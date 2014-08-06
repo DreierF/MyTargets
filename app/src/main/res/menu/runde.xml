@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="de.dreier.mytargets.RundeActivity" >
+    <item android:id="@+id/action_runde_detail"
+        android:title="Bearbeiten"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+    <item android:id="@+id/action_start_passe"
+        android:title="Beginne Passe"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:icon="@drawable/ic_action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="always" />
+</menu>
