@@ -57,7 +57,7 @@ public class MainActivity extends ListActivity implements ListView.OnItemClickLi
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
         if(pos==0) {
-            Intent i = new Intent(this,EditRoundActivity.class);
+            Intent i = new Intent(this,NewRoundActivity.class);
             startActivity(i);
             overridePendingTransition(R.anim.right_in, R.anim.left_out);
         } else {

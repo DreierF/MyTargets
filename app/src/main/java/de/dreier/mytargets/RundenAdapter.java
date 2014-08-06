@@ -37,7 +37,7 @@ public class RundenAdapter extends CursorAdapter {
 
     @Override
     public long getItemId(int pos) {
-        return pos==0?0:getItemId(pos-1);
+        return pos==0?0:super.getItemId(pos-1);
     }
 
     @Override

@@ -5,8 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -17,39 +15,65 @@ import android.view.View;
  * TODO: document your custom view class.
  */
 public class TargetView extends View implements View.OnTouchListener {
-    public static int[] highlightColor = {
-            0xFFFCEA0F, 0xFFFCEA0F, // Gelb
-            0xFFE30513, 0xFFE30513, // Rot
-            0xFF1D70B7, 0xFF1D70B7, //Blau
-            0xFF050505, 0xFF050505, // Schwarz
-            Color.WHITE, Color.WHITE, // Weiß
-            0xFF1C1C1B, 0xFF1C1C1B // Mistake
+    public static final int[] highlightColor = {
+            0xFFFCEA0F, // Gelb
+            0xFFE30513, // Rot
+            0xFF1D70B7, //Blau
+            0xFF050505, // Schwarz
+            Color.WHITE,  // Weiß
+            0xFF1C1C1B // Mistake
     };
 
-    public static int[] circleStrokeColor = {
-            0xFFFCEA0F, 0xFFFCEA0F, // Gelb
-            0xFFE30513, 0xFFE30513, // Rot
-            0xFF1D70B7, 0xFF1D70B7, //Blau
-            0xFF050505, 0xFF050505, // Schwarz
-            0xFF1C1C1B, 0xFF1C1C1B, // Weiß wird schwarz dargestellt
-            0xFF1C1C1B, 0xFF1C1C1B // Mistake
+    public static final int[] circleStrokeColor = {
+            0xFFFCEA0F, // Gelb
+            0xFFE30513, // Rot
+            0xFF1D70B7, //Blau
+            0xFF050505, // Schwarz
+            0xFF1C1C1B, // Weiß wird schwarz dargestellt
+            0xFF1C1C1B, // Mistake
     };
 
-    public static int[] rectColor = {
-            0xFFFCEA0F, 0xFFFCEA0F, // Gelb
-            0xFFE30513, 0xFFE30513, // Rot
-            0xFF1D70B7, 0xFF1D70B7, //Blau
-            0xFF1C1C1B, 0xFF1C1C1B, // Schwarz
-            Color.WHITE, Color.WHITE, // Weiß
-            0xFF1C1C1B, 0xFF1C1C1B // Mistake
+    public static final int[] rectColor = {
+            0xFFFCEA0F, // Gelb
+            0xFFE30513, // Rot
+            0xFF1D70B7, //Blau
+            0xFF1C1C1B, // Schwarz
+            Color.WHITE, // Weiß
+            0xFF1C1C1B // Mistake
     };
 
-    public static int[] grayColor = {
-            0xFF7a7439, 0xFF7a7439, // Gelb
-            0xFF7a2621, 0xFF7a2621, // Rot
-            0xFF234466, 0xFF234466, //Blau
-            0xFF1C1C1B, 0xFF1C1C1B, // Schwarz
-            0xFF7d7a80, 0xFF7d7a80 // Weiß
+    public static final int[] grayColor = {
+            0xFF7a7439, // Gelb
+            0xFF7a2621, // Rot
+            0xFF234466, //Blau
+            0xFF1C1C1B, // Schwarz
+            0xFF7d7a80 // Weiß
+    };
+
+    public static final int[][] target_rounds = {
+            {0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4}, //WA
+            {0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4},
+            {0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4},
+            {0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4},
+            {0, 0, 0, 1, 1, 2}, // WA Spot
+            {0, 0, 0, 1, 1, 2},
+            {0, 0, 0, 1, 1, 2},
+            {0, 0, 3, 3, 3, 3}, // WA Field
+            {4, 4, 3, 3, 3, 3},  //DFBV Spiegel
+            {4, 4, 3} //DFBV Spiegel Spot
+    };
+
+    public static final int[][] target_points = {
+            {10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1}, //WA
+            {10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1},
+            {10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1},
+            {10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1},
+            {10, 10, 9, 8, 7, 6}, // WA Spot
+            {10, 10, 9, 8, 7, 6},
+            {10, 10, 9, 8, 7, 6},
+            {5, 5, 4, 3, 2, 1}, // WA Field
+            {5, 5, 4, 3, 2, 1},  //DFBV Spiegel
+            {5, 5, 4} //DFBV Spiegel Spot
     };
 
     private int radius, midX, midY;
@@ -58,22 +82,35 @@ public class TargetView extends View implements View.OnTouchListener {
     private TextPaint mTextPaint;
     private Paint thinBlackBorder, drawColorP, rectColorP, circleColorP;
 
-    private int[] points = {-2,-2,-2};
+    private int[] points_zone = {-2,-2,-2};
     private int currentArrow = 0, lastSetArrow = -1;
-    private OnTargetSetListener setListener=null;
+    private OnTargetSetListener setListener = null;
+    private int ppp = 3;
+    private int targetRound = 0;
 
 
     public void reset() {
         currentArrow = 0;
         lastSetArrow = -1;
-        for(int i=0;i<3;i++) points[i] = -2;
+        for(int i=0;i<3;i++) points_zone[i] = -2;
         invalidate();
     }
 
-    public void setPoints(int[] points) {
-        currentArrow = 0;
-        lastSetArrow = -1;
-        this.points = points;
+    public void setPPP(int num) {
+        ppp = num;
+        points_zone = new int[num];
+        for(int i=0;i<num;i++)
+            points_zone[i] = -2;
+    }
+
+    public void setTargetRound(int i) {
+        targetRound = i;
+    }
+
+    public void setZones(int[] zones) {
+        currentArrow = zones.length;
+        lastSetArrow = zones.length;
+        this.points_zone = zones;
         invalidate();
     }
 
@@ -127,68 +164,86 @@ public class TargetView extends View implements View.OnTouchListener {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        for(int i=10;i>0;i--) {
-            boolean isSelected = false;
-            if(currentArrow<3)
-                isSelected = i==11-points[currentArrow];
-            drawColorP.setColor((isSelected?highlightColor:grayColor)[i-1]);
-            rectColorP.setColor(rectColor[i-1]);
+        int[] target = target_rounds[targetRound];
+        int zones = target.length;
+        int curZone;
+        if(currentArrow<ppp)
+            curZone = points_zone[currentArrow];
+        else
+            curZone = -2;
+        for(int i=zones; i>0; i--) {
+            // Select colors to draw with
+            drawColorP.setColor((i==curZone+1?highlightColor:grayColor)[target[i-1]]);
+            rectColorP.setColor(rectColor[target[i-1]]);
 
-            // Zeichne einen Ring
-            canvas.drawCircle(midX,midY, radius *i*0.1f, drawColorP);
-
-            // Zeichne die Trennlinie zwischen den Ringen
-            canvas.drawCircle(midX, midY, radius * i * 0.1f, thinBlackBorder);
+            // Zeichne einen Ring mit Trennlinie
+            float rad = (radius * i)/(float)zones;
+            canvas.drawCircle(midX, midY, rad, drawColorP);
+            canvas.drawCircle(midX, midY, rad, thinBlackBorder);
 
             // Zeichne den Indikator rechts
-            canvas.drawRect(midX + radius + 180, contentHeight * (i - 1) / 11, midX + radius + 230, contentHeight * i / 11, rectColorP);
-            canvas.drawRect(midX + radius + 180, contentHeight * (i - 1) / 11, midX + radius + 230, contentHeight * i / 11, thinBlackBorder);
+            int X1 = midX + radius + 180;
+            int X2 = midX + radius + 230;
+            int Y1 = contentHeight * (i - 1) / (zones+1);
+            int Y2 = contentHeight * i / (zones+1);
+            canvas.drawRect(X1, Y1, X2, Y2, rectColorP);
+            canvas.drawRect(X1, Y1, X2, Y2, thinBlackBorder);
         }
 
-        if(currentArrow<3 && points[currentArrow]>=0) {
+        if(curZone>=-1) {
             float circleY;
-            int i = 11 - points[currentArrow];
-            circleColorP.setColor(circleStrokeColor[i - 1]);
-            if (i == 11) {
+            if (curZone == -1) {
                 circleY = midY + radius;
             } else {
-                circleY = midY + radius * i * 0.1f;
-                canvas.drawLine(midX, circleY, midX + radius + 40, circleY, circleColorP);
+                circleY = midY + radius * (curZone+1) / (float)zones;
             }
-            drawCircle(canvas, midX + radius + 80, circleY, points[currentArrow]);
+            drawCircle(canvas, midX + radius + 80, circleY, curZone);
+            if(curZone>-1)
+                canvas.drawLine(midX, circleY, midX + radius + 30, circleY, circleColorP);
         }
         if(lastSetArrow>=0) {
-            drawCircle(canvas, midX + 200, midY+radius*1.15f, points[0]);
+            drawCircle(canvas, midX + 200, midY+radius*1.15f, points_zone[0]);
         }
         if(lastSetArrow>=1) {
-            drawCircle(canvas, midX + 350, midY+radius*1.15f, points[1]);
+            drawCircle(canvas, midX + 350, midY+radius*1.15f, points_zone[1]);
         }
         if(lastSetArrow>=2) {
-            drawCircle(canvas, midX + 500, midY+radius*1.15f, points[2]);
+            drawCircle(canvas, midX + 500, midY+radius*1.15f, points_zone[2]);
         }
     }
 
     public void saveState(Bundle b) {
-        b.putIntArray("points",points);
-        b.putInt("currentArrow",currentArrow);
-        b.putInt("lastSetArrow",lastSetArrow);
+        b.putIntArray("points_zone", points_zone);
+        b.putInt("currentArrow", currentArrow);
+        b.putInt("lastSetArrow", lastSetArrow);
+        b.putInt("ppp",ppp);
+        b.putInt("target_round",targetRound);
     }
 
     public void restoreState(Bundle b) {
-        points = b.getIntArray("points");
+        points_zone = b.getIntArray("points_zone");
         currentArrow = b.getInt("currentArrow");
         lastSetArrow = b.getInt("lastSetArrow");
+        ppp = b.getInt("ppp");
+        targetRound = b.getInt("target_round");
     }
 
-    private void drawCircle(Canvas can, float x, float y, int points) {
-        int i=10-points;
+    private void drawCircle(Canvas can, float x, float y, int zone) {
+        int points, colorInd;
+        if(zone>-1) {
+            points = target_points[targetRound][zone];
+            colorInd = target_rounds[targetRound][zone];
+        } else {
+            points = 0;
+            colorInd = 3;
+        }
         circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
-        circleColorP.setColor(rectColor[i]);
+        circleColorP.setColor(rectColor[colorInd]);
         can.drawCircle(x, y, 50, circleColorP);
         circleColorP.setStyle(Paint.Style.STROKE);
-        circleColorP.setColor(circleStrokeColor[i]);
+        circleColorP.setColor(circleStrokeColor[colorInd]);
         can.drawCircle(x, y, 50, circleColorP);
-        mTextPaint.setColor(i>1&&i<8||i>9 ? Color.WHITE : Color.BLACK);
+        mTextPaint.setColor(colorInd==0||colorInd==4 ? Color.BLACK : Color.WHITE);
         can.drawText(points==0?"M":"" + points, x, y + 20, mTextPaint);
     }
 
@@ -213,7 +268,7 @@ public class TargetView extends View implements View.OnTouchListener {
 
         if(x>midX+100 && x<midX+700 && y> midY+radius*1.15f-50 && y<midY+radius*1.15f+50) {
             int arrow = (int)((x-midX-100)/200.0);
-            if(arrow<3 && points[arrow]>=0) {
+            if(arrow<3 && points_zone[arrow]>=0) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     currentArrow = arrow;
                     invalidate();
@@ -222,37 +277,33 @@ public class TargetView extends View implements View.OnTouchListener {
             }
         }
 
-        int point;
+        int zone, ringe = target_rounds[targetRound].length;
         if(x>midX + radius + 100) { // Handle selection with indikator
-            point = 10 - (int) (y * 11.0 / (float) contentHeight);
+            zone = (int) (y * (ringe+1) / (float) contentHeight);
         } else { // Handle with target
             double xDiff = x-midX;
             double yDiff = y-midY;
-            point = (int)(11.0-(Math.sqrt(xDiff*xDiff+yDiff*yDiff)*10.0/ (float) radius));
+            zone = (int)(Math.sqrt(xDiff*xDiff+yDiff*yDiff)*ringe/ (float) radius);
         }
 
-        // Correct points
-        if (point < 0)
-            point = 0;
+        // Correct points_zone
+        if (zone < -1 || zone >= ringe)
+            zone = -1;
 
-        if (point > 10)
-            point = 10;
-
-        if (currentArrow < 3)
-            points[currentArrow] = point;
+        if (currentArrow < ppp)
+            points_zone[currentArrow] = zone;
 
         if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
             //go to next page
             if(currentArrow==lastSetArrow+1) {
                 lastSetArrow++;
                 currentArrow++;
-            } else if(lastSetArrow<3) {
+            } else if(lastSetArrow<ppp) {
                 currentArrow = lastSetArrow+1;
             }
 
-
-            if (currentArrow == 3 && setListener != null)
-                setListener.OnTargetSet(points);
+            if (currentArrow == ppp && setListener != null)
+                setListener.OnTargetSet(points_zone);
         }
 
         invalidate();

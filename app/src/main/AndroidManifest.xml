@@ -49,7 +49,7 @@
                 android:value="de.dreier.mytargets.RundeActivity" />
         </activity>
         <activity
-            android:name=".EditRoundActivity"
+            android:name=".NewRoundActivity"
             android:label="@string/title_activity_new_round"
             android:parentActivityName=".TrainingActivity" >
             <meta-data

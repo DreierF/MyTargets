@@ -8,17 +8,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-public class EditRoundActivity extends Activity implements View.OnClickListener {
+public class NewRoundActivity extends Activity implements View.OnClickListener {
 
     public static final String TRAINING_ID = "training_id";
-    public static final String ROUND_ID = "round_id";
-    private long mTraining = -1, mRound = -1;
+    private long mTraining = -1;
 
     private Spinner distance;
     private RadioButton outdoor,indoor;
@@ -37,8 +34,6 @@ public class EditRoundActivity extends Activity implements View.OnClickListener 
         if (i != null) {
             if (i.hasExtra(TRAINING_ID)) {
                 mTraining = i.getLongExtra(TRAINING_ID, -1);
-            } else if (i.hasExtra(ROUND_ID)) {
-                mRound = i.getLongExtra(ROUND_ID, -1);
             }
         }
 
@@ -58,6 +53,7 @@ public class EditRoundActivity extends Activity implements View.OnClickListener 
         target.setAdapter(new TargetAdapter(this));
         Button cancel = (Button) findViewById(R.id.cancel_button);
         Button new_round = (Button) findViewById(R.id.new_round_button);
+        new_round.setText(mTraining==-1?"Starten":"Neue Runde");
         new_round.setOnClickListener(this);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,8 +65,8 @@ public class EditRoundActivity extends Activity implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
-        TargetOpenHelper db = new TargetOpenHelper(EditRoundActivity.this);
-        if(mTraining==-1 && mRound==-1) {
+        TargetOpenHelper db = new TargetOpenHelper(NewRoundActivity.this);
+        if(mTraining==-1) {
             mTraining = db.newTraining();
         }
         long bow = 0;
@@ -79,10 +75,11 @@ public class EditRoundActivity extends Activity implements View.OnClickListener 
         int p = ppp.getValue();
         int tar = target.getSelectedItemPosition();
         boolean in = indoor.isChecked();
-        mRound = db.newRound(mTraining, mRound, dist, unit, in, p, tar, bow);
+        long round = db.newRound(mTraining, dist, unit, in, p, tar, bow);
         db.close();
         Intent i = new Intent(this,RundeActivity.class);
-        i.putExtra(RundeActivity.RUNDE_ID,mRound);
+        i.putExtra(RundeActivity.RUNDE_ID,round);
+        i.putExtra(RundeActivity.TRAINING_ID,mTraining);
         startActivity(i);
         finish();
     }
@@ -97,6 +94,8 @@ public class EditRoundActivity extends Activity implements View.OnClickListener 
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            Intent i = new Intent(this,SettingsActivity.class);
+            startActivity(i);
             return true;
         }
         return super.onOptionsItemSelected(item);

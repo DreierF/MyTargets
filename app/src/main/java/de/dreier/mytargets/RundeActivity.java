@@ -13,17 +13,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import de.dreier.mytargets.R;
-
 /**
  * Shows all passes of one round
  */
 public class RundeActivity extends ListActivity implements ListView.OnItemClickListener {
 
     public static final String RUNDE_ID = "runde_id";
+    public static final String TRAINING_ID = "training_id";
     private long mRound;
     private PasseAdapter adapter;
     private ListView mListView;
+    private long mTraining;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,18 @@ public class RundeActivity extends ListActivity implements ListView.OnItemClickL
         Intent i = getIntent();
         if(i!=null && i.hasExtra(RUNDE_ID)) {
             mRound = i.getLongExtra(RUNDE_ID,-1);
+            mTraining = i.getLongExtra(TRAINING_ID, -1);
         }
+
+        TargetOpenHelper db = new TargetOpenHelper(this);
+        if(db.getPasses(mRound).getCount()==0) {
+            i = new Intent(this,PasseActivity.class);
+            i.putExtra(PasseActivity.RUNDE_ID,mRound);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
+        }
+
+        setTitle("Runde "+db.getRoundInd(mTraining,mRound));
 
         mListView = getListView();
         mListView.setDividerHeight(0);
@@ -53,13 +64,7 @@ public class RundeActivity extends ListActivity implements ListView.OnItemClickL
         Intent i;
         switch (item.getItemId()) {
             case R.id.action_settings:
-                return true;
-            case R.id.action_start_passe:
-                i = new Intent(this,PasseActivity.class);
-                startActivity(i);
-                return true;
-            case R.id.action_runde_detail:
-                i = new Intent(this,EditRoundActivity.class);
+                i = new Intent(this,SettingsActivity.class);
                 startActivity(i);
                 return true;
             case android.R.id.home:
@@ -81,6 +86,13 @@ public class RundeActivity extends ListActivity implements ListView.OnItemClickL
     public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
         if(pos==0) {
             Intent i = new Intent(this,PasseActivity.class);
+            i.putExtra(PasseActivity.RUNDE_ID,mRound);
+            startActivity(i);
+            overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        } else {
+            Intent i = new Intent(this,PasseActivity.class);
+            i.putExtra(PasseActivity.RUNDE_ID,mRound);
+            i.putExtra(PasseActivity.PASSE_IND,pos);
             startActivity(i);
             overridePendingTransition(R.anim.right_in, R.anim.left_out);
         }

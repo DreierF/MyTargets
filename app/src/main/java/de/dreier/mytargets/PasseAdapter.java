@@ -16,11 +16,13 @@ public class PasseAdapter extends CursorAdapter {
     private final LayoutInflater mInflater;
     private final TargetOpenHelper db;
     private final int passeIdInd;
+    private final TargetOpenHelper.Round roundInfo;
 
     public PasseAdapter(Context context, long round) {
         super(context,new TargetOpenHelper(context).getPasses(round),0);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         db = new TargetOpenHelper(context);
+        roundInfo = db.getRound(round);
         passeIdInd = getCursor().getColumnIndex(TargetOpenHelper.PASSE_ID);
     }
     @Override
@@ -40,7 +42,7 @@ public class PasseAdapter extends CursorAdapter {
 
     @Override
     public long getItemId(int pos) {
-        return pos==0?0:getItemId(pos-1);
+        return pos==0?0:super.getItemId(pos-1);
     }
 
     @Override
@@ -75,7 +77,7 @@ public class PasseAdapter extends CursorAdapter {
         ViewHolder holder = (ViewHolder) view.getTag();
         holder.subtitle.setText("Passe "+(1+cursor.getPosition()));
         int[] points = db.getPasse(cursor.getLong(passeIdInd));
-        holder.shots.setPoints(points);
+        holder.shots.setPoints(points,roundInfo.target);
     }
 
     public static class ViewHolder {

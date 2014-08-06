@@ -5,10 +5,6 @@
         android:title="Neue Runde"
         android:icon="@drawable/ic_action_new"
         android:showAsAction="always" />
-    <item android:id="@+id/action_runde_detail"
-        android:title="Runde bearbeituen"
-        android:icon="@drawable/ic_action_edit"
-        android:showAsAction="ifRoom" />
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:icon="@drawable/ic_action_settings"

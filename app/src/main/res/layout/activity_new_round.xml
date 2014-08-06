@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="de.dreier.mytargets.EditRoundActivity">
+    tools:context="de.dreier.mytargets.NewRoundActivity">
 
     <ScrollView
         android:layout_width="wrap_content"

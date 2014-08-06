@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -87,13 +86,14 @@ public class TrainingActivity extends ListActivity implements ListView.OnItemCli
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
         if(pos==0) {
-            Intent i = new Intent(this,EditRoundActivity.class);
-            i.putExtra(EditRoundActivity.TRAINING_ID,mTraining);
+            Intent i = new Intent(this,NewRoundActivity.class);
+            i.putExtra(NewRoundActivity.TRAINING_ID,mTraining);
             startActivity(i);
             overridePendingTransition(R.anim.right_in, R.anim.left_out);
         } else {
             Intent i = new Intent(this,RundeActivity.class);
-            i.putExtra(RundeActivity.RUNDE_ID,mTraining);
+            i.putExtra(RundeActivity.RUNDE_ID,getListAdapter().getItemId(pos));
+            i.putExtra(RundeActivity.TRAINING_ID,mTraining);
             startActivity(i);
             overridePendingTransition(R.anim.right_in, R.anim.left_out);
         }

@@ -20,6 +20,7 @@ public class PassenView extends View {
 
     private int[] points = {-2,-2,-2};
     private float placePerShoot;
+    private int targetRound;
 
     public PassenView(Context context) {
         super(context);
@@ -48,29 +49,38 @@ public class PassenView extends View {
         circleColorP.setStrokeWidth(6);
     }
 
-    public void setPoints(int[] p) {
+    public void setPoints(int[] p, int tar) {
         points = p;
+        targetRound = tar;
         invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        placePerShoot = contentWidth/(float)points.length;
 
         for(int i=0;i<points.length;i++) {
             drawCircle(canvas, i*placePerShoot+(placePerShoot/2.0f), contentHeight/2.0f, points[i]);
         }
     }
 
-    private void drawCircle(Canvas can, float x, float y, int points) {
-        int i=10-points;
+    private void drawCircle(Canvas can, float x, float y, int zone) {
+        int points, colorInd;
+        if(zone>-1) {
+            points = TargetView.target_points[targetRound][zone];
+            colorInd = TargetView.target_rounds[targetRound][zone];
+        } else {
+            points = 0;
+            colorInd = 3;
+        }
         circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
-        circleColorP.setColor(TargetView.rectColor[i]);
+        circleColorP.setColor(TargetView.rectColor[colorInd]);
         can.drawCircle(x, y, 50, circleColorP);
         circleColorP.setStyle(Paint.Style.STROKE);
-        circleColorP.setColor(TargetView.circleStrokeColor[i]);
+        circleColorP.setColor(TargetView.circleStrokeColor[colorInd]);
         can.drawCircle(x, y, 50, circleColorP);
-        mTextPaint.setColor(i>1&&i<8||i>9 ? Color.WHITE : Color.BLACK);
+        mTextPaint.setColor(colorInd==0||colorInd==4 ? Color.BLACK : Color.WHITE);
         can.drawText(points==0?"M":"" + points, x, y + 20, mTextPaint);
     }
 
@@ -80,7 +90,6 @@ public class PassenView extends View {
 
         contentWidth = getWidth();
         contentHeight = getHeight();
-        placePerShoot = contentWidth/(float)points.length;
     }
 
     @Override

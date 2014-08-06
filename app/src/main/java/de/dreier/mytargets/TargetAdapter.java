@@ -19,19 +19,6 @@ public class TargetAdapter extends BaseAdapter implements SpinnerAdapter {
             R.drawable.wa, R.drawable.wa, R.drawable.wa_spot, R.drawable.wa_spot, R.drawable.wa_spot,
             R.drawable.wa_field, R.drawable.dfbv_spiegel, R.drawable.dfbv_spiegel_spot};
 
-    public int[][] target_rounds = {
-            {0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4}, //WA
-            {0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4},
-            {0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4},
-            {0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4},
-            {0, 0, 0, 1, 1, 2}, // WA Spot
-            {0, 0, 0, 1, 1, 2},
-            {0, 0, 0, 1, 1, 2},
-            {0, 0, 3, 3, 3, 3}, // WA Field
-            {4, 4, 3, 3, 3, 3},  //DFBV Spiegel
-            {4, 4, 3} //DFBV Spiegel Spot
-    };
-
 	public TargetAdapter(Context context) {
         mContext = context;
 	}

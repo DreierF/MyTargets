@@ -148,7 +148,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         return insertId;
     }
 
-    public long newRound(long training, long round, int distance, String unit, boolean indoor, int ppp, int target, long bow) {
+    public long newRound(long training, int distance, String unit, boolean indoor, int ppp, int target, long bow) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(RUNDE_DISTANCE, distance);
@@ -158,12 +158,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         values.put(RUNDE_BOW, bow);
         values.put(RUNDE_PPP, ppp);
         values.put(RUNDE_TRAINING, training);
-        if(round==-1) {
-            round = db.insert(TABLE_RUNDE, null, values);
-        } else {
-            String[] where = {""+round};
-            db.update(TABLE_RUNDE, values, RUNDE_ID+"=?",where);
-        }
+        long round = db.insert(TABLE_RUNDE, null, values);
         db.close();
         return round;
     }
@@ -173,7 +168,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         String[] cols1 = {PASSE_ID};
         String[] args1 = {""+round};
         Cursor res1 = db.query(TABLE_PASSE,cols1,PASSE_RUNDE+"=?",args1,null,null,PASSE_ID+" ASC");
-        if(!res1.moveToPosition(passe))
+        if(!res1.moveToPosition(passe-1))
             return null;
         long passeId = res1.getLong(0);
         String[] cols2 = {SHOOT_POINTS};
@@ -186,6 +181,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
             points[i] = res.getInt(0);
             res.moveToNext();
         }
+        res.close();
         db.close();
         return points;
     }
@@ -202,6 +198,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         tr.id = res.getLong(0);
         tr.title = res.getString(1);
         tr.date = new Date(res.getLong(2));
+        res.close();
         db.close();
         return tr;
     }
@@ -215,16 +212,57 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         int[] points = new int[count];
         res.moveToFirst();
         for(int i=0;i<count;i++) {
-            points[i] = res.getInt(0);
+            points[i] = res.getInt(1);
             res.moveToNext();
         }
+        res.close();
         db.close();
         return points;
+    }
+
+    public Round getRound(long round) {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] cols = {RUNDE_PPP,RUNDE_TRAINING,RUNDE_TARGET};
+        String[] args = {""+round};
+        Cursor res = db.query(TABLE_RUNDE,cols,RUNDE_ID+"=?",args,null,null,null);
+        res.moveToFirst();
+        Round r = new Round();
+        r.ppp = res.getInt(0);
+        r.training = res.getLong(1);
+        r.target = res.getInt(2);
+        res.close();
+        db.close();
+        return r;
+    }
+
+    public int getRoundInd(long training, long round) {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] cols = {RUNDE_ID};
+        String[] args = {""+training};
+        Cursor res = db.query(TABLE_RUNDE,cols,RUNDE_TRAINING+"=?",args,null,null,RUNDE_ID+" ASC");
+        res.moveToFirst();
+        for(int i=1;i<res.getCount()+1;i++) {
+            if(round==res.getLong(0)) {
+                res.close();
+                db.close();
+                return i;
+            }
+            res.moveToNext();
+        }
+        res.close();
+        db.close();
+        return 0;
     }
 
     public class Training {
         long id;
         String title;
         Date date;
+    }
+
+    public class Round {
+        int ppp;
+        int target;
+        long training;
     }
 }
