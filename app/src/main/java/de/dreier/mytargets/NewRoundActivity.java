@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
@@ -19,11 +18,10 @@ public class NewRoundActivity extends Activity implements View.OnClickListener {
 
     private Spinner distance;
     private RadioButton outdoor,indoor;
-    private NumberPicker ppp;
     private Spinner bow,target;
     private String[] distances = {"10m","15m", "18m", "20m", "25m", "30m", "40m", "50m", "60m", "70m", "90m"};
     private int[] distanceValues = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
-
+    private RadioButton ppp3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +43,15 @@ public class NewRoundActivity extends Activity implements View.OnClickListener {
         outdoor = (RadioButton) findViewById(R.id.outdoor);
         outdoor.setChecked(true);
         indoor = (RadioButton) findViewById(R.id.indoor);
-        ppp = (NumberPicker) findViewById(R.id.ppp);
-        ppp.setMaxValue(10);
-        ppp.setMinValue(3);
+        ppp3 = (RadioButton) findViewById(R.id.ppp3);
+        ppp3.setChecked(true);
         bow = (Spinner) findViewById(R.id.bow);
+        bow.setAdapter(new BowItemAdapter(this));
         target = (Spinner) findViewById(R.id.target);
-        target.setAdapter(new TargetAdapter(this));
+        target.setAdapter(new TargetItemAdapter(this));
         Button cancel = (Button) findViewById(R.id.cancel_button);
         Button new_round = (Button) findViewById(R.id.new_round_button);
-        new_round.setText(mTraining==-1?"Starten":"Neue Runde");
+        new_round.setText(getString(mTraining==-1?R.string.start:R.string.new_round));
         new_round.setOnClickListener(this);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +70,7 @@ public class NewRoundActivity extends Activity implements View.OnClickListener {
         long bow = 0;
         int dist = distanceValues[distance.getSelectedItemPosition()];
         String unit = "m";
-        int p = ppp.getValue();
+        int p = ppp3.isChecked()?3:6;
         int tar = target.getSelectedItemPosition();
         boolean in = indoor.isChecked();
         long round = db.newRound(mTraining, dist, unit, in, p, tar, bow);
@@ -86,18 +84,18 @@ public class NewRoundActivity extends Activity implements View.OnClickListener {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.new_round, menu);
+        getMenuInflater().inflate(R.menu.settings_only, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             Intent i = new Intent(this,SettingsActivity.class);
             startActivity(i);
             return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 }

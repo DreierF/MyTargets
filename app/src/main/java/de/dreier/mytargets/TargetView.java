@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -83,11 +84,13 @@ public class TargetView extends View implements View.OnTouchListener {
     private Paint thinBlackBorder, drawColorP, rectColorP, circleColorP;
 
     private int[] points_zone = {-2,-2,-2};
-    private int currentArrow = 0, lastSetArrow = -1;
+    private int currentArrow = 0, lastSetArrow = -1;//*/
+
     private OnTargetSetListener setListener = null;
     private int ppp = 3;
     private int targetRound = 0;
-
+    private float density;
+    private float resultX1, resultX2, spacePerResult;
 
     public void reset() {
         currentArrow = 0;
@@ -135,11 +138,12 @@ public class TargetView extends View implements View.OnTouchListener {
 
     private void init(AttributeSet attrs, int defStyle) {
         // Set up a default TextPaint object
+        density = getResources().getDisplayMetrics().density;
         mTextPaint = new TextPaint();
         mTextPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setTextAlign(Paint.Align.LEFT);
         mTextPaint.setColor(Color.BLACK);
-        mTextPaint.setTextSize(60);
+        mTextPaint.setTextSize(22*density);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
 
         thinBlackBorder = new Paint();
@@ -155,7 +159,7 @@ public class TargetView extends View implements View.OnTouchListener {
 
         circleColorP = new Paint();
         circleColorP.setAntiAlias(true);
-        circleColorP.setStrokeWidth(6);
+        circleColorP.setStrokeWidth(2*density);
 
         setOnTouchListener(this);
     }
@@ -182,8 +186,8 @@ public class TargetView extends View implements View.OnTouchListener {
             canvas.drawCircle(midX, midY, rad, thinBlackBorder);
 
             // Zeichne den Indikator rechts
-            int X1 = midX + radius + 180;
-            int X2 = midX + radius + 230;
+            int X1 = (int)(contentWidth - 50*density);
+            int X2 = (int)(contentWidth - 20*density);
             int Y1 = contentHeight * (i - 1) / (zones+1);
             int Y2 = contentHeight * i / (zones+1);
             canvas.drawRect(X1, Y1, X2, Y2, rectColorP);
@@ -197,18 +201,13 @@ public class TargetView extends View implements View.OnTouchListener {
             } else {
                 circleY = midY + radius * (curZone+1) / (float)zones;
             }
-            drawCircle(canvas, midX + radius + 80, circleY, curZone);
+            drawCircle(canvas, midX + radius + 27*density, circleY, curZone);
             if(curZone>-1)
-                canvas.drawLine(midX, circleY, midX + radius + 30, circleY, circleColorP);
+                canvas.drawLine(midX, circleY, midX + radius + 10*density, circleY, circleColorP);
         }
-        if(lastSetArrow>=0) {
-            drawCircle(canvas, midX + 200, midY+radius*1.15f, points_zone[0]);
-        }
-        if(lastSetArrow>=1) {
-            drawCircle(canvas, midX + 350, midY+radius*1.15f, points_zone[1]);
-        }
-        if(lastSetArrow>=2) {
-            drawCircle(canvas, midX + 500, midY+radius*1.15f, points_zone[2]);
+
+        for(int i=0;i<=lastSetArrow && i<ppp;i++) {
+            drawCircle(canvas, midX + spacePerResult*i+resultX1+(spacePerResult/2.0f), midY+radius*1.3f, points_zone[i]);
         }
     }
 
@@ -239,12 +238,12 @@ public class TargetView extends View implements View.OnTouchListener {
         }
         circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
         circleColorP.setColor(rectColor[colorInd]);
-        can.drawCircle(x, y, 50, circleColorP);
+        can.drawCircle(x, y, 17*density, circleColorP);
         circleColorP.setStyle(Paint.Style.STROKE);
         circleColorP.setColor(circleStrokeColor[colorInd]);
-        can.drawCircle(x, y, 50, circleColorP);
+        can.drawCircle(x, y, 17*density, circleColorP);
         mTextPaint.setColor(colorInd==0||colorInd==4 ? Color.BLACK : Color.WHITE);
-        can.drawText(points==0?"M":"" + points, x, y + 20, mTextPaint);
+        can.drawText(points==0?"M":(zone==0 && targetRound<4?"X":"" + points), x, y + 7*density, mTextPaint);
     }
 
     @Override
@@ -256,9 +255,12 @@ public class TargetView extends View implements View.OnTouchListener {
 
         int bounds = Math.min(contentWidth*2,contentHeight);
 
-        radius = bounds/2-120;
+        radius = (int)(bounds/2.0-50*density);
         midX = 0;
-        midY = radius+30;
+        midY = radius+(int)(10*density);
+        resultX1 = 30*density;
+        resultX2 = contentWidth-80*density;
+        spacePerResult = (resultX2-resultX1)/ppp;
     }
 
     @Override
@@ -266,9 +268,9 @@ public class TargetView extends View implements View.OnTouchListener {
         float x = motionEvent.getX();
         float y = motionEvent.getY();
 
-        if(x>midX+100 && x<midX+700 && y> midY+radius*1.15f-50 && y<midY+radius*1.15f+50) {
-            int arrow = (int)((x-midX-100)/200.0);
-            if(arrow<3 && points_zone[arrow]>=0) {
+        if(x>resultX1 && x<resultX2 && y> midY+radius*1.3f-20*density && y<midY+radius*1.3f+20*density) {
+            int arrow = (int)((x-resultX1)/spacePerResult);
+            if(arrow<ppp && points_zone[arrow]>=0) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     currentArrow = arrow;
                     invalidate();
@@ -278,7 +280,7 @@ public class TargetView extends View implements View.OnTouchListener {
         }
 
         int zone, ringe = target_rounds[targetRound].length;
-        if(x>midX + radius + 100) { // Handle selection with indikator
+        if(x>midX + radius + 30*density) { // Handle selection with indikator
             zone = (int) (y * (ringe+1) / (float) contentHeight);
         } else { // Handle with target
             double xDiff = x-midX;
@@ -302,7 +304,7 @@ public class TargetView extends View implements View.OnTouchListener {
                 currentArrow = lastSetArrow+1;
             }
 
-            if (currentArrow == ppp && setListener != null)
+            if (lastSetArrow+1 >= ppp && setListener != null)
                 setListener.OnTargetSet(points_zone);
         }
 

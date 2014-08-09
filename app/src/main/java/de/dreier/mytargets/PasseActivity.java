@@ -69,12 +69,14 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
     }
 
     public void setPasse(int passe) {
-        if(curPasse<=savedPasses) {
+        if(passe<=savedPasses) {
             int[] points = db.getPasse(mRound,passe);
             if(points!=null)
                 target.setZones(points);
             else
                 target.reset();
+        } else {
+            target.reset();
         }
         curPasse = passe;
         setTitle("Passe "+curPasse);
@@ -92,10 +94,10 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i;
         switch (item.getItemId()) {
-            case R.id.action_settings:
+            /*case R.id.action_settings:
                 i = new Intent(this,SettingsActivity.class);
                 startActivity(i);
-                return true;
+                return true;*/
             case R.id.action_new_runde:
                 i = new Intent(this,NewRoundActivity.class);
                 i.putExtra(NewRoundActivity.TRAINING_ID,mTraining);
@@ -124,7 +126,7 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
             savedPasses++;
             db.addPasseToRound(mRound, zones);
         } else {
-            //db.updatePasse(mRound, points);
+            db.updatePasse(mRound, curPasse, zones);
         }
         db.close();
         setPasse(curPasse);

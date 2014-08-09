@@ -2,6 +2,7 @@ package de.dreier.mytargets;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,56 +16,19 @@ import java.util.Date;
  * Shows all Trainings
  * */
 
-public class TrainingAdapter extends CursorAdapter {
+public class TrainingAdapter extends NowListAdapter {
 
-    private final LayoutInflater mInflater;
     private final int titleInd;
     private final int dateInd;
     private final DateFormat dateFormat;
 
     public TrainingAdapter(Context context) {
-        super(context,new TargetOpenHelper(context).getTrainings(),0);
+        super(context,new TargetOpenHelper(context).getTrainings());
         titleInd = getCursor().getColumnIndex(TargetOpenHelper.TRAINING_TITLE);
         dateInd = getCursor().getColumnIndex(TargetOpenHelper.TRAINING_DATE);
         dateFormat = DateFormat.getDateInstance();
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
-
-    @Override
-    public int getCount() {
-        return 1+getCursor().getCount();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return position==0?0:1;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 2;
-    }
-
-    @Override
-    public long getItemId(int pos) {
-        return pos==0?0:super.getItemId(pos-1);
-    }
-
-    @Override
-    public View getView(int pos, View convertView, ViewGroup parent) {
-        View view;
-        if(pos==0) {
-            if (convertView == null) {
-                view = mInflater.inflate(R.layout.new_card, parent, false);
-            } else {
-                view = convertView;
-            }
-            TextView text = (TextView) view.findViewById(R.id.newText);
-            text.setText("Neues Training");
-        } else {
-            view = super.getView(pos-1,convertView,parent);
-        }
-        return view;
+        mNewText = context.getString(R.string.new_training);
+        mExtraCards = 2;
     }
 
     @Override
@@ -87,5 +51,16 @@ public class TrainingAdapter extends CursorAdapter {
     public static class ViewHolder {
         public TextView title;
         public TextView subtitle;
+    }
+
+    @Override
+    protected View buildExtraCard(int pos, View convertView, ViewGroup parent) {
+        View view;
+        if (convertView == null) {
+            view = mInflater.inflate(R.layout.mybows_card, parent, false);
+        } else {
+            view = convertView;
+        }
+        return view;
     }
 }

@@ -5,9 +5,56 @@
     <string name="prev">Previous</string>
     <string name="next">Next</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_training">TrainingActivity</string>
-    <string name="title_activity_runde">RundeActivity</string>
     <string name="title_activity_new_round">New Round</string>
+    <string name="title_activity_edit_bow">Add bow</string>
 
+    <!-- EditBowActivity -->
+    <string name="name">Name</string>
+    <string name="bow_typ">Bow typ</string>
+    <string name="recurve_bow">Recurve bow</string>
+    <string name="compound_bow">Compound bow</string>
+    <string name="bare_bow">Barebow</string>
+    <string name="long_bow">Longbow</string>
+    <string name="properties">Properties</string>
+    <string name="brand">Brand</string>
+    <string name="size">Size</string>
+    <string name="description">Description</string>
+    <string name="height">Height</string>
+    <string name="tiller">Tiller</string>
+    <string name="sight_settings">Sight settings</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+
+    <!-- NewRoundActivity -->
+    <string name="outdoor">Outdoor</string>
+    <string name="indoor">Indoor</string>
+    <string name="distance">Distance</string>
+    <string name="three">3</string>
+    <string name="six">6</string>
+    <string name="bow">Bow</string>
+    <string name="arrows_per_passe">Arrows per passe</string>
+    <string name="target_round">Target round</string>
+    <string name="new_round">New round</string>
+
+    <string name="delete">Delete</string>
+    <string name="take_picture">Take a picture</string>
+    <string name="pick_from_gallery">Select a picture from gallery</string>
+    <string name="bow_plural">bows</string>
+    <string name="bow_singular">bow</string>
+    <string name="new_bow">New bow</string>
+    <string name="select_picture">Select a picture</string>
+    <string name="training_plural">trainings</string>
+    <string name="training_singular">training</string>
+    <string name="start">Begin</string>
+    <string name="selected">selected</string>
+    <string name="new_passe">New passe</string>
+    <string name="round">Round</string>
+    <string name="points">Points</string>
+    <string name="passe">Passe</string>
+    <string name="passe_singular">passe</string>
+    <string name="passe_plural">passes</string>
+    <string name="round_plural">rounds</string>
+    <string name="round_singular">round</string>
+    <string name="new_training">New training</string>
 </resources>

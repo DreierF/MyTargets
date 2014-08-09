@@ -25,79 +25,93 @@
             android:paddingTop="@dimen/activity_vertical_margin"
             android:paddingBottom="@dimen/activity_vertical_margin">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Entfernung" />
-
-            <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/distance" />
-
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_weight="1">
                 <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Outdoor"
+                    android:text="@string/outdoor"
                     android:id="@+id/outdoor"
                     android:layout_weight="1" />
 
                 <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Indoor"
+                    android:text="@string/indoor"
                     android:id="@+id/indoor"
                     android:layout_weight="1" />
             </RadioGroup>
 
-            <LinearLayout
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:text="@string/distance"
+                android:layout_marginTop="16dp"
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_weight="1" />
+
+            <Spinner
+                android:id="@+id/distance"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/arrows_per_passe"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="center_vertical"
+                style="?android:attr/listSeparatorTextViewStyle" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
                 android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_weight="1">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <RadioButton
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Pfeile pro Passe"
-                    android:id="@+id/textView3"
-                    android:layout_gravity="center_vertical" />
+                    android:text="@string/three"
+                    android:id="@+id/ppp3"
+                    android:layout_weight="1" />
 
-            </LinearLayout>
-
-            <NumberPicker
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/ppp"
-                android:layout_gravity="center_vertical" />
+                <RadioButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/six"
+                    android:id="@+id/ppp6"
+                    android:layout_weight="1" />
+            </RadioGroup>
 
             <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Bogen"
-            android:id="@+id/textView4" />
+            android:text="@string/bow"
+            style="?android:attr/listSeparatorTextViewStyle" />
 
             <Spinner
+                android:id="@+id/bow"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/bow" />
+                android:layout_height="wrap_content" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Auflage" />
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:text="@string/target_round"
+                android:layout_marginTop="16dp"
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_weight="1" />
 
             <Spinner
+                android:id="@+id/target"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/target" />
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
         </LinearLayout>
     </ScrollView>
@@ -130,7 +144,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/selectable_item_background"
-            android:text="Abbrechen" />
+            android:text="@string/cancel" />
         <Button
             android:id="@+id/new_round_button"
             style="@android:style/Holo.Light.ButtonBar.AlertDialog"
@@ -138,7 +152,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/selectable_item_background"
-            android:text="Neue Runde" />
+            android:text="@string/new_round" />
     </LinearLayout>
 
 </RelativeLayout>

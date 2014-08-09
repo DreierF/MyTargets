@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.dreier.mytargets" >
 
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -13,8 +18,8 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,7 +28,6 @@
         </activity>
         <activity
             android:name=".TrainingActivity"
-            android:label="@string/title_activity_training"
             android:launchMode="singleTop"
             android:parentActivityName=".MainActivity" >
             <meta-data
@@ -32,7 +36,6 @@
         </activity>
         <activity
             android:name=".RundeActivity"
-            android:label="@string/title_activity_runde"
             android:launchMode="singleTop"
             android:parentActivityName=".TrainingActivity" >
             <meta-data
@@ -55,6 +58,23 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.dreier.mytargets.TrainingActivity" />
+        </activity>
+        <activity
+            android:name=".BowActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.dreier.mytargets.MainActivity" />
+        </activity>
+        <activity
+            android:name=".EditBowActivity"
+            android:label="@string/title_activity_edit_bow"
+            android:theme="@style/Theme.TranslucentActionBar.ActionBar.Overlay"
+            android:parentActivityName=".BowActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.dreier.mytargets.BowActivity" />
         </activity>
     </application>
 

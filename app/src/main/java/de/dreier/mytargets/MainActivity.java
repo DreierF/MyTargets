@@ -15,56 +15,35 @@ import android.widget.ListView;
 /**
  * Shows an overview over all tring days
  * */
-public class MainActivity extends ListActivity implements ListView.OnItemClickListener {
-
-    private ListView mListView;
+public class MainActivity extends NowListActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mListView = getListView();
-        mListView.setDividerHeight(0);
-        mListView.setOnItemClickListener(this);
-        mListView.setBackgroundColor(0xFFEEEEEE);
-        mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        mListView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+    protected void init(Intent intent, Bundle savedInstanceState) {
+        itemSingular = getString(R.string.training_singular);
+        itemPlural = getString(R.string.training_plural);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        TrainingAdapter adapter = new TrainingAdapter(this);
+        adapter = new TrainingAdapter(this);
         setListAdapter(adapter);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            Intent i = new Intent(this,SettingsActivity.class);
-            startActivity(i);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    protected void onDelete(long[] ids) {
+        db.deleteTrainings(ids);
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+    public void onItemClick(Intent i, int pos, long id) {
         if(pos==0) {
-            Intent i = new Intent(this,NewRoundActivity.class);
-            startActivity(i);
-            overridePendingTransition(R.anim.right_in, R.anim.left_out);
+            i.setClass(this,NewRoundActivity.class);
+        } else if(pos==1) {
+            i.setClass(this,BowActivity.class);
         } else {
-            Intent i = new Intent(this,TrainingActivity.class);
+            i.setClass(this,TrainingActivity.class);
             i.putExtra(TrainingActivity.TRAINING_ID,getListAdapter().getItemId(pos));
-            startActivity(i);
-            overridePendingTransition(R.anim.right_in, R.anim.left_out);
         }
     }
 }

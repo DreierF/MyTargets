@@ -21,6 +21,7 @@ public class PassenView extends View {
     private int[] points = {-2,-2,-2};
     private float placePerShoot;
     private int targetRound;
+    private float density;
 
     public PassenView(Context context) {
         super(context);
@@ -38,15 +39,16 @@ public class PassenView extends View {
     }
 
     private void init(AttributeSet attrs, int defStyle) {
+        density = getResources().getDisplayMetrics().density;
         mTextPaint = new TextPaint();
         mTextPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setTextAlign(Paint.Align.LEFT);
         mTextPaint.setColor(Color.BLACK);
-        mTextPaint.setTextSize(60);
+        mTextPaint.setTextSize(22*density);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
         circleColorP = new Paint();
         circleColorP.setAntiAlias(true);
-        circleColorP.setStrokeWidth(6);
+        circleColorP.setStrokeWidth(2*density);
     }
 
     public void setPoints(int[] p, int tar) {
@@ -76,12 +78,12 @@ public class PassenView extends View {
         }
         circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
         circleColorP.setColor(TargetView.rectColor[colorInd]);
-        can.drawCircle(x, y, 50, circleColorP);
+        can.drawCircle(x, y, 17*density, circleColorP);
         circleColorP.setStyle(Paint.Style.STROKE);
         circleColorP.setColor(TargetView.circleStrokeColor[colorInd]);
-        can.drawCircle(x, y, 50, circleColorP);
+        can.drawCircle(x, y, 17*density, circleColorP);
         mTextPaint.setColor(colorInd==0||colorInd==4 ? Color.BLACK : Color.WHITE);
-        can.drawText(points==0?"M":"" + points, x, y + 20, mTextPaint);
+        can.drawText(points==0?"M":(zone==0 && targetRound<4?"X":"" + points), x, y + 7*density, mTextPaint);
     }
 
     @Override
@@ -94,8 +96,8 @@ public class PassenView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int desiredWidth = 200*points.length;
-        int desiredHeight = 106;
+        int desiredWidth = (int)(60*points.length*density);
+        int desiredHeight = (int)(40*density);
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);

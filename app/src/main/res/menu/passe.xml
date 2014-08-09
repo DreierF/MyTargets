@@ -2,12 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".SetTargetsActivity" >
     <item android:id="@+id/action_new_runde"
-        android:title="Neue Runde"
+        android:title="@string/new_round"
         android:icon="@drawable/ic_action_new"
-        android:showAsAction="always" />
-    <item android:id="@+id/action_settings"
+        android:showAsAction="always|withText" />
+    <!--<item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:icon="@drawable/ic_action_settings"
         android:orderInCategory="100"
-        android:showAsAction="always" />
+        android:showAsAction="always" />-->
 </menu>

@@ -9,52 +9,24 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 /**
- * Shows all rounds of one training
+ * Shows all rounds of one settings_only
  */
-public class RundenAdapter extends CursorAdapter {
+public class RundenAdapter extends NowListAdapter {
 
-    private final LayoutInflater mInflater;
+    private final int unitInd;
+    private final int pppInd;
+    private final int targetInd, idInd;
+    private int distInd, indoorInd;
 
     public RundenAdapter(Context context, long training) {
-        super(context,new TargetOpenHelper(context).getRunden(training),0);
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
-
-    @Override
-    public int getCount() {
-        return 1+super.getCount();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return position==0?0:1;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 2;
-    }
-
-    @Override
-    public long getItemId(int pos) {
-        return pos==0?0:super.getItemId(pos-1);
-    }
-
-    @Override
-    public View getView(int pos, View convertView, ViewGroup parent) {
-        View view;
-        if(pos==0) {
-            if (convertView == null) {
-                view = mInflater.inflate(R.layout.new_card, parent, false);
-            } else {
-                view = convertView;
-            }
-            TextView text = (TextView) view.findViewById(R.id.newText);
-            text.setText("Neues Runde");
-        } else {
-            view = super.getView(pos-1,convertView,parent);
-        }
-        return view;
+        super(context,new TargetOpenHelper(context).getRunden(training));
+        idInd = getCursor().getColumnIndex(TargetOpenHelper.RUNDE_ID);
+        distInd = getCursor().getColumnIndex(TargetOpenHelper.RUNDE_DISTANCE);
+        unitInd = getCursor().getColumnIndex(TargetOpenHelper.RUNDE_UNIT);
+        indoorInd = getCursor().getColumnIndex(TargetOpenHelper.RUNDE_INDOOR);
+        pppInd = getCursor().getColumnIndex(TargetOpenHelper.RUNDE_PPP);
+        targetInd = getCursor().getColumnIndex(TargetOpenHelper.RUNDE_TARGET);
+        mNewText = context.getString(R.string.new_round);
     }
 
     @Override
@@ -63,19 +35,28 @@ public class RundenAdapter extends CursorAdapter {
         View v = mInflater.inflate(R.layout.round_card, viewGroup, false);
         holder.title = (TextView) v.findViewById(R.id.round);
         holder.subtitle = (TextView) v.findViewById(R.id.dist);
+        holder.ges = (TextView) v.findViewById(R.id.gesRound);
         v.setTag(holder);
         return v;
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        int tar = cursor.getInt(targetInd);
+        long round = cursor.getLong(idInd);
+        int[] target = TargetView.target_points[tar];
+        int reached = db.getRoundPoints(round,tar);
+        int maxP = cursor.getInt(pppInd)*target[0]*db.getPasses(round).getCount();
+
         ViewHolder holder = (ViewHolder) view.getTag();
-        holder.title.setText("Runde "+(1+cursor.getPosition()));
-        holder.subtitle.setText("30m");
+        holder.title.setText(context.getString(R.string.round)+" "+(1+cursor.getPosition()));
+        holder.subtitle.setText(cursor.getInt(distInd)+cursor.getString(unitInd)+" - "+context.getString(cursor.getInt(indoorInd)==0?R.string.outdoor:R.string.indoor));
+        holder.ges.setText(reached+"/"+maxP);
     }
 
     public static class ViewHolder {
         public TextView title;
         public TextView subtitle;
+        public TextView ges;
     }
 }

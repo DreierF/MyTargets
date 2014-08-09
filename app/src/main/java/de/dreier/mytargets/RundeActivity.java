@@ -16,85 +16,51 @@ import android.widget.ListView;
 /**
  * Shows all passes of one round
  */
-public class RundeActivity extends ListActivity implements ListView.OnItemClickListener {
+public class RundeActivity extends NowListActivity {
 
-    public static final String RUNDE_ID = "runde_id";
-    public static final String TRAINING_ID = "training_id";
-    private long mRound;
-    private PasseAdapter adapter;
-    private ListView mListView;
     private long mTraining;
+    private long mRound;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Intent i = getIntent();
-        if(i!=null && i.hasExtra(RUNDE_ID)) {
-            mRound = i.getLongExtra(RUNDE_ID,-1);
-            mTraining = i.getLongExtra(TRAINING_ID, -1);
+    protected void init(Intent intent, Bundle savedInstanceState) {
+        itemSingular = getString(R.string.passe_singular);
+        itemPlural = getString(R.string.passe_plural);
+        if(intent!=null && intent.hasExtra(RUNDE_ID)) {
+            mRound = intent.getLongExtra(RUNDE_ID,-1);
+            mTraining = intent.getLongExtra(TRAINING_ID, -1);
         }
 
-        TargetOpenHelper db = new TargetOpenHelper(this);
         if(db.getPasses(mRound).getCount()==0) {
-            i = new Intent(this,PasseActivity.class);
-            i.putExtra(PasseActivity.RUNDE_ID,mRound);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(i);
+            intent = new Intent(this,PasseActivity.class);
+            intent.putExtra(PasseActivity.RUNDE_ID,mRound);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
         }
 
-        setTitle("Runde "+db.getRoundInd(mTraining,mRound));
-
-        mListView = getListView();
-        mListView.setDividerHeight(0);
-        mListView.setOnItemClickListener(this);
-        mListView.setBackgroundColor(0xFFEEEEEE);
-        mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        mListView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        setTitle(getString(R.string.round)+" "+db.getRoundInd(mTraining,mRound));
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.runde, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent i;
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                i = new Intent(this,SettingsActivity.class);
-                startActivity(i);
-                return true;
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                overridePendingTransition(R.anim.right_out, R.anim.left_in);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+    protected void onDelete(long[] ids) {
+        db.deletePasses(ids);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        adapter = new PasseAdapter(this,mRound);
+        adapter = new PasseAdapter(this,mTraining,mRound);
         setListAdapter(adapter);
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+    public void onItemClick(Intent i, int pos, long id) {
         if(pos==0) {
-            Intent i = new Intent(this,PasseActivity.class);
+            i.setClass(this,PasseActivity.class);
             i.putExtra(PasseActivity.RUNDE_ID,mRound);
-            startActivity(i);
-            overridePendingTransition(R.anim.right_in, R.anim.left_out);
         } else {
-            Intent i = new Intent(this,PasseActivity.class);
+            i.setClass(this,PasseActivity.class);
             i.putExtra(PasseActivity.RUNDE_ID,mRound);
             i.putExtra(PasseActivity.PASSE_IND,pos);
-            startActivity(i);
-            overridePendingTransition(R.anim.right_in, R.anim.left_out);
         }
     }
 }
