@@ -1,0 +1,13 @@
+int attr floatLabelColor 0x7f010000
+int id edit_text 0x7f030000
+int id float_label 0x7f030001
+int layout float_label 0x7f020000
+int string app_name 0x7f040000
+int style AppTheme 0x7f050000
+int[] styleable FloatLabel { 0x0101009a, 0x010100f2, 0x0101014f, 0x01010150, 0x01010220, 0x7f010000 }
+int styleable FloatLabel_android_hint 3
+int styleable FloatLabel_android_inputType 4
+int styleable FloatLabel_android_layout 1
+int styleable FloatLabel_android_text 2
+int styleable FloatLabel_android_textColorHint 0
+int styleable FloatLabel_floatLabelColor 5

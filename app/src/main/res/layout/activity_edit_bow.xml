@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:float="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -53,12 +52,12 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin">
 
-                <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                <com.iangclifton.android.floatlabel.FloatLabel
                     android:id="@+id/bow_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    float:fletFloatingHint="@string/name" >
-                    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+                    android:inputType="textNoSuggestions"
+                    android:hint="@string/name"/>
 
                 <TextView
                     style="?android:attr/listSeparatorTextViewStyle"
@@ -119,18 +118,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    <com.iangclifton.android.floatlabel.FloatLabel
                         android:id="@+id/marke"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        float:fletFloatingHint="@string/brand"
+                        android:hint="@string/brand"
+                        android:inputType="textNoSuggestions"
                         android:layout_weight="1" />
 
-                    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    <com.iangclifton.android.floatlabel.FloatLabel
                         android:id="@+id/size"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        float:fletFloatingHint="@string/size"
+                        android:hint="@string/size"
+                        android:inputType="textNoSuggestions"
                         android:layout_weight="1" />
 
 
@@ -141,26 +142,28 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    <com.iangclifton.android.floatlabel.FloatLabel
                         android:id="@+id/height"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        float:fletFloatingHint="@string/height"
+                        android:hint="@string/height"
+                        android:inputType="textNoSuggestions"
                         android:layout_weight="1" />
 
-                    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    <com.iangclifton.android.floatlabel.FloatLabel
                         android:id="@+id/tiller"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        float:fletFloatingHint="@string/tiller"
+                        android:hint="@string/tiller"
+                        android:inputType="textNoSuggestions"
                         android:layout_weight="1" />
                 </LinearLayout>
 
-                <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                <com.iangclifton.android.floatlabel.FloatLabel
                     android:id="@+id/desc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    float:fletFloatingHint="@string/description" />
+                    android:hint="@string/description" />
 
                 <TextView
                     style="?android:attr/listSeparatorTextViewStyle"
@@ -170,131 +173,75 @@
                     android:layout_weight="1"
                     android:text="@string/sight_settings" />
 
-                <TableLayout
+                <LinearLayout
+                    android:id="@+id/sight_settings"
+                    android:orientation="vertical"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
-
-                    <TableRow
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="10m"
-                            android:paddingRight="10dp" />
-
-                        <EditText
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="numberDecimal"
-                            android:ems="10"
-                            android:id="@+id/editText" />
-
-                        <ImageButton
-                            android:id="@+id/remove_visier10"
-                            android:background="?android:attr/selectableItemBackground"
-                            android:textColor="@android:color/secondary_text_dark"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:src="@drawable/ic_action_cancel" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="20m"
-                            android:paddingRight="10dp" />
-
-                        <EditText
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="numberDecimal"
-                            android:ems="10"
-                            android:id="@+id/editText20" />
-
-                        <ImageButton
-                            android:id="@+id/remove_visier"
-                            android:background="?android:attr/selectableItemBackground"
-                            android:textColor="@android:color/secondary_text_dark"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_action_cancel" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent">
-
-                        <Button
-                            android:id="@+id/add_visier_button"
-                            android:background="?android:attr/selectableItemBackground"
-                            android:textColor="@android:color/secondary_text_dark"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/add"
-                            android:gravity="left"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:paddingLeft="15dp"
-                            android:layout_weight="1"/>
-                        <!--
-                            android:background="@drawable/selectable_item_background"-->
-                        <!--style="@android:style/Widget.Holo.Button.Borderless"-->
-
-                    </TableRow>
-                </TableLayout>
+                    android:layout_height="wrap_content">
 
 
-            </LinearLayout>
-        </LinearLayout>
+                </LinearLayout>
+
+
+                <Button
+                    android:id="@+id/add_visier_button"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:text="@string/add"
+                    android:gravity="left"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:layout_marginBottom="10dp" />
+                <!--
+                    android:background="@drawable/selectable_item_background"-->
+                <!--style="@android:style/Widget.Holo.Button.Borderless"-->
+
+
+    </LinearLayout>
+</LinearLayout>
     </de.dreier.mytargets.NotifyingScrollView>
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@+id/but_bar"
-        android:layout_alignLeft="@+id/but_bar"
-        android:layout_alignStart="@+id/but_bar"
-        android:background="?android:attr/listDivider" />
+<View
+android:id="@+id/divider"
+android:layout_width="match_parent"
+android:layout_height="1dp"
+android:layout_above="@+id/but_bar"
+android:layout_alignLeft="@+id/but_bar"
+android:layout_alignStart="@+id/but_bar"
+android:background="?android:attr/listDivider" />
 
-    <LinearLayout
-        android:id="@+id/but_bar"
-        style="@android:style/Holo.Light.ButtonBar.AlertDialog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:orientation="horizontal">
+<LinearLayout
+android:id="@+id/but_bar"
+style="@android:style/Holo.Light.ButtonBar.AlertDialog"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_alignParentBottom="true"
+android:layout_alignParentEnd="true"
+android:layout_alignParentLeft="true"
+android:layout_alignParentRight="true"
+android:layout_alignParentStart="true"
+android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/cancel_button"
-            style="@android:style/Holo.Light.ButtonBar.AlertDialog"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/selectable_item_background"
-            android:text="@string/cancel" />
+<Button
+    android:id="@+id/cancel_button"
+    style="@android:style/Holo.Light.ButtonBar.AlertDialog"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:background="@drawable/selectable_item_background"
+    android:text="@string/cancel" />
 
-        <Button
-            android:id="@+id/new_bow_button"
-            style="@android:style/Holo.Light.ButtonBar.AlertDialog"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/selectable_item_background"
-            android:text="@string/save" />
-    </LinearLayout>
+<Button
+    android:id="@+id/new_bow_button"
+    style="@android:style/Holo.Light.ButtonBar.AlertDialog"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:background="@drawable/selectable_item_background"
+    android:text="@string/save" />
+</LinearLayout>
 
-</RelativeLayout>
+    </RelativeLayout>

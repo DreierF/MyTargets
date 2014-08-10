@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FloatLabel">
+        <attr name="android:hint"/>
+        <attr name="android:layout"/>
+        <attr name="android:text"/>
+        <attr name="android:textColorHint"/>
+        <attr name="floatLabelColor" format="color"/>
+        <attr name="android:inputType"/>
+    </declare-styleable>
+</resources>

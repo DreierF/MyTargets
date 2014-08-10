@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- From: file:/C:/Users/Florian/Documents/Repositories/MyTargets/libraries/FloatLabel/res/values/attrs.xml -->
+    <eat-comment />
+
+    <declare-styleable name="FloatLabel">
+        <attr name="android:hint" />
+        <attr name="android:layout" />
+        <attr name="android:text" />
+        <attr name="android:textColorHint" />
+        <attr name="floatLabelColor" format="color" />
+        <attr name="android:inputType" />
+    </declare-styleable>
+    <!-- From: file:/C:/Users/Florian/Documents/Repositories/MyTargets/libraries/FloatLabel/res/values/ids.xml -->
+    <eat-comment />
+
+    <item name="edit_text" type="id"/>
+    <item name="float_label" type="id"/>
+    <!-- From: file:/C:/Users/Florian/Documents/Repositories/MyTargets/libraries/FloatLabel/res/values/strings.xml -->
+    <eat-comment />
+
+    <string name="app_name">Float Label</string>
+    <!-- From: file:/C:/Users/Florian/Documents/Repositories/MyTargets/libraries/FloatLabel/res/values/styles.xml -->
+    <eat-comment />
+
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar"></style>
+
+</resources>

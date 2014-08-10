@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/newText"
+            android:text="@string/my_bows"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:textColor="@color/card_action"/>

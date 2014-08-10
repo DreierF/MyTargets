@@ -44,16 +44,23 @@ public class PasseAdapter extends NowListAdapter {
         int reached = db.getRoundPoints(mRound,roundInfo.target);
         int maxP = roundInfo.ppp*target[0]*db.getPasses(mRound).getCount();
 
-        TextView round = (TextView) view.findViewById(R.id.round);
-        TextView dist = (TextView) view.findViewById(R.id.dist);
-        TextView points = (TextView) view.findViewById(R.id.gesRound);
-        TextView tar = (TextView) view.findViewById(R.id.target);
+        TextView round = (TextView) view.findViewById(R.id.detail_round);
+        TextView dist = (TextView) view.findViewById(R.id.detail_dist);
+        TextView points = (TextView) view.findViewById(R.id.detail_gesRound);
+        TextView tar = (TextView) view.findViewById(R.id.detail_target);
+        TextView bow = (TextView) view.findViewById(R.id.detail_bow);
         round.setText(mContext.getString(R.string.round)+" "+db.getRoundInd(mTraining,mRound));
         dist.setText(Html.fromHtml(mContext.getString(R.string.distance)+": <font color=#669900><b>"+
                 roundInfo.distance+" - "+
                 mContext.getString(roundInfo.indoor?R.string.indoor:R.string.outdoor)+"</b></font>"));
         points.setText(Html.fromHtml(mContext.getString(R.string.points)+": <font color=#669900><b>"+reached+"/"+maxP+"</b></font>"));
         tar.setText(Html.fromHtml(mContext.getString(R.string.target_round)+": <font color=#669900><b>"+ TargetItemAdapter.targets[roundInfo.target]+"</b></font>"));
+        TargetOpenHelper.Bow binfo = db.getBow(roundInfo.bow, true);
+        if(binfo!=null) {
+            bow.setText(Html.fromHtml(mContext.getString(R.string.bow) + ": <font color=#669900><b>" + binfo.name + "</b></font>"));
+        } else {
+            bow.setVisibility(View.GONE);
+        }
         return view;
     }
 

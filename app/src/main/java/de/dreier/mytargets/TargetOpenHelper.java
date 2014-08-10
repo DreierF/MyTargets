@@ -6,12 +6,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class TargetOpenHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "database";
-    private static final int DATABASE_VERSION = 4;
+    public static final String DATABASE_NAME = "database";
+    private static final int DATABASE_VERSION = 1;
 
     private static final String TABLE_TRAINING = "TRAINING";
     public static final String TRAINING_ID = "_id";
@@ -40,37 +43,50 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
     private static final String TABLE_BOW = "BOW";
     public static final String BOW_ID = "_id";
     public static final String BOW_NAME = "name";
-    public static final String BOW_MARKE = "marke";
+    public static final String BOW_BRAND = "brand";
     public static final String BOW_TYPE = "type";
     public static final String BOW_SIZE = "size";
     public static final String BOW_HEIGHT = "hight";
     public static final String BOW_TILLER = "tiller";
     public static final String BOW_DESCRIPTION = "description";
+    public static final String BOW_THUMBNAIL = "thumbnail";
     public static final String BOW_IMAGE = "image";
+
+    private static final String TABLE_BOW_IMAGE = "BOW_IMAGE";
+    public static final String BOW_IMAGE_ID = "_id";
+    public static final String BOW_IMAGE_DATA = "data";
 
 
     private static final String TABLE_VISIER = "VISIER";
     public static final String VISIER_ID = "_id";
     public static final String VISIER_BOW = "bow";
     public static final String VISIER_DISTANCE = "distance";
+    public static final String VISIER_SETTING = "setting";
 
     private static final String CREATE_TABLE_BOW =
             "CREATE TABLE "+ TABLE_BOW +" ( "+
                     BOW_ID +" INTEGER PRIMARY KEY AUTOINCREMENT,"+
                     BOW_NAME +" TEXT,"+
-                    BOW_MARKE +" TEXT,"+
+                    BOW_BRAND +" TEXT,"+
                     BOW_TYPE +" INTEGER,"+
                     BOW_SIZE +" INTEGER,"+
                     BOW_HEIGHT +" TEXT,"+
                     BOW_TILLER +" TEXT,"+
                     BOW_DESCRIPTION +" TEXT,"+
-                    BOW_IMAGE +" BLOB);";
+                    BOW_THUMBNAIL +" BLOB,"+
+                    BOW_IMAGE+" INTEGER REFERENCES "+TABLE_BOW_IMAGE+" ON DELETE SET NULL);";
+
+    private static final String CREATE_TABLE_BOW_IMAGE =
+            "CREATE TABLE "+ TABLE_BOW_IMAGE +" ( "+
+                    BOW_IMAGE_ID +" INTEGER PRIMARY KEY AUTOINCREMENT,"+
+                    BOW_IMAGE_DATA +" BLOB);";
 
     private static final String CREATE_TABLE_VISIER =
             "CREATE TABLE "+TABLE_VISIER+" ( "+
                     VISIER_ID+" INTEGER PRIMARY KEY AUTOINCREMENT,"+
                     VISIER_BOW +" REFERENCES "+ TABLE_BOW +" ON DELETE CASCADE,"+
-                    VISIER_DISTANCE+" INTEGER);";
+                    VISIER_DISTANCE+" INTEGER,"+
+                    VISIER_SETTING+" TEXT);";
 
     private static final String CREATE_TABLE_TRAINING =
             "CREATE TABLE "+TABLE_TRAINING+" ( "+
@@ -107,6 +123,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_BOW);
+        db.execSQL(CREATE_TABLE_BOW_IMAGE);
         db.execSQL(CREATE_TABLE_VISIER);
         db.execSQL(CREATE_TABLE_TRAINING);
         db.execSQL(CREATE_TABLE_ROUND);
@@ -121,33 +138,31 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_PASSE);
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_SHOOT);
         db.execSQL("DROP TABLE IF EXISTS "+ TABLE_BOW);
+        db.execSQL("DROP TABLE IF EXISTS "+ TABLE_BOW_IMAGE);
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_VISIER);
         onCreate(db);
     }
 
     public Cursor getTrainings() {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor res = db.query(TABLE_TRAINING, null, null, null, null, null, TRAINING_DATE+" ASC");
-        return res;
+        return db.query(TABLE_TRAINING, null, null, null, null, null, TRAINING_DATE+" ASC");
     }
 
     public Cursor getRunden(long training) {
         SQLiteDatabase db = getReadableDatabase();
         String[] args = {""+training};
-        Cursor res = db.query(TABLE_ROUND,null,RUNDE_TRAINING+"=?",args,null,null,RUNDE_ID+" ASC");
-        return res;
+        return db.query(TABLE_ROUND,null,RUNDE_TRAINING+"=?",args,null,null,RUNDE_ID+" ASC");
     }
 
     public Cursor getPasses(long round) {
         SQLiteDatabase db = getReadableDatabase();
         String[] args = {""+round};
-        Cursor res = db.query(TABLE_PASSE,null, PASSE_ROUND +"=?",args,null,null,PASSE_ID+" ASC");
-        return res;
+        return db.query(TABLE_PASSE,null, PASSE_ROUND +"=?",args,null,null,PASSE_ID+" ASC");
     }
 
     public Cursor getBows() {
         SQLiteDatabase db = getReadableDatabase();
-        return db.query(TABLE_BOW,null,null,null,null,null, BOW_ID +" ASC");
+        return db.query(TABLE_BOW,null,null,null,null,null, BOW_ID+" ASC");
     }
 
     public long addPasseToRound(long round, int[] points) {
@@ -155,10 +170,10 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(PASSE_ROUND, round);
         long insertId = db.insert(TABLE_PASSE, null, values);
-        for(int i=0;i<points.length;i++) {
+        for(int point:points) {
             values = new ContentValues();
             values.put(SHOOT_PASSE, insertId);
-            values.put(SHOOT_ZONE, points[i]);
+            values.put(SHOOT_ZONE, point);
             db.insert(TABLE_SHOOT, null, values);
         }
         db.close();
@@ -257,7 +272,8 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         r.training = res.getLong(1);
         r.target = res.getInt(2);
         r.indoor = res.getInt(3)!=0;
-        r.distance = ""+res.getInt(4)+res.getString(5);
+        r.distance = ""+NewRoundActivity.distanceValues[res.getInt(4)]+res.getString(5);
+        r.distanceInd = res.getInt(4);
         r.bow = res.getInt(6);
         res.close();
         db.close();
@@ -361,17 +377,136 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void updateBow(long bowId, String name, int bowType, String marke, String size, String height, String tiller, String desc, Bitmap img) {
+    public long updateBow(long bowId, long imageId, String name, int bowType, String marke, String size, String height, String tiller, String desc, Bitmap thumb, Bitmap img) {
+        SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
+        byte[] imageData = getBitmapAsByteArray(img);
+        values.put(BOW_IMAGE_DATA,imageData);
+        if(imageId==-1) {
+            imageId = db.insert(TABLE_BOW_IMAGE,null,values);
+        } else {
+            String[] args = {"" + imageId};
+            db.update(TABLE_BOW_IMAGE,values,BOW_IMAGE_ID+"=?",args);
+        }
+        values.clear();
         values.put(BOW_NAME,name);
         values.put(BOW_TYPE,bowType);
-        values.put(BOW_MARKE,marke);
+        values.put(BOW_BRAND,marke);
         values.put(BOW_SIZE,size);
         values.put(BOW_HEIGHT,height);
         values.put(BOW_TILLER,tiller);
         values.put(BOW_DESCRIPTION,desc);
-        //values.put(BOW_IMAGE,img);
-        //TODO
+        imageData = getBitmapAsByteArray(thumb);
+        values.put(BOW_THUMBNAIL,imageData);
+        values.put(BOW_IMAGE,imageId);
+        if(bowId==-1) {
+            bowId = db.insert(TABLE_BOW,null,values);
+        } else {
+            String[] args = {"" + bowId};
+            db.update(TABLE_BOW,values,BOW_ID+"=?",args);
+        }
+        return bowId;
+    }
+
+    public static byte[] getBitmapAsByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+        return outputStream.toByteArray();
+    }
+
+    public Bow getBow(long bowId, boolean small) {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] cols = {BOW_NAME,BOW_TYPE, BOW_BRAND,BOW_SIZE,BOW_HEIGHT,BOW_TILLER,BOW_DESCRIPTION,BOW_THUMBNAIL,BOW_IMAGE};
+        String[] args = {""+bowId};
+        Cursor res = db.query(TABLE_BOW,cols,BOW_ID+"=?",args,null,null,null);
+        Bow bow = null;
+        if(res.moveToFirst()) {
+            bow = new Bow();
+            bow.id = bowId;
+            bow.name = res.getString(0);
+            bow.type = res.getInt(1);
+            bow.brand = res.getString(2);
+            bow.size = res.getString(3);
+            bow.height = res.getString(4);
+            bow.tiller = res.getString(5);
+            bow.description = res.getString(6);
+            if(small) {
+                byte[] data = res.getBlob(7);
+                bow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
+                res.close();
+            } else {
+                bow.imageId = res.getLong(8);
+                res.close();
+                String[] cols2 = {BOW_IMAGE_DATA};
+                String[] args2 = {""+bow.imageId};
+                res = db.query(TABLE_BOW_IMAGE,cols2,BOW_IMAGE_ID+"=?",args2,null,null,null);
+                res.moveToFirst();
+                byte[] data = res.getBlob(0);
+                bow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
+                res.close();
+            }
+        }
+        return bow;
+    }
+
+    public void updateSightSettings(long bowId, ArrayList<EditBowActivity.SightSetting> sightSettingsList) {
+        SQLiteDatabase db = getWritableDatabase();
+        String[] args = {"" + bowId};
+        db.delete(TABLE_VISIER,VISIER_BOW+"=?",args);
+        for(EditBowActivity.SightSetting set:sightSettingsList) {
+            ContentValues values = new ContentValues();
+            values.put(VISIER_DISTANCE,set.distanceInd);
+            values.put(VISIER_SETTING,set.value);
+            db.insert(TABLE_VISIER,null,values);
+        }
+
+    }
+
+    public String getSetting(long bowId, int distInd) {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] cols = {VISIER_SETTING};
+        String[] args = {""+bowId,""+distInd};
+        Cursor res = db.query(TABLE_VISIER,cols,VISIER_BOW+"=? AND "+VISIER_DISTANCE+"=?",args,null,null,null);
+        String s = "";
+        if(res.moveToFirst()) {
+            s = res.getString(0);
+        }
+        res.close();
+        db.close();
+        return s;
+    }
+
+    public ArrayList<EditBowActivity.SightSetting> getSettings(long bowId) {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] cols = {VISIER_DISTANCE,VISIER_SETTING};
+        String[] args = {""+bowId};
+        Cursor res = db.query(TABLE_VISIER,cols,VISIER_BOW+"=?",args,null,null,null);
+        String s = null;
+        res.moveToFirst();
+        ArrayList<EditBowActivity.SightSetting> list = new ArrayList<EditBowActivity.SightSetting>();
+        for(int i=0;i<res.getCount();i++) {
+            EditBowActivity.SightSetting set = new EditBowActivity.SightSetting();
+            set.distanceInd = res.getInt(0);
+            set.value = res.getString(1);
+            list.add(set);
+            res.moveToNext();
+        }
+        res.close();
+        db.close();
+        return list;
+    }
+
+    public class Bow {
+        long id;
+        long imageId;
+        String name;
+        int type;
+        String brand;
+        String size;
+        String height;
+        String tiller;
+        String description;
+        Bitmap image;
     }
 
     public class Training {
@@ -387,5 +522,6 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         public boolean indoor;
         public String distance;
         public int bow;
+        public int distanceInd;
     }
 }

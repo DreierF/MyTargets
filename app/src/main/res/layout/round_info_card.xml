@@ -11,27 +11,33 @@
         android:background="@drawable/card_selector">
 
         <TextView
-            android:id="@+id/round"
+            android:id="@+id/detail_round"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_gravity="center_vertical" />
 
         <TextView
-            android:id="@+id/dist"
+            android:id="@+id/detail_dist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_gravity="center_vertical" />
 
         <TextView
-            android:id="@+id/gesRound"
+            android:id="@+id/detail_gesRound"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <TextView
-            android:id="@+id/target"
+            android:id="@+id/detail_target"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/detail_bow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall" />

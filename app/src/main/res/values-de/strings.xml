@@ -55,5 +55,9 @@
     <string name="round_plural">Runden</string>
     <string name="round_singular">Runde</string>
     <string name="new_training">Neues Training</string>
+    <string name="my_bows">Meine Bögen</string>
+    <string name="add_bow">Bogen hinzufügen</string>
+    <string name="three">3</string>
+    <string name="six">6</string>
 
 </resources>

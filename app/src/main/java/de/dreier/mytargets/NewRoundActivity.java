@@ -1,7 +1,10 @@
 package de.dreier.mytargets;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,9 +22,10 @@ public class NewRoundActivity extends Activity implements View.OnClickListener {
     private Spinner distance;
     private RadioButton outdoor,indoor;
     private Spinner bow,target;
-    private String[] distances = {"10m","15m", "18m", "20m", "25m", "30m", "40m", "50m", "60m", "70m", "90m"};
-    private int[] distanceValues = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
+    public static String[] distances = {"10m","15m", "18m", "20m", "25m", "30m", "40m", "50m", "60m", "70m", "90m"};
+    public static int[] distanceValues = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
     private RadioButton ppp3;
+    private Button addBow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,25 +38,50 @@ public class NewRoundActivity extends Activity implements View.OnClickListener {
                 mTraining = i.getLongExtra(TRAINING_ID, -1);
             }
         }
+        SharedPreferences prefs = getSharedPreferences(MyBackupAgent.PREFS, 0);
 
         distance = (Spinner) findViewById(R.id.distance);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(distance.getContext(),
                 android.R.layout.simple_spinner_item, distances);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         distance.setAdapter(adapter);
+        distance.setSelection(prefs.getInt("distance",0));
+
         outdoor = (RadioButton) findViewById(R.id.outdoor);
-        outdoor.setChecked(true);
         indoor = (RadioButton) findViewById(R.id.indoor);
+        if(prefs.getBoolean("indoor",false)) {
+            indoor.setChecked(true);
+        } else {
+            outdoor.setChecked(true);
+        }
+
         ppp3 = (RadioButton) findViewById(R.id.ppp3);
-        ppp3.setChecked(true);
+        RadioButton ppp6 = (RadioButton) findViewById(R.id.ppp6);
+        if(prefs.getInt("ppp",3)==3) {
+            ppp3.setChecked(true);
+        } else {
+            ppp6.setChecked(true);
+        }
+
         bow = (Spinner) findViewById(R.id.bow);
         bow.setAdapter(new BowItemAdapter(this));
-        target = (Spinner) findViewById(R.id.target);
+        bow.setSelection(prefs.getInt("bow",0));
+
+        target = (Spinner) findViewById(R.id.target_spinner);
         target.setAdapter(new TargetItemAdapter(this));
-        Button cancel = (Button) findViewById(R.id.cancel_button);
+        target.setSelection(prefs.getInt("target",2));
+        addBow = (Button) findViewById(R.id.add_bow);
+        addBow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(NewRoundActivity.this,EditBowActivity.class);
+                startActivity(i);
+            }
+        });
         Button new_round = (Button) findViewById(R.id.new_round_button);
         new_round.setText(getString(mTraining==-1?R.string.start:R.string.new_round));
         new_round.setOnClickListener(this);
+        Button cancel = (Button) findViewById(R.id.cancel_button);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,22 +91,45 @@ public class NewRoundActivity extends Activity implements View.OnClickListener {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        bow.setAdapter(new BowItemAdapter(this));
+        if(bow.getAdapter().getCount()>0) {
+            addBow.setVisibility(View.GONE);
+            bow.setVisibility(View.VISIBLE);
+        } else {
+            addBow.setVisibility(View.VISIBLE);
+            bow.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
     public void onClick(View view) {
         TargetOpenHelper db = new TargetOpenHelper(NewRoundActivity.this);
         if(mTraining==-1) {
             mTraining = db.newTraining();
         }
-        long bow = 0;
-        int dist = distanceValues[distance.getSelectedItemPosition()];
+        long b = bow.getSelectedItemId();
+        int dist = distance.getSelectedItemPosition();
         String unit = "m";
         int p = ppp3.isChecked()?3:6;
         int tar = target.getSelectedItemPosition();
         boolean in = indoor.isChecked();
-        long round = db.newRound(mTraining, dist, unit, in, p, tar, bow);
+        long round = db.newRound(mTraining, dist, unit, in, p, tar, b);
         db.close();
-        Intent i = new Intent(this,RundeActivity.class);
-        i.putExtra(RundeActivity.RUNDE_ID,round);
-        i.putExtra(RundeActivity.TRAINING_ID,mTraining);
+
+        SharedPreferences prefs = getSharedPreferences(MyBackupAgent.PREFS, 0);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("bow",bow.getSelectedItemPosition());
+        editor.putInt("distance",dist);
+        editor.putInt("ppp",p);
+        editor.putInt("target",tar);
+        editor.putBoolean("indoor",in);
+        editor.commit();
+
+        Intent i = new Intent(this,RoundActivity.class);
+        i.putExtra(RoundActivity.ROUND_ID,round);
+        i.putExtra(RoundActivity.TRAINING_ID,mTraining);
         startActivity(i);
         finish();
     }
@@ -91,11 +143,6 @@ public class NewRoundActivity extends Activity implements View.OnClickListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        /*if (id == R.id.action_settings) {
-            Intent i = new Intent(this,SettingsActivity.class);
-            startActivity(i);
-            return true;
-        }*/
         return super.onOptionsItemSelected(item);
     }
 }

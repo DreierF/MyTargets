@@ -1,11 +1,7 @@
 package de.dreier.mytargets;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import de.dreier.mytargets.R;
 
 public class BowActivity extends NowListActivity {
 
@@ -33,7 +29,7 @@ public class BowActivity extends NowListActivity {
             i.setClass(this,EditBowActivity.class);
         } else {
             i.setClass(this,EditBowActivity.class);
-            i.putExtra(EditBowActivity.BOGEN_ID,id);
+            i.putExtra(EditBowActivity.BOW_ID,id);
         }
     }
 }

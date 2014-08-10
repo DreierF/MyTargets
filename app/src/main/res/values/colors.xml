@@ -9,6 +9,6 @@
     <color name="card_subtitle">#303030</color>
     <color name="card_action">#4285f4</color>
 
-    <drawable name="ab_background">#ff0000</drawable>
+    <drawable name="actionbar_background">#259b24</drawable>
 
 </resources>

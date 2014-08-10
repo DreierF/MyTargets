@@ -22,7 +22,7 @@ import android.widget.ListView;
 public abstract class NowListActivity extends ListActivity implements ListView.OnItemClickListener {
 
     public static final String TRAINING_ID = "training_id";
-    public static final String RUNDE_ID = "round_id";
+    public static final String ROUND_ID = "round_id";
     protected ListView mListView;
     protected NowListAdapter adapter;
     protected ActionMode mActionMode;
@@ -41,6 +41,7 @@ public abstract class NowListActivity extends ListActivity implements ListView.O
         mListView.setDividerHeight(0);
         mListView.setOnItemClickListener(this);
         mListView.setBackgroundColor(0xFFEEEEEE);
+        //mListView.setBackgroundColor(0xffd0f8ce);
         mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         mListView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -49,8 +50,11 @@ public abstract class NowListActivity extends ListActivity implements ListView.O
 
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-                if(!adapter.isSelectable(position) && checked)
-                    mListView.setItemChecked(position,false);
+                if(!adapter.isSelectable(position)) {
+                    if(checked)
+                        mListView.setItemChecked(position, false);
+                    return;
+                }
                 count+=checked?1:-1;
 
                 if(count==1)
@@ -81,7 +85,9 @@ public abstract class NowListActivity extends ListActivity implements ListView.O
             }
 
             @Override
-            public void onDestroyActionMode(ActionMode mode) {}
+            public void onDestroyActionMode(ActionMode mode) {
+                count = 0;
+            }
 
             @Override
             public boolean onPrepareActionMode(ActionMode mode, Menu menu) {

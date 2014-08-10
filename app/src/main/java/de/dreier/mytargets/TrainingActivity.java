@@ -2,9 +2,6 @@ package de.dreier.mytargets;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import java.text.DateFormat;
 
@@ -45,16 +42,16 @@ public class TrainingActivity extends NowListActivity {
             i.setClass(this, NewRoundActivity.class);
             i.putExtra(NewRoundActivity.TRAINING_ID, mTraining);
         } else {
-            i.setClass(this, RundeActivity.class);
-            i.putExtra(RundeActivity.RUNDE_ID, getListAdapter().getItemId(pos));
-            i.putExtra(RundeActivity.TRAINING_ID, mTraining);
+            i.setClass(this, RoundActivity.class);
+            i.putExtra(RoundActivity.ROUND_ID, getListAdapter().getItemId(pos));
+            i.putExtra(RoundActivity.TRAINING_ID, mTraining);
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        adapter = new RundenAdapter(this,mTraining);
+        adapter = new RoundsAdapter(this,mTraining);
         setListAdapter(adapter);
     }
 

@@ -1,16 +1,21 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/GreenActionBar</item>
     </style>
 
-    <style name="Widget.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@drawable/ab_background</item>
+    <style name="AppTheme.Overlay">
+        <item name="android:actionBarStyle">@style/GreenActionBar.Transparent</item>
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
-    <style name="Widget.ActionBar.Transparent">
+    <style name="GreenActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/ab_solid_example</item>
+        <item name="android:displayOptions">showTitle</item>
+    </style>
+
+    <style name="GreenActionBar.Transparent">
         <item name="android:background">@android:color/transparent</item>
     </style>
-
 </resources>

@@ -11,7 +11,7 @@ import android.widget.Button;
 
 public class PasseActivity extends Activity implements TargetView.OnTargetSetListener {
 
-    public static final String RUNDE_ID = "round_id";
+    public static final String ROUND_ID = "round_id";
     public static final String PASSE_IND = "passe_ind";
     private TargetView target;
     private Button next, prev;
@@ -28,8 +28,8 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
         db = new TargetOpenHelper(this);
 
         Intent i = getIntent();
-        if(i!=null && i.hasExtra(RUNDE_ID)) {
-            mRound = i.getLongExtra(RUNDE_ID,-1);
+        if(i!=null && i.hasExtra(ROUND_ID)) {
+            mRound = i.getLongExtra(ROUND_ID,-1);
             savedPasses = db.getPasses(mRound).getCount();
             if(i.hasExtra(PASSE_IND)) {
                 curPasse = i.getIntExtra(PASSE_IND, -1);
@@ -48,11 +48,12 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
         target.setTargetRound(r.target);
         target.setPPP(r.ppp);
 
+        setPasse(curPasse);
+
         if(savedInstanceState!=null) {
             target.restoreState(savedInstanceState);
             curPasse = savedInstanceState.getInt("curPasse");
         }
-        setPasse(curPasse);
 
         next.setOnClickListener(new View.OnClickListener() {
             @Override
