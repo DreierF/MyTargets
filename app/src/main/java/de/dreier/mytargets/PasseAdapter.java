@@ -3,6 +3,7 @@ package de.dreier.mytargets;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -57,7 +58,7 @@ public class PasseAdapter extends NowListAdapter {
         tar.setText(Html.fromHtml(mContext.getString(R.string.target_round)+": <font color=#669900><b>"+ TargetItemAdapter.targets[roundInfo.target]+"</b></font>"));
         TargetOpenHelper.Bow binfo = db.getBow(roundInfo.bow, true);
         if(binfo!=null) {
-            bow.setText(Html.fromHtml(mContext.getString(R.string.bow) + ": <font color=#669900><b>" + binfo.name + "</b></font>"));
+            bow.setText(Html.fromHtml(mContext.getString(R.string.bow) + ": <font color=#669900><b>" + TextUtils.htmlEncode(binfo.name) + "</b></font>"));
         } else {
             bow.setVisibility(View.GONE);
         }

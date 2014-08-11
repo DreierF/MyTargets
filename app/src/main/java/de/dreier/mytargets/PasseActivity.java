@@ -32,7 +32,7 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
             mRound = i.getLongExtra(ROUND_ID,-1);
             savedPasses = db.getPasses(mRound).getCount();
             if(i.hasExtra(PASSE_IND)) {
-                curPasse = i.getIntExtra(PASSE_IND, -1);
+                curPasse = i.getIntExtra(PASSE_IND, -1)-1;
             } else {
                 curPasse = savedPasses+1;
             }
@@ -48,11 +48,12 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
         target.setTargetRound(r.target);
         target.setPPP(r.ppp);
 
-        setPasse(curPasse);
-
         if(savedInstanceState!=null) {
             target.restoreState(savedInstanceState);
             curPasse = savedInstanceState.getInt("curPasse");
+            updatePasse();
+        } else {
+            setPasse(curPasse);
         }
 
         next.setOnClickListener(new View.OnClickListener() {
@@ -70,16 +71,20 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
     }
 
     public void setPasse(int passe) {
-        if(passe<=savedPasses) {
-            int[] points = db.getPasse(mRound,passe);
-            if(points!=null)
+        if (passe <= savedPasses) {
+            int[] points = db.getPasse(mRound, passe);
+            if (points != null)
                 target.setZones(points);
             else
                 target.reset();
-        } else {
+        } else if (passe != curPasse) {
             target.reset();
         }
         curPasse = passe;
+        updatePasse();
+    }
+
+    public void updatePasse() {
         setTitle("Passe "+curPasse);
         prev.setEnabled(curPasse > 1);
         next.setEnabled(curPasse<=savedPasses);
@@ -102,11 +107,13 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
             case R.id.action_new_runde:
                 i = new Intent(this,NewRoundActivity.class);
                 i.putExtra(NewRoundActivity.TRAINING_ID,mTraining);
+                i.putExtra(NewRoundActivity.FROM_PASSE,true);
                 startActivity(i);
+                overridePendingTransition(R.anim.left_in, R.anim.right_out);
                 return true;
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
-                overridePendingTransition(R.anim.right_out, R.anim.left_in);
+                overridePendingTransition(R.anim.left_in, R.anim.right_out);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -130,6 +137,6 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
             db.updatePasse(mRound, curPasse, zones);
         }
         db.close();
-        setPasse(curPasse);
+        updatePasse();
     }
 }

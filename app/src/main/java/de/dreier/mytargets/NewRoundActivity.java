@@ -17,6 +17,7 @@ import android.widget.Spinner;
 public class NewRoundActivity extends Activity implements View.OnClickListener {
 
     public static final String TRAINING_ID = "training_id";
+    public static final String FROM_PASSE = "from_passe";
     private long mTraining = -1;
 
     private Spinner distance;
@@ -26,6 +27,7 @@ public class NewRoundActivity extends Activity implements View.OnClickListener {
     public static int[] distanceValues = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
     private RadioButton ppp3;
     private Button addBow;
+    private boolean mCalledFromPasse = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class NewRoundActivity extends Activity implements View.OnClickListener {
             if (i.hasExtra(TRAINING_ID)) {
                 mTraining = i.getLongExtra(TRAINING_ID, -1);
             }
+            mCalledFromPasse = i.hasExtra(FROM_PASSE);
         }
         SharedPreferences prefs = getSharedPreferences(MyBackupAgent.PREFS, 0);
 
@@ -86,6 +89,10 @@ public class NewRoundActivity extends Activity implements View.OnClickListener {
             @Override
             public void onClick(View view) {
                 finish();
+                if(mCalledFromPasse)
+                    overridePendingTransition(R.anim.right_in, R.anim.left_out);
+                else
+                    overridePendingTransition(R.anim.left_in, R.anim.right_out);
             }
         });
     }
@@ -130,8 +137,15 @@ public class NewRoundActivity extends Activity implements View.OnClickListener {
         Intent i = new Intent(this,RoundActivity.class);
         i.putExtra(RoundActivity.ROUND_ID,round);
         i.putExtra(RoundActivity.TRAINING_ID,mTraining);
+        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(i);
+
+        i = new Intent(this,PasseActivity.class);
+        i.putExtra(PasseActivity.ROUND_ID,round);
+        startActivity(i);
+
         finish();
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     @Override
@@ -142,7 +156,7 @@ public class NewRoundActivity extends Activity implements View.OnClickListener {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        //int id = item.getItemId();
         return super.onOptionsItemSelected(item);
     }
 }

@@ -115,7 +115,7 @@ public abstract class NowListActivity extends ListActivity implements ListView.O
                 return true;*/
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
-                overridePendingTransition(R.anim.right_out, R.anim.left_in);
+                overridePendingTransition(R.anim.left_in, R.anim.right_out);
                 return true;
         }
         return super.onOptionsItemSelected(item);

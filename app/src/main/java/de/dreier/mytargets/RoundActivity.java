@@ -24,13 +24,6 @@ public class RoundActivity extends NowListActivity {
             mRound = savedInstanceState.getLong(ROUND_ID,-1);
         }
 
-        if(db.getPasses(mRound).getCount()==0) {
-            intent = new Intent(this,PasseActivity.class);
-            intent.putExtra(PasseActivity.ROUND_ID,mRound);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-        }
-
         setTitle(getString(R.string.round)+" "+db.getRoundInd(mTraining,mRound));
     }
 

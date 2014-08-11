@@ -290,7 +290,9 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         int[] target = TargetView.target_points[tar];
         int sum = 0;
         for(int i=0;i<res.getCount();i++) {
-            sum+=target[res.getInt(0)];
+            int zone = res.getInt(0);
+            if(zone>-1)
+                sum+=target[zone];
             res.moveToNext();
         }
         res.close();
