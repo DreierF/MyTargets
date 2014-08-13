@@ -1,14 +1,17 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+    <style name="AppBaseTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/GreenActionBar</item>
     </style>
 
-    <style name="AppTheme.Overlay">
+    <style name="AppBaseTheme.Overlay">
         <item name="android:actionBarStyle">@style/GreenActionBar.Transparent</item>
         <item name="android:windowActionBarOverlay">true</item>
     </style>
+
+    <style name="AppTheme" parent="AppBaseTheme" />
+    <style name="AppTheme.Overlay" parent="AppBaseTheme.Overlay" />
 
     <style name="GreenActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@drawable/ab_solid_example</item>

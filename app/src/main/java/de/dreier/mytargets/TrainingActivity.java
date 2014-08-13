@@ -37,7 +37,7 @@ public class TrainingActivity extends NowListActivity {
     }
 
     @Override
-    public void onItemClick(Intent i, int pos, long id) {
+    public boolean onItemClick(Intent i, int pos, long id) {
         if(pos==0) {
             i.setClass(this, NewRoundActivity.class);
             i.putExtra(NewRoundActivity.TRAINING_ID, mTraining);
@@ -46,6 +46,7 @@ public class TrainingActivity extends NowListActivity {
             i.putExtra(RoundActivity.ROUND_ID, getListAdapter().getItemId(pos));
             i.putExtra(RoundActivity.TRAINING_ID, mTraining);
         }
+        return true;
     }
 
     @Override

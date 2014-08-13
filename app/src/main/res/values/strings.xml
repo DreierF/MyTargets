@@ -59,4 +59,13 @@
     <string name="new_training">New training</string>
     <string name="my_bows">My bows</string>
     <string name="add_bow">Add bow</string>
+
+    <string name="yellow">yellow</string>
+    <string name="red">red</string>
+    <string name="blue">blue</string>
+    <string name="black">black</string>
+    <string name="white">white</string>
+    <string name="inner">inner</string>
+    <string name="outer">outer</string>
+
 </resources>

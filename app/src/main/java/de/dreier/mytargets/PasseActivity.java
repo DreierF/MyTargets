@@ -1,9 +1,17 @@
 package de.dreier.mytargets;
 
 import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.v4.app.NavUtils;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.RemoteInput;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +21,7 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
 
     public static final String ROUND_ID = "round_id";
     public static final String PASSE_IND = "passe_ind";
+    private static final String EXTRA_VOICE_REPLY = "voice_input";
     private TargetView target;
     private Button next, prev;
     private int curPasse = 1;
@@ -48,6 +57,12 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
         target.setTargetRound(r.target);
         target.setPPP(r.ppp);
 
+        Bundle remoteInput = RemoteInput.getResultsFromIntent(i);
+        if (remoteInput != null) {
+            String voiceInput = remoteInput.getCharSequence(EXTRA_VOICE_REPLY).toString();
+            createPasseFromVoiceInput(voiceInput,r);
+        }
+
         if(savedInstanceState!=null) {
             target.restoreState(savedInstanceState);
             curPasse = savedInstanceState.getInt("curPasse");
@@ -68,6 +83,59 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
                 setPasse(curPasse - 1);
             }
         });
+    }
+
+    private void createPasseFromVoiceInput(String voiceInput, TargetOpenHelper.Round r) {
+        String[] inp = voiceInput.split(" ");
+        int[] passe_zone = new int[r.ppp];
+        int biggestPoints = TargetView.target_points[r.target][0];
+        int cur = 0;
+        int color = -1, zone = -1;
+        for(int i=0;i<inp.length;i++) {
+            try {
+                int points = Integer.parseInt(inp[i]);
+                while(points>biggestPoints) {
+                    int firstPoints;
+                    if(biggestPoints==10) {
+                        firstPoints = Integer.parseInt(inp[i].substring(0, 2));
+                        if (firstPoints != 10) {
+                            firstPoints = Integer.parseInt(inp[i].substring(0, 1));
+                            inp[i] = inp[i].substring(1);
+                        } else {
+                            inp[i] = inp[i].substring(2);
+                        }
+                    } else {
+                        firstPoints = Integer.parseInt(inp[i].substring(0, 1));
+                    }
+                    passe_zone[cur] = firstPoints;
+                    cur++;
+                    points = Integer.parseInt(inp[i]);
+                }
+                passe_zone[cur] = points;
+                cur++;
+            } catch (NumberFormatException e) {
+                String p = inp[i].toLowerCase();
+                if(p==getString(R.string.yellow)) {
+                    color = 0;
+                } else if(p==getString(R.string.blue)) {
+                    color = 1;
+                } else if(p==getString(R.string.red)) {
+                    color = 2;
+                } else if(p==getString(R.string.black)) {
+                    color = 3;
+                } else if(p==getString(R.string.white)) {
+                    color = 4;
+                } else if(p==getString(R.string.inner)) {
+                    zone = 0;
+                } else if(p==getString(R.string.outer)) {
+                    zone = 1;
+                } else if(p=="x") {
+                    passe_zone[cur] = 0;
+                    cur++;
+                }
+                //TODO
+            }
+        }
     }
 
     public void setPasse(int passe) {
@@ -109,7 +177,7 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
                 i.putExtra(NewRoundActivity.TRAINING_ID,mTraining);
                 i.putExtra(NewRoundActivity.FROM_PASSE,true);
                 startActivity(i);
-                overridePendingTransition(R.anim.left_in, R.anim.right_out);
+                overridePendingTransition(R.anim.left_in_complete, R.anim.right_out_half);
                 return true;
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
@@ -138,5 +206,48 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
         }
         db.close();
         updatePasse();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.left_in, R.anim.right_out);
+    }
+
+    public void updateNotification() {
+        int notificationId = 1;
+
+        RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY)
+                .setLabel("Was hast du getroffen?")
+                .setAllowFreeFormInput(false)
+                .build();
+
+        Intent replyIntent = new Intent(this, MainActivity.class);
+        replyIntent.putExtra(ROUND_ID,mRound);
+        PendingIntent replyPendingIntent =
+                PendingIntent.getActivity(this, 0, replyIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Create the reply action and add the remote input
+        NotificationCompat.Action action =
+                new NotificationCompat.Action.Builder(R.drawable.wear_add_passe,
+                        "Passe hinzufügen", replyPendingIntent)
+                        .addRemoteInput(remoteInput)
+                        .build();
+
+        final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+        // This notification will be shown only on watch
+        final NotificationCompat.Builder wearableNotificationBuilder = new NotificationCompat.Builder(this)
+                // .setSmallIcon(R.drawable.ic_launcher)
+               // .setContentTitle(Html.fromHtml(cursor.getString(englishInd)))
+               // .setContentText(Html.fromHtml(cursor.getString(germanInd)))
+                .setOngoing(false)
+                .setOnlyAlertOnce(true)
+                .setGroup("GROUP")
+                .setGroupSummary(false)
+                .addAction(action);
+
+        notificationManager.notify(notificationId, wearableNotificationBuilder.build());
     }
 }

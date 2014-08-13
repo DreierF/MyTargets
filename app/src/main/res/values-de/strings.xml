@@ -60,4 +60,13 @@
     <string name="three">3</string>
     <string name="six">6</string>
 
+
+    <string name="yellow">gelb</string>
+    <string name="red">rot</string>
+    <string name="blue">blau</string>
+    <string name="black">schwarz</string>
+    <string name="white">weiß</string>
+    <string name="inner">innen</string>
+    <string name="outer">außen</string>
+
 </resources>

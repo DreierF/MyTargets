@@ -88,11 +88,7 @@ public class NewRoundActivity extends Activity implements View.OnClickListener {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
-                if(mCalledFromPasse)
-                    overridePendingTransition(R.anim.right_in, R.anim.left_out);
-                else
-                    overridePendingTransition(R.anim.left_in, R.anim.right_out);
+                onBackPressed();
             }
         });
     }
@@ -146,6 +142,15 @@ public class NewRoundActivity extends Activity implements View.OnClickListener {
 
         finish();
         overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        if(mCalledFromPasse)
+            overridePendingTransition(R.anim.right_in_half, R.anim.left_out_complete);
+        else
+            overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
     @Override

@@ -29,6 +29,7 @@ public abstract class NowListActivity extends ListActivity implements ListView.O
     protected String itemSingular;
     protected String itemPlural;
     protected TargetOpenHelper db;
+    protected boolean mEnableBackAnimation = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,10 +125,18 @@ public abstract class NowListActivity extends ListActivity implements ListView.O
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
         Intent i = new Intent();
-        onItemClick(i, pos, id);
-        startActivity(i);
-        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        if(onItemClick(i, pos, id)) {
+            startActivity(i);
+            overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        }
     }
 
-    public abstract void onItemClick(Intent i, int pos, long id);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(mEnableBackAnimation)
+            overridePendingTransition(R.anim.left_in, R.anim.right_out);
+    }
+
+    public abstract boolean onItemClick(Intent i, int pos, long id);
 }

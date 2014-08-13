@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -96,6 +97,8 @@ public class TargetView extends View implements View.OnTouchListener {
     private float mOutToX, mOutToY;
     private int mInZone, mOutZone;
     private int mZoneCount;
+    private int mCurPressed = -1;
+    private Paint grayBackground;
 
     public void reset() {
         mCurSelecting = -1;
@@ -165,6 +168,10 @@ public class TargetView extends View implements View.OnTouchListener {
         rectColorP = new Paint();
         rectColorP.setAntiAlias(true);
 
+        grayBackground = new Paint();
+        grayBackground.setColor(0xFFDDDDDD);
+        grayBackground.setAntiAlias(true);
+
         circleColorP = new Paint();
         circleColorP.setAntiAlias(true);
         circleColorP.setStrokeWidth(2*density);
@@ -214,6 +221,12 @@ public class TargetView extends View implements View.OnTouchListener {
             drawCircle(canvas, midX + radius + 27*density, circleY, curZone);
             if(curZone>-1)
                 canvas.drawLine(midX, circleY, midX + radius + 10*density, circleY, circleColorP);
+        }
+
+        // Draw touch feedback if arrow is pressed
+        if(mCurPressed!=-1) {
+            canvas.drawRect(midX + spacePerResult*mCurPressed+resultX1,midY+radius*1.3f-20*density,
+                    midX + spacePerResult*(mCurPressed+1)+resultX1,midY+radius*1.3f+20*density,grayBackground);
         }
 
         // Draw all points of this passe at the bottom
@@ -373,8 +386,12 @@ public class TargetView extends View implements View.OnTouchListener {
             int arrow = (int)((x-resultX1)/spacePerResult);
             if(arrow<ppp && points_zone[arrow]>=-1 && arrow!=currentArrow) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    mCurPressed = -1;
                     animateSelectCircle(arrow);
+                } else {
+                    mCurPressed = arrow;
                 }
+                invalidate();
                 return true;
             }
         }

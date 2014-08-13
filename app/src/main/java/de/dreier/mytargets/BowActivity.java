@@ -2,6 +2,7 @@ package de.dreier.mytargets;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ListAdapter;
 
 public class BowActivity extends NowListActivity {
 
@@ -24,12 +25,13 @@ public class BowActivity extends NowListActivity {
     }
 
     @Override
-    public void onItemClick(Intent i, int pos, long id) {
+    public boolean onItemClick(Intent i, int pos, long id) {
         if(pos==0) {
             i.setClass(this,EditBowActivity.class);
         } else {
             i.setClass(this,EditBowActivity.class);
             i.putExtra(EditBowActivity.BOW_ID,id);
         }
+        return true;
     }
 }

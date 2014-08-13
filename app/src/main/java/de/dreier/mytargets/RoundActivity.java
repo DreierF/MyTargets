@@ -40,15 +40,18 @@ public class RoundActivity extends NowListActivity {
     }
 
     @Override
-    public void onItemClick(Intent i, int pos, long id) {
+    public boolean onItemClick(Intent i, int pos, long id) {
         if(pos==0) {
-            i.setClass(this,PasseActivity.class);
-            i.putExtra(PasseActivity.ROUND_ID,mRound);
-        } else {
+            i.setClass(this, PasseActivity.class);
+            i.putExtra(PasseActivity.ROUND_ID, mRound);
+        } else if(pos==1) {
+            return false;
+        }else  {
             i.setClass(this,PasseActivity.class);
             i.putExtra(PasseActivity.ROUND_ID,mRound);
             i.putExtra(PasseActivity.PASSE_IND,pos);
         }
+        return true;
     }
 
     @Override

@@ -407,6 +407,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
             String[] args = {"" + bowId};
             db.update(TABLE_BOW,values,BOW_ID+"=?",args);
         }
+        db.close();
         return bowId;
     }
 
@@ -448,6 +449,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
                 res.close();
             }
         }
+        db.close();
         return bow;
     }
 
@@ -461,7 +463,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
             values.put(VISIER_SETTING,set.value);
             db.insert(TABLE_VISIER,null,values);
         }
-
+        db.close();
     }
 
     public String getSetting(long bowId, int distInd) {

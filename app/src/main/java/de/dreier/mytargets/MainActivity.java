@@ -21,6 +21,7 @@ public class MainActivity extends NowListActivity {
     protected void init(Intent intent, Bundle savedInstanceState) {
         itemSingular = getString(R.string.training_singular);
         itemPlural = getString(R.string.training_plural);
+        mEnableBackAnimation = false;
     }
 
     @Override
@@ -36,7 +37,7 @@ public class MainActivity extends NowListActivity {
     }
 
     @Override
-    public void onItemClick(Intent i, int pos, long id) {
+    public boolean onItemClick(Intent i, int pos, long id) {
         if(pos==0) {
             i.setClass(this,NewRoundActivity.class);
         } else if(pos==1) {
@@ -45,5 +46,6 @@ public class MainActivity extends NowListActivity {
             i.setClass(this,TrainingActivity.class);
             i.putExtra(TrainingActivity.TRAINING_ID,getListAdapter().getItemId(pos));
         }
+        return true;
     }
 }
