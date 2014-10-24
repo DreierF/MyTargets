@@ -1,17 +1,10 @@
 package de.dreier.mytargets;
 
 import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.app.RemoteInput;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +26,8 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_targets);
+
+        //updateNotification();
 
         db = new TargetOpenHelper(this);
 
@@ -56,12 +51,12 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
         mTraining = r.training;
         target.setTargetRound(r.target);
         target.setPPP(r.ppp);
-
+/*
         Bundle remoteInput = RemoteInput.getResultsFromIntent(i);
         if (remoteInput != null) {
             String voiceInput = remoteInput.getCharSequence(EXTRA_VOICE_REPLY).toString();
             createPasseFromVoiceInput(voiceInput,r);
-        }
+        }*/
 
         if(savedInstanceState!=null) {
             target.restoreState(savedInstanceState);
@@ -85,8 +80,8 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
         });
     }
 
-    private void createPasseFromVoiceInput(String voiceInput, TargetOpenHelper.Round r) {
-        String[] inp = voiceInput.split(" ");
+    /*private void createPasseFromVoiceInput(String voiceInput, TargetOpenHelper.Round r) {
+        String[] inp = voiceInput.split("( |.)");
         int[] passe_zone = new int[r.ppp];
         int biggestPoints = TargetView.target_points[r.target][0];
         int cur = 0;
@@ -133,10 +128,19 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
                     passe_zone[cur] = 0;
                     cur++;
                 }
-                //TODO
+
+                if(color!=-1 && zone!=-1) {
+                    passe_zone[cur] = 1+color*2+zone;
+                    cur++;
+                    color = -1;
+                    zone = -1;
+                }
             }
         }
-    }
+        if(cur==r.ppp) {
+            OnTargetSet(passe_zone);
+        }
+    }*/
 
     public void setPasse(int passe) {
         if (passe <= savedPasses) {
@@ -188,7 +192,7 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("curPasse",curPasse);
         target.saveState(outState);
@@ -214,40 +218,62 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
         overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
-    public void updateNotification() {
+    /*public void updateNotification() {
         int notificationId = 1;
 
         RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY)
                 .setLabel("Was hast du getroffen?")
-                .setAllowFreeFormInput(false)
                 .build();
 
-        Intent replyIntent = new Intent(this, MainActivity.class);
+        Intent replyIntent = new Intent(this, PasseActivity.class);
         replyIntent.putExtra(ROUND_ID,mRound);
         PendingIntent replyPendingIntent =
-                PendingIntent.getActivity(this, 0, replyIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.getActivity(this, 0, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);//PendingIntent.FLAG_UPDATE_CURRENT
 
+        NotificationCompat.Action action = new NotificationCompat.Action.Builder(
+                R.drawable.wear_action_search, null, replyPendingIntent).build();
+
+
+        /*NotificationCompat.Action action =
+                new NotificationCompat.Action.Builder(R.drawable.ic_action_location_found,
+                        "Passe", replyPendingIntent)
+                        .addRemoteInput(remoteInput)
+                        .build();*
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle("MyTargets")
+                        .setContentText("Neue Passe")
+                        .extend(new NotificationCompat.WearableExtender().addAction(action));
+                                //.setContentAction(0));
+
+
+      /*
         // Create the reply action and add the remote input
         NotificationCompat.Action action =
-                new NotificationCompat.Action.Builder(R.drawable.wear_add_passe,
-                        "Passe hinzufügen", replyPendingIntent)
-                        .addRemoteInput(remoteInput)
+                new NotificationCompat.Action.Builder(R.drawable.wear_action_search,
+                        "Passe", replyPendingIntent)
+                       // .addRemoteInput(remoteInput)
                         .build();
 
-        final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
         // This notification will be shown only on watch
         final NotificationCompat.Builder wearableNotificationBuilder = new NotificationCompat.Builder(this)
-                // .setSmallIcon(R.drawable.ic_launcher)
-               // .setContentTitle(Html.fromHtml(cursor.getString(englishInd)))
-               // .setContentText(Html.fromHtml(cursor.getString(germanInd)))
+                 .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle("MyTargets")
+                .setContentText("Wische nach links")
                 .setOngoing(false)
                 .setOnlyAlertOnce(true)
                 .setGroup("GROUP")
                 .setGroupSummary(false)
-                .addAction(action);
+                .addAction(action);*
 
-        notificationManager.notify(notificationId, wearableNotificationBuilder.build());
-    }
+        // Get an instance of the NotificationManager service
+        NotificationManagerCompat notificationManager =
+                NotificationManagerCompat.from(this);
+
+        // Build the notification and issues it with notification manager.
+        notificationManager.notify(notificationId, notificationBuilder.build());
+    }*/
 }
