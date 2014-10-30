@@ -1,11 +1,11 @@
 package de.dreier.mytargets;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,12 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 /**
  * Shows all rounds of one settings_only day
  */
-public abstract class NowListActivity extends ListActivity implements ListView.OnItemClickListener {
+public abstract class NowListActivity extends ActionBarActivity implements ListView.OnItemClickListener {
 
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
@@ -34,15 +35,15 @@ public abstract class NowListActivity extends ListActivity implements ListView.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_list);
 
         db = new TargetOpenHelper(this);
         init(getIntent(),savedInstanceState);
 
-        mListView = getListView();
+        mListView = (ListView) findViewById(android.R.id.list);
         mListView.setDividerHeight(0);
         mListView.setOnItemClickListener(this);
         mListView.setBackgroundColor(0xFFEEEEEE);
-        //mListView.setBackgroundColor(0xffd0f8ce);
         mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         mListView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -95,6 +96,14 @@ public abstract class NowListActivity extends ListActivity implements ListView.O
                 return false;
             }
         });
+    }
+
+    protected void setListAdapter(NowListAdapter adapter) {
+        mListView.setAdapter(adapter);
+    }
+
+    protected ListAdapter getListAdapter() {
+        return mListView.getAdapter();
     }
 
     protected abstract void init(Intent intent, Bundle savedInstanceState);

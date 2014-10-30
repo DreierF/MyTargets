@@ -1,19 +1,10 @@
 package de.dreier.mytargets;
 
-import android.app.ListActivity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 /**
- * Shows an overview over all tring days
+ * Shows an overview over all trying days
  * */
 public class MainActivity extends NowListActivity {
 

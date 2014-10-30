@@ -2,7 +2,6 @@ package de.dreier.mytargets;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ListAdapter;
 
 public class BowActivity extends NowListActivity {
 

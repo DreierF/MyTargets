@@ -8,10 +8,6 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
-
-/**
- * TODO: document your custom view class.
- */
 public class PassenView extends View {
     private int contentWidth, contentHeight;
 
@@ -83,7 +79,7 @@ public class PassenView extends View {
         circleColorP.setColor(TargetView.circleStrokeColor[colorInd]);
         can.drawCircle(x, y, 17*density, circleColorP);
         mTextPaint.setColor(colorInd==0||colorInd==4 ? Color.BLACK : Color.WHITE);
-        can.drawText(points==0?"M":(zone==0 && targetRound<4?"X":"" + points), x, y + 7*density, mTextPaint);
+        can.drawText(points==0?"M":(zone==0 && targetRound<7?"X":"" + points), x, y + 7*density, mTextPaint);
     }
 
     @Override

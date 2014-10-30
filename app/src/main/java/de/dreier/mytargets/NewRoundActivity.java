@@ -1,11 +1,9 @@
 package de.dreier.mytargets;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +12,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
-public class NewRoundActivity extends Activity implements View.OnClickListener {
+public class NewRoundActivity extends ActionBarActivity implements View.OnClickListener {
 
     public static final String TRAINING_ID = "training_id";
     public static final String FROM_PASSE = "from_passe";
@@ -128,7 +126,7 @@ public class NewRoundActivity extends Activity implements View.OnClickListener {
         editor.putInt("ppp",p);
         editor.putInt("target",tar);
         editor.putBoolean("indoor",in);
-        editor.commit();
+        editor.apply();
 
         Intent i = new Intent(this,RoundActivity.class);
         i.putExtra(RoundActivity.ROUND_ID,round);

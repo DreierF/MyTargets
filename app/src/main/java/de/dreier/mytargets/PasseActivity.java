@@ -1,16 +1,16 @@
 package de.dreier.mytargets;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-public class PasseActivity extends Activity implements TargetView.OnTargetSetListener {
+public class PasseActivity extends ActionBarActivity implements TargetView.OnTargetSetListener {
 
     public static final String ROUND_ID = "round_id";
     public static final String PASSE_IND = "passe_ind";
@@ -78,8 +78,10 @@ public class PasseActivity extends Activity implements TargetView.OnTargetSetLis
                 setPasse(curPasse - 1);
             }
         });
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    // TODO handle "2 times X and 1 times 10" evtl.?
     /*private void createPasseFromVoiceInput(String voiceInput, TargetOpenHelper.Round r) {
         String[] inp = voiceInput.split("( |.)");
         int[] passe_zone = new int[r.ppp];

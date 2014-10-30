@@ -21,6 +21,7 @@
     <string name="compound_bow">Compoundbogen</string>
     <string name="bare_bow">Blankbogen</string>
     <string name="long_bow">Langbogen</string>
+    <string name="horse_bow">Reiterbigen</string>
     <string name="properties">Eigenschaften</string>
     <string name="brand">Marke</string>
     <string name="size">Größe</string>
@@ -68,5 +69,8 @@
     <string name="white">weiß</string>
     <string name="inner">innen</string>
     <string name="outer">außen</string>
+    <string name="yumi">Yumi</string>
+    <string name="share">Teilen</string>
+    <string name="my_share_text">Yeah, schaue dir mal meine Bogenschießergebnisse an. Ich habe:\n%1$d mal X\n%2$d mal 10\n%3$d mal 9\nDas macht insgesamt %4$d von %5$d Ringe.</string>
 
 </resources>

@@ -13,8 +13,9 @@
     <string name="bow_typ">Bow typ</string>
     <string name="recurve_bow">Recurve bow</string>
     <string name="compound_bow">Compound bow</string>
-    <string name="bare_bow">Barebow</string>
+    <string name="bare_bow">Bare bow</string>
     <string name="long_bow">Longbow</string>
+    <string name="horse_bow">Horsebow</string>
     <string name="properties">Properties</string>
     <string name="brand">Brand</string>
     <string name="size">Size</string>
@@ -67,5 +68,8 @@
     <string name="white">white</string>
     <string name="inner">inner</string>
     <string name="outer">outer</string>
+    <string name="yumi">Yumi</string>
+    <string name="share">Share</string>
+    <string name="my_share_text">Yeah, look at my archery score. If got:\n%1$d times X\n%2$d times 10\n%3$d times 9\nThis makes a total of %4$d out of %5$d rings.</string>
 
 </resources>

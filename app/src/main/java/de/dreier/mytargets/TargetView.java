@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -357,7 +356,7 @@ public class TargetView extends View implements View.OnTouchListener {
         circleColorP.setColor(circleStrokeColor[colorInd]);
         can.drawCircle(x, y, 17*density, circleColorP);
         mTextPaint.setColor(colorInd==0||colorInd==4 ? Color.BLACK : Color.WHITE);
-        can.drawText(points==0?"M":(zone==0 && targetRound<4?"X":"" + points), x, y + 7*density, mTextPaint);
+        can.drawText(points==0?"M":(zone==0 && targetRound<7?"X":"" + points), x, y + 7*density, mTextPaint);
     }
 
     @Override

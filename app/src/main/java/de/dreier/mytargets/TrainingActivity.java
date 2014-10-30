@@ -27,8 +27,9 @@ public class TrainingActivity extends NowListActivity {
             finish();
 
         TargetOpenHelper.Training tr = db.getTraining(mTraining);
-        getActionBar().setTitle(tr.title);
-        getActionBar().setSubtitle(DateFormat.getDateInstance().format(tr.date));
+        getSupportActionBar().setTitle(tr.title);
+        getSupportActionBar().setSubtitle(DateFormat.getDateInstance().format(tr.date));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

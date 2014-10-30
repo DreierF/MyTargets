@@ -16,17 +16,17 @@ import android.widget.TextView;
 public class PasseAdapter extends NowListAdapter {
 
     private final int passeIdInd;
-    private final TargetOpenHelper.Round roundInfo;
+    private final TargetOpenHelper.Round mRoundInfo;
     private final long mRound;
     private final long mTraining;
     private final float density;
 
-    public PasseAdapter(Context context, long training, long round) {
-        super(context,new TargetOpenHelper(context).getPasses(round));
-        roundInfo = db.getRound(round);
+    public PasseAdapter(Context context, long training, long round, TargetOpenHelper.Round roundInfo) {
+        super(context, new TargetOpenHelper(context).getPasses(round));
         mExtraCards = 2;
         mNewText = context.getString(R.string.new_passe);
         mRound = round;
+        mRoundInfo = roundInfo;
         mTraining = training;
         passeIdInd = getCursor().getColumnIndex(TargetOpenHelper.PASSE_ID);
         density = context.getResources().getDisplayMetrics().density;
@@ -41,27 +41,33 @@ public class PasseAdapter extends NowListAdapter {
             view = convertView;
         }
 
-        int[] target = TargetView.target_points[roundInfo.target];
-        int reached = db.getRoundPoints(mRound,roundInfo.target);
-        int maxP = roundInfo.ppp*target[0]*db.getPasses(mRound).getCount();
+        int[] target = TargetView.target_points[mRoundInfo.target];
+        int reached = db.getRoundPoints(mRound, mRoundInfo.target);
+        int maxP = mRoundInfo.ppp * target[0] * db.getPasses(mRound).getCount();
 
         TextView round = (TextView) view.findViewById(R.id.detail_round);
-        TextView dist = (TextView) view.findViewById(R.id.detail_dist);
-        TextView points = (TextView) view.findViewById(R.id.detail_gesRound);
-        TextView tar = (TextView) view.findViewById(R.id.detail_target);
-        TextView bow = (TextView) view.findViewById(R.id.detail_bow);
-        round.setText(mContext.getString(R.string.round)+" "+db.getRoundInd(mTraining,mRound));
-        dist.setText(Html.fromHtml(mContext.getString(R.string.distance)+": <font color=#669900><b>"+
-                roundInfo.distance+" - "+
-                mContext.getString(roundInfo.indoor?R.string.indoor:R.string.outdoor)+"</b></font>"));
-        points.setText(Html.fromHtml(mContext.getString(R.string.points)+": <font color=#669900><b>"+reached+"/"+maxP+"</b></font>"));
-        tar.setText(Html.fromHtml(mContext.getString(R.string.target_round)+": <font color=#669900><b>"+ TargetItemAdapter.targets[roundInfo.target]+"</b></font>"));
-        TargetOpenHelper.Bow binfo = db.getBow(roundInfo.bow, true);
-        if(binfo!=null) {
-            bow.setText(Html.fromHtml(mContext.getString(R.string.bow) + ": <font color=#669900><b>" + TextUtils.htmlEncode(binfo.name) + "</b></font>"));
-        } else {
-            bow.setVisibility(View.GONE);
+        TextView info = (TextView) view.findViewById(R.id.detail_round_info);
+        TextView score = (TextView) view.findViewById(R.id.detail_score);
+
+        // Set round info
+        round.setText(mContext.getString(R.string.round) + " " + db.getRoundInd(mTraining, mRound));
+        String infoText = mContext.getString(R.string.distance) + ": <font color=#669900><b>" +
+                mRoundInfo.distance + " - " +
+                mContext.getString(mRoundInfo.indoor ? R.string.indoor : R.string.outdoor) + "</b></font><br>" +
+                mContext.getString(R.string.points) + ": <font color=#669900><b>" + reached + "/" + maxP + "</b></font><br>" +
+                mContext.getString(R.string.target_round) + ": <font color=#669900><b>" + TargetItemAdapter.targets[mRoundInfo.target] + "</b></font>";
+        TargetOpenHelper.Bow binfo = db.getBow(mRoundInfo.bow, true);
+        if (binfo != null) {
+            infoText += "<br>" + mContext.getString(R.string.bow) +
+                    ": <font color=#669900><b>" + TextUtils.htmlEncode(binfo.name) + "</b></font>";
         }
+        info.setText(Html.fromHtml(infoText));
+
+        // Set number of X, 10, 9 shoots
+        infoText = "X: <font color=#669900><b>" + mRoundInfo.scoreCount[0] + "</b></font><br>" +
+                "10: <font color=#669900><b>" + mRoundInfo.scoreCount[1] + "</b></font><br>" +
+                "9: <font color=#669900><b>" + mRoundInfo.scoreCount[2] + "</b></font>";
+        score.setText(Html.fromHtml(infoText));
         return view;
     }
 
@@ -69,7 +75,7 @@ public class PasseAdapter extends NowListAdapter {
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
         ViewHolder holder = new ViewHolder();
         View v = mInflater.inflate(R.layout.passe_card, viewGroup, false);
-        holder.layout = (LinearLayout)v.findViewById(R.id.passe_layout);
+        holder.layout = (LinearLayout) v.findViewById(R.id.passe_layout);
         holder.shots = (PassenView) v.findViewById(R.id.shoots);
         holder.subtitle = (TextView) v.findViewById(R.id.passe);
         v.setTag(holder);
@@ -81,9 +87,9 @@ public class PasseAdapter extends NowListAdapter {
         ViewHolder holder = (ViewHolder) view.getTag();
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) holder.layout.getLayoutParams();
         params.setMargins((int) (8 * density), (int) (cursor.getPosition() == 0 ? 8 * density : 0), (int) (8 * density), (int) (cursor.getPosition() == cursor.getCount() - 1 ? 8 * density : 0));
-        holder.subtitle.setText(context.getString(R.string.passe)+" "+(1+cursor.getPosition()));
+        holder.subtitle.setText(context.getString(R.string.passe) + " " + (1 + cursor.getPosition()));
         int[] points = db.getPasse(cursor.getLong(passeIdInd));
-        holder.shots.setPoints(points,roundInfo.target);
+        holder.shots.setPoints(points, mRoundInfo.target);
     }
 
     public static class ViewHolder {

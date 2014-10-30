@@ -1,12 +1,12 @@
 package de.dreier.mytargets;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,6 +14,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -34,21 +35,23 @@ import android.widget.Spinner;
 import com.iangclifton.android.floatlabel.FloatLabel;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class EditBowActivity extends Activity implements View.OnClickListener {
+public class EditBowActivity extends ActionBarActivity implements View.OnClickListener {
 
     public static final String BOW_ID = "bow_id";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int SELECT_PICTURE = 2;
     private ImageView mImageView;
     private FloatLabel name, brand, size, height, tiller, desc;
-    private RadioButton recurvebow, compoundbow, longbow, blank;
-    private long mBowId = -1, mImageId = -1;
+    private RadioButton recurvebow, compoundbow, longbow, blank, horse, yumi;
+    private long mBowId = -1;
+    private String mImageFile = null;
     private Uri fileUri;
     private Bitmap imageBitmap = null;
     private Drawable mActionBarBackgroundDrawable;
@@ -61,7 +64,7 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_edit_bow);
 
         Intent intent = getIntent();
-        if(intent!=null && intent.hasExtra(BOW_ID)) {
+        if (intent != null && intent.hasExtra(BOW_ID)) {
             mBowId = intent.getLongExtra(BOW_ID, -1);
         }
 
@@ -70,11 +73,12 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
             mActionBarBackgroundDrawable.setCallback(mDrawableCallback);
         }
-        getActionBar().setBackgroundDrawable(mActionBarBackgroundDrawable);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setBackgroundDrawable(mActionBarBackgroundDrawable);
 
         ((NotifyingScrollView) findViewById(R.id.scrollView)).setOnScrollChangedListener(mOnScrollChangedListener);
 
-        mImageView = (ImageView)findViewById(R.id.imageView);
+        mImageView = (ImageView) findViewById(R.id.imageView);
         registerForContextMenu(mImageView);
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,22 +86,24 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
                 mImageView.showContextMenu();
             }
         });
-        name = (FloatLabel)findViewById(R.id.bow_name);
-        recurvebow = (RadioButton)findViewById(R.id.recurve);
-        compoundbow = (RadioButton)findViewById(R.id.compound);
-        longbow = (RadioButton)findViewById(R.id.longbow);
-        blank = (RadioButton)findViewById(R.id.blank);
+        name = (FloatLabel) findViewById(R.id.bow_name);
+        recurvebow = (RadioButton) findViewById(R.id.recurve);
+        compoundbow = (RadioButton) findViewById(R.id.compound);
+        longbow = (RadioButton) findViewById(R.id.longbow);
+        blank = (RadioButton) findViewById(R.id.blank);
+        horse = (RadioButton) findViewById(R.id.horse);
+        yumi = (RadioButton) findViewById(R.id.yumi);
         brand = (FloatLabel) findViewById(R.id.marke);
         size = (FloatLabel) findViewById(R.id.size);
         height = (FloatLabel) findViewById(R.id.height);
         tiller = (FloatLabel) findViewById(R.id.tiller);
         desc = (FloatLabel) findViewById(R.id.desc);
-        sight_settings = (LinearLayout)findViewById(R.id.sight_settings);
+        sight_settings = (LinearLayout) findViewById(R.id.sight_settings);
         Button add_button = (Button) findViewById(R.id.add_visier_button);
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addSightSetting(new SightSetting(),-1);
+                addSightSetting(new SightSetting(), -1);
             }
         });
         Button cancel = (Button) findViewById(R.id.cancel_button);
@@ -116,6 +122,8 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
                 compoundbow.setChecked(false);
                 longbow.setChecked(false);
                 blank.setChecked(false);
+                horse.setChecked(false);
+                yumi.setChecked(false);
             }
         });
 
@@ -125,6 +133,8 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
                 compoundbow.setChecked(true);
                 longbow.setChecked(false);
                 blank.setChecked(false);
+                horse.setChecked(false);
+                yumi.setChecked(false);
             }
         });
 
@@ -134,6 +144,8 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
                 compoundbow.setChecked(false);
                 longbow.setChecked(true);
                 blank.setChecked(false);
+                horse.setChecked(false);
+                yumi.setChecked(false);
             }
         });
 
@@ -143,12 +155,36 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
                 compoundbow.setChecked(false);
                 longbow.setChecked(false);
                 blank.setChecked(true);
+                horse.setChecked(false);
+                yumi.setChecked(false);
             }
         });
 
-        if(savedInstanceState==null && mBowId!=-1) {
+        horse.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                recurvebow.setChecked(false);
+                compoundbow.setChecked(false);
+                longbow.setChecked(false);
+                blank.setChecked(false);
+                horse.setChecked(true);
+                yumi.setChecked(false);
+            }
+        });
+
+        yumi.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                recurvebow.setChecked(false);
+                compoundbow.setChecked(false);
+                longbow.setChecked(false);
+                blank.setChecked(false);
+                horse.setChecked(false);
+                yumi.setChecked(true);
+            }
+        });
+
+        if (savedInstanceState == null && mBowId != -1) {
             TargetOpenHelper db = new TargetOpenHelper(this);
-            TargetOpenHelper.Bow bow = db.getBow(mBowId,false);
+            TargetOpenHelper.Bow bow = db.getBow(mBowId, false);
             name.setText(bow.name);
             brand.setText(bow.brand);
             size.setText(bow.size);
@@ -157,24 +193,34 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
             desc.setText(bow.description);
             imageBitmap = bow.image;
             mImageView.setImageBitmap(imageBitmap);
-            mImageId = bow.imageId;
+            mImageFile = bow.imageFile;
             switch (bow.type) {
                 case 0:
-                    recurvebow.setChecked(true); break;
+                    recurvebow.setChecked(true);
+                    break;
                 case 1:
-                    compoundbow.setChecked(true); break;
+                    compoundbow.setChecked(true);
+                    break;
                 case 2:
-                    longbow.setChecked(true); break;
+                    longbow.setChecked(true);
+                    break;
                 case 3:
-                    blank.setChecked(true); break;
+                    blank.setChecked(true);
+                    break;
+                case 4:
+                    horse.setChecked(true);
+                    break;
+                case 5:
+                    yumi.setChecked(true);
+                    break;
             }
             sightSettingsList = db.getSettings(mBowId);
-        } else if(savedInstanceState==null) {
+        } else if (savedInstanceState == null) {
             recurvebow.setChecked(true);
             sightSettingsList = new ArrayList<SightSetting>();
         }
 
-        if(savedInstanceState!=null) {
+        if (savedInstanceState != null) {
             name.setText(savedInstanceState.getString("name"));
             brand.setText(savedInstanceState.getString("brand"));
             size.setText(savedInstanceState.getString("size"));
@@ -182,28 +228,30 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
             tiller.setText(savedInstanceState.getString("tiller"));
             desc.setText(savedInstanceState.getString("desc"));
             imageBitmap = savedInstanceState.getParcelable("img");
-            mImageId = savedInstanceState.getLong("image_id");
+            mImageFile = savedInstanceState.getString("image_file");
             mImageView.setImageBitmap(imageBitmap);
             sightSettingsList = savedInstanceState.getParcelableArrayList("settings");
-        } else if(imageBitmap==null) {
-            ViewTreeObserver vtobs = mImageView.getViewTreeObserver();
-            vtobs.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    if(imageBitmap==null) {
-                        int width = mImageView.getMeasuredWidth();
-                        int height = mImageView.getMeasuredHeight();
-                        try {
-                            imageBitmap = decodeSampledBitmapFromRes(R.drawable.recurvebogen, width, height);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            imageBitmap = null;
+        } else {
+            if (imageBitmap == null) {
+                ViewTreeObserver vtobs = mImageView.getViewTreeObserver();
+                vtobs.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        if (imageBitmap == null) {
+                            int width = mImageView.getMeasuredWidth();
+                            int height = mImageView.getMeasuredHeight();
+                            try {
+                                imageBitmap = decodeSampledBitmapFromRes(R.drawable.recurvebogen, width, height);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                imageBitmap = null;
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
 
-            if(sightSettingsList.size()==0) {
+            if (sightSettingsList.size() == 0) {
                 addSightSetting(new SightSetting(), -1);
             } else {
                 for (int i = 0; i < sightSettingsList.size(); i++) {
@@ -211,15 +259,17 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
                 }
             }
         }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public static class SightSetting implements Parcelable {
         Spinner distance;
         EditText setting;
         int distanceInd = 0;
-        String value="/";
+        String value = "/";
 
-        public SightSetting() {}
+        public SightSetting() {
+        }
 
         @Override
         public int describeContents() {
@@ -272,12 +322,12 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
         setting.distance.setAdapter(adapter);
         setting.distance.setSelection(setting.distanceInd);
         setting.setting.setText(setting.value);
-        if(i==-1) {
+        if (i == -1) {
             i = sightSettingsList.size();
             sightSettingsList.add(setting);
         }
-        setting.distance.setId(548969458+i*2);
-        setting.setting.setId(548969458+i*2+1);
+        setting.distance.setId(548969458 + i * 2);
+        setting.setting.setId(548969458 + i * 2 + 1);
         sight_settings.addView(rel);
     }
 
@@ -285,24 +335,28 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
     public void onClick(View view) {
         TargetOpenHelper db = new TargetOpenHelper(this);
 
-        int bowType=0;
-        if(recurvebow.isChecked())
+        int bowType = 0;
+        if (recurvebow.isChecked())
             bowType = 0;
-        else if(compoundbow.isChecked())
+        else if (compoundbow.isChecked())
             bowType = 1;
-        else if(longbow.isChecked())
+        else if (longbow.isChecked())
             bowType = 2;
-        else if(blank.isChecked())
+        else if (blank.isChecked())
             bowType = 3;
+        else if (horse.isChecked())
+            bowType = 4;
+        else if (yumi.isChecked())
+            bowType = 5;
 
         Bitmap thumb = ThumbnailUtils.extractThumbnail(imageBitmap, 100, 100);
 
-        mBowId = db.updateBow(mBowId, mImageId, name.getTextString(), bowType,
+        mBowId = db.updateBow(mBowId, mImageFile, name.getTextString(), bowType,
                 brand.getTextString(), size.getTextString(),
                 height.getTextString(), tiller.getTextString(),
-                desc.getTextString(), thumb, imageBitmap);
+                desc.getTextString(), thumb);
 
-        for(SightSetting set:sightSettingsList)
+        for (SightSetting set : sightSettingsList)
             set.update();
 
         db.updateSightSettings(mBowId, sightSettingsList);
@@ -312,7 +366,7 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
     private Drawable.Callback mDrawableCallback = new Drawable.Callback() {
         @Override
         public void invalidateDrawable(Drawable who) {
-            getActionBar().setBackgroundDrawable(who);
+            getSupportActionBar().setBackgroundDrawable(who);
         }
 
         @Override
@@ -326,7 +380,7 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
 
     private NotifyingScrollView.OnScrollChangedListener mOnScrollChangedListener = new NotifyingScrollView.OnScrollChangedListener() {
         public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt) {
-            final int headerHeight = findViewById(R.id.imageView).getHeight() - getActionBar().getHeight();
+            final int headerHeight = findViewById(R.id.imageView).getHeight() - getSupportActionBar().getHeight();
             final float ratio = (float) Math.min(Math.max(t, 0), headerHeight) / headerHeight;
             final int newAlpha = (int) (ratio * 255);
             mActionBarBackgroundDrawable.setAlpha(newAlpha);
@@ -356,10 +410,10 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                     try {
                         fileUri = getOutputMediaFileUri();
-                    } catch(NullPointerException e) {
+                    } catch (NullPointerException e) {
                         return true;
                     }
-                    takePictureIntent.putExtra( MediaStore.EXTRA_OUTPUT, fileUri );
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
                 return true;
@@ -373,35 +427,52 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
         Uri selectedImageUri;
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             selectedImageUri = fileUri;
-        } else if(requestCode==SELECT_PICTURE  && resultCode == RESULT_OK) {
+        } else if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK) {
             selectedImageUri = data.getData();
         } else {
             return;
         }
 
-        try {
-            imageBitmap = decodeSampledBitmapFromStream(selectedImageUri,mImageView.getWidth(),mImageView.getHeight());
-            mImageView.setImageBitmap(imageBitmap);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        new AsyncTask<Uri, Void, Boolean>() {
+
+            @Override
+            protected Boolean doInBackground(Uri... params) {
+                try {
+                    imageBitmap = decodeSampledBitmapFromStream(params[0], mImageView.getWidth(), mImageView.getHeight());
+                    File f = File.createTempFile(params[0].getLastPathSegment(), null, getFilesDir());
+                    FileOutputStream out = new FileOutputStream(f);
+                    imageBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                    mImageFile = f.getAbsolutePath();
+                    return true;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(Boolean success) {
+                if (success)
+                    mImageView.setImageBitmap(imageBitmap);
+            }
+        }.execute(selectedImageUri);
     }
 
-    private static Uri getOutputMediaFileUri(){
+    private static Uri getOutputMediaFileUri() {
         return Uri.fromFile(getOutputMediaFile());
     }
 
-    private static File getOutputMediaFile(){
-        if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            Log.d("OutputMediaFile","SD card is not mounted!");
+    private static File getOutputMediaFile() {
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            Log.d("OutputMediaFile", "SD card is not mounted!");
             return null;
         }
 
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), "MyTargets");
 
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
                 Log.d("MyTargets", "failed to create directory");
                 return null;
             }
@@ -411,7 +482,7 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
         return new File(mediaStorageDir.getPath() + File.separator +
-                "IMG_"+ timeStamp + ".jpg");
+                "IMG_" + timeStamp + ".jpg");
     }
 
     public Bitmap decodeSampledBitmapFromStream(Uri uri, int reqWidth, int reqHeight) throws IOException {
@@ -443,7 +514,7 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
-        int minSize = Math.max(reqWidth,reqHeight);
+        int minSize = Math.max(reqWidth, reqHeight);
 
         if (height > minSize || width > minSize) {
 
@@ -468,10 +539,10 @@ public class EditBowActivity extends Activity implements View.OnClickListener {
         outState.putString("height", height.getTextString());
         outState.putString("tiller", tiller.getTextString());
         outState.putString("desc", desc.getTextString());
-        outState.putParcelable("img",imageBitmap);
-        outState.putLong("image_id",mImageId);
-        for(SightSetting set:sightSettingsList)
+        outState.putParcelable("img", imageBitmap);
+        outState.putString("image_file", mImageFile);
+        for (SightSetting set : sightSettingsList)
             set.update();
-        outState.putParcelableArrayList("settings",sightSettingsList);
+        outState.putParcelableArrayList("settings", sightSettingsList);
     }
 }
