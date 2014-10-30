@@ -12,11 +12,11 @@ import android.widget.TextView;
 public class TargetItemAdapter extends BaseAdapter implements SpinnerAdapter {
     private final Context mContext;
     public static String[] targets = {"WA 40cm", "WA 60cm",
-            "WA 80cm", "WA 120cm", "WA Spot 40cm", "WA Spot 60cm", "WA Spot 80cm",
+            "WA 80cm", "WA 120cm", "WA 3er Spot 20cm", "WA Spot 40cm", "WA Spot 60cm", "WA Spot 80cm",
             "WA Field 40cm", "DFBV Spiegel 40cm", "DFBV Spiegel Spot 40cm"};
 
     private static int[] targets_drawable = {R.drawable.wa, R.drawable.wa,
-            R.drawable.wa, R.drawable.wa, R.drawable.wa_spot, R.drawable.wa_spot, R.drawable.wa_spot,
+            R.drawable.wa, R.drawable.wa, R.drawable.wa_spot, R.drawable.wa_spot, R.drawable.wa_spot, R.drawable.wa_spot,
             R.drawable.wa_field, R.drawable.dfbv_spiegel, R.drawable.dfbv_spiegel_spot};
 
 	public TargetItemAdapter(Context context) {

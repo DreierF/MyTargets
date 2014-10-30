@@ -71,5 +71,9 @@
     <string name="yumi">Yumi</string>
     <string name="share">Share</string>
     <string name="my_share_text">Yeah, look at my archery score. If got:\n%1$d times X\n%2$d times 10\n%3$d times 9\nThis makes a total of %4$d out of %5$d rings.</string>
+    <string name="export">Export</string>
+    <string name="send_exported">Send exported data</string>
+    <string name="exporting_failed">Exporting failed!</string>
+    <string name="edit">Edit</string>
 
 </resources>

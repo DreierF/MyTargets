@@ -56,6 +56,7 @@ public class TargetView extends View implements View.OnTouchListener {
             {0, 0, 0, 1, 1, 2}, // WA Spot
             {0, 0, 0, 1, 1, 2},
             {0, 0, 0, 1, 1, 2},
+            {0, 0, 0, 1, 1, 2},
             {0, 0, 3, 3, 3, 3}, // WA Field
             {4, 4, 3, 3, 3, 3},  //DFBV Spiegel
             {4, 4, 3} //DFBV Spiegel Spot
@@ -67,6 +68,7 @@ public class TargetView extends View implements View.OnTouchListener {
             {10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1},
             {10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1},
             {10, 10, 9, 8, 7, 6}, // WA Spot
+            {10, 10, 9, 8, 7, 6},
             {10, 10, 9, 8, 7, 6},
             {10, 10, 9, 8, 7, 6},
             {5, 5, 4, 3, 2, 1}, // WA Field

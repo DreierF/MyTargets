@@ -16,6 +16,7 @@ public class TrainingActivity extends NowListActivity {
     protected void init(Intent intent, Bundle savedInstanceState) {
         itemSingular = getString(R.string.round_singular);
         itemPlural = getString(R.string.round_plural);
+        mEditable = true;
 
         if(intent!=null && intent.hasExtra(TRAINING_ID)) {
             mTraining = intent.getLongExtra(TRAINING_ID,-1);
@@ -30,6 +31,14 @@ public class TrainingActivity extends NowListActivity {
         getSupportActionBar().setTitle(tr.title);
         getSupportActionBar().setSubtitle(DateFormat.getDateInstance().format(tr.date));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void onEdit(long id) {
+        Intent i = new Intent(this, NewRoundActivity.class);
+        i.putExtra(NewRoundActivity.TRAINING_ID, mTraining);
+        i.putExtra(NewRoundActivity.ROUND_ID, id);
+        startActivity(i);
     }
 
     @Override

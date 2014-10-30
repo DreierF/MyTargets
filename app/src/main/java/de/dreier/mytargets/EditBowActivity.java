@@ -3,6 +3,7 @@ package de.dreier.mytargets;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -68,7 +69,7 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
             mBowId = intent.getLongExtra(BOW_ID, -1);
         }
 
-        mActionBarBackgroundDrawable = getResources().getDrawable(R.drawable.ab_solid_example);
+        mActionBarBackgroundDrawable = new ColorDrawable(getResources().getColor(R.color.colorPrimary));
         mActionBarBackgroundDrawable.setAlpha(0);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
             mActionBarBackgroundDrawable.setCallback(mDrawableCallback);
@@ -304,7 +305,7 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
         }
     }
 
-    private void addSightSetting(SightSetting setting, int i) {
+    private void addSightSetting(final SightSetting setting, int i) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         final View rel = inflater.inflate(R.layout.sight_settings_item, sight_settings, false);
         setting.distance = (Spinner) rel.findViewById(R.id.distanceSpinner);
@@ -314,6 +315,7 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
             @Override
             public void onClick(View view) {
                 sight_settings.removeView(rel);
+                sightSettingsList.remove(setting);
             }
         });
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,

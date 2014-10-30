@@ -9,6 +9,7 @@ public class BowActivity extends NowListActivity {
     protected void init(Intent intent, Bundle savedInstanceState) {
         itemSingular = getString(R.string.bow_singular);
         itemPlural = getString(R.string.bow_plural);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

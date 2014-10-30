@@ -32,20 +32,20 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
         db = new TargetOpenHelper(this);
 
         Intent i = getIntent();
-        if(i!=null && i.hasExtra(ROUND_ID)) {
-            mRound = i.getLongExtra(ROUND_ID,-1);
+        if (i != null && i.hasExtra(ROUND_ID)) {
+            mRound = i.getLongExtra(ROUND_ID, -1);
             savedPasses = db.getPasses(mRound).getCount();
-            if(i.hasExtra(PASSE_IND)) {
-                curPasse = i.getIntExtra(PASSE_IND, -1)-1;
+            if (i.hasExtra(PASSE_IND)) {
+                curPasse = i.getIntExtra(PASSE_IND, -1) - 1;
             } else {
-                curPasse = savedPasses+1;
+                curPasse = savedPasses + 1;
             }
         }
 
-        target = (TargetView)findViewById(R.id.targetview);
+        target = (TargetView) findViewById(R.id.targetview);
         target.setOnTargetSetListener(this);
-        next = (Button)findViewById(R.id.next_button);
-        prev = (Button)findViewById(R.id.prev_button);
+        next = (Button) findViewById(R.id.next_button);
+        prev = (Button) findViewById(R.id.prev_button);
 
         TargetOpenHelper.Round r = db.getRound(mRound);
         mTraining = r.training;
@@ -58,7 +58,7 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
             createPasseFromVoiceInput(voiceInput,r);
         }*/
 
-        if(savedInstanceState!=null) {
+        if (savedInstanceState != null) {
             target.restoreState(savedInstanceState);
             curPasse = savedInstanceState.getInt("curPasse");
             updatePasse();
@@ -159,9 +159,9 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
     }
 
     public void updatePasse() {
-        setTitle("Passe "+curPasse);
+        setTitle("Passe " + curPasse);
         prev.setEnabled(curPasse > 1);
-        next.setEnabled(curPasse<=savedPasses);
+        next.setEnabled(curPasse <= savedPasses);
     }
 
     @Override
@@ -179,9 +179,9 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
                 startActivity(i);
                 return true;*/
             case R.id.action_new_runde:
-                i = new Intent(this,NewRoundActivity.class);
-                i.putExtra(NewRoundActivity.TRAINING_ID,mTraining);
-                i.putExtra(NewRoundActivity.FROM_PASSE,true);
+                i = new Intent(this, NewRoundActivity.class);
+                i.putExtra(NewRoundActivity.TRAINING_ID, mTraining);
+                i.putExtra(NewRoundActivity.FROM_PASSE, true);
                 startActivity(i);
                 overridePendingTransition(R.anim.left_in_complete, R.anim.right_out_half);
                 return true;
@@ -196,7 +196,7 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("curPasse",curPasse);
+        outState.putInt("curPasse", curPasse);
         target.saveState(outState);
     }
 
@@ -204,7 +204,7 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
     public void OnTargetSet(int[] zones) {
         TargetOpenHelper db = new TargetOpenHelper(this);
 
-        if(curPasse>savedPasses) {
+        if (curPasse > savedPasses) {
             savedPasses++;
             db.addPasseToRound(mRound, zones);
         } else {

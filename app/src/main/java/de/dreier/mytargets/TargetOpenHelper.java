@@ -186,7 +186,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         return insertId;
     }
 
-    public long newRound(long training, int distance, String unit, boolean indoor, int ppp, int target, long bow) {
+    public long newRound(long training, long round, int distance, String unit, boolean indoor, int ppp, int target, long bow) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(RUNDE_DISTANCE, distance);
@@ -196,7 +196,12 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         values.put(RUNDE_BOW, bow);
         values.put(RUNDE_PPP, ppp);
         values.put(RUNDE_TRAINING, training);
-        long round = db.insert(TABLE_ROUND, null, values);
+        if(round==-1) {
+            round = db.insert(TABLE_ROUND, null, values);
+        } else {
+            values.put(RUNDE_ID, round);
+            db.replace(TABLE_ROUND, null, values);
+        }
         db.close();
         return round;
     }
@@ -449,8 +454,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
 
     public void updateSightSettings(long bowId, ArrayList<EditBowActivity.SightSetting> sightSettingsList) {
         SQLiteDatabase db = getWritableDatabase();
-        String[] args = {"" + bowId};
-        db.delete(TABLE_VISIER, VISIER_BOW + "=?", args);
+        db.delete(TABLE_VISIER, VISIER_BOW + "="+bowId, null);
         for (EditBowActivity.SightSetting set : sightSettingsList) {
             ContentValues values = new ContentValues();
             values.put(VISIER_BOW, bowId);
@@ -496,19 +500,46 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
     public void exportAll(File file) throws IOException {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cur = db.rawQuery("SELECT t.title,datetime(t.datum/1000, 'unixepoch') AS date,r.indoor,r.distance," +
-                "r.unit,r.target, b.name, (11-s.points) AS score " +
+                "r.target, b.name AS bow, s.points AS score " +
                 "FROM TRAINING t, ROUND r, PASSE p, SHOOT s, BOW b " +
                 "WHERE t._id = r.training AND r._id = p.round AND p._id = s.passe AND r.bow = b._id", null);
         String[] names = cur.getColumnNames();
+
+        file.getParentFile().mkdirs();
+        file.createNewFile();
         FileWriter writer = new FileWriter(file);
         for (String column : names) {
             writer.append("\"" + column + "\";");
         }
         writer.append("\n");
+        int distInd = cur.getColumnIndexOrThrow("distance");
+        int targetInd = cur.getColumnIndexOrThrow("target");
+        int scoreInd = cur.getColumnIndexOrThrow("score");
+        int indoorInd = cur.getColumnIndexOrThrow("indoor");
         if (cur.moveToFirst()) {
             do {
                 for (int i = 0; i < names.length; i++) {
-                    writer.append("\"" + cur.getString(i) + "\";");
+                    writer.append("\"");
+                    if (i == distInd) {
+                        writer.append(NewRoundActivity.distances[cur.getInt(i)]);
+                    } else if (i == targetInd) {
+                        writer.append(TargetItemAdapter.targets[cur.getInt(i)]);
+                    } else if (i == indoorInd) {
+                        if (cur.getInt(i) == 0)
+                            writer.append("Outdoor");
+                        else
+                            writer.append("Indoor");
+                    } else if (i == scoreInd) {
+                        if (cur.getInt(scoreInd) == -1)
+                            writer.append("M");
+                        else if (cur.getInt(scoreInd) == 0)
+                            writer.append("X");
+                        else
+                            writer.append(String.valueOf(TargetView.target_points[cur.getInt(targetInd)][cur.getInt(scoreInd)]));
+                    } else {
+                        writer.append(cur.getString(i));
+                    }
+                    writer.append("\";");
                 }
                 writer.append("\n");
             } while (cur.moveToNext());
