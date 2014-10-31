@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="de.dreier.mytargets.ScoreboardActivity">
+    <item
+        android:id="@+id/action_print"
+        android:icon="@drawable/ic_print_white_24dp"
+        android:title="@string/action_print"
+        app:showAsAction="ifRoom" />
+</menu>

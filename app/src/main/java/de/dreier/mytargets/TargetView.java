@@ -76,6 +76,16 @@ public class TargetView extends View implements View.OnTouchListener {
             {5, 5, 4} //DFBV Spiegel Spot
     };
 
+    public static String getStringByZone(int target, int zone) {
+        if(zone<=-1) {
+            return "M";
+        } else if(zone==0 && target<8) {
+            return "X";
+        } else {
+            return String.valueOf(target_points[target][zone]);
+        }
+    }
+
     private int radius, midX, midY;
     private int contentWidth, contentHeight;
 
@@ -343,12 +353,10 @@ public class TargetView extends View implements View.OnTouchListener {
     }
 
     private void drawCircle(Canvas can, float x, float y, int zone) {
-        int points, colorInd;
+        int colorInd;
         if(zone>-1) {
-            points = target_points[targetRound][zone];
             colorInd = target_rounds[targetRound][zone];
         } else {
-            points = 0;
             colorInd = 3;
         }
         circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -358,7 +366,7 @@ public class TargetView extends View implements View.OnTouchListener {
         circleColorP.setColor(circleStrokeColor[colorInd]);
         can.drawCircle(x, y, 17*density, circleColorP);
         mTextPaint.setColor(colorInd==0||colorInd==4 ? Color.BLACK : Color.WHITE);
-        can.drawText(points==0?"M":(zone==0 && targetRound<7?"X":"" + points), x, y + 7*density, mTextPaint);
+        can.drawText(getStringByZone(targetRound, zone), x, y + 7*density, mTextPaint);
     }
 
     @Override

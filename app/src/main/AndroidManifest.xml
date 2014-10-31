@@ -1,78 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.dreier.mytargets" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="de.dreier.mytargets">
 
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <!-- TODO: Register at https://developer.android.com/google/backup/signup.html?csw=1 -->
     <application
         android:allowBackup="true"
+        android:backupAgent="de.dreier.mytargets.MyBackupAgent"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
-        android:backupAgent=".MyBackupAgent">
+        tools:ignore="UnusedAttribute">
+
+        <meta-data
+            android:name="com.google.android.backup.api_key"
+            android:value="AEdPqrEAAAAIy_jZMyyGuh5M-ICvUll4H1WyF1R9M8cUcN5wVw" />
+
         <activity
-            android:name=".MainActivity"
+            android:name="de.dreier.mytargets.MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".TrainingActivity"
+            android:name="de.dreier.mytargets.TrainingActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName="de.dreier.mytargets.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.dreier.mytargets.MainActivity" />
         </activity>
         <activity
-            android:name=".RoundActivity"
+            android:name="de.dreier.mytargets.RoundActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".TrainingActivity" >
+            android:parentActivityName="de.dreier.mytargets.TrainingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.dreier.mytargets.TrainingActivity" />
         </activity>
         <activity
-            android:name=".PasseActivity"
+            android:name="de.dreier.mytargets.PasseActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:parentActivityName=".RoundActivity" >
+            android:parentActivityName="de.dreier.mytargets.RoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.dreier.mytargets.RundeActivity" />
+                android:value="de.dreier.mytargets.RoundActivity" />
         </activity>
         <activity
-            android:name=".NewRoundActivity"
+            android:name="de.dreier.mytargets.NewRoundActivity"
             android:label="@string/title_activity_new_round"
-            android:parentActivityName=".TrainingActivity" >
+            android:parentActivityName="de.dreier.mytargets.TrainingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.dreier.mytargets.TrainingActivity" />
         </activity>
         <activity
-            android:name=".BowActivity"
+            android:name="de.dreier.mytargets.BowActivity"
             android:label="@string/my_bows"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName="de.dreier.mytargets.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.dreier.mytargets.MainActivity" />
         </activity>
         <activity
-            android:name=".EditBowActivity"
+            android:name="de.dreier.mytargets.EditBowActivity"
             android:label="@string/title_activity_edit_bow"
-            android:theme="@style/AppTheme.Overlay"
-            android:parentActivityName=".BowActivity" >
+            android:parentActivityName="de.dreier.mytargets.BowActivity"
+            android:theme="@style/AppTheme.Overlay">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.dreier.mytargets.BowActivity" />
+        </activity>
+        <activity
+            android:name="de.dreier.mytargets.ScoreboardActivity"
+            android:label="@string/title_activity_scoreboard"
+            android:parentActivityName="de.dreier.mytargets.RoundActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.dreier.mytargets.RoundActivity" />
         </activity>
     </application>
 

@@ -65,8 +65,8 @@ public class PasseAdapter extends NowListAdapter {
 
         // Set number of X, 10, 9 shoots
         infoText = "X: <font color=#669900><b>" + mRoundInfo.scoreCount[0] + "</b></font><br>" +
-                "10: <font color=#669900><b>" + mRoundInfo.scoreCount[1] + "</b></font><br>" +
-                "9: <font color=#669900><b>" + mRoundInfo.scoreCount[2] + "</b></font>";
+                mContext.getString(R.string.ten_x) + ": <font color=#669900><b>" + (mRoundInfo.scoreCount[0]+mRoundInfo.scoreCount[1]) + "</b></font><br>" +
+                mContext.getString(R.string.nine) + ": <font color=#669900><b>" + mRoundInfo.scoreCount[2] + "</b></font>";
         score.setText(Html.fromHtml(infoText));
         return view;
     }

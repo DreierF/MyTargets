@@ -76,5 +76,12 @@
     <string name="send_exported">Sende exportierte Daten</string>
     <string name="exporting_failed">Export fehlgeschlagen!</string>
     <string name="edit">Bearbeiten</string>
+    <string name="html_header_fields">&lt;th>Pfeile&lt;/th>&lt;th>Summe&lt;/th>&lt;th>&amp;Uuml;bertrag&lt;/th></string>
+    <string name="scoreboard">Scoreboard</string>
+    <string name="title_activity_scoreboard">Scoreboard</string>
+    <string name="action_print">Drucken</string>
+    <string name="nine">Neuner</string>
+    <string name="ten_x">Zehner+X</string>
+    <string name="average">Schnitt</string>
 
 </resources>

@@ -64,12 +64,10 @@ public class PassenView extends View {
     }
 
     private void drawCircle(Canvas can, float x, float y, int zone) {
-        int points, colorInd;
+        int colorInd;
         if(zone>-1) {
-            points = TargetView.target_points[targetRound][zone];
             colorInd = TargetView.target_rounds[targetRound][zone];
         } else {
-            points = 0;
             colorInd = 3;
         }
         circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -79,7 +77,7 @@ public class PassenView extends View {
         circleColorP.setColor(TargetView.circleStrokeColor[colorInd]);
         can.drawCircle(x, y, 17*density, circleColorP);
         mTextPaint.setColor(colorInd==0||colorInd==4 ? Color.BLACK : Color.WHITE);
-        can.drawText(points==0?"M":(zone==0 && targetRound<7?"X":"" + points), x, y + 7*density, mTextPaint);
+        can.drawText(TargetView.getStringByZone(targetRound, zone), x, y + 7*density, mTextPaint);
     }
 
     @Override

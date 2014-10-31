@@ -37,7 +37,6 @@
     <string name="arrows_per_passe">Arrows per passe</string>
     <string name="target_round">Target round</string>
     <string name="new_round">New round</string>
-
     <string name="delete">Delete</string>
     <string name="take_picture">Take a picture</string>
     <string name="pick_from_gallery">Select a picture from gallery</string>
@@ -60,7 +59,6 @@
     <string name="new_training">New training</string>
     <string name="my_bows">My bows</string>
     <string name="add_bow">Add bow</string>
-
     <string name="yellow">yellow</string>
     <string name="red">red</string>
     <string name="blue">blue</string>
@@ -75,5 +73,12 @@
     <string name="send_exported">Send exported data</string>
     <string name="exporting_failed">Exporting failed!</string>
     <string name="edit">Edit</string>
+    <string name="html_header_fields">&lt;th>Arrows&lt;/th>&lt;th>Sum&lt;/th>&lt;th>Carry&lt;/th></string>
+    <string name="scoreboard">Scoreboard</string>
+    <string name="title_activity_scoreboard">Scoreboard</string>
+    <string name="action_print">Print</string>
+    <string name="nine">Nine</string>
+    <string name="ten_x">Ten+X</string>
+    <string name="average">Average</string>
 
 </resources>

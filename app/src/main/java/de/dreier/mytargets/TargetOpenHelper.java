@@ -245,6 +245,12 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         return tr;
     }
 
+    /**
+     * Gets the passe by id
+     *
+     * @param passe Passe id
+     * @return array containing all zone information
+     */
     public int[] getPasse(long passe) {
         SQLiteDatabase db = getReadableDatabase();
         String[] cols = {SHOOT_ID, SHOOT_ZONE};
@@ -501,8 +507,8 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cur = db.rawQuery("SELECT t.title,datetime(t.datum/1000, 'unixepoch') AS date,r.indoor,r.distance," +
                 "r.target, b.name AS bow, s.points AS score " +
-                "FROM TRAINING t, ROUND r, PASSE p, SHOOT s, BOW b " +
-                "WHERE t._id = r.training AND r._id = p.round AND p._id = s.passe AND r.bow = b._id", null);
+                "FROM TRAINING t, ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON r.bow = b._id " +
+                "WHERE t._id = r.training AND r._id = p.round AND p._id = s.passe", null);
         String[] names = cur.getColumnNames();
 
         file.getParentFile().mkdirs();

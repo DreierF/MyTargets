@@ -56,6 +56,18 @@ public class RoundActivity extends NowListActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_scoreboard) {
+            Intent intent = new Intent(this, ScoreboardActivity.class);
+            intent.putExtra(ScoreboardActivity.ROUND_ID, mRound);
+            startActivity(intent);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void onDelete(long[] ids) {
         db.deletePasses(ids);
     }
