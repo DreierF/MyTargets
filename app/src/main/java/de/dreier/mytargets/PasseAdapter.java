@@ -41,7 +41,7 @@ public class PasseAdapter extends NowListAdapter {
             view = convertView;
         }
 
-        int[] target = TargetView.target_points[mRoundInfo.target];
+        int[] target = Target.target_points[mRoundInfo.target];
         int reached = db.getRoundPoints(mRound, mRoundInfo.target);
         int maxP = mRoundInfo.ppp * target[0] * db.getPasses(mRound).getCount();
 

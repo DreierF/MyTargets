@@ -2,6 +2,7 @@ package de.dreier.mytargets;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 public class BowActivity extends NowListActivity {
 

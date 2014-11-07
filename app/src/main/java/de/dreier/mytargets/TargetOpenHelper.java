@@ -12,12 +12,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class TargetOpenHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String TABLE_TRAINING = "TRAINING";
     public static final String TRAINING_ID = "_id";
@@ -42,6 +43,8 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
     public static final String SHOOT_ID = "_id";
     public static final String SHOOT_PASSE = "passe";
     public static final String SHOOT_ZONE = "points";
+    public static final String SHOOT_X = "x";
+    public static final String SHOOT_Y = "y";
 
     private static final String TABLE_BOW = "BOW";
     public static final String BOW_ID = "_id";
@@ -109,7 +112,9 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
             "CREATE TABLE IF NOT EXISTS " + TABLE_SHOOT + " (" +
                     SHOOT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     SHOOT_PASSE + " INTEGER REFERENCES " + TABLE_PASSE + " ON DELETE CASCADE," +
-                    SHOOT_ZONE + " INTEGER);";
+                    SHOOT_ZONE + " INTEGER," +
+                    SHOOT_X + " REAL," +
+                    SHOOT_Y + " REAL);";
 
     TargetOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -127,14 +132,32 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion == 1) {
-            //db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRAINING);
-            //db.execSQL("DROP TABLE IF EXISTS " + TABLE_ROUND);
-            //db.execSQL("DROP TABLE IF EXISTS " + TABLE_PASSE);
-            //db.execSQL("DROP TABLE IF EXISTS " + TABLE_SHOOT);
+        if (oldVersion < 2) {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_BOW);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_BOW_IMAGE);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_VISIER);
+        }
+        if (oldVersion < 3) {
+            db.execSQL("ALTER TABLE SHOOT ADD COLUMN x REAL");
+            db.execSQL("ALTER TABLE SHOOT ADD COLUMN y REAL");
+            Cursor cur = db.rawQuery("SELECT s._id, s.points, r.target " +
+                    "FROM SHOOT s, PASSE p, ROUND r " +
+                    "WHERE s.passe=p._id " +
+                    "AND p.round=r._id", null);
+            if (cur.moveToFirst()) {
+                do {
+                    int shoot = cur.getInt(0);
+                    int zone = cur.getInt(1);
+                    int target = cur.getInt(2);
+                    if (zone == -1) {
+                        db.execSQL("UPDATE SHOOT SET x=1, y=1 WHERE _id=" + shoot);
+                    } else {
+                        float x = (zone * 2 + 1) / (float) (Target.target_points[target].length * 2);
+                        db.execSQL("UPDATE SHOOT SET x=" + x + ", y=0 WHERE _id=" + shoot);
+                    }
+                } while (cur.moveToNext());
+            }
+            cur.close();
         }
         onCreate(db);
     }
@@ -161,15 +184,17 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         return db.query(TABLE_BOW, null, null, null, null, null, BOW_ID + " ASC");
     }
 
-    public long addPasseToRound(long round, int[] points) {
+    public long addPasseToRound(long round, Passe passe) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(PASSE_ROUND, round);
         long insertId = db.insert(TABLE_PASSE, null, values);
-        for (int point : points) {
+        for (int i = 0; i < passe.zones.length; i++) {
             values = new ContentValues();
             values.put(SHOOT_PASSE, insertId);
-            values.put(SHOOT_ZONE, point);
+            values.put(SHOOT_ZONE, passe.zones[i]);
+            values.put(SHOOT_X, passe.points[i][0]);
+            values.put(SHOOT_Y, passe.points[i][1]);
             db.insert(TABLE_SHOOT, null, values);
         }
         db.close();
@@ -196,7 +221,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         values.put(RUNDE_BOW, bow);
         values.put(RUNDE_PPP, ppp);
         values.put(RUNDE_TRAINING, training);
-        if(round==-1) {
+        if (round == -1) {
             round = db.insert(TABLE_ROUND, null, values);
         } else {
             values.put(RUNDE_ID, round);
@@ -206,7 +231,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         return round;
     }
 
-    public int[] getPasse(long round, int passe) {
+    public Passe getPasse(long round, int passe) {
         SQLiteDatabase db = getReadableDatabase();
         String[] cols1 = {PASSE_ID};
         String[] args1 = {"" + round};
@@ -214,19 +239,34 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         if (!res1.moveToPosition(passe - 1))
             return null;
         long passeId = res1.getLong(0);
-        String[] cols2 = {SHOOT_ZONE};
+        String[] cols2 = {SHOOT_ZONE, SHOOT_X, SHOOT_Y};
         String[] args2 = {"" + passeId};
         Cursor res = db.query(TABLE_SHOOT, cols2, SHOOT_PASSE + "=?", args2, null, null, SHOOT_ID + " ASC");
         int count = res.getCount();
-        int[] points = new int[count];
+
+        Passe p = new Passe(count);
         res.moveToFirst();
         for (int i = 0; i < count; i++) {
-            points[i] = res.getInt(0);
+            p.zones[i] = res.getInt(0);
+            p.points[i][0] = res.getFloat(1);
+            p.points[i][1] = res.getFloat(2);
             res.moveToNext();
         }
         res.close();
         db.close();
-        return points;
+        return p;
+    }
+
+    public static class Passe implements Serializable {
+        int[] zones;
+        float[][] points;
+
+        Passe(int count) {
+            zones = new int[count];
+            points = new float[count][];
+            for (int i = 0; i < count; i++)
+                points[i] = new float[2];
+        }
     }
 
     public Training getTraining(long training) {
@@ -307,7 +347,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
                 " FROM " + TABLE_PASSE + " p, " + TABLE_SHOOT + " s" +
                 " WHERE p." + PASSE_ROUND + "=? AND s." + SHOOT_PASSE + "=p." + PASSE_ID, args);
         res.moveToFirst();
-        int[] target = TargetView.target_points[tar];
+        int[] target = Target.target_points[tar];
         int sum = 0;
         for (int i = 0; i < res.getCount(); i++) {
             int zone = res.getInt(0);
@@ -375,7 +415,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void updatePasse(long round, int passe, int[] zones) {
+    public void updatePasse(long round, int passe, Passe p) {
         SQLiteDatabase db = getReadableDatabase();
         String[] cols1 = {PASSE_ID};
         String[] args1 = {"" + round};
@@ -391,7 +431,9 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         for (int i = 0; i < count; i++) {
             String[] args3 = {"" + res.getLong(0)};
             ContentValues values = new ContentValues();
-            values.put(SHOOT_ZONE, zones[i]);
+            values.put(SHOOT_ZONE, p.zones[i]);
+            values.put(SHOOT_X, p.points[i][0]);
+            values.put(SHOOT_Y, p.points[i][1]);
             db.update(TABLE_SHOOT, values, SHOOT_ID + "=?", args3);
             res.moveToNext();
         }
@@ -460,7 +502,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
 
     public void updateSightSettings(long bowId, ArrayList<EditBowActivity.SightSetting> sightSettingsList) {
         SQLiteDatabase db = getWritableDatabase();
-        db.delete(TABLE_VISIER, VISIER_BOW + "="+bowId, null);
+        db.delete(TABLE_VISIER, VISIER_BOW + "=" + bowId, null);
         for (EditBowActivity.SightSetting set : sightSettingsList) {
             ContentValues values = new ContentValues();
             values.put(VISIER_BOW, bowId);
@@ -541,7 +583,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
                         else if (cur.getInt(scoreInd) == 0)
                             writer.append("X");
                         else
-                            writer.append(String.valueOf(TargetView.target_points[cur.getInt(targetInd)][cur.getInt(scoreInd)]));
+                            writer.append(String.valueOf(Target.target_points[cur.getInt(targetInd)][cur.getInt(scoreInd)]));
                     } else {
                         writer.append(cur.getString(i));
                     }

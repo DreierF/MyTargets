@@ -42,7 +42,7 @@ public class RoundActivity extends NowListActivity {
 
         // Construct share intent
         mRoundInfo = db.getRound(mRound);
-        int[] target = TargetView.target_points[mRoundInfo.target];
+        int[] target = Target.target_points[mRoundInfo.target];
         int reached = db.getRoundPoints(mRound, mRoundInfo.target);
         int maxP = mRoundInfo.ppp * target[0] * db.getPasses(mRound).getCount();
         String text = String.format(getString(R.string.my_share_text),

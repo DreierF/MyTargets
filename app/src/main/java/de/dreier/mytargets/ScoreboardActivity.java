@@ -81,9 +81,9 @@ public class ScoreboardActivity extends ActionBarActivity {
                         tmp_html += "<tr>";
                         for (int aPasse : passe) {
                             tmp_html += "<td>";
-                            tmp_html += TargetView.getStringByZone(info.target, aPasse);
+                            tmp_html += Target.getStringByZone(info.target, aPasse);
                             tmp_html += "</td>";
-                            final int points = aPasse==-1?0:TargetView.target_points[info.target][aPasse];
+                            final int points = aPasse==-1?0:Target.target_points[info.target][aPasse];
                             arrows += points;
                             sum += points;
                             carry += points;
@@ -99,9 +99,9 @@ public class ScoreboardActivity extends ActionBarActivity {
                         html += "<tr>";
                         for (int aPasse : passe) {
                             html += "<td>";
-                            html += TargetView.getStringByZone(info.target, aPasse);
+                            html += Target.getStringByZone(info.target, aPasse);
                             html += "</td>";
-                            final int points = aPasse==-1?0:TargetView.target_points[info.target][aPasse];
+                            final int points = aPasse==-1?0:Target.target_points[info.target][aPasse];
                             arrows += points;
                             sum += points;
                             carry += points;

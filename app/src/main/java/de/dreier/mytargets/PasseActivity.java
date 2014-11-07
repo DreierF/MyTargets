@@ -1,7 +1,9 @@
 package de.dreier.mytargets;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
@@ -10,17 +12,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import de.dreier.mytargets.TargetOpenHelper.Passe;
+
 public class PasseActivity extends ActionBarActivity implements TargetView.OnTargetSetListener {
 
     public static final String ROUND_ID = "round_id";
     public static final String PASSE_IND = "passe_ind";
     private static final String EXTRA_VOICE_REPLY = "voice_input";
+    private static final String TARGET_MODE = "target_mode";
     private TargetView target;
     private Button next, prev;
     private int curPasse = 1;
     private int savedPasses = 0;
     private long mRound, mTraining;
     private TargetOpenHelper db;
+    private boolean mMode = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +57,9 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
         mTraining = r.training;
         target.setTargetRound(r.target);
         target.setPPP(r.ppp);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mMode = prefs.getBoolean(TARGET_MODE, true);
+        target.switchMode(mMode, false);
 /*
         Bundle remoteInput = RemoteInput.getResultsFromIntent(i);
         if (remoteInput != null) {
@@ -146,10 +155,10 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
 
     public void setPasse(int passe) {
         if (passe <= savedPasses) {
-            int[] points = db.getPasse(mRound, passe);
-            if (points != null)
-                target.setZones(points);
-            else
+            Passe p = db.getPasse(mRound, passe);
+            if (p != null) {
+                target.setZones(p);
+            } else
                 target.reset();
         } else if (passe != curPasse) {
             target.reset();
@@ -171,19 +180,28 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_switch_mode).setIcon(mMode?R.drawable.ic_target_exact_24dp:R.drawable.ic_target_zone_24dp);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i;
         switch (item.getItemId()) {
-            /*case R.id.action_settings:
-                i = new Intent(this,SettingsActivity.class);
-                startActivity(i);
-                return true;*/
             case R.id.action_new_runde:
                 i = new Intent(this, NewRoundActivity.class);
                 i.putExtra(NewRoundActivity.TRAINING_ID, mTraining);
                 i.putExtra(NewRoundActivity.FROM_PASSE, true);
                 startActivity(i);
                 overridePendingTransition(R.anim.left_in_complete, R.anim.right_out_half);
+                return true;
+            case R.id.action_switch_mode:
+                mMode = !mMode;
+                target.switchMode(mMode, true);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                prefs.edit().putBoolean(TARGET_MODE, mMode).apply();
+                supportInvalidateOptionsMenu();
                 return true;
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
@@ -201,14 +219,14 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
     }
 
     @Override
-    public void OnTargetSet(int[] zones) {
+    public void OnTargetSet(Passe passe) {
         TargetOpenHelper db = new TargetOpenHelper(this);
 
         if (curPasse > savedPasses) {
             savedPasses++;
-            db.addPasseToRound(mRound, zones);
+            db.addPasseToRound(mRound, passe);
         } else {
-            db.updatePasse(mRound, curPasse, zones);
+            db.updatePasse(mRound, curPasse, passe);
         }
         db.close();
         updatePasse();

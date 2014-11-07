@@ -2,10 +2,8 @@ package de.dreier.mytargets;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 /**
@@ -44,7 +42,7 @@ public class RoundsAdapter extends NowListAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         int tar = cursor.getInt(targetInd);
         long round = cursor.getLong(idInd);
-        int[] target = TargetView.target_points[tar];
+        int[] target = Target.target_points[tar];
         int reached = db.getRoundPoints(round,tar);
         int maxP = cursor.getInt(pppInd)*target[0]*db.getPasses(round).getCount();
 

@@ -83,5 +83,6 @@
     <string name="nine">Neuner</string>
     <string name="ten_x">Zehner+X</string>
     <string name="average">Schnitt</string>
+    <string name="switch_mode">Wechsle Eingabe Modus</string>
 
 </resources>

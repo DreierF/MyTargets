@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".SetTargetsActivity">
     <item
+        android:id="@+id/action_switch_mode"
+        android:icon="@drawable/ic_target_exact_24dp"
+        android:title="@string/switch_mode"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_new_runde"
         android:icon="@drawable/ic_add_white_24dp"
         android:title="@string/new_round"

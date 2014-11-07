@@ -80,5 +80,6 @@
     <string name="nine">Nine</string>
     <string name="ten_x">Ten+X</string>
     <string name="average">Average</string>
+    <string name="switch_mode">Switch input mode</string>
 
 </resources>

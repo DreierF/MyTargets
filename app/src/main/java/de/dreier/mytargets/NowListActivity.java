@@ -151,6 +151,14 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
         }
     }
 
+    public void onFabPressed(View view) {
+        Intent i = new Intent();
+        if (onItemClick(i, 0, 0)) {
+            startActivity(i);
+            overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        }
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
