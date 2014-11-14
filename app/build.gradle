@@ -8,8 +8,8 @@ android {
         applicationId "de.dreier.mytargets"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 8
-        versionName "1.7"
+        versionCode 11
+        versionName "1.8.2"
     }
     buildTypes {
         release {

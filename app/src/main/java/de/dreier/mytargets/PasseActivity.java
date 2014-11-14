@@ -313,8 +313,6 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
         content.putExtra(ROUND_ID, mRound);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, content, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // Load background and bow settings
-        Log.d("bow", "" + r.bow);
         Bitmap image;
         String title, setting;
 
@@ -330,8 +328,8 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
             setting = getString(R.string.swipe_to_left);
         }
 
-        // Set bow background and sight settings
-        TargetOpenHelper.Bow bow = db.getBow(r.bow, true);
+        // Load background and bow settings
+        TargetOpenHelper.Bow bow = db.getBow(r.bow, false);
         if (r.bow == -1 || bow == null) {
             image = BitmapFactory.decodeResource(getResources(), R.drawable.wear_bg);
         } else {

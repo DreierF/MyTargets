@@ -611,7 +611,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         Date date;
     }
 
-    public class Round implements Serializable {
+    public static class Round implements Serializable {
         int ppp;
         int target;
         long training;

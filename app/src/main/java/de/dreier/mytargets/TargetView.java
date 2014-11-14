@@ -156,9 +156,9 @@ public class TargetView extends View implements View.OnTouchListener {
             float py = mPasse.points[currentArrow][1];
             int append = (px < 0 && py < 0) ? 1 : 0;
             canvas.clipRect(midX - radius + append * radius, 0,
-                    midY - radius + radius * (append + 1), radius, Region.Op.REPLACE);
-            int x = (int) (radius * (append + 0.5 - px * 2));
-            int y = (int) (radius * (0.5 - py * 2));
+                    midX - radius + radius * (append + 1), midY, Region.Op.REPLACE);
+            int x = (int) (midX + radius * (append - 2 * px - 0.5));
+            int y = (int) (midY + radius * (-2 * py - 0.5));
             drawTarget(canvas, x, y, radius * 2);
             canvas.restore();
         }
@@ -415,9 +415,9 @@ public class TargetView extends View implements View.OnTouchListener {
     }
 
     private void calcSizes() {
-        int bounds = Math.min(contentWidth * (mModeEasy ? 2 : 1), contentHeight);
-
-        radius = (int) (bounds / 2.0 - (mModeEasy ? 50 : 10) * density);
+        float radH = (contentHeight - 10 * density) / 2.45f;
+        float radW = (contentWidth - (mModeEasy ? 70 : 20) * density) * (mModeEasy ? 1 : 0.5f);
+        radius = (int) (Math.min(radW, radH));
         midX = mModeEasy ? 0 : contentWidth / 2;
         midY = radius + (int) (10 * density);
         resultX1 = 30 * density;
