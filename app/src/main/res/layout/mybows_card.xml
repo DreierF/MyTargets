@@ -4,23 +4,19 @@
     android:layout_height="?android:attr/listPreferredItemHeight">
 
     <LinearLayout
+        style="@style/Card"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:background="@drawable/card_selector">
+        android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/newText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/newText"
-            android:text="@string/my_bows"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:textColor="@color/card_action"/>
+            android:text="@string/my_bows"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/card_action" />
 
     </LinearLayout>
 

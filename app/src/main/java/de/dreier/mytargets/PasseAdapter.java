@@ -6,7 +6,6 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -41,9 +40,9 @@ public class PasseAdapter extends NowListAdapter {
             view = convertView;
         }
 
-        int[] target = Target.target_points[mRoundInfo.target];
-        int reached = db.getRoundPoints(mRound, mRoundInfo.target);
-        int maxP = mRoundInfo.ppp * target[0] * db.getPasses(mRound).getCount();
+        int maxPoints = Target.getMaxPoints(mRoundInfo.target);
+        int reached = db.getRoundPoints(mRound);
+        int maxP = mRoundInfo.ppp * maxPoints * db.getPasses(mRound).getCount();
 
         TextView round = (TextView) view.findViewById(R.id.detail_round);
         TextView info = (TextView) view.findViewById(R.id.detail_round_info);
@@ -85,11 +84,9 @@ public class PasseAdapter extends NowListAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder holder = (ViewHolder) view.getTag();
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) holder.layout.getLayoutParams();
-        params.setMargins((int) (8 * density), (int) (cursor.getPosition() == 0 ? 8 * density : 0), (int) (8 * density), (int) (cursor.getPosition() == cursor.getCount() - 1 ? 8 * density : 0));
         holder.subtitle.setText(context.getString(R.string.passe) + " " + (1 + cursor.getPosition()));
         int[] points = db.getPasse(cursor.getLong(passeIdInd));
-        holder.shots.setPoints(points, mRoundInfo.target);
+        holder.shots.setPoints(points, mRoundInfo.target, mRoundInfo.compound);
     }
 
     public static class ViewHolder {

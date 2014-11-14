@@ -1,5 +1,7 @@
 package de.dreier.mytargets;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,13 +20,14 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
     private long mTraining = -1, mRound = -1;
 
     private Spinner distance;
-    private RadioButton outdoor, indoor;
+    private RadioButton indoor;
     private Spinner bow, target;
     public static String[] distances = {"10m", "15m", "18m", "20m", "25m", "30m", "40m", "50m", "60m", "70m", "90m"};
     public static int[] distanceValues = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
     private RadioButton ppp3;
     private Button addBow;
     private boolean mCalledFromPasse = false;
+    private int mBowType = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +53,7 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
 
         distance = (Spinner) findViewById(R.id.distance);
         distance.setAdapter(adapter);
-        outdoor = (RadioButton) findViewById(R.id.outdoor);
+        RadioButton outdoor = (RadioButton) findViewById(R.id.outdoor);
         indoor = (RadioButton) findViewById(R.id.indoor);
         ppp3 = (RadioButton) findViewById(R.id.ppp3);
         RadioButton ppp6 = (RadioButton) findViewById(R.id.ppp6);
@@ -116,16 +119,45 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(final View view) {
+        int tar = target.getSelectedItemPosition();
+
+        if (bow.getAdapter().getCount() == 0 && mBowType == -1 && tar == 4) {
+            new AlertDialog.Builder(this).setTitle(R.string.title_compound)
+                    .setMessage(R.string.msg_compound_type)
+                    .setPositiveButton(R.string.compound_bow, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mBowType = 1;
+                            NewRoundActivity.this.onClick(view);
+                        }
+                    })
+                    .setNegativeButton(R.string.other_bow, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mBowType = 0;
+                            NewRoundActivity.this.onClick(view);
+                        }
+                    })
+                    .show();
+            return;
+        }
+
         TargetOpenHelper db = new TargetOpenHelper(this);
         if (mTraining == -1) {
             mTraining = db.newTraining();
         }
         long b = bow.getSelectedItemId();
+        if (bow.getAdapter().getCount() == 0) {
+            if (tar == 4) {
+                b = mBowType == 1 ? -2 : -1;
+            } else {
+                b = -1;
+            }
+        }
         int dist = distance.getSelectedItemPosition();
         String unit = "m";
         int p = ppp3.isChecked() ? 3 : 6;
-        int tar = target.getSelectedItemPosition();
         boolean in = indoor.isChecked();
         long round = db.newRound(mTraining, mRound, dist, unit, in, p, tar, b);
         db.close();

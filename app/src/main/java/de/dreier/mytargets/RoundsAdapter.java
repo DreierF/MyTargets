@@ -17,7 +17,7 @@ public class RoundsAdapter extends NowListAdapter {
     private int distInd, indoorInd;
 
     public RoundsAdapter(Context context, long training) {
-        super(context,new TargetOpenHelper(context).getRunden(training));
+        super(context, new TargetOpenHelper(context).getRunden(training));
         idInd = getCursor().getColumnIndex(TargetOpenHelper.RUNDE_ID);
         distInd = getCursor().getColumnIndex(TargetOpenHelper.RUNDE_DISTANCE);
         unitInd = getCursor().getColumnIndex(TargetOpenHelper.RUNDE_UNIT);
@@ -42,14 +42,14 @@ public class RoundsAdapter extends NowListAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         int tar = cursor.getInt(targetInd);
         long round = cursor.getLong(idInd);
-        int[] target = Target.target_points[tar];
-        int reached = db.getRoundPoints(round,tar);
-        int maxP = cursor.getInt(pppInd)*target[0]*db.getPasses(round).getCount();
+        int max = Target.getMaxPoints(tar);
+        int reached = db.getRoundPoints(round);
+        int maxP = cursor.getInt(pppInd) * max * db.getPasses(round).getCount();
 
         ViewHolder holder = (ViewHolder) view.getTag();
-        holder.title.setText(context.getString(R.string.round)+" "+(1+cursor.getPosition()));
-        holder.subtitle.setText(NewRoundActivity.distanceValues[cursor.getInt(distInd)]+cursor.getString(unitInd)+" - "+context.getString(cursor.getInt(indoorInd)==0?R.string.outdoor:R.string.indoor));
-        holder.ges.setText(reached+"/"+maxP);
+        holder.title.setText(context.getString(R.string.round) + " " + (1 + cursor.getPosition()));
+        holder.subtitle.setText(NewRoundActivity.distanceValues[cursor.getInt(distInd)] + cursor.getString(unitInd) + " - " + context.getString(cursor.getInt(indoorInd) == 0 ? R.string.outdoor : R.string.indoor));
+        holder.ges.setText(reached + "/" + maxP);
     }
 
     public static class ViewHolder {

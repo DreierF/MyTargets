@@ -4,10 +4,9 @@
     android:layout_height="wrap_content">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/Card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:background="@drawable/card_selector"
         android:orientation="horizontal">
 
         <LinearLayout

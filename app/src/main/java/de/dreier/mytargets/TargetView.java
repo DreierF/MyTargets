@@ -26,8 +26,6 @@ public class TargetView extends View implements View.OnTouchListener {
     private int currentArrow = 0, lastSetArrow = -1;
 
     private OnTargetSetListener setListener = null;
-    private int ppp = 3;
-    private int targetRound = 0;
     private float density;
     private float resultX1, resultX2, spacePerResult;
     private float mCurAnimationProgress;
@@ -45,26 +43,23 @@ public class TargetView extends View implements View.OnTouchListener {
     private Passe mPasse;
     private int oldRadius;
     private float oldSpacePerResult, oldResultX1;
+    private TargetOpenHelper.Round roundInfo;
 
     public void reset() {
         currentArrow = 0;
         lastSetArrow = -1;
-        setPPP(ppp);
-    }
-
-    public void setPPP(int num) {
         mCurSelecting = -1;
-        ppp = num;
-        mPasse = new Passe(num);
-        for (int i = 0; i < num; i++) {
+        for (int i = 0; i < roundInfo.ppp; i++) {
             mPasse.zones[i] = -2;
         }
         invalidate();
     }
 
-    public void setTargetRound(int i) {
-        targetRound = i;
-        mZoneCount = Target.target_rounds[targetRound].length;
+    public void setRoundInfo(TargetOpenHelper.Round r) {
+        roundInfo = r;
+        mZoneCount = Target.target_rounds[r.target].length;
+        mPasse = new Passe(r.ppp);
+        reset();
     }
 
     public void setZones(Passe passe) {
@@ -135,9 +130,9 @@ public class TargetView extends View implements View.OnTouchListener {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        target = Target.target_rounds[targetRound];
+        target = Target.target_rounds[roundInfo.target];
         int curZone;
-        if (currentArrow < ppp)
+        if (currentArrow < roundInfo.ppp)
             curZone = mPasse.zones[currentArrow];
         else
             curZone = -2;
@@ -188,16 +183,19 @@ public class TargetView extends View implements View.OnTouchListener {
         }
 
         // Draw all points of this passe at the bottom
-        for (int i = 0; i <= lastSetArrow && i < ppp; i++) {
+        for (int i = 0; i <= lastSetArrow && i < roundInfo.ppp; i++) {
             float newX = spacePerResult * i + resultX1 + (spacePerResult / 2.0f);
             float newY = midY + radius * 1.3f;
-            if (mCurSelecting == -2) {
-                float oldX = oldSpacePerResult * i + oldResultX1 + (oldSpacePerResult / 2.0f);
-                float oldY = mOutFromY + oldRadius * 1.3f;
-                drawCircle(canvas, oldX + (newX - oldX) * mCurAnimationProgress,
-                        oldY + (newY - oldY) * mCurAnimationProgress, mPasse.zones[i]);
-            } else if (currentArrow != i && mCurSelecting != i)
-                drawCircle(canvas, newX, newY, mPasse.zones[i]);
+            if (currentArrow != i && mCurSelecting != i) {
+                if (mCurSelecting == -2) {
+                    float oldX = oldSpacePerResult * i + oldResultX1 + (oldSpacePerResult / 2.0f);
+                    float oldY = mOutFromY + oldRadius * 1.3f;
+                    drawCircle(canvas, oldX + (newX - oldX) * mCurAnimationProgress,
+                            oldY + (newY - oldY) * mCurAnimationProgress, mPasse.zones[i]);
+                } else {
+                    drawCircle(canvas, newX, newY, mPasse.zones[i]);
+                }
+            }
         }
 
         // Draw animation
@@ -206,7 +204,7 @@ public class TargetView extends View implements View.OnTouchListener {
             if (mOutZone >= -1) {
                 drawCircle(canvas, mOutFromX + (mOutToX - mOutFromX) * mCurAnimationProgress, mOutFromY + (mOutToY - mOutFromY) * mCurAnimationProgress, mOutZone);
                 if (mOutZone > -1 && mModeEasy) {
-                    int colorInd = mOutZone > -1 ? Target.target_rounds[targetRound][mOutZone] : 3;
+                    int colorInd = mOutZone > -1 ? Target.target_rounds[roundInfo.target][mOutZone] : 3;
                     int color = Target.circleStrokeColor[colorInd];
                     circleColorP.setColor(animateColor(color, color & 0xFFFFFF));
                     canvas.drawLine(midX, mOutFromY, midX + radius + 10 * density, mOutFromY, circleColorP);
@@ -216,7 +214,7 @@ public class TargetView extends View implements View.OnTouchListener {
             if (mInZone >= -1) {
                 drawCircle(canvas, mInFromX + (mInToX - mInFromX) * mCurAnimationProgress, mInFromY + (mInToY - mInFromY) * mCurAnimationProgress, mInZone);
                 if (mInZone > -1 && mModeEasy) {
-                    int colorInd = mInZone > -1 ? Target.target_rounds[targetRound][mInZone] : 3;
+                    int colorInd = mInZone > -1 ? Target.target_rounds[roundInfo.target][mInZone] : 3;
                     int color = Target.circleStrokeColor[colorInd];
                     circleColorP.setColor(animateColor(color & 0xFFFFFF, color));
                     canvas.drawLine(midX, mInToY, midX + radius + 10 * density, mInToY, circleColorP);
@@ -242,7 +240,7 @@ public class TargetView extends View implements View.OnTouchListener {
         if (!mModeEasy) {
             float count = 0;
             float sumX = 0, sumY = 0;
-            for (int i = 0; i <= lastSetArrow + 1 && i < ppp && mPasse.zones[i] != -2; i++) {
+            for (int i = 0; i <= lastSetArrow + 1 && i < roundInfo.ppp && mPasse.zones[i] != -2; i++) {
 
                 // For yellow and white background use black font color
                 int colorInd = i == mZoneCount || mPasse.zones[i] < 0 ? 0 : target[mPasse.zones[i]];
@@ -297,14 +295,14 @@ public class TargetView extends View implements View.OnTouchListener {
 
                 // For yellow and white background use black font color
                 mTextPaint.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
-                canvas.drawText(Target.getStringByZone(targetRound, i), X1 + (X2 - X1) / 2, Y1 + (Y2 - Y1) / 2 + 10 * density, mTextPaint);
+                canvas.drawText(Target.getStringByZone(roundInfo.target, i, roundInfo.compound), X1 + (X2 - X1) / 2, Y1 + (Y2 - Y1) / 2 + 10 * density, mTextPaint);
             }
         }
     }
 
     private void initAnimationPositions() {
         //Calculate positions of outgoing object
-        if (currentArrow < ppp && mPasse.zones[currentArrow] >= -1) {
+        if (currentArrow < roundInfo.ppp && mPasse.zones[currentArrow] >= -1) {
             mOutZone = mPasse.zones[currentArrow];
             mOutToX = spacePerResult * currentArrow + resultX1 + (spacePerResult / 2.0f);
             mOutToY = midY + radius * 1.3f;
@@ -324,7 +322,7 @@ public class TargetView extends View implements View.OnTouchListener {
         }
 
         // Calculate positions for incoming object
-        if (mCurSelecting < ppp && mPasse.zones[mCurSelecting] >= -1) {
+        if (mCurSelecting < roundInfo.ppp && mPasse.zones[mCurSelecting] >= -1) {
             mInZone = mPasse.zones[mCurSelecting];
             mInFromX = spacePerResult * mCurSelecting + resultX1 + (spacePerResult / 2.0f);
             mInFromY = midY + radius * 1.3f;
@@ -345,9 +343,9 @@ public class TargetView extends View implements View.OnTouchListener {
     }
 
     private int getZoneColor(int zone) {
-        final int[] target = Target.target_rounds[targetRound];
+        final int[] target = Target.target_rounds[roundInfo.target];
         final int curZone;
-        if (currentArrow < ppp)
+        if (currentArrow < roundInfo.ppp)
             curZone = mPasse.zones[currentArrow];
         else
             curZone = -2;
@@ -379,24 +377,22 @@ public class TargetView extends View implements View.OnTouchListener {
 
     public void saveState(Bundle b) {
         b.putSerializable("passe", mPasse);
+        b.putSerializable("roundInfo", roundInfo);
         b.putInt("currentArrow", currentArrow);
         b.putInt("lastSetArrow", lastSetArrow);
-        b.putInt("ppp", ppp);
-        b.putInt("target_round", targetRound);
     }
 
     public void restoreState(Bundle b) {
         mPasse = (Passe) b.getSerializable("passe");
         currentArrow = b.getInt("currentArrow");
         lastSetArrow = b.getInt("lastSetArrow");
-        ppp = b.getInt("ppp");
-        targetRound = b.getInt("target_round");
+        roundInfo = (TargetOpenHelper.Round) b.getSerializable("roundInfo");
     }
 
     private void drawCircle(Canvas can, float x, float y, int zone) {
         int colorInd;
         if (zone > -1) {
-            colorInd = Target.target_rounds[targetRound][zone];
+            colorInd = Target.target_rounds[roundInfo.target][zone];
         } else {
             colorInd = 3;
         }
@@ -407,7 +403,7 @@ public class TargetView extends View implements View.OnTouchListener {
         circleColorP.setColor(Target.circleStrokeColor[colorInd]);
         can.drawCircle(x, y, 17 * density, circleColorP);
         mTextPaint.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
-        can.drawText(Target.getStringByZone(targetRound, zone), x, y + 7 * density, mTextPaint);
+        can.drawText(Target.getStringByZone(roundInfo.target, zone, roundInfo.compound), x, y + 7 * density, mTextPaint);
     }
 
     @Override
@@ -426,7 +422,7 @@ public class TargetView extends View implements View.OnTouchListener {
         midY = radius + (int) (10 * density);
         resultX1 = 30 * density;
         resultX2 = contentWidth - (mModeEasy ? 80 : 30) * density;
-        spacePerResult = (resultX2 - resultX1) / ppp;
+        spacePerResult = (resultX2 - resultX1) / roundInfo.ppp;
     }
 
     @Override
@@ -440,7 +436,7 @@ public class TargetView extends View implements View.OnTouchListener {
         // Handle selection of already saved shoots
         if (x > resultX1 && x < resultX2 && y > midY + radius * 1.3f - 20 * density && y < midY + radius * 1.3f + 20 * density) {
             int arrow = (int) ((x - resultX1) / spacePerResult);
-            if (arrow < ppp && mPasse.zones[arrow] >= -1 && arrow != currentArrow) {
+            if (arrow < roundInfo.ppp && mPasse.zones[arrow] >= -1 && arrow != currentArrow) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     mCurPressed = -1;
                     animateSelectCircle(arrow);
@@ -452,7 +448,7 @@ public class TargetView extends View implements View.OnTouchListener {
             }
         }
 
-        int zone, ringe = Target.target_rounds[targetRound].length;
+        int zone, ringe = Target.target_rounds[roundInfo.target].length;
         // Handle selection via right indicator bar
         if (x > midX + radius + 30 * density && mModeEasy) {
             zone = (int) (y * (ringe + 1) / (float) contentHeight);
@@ -467,7 +463,7 @@ public class TargetView extends View implements View.OnTouchListener {
             zone = -1;
 
         // If a valid selection was made save it in the passe
-        if (currentArrow < ppp && (mPasse.zones[currentArrow] != zone || !mModeEasy)) {
+        if (currentArrow < roundInfo.ppp && (mPasse.zones[currentArrow] != zone || !mModeEasy)) {
             mPasse.zones[currentArrow] = zone;
             mPasse.points[currentArrow][0] = (x - midX) / radius;
             mPasse.points[currentArrow][1] = (y - midY) / radius;
@@ -482,7 +478,7 @@ public class TargetView extends View implements View.OnTouchListener {
 
             animateSelectCircle(lastSetArrow + 1);
 
-            if (lastSetArrow + 1 >= ppp && setListener != null)
+            if (lastSetArrow + 1 >= roundInfo.ppp && setListener != null)
                 setListener.OnTargetSet(mPasse);
 
             return true;

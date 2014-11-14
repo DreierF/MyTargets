@@ -1,12 +1,19 @@
 package de.dreier.mytargets;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.RemoteInput;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +27,7 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
     public static final String PASSE_IND = "passe_ind";
     private static final String EXTRA_VOICE_REPLY = "voice_input";
     private static final String TARGET_MODE = "target_mode";
+    private static final String PASSE_VIA_VOICE = "passe_via_voice";
     private TargetView target;
     private Button next, prev;
     private int curPasse = 1;
@@ -27,13 +35,30 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
     private long mRound, mTraining;
     private TargetOpenHelper db;
     private boolean mMode = true;
+    private TargetOpenHelper.Round r;
+
+    @Override
+    protected void onNewIntent(Intent i) {
+        super.onNewIntent(i);
+        Bundle remoteInput = RemoteInput.getResultsFromIntent(i);
+        if (remoteInput != null) {
+            Log.d("round", "" + mRound);
+            String voiceInput = remoteInput.getCharSequence(EXTRA_VOICE_REPLY).toString();
+            createPasseFromVoiceInput(voiceInput, r);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.cancel(1);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_targets);
-
-        //updateNotification();
 
         db = new TargetOpenHelper(this);
 
@@ -53,19 +78,20 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
         next = (Button) findViewById(R.id.next_button);
         prev = (Button) findViewById(R.id.prev_button);
 
-        TargetOpenHelper.Round r = db.getRound(mRound);
+        r = db.getRound(mRound);
         mTraining = r.training;
-        target.setTargetRound(r.target);
-        target.setPPP(r.ppp);
+        target.setRoundInfo(r);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         mMode = prefs.getBoolean(TARGET_MODE, true);
         target.switchMode(mMode, false);
-/*
+
+        updateNotification(null);
+
         Bundle remoteInput = RemoteInput.getResultsFromIntent(i);
         if (remoteInput != null) {
             String voiceInput = remoteInput.getCharSequence(EXTRA_VOICE_REPLY).toString();
-            createPasseFromVoiceInput(voiceInput,r);
-        }*/
+            createPasseFromVoiceInput(voiceInput, r);
+        }
 
         if (savedInstanceState != null) {
             target.restoreState(savedInstanceState);
@@ -90,19 +116,19 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    // TODO handle "2 times X and 1 times 10" evtl.?
-    /*private void createPasseFromVoiceInput(String voiceInput, TargetOpenHelper.Round r) {
-        String[] inp = voiceInput.split("( |.)");
-        int[] passe_zone = new int[r.ppp];
-        int biggestPoints = TargetView.target_points[r.target][0];
+    private void createPasseFromVoiceInput(String voiceInput, TargetOpenHelper.Round r) {
+        Log.d("voice", voiceInput);
+        String[] inp = voiceInput.split("( |\\.)");
+        Passe passe = new Passe(r.ppp);
+        int biggestPoints = Target.getMaxPoints(r.target);
         int cur = 0;
         int color = -1, zone = -1;
-        for(int i=0;i<inp.length;i++) {
+        for (int i = 0; i < inp.length; i++) {
             try {
                 int points = Integer.parseInt(inp[i]);
-                while(points>biggestPoints) {
+                while (points > biggestPoints) {
                     int firstPoints;
-                    if(biggestPoints==10) {
+                    if (biggestPoints == 10) {
                         firstPoints = Integer.parseInt(inp[i].substring(0, 2));
                         if (firstPoints != 10) {
                             firstPoints = Integer.parseInt(inp[i].substring(0, 1));
@@ -113,45 +139,72 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
                     } else {
                         firstPoints = Integer.parseInt(inp[i].substring(0, 1));
                     }
-                    passe_zone[cur] = firstPoints;
+                    passe.zones[cur] = Target.pointsToZone(r.target, firstPoints);
+                    Log.d("passe", "recognized: " + firstPoints);
                     cur++;
                     points = Integer.parseInt(inp[i]);
                 }
-                passe_zone[cur] = points;
+                Log.d("passe", "recognized: " + points);
+                passe.zones[cur] = Target.pointsToZone(r.target, points);
                 cur++;
             } catch (NumberFormatException e) {
                 String p = inp[i].toLowerCase();
-                if(p==getString(R.string.yellow)) {
+                if (p.equals(getString(R.string.yellow))) {
                     color = 0;
-                } else if(p==getString(R.string.blue)) {
+                } else if (p.equals(getString(R.string.gold))) {
+                    color = 0;
+                } else if (p.equals(getString(R.string.blue))) {
                     color = 1;
-                } else if(p==getString(R.string.red)) {
+                } else if (p.equals(getString(R.string.red))) {
                     color = 2;
-                } else if(p==getString(R.string.black)) {
+                } else if (p.equals(getString(R.string.black))) {
                     color = 3;
-                } else if(p==getString(R.string.white)) {
+                } else if (p.equals(getString(R.string.white))) {
                     color = 4;
-                } else if(p==getString(R.string.inner)) {
+                } else if (p.equals(getString(R.string.inner))) {
                     zone = 0;
-                } else if(p==getString(R.string.outer)) {
+                } else if (p.equals(getString(R.string.outer))) {
                     zone = 1;
-                } else if(p=="x") {
-                    passe_zone[cur] = 0;
+                } else if (p.equals(getString(R.string.mistake))) {
+                    Log.d("passe", "recognized: mistake");
+                    passe.zones[cur] = -1;
                     cur++;
+                } else if (p.startsWith("x")) {
+                    Log.d("passe", "recognized: x");
+                    passe.zones[cur] = 0;
+                    cur++;
+                    inp[i] = inp[i].substring(1).trim();
+                    if (!inp[i].isEmpty())
+                        i--;
+                } else {
+                    Log.d("passe", "recognized nothing");
+                    inp[i] = inp[i].substring(1).trim();
+                    if (!inp[i].isEmpty())
+                        i--;
                 }
 
-                if(color!=-1 && zone!=-1) {
-                    passe_zone[cur] = 1+color*2+zone;
+                if (color != -1 && zone != -1) {
+                    Log.d("passe", "recognized: " + (1 + color * 2 + zone));
+                    passe.zones[cur] = 1 + color * 2 + zone;
                     cur++;
                     color = -1;
                     zone = -1;
                 }
             }
         }
-        if(cur==r.ppp) {
-            OnTargetSet(passe_zone);
+        if (cur == r.ppp) {
+            for (int i = 0; i < r.ppp; i++) {
+                passe.points[i][0] = Target.zoneToX(r.target, passe.zones[i]);
+                passe.points[i][1] = 0;
+            }
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            prefs.edit().putBoolean(PASSE_VIA_VOICE, true).apply();
+            curPasse = savedPasses + 1;
+            OnTargetSet(passe);
+            setPasse(curPasse);
+            updateNotification(passe);
         }
-    }*/
+    }
 
     public void setPasse(int passe) {
         if (passe <= savedPasses) {
@@ -181,7 +234,7 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_switch_mode).setIcon(mMode?R.drawable.ic_target_exact_24dp:R.drawable.ic_target_zone_24dp);
+        menu.findItem(R.id.action_switch_mode).setIcon(mMode ? R.drawable.ic_target_exact_24dp : R.drawable.ic_target_zone_24dp);
         return true;
     }
 
@@ -238,62 +291,73 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
         overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
-    /*public void updateNotification() {
-        int notificationId = 1;
-
-        RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY)
-                .setLabel("Was hast du getroffen?")
-                .build();
-
-        Intent replyIntent = new Intent(this, PasseActivity.class);
-        replyIntent.putExtra(ROUND_ID,mRound);
-        PendingIntent replyPendingIntent =
-                PendingIntent.getActivity(this, 0, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);//PendingIntent.FLAG_UPDATE_CURRENT
-
-        NotificationCompat.Action action = new NotificationCompat.Action.Builder(
-                R.drawable.wear_action_search, null, replyPendingIntent).build();
-
-
-        /*NotificationCompat.Action action =
-                new NotificationCompat.Action.Builder(R.drawable.ic_action_location_found,
-                        "Passe", replyPendingIntent)
-                        .addRemoteInput(remoteInput)
-                        .build();*
-
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle("MyTargets")
-                        .setContentText("Neue Passe")
-                        .extend(new NotificationCompat.WearableExtender().addAction(action));
-                                //.setContentAction(0));
-
-
-      /*
-        // Create the reply action and add the remote input
-        NotificationCompat.Action action =
-                new NotificationCompat.Action.Builder(R.drawable.wear_action_search,
-                        "Passe", replyPendingIntent)
-                       // .addRemoteInput(remoteInput)
-                        .build();
-
-
-        // This notification will be shown only on watch
-        final NotificationCompat.Builder wearableNotificationBuilder = new NotificationCompat.Builder(this)
-                 .setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle("MyTargets")
-                .setContentText("Wische nach links")
-                .setOngoing(false)
-                .setOnlyAlertOnce(true)
-                .setGroup("GROUP")
-                .setGroupSummary(false)
-                .addAction(action);*
-
+    public void updateNotification(Passe passe) {
         // Get an instance of the NotificationManager service
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(this);
 
+        RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY)
+                .setLabel(getString(R.string.what_input)).build();
+
+        Intent replyIntent = new Intent(this, PasseActivity.class);
+        replyIntent.putExtra(ROUND_ID, mRound);
+        PendingIntent replyPendingIntent = PendingIntent.getActivity(this, 0, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Create the reply action and add the remote input
+        NotificationCompat.Action action =
+                new NotificationCompat.Action.Builder(R.drawable.ic_action_location_found, "Passe", replyPendingIntent)
+                        .addRemoteInput(remoteInput).build();
+
+        // This notification will be shown only on watch
+        Intent content = new Intent(this, PasseActivity.class);
+        content.putExtra(ROUND_ID, mRound);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, content, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Load background and bow settings
+        Log.d("bow", "" + r.bow);
+        Bitmap image;
+        String title, setting;
+
+        // Initialize message text
+        if (passe != null) {
+            title = "Passe "+curPasse;
+            setting = "";
+            for (int i = 0; i < passe.zones.length; i++) {
+                setting += Target.getStringByZone(r.target, passe.zones[i], r.compound)+" ";
+            }
+        } else {
+            title = getString(R.string.app_name);
+            setting = getString(R.string.swipe_to_left);
+        }
+
+        // Set bow background and sight settings
+        TargetOpenHelper.Bow bow = db.getBow(r.bow, true);
+        if (r.bow == -1 || bow == null) {
+            image = BitmapFactory.decodeResource(getResources(), R.drawable.wear_bg);
+        } else {
+            image = bow.image;
+            if (passe != null) {
+                setting += "\n";
+                setting += db.getSetting(r.bow, r.distanceInd);
+            } else {
+                setting = db.getSetting(r.bow, r.distanceInd);
+            }
+        }
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!prefs.getBoolean(PASSE_VIA_VOICE, false)) {
+            setting = getString(R.string.voice_how_to);
+        }
+
+        final NotificationCompat.Builder wearableNotificationBuilder = new NotificationCompat.Builder(this)
+                .setContentTitle(title)
+                .setContentText(setting)
+                .setContentIntent(contentIntent)
+                .setGroup("GROUP")
+                .setGroupSummary(false)
+                .extend(new NotificationCompat.WearableExtender().addAction(action).setBackground(image));
+
         // Build the notification and issues it with notification manager.
-        notificationManager.notify(notificationId, notificationBuilder.build());
-    }*/
+        notificationManager.notify(1, wearableNotificationBuilder.build());
+    }
 }

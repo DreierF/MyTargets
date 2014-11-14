@@ -149,12 +149,8 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
                     int shoot = cur.getInt(0);
                     int zone = cur.getInt(1);
                     int target = cur.getInt(2);
-                    if (zone == -1) {
-                        db.execSQL("UPDATE SHOOT SET x=1, y=1 WHERE _id=" + shoot);
-                    } else {
-                        float x = (zone * 2 + 1) / (float) (Target.target_points[target].length * 2);
-                        db.execSQL("UPDATE SHOOT SET x=" + x + ", y=0 WHERE _id=" + shoot);
-                    }
+                    float x = Target.zoneToX(target, zone);
+                    db.execSQL("UPDATE SHOOT SET x=" + x + ", y=0 WHERE _id=" + shoot);
                 } while (cur.moveToNext());
             }
             cur.close();
@@ -310,11 +306,10 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
 
     public Round getRound(long round) {
         SQLiteDatabase db = getReadableDatabase();
-        String[] cols = {RUNDE_PPP, RUNDE_TRAINING, RUNDE_TARGET, RUNDE_INDOOR, RUNDE_DISTANCE, RUNDE_UNIT, RUNDE_BOW};
-        String[] args = {"" + round};
 
         // Get all generic round attributes
-        Cursor res = db.query(TABLE_ROUND, cols, RUNDE_ID + "=?", args, null, null, null);
+        Cursor res = db.rawQuery("SELECT r.ppp, r.training, r.target, r.indoor, r.distance, r.unit, r.bow, b.type " +
+                "FROM ROUND r LEFT JOIN BOW b ON b._id=r.bow WHERE r._id=" + round, null);
         res.moveToFirst();
         Round r = new Round();
         r.ppp = res.getInt(0);
@@ -324,12 +319,13 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         r.distance = "" + NewRoundActivity.distanceValues[res.getInt(4)] + res.getString(5);
         r.distanceInd = res.getInt(4);
         r.bow = res.getInt(6);
+        r.compound = r.bow == -2 || res.getInt(7) == 1;
         res.close();
 
         // Get number of X, 10 and 9 score
         Cursor cur = db.rawQuery("SELECT s.points, COUNT(*) " +
-                "FROM PASSE p, SHOOT s  WHERE p.round=? AND p._id = s.passe " +
-                "AND s.points<3 AND s.points>-1 GROUP BY s.points", args);
+                "FROM PASSE p, SHOOT s  WHERE p.round=" + round + " AND p._id = s.passe " +
+                "AND s.points<3 AND s.points>-1 GROUP BY s.points", null);
         if (cur.moveToFirst()) {
             do {
                 r.scoreCount[cur.getInt(0)] = cur.getInt(1);
@@ -340,19 +336,20 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         return r;
     }
 
-    public int getRoundPoints(long round, int tar) {
+    public int getRoundPoints(long round) {
         SQLiteDatabase db = getReadableDatabase();
         String[] args = {"" + round};
-        Cursor res = db.rawQuery("SELECT s." + SHOOT_ZONE +
-                " FROM " + TABLE_PASSE + " p, " + TABLE_SHOOT + " s" +
-                " WHERE p." + PASSE_ROUND + "=? AND s." + SHOOT_PASSE + "=p." + PASSE_ID, args);
+
+        Cursor res = db.rawQuery("SELECT s.points, r.target, CASE WHEN r.bow='-2' OR b.type='1' THEN 1 ELSE 0 END compound" +
+                " FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow" +
+                " WHERE r._id=p.round AND p.round=? AND s.passe=p._id", args);
         res.moveToFirst();
-        int[] target = Target.target_points[tar];
         int sum = 0;
         for (int i = 0; i < res.getCount(); i++) {
             int zone = res.getInt(0);
-            if (zone > -1)
-                sum += target[zone];
+            int target = res.getInt(1);
+            boolean compound = res.getInt(2) == 1;
+            sum += Target.getPointsByZone(target, zone, compound);
             res.moveToNext();
         }
         res.close();
@@ -548,7 +545,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
     public void exportAll(File file) throws IOException {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cur = db.rawQuery("SELECT t.title,datetime(t.datum/1000, 'unixepoch') AS date,r.indoor,r.distance," +
-                "r.target, b.name AS bow, s.points AS score " +
+                "r.target, b.name AS bow, s.points AS score, CASE WHEN r.bow='-2' OR b.type='1' THEN 1 ELSE 0 END compound " +
                 "FROM TRAINING t, ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON r.bow = b._id " +
                 "WHERE t._id = r.training AND r._id = p.round AND p._id = s.passe", null);
         String[] names = cur.getColumnNames();
@@ -556,17 +553,18 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         file.getParentFile().mkdirs();
         file.createNewFile();
         FileWriter writer = new FileWriter(file);
-        for (String column : names) {
-            writer.append("\"" + column + "\";");
+        for (int i = 0; i < names.length-1; i++) {
+            writer.append("\"" + names[i] + "\";");
         }
         writer.append("\n");
         int distInd = cur.getColumnIndexOrThrow("distance");
         int targetInd = cur.getColumnIndexOrThrow("target");
         int scoreInd = cur.getColumnIndexOrThrow("score");
         int indoorInd = cur.getColumnIndexOrThrow("indoor");
+        int compoundInd = cur.getColumnIndexOrThrow("compound");
         if (cur.moveToFirst()) {
             do {
-                for (int i = 0; i < names.length; i++) {
+                for (int i = 0; i < names.length-1; i++) {
                     writer.append("\"");
                     if (i == distInd) {
                         writer.append(NewRoundActivity.distances[cur.getInt(i)]);
@@ -578,12 +576,8 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
                         else
                             writer.append("Indoor");
                     } else if (i == scoreInd) {
-                        if (cur.getInt(scoreInd) == -1)
-                            writer.append("M");
-                        else if (cur.getInt(scoreInd) == 0)
-                            writer.append("X");
-                        else
-                            writer.append(String.valueOf(Target.target_points[cur.getInt(targetInd)][cur.getInt(scoreInd)]));
+                        String x = Target.getStringByZone(cur.getInt(targetInd), cur.getInt(scoreInd), cur.getInt(compoundInd)==1);
+                        writer.append(x);
                     } else {
                         writer.append(cur.getString(i));
                     }
@@ -617,7 +611,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         Date date;
     }
 
-    public class Round {
+    public class Round implements Serializable {
         int ppp;
         int target;
         long training;
@@ -626,5 +620,6 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         public int bow;
         public int distanceInd;
         public int[] scoreCount = new int[3];
+        public boolean compound;
     }
 }

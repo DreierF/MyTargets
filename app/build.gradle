@@ -8,8 +8,8 @@ android {
         applicationId "de.dreier.mytargets"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 7
-        versionName "1.6"
+        versionCode 8
+        versionName "1.7"
     }
     buildTypes {
         release {
@@ -22,6 +22,6 @@ android {
 dependencies {
     compile 'com.android.support:support-v4:21.0.0'
     compile 'com.android.support:appcompat-v7:21.0.0'
+    compile 'com.melnykov:floatingactionbutton:1.0.7'
     compile project(":libraries:FloatLabel")
-    compile project(":libraries:FloatingActionButton")
 }

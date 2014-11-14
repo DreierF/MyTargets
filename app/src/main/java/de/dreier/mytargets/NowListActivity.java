@@ -17,6 +17,8 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.melnykov.fab.FloatingActionButton;
+
 /**
  * Shows all rounds of one settings_only day
  */
@@ -105,6 +107,9 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
                 return false;
             }
         });
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.attachToListView(mListView);
     }
 
     protected void onEdit(long id) {}

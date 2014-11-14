@@ -42,9 +42,9 @@ public class RoundActivity extends NowListActivity {
 
         // Construct share intent
         mRoundInfo = db.getRound(mRound);
-        int[] target = Target.target_points[mRoundInfo.target];
-        int reached = db.getRoundPoints(mRound, mRoundInfo.target);
-        int maxP = mRoundInfo.ppp * target[0] * db.getPasses(mRound).getCount();
+        int max = Target.getMaxPoints(mRoundInfo.target);
+        int reached = db.getRoundPoints(mRound);
+        int maxP = mRoundInfo.ppp * max * db.getPasses(mRound).getCount();
         String text = String.format(getString(R.string.my_share_text),
                 mRoundInfo.scoreCount[0], mRoundInfo.scoreCount[1], mRoundInfo.scoreCount[2], reached, maxP);
         Intent shareIntent = new Intent();

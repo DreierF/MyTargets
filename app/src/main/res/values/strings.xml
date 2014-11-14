@@ -60,6 +60,7 @@
     <string name="my_bows">My bows</string>
     <string name="add_bow">Add bow</string>
     <string name="yellow">yellow</string>
+    <string name="gold">gold</string>
     <string name="red">red</string>
     <string name="blue">blue</string>
     <string name="black">black</string>
@@ -81,5 +82,13 @@
     <string name="ten_x">Ten+X</string>
     <string name="average">Average</string>
     <string name="switch_mode">Switch input mode</string>
+    <string name="swipe_to_left">Swipe to left</string>
+    <string name="watch_notification">Android Wear notification</string>
+    <string name="mistake">mistake</string>
+    <string name="title_compound">Compound?</string>
+    <string name="msg_compound_type">Which bow type are you using? (There is a difference in how many points you get for the golden rings)</string>
+    <string name="other_bow">Other bow</string>
+    <string name="what_input">What did you hit?</string>
+    <string name="voice_how_to">Swipe left and press Passe button. Then you can say \"X 10 9\", \"9 7 Mistake\" or \"Inner blue outer gold X\". The Passe gets automatically saved if it has been recognized.</string>
 
 </resources>

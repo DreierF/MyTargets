@@ -63,6 +63,7 @@
 
 
     <string name="yellow">gelb</string>
+    <string name="gold">gold</string>
     <string name="red">rot</string>
     <string name="blue">blau</string>
     <string name="black">schwarz</string>
@@ -84,5 +85,13 @@
     <string name="ten_x">Zehner+X</string>
     <string name="average">Schnitt</string>
     <string name="switch_mode">Wechsle Eingabe Modus</string>
+    <string name="swipe_to_left">Wische nach links</string>
+    <string name="watch_notification">Android Wear Benachrichtigung</string>
+    <string name="mistake">fehler</string>
+    <string name="title_compound">Compound?</string>
+    <string name="msg_compound_type">Welchen Bogentyp verwendest du? (Es entscheidet wie viele Punkte du für die goldenen Ringe bekommst)</string>
+    <string name="other_bow">Anderer Bogen</string>
+    <string name="what_input">Was hast du getroffen?</string>
+    <string name="voice_how_to">Swipe left and press Passe button. Then you can say \"X 10 9\", \"9 7 Mistake\" or \"Inner blue outer gold X\". The Passe gets automatically saved if it has been recognized.</string>
 
 </resources>
