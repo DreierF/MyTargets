@@ -323,9 +323,11 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         res.close();
 
         // Get number of X, 10 and 9 score
-        Cursor cur = db.rawQuery("SELECT s.points, COUNT(*) " +
-                "FROM PASSE p, SHOOT s  WHERE p.round=" + round + " AND p._id = s.passe " +
-                "AND s.points<3 AND s.points>-1 GROUP BY s.points", null);
+        Cursor cur = db.rawQuery("SELECT s.points+(CASE WHEN (r.bow='-2' OR b.type='1') "+
+                "AND s.points=1 AND r.target=4 THEN 1 ELSE 0 END) AS czone, COUNT(*) " +
+                "FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow " +
+                "WHERE r._id=p.round AND p.round=" + round + " AND s.passe=p._id AND "+
+                "s.points<3 AND s.points>-1 GROUP BY czone", null);
         if (cur.moveToFirst()) {
             do {
                 r.scoreCount[cur.getInt(0)] = cur.getInt(1);
@@ -554,7 +556,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         file.createNewFile();
         FileWriter writer = new FileWriter(file);
         for (int i = 0; i < names.length-1; i++) {
-            writer.append("\"" + names[i] + "\";");
+            writer.append("\"").append(names[i]).append("\";");
         }
         writer.append("\n");
         int distInd = cur.getColumnIndexOrThrow("distance");
