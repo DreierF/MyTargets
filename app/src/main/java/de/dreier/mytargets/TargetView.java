@@ -21,7 +21,7 @@ public class TargetView extends View implements View.OnTouchListener {
     private int contentWidth, contentHeight;
 
     private TextPaint mTextPaint;
-    private Paint thinBlackBorder, drawColorP, rectColorP, circleColorP;
+    private Paint thinBlackBorder, thinWhiteBorder, drawColorP, rectColorP, circleColorP;
 
     private int currentArrow = 0, lastSetArrow = -1;
 
@@ -110,6 +110,11 @@ public class TargetView extends View implements View.OnTouchListener {
         thinBlackBorder.setColor(0xFF1C1C1B);
         thinBlackBorder.setAntiAlias(true);
         thinBlackBorder.setStyle(Paint.Style.STROKE);
+
+        thinWhiteBorder = new Paint();
+        thinWhiteBorder.setColor(0xFFEEEEEE);
+        thinWhiteBorder.setAntiAlias(true);
+        thinWhiteBorder.setStyle(Paint.Style.STROKE);
 
         drawColorP = new Paint();
         drawColorP.setAntiAlias(true);
@@ -233,7 +238,7 @@ public class TargetView extends View implements View.OnTouchListener {
             // Draw a ring mit separator line
             float rad = (radius * i) / (float) mZoneCount;
             canvas.drawCircle(x, y, rad, drawColorP);
-            canvas.drawCircle(x, y, rad, thinBlackBorder);
+            canvas.drawCircle(x, y, rad, Target.target_rounds[roundInfo.target][i - 1] == 3 ? thinWhiteBorder : thinBlackBorder);
         }
 
         // Draw exact arrow position
@@ -290,8 +295,10 @@ public class TargetView extends View implements View.OnTouchListener {
                     colorInd = target[i];
                     rectColorP.setColor(Target.rectColor[colorInd]);
                     canvas.drawRect(X1, Y1, X2, Y2, rectColorP);
+                    canvas.drawRect(X1, Y1, X2, Y2, Target.target_rounds[roundInfo.target][i] == 3 ? thinWhiteBorder : thinBlackBorder);
+                } else {
+                    canvas.drawRect(X1, Y1, X2, Y2, thinBlackBorder);
                 }
-                canvas.drawRect(X1, Y1, X2, Y2, thinBlackBorder);
 
                 // For yellow and white background use black font color
                 mTextPaint.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
@@ -478,8 +485,9 @@ public class TargetView extends View implements View.OnTouchListener {
 
             animateSelectCircle(lastSetArrow + 1);
 
-            if (lastSetArrow + 1 >= roundInfo.ppp && setListener != null)
-                setListener.OnTargetSet(mPasse);
+            if (lastSetArrow + 1 >= roundInfo.ppp && setListener != null) {
+                setListener.OnTargetSet(new Passe(mPasse));
+            }
 
             return true;
         }

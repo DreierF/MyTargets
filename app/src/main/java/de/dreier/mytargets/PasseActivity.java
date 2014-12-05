@@ -275,6 +275,20 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
     public void OnTargetSet(Passe passe) {
         TargetOpenHelper db = new TargetOpenHelper(this);
 
+        // Sort passe
+        for (int n = passe.zones.length; n > 1; n--) {
+            for (int i = 0; i < n - 1; i++) {
+                if ((passe.zones[i] > passe.zones[i + 1] && passe.zones[i + 1] != -1) || passe.zones[i] == -1) {
+                    int tmp = passe.zones[i];
+                    float[] coords = passe.points[i];
+                    passe.zones[i] = passe.zones[i + 1];
+                    passe.points[i] = passe.points[i + 1];
+                    passe.zones[i + 1] = tmp;
+                    passe.points[i + 1] = coords;
+                }
+            }
+        }
+
         if (curPasse > savedPasses) {
             savedPasses++;
             db.addPasseToRound(mRound, passe);
@@ -318,10 +332,10 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
 
         // Initialize message text
         if (passe != null) {
-            title = "Passe "+curPasse;
+            title = "Passe " + curPasse;
             setting = "";
             for (int i = 0; i < passe.zones.length; i++) {
-                setting += Target.getStringByZone(r.target, passe.zones[i], r.compound)+" ";
+                setting += Target.getStringByZone(r.target, passe.zones[i], r.compound) + " ";
             }
         } else {
             title = getString(R.string.app_name);

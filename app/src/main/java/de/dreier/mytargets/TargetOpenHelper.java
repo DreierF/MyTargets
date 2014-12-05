@@ -263,6 +263,11 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
             for (int i = 0; i < count; i++)
                 points[i] = new float[2];
         }
+
+        Passe(Passe p) {
+            zones = p.zones.clone();
+            points = p.points.clone();
+        }
     }
 
     public Training getTraining(long training) {
