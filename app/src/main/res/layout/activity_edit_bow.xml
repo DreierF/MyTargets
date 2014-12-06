@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="de.dreier.mytargets.EditBowActivity">
+    tools:context="de.dreier.mytargets.activities.EditBowActivity">
 
-    <de.dreier.mytargets.NotifyingScrollView
+    <de.dreier.mytargets.views.NotifyingScrollView
         android:id="@+id/scrollView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -221,7 +221,7 @@
 
     </LinearLayout>
 </LinearLayout>
-    </de.dreier.mytargets.NotifyingScrollView>
+    </de.dreier.mytargets.views.NotifyingScrollView>
 
 <View
 android:id="@+id/divider"

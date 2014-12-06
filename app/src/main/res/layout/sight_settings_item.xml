@@ -6,13 +6,27 @@
     android:layout_height="match_parent">
 
     <Spinner
-        android:id="@+id/distanceSpinner"
+        android:id="@+id/distance"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:paddingRight="10dp" />
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:id="@+id/customDist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/distanceVal"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="number" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="m"/>
+    </LinearLayout>
 
     <EditText
         android:id="@+id/sight_setting"

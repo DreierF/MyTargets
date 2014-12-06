@@ -2,26 +2,24 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.0.2"
+    buildToolsVersion "21.1.1"
 
     defaultConfig {
         applicationId "de.dreier.mytargets"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 12
-        versionName "1.8.3"
+        versionCode 15
+        versionName "1.9"
     }
     buildTypes {
         release {
-            runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:21.0.0'
-    compile 'com.android.support:appcompat-v7:21.0.0'
+    compile 'com.android.support:support-v4:21.0.2'
+    compile 'com.android.support:appcompat-v7:21.0.2'
     compile 'com.melnykov:floatingactionbutton:1.0.7'
     compile project(":libraries:FloatLabel")
 }

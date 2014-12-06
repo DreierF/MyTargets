@@ -8,7 +8,7 @@
     <view
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        class="de.dreier.mytargets.TargetView"
+        class="de.dreier.mytargets.views.TargetView"
         android:id="@+id/targetview"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"

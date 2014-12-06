@@ -31,8 +31,9 @@
     <string name="outdoor">Outdoor</string>
     <string name="indoor">Indoor</string>
     <string name="distance">Distance</string>
-    <string name="three">3</string>
-    <string name="six">6</string>
+    <string name="two" translatable="false">2</string>
+    <string name="three" translatable="false">3</string>
+    <string name="six" translatable="false">6</string>
     <string name="bow">Bow</string>
     <string name="arrows_per_passe">Arrows per passe</string>
     <string name="target_round">Target round</string>
@@ -90,5 +91,10 @@
     <string name="other_bow">Other bow</string>
     <string name="what_input">What did you hit?</string>
     <string name="voice_how_to">Swipe left and press Passe button. Then you can say \"X 10 9\", \"9 7 Mistake\" or \"Inner blue outer gold X\". The Passe gets automatically saved if it has been recognized.</string>
+    <string name="competition">Competition</string>
+    <string name="training">Training</string>
+    <string name="training_type">Trainingtype</string>
+    <string name="statistic">Statistic</string>
+    <string name="show_all">Show all shoots</string>
 
 </resources>

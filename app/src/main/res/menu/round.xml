@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_statistics"
+        android:icon="@drawable/ic_trending_up_white_24dp"
+        android:title="@string/statistic"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/menu_item_share"
         android:title="@string/share"
         app:actionProviderClass="android.support.v7.widget.ShareActionProvider"

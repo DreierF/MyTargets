@@ -58,8 +58,6 @@
     <string name="new_training">Neues Training</string>
     <string name="my_bows">Meine Bögen</string>
     <string name="add_bow">Bogen hinzufügen</string>
-    <string name="three">3</string>
-    <string name="six">6</string>
 
 
     <string name="yellow">gelb</string>
@@ -93,5 +91,10 @@
     <string name="other_bow">Anderer Bogen</string>
     <string name="what_input">Was hast du getroffen?</string>
     <string name="voice_how_to">Swipe left and press Passe button. Then you can say \"X 10 9\", \"9 7 Mistake\" or \"Inner blue outer gold X\". The Passe gets automatically saved if it has been recognized.</string>
+    <string name="competition">Wettkampf</string>
+    <string name="training">Training</string>
+    <string name="training_type">Trainingsart</string>
+    <string name="statistic">Statistik</string>
+    <string name="show_all">Zeige alle Schüsse</string>
 
 </resources>
