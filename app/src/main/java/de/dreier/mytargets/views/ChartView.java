@@ -9,10 +9,8 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.widget.RelativeLayout;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import de.dreier.mytargets.models.LinearSeries;
 import de.dreier.mytargets.models.RectD;
@@ -42,8 +40,6 @@ public class ChartView extends RelativeLayout {
 	// Grid
 	private Rect mGridBounds = new Rect();
 	private final int mGridLineWidth;
-
-	private SimpleDateFormat dateFormatMonth;
 
 	private long mMinY = 0;
 	private long mMaxY = 15;
@@ -82,13 +78,6 @@ public class ChartView extends RelativeLayout {
 		mTextPaint.setTextAlign(Paint.Align.CENTER);
 		mTextPaint.setAntiAlias(true);
 		mTextPaint.setTextSize(mLabelTextSize);
-
-		/*Calendar cal = (Calendar)QDateMgr.beg_hj[0].clone();
-		mMinX = cal.getTimeInMillis();
-		cal.add(Calendar.MONTH, 1);
-		mMaxX = cal.getTimeInMillis();*/
-		
-		dateFormatMonth = new SimpleDateFormat("MMM",Locale.GERMANY);
 	}
 
 	/*

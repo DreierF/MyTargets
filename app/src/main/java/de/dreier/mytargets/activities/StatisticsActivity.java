@@ -93,9 +93,9 @@ public class StatisticsActivity extends ActionBarActivity {
 
         LinearSeries series = new LinearSeries();
         long x0 = data.getMinX();
-        long y0 = (long) (beta1 * x0 + beta0);
+        double y0 = beta1 * x0 + beta0;
         long x1 = data.getMaxX();
-        long y1 = (long) (beta1 * x1 + beta0);
+        double y1 = beta1 * x1 + beta0;
         series.addPoint(new LinearSeries.LinearPoint(x0, y0));
         series.addPoint(new LinearSeries.LinearPoint(x1, y1));
         return series;

@@ -8,11 +8,13 @@ android {
         applicationId "de.dreier.mytargets"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 15
-        versionName "1.9"
+        versionCode 16
+        versionName "1.9.1"
     }
     buildTypes {
         release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
 }

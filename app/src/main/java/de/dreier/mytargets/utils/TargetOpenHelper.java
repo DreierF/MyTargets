@@ -2,11 +2,13 @@ package de.dreier.mytargets.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.preference.PreferenceManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -120,9 +122,11 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
                     SHOOT_ZONE + " INTEGER," +
                     SHOOT_X + " REAL," +
                     SHOOT_Y + " REAL);";
+    private final Context mContext;
 
     public TargetOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mContext = context;
     }
 
     @Override
@@ -166,6 +170,9 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
                     db.execSQL("UPDATE " + table + " SET distance=" + NewRoundActivity.distanceValues[i] + " WHERE distance=" + i);
                 }
             }
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+            int defaultDist = NewRoundActivity.distanceValues[prefs.getInt("distance", 0)];
+            prefs.edit().putInt("distance", defaultDist).apply();
         }
         onCreate(db);
     }
@@ -271,10 +278,10 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         String[] cols2 = {SHOOT_ZONE, SHOOT_X, SHOOT_Y};
         String[] args1 = {"" + round};
         Cursor res1 = db.query(TABLE_PASSE, cols1, PASSE_ROUND + "=?", args1, null, null, PASSE_ID + " ASC");
-        if(res1.moveToFirst()) {
+        if (res1.moveToFirst()) {
             ArrayList<Passe> list = new ArrayList<>();
             do {
-                if(res1.getPosition()!=passe-1) {
+                if (res1.getPosition() != passe - 1) {
                     String[] args2 = {"" + res1.getLong(0)}; // passe id
                     Cursor res = db.query(TABLE_SHOOT, cols2, SHOOT_PASSE + "=?", args2, null, null, SHOOT_ID + " ASC");
                     int count = res.getCount();
@@ -289,7 +296,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
                     list.add(p);
                     res.close();
                 }
-            } while(res1.moveToNext());
+            } while (res1.moveToNext());
 
             db.close();
             return list;

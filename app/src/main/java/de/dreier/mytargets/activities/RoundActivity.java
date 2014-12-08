@@ -42,7 +42,7 @@ public class RoundActivity extends NowListActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.round, menu);
-        MenuItem item = menu.findItem(R.id.menu_item_share);
+        MenuItem item = menu.findItem(R.id.action_share);
         ShareActionProvider shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
 
         // Construct share intent
@@ -58,6 +58,15 @@ public class RoundActivity extends NowListActivity {
         shareIntent.setType("text/plain");
         shareActionProvider.setShareIntent(shareIntent);
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean hasPasses = adapter.getCount()>2;
+        menu.findItem(R.id.action_scoreboard).setVisible(hasPasses);
+        menu.findItem(R.id.action_share).setVisible(hasPasses);
+        menu.findItem(R.id.action_statistics).setVisible(hasPasses);
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -89,6 +98,7 @@ public class RoundActivity extends NowListActivity {
         mRoundInfo = db.getRound(mRound);
         adapter = new PasseAdapter(this, mTraining, mRound, mRoundInfo);
         setListAdapter(adapter);
+        supportInvalidateOptionsMenu();
     }
 
     @Override

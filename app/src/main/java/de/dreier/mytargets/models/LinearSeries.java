@@ -18,8 +18,8 @@ public class LinearSeries {
 
     private long mMinX = Long.MAX_VALUE;
     private long mMaxX = Long.MIN_VALUE;
-    private long mMinY = Long.MAX_VALUE;
-    private long mMaxY = Long.MIN_VALUE;
+    private double mMinY = Long.MAX_VALUE;
+    private double mMaxY = Long.MIN_VALUE;
 
     private PointF mLastPoint;
 
@@ -77,7 +77,7 @@ public class LinearSeries {
         mMaxY = Long.MIN_VALUE;
     }
 
-    private void extendRange(long x, long y) {
+    private void extendRange(long x, double y) {
         if (x < mMinX) mMinX = x;
         if (x > mMaxX) mMaxX = x;
         if (y < mMinY) mMinY = y;
@@ -99,19 +99,19 @@ public class LinearSeries {
         return mMaxX;
     }
 
-    public long getMinY() {
+    public double getMinY() {
         return mMinY;
     }
 
-    public long getMaxY() {
+    public double getMaxY() {
         return mMaxY;
     }
 
     public static class LinearPoint implements Comparable<LinearPoint> {
         private long mX;
-        private long mY;
+        private double mY;
 
-        public LinearPoint(long x, long y) {
+        public LinearPoint(long x, double y) {
             mX = x;
             mY = y;
         }
@@ -120,7 +120,7 @@ public class LinearSeries {
             return mX;
         }
 
-        public long getY() {
+        public double getY() {
             return mY;
         }
 
