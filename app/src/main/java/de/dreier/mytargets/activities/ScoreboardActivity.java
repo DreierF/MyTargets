@@ -10,13 +10,17 @@ import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.io.ByteArrayOutputStream;
+
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.models.Target;
+import de.dreier.mytargets.utils.TargetImage;
 import de.dreier.mytargets.utils.TargetOpenHelper;
 
 
@@ -134,13 +138,23 @@ public class ScoreboardActivity extends ActionBarActivity {
                     "<td>" + (info.scoreCount[0] + info.scoreCount[1]) + "</td>" +
                     "<td>" + info.scoreCount[0] + "</td>" +
                     "<td>" + avg + "</td>" +
-                    "</tr></table></html>";
+                    "</tr></table>";
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            new TargetImage().generateBitmap(ScoreboardActivity.this, 800, info, mRound, byteArrayOutputStream);
+
+            // Convert bitmap to Base64 encoded image for web
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            String imgageBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            String image = "data:image/png;base64," + imgageBase64;
+            html += "<div align='center' style=\"padding: 20px;\"><img src='" + image + "' width='60%' /></div>";
+            html += "</html>";
             return html;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            webView.loadData(s, "text/html", "UTF-8");
+            webView.loadDataWithBaseURL("file:///android_asset/", s, "text/html", "UTF-8", "");
         }
     };
 

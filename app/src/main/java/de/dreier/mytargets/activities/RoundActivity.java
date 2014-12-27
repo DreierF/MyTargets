@@ -1,15 +1,22 @@
 package de.dreier.mytargets.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.PasseAdapter;
 import de.dreier.mytargets.models.Target;
+import de.dreier.mytargets.utils.TargetImage;
 import de.dreier.mytargets.utils.TargetOpenHelper;
 
 /**
@@ -52,11 +59,30 @@ public class RoundActivity extends NowListActivity {
         int maxP = mRoundInfo.ppp * max * db.getPasses(mRound).getCount();
         String text = String.format(getString(R.string.my_share_text),
                 mRoundInfo.scoreCount[0], mRoundInfo.scoreCount[1], mRoundInfo.scoreCount[2], reached, maxP);
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, text);
-        shareIntent.setType("text/plain");
-        shareActionProvider.setShareIntent(shareIntent);
+        File dir = getExternalCacheDir();
+        try {
+            final File f = File.createTempFile("target", ".png", dir);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    FileOutputStream fOut = null;
+                    try {
+                        fOut = new FileOutputStream(f);
+                        new TargetImage().generateBitmap(RoundActivity.this, 800, mRoundInfo, mRound, fOut);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
+            shareIntent.setType("*/*");
+            shareActionProvider.setShareIntent(shareIntent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
