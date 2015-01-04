@@ -22,6 +22,6 @@ android {
 dependencies {
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.melnykov:floatingactionbutton:1.0.7'
+    compile project(":libraries:FloatingActionButton")
     compile project(":libraries:FloatLabel")
 }
