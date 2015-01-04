@@ -9,7 +9,7 @@
         android:id="@+id/distance"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <LinearLayout
         android:id="@+id/customDist"
@@ -22,10 +22,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="m"/>
+            android:text="m" />
     </LinearLayout>
 
     <EditText
@@ -35,8 +36,11 @@
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="80dp"
+        android:layout_marginStart="80dp"
         android:layout_toLeftOf="@+id/remove_sight_setting"
-        android:ems="10" />
+        android:layout_toStartOf="@+id/remove_sight_setting"
+        android:ems="10"
+        android:inputType="text" />
 
     <ImageButton
         android:id="@+id/remove_sight_setting"
@@ -46,5 +50,6 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:background="?android:attr/selectableItemBackground"
+        android:contentDescription="@string/delete"
         android:src="@drawable/ic_action_cancel" />
 </RelativeLayout>

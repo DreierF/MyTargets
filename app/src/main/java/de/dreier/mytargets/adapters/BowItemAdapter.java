@@ -34,7 +34,7 @@ public class BowItemAdapter extends CursorAdapter implements SpinnerAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        View v = mInflater.inflate(R.layout.bow_item, null);
+        View v = mInflater.inflate(R.layout.bow_item, viewGroup, false);
 
         ViewHolder holder = new ViewHolder();
         holder.img = (ImageView) v.findViewById(R.id.bowImage);

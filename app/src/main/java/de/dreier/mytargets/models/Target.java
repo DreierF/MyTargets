@@ -4,38 +4,38 @@ import android.graphics.Color;
 
 public class Target {
     public static final int[] highlightColor = {
-            0xFFFCEA0F, // Gelb
-            0xFFE30513, // Rot
-            0xFF1D70B7, //Blau
-            0xFF050505, // Schwarz
-            Color.WHITE,  // Weiß
-            0xFF1C1C1B // Mistake
+            0xFFFCEA0F, // yellow
+            0xFFE30513, // red
+            0xFF1D70B7, // blue
+            0xFF050505, // black
+            Color.WHITE,  // white
+            0xFF1C1C1B // mistake
     };
 
     public static final int[] circleStrokeColor = {
-            0xFFFCEA0F, // Gelb
-            0xFFE30513, // Rot
-            0xFF1D70B7, //Blau
-            0xFF050505, // Schwarz
-            0xFF1C1C1B, // Weiß wird schwarz dargestellt
-            0xFF1C1C1B, // Mistake
+            0xFFFCEA0F, // yellow
+            0xFFE30513, // red
+            0xFF1D70B7, // blue
+            0xFF050505, // black
+            0xFF1C1C1B, // white gets drawn black
+            0xFF1C1C1B, // mistake
     };
 
     public static final int[] rectColor = {
-            0xFFFCEA0F, // Gelb
-            0xFFE30513, // Rot
-            0xFF1D70B7, //Blau
-            0xFF1C1C1B, // Schwarz
-            Color.WHITE, // Weiß
-            0xFF1C1C1B // Mistake
+            0xFFFCEA0F, // yellow
+            0xFFE30513, // red
+            0xFF1D70B7, // blue
+            0xFF1C1C1B, // black
+            Color.WHITE, // withe
+            0xFF1C1C1B // mistake
     };
 
     public static final int[] grayColor = {
-            0xFF7a7439, // Gelb
-            0xFF7a2621, // Rot
-            0xFF234466, //Blau
-            0xFF1C1C1B, // Schwarz
-            0xFF7d7a80 // Weiß
+            0xFF7a7439, // yellow
+            0xFF7a2621, // red
+            0xFF234466, // blue
+            0xFF1C1C1B, // black
+            0xFF7d7a80 // white
     };
 
     public static final int[][] target_rounds = {

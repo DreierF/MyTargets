@@ -31,7 +31,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 
 import com.iangclifton.android.floatlabel.FloatLabel;
@@ -55,7 +54,7 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
     private static final int SELECT_PICTURE = 2;
     private ImageView mImageView;
     private FloatLabel name, brand, size, height, tiller, desc;
-    private RadioButton recurvebow, compoundbow, longbow, blank, horse, yumi;
+    private RadioButton recurveBow, compoundBow, longBow, blank, horse, yumi;
     private long mBowId = -1;
     private String mImageFile = null;
     private Uri fileUri;
@@ -93,9 +92,9 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
             }
         });
         name = (FloatLabel) findViewById(R.id.bow_name);
-        recurvebow = (RadioButton) findViewById(R.id.recurve);
-        compoundbow = (RadioButton) findViewById(R.id.compound);
-        longbow = (RadioButton) findViewById(R.id.longbow);
+        recurveBow = (RadioButton) findViewById(R.id.recurve);
+        compoundBow = (RadioButton) findViewById(R.id.compound);
+        longBow = (RadioButton) findViewById(R.id.longbow);
         blank = (RadioButton) findViewById(R.id.blank);
         horse = (RadioButton) findViewById(R.id.horse);
         yumi = (RadioButton) findViewById(R.id.yumi);
@@ -122,33 +121,33 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
         Button newBow = (Button) findViewById(R.id.new_bow_button);
         newBow.setOnClickListener(this);
 
-        recurvebow.setOnClickListener(new View.OnClickListener() {
+        recurveBow.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                recurvebow.setChecked(true);
-                compoundbow.setChecked(false);
-                longbow.setChecked(false);
+                recurveBow.setChecked(true);
+                compoundBow.setChecked(false);
+                longBow.setChecked(false);
                 blank.setChecked(false);
                 horse.setChecked(false);
                 yumi.setChecked(false);
             }
         });
 
-        compoundbow.setOnClickListener(new View.OnClickListener() {
+        compoundBow.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                recurvebow.setChecked(false);
-                compoundbow.setChecked(true);
-                longbow.setChecked(false);
+                recurveBow.setChecked(false);
+                compoundBow.setChecked(true);
+                longBow.setChecked(false);
                 blank.setChecked(false);
                 horse.setChecked(false);
                 yumi.setChecked(false);
             }
         });
 
-        longbow.setOnClickListener(new View.OnClickListener() {
+        longBow.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                recurvebow.setChecked(false);
-                compoundbow.setChecked(false);
-                longbow.setChecked(true);
+                recurveBow.setChecked(false);
+                compoundBow.setChecked(false);
+                longBow.setChecked(true);
                 blank.setChecked(false);
                 horse.setChecked(false);
                 yumi.setChecked(false);
@@ -157,9 +156,9 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
 
         blank.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                recurvebow.setChecked(false);
-                compoundbow.setChecked(false);
-                longbow.setChecked(false);
+                recurveBow.setChecked(false);
+                compoundBow.setChecked(false);
+                longBow.setChecked(false);
                 blank.setChecked(true);
                 horse.setChecked(false);
                 yumi.setChecked(false);
@@ -168,9 +167,9 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
 
         horse.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                recurvebow.setChecked(false);
-                compoundbow.setChecked(false);
-                longbow.setChecked(false);
+                recurveBow.setChecked(false);
+                compoundBow.setChecked(false);
+                longBow.setChecked(false);
                 blank.setChecked(false);
                 horse.setChecked(true);
                 yumi.setChecked(false);
@@ -179,9 +178,9 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
 
         yumi.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                recurvebow.setChecked(false);
-                compoundbow.setChecked(false);
-                longbow.setChecked(false);
+                recurveBow.setChecked(false);
+                compoundBow.setChecked(false);
+                longBow.setChecked(false);
                 blank.setChecked(false);
                 horse.setChecked(false);
                 yumi.setChecked(true);
@@ -202,13 +201,13 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
             mImageFile = bow.imageFile;
             switch (bow.type) {
                 case 0:
-                    recurvebow.setChecked(true);
+                    recurveBow.setChecked(true);
                     break;
                 case 1:
-                    compoundbow.setChecked(true);
+                    compoundBow.setChecked(true);
                     break;
                 case 2:
-                    longbow.setChecked(true);
+                    longBow.setChecked(true);
                     break;
                 case 3:
                     blank.setChecked(true);
@@ -222,7 +221,7 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
             }
             sightSettingsList = db.getSettings(mBowId);
         } else if (savedInstanceState == null) {
-            recurvebow.setChecked(true);
+            recurveBow.setChecked(true);
             sightSettingsList = new ArrayList<>();
         }
 
@@ -378,11 +377,11 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
         TargetOpenHelper db = new TargetOpenHelper(this);
 
         int bowType = 0;
-        if (recurvebow.isChecked())
+        if (recurveBow.isChecked())
             bowType = 0;
-        else if (compoundbow.isChecked())
+        else if (compoundBow.isChecked())
             bowType = 1;
-        else if (longbow.isChecked())
+        else if (longBow.isChecked())
             bowType = 2;
         else if (blank.isChecked())
             bowType = 3;
@@ -405,7 +404,7 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
         finish();
     }
 
-    private Drawable.Callback mDrawableCallback = new Drawable.Callback() {
+    private final Drawable.Callback mDrawableCallback = new Drawable.Callback() {
         @Override
         public void invalidateDrawable(Drawable who) {
             getSupportActionBar().setBackgroundDrawable(who);
@@ -420,8 +419,8 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
         }
     };
 
-    private NotifyingScrollView.OnScrollChangedListener mOnScrollChangedListener = new NotifyingScrollView.OnScrollChangedListener() {
-        public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt) {
+    private final NotifyingScrollView.OnScrollChangedListener mOnScrollChangedListener = new NotifyingScrollView.OnScrollChangedListener() {
+        public void onScrollChanged(int t) {
             final int headerHeight = findViewById(R.id.imageView).getHeight() - getSupportActionBar().getHeight();
             final float ratio = (float) Math.min(Math.max(t, 0), headerHeight) / headerHeight;
             final int newAlpha = (int) (ratio * 255);
@@ -527,7 +526,7 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
                 "IMG_" + timeStamp + ".jpg");
     }
 
-    public Bitmap decodeSampledBitmapFromStream(Uri uri, int reqWidth, int reqHeight) throws IOException {
+    Bitmap decodeSampledBitmapFromStream(Uri uri, int reqWidth, int reqHeight) throws IOException {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         InputStream stream = getContentResolver().openInputStream(uri);
@@ -541,7 +540,7 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
         return bmp;
     }
 
-    public Bitmap decodeSampledBitmapFromRes(int id, int reqWidth, int reqHeight) throws IOException {
+    Bitmap decodeSampledBitmapFromRes(int id, int reqWidth, int reqHeight) throws IOException {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(getResources(), id, options);
@@ -550,7 +549,7 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
         return BitmapFactory.decodeResource(getResources(), id, options);
     }
 
-    public static int calculateInSampleSize(
+    private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;

@@ -28,50 +28,50 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 4;
 
     private static final String TABLE_TRAINING = "TRAINING";
-    public static final String TRAINING_ID = "_id";
+    private static final String TRAINING_ID = "_id";
     public static final String TRAINING_TITLE = "title";
     public static final String TRAINING_DATE = "datum";
 
     private static final String TABLE_ROUND = "ROUND";
     public static final String RUNDE_ID = "_id";
-    public static final String RUNDE_TRAINING = "training";
+    private static final String RUNDE_TRAINING = "training";
     public static final String RUNDE_INDOOR = "indoor";
     public static final String RUNDE_DISTANCE = "distance";
     public static final String RUNDE_UNIT = "unit";
-    public static final String RUNDE_BOW = "bow";
+    private static final String RUNDE_BOW = "bow";
     public static final String RUNDE_PPP = "ppp";
     public static final String RUNDE_TARGET = "target";
 
     private static final String TABLE_PASSE = "PASSE";
     public static final String PASSE_ID = "_id";
-    public static final String PASSE_ROUND = "round";
+    private static final String PASSE_ROUND = "round";
 
     private static final String TABLE_SHOOT = "SHOOT";
-    public static final String SHOOT_ID = "_id";
-    public static final String SHOOT_PASSE = "passe";
-    public static final String SHOOT_ZONE = "points";
-    public static final String SHOOT_X = "x";
-    public static final String SHOOT_Y = "y";
+    private static final String SHOOT_ID = "_id";
+    private static final String SHOOT_PASSE = "passe";
+    private static final String SHOOT_ZONE = "points";
+    private static final String SHOOT_X = "x";
+    private static final String SHOOT_Y = "y";
 
     private static final String TABLE_BOW = "BOW";
-    public static final String BOW_ID = "_id";
+    private static final String BOW_ID = "_id";
     public static final String BOW_NAME = "name";
-    public static final String BOW_BRAND = "brand";
-    public static final String BOW_TYPE = "type";
-    public static final String BOW_SIZE = "size";
-    public static final String BOW_HEIGHT = "height";
-    public static final String BOW_TILLER = "tiller";
-    public static final String BOW_DESCRIPTION = "description";
+    private static final String BOW_BRAND = "brand";
+    private static final String BOW_TYPE = "type";
+    private static final String BOW_SIZE = "size";
+    private static final String BOW_HEIGHT = "height";
+    private static final String BOW_TILLER = "tiller";
+    private static final String BOW_DESCRIPTION = "description";
     public static final String BOW_THUMBNAIL = "thumbnail";
-    public static final String BOW_IMAGE = "image";
+    private static final String BOW_IMAGE = "image";
 
     private static final String TABLE_BOW_IMAGE = "BOW_IMAGE";
 
     private static final String TABLE_VISIER = "VISIER";
-    public static final String VISIER_ID = "_id";
-    public static final String VISIER_BOW = "bow";
-    public static final String VISIER_DISTANCE = "distance";
-    public static final String VISIER_SETTING = "setting";
+    private static final String VISIER_ID = "_id";
+    private static final String VISIER_BOW = "bow";
+    private static final String VISIER_DISTANCE = "distance";
+    private static final String VISIER_SETTING = "setting";
 
     private static final String CREATE_TABLE_BOW =
             "CREATE TABLE IF NOT EXISTS " + TABLE_BOW + " ( " +
@@ -199,7 +199,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         return db.query(TABLE_BOW, null, null, null, null, null, BOW_ID + " ASC");
     }
 
-    public long addPasseToRound(long round, Passe passe) {
+    public void addPasseToRound(long round, Passe passe) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(PASSE_ROUND, round);
@@ -525,7 +525,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         return bowId;
     }
 
-    public static byte[] getBitmapAsByteArray(Bitmap bitmap) {
+    private static byte[] getBitmapAsByteArray(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
         return outputStream.toByteArray();

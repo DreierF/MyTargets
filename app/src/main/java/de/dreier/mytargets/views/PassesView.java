@@ -10,29 +10,28 @@ import android.view.View;
 
 import de.dreier.mytargets.models.Target;
 
-public class PassenView extends View {
+public class PassesView extends View {
     private int contentWidth, contentHeight;
 
     private TextPaint mTextPaint;
     private Paint circleColorP;
 
     private int[] points = {-2,-2,-2};
-    private float placePerShoot;
     private int targetRound;
     private float density;
     private boolean compoundBow;
 
-    public PassenView(Context context) {
+    public PassesView(Context context) {
         super(context);
         init(null, 0);
     }
 
-    public PassenView(Context context, AttributeSet attrs) {
+    public PassesView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs, 0);
     }
 
-    public PassenView(Context context, AttributeSet attrs, int defStyle) {
+    public PassesView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(attrs, defStyle);
     }
@@ -60,10 +59,10 @@ public class PassenView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        placePerShoot = contentWidth/(float)points.length;
+        float placePerShoot = contentWidth / (float) points.length;
 
         for(int i=0;i<points.length;i++) {
-            drawCircle(canvas, i*placePerShoot+(placePerShoot/2.0f), contentHeight/2.0f, points[i]);
+            drawCircle(canvas, i* placePerShoot +(placePerShoot /2.0f), contentHeight/2.0f, points[i]);
         }
     }
 

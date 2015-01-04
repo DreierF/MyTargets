@@ -216,7 +216,7 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
         }
     }
 
-    public void setPasse(int passe) {
+    void setPasse(int passe) {
         if (passe <= savedPasses) {
             Passe p = db.getPasse(mRound, passe);
             if (p != null) {
@@ -233,7 +233,7 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
         updatePasse();
     }
 
-    public void updatePasse() {
+    void updatePasse() {
         setTitle("Passe " + curPasse);
         prev.setEnabled(curPasse > 1);
         next.setEnabled(curPasse <= savedPasses);
@@ -326,7 +326,7 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
         overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
-    public void updateNotification(Passe passe) {
+    void updateNotification(Passe passe) {
         // Get an instance of the NotificationManager service
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(this);
@@ -340,7 +340,7 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
 
         // Create the reply action and add the remote input
         NotificationCompat.Action action =
-                new NotificationCompat.Action.Builder(R.drawable.ic_action_location_found, "Passe", replyPendingIntent)
+                new NotificationCompat.Action.Builder(R.drawable.ic_target_zone_24dp, "Passe", replyPendingIntent)
                         .addRemoteInput(remoteInput).build();
 
         // This notification will be shown only on watch

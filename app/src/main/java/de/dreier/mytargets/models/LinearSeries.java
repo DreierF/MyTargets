@@ -12,7 +12,7 @@ import java.util.TreeSet;
 
 public class LinearSeries {
 
-    protected Paint mPaint = new Paint();
+    private final Paint mPaint = new Paint();
 
     private final SortedSet<LinearPoint> mPoints = Collections.synchronizedSortedSet(new TreeSet<LinearPoint>());
 
@@ -84,7 +84,7 @@ public class LinearSeries {
         if (y > mMaxY) mMaxY = y;
     }
 
-    protected void recalculateRange() {
+    void recalculateRange() {
         resetRange();
 
         for (LinearPoint point : mPoints)

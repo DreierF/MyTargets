@@ -398,7 +398,7 @@ public class TargetView extends View implements View.OnTouchListener {
         }
     }
 
-    public int animateColor(int from, int to) {
+    int animateColor(int from, int to) {
         final int fa = (from >> 24) & 0xFF;
         final int fr = (from >> 16) & 0xFF;
         final int fg = (from >> 8) & 0xFF;

@@ -66,30 +66,30 @@ public class StatisticsActivity extends ActionBarActivity {
         double[] x = new double[points.size()];
         double[] y = new double[points.size()];
 
-        // first pass: read in data, compute xbar and ybar
+        // first pass: read in data, compute x bar and y bar
         int n = 0;
-        double sumx = 0.0, sumy = 0.0;
+        double sum_x = 0.0, sum_y = 0.0;
         for (LinearPoint p : points) {
             x[n] = p.getX();
             y[n] = p.getY();
-            sumx += x[n];
-            sumy += y[n];
+            sum_x += x[n];
+            sum_y += y[n];
             n++;
         }
         if (n < 1)
             return null;
 
-        double xbar = sumx / n;
-        double ybar = sumy / n;
+        double x_bar = sum_x / n;
+        double y_bar = sum_y / n;
 
         // second pass: compute summary statistics
-        double xxbar = 0.0, xybar = 0.0;
+        double xx_bar = 0.0, xy_bar = 0.0;
         for (int i = 0; i < n; i++) {
-            xxbar += (x[i] - xbar) * (x[i] - xbar);
-            xybar += (x[i] - xbar) * (y[i] - ybar);
+            xx_bar += (x[i] - x_bar) * (x[i] - x_bar);
+            xy_bar += (x[i] - x_bar) * (y[i] - y_bar);
         }
-        double beta1 = xybar / xxbar;
-        double beta0 = ybar - beta1 * xbar;
+        double beta1 = xy_bar / xx_bar;
+        double beta0 = y_bar - beta1 * x_bar;
 
         LinearSeries series = new LinearSeries();
         long x0 = data.getMinX();

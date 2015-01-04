@@ -3,10 +3,6 @@
 
     <color name="card_pressed">#f8f8f8</color><!-- #ebebeb -->
     <color name="card_activated">#500099CC</color>
-    <color name="card_pressed_header">#d6d6d6</color>
-    <color name="header_button_default">#494949</color>
-    <color name="card_gray">#e5e5e5</color>
-    <color name="card_subtitle">#303030</color>
     <color name="card_action">#4285f4</color>
     <color name="colorPrimary">#259b24</color>
     <color name="colorPrimaryDark">#0a7e07</color>
@@ -14,7 +10,5 @@
 
     <color name="ripple">#FFA733</color>
     <color name="colorAccent_pressed">#CC7400</color>
-
-    <drawable name="actionbar_background">#259b24</drawable>
 
 </resources>

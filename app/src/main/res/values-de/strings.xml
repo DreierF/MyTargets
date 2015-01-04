@@ -4,11 +4,10 @@
     <string name="app_name">My Targets</string>
     <string name="prev">Zurück</string>
     <string name="next">Weiter</string>
-    <string name="action_settings">Einstellungen</string>
     <string name="title_activity_new_round">Neue Runde</string>
     <string name="title_activity_edit_bow">Bogen hinzufügen</string>
     <string name="take_picture">Neues Foto aufnehmen</string>
-    <string name="pick_from_gallery">Foto aus Gallerie auswählen</string>
+    <string name="pick_from_gallery">Foto aus Galerie auswählen</string>
     <string name="new_bow">Neuer Bogen</string>
     <string name="select_picture">Wähle ein Bild</string>
     <string name="training_plural">Trainings</string>
@@ -84,16 +83,13 @@
     <string name="average">Schnitt</string>
     <string name="switch_mode">Wechsle Eingabe Modus</string>
     <string name="swipe_to_left">Wische nach links</string>
-    <string name="watch_notification">Android Wear Benachrichtigung</string>
     <string name="mistake">fehler</string>
     <string name="title_compound">Compound?</string>
     <string name="msg_compound_type">Welchen Bogentyp verwendest du? (Es entscheidet wie viele Punkte du für die goldenen Ringe bekommst)</string>
     <string name="other_bow">Anderer Bogen</string>
     <string name="what_input">Was hast du getroffen?</string>
     <string name="voice_how_to">Swipe left and press Passe button. Then you can say \"X 10 9\", \"9 7 Mistake\" or \"Inner blue outer gold X\". The Passe gets automatically saved if it has been recognized.</string>
-    <string name="competition">Wettkampf</string>
     <string name="training">Training</string>
-    <string name="training_type">Trainingsart</string>
     <string name="statistic">Statistik</string>
     <string name="show_all">Zeige alle Schüsse</string>
 

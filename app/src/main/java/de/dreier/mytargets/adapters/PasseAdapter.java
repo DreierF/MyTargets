@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import de.dreier.mytargets.views.PassenView;
+import de.dreier.mytargets.views.PassesView;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.models.Target;
 import de.dreier.mytargets.utils.TargetOpenHelper;
@@ -23,7 +23,6 @@ public class PasseAdapter extends NowListAdapter {
     private final TargetOpenHelper.Round mRoundInfo;
     private final long mRound;
     private final long mTraining;
-    private final float density;
 
     public PasseAdapter(Context context, long training, long round, TargetOpenHelper.Round roundInfo) {
         super(context, new TargetOpenHelper(context).getPasses(round));
@@ -33,7 +32,6 @@ public class PasseAdapter extends NowListAdapter {
         mRoundInfo = roundInfo;
         mTraining = training;
         passeIdInd = getCursor().getColumnIndex(TargetOpenHelper.PASSE_ID);
-        density = context.getResources().getDisplayMetrics().density;
     }
 
     @Override
@@ -80,7 +78,7 @@ public class PasseAdapter extends NowListAdapter {
         ViewHolder holder = new ViewHolder();
         View v = mInflater.inflate(R.layout.passe_card, viewGroup, false);
         holder.layout = (LinearLayout) v.findViewById(R.id.passe_layout);
-        holder.shots = (PassenView) v.findViewById(R.id.shoots);
+        holder.shots = (PassesView) v.findViewById(R.id.shoots);
         holder.subtitle = (TextView) v.findViewById(R.id.passe);
         v.setTag(holder);
         return v;
@@ -95,7 +93,7 @@ public class PasseAdapter extends NowListAdapter {
     }
 
     public static class ViewHolder {
-        public PassenView shots;
+        public PassesView shots;
         public TextView subtitle;
         public LinearLayout layout;
     }

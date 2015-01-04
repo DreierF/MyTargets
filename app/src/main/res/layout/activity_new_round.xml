@@ -1,70 +1,70 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="de.dreier.mytargets.activities.NewRoundActivity">
 
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
+        android:layout_above="@+id/divider"
         android:layout_alignParentEnd="true"
-        android:layout_above="@+id/divider">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin">
+            android:paddingTop="@dimen/activity_vertical_margin">
 
             <com.iangclifton.android.floatlabel.FloatLabel
                 android:id="@+id/training"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:hint="@string/description"/>
+                android:hint="@string/description"
+                android:inputType="text" />
 
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_weight="1">
-                <RadioButton
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/outdoor"
-                    android:id="@+id/outdoor"
-                    android:layout_weight="1" />
+                android:layout_weight="1"
+                android:orientation="horizontal">
 
                 <RadioButton
+                    android:id="@+id/outdoor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/indoor"
+                    android:layout_weight="1"
+                    android:text="@string/outdoor" />
+
+                <RadioButton
                     android:id="@+id/indoor"
-                    android:layout_weight="1" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/indoor" />
             </RadioGroup>
 
             <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:text="@string/distance"
                 android:layout_marginTop="16dp"
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="@string/distance" />
 
             <Spinner
                 android:id="@+id/distance"
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
 
             <LinearLayout
                 android:id="@+id/customDist"
@@ -77,53 +77,54 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:inputType="number" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="m"/>
+                    android:text="m" />
             </LinearLayout>
 
             <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/arrows_per_passe"
-                android:layout_marginTop="16dp"
                 android:layout_gravity="center_vertical"
-                style="?android:attr/listSeparatorTextViewStyle" />
+                android:layout_marginTop="16dp"
+                android:text="@string/arrows_per_passe" />
 
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
-                android:orientation="horizontal"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="horizontal">
 
                 <RadioButton
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/two"
                     android:id="@+id/ppp2"
-                    android:layout_weight="1" />
-
-                <RadioButton
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/three"
+                    android:layout_weight="1"
+                    android:text="@string/two" />
+
+                <RadioButton
                     android:id="@+id/ppp3"
-                    android:layout_weight="1" />
-
-                <RadioButton
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/six"
+                    android:layout_weight="1"
+                    android:text="@string/three" />
+
+                <RadioButton
                     android:id="@+id/ppp6"
-                    android:layout_weight="1" />
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/six" />
             </RadioGroup>
 
             <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/bow"
-            style="?android:attr/listSeparatorTextViewStyle" />
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/bow" />
 
             <Spinner
                 android:id="@+id/bow"
@@ -132,24 +133,25 @@
 
             <Button
                 android:id="@+id/add_bow"
-                android:background="?android:attr/selectableItemBackground"
-                android:textColor="@android:color/secondary_text_light"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
-                android:text="@string/add_bow"
-                android:gravity="left"
-                android:paddingLeft="15dp"
-                android:paddingTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="start"
                 android:paddingBottom="5dp"
-                android:layout_marginBottom="10dp" />
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="5dp"
+                android:text="@string/add_bow"
+                android:textColor="@android:color/secondary_text_light" />
 
             <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:text="@string/target_round"
                 android:layout_marginTop="16dp"
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="@string/target_round" />
 
             <Spinner
                 android:id="@+id/target_spinner"
@@ -163,22 +165,22 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?android:attr/listDivider"
         android:layout_above="@+id/but_bar"
         android:layout_alignLeft="@+id/but_bar"
-        android:layout_alignStart="@+id/but_bar" />
+        android:layout_alignStart="@+id/but_bar"
+        android:background="?android:attr/listDivider" />
 
     <LinearLayout
         android:id="@+id/but_bar"
         style="@android:style/Holo.Light.ButtonBar.AlertDialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true">
+        android:layout_alignParentStart="true"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/cancel_button"
@@ -188,6 +190,7 @@
             android:layout_weight="1"
             android:background="@drawable/selectable_item_background"
             android:text="@string/cancel" />
+
         <Button
             android:id="@+id/new_round_button"
             style="@android:style/Holo.Light.ButtonBar.AlertDialog"

@@ -60,7 +60,7 @@ public class ScoreboardActivity extends ActionBarActivity {
         loadScoreboardTask.execute();
     }
 
-    private AsyncTask<Void, Void, String> loadScoreboardTask = new AsyncTask<Void, Void, String>() {
+    private final AsyncTask<Void, Void, String> loadScoreboardTask = new AsyncTask<Void, Void, String>() {
 
         @Override
         protected String doInBackground(Void... params) {

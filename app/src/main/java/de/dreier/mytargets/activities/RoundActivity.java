@@ -65,7 +65,7 @@ public class RoundActivity extends NowListActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    FileOutputStream fOut = null;
+                    FileOutputStream fOut;
                     try {
                         fOut = new FileOutputStream(f);
                         new TargetImage().generateBitmap(RoundActivity.this, 800, mRoundInfo, mRound, fOut);

@@ -20,31 +20,30 @@ import de.dreier.mytargets.utils.TargetOpenHelper;
 public class ChartView extends RelativeLayout {
 
 	// View
-	private Paint mPaint = new Paint();
-	private Paint mTextPaint = new Paint();
+	private final Paint mPaint = new Paint();
+	private final Paint mTextPaint = new Paint();
 
 	// Series
-	private List<LinearSeries> mSeries = new ArrayList<LinearSeries>();
+	private final List<LinearSeries> mSeries = new ArrayList<>();
 
-	private int mLeftLabelWidth;
-	private int mTopLabelHeight;
+	private final int mLeftLabelWidth;
+	private final int mTopLabelHeight;
 	private int mRightLabelWidth;
-	private int mBottomLabelHeight;
-	private float mLabelTextSize;
+	private final int mBottomLabelHeight;
+	private final float mLabelTextSize;
 
 	// Range
-	private RectD mValueBounds = new RectD();
+	private final RectD mValueBounds = new RectD();
 	private long mMinX = Long.MAX_VALUE;
 	private long mMaxX = Long.MIN_VALUE;
 
 	// Grid
-	private Rect mGridBounds = new Rect();
+	private final Rect mGridBounds = new Rect();
 	private final int mGridLineWidth;
 
 	private long mMinY = 0;
 	private long mMaxY = 15;
 
-	private float mDensity;
     private TargetOpenHelper.Round mRoundInfo;
 
     private enum Axis { X, Y }
@@ -61,16 +60,16 @@ public class ChartView extends RelativeLayout {
 		super(context, attrs, defStyle);
 
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
-		mDensity = metrics.density;
+        float density = metrics.density;
 
 		setWillNotDraw(false);
 		setBackgroundColor(Color.TRANSPARENT);
 
-		mGridLineWidth = (int) mDensity;
-		mLeftLabelWidth = (int) (28*mDensity);
-		mTopLabelHeight = (int) (10*mDensity);
-		mBottomLabelHeight = (int) (20*mDensity);
-		mLabelTextSize = 16f*mDensity;
+		mGridLineWidth = (int) density;
+		mLeftLabelWidth = (int) (28* density);
+		mTopLabelHeight = (int) (10* density);
+		mBottomLabelHeight = (int) (20* density);
+		mLabelTextSize = 16f* density;
 		
 		// Apply the label text settings to the text painter
 		mTextPaint.setColor(Color.DKGRAY);
@@ -104,7 +103,7 @@ public class ChartView extends RelativeLayout {
 	}
 
 	// Reset the visible range to show nothing
-	public void resetRange() {
+    void resetRange() {
 		/*Calendar cal = (Calendar)QDateMgr.beg_hj[0].clone();
 		mMinX = cal.getTimeInMillis();
 		cal.add(Calendar.MONTH, 1);
@@ -144,7 +143,7 @@ public class ChartView extends RelativeLayout {
 			series.draw(canvas, mGridBounds, mValueBounds, scaleX, scaleY);
 	}
 	
-	public void setYRange(long min, long max) {
+	void setYRange(long min, long max) {
 		mMinY = min;
 		mMaxY = max;
 		mValueBounds.set(mMinX, mMinY, mMaxX, mMaxY);
@@ -158,8 +157,8 @@ public class ChartView extends RelativeLayout {
 		long minPoint = axis == Axis.X ? mValueBounds.left : mValueBounds.top;
 		long maxPoint = axis == Axis.X ? mValueBounds.right : mValueBounds.bottom;
 
-		Long pointCoord;
-		final int originPointCoord = axis == Axis.X ? mGridBounds.left : mGridBounds.top;
+		Long pointCoordinate;
+		final int originPointCoordinate = axis == Axis.X ? mGridBounds.left : mGridBounds.top;
 
 		// Enclose the grid on both sides for neatness
 		if (axis == Axis.X) {
@@ -182,7 +181,6 @@ public class ChartView extends RelativeLayout {
 		} else {
 			final float gridHeight = mGridBounds.height();
 			float valueHeight = maxPoint-minPoint;
-			final int step=1;
 			final float scaleY = gridHeight / valueHeight;
 			for (long point = minPoint; point <= maxPoint && drawn < 50; // Go right up to the maximum
 												// point, but because this
@@ -196,18 +194,18 @@ public class ChartView extends RelativeLayout {
 				// it should be in value from the left, scale
 				// that to the drawing distance, and move it away from the
 				// origin co-ordinate
-				pointCoord = (long) (originPointCoord + (scaleY * (point - minPoint)));
+				pointCoordinate = (long) (originPointCoordinate + (scaleY * (point - minPoint)));
 
 				// Points
 				// Draw a horizontal line at this y-value
-				canvas.drawLine(mGridBounds.left, pointCoord.floatValue(),
-						mGridBounds.right, pointCoord.floatValue(), mPaint);
+				canvas.drawLine(mGridBounds.left, pointCoordinate.floatValue(),
+						mGridBounds.right, pointCoordinate.floatValue(), mPaint);
 				// And the text label
 				if (point <= maxPoint)
 					canvas.drawText(""+ Target.getStringByZone(mRoundInfo.target, (int)point, mRoundInfo.compound),
 							mLeftLabelWidth / 2, // centre it in the left label
 													// gutter
-							pointCoord.floatValue() + (mLabelTextSize / 2),
+							pointCoordinate.floatValue() + (mLabelTextSize / 2),
 							// since the text is drawn from the middle-bottom we
 							// need to push it down a little more
 							mTextPaint);

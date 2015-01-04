@@ -13,11 +13,11 @@ import de.dreier.mytargets.R;
 
 public class TargetItemAdapter extends BaseAdapter implements SpinnerAdapter {
     private final Context mContext;
-    public static String[] targets = {"WA 40cm", "WA 60cm",
+    public static final String[] targets = {"WA 40cm", "WA 60cm",
             "WA 80cm", "WA 120cm", "WA 3er Spot 20cm", "WA Spot 40cm", "WA Spot 60cm", "WA Spot 80cm",
             "WA Field 40cm", "DFBV Spiegel 40cm", "DFBV Spiegel Spot 40cm"};
 
-    private static int[] targets_drawable = {R.drawable.wa, R.drawable.wa,
+    private static final int[] targets_drawable = {R.drawable.wa, R.drawable.wa,
             R.drawable.wa, R.drawable.wa, R.drawable.wa_spot, R.drawable.wa_spot, R.drawable.wa_spot, R.drawable.wa_spot,
             R.drawable.wa_field, R.drawable.dfbv_spiegel, R.drawable.dfbv_spiegel_spot};
 
@@ -46,7 +46,7 @@ public class TargetItemAdapter extends BaseAdapter implements SpinnerAdapter {
 		if (v == null) {
 			LayoutInflater vi = (LayoutInflater) mContext.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(R.layout.target_item, null);
+			v = vi.inflate(R.layout.target_item, parent, false);
 		}
 
         ImageView img = (ImageView) v.findViewById(R.id.targetImage);

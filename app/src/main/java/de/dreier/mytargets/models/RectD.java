@@ -106,7 +106,7 @@ public class RectD implements Parcelable {
 	 *
 	 * @hide
 	 */
-	public String toShortString(StringBuilder sb) {
+    String toShortString(StringBuilder sb) {
 		sb.setLength(0);
 		sb.append('[');
 		sb.append(left);
@@ -338,7 +338,7 @@ public class RectD implements Parcelable {
 	 *		 (and this rectangle is then set to that intersection) else
 	 *		 return false and do not change this rectangle.
 	 */
-	public boolean intersect(long left, long top, long right, long bottom) {
+    boolean intersect(long left, long top, long right, long bottom) {
 		if (this.left < right && left < this.right && this.top < bottom && top < this.bottom) {
 			if (this.left < left) {
 				this.left = left;
@@ -437,7 +437,7 @@ public class RectD implements Parcelable {
 	 * @param right  The right edge being unioned with this rectangle
 	 * @param bottom The bottom edge being unioned with this rectangle
 	 */
-	public void union(long left, long top, long right, long bottom) {
+    void union(long left, long top, long right, long bottom) {
 		if ((left < right) && (top < bottom)) {
 			if ((this.left < this.right) && (this.top < this.bottom)) {
 				if (this.left > left)
@@ -552,7 +552,7 @@ public class RectD implements Parcelable {
 	 *
 	 * @param in The parcel to read the rectangle's coordinates from
 	 */
-	public void readFromParcel(Parcel in) {
+    void readFromParcel(Parcel in) {
 		left = in.readLong();
 		top = in.readLong();
 		right = in.readLong();

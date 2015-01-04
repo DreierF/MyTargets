@@ -30,13 +30,13 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
 
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
-    protected ListView mListView;
-    protected NowListAdapter adapter;
-    protected String itemSingular;
-    protected String itemPlural;
-    protected TargetOpenHelper db;
-    protected boolean mEnableBackAnimation = true;
-    protected boolean mEditable = false;
+    private ListView mListView;
+    NowListAdapter adapter;
+    String itemSingular;
+    String itemPlural;
+    TargetOpenHelper db;
+    boolean mEnableBackAnimation = true;
+    boolean mEditable = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,13 +116,13 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
         fab.attachToListView(mListView);
     }
 
-    protected void onEdit(long id) {}
+    void onEdit(long id) {}
 
-    protected void setListAdapter(NowListAdapter adapter) {
+    void setListAdapter(NowListAdapter adapter) {
         mListView.setAdapter(adapter);
     }
 
-    protected ListAdapter getListAdapter() {
+    ListAdapter getListAdapter() {
         return mListView.getAdapter();
     }
 
@@ -132,7 +132,7 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.settings_only, menu);
+        //getMenuInflater().inflate(R.menu.settings_only, menu);
         return true;
     }
 
@@ -175,5 +175,5 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
             overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
-    public abstract boolean onItemClick(Intent i, int pos, long id);
+    protected abstract boolean onItemClick(Intent i, int pos, long id);
 }

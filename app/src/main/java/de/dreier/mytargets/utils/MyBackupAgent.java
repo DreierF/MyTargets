@@ -8,8 +8,8 @@ public class MyBackupAgent extends BackupAgentHelper {
     public static final String PREFS = "user_preferences";
 
     // A key to uniquely identify the set of backup data
-    static final String PREFS_BACKUP_KEY = "prefs";
-    static final String SQLITE_BACKUP_KEY = "sqlite";
+    private static final String PREFS_BACKUP_KEY = "prefs";
+    private static final String SQLITE_BACKUP_KEY = "sqlite";
 
     // Allocate a helper and add it to the backup agent
     @Override

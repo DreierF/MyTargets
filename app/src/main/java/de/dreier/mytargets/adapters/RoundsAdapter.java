@@ -18,7 +18,8 @@ public class RoundsAdapter extends NowListAdapter {
     private final int unitInd;
     private final int pppInd;
     private final int targetInd, idInd;
-    private int distInd, indoorInd;
+    private final int distInd;
+    private final int indoorInd;
 
     public RoundsAdapter(Context context, long training) {
         super(context, new TargetOpenHelper(context).getRunden(training));

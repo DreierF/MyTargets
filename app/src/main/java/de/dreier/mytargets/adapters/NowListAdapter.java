@@ -15,14 +15,14 @@ import de.dreier.mytargets.utils.TargetOpenHelper;
  * Shows all passes of one round
  */
 public abstract class NowListAdapter extends CursorAdapter {
-    protected final LayoutInflater mInflater;
-    protected final TargetOpenHelper db;
-    protected final Context mContext;
-    protected int mExtraCards = 1;
-    protected String mNewText;
+    final LayoutInflater mInflater;
+    final TargetOpenHelper db;
+    final Context mContext;
+    int mExtraCards = 1;
+    String mNewText;
 
-    public NowListAdapter(Context context, Cursor cursor) {
-        super(context,cursor,0);
+    NowListAdapter(Context context, Cursor cursor) {
+        super(context, cursor, 0);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         db = new TargetOpenHelper(context);
         mContext = context;
@@ -30,12 +30,12 @@ public abstract class NowListAdapter extends CursorAdapter {
 
     @Override
     public int getCount() {
-        return super.getCount()+mExtraCards;
+        return super.getCount() + mExtraCards;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if(position<mExtraCards)
+        if (position < mExtraCards)
             return position;
         else
             return mExtraCards;
@@ -43,22 +43,22 @@ public abstract class NowListAdapter extends CursorAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return mExtraCards+(super.getCount()>0?1:0);
+        return mExtraCards + (super.getCount() > 0 ? 1 : 0);
     }
 
     @Override
     public long getItemId(int pos) {
-        return pos<mExtraCards?-1-pos:super.getItemId(pos-mExtraCards);
+        return pos < mExtraCards ? -1 - pos : super.getItemId(pos - mExtraCards);
     }
 
     public boolean isSelectable(int position) {
-        return position>=mExtraCards;
+        return position >= mExtraCards;
     }
 
     @Override
     public View getView(int pos, View convertView, ViewGroup parent) {
         View view;
-        if(pos==0) {
+        if (pos == 0) {
             if (convertView == null) {
                 view = mInflater.inflate(R.layout.new_card, parent, false);
             } else {
@@ -66,13 +66,15 @@ public abstract class NowListAdapter extends CursorAdapter {
             }
             TextView text = (TextView) view.findViewById(R.id.newText);
             text.setText(mNewText);
-        } else if(pos<mExtraCards) {
-            view = buildExtraCard(pos,convertView,parent);
+        } else if (pos < mExtraCards) {
+            view = buildExtraCard(pos, convertView, parent);
         } else {
-            view = super.getView(pos-mExtraCards,convertView,parent);
+            view = super.getView(pos - mExtraCards, convertView, parent);
         }
         return view;
     }
 
-    protected View buildExtraCard(int pos, View convertView, ViewGroup parent) {throw new IllegalArgumentException("buildExtraCard must be implemented!");}
+    protected View buildExtraCard(int pos, View convertView, ViewGroup parent) {
+        throw new IllegalArgumentException("buildExtraCard must be implemented!");
+    }
 }
