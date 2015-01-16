@@ -10,12 +10,11 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.utils.TargetOpenHelper;
 
 /**
  * Shows all Trainings
- * */
+ */
 
 public class TrainingAdapter extends NowListAdapter {
 
@@ -24,7 +23,7 @@ public class TrainingAdapter extends NowListAdapter {
     private final DateFormat dateFormat;
 
     public TrainingAdapter(Context context) {
-        super(context,new TargetOpenHelper(context).getTrainings());
+        super(context, new TargetOpenHelper(context).getTrainings());
         titleInd = getCursor().getColumnIndex(TargetOpenHelper.TRAINING_TITLE);
         dateInd = getCursor().getColumnIndex(TargetOpenHelper.TRAINING_DATE);
         dateFormat = DateFormat.getDateInstance();
@@ -38,6 +37,7 @@ public class TrainingAdapter extends NowListAdapter {
         View v = mInflater.inflate(R.layout.training_card, viewGroup, false);
         holder.title = (TextView) v.findViewById(R.id.training);
         holder.subtitle = (TextView) v.findViewById(R.id.training_date);
+        holder.ges = (TextView) v.findViewById(R.id.gesTraining);
         v.setTag(holder);
         return v;
     }
@@ -47,11 +47,14 @@ public class TrainingAdapter extends NowListAdapter {
         ViewHolder holder = (ViewHolder) view.getTag();
         holder.title.setText(cursor.getString(titleInd));
         holder.subtitle.setText(dateFormat.format(new Date(cursor.getLong(dateInd))));
+        int[] points = db.getTrainingPoints(cursor.getLong(0));
+        holder.ges.setText(points[0] + "/" + points[1]);
     }
 
     public static class ViewHolder {
         public TextView title;
         public TextView subtitle;
+        public TextView ges;
     }
 
     @Override

@@ -213,7 +213,6 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
             db.insert(TABLE_SHOOT, null, values);
         }
         db.close();
-        return insertId;
     }
 
     public long newTraining(String title) {
@@ -398,6 +397,28 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         cur.close();
         db.close();
         return r;
+    }
+
+    public int[] getTrainingPoints(long training) {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] args = {"" + training};
+
+        Cursor res = db.rawQuery("SELECT s.points, r.target, CASE WHEN r.bow='-2' OR b.type='1' THEN 1 ELSE 0 END compound" +
+                " FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow" +
+                " WHERE r._id=p.round AND r.training=? AND s.passe=p._id", args);
+        res.moveToFirst();
+        int[] sum = new int[2];
+        for (int i = 0; i < res.getCount(); i++) {
+            int zone = res.getInt(0);
+            int target = res.getInt(1);
+            boolean compound = res.getInt(2) == 1;
+            sum[0] += Target.getPointsByZone(target, zone, compound);
+            sum[1] += Target.getMaxPoints(target);
+            res.moveToNext();
+        }
+        res.close();
+        db.close();
+        return sum;
     }
 
     public int getRoundPoints(long round) {
