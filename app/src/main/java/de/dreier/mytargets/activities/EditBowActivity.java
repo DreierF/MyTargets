@@ -43,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.views.NotifyingScrollView;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.utils.TargetOpenHelper;
@@ -189,7 +190,7 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
 
         if (savedInstanceState == null && mBowId != -1) {
             TargetOpenHelper db = new TargetOpenHelper(this);
-            TargetOpenHelper.Bow bow = db.getBow(mBowId, false);
+            Bow bow = db.getBow(mBowId, false);
             name.setText(bow.name);
             brand.setText(bow.brand);
             size.setText(bow.size);

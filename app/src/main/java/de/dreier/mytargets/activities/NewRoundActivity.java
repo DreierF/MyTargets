@@ -18,6 +18,7 @@ import com.iangclifton.android.floatlabel.FloatLabel;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
+import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.utils.TargetOpenHelper;
 import de.dreier.mytargets.adapters.BowItemAdapter;
 import de.dreier.mytargets.utils.MyBackupAgent;
@@ -143,7 +144,7 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
         } else {
             // Load saved values
             TargetOpenHelper db = new TargetOpenHelper(this);
-            TargetOpenHelper.Round r = db.getRound(mRound);
+            Round r = db.getRound(mRound);
             if(r.distanceInd==-1) {
                 distance.setVisibility(View.GONE);
                 customDist.setVisibility(View.VISIBLE);

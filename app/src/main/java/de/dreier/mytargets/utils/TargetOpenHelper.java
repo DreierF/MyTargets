@@ -14,14 +14,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
 import de.dreier.mytargets.activities.EditBowActivity;
 import de.dreier.mytargets.activities.NewRoundActivity;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
+import de.dreier.mytargets.models.Bow;
+import de.dreier.mytargets.models.Passe;
+import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Target;
+import de.dreier.mytargets.models.Training;
 
 public class TargetOpenHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
@@ -179,7 +182,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
 
     public Cursor getTrainings() {
         SQLiteDatabase db = getReadableDatabase();
-        return db.query(TABLE_TRAINING, null, null, null, null, null, TRAINING_DATE + " ASC");
+        return db.query(TABLE_TRAINING, null, null, null, null, null, TRAINING_DATE + " DESC");
     }
 
     public Cursor getRunden(long training) {
@@ -303,23 +306,6 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         res1.close();
         db.close();
         return new ArrayList<>();
-    }
-
-    public static class Passe implements Serializable {
-        public int[] zones;
-        public float[][] points;
-
-        public Passe(int count) {
-            zones = new int[count];
-            points = new float[count][];
-            for (int i = 0; i < count; i++)
-                points[i] = new float[2];
-        }
-
-        public Passe(Passe p) {
-            zones = p.zones.clone();
-            points = p.points.clone();
-        }
     }
 
     public Training getTraining(long training) {
@@ -678,35 +664,4 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public class Bow {
-        public long id;
-        public String imageFile;
-        public String name;
-        public int type;
-        public String brand;
-        public String size;
-        public String height;
-        public String tiller;
-        public String description;
-        public Bitmap image;
-    }
-
-    public class Training {
-        public long id;
-        public String title;
-        public Date date;
-    }
-
-    public static class Round implements Serializable {
-        public int ppp;
-        public int target;
-        public long training;
-        public boolean indoor;
-        public String distance;
-        public int distanceVal;
-        public int bow;
-        public int[] scoreCount = new int[3];
-        public boolean compound;
-        public int distanceInd;
-    }
 }

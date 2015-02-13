@@ -15,8 +15,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 
 import java.util.ArrayList;
 
-import de.dreier.mytargets.utils.TargetOpenHelper;
-import de.dreier.mytargets.utils.TargetOpenHelper.Passe;
+import de.dreier.mytargets.models.Round;
+import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Target;
 
 public class TargetView extends View implements View.OnTouchListener {
@@ -47,7 +47,7 @@ public class TargetView extends View implements View.OnTouchListener {
     private Passe mPasse;
     private int oldRadius;
     private float oldSpacePerResult, oldResultX1;
-    private TargetOpenHelper.Round roundInfo;
+    private Round roundInfo;
     private boolean showAll = false;
     private ArrayList<Passe> mOldShots;
 
@@ -61,7 +61,7 @@ public class TargetView extends View implements View.OnTouchListener {
         invalidate();
     }
 
-    public void setRoundInfo(TargetOpenHelper.Round r) {
+    public void setRoundInfo(Round r) {
         roundInfo = r;
         mZoneCount = Target.target_rounds[r.target].length;
         mPasse = new Passe(r.ppp);
@@ -426,7 +426,7 @@ public class TargetView extends View implements View.OnTouchListener {
         mPasse = (Passe) b.getSerializable("passe");
         currentArrow = b.getInt("currentArrow");
         lastSetArrow = b.getInt("lastSetArrow");
-        roundInfo = (TargetOpenHelper.Round) b.getSerializable("roundInfo");
+        roundInfo = (Round) b.getSerializable("roundInfo");
         mOldShots = (ArrayList<Passe>) b.getSerializable("oldShots");
     }
 

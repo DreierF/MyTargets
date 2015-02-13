@@ -12,6 +12,8 @@ import java.util.SortedSet;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.models.LinearSeries;
 import de.dreier.mytargets.models.LinearSeries.LinearPoint;
+import de.dreier.mytargets.models.Passe;
+import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.utils.TargetOpenHelper;
 import de.dreier.mytargets.views.ChartView;
 
@@ -47,13 +49,13 @@ public class StatisticsActivity extends ActionBarActivity {
 
     private LinearSeries generateRoundSeries() {
         TargetOpenHelper db = new TargetOpenHelper(this);
-        ArrayList<TargetOpenHelper.Passe> passes = db.getRoundPasses(mRound, -1);
-        TargetOpenHelper.Round r = db.getRound(mRound);
+        ArrayList<Passe> passes = db.getRoundPasses(mRound, -1);
+        Round r = db.getRound(mRound);
 
         LinearSeries series = new LinearSeries();
 
         int x = 0;
-        for (TargetOpenHelper.Passe p : passes) {
+        for (Passe p : passes) {
             for (int zone : p.zones)
                 series.addPoint(new LinearSeries.LinearPoint(x++, (long) zone));
         }

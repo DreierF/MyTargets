@@ -11,8 +11,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Target;
-import de.dreier.mytargets.utils.TargetOpenHelper.Passe;
+import de.dreier.mytargets.models.Passe;
 
 public class TargetImage {
 
@@ -24,7 +25,7 @@ public class TargetImage {
     private int[] target;
     private static final int density = 1;
 
-    public void generateBitmap(Context context, int size, TargetOpenHelper.Round roundInfo, long round, OutputStream fOut) {
+    public void generateBitmap(Context context, int size, Round roundInfo, long round, OutputStream fOut) {
         // Create bitmap to draw on
         Bitmap b = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(b);

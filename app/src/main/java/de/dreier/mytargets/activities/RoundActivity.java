@@ -15,9 +15,9 @@ import java.io.IOException;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.PasseAdapter;
+import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Target;
 import de.dreier.mytargets.utils.TargetImage;
-import de.dreier.mytargets.utils.TargetOpenHelper;
 
 /**
  * Shows all passes of one round
@@ -27,7 +27,7 @@ public class RoundActivity extends NowListActivity {
     private long mTraining;
     private long mRound;
 
-    private TargetOpenHelper.Round mRoundInfo;
+    private Round mRoundInfo;
 
     @Override
     protected void init(Intent intent, Bundle savedInstanceState) {

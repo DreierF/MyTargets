@@ -6,11 +6,8 @@ import android.os.Bundle;
 import java.text.DateFormat;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.NewRoundActivity;
-import de.dreier.mytargets.activities.NowListActivity;
-import de.dreier.mytargets.activities.RoundActivity;
 import de.dreier.mytargets.adapters.RoundsAdapter;
-import de.dreier.mytargets.utils.TargetOpenHelper;
+import de.dreier.mytargets.models.Training;
 
 /**
  * Shows all rounds of one training day
@@ -34,7 +31,7 @@ public class TrainingActivity extends NowListActivity {
         if(mTraining==-1)
             finish();
 
-        TargetOpenHelper.Training tr = db.getTraining(mTraining);
+        Training tr = db.getTraining(mTraining);
         getSupportActionBar().setTitle(tr.title);
         getSupportActionBar().setSubtitle(DateFormat.getDateInstance().format(tr.date));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import de.dreier.mytargets.models.Round;
+import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.views.PassesView;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.models.Target;
@@ -20,11 +22,11 @@ import de.dreier.mytargets.utils.TargetOpenHelper;
 public class PasseAdapter extends NowListAdapter {
 
     private final int passeIdInd;
-    private final TargetOpenHelper.Round mRoundInfo;
+    private final Round mRoundInfo;
     private final long mRound;
     private final long mTraining;
 
-    public PasseAdapter(Context context, long training, long round, TargetOpenHelper.Round roundInfo) {
+    public PasseAdapter(Context context, long training, long round, Round roundInfo) {
         super(context, new TargetOpenHelper(context).getPasses(round));
         mExtraCards = 2;
         mNewText = context.getString(R.string.new_passe);
@@ -58,7 +60,7 @@ public class PasseAdapter extends NowListAdapter {
                 mContext.getString(mRoundInfo.indoor ? R.string.indoor : R.string.outdoor) + "</b></font><br>" +
                 mContext.getString(R.string.points) + ": <font color=#669900><b>" + reached + "/" + maxP + "</b></font><br>" +
                 mContext.getString(R.string.target_round) + ": <font color=#669900><b>" + TargetItemAdapter.targets[mRoundInfo.target] + "</b></font>";
-        TargetOpenHelper.Bow binfo = db.getBow(mRoundInfo.bow, true);
+        Bow binfo = db.getBow(mRoundInfo.bow, true);
         if (binfo != null) {
             infoText += "<br>" + mContext.getString(R.string.bow) +
                     ": <font color=#669900><b>" + TextUtils.htmlEncode(binfo.name) + "</b></font>";

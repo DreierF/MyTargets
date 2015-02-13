@@ -14,8 +14,8 @@ import java.util.List;
 
 import de.dreier.mytargets.models.LinearSeries;
 import de.dreier.mytargets.models.RectD;
+import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Target;
-import de.dreier.mytargets.utils.TargetOpenHelper;
 
 public class ChartView extends RelativeLayout {
 
@@ -44,7 +44,7 @@ public class ChartView extends RelativeLayout {
 	private long mMinY = 0;
 	private long mMaxY = 15;
 
-    private TargetOpenHelper.Round mRoundInfo;
+    private Round mRoundInfo;
 
     private enum Axis { X, Y }
 
@@ -214,7 +214,7 @@ public class ChartView extends RelativeLayout {
 		}
 	}
 
-    public void setRoundInfo(TargetOpenHelper.Round round) {
+    public void setRoundInfo(Round round) {
         mRoundInfo = round;
         setYRange(0, Target.target_rounds[round.target].length);
     }

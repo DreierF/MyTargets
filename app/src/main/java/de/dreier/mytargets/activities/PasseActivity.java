@@ -22,9 +22,11 @@ import android.widget.Button;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Target;
+import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.utils.TargetOpenHelper;
-import de.dreier.mytargets.utils.TargetOpenHelper.Passe;
+import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.views.TargetView;
 
 public class PasseActivity extends ActionBarActivity implements TargetView.OnTargetSetListener {
@@ -42,7 +44,7 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
     private long mRound, mTraining;
     private TargetOpenHelper db;
     private boolean mMode = true;
-    private TargetOpenHelper.Round r;
+    private Round r;
     private boolean mShowAllMode = false;
 
     @Override
@@ -126,7 +128,7 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void createPasseFromVoiceInput(String voiceInput, TargetOpenHelper.Round r) {
+    private void createPasseFromVoiceInput(String voiceInput, Round r) {
         Log.d("voice", voiceInput);
         String[] inp = voiceInput.split("( |\\.)");
         Passe passe = new Passe(r.ppp);
@@ -364,7 +366,7 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
         }
 
         // Load background and bow settings
-        TargetOpenHelper.Bow bow = db.getBow(r.bow, false);
+        Bow bow = db.getBow(r.bow, false);
         if (r.bow == -1 || bow == null) {
             image = BitmapFactory.decodeResource(getResources(), R.drawable.wear_bg);
         } else {
