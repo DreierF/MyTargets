@@ -6,12 +6,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Region;
+import android.os.Bundle;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
+import de.dreier.mytargets.models.OnTargetSetListener;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Target;
@@ -64,7 +66,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
         reset();
     }
 
-    public void switchMode(boolean mode) {
+    public void setMode(boolean mode) {
         if (mode != mModeEasy) {
             mModeEasy = mode;
         }
@@ -72,10 +74,6 @@ public class TargetSelectView extends View implements View.OnTouchListener {
 
     public void setChinHeight(int chinHeight) {
         this.chinHeight = chinHeight;
-    }
-
-    public interface OnTargetSetListener {
-        public void OnTargetSet(Passe passe);
     }
 
     public TargetSelectView(Context context) {
@@ -164,7 +162,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
                 } else {
                     circleY = radius + radius * (curZone + 1) / (float) mZoneCount;
                 }
-                drawCircle(canvas, radius + radius + 27 * density, circleY, curZone, 17);
+                drawCircle(canvas, radius + radius + 27 * density, circleY, curZone, 17, 22);
                 if (curZone > -1)
                     canvas.drawLine(radius, circleY, radius + radius + 10 * density, circleY, circleColorP);
             }
@@ -176,13 +174,15 @@ public class TargetSelectView extends View implements View.OnTouchListener {
             if (mOutZone >= -1) {
                 drawCircle(canvas, mOutFromX + (mOutToX - mOutFromX) * mCurAnimationProgress,
                         mOutFromY + (mOutToY - mOutFromY) * mCurAnimationProgress, mOutZone,
-                        (int) (17 - (17 - 10) * mCurAnimationProgress));
+                        (int) (17 - (17 - 10) * mCurAnimationProgress),
+                        (int) (22 - (22 - 13) * mCurAnimationProgress));
             }
             // Draw incoming object
             if (mInZone >= -1) {
                 drawCircle(canvas, mInFromX + (mInToX - mInFromX) * mCurAnimationProgress,
                         mInFromY + (mInToY - mInFromY) * mCurAnimationProgress, mInZone,
-                        (int) (10 + (17 - 10) * mCurAnimationProgress));
+                        (int) (10 + (17 - 10) * mCurAnimationProgress),
+                        (int) (22 - (22 - 13) * mCurAnimationProgress));
             }
         }
     }
@@ -199,13 +199,24 @@ public class TargetSelectView extends View implements View.OnTouchListener {
             curZone = mPasse.zones[currentArrow];
         else
             curZone = -2;
+
+        // Erase background
         drawColorP.setColor(0xffffffff);
         canvas.drawRect(0, 0, contentWidth, contentHeight, drawColorP);
+
+        // Draw all possible points in a circular
         for (int i = -1; i < mZoneCount; i++) {
             float[] coord = getCircularCoords(i);
-            drawCircle(canvas, coord[0], coord[1], i, (i == curZone ? 23 : 17));
+            drawCircle(canvas, coord[0], coord[1], i,
+                    i == curZone ? 23 : 17,
+                    i == curZone ? 29 : 22);
         }
 
+        // Draw all points of this passe in the center
+        drawSelectedPointsInCenter(canvas);
+    }
+
+    private void drawSelectedPointsInCenter(Canvas canvas) {
         // Draw touch feedback if arrow is pressed
         if (mCurPressed != -1) {
             float x = radius + (mCurPressed - 1) * 25 * density;
@@ -213,16 +224,18 @@ public class TargetSelectView extends View implements View.OnTouchListener {
             canvas.drawRect(x, y, x + 25 * density, y + 25 * density, grayBackground);
         }
 
-        // Draw all points of this passe in the center
+        // Draw separator line if there are more then 3 shots
         if (twoRows) {
             canvas.drawLine(radius - 30 * density,
                     radius, radius + 30 * density, radius, thinBlackBorder);
         }
+
+        // Draw the points
         for (int i = 0; i <= lastSetArrow && i < roundInfo.ppp; i++) {
             float newX = radius + ((i % 3) - 1) * 25 * density;
             float newY = radius + (i < 3 ? -1 : 1) * (twoRows ? 30 * density : 20 * density);
             if (currentArrow != i && mCurSelecting != i) {
-                drawCircle(canvas, newX, newY, mPasse.zones[i], 10);
+                drawCircle(canvas, newX, newY, mPasse.zones[i], 10, 13);
             }
         }
     }
@@ -337,7 +350,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
         return (zone == curZone || !mModeEasy ? Target.highlightColor : Target.grayColor)[target[zone]];
     }
 
-    private void drawCircle(Canvas can, float x, float y, int zone, int rad) {
+    private void drawCircle(Canvas can, float x, float y, int zone, int rad, int font_size) {
         int colorInd;
         if (zone > -1) {
             colorInd = Target.target_rounds[roundInfo.target][zone];
@@ -351,6 +364,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
         circleColorP.setColor(Target.circleStrokeColor[colorInd]);
         can.drawCircle(x, y, rad * density, circleColorP);
         mTextPaint.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
+        mTextPaint.setTextSize(font_size * density);
         can.drawText(Target.getStringByZone(roundInfo.target, zone, roundInfo.compound), x, y + 7 * density, mTextPaint);
     }
 
@@ -429,7 +443,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
             animateSelectCircle(lastSetArrow + 1);
 
             if (lastSetArrow + 1 >= roundInfo.ppp && setListener != null) {
-                setListener.OnTargetSet(new Passe(mPasse));
+                setListener.onTargetSet(new Passe(mPasse));
             }
 
             return true;
@@ -462,5 +476,20 @@ public class TargetSelectView extends View implements View.OnTouchListener {
 
     public void setOnTargetSetListener(OnTargetSetListener listener) {
         setListener = listener;
+    }
+
+
+    public void saveState(Bundle b) {
+        b.putSerializable("passe", mPasse);
+        b.putSerializable("roundInfo", roundInfo);
+        b.putInt("currentArrow", currentArrow);
+        b.putInt("lastSetArrow", lastSetArrow);
+    }
+
+    public void restoreState(Bundle b) {
+        mPasse = (Passe) b.getSerializable("passe");
+        currentArrow = b.getInt("currentArrow");
+        lastSetArrow = b.getInt("lastSetArrow");
+        roundInfo = (Round) b.getSerializable("roundInfo");
     }
 }

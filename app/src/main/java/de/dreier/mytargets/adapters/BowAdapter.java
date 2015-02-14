@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.utils.TargetOpenHelper;
+import de.dreier.mytargets.managers.DatabaseManager;
 
 /**
  * Shows all Trainings
@@ -21,9 +21,9 @@ public class BowAdapter extends NowListAdapter {
     private final int nameInd, thumbInd;
 
     public BowAdapter(Context context) {
-        super(context,new TargetOpenHelper(context).getBows());
-        nameInd = getCursor().getColumnIndex(TargetOpenHelper.BOW_NAME);
-        thumbInd = getCursor().getColumnIndex(TargetOpenHelper.BOW_THUMBNAIL);
+        super(context,new DatabaseManager(context).getBows());
+        nameInd = getCursor().getColumnIndex(DatabaseManager.BOW_NAME);
+        thumbInd = getCursor().getColumnIndex(DatabaseManager.BOW_THUMBNAIL);
         mNewText = context.getString(R.string.new_bow);
     }
 

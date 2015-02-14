@@ -3,6 +3,8 @@ package de.dreier.mytargets.utils;
 import android.app.backup.BackupAgentHelper;
 import android.app.backup.SharedPreferencesBackupHelper;
 
+import de.dreier.mytargets.managers.DatabaseManager;
+
 public class MyBackupAgent extends BackupAgentHelper {
     // The name of the SharedPreferences file
     public static final String PREFS = "user_preferences";
@@ -15,6 +17,6 @@ public class MyBackupAgent extends BackupAgentHelper {
     @Override
     public void onCreate() {
         addHelper(PREFS_BACKUP_KEY, new SharedPreferencesBackupHelper(this, PREFS));
-        addHelper(SQLITE_BACKUP_KEY, new DbBackupHelper(this, TargetOpenHelper.DATABASE_NAME));
+        addHelper(SQLITE_BACKUP_KEY, new DbBackupHelper(this, DatabaseManager.DATABASE_NAME));
     }
 }

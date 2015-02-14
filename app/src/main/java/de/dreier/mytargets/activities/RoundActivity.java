@@ -3,8 +3,6 @@ package de.dreier.mytargets.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -49,9 +47,10 @@ public class RoundActivity extends NowListActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.round, menu);
-        MenuItem item = menu.findItem(R.id.action_share);
-        ShareActionProvider shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        return true;
+    }
 
+    private Intent buildShareIntent() {
         // Construct share intent
         mRoundInfo = db.getRound(mRound);
         int max = Target.getMaxPoints(mRoundInfo.target);
@@ -79,11 +78,11 @@ public class RoundActivity extends NowListActivity {
             shareIntent.putExtra(Intent.EXTRA_TEXT, text);
             shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
             shareIntent.setType("*/*");
-            shareActionProvider.setShareIntent(shareIntent);
+            return shareIntent;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return true;
+        return null;
     }
 
     @Override
@@ -107,6 +106,9 @@ public class RoundActivity extends NowListActivity {
                 Intent i = new Intent(this, StatisticsActivity.class);
                 i.putExtra(StatisticsActivity.ROUND_ID, mRound);
                 startActivity(i);
+                return true;
+            case R.id.action_share:
+                startActivity(buildShareIntent());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -10,7 +10,7 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.utils.TargetOpenHelper;
+import de.dreier.mytargets.managers.DatabaseManager;
 
 /**
  * Shows all Trainings
@@ -23,9 +23,9 @@ public class TrainingAdapter extends NowListAdapter {
     private final DateFormat dateFormat;
 
     public TrainingAdapter(Context context) {
-        super(context, new TargetOpenHelper(context).getTrainings());
-        titleInd = getCursor().getColumnIndex(TargetOpenHelper.TRAINING_TITLE);
-        dateInd = getCursor().getColumnIndex(TargetOpenHelper.TRAINING_DATE);
+        super(context, new DatabaseManager(context).getTrainings());
+        titleInd = getCursor().getColumnIndex(DatabaseManager.TRAINING_TITLE);
+        dateInd = getCursor().getColumnIndex(DatabaseManager.TRAINING_DATE);
         dateFormat = DateFormat.getDateInstance();
         mNewText = context.getString(R.string.new_training);
         mExtraCards = 2;

@@ -15,6 +15,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 
 import java.util.ArrayList;
 
+import de.dreier.mytargets.models.OnTargetSetListener;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Target;
@@ -91,10 +92,6 @@ public class TargetView extends View implements View.OnTouchListener {
     public void setOldShoots(ArrayList<Passe> oldOnes) {
         mOldShots = oldOnes;
         invalidate();
-    }
-
-    public interface OnTargetSetListener {
-        public void OnTargetSet(Passe passe);
     }
 
     public TargetView(Context context) {
@@ -520,7 +517,7 @@ public class TargetView extends View implements View.OnTouchListener {
             animateSelectCircle(lastSetArrow + 1);
 
             if (lastSetArrow + 1 >= roundInfo.ppp && setListener != null) {
-                setListener.OnTargetSet(new Passe(mPasse));
+                setListener.onTargetSet(new Passe(mPasse));
             }
 
             return true;

@@ -19,10 +19,10 @@ import android.webkit.WebViewClient;
 import java.io.ByteArrayOutputStream;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Target;
 import de.dreier.mytargets.utils.TargetImage;
-import de.dreier.mytargets.utils.TargetOpenHelper;
 
 
 public class ScoreboardActivity extends ActionBarActivity {
@@ -65,7 +65,7 @@ public class ScoreboardActivity extends ActionBarActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            TargetOpenHelper db = new TargetOpenHelper(ScoreboardActivity.this);
+            DatabaseManager db = new DatabaseManager(ScoreboardActivity.this);
             Round info = db.getRound(mRound);
             Cursor cur = db.getPasses(mRound);
             String html = "<html><style type=\"text/css\">\n" +

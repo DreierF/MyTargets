@@ -13,7 +13,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.utils.TargetOpenHelper;
+import de.dreier.mytargets.managers.DatabaseManager;
 
 public class BowItemAdapter extends CursorAdapter implements SpinnerAdapter {
 
@@ -21,10 +21,10 @@ public class BowItemAdapter extends CursorAdapter implements SpinnerAdapter {
     private final LayoutInflater mInflater;
 
     public BowItemAdapter(Context context) {
-        super(context,new TargetOpenHelper(context).getBows(),0);
+        super(context,new DatabaseManager(context).getBows(),0);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        nameInd = getCursor().getColumnIndex(TargetOpenHelper.BOW_NAME);
-        thumbInd = getCursor().getColumnIndex(TargetOpenHelper.BOW_THUMBNAIL);
+        nameInd = getCursor().getColumnIndex(DatabaseManager.BOW_NAME);
+        thumbInd = getCursor().getColumnIndex(DatabaseManager.BOW_THUMBNAIL);
 	}
 
 	@Override

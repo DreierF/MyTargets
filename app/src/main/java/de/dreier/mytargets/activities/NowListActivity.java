@@ -21,7 +21,7 @@ import com.melnykov.fab.FloatingActionButton;
 
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.utils.TargetOpenHelper;
+import de.dreier.mytargets.managers.DatabaseManager;
 
 /**
  * Shows all rounds of one settings_only day
@@ -34,7 +34,7 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
     NowListAdapter adapter;
     String itemSingular;
     String itemPlural;
-    TargetOpenHelper db;
+    DatabaseManager db;
     boolean mEnableBackAnimation = true;
     boolean mEditable = false;
 
@@ -43,7 +43,7 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        db = new TargetOpenHelper(this);
+        db = new DatabaseManager(this);
         init(getIntent(), savedInstanceState);
 
         mListView = (ListView) findViewById(android.R.id.list);

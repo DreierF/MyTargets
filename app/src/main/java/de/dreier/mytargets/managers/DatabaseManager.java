@@ -1,4 +1,4 @@
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.managers;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -26,7 +26,7 @@ import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Target;
 import de.dreier.mytargets.models.Training;
 
-public class TargetOpenHelper extends SQLiteOpenHelper {
+public class DatabaseManager extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
     private static final int DATABASE_VERSION = 4;
 
@@ -127,7 +127,7 @@ public class TargetOpenHelper extends SQLiteOpenHelper {
                     SHOOT_Y + " REAL);";
     private final Context mContext;
 
-    public TargetOpenHelper(Context context) {
+    public DatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
     }

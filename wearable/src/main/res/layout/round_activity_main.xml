@@ -10,8 +10,8 @@
 
     <android.support.wearable.view.DelayedConfirmationView
         android:id="@+id/delayed_confirm"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:src="@drawable/ic_close_white_18dp"

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Target;
 import de.dreier.mytargets.models.Passe;
@@ -33,7 +34,7 @@ public class TargetImage {
 
         // Initialize variables
         int radius = size / 2;
-        TargetOpenHelper db = new TargetOpenHelper(context);
+        DatabaseManager db = new DatabaseManager(context);
         ArrayList<Passe> oldOnes = db.getRoundPasses(round, -1);
         mZoneCount = Target.target_rounds[roundInfo.target].length;
         init();

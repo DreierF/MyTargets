@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.views.PassesView;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.models.Target;
-import de.dreier.mytargets.utils.TargetOpenHelper;
 
 /**
  * Shows all passes of one round
@@ -27,13 +27,13 @@ public class PasseAdapter extends NowListAdapter {
     private final long mTraining;
 
     public PasseAdapter(Context context, long training, long round, Round roundInfo) {
-        super(context, new TargetOpenHelper(context).getPasses(round));
+        super(context, new DatabaseManager(context).getPasses(round));
         mExtraCards = 2;
         mNewText = context.getString(R.string.new_passe);
         mRound = round;
         mRoundInfo = roundInfo;
         mTraining = training;
-        passeIdInd = getCursor().getColumnIndex(TargetOpenHelper.PASSE_ID);
+        passeIdInd = getCursor().getColumnIndex(DatabaseManager.PASSE_ID);
     }
 
     @Override

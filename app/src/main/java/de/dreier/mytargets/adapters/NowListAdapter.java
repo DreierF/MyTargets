@@ -9,14 +9,14 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.utils.TargetOpenHelper;
+import de.dreier.mytargets.managers.DatabaseManager;
 
 /**
  * Shows all passes of one round
  */
 public abstract class NowListAdapter extends CursorAdapter {
     final LayoutInflater mInflater;
-    final TargetOpenHelper db;
+    final DatabaseManager db;
     final Context mContext;
     int mExtraCards = 1;
     String mNewText;
@@ -24,7 +24,7 @@ public abstract class NowListAdapter extends CursorAdapter {
     NowListAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        db = new TargetOpenHelper(context);
+        db = new DatabaseManager(context);
         mContext = context;
     }
 

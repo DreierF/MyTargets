@@ -1,26 +1,76 @@
 package de.dreier.mytargets.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.utils.TargetOpenHelper;
 import de.dreier.mytargets.adapters.TrainingAdapter;
+import de.dreier.mytargets.managers.DatabaseManager;
 
 /**
  * Shows an overview over all trying days
  */
 public class MainActivity extends NowListActivity {
+
+    private static boolean shownThisTime = false;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        boolean shown = prefs.getBoolean("translation_dialog_shown", false);
+
+        String longLang = Locale.getDefault().getDisplayLanguage().toLowerCase();
+        String shortLocale = Locale.getDefault().getLanguage();
+        if (!shortLocale.equals("de") && !shortLocale.equals("en") && !shown && !shownThisTime) {
+            // Linkify the message
+            final SpannableString s = new SpannableString(Html.fromHtml("If you would like " +
+                    "to help make MyTargets even better by translating the app to " +
+                    longLang + ", please send me an E-Mail (dreier.florian@gmail.com) " +
+                    "so I can give you access to the translation tool!<br /><br />" +
+                    "Thanks in advance :)"));
+            Linkify.addLinks(s, Linkify.EMAIL_ADDRESSES);
+            AlertDialog d = new AlertDialog.Builder(this).setTitle("App translation")
+                    .setMessage(s)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            prefs.edit().putBoolean("translation_dialog_shown", true).apply();
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("Remind me later", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            shownThisTime = true;
+                            dialog.dismiss();
+                        }
+                    }).create();
+            d.show();
+            ((TextView) d.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+        }
+    }
 
     @Override
     protected void init(Intent intent, Bundle savedInstanceState) {
@@ -49,7 +99,7 @@ public class MainActivity extends NowListActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        db = new TargetOpenHelper(MainActivity.this);
+                        db = new DatabaseManager(MainActivity.this);
 
                         String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
                         SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");

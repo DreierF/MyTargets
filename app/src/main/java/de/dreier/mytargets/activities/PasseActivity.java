@@ -13,7 +13,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,14 +21,16 @@ import android.widget.Button;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.managers.WearMessageManager;
+import de.dreier.mytargets.models.Bow;
+import de.dreier.mytargets.models.OnTargetSetListener;
+import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Target;
-import de.dreier.mytargets.models.Bow;
-import de.dreier.mytargets.utils.TargetOpenHelper;
-import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.views.TargetView;
 
-public class PasseActivity extends ActionBarActivity implements TargetView.OnTargetSetListener {
+public class PasseActivity extends ActionBarActivity implements OnTargetSetListener {
 
     public static final String ROUND_ID = "round_id";
     public static final String PASSE_IND = "passe_ind";
@@ -42,35 +43,18 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
     private int curPasse = 1;
     private int savedPasses = 0;
     private long mRound, mTraining;
-    private TargetOpenHelper db;
+    private DatabaseManager db;
     private boolean mMode = true;
     private Round r;
     private boolean mShowAllMode = false;
-
-    @Override
-    protected void onNewIntent(Intent i) {
-        super.onNewIntent(i);
-        Bundle remoteInput = RemoteInput.getResultsFromIntent(i);
-        if (remoteInput != null) {
-            Log.d("round", "" + mRound);
-            String voiceInput = remoteInput.getCharSequence(EXTRA_VOICE_REPLY).toString();
-            createPasseFromVoiceInput(voiceInput, r);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.cancel(1);
-    }
+    private WearMessageManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_targets);
 
-        db = new TargetOpenHelper(this);
+        db = new DatabaseManager(this);
 
         Intent i = getIntent();
         if (i != null && i.hasExtra(ROUND_ID)) {
@@ -96,14 +80,12 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
         mShowAllMode = prefs.getBoolean(SHOW_ALL_MODE, false);
         target.switchMode(mMode, false);
         target.showAll(mShowAllMode);
-
-        updateNotification(null);
-
-        Bundle remoteInput = RemoteInput.getResultsFromIntent(i);
-        if (remoteInput != null) {
-            String voiceInput = remoteInput.getCharSequence(EXTRA_VOICE_REPLY).toString();
-            createPasseFromVoiceInput(voiceInput, r);
+        Bow bow = null;
+        if (r.bow != -1) {
+            bow = db.getBow(r.bow, true);
         }
+
+        manager = new WearMessageManager(this, r, mMode, bow);
 
         if (savedInstanceState != null) {
             target.restoreState(savedInstanceState);
@@ -128,94 +110,23 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void createPasseFromVoiceInput(String voiceInput, Round r) {
-        Log.d("voice", voiceInput);
-        String[] inp = voiceInput.split("( |\\.)");
-        Passe passe = new Passe(r.ppp);
-        int biggestPoints = Target.getMaxPoints(r.target);
-        int cur = 0;
-        int color = -1, zone = -1;
-        for (int i = 0; i < inp.length; i++) {
-            try {
-                int points = Integer.parseInt(inp[i]);
-                while (points > biggestPoints) {
-                    int firstPoints;
-                    if (biggestPoints == 10) {
-                        firstPoints = Integer.parseInt(inp[i].substring(0, 2));
-                        if (firstPoints != 10) {
-                            firstPoints = Integer.parseInt(inp[i].substring(0, 1));
-                            inp[i] = inp[i].substring(1);
-                        } else {
-                            inp[i] = inp[i].substring(2);
-                        }
-                    } else {
-                        firstPoints = Integer.parseInt(inp[i].substring(0, 1));
-                    }
-                    passe.zones[cur] = Target.pointsToZone(r.target, firstPoints);
-                    Log.d("passe", "recognized: " + firstPoints);
-                    cur++;
-                    points = Integer.parseInt(inp[i]);
-                }
-                Log.d("passe", "recognized: " + points);
-                passe.zones[cur] = Target.pointsToZone(r.target, points);
-                cur++;
-            } catch (NumberFormatException e) {
-                String p = inp[i].toLowerCase();
-                if (p.equals(getString(R.string.yellow))) {
-                    color = 0;
-                } else if (p.equals(getString(R.string.gold))) {
-                    color = 0;
-                } else if (p.equals(getString(R.string.blue))) {
-                    color = 1;
-                } else if (p.equals(getString(R.string.red))) {
-                    color = 2;
-                } else if (p.equals(getString(R.string.black))) {
-                    color = 3;
-                } else if (p.equals(getString(R.string.white))) {
-                    color = 4;
-                } else if (p.equals(getString(R.string.inner))) {
-                    zone = 0;
-                } else if (p.equals(getString(R.string.outer))) {
-                    zone = 1;
-                } else if (p.equals(getString(R.string.mistake))) {
-                    Log.d("passe", "recognized: mistake");
-                    passe.zones[cur] = -1;
-                    cur++;
-                } else if (p.startsWith("x")) {
-                    Log.d("passe", "recognized: x");
-                    passe.zones[cur] = 0;
-                    cur++;
-                    inp[i] = inp[i].substring(1).trim();
-                    if (!inp[i].isEmpty())
-                        i--;
-                } else {
-                    Log.d("passe", "recognized nothing");
-                    inp[i] = inp[i].substring(1).trim();
-                    if (!inp[i].isEmpty())
-                        i--;
-                }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        manager.close();
+    }
 
-                if (color != -1 && zone != -1) {
-                    Log.d("passe", "recognized: " + (1 + color * 2 + zone));
-                    passe.zones[cur] = 1 + color * 2 + zone;
-                    cur++;
-                    color = -1;
-                    zone = -1;
-                }
-            }
-        }
-        if (cur == r.ppp) {
-            for (int i = 0; i < r.ppp; i++) {
-                passe.points[i][0] = Target.zoneToX(r.target, passe.zones[i]);
-                passe.points[i][1] = 0;
-            }
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            prefs.edit().putBoolean(PASSE_VIA_VOICE, true).apply();
-            curPasse = savedPasses + 1;
-            OnTargetSet(passe);
-            setPasse(curPasse);
-            updateNotification(passe);
-        }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.passe, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_switch_mode).setIcon(mMode ? R.drawable.ic_target_exact_24dp : R.drawable.ic_target_zone_24dp);
+        menu.findItem(R.id.action_show_all).setIcon(mShowAllMode ? R.drawable.ic_visibility_off_white_24dp : R.drawable.ic_visibility_white_24dp);
+        return true;
     }
 
     void setPasse(int passe) {
@@ -239,19 +150,6 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
         setTitle("Passe " + curPasse);
         prev.setEnabled(curPasse > 1);
         next.setEnabled(curPasse <= savedPasses);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.passe, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_switch_mode).setIcon(mMode ? R.drawable.ic_target_exact_24dp : R.drawable.ic_target_zone_24dp);
-        menu.findItem(R.id.action_show_all).setIcon(mShowAllMode ? R.drawable.ic_visibility_off_white_24dp : R.drawable.ic_visibility_white_24dp);
-        return true;
     }
 
     @Override
@@ -295,8 +193,8 @@ public class PasseActivity extends ActionBarActivity implements TargetView.OnTar
     }
 
     @Override
-    public void OnTargetSet(Passe passe) {
-        TargetOpenHelper db = new TargetOpenHelper(this);
+    public void onTargetSet(Passe passe) {
+        DatabaseManager db = new DatabaseManager(this);
 
         // Sort passe
         for (int n = passe.zones.length; n > 1; n--) {

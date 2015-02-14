@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Target;
-import de.dreier.mytargets.utils.TargetOpenHelper;
 
 /**
  * Shows all rounds of one settings_only
@@ -22,13 +22,13 @@ public class RoundsAdapter extends NowListAdapter {
     private final int indoorInd;
 
     public RoundsAdapter(Context context, long training) {
-        super(context, new TargetOpenHelper(context).getRunden(training));
-        idInd = getCursor().getColumnIndex(TargetOpenHelper.RUNDE_ID);
-        distInd = getCursor().getColumnIndex(TargetOpenHelper.RUNDE_DISTANCE);
-        unitInd = getCursor().getColumnIndex(TargetOpenHelper.RUNDE_UNIT);
-        indoorInd = getCursor().getColumnIndex(TargetOpenHelper.RUNDE_INDOOR);
-        pppInd = getCursor().getColumnIndex(TargetOpenHelper.RUNDE_PPP);
-        targetInd = getCursor().getColumnIndex(TargetOpenHelper.RUNDE_TARGET);
+        super(context, new DatabaseManager(context).getRunden(training));
+        idInd = getCursor().getColumnIndex(DatabaseManager.RUNDE_ID);
+        distInd = getCursor().getColumnIndex(DatabaseManager.RUNDE_DISTANCE);
+        unitInd = getCursor().getColumnIndex(DatabaseManager.RUNDE_UNIT);
+        indoorInd = getCursor().getColumnIndex(DatabaseManager.RUNDE_INDOOR);
+        pppInd = getCursor().getColumnIndex(DatabaseManager.RUNDE_PPP);
+        targetInd = getCursor().getColumnIndex(DatabaseManager.RUNDE_TARGET);
         mNewText = context.getString(R.string.new_round);
     }
 
