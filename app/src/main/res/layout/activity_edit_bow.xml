@@ -182,7 +182,8 @@
                     android:id="@+id/desc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/description" />
+                    android:hint="@string/description"
+                    android:inputType="textMultiLine" />
 
                 <TextView
                     style="?android:attr/listSeparatorTextViewStyle"

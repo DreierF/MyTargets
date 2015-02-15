@@ -81,7 +81,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
         target.switchMode(mMode, false);
         target.showAll(mShowAllMode);
         Bow bow = null;
-        if (r.bow != -1) {
+        if (r.bow > -1) {
             bow = db.getBow(r.bow, true);
         }
 

@@ -256,6 +256,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (!res1.moveToPosition(passe - 1))
             return null;
         long passeId = res1.getLong(0);
+        res1.close();
         String[] cols2 = {SHOOT_ZONE, SHOOT_X, SHOOT_Y};
         String[] args2 = {"" + passeId};
         Cursor res = db.query(TABLE_SHOOT, cols2, SHOOT_PASSE + "=?", args2, null, null, SHOOT_ID + " ASC");
@@ -370,7 +371,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         res.close();
 
         // Get number of X, 10 and 9 score
-        Cursor cur = db.rawQuery("SELECT s.points+(CASE WHEN (r.bow='-2' OR b.type='1') " +
+        Cursor cur = db.rawQuery("SELECT s.points+(CASE WHEN (r.bow=-2 OR b.type='1') " +
                 "AND s.points=1 AND r.target=4 THEN 1 ELSE 0 END) AS czone, COUNT(*) " +
                 "FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow " +
                 "WHERE r._id=p.round AND p.round=" + round + " AND s.passe=p._id AND " +
@@ -389,7 +390,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         String[] args = {"" + training};
 
-        Cursor res = db.rawQuery("SELECT s.points, r.target, CASE WHEN r.bow='-2' OR b.type='1' THEN 1 ELSE 0 END compound" +
+        Cursor res = db.rawQuery("SELECT s.points, r.target, CASE WHEN r.bow=-2 OR b.type='1' THEN 1 ELSE 0 END compound" +
                 " FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow" +
                 " WHERE r._id=p.round AND r.training=? AND s.passe=p._id", args);
         res.moveToFirst();
@@ -411,7 +412,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         String[] args = {"" + round};
 
-        Cursor res = db.rawQuery("SELECT s.points, r.target, CASE WHEN r.bow='-2' OR b.type='1' THEN 1 ELSE 0 END compound" +
+        Cursor res = db.rawQuery("SELECT s.points, r.target, CASE WHEN r.bow=-2 OR b.type='1' THEN 1 ELSE 0 END compound" +
                 " FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow" +
                 " WHERE r._id=p.round AND p.round=? AND s.passe=p._id", args);
         res.moveToFirst();
@@ -491,6 +492,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (!res1.moveToPosition(passe - 1))
             return;
         long passeId = res1.getLong(0);
+        res1.close();
         String[] cols2 = {SHOOT_ID};
         String[] args2 = {"" + passeId};
         Cursor res = db.query(TABLE_SHOOT, cols2, SHOOT_PASSE + "=?", args2, null, null, SHOOT_ID + " ASC");
@@ -620,7 +622,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public void exportAll(File file) throws IOException {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cur = db.rawQuery("SELECT t.title,datetime(t.datum/1000, 'unixepoch') AS date,r.indoor,r.distance," +
-                "r.target, b.name AS bow, s.points AS score, CASE WHEN r.bow='-2' OR b.type='1' THEN 1 ELSE 0 END compound " +
+                "r.target, b.name AS bow, s.points AS score, CASE WHEN r.bow=-2 OR b.type='1' THEN 1 ELSE 0 END compound " +
                 "FROM TRAINING t, ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON r.bow = b._id " +
                 "WHERE t._id = r.training AND r._id = p.round AND p._id = s.passe", null);
         String[] names = cur.getColumnNames();

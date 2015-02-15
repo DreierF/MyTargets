@@ -17,10 +17,10 @@ import android.widget.Spinner;
 import com.iangclifton.android.floatlabel.FloatLabel;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.adapters.BowItemAdapter;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.adapters.BowItemAdapter;
 import de.dreier.mytargets.utils.MyBackupAgent;
 
 public class NewRoundActivity extends ActionBarActivity implements View.OnClickListener {
@@ -66,13 +66,13 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         training = (FloatLabel) findViewById(R.id.training);
         customDist = findViewById(R.id.customDist);
-        distanceVal = (EditText)findViewById(R.id.distanceVal);
+        distanceVal = (EditText) findViewById(R.id.distanceVal);
         distance = (Spinner) findViewById(R.id.distance);
         distance.setAdapter(adapter);
         distance.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position==distances.length-1) {
+                if (position == distances.length - 1) {
                     distance.setVisibility(View.GONE);
                     customDist.setVisibility(View.VISIBLE);
                     custom = true;
@@ -121,10 +121,10 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
             for (int j = 0; j < NewRoundActivity.distanceValues.length; j++)
                 if (NewRoundActivity.distanceValues[j] == distVal)
                     distanceInd = j;
-            if(distanceInd==-1) {
+            if (distanceInd == -1) {
                 distance.setVisibility(View.GONE);
                 customDist.setVisibility(View.VISIBLE);
-                distanceVal.setText(""+distVal);
+                distanceVal.setText("" + distVal);
                 custom = true;
             } else {
                 distance.setSelection(distanceInd);
@@ -140,12 +140,11 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
             ppp6.setChecked(ppp == 6);
             bow.setSelection(prefs.getInt("bow", 0));
             target.setSelection(prefs.getInt("target", 2));
-            training.setText(getString(R.string.training));
         } else {
             // Load saved values
             DatabaseManager db = new DatabaseManager(this);
             Round r = db.getRound(mRound);
-            if(r.distanceInd==-1) {
+            if (r.distanceInd == -1) {
                 distance.setVisibility(View.GONE);
                 customDist.setVisibility(View.VISIBLE);
                 distanceVal.setText("" + r.distanceVal);
@@ -163,6 +162,10 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
             ppp6.setChecked(r.ppp == 6);
             bow.setSelection(r.bow);
             target.setSelection(r.target);
+        }
+        if (mTraining == -1) {
+            training.setText(getString(R.string.training));
+        } else {
             training.setVisibility(View.GONE);
         }
     }
@@ -219,7 +222,7 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
             }
         }
         int dist;
-        if(custom) {
+        if (custom) {
             dist = Integer.parseInt(distanceVal.getText().toString());
         } else {
             dist = distanceValues[distance.getSelectedItemPosition()];
