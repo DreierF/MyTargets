@@ -29,7 +29,6 @@
     <string name="tiller">Tiller</string>
     <string name="sight_settings">Visiereinstellungen</string>
     <string name="add">Hinzufügen</string>
-    <string name="cancel">Abbrechen</string>
     <string name="save">Speichern</string>
 
     <!-- NewRoundActivity -->
@@ -92,5 +91,8 @@
     <string name="training">Training</string>
     <string name="statistic">Statistik</string>
     <string name="show_all">Zeige alle Schüsse</string>
+    <string name="text">Text</string>
+    <string name="dispersion_pattern">Trefferbild</string>
+    <string name="sharing_failed">Teilen fehlgeschlagen!</string>
 
 </resources>

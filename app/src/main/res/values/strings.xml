@@ -23,7 +23,6 @@
     <string name="tiller">Tiller</string>
     <string name="sight_settings">Sight settings</string>
     <string name="add">Add</string>
-    <string name="cancel">Cancel</string>
     <string name="save">Save</string>
 
     <!-- NewRoundActivity -->
@@ -92,5 +91,8 @@
     <string name="training">Training</string>
     <string name="statistic">Statistic</string>
     <string name="show_all">Show all shoots</string>
+    <string name="text">Text</string>
+    <string name="dispersion_pattern">Dispersion pattern</string>
+    <string name="sharing_failed">Sharing failed!</string>
 
 </resources>
