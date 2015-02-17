@@ -16,8 +16,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.models.OnTargetSetListener;
-import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Passe;
+import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Target;
 
 public class TargetView extends View implements View.OnTouchListener {
@@ -248,16 +248,32 @@ public class TargetView extends View implements View.OnTouchListener {
     }
 
     private void drawTarget(Canvas canvas, int x, int y, int radius) {
+        // Erase background
         drawColorP.setColor(0xffeeeeee);
         canvas.drawRect(0, 0, contentWidth, contentHeight, drawColorP);
+
         for (int i = mZoneCount; i > 0; i--) {
             // Select colors to draw with
             drawColorP.setColor(getZoneColor(i - 1));
 
             // Draw a ring mit separator line
-            float rad = (radius * i) / (float) mZoneCount;
-            canvas.drawCircle(x, y, rad, drawColorP);
-            canvas.drawCircle(x, y, rad, Target.target_rounds[roundInfo.target][i - 1] == 3 ? thinWhiteBorder : thinBlackBorder);
+            if (i != 2 || roundInfo.target != 3 || !roundInfo.compound) {
+                float rad = (radius * i) / (float) mZoneCount;
+                canvas.drawCircle(x, y, rad, drawColorP);
+                canvas.drawCircle(x, y, rad, Target.target_rounds[roundInfo.target][i - 1] == 3 ? thinWhiteBorder : thinBlackBorder);
+            }
+        }
+
+        // Draw cross in the middle
+        Paint midColor = Target.target_rounds[roundInfo.target][0] == 3 ? thinWhiteBorder : thinBlackBorder;
+        if (roundInfo.target < 5) {
+            float lineLength = radius / (float) (mZoneCount * 6);
+            canvas.drawLine(x - lineLength, y, x + lineLength, y, midColor);
+            canvas.drawLine(x, y - lineLength, x, y + lineLength, midColor);
+        } else {
+            float lineLength = radius / (float) (mZoneCount * 4);
+            canvas.drawLine(x - lineLength, y - lineLength, x + lineLength, y + lineLength, midColor);
+            canvas.drawLine(x - lineLength, y + lineLength, x + lineLength, y - lineLength, midColor);
         }
 
         // Draw exact arrow position
@@ -318,6 +334,10 @@ public class TargetView extends View implements View.OnTouchListener {
                 int Y1 = contentHeight * i / (mZoneCount + 1);
                 int Y2 = contentHeight * (i + 1) / (mZoneCount + 1);
 
+                if (i == 1 && roundInfo.target == 3 && roundInfo.compound) {
+                    Y2 = contentHeight * (i + 2) / (mZoneCount + 1);
+                }
+
                 int colorInd = 0;
                 // For all rectangles except mistake draw background
                 if (i != mZoneCount) {
@@ -332,6 +352,10 @@ public class TargetView extends View implements View.OnTouchListener {
                 // For yellow and white background use black font color
                 mTextPaint.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
                 canvas.drawText(Target.getStringByZone(roundInfo.target, i, roundInfo.compound), X1 + (X2 - X1) / 2, Y1 + (Y2 - Y1) / 2 + 10 * density, mTextPaint);
+
+                if (i == 1 && roundInfo.target == 3 && roundInfo.compound) {
+                    i++;
+                }
             }
         }
     }
@@ -499,6 +523,11 @@ public class TargetView extends View implements View.OnTouchListener {
         // Correct points_zone
         if (zone < -1 || zone >= ringe)
             zone = -1;
+
+        // Make 3er Spot 9 appear as one
+        if (zone == 1 && roundInfo.target == 3 && roundInfo.compound) {
+            zone = 2;
+        }
 
         // If a valid selection was made save it in the passe
         if (currentArrow < roundInfo.ppp && (mPasse.zones[currentArrow] != zone || !mModeEasy)) {

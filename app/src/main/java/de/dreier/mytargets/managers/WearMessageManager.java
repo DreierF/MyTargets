@@ -63,8 +63,10 @@ public class WearMessageManager implements GoogleApiClient.ConnectionCallbacks, 
         HashSet<String> results = new HashSet<>();
         NodeApi.GetConnectedNodesResult nodes =
                 Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
-        for (Node node : nodes.getNodes()) {
-            results.add(node.getId());
+        if (nodes != null) {
+            for (Node node : nodes.getNodes()) {
+                results.add(node.getId());
+            }
         }
         return results;
     }

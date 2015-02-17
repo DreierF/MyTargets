@@ -94,5 +94,6 @@
     <string name="text">Text</string>
     <string name="dispersion_pattern">Trefferbild</string>
     <string name="sharing_failed">Teilen fehlgeschlagen!</string>
+    <string name="comment">Kommentar</string>
 
 </resources>

@@ -34,37 +34,35 @@
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="1">
 
                 <RadioButton
                     android:id="@+id/outdoor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight=".5"
                     android:text="@string/outdoor" />
 
                 <RadioButton
                     android:id="@+id/indoor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight=".5"
                     android:text="@string/indoor" />
             </RadioGroup>
 
             <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
+                style="@style/Label"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_weight="1"
                 android:text="@string/distance" />
 
             <Spinner
                 android:id="@+id/distance"
                 android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:id="@+id/customDist"
@@ -75,7 +73,6 @@
                     android:id="@+id/distanceVal"
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:inputType="number" />
 
                 <TextView
@@ -85,7 +82,7 @@
             </LinearLayout>
 
             <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
+                style="@style/Label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -95,8 +92,8 @@
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="3">
 
                 <RadioButton
                     android:id="@+id/ppp2"
@@ -121,9 +118,10 @@
             </RadioGroup>
 
             <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
+                style="@style/Label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:text="@string/bow" />
 
             <Spinner
@@ -146,17 +144,24 @@
                 android:textColor="@android:color/secondary_text_light" />
 
             <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
+                style="@style/Label"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_weight="1"
                 android:text="@string/target_round" />
 
             <Spinner
                 android:id="@+id/target_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <com.iangclifton.android.floatlabel.FloatLabel
+                android:id="@+id/comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/comment"
+                android:inputType="textMultiLine" />
 
         </LinearLayout>
     </ScrollView>

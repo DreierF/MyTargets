@@ -6,8 +6,9 @@
 
     <ImageView
         android:id="@+id/targetImage"
-        android:layout_width="70dp"
-        android:layout_height="70dp" />
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:padding="5dp" />
 
     <TextView
         android:id="@+id/targetDescription"
@@ -17,4 +18,5 @@
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
 </LinearLayout>

@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.models.Bow;
-import de.dreier.mytargets.views.PassesView;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.models.Bow;
+import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Target;
+import de.dreier.mytargets.views.PassesView;
 
 /**
  * Shows all passes of one round
@@ -55,21 +55,26 @@ public class PasseAdapter extends NowListAdapter {
 
         // Set round info
         round.setText(mContext.getString(R.string.round) + " " + db.getRoundInd(mTraining, mRound));
+        String percent = maxP == 0 ? "" : " (" + (reached * 100 / maxP) + "%)";
         String infoText = mContext.getString(R.string.distance) + ": <font color=#669900><b>" +
                 mRoundInfo.distance + " - " +
                 mContext.getString(mRoundInfo.indoor ? R.string.indoor : R.string.outdoor) + "</b></font><br>" +
-                mContext.getString(R.string.points) + ": <font color=#669900><b>" + reached + "/" + maxP + "</b></font><br>" +
+                mContext.getString(R.string.points) + ": <font color=#669900><b>" + reached + "/" + maxP + percent + "</b></font><br>" +
                 mContext.getString(R.string.target_round) + ": <font color=#669900><b>" + TargetItemAdapter.targets[mRoundInfo.target] + "</b></font>";
         Bow binfo = db.getBow(mRoundInfo.bow, true);
         if (binfo != null) {
             infoText += "<br>" + mContext.getString(R.string.bow) +
                     ": <font color=#669900><b>" + TextUtils.htmlEncode(binfo.name) + "</b></font>";
         }
+        if (!mRoundInfo.comment.isEmpty()) {
+            infoText += "<br>" + mContext.getString(R.string.comment) +
+                    ": <font color=#669900><b>" + TextUtils.htmlEncode(mRoundInfo.comment) + "</b></font>";
+        }
         info.setText(Html.fromHtml(infoText));
 
         // Set number of X, 10, 9 shoots
         infoText = "X: <font color=#669900><b>" + mRoundInfo.scoreCount[0] + "</b></font><br>" +
-                mContext.getString(R.string.ten_x) + ": <font color=#669900><b>" + (mRoundInfo.scoreCount[0]+mRoundInfo.scoreCount[1]) + "</b></font><br>" +
+                mContext.getString(R.string.ten_x) + ": <font color=#669900><b>" + (mRoundInfo.scoreCount[0] + mRoundInfo.scoreCount[1]) + "</b></font><br>" +
                 mContext.getString(R.string.nine) + ": <font color=#669900><b>" + mRoundInfo.scoreCount[2] + "</b></font>";
         score.setText(Html.fromHtml(infoText));
         return view;

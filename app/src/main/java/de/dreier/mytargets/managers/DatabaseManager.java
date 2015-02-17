@@ -28,7 +28,7 @@ import de.dreier.mytargets.models.Training;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     private static final String TABLE_TRAINING = "TRAINING";
     private static final String TRAINING_ID = "_id";
@@ -42,6 +42,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String RUNDE_DISTANCE = "distance";
     public static final String RUNDE_UNIT = "unit";
     private static final String RUNDE_BOW = "bow";
+    private static final String RUNDE_COMMENT = "comment";
     public static final String RUNDE_PPP = "ppp";
     public static final String RUNDE_TARGET = "target";
 
@@ -55,6 +56,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String SHOOT_ZONE = "points";
     private static final String SHOOT_X = "x";
     private static final String SHOOT_Y = "y";
+    private static final String SHOOT_COMMENT = "comment";
 
     private static final String TABLE_BOW = "BOW";
     private static final String BOW_ID = "_id";
@@ -110,8 +112,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     RUNDE_UNIT + " TEXT," +
                     RUNDE_PPP + " INTEGER," +
                     RUNDE_TARGET + " INTEGER," +
-                    RUNDE_BOW + " REFERENCES " + TABLE_BOW + " ON DELETE SET NULL," +
-                    RUNDE_TRAINING + " INTEGER REFERENCES " + TABLE_TRAINING + " ON DELETE CASCADE);";
+                    RUNDE_BOW + "INTEGER REFERENCES " + TABLE_BOW + " ON DELETE SET NULL," +
+                    RUNDE_TRAINING + " INTEGER REFERENCES " + TABLE_TRAINING + " ON DELETE CASCADE," +
+                    RUNDE_COMMENT + " TEXT);";
 
     private static final String CREATE_TABLE_PASSE =
             "CREATE TABLE IF NOT EXISTS " + TABLE_PASSE + " (" +
@@ -124,7 +127,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     SHOOT_PASSE + " INTEGER REFERENCES " + TABLE_PASSE + " ON DELETE CASCADE," +
                     SHOOT_ZONE + " INTEGER," +
                     SHOOT_X + " REAL," +
-                    SHOOT_Y + " REAL);";
+                    SHOOT_Y + " REAL," +
+                    SHOOT_COMMENT + " TEXT);";
     private final Context mContext;
 
     public DatabaseManager(Context context) {
@@ -177,6 +181,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
             int defaultDist = NewRoundActivity.distanceValues[prefs.getInt("distance", 0)];
             prefs.edit().putInt("distance", defaultDist).apply();
         }
+        if (oldVersion < 5) {
+            db.execSQL("ALTER TABLE ROUND ADD COLUMN comment TEXT DEFAULT ''");
+            db.execSQL("ALTER TABLE SHOOT ADD COLUMN comment TEXT DEFAULT ''");
+            db.execSQL("UPDATE ROUND SET target=0 WHERE target=1 OR target=2 OR target=3");
+            db.execSQL("UPDATE ROUND SET target=2 WHERE target=5 OR target=6 OR target=7");
+            db.execSQL("UPDATE ROUND SET target=3 WHERE target=4");
+            db.execSQL("UPDATE ROUND SET target=4 WHERE target=8");
+            db.execSQL("UPDATE ROUND SET target=5 WHERE target=9");
+            db.execSQL("UPDATE ROUND SET target=6 WHERE target=10");
+        }
         onCreate(db);
     }
 
@@ -213,6 +227,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             values.put(SHOOT_ZONE, passe.zones[i]);
             values.put(SHOOT_X, passe.points[i][0]);
             values.put(SHOOT_Y, passe.points[i][1]);
+            values.put(SHOOT_COMMENT, passe.comment[i]);
             db.insert(TABLE_SHOOT, null, values);
         }
         db.close();
@@ -228,7 +243,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return insertId;
     }
 
-    public long newRound(long training, long round, int distance, String unit, boolean indoor, int ppp, int target, long bow) {
+    public long newRound(long training, long round, int distance, String unit, boolean indoor, int ppp, int target, long bow, String comment) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(RUNDE_DISTANCE, distance);
@@ -236,6 +251,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         values.put(RUNDE_INDOOR, indoor);
         values.put(RUNDE_TARGET, target);
         values.put(RUNDE_BOW, bow);
+        values.put(RUNDE_COMMENT, comment);
         values.put(RUNDE_PPP, ppp);
         values.put(RUNDE_TRAINING, training);
         if (round == -1) {
@@ -352,7 +368,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
 
         // Get all generic round attributes
-        Cursor res = db.rawQuery("SELECT r.ppp, r.training, r.target, r.indoor, r.distance, r.unit, r.bow, b.type " +
+        Cursor res = db.rawQuery("SELECT r.ppp, r.training, r.target, r.indoor, r.distance, r.unit, r.bow, b.type, r.comment " +
                 "FROM ROUND r LEFT JOIN BOW b ON b._id=r.bow WHERE r._id=" + round, null);
         res.moveToFirst();
         Round r = new Round();
@@ -368,11 +384,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
         r.distance = "" + r.distanceVal + res.getString(5);
         r.bow = res.getInt(6);
         r.compound = r.bow == -2 || res.getInt(7) == 1;
+        r.comment = res.getString(8);
+        if (r.comment == null)
+            r.comment = "";
         res.close();
 
         // Get number of X, 10 and 9 score
         Cursor cur = db.rawQuery("SELECT s.points+(CASE WHEN (r.bow=-2 OR b.type=1) " +
-                "AND s.points=1 AND r.target=4 THEN 1 ELSE 0 END) AS czone, COUNT(*) " +
+                "AND s.points=1 AND r.target=3 THEN 1 ELSE 0 END) AS czone, COUNT(*) " +
                 "FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow " +
                 "WHERE r._id=p.round AND p.round=" + round + " AND s.passe=p._id AND " +
                 "s.points<3 AND s.points>-1 GROUP BY czone", null);

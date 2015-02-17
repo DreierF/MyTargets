@@ -15,4 +15,5 @@ public class Round implements Serializable {
     public int[] scoreCount = new int[3];
     public boolean compound;
     public int distanceInd;
+    public String comment;
 }

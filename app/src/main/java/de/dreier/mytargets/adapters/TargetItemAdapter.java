@@ -13,13 +13,11 @@ import de.dreier.mytargets.R;
 
 public class TargetItemAdapter extends BaseAdapter implements SpinnerAdapter {
     private final Context mContext;
-    public static final String[] targets = {"WA 40cm", "WA 60cm",
-            "WA 80cm", "WA 120cm", "WA 3er Spot 20cm", "WA Spot 40cm", "WA Spot 60cm", "WA Spot 80cm",
-            "WA Field 40cm", "DFBV Spiegel 40cm", "DFBV Spiegel Spot 40cm"};
+    public static final String[] targets = {"WA", "WA Spot 5-10", "WA Spot 6-10", "WA 3er Spot",
+            "WA Field", "DFBV Spiegel", "DFBV Spiegel Spot", "DFBV Field"};
 
-    private static final int[] targets_drawable = {R.drawable.wa, R.drawable.wa,
-            R.drawable.wa, R.drawable.wa, R.drawable.wa_spot, R.drawable.wa_spot, R.drawable.wa_spot, R.drawable.wa_spot,
-            R.drawable.wa_field, R.drawable.dfbv_spiegel, R.drawable.dfbv_spiegel_spot};
+    private static final int[] targets_drawable = {R.drawable.wa, R.drawable.wa_spot_5, R.drawable.wa_spot_6, R.drawable.wa_spot_6,
+            R.drawable.wa_field, R.drawable.dfbv_spiegel, R.drawable.dfbv_spiegel_spot, R.drawable.dfbv_field};
 
 	public TargetItemAdapter(Context context) {
         mContext = context;

@@ -60,7 +60,7 @@
                     android:inputType="textNoSuggestions" />
 
                 <TextView
-                    style="?android:attr/listSeparatorTextViewStyle"
+                    style="@style/Label"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginTop="16dp"
@@ -125,7 +125,7 @@
                 </LinearLayout>
 
                 <TextView
-                    style="?android:attr/listSeparatorTextViewStyle"
+                    style="@style/Label"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginTop="16dp"
@@ -186,7 +186,7 @@
                     android:inputType="textMultiLine" />
 
                 <TextView
-                    style="?android:attr/listSeparatorTextViewStyle"
+                    style="@style/Label"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginTop="16dp"
@@ -216,10 +216,6 @@
                     android:paddingTop="5dp"
                     android:text="@string/add"
                     android:textColor="@android:color/secondary_text_light" />
-                <!--
-                    android:background="@drawable/selectable_item_background"-->
-                <!--style="@android:style/Widget.Holo.Button.Borderless"-->
-
 
             </LinearLayout>
         </LinearLayout>

@@ -260,9 +260,23 @@ public class TargetSelectView extends View implements View.OnTouchListener {
             drawColorP.setColor(getZoneColor(i - 1));
 
             // Draw a ring mit separator line
-            float rad = (radius * i) / (float) mZoneCount;
-            canvas.drawCircle(x, y, rad, drawColorP);
-            canvas.drawCircle(x, y, rad, Target.target_rounds[roundInfo.target][i - 1] == 3 ? thinWhiteBorder : thinBlackBorder);
+            if (i != 2 || roundInfo.target != 3 || !roundInfo.compound) {
+                float rad = (radius * i) / (float) mZoneCount;
+                canvas.drawCircle(x, y, rad, drawColorP);
+                canvas.drawCircle(x, y, rad, Target.target_rounds[roundInfo.target][i - 1] == 3 ? thinWhiteBorder : thinBlackBorder);
+            }
+        }
+
+        // Draw cross in the middle
+        Paint midColor = Target.target_rounds[roundInfo.target][0] == 3 ? thinWhiteBorder : thinBlackBorder;
+        if (roundInfo.target < 5) {
+            float lineLength = radius / (float) (mZoneCount * 6);
+            canvas.drawLine(x - lineLength, y, x + lineLength, y, midColor);
+            canvas.drawLine(x, y - lineLength, x, y + lineLength, midColor);
+        } else {
+            float lineLength = radius / (float) (mZoneCount * 4);
+            canvas.drawLine(x - lineLength, y - lineLength, x + lineLength, y + lineLength, midColor);
+            canvas.drawLine(x - lineLength, y + lineLength, x + lineLength, y - lineLength, midColor);
         }
 
         // Draw exact arrow position
@@ -425,6 +439,11 @@ public class TargetSelectView extends View implements View.OnTouchListener {
         // Correct points_zone
         if (zone >= rings)
             zone = -1;
+
+        // Make 3er Spot 9 appear as one
+        if (zone == 1 && roundInfo.target == 3 && roundInfo.compound) {
+            zone = 2;
+        }
 
         // If a valid selection was made save it in the passe
         if (currentArrow < roundInfo.ppp && mPasse.zones[currentArrow] != zone) {

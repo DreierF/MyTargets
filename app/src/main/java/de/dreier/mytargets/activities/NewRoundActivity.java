@@ -39,7 +39,7 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
     private Button addBow;
     private boolean mCalledFromPasse = false;
     private int mBowType = -1;
-    private FloatLabel training;
+    private FloatLabel training, comment;
     private View customDist;
     private EditText distanceVal;
     private boolean custom = false;
@@ -101,6 +101,7 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
                 startActivity(i);
             }
         });
+        comment = (FloatLabel) findViewById(R.id.comment);
         Button new_round = (Button) findViewById(R.id.new_round_button);
         new_round.setText(getString(mTraining == -1 ? R.string.start :
                 (mRound == -1 ? R.string.new_round : R.string.save)));
@@ -140,6 +141,7 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
             ppp6.setChecked(ppp == 6);
             bow.setSelection(prefs.getInt("bow", 0));
             target.setSelection(prefs.getInt("target", 2));
+            comment.setText("");
         } else {
             // Load saved values
             DatabaseManager db = new DatabaseManager(this);
@@ -162,6 +164,7 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
             ppp6.setChecked(r.ppp == 6);
             bow.setSelection(r.bow);
             target.setSelection(r.target);
+            comment.setText(r.comment);
         }
         if (mTraining == -1) {
             training.setText(getString(R.string.training));
@@ -187,7 +190,7 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
     public void onClick(final View view) {
         int tar = target.getSelectedItemPosition();
 
-        if (bow.getAdapter().getCount() == 0 && mBowType == -1 && tar == 4) {
+        if (bow.getAdapter().getCount() == 0 && mBowType == -1 && tar == 3) {
             new AlertDialog.Builder(this).setTitle(R.string.title_compound)
                     .setMessage(R.string.msg_compound_type)
                     .setPositiveButton(R.string.compound_bow, new DialogInterface.OnClickListener() {
@@ -215,7 +218,7 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
         }
         long b = bow.getSelectedItemId();
         if (bow.getAdapter().getCount() == 0) {
-            if (tar == 4) {
+            if (tar == 3) {
                 b = mBowType == 1 ? -2 : -1;
             } else {
                 b = -1;
@@ -230,7 +233,8 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
         String unit = "m";
         int p = ppp2.isChecked() ? 2 : (ppp3.isChecked() ? 3 : 6);
         boolean in = indoor.isChecked();
-        long round = db.newRound(mTraining, mRound, dist, unit, in, p, tar, b);
+        String co = comment.getTextString();
+        long round = db.newRound(mTraining, mRound, dist, unit, in, p, tar, b, co);
         db.close();
 
         SharedPreferences prefs = getSharedPreferences(MyBackupAgent.PREFS, 0);
