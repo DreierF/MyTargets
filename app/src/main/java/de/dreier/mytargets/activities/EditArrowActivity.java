@@ -49,7 +49,7 @@ import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.views.NotifyingScrollView;
 
-public class EditBowActivity extends ActionBarActivity implements View.OnClickListener {
+public class EditArrowActivity extends ActionBarActivity implements View.OnClickListener {
 
     public static final String BOW_ID = "bow_id";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -68,7 +68,7 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_bow);
+        setContentView(R.layout.activity_edit_arrow);
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(BOW_ID)) {
@@ -221,7 +221,6 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
                     yumi.setChecked(true);
                     break;
             }
-            sightSettingsList = db.getSettings(mBowId);
         } else if (savedInstanceState == null) {
             recurveBow.setChecked(true);
             sightSettingsList = new ArrayList<>();
@@ -287,8 +286,8 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
             parcel.writeString(value);
         }
 
-        public static final Parcelable.Creator<SightSetting> CREATOR
-                = new Parcelable.Creator<SightSetting>() {
+        public static final Creator<SightSetting> CREATOR
+                = new Creator<SightSetting>() {
             public SightSetting createFromParcel(Parcel in) {
                 return new SightSetting(in);
             }
@@ -393,10 +392,6 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
                 height.getTextString(), tiller.getTextString(),
                 desc.getTextString(), thumb);
 
-        for (SightSetting set : sightSettingsList)
-            set.update();
-
-        db.updateSightSettings(mBowId, sightSettingsList);
         finish();
     }
 

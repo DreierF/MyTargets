@@ -1,0 +1,162 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="de.dreier.mytargets.activities.EditBowActivity">
+
+    <de.dreier.mytargets.views.NotifyingScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/divider"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="0dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@drawable/recurve_bow"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:longClickable="true"
+                    android:scaleType="centerCrop" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/gradient" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin">
+
+                <com.iangclifton.android.floatlabel.FloatLabel
+                    android:id="@+id/arrow_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/name"
+                    android:inputType="textNoSuggestions" />
+
+                <com.iangclifton.android.floatlabel.FloatLabel
+                    android:id="@+id/arrow_length"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/length"
+                    android:inputType="textNoSuggestions" />
+
+                <com.iangclifton.android.floatlabel.FloatLabel
+                    android:id="@+id/arrow_material"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/material"
+                    android:inputType="textNoSuggestions" />
+
+                <com.iangclifton.android.floatlabel.FloatLabel
+                    android:id="@+id/arrow_spine"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/spine"
+                    android:inputType="textNoSuggestions" />
+
+                <com.iangclifton.android.floatlabel.FloatLabel
+                    android:id="@+id/arrow_weight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/weight"
+                    android:inputType="textNoSuggestions" />
+
+                <com.iangclifton.android.floatlabel.FloatLabel
+                    android:id="@+id/arrow_vanes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/vanes"
+                    android:inputType="textNoSuggestions" />
+
+                <com.iangclifton.android.floatlabel.FloatLabel
+                    android:id="@+id/arrow_point"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/point"
+                    android:inputType="textNoSuggestions" />
+
+                <com.iangclifton.android.floatlabel.FloatLabel
+                    android:id="@+id/arrow_nock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/nock"
+                    android:inputType="textNoSuggestions" />
+
+                <com.iangclifton.android.floatlabel.FloatLabel
+                    android:id="@+id/arrow_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/comment"
+                    android:inputType="textNoSuggestions" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </de.dreier.mytargets.views.NotifyingScrollView>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/but_bar"
+        android:layout_alignLeft="@+id/but_bar"
+        android:layout_alignStart="@+id/but_bar"
+        android:background="?android:attr/listDivider" />
+
+    <LinearLayout
+        android:id="@+id/but_bar"
+        style="@android:style/Holo.Light.ButtonBar.AlertDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/cancel_button"
+            style="@android:style/Holo.Light.ButtonBar.AlertDialog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selectable_item_background"
+            android:text="@android:string/cancel" />
+
+        <Button
+            android:id="@+id/new_bow_button"
+            style="@android:style/Holo.Light.ButtonBar.AlertDialog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selectable_item_background"
+            android:text="@string/save" />
+    </LinearLayout>
+
+</RelativeLayout>

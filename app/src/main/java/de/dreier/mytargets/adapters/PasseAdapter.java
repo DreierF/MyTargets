@@ -6,7 +6,6 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
@@ -61,10 +60,10 @@ public class PasseAdapter extends NowListAdapter {
                 mContext.getString(mRoundInfo.indoor ? R.string.indoor : R.string.outdoor) + "</b></font><br>" +
                 mContext.getString(R.string.points) + ": <font color=#669900><b>" + reached + "/" + maxP + percent + "</b></font><br>" +
                 mContext.getString(R.string.target_round) + ": <font color=#669900><b>" + TargetItemAdapter.targets[mRoundInfo.target] + "</b></font>";
-        Bow binfo = db.getBow(mRoundInfo.bow, true);
-        if (binfo != null) {
+        Bow bow = db.getBow(mRoundInfo.bow, true);
+        if (bow != null) {
             infoText += "<br>" + mContext.getString(R.string.bow) +
-                    ": <font color=#669900><b>" + TextUtils.htmlEncode(binfo.name) + "</b></font>";
+                    ": <font color=#669900><b>" + TextUtils.htmlEncode(bow.name) + "</b></font>";
         }
         if (!mRoundInfo.comment.isEmpty()) {
             infoText += "<br>" + mContext.getString(R.string.comment) +
@@ -84,7 +83,6 @@ public class PasseAdapter extends NowListAdapter {
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
         ViewHolder holder = new ViewHolder();
         View v = mInflater.inflate(R.layout.passe_card, viewGroup, false);
-        holder.layout = (LinearLayout) v.findViewById(R.id.passe_layout);
         holder.shots = (PassesView) v.findViewById(R.id.shoots);
         holder.subtitle = (TextView) v.findViewById(R.id.passe);
         v.setTag(holder);
@@ -102,6 +100,5 @@ public class PasseAdapter extends NowListAdapter {
     public static class ViewHolder {
         public PassesView shots;
         public TextView subtitle;
-        public LinearLayout layout;
     }
 }

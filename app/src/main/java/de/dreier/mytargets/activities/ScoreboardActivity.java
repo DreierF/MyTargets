@@ -15,7 +15,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.utils.ScoreboardHelper;
+import de.dreier.mytargets.utils.ScoreboardUtils;
 
 
 public class ScoreboardActivity extends ActionBarActivity {
@@ -58,7 +58,7 @@ public class ScoreboardActivity extends ActionBarActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            return ScoreboardHelper.getHTMLString(ScoreboardActivity.this, mRound, true);
+            return ScoreboardUtils.getHTMLString(ScoreboardActivity.this, mRound, true);
         }
 
         @Override

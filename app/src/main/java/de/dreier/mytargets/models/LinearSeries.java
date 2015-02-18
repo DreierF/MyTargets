@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -25,7 +26,7 @@ public class LinearSeries {
 
     public void draw(Canvas canvas, Rect gridBounds, RectD valueBounds, float scaleX, float scaleY) {
         for (LinearPoint point : mPoints) {
-            final float x = (float) (gridBounds.left + (scaleX * (point.getX() - valueBounds.left)));
+            final float x = gridBounds.left + (scaleX * (point.getX() - valueBounds.left));
             final float y = (float) (gridBounds.bottom + (scaleY * ((point.getY() == -1 ? valueBounds.bottom : point.getY())-valueBounds.bottom)));
 
             if (mLastPoint != null)
@@ -108,8 +109,8 @@ public class LinearSeries {
     }
 
     public static class LinearPoint implements Comparable<LinearPoint> {
-        private long mX;
-        private double mY;
+        private final long mX;
+        private final double mY;
 
         public LinearPoint(long x, double y) {
             mX = x;
@@ -125,7 +126,7 @@ public class LinearSeries {
         }
 
         @Override
-        public int compareTo(LinearPoint another) {
+        public int compareTo(@NonNull LinearPoint another) {
             return Double.compare(mX, another.mX);
         }
 

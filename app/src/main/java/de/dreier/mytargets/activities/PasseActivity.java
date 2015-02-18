@@ -1,6 +1,5 @@
 package de.dreier.mytargets.activities;
 
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -9,9 +8,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.app.RemoteInput;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,15 +24,14 @@ import de.dreier.mytargets.models.OnTargetSetListener;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Target;
+import de.dreier.mytargets.models.WearableUtils;
 import de.dreier.mytargets.views.TargetView;
 
 public class PasseActivity extends ActionBarActivity implements OnTargetSetListener {
 
     public static final String ROUND_ID = "round_id";
     public static final String PASSE_IND = "passe_ind";
-    private static final String EXTRA_VOICE_REPLY = "voice_input";
     private static final String TARGET_MODE = "target_mode";
-    private static final String PASSE_VIA_VOICE = "passe_via_voice";
     private static final String SHOW_ALL_MODE = "show_all";
     private TargetView target;
     private Button next, prev;
@@ -67,7 +62,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
             }
         }
 
-        target = (TargetView) findViewById(R.id.targetview);
+        target = (TargetView) findViewById(R.id.target_view);
         target.setOnTargetSetListener(this);
         next = (Button) findViewById(R.id.next_button);
         prev = (Button) findViewById(R.id.prev_button);
@@ -80,12 +75,16 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
         mShowAllMode = prefs.getBoolean(SHOW_ALL_MODE, false);
         target.switchMode(mMode, false);
         target.showAll(mShowAllMode);
-        Bow bow = null;
+        Bitmap image;
         if (r.bow > -1) {
-            bow = db.getBow(r.bow, true);
+            Bow bow = db.getBow(r.bow, true);
+            image = bow.image;
+        } else {
+            image = BitmapFactory.decodeResource(getResources(), R.drawable.wear_bg);
         }
 
-        manager = new WearMessageManager(this, r, mMode, bow);
+        WearableUtils.NotificationInfo info = buildInfo();
+        manager = new WearMessageManager(this, image, info);
 
         if (savedInstanceState != null) {
             target.restoreState(savedInstanceState);
@@ -156,7 +155,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i;
         switch (item.getItemId()) {
-            case R.id.action_new_runde:
+            case R.id.action_new_round:
                 i = new Intent(this, NewRoundActivity.class);
                 i.putExtra(NewRoundActivity.TRAINING_ID, mTraining);
                 i.putExtra(NewRoundActivity.FROM_PASSE, true);
@@ -169,6 +168,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 prefs.edit().putBoolean(TARGET_MODE, mMode).apply();
                 supportInvalidateOptionsMenu();
+                manager.sendMessage(buildInfo());
                 return true;
             case R.id.action_show_all:
                 mShowAllMode = !mShowAllMode;
@@ -193,31 +193,29 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
     }
 
     @Override
-    public void onTargetSet(Passe passe) {
+    public void onTargetSet(Passe passe, boolean remote) {
         DatabaseManager db = new DatabaseManager(this);
+        passe.sort();
 
-        // Sort passe
-        for (int n = passe.zones.length; n > 1; n--) {
-            for (int i = 0; i < n - 1; i++) {
-                if ((passe.zones[i] > passe.zones[i + 1] && passe.zones[i + 1] != -1) || passe.zones[i] == -1) {
-                    int tmp = passe.zones[i];
-                    float[] coords = passe.points[i];
-                    passe.zones[i] = passe.zones[i + 1];
-                    passe.points[i] = passe.points[i + 1];
-                    passe.zones[i + 1] = tmp;
-                    passe.points[i + 1] = coords;
-                }
-            }
-        }
-
-        if (curPasse > savedPasses) {
+        if (curPasse > savedPasses || remote) {
             savedPasses++;
             db.addPasseToRound(mRound, passe);
+            manager.sendMessage(buildInfo());
+            if (remote)
+                curPasse = savedPasses + 1;
         } else {
             db.updatePasse(mRound, curPasse, passe);
+            if (curPasse == savedPasses) {
+                manager.sendMessage(buildInfo());
+            }
         }
         db.close();
-        updatePasse();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                updatePasse();
+            }
+        });
     }
 
     @Override
@@ -226,71 +224,25 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
         overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
-    void updateNotification(Passe passe) {
-        // Get an instance of the NotificationManager service
-        NotificationManagerCompat notificationManager =
-                NotificationManagerCompat.from(this);
-
-        RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY)
-                .setLabel(getString(R.string.what_input)).build();
-
-        Intent replyIntent = new Intent(this, PasseActivity.class);
-        replyIntent.putExtra(ROUND_ID, mRound);
-        PendingIntent replyPendingIntent = PendingIntent.getActivity(this, 0, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // Create the reply action and add the remote input
-        NotificationCompat.Action action =
-                new NotificationCompat.Action.Builder(R.drawable.ic_target_zone_24dp, "Passe", replyPendingIntent)
-                        .addRemoteInput(remoteInput).build();
-
-        // This notification will be shown only on watch
-        Intent content = new Intent(this, PasseActivity.class);
-        content.putExtra(ROUND_ID, mRound);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, content, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Bitmap image;
-        String title, setting;
+    private WearableUtils.NotificationInfo buildInfo() {
+        String title = "Passe " + savedPasses;
+        String text = "";
 
         // Initialize message text
-        if (passe != null) {
-            title = "Passe " + curPasse;
-            setting = "";
-            for (int i = 0; i < passe.zones.length; i++) {
-                setting += Target.getStringByZone(r.target, passe.zones[i], r.compound) + " ";
+        Passe lastPasse = db.getPasse(mRound, savedPasses);
+        if (lastPasse != null) {
+            for (int zone : lastPasse.zones) {
+                text += Target.getStringByZone(r.target, zone, r.compound) + " ";
             }
+            text += "\n";
         } else {
-            title = getString(R.string.app_name);
-            setting = getString(R.string.swipe_to_left);
+            text = getString(R.string.app_name);
         }
 
-        // Load background and bow settings
-        Bow bow = db.getBow(r.bow, false);
-        if (r.bow == -1 || bow == null) {
-            image = BitmapFactory.decodeResource(getResources(), R.drawable.wear_bg);
-        } else {
-            image = bow.image;
-            if (passe != null) {
-                setting += "\n";
-                setting += db.getSetting(r.bow, r.distanceVal);
-            } else {
-                setting = db.getSetting(r.bow, r.distanceVal);
-            }
+        // Load bow settings
+        if (r.bow > -1) {
+            text += db.getSetting(r.bow, r.distanceVal);
         }
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!prefs.getBoolean(PASSE_VIA_VOICE, false)) {
-            setting = getString(R.string.voice_how_to);
-        }
-
-        final NotificationCompat.Builder wearableNotificationBuilder = new NotificationCompat.Builder(this)
-                .setContentTitle(title)
-                .setContentText(setting)
-                .setContentIntent(contentIntent)
-                .setGroup("GROUP")
-                .setGroupSummary(false)
-                .extend(new NotificationCompat.WearableExtender().addAction(action).setBackground(image));
-
-        // Build the notification and issues it with notification manager.
-        notificationManager.notify(1, wearableNotificationBuilder.build());
+        return new WearableUtils.NotificationInfo(r, title, text, mMode);
     }
 }

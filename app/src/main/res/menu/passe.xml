@@ -13,7 +13,7 @@
         android:title="@string/switch_mode"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_new_runde"
+        android:id="@+id/action_new_round"
         android:icon="@drawable/ic_add_white_24dp"
         android:title="@string/new_round"
         app:showAsAction="ifRoom|withText" />

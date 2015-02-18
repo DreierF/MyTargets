@@ -1,6 +1,7 @@
 package de.dreier.mytargets.managers;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -17,26 +18,22 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
-import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.models.OnTargetSetListener;
 import de.dreier.mytargets.models.Passe;
-import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.models.WearableConst;
+import de.dreier.mytargets.models.WearableUtils;
 
 public class WearMessageManager implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, MessageApi.MessageListener {
 
     private static final String TAG = "wearMessageManager";
     private final OnTargetSetListener mListener;
-    private final Round round;
-    private final boolean mode;
-    private Bow bow;
+    private final WearableUtils.NotificationInfo info;
+    private final Bitmap image;
 
-    private GoogleApiClient mGoogleApiClient;
+    private final GoogleApiClient mGoogleApiClient;
 
-    public WearMessageManager(Context context, Round round, boolean mode, Bow bow) {
-        this.round = round;
-        this.mode = mode;
-        this.bow = bow;
+    public WearMessageManager(Context context, Bitmap image, WearableUtils.NotificationInfo info) {
+        this.image = image;
+        this.info = info;
         mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(Wearable.API)
                 .addConnectionCallbacks(this)
@@ -56,13 +53,12 @@ public class WearMessageManager implements GoogleApiClient.ConnectionCallbacks, 
             Log.d(TAG, "Connected to Google Api Service");
         }
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
-        sendMessage(WearableConst.STARTED_ROUND, round, mode, bow);
+        sendMessage(image, info);
     }
 
-    public Collection<String> getNodes() {
+    Collection<String> getNodes() {
         HashSet<String> results = new HashSet<>();
-        NodeApi.GetConnectedNodesResult nodes =
-                Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
+        NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
         if (nodes != null) {
             for (Node node : nodes.getNodes()) {
                 results.add(node.getId());
@@ -71,31 +67,34 @@ public class WearMessageManager implements GoogleApiClient.ConnectionCallbacks, 
         return results;
     }
 
-
-    private void sendMessage(final String path) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                sendMessage(path, new byte[0]);
-            }
-        }).start();
-    }
-
-    public void sendMessage(final String path, Round r, boolean mode, Bow bow) {
+    void sendMessage(Bitmap image, WearableUtils.NotificationInfo info) {
         // Serialize bundle to byte array
-        byte[] data = new byte[0];
         try {
-            data = WearableConst.serialize(r, mode, bow);
+            final byte[] data = WearableUtils.serialize(image, info);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    sendMessage(WearableUtils.STARTED_ROUND, data);
+                }
+            }).start();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        final byte[] finalData = data;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                sendMessage(path, finalData);
-            }
-        }).start();
+    }
+
+    public void sendMessage(WearableUtils.NotificationInfo info) {
+        // Serialize info to byte array
+        try {
+            final byte[] data = WearableUtils.serialize(info);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    sendMessage(WearableUtils.UPDATE_ROUND, data);
+                }
+            }).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void sendMessage(String path, byte[] data) {
@@ -123,13 +122,13 @@ public class WearMessageManager implements GoogleApiClient.ConnectionCallbacks, 
         byte[] data = messageEvent.getData();
         Passe p = null;
         try {
-            p = WearableConst.deserializeToPasse(data);
+            p = WearableUtils.deserializeToPasse(data);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
-        if (messageEvent.getPath().equals(WearableConst.FINISHED_INPUT)) {
-            mListener.onTargetSet(p);
+        if (messageEvent.getPath().equals(WearableUtils.FINISHED_INPUT)) {
+            mListener.onTargetSet(p, true);
         }
     }
 
@@ -144,10 +143,19 @@ public class WearMessageManager implements GoogleApiClient.ConnectionCallbacks, 
     }
 
     public void close() {
-        if (null != mGoogleApiClient && mGoogleApiClient.isConnected()) {
-            sendMessage(WearableConst.STOPPED_ROUND);
-            Wearable.MessageApi.removeListener(mGoogleApiClient, this);
-            mGoogleApiClient.disconnect();
+        if (mGoogleApiClient.isConnected()) {
+            sendMessageStopped();
         }
+    }
+
+    private void sendMessageStopped() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sendMessage(WearableUtils.STOPPED_ROUND, new byte[0]);
+                Wearable.MessageApi.removeListener(mGoogleApiClient, WearMessageManager.this);
+                mGoogleApiClient.disconnect();
+            }
+        }).start();
     }
 }

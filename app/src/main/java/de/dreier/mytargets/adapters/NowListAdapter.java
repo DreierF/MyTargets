@@ -74,7 +74,7 @@ public abstract class NowListAdapter extends CursorAdapter {
         return view;
     }
 
-    protected View buildExtraCard(int pos, View convertView, ViewGroup parent) {
+    View buildExtraCard(int pos, View convertView, ViewGroup parent) {
         throw new IllegalArgumentException("buildExtraCard must be implemented!");
     }
 }

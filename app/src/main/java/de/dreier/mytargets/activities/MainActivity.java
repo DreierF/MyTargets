@@ -1,5 +1,6 @@
 package de.dreier.mytargets.activities;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -44,7 +45,7 @@ public class MainActivity extends NowListActivity {
         String longLang = Locale.getDefault().getDisplayLanguage().toLowerCase();
         String shortLocale = Locale.getDefault().getLanguage();
         if (!shortLocale.equals("de") && !shortLocale.equals("en") && !shown && !shownThisTime) {
-            // Linkify the message
+            // Link the e-mail address in the message
             final SpannableString s = new SpannableString(Html.fromHtml("If you would like " +
                     "to help make MyTargets even better by translating the app to " +
                     longLang + ", please send me an E-Mail (dreier.florian@gmail.com) " +
@@ -102,6 +103,7 @@ public class MainActivity extends NowListActivity {
                         db = new DatabaseManager(MainActivity.this);
 
                         String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+                        @SuppressLint("SimpleDateFormat")
                         SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");
                         String fileName = "/MyTargets/exported_data_" + format.format(new Date()) + ".csv";
                         File file = new File(baseDir + fileName);

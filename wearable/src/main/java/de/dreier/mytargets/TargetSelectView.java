@@ -38,7 +38,6 @@ public class TargetSelectView extends View implements View.OnTouchListener {
     private float mOutToX, mOutToY;
     private int mInZone, mOutZone;
     private int mZoneCount;
-    private int mCurPressed = -1;
     private Paint grayBackground;
     private boolean mModeEasy = true;
     private int[] target;
@@ -217,13 +216,6 @@ public class TargetSelectView extends View implements View.OnTouchListener {
     }
 
     private void drawSelectedPointsInCenter(Canvas canvas) {
-        // Draw touch feedback if arrow is pressed
-        if (mCurPressed != -1) {
-            float x = radius + (mCurPressed - 1) * 25 * density;
-            float y = radius + (mCurPressed < 3 ? -1 : 1) * (twoRows ? 30 * density : 20 * density);
-            canvas.drawRect(x, y, x + 25 * density, y + 25 * density, grayBackground);
-        }
-
         // Draw separator line if there are more then 3 shots
         if (twoRows) {
             canvas.drawLine(radius - 30 * density,
@@ -379,7 +371,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
         can.drawCircle(x, y, rad * density, circleColorP);
         mTextPaint.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
         mTextPaint.setTextSize(font_size * density);
-        can.drawText(Target.getStringByZone(roundInfo.target, zone, roundInfo.compound), x, y + 7 * density, mTextPaint);
+        can.drawText(Target.getStringByZone(roundInfo.target, zone, roundInfo.compound), x, y + font_size * 7 * density / 22.0f, mTextPaint);
     }
 
     @Override
@@ -404,30 +396,13 @@ public class TargetSelectView extends View implements View.OnTouchListener {
         int zone = -2, rings = Target.target_rounds[roundInfo.target].length;
 
         if (mModeEasy) {
-            float perception_rad = radius - 40 * density;
+            float perception_rad = radius - 50 * density;
             // Select current arrow
             if (xDiff * xDiff + yDiff * yDiff > perception_rad * perception_rad) {
                 double degree1 = Math.toDegrees(Math.atan2(-yDiff, xDiff)) - (180.0 / (double) rings);
                 if (degree1 < 0)
                     degree1 += 360.0;
                 zone = (int) ((rings + 1) * ((360.0 - degree1) / 360.0));
-            }
-
-            // Handle selection of already saved shoots
-            if (x > radius - 25 * density && x < radius + 25 * density &&
-                    y > radius - (twoRows ? 30 * density : 20 * density) &&
-                    y < radius + (twoRows ? 30 * density : 0)) {
-                int arrow = (int) ((x - radius - 25 * density) / 25 * density);
-                if (arrow < roundInfo.ppp && mPasse.zones[arrow] >= -1 && arrow != currentArrow) {
-                    if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                        mCurPressed = -1;
-                        animateSelectCircle(arrow);
-                    } else {
-                        mCurPressed = arrow;
-                    }
-                    invalidate();
-                    return true;
-                }
             }
         } else {
             zone = (int) (Math.sqrt(xDiff * xDiff + yDiff * yDiff) * rings / (float) radius);
@@ -462,7 +437,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
             animateSelectCircle(lastSetArrow + 1);
 
             if (lastSetArrow + 1 >= roundInfo.ppp && setListener != null) {
-                setListener.onTargetSet(new Passe(mPasse));
+                setListener.onTargetSet(new Passe(mPasse), false);
             }
 
             return true;

@@ -1,8 +1,10 @@
 package de.dreier.mytargets;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.wearable.activity.ConfirmationActivity;
 import android.support.wearable.view.DelayedConfirmationView;
@@ -25,7 +27,7 @@ import java.util.HashSet;
 import de.dreier.mytargets.models.OnTargetSetListener;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.models.WearableConst;
+import de.dreier.mytargets.models.WearableUtils;
 
 public class MainActivity extends Activity implements OnTargetSetListener, GoogleApiClient.ConnectionCallbacks {
 
@@ -85,25 +87,28 @@ public class MainActivity extends Activity implements OnTargetSetListener, Googl
     }
 
     @Override
-    public void onTargetSet(final Passe passe) {
+    public void onTargetSet(final Passe passe, boolean remote) {
         confirm.setVisibility(View.VISIBLE);
         confirm.setTotalTimeMs(2500);
         confirm.start();
         confirm.setListener(new DelayedConfirmationView.DelayedConfirmationListener() {
             @Override
+            public void onTimerSelected(View view) {
+                mTarget.reset();
+                confirm.setVisibility(View.INVISIBLE);
+                confirm.reset();
+            }
+
+            @Override
             public void onTimerFinished(View view) {
-                sendMessage(WearableConst.FINISHED_INPUT, passe);
                 Intent intent = new Intent(MainActivity.this, ConfirmationActivity.class);
                 intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.SUCCESS_ANIMATION);
                 intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, getString(R.string.saved));
                 startActivity(intent);
+                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                v.vibrate(200);
                 finish();
-            }
-
-            @Override
-            public void onTimerSelected(View view) {
-                mTarget.reset();
-                confirm.setVisibility(View.INVISIBLE);
+                sendMessage(WearableUtils.FINISHED_INPUT, passe);
             }
         });
     }
@@ -122,7 +127,7 @@ public class MainActivity extends Activity implements OnTargetSetListener, Googl
         // Serialize bundle to byte array
         byte[] data = new byte[0];
         try {
-            data = WearableConst.serialize(p);
+            data = WearableUtils.serialize(p);
         } catch (IOException e) {
             e.printStackTrace();
         }

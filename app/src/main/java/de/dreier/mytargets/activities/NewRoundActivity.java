@@ -33,7 +33,7 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
     private Spinner distance;
     private RadioButton indoor;
     private Spinner bow, target;
-    public static final String[] distances = {"10m", "15m", "18m", "20m", "25m", "30m", "40m", "50m", "60m", "70m", "90m", "Benutzerdefiniert"};
+    public static final String[] distances = {"10m", "15m", "18m", "20m", "25m", "30m", "40m", "50m", "60m", "70m", "90m", "Benutzerdefiniert"}; //TODO make this dependant of language
     public static final int[] distanceValues = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
     private RadioButton ppp2, ppp3;
     private Button addBow;

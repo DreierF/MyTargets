@@ -6,9 +6,12 @@
     <string name="next">Weiter</string>
     <string name="title_activity_new_round">Neue Runde</string>
     <string name="title_activity_edit_bow">Bogen hinzufügen</string>
+    <string name="title_activity_edit_arrow">Pfeil hinzufügen</string>
+
     <string name="take_picture">Neues Foto aufnehmen</string>
     <string name="pick_from_gallery">Foto aus Galerie auswählen</string>
     <string name="new_bow">Neuer Bogen</string>
+    <string name="new_arrow">Neuer Pfeil</string>
     <string name="select_picture">Wähle ein Bild</string>
     <string name="training_plural">Trainings</string>
     <string name="training_singular">Training</string>
@@ -56,16 +59,6 @@
     <string name="new_training">Neues Training</string>
     <string name="my_bows">Meine Bögen</string>
     <string name="add_bow">Bogen hinzufügen</string>
-
-
-    <string name="yellow">gelb</string>
-    <string name="gold">gold</string>
-    <string name="red">rot</string>
-    <string name="blue">blau</string>
-    <string name="black">schwarz</string>
-    <string name="white">weiß</string>
-    <string name="inner">innen</string>
-    <string name="outer">außen</string>
     <string name="yumi">Yumi</string>
     <string name="share">Teilen</string>
     <string name="my_share_text">Yeah, schaue dir mal meine Bogenschießergebnisse an. Ich habe:\n%1$d mal X\n%2$d mal 10\n%3$d mal 9\nDas macht insgesamt %4$d von %5$d Ringe.</string>
@@ -81,13 +74,9 @@
     <string name="ten_x">Zehner+X</string>
     <string name="average">Schnitt</string>
     <string name="switch_mode">Wechsle Eingabe Modus</string>
-    <string name="swipe_to_left">Wische nach links</string>
-    <string name="mistake">fehler</string>
     <string name="title_compound">Compound?</string>
     <string name="msg_compound_type">Welchen Bogentyp verwendest du? (Es entscheidet wie viele Punkte du für die goldenen Ringe bekommst)</string>
     <string name="other_bow">Anderer Bogen</string>
-    <string name="what_input">Was hast du getroffen?</string>
-    <string name="voice_how_to">Swipe left and press Passe button. Then you can say \"X 10 9\", \"9 7 Mistake\" or \"Inner blue outer gold X\". The Passe gets automatically saved if it has been recognized.</string>
     <string name="training">Training</string>
     <string name="statistic">Statistik</string>
     <string name="show_all">Zeige alle Schüsse</string>
@@ -95,5 +84,14 @@
     <string name="dispersion_pattern">Trefferbild</string>
     <string name="sharing_failed">Teilen fehlgeschlagen!</string>
     <string name="comment">Kommentar</string>
+    <string name="comments">Kommentare</string>
+
+    <string name="length">Länge</string>
+    <string name="spine">Spine</string>
+    <string name="weight">Gewicht</string>
+    <string name="vanes">Befiederung</string>
+    <string name="point">Schwerpunkt</string>
+    <string name="nock">Nocke</string>
+    <string name="material">Material</string>
 
 </resources>

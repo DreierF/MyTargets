@@ -8,10 +8,10 @@
     <Spinner
         android:id="@+id/distance"
         android:layout_width="70dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_height="wrap_content" />
 
     <LinearLayout
+        android:orientation="horizontal"
         android:id="@+id/customDist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -20,13 +20,12 @@
             android:id="@+id/distanceVal"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:inputType="number" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="m" />
+            android:text="@string/meter_short" />
     </LinearLayout>
 
     <EditText

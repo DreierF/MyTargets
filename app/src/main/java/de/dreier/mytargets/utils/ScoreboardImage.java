@@ -21,7 +21,7 @@ public class ScoreboardImage {
     public void generateBitmap(final Activity context, final long mRound, boolean dispersion_pattern, final File f) {
 
         // Generate html content
-        final String content = ScoreboardHelper.getHTMLString(context, mRound, dispersion_pattern);
+        final String content = ScoreboardUtils.getHTMLString(context, mRound, dispersion_pattern);
 
         final CountDownLatch signal = new CountDownLatch(1);
         context.runOnUiThread(new Runnable() {

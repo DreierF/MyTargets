@@ -6,6 +6,7 @@
     <string name="next">Next</string>
     <string name="title_activity_new_round">New Round</string>
     <string name="title_activity_edit_bow">Add bow</string>
+    <string name="title_activity_edit_arrow">Add arrow</string>
 
     <!-- EditBowActivity -->
     <string name="name">Name</string>
@@ -13,8 +14,8 @@
     <string name="recurve_bow">Recurve bow</string>
     <string name="compound_bow">Compound bow</string>
     <string name="bare_bow">Bare bow</string>
-    <string name="long_bow">Longbow</string>
-    <string name="horse_bow">Horsebow</string>
+    <string name="long_bow">Long bow</string>
+    <string name="horse_bow">Horse bow</string>
     <string name="properties">Properties</string>
     <string name="brand">Brand</string>
     <string name="size">Size</string>
@@ -56,16 +57,9 @@
     <string name="round_plural">rounds</string>
     <string name="round_singular">round</string>
     <string name="new_training">New training</string>
+    <string name="new_arrow">New arrow</string>
     <string name="my_bows">My bows</string>
     <string name="add_bow">Add bow</string>
-    <string name="yellow">yellow</string>
-    <string name="gold">gold</string>
-    <string name="red">red</string>
-    <string name="blue">blue</string>
-    <string name="black">black</string>
-    <string name="white">white</string>
-    <string name="inner">inner</string>
-    <string name="outer">outer</string>
     <string name="yumi">Yumi</string>
     <string name="share">Share</string>
     <string name="my_share_text">Yeah, look at my archery score. If got:\n%1$d times X\n%2$d times 10\n%3$d times 9\nThis makes a total of %4$d out of %5$d rings.</string>
@@ -81,13 +75,9 @@
     <string name="ten_x">Ten+X</string>
     <string name="average">Average</string>
     <string name="switch_mode">Switch input mode</string>
-    <string name="swipe_to_left">Swipe to left</string>
-    <string name="mistake">mistake</string>
     <string name="title_compound">Compound?</string>
     <string name="msg_compound_type">Which bow type are you using? (There is a difference in how many points you get for the golden rings)</string>
     <string name="other_bow">Other bow</string>
-    <string name="what_input">What did you hit?</string>
-    <string name="voice_how_to">Swipe left and press Passe button. Then you can say \"X 10 9\", \"9 7 Mistake\" or \"Inner blue outer gold X\". The Passe gets automatically saved if it has been recognized.</string>
     <string name="training">Training</string>
     <string name="statistic">Statistic</string>
     <string name="show_all">Show all shoots</string>
@@ -95,5 +85,15 @@
     <string name="dispersion_pattern">Dispersion pattern</string>
     <string name="sharing_failed">Sharing failed!</string>
     <string name="comment">Comment</string>
+    <string name="meter_short" translatable="false">m</string>
+    <string name="comments">Comments</string>
+
+    <string name="length">Length</string>
+    <string name="spine">Spine</string>
+    <string name="weight">Weight</string>
+    <string name="vanes">Vanes</string>
+    <string name="point">Point</string>
+    <string name="nock">Nock</string>
+    <string name="material">Material</string>
 
 </resources>

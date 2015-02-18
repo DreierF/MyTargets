@@ -17,7 +17,7 @@ import de.dreier.mytargets.R;
 public class ShareDialogFragment extends DialogFragment {
 
     // Use this instance of the interface to deliver action events
-    ShareDialogListener mListener;
+    private ShareDialogListener mListener;
     private ArrayList<Integer> mSelectedItems;
 
     public interface ShareDialogListener {
@@ -58,7 +58,7 @@ public class ShareDialogFragment extends DialogFragment {
                                     mSelectedItems.contains(2));
                         } catch (IOException e) {
                             e.printStackTrace();
-                            Toast.makeText(getActivity(), R.string.sharing_failed, Toast.LENGTH_SHORT);
+                            Toast.makeText(getActivity(), R.string.sharing_failed, Toast.LENGTH_SHORT).show();
                         }
                     }
                 })

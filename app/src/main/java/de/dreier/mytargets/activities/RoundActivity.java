@@ -81,7 +81,7 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
         }
     }
 
-    public void showShareDialog() {
+    void showShareDialog() {
         // Create an instance of the dialog fragment and show it
         ShareDialogFragment dialog = new ShareDialogFragment();
         dialog.show(getSupportFragmentManager(), "share_dialog");
@@ -95,7 +95,7 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
         int max = Target.getMaxPoints(mRoundInfo.target);
         int reached = db.getRoundPoints(mRound);
         int maxP = mRoundInfo.ppp * max * db.getPasses(mRound).getCount();
-        final String text = String.format(getString(R.string.my_share_text),
+        final String text = getString(R.string.my_share_text,
                 mRoundInfo.scoreCount[0], mRoundInfo.scoreCount[1], mRoundInfo.scoreCount[2], reached, maxP);
 
         new Thread(new Runnable() {

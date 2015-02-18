@@ -9,6 +9,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -82,6 +83,15 @@
         <activity
             android:name=".activities.EditBowActivity"
             android:label="@string/title_activity_edit_bow"
+            android:parentActivityName=".activities.BowActivity"
+            android:theme="@style/AppTheme.Overlay">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.BowActivity" />
+        </activity>
+        <activity
+            android:name=".activities.EditArrowActivity"
+            android:label="@string/title_activity_edit_arrow"
             android:parentActivityName=".activities.BowActivity"
             android:theme="@style/AppTheme.Overlay">
             <meta-data

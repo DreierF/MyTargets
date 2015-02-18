@@ -22,13 +22,13 @@ public class RoundsAdapter extends NowListAdapter {
     private final int indoorInd;
 
     public RoundsAdapter(Context context, long training) {
-        super(context, new DatabaseManager(context).getRunden(training));
-        idInd = getCursor().getColumnIndex(DatabaseManager.RUNDE_ID);
-        distInd = getCursor().getColumnIndex(DatabaseManager.RUNDE_DISTANCE);
-        unitInd = getCursor().getColumnIndex(DatabaseManager.RUNDE_UNIT);
-        indoorInd = getCursor().getColumnIndex(DatabaseManager.RUNDE_INDOOR);
-        pppInd = getCursor().getColumnIndex(DatabaseManager.RUNDE_PPP);
-        targetInd = getCursor().getColumnIndex(DatabaseManager.RUNDE_TARGET);
+        super(context, new DatabaseManager(context).getRounds(training));
+        idInd = getCursor().getColumnIndex(DatabaseManager.ROUND_ID);
+        distInd = getCursor().getColumnIndex(DatabaseManager.ROUND_DISTANCE);
+        unitInd = getCursor().getColumnIndex(DatabaseManager.ROUND_UNIT);
+        indoorInd = getCursor().getColumnIndex(DatabaseManager.ROUND_INDOOR);
+        pppInd = getCursor().getColumnIndex(DatabaseManager.ROUND_PPP);
+        targetInd = getCursor().getColumnIndex(DatabaseManager.ROUND_TARGET);
         mNewText = context.getString(R.string.new_round);
     }
 

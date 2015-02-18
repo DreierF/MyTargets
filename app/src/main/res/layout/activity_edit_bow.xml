@@ -30,7 +30,7 @@
                     android:id="@+id/imageView"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:background="@drawable/recurvebogen"
+                    android:background="@drawable/recurve_bow"
                     android:clickable="true"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
@@ -138,7 +138,7 @@
                     android:orientation="horizontal">
 
                     <com.iangclifton.android.floatlabel.FloatLabel
-                        android:id="@+id/marke"
+                        android:id="@+id/brand"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -204,7 +204,7 @@
 
 
                 <Button
-                    android:id="@+id/add_visier_button"
+                    android:id="@+id/add_sight_setting_button"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:layout_marginBottom="10dp"
