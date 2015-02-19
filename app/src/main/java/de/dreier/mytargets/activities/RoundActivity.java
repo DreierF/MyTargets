@@ -89,7 +89,7 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
 
     /* Called after the user selected with items he wants to share */
     @Override
-    public void onShareDialogConfirmed(final boolean include_text, final boolean dispersion_pattern, final boolean scoreboard) {
+    public void onShareDialogConfirmed(final boolean include_text, final boolean dispersion_pattern, final boolean scoreboard, final boolean comments) {
         // Construct share intent
         mRoundInfo = db.getRound(mRound);
         int max = Target.getMaxPoints(mRoundInfo.target);
@@ -103,17 +103,17 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
             public void run() {
                 try {
                     final File f = File.createTempFile("target", ".png", getExternalCacheDir());
-                    if (scoreboard) {
-                        new ScoreboardImage().generateBitmap(RoundActivity.this, mRound, dispersion_pattern, f);
-                    } else if (dispersion_pattern) {
+                    if (dispersion_pattern && !scoreboard && !comments) {
                         new TargetImage().generateBitmap(RoundActivity.this, 800, mRoundInfo, mRound, f);
+                    } else {
+                        new ScoreboardImage().generateBitmap(RoundActivity.this, mRound, scoreboard, dispersion_pattern, comments, f);
                     }
 
                     // Build and fire intent to ask for share provider
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     if (include_text)
                         shareIntent.putExtra(Intent.EXTRA_TEXT, text);
-                    if (dispersion_pattern || scoreboard)
+                    if (dispersion_pattern || scoreboard || comments)
                         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
                     shareIntent.setType("*/*");
                     startActivity(shareIntent);

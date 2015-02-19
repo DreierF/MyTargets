@@ -6,11 +6,9 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,11 +18,13 @@ import java.util.Date;
 import de.dreier.mytargets.activities.EditBowActivity;
 import de.dreier.mytargets.activities.NewRoundActivity;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
+import de.dreier.mytargets.models.Arrow;
 import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
 import de.dreier.mytargets.models.Target;
 import de.dreier.mytargets.models.Training;
+import de.dreier.mytargets.utils.BitmapUtils;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
@@ -81,7 +81,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     private static final String TABLE_ARROW = "ARROW";
     private static final String ARROW_ID = "_id";
-    private static final String ARROW_NAME = "name";
+    public static final String ARROW_NAME = "name";
     private static final String ARROW_LENGTH = "length";
     private static final String ARROW_MATERIAL = "material";
     private static final String ARROW_SPINE = "spine";
@@ -90,7 +90,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String ARROW_POINT = "point";
     private static final String ARROW_NOCK = "nock";
     private static final String ARROW_COMMENT = "comment";
-    private static final String ARROW_THUMBNAIL = "thumbnail";
+    public static final String ARROW_THUMBNAIL = "thumbnail";
     private static final String ARROW_IMAGE = "image";
 
     private static final String CREATE_TABLE_BOW =
@@ -228,6 +228,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+////// GET COMPLETE TABLE //////
+
     public Cursor getTrainings() {
         SQLiteDatabase db = getReadableDatabase();
         return db.query(TABLE_TRAINING, null, null, null, null, null, TRAINING_DATE + " DESC");
@@ -249,6 +251,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         return db.query(TABLE_BOW, null, null, null, null, null, BOW_ID + " ASC");
     }
+
+    public Cursor getArrows() {
+        SQLiteDatabase db = getReadableDatabase();
+        return db.query(TABLE_ARROW, null, null, null, null, null, ARROW_ID + " ASC");
+    }
+
+////// INSERT //////
 
     public void addPasseToRound(long round, Shot[] passe) {
         SQLiteDatabase db = getWritableDatabase();
@@ -277,7 +286,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return insertId;
     }
 
-    public long newRound(long training, long round, int distance, String unit, boolean indoor, int ppp, int target, long bow, String comment) {
+    public long newRound(long training, long round, int distance, String unit, boolean indoor, int ppp, int target, long bow, long arrow, String comment) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ROUND_DISTANCE, distance);
@@ -285,6 +294,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         values.put(ROUND_INDOOR, indoor);
         values.put(ROUND_TARGET, target);
         values.put(ROUND_BOW, bow);
+        values.put(ROUND_ARROW, arrow);
         values.put(ROUND_COMMENT, comment);
         values.put(ROUND_PPP, ppp);
         values.put(ROUND_TRAINING, training);
@@ -296,6 +306,66 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
         db.close();
         return round;
+    }
+
+////// GET SINGLE ENTRY AS OBJECT //////
+
+    public Training getTraining(long training) {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] cols = {TRAINING_ID, TRAINING_TITLE, TRAINING_DATE};
+        String[] args = {"" + training};
+        Cursor res = db.query(TABLE_TRAINING, cols, TRAINING_ID + "=?", args, null, null, null);
+        res.moveToFirst();
+
+        Training tr = new Training();
+        tr.id = res.getLong(0);
+        tr.title = res.getString(1);
+        tr.date = new Date(res.getLong(2));
+        res.close();
+        db.close();
+        return tr;
+    }
+
+    public Round getRound(long round) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        // Get all generic round attributes
+        Cursor res = db.rawQuery("SELECT r.ppp, r.training, r.target, r.indoor, r.distance, r.unit, r.bow, r.arrow, b.type, r.comment " +
+                "FROM ROUND r LEFT JOIN BOW b ON b._id=r.bow WHERE r._id=" + round, null);
+        res.moveToFirst();
+        Round r = new Round();
+        r.ppp = res.getInt(0);
+        r.training = res.getLong(1);
+        r.target = res.getInt(2);
+        r.indoor = res.getInt(3) != 0;
+        r.distanceVal = res.getInt(4);
+        r.distanceInd = -1;
+        for (int i = 0; i < NewRoundActivity.distanceValues.length; i++)
+            if (NewRoundActivity.distanceValues[i] == r.distanceVal)
+                r.distanceInd = i;
+        r.distance = "" + r.distanceVal + res.getString(5);
+        r.bow = res.getInt(6);
+        r.arrow = res.getInt(7);
+        r.compound = r.bow == -2 || res.getInt(8) == 1;
+        r.comment = res.getString(9);
+        if (r.comment == null)
+            r.comment = "";
+        res.close();
+
+        // Get number of X, 10 and 9 score
+        Cursor cur = db.rawQuery("SELECT s.points+(CASE WHEN (r.bow=-2 OR b.type=1) " +
+                "AND s.points=1 AND r.target=3 THEN 1 ELSE 0 END) AS zone, COUNT(*) " +
+                "FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow " +
+                "WHERE r._id=p.round AND p.round=" + round + " AND s.passe=p._id AND " +
+                "s.points<3 AND s.points>-1 GROUP BY zone", null);
+        if (cur.moveToFirst()) {
+            do {
+                r.scoreCount[cur.getInt(0)] = cur.getInt(1);
+            } while (cur.moveToNext());
+        }
+        cur.close();
+        db.close();
+        return r;
     }
 
     public Shot[] getPasse(long round, int passe) {
@@ -326,16 +396,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return p;
     }
 
-    public ArrayList<Shot[]> getRoundPasses(long round, int passe) {
+    public ArrayList<Shot[]> getRoundPasses(long round, int excludePasse) {
         SQLiteDatabase db = getReadableDatabase();
         String[] cols1 = {PASSE_ID};
-        String[] cols2 = {SHOOT_ZONE, SHOOT_X, SHOOT_Y};
+        String[] cols2 = {SHOOT_ZONE, SHOOT_X, SHOOT_Y, SHOOT_COMMENT};
         String[] args1 = {"" + round};
         Cursor res1 = db.query(TABLE_PASSE, cols1, PASSE_ROUND + "=?", args1, null, null, PASSE_ID + " ASC");
         if (res1.moveToFirst()) {
             ArrayList<Shot[]> list = new ArrayList<>();
             do {
-                if (res1.getPosition() != passe - 1) {
+                if (res1.getPosition() != excludePasse - 1) {
                     String[] args2 = {"" + res1.getLong(0)}; // passe id
                     Cursor res = db.query(TABLE_SHOOT, cols2, SHOOT_PASSE + "=?", args2, null, null, SHOOT_ID + " ASC");
                     int count = res.getCount();
@@ -345,6 +415,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                         p[i].zone = res.getInt(0);
                         p[i].x = res.getFloat(1);
                         p[i].y = res.getFloat(2);
+                        p[i].comment = res.getString(3);
                         res.moveToNext();
                     }
                     list.add(p);
@@ -360,28 +431,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return new ArrayList<>();
     }
 
-    public Training getTraining(long training) {
-        SQLiteDatabase db = getReadableDatabase();
-        String[] cols = {TRAINING_ID, TRAINING_TITLE, TRAINING_DATE};
-        String[] args = {"" + training};
-        Cursor res = db.query(TABLE_TRAINING, cols, TRAINING_ID + "=?", args, null, null, null);
-        res.moveToFirst();
-
-        Training tr = new Training();
-        tr.id = res.getLong(0);
-        tr.title = res.getString(1);
-        tr.date = new Date(res.getLong(2));
-        res.close();
-        db.close();
-        return tr;
-    }
-
-    /**
-     * Gets the passe by id
-     *
-     * @param passe Passe id
-     * @return array containing all zone information
-     */
     public int[] getPasse(long passe) {
         SQLiteDatabase db = getReadableDatabase();
         String[] cols = {SHOOT_ID, SHOOT_ZONE};
@@ -399,68 +448,69 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return points;
     }
 
-    public Round getRound(long round) {
+    public Bow getBow(long bowId, boolean small) {
         SQLiteDatabase db = getReadableDatabase();
-
-        // Get all generic round attributes
-        Cursor res = db.rawQuery("SELECT r.ppp, r.training, r.target, r.indoor, r.distance, r.unit, r.bow, b.type, r.comment " +
-                "FROM ROUND r LEFT JOIN BOW b ON b._id=r.bow WHERE r._id=" + round, null);
-        res.moveToFirst();
-        Round r = new Round();
-        r.ppp = res.getInt(0);
-        r.training = res.getLong(1);
-        r.target = res.getInt(2);
-        r.indoor = res.getInt(3) != 0;
-        r.distanceVal = res.getInt(4);
-        r.distanceInd = -1;
-        for (int i = 0; i < NewRoundActivity.distanceValues.length; i++)
-            if (NewRoundActivity.distanceValues[i] == r.distanceVal)
-                r.distanceInd = i;
-        r.distance = "" + r.distanceVal + res.getString(5);
-        r.bow = res.getInt(6);
-        r.compound = r.bow == -2 || res.getInt(7) == 1;
-        r.comment = res.getString(8);
-        if (r.comment == null)
-            r.comment = "";
-        res.close();
-
-        // Get number of X, 10 and 9 score
-        Cursor cur = db.rawQuery("SELECT s.points+(CASE WHEN (r.bow=-2 OR b.type=1) " +
-                "AND s.points=1 AND r.target=3 THEN 1 ELSE 0 END) AS zone, COUNT(*) " +
-                "FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow " +
-                "WHERE r._id=p.round AND p.round=" + round + " AND s.passe=p._id AND " +
-                "s.points<3 AND s.points>-1 GROUP BY zone", null);
-        if (cur.moveToFirst()) {
-            do {
-                r.scoreCount[cur.getInt(0)] = cur.getInt(1);
-            } while (cur.moveToNext());
+        String[] cols = {BOW_NAME, BOW_TYPE, BOW_BRAND, BOW_SIZE, BOW_HEIGHT, BOW_TILLER, BOW_DESCRIPTION, BOW_THUMBNAIL, BOW_IMAGE};
+        String[] args = {"" + bowId};
+        Cursor res = db.query(TABLE_BOW, cols, BOW_ID + "=?", args, null, null, null);
+        Bow bow = null;
+        if (res.moveToFirst()) {
+            bow = new Bow();
+            bow.id = bowId;
+            bow.name = res.getString(0);
+            bow.type = res.getInt(1);
+            bow.brand = res.getString(2);
+            bow.size = res.getString(3);
+            bow.height = res.getString(4);
+            bow.tiller = res.getString(5);
+            bow.description = res.getString(6);
+            if (small) {
+                byte[] data = res.getBlob(7);
+                bow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
+                res.close();
+            } else {
+                bow.imageFile = res.getString(8);
+                bow.image = BitmapFactory.decodeFile(bow.imageFile);
+                res.close();
+            }
         }
-        cur.close();
         db.close();
-        return r;
+        return bow;
     }
 
-    public ArrayList<Shot> getCommentedShots(long round) {
+    public Arrow getArrow(long arrowId, boolean small) {
         SQLiteDatabase db = getReadableDatabase();
-        String[] args = {"" + round};
-
-        Cursor res = db.rawQuery("SELECT s.passe, s.points, s.comment" +
-                " FROM ROUND r, PASSE p, SHOOT s" +
-                " WHERE r._id=p.round AND p.round=? AND s.passe=p._id AND s.comment!=\"\"", args);
-        res.moveToFirst();
-        ArrayList<Shot> list = new ArrayList<>();
-        for (int i = 0; i < res.getCount(); i++) {
-            Shot shot = new Shot();
-            shot.passe = res.getInt(0);
-            shot.zone = res.getInt(1);
-            shot.comment = res.getString(2);
-            list.add(shot);
-            res.moveToNext();
+        String[] cols = {ARROW_NAME, ARROW_LENGTH, ARROW_MATERIAL, ARROW_SPINE, ARROW_WEIGHT, ARROW_VANES, ARROW_POINT, ARROW_NOCK, ARROW_COMMENT, ARROW_THUMBNAIL, ARROW_IMAGE};
+        String[] args = {"" + arrowId};
+        Cursor res = db.query(TABLE_ARROW, cols, ARROW_ID + "=?", args, null, null, null);
+        Arrow arrow = null;
+        if (res.moveToFirst()) {
+            arrow = new Arrow();
+            arrow.id = arrowId;
+            arrow.name = res.getString(0);
+            arrow.length = res.getString(1);
+            arrow.material = res.getString(2);
+            arrow.spine = res.getString(3);
+            arrow.weight = res.getString(4);
+            arrow.vanes = res.getString(5);
+            arrow.point = res.getString(6);
+            arrow.nock = res.getString(7);
+            arrow.comment = res.getString(8);
+            if (small) {
+                byte[] data = res.getBlob(9);
+                arrow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
+                res.close();
+            } else {
+                arrow.imageFile = res.getString(10);
+                arrow.image = BitmapFactory.decodeFile(arrow.imageFile);
+                res.close();
+            }
         }
-        res.close();
         db.close();
-        return list;
+        return arrow;
     }
+
+////// GET AGGREGATED INFORMATION //////
 
     public int[] getTrainingPoints(long training) {
         SQLiteDatabase db = getReadableDatabase();
@@ -524,41 +574,21 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return 0;
     }
 
-    public void deletePasses(long[] ids) {
+    public String getSetting(long bowId, int dist) {
         SQLiteDatabase db = getReadableDatabase();
-        for (long id : ids) {
-            String[] args = {"" + id};
-            db.delete(TABLE_PASSE, PASSE_ID + "=?", args);
+        String[] cols = {VISIER_SETTING};
+        String[] args = {"" + bowId, "" + dist};
+        Cursor res = db.query(TABLE_VISIER, cols, VISIER_BOW + "=? AND " + VISIER_DISTANCE + "=?", args, null, null, null);
+        String s = "";
+        if (res.moveToFirst()) {
+            s = res.getString(0);
         }
+        res.close();
         db.close();
+        return s;
     }
 
-    public void deleteRounds(long[] ids) {
-        SQLiteDatabase db = getReadableDatabase();
-        for (long id : ids) {
-            String[] args = {"" + id};
-            db.delete(TABLE_ROUND, ROUND_ID + "=?", args);
-        }
-        db.close();
-    }
-
-    public void deleteTrainings(long[] ids) {
-        SQLiteDatabase db = getReadableDatabase();
-        for (long id : ids) {
-            String[] args = {"" + id};
-            db.delete(TABLE_TRAINING, TRAINING_ID + "=?", args);
-        }
-        db.close();
-    }
-
-    public void deleteBows(long[] ids) {
-        SQLiteDatabase db = getReadableDatabase();
-        for (long id : ids) {
-            String[] args = {"" + id};
-            db.delete(TABLE_BOW, BOW_ID + "=?", args);
-        }
-        db.close();
-    }
+////// UPDATE INFORMATION //////
 
     public void updatePasse(long round, int passe, Shot[] p) {
         SQLiteDatabase db = getReadableDatabase();
@@ -588,63 +618,52 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.close();
     }
 
-    public long updateBow(long bowId, String imageFile, String name, int bowType, String brand, String size, String height, String tiller, String desc, Bitmap thumb) {
+    public long updateBow(Bow bow) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(BOW_NAME, name);
-        values.put(BOW_TYPE, bowType);
-        values.put(BOW_BRAND, brand);
-        values.put(BOW_SIZE, size);
-        values.put(BOW_HEIGHT, height);
-        values.put(BOW_TILLER, tiller);
-        values.put(BOW_DESCRIPTION, desc);
-        byte[] imageData = getBitmapAsByteArray(thumb);
+        values.put(BOW_NAME, bow.name);
+        values.put(BOW_TYPE, bow.type);
+        values.put(BOW_BRAND, bow.brand);
+        values.put(BOW_SIZE, bow.size);
+        values.put(BOW_HEIGHT, bow.height);
+        values.put(BOW_TILLER, bow.tiller);
+        values.put(BOW_DESCRIPTION, bow.description);
+        byte[] imageData = BitmapUtils.getBitmapAsByteArray(bow.image);
         values.put(BOW_THUMBNAIL, imageData);
-        values.put(BOW_IMAGE, imageFile);
-        if (bowId == -1) {
-            bowId = db.insert(TABLE_BOW, null, values);
+        values.put(BOW_IMAGE, bow.imageFile);
+        if (bow.id == -1) {
+            bow.id = db.insert(TABLE_BOW, null, values);
         } else {
-            String[] args = {"" + bowId};
+            String[] args = {"" + bow.id};
             db.update(TABLE_BOW, values, BOW_ID + "=?", args);
         }
         db.close();
-        return bowId;
+        return bow.id;
     }
 
-    private static byte[] getBitmapAsByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
-        return outputStream.toByteArray();
-    }
-
-    public Bow getBow(long bowId, boolean small) {
-        SQLiteDatabase db = getReadableDatabase();
-        String[] cols = {BOW_NAME, BOW_TYPE, BOW_BRAND, BOW_SIZE, BOW_HEIGHT, BOW_TILLER, BOW_DESCRIPTION, BOW_THUMBNAIL, BOW_IMAGE};
-        String[] args = {"" + bowId};
-        Cursor res = db.query(TABLE_BOW, cols, BOW_ID + "=?", args, null, null, null);
-        Bow bow = null;
-        if (res.moveToFirst()) {
-            bow = new Bow();
-            bow.id = bowId;
-            bow.name = res.getString(0);
-            bow.type = res.getInt(1);
-            bow.brand = res.getString(2);
-            bow.size = res.getString(3);
-            bow.height = res.getString(4);
-            bow.tiller = res.getString(5);
-            bow.description = res.getString(6);
-            if (small) {
-                byte[] data = res.getBlob(7);
-                bow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
-                res.close();
-            } else {
-                bow.imageFile = res.getString(8);
-                bow.image = BitmapFactory.decodeFile(bow.imageFile);
-                res.close();
-            }
+    public long updateArrow(Arrow arrow) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ARROW_NAME, arrow.name);
+        values.put(ARROW_LENGTH, arrow.length);
+        values.put(ARROW_MATERIAL, arrow.material);
+        values.put(ARROW_SPINE, arrow.spine);
+        values.put(ARROW_WEIGHT, arrow.weight);
+        values.put(ARROW_VANES, arrow.vanes);
+        values.put(ARROW_POINT, arrow.point);
+        values.put(ARROW_NOCK, arrow.nock);
+        values.put(ARROW_COMMENT, arrow.comment);
+        byte[] imageData = BitmapUtils.getBitmapAsByteArray(arrow.image);
+        values.put(ARROW_THUMBNAIL, imageData);
+        values.put(ARROW_IMAGE, arrow.imageFile);
+        if (arrow.id == -1) {
+            arrow.id = db.insert(TABLE_ARROW, null, values);
+        } else {
+            String[] args = {"" + arrow.id};
+            db.update(TABLE_ARROW, values, ARROW_ID + "=?", args);
         }
         db.close();
-        return bow;
+        return arrow.id;
     }
 
     public void updateSightSettings(long bowId, ArrayList<EditBowActivity.SightSetting> sightSettingsList) {
@@ -658,20 +677,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.insert(TABLE_VISIER, null, values);
         }
         db.close();
-    }
-
-    public String getSetting(long bowId, int dist) {
-        SQLiteDatabase db = getReadableDatabase();
-        String[] cols = {VISIER_SETTING};
-        String[] args = {"" + bowId, "" + dist};
-        Cursor res = db.query(TABLE_VISIER, cols, VISIER_BOW + "=? AND " + VISIER_DISTANCE + "=?", args, null, null, null);
-        String s = "";
-        if (res.moveToFirst()) {
-            s = res.getString(0);
-        }
-        res.close();
-        db.close();
-        return s;
     }
 
     public ArrayList<EditBowActivity.SightSetting> getSettings(long bowId) {
@@ -695,6 +700,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.close();
         return list;
     }
+
+////// EXPORT ALL //////
 
     public void exportAll(File file) throws IOException {
         SQLiteDatabase db = getReadableDatabase();
@@ -742,4 +749,37 @@ public class DatabaseManager extends SQLiteOpenHelper {
         cur.close();
         db.close();
     }
+
+
+////// DELETE ENTRIES //////
+
+    public void deleteTrainings(long[] ids) {
+        deleteEntries(TABLE_TRAINING, ids);
+    }
+
+    public void deleteRounds(long[] ids) {
+        deleteEntries(TABLE_ROUND, ids);
+    }
+
+    public void deletePasses(long[] ids) {
+        deleteEntries(TABLE_PASSE, ids);
+    }
+
+    public void deleteBows(long[] ids) {
+        deleteEntries(TABLE_BOW, ids);
+    }
+
+    public void deleteArrows(long[] ids) {
+        deleteEntries(TABLE_ARROW, ids);
+    }
+
+    public void deleteEntries(String table, long[] ids) {
+        SQLiteDatabase db = getReadableDatabase();
+        for (long id : ids) {
+            String[] args = {"" + id};
+            db.delete(table, "_id=?", args);
+        }
+        db.close();
+    }
+
 }

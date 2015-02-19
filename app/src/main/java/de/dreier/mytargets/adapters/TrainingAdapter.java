@@ -28,7 +28,6 @@ public class TrainingAdapter extends NowListAdapter {
         dateInd = getCursor().getColumnIndex(DatabaseManager.TRAINING_DATE);
         dateFormat = DateFormat.getDateInstance();
         mNewText = context.getString(R.string.new_training);
-        mExtraCards = 2;
     }
 
     @Override
@@ -55,16 +54,5 @@ public class TrainingAdapter extends NowListAdapter {
         public TextView title;
         public TextView subtitle;
         public TextView ges;
-    }
-
-    @Override
-    protected View buildExtraCard(int pos, View convertView, ViewGroup parent) {
-        View view;
-        if (convertView == null) {
-            view = mInflater.inflate(R.layout.mybows_card, parent, false);
-        } else {
-            view = convertView;
-        }
-        return view;
     }
 }

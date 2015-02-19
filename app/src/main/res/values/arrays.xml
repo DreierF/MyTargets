@@ -4,5 +4,6 @@
         <item>@string/text</item>
         <item>@string/dispersion_pattern</item>
         <item>@string/scoreboard</item>
+        <item>@string/comments</item>
     </string-array>
 </resources>

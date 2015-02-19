@@ -1,12 +1,13 @@
-package de.dreier.mytargets.activities;
+package de.dreier.mytargets.fragments;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.ActionMode;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,14 +20,14 @@ import android.widget.ListView;
 
 import com.melnykov.fab.FloatingActionButton;
 
-import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
 
 /**
  * Shows all rounds of one settings_only day
  */
-public abstract class NowListActivity extends ActionBarActivity implements ListView.OnItemClickListener {
+public abstract class NowListFragment extends Fragment implements ListView.OnItemClickListener {
 
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
@@ -38,15 +39,26 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
     boolean mEnableBackAnimation = true;
     boolean mEditable = false;
 
+    /*public static NowListFragment newInstance(int index) {
+        NowListFragment f = new NowListFragment();
+
+        // Supply index input as an argument.
+        Bundle args = new Bundle();
+        args.putInt("index", index);
+        f.setArguments(args);
+
+        return f;
+    }*/
+
+    public int getShownIndex() {
+        return getArguments().getInt("index", 0);
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_list);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
-        db = new DatabaseManager(this);
-        init(getIntent(), savedInstanceState);
-
-        mListView = (ListView) findViewById(android.R.id.list);
+        mListView = (ListView) rootView.findViewById(android.R.id.list);
         mListView.setDividerHeight(0);
         mListView.setOnItemClickListener(this);
         mListView.setBackgroundColor(0xFFEEEEEE);
@@ -112,8 +124,16 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.attachToListView(mListView);
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        db = new DatabaseManager(getActivity());
+        init(getArguments(), savedInstanceState);
     }
 
     void onEdit(long id) {}
@@ -126,37 +146,15 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
         return mListView.getAdapter();
     }
 
-    protected abstract void init(Intent intent, Bundle savedInstanceState);
+    protected abstract void init(Bundle intent, Bundle savedInstanceState);
 
     protected abstract void onDelete(long[] ids);
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //getMenuInflater().inflate(R.menu.settings_only, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            /*case R.id.action_settings:
-                Intent i = new Intent(this,SettingsActivity.class);
-                startActivity(i);
-                return true;*/
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                overridePendingTransition(R.anim.left_in, R.anim.right_out);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
         Intent i = new Intent();
         if (onItemClick(i, pos, id)) {
             startActivity(i);
-            overridePendingTransition(R.anim.right_in, R.anim.left_out);
         }
     }
 
@@ -164,15 +162,7 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
         Intent i = new Intent();
         if (onItemClick(i, 0, 0)) {
             startActivity(i);
-            overridePendingTransition(R.anim.right_in, R.anim.left_out);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        if (mEnableBackAnimation)
-            overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
     protected abstract boolean onItemClick(Intent i, int pos, long id);

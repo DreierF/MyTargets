@@ -3,7 +3,6 @@ package de.dreier.mytargets.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
@@ -39,7 +38,6 @@ import com.iangclifton.android.floatlabel.FloatLabel;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,6 +45,7 @@ import java.util.Date;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Bow;
+import de.dreier.mytargets.utils.BitmapUtils;
 import de.dreier.mytargets.views.NotifyingScrollView;
 
 public class EditBowActivity extends ActionBarActivity implements View.OnClickListener {
@@ -246,15 +245,15 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
                         if (imageBitmap == null) {
                             int width = mImageView.getMeasuredWidth();
                             int height = mImageView.getMeasuredHeight();
-                            imageBitmap = decodeSampledBitmapFromRes(R.drawable.recurve_bow, width, height);
+                            imageBitmap = BitmapUtils.decodeSampledBitmapFromRes(EditBowActivity.this, R.drawable.recurve_bow, width, height);
                         }
                     }
                 });
             }
 
-            if (sightSettingsList.size() == 0) {
+            if (sightSettingsList.size() == 0 && mBowId == -1) {
                 addSightSetting(new SightSetting(), -1);
-            } else {
+            } else if(sightSettingsList.size() > 0) {
                 for (int i = 0; i < sightSettingsList.size(); i++) {
                     addSightSetting(sightSettingsList.get(i), i);
                 }
@@ -372,26 +371,34 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
     public void onClick(View view) {
         DatabaseManager db = new DatabaseManager(this);
 
-        int bowType = 0;
+        Bow bow = new Bow();
+        bow.id = mBowId;
+        bow.name = name.getTextString();
+        bow.brand = brand.getTextString();
+        bow.size = size.getTextString();
+        bow.height = height.getTextString();
+        bow.tiller = tiller.getTextString();
+        bow.description = desc.getTextString();
+
         if (recurveBow.isChecked())
-            bowType = 0;
+            bow.type = 0;
         else if (compoundBow.isChecked())
-            bowType = 1;
+            bow.type = 1;
         else if (longBow.isChecked())
-            bowType = 2;
+            bow.type = 2;
         else if (blank.isChecked())
-            bowType = 3;
+            bow.type = 3;
         else if (horse.isChecked())
-            bowType = 4;
+            bow.type = 4;
         else if (yumi.isChecked())
-            bowType = 5;
+            bow.type = 5;
+        else
+            bow.type = 0;
 
-        Bitmap thumb = ThumbnailUtils.extractThumbnail(imageBitmap, 100, 100);
+        bow.image = ThumbnailUtils.extractThumbnail(imageBitmap, 100, 100);
+        bow.imageFile = mImageFile;
 
-        mBowId = db.updateBow(mBowId, mImageFile, name.getTextString(), bowType,
-                brand.getTextString(), size.getTextString(),
-                height.getTextString(), tiller.getTextString(),
-                desc.getTextString(), thumb);
+        mBowId = db.updateBow(bow);
 
         for (SightSetting set : sightSettingsList)
             set.update();
@@ -475,7 +482,7 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
             @Override
             protected Boolean doInBackground(Uri... params) {
                 try {
-                    imageBitmap = decodeSampledBitmapFromStream(params[0], mImageView.getWidth(), mImageView.getHeight());
+                    imageBitmap = BitmapUtils.decodeSampledBitmapFromStream(EditBowActivity.this, params[0], mImageView.getWidth(), mImageView.getHeight());
                     File f = File.createTempFile(params[0].getLastPathSegment(), null, getFilesDir());
                     FileOutputStream out = new FileOutputStream(f);
                     imageBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
@@ -521,51 +528,6 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
 
         return new File(mediaStorageDir.getPath() + File.separator +
                 "IMG_" + timeStamp + ".jpg");
-    }
-
-    Bitmap decodeSampledBitmapFromStream(Uri uri, int reqWidth, int reqHeight) throws IOException {
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        InputStream stream = getContentResolver().openInputStream(uri);
-        BitmapFactory.decodeStream(stream, null, options);
-        stream.close();
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-        options.inJustDecodeBounds = false;
-        stream = getContentResolver().openInputStream(uri);
-        Bitmap bmp = BitmapFactory.decodeStream(stream, null, options);
-        stream.close();
-        return bmp;
-    }
-
-    Bitmap decodeSampledBitmapFromRes(int id, int reqWidth, int reqHeight) {
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(getResources(), id, options);
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeResource(getResources(), id, options);
-    }
-
-    private static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-        int minSize = Math.max(reqWidth, reqHeight);
-
-        if (height > minSize || width > minSize) {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            while ((halfHeight / inSampleSize) > minSize
-                    && (halfWidth / inSampleSize) > minSize) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
     }
 
     @Override

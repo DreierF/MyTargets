@@ -15,22 +15,22 @@ import android.widget.TextView;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 
-public class BowItemAdapter extends CursorAdapter implements SpinnerAdapter {
+public class ArrowItemAdapter extends CursorAdapter implements SpinnerAdapter {
 
     private final int nameInd, thumbInd;
     private final LayoutInflater mInflater;
 
-    public BowItemAdapter(Context context) {
-        super(context,new DatabaseManager(context).getBows(),0);
+    public ArrowItemAdapter(Context context) {
+        super(context, new DatabaseManager(context).getArrows(), 0);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        nameInd = getCursor().getColumnIndex(DatabaseManager.BOW_NAME);
-        thumbInd = getCursor().getColumnIndex(DatabaseManager.BOW_THUMBNAIL);
-	}
+        nameInd = getCursor().getColumnIndex(DatabaseManager.ARROW_NAME);
+        thumbInd = getCursor().getColumnIndex(DatabaseManager.ARROW_THUMBNAIL);
+    }
 
-	@Override
-	public View getDropDownView(int position, View convertView, ViewGroup parent) {
-		return getView(position,convertView,parent);
-	}
+    @Override
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        return getView(position, convertView, parent);
+    }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {

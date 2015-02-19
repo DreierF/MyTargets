@@ -16,4 +16,5 @@ public class Round implements Serializable {
     public boolean compound;
     public int distanceInd;
     public String comment;
+    public int arrow;
 }

@@ -38,7 +38,6 @@ public class TargetSelectView extends View implements View.OnTouchListener {
     private float mOutToX, mOutToY;
     private int mInZone, mOutZone;
     private int mZoneCount;
-    private Paint grayBackground;
     private boolean mModeEasy = true;
     private int[] target;
     private Shot[] mPasse;
@@ -112,10 +111,6 @@ public class TargetSelectView extends View implements View.OnTouchListener {
 
         drawColorP = new Paint();
         drawColorP.setAntiAlias(true);
-
-        grayBackground = new Paint();
-        grayBackground.setColor(0xFFDDDDDD);
-        grayBackground.setAntiAlias(true);
 
         circleColorP = new Paint();
         circleColorP.setAntiAlias(true);

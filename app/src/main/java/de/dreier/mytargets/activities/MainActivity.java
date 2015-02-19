@@ -2,6 +2,7 @@ package de.dreier.mytargets.activities;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -25,20 +31,89 @@ import java.util.Date;
 import java.util.Locale;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.TrainingAdapter;
+import de.dreier.mytargets.fragments.ArrowFragment;
+import de.dreier.mytargets.fragments.BowFragment;
+import de.dreier.mytargets.fragments.TrainingsFragment;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.views.SlidingTabLayout;
 
 /**
  * Shows an overview over all trying days
  */
-public class MainActivity extends NowListActivity {
+public class MainActivity extends ActionBarActivity {
 
     private static boolean shownThisTime = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new MainTabsFragmentPagerAdapter(this));
+
+        SlidingTabLayout slidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+        slidingTabLayout.setDistributeEvenly(true);
+        slidingTabLayout.setViewPager(viewPager);
+
+        /*mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+
+            @Override
+            public int getIndicatorColor(int position) {
+                return mTabs.get(position).getIndicatorColor();
+            }
+
+            @Override
+            public int getDividerColor(int position) {
+                return mTabs.get(position).getDividerColor();
+            }
+
+        });*/
+
+        askForHelpTranslating();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+    }
+
+    public static class MainTabsFragmentPagerAdapter extends FragmentPagerAdapter {
+
+        private final Context context;
+
+        MainTabsFragmentPagerAdapter(ActionBarActivity context) {
+            super(context.getSupportFragmentManager());
+            this.context = context;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0) {
+                return new TrainingsFragment();
+            } else if (position == 1) {
+                return new BowFragment();
+            } else {
+                return new ArrowFragment();
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            if (position == 0) {
+                return context.getString(R.string.training);
+            } else if (position == 1) {
+                return context.getString(R.string.bow);
+            } else {
+                return context.getString(R.string.arrow);
+            }
+        }
+    }
+
+    private void askForHelpTranslating() {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         boolean shown = prefs.getBoolean("translation_dialog_shown", false);
 
@@ -74,20 +149,6 @@ public class MainActivity extends NowListActivity {
     }
 
     @Override
-    protected void init(Intent intent, Bundle savedInstanceState) {
-        itemSingular = getString(R.string.training_singular);
-        itemPlural = getString(R.string.training_plural);
-        mEnableBackAnimation = false;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        adapter = new TrainingAdapter(this);
-        setListAdapter(adapter);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -100,8 +161,7 @@ public class MainActivity extends NowListActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        db = new DatabaseManager(MainActivity.this);
-
+                        DatabaseManager db = new DatabaseManager(MainActivity.this);
                         String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
                         @SuppressLint("SimpleDateFormat")
                         SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");
@@ -127,23 +187,5 @@ public class MainActivity extends NowListActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onDelete(long[] ids) {
-        db.deleteTrainings(ids);
-    }
-
-    @Override
-    public boolean onItemClick(Intent i, int pos, long id) {
-        if (pos == 0) {
-            i.setClass(this, NewRoundActivity.class);
-        } else if (pos == 1) {
-            i.setClass(this, BowActivity.class);
-        } else {
-            i.setClass(this, TrainingActivity.class);
-            i.putExtra(TrainingActivity.TRAINING_ID, getListAdapter().getItemId(pos));
-        }
-        return true;
     }
 }

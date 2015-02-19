@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,13 +20,14 @@ import android.widget.Spinner;
 import com.iangclifton.android.floatlabel.FloatLabel;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.adapters.ArrowItemAdapter;
 import de.dreier.mytargets.adapters.BowItemAdapter;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.utils.MyBackupAgent;
 
-public class NewRoundActivity extends ActionBarActivity implements View.OnClickListener {
+public class NewRoundActivity extends ActionBarActivity {
 
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
@@ -32,14 +36,15 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
 
     private Spinner distance;
     private RadioButton indoor;
-    private Spinner bow, target;
+    private Spinner bow, arrow, target;
     public static final String[] distances = {"10m", "15m", "18m", "20m", "25m", "30m", "40m", "50m", "60m", "70m", "90m", "Benutzerdefiniert"}; //TODO make this dependant of language
     public static final int[] distanceValues = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
     private RadioButton ppp2, ppp3;
-    private Button addBow;
+    private Button addBow, addArrow;
     private boolean mCalledFromPasse = false;
     private int mBowType = -1;
-    private FloatLabel training, comment;
+    private EditText training;
+    private FloatLabel comment;
     private View customDist;
     private EditText distanceVal;
     private boolean custom = false;
@@ -48,6 +53,11 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_round);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
 
         Intent i = getIntent();
         if (i != null) {
@@ -61,10 +71,9 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
         }
         SharedPreferences prefs = getSharedPreferences(MyBackupAgent.PREFS, 0);
 
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, distances);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        training = (FloatLabel) findViewById(R.id.training);
+        training = (EditText) findViewById(R.id.training);
         customDist = findViewById(R.id.customDist);
         distanceVal = (EditText) findViewById(R.id.distanceVal);
         distance = (Spinner) findViewById(R.id.distance);
@@ -91,6 +100,8 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
         RadioButton ppp6 = (RadioButton) findViewById(R.id.ppp6);
         bow = (Spinner) findViewById(R.id.bow);
         bow.setAdapter(new BowItemAdapter(this));
+        arrow = (Spinner) findViewById(R.id.arrow);
+        arrow.setAdapter(new ArrowItemAdapter(this));
         target = (Spinner) findViewById(R.id.target_spinner);
         target.setAdapter(new TargetItemAdapter(this));
         addBow = (Button) findViewById(R.id.add_bow);
@@ -101,19 +112,15 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
                 startActivity(i);
             }
         });
-        comment = (FloatLabel) findViewById(R.id.comment);
-        Button new_round = (Button) findViewById(R.id.new_round_button);
-        new_round.setText(getString(mTraining == -1 ? R.string.start :
-                (mRound == -1 ? R.string.new_round : R.string.save)));
-        new_round.setOnClickListener(this);
-        Button cancel = (Button) findViewById(R.id.cancel_button);
-        cancel.setOnClickListener(new View.OnClickListener() {
+        addArrow = (Button) findViewById(R.id.add_arrow);
+        addArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                Intent i = new Intent(NewRoundActivity.this, EditArrowActivity.class);
+                startActivity(i);
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        comment = (FloatLabel) findViewById(R.id.comment);
 
         if (mRound == -1) {
             // Initialise with default values
@@ -140,6 +147,7 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
             ppp3.setChecked(ppp == 3);
             ppp6.setChecked(ppp == 6);
             bow.setSelection(prefs.getInt("bow", 0));
+            arrow.setSelection(prefs.getInt("arrow", 0));
             target.setSelection(prefs.getInt("target", 2));
             comment.setText("");
         } else {
@@ -163,13 +171,15 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
             ppp3.setChecked(r.ppp == 3);
             ppp6.setChecked(r.ppp == 6);
             bow.setSelection(r.bow);
+            arrow.setSelection(r.arrow);
             target.setSelection(r.target);
             comment.setText(r.comment);
         }
         if (mTraining == -1) {
             training.setText(getString(R.string.training));
         } else {
-            training.setVisibility(View.GONE);
+            View training_container = findViewById(R.id.training_container);
+            training_container.setVisibility(View.GONE);
         }
     }
 
@@ -184,10 +194,32 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
             addBow.setVisibility(View.VISIBLE);
             bow.setVisibility(View.GONE);
         }
+        arrow.setAdapter(new ArrowItemAdapter(this));
+        if (arrow.getAdapter().getCount() > 0) {
+            addArrow.setVisibility(View.GONE);
+            arrow.setVisibility(View.VISIBLE);
+        } else {
+            addArrow.setVisibility(View.VISIBLE);
+            arrow.setVisibility(View.GONE);
+        }
     }
 
     @Override
-    public void onClick(final View view) {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.save, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_save) {
+            onSave();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onSave() {
         int tar = target.getSelectedItemPosition();
 
         if (bow.getAdapter().getCount() == 0 && mBowType == -1 && tar == 3) {
@@ -197,21 +229,21 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mBowType = 1;
-                            NewRoundActivity.this.onClick(view);
+                            onSave();
                         }
                     })
                     .setNegativeButton(R.string.other_bow, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mBowType = 0;
-                            NewRoundActivity.this.onClick(view);
+                            onSave();
                         }
                     })
                     .show();
             return;
         }
 
-        String title = training.getTextString();
+        String title = training.getText().toString();
         DatabaseManager db = new DatabaseManager(this);
         if (mTraining == -1) {
             mTraining = db.newTraining(title);
@@ -224,6 +256,10 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
                 b = -1;
             }
         }
+        long a = arrow.getSelectedItemId();
+        if (arrow.getAdapter().getCount() == 0) {
+            a = -1;
+        }
         int dist;
         if (custom) {
             dist = Integer.parseInt(distanceVal.getText().toString());
@@ -234,12 +270,13 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
         int p = ppp2.isChecked() ? 2 : (ppp3.isChecked() ? 3 : 6);
         boolean in = indoor.isChecked();
         String co = comment.getTextString();
-        long round = db.newRound(mTraining, mRound, dist, unit, in, p, tar, b, co);
+        long round = db.newRound(mTraining, mRound, dist, unit, in, p, tar, b, a, co);
         db.close();
 
         SharedPreferences prefs = getSharedPreferences(MyBackupAgent.PREFS, 0);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("bow", bow.getSelectedItemPosition());
+        editor.putInt("arrow", arrow.getSelectedItemPosition());
         editor.putInt("distance", dist);
         editor.putInt("ppp", p);
         editor.putInt("target", tar);
@@ -248,7 +285,12 @@ public class NewRoundActivity extends ActionBarActivity implements View.OnClickL
 
         finish();
         if (mRound == -1) {
-            Intent i = new Intent(this, RoundActivity.class);
+            Intent i = new Intent(this, TrainingActivity.class);
+            i.putExtra(TrainingActivity.TRAINING_ID, mTraining);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
+
+            i = new Intent(this, RoundActivity.class);
             i.putExtra(RoundActivity.ROUND_ID, round);
             i.putExtra(RoundActivity.TRAINING_ID, mTraining);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

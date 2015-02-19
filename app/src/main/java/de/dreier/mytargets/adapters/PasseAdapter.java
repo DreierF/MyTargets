@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.models.Arrow;
 import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Target;
@@ -64,6 +65,11 @@ public class PasseAdapter extends NowListAdapter {
         if (bow != null) {
             infoText += "<br>" + mContext.getString(R.string.bow) +
                     ": <font color=#669900><b>" + TextUtils.htmlEncode(bow.name) + "</b></font>";
+        }
+        Arrow arrow = db.getArrow(mRoundInfo.arrow, true);
+        if (arrow != null) {
+            infoText += "<br>" + mContext.getString(R.string.arrow) +
+                    ": <font color=#669900><b>" + TextUtils.htmlEncode(arrow.name) + "</b></font>";
         }
         if (!mRoundInfo.comment.isEmpty()) {
             infoText += "<br>" + mContext.getString(R.string.comment) +

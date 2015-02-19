@@ -32,7 +32,7 @@ public class BowAdapter extends NowListAdapter {
         ViewHolder holder = new ViewHolder();
         View v = mInflater.inflate(R.layout.bow_card, viewGroup, false);
         holder.name = (TextView) v.findViewById(R.id.name);
-        holder.img = (ImageView) v.findViewById(R.id.bowImage);
+        holder.img = (ImageView) v.findViewById(R.id.image);
         v.setTag(holder);
         return v;
     }

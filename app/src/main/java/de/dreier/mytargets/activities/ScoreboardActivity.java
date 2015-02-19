@@ -58,7 +58,7 @@ public class ScoreboardActivity extends ActionBarActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            return ScoreboardUtils.getHTMLString(ScoreboardActivity.this, mRound, true);
+            return ScoreboardUtils.getHTMLString(ScoreboardActivity.this, mRound, true, true, true);
         }
 
         @Override

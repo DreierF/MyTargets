@@ -2,9 +2,7 @@ package de.dreier.mytargets.utils;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Picture;
-import android.graphics.drawable.PictureDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -18,10 +16,10 @@ import java.util.concurrent.CountDownLatch;
 public class ScoreboardImage {
     private Bitmap b;
 
-    public void generateBitmap(final Activity context, final long mRound, boolean dispersion_pattern, final File f) {
+    public void generateBitmap(final Activity context, final long mRound, boolean scoreboard, boolean dispersion_pattern, boolean comments, final File f) {
 
         // Generate html content
-        final String content = ScoreboardUtils.getHTMLString(context, mRound, dispersion_pattern);
+        final String content = ScoreboardUtils.getHTMLString(context, mRound, scoreboard, dispersion_pattern, comments);
 
         final CountDownLatch signal = new CountDownLatch(1);
         context.runOnUiThread(new Runnable() {
@@ -37,13 +35,13 @@ public class ScoreboardImage {
                 container.addView(webView);
 
                 // Render html to bitmap
-                webView.loadData(content, "text/html", "UTF-8");
+                webView.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8", "");
                 webView.setPictureListener(new WebView.PictureListener() {
 
                     public void onNewPicture(WebView view, Picture picture) {
                         picture = webView.capturePicture();
 
-                        b = pictureDrawable2Bitmap(picture);
+                        b = BitmapUtils.pictureDrawable2Bitmap(picture);
 
                         // Write bitmap to stream
                         try {
@@ -71,14 +69,5 @@ public class ScoreboardImage {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    // Convert Picture to Bitmap
-    private static Bitmap pictureDrawable2Bitmap(Picture picture) {
-        PictureDrawable pd = new PictureDrawable(picture);
-        Bitmap bitmap = Bitmap.createBitmap(pd.getIntrinsicWidth(), pd.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        canvas.drawPicture(pd.getPicture());
-        return bitmap;
     }
 }

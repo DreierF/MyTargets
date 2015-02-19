@@ -56,6 +56,8 @@
     <string name="passe_plural">passes</string>
     <string name="round_plural">rounds</string>
     <string name="round_singular">round</string>
+    <string name="arrow_singular">arrow</string>
+    <string name="arrow_plural">arrows</string>
     <string name="new_training">New training</string>
     <string name="new_arrow">New arrow</string>
     <string name="my_bows">My bows</string>
@@ -95,5 +97,9 @@
     <string name="point">Point</string>
     <string name="nock">Nock</string>
     <string name="material">Material</string>
+    <string name="arrow">Arrow</string>
+    <string name="add_arrow">Add arrow</string>
+    <string name="title">Title</string>
+    <string name="action_save">Save</string>
 
 </resources>

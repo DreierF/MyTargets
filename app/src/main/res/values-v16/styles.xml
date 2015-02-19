@@ -8,6 +8,10 @@
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
     </style>
 
+    <style name="AppTheme.CustomToolbar" parent="AppBaseTheme.CustomToolbar">
+        <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
+    </style>
+
     <style name="RobotoTextViewStyle">
         <item name="android:fontFamily">sans-serif-light</item>
     </style>

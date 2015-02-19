@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="de.dreier.mytargets.activities.EditBowActivity">
+    tools:context="de.dreier.mytargets.activities.EditArrowActivity">
 
     <de.dreier.mytargets.views.NotifyingScrollView
         android:id="@+id/scrollView"
@@ -30,7 +30,7 @@
                     android:id="@+id/imageView"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:background="@drawable/recurve_bow"
+                    android:background="@drawable/arrows"
                     android:clickable="true"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
@@ -150,7 +150,7 @@
             android:text="@android:string/cancel" />
 
         <Button
-            android:id="@+id/new_bow_button"
+            android:id="@+id/new_arrow_button"
             style="@android:style/Holo.Light.ButtonBar.AlertDialog"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

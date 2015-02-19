@@ -21,7 +21,7 @@ public class ShareDialogFragment extends DialogFragment {
     private ArrayList<Integer> mSelectedItems;
 
     public interface ShareDialogListener {
-        void onShareDialogConfirmed(boolean text, boolean dispersion_pattern, boolean scoreboard) throws IOException;
+        void onShareDialogConfirmed(boolean text, boolean dispersion_pattern, boolean scoreboard, boolean comments) throws IOException;
     }
 
     @NonNull
@@ -52,10 +52,13 @@ public class ShareDialogFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
                         try {
-                            mListener.onShareDialogConfirmed(
-                                    mSelectedItems.contains(0),
-                                    mSelectedItems.contains(1),
-                                    mSelectedItems.contains(2));
+                            if (!mSelectedItems.isEmpty()) {
+                                mListener.onShareDialogConfirmed(
+                                        mSelectedItems.contains(0),
+                                        mSelectedItems.contains(1),
+                                        mSelectedItems.contains(2),
+                                        mSelectedItems.contains(3));
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                             Toast.makeText(getActivity(), R.string.sharing_failed, Toast.LENGTH_SHORT).show();

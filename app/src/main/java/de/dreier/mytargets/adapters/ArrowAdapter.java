@@ -4,41 +4,35 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 
-public class BowItemAdapter extends CursorAdapter implements SpinnerAdapter {
+/**
+ * Shows all Trainings
+ */
+
+public class ArrowAdapter extends NowListAdapter {
 
     private final int nameInd, thumbInd;
-    private final LayoutInflater mInflater;
 
-    public BowItemAdapter(Context context) {
-        super(context,new DatabaseManager(context).getBows(),0);
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        nameInd = getCursor().getColumnIndex(DatabaseManager.BOW_NAME);
-        thumbInd = getCursor().getColumnIndex(DatabaseManager.BOW_THUMBNAIL);
-	}
-
-	@Override
-	public View getDropDownView(int position, View convertView, ViewGroup parent) {
-		return getView(position,convertView,parent);
-	}
+    public ArrowAdapter(Context context) {
+        super(context, new DatabaseManager(context).getArrows());
+        nameInd = getCursor().getColumnIndex(DatabaseManager.ARROW_NAME);
+        thumbInd = getCursor().getColumnIndex(DatabaseManager.ARROW_THUMBNAIL);
+        mNewText = context.getString(R.string.new_arrow);
+    }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        View v = mInflater.inflate(R.layout.image_item, viewGroup, false);
-
         ViewHolder holder = new ViewHolder();
-        holder.img = (ImageView) v.findViewById(R.id.image);
+        View v = mInflater.inflate(R.layout.bow_card, viewGroup, false);
         holder.name = (TextView) v.findViewById(R.id.name);
+        holder.img = (ImageView) v.findViewById(R.id.image);
         v.setTag(holder);
         return v;
     }
@@ -52,8 +46,9 @@ public class BowItemAdapter extends CursorAdapter implements SpinnerAdapter {
         holder.img.setImageBitmap(image);
     }
 
-    private class ViewHolder {
-        ImageView img;
-        TextView name;
+    public static class ViewHolder {
+        public ImageView img;
+        public TextView name;
+        public TextView subtitle;
     }
 }

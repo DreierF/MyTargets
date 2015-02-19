@@ -1,24 +1,24 @@
-package de.dreier.mytargets.activities;
+package de.dreier.mytargets.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import de.dreier.mytargets.adapters.BowAdapter;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.EditBowActivity;
+import de.dreier.mytargets.adapters.BowAdapter;
 
-public class BowActivity extends NowListActivity {
+public class BowFragment extends NowListFragment {
 
     @Override
-    protected void init(Intent intent, Bundle savedInstanceState) {
+    protected void init(Bundle intent, Bundle savedInstanceState) {
         itemSingular = getString(R.string.bow_singular);
         itemPlural = getString(R.string.bow_plural);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        adapter = new BowAdapter(this);
+        adapter = new BowAdapter(getActivity());
         setListAdapter(adapter);
     }
 
@@ -29,11 +29,11 @@ public class BowActivity extends NowListActivity {
 
     @Override
     public boolean onItemClick(Intent i, int pos, long id) {
-        if(pos==0) {
-            i.setClass(this,EditBowActivity.class);
+        if (pos == 0) {
+            i.setClass(getActivity(), EditBowActivity.class);
         } else {
-            i.setClass(this,EditBowActivity.class);
-            i.putExtra(EditBowActivity.BOW_ID,id);
+            i.setClass(getActivity(), EditBowActivity.class);
+            i.putExtra(EditBowActivity.BOW_ID, id);
         }
         return true;
     }

@@ -19,8 +19,10 @@ public class Shot implements Comparable<Shot> {
 
     public static Shot[] newArray(int ppp) {
         Shot[] arr = new Shot[ppp];
-        for (int i = 0; i < arr.length; i++)
+        for (int i = 0; i < arr.length; i++) {
             arr[i] = new Shot();
+            arr[i].comment = "";
+        }
         return arr;
     }
 }
