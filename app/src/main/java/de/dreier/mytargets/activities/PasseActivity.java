@@ -15,14 +15,15 @@ import android.view.View;
 import android.widget.Button;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.WearMessageManager;
 import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.models.OnTargetSetListener;
-import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
+import de.dreier.mytargets.models.Shot;
 import de.dreier.mytargets.models.Target;
 import de.dreier.mytargets.models.WearableUtils;
 import de.dreier.mytargets.views.TargetView;
@@ -130,7 +131,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
 
     void setPasse(int passe) {
         if (passe <= savedPasses) {
-            Passe p = db.getPasse(mRound, passe);
+            Shot[] p = db.getPasse(mRound, passe);
             if (p != null) {
                 target.setZones(p);
             } else {
@@ -139,7 +140,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
         } else if (passe != curPasse) {
             target.reset();
         }
-        ArrayList<Passe> oldOnes = db.getRoundPasses(mRound, passe);
+        ArrayList<Shot[]> oldOnes = db.getRoundPasses(mRound, passe);
         target.setOldShoots(oldOnes);
         curPasse = passe;
         updatePasse();
@@ -193,9 +194,9 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
     }
 
     @Override
-    public void onTargetSet(Passe passe, boolean remote) {
+    public void onTargetSet(Shot[] passe, boolean remote) {
         DatabaseManager db = new DatabaseManager(this);
-        passe.sort();
+        Arrays.sort(passe);
 
         if (curPasse > savedPasses || remote) {
             savedPasses++;
@@ -229,10 +230,10 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
         String text = "";
 
         // Initialize message text
-        Passe lastPasse = db.getPasse(mRound, savedPasses);
+        Shot[] lastPasse = db.getPasse(mRound, savedPasses);
         if (lastPasse != null) {
-            for (int zone : lastPasse.zones) {
-                text += Target.getStringByZone(r.target, zone, r.compound) + " ";
+            for (Shot shot : lastPasse) {
+                text += Target.getStringByZone(r.target, shot.zone, r.compound) + " ";
             }
             text += "\n";
         } else {

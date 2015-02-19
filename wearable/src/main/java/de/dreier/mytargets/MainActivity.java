@@ -25,8 +25,8 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import de.dreier.mytargets.models.OnTargetSetListener;
-import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
+import de.dreier.mytargets.models.Shot;
 import de.dreier.mytargets.models.WearableUtils;
 
 public class MainActivity extends Activity implements OnTargetSetListener, GoogleApiClient.ConnectionCallbacks {
@@ -87,7 +87,7 @@ public class MainActivity extends Activity implements OnTargetSetListener, Googl
     }
 
     @Override
-    public void onTargetSet(final Passe passe, boolean remote) {
+    public void onTargetSet(final Shot[] passe, boolean remote) {
         confirm.setVisibility(View.VISIBLE);
         confirm.setTotalTimeMs(2500);
         confirm.start();
@@ -123,7 +123,7 @@ public class MainActivity extends Activity implements OnTargetSetListener, Googl
         return results;
     }
 
-    public void sendMessage(final String path, Passe p) {
+    public void sendMessage(final String path, Shot[] p) {
         // Serialize bundle to byte array
         byte[] data = new byte[0];
         try {

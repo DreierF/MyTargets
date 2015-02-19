@@ -21,7 +21,6 @@ import de.dreier.mytargets.activities.EditBowActivity;
 import de.dreier.mytargets.activities.NewRoundActivity;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
 import de.dreier.mytargets.models.Bow;
-import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
 import de.dreier.mytargets.models.Target;
@@ -251,18 +250,18 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return db.query(TABLE_BOW, null, null, null, null, null, BOW_ID + " ASC");
     }
 
-    public void addPasseToRound(long round, Passe passe) {
+    public void addPasseToRound(long round, Shot[] passe) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(PASSE_ROUND, round);
         long insertId = db.insert(TABLE_PASSE, null, values);
-        for (int i = 0; i < passe.zones.length; i++) {
+        for (Shot aPasse : passe) {
             values = new ContentValues();
             values.put(SHOOT_PASSE, insertId);
-            values.put(SHOOT_ZONE, passe.zones[i]);
-            values.put(SHOOT_X, passe.points[i][0]);
-            values.put(SHOOT_Y, passe.points[i][1]);
-            values.put(SHOOT_COMMENT, passe.comment[i]);
+            values.put(SHOOT_ZONE, aPasse.zone);
+            values.put(SHOOT_X, aPasse.x);
+            values.put(SHOOT_Y, aPasse.y);
+            values.put(SHOOT_COMMENT, aPasse.comment);
             db.insert(TABLE_SHOOT, null, values);
         }
         db.close();
@@ -299,7 +298,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return round;
     }
 
-    public Passe getPasse(long round, int passe) {
+    public Shot[] getPasse(long round, int passe) {
         SQLiteDatabase db = getReadableDatabase();
         String[] cols1 = {PASSE_ID};
         String[] args1 = {"" + round};
@@ -313,13 +312,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
         Cursor res = db.query(TABLE_SHOOT, cols2, SHOOT_PASSE + "=?", args2, null, null, SHOOT_ID + " ASC");
         int count = res.getCount();
 
-        Passe p = new Passe(count);
+        Shot[] p = Shot.newArray(count);
         res.moveToFirst();
         for (int i = 0; i < count; i++) {
-            p.zones[i] = res.getInt(0);
-            p.points[i][0] = res.getFloat(1);
-            p.points[i][1] = res.getFloat(2);
-            p.comment[i] = res.getString(3);
+            p[i].zone = res.getInt(0);
+            p[i].x = res.getFloat(1);
+            p[i].y = res.getFloat(2);
+            p[i].comment = res.getString(3);
             res.moveToNext();
         }
         res.close();
@@ -327,25 +326,25 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return p;
     }
 
-    public ArrayList<Passe> getRoundPasses(long round, int passe) {
+    public ArrayList<Shot[]> getRoundPasses(long round, int passe) {
         SQLiteDatabase db = getReadableDatabase();
         String[] cols1 = {PASSE_ID};
         String[] cols2 = {SHOOT_ZONE, SHOOT_X, SHOOT_Y};
         String[] args1 = {"" + round};
         Cursor res1 = db.query(TABLE_PASSE, cols1, PASSE_ROUND + "=?", args1, null, null, PASSE_ID + " ASC");
         if (res1.moveToFirst()) {
-            ArrayList<Passe> list = new ArrayList<>();
+            ArrayList<Shot[]> list = new ArrayList<>();
             do {
                 if (res1.getPosition() != passe - 1) {
                     String[] args2 = {"" + res1.getLong(0)}; // passe id
                     Cursor res = db.query(TABLE_SHOOT, cols2, SHOOT_PASSE + "=?", args2, null, null, SHOOT_ID + " ASC");
                     int count = res.getCount();
-                    Passe p = new Passe(count);
+                    Shot[] p = Shot.newArray(count);
                     res.moveToFirst();
                     for (int i = 0; i < count; i++) {
-                        p.zones[i] = res.getInt(0);
-                        p.points[i][0] = res.getFloat(1);
-                        p.points[i][1] = res.getFloat(2);
+                        p[i].zone = res.getInt(0);
+                        p[i].x = res.getFloat(1);
+                        p[i].y = res.getFloat(2);
                         res.moveToNext();
                     }
                     list.add(p);
@@ -561,7 +560,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void updatePasse(long round, int passe, Passe p) {
+    public void updatePasse(long round, int passe, Shot[] p) {
         SQLiteDatabase db = getReadableDatabase();
         String[] cols1 = {PASSE_ID};
         String[] args1 = {"" + round};
@@ -578,10 +577,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
         for (int i = 0; i < count; i++) {
             String[] args3 = {"" + res.getLong(0)};
             ContentValues values = new ContentValues();
-            values.put(SHOOT_ZONE, p.zones[i]);
-            values.put(SHOOT_X, p.points[i][0]);
-            values.put(SHOOT_Y, p.points[i][1]);
-            values.put(SHOOT_COMMENT, p.comment[i]);
+            values.put(SHOOT_ZONE, p[i].zone);
+            values.put(SHOOT_X, p[i].x);
+            values.put(SHOOT_Y, p[i].y);
+            values.put(SHOOT_COMMENT, p[i].comment);
             db.update(TABLE_SHOOT, values, SHOOT_ID + "=?", args3);
             res.moveToNext();
         }

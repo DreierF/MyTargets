@@ -13,8 +13,8 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.LinearSeries;
 import de.dreier.mytargets.models.LinearSeries.LinearPoint;
-import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
+import de.dreier.mytargets.models.Shot;
 import de.dreier.mytargets.views.ChartView;
 
 public class StatisticsActivity extends ActionBarActivity {
@@ -49,16 +49,15 @@ public class StatisticsActivity extends ActionBarActivity {
 
     private LinearSeries generateRoundSeries() {
         DatabaseManager db = new DatabaseManager(this);
-        ArrayList<Passe> passes = db.getRoundPasses(mRound, -1);
+        ArrayList<Shot[]> passes = db.getRoundPasses(mRound, -1);
         Round r = db.getRound(mRound);
 
         LinearSeries series = new LinearSeries();
 
         int x = 0;
-        for (Passe p : passes) {
-            for (int zone : p.zones)
-                series.addPoint(new LinearSeries.LinearPoint(x++, (long) zone));
-        }
+        for (Shot[] passe : passes)
+            for (Shot shot : passe)
+                series.addPoint(new LinearPoint(x++, (long) shot.zone));
         chartView.setRoundInfo(r);
         return series;
     }

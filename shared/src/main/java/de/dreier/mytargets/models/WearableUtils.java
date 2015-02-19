@@ -37,7 +37,7 @@ public class WearableUtils {
         os.writeObject(bitmapDataObject);
     }
 
-    public static byte[] serialize(Passe p) throws IOException {
+    public static byte[] serialize(Shot[] p) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ObjectOutputStream os = new ObjectOutputStream(out);
         os.writeObject(p);
@@ -59,10 +59,10 @@ public class WearableUtils {
         return (NotificationInfo) is.readObject();
     }
 
-    public static Passe deserializeToPasse(byte[] data) throws IOException, ClassNotFoundException {
+    public static Shot[] deserializeToPasse(byte[] data) throws IOException, ClassNotFoundException {
         ByteArrayInputStream in = new ByteArrayInputStream(data);
         ObjectInputStream is = new ObjectInputStream(in);
-        return (Passe) is.readObject();
+        return (Shot[]) is.readObject();
     }
 
     public static Bundle deserializeToBundle(byte[] data) throws IOException, ClassNotFoundException {
