@@ -19,6 +19,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,7 +49,7 @@ import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.utils.BitmapUtils;
 import de.dreier.mytargets.views.NotifyingScrollView;
 
-public class EditBowActivity extends ActionBarActivity implements View.OnClickListener {
+public class EditBowActivity extends ActionBarActivity {
 
     public static final String BOW_ID = "bow_id";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -112,15 +113,6 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
                 addSightSetting(new SightSetting(), -1);
             }
         });
-        Button cancel = (Button) findViewById(R.id.cancel_button);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-        Button newBow = (Button) findViewById(R.id.new_bow_button);
-        newBow.setOnClickListener(this);
 
         recurveBow.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -260,6 +252,22 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
             }
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.save, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_save) {
+            onSave();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public static class SightSetting implements Parcelable {
@@ -321,7 +329,7 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
         setting.distance.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == NewRoundActivity.distances.length - 1) {
+                if (position == NewRoundActivity.distanceValues.length) {
                     setting.distance.setVisibility(View.GONE);
                     setting.customDist.setVisibility(View.VISIBLE);
                     setting.custom = true;
@@ -343,7 +351,7 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
             }
         });
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, NewRoundActivity.distances);
+                android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.distances));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         setting.distance.setAdapter(adapter);
         if (setting.distanceInd == -1) {
@@ -367,8 +375,7 @@ public class EditBowActivity extends ActionBarActivity implements View.OnClickLi
         sight_settings.addView(rel);
     }
 
-    @Override
-    public void onClick(View view) {
+    public void onSave() {
         DatabaseManager db = new DatabaseManager(this);
 
         Bow bow = new Bow();

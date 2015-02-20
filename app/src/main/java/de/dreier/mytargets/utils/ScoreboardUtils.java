@@ -109,7 +109,7 @@ public class ScoreboardUtils {
                     if (!TextUtils.isEmpty(shot.comment)) {
                         comments += "<tr><td>" + i + "</td>" +
                                 "<td>" + Target.getStringByZone(info.target, shot.zone, info.compound) + "</td>" +
-                                "<td>" + shot.comment + "</td></tr>";
+                                "<td>" + TextUtils.htmlEncode(shot.comment).replace("\n","<br />") + "</td></tr>";
                         commentsCount++;
                     }
                 }

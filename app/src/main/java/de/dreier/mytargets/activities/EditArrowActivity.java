@@ -16,11 +16,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import com.iangclifton.android.floatlabel.FloatLabel;
@@ -37,7 +37,7 @@ import de.dreier.mytargets.models.Arrow;
 import de.dreier.mytargets.utils.BitmapUtils;
 import de.dreier.mytargets.views.NotifyingScrollView;
 
-public class EditArrowActivity extends ActionBarActivity implements View.OnClickListener {
+public class EditArrowActivity extends ActionBarActivity {
 
     public static final String ARROW_ID = "arrow_id";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -88,15 +88,6 @@ public class EditArrowActivity extends ActionBarActivity implements View.OnClick
         point = (FloatLabel) findViewById(R.id.arrow_point);
         nock = (FloatLabel) findViewById(R.id.arrow_nock);
         comment = (FloatLabel) findViewById(R.id.arrow_comment);
-        Button cancel = (Button) findViewById(R.id.cancel_button);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-        Button newArrow = (Button) findViewById(R.id.new_arrow_button);
-        newArrow.setOnClickListener(this);
 
         if (savedInstanceState == null && mArrowId != -1) {
             DatabaseManager db = new DatabaseManager(this);
@@ -143,10 +134,25 @@ public class EditArrowActivity extends ActionBarActivity implements View.OnClick
             }
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
     }
 
     @Override
-    public void onClick(View view) {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.save, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_save) {
+            onSave();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onSave() {
         DatabaseManager db = new DatabaseManager(this);
 
         Arrow arrow = new Arrow();

@@ -11,15 +11,17 @@ import android.graphics.Region;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.text.InputType;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -59,7 +61,7 @@ public class TargetView extends View implements View.OnTouchListener {
     private float oldSpacePerResult, oldResultX1;
     private Round roundInfo;
     private boolean showAll = false;
-    private ArrayList<Shot[]> mOldShots;
+    private List<Shot[]> mOldShots;
     private Timer longPressTimer;
 
     public void reset() {
@@ -450,7 +452,7 @@ public class TargetView extends View implements View.OnTouchListener {
         b.putSerializable("roundInfo", roundInfo);
         b.putInt("currentArrow", currentArrow);
         b.putInt("lastSetArrow", lastSetArrow);
-        b.putSerializable("oldShots", mOldShots);
+        b.putSerializable("oldShots", mOldShots.toArray());
     }
 
     public void restoreState(Bundle b) {
@@ -458,7 +460,7 @@ public class TargetView extends View implements View.OnTouchListener {
         currentArrow = b.getInt("currentArrow");
         lastSetArrow = b.getInt("lastSetArrow");
         roundInfo = (Round) b.getSerializable("roundInfo");
-        mOldShots = (ArrayList<Shot[]>) b.getSerializable("oldShots"); //TODO make shot parcelable
+        mOldShots = Arrays.asList((Shot[][]) b.getSerializable("oldShots"));
     }
 
     private void drawCircle(Canvas can, float x, float y, int zone, String comment) {
@@ -594,12 +596,15 @@ public class TargetView extends View implements View.OnTouchListener {
             Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
             v.vibrate(500);
             animateSelectCircle(roundInfo.ppp);
-            final EditText input = new EditText(getContext());
+
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.comment_dialog, null);
+            final EditText input = (EditText) view.findViewById(R.id.shot_comment);
             input.setText(mPasse[mCurPressed].comment);
-            input.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+
             new AlertDialog.Builder(getContext())
                     .setTitle(R.string.comment)
-                    .setView(input)
+                    .setView(view)
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             mPasse[mCurPressed].comment = input.getText().toString();

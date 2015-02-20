@@ -99,5 +99,6 @@
     <string name="add_arrow">Pfeil hinzufügen</string>
     <string name="title">Titel</string>
     <string name="action_save">Speichern</string>
+    <string name="custom">Benutzerdefiniert</string>
 
 </resources>

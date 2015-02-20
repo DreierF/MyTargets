@@ -6,4 +6,18 @@
         <item>@string/scoreboard</item>
         <item>@string/comments</item>
     </string-array>
+    <string-array name="distances">
+        <item>10m</item>
+        <item>15m</item>
+        <item>18m</item>
+        <item>20m</item>
+        <item>25m</item>
+        <item>30m</item>
+        <item>40m</item>
+        <item>50m</item>
+        <item>60m</item>
+        <item>70m</item>
+        <item>90m</item>
+        <item>@string/custom</item>
+    </string-array>
 </resources>

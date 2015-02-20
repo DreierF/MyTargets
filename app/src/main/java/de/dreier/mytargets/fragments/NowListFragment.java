@@ -27,7 +27,7 @@ import de.dreier.mytargets.managers.DatabaseManager;
 /**
  * Shows all rounds of one settings_only day
  */
-public abstract class NowListFragment extends Fragment implements ListView.OnItemClickListener {
+public abstract class NowListFragment extends Fragment implements ListView.OnItemClickListener, View.OnClickListener {
 
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
@@ -125,6 +125,7 @@ public abstract class NowListFragment extends Fragment implements ListView.OnIte
         });
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.setOnClickListener(this);
         fab.attachToListView(mListView);
         return rootView;
     }
@@ -155,15 +156,18 @@ public abstract class NowListFragment extends Fragment implements ListView.OnIte
         Intent i = new Intent();
         if (onItemClick(i, pos, id)) {
             startActivity(i);
-        }
-    }
-
-    public void onFabPressed(View view) {
-        Intent i = new Intent();
-        if (onItemClick(i, 0, 0)) {
-            startActivity(i);
+            getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
         }
     }
 
     protected abstract boolean onItemClick(Intent i, int pos, long id);
+
+    @Override
+    public void onClick(View v) {
+        Intent i = new Intent();
+        if (onItemClick(i, 0, 0)) {
+            startActivity(i);
+            getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        }
+    }
 }

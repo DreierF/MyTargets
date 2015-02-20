@@ -101,5 +101,6 @@
     <string name="add_arrow">Add arrow</string>
     <string name="title">Title</string>
     <string name="action_save">Save</string>
+    <string name="custom">Custom</string>
 
 </resources>

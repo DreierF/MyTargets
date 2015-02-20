@@ -214,13 +214,13 @@ public class TargetSelectView extends View implements View.OnTouchListener {
         // Draw separator line if there are more then 3 shots
         if (twoRows) {
             canvas.drawLine(radius - 30 * density,
-                    radius, radius + 30 * density, radius, thinBlackBorder);
+                    radius - 25 * density, radius + 30 * density, radius - 15 * density, thinBlackBorder);
         }
 
         // Draw the points
         for (int i = 0; i <= lastSetArrow && i < roundInfo.ppp; i++) {
             float newX = radius + ((i % 3) - 1) * 25 * density;
-            float newY = radius + (i < 3 ? -1 : 1) * (twoRows ? 30 * density : 20 * density);
+            float newY = radius - 25 * density + (i < 3 ? -1 : 1) * (twoRows ? 15 * density : -5 * density);
             if (currentArrow != i && mCurSelecting != i) {
                 drawCircle(canvas, newX, newY, mPasse[i].zone, 10, 13);
             }

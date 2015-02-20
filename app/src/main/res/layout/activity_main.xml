@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-
         app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
         <LinearLayout
@@ -27,11 +26,21 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_weight="1"
-        android:background="@android:color/white" />
+        android:layout_height="match_parent">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_drop_shadow_height"
+            android:background="@drawable/toolbar_drop_shadow" />
+
+    </FrameLayout>
 
 </LinearLayout>

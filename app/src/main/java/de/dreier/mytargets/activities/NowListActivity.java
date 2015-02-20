@@ -26,7 +26,7 @@ import de.dreier.mytargets.managers.DatabaseManager;
 /**
  * Shows all rounds of one settings_only day
  */
-public abstract class NowListActivity extends ActionBarActivity implements ListView.OnItemClickListener {
+public abstract class NowListActivity extends ActionBarActivity implements ListView.OnItemClickListener, View.OnClickListener {
 
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
@@ -113,6 +113,7 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
         });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(this);
         fab.attachToListView(mListView);
     }
 
@@ -139,10 +140,6 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            /*case R.id.action_settings:
-                Intent i = new Intent(this,SettingsActivity.class);
-                startActivity(i);
-                return true;*/
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 overridePendingTransition(R.anim.left_in, R.anim.right_out);
@@ -160,14 +157,6 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
         }
     }
 
-    public void onFabPressed(View view) {
-        Intent i = new Intent();
-        if (onItemClick(i, 0, 0)) {
-            startActivity(i);
-            overridePendingTransition(R.anim.right_in, R.anim.left_out);
-        }
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -176,4 +165,13 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
     }
 
     protected abstract boolean onItemClick(Intent i, int pos, long id);
+
+    @Override
+    public void onClick(View v) {
+        Intent i = new Intent();
+        if (onItemClick(i, 0, 0)) {
+            startActivity(i);
+            overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        }
+    }
 }

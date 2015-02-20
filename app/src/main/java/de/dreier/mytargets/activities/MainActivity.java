@@ -56,20 +56,6 @@ public class MainActivity extends ActionBarActivity {
         slidingTabLayout.setDistributeEvenly(true);
         slidingTabLayout.setViewPager(viewPager);
 
-        /*mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-
-            @Override
-            public int getIndicatorColor(int position) {
-                return mTabs.get(position).getIndicatorColor();
-            }
-
-            @Override
-            public int getDividerColor(int position) {
-                return mTabs.get(position).getDividerColor();
-            }
-
-        });*/
-
         askForHelpTranslating();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -77,7 +63,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public static class MainTabsFragmentPagerAdapter extends FragmentPagerAdapter {
-
         private final Context context;
 
         MainTabsFragmentPagerAdapter(ActionBarActivity context) {

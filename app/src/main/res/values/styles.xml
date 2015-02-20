@@ -5,6 +5,17 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionModeStyle">@style/LStyled.ActionMode</item>
+        <item name="actionModeBackground">@color/colorAccent</item>
+    </style>
+
+    <style name="LStyled.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="titleTextStyle">@style/LStyled.ActionMode.Title</item>
+        <item name="closeItemLayout">@layout/abc_action_mode_close_item_material_mine</item>
+    </style>
+
+    <style name="LStyled.ActionMode.Title" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Title">
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="AppBaseTheme.Overlay">

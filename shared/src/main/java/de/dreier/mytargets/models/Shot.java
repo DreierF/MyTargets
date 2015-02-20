@@ -2,13 +2,17 @@ package de.dreier.mytargets.models;
 
 import android.support.annotation.NonNull;
 
-public class Shot implements Comparable<Shot> {
+import java.io.Serializable;
+
+public class Shot implements Comparable<Shot>, Serializable {
+    static final long serialVersionUID = 44L;
     public int passe;
     public int zone;
     public float x, y;
     public String comment;
 
-    public Shot() {}
+    public Shot() {
+    }
 
     @Override
     public int compareTo(@NonNull Shot another) {

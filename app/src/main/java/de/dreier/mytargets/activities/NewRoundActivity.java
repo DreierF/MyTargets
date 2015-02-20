@@ -37,7 +37,6 @@ public class NewRoundActivity extends ActionBarActivity {
     private Spinner distance;
     private RadioButton indoor;
     private Spinner bow, arrow, target;
-    public static final String[] distances = {"10m", "15m", "18m", "20m", "25m", "30m", "40m", "50m", "60m", "70m", "90m", "Benutzerdefiniert"}; //TODO make this dependant of language
     public static final int[] distanceValues = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
     private RadioButton ppp2, ppp3;
     private Button addBow, addArrow;
@@ -71,7 +70,7 @@ public class NewRoundActivity extends ActionBarActivity {
         }
         SharedPreferences prefs = getSharedPreferences(MyBackupAgent.PREFS, 0);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, distances);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.distances));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         training = (EditText) findViewById(R.id.training);
         customDist = findViewById(R.id.customDist);
@@ -81,7 +80,7 @@ public class NewRoundActivity extends ActionBarActivity {
         distance.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == distances.length - 1) {
+                if (position == distanceValues.length) {
                     distance.setVisibility(View.GONE);
                     customDist.setVisibility(View.VISIBLE);
                     custom = true;
@@ -177,6 +176,7 @@ public class NewRoundActivity extends ActionBarActivity {
         }
         if (mTraining == -1) {
             training.setText(getString(R.string.training));
+            getSupportActionBar().setTitle(R.string.new_training);
         } else {
             View training_container = findViewById(R.id.training_container);
             training_container.setVisibility(View.GONE);
