@@ -19,8 +19,8 @@ import android.widget.ListView;
 
 import com.melnykov.fab.FloatingActionButton;
 
-import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
 
 /**
@@ -30,7 +30,7 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
 
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
-    private ListView mListView;
+    protected ListView mListView;
     NowListAdapter adapter;
     String itemSingular;
     String itemPlural;
@@ -38,13 +38,16 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
     boolean mEnableBackAnimation = true;
     boolean mEditable = false;
 
+    protected int getLayoutResource() {
+        return R.layout.fragment_list;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_list);
+        setContentView(getLayoutResource());
 
         db = new DatabaseManager(this);
-        init(getIntent(), savedInstanceState);
 
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setDividerHeight(0);
@@ -111,13 +114,15 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
                 return false;
             }
         });
+        init(getIntent(), savedInstanceState);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
         fab.attachToListView(mListView);
     }
 
-    void onEdit(long id) {}
+    void onEdit(long id) {
+    }
 
     void setListAdapter(NowListAdapter adapter) {
         mListView.setAdapter(adapter);

@@ -14,7 +14,6 @@
         android:minHeight="?attr/actionBarSize"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/training_container"
         android:layout_width="match_parent"

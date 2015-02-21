@@ -50,7 +50,8 @@
         <activity
             android:name=".activities.RoundActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.TrainingActivity">
+            android:parentActivityName=".activities.TrainingActivity"
+            android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.TrainingActivity" />

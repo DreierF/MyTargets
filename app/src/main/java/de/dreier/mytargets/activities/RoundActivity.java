@@ -3,8 +3,12 @@ package de.dreier.mytargets.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -12,7 +16,10 @@ import java.io.IOException;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.PasseAdapter;
+import de.dreier.mytargets.adapters.TargetItemAdapter;
 import de.dreier.mytargets.fragments.ShareDialogFragment;
+import de.dreier.mytargets.models.Arrow;
+import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Target;
 import de.dreier.mytargets.utils.ScoreboardImage;
@@ -29,6 +36,11 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
     private Round mRoundInfo;
 
     @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_round;
+    }
+
+    @Override
     protected void init(Intent intent, Bundle savedInstanceState) {
         itemSingular = getString(R.string.passe_singular);
         itemPlural = getString(R.string.passe_plural);
@@ -41,8 +53,58 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
             mRound = savedInstanceState.getLong(ROUND_ID, -1);
         }
 
-        setTitle(getString(R.string.round) + " " + db.getRoundInd(mTraining, mRound));
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getString(R.string.round) + " " + db.getRoundInd(mTraining, mRound));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mRoundInfo = db.getRound(mRound);
+        setRoundInfo();
+        adapter = new PasseAdapter(this, mRound, mRoundInfo);
+        setListAdapter(adapter);
+        supportInvalidateOptionsMenu();
+    }
+
+    public void setRoundInfo() {
+        int maxPoints = Target.getMaxPoints(mRoundInfo.target);
+        int reached = db.getRoundPoints(mRound);
+        int maxP = mRoundInfo.ppp * maxPoints * db.getPasses(mRound).getCount();
+
+        TextView info = (TextView) findViewById(R.id.detail_round_info);
+        TextView score = (TextView) findViewById(R.id.detail_score);
+
+        // Set round info
+        String percent = maxP == 0 ? "" : " (" + (reached * 100 / maxP) + "%)";
+        String infoText = "<font color=#ffffff>"+getString(R.string.distance) + "</font>: <font color=#ff9100><b>" +
+                mRoundInfo.distance + " - " +
+                getString(mRoundInfo.indoor ? R.string.indoor : R.string.outdoor) + "</b></font><br>" +
+                "<font color=#ffffff>"+getString(R.string.points) + "</font>: <font color=#ff9100><b>" + reached + "/" + maxP + percent + "</b></font><br>" +
+                "<font color=#ffffff>"+getString(R.string.target_round) + "</font>: <font color=#ff9100><b>" + TargetItemAdapter.targets[mRoundInfo.target] + "</b></font>";
+        Bow bow = db.getBow(mRoundInfo.bow, true);
+        if (bow != null) {
+            infoText += "<br><font color=#ffffff>"+getString(R.string.bow) +
+                    "</font>: <font color=#ff9100><b>" + TextUtils.htmlEncode(bow.name) + "</b></font>";
+        }
+        Arrow arrow = db.getArrow(mRoundInfo.arrow, true);
+        if (arrow != null) {
+            infoText += "<br><font color=#ffffff>"+getString(R.string.arrow) +
+                    "</font>: <font color=#ff9100><b>" + TextUtils.htmlEncode(arrow.name) + "</b></font>";
+        }
+        if (!mRoundInfo.comment.isEmpty()) {
+            infoText += "<br><font color=#ffffff>"+getString(R.string.comment) +
+                    "</font>: <font color=#ff9100><b>" + TextUtils.htmlEncode(mRoundInfo.comment) + "</b></font>";
+        }
+        info.setText(Html.fromHtml(infoText));
+
+        // Set number of X, 10, 9 shoots
+        infoText = "<font color=#ffffff>X</font>: <font color=#ff9100><b>" + mRoundInfo.scoreCount[0] + "</b></font><br>" +
+                "<font color=#ffffff>"+getString(R.string.ten_x) + "</font>: <font color=#ff9100><b>" + (mRoundInfo.scoreCount[0] + mRoundInfo.scoreCount[1]) + "</b></font><br>" +
+                "<font color=#ffffff>"+getString(R.string.nine) + "</font>: <font color=#ff9100><b>" + mRoundInfo.scoreCount[2] + "</b></font>";
+        score.setText(Html.fromHtml(infoText));
     }
 
     @Override
@@ -131,21 +193,10 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mRoundInfo = db.getRound(mRound);
-        adapter = new PasseAdapter(this, mTraining, mRound, mRoundInfo);
-        setListAdapter(adapter);
-        supportInvalidateOptionsMenu();
-    }
-
-    @Override
     public boolean onItemClick(Intent i, int pos, long id) {
         if (pos == 0) {
             i.setClass(this, PasseActivity.class);
             i.putExtra(PasseActivity.ROUND_ID, mRound);
-        } else if (pos == 1) {
-            return false;
         } else {
             i.setClass(this, PasseActivity.class);
             i.putExtra(PasseActivity.ROUND_ID, mRound);

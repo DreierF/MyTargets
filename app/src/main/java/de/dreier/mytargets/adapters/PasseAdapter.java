@@ -2,18 +2,13 @@ package de.dreier.mytargets.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.text.Html;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.models.Arrow;
-import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.models.Target;
 import de.dreier.mytargets.views.PassesView;
 
 /**
@@ -23,66 +18,12 @@ public class PasseAdapter extends NowListAdapter {
 
     private final int passeIdInd;
     private final Round mRoundInfo;
-    private final long mRound;
-    private final long mTraining;
 
-    public PasseAdapter(Context context, long training, long round, Round roundInfo) {
+    public PasseAdapter(Context context, long round, Round roundInfo) {
         super(context, new DatabaseManager(context).getPasses(round));
-        mExtraCards = 2;
         mNewText = context.getString(R.string.new_passe);
-        mRound = round;
         mRoundInfo = roundInfo;
-        mTraining = training;
         passeIdInd = getCursor().getColumnIndex(DatabaseManager.PASSE_ID);
-    }
-
-    @Override
-    protected View buildExtraCard(int pos, View convertView, ViewGroup parent) {
-        View view;
-        if (convertView == null) {
-            view = mInflater.inflate(R.layout.round_info_card, parent, false);
-        } else {
-            view = convertView;
-        }
-
-        int maxPoints = Target.getMaxPoints(mRoundInfo.target);
-        int reached = db.getRoundPoints(mRound);
-        int maxP = mRoundInfo.ppp * maxPoints * db.getPasses(mRound).getCount();
-
-        TextView round = (TextView) view.findViewById(R.id.detail_round);
-        TextView info = (TextView) view.findViewById(R.id.detail_round_info);
-        TextView score = (TextView) view.findViewById(R.id.detail_score);
-
-        // Set round info
-        round.setText(mContext.getString(R.string.round) + " " + db.getRoundInd(mTraining, mRound));
-        String percent = maxP == 0 ? "" : " (" + (reached * 100 / maxP) + "%)";
-        String infoText = mContext.getString(R.string.distance) + ": <font color=#669900><b>" +
-                mRoundInfo.distance + " - " +
-                mContext.getString(mRoundInfo.indoor ? R.string.indoor : R.string.outdoor) + "</b></font><br>" +
-                mContext.getString(R.string.points) + ": <font color=#669900><b>" + reached + "/" + maxP + percent + "</b></font><br>" +
-                mContext.getString(R.string.target_round) + ": <font color=#669900><b>" + TargetItemAdapter.targets[mRoundInfo.target] + "</b></font>";
-        Bow bow = db.getBow(mRoundInfo.bow, true);
-        if (bow != null) {
-            infoText += "<br>" + mContext.getString(R.string.bow) +
-                    ": <font color=#669900><b>" + TextUtils.htmlEncode(bow.name) + "</b></font>";
-        }
-        Arrow arrow = db.getArrow(mRoundInfo.arrow, true);
-        if (arrow != null) {
-            infoText += "<br>" + mContext.getString(R.string.arrow) +
-                    ": <font color=#669900><b>" + TextUtils.htmlEncode(arrow.name) + "</b></font>";
-        }
-        if (!mRoundInfo.comment.isEmpty()) {
-            infoText += "<br>" + mContext.getString(R.string.comment) +
-                    ": <font color=#669900><b>" + TextUtils.htmlEncode(mRoundInfo.comment) + "</b></font>";
-        }
-        info.setText(Html.fromHtml(infoText));
-
-        // Set number of X, 10, 9 shoots
-        infoText = "X: <font color=#669900><b>" + mRoundInfo.scoreCount[0] + "</b></font><br>" +
-                mContext.getString(R.string.ten_x) + ": <font color=#669900><b>" + (mRoundInfo.scoreCount[0] + mRoundInfo.scoreCount[1]) + "</b></font><br>" +
-                mContext.getString(R.string.nine) + ": <font color=#669900><b>" + mRoundInfo.scoreCount[2] + "</b></font>";
-        score.setText(Html.fromHtml(infoText));
-        return view;
     }
 
     @Override
