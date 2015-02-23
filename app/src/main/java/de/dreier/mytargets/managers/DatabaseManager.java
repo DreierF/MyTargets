@@ -284,28 +284,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return insertId;
     }
 
-    public long newRound(long training, long round, int distance, String unit, boolean indoor, int ppp, int target, long bow, long arrow, String comment) {
-        SQLiteDatabase db = getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(ROUND_DISTANCE, distance);
-        values.put(ROUND_UNIT, unit);
-        values.put(ROUND_INDOOR, indoor);
-        values.put(ROUND_TARGET, target);
-        values.put(ROUND_BOW, bow);
-        values.put(ROUND_ARROW, arrow);
-        values.put(ROUND_COMMENT, comment);
-        values.put(ROUND_PPP, ppp);
-        values.put(ROUND_TRAINING, training);
-        if (round == -1) {
-            round = db.insert(TABLE_ROUND, null, values);
-        } else {
-            values.put(ROUND_ID, round);
-            db.replace(TABLE_ROUND, null, values);
-        }
-        db.close();
-        return round;
-    }
-
 ////// GET SINGLE ENTRY AS OBJECT //////
 
     public Training getTraining(long training) {
@@ -586,6 +564,28 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
 ////// UPDATE INFORMATION //////
+
+    public long updateRound(long training, long round, int distance, String unit, boolean indoor, int ppp, int target, long bow, long arrow, String comment) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ROUND_DISTANCE, distance);
+        values.put(ROUND_UNIT, unit);
+        values.put(ROUND_INDOOR, indoor);
+        values.put(ROUND_TARGET, target);
+        values.put(ROUND_BOW, bow);
+        values.put(ROUND_ARROW, arrow);
+        values.put(ROUND_COMMENT, comment);
+        values.put(ROUND_PPP, ppp);
+        values.put(ROUND_TRAINING, training);
+        if (round == -1) {
+            round = db.insert(TABLE_ROUND, null, values);
+        } else {
+            values.put(ROUND_ID, round);
+            db.replace(TABLE_ROUND, null, values);
+        }
+        db.close();
+        return round;
+    }
 
     public void updatePasse(long round, int passe, Shot[] p) {
         SQLiteDatabase db = getReadableDatabase();

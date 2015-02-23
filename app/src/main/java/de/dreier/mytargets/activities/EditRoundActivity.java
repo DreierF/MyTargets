@@ -26,6 +26,7 @@ import de.dreier.mytargets.adapters.TargetItemAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.utils.MyBackupAgent;
+import de.dreier.mytargets.views.DialogSpinner;
 
 public class EditRoundActivity extends ActionBarActivity {
 
@@ -36,7 +37,9 @@ public class EditRoundActivity extends ActionBarActivity {
 
     private Spinner distance;
     private RadioButton indoor;
-    private Spinner bow, arrow, target;
+    private Spinner bow;
+    private Spinner arrow;
+    private DialogSpinner target;
     public static final int[] distanceValues = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
     private RadioButton ppp2, ppp3;
     private Button addBow, addArrow;
@@ -101,7 +104,7 @@ public class EditRoundActivity extends ActionBarActivity {
         bow.setAdapter(new BowItemAdapter(this));
         arrow = (Spinner) findViewById(R.id.arrow);
         arrow.setAdapter(new ArrowItemAdapter(this));
-        target = (Spinner) findViewById(R.id.target_spinner);
+        target = (DialogSpinner) findViewById(R.id.target_spinner);
         target.setAdapter(new TargetItemAdapter(this));
         addBow = (Button) findViewById(R.id.add_bow);
         addBow.setOnClickListener(new View.OnClickListener() {
@@ -270,7 +273,7 @@ public class EditRoundActivity extends ActionBarActivity {
         int p = ppp2.isChecked() ? 2 : (ppp3.isChecked() ? 3 : 6);
         boolean in = indoor.isChecked();
         String co = comment.getTextString();
-        long round = db.newRound(mTraining, mRound, dist, unit, in, p, tar, b, a, co);
+        long round = db.updateRound(mTraining, mRound, dist, unit, in, p, tar, b, a, co);
         db.close();
 
         SharedPreferences prefs = getSharedPreferences(MyBackupAgent.PREFS, 0);

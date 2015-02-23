@@ -209,10 +209,16 @@
                     android:layout_marginTop="16dp"
                     android:text="@string/target_round" />
 
-                <Spinner
+                <!--<Spinner
                     android:id="@+id/target_spinner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content" />-->
+
+                <de.dreier.mytargets.views.DialogSpinner
+                    android:id="@+id/target_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
 
                 <com.iangclifton.android.floatlabel.FloatLabel
                     android:id="@+id/comment"

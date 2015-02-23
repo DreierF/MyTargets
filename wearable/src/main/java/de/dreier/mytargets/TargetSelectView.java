@@ -66,7 +66,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
 
     public void setMode(boolean mode) {
         if (mode != mModeEasy) {
-            mModeEasy = mode;
+            //mModeEasy = mode;
         }
     }
 
@@ -211,12 +211,6 @@ public class TargetSelectView extends View implements View.OnTouchListener {
     }
 
     private void drawSelectedPointsInCenter(Canvas canvas) {
-        // Draw separator line if there are more then 3 shots
-        if (twoRows) {
-            canvas.drawLine(radius - 30 * density,
-                    radius - 25 * density, radius + 30 * density, radius - 25 * density, thinBlackBorder);
-        }
-
         // Draw the points
         for (int i = 0; i <= lastSetArrow && i < roundInfo.ppp; i++) {
             float newX = radius + ((i % 3) - 1) * 25 * density;
@@ -418,8 +412,13 @@ public class TargetSelectView extends View implements View.OnTouchListener {
         // If a valid selection was made save it in the passe
         if (currentArrow < roundInfo.ppp && mPasse[currentArrow].zone != zone) {
             mPasse[currentArrow].zone = zone;
-            mPasse[currentArrow].x = (float) (xDiff / radius);
-            mPasse[currentArrow].y = (float) (yDiff / radius);
+            if(mModeEasy) {
+                mPasse[currentArrow].x = Target.zoneToX(roundInfo.target, zone);
+                mPasse[currentArrow].y = 0f;
+            } else {
+                mPasse[currentArrow].x = (float) (xDiff / radius);
+                mPasse[currentArrow].y = (float) (yDiff / radius);
+            }
             invalidate();
         }
 

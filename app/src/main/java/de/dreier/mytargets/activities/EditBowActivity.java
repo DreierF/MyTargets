@@ -149,7 +149,8 @@ public class EditBowActivity extends EditWithImageActivity {
             tiller.setText(bow.tiller);
             desc.setText(bow.description);
             imageBitmap = bow.image;
-            mImageView.setImageBitmap(imageBitmap);
+            if (imageBitmap != null)
+                mImageView.setImageBitmap(imageBitmap);
             mImageFile = bow.imageFile;
             switch (bow.type) {
                 case 0:
@@ -188,7 +189,7 @@ public class EditBowActivity extends EditWithImageActivity {
         } else {
             if (sightSettingsList.size() == 0 && mBowId == -1) {
                 addSightSetting(new SightSetting(), -1);
-            } else if(sightSettingsList.size() > 0) {
+            } else if (sightSettingsList.size() > 0) {
                 for (int i = 0; i < sightSettingsList.size(); i++) {
                     addSightSetting(sightSettingsList.get(i), i);
                 }
