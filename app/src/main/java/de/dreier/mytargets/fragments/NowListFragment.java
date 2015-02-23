@@ -29,30 +29,11 @@ import de.dreier.mytargets.managers.DatabaseManager;
  */
 public abstract class NowListFragment extends Fragment implements ListView.OnItemClickListener, View.OnClickListener {
 
-    public static final String TRAINING_ID = "training_id";
-    public static final String ROUND_ID = "round_id";
     private ListView mListView;
     NowListAdapter adapter;
-    String itemSingular;
-    String itemPlural;
+    protected int itemTypeRes;
     DatabaseManager db;
-    boolean mEnableBackAnimation = true;
     boolean mEditable = false;
-
-    /*public static NowListFragment newInstance(int index) {
-        NowListFragment f = new NowListFragment();
-
-        // Supply index input as an argument.
-        Bundle args = new Bundle();
-        args.putInt("index", index);
-        f.setArguments(args);
-
-        return f;
-    }*/
-
-    public int getShownIndex() {
-        return getArguments().getInt("index", 0);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,10 +58,8 @@ public abstract class NowListFragment extends Fragment implements ListView.OnIte
                 }
                 count += checked ? 1 : -1;
 
-                if (count == 1)
-                    mode.setTitle("1 " + itemSingular + " " + getString(R.string.selected));
-                else
-                    mode.setTitle(count + " " + itemPlural + " " + getString(R.string.selected));
+                final String title = getResources().getQuantityString(itemTypeRes, count, count);
+                mode.setTitle(title);
                 mode.invalidate();
             }
 

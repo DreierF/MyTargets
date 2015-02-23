@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.PluralsRes;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.view.ActionMode;
@@ -32,8 +33,7 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
     public static final String ROUND_ID = "round_id";
     protected ListView mListView;
     NowListAdapter adapter;
-    String itemSingular;
-    String itemPlural;
+    protected @PluralsRes int itemTypeRes;
     DatabaseManager db;
     boolean mEnableBackAnimation = true;
     boolean mEditable = false;
@@ -48,7 +48,6 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
         setContentView(getLayoutResource());
 
         db = new DatabaseManager(this);
-
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setDividerHeight(0);
         mListView.setOnItemClickListener(this);
@@ -68,10 +67,8 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
                 }
                 count += checked ? 1 : -1;
 
-                if (count == 1)
-                    mode.setTitle("1 " + itemSingular + " " + getString(R.string.selected));
-                else
-                    mode.setTitle(count + " " + itemPlural + " " + getString(R.string.selected));
+                final String title = getResources().getQuantityString(itemTypeRes, count, count);
+                mode.setTitle(title);
                 mode.invalidate();
             }
 
@@ -135,12 +132,6 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
     protected abstract void init(Intent intent, Bundle savedInstanceState);
 
     protected abstract void onDelete(long[] ids);
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //getMenuInflater().inflate(R.menu.settings_only, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

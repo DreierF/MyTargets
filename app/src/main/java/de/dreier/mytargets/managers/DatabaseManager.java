@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import de.dreier.mytargets.activities.EditBowActivity;
-import de.dreier.mytargets.activities.NewRoundActivity;
+import de.dreier.mytargets.activities.EditRoundActivity;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
 import de.dreier.mytargets.models.Arrow;
 import de.dreier.mytargets.models.Bow;
@@ -87,7 +87,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String ARROW_SPINE = "spine";
     private static final String ARROW_WEIGHT = "weight";
     private static final String ARROW_VANES = "vanes";
-    private static final String ARROW_POINT = "point";
     private static final String ARROW_NOCK = "nock";
     private static final String ARROW_COMMENT = "comment";
     public static final String ARROW_THUMBNAIL = "thumbnail";
@@ -141,7 +140,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     ARROW_SPINE + " TEXT," +
                     ARROW_WEIGHT + " TEXT," +
                     ARROW_VANES + " TEXT," +
-                    ARROW_POINT + " TEXT," +
                     ARROW_NOCK + " TEXT," +
                     ARROW_COMMENT + " TEXT," +
                     ARROW_THUMBNAIL + " BLOB," +
@@ -206,11 +204,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (oldVersion < 4) {
             for (String table : new String[]{"ROUND", "VISIER"}) {
                 for (int i = 10; i >= 0; i--) {
-                    db.execSQL("UPDATE " + table + " SET distance=" + NewRoundActivity.distanceValues[i] + " WHERE distance=" + i);
+                    db.execSQL("UPDATE " + table + " SET distance=" + EditRoundActivity.distanceValues[i] + " WHERE distance=" + i);
                 }
             }
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            int defaultDist = NewRoundActivity.distanceValues[prefs.getInt("distance", 0)];
+            int defaultDist = EditRoundActivity.distanceValues[prefs.getInt("distance", 0)];
             prefs.edit().putInt("distance", defaultDist).apply();
         }
         if (oldVersion < 5) {
@@ -340,8 +338,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         r.indoor = res.getInt(3) != 0;
         r.distanceVal = res.getInt(4);
         r.distanceInd = -1;
-        for (int i = 0; i < NewRoundActivity.distanceValues.length; i++)
-            if (NewRoundActivity.distanceValues[i] == r.distanceVal)
+        for (int i = 0; i < EditRoundActivity.distanceValues.length; i++)
+            if (EditRoundActivity.distanceValues[i] == r.distanceVal)
                 r.distanceInd = i;
         r.distance = "" + r.distanceVal + res.getString(5);
         r.bow = res.getInt(6);
@@ -480,7 +478,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public Arrow getArrow(long arrowId, boolean small) {
         SQLiteDatabase db = getReadableDatabase();
-        String[] cols = {ARROW_NAME, ARROW_LENGTH, ARROW_MATERIAL, ARROW_SPINE, ARROW_WEIGHT, ARROW_VANES, ARROW_POINT, ARROW_NOCK, ARROW_COMMENT, ARROW_THUMBNAIL, ARROW_IMAGE};
+        String[] cols = {ARROW_NAME, ARROW_LENGTH, ARROW_MATERIAL, ARROW_SPINE, ARROW_WEIGHT, ARROW_VANES, ARROW_NOCK, ARROW_COMMENT, ARROW_THUMBNAIL, ARROW_IMAGE};
         String[] args = {"" + arrowId};
         Cursor res = db.query(TABLE_ARROW, cols, ARROW_ID + "=?", args, null, null, null);
         Arrow arrow = null;
@@ -493,15 +491,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
             arrow.spine = res.getString(3);
             arrow.weight = res.getString(4);
             arrow.vanes = res.getString(5);
-            arrow.point = res.getString(6);
-            arrow.nock = res.getString(7);
-            arrow.comment = res.getString(8);
+            arrow.nock = res.getString(6);
+            arrow.comment = res.getString(7);
             if (small) {
-                byte[] data = res.getBlob(9);
+                byte[] data = res.getBlob(8);
                 arrow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
                 res.close();
             } else {
-                arrow.imageFile = res.getString(10);
+                arrow.imageFile = res.getString(9);
                 arrow.image = BitmapFactory.decodeFile(arrow.imageFile);
                 res.close();
             }
@@ -650,7 +647,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         values.put(ARROW_SPINE, arrow.spine);
         values.put(ARROW_WEIGHT, arrow.weight);
         values.put(ARROW_VANES, arrow.vanes);
-        values.put(ARROW_POINT, arrow.point);
         values.put(ARROW_NOCK, arrow.nock);
         values.put(ARROW_COMMENT, arrow.comment);
         byte[] imageData = BitmapUtils.getBitmapAsByteArray(arrow.image);
@@ -689,8 +685,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 EditBowActivity.SightSetting set = new EditBowActivity.SightSetting();
                 set.distanceVal = res.getInt(0);
                 set.distanceInd = -1;
-                for (int i = 0; i < NewRoundActivity.distanceValues.length; i++)
-                    if (NewRoundActivity.distanceValues[i] == set.distanceVal)
+                for (int i = 0; i < EditRoundActivity.distanceValues.length; i++)
+                    if (EditRoundActivity.distanceValues[i] == set.distanceVal)
                         set.distanceInd = i;
                 set.value = res.getString(1);
                 list.add(set);

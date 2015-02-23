@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.NewRoundActivity;
+import de.dreier.mytargets.activities.EditRoundActivity;
 import de.dreier.mytargets.activities.TrainingActivity;
 import de.dreier.mytargets.adapters.TrainingAdapter;
 
@@ -15,9 +15,7 @@ public class TrainingsFragment extends NowListFragment {
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
-        itemSingular = getString(R.string.training_singular);
-        itemPlural = getString(R.string.training_plural);
-        mEnableBackAnimation = false;
+        itemTypeRes = R.plurals.training;
     }
 
     @Override
@@ -35,7 +33,7 @@ public class TrainingsFragment extends NowListFragment {
     @Override
     public boolean onItemClick(Intent i, int pos, long id) {
         if (pos == 0) {
-            i.setClass(getActivity(), NewRoundActivity.class);
+            i.setClass(getActivity(), EditRoundActivity.class);
         } else {
             i.setClass(getActivity(), TrainingActivity.class);
             i.putExtra(TrainingActivity.TRAINING_ID, getListAdapter().getItemId(pos));

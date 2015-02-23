@@ -66,8 +66,8 @@
                 android:value=".activities.RoundActivity" />
         </activity>
         <activity
-            android:name=".activities.NewRoundActivity"
-            android:label="@string/title_activity_new_round"
+            android:name=".activities.EditRoundActivity"
+            android:label="@string/new_round"
             android:parentActivityName=".activities.TrainingActivity"
             android:theme="@style/AppTheme.CustomToolbar"
             android:windowSoftInputMode="stateAlwaysHidden">
@@ -77,25 +77,25 @@
         </activity>
         <activity
             android:name=".activities.EditBowActivity"
-            android:label="@string/title_activity_edit_bow"
+            android:label="@string/add_bow"
             android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.Overlay">
+            android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
         <activity
             android:name=".activities.EditArrowActivity"
-            android:label="@string/title_activity_edit_arrow"
+            android:label="@string/add_arrow"
             android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.Overlay">
+            android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
         <activity
             android:name=".activities.ScoreboardActivity"
-            android:label="@string/title_activity_scoreboard"
+            android:label="@string/scoreboard"
             android:parentActivityName=".activities.RoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -156,6 +156,12 @@ public class TargetView extends View implements View.OnTouchListener {
         circleColorP.setStrokeWidth(2 * density);
 
         setOnTouchListener(this);
+
+        if(isInEditMode()) {
+            roundInfo = new Round();
+            roundInfo.ppp = 3;
+            mPasse = Shot.newArray(3);
+        }
     }
 
     @Override

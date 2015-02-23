@@ -6,7 +6,7 @@
         <item>@string/scoreboard</item>
         <item>@string/comments</item>
     </string-array>
-    <string-array name="distances">
+    <string-array name="distances" translatable="false">
         <item>10m</item>
         <item>15m</item>
         <item>18m</item>

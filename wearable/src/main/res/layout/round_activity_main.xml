@@ -13,7 +13,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:src="@drawable/ic_close_white_18dp"
         app:circle_border_color="@color/green"
         app:circle_border_width="@dimen/circle_border_normal_width"

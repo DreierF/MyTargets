@@ -30,11 +30,14 @@ public class ScoreboardUtils {
         String html = "<html>" + CSS;
 
         if (scoreboard) {
+            // TODO use this one http://www.bogenundpfeile.de/media/Schiesszettel_FI.pdf
             html += "<table class=\"myTable\"><tr>";
             for (int i = 1; i <= info.ppp; i++) {
                 html += "<th>" + i + "</th>";
             }
-            html += context.getString(R.string.html_header_fields);
+            html+="<th>" + context.getString(R.string.arrows) + "</th>";
+            html+="<th>" + context.getString(R.string.sum) + "</th>";
+            html+="<th>" + context.getString(R.string.carry) + "</th>";
             html += "</tr>";
             int sum = 0, carry = 0, count = 0;
             int i = 0;

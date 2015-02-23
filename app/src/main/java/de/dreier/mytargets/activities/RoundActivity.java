@@ -8,8 +8,16 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AbsListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.github.ksoichiro.android.observablescrollview.ObservableListView;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
+import com.github.ksoichiro.android.observablescrollview.ScrollState;
+import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
+import com.nineoldandroids.view.ViewHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,16 +32,22 @@ import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Target;
 import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.TargetImage;
+import de.dreier.mytargets.utils.ToolbarUtils;
 
 /**
  * Shows all passes of one round
  */
-public class RoundActivity extends NowListActivity implements ShareDialogFragment.ShareDialogListener {
+public class RoundActivity extends NowListActivity implements ShareDialogFragment.ShareDialogListener, ObservableScrollViewCallbacks {
 
     private long mTraining;
     private long mRound;
 
     private Round mRoundInfo;
+    private Toolbar mHeader;
+    private int mActionBarSize;
+    private int mHeaderHeight;
+    private View mDetails;
+    private View mShadow;
 
     @Override
     protected int getLayoutResource() {
@@ -42,8 +56,7 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
 
     @Override
     protected void init(Intent intent, Bundle savedInstanceState) {
-        itemSingular = getString(R.string.passe_singular);
-        itemPlural = getString(R.string.passe_plural);
+        itemTypeRes = R.plurals.passe;
         if (intent != null && intent.hasExtra(ROUND_ID)) {
             mTraining = intent.getLongExtra(TRAINING_ID, -1);
             mRound = intent.getLongExtra(ROUND_ID, -1);
@@ -53,10 +66,36 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
             mRound = savedInstanceState.getLong(ROUND_ID, -1);
         }
 
+        // Get UI elements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mHeader = (Toolbar) findViewById(R.id.round_container);
+        mDetails = findViewById(R.id.round_container_content);
+        mShadow = findViewById(R.id.shadow);
+        ObservableListView listView = ((ObservableListView) mListView);
+
+        // Set listeners
+        listView.setScrollViewCallbacks(this);
+        mHeader.setOnClickListener(headerClickListener);
+
+        // Load values for animations
+        mActionBarSize = ToolbarUtils.getActionBarSize(this);
+        mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.ext_toolbar_round_height);
+
+        // Set up toolbar
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.round) + " " + db.getRoundInd(mTraining, mRound));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        // Set padding view for ListView. This is the flexible space.
+        View paddingView = new View(this);
+        AbsListView.LayoutParams lp = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, mHeaderHeight + mActionBarSize);
+        paddingView.setLayoutParams(lp);
+
+        // This is required to disable header's list selector effect
+        paddingView.setClickable(true);
+
+        mListView.addHeaderView(paddingView);
     }
 
     @Override
@@ -79,31 +118,31 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
 
         // Set round info
         String percent = maxP == 0 ? "" : " (" + (reached * 100 / maxP) + "%)";
-        String infoText = "<font color=#ffffff>"+getString(R.string.distance) + "</font>: <font color=#ff9100><b>" +
+        String infoText = "<font color=#ffffff>" + getString(R.string.distance) + "</font>: <font color=#ff9100><b>" +
                 mRoundInfo.distance + " - " +
                 getString(mRoundInfo.indoor ? R.string.indoor : R.string.outdoor) + "</b></font><br>" +
-                "<font color=#ffffff>"+getString(R.string.points) + "</font>: <font color=#ff9100><b>" + reached + "/" + maxP + percent + "</b></font><br>" +
-                "<font color=#ffffff>"+getString(R.string.target_round) + "</font>: <font color=#ff9100><b>" + TargetItemAdapter.targets[mRoundInfo.target] + "</b></font>";
+                "<font color=#ffffff>" + getString(R.string.points) + "</font>: <font color=#ff9100><b>" + reached + "/" + maxP + percent + "</b></font><br>" +
+                "<font color=#ffffff>" + getString(R.string.target_round) + "</font>: <font color=#ff9100><b>" + TargetItemAdapter.targets[mRoundInfo.target] + "</b></font>";
         Bow bow = db.getBow(mRoundInfo.bow, true);
         if (bow != null) {
-            infoText += "<br><font color=#ffffff>"+getString(R.string.bow) +
+            infoText += "<br><font color=#ffffff>" + getString(R.string.bow) +
                     "</font>: <font color=#ff9100><b>" + TextUtils.htmlEncode(bow.name) + "</b></font>";
         }
         Arrow arrow = db.getArrow(mRoundInfo.arrow, true);
         if (arrow != null) {
-            infoText += "<br><font color=#ffffff>"+getString(R.string.arrow) +
+            infoText += "<br><font color=#ffffff>" + getString(R.string.arrow) +
                     "</font>: <font color=#ff9100><b>" + TextUtils.htmlEncode(arrow.name) + "</b></font>";
         }
         if (!mRoundInfo.comment.isEmpty()) {
-            infoText += "<br><font color=#ffffff>"+getString(R.string.comment) +
+            infoText += "<br><font color=#ffffff>" + getString(R.string.comment) +
                     "</font>: <font color=#ff9100><b>" + TextUtils.htmlEncode(mRoundInfo.comment) + "</b></font>";
         }
         info.setText(Html.fromHtml(infoText));
 
         // Set number of X, 10, 9 shoots
         infoText = "<font color=#ffffff>X</font>: <font color=#ff9100><b>" + mRoundInfo.scoreCount[0] + "</b></font><br>" +
-                "<font color=#ffffff>"+getString(R.string.ten_x) + "</font>: <font color=#ff9100><b>" + (mRoundInfo.scoreCount[0] + mRoundInfo.scoreCount[1]) + "</b></font><br>" +
-                "<font color=#ffffff>"+getString(R.string.nine) + "</font>: <font color=#ff9100><b>" + mRoundInfo.scoreCount[2] + "</b></font>";
+                "<font color=#ffffff>" + getString(R.string.ten_x) + "</font>: <font color=#ff9100><b>" + (mRoundInfo.scoreCount[0] + mRoundInfo.scoreCount[1]) + "</b></font><br>" +
+                "<font color=#ffffff>" + getString(R.string.nine) + "</font>: <font color=#ff9100><b>" + mRoundInfo.scoreCount[2] + "</b></font>";
         score.setText(Html.fromHtml(infoText));
     }
 
@@ -192,6 +231,16 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
         db.deletePasses(ids);
     }
 
+    private View.OnClickListener headerClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent i = new Intent(RoundActivity.this, EditRoundActivity.class);
+            i.putExtra(EditRoundActivity.TRAINING_ID, mTraining);
+            i.putExtra(EditRoundActivity.ROUND_ID, mRound);
+            startActivity(i);
+        }
+    };
+
     @Override
     public boolean onItemClick(Intent i, int pos, long id) {
         if (pos == 0) {
@@ -200,7 +249,7 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
         } else {
             i.setClass(this, PasseActivity.class);
             i.putExtra(PasseActivity.ROUND_ID, mRound);
-            i.putExtra(PasseActivity.PASSE_IND, pos);
+            i.putExtra(PasseActivity.PASSE_IND, pos - 1);
         }
         return true;
     }
@@ -210,5 +259,21 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
         super.onSaveInstanceState(outState);
         outState.putLong(TRAINING_ID, mTraining);
         outState.putLong(ROUND_ID, mRound);
+    }
+
+    @Override
+    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+        int translationShadow = Math.max(mActionBarSize, mActionBarSize + mHeaderHeight - scrollY);
+        ViewHelper.setTranslationY(mShadow, translationShadow);
+        ViewHelper.setTranslationY(mHeader, mActionBarSize - scrollY);
+        ViewHelper.setAlpha(mDetails, ScrollUtils.getFloat((float) (mHeaderHeight - scrollY * 2) / mHeaderHeight, 0, 1));
+    }
+
+    @Override
+    public void onDownMotionEvent() {
+    }
+
+    @Override
+    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
     }
 }

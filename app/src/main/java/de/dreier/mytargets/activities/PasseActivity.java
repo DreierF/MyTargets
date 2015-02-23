@@ -48,7 +48,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_targets);
+        setContentView(R.layout.activity_passe);
 
         db = new DatabaseManager(this);
 
@@ -57,7 +57,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
             mRound = i.getLongExtra(ROUND_ID, -1);
             savedPasses = db.getPasses(mRound).getCount();
             if (i.hasExtra(PASSE_IND)) {
-                curPasse = i.getIntExtra(PASSE_IND, -1) - 1;
+                curPasse = i.getIntExtra(PASSE_IND, -1);
             } else {
                 curPasse = savedPasses + 1;
             }
@@ -157,9 +157,9 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
         Intent i;
         switch (item.getItemId()) {
             case R.id.action_new_round:
-                i = new Intent(this, NewRoundActivity.class);
-                i.putExtra(NewRoundActivity.TRAINING_ID, mTraining);
-                i.putExtra(NewRoundActivity.FROM_PASSE, true);
+                i = new Intent(this, EditRoundActivity.class);
+                i.putExtra(EditRoundActivity.TRAINING_ID, mTraining);
+                i.putExtra(EditRoundActivity.FROM_PASSE, true);
                 startActivity(i);
                 overridePendingTransition(R.anim.left_in_complete, R.anim.right_out_half);
                 return true;
@@ -237,7 +237,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
             }
             text += "\n";
         } else {
-            text = getString(R.string.app_name);
+            title = getString(R.string.app_name);
         }
 
         // Load bow settings

@@ -1,14 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- General -->
     <string name="app_name">My Targets</string>
     <string name="prev">Previous</string>
     <string name="next">Next</string>
-    <string name="title_activity_new_round">New Round</string>
-    <string name="title_activity_edit_bow">Add bow</string>
-    <string name="title_activity_edit_arrow">Add arrow</string>
+    <string name="save">Save</string>
+    <string name="custom">Custom</string>
+    <string name="training">Training</string>
+    <string name="bow">Bow</string>
+    <string name="arrow">Arrow</string>
+    <string name="round">Round</string>
+    <string name="points">Points</string>
+    <string name="passe">Passe</string>
+    
+    <!-- Overview -->
+    <string name="new_training">New training</string>
+    <string name="new_bow">New bow</string>
+    <string name="new_arrow">New arrow</string>
+    <string name="new_round">New round</string>
+    <string name="new_passe">New passe</string>
+    <plurals name="training">
+        <item quantity="one">One training selected</item>
+        <item quantity="other">%d trainings selected</item>
+    </plurals>
+    <plurals name="bow">
+        <item quantity="one">One bow selected</item>
+        <item quantity="other">%d bows selected</item>
+    </plurals>
+    <plurals name="arrow">
+        <item quantity="one">One arrow selected</item>
+        <item quantity="other">%d arrows selected</item>
+    </plurals>
+    <plurals name="round">
+        <item quantity="one">One round selected</item>
+        <item quantity="other">%d rounds selected</item>
+    </plurals>
+    <plurals name="passe">
+        <item quantity="one">One passe selected</item>
+        <item quantity="other">%d passes selected</item>
+    </plurals>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="statistic">Statistic</string>
 
-    <!-- EditBowActivity -->
+    <!-- Share -->
+    <string name="share">Share</string>
+    <string name="my_share_text">Yeah, look at my archery score. If got:\n%1$d times X\n%2$d times 10\n%3$d times 9\nThis makes a total of %4$d out of %5$d rings.</string>
+    <string name="comments">Comments</string>
+    <string name="text">Text</string>
+    <string name="dispersion_pattern">Dispersion pattern</string>
+    <string name="sharing_failed">Sharing failed!</string>
+
+    <!-- Export -->
+    <string name="export">Export</string>
+    <string name="send_exported">Send exported data</string>
+    <string name="exporting_failed">Exporting failed!</string>
+
+    <!-- New bow -->
+    <string name="add_bow">Add bow</string>
     <string name="name">Name</string>
     <string name="bow_typ">Bow typ</string>
     <string name="recurve_bow">Recurve bow</string>
@@ -16,6 +66,7 @@
     <string name="bare_bow">Bare bow</string>
     <string name="long_bow">Long bow</string>
     <string name="horse_bow">Horse bow</string>
+    <string name="yumi">Yumi</string>
     <string name="properties">Properties</string>
     <string name="brand">Brand</string>
     <string name="size">Size</string>
@@ -24,83 +75,50 @@
     <string name="tiller">Tiller</string>
     <string name="sight_settings">Sight settings</string>
     <string name="add">Add</string>
-    <string name="save">Save</string>
-
-    <!-- NewRoundActivity -->
-    <string name="outdoor">Outdoor</string>
-    <string name="indoor">Indoor</string>
-    <string name="distance">Distance</string>
-    <string name="two" translatable="false">2</string>
-    <string name="three" translatable="false">3</string>
-    <string name="six" translatable="false">6</string>
-    <string name="bow">Bow</string>
-    <string name="arrows_per_passe">Arrows per passe</string>
-    <string name="target_round">Target round</string>
-    <string name="new_round">New round</string>
-    <string name="delete">Delete</string>
+    <string name="select_picture">Select a picture</string>
     <string name="take_picture">Take a picture</string>
     <string name="pick_from_gallery">Select a picture from gallery</string>
-    <string name="bow_plural">bows</string>
-    <string name="bow_singular">bow</string>
-    <string name="new_bow">New bow</string>
-    <string name="select_picture">Select a picture</string>
-    <string name="training_plural">trainings</string>
-    <string name="training_singular">training</string>
-    <string name="start">Begin</string>
-    <string name="selected">selected</string>
-    <string name="new_passe">New passe</string>
-    <string name="round">Round</string>
-    <string name="points">Points</string>
-    <string name="passe">Passe</string>
-    <string name="passe_singular">passe</string>
-    <string name="passe_plural">passes</string>
-    <string name="round_plural">rounds</string>
-    <string name="round_singular">round</string>
-    <string name="arrow_singular">arrow</string>
-    <string name="arrow_plural">arrows</string>
-    <string name="new_training">New training</string>
-    <string name="new_arrow">New arrow</string>
-    <string name="my_bows">My bows</string>
-    <string name="add_bow">Add bow</string>
-    <string name="yumi">Yumi</string>
-    <string name="share">Share</string>
-    <string name="my_share_text">Yeah, look at my archery score. If got:\n%1$d times X\n%2$d times 10\n%3$d times 9\nThis makes a total of %4$d out of %5$d rings.</string>
-    <string name="export">Export</string>
-    <string name="send_exported">Send exported data</string>
-    <string name="exporting_failed">Exporting failed!</string>
-    <string name="edit">Edit</string>
-    <string name="html_header_fields">&lt;th>Arrows&lt;/th>&lt;th>Sum&lt;/th>&lt;th>Carry&lt;/th></string>
-    <string name="scoreboard">Scoreboard</string>
-    <string name="title_activity_scoreboard">Scoreboard</string>
-    <string name="action_print">Print</string>
-    <string name="nine">Nine</string>
-    <string name="ten_x">Ten+X</string>
-    <string name="average">Average</string>
-    <string name="switch_mode">Switch input mode</string>
-    <string name="title_compound">Compound?</string>
-    <string name="msg_compound_type">Which bow type are you using? (There is a difference in how many points you get for the golden rings)</string>
-    <string name="other_bow">Other bow</string>
-    <string name="training">Training</string>
-    <string name="statistic">Statistic</string>
-    <string name="show_all">Show all shoots</string>
-    <string name="text">Text</string>
-    <string name="dispersion_pattern">Dispersion pattern</string>
-    <string name="sharing_failed">Sharing failed!</string>
-    <string name="comment">Comment</string>
-    <string name="meter_short" translatable="false">m</string>
-    <string name="comments">Comments</string>
 
+    <!-- New arrow -->
+    <string name="add_arrow">Add arrow</string>
     <string name="length">Length</string>
     <string name="spine">Spine</string>
     <string name="weight">Weight</string>
     <string name="vanes">Vanes</string>
-    <string name="point">Point</string>
     <string name="nock">Nock</string>
     <string name="material">Material</string>
-    <string name="arrow">Arrow</string>
-    <string name="add_arrow">Add arrow</string>
+
+    <!-- New round -->
     <string name="title">Title</string>
-    <string name="action_save">Save</string>
-    <string name="custom">Custom</string>
+    <string name="outdoor">Outdoor</string>
+    <string name="indoor">Indoor</string>
+    <string name="distance">Distance</string>
+    <string name="arrows_per_passe">Arrows per passe</string>
+    <string name="target_round">Target round</string>
+    <string name="title_compound">Compound?</string>
+    <string name="msg_compound_type">Which bow type are you using? (There is a difference in how many points you get for the golden rings)</string>
+    <string name="other_bow">Other bow</string>
+
+    <!-- Scoreboard -->
+    <string name="scoreboard">Scoreboard</string>
+    <string name="arrows">Arrows</string>
+    <string name="sum">Sum</string>
+    <string name="carry">Carry</string>
+    <string name="action_print">Print</string>
+    <string name="nine">Nine</string>
+    <string name="ten_x">Ten+X</string>
+    <string name="average">Average</string>
+
+    <!-- Input mode -->
+    <string name="switch_mode">Switch input mode</string>
+    <string name="show_all">Show all shoots</string>
+    <string name="comment">Comment</string>
+
+
+    <!-- NOT TRANSLATABLE -->
+    <string name="two" translatable="false">2</string>
+    <string name="three" translatable="false">3</string>
+    <string name="six" translatable="false">6</string>
+    <string name="meter_short" translatable="false">m</string>
 
 </resources>

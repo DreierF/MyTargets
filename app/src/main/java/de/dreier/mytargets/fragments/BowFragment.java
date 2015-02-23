@@ -11,8 +11,7 @@ public class BowFragment extends NowListFragment {
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
-        itemSingular = getString(R.string.bow_singular);
-        itemPlural = getString(R.string.bow_plural);
+        itemTypeRes = R.plurals.bow;
     }
 
     @Override

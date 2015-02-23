@@ -11,7 +11,6 @@ public class Arrow {
     public String spine;
     public String weight;
     public String vanes;
-    public String point;
     public String nock;
     public String comment;
     public Bitmap image;

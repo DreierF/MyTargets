@@ -27,7 +27,7 @@ import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.utils.MyBackupAgent;
 
-public class NewRoundActivity extends ActionBarActivity {
+public class EditRoundActivity extends ActionBarActivity {
 
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
@@ -51,7 +51,7 @@ public class NewRoundActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_round);
+        setContentView(R.layout.activity_edit_round);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -107,7 +107,7 @@ public class NewRoundActivity extends ActionBarActivity {
         addBow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(NewRoundActivity.this, EditBowActivity.class);
+                Intent i = new Intent(EditRoundActivity.this, EditBowActivity.class);
                 startActivity(i);
             }
         });
@@ -115,7 +115,7 @@ public class NewRoundActivity extends ActionBarActivity {
         addArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(NewRoundActivity.this, EditArrowActivity.class);
+                Intent i = new Intent(EditRoundActivity.this, EditArrowActivity.class);
                 startActivity(i);
             }
         });
@@ -125,8 +125,8 @@ public class NewRoundActivity extends ActionBarActivity {
             // Initialise with default values
             int distVal = prefs.getInt("distance", 10);
             int distanceInd = -1;
-            for (int j = 0; j < NewRoundActivity.distanceValues.length; j++)
-                if (NewRoundActivity.distanceValues[j] == distVal)
+            for (int j = 0; j < EditRoundActivity.distanceValues.length; j++)
+                if (EditRoundActivity.distanceValues[j] == distVal)
                     distanceInd = j;
             if (distanceInd == -1) {
                 distance.setVisibility(View.GONE);

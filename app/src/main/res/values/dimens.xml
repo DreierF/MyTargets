@@ -3,4 +3,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="toolbar_drop_shadow_height">10dp</dimen>
+    <dimen name="flexible_space_image_height">240dp</dimen>
+    <dimen name="margin_standard">16dp</dimen>
+    <dimen name="flexible_space_show_fab_offset">120dp</dimen>
+    <dimen name="left_space_title_toolbar">40dp</dimen>
+    <dimen name="ext_toolbar_round_height">120dp</dimen>
 </resources>

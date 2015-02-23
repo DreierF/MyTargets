@@ -214,7 +214,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
         // Draw separator line if there are more then 3 shots
         if (twoRows) {
             canvas.drawLine(radius - 30 * density,
-                    radius - 25 * density, radius + 30 * density, radius - 15 * density, thinBlackBorder);
+                    radius - 25 * density, radius + 30 * density, radius - 25 * density, thinBlackBorder);
         }
 
         // Draw the points
@@ -309,7 +309,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
         if (currentArrow < roundInfo.ppp && mPasse[currentArrow].zone >= -1) {
             mOutZone = mPasse[currentArrow].zone;
             mOutToX = radius + ((currentArrow % 3) - 1) * 25 * density;
-            mOutToY = radius + (currentArrow < 3 ? -1 : 1) * (twoRows ? 30 * density : 20 * density);
+            mOutToY = radius - 25 * density + (currentArrow < 3 ? -1 : 1) * (twoRows ? 15 * density : -5 * density);
             if (mModeEasy) {
                 float[] coord = getCircularCoords(mOutZone);
                 mOutFromX = coord[0];
@@ -330,7 +330,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
             mInFromY = coord[1];
             if (mModeEasy) {
                 mInToX = radius + ((mCurSelecting % 3) - 1) * 25 * density;
-                mInToY = radius + (mCurSelecting < 3 ? -1 : 1) * (twoRows ? 30 * density : 20 * density);
+                mInToY = radius - 25 * density + (mCurSelecting < 3 ? -1 : 1) * (twoRows ? 15 * density : -5 * density);
             } else {
                 mInToX = radius + radius * mPasse[mCurSelecting].x;
                 mInToY = radius + radius * mPasse[mCurSelecting].y;

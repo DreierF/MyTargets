@@ -11,8 +11,7 @@ public class ArrowFragment extends NowListFragment {
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
-        itemSingular = getString(R.string.arrow_singular);
-        itemPlural = getString(R.string.arrow_plural);
+        itemTypeRes = R.plurals.arrow;
     }
 
     @Override
@@ -24,7 +23,7 @@ public class ArrowFragment extends NowListFragment {
 
     @Override
     protected void onDelete(long[] ids) {
-        db.deleteBows(ids);
+        db.deleteArrows(ids);
     }
 
     @Override

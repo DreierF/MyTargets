@@ -18,8 +18,7 @@ public class TrainingActivity extends NowListActivity {
 
     @Override
     protected void init(Intent intent, Bundle savedInstanceState) {
-        itemSingular = getString(R.string.round_singular);
-        itemPlural = getString(R.string.round_plural);
+        itemTypeRes = R.plurals.round;
         mEditable = true;
 
         if(intent!=null && intent.hasExtra(TRAINING_ID)) {
@@ -39,9 +38,9 @@ public class TrainingActivity extends NowListActivity {
 
     @Override
     protected void onEdit(long id) {
-        Intent i = new Intent(this, NewRoundActivity.class);
-        i.putExtra(NewRoundActivity.TRAINING_ID, mTraining);
-        i.putExtra(NewRoundActivity.ROUND_ID, id);
+        Intent i = new Intent(this, EditRoundActivity.class);
+        i.putExtra(EditRoundActivity.TRAINING_ID, mTraining);
+        i.putExtra(EditRoundActivity.ROUND_ID, id);
         startActivity(i);
     }
 
@@ -53,8 +52,8 @@ public class TrainingActivity extends NowListActivity {
     @Override
     public boolean onItemClick(Intent i, int pos, long id) {
         if(pos==0) {
-            i.setClass(this, NewRoundActivity.class);
-            i.putExtra(NewRoundActivity.TRAINING_ID, mTraining);
+            i.setClass(this, EditRoundActivity.class);
+            i.putExtra(EditRoundActivity.TRAINING_ID, mTraining);
         } else {
             i.setClass(this, RoundActivity.class);
             i.putExtra(RoundActivity.ROUND_ID, getListAdapter().getItemId(pos));
