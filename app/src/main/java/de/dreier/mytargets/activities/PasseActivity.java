@@ -233,7 +233,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
         Shot[] lastPasse = db.getPasse(mRound, savedPasses);
         if (lastPasse != null) {
             for (Shot shot : lastPasse) {
-                text += Target.getStringByZone(r.target, shot.zone, r.compound) + " ";
+                text += Target.getStringByZone(r.target, shot.zone) + " ";
             }
             text += "\n";
         } else {

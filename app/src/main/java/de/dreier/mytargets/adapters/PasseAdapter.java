@@ -41,7 +41,7 @@ public class PasseAdapter extends NowListAdapter {
         ViewHolder holder = (ViewHolder) view.getTag();
         holder.subtitle.setText(context.getString(R.string.passe) + " " + (1 + cursor.getPosition()));
         int[] points = db.getPasse(cursor.getLong(passeIdInd));
-        holder.shots.setPoints(points, mRoundInfo.target, mRoundInfo.compound);
+        holder.shots.setPoints(points, mRoundInfo.target);
     }
 
     public static class ViewHolder {

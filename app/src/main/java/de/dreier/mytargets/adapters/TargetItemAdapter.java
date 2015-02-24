@@ -6,12 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 
-public class TargetItemAdapter extends BaseAdapter implements SpinnerAdapter {
+public class TargetItemAdapter extends BaseAdapter {
     private final Context mContext;
     public static final String[] targets = {"WA", "WA Spot 5-10", "WA Spot 6-10", "WA 3er Spot",
             "WA Field", "DFBV Spiegel", "DFBV Spiegel Spot", "DFBV Field"};
@@ -44,19 +43,14 @@ public class TargetItemAdapter extends BaseAdapter implements SpinnerAdapter {
 		if (v == null) {
 			LayoutInflater vi = (LayoutInflater) mContext.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(R.layout.target_item, parent, false);
+			v = vi.inflate(R.layout.image_item, parent, false);
 		}
 
-        ImageView img = (ImageView) v.findViewById(R.id.targetImage);
-        TextView desc = (TextView) v.findViewById(R.id.targetDescription);
+        ImageView img = (ImageView) v.findViewById(R.id.image);
+        TextView desc = (TextView) v.findViewById(R.id.name);
 
         img.setImageDrawable(mContext.getResources().getDrawable(targets_drawable[position]));
         desc.setText(targets[position]);
 		return v;
-	}
-
-	@Override
-	public View getDropDownView(int position, View convertView, ViewGroup parent) {
-		return getView(position,convertView,parent);
 	}
 }

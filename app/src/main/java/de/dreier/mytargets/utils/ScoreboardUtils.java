@@ -48,9 +48,9 @@ public class ScoreboardUtils {
                     tmp_html += "<tr>";
                     for (Shot shot : passe) {
                         tmp_html += "<td>";
-                        tmp_html += Target.getStringByZone(info.target, shot.zone, info.compound);
+                        tmp_html += Target.getStringByZone(info.target, shot.zone);
                         tmp_html += "</td>";
-                        int points = Target.getPointsByZone(info.target, shot.zone, info.compound);
+                        int points = Target.getPointsByZone(info.target, shot.zone);
                         arrows += points;
                         sum += points;
                         carry += points;
@@ -66,9 +66,9 @@ public class ScoreboardUtils {
                     html += "<tr>";
                     for (Shot shot : passe) {
                         html += "<td>";
-                        html += Target.getStringByZone(info.target, shot.zone, info.compound);
+                        html += Target.getStringByZone(info.target, shot.zone);
                         html += "</td>";
-                        int points = Target.getPointsByZone(info.target, shot.zone, info.compound);
+                        int points = Target.getPointsByZone(info.target, shot.zone);
                         arrows += points;
                         sum += points;
                         carry += points;
@@ -111,7 +111,7 @@ public class ScoreboardUtils {
                 for (Shot shot : passe) {
                     if (!TextUtils.isEmpty(shot.comment)) {
                         comments += "<tr><td>" + i + "</td>" +
-                                "<td>" + Target.getStringByZone(info.target, shot.zone, info.compound) + "</td>" +
+                                "<td>" + Target.getStringByZone(info.target, shot.zone) + "</td>" +
                                 "<td>" + TextUtils.htmlEncode(shot.comment).replace("\n","<br />") + "</td></tr>";
                         commentsCount++;
                     }

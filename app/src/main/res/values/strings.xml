@@ -60,7 +60,7 @@
     <!-- New bow -->
     <string name="add_bow">Add bow</string>
     <string name="name">Name</string>
-    <string name="bow_typ">Bow typ</string>
+    <string name="bow_type">Bow type</string>
     <string name="recurve_bow">Recurve bow</string>
     <string name="compound_bow">Compound bow</string>
     <string name="bare_bow">Bare bow</string>
@@ -71,7 +71,7 @@
     <string name="brand">Brand</string>
     <string name="size">Size</string>
     <string name="description">Description</string>
-    <string name="height">Height</string>
+    <string name="height">Brace height</string>
     <string name="tiller">Tiller</string>
     <string name="sight_settings">Sight settings</string>
     <string name="add">Add</string>

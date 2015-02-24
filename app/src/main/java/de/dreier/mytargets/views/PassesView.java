@@ -19,7 +19,6 @@ public class PassesView extends View {
     private int[] points = {-2, -2, -2};
     private int targetRound;
     private float density;
-    private boolean compoundBow;
 
     public PassesView(Context context) {
         super(context);
@@ -49,10 +48,9 @@ public class PassesView extends View {
         circleColorP.setStrokeWidth(2 * density);
     }
 
-    public void setPoints(int[] p, int tar, boolean compound) {
+    public void setPoints(int[] p, int tar) {
         points = p;
         targetRound = tar;
-        compoundBow = compound;
         invalidate();
     }
 
@@ -80,7 +78,7 @@ public class PassesView extends View {
         circleColorP.setColor(Target.circleStrokeColor[colorInd]);
         can.drawCircle(x, y, 17 * density, circleColorP);
         mTextPaint.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
-        can.drawText(Target.getStringByZone(targetRound, zone, compoundBow), x, y + 7 * density, mTextPaint);
+        can.drawText(Target.getStringByZone(targetRound, zone), x, y + 7 * density, mTextPaint);
     }
 
     @Override

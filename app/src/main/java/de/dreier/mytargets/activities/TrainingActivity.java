@@ -2,6 +2,8 @@ package de.dreier.mytargets.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import java.text.DateFormat;
 
@@ -73,5 +75,31 @@ public class TrainingActivity extends NowListActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong(TRAINING_ID,mTraining);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.training, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean hasPasses = adapter.getCount() > 1;
+        menu.findItem(R.id.action_statistics).setVisible(hasPasses);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_statistics:
+                Intent i = new Intent(this, StatisticsActivity.class);
+                i.putExtra(StatisticsActivity.TRAINING_ID, mTraining);
+                startActivity(i);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

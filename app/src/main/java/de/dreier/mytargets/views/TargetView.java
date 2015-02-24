@@ -369,7 +369,7 @@ public class TargetView extends View implements View.OnTouchListener {
 
                 // For yellow and white background use black font color
                 mTextPaint.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
-                canvas.drawText(Target.getStringByZone(roundInfo.target, i, roundInfo.compound), X1 + (X2 - X1) / 2, Y1 + (Y2 - Y1) / 2 + 10 * density, mTextPaint);
+                canvas.drawText(Target.getStringByZone(roundInfo.target, i), X1 + (X2 - X1) / 2, Y1 + (Y2 - Y1) / 2 + 10 * density, mTextPaint);
 
                 if (i == 1 && roundInfo.target == 3 && roundInfo.compound) {
                     i++;
@@ -483,7 +483,7 @@ public class TargetView extends View implements View.OnTouchListener {
         circleColorP.setColor(Target.circleStrokeColor[colorInd]);
         can.drawCircle(x, y, 17 * density, circleColorP);
         mTextPaint.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
-        can.drawText(Target.getStringByZone(roundInfo.target, zone, roundInfo.compound), x, y + 7 * density, mTextPaint);
+        can.drawText(Target.getStringByZone(roundInfo.target, zone), x, y + 7 * density, mTextPaint);
 
         if (comment != null && !comment.isEmpty()) {
             circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);

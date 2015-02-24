@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.iangclifton.android.floatlabel.FloatLabel;
 
@@ -37,12 +38,11 @@ public class EditRoundActivity extends ActionBarActivity {
 
     private Spinner distance;
     private RadioButton indoor;
-    private Spinner bow;
-    private Spinner arrow;
+    private DialogSpinner bow;
+    private DialogSpinner arrow;
     private DialogSpinner target;
     public static final int[] distanceValues = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
     private RadioButton ppp2, ppp3;
-    private Button addBow, addArrow;
     private boolean mCalledFromPasse = false;
     private int mBowType = -1;
     private EditText training;
@@ -95,33 +95,34 @@ public class EditRoundActivity extends ActionBarActivity {
 
             }
         });
+        // Indoor / outdoor
         RadioButton outdoor = (RadioButton) findViewById(R.id.outdoor);
         indoor = (RadioButton) findViewById(R.id.indoor);
+
+        // Points per passe
         ppp2 = (RadioButton) findViewById(R.id.ppp2);
         ppp3 = (RadioButton) findViewById(R.id.ppp3);
         RadioButton ppp6 = (RadioButton) findViewById(R.id.ppp6);
-        bow = (Spinner) findViewById(R.id.bow);
-        bow.setAdapter(new BowItemAdapter(this));
-        arrow = (Spinner) findViewById(R.id.arrow);
-        arrow.setAdapter(new ArrowItemAdapter(this));
+
+        // Bow
+        bow = (DialogSpinner) findViewById(R.id.bow);
+        bow.setAdapter(new BowItemAdapter(this), R.string.bow);
+        Button addBow = (Button) findViewById(R.id.add_bow);
+        i = new Intent(this, EditBowActivity.class);
+        bow.setAddButton(addBow, R.string.add_bow, i);
+
+        // Arrow
+        arrow = (DialogSpinner) findViewById(R.id.arrow);
+        arrow.setAdapter(new ArrowItemAdapter(this), R.string.arrow);
+        Button addArrow = (Button) findViewById(R.id.add_arrow);
+        i = new Intent(this, EditArrowActivity.class);
+        arrow.setAddButton(addArrow, R.string.add_arrow, i);
+
+        // Target round
         target = (DialogSpinner) findViewById(R.id.target_spinner);
-        target.setAdapter(new TargetItemAdapter(this));
-        addBow = (Button) findViewById(R.id.add_bow);
-        addBow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(EditRoundActivity.this, EditBowActivity.class);
-                startActivity(i);
-            }
-        });
-        addArrow = (Button) findViewById(R.id.add_arrow);
-        addArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(EditRoundActivity.this, EditArrowActivity.class);
-                startActivity(i);
-            }
-        });
+        target.setAdapter(new TargetItemAdapter(this), R.string.target_round);
+
+        // Comment
         comment = (FloatLabel) findViewById(R.id.comment);
 
         if (mRound == -1) {
@@ -176,6 +177,17 @@ public class EditRoundActivity extends ActionBarActivity {
             arrow.setSelection(r.arrow);
             target.setSelection(r.target);
             comment.setText(r.comment);
+
+            ppp2.setEnabled(false);
+            ppp3.setEnabled(false);
+            ppp6.setEnabled(false);
+            bow.setEnabled(false);
+            arrow.setEnabled(false);
+            target.setEnabled(false);
+            ((TextView)findViewById(R.id.label_ppp)).setTextColor(0xff444444);
+            ((TextView)findViewById(R.id.label_bow)).setTextColor(0xff444444);
+            ((TextView)findViewById(R.id.label_arrow)).setTextColor(0xff444444);
+            ((TextView)findViewById(R.id.label_target)).setTextColor(0xff444444);
         }
         if (mTraining == -1) {
             training.setText(getString(R.string.training));
@@ -189,22 +201,8 @@ public class EditRoundActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        bow.setAdapter(new BowItemAdapter(this));
-        if (bow.getAdapter().getCount() > 0) {
-            addBow.setVisibility(View.GONE);
-            bow.setVisibility(View.VISIBLE);
-        } else {
-            addBow.setVisibility(View.VISIBLE);
-            bow.setVisibility(View.GONE);
-        }
-        arrow.setAdapter(new ArrowItemAdapter(this));
-        if (arrow.getAdapter().getCount() > 0) {
-            addArrow.setVisibility(View.GONE);
-            arrow.setVisibility(View.VISIBLE);
-        } else {
-            addArrow.setVisibility(View.VISIBLE);
-            arrow.setVisibility(View.GONE);
-        }
+        bow.setAdapter(new BowItemAdapter(this), R.string.bow);
+        arrow.setAdapter(new ArrowItemAdapter(this), R.string.arrow);
     }
 
     @Override

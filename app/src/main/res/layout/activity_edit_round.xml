@@ -114,8 +114,10 @@
                         android:text="@string/meter_short" />
                 </LinearLayout>
 
+
                 <TextView
                     style="@style/Label"
+                    android:id="@+id/label_ppp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -152,67 +154,69 @@
 
                 <TextView
                     style="@style/Label"
+                    android:id="@+id/label_bow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/bow" />
 
-                <Spinner
+                <de.dreier.mytargets.views.DialogSpinner
                     android:id="@+id/bow"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content">
 
-                <Button
-                    android:id="@+id/add_bow"
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:gravity="start"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:paddingTop="5dp"
-                    android:text="@string/add_bow"
-                    android:textColor="@android:color/secondary_text_light" />
+                    <Button
+                        android:id="@+id/add_bow"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:gravity="start"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:paddingTop="5dp"
+                        android:text="@string/add_bow"
+                        android:textColor="@android:color/secondary_text_light" />
+
+                </de.dreier.mytargets.views.DialogSpinner>
 
                 <TextView
                     style="@style/Label"
+                    android:id="@+id/label_arrow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/arrow" />
 
-                <Spinner
+                <de.dreier.mytargets.views.DialogSpinner
                     android:id="@+id/arrow"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content">
 
-                <Button
-                    android:id="@+id/add_arrow"
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:gravity="start"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:paddingTop="5dp"
-                    android:text="@string/add_arrow"
-                    android:textColor="@android:color/secondary_text_light" />
+                    <Button
+                        android:id="@+id/add_arrow"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:gravity="start"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:paddingTop="5dp"
+                        android:text="@string/add_arrow"
+                        android:textColor="@android:color/secondary_text_light" />
+
+                </de.dreier.mytargets.views.DialogSpinner>
 
                 <TextView
                     style="@style/Label"
+                    android:id="@+id/label_target"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/target_round" />
-
-                <!--<Spinner
-                    android:id="@+id/target_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />-->
 
                 <de.dreier.mytargets.views.DialogSpinner
                     android:id="@+id/target_spinner"

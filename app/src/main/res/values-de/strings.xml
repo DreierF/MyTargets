@@ -60,7 +60,7 @@
     <!-- New bow -->
     <string name="add_bow">Bogen hinzufügen</string>
     <string name="name">Name</string>
-    <string name="bow_typ">Bogenart</string>
+    <string name="bow_type">Bogenart</string>
     <string name="recurve_bow">Recurvebogen</string>
     <string name="compound_bow">Compoundbogen</string>
     <string name="bare_bow">Blankbogen</string>

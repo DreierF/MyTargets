@@ -9,13 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 
-public class ArrowItemAdapter extends CursorAdapter implements SpinnerAdapter {
+public class ArrowItemAdapter extends CursorAdapter {
 
     private final int nameInd, thumbInd;
     private final LayoutInflater mInflater;
@@ -25,11 +24,6 @@ public class ArrowItemAdapter extends CursorAdapter implements SpinnerAdapter {
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         nameInd = getCursor().getColumnIndex(DatabaseManager.ARROW_NAME);
         thumbInd = getCursor().getColumnIndex(DatabaseManager.ARROW_THUMBNAIL);
-    }
-
-    @Override
-    public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        return getView(position, convertView, parent);
     }
 
     @Override

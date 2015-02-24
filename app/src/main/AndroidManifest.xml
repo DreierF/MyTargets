@@ -79,7 +79,8 @@
             android:name=".activities.EditBowActivity"
             android:label="@string/add_bow"
             android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.CustomToolbar">
+            android:theme="@style/AppTheme.CustomToolbar"
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
@@ -88,7 +89,8 @@
             android:name=".activities.EditArrowActivity"
             android:label="@string/add_arrow"
             android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.CustomToolbar">
+            android:theme="@style/AppTheme.CustomToolbar"
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />

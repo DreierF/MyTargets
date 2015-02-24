@@ -66,25 +66,21 @@ public class Target {
             {5, 5, 4, 3, 2, 1} // DFBV Field
     };
 
-    public static String getStringByZone(int target, int zone, boolean compound) {
+    public static String getStringByZone(int target, int zone) {
         final int[] points = target_points[target];
         if (zone <= -1 || zone >= points.length) {
             return "M";
         } else if (zone == 0) {
             return "X";
         } else {
-            return String.valueOf(getPointsByZone(target, zone, compound));
+            return String.valueOf(getPointsByZone(target, zone));
         }
     }
 
-    public static int getPointsByZone(int target, int zone, boolean compound) {
+    public static int getPointsByZone(int target, int zone) {
         if (target < target_points.length) {
             if (target_points[target].length > zone && zone >= 0) {
-                if (target == 3 && compound && zone == 1) {
-                    return 9;
-                } else {
-                    return target_points[target][zone];
-                }
+                return target_points[target][zone];
             }
         }
         return 0;

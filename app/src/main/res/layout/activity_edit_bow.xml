@@ -9,7 +9,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:layout_weight="1"
-        android:text="@string/bow_typ" />
+        android:text="@string/bow_type" />
 
     <LinearLayout
         android:layout_width="match_parent"

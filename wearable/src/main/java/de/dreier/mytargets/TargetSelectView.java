@@ -360,7 +360,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
         can.drawCircle(x, y, rad * density, circleColorP);
         mTextPaint.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
         mTextPaint.setTextSize(font_size * density);
-        can.drawText(Target.getStringByZone(roundInfo.target, zone, roundInfo.compound), x, y + font_size * 7 * density / 22.0f, mTextPaint);
+        can.drawText(Target.getStringByZone(roundInfo.target, zone), x, y + font_size * 7 * density / 22.0f, mTextPaint);
     }
 
     @Override

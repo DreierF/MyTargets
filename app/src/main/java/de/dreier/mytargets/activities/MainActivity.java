@@ -27,6 +27,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -99,12 +100,17 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void askForHelpTranslating() {
+        ArrayList<String> supportedLanguages = new ArrayList<>();
+        supportedLanguages.add("de");
+        supportedLanguages.add("en");
+        supportedLanguages.add("fr");
+
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         boolean shown = prefs.getBoolean("translation_dialog_shown", false);
 
         String longLang = Locale.getDefault().getDisplayLanguage().toLowerCase();
         String shortLocale = Locale.getDefault().getLanguage();
-        if (!shortLocale.equals("de") && !shortLocale.equals("en") && !shown && !shownThisTime) {
+        if (!supportedLanguages.contains(shortLocale) && !shown && !shownThisTime) {
             // Link the e-mail address in the message
             final SpannableString s = new SpannableString(Html.fromHtml("If you would like " +
                     "to help make MyTargets even better by translating the app to " +

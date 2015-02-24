@@ -154,7 +154,7 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean hasPasses = adapter.getCount() > 2;
+        boolean hasPasses = adapter.getCount() > 1;
         menu.findItem(R.id.action_scoreboard).setVisible(hasPasses);
         menu.findItem(R.id.action_share).setVisible(hasPasses);
         menu.findItem(R.id.action_statistics).setVisible(hasPasses);
@@ -171,6 +171,7 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
                 return true;
             case R.id.action_statistics:
                 Intent i = new Intent(this, StatisticsActivity.class);
+                i.putExtra(StatisticsActivity.TRAINING_ID, mTraining);
                 i.putExtra(StatisticsActivity.ROUND_ID, mRound);
                 startActivity(i);
                 return true;
@@ -249,7 +250,7 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
         } else {
             i.setClass(this, PasseActivity.class);
             i.putExtra(PasseActivity.ROUND_ID, mRound);
-            i.putExtra(PasseActivity.PASSE_IND, pos - 1);
+            i.putExtra(PasseActivity.PASSE_IND, pos);
         }
         return true;
     }

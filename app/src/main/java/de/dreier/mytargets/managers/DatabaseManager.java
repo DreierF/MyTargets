@@ -166,6 +166,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     @Override
+    public void onConfigure(SQLiteDatabase db) {
+        super.onConfigure(db);
+        db.execSQL("PRAGMA foreign_keys=ON");
+    }
+
+    @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_BOW);
         db.execSQL(CREATE_TABLE_VISIER);
@@ -222,6 +228,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("UPDATE ROUND SET target=4 WHERE target=8");
             db.execSQL("UPDATE ROUND SET target=5 WHERE target=9");
             db.execSQL("UPDATE ROUND SET target=6 WHERE target=10");
+            db.execSQL("UPDATE SHOOT SET points=2 WHERE _id IN (SELECT s._id " +
+                    "FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow " +
+                    "WHERE r._id=p.round AND s.passe=p._id " +
+                    "AND (r.bow=-2 OR b.type=1) AND s.points=1 AND r.target=3)");
         }
         onCreate(db);
     }
@@ -329,9 +339,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         res.close();
 
         // Get number of X, 10 and 9 score
-        Cursor cur = db.rawQuery("SELECT s.points+(CASE WHEN (r.bow=-2 OR b.type=1) " +
-                "AND s.points=1 AND r.target=3 THEN 1 ELSE 0 END) AS zone, COUNT(*) " +
-                "FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow " +
+        Cursor cur = db.rawQuery("SELECT s.points AS zone, COUNT(*) " +
+                "FROM ROUND r, PASSE p, SHOOT s " +
                 "WHERE r._id=p.round AND p.round=" + round + " AND s.passe=p._id AND " +
                 "s.points<3 AND s.points>-1 GROUP BY zone", null);
         if (cur.moveToFirst()) {
@@ -487,20 +496,85 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 ////// GET AGGREGATED INFORMATION //////
 
+    public ArrayList<Integer> getAllTrainings() {
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor res = db.rawQuery("SELECT s.points, r.target, s.passe  " +
+                "FROM TRAINING t, ROUND r, PASSE p, SHOOT s " +
+                "WHERE t._id=r.training AND r._id=p.round " +
+                "AND p._id=s.passe " +
+                "ORDER BY t.datum, t._id, r._id, p._id, s._id", null);
+        res.moveToFirst();
+
+        int oldPasse = -1;
+        int actCounter = 0, maxCounter = 0;
+        ArrayList<Integer> history = new ArrayList<>();
+        for (int i = 0; i < res.getCount(); i++) {
+            int zone = res.getInt(0);
+            int target = res.getInt(1);
+            int passe = res.getInt(2);
+            if (oldPasse != -1 && oldPasse != passe) {
+                float percent = actCounter * 100.0f / (float) maxCounter;
+                history.add((int) percent);
+                actCounter = 0;
+                maxCounter = 0;
+            }
+            actCounter += Target.getPointsByZone(target, zone);
+            maxCounter += Target.getMaxPoints(target);
+            oldPasse = passe;
+            res.moveToNext();
+        }
+        res.close();
+        db.close();
+        return history;
+    }
+
+    public ArrayList<Integer> getAllRounds(long training) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor res = db.rawQuery("SELECT s.points, r.target, s.passe  " +
+                "FROM ROUND r, PASSE p, SHOOT s " +
+                "WHERE "+training+"=r.training AND r._id=p.round " +
+                "AND p._id=s.passe " +
+                "ORDER BY r._id, p._id, s._id", null);
+        res.moveToFirst();
+
+        int oldPasse = -1;
+        int actCounter = 0, maxCounter = 0;
+        ArrayList<Integer> history = new ArrayList<>();
+        for (int i = 0; i < res.getCount(); i++) {
+            int zone = res.getInt(0);
+            int target = res.getInt(1);
+            int passe = res.getInt(2);
+            if (oldPasse != -1 && oldPasse != passe) {
+                float percent = actCounter * 100.0f / (float) maxCounter;
+                history.add((int) percent);
+                actCounter = 0;
+                maxCounter = 0;
+            }
+            actCounter += Target.getPointsByZone(target, zone);
+            maxCounter += Target.getMaxPoints(target);
+            oldPasse = passe;
+            res.moveToNext();
+        }
+        res.close();
+        db.close();
+        return history;
+    }
+
     public int[] getTrainingPoints(long training) {
         SQLiteDatabase db = getReadableDatabase();
         String[] args = {"" + training};
 
-        Cursor res = db.rawQuery("SELECT s.points, r.target, CASE WHEN r.bow=-2 OR b.type=1 THEN 1 ELSE 0 END compound" +
-                " FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow" +
+        Cursor res = db.rawQuery("SELECT s.points, r.target" +
+                " FROM ROUND r, PASSE p, SHOOT s" +
                 " WHERE r._id=p.round AND r.training=? AND s.passe=p._id", args);
         res.moveToFirst();
         int[] sum = new int[2];
         for (int i = 0; i < res.getCount(); i++) {
             int zone = res.getInt(0);
             int target = res.getInt(1);
-            boolean compound = res.getInt(2) == 1;
-            sum[0] += Target.getPointsByZone(target, zone, compound);
+            sum[0] += Target.getPointsByZone(target, zone);
             sum[1] += Target.getMaxPoints(target);
             res.moveToNext();
         }
@@ -513,16 +587,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         String[] args = {"" + round};
 
-        Cursor res = db.rawQuery("SELECT s.points, r.target, CASE WHEN r.bow=-2 OR b.type=1 THEN 1 ELSE 0 END compound" +
-                " FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow" +
+        Cursor res = db.rawQuery("SELECT s.points, r.target" +
+                " FROM ROUND r, PASSE p, SHOOT s" +
                 " WHERE r._id=p.round AND p.round=? AND s.passe=p._id", args);
         res.moveToFirst();
         int sum = 0;
         for (int i = 0; i < res.getCount(); i++) {
             int zone = res.getInt(0);
             int target = res.getInt(1);
-            boolean compound = res.getInt(2) == 1;
-            sum += Target.getPointsByZone(target, zone, compound);
+            sum += Target.getPointsByZone(target, zone);
             res.moveToNext();
         }
         res.close();
@@ -702,8 +775,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public void exportAll(File file) throws IOException {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cur = db.rawQuery("SELECT t.title,datetime(t.datum/1000, 'unixepoch') AS date,r.indoor,r.distance," +
-                "r.target, b.name AS bow, s.points AS score, CASE WHEN r.bow=-2 OR b.type=1 THEN 1 ELSE 0 END compound " +
-                "FROM TRAINING t, ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON r.bow = b._id " +
+                "r.target, b.name AS bow, s.points AS score " +
+                "FROM TRAINING t, ROUND r, PASSE p, SHOOT s " +
                 "WHERE t._id = r.training AND r._id = p.round AND p._id = s.passe", null);
         String[] names = cur.getColumnNames();
 
@@ -717,7 +790,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         int targetInd = cur.getColumnIndexOrThrow("target");
         int scoreInd = cur.getColumnIndexOrThrow("score");
         int indoorInd = cur.getColumnIndexOrThrow("indoor");
-        int compoundInd = cur.getColumnIndexOrThrow("compound");
         if (cur.moveToFirst()) {
             do {
                 for (int i = 0; i < names.length - 1; i++) {
@@ -730,7 +802,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                         else
                             writer.append("Indoor");
                     } else if (i == scoreInd) {
-                        String x = Target.getStringByZone(cur.getInt(targetInd), cur.getInt(scoreInd), cur.getInt(compoundInd) == 1);
+                        String x = Target.getStringByZone(cur.getInt(targetInd), cur.getInt(scoreInd));
                         writer.append(x);
                     } else {
                         writer.append(cur.getString(i));
