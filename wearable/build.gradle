@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 
-
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
@@ -9,8 +8,8 @@ android {
         applicationId "de.dreier.mytargets"
         minSdkVersion 20
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 19
+        versionName "1.9.9"
     }
     buildTypes {
         release {

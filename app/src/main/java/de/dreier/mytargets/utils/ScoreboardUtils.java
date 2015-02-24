@@ -30,14 +30,14 @@ public class ScoreboardUtils {
         String html = "<html>" + CSS;
 
         if (scoreboard) {
-            // TODO use this one http://www.bogenundpfeile.de/media/Schiesszettel_FI.pdf
-            html += "<table class=\"myTable\"><tr>";
+            html += "<table class=\"myTable\"><tr>" +
+                    "<th colspan=\"" + info.ppp + "\">" + context.getString(R.string.arrows) + "</th>" +
+                    "<th rowspan=\"2\" colspan=\"2\">" + context.getString(R.string.sum) + "</th>" +
+                    "<th rowspan=\"2\">" + context.getString(R.string.carry) + "</th>" +
+                    "</tr><tr>";
             for (int i = 1; i <= info.ppp; i++) {
                 html += "<th>" + i + "</th>";
             }
-            html+="<th>" + context.getString(R.string.arrows) + "</th>";
-            html+="<th>" + context.getString(R.string.sum) + "</th>";
-            html+="<th>" + context.getString(R.string.carry) + "</th>";
             html += "</tr>";
             int sum = 0, carry = 0, count = 0;
             int i = 0;
@@ -112,7 +112,7 @@ public class ScoreboardUtils {
                     if (!TextUtils.isEmpty(shot.comment)) {
                         comments += "<tr><td>" + i + "</td>" +
                                 "<td>" + Target.getStringByZone(info.target, shot.zone) + "</td>" +
-                                "<td>" + TextUtils.htmlEncode(shot.comment).replace("\n","<br />") + "</td></tr>";
+                                "<td>" + TextUtils.htmlEncode(shot.comment).replace("\n", "<br />") + "</td></tr>";
                         commentsCount++;
                     }
                 }

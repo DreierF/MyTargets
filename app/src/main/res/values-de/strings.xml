@@ -114,4 +114,9 @@
     <string name="show_all">Zeige alle Schüsse</string>
     <string name="comment">Kommentar</string>
 
+    <!-- Statistics -->
+    <string name="all_trainings">Alle Trainings</string>
+    <string name="entire_training">Gesamtes Training</string>
+    <string name="current_round">Aktuelle Runde</string>
+
 </resources>

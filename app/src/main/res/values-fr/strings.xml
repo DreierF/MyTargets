@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General -->
+    <string name="app_name">MyTargets</string>
+    <string name="prev">Précédent</string>
+    <string name="next">Suivant</string>
+    <string name="save">Sauver</string>
+    <string name="custom">Personnaliser</string>
+    <string name="training">Entraînement</string>
+    <string name="bow">Arc</string>
+    <string name="arrow">Flèche</string>
+    <string name="round">Série</string>
+    <string name="points">Points</string>
+    <string name="passe">Volée</string>
+    
+    <!-- Overview -->
+    <string name="new_training">Nouvel entraînement</string>
+    <string name="new_bow">Nouvel Arc</string>
+    <string name="new_arrow">Nouvelle flèche</string>
+    <string name="new_round">Nouvelle série</string>
+    <string name="new_passe">Nouvelle volée</string>
+    <plurals name="training">
+        <item quantity="one">%d entraînement sélectionné</item>
+        <item quantity="other">%d entraînements sélectionnés</item>
+    </plurals>
+    <plurals name="bow">
+        <item quantity="one">%d arc sélectionné</item>
+        <item quantity="other">%d arcs sélectionnés</item>
+    </plurals>
+    <plurals name="arrow">
+        <item quantity="one">%d flèche sélectionnée</item>
+        <item quantity="other">%d flèches sélectionnées</item>
+    </plurals>
+    <plurals name="round">
+        <item quantity="one">%d Série sélectionnée</item>
+        <item quantity="other">%d Séries sélectionnées</item>
+    </plurals>
+    <plurals name="passe">
+        <item quantity="one">%d volée sélectionnée</item>
+        <item quantity="other">%d volées sélectionnées</item>
+    </plurals>
+    <string name="edit">Modifier</string>
+    <string name="delete">Effacer</string>
+    <string name="statistic">Statistique</string>
+
+    <!-- Share -->
+    <string name="share">Partager</string>
+    <string name="my_share_text">Ouais, regarde mon score au tir à l\'arc. J\'ai eu:\n%1$d fois X\n%2$d fois 10\n%3$d fois 9\nCela fait un total de %4$d sur %5$d.</string>
+    <string name="comments">Commentaires</string>
+    <string name="text">Texte</string>
+    <string name="dispersion_pattern">Dispersion pattern</string>
+    <string name="sharing_failed">Le partage n\'a pas fonctionné!</string>
+
+    <!-- Export -->
+    <string name="export">Exporter</string>
+    <string name="send_exported">Envoyer les données exportées</string>
+    <string name="exporting_failed">L\'export n\'a pas fonctionné!</string>
+
+    <!-- New bow -->
+    <string name="add_bow">Ajouter un arc</string>
+    <string name="name">Nom</string>
+    <string name="bow_type">Type d\'arc</string>
+    <string name="recurve_bow">Arc classique</string>
+    <string name="compound_bow">Arc à poulies</string>
+    <string name="bare_bow">Arc nu (Barebow)</string>
+    <string name="long_bow">Arc long (Longbow)</string>
+    <string name="horse_bow">Horse bow</string>
+    <string name="yumi">Yumi</string>
+    <string name="properties">Propriétés</string>
+    <string name="brand">Marque</string>
+    <string name="size">Taille</string>
+    <string name="description">Description</string>
+    <string name="height">Band</string>
+    <string name="tiller">Tiller</string>
+    <string name="sight_settings">Réglages du viseur</string>
+    <string name="add">Ajouter</string>
+    <string name="select_picture">Choisir une image</string>
+    <string name="take_picture">Prendre une photo</string>
+    <string name="pick_from_gallery">Choisir une photo dans la galerie</string>
+
+    <!-- New arrow -->
+    <string name="add_arrow">Ajouter une flèche</string>
+    <string name="length">Longueur</string>
+    <string name="spine">Rigidité (Spine)</string>
+    <string name="weight">Poids</string>
+    <string name="vanes">Empennage</string>
+    <string name="nock">Encoche</string>
+    <string name="material">Matériau</string>
+
+    <!-- New round -->
+    <string name="title">Titre</string>
+    <string name="outdoor">Extérieur</string>
+    <string name="indoor">Intérieur</string>
+    <string name="distance">Distance</string>
+    <string name="arrows_per_passe">Flèches par volée</string>
+    <string name="target_round">Blason</string>
+    <string name="title_compound">Arc à poulies?</string>
+    <string name="msg_compound_type">Quel type d\'arc utilisez-vous? (différence pour la comptabilisation des points pour 10)</string>
+    <string name="other_bow">Autre arc</string>
+
+    <!-- Scoreboard -->
+    <string name="scoreboard">Feuille de marque</string>
+    <string name="arrows">Volée</string>
+    <string name="sum">Somme</string>
+    <string name="carry">Cumul</string>
+    <string name="action_print">Imprimer</string>
+    <string name="nine">Neuf</string>
+    <string name="ten_x">Dix+X</string>
+    <string name="average">Moyenne</string>
+
+    <!-- Input mode -->
+    <string name="switch_mode">Allez en mode saisie</string>
+    <string name="show_all">Montrer tous les tirs</string>
+    <string name="comment">Commentaire</string>
+
+    <!-- Statistics -->
+    <string name="all_trainings">Tous les entraînements</string>
+    <string name="entire_training">Entraînement complet</string>
+    <string name="current_round">Série actuelle</string>
+
+</resources>

@@ -108,7 +108,7 @@ public class MainActivity extends ActionBarActivity {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         boolean shown = prefs.getBoolean("translation_dialog_shown", false);
 
-        String longLang = Locale.getDefault().getDisplayLanguage().toLowerCase();
+        String longLang = Locale.getDefault().getDisplayLanguage();
         String shortLocale = Locale.getDefault().getLanguage();
         if (!supportedLanguages.contains(shortLocale) && !shown && !shownThisTime) {
             // Link the e-mail address in the message

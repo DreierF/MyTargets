@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">MyTargets</string>
+    <string name="app_name" translateable="false">MyTargets</string>
     <string name="saved">Saved</string>
 </resources>

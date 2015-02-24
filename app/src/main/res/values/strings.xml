@@ -114,6 +114,10 @@
     <string name="show_all">Show all shoots</string>
     <string name="comment">Comment</string>
 
+    <!-- Statistics -->
+    <string name="all_trainings">All trainings</string>
+    <string name="entire_training">Entire training</string>
+    <string name="current_round">Current round</string>
 
     <!-- NOT TRANSLATABLE -->
     <string name="two" translatable="false">2</string>

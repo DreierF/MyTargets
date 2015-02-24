@@ -67,11 +67,11 @@ public class StatisticsActivity extends ActionBarActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Alle Trainings";
+                    return getString(R.string.all_trainings);
                 case 1:
-                    return "Gesamtes Training";
+                    return getString(R.string.entire_training);
                 default:
-                    return "Aktuelle Runde";
+                    return getString(R.string.current_round);
             }
         }
     }
