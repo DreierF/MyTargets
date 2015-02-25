@@ -69,8 +69,8 @@ public class WearableUtils {
         ByteArrayInputStream in = new ByteArrayInputStream(data);
         ObjectInputStream is = new ObjectInputStream(in);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(BUNDLE_IMAGE, (Serializable) is.readObject());
-        bundle.putSerializable(BUNDLE_INFO, (Serializable) is.readObject());
+        bundle.putSerializable(BUNDLE_IMAGE, (BitmapDataObject) is.readObject());
+        bundle.putSerializable(BUNDLE_INFO, (NotificationInfo) is.readObject());
         return bundle;
     }
 
@@ -93,6 +93,9 @@ public class WearableUtils {
     public static class BitmapDataObject implements Serializable {
         private static final long serialVersionUID = 111696345129311948L;
         private byte[] imageByteArray;
+
+        public BitmapDataObject() {
+        }
 
         public Bitmap getBitmap() {
             return BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length);

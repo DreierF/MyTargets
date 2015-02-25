@@ -13,6 +13,7 @@
     <string name="round">Runde</string>
     <string name="points">Punkte</string>
     <string name="passe">Passe</string>
+    <string name="passe_n">Passe %d</string>
 
     <!-- Overview -->
     <string name="new_training">Neues Training</string>

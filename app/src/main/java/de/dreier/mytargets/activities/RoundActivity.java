@@ -86,7 +86,6 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
         getSupportActionBar().setTitle(getString(R.string.round) + " " + db.getRoundInd(mTraining, mRound));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         // Set padding view for ListView. This is the flexible space.
         View paddingView = new View(this);
         AbsListView.LayoutParams lp = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, mHeaderHeight + mActionBarSize);

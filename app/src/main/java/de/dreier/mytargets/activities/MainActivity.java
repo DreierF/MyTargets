@@ -54,7 +54,7 @@ public class MainActivity extends ActionBarActivity {
         viewPager.setAdapter(new MainTabsFragmentPagerAdapter(this));
 
         SlidingTabLayout slidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
-        slidingTabLayout.setDistributeEvenly(true);
+        //slidingTabLayout.setDistributeEvenly(true);
         slidingTabLayout.setViewPager(viewPager);
 
         askForHelpTranslating();

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -76,16 +77,14 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
         mShowAllMode = prefs.getBoolean(SHOW_ALL_MODE, false);
         target.switchMode(mMode, false);
         target.showAll(mShowAllMode);
-        Bitmap image;
-        if (r.bow > -1) {
-            Bow bow = db.getBow(r.bow, true);
-            image = bow.image;
-        } else {
-            image = BitmapFactory.decodeResource(getResources(), R.drawable.wear_bg);
-        }
 
-        WearableUtils.NotificationInfo info = buildInfo();
-        manager = new WearMessageManager(this, image, info);
+        // Send message to wearable app, that we are starting a passe
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                startWearNotification();
+            }
+        }).start();
 
         if (savedInstanceState != null) {
             target.restoreState(savedInstanceState);
@@ -108,6 +107,20 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void startWearNotification() {
+        Bitmap image;
+        if (r.bow > -1) {
+            Bow bow = db.getBow(r.bow, true);
+            image = bow.image;
+        } else {
+            image = BitmapFactory.decodeResource(getResources(), R.drawable.wear_bg);
+        }
+        image = ThumbnailUtils.extractThumbnail(image, 320, 320);
+
+        WearableUtils.NotificationInfo info = buildInfo();
+        manager = new WearMessageManager(this, image, info);
     }
 
     @Override
@@ -147,7 +160,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
     }
 
     void updatePasse() {
-        setTitle("Passe " + curPasse);
+        setTitle(getString(R.string.passe_n, curPasse));
         prev.setEnabled(curPasse > 1);
         next.setEnabled(curPasse <= savedPasses);
     }
@@ -226,7 +239,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
     }
 
     private WearableUtils.NotificationInfo buildInfo() {
-        String title = "Passe " + savedPasses;
+        String title = getString(R.string.passe_n, savedPasses);
         String text = "";
 
         // Initialize message text
@@ -242,7 +255,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
 
         // Load bow settings
         if (r.bow > -1) {
-            text += db.getSetting(r.bow, r.distanceVal);
+            text += r.distance + ": " + db.getSetting(r.bow, r.distanceVal);
         }
         return new WearableUtils.NotificationInfo(r, title, text, mMode);
     }

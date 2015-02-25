@@ -165,11 +165,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
         mContext = context;
     }
 
-    @Override
+    /*@Override
     public void onConfigure(SQLiteDatabase db) {
         super.onConfigure(db);
         db.execSQL("PRAGMA foreign_keys=ON");
-    }
+    }*/
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -534,7 +534,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         Cursor res = db.rawQuery("SELECT s.points, r.target, s.passe  " +
                 "FROM ROUND r, PASSE p, SHOOT s " +
-                "WHERE "+training+"=r.training AND r._id=p.round " +
+                "WHERE " + training + "=r.training AND r._id=p.round " +
                 "AND p._id=s.passe " +
                 "ORDER BY r._id, p._id, s._id", null);
         res.moveToFirst();
