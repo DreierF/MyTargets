@@ -80,7 +80,7 @@
             android:label="@string/add_bow"
             android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.CustomToolbar"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
@@ -90,7 +90,7 @@
             android:label="@string/add_arrow"
             android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.CustomToolbar"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />

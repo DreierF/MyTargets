@@ -112,7 +112,9 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
     private void startWearNotification() {
         Bitmap image;
         if (r.bow > -1) {
+            DatabaseManager db = new DatabaseManager(this);
             Bow bow = db.getBow(r.bow, true);
+            db.close();
             image = bow.image;
         } else {
             image = BitmapFactory.decodeResource(getResources(), R.drawable.wear_bg);
@@ -127,6 +129,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
     protected void onDestroy() {
         super.onDestroy();
         manager.close();
+        db.close();
     }
 
     @Override
