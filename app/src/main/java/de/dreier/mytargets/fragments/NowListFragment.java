@@ -112,7 +112,7 @@ public abstract class NowListFragment extends Fragment implements ListView.OnIte
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        db = new DatabaseManager(getActivity());
+        db = DatabaseManager.getInstance(getActivity());
         init(getArguments(), savedInstanceState);
     }
 

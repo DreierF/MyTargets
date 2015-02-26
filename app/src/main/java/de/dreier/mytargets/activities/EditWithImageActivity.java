@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -98,7 +99,13 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
         mLeftSpace = getResources().getDimensionPixelSize(R.dimen.left_space_title_toolbar);
         mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
         mActionBarSize = ToolbarUtils.getActionBarSize(this);
+        int statusBarSize = ToolbarUtils.getStatusBarSize(this);
         mToolbarColor = getResources().getColor(R.color.colorPrimary);
+
+        // Ensure scrollview is at least as big to fill the screen
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        content.setMinimumHeight(metrics.heightPixels - mActionBarSize - statusBarSize);
 
         // Inflate whole layout
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);

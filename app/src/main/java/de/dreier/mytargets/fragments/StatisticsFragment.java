@@ -66,7 +66,7 @@ public class StatisticsFragment extends Fragment {
     }
 
     private LinearSeries generateAllSeries() {
-        DatabaseManager db = new DatabaseManager(getActivity());
+        DatabaseManager db = DatabaseManager.getInstance(getActivity());
         ArrayList<Integer> list = db.getAllTrainings();
 
         LinearSeries series = new LinearSeries();
@@ -79,7 +79,7 @@ public class StatisticsFragment extends Fragment {
     }
 
     private LinearSeries generateTrainingSeries() {
-        DatabaseManager db = new DatabaseManager(getActivity());
+        DatabaseManager db = DatabaseManager.getInstance(getActivity());
         ArrayList<Integer> list = db.getAllRounds(mTraining);
 
         LinearSeries series = new LinearSeries();
@@ -92,7 +92,7 @@ public class StatisticsFragment extends Fragment {
     }
 
     private LinearSeries generateRoundSeries() {
-        DatabaseManager db = new DatabaseManager(getActivity());
+        DatabaseManager db = DatabaseManager.getInstance(getActivity());
         ArrayList<Shot[]> passes = db.getRoundPasses(mRound, -1);
         Round r = db.getRound(mRound);
 

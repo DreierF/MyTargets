@@ -155,7 +155,7 @@ public class EditRoundActivity extends ActionBarActivity {
             comment.setText("");
         } else {
             // Load saved values
-            DatabaseManager db = new DatabaseManager(this);
+            DatabaseManager db = DatabaseManager.getInstance(this);
             Round r = db.getRound(mRound);
             if (r.distanceInd == -1) {
                 distance.setVisibility(View.GONE);
@@ -245,7 +245,7 @@ public class EditRoundActivity extends ActionBarActivity {
         }
 
         String title = training.getText().toString();
-        DatabaseManager db = new DatabaseManager(this);
+        DatabaseManager db = DatabaseManager.getInstance(this);
         if (mTraining == -1) {
             mTraining = db.newTraining(title);
         }
@@ -272,7 +272,6 @@ public class EditRoundActivity extends ActionBarActivity {
         boolean in = indoor.isChecked();
         String co = comment.getTextString();
         long round = db.updateRound(mTraining, mRound, dist, unit, in, p, tar, b, a, co);
-        db.close();
 
         SharedPreferences prefs = getSharedPreferences(MyBackupAgent.PREFS, 0);
         SharedPreferences.Editor editor = prefs.edit();

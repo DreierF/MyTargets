@@ -152,7 +152,7 @@ public class MainActivity extends ActionBarActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        DatabaseManager db = new DatabaseManager(MainActivity.this);
+                        DatabaseManager db = DatabaseManager.getInstance(MainActivity.this);
                         String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
                         @SuppressLint("SimpleDateFormat")
                         SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");

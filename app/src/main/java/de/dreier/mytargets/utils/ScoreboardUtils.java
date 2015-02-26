@@ -22,7 +22,7 @@ public class ScoreboardUtils {
 
     public static String getHTMLString(Context context, long round, boolean scoreboard, boolean withTarget, boolean showComments) {
         // Query information from database
-        DatabaseManager db = new DatabaseManager(context);
+        DatabaseManager db = DatabaseManager.getInstance(context);
         Round info = db.getRound(round);
         ArrayList<Shot[]> passes = db.getRoundPasses(round, -1);
 
@@ -84,7 +84,6 @@ public class ScoreboardUtils {
                 html += "<td rowspan=\"2\">" + carry + "</td>";
             }
             html += tmp_html;
-            db.close();
             float avg = ((carry * 100) / count) / 100.0f;
             html += "</table>";
             html += "<table class=\"myTable\" style=\"margin-top:5px;\">" +

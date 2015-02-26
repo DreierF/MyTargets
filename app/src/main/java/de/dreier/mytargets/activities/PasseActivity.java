@@ -51,7 +51,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_passe);
 
-        db = new DatabaseManager(this);
+        db = DatabaseManager.getInstance(this);
 
         Intent i = getIntent();
         if (i != null && i.hasExtra(ROUND_ID)) {
@@ -112,9 +112,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
     private void startWearNotification() {
         Bitmap image;
         if (r.bow > -1) {
-            DatabaseManager db = new DatabaseManager(this);
-            Bow bow = db.getBow(r.bow, true);
-            db.close();
+            Bow bow = DatabaseManager.getInstance(this).getBow(r.bow, true);
             image = bow.image;
         } else {
             image = BitmapFactory.decodeResource(getResources(), R.drawable.wear_bg);
@@ -129,7 +127,6 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
     protected void onDestroy() {
         super.onDestroy();
         manager.close();
-        db.close();
     }
 
     @Override
@@ -211,7 +208,6 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
 
     @Override
     public void onTargetSet(Shot[] passe, boolean remote) {
-        DatabaseManager db = new DatabaseManager(this);
         Arrays.sort(passe);
 
         if (curPasse > savedPasses || remote) {
@@ -226,7 +222,6 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
                 manager.sendMessage(buildInfo());
             }
         }
-        db.close();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

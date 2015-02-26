@@ -20,11 +20,11 @@ public class BowItemAdapter extends CursorAdapter {
     private final LayoutInflater mInflater;
 
     public BowItemAdapter(Context context) {
-        super(context,new DatabaseManager(context).getBows(),0);
+        super(context, DatabaseManager.getInstance(context).getBows(), 0);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         nameInd = getCursor().getColumnIndex(DatabaseManager.BOW_NAME);
         thumbInd = getCursor().getColumnIndex(DatabaseManager.BOW_THUMBNAIL);
-	}
+    }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {

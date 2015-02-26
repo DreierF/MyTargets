@@ -22,7 +22,7 @@ public class RoundsAdapter extends NowListAdapter {
     private final int indoorInd;
 
     public RoundsAdapter(Context context, long training) {
-        super(context, new DatabaseManager(context).getRounds(training));
+        super(context, DatabaseManager.getInstance(context).getRounds(training));
         idInd = getCursor().getColumnIndex(DatabaseManager.ROUND_ID);
         distInd = getCursor().getColumnIndex(DatabaseManager.ROUND_DISTANCE);
         unitInd = getCursor().getColumnIndex(DatabaseManager.ROUND_UNIT);

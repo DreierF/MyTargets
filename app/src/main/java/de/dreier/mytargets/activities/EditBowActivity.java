@@ -140,7 +140,7 @@ public class EditBowActivity extends EditWithImageActivity {
         });
 
         if (savedInstanceState == null && mBowId != -1) {
-            DatabaseManager db = new DatabaseManager(this);
+            DatabaseManager db = DatabaseManager.getInstance(this);
             Bow bow = db.getBow(mBowId, false);
             name.setText(bow.name);
             brand.setText(bow.brand);
@@ -304,7 +304,7 @@ public class EditBowActivity extends EditWithImageActivity {
 
     @Override
     public void onSave() {
-        DatabaseManager db = new DatabaseManager(this);
+        DatabaseManager db = DatabaseManager.getInstance(this);
 
         Bow bow = new Bow();
         bow.id = mBowId;

@@ -249,7 +249,7 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
         } else {
             i.setClass(this, PasseActivity.class);
             i.putExtra(PasseActivity.ROUND_ID, mRound);
-            i.putExtra(PasseActivity.PASSE_IND, pos);
+            i.putExtra(PasseActivity.PASSE_IND, pos - 1);
         }
         return true;
     }

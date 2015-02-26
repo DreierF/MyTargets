@@ -24,7 +24,7 @@ public abstract class NowListAdapter extends CursorAdapter {
     NowListAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        db = new DatabaseManager(context);
+        db = DatabaseManager.getInstance(context);
         mContext = context;
     }
 

@@ -41,8 +41,7 @@ public class EditArrowActivity extends EditWithImageActivity {
         comment = (FloatLabel) findViewById(R.id.arrow_comment);
 
         if (savedInstanceState == null && mArrowId != -1) {
-            DatabaseManager db = new DatabaseManager(this);
-            Arrow arrow = db.getArrow(mArrowId, false);
+            Arrow arrow = DatabaseManager.getInstance(this).getArrow(mArrowId, false);
             name.setText(arrow.name);
             length.setText(arrow.length);
             material.setText(arrow.material);
@@ -69,7 +68,7 @@ public class EditArrowActivity extends EditWithImageActivity {
 
     @Override
     public void onSave() {
-        DatabaseManager db = new DatabaseManager(this);
+        DatabaseManager db = DatabaseManager.getInstance(this);
 
         Arrow arrow = new Arrow();
         arrow.id = mArrowId;

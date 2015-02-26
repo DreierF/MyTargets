@@ -23,7 +23,7 @@ public class TrainingAdapter extends NowListAdapter {
     private final DateFormat dateFormat;
 
     public TrainingAdapter(Context context) {
-        super(context, new DatabaseManager(context).getTrainings());
+        super(context, DatabaseManager.getInstance(context).getTrainings());
         titleInd = getCursor().getColumnIndex(DatabaseManager.TRAINING_TITLE);
         dateInd = getCursor().getColumnIndex(DatabaseManager.TRAINING_DATE);
         dateFormat = DateFormat.getDateInstance();

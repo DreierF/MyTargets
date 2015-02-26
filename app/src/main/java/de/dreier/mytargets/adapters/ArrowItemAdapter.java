@@ -20,7 +20,7 @@ public class ArrowItemAdapter extends CursorAdapter {
     private final LayoutInflater mInflater;
 
     public ArrowItemAdapter(Context context) {
-        super(context, new DatabaseManager(context).getArrows(), 0);
+        super(context, DatabaseManager.getInstance(context).getArrows(), 0);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         nameInd = getCursor().getColumnIndex(DatabaseManager.ARROW_NAME);
         thumbInd = getCursor().getColumnIndex(DatabaseManager.ARROW_THUMBNAIL);

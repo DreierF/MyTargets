@@ -20,7 +20,7 @@ public class PasseAdapter extends NowListAdapter {
     private final Round mRoundInfo;
 
     public PasseAdapter(Context context, long round, Round roundInfo) {
-        super(context, new DatabaseManager(context).getPasses(round));
+        super(context, DatabaseManager.getInstance(context).getPasses(round));
         mNewText = context.getString(R.string.new_passe);
         mRoundInfo = roundInfo;
         passeIdInd = getCursor().getColumnIndex(DatabaseManager.PASSE_ID);

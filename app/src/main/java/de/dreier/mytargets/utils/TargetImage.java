@@ -38,7 +38,7 @@ public class TargetImage {
 
         // Initialize variables
         int radius = size / 2;
-        DatabaseManager db = new DatabaseManager(context);
+        DatabaseManager db = DatabaseManager.getInstance(context);
         ArrayList<Shot[]> oldOnes = db.getRoundPasses(round, -1);
         mZoneCount = Target.target_rounds[roundInfo.target].length;
         init();

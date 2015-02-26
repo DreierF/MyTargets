@@ -47,7 +47,8 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResource());
 
-        db = new DatabaseManager(this);
+        db = DatabaseManager.getInstance(this);
+
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setDividerHeight(0);
         mListView.setOnItemClickListener(this);

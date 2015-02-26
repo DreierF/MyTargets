@@ -14,14 +14,14 @@ import de.dreier.mytargets.managers.DatabaseManager;
 
 /**
  * Shows all Trainings
- * */
+ */
 
 public class BowAdapter extends NowListAdapter {
 
     private final int nameInd, thumbInd;
 
     public BowAdapter(Context context) {
-        super(context,new DatabaseManager(context).getBows());
+        super(context, DatabaseManager.getInstance(context).getBows());
         nameInd = getCursor().getColumnIndex(DatabaseManager.BOW_NAME);
         thumbInd = getCursor().getColumnIndex(DatabaseManager.BOW_THUMBNAIL);
         mNewText = context.getString(R.string.new_bow);

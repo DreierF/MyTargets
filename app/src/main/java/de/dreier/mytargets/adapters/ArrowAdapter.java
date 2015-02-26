@@ -21,7 +21,7 @@ public class ArrowAdapter extends NowListAdapter {
     private final int nameInd, thumbInd;
 
     public ArrowAdapter(Context context) {
-        super(context, new DatabaseManager(context).getArrows());
+        super(context, DatabaseManager.getInstance(context).getArrows());
         nameInd = getCursor().getColumnIndex(DatabaseManager.ARROW_NAME);
         thumbInd = getCursor().getColumnIndex(DatabaseManager.ARROW_THUMBNAIL);
         mNewText = context.getString(R.string.new_arrow);
