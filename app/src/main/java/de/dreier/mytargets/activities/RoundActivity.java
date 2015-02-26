@@ -243,7 +243,7 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
 
     @Override
     public boolean onItemClick(Intent i, int pos, long id) {
-        if (pos == 0) {
+        if (pos == 1) {
             i.setClass(this, PasseActivity.class);
             i.putExtra(PasseActivity.ROUND_ID, mRound);
         } else {
