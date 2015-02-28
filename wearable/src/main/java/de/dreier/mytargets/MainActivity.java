@@ -32,7 +32,6 @@ import de.dreier.mytargets.models.WearableUtils;
 public class MainActivity extends Activity implements OnTargetSetListener, GoogleApiClient.ConnectionCallbacks {
 
     public static final String EXTRA_ROUND = "round";
-    public static final String EXTRA_MODE = "mode";
     public TargetSelectView mTarget;
     public DelayedConfirmationView confirm;
     private Round round;
@@ -47,7 +46,6 @@ public class MainActivity extends Activity implements OnTargetSetListener, Googl
         Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null) {
             round = (Round) intent.getExtras().getSerializable(EXTRA_ROUND);
-            mode = intent.getExtras().getBoolean(EXTRA_MODE, false);
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -69,7 +67,6 @@ public class MainActivity extends Activity implements OnTargetSetListener, Googl
 
                 // Set up target view
                 mTarget.setRoundInfo(round);
-                mTarget.setMode(mode);
                 mTarget.reset();
                 mTarget.setOnTargetSetListener(MainActivity.this);
 

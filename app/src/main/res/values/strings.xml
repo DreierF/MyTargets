@@ -2,7 +2,7 @@
 <resources>
 
     <!-- General -->
-    <string name="app_name">My Targets</string>
+    <string name="app_name">MyTargets</string>
     <string name="prev">Previous</string>
     <string name="next">Next</string>
     <string name="save">Save</string>
@@ -112,7 +112,7 @@
 
     <!-- Input mode -->
     <string name="switch_mode">Switch input mode</string>
-    <string name="show_all">Show all shoots</string>
+    <string name="show_all">Show all impacts</string>
     <string name="comment">Comment</string>
 
     <!-- Statistics -->

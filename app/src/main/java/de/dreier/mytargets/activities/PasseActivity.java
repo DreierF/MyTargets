@@ -182,7 +182,6 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 prefs.edit().putBoolean(TARGET_MODE, mMode).apply();
                 supportInvalidateOptionsMenu();
-                manager.sendMessage(buildInfo());
                 return true;
             case R.id.action_show_all:
                 mShowAllMode = !mShowAllMode;
@@ -255,6 +254,6 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
         if (r.bow > -1) {
             text += r.distance + ": " + db.getSetting(r.bow, r.distanceVal);
         }
-        return new WearableUtils.NotificationInfo(r, title, text, mMode);
+        return new WearableUtils.NotificationInfo(r, title, text);
     }
 }

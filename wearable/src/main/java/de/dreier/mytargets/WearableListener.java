@@ -57,7 +57,6 @@ public class WearableListener extends WearableListenerService {
         // Build the intent to display our custom notification
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.putExtra(MainActivity.EXTRA_ROUND, info.round);
-        notificationIntent.putExtra(MainActivity.EXTRA_MODE, info.mode);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 

@@ -77,16 +77,14 @@ public class WearableUtils {
     public static class NotificationInfo implements Serializable {
         static final long serialVersionUID = 43L;
 
-        public NotificationInfo(Round round, String title, String text, boolean mode) {
+        public NotificationInfo(Round round, String title, String text) {
             this.round = round;
             this.title = title;
             this.text = text;
-            this.mode = mode;
         }
 
         public String title;
         public String text;
-        public boolean mode;
         public Round round;
     }
 

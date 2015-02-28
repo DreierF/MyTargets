@@ -42,6 +42,13 @@ public class Target {
             0xFF7d7a80 // white
     };
 
+    public static final int[][] intersectionColor = {
+            {0xFF473414, 0xFF10110B}, // yellow -> yellow/red
+            {0xFF6A1D0B, 0xFF191E38}, // red -> red/blue
+            {0xFF1E4C66, 0xFF12243A}, // blue -> blue/black
+            {0xFF6A6869, 0xFF1C1C1B}, // black -> black/white
+            {0xFF9A9A99, 0xFF505050}}; // white -> white/mistake
+
     // Indices for target colors starting with the middle one
     public static final int[][] target_rounds = {
             {0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4}, //WA

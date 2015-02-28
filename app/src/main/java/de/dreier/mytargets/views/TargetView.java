@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,12 +21,11 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.models.Circle;
 import de.dreier.mytargets.models.OnTargetSetListener;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
@@ -61,8 +61,62 @@ public class TargetView extends View implements View.OnTouchListener {
     private float oldSpacePerResult, oldResultX1;
     private Round roundInfo;
     private boolean showAll = false;
-    private List<Shot[]> mOldShots;
+    private ArrayList<Shot[]> mOldShots;
     private Timer longPressTimer;
+    private Runnable task = new Runnable() {
+        @Override
+        public void run() {
+            longPressTimer = null;
+            Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+            v.vibrate(500);
+            animateSelectCircle(roundInfo.ppp);
+
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.comment_dialog, null);
+            final EditText input = (EditText) view.findViewById(R.id.shot_comment);
+            input.setText(mPasse[mCurPressed].comment);
+
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.comment)
+                    .setView(view)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            mPasse[mCurPressed].comment = input.getText().toString();
+                            if (lastSetArrow + 1 >= roundInfo.ppp && setListener != null) {
+                                setListener.onTargetSet(mPasse.clone(), false);
+                            }
+                            mCurPressed = -1;
+                            invalidate();
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            mCurPressed = -1;
+                            invalidate();
+                            dialog.dismiss();
+                        }
+                    }).show();
+        }
+    };
+    private Circle circle;
+    private Paint thinLine;
+    private Handler h = new Handler();
+
+    public TargetView(Context context) {
+        super(context);
+        init();
+    }
+
+    public TargetView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public TargetView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init();
+    }
 
     public void reset() {
         currentArrow = 0;
@@ -78,6 +132,7 @@ public class TargetView extends View implements View.OnTouchListener {
         roundInfo = r;
         mZoneCount = Target.target_rounds[r.target].length;
         mPasse = Shot.newArray(r.ppp);
+        circle = new Circle(density, roundInfo.target);
         reset();
     }
 
@@ -104,21 +159,6 @@ public class TargetView extends View implements View.OnTouchListener {
     public void setOldShoots(ArrayList<Shot[]> oldOnes) {
         mOldShots = oldOnes;
         invalidate();
-    }
-
-    public TargetView(Context context) {
-        super(context);
-        init();
-    }
-
-    public TargetView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public TargetView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        init();
     }
 
     private void init() {
@@ -155,9 +195,13 @@ public class TargetView extends View implements View.OnTouchListener {
         circleColorP.setAntiAlias(true);
         circleColorP.setStrokeWidth(2 * density);
 
+        thinLine = new Paint();
+        thinLine.setAntiAlias(true);
+        thinLine.setStyle(Paint.Style.STROKE);
+
         setOnTouchListener(this);
 
-        if(isInEditMode()) {
+        if (isInEditMode()) {
             roundInfo = new Round();
             roundInfo.ppp = 3;
             mPasse = Shot.newArray(3);
@@ -207,7 +251,7 @@ public class TargetView extends View implements View.OnTouchListener {
             } else {
                 circleY = midY + radius * (curZone + 1) / (float) mZoneCount;
             }
-            drawCircle(canvas, midX + radius + 27 * density, circleY, curZone, null);
+            circle.draw(canvas, midX + radius + 27 * density, circleY, curZone, 17, false);
             if (curZone > -1)
                 canvas.drawLine(midX, circleY, midX + radius + 10 * density, circleY, circleColorP);
         }
@@ -226,10 +270,9 @@ public class TargetView extends View implements View.OnTouchListener {
                 if (mCurSelecting == -2) {
                     float oldX = oldSpacePerResult * i + oldResultX1 + (oldSpacePerResult / 2.0f);
                     float oldY = mOutFromY + oldRadius * 1.3f;
-                    drawCircle(canvas, oldX + (newX - oldX) * mCurAnimationProgress,
-                            oldY + (newY - oldY) * mCurAnimationProgress, mPasse[i].zone, null);
+                    circle.draw(canvas, oldX + (newX - oldX) * mCurAnimationProgress, oldY + (newY - oldY) * mCurAnimationProgress, mPasse[i].zone, 17, false);
                 } else {
-                    drawCircle(canvas, newX, newY, mPasse[i].zone, mPasse[i].comment);
+                    circle.draw(canvas, newX, newY, mPasse[i].zone, 17, !TextUtils.isEmpty(mPasse[i].comment));
                 }
             }
         }
@@ -238,7 +281,7 @@ public class TargetView extends View implements View.OnTouchListener {
         if (mCurSelecting > -1) {
             // Draw outgoing object
             if (mOutZone >= -1) {
-                drawCircle(canvas, mOutFromX + (mOutToX - mOutFromX) * mCurAnimationProgress, mOutFromY + (mOutToY - mOutFromY) * mCurAnimationProgress, mOutZone, null);
+                circle.draw(canvas, mOutFromX + (mOutToX - mOutFromX) * mCurAnimationProgress, mOutFromY + (mOutToY - mOutFromY) * mCurAnimationProgress, mOutZone, 17, false);
                 if (mOutZone > -1 && mModeEasy) {
                     int colorInd = mOutZone > -1 ? Target.target_rounds[roundInfo.target][mOutZone] : 3;
                     int color = Target.circleStrokeColor[colorInd];
@@ -248,7 +291,7 @@ public class TargetView extends View implements View.OnTouchListener {
             }
             // Draw incoming object
             if (mInZone >= -1) {
-                drawCircle(canvas, mInFromX + (mInToX - mInFromX) * mCurAnimationProgress, mInFromY + (mInToY - mInFromY) * mCurAnimationProgress, mInZone, null);
+                circle.draw(canvas, mInFromX + (mInToX - mInFromX) * mCurAnimationProgress, mInFromY + (mInToY - mInFromY) * mCurAnimationProgress, mInZone, 17, false);
                 if (mInZone > -1 && mModeEasy) {
                     int colorInd = mInZone > -1 ? Target.target_rounds[roundInfo.target][mInZone] : 3;
                     int color = Target.circleStrokeColor[colorInd];
@@ -257,12 +300,6 @@ public class TargetView extends View implements View.OnTouchListener {
                 }
             }
         }
-    }
-
-    class Midpoint {
-        float count = 0;
-        float sumX = 0;
-        float sumY = 0;
     }
 
     private void drawTarget(Canvas canvas, int x, int y, int radius) {
@@ -278,7 +315,14 @@ public class TargetView extends View implements View.OnTouchListener {
             if (i != 2 || roundInfo.target != 3 || !roundInfo.compound) {
                 float rad = (radius * i) / (float) mZoneCount;
                 canvas.drawCircle(x, y, rad, drawColorP);
-                canvas.drawCircle(x, y, rad, Target.target_rounds[roundInfo.target][i - 1] == 3 ? thinWhiteBorder : thinBlackBorder);
+                int colorIndCur = Target.target_rounds[roundInfo.target][i - 1];
+                int colorIndNext = colorIndCur + 1;
+                if (i < mZoneCount) {
+                    colorIndNext = Target.target_rounds[roundInfo.target][i];
+                }
+                int color = Target.intersectionColor[colorIndCur][colorIndCur == colorIndNext ? 0 : 1];
+                thinLine.setColor(color);
+                canvas.drawCircle(x, y, rad, thinLine);
             }
         }
 
@@ -353,9 +397,9 @@ public class TargetView extends View implements View.OnTouchListener {
                 int Y2 = contentHeight * (i + 1) / (mZoneCount + 1);
 
                 if (roundInfo.target == 3 && roundInfo.compound) {
-                    if(i == 1) {
+                    if (i == 1) {
                         continue;
-                    } else if(i==2) {
+                    } else if (i == 2) {
                         Y1 = contentHeight * (i - 1) / (mZoneCount + 1);
                     }
                 }
@@ -458,7 +502,7 @@ public class TargetView extends View implements View.OnTouchListener {
         b.putSerializable("roundInfo", roundInfo);
         b.putInt("currentArrow", currentArrow);
         b.putInt("lastSetArrow", lastSetArrow);
-        b.putSerializable("oldShots", mOldShots.toArray());
+        b.putSerializable("oldShots", mOldShots);
     }
 
     public void restoreState(Bundle b) {
@@ -466,32 +510,7 @@ public class TargetView extends View implements View.OnTouchListener {
         currentArrow = b.getInt("currentArrow");
         lastSetArrow = b.getInt("lastSetArrow");
         roundInfo = (Round) b.getSerializable("roundInfo");
-        mOldShots = Arrays.asList((Shot[][]) b.getSerializable("oldShots"));
-    }
-
-    private void drawCircle(Canvas can, float x, float y, int zone, String comment) {
-        int colorInd;
-        if (zone > -1) {
-            colorInd = Target.target_rounds[roundInfo.target][zone];
-        } else {
-            colorInd = 3;
-        }
-        circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
-        circleColorP.setColor(Target.rectColor[colorInd]);
-        can.drawCircle(x, y, 17 * density, circleColorP);
-        circleColorP.setStyle(Paint.Style.STROKE);
-        circleColorP.setColor(Target.circleStrokeColor[colorInd]);
-        can.drawCircle(x, y, 17 * density, circleColorP);
-        mTextPaint.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
-        can.drawText(Target.getStringByZone(roundInfo.target, zone), x, y + 7 * density, mTextPaint);
-
-        if (comment != null && !comment.isEmpty()) {
-            circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
-            circleColorP.setColor(0xFFFF0000);
-            can.drawCircle(x + 14 * density, y - 14 * density, 8 * density, circleColorP);
-            mTextPaint.setColor(0xFFFFFFFF);
-            can.drawText("+", x + 14 * density, y - 7 * density, mTextPaint);
-        }
+        mOldShots = (ArrayList<Shot[]>) b.getSerializable("oldShots");
     }
 
     @Override
@@ -594,44 +613,6 @@ public class TargetView extends View implements View.OnTouchListener {
         return true;
     }
 
-    private Handler h = new Handler();
-    private Runnable task = new Runnable() {
-        @Override
-        public void run() {
-            longPressTimer = null;
-            Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-            v.vibrate(500);
-            animateSelectCircle(roundInfo.ppp);
-
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.comment_dialog, null);
-            final EditText input = (EditText) view.findViewById(R.id.shot_comment);
-            input.setText(mPasse[mCurPressed].comment);
-
-            new AlertDialog.Builder(getContext())
-                    .setTitle(R.string.comment)
-                    .setView(view)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            mPasse[mCurPressed].comment = input.getText().toString();
-                            if (lastSetArrow + 1 >= roundInfo.ppp && setListener != null) {
-                                setListener.onTargetSet(mPasse.clone(), false);
-                            }
-                            mCurPressed = -1;
-                            invalidate();
-                            dialog.dismiss();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            mCurPressed = -1;
-                            invalidate();
-                            dialog.dismiss();
-                        }
-                    }).show();
-        }
-    };
-
     private void animateSelectCircle(final int i) {
         mCurSelecting = i;
         mCurAnimationProgress = 0;
@@ -684,5 +665,11 @@ public class TargetView extends View implements View.OnTouchListener {
 
     public void setOnTargetSetListener(OnTargetSetListener listener) {
         setListener = listener;
+    }
+
+    class Midpoint {
+        float count = 0;
+        float sumX = 0;
+        float sumY = 0;
     }
 }
