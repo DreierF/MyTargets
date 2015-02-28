@@ -252,8 +252,11 @@ public class TargetView extends View implements View.OnTouchListener {
                 circleY = midY + radius * (curZone + 1) / (float) mZoneCount;
             }
             circle.draw(canvas, midX + radius + 27 * density, circleY, curZone, 17, false);
-            if (curZone > -1)
+            if (curZone > -1) {
+                int colorInd = curZone > -1 ? target[curZone] : 3;
+                circleColorP.setColor(Target.circleStrokeColor[colorInd]);
                 canvas.drawLine(midX, circleY, midX + radius + 10 * density, circleY, circleColorP);
+            }
         }
 
         // Draw touch feedback if arrow is pressed
