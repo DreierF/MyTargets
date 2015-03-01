@@ -35,7 +35,6 @@ public class MainActivity extends Activity implements OnTargetSetListener, Googl
     public TargetSelectView mTarget;
     public DelayedConfirmationView confirm;
     private Round round;
-    private boolean mode;
     private GoogleApiClient mGoogleApiClient;
 
     @Override

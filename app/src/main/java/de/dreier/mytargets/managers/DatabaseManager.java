@@ -28,29 +28,38 @@ import de.dreier.mytargets.utils.BitmapUtils;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
-    private static final int DATABASE_VERSION = 5;
-
-    private static final String TABLE_TRAINING = "TRAINING";
-    private static final String TRAINING_ID = "_id";
     public static final String TRAINING_TITLE = "title";
     public static final String TRAINING_DATE = "datum";
-
-    private static final String TABLE_ROUND = "ROUND";
     public static final String ROUND_ID = "_id";
-    private static final String ROUND_TRAINING = "training";
     public static final String ROUND_INDOOR = "indoor";
     public static final String ROUND_DISTANCE = "distance";
     public static final String ROUND_UNIT = "unit";
-    private static final String ROUND_BOW = "bow";
     public static final String ROUND_PPP = "ppp";
     public static final String ROUND_TARGET = "target";
     public static final String ROUND_ARROW = "arrow";
-    private static final String ROUND_COMMENT = "comment";
-
-    private static final String TABLE_PASSE = "PASSE";
     public static final String PASSE_ID = "_id";
+    public static final String BOW_NAME = "name";
+    public static final String BOW_THUMBNAIL = "thumbnail";
+    public static final String ARROW_NAME = "name";
+    public static final String ARROW_THUMBNAIL = "thumbnail";
+    private static final int DATABASE_VERSION = 5;
+    private static final String TABLE_TRAINING = "TRAINING";
+    private static final String TRAINING_ID = "_id";
+    private static final String CREATE_TABLE_TRAINING =
+            "CREATE TABLE IF NOT EXISTS " + TABLE_TRAINING + " ( " +
+                    TRAINING_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    TRAINING_DATE + " INTEGER," +
+                    TRAINING_TITLE + " TEXT);";
+    private static final String TABLE_ROUND = "ROUND";
+    private static final String ROUND_TRAINING = "training";
+    private static final String ROUND_BOW = "bow";
+    private static final String ROUND_COMMENT = "comment";
+    private static final String TABLE_PASSE = "PASSE";
     private static final String PASSE_ROUND = "round";
-
+    private static final String CREATE_TABLE_PASSE =
+            "CREATE TABLE IF NOT EXISTS " + TABLE_PASSE + " (" +
+                    PASSE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    PASSE_ROUND + " INTEGER REFERENCES " + TABLE_ROUND + " ON DELETE CASCADE);";
     private static final String TABLE_SHOOT = "SHOOT";
     private static final String SHOOT_ID = "_id";
     private static final String SHOOT_PASSE = "passe";
@@ -58,40 +67,23 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String SHOOT_X = "x";
     private static final String SHOOT_Y = "y";
     private static final String SHOOT_COMMENT = "comment";
-
+    private static final String CREATE_TABLE_SHOOT =
+            "CREATE TABLE IF NOT EXISTS " + TABLE_SHOOT + " (" +
+                    SHOOT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    SHOOT_PASSE + " INTEGER REFERENCES " + TABLE_PASSE + " ON DELETE CASCADE," +
+                    SHOOT_ZONE + " INTEGER," +
+                    SHOOT_X + " REAL," +
+                    SHOOT_Y + " REAL," +
+                    SHOOT_COMMENT + " TEXT);";
     private static final String TABLE_BOW = "BOW";
     private static final String BOW_ID = "_id";
-    public static final String BOW_NAME = "name";
     private static final String BOW_BRAND = "brand";
     private static final String BOW_TYPE = "type";
     private static final String BOW_SIZE = "size";
     private static final String BOW_HEIGHT = "height";
     private static final String BOW_TILLER = "tiller";
     private static final String BOW_DESCRIPTION = "description";
-    public static final String BOW_THUMBNAIL = "thumbnail";
     private static final String BOW_IMAGE = "image";
-
-    private static final String TABLE_BOW_IMAGE = "BOW_IMAGE";
-
-    private static final String TABLE_VISIER = "VISIER";
-    private static final String VISIER_ID = "_id";
-    private static final String VISIER_BOW = "bow";
-    private static final String VISIER_DISTANCE = "distance";
-    private static final String VISIER_SETTING = "setting";
-
-    private static final String TABLE_ARROW = "ARROW";
-    private static final String ARROW_ID = "_id";
-    public static final String ARROW_NAME = "name";
-    private static final String ARROW_LENGTH = "length";
-    private static final String ARROW_MATERIAL = "material";
-    private static final String ARROW_SPINE = "spine";
-    private static final String ARROW_WEIGHT = "weight";
-    private static final String ARROW_VANES = "vanes";
-    private static final String ARROW_NOCK = "nock";
-    private static final String ARROW_COMMENT = "comment";
-    public static final String ARROW_THUMBNAIL = "thumbnail";
-    private static final String ARROW_IMAGE = "image";
-
     private static final String CREATE_TABLE_BOW =
             "CREATE TABLE IF NOT EXISTS " + TABLE_BOW + " ( " +
                     BOW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -104,20 +96,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     BOW_DESCRIPTION + " TEXT," +
                     BOW_THUMBNAIL + " BLOB," +
                     BOW_IMAGE + " TEXT);";
-
+    private static final String TABLE_BOW_IMAGE = "BOW_IMAGE";
+    private static final String TABLE_VISIER = "VISIER";
+    private static final String VISIER_ID = "_id";
+    private static final String VISIER_BOW = "bow";
+    private static final String VISIER_DISTANCE = "distance";
+    private static final String VISIER_SETTING = "setting";
     private static final String CREATE_TABLE_VISIER =
             "CREATE TABLE IF NOT EXISTS " + TABLE_VISIER + " ( " +
                     VISIER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     VISIER_BOW + " REFERENCES " + TABLE_BOW + " ON DELETE CASCADE," +
                     VISIER_DISTANCE + " INTEGER," +
                     VISIER_SETTING + " TEXT);";
-
-    private static final String CREATE_TABLE_TRAINING =
-            "CREATE TABLE IF NOT EXISTS " + TABLE_TRAINING + " ( " +
-                    TRAINING_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    TRAINING_DATE + " INTEGER," +
-                    TRAINING_TITLE + " TEXT);";
-
+    private static final String TABLE_ARROW = "ARROW";
     private static final String CREATE_TABLE_ROUND =
             "CREATE TABLE IF NOT EXISTS " + TABLE_ROUND + " (" +
                     ROUND_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -130,7 +121,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     ROUND_TRAINING + " INTEGER REFERENCES " + TABLE_TRAINING + " ON DELETE CASCADE," +
                     ROUND_ARROW + " INTEGER REFERENCES " + TABLE_ARROW + " ON DELETE SET NULL," +
                     ROUND_COMMENT + " TEXT);";
-
+    private static final String ARROW_ID = "_id";
+    private static final String ARROW_LENGTH = "length";
+    private static final String ARROW_MATERIAL = "material";
+    private static final String ARROW_SPINE = "spine";
+    private static final String ARROW_WEIGHT = "weight";
+    private static final String ARROW_VANES = "vanes";
+    private static final String ARROW_NOCK = "nock";
+    private static final String ARROW_COMMENT = "comment";
+    private static final String ARROW_IMAGE = "image";
     private static final String CREATE_TABLE_ARROW =
             "CREATE TABLE IF NOT EXISTS " + TABLE_ARROW + " (" +
                     ARROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -144,36 +143,21 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     ARROW_COMMENT + " TEXT," +
                     ARROW_THUMBNAIL + " BLOB," +
                     ARROW_IMAGE + " TEXT);";
-
-    private static final String CREATE_TABLE_PASSE =
-            "CREATE TABLE IF NOT EXISTS " + TABLE_PASSE + " (" +
-                    PASSE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    PASSE_ROUND + " INTEGER REFERENCES " + TABLE_ROUND + " ON DELETE CASCADE);";
-
-    private static final String CREATE_TABLE_SHOOT =
-            "CREATE TABLE IF NOT EXISTS " + TABLE_SHOOT + " (" +
-                    SHOOT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    SHOOT_PASSE + " INTEGER REFERENCES " + TABLE_PASSE + " ON DELETE CASCADE," +
-                    SHOOT_ZONE + " INTEGER," +
-                    SHOOT_X + " REAL," +
-                    SHOOT_Y + " REAL," +
-                    SHOOT_COMMENT + " TEXT);";
-
     private static DatabaseManager sInstance;
     private final Context mContext;
     private final SQLiteDatabase db;
+
+    private DatabaseManager(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mContext = context;
+        db = getWritableDatabase();
+    }
 
     public static DatabaseManager getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new DatabaseManager(context.getApplicationContext());
         }
         return sInstance;
-    }
-
-    private DatabaseManager(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        mContext = context;
-        db = getWritableDatabase();
     }
 
     /*@Override
@@ -349,17 +333,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return r;
     }
 
-    public Shot[] getPasse(long round, int passe) {
-        String[] cols1 = {PASSE_ID};
-        String[] args1 = {"" + round};
-        Cursor res1 = db.query(TABLE_PASSE, cols1, PASSE_ROUND + "=?", args1, null, null, PASSE_ID + " ASC");
-        if (!res1.moveToPosition(passe - 1))
-            return null;
-        long passeId = res1.getLong(0);
-        res1.close();
-        String[] cols2 = {SHOOT_ZONE, SHOOT_X, SHOOT_Y, SHOOT_COMMENT};
-        String[] args2 = {"" + passeId};
-        Cursor res = db.query(TABLE_SHOOT, cols2, SHOOT_PASSE + "=?", args2, null, null, SHOOT_ID + " ASC");
+    public Shot[] getPasse(long passe) {
+        String[] cols = {SHOOT_ZONE, SHOOT_X, SHOOT_Y, SHOOT_COMMENT};
+        String[] args = {"" + passe};
+        Cursor res = db.query(TABLE_SHOOT, cols, SHOOT_PASSE + "=?", args, null, null, SHOOT_ID + " ASC");
         int count = res.getCount();
 
         Shot[] p = Shot.newArray(count);
@@ -373,6 +350,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
         res.close();
         return p;
+    }
+
+    public Shot[] getPasse(long round, int passe) {
+        String[] cols = {PASSE_ID};
+        String[] args = {"" + round};
+        Cursor res = db.query(TABLE_PASSE, cols, PASSE_ROUND + "=?", args, null, null, PASSE_ID + " ASC");
+        if (!res.moveToPosition(passe - 1))
+            return null;
+        long passeId = res.getLong(0);
+        res.close();
+        return getPasse(passeId);
     }
 
     public ArrayList<Shot[]> getRoundPasses(long round, int excludePasse) {
@@ -404,21 +392,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
         res1.close();
         return new ArrayList<>();
-    }
-
-    public int[] getPasse(long passe) {
-        String[] cols = {SHOOT_ID, SHOOT_ZONE};
-        String[] args = {"" + passe};
-        Cursor res = db.query(TABLE_SHOOT, cols, SHOOT_PASSE + "=?", args, null, null, SHOOT_ID + " ASC");
-        int count = res.getCount();
-        int[] points = new int[count];
-        res.moveToFirst();
-        for (int i = 0; i < count; i++) {
-            points[i] = res.getInt(1);
-            res.moveToNext();
-        }
-        res.close();
-        return points;
     }
 
     public Bow getBow(long bowId, boolean small) {

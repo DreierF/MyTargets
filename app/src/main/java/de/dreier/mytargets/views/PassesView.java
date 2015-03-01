@@ -2,23 +2,19 @@ package de.dreier.mytargets.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
-import de.dreier.mytargets.models.Target;
+import de.dreier.mytargets.models.Circle;
+import de.dreier.mytargets.models.Shot;
 
 public class PassesView extends View {
     private int contentWidth, contentHeight;
 
-    private TextPaint mTextPaint;
-    private Paint circleColorP;
-
-    private int[] points = {-2, -2, -2};
-    private int targetRound;
+    private Shot[] points = new Shot[3];
     private float density;
+    private Circle circle;
 
     public PassesView(Context context) {
         super(context);
@@ -37,20 +33,11 @@ public class PassesView extends View {
 
     private void init() {
         density = getResources().getDisplayMetrics().density;
-        mTextPaint = new TextPaint();
-        mTextPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setTextAlign(Paint.Align.LEFT);
-        mTextPaint.setColor(Color.BLACK);
-        mTextPaint.setTextSize(22 * density);
-        mTextPaint.setTextAlign(Paint.Align.CENTER);
-        circleColorP = new Paint();
-        circleColorP.setAntiAlias(true);
-        circleColorP.setStrokeWidth(2 * density);
     }
 
-    public void setPoints(int[] p, int tar) {
+    public void setPoints(Shot[] p, int tar) {
         points = p;
-        targetRound = tar;
+        circle = new Circle(density, tar);
         invalidate();
     }
 
@@ -60,25 +47,10 @@ public class PassesView extends View {
         float placePerShoot = contentWidth / (float) points.length;
 
         for (int i = 0; i < points.length; i++) {
-            drawCircle(canvas, i * placePerShoot + (placePerShoot / 2.0f), contentHeight / 2.0f, points[i]);
+            circle.draw(canvas, i * placePerShoot + (placePerShoot / 2.0f),
+                    contentHeight / 2.0f, points[i].zone,
+                    17, !TextUtils.isEmpty(points[i].comment));
         }
-    }
-
-    private void drawCircle(Canvas can, float x, float y, int zone) {
-        int colorInd;
-        if (zone > -1) {
-            colorInd = Target.target_rounds[targetRound][zone];
-        } else {
-            colorInd = 3;
-        }
-        circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
-        circleColorP.setColor(Target.rectColor[colorInd]);
-        can.drawCircle(x, y, 17 * density, circleColorP);
-        circleColorP.setStyle(Paint.Style.STROKE);
-        circleColorP.setColor(Target.circleStrokeColor[colorInd]);
-        can.drawCircle(x, y, 17 * density, circleColorP);
-        mTextPaint.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
-        can.drawText(Target.getStringByZone(targetRound, zone), x, y + 7 * density, mTextPaint);
     }
 
     @Override
@@ -92,7 +64,7 @@ public class PassesView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int desiredWidth = (int) (60 * points.length * density);
-        int desiredHeight = (int) (40 * density);
+        int desiredHeight = (int) (50 * density);
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);

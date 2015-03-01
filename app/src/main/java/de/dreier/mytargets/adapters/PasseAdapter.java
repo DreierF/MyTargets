@@ -9,6 +9,7 @@ import android.widget.TextView;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Round;
+import de.dreier.mytargets.models.Shot;
 import de.dreier.mytargets.views.PassesView;
 
 /**
@@ -40,7 +41,7 @@ public class PasseAdapter extends NowListAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder holder = (ViewHolder) view.getTag();
         holder.subtitle.setText(context.getString(R.string.passe) + " " + (1 + cursor.getPosition()));
-        int[] points = db.getPasse(cursor.getLong(passeIdInd));
+        Shot[] points = db.getPasse(cursor.getLong(passeIdInd));
         holder.shots.setPoints(points, mRoundInfo.target);
     }
 
