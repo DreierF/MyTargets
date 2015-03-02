@@ -705,14 +705,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public void exportAll(File file) throws IOException {
         Cursor cur = db.rawQuery("SELECT t.title,datetime(t.datum/1000, 'unixepoch') AS date,r.indoor,r.distance," +
                 "r.target, b.name AS bow, s.points AS score " +
-                "FROM TRAINING t, ROUND r, PASSE p, SHOOT s " +
+                "FROM TRAINING t, ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow " +
                 "WHERE t._id = r.training AND r._id = p.round AND p._id = s.passe", null);
         String[] names = cur.getColumnNames();
 
         file.getParentFile().mkdirs();
         file.createNewFile();
         FileWriter writer = new FileWriter(file);
-        for (int i = 0; i < names.length - 1; i++) {
+        for (int i = 0; i < names.length; i++) {
             writer.append("\"").append(names[i]).append("\";");
         }
         writer.append("\n");
@@ -721,7 +721,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         int indoorInd = cur.getColumnIndexOrThrow("indoor");
         if (cur.moveToFirst()) {
             do {
-                for (int i = 0; i < names.length - 1; i++) {
+                for (int i = 0; i < names.length; i++) {
                     writer.append("\"");
                     if (i == targetInd) {
                         writer.append(TargetItemAdapter.targets[cur.getInt(i)]);

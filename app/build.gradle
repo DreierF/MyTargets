@@ -11,8 +11,8 @@ android {
         applicationId 'de.dreier.mytargets'
         minSdkVersion 11
         targetSdkVersion 21
-        versionCode 19
-        versionName '1.9.9'
+        versionCode 20
+        versionName '2.0'
     }
 
     signingConfigs {
