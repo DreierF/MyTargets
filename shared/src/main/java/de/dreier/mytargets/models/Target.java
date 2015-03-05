@@ -41,14 +41,6 @@ public class Target {
             0xFF1C1C1B, // black
             0xFF7d7a80 // white
     };
-
-    public static final int[][] intersectionColor = {
-            {0xFF473414, 0xFF10110B}, // yellow -> yellow/red
-            {0xFF6A1D0B, 0xFF191E38}, // red -> red/blue
-            {0xFF1E4C66, 0xFF12243A}, // blue -> blue/black
-            {0xFF6A6869, 0xFF1C1C1B}, // black -> black/white
-            {0xFF9A9A99, 0xFF505050}}; // white -> white/mistake
-
     // Indices for target colors starting with the middle one
     public static final int[][] target_rounds = {
             {0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4}, //WA
@@ -60,7 +52,12 @@ public class Target {
             {4, 4, 3}, // DFBV Spiegel Spot
             {3, 3, 4, 4, 3, 3} // DFBV Field
     };
-
+    private static final int[][] intersectionColor = {
+            {0xFF473414, 0xFF10110B}, // yellow -> yellow/red
+            {0xFF6A1D0B, 0xFF191E38}, // red -> red/blue
+            {0xFF1E4C66, 0xFF12243A}, // blue -> blue/black
+            {0xFF6A6869, 0xFF1C1C1B}, // black -> black/white
+            {0xFF9A9A99, 0xFF505050}}; // white -> white/mistake
     // Points for zone
     private static final int[][] target_points = {
             {10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1}, //WA
@@ -108,5 +105,24 @@ public class Target {
         } else {
             return (zone * 2 + 1) / (float) (zones * 2);
         }
+    }
+
+    public static int getIntersectionColor(int from, int to, boolean darker) {
+        int color = Target.intersectionColor[from][from == to ? 0 : 1];
+        if (darker) {
+            if (from == 3 && to == 3)
+                return 0xFF555555;
+
+            int red = (color << 16 & 0xFF) - 150;
+            int green = (color << 8 & 0xFF) - 150;
+            int blue = (color & 0xFF) - 150;
+
+            red = (red < 0 ? 0 : red << 16);
+            green = (green < 0 ? 0 : green << 8);
+            blue = (blue < 0 ? 0 : blue);
+
+            color = 0xFF000000 | red | green | blue;
+        }
+        return color;
     }
 }

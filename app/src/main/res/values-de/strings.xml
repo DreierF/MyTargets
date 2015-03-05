@@ -120,4 +120,34 @@
     <string name="entire_training">Gesamtes Training</string>
     <string name="current_round">Aktuelle Runde</string>
 
+    <!-- Import/Backup -->
+    <string name="backup_action">Backup</string>
+    <string name="import_action">Import</string>
+    <string name="select_a_file">Wähle eine Datei</string>
+    <string name="dir_not_created">Ordner konnte nicht erstellt werden!</string>
+    <string name="backup_successful">Backup erfolgreich!</string>
+    <string name="backup_saved_as">Backup wurde unter \'%s\' gespeichert.</string>
+    <string name="backup_failed">Backup gescheitert!</string>
+    <string name="backup_error">Beim Erstellen des Backups ist ein Fehler aufgetreten:\n%s</string>
+    <string name="sd_card_not_available_title">SD Karte nicht verfügbar!</string>
+    <string name="sd_card_not_available_desc">Bitte mounten Sie ihre SD Karte und versuchen Sie es anschließend erneut!</string>
+    <string name="import_successful">Import erfolgreich!</string>
+    <string name="import_failed">Import gescheitert!</string>
+    <string name="file_not_found">Datei nicht gefunden!</string>
+    <string name="failed_reading_file">Fehler beim Einlesen der Datei!</string>
+
+    <!-- Donate -->
+    <string name="donate_action">Spenden</string>
+    <string name="donate_2">Spende mir einen Burger</string>
+    <string name="donate_2_price">2€</string>
+    <string name="donate_5">Spende mir einen Döner</string>
+    <string name="donate_5_price">5€</string>
+    <string name="donate_10">Spende mir eine große Pizza</string>
+    <string name="donate_10_price">10€</string>
+    <string name="donate_20">Spende mir ein bisschen Benzin</string>
+    <string name="donate_20_price">20€</string>
+    <string name="donate_infinite">Dauerhafte Unterstützung</string>
+    <string name="donate_infinite_price">monatlich 1€</string>
+    <string name="donation_thank">Vielen Dank für Ihre Unterstützung!</string>
+
 </resources>

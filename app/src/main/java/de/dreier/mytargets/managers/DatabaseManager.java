@@ -9,9 +9,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -24,6 +28,7 @@ import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
 import de.dreier.mytargets.models.Target;
 import de.dreier.mytargets.models.Training;
+import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.BitmapUtils;
 
 public class DatabaseManager extends SQLiteOpenHelper {
@@ -774,6 +779,27 @@ public class DatabaseManager extends SQLiteOpenHelper {
             String[] args = {"" + id};
             db.delete(table, "_id=?", args);
         }
+    }
+
+////// BACKUP DATABASE //////
+
+    public static boolean Import(InputStream st) {
+        File tmp;
+        try {
+            // Copy backup stream to temp file
+            tmp = File.createTempFile("import", ".db");
+            BackupUtils.copy(st, tmp);
+
+            // Replace database file
+            File db_file = sInstance.mContext.getDatabasePath(DatabaseManager.DATABASE_NAME);
+            sInstance.close();
+            BackupUtils.copy(tmp, db_file);
+            sInstance = null;
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

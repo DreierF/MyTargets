@@ -323,7 +323,7 @@ public class TargetView extends View implements View.OnTouchListener {
                 if (i < mZoneCount) {
                     colorIndNext = Target.target_rounds[roundInfo.target][i];
                 }
-                int color = Target.intersectionColor[colorIndCur][colorIndCur == colorIndNext ? 0 : 1];
+                int color = Target.getIntersectionColor(colorIndCur, colorIndNext, mModeEasy);
                 thinLine.setColor(color);
                 canvas.drawCircle(x, y, rad, thinLine);
             }

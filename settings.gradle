@@ -1,3 +1,4 @@
 include ':app', ':wearable', ':shared'
+include ':libraries:aFileChooser'
 include ':libraries:FloatingActionButton'
 include ':libraries:FloatLabel'

@@ -5,4 +5,16 @@
         android:id="@+id/action_export"
         android:title="@string/export"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_backup"
+        android:title="@string/backup_action"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_import"
+        android:title="@string/import_action"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_donate"
+        android:title="@string/donate_action"
+        app:showAsAction="never" />
 </menu>
