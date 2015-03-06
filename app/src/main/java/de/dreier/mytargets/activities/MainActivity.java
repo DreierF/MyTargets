@@ -17,7 +17,6 @@ import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +33,7 @@ import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.views.SlidingTabLayout;
 import util.IabHelper;
 import util.IabResult;
+import util.Inventory;
 import util.Purchase;
 
 /**
@@ -73,7 +73,18 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
             public void onIabSetupFinished(IabResult result) {
                 Log.d(TAG, "Setup finished.");
+
+                // Have we been disposed of in the meantime? If so, quit.
+                if (mHelper == null) return;
+
+                if (!result.isSuccess()) {
+                    // Oh noes, there was a problem.
+                    Log.d(TAG, "Problem setting up in-app billing: " + result);
+                    return;
+                }
+
                 mInfiniteSupported = mHelper.subscriptionsSupported();
+                mHelper.queryInventoryAsync(true, DonateDialogFragment.donations, mGotInventoryListener);
             }
         });
     }
@@ -159,7 +170,7 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
                 startActivityForResult(intent, 1);
                 return true;
             case R.id.action_donate:
-                DonateDialogFragment newFragment = DonateDialogFragment.newInstance(mInfiniteSupported);
+                DonateDialogFragment newFragment = DonateDialogFragment.newInstance(mInfiniteSupported, mSubscribedToInfinite);
                 newFragment.show(getSupportFragmentManager(), "dialog");
                 return true;
         }
@@ -191,24 +202,47 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
         }
     }
 
-    void complain(String message) {
-        alert("Error: " + message);
-    }
+    private boolean mSubscribedToInfinite;
 
-    void alert(String message) {
-        AlertDialog.Builder bld = new AlertDialog.Builder(this);
-        bld.setMessage(message);
-        bld.setNeutralButton(android.R.string.ok, null);
-        bld.create().show();
-    }
+    // Listener that's called when we finish querying the items and subscriptions we own
+    IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
+        public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
+            Log.d(TAG, "Query inventory finished.");
+
+            // Have we been disposed of in the meantime? If so, quit.
+            if (mHelper == null) return;
+
+            // Is it a failure?
+            if (result.isFailure()) {
+                Log.d(TAG, "Failed to query inventory: " + result);
+                return;
+            }
+
+            // Do we have the infinite subscription
+            Purchase infinitePurchase = inventory.getPurchase(DonateDialogFragment.DONATION_INFINITE);
+            mSubscribedToInfinite = infinitePurchase != null && infinitePurchase.getOrderId() != null;
+
+            for (String sku : DonateDialogFragment.donations) {
+                Purchase purchase = inventory.getPurchase(sku);
+                Log.d(TAG, sku + " " + inventory.getSkuDetails(sku).getPrice());
+                DonateDialogFragment.prices.put(sku, inventory.getSkuDetails(sku).getPrice());
+
+                // If consumption failed last time try it again
+                if (purchase != null && !sku.equals(DonateDialogFragment.DONATION_INFINITE)) {
+                    if (purchase.getOrderId() != null)
+                        mHelper.consumeAsync(inventory.getPurchase(sku), mConsumeFinishedListener);
+                }
+            }
+        }
+    };
 
     @Override
     public void onDonate(int position) {
         if (position < 4) {
-            mHelper.launchPurchaseFlow(this, DonateDialogFragment.donation[position],
+            mHelper.launchPurchaseFlow(this, DonateDialogFragment.donations.get(position),
                     RC_REQUEST, mPurchaseFinishedListener, "");
         } else {
-            mHelper.launchPurchaseFlow(this, DonateDialogFragment.donation[position],
+            mHelper.launchPurchaseFlow(this, DonateDialogFragment.donations.get(position),
                     IabHelper.ITEM_TYPE_SUBS,
                     RC_REQUEST, mPurchaseFinishedListener, "");
         }
@@ -217,19 +251,38 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
     // Callback for when a purchase is finished
     IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
         public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
-            Log.d(TAG, "Purchase finished: " + result + ", purchase: " + purchase);
 
             // if we were disposed of in the meantime, quit.
             if (mHelper == null) return;
 
             if (result.isFailure()) {
-                complain("Error purchasing: " + result);
+                Log.d(TAG, "Error purchasing: " + result);
                 return;
             }
 
-            Log.d(TAG, "Purchase successful.");
+            if (!purchase.getSku().equals(DonateDialogFragment.DONATION_INFINITE)) {
+                mHelper.consumeAsync(purchase, mConsumeFinishedListener);
+            }
 
-            alert(getString(R.string.donation_thank));
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+            prefs.edit().putBoolean("donated", true).apply();
+
+            new AlertDialog.Builder(MainActivity.this)
+                    .setMessage(getString(R.string.donation_thank))
+                    .setNeutralButton(android.R.string.ok, null)
+                    .setCancelable(false)
+                    .create().show();
+        }
+    };
+
+    // Called when consumption is complete
+    IabHelper.OnConsumeFinishedListener mConsumeFinishedListener = new IabHelper.OnConsumeFinishedListener() {
+        public void onConsumeFinished(Purchase purchase, IabResult result) {
+            if (mHelper == null) return;
+
+            if (!result.isSuccess())
+                Log.d(TAG, "Error while consuming: " + result);
+
         }
     };
 }

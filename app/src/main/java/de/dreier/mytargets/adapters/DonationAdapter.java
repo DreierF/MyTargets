@@ -8,15 +8,16 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.fragments.DonateDialogFragment;
 
 /**
  * Created by Florian on 05.03.2015.
  */
 public class DonationAdapter extends BaseAdapter {
 
-    private final Context mContext;
     private final boolean mSupported;
     private final LayoutInflater mInflater;
+    private Context mContext;
 
     public DonationAdapter(Context context, boolean supported) {
         mContext = context;
@@ -26,7 +27,7 @@ public class DonationAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mSupported?5:4;
+        return mSupported ? 5 : 4;
     }
 
     @Override
@@ -46,26 +47,27 @@ public class DonationAdapter extends BaseAdapter {
         }
         TextView desc = (TextView) convertView.findViewById(R.id.desc);
         TextView price = (TextView) convertView.findViewById(R.id.price);
+        String sku = DonateDialogFragment.donations.get(position);
+        if(position==4) {
+            price.setText(mContext.getString(R.string.monthly, DonateDialogFragment.prices.get(sku)));
+        } else {
+            price.setText(DonateDialogFragment.prices.get(sku));
+        }
         switch (position) {
             case 0:
                 desc.setText(R.string.donate_2);
-                price.setText(R.string.donate_2_price);
                 break;
             case 1:
                 desc.setText(R.string.donate_5);
-                price.setText(R.string.donate_5_price);
                 break;
             case 2:
                 desc.setText(R.string.donate_10);
-                price.setText(R.string.donate_10_price);
                 break;
             case 3:
                 desc.setText(R.string.donate_20);
-                price.setText(R.string.donate_20_price);
                 break;
             case 4:
                 desc.setText(R.string.donate_infinite);
-                price.setText(R.string.donate_infinite_price);
                 break;
         }
         return convertView;

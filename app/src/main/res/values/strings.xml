@@ -125,6 +125,10 @@
     <string name="three" translatable="false">3</string>
     <string name="six" translatable="false">6</string>
     <string name="meter_short" translatable="false">m</string>
+    <string name="donate_2_price" translatable="false">2€</string>
+    <string name="donate_5_price" translatable="false">5€</string>
+    <string name="donate_10_price" translatable="false">10€</string>
+    <string name="donate_20_price" translatable="false">20€</string>
 
     <!-- Import/Backup -->
     <string name="backup_action">Backup</string>
@@ -145,15 +149,11 @@
     <!-- Donate -->
     <string name="donate_action">Donate</string>
     <string name="donate_2">Donate me a burger</string>
-    <string name="donate_2_price">2€</string>
     <string name="donate_5">Donate me a kebab</string>
-    <string name="donate_5_price">5€</string>
     <string name="donate_10">Donate me a large pizza</string>
-    <string name="donate_10_price">10€</string>
     <string name="donate_20">Donate me some fuel</string>
-    <string name="donate_20_price">20€</string>
     <string name="donate_infinite">Lasting support</string>
-    <string name="donate_infinite_price">monthly 1€</string>
     <string name="donation_thank">Thank you for your support!</string>
+    <string name="monthly">monthly %s</string>
 
 </resources>

@@ -139,15 +139,11 @@
     <!-- Donate -->
     <string name="donate_action">Spenden</string>
     <string name="donate_2">Spende mir einen Burger</string>
-    <string name="donate_2_price">2€</string>
     <string name="donate_5">Spende mir einen Döner</string>
-    <string name="donate_5_price">5€</string>
     <string name="donate_10">Spende mir eine große Pizza</string>
-    <string name="donate_10_price">10€</string>
     <string name="donate_20">Spende mir ein bisschen Benzin</string>
-    <string name="donate_20_price">20€</string>
     <string name="donate_infinite">Dauerhafte Unterstützung</string>
-    <string name="donate_infinite_price">monatlich 1€</string>
     <string name="donation_thank">Vielen Dank für Ihre Unterstützung!</string>
+    <string name="monthly">monatlich %s</string>
 
 </resources>

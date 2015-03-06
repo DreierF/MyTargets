@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.DonationAdapter;
 
@@ -18,7 +21,21 @@ import de.dreier.mytargets.adapters.DonationAdapter;
  */
 public class DonateDialogFragment extends DialogFragment {
 
-    public static String[] donation = {"donation_2", "donation_5", "donation_10", "donation_20", "donation_infinite"};
+    public static String DONATION_INFINITE = "donation_infinite";
+
+    public static ArrayList<String> donations;
+    public static final HashMap<String, String> prices;
+
+    static {
+        donations = new ArrayList<>(5);
+        donations.add("donation_2");
+        donations.add("donation_5");
+        donations.add("donation_10");
+        donations.add("donation_20");
+        donations.add(DONATION_INFINITE);
+
+        prices = new HashMap<>();
+    }
 
     public interface DonationListener {
         void onDonate(int position);
@@ -26,10 +43,10 @@ public class DonateDialogFragment extends DialogFragment {
 
     private DonationListener mListener;
 
-    public static DonateDialogFragment newInstance(boolean supported) {
+    public static DonateDialogFragment newInstance(boolean supported, boolean subscribed) {
         DonateDialogFragment frag = new DonateDialogFragment();
         Bundle args = new Bundle();
-        args.putBoolean("supported", supported);
+        args.putBoolean("supported", supported && !subscribed);
         frag.setArguments(args);
         return frag;
     }
