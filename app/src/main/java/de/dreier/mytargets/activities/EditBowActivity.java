@@ -1,7 +1,6 @@
 package de.dreier.mytargets.activities;
 
 import android.content.Intent;
-import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -330,8 +329,7 @@ public class EditBowActivity extends EditWithImageActivity {
         else
             bow.type = 0;
 
-        bow.image = ThumbnailUtils.extractThumbnail(imageBitmap, 100, 100);
-        bow.imageFile = mImageFile;
+        bow.image = imageBitmap;
 
         mBowId = db.updateBow(bow);
 

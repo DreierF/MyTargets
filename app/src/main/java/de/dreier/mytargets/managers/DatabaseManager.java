@@ -6,13 +6,12 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.preference.PreferenceManager;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +31,8 @@ import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.BitmapUtils;
 
 public class DatabaseManager extends SQLiteOpenHelper {
+    private static final int DATABASE_VERSION = 6;
+
     public static final String DATABASE_NAME = "database";
     public static final String TRAINING_TITLE = "title";
     public static final String TRAINING_DATE = "datum";
@@ -47,7 +48,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String BOW_THUMBNAIL = "thumbnail";
     public static final String ARROW_NAME = "name";
     public static final String ARROW_THUMBNAIL = "thumbnail";
-    private static final int DATABASE_VERSION = 5;
     private static final String TABLE_TRAINING = "TRAINING";
     private static final String TRAINING_ID = "_id";
     private static final String CREATE_TABLE_TRAINING =
@@ -148,6 +148,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     ARROW_COMMENT + " TEXT," +
                     ARROW_THUMBNAIL + " BLOB," +
                     ARROW_IMAGE + " TEXT);";
+    private static final String TABLE_IMAGE = "IMAGE";
+    private static final String IMAGE_ID = "_id";
+    private static final String IMAGE_DATA = "data";
+    private static final String CREATE_TABLE_IMAGE =
+            "CREATE TABLE IF NOT EXISTS " + TABLE_IMAGE + " (" +
+                    IMAGE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    IMAGE_DATA + " BLOB);";
     private static DatabaseManager sInstance;
     private final Context mContext;
     private final SQLiteDatabase db;
@@ -173,6 +180,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_TABLE_IMAGE);
         db.execSQL(CREATE_TABLE_BOW);
         db.execSQL(CREATE_TABLE_VISIER);
         db.execSQL(CREATE_TABLE_ARROW);
@@ -232,6 +240,35 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     "FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow " +
                     "WHERE r._id=p.round AND s.passe=p._id " +
                     "AND (r.bow=-2 OR b.type=1) AND s.points=1 AND r.target=3)");
+        }
+        if (oldVersion < 6) {
+            db.execSQL(CREATE_TABLE_IMAGE);
+
+            // Migrate all bow images
+            Cursor cur = db.rawQuery("SELECT image FROM BOW WHERE image IS NOT NULL", null);
+            if (cur.moveToFirst()) {
+                String fileName = cur.getString(0);
+                Bitmap bmp = BitmapFactory.decodeFile(fileName);
+                byte[] imageData = BitmapUtils.getBitmapAsByteArray(bmp);
+                ContentValues values = new ContentValues();
+                values.put(IMAGE_DATA, imageData);
+                long id = db.insert(TABLE_IMAGE, null, values);
+                db.execSQL("UPDATE BOW SET image=" + id + " WHERE image=\""+fileName+"\"");
+            }
+            cur.close();
+
+            // Migrate all arrow images
+            cur = db.rawQuery("SELECT image FROM ARROW WHERE image IS NOT NULL", null);
+            if (cur.moveToFirst()) {
+                String fileName = cur.getString(0);
+                Bitmap bmp = BitmapFactory.decodeFile(fileName);
+                byte[] imageData = BitmapUtils.getBitmapAsByteArray(bmp);
+                ContentValues values = new ContentValues();
+                values.put(IMAGE_DATA, imageData);
+                long id = db.insert(TABLE_IMAGE, null, values);
+                db.execSQL("UPDATE ARROW SET image=" + id + " WHERE image=\""+fileName+"\"");
+            }
+            cur.close();
         }
         onCreate(db);
     }
@@ -419,12 +456,22 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 bow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
                 res.close();
             } else {
-                bow.imageFile = res.getString(8);
-                bow.image = BitmapFactory.decodeFile(bow.imageFile);
+                bow.image = loadImage(res.getLong(8));
                 res.close();
             }
         }
         return bow;
+    }
+
+    private Bitmap loadImage(long imageId) {
+        Cursor res = db.rawQuery("SELECT data FROM IMAGE WHERE _id="+imageId, null);
+        Bitmap image = null;
+        if (res.moveToFirst()) {
+            byte[] data = res.getBlob(0);
+            image = BitmapFactory.decodeByteArray(data, 0, data.length);
+        }
+        res.close();
+        return image;
     }
 
     public Arrow getArrow(long arrowId, boolean small) {
@@ -448,8 +495,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 arrow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
                 res.close();
             } else {
-                arrow.imageFile = res.getString(9);
-                arrow.image = BitmapFactory.decodeFile(arrow.imageFile);
+                arrow.image = loadImage(res.getLong(9));
                 res.close();
             }
         }
@@ -640,9 +686,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
         values.put(BOW_HEIGHT, bow.height);
         values.put(BOW_TILLER, bow.tiller);
         values.put(BOW_DESCRIPTION, bow.description);
-        byte[] imageData = BitmapUtils.getBitmapAsByteArray(bow.image);
+        Bitmap thumb = ThumbnailUtils.extractThumbnail(bow.image, 100, 100);
+        byte[] imageData = BitmapUtils.getBitmapAsByteArray(thumb);
         values.put(BOW_THUMBNAIL, imageData);
-        values.put(BOW_IMAGE, bow.imageFile);
+        values.put(BOW_IMAGE, saveImage(bow.image));
         if (bow.id == -1) {
             bow.id = db.insert(TABLE_BOW, null, values);
         } else {
@@ -650,6 +697,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.update(TABLE_BOW, values, BOW_ID + "=?", args);
         }
         return bow.id;
+    }
+
+    private long saveImage(Bitmap image) {
+        byte[] imageData = BitmapUtils.getBitmapAsByteArray(image);
+        ContentValues values = new ContentValues();
+        values.put(IMAGE_DATA, imageData);
+        return db.insert(TABLE_IMAGE, null, values);
     }
 
     public long updateArrow(Arrow arrow) {
@@ -662,9 +716,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
         values.put(ARROW_VANES, arrow.vanes);
         values.put(ARROW_NOCK, arrow.nock);
         values.put(ARROW_COMMENT, arrow.comment);
-        byte[] imageData = BitmapUtils.getBitmapAsByteArray(arrow.image);
+        Bitmap thumb = ThumbnailUtils.extractThumbnail(arrow.image, 100, 100);
+        byte[] imageData = BitmapUtils.getBitmapAsByteArray(thumb);
         values.put(ARROW_THUMBNAIL, imageData);
-        values.put(ARROW_IMAGE, arrow.imageFile);
+        values.put(ARROW_IMAGE, saveImage(arrow.image));
         if (arrow.id == -1) {
             arrow.id = db.insert(TABLE_ARROW, null, values);
         } else {

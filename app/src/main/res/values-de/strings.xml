@@ -145,5 +145,6 @@
     <string name="donate_infinite">Dauerhafte Unterstützung</string>
     <string name="donation_thank">Vielen Dank für Ihre Unterstützung!</string>
     <string name="monthly">monatlich %s</string>
+    <string name="donate_text">Die Beträge sind inkl. Mehrwertsteuer und 30% Gebühren für Google. Alternativ kannst du mir auch gerne auf das PayPal Konto dreier.florian@gmail.com spenden.</string>
 
 </resources>

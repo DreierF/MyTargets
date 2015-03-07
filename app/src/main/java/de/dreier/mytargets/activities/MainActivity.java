@@ -224,7 +224,6 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
 
             for (String sku : DonateDialogFragment.donations) {
                 Purchase purchase = inventory.getPurchase(sku);
-                Log.d(TAG, sku + " " + inventory.getSkuDetails(sku).getPrice());
                 DonateDialogFragment.prices.put(sku, inventory.getSkuDetails(sku).getPrice());
 
                 // If consumption failed last time try it again

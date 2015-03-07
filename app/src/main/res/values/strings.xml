@@ -125,10 +125,6 @@
     <string name="three" translatable="false">3</string>
     <string name="six" translatable="false">6</string>
     <string name="meter_short" translatable="false">m</string>
-    <string name="donate_2_price" translatable="false">2€</string>
-    <string name="donate_5_price" translatable="false">5€</string>
-    <string name="donate_10_price" translatable="false">10€</string>
-    <string name="donate_20_price" translatable="false">20€</string>
 
     <!-- Import/Backup -->
     <string name="backup_action">Backup</string>
@@ -155,5 +151,6 @@
     <string name="donate_infinite">Lasting support</string>
     <string name="donation_thank">Thank you for your support!</string>
     <string name="monthly">monthly %s</string>
+    <string name="donate_text">The amounts are incl. VAT and 30% fees for Google. Alternatively you may gladly donate on the PayPal account dreier.florian@gmail.com.</string>
 
 </resources>

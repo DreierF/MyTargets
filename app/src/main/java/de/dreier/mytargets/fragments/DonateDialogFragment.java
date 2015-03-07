@@ -68,7 +68,6 @@ public class DonateDialogFragment extends DialogFragment {
         boolean supported = getArguments().getBoolean("supported");
         list.setAdapter(new DonationAdapter(getActivity(), supported));
         final Dialog dialog = new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.donate_action)
                 .setView(list)
                 .create();
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {

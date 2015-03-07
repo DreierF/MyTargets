@@ -26,8 +26,18 @@ public class DonationAdapter extends BaseAdapter {
     }
 
     @Override
+    public boolean areAllItemsEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return position != getCount() - 1;
+    }
+
+    @Override
     public int getCount() {
-        return mSupported ? 5 : 4;
+        return mSupported ? 6 : 5;
     }
 
     @Override
@@ -47,12 +57,18 @@ public class DonationAdapter extends BaseAdapter {
         }
         TextView desc = (TextView) convertView.findViewById(R.id.desc);
         TextView price = (TextView) convertView.findViewById(R.id.price);
-        String sku = DonateDialogFragment.donations.get(position);
-        if(position==4) {
-            price.setText(mContext.getString(R.string.monthly, DonateDialogFragment.prices.get(sku)));
-        } else {
+        if (position == 4) {
+            price.setText(mContext.getString(R.string.monthly,
+                    DonateDialogFragment.prices.get(DonateDialogFragment.DONATION_INFINITE)));
+        } else if (position < 4) {
+            String sku = DonateDialogFragment.donations.get(position);
             price.setText(DonateDialogFragment.prices.get(sku));
+        } else {
+            price.setText("");
         }
+
+        float density = mContext.getResources().getDisplayMetrics().scaledDensity;
+        desc.setTextSize(density * 5);
         switch (position) {
             case 0:
                 desc.setText(R.string.donate_2);
@@ -68,6 +84,10 @@ public class DonationAdapter extends BaseAdapter {
                 break;
             case 4:
                 desc.setText(R.string.donate_infinite);
+                break;
+            case 5:
+                desc.setText(R.string.donate_text);
+                desc.setTextSize(density * 4);
                 break;
         }
         return convertView;

@@ -1,7 +1,6 @@
 package de.dreier.mytargets.activities;
 
 import android.content.Intent;
-import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -81,8 +80,7 @@ public class EditArrowActivity extends EditWithImageActivity {
         arrow.nock = nock.getTextString();
         arrow.comment = comment.getTextString();
 
-        arrow.image = ThumbnailUtils.extractThumbnail(imageBitmap, 100, 100);
-        arrow.imageFile = mImageFile;
+        arrow.image = imageBitmap;
 
         mArrowId = db.updateArrow(arrow);
         finish();
@@ -99,7 +97,5 @@ public class EditArrowActivity extends EditWithImageActivity {
         outState.putString("vanes", vanes.getTextString());
         outState.putString("nock", nock.getTextString());
         outState.putString("comment", comment.getTextString());
-        outState.putParcelable("img", imageBitmap);
-        outState.putString("image_file", mImageFile);
     }
 }
