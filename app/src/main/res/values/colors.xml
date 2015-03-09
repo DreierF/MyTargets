@@ -11,5 +11,7 @@
     <color name="ripple">#FFA733</color>
     <color name="colorAccent_pressed">#CC7400</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="accent_lighter_transparent">#7F090007</color>
+    <color name="accent_lighter">#7F090006</color>
 
 </resources>

@@ -121,29 +121,30 @@
     <string name="current_round">Série actuelle</string>
 
     <!-- Import/Backup -->
-    <string name="backup_action">Backup</string>
+    <string name="backup_action">Sauvegarde</string>
     <string name="import_action">Import</string>
-    <string name="select_a_file">Select a file</string>
-    <string name="dir_not_created">Directory could not be created!</string>
-    <string name="backup_successful">Backup successful!</string>
-    <string name="backup_saved_as">Backup was saved as \'%s\'.</string>
-    <string name="backup_failed">Backup failed!</string>
-    <string name="backup_error">An error occurred while creating backup:\n%s</string>
-    <string name="sd_card_not_available_title">SD card not available!</string>
-    <string name="sd_card_not_available_desc">Please mount your sd card and try again!</string>
-    <string name="import_successful">Import successful!</string>
-    <string name="import_failed">Import failed!</string>
-    <string name="file_not_found">File not found!</string>
-    <string name="failed_reading_file">Failed reading file!</string>
+    <string name="select_a_file">Choisir un fichier</string>
+    <string name="dir_not_created"> Le répertoire ne peut pas être créé!</string>
+    <string name="backup_successful">Sauvegarde réussie!</string>
+    <string name="backup_saved_as">La sauvegarde a été enregistrée sous \'%s\'.</string>
+    <string name="backup_failed">La sauvegarde a échouée!</string>
+    <string name="backup_error">Une erreur s\'est produite pendant la sauvegarde: \n%s</string>
+    <string name="sd_card_not_available_title">Pas de carte SD accessible!</string>
+    <string name="sd_card_not_available_desc">Merci de monter votre carte SD et de réessayer!</string>
+    <string name="import_successful">L\'Import a réussi!</string>
+    <string name="import_failed">L\'import a échoué!</string>
+    <string name="file_not_found">Fichier non trouvé!</string>
+    <string name="failed_reading_file">Echec de la lecture du fichier!</string>
 
     <!-- Donate -->
-    <string name="donate_action">Donate</string>
-    <string name="donate_2">Donate me a burger</string>
-    <string name="donate_5">Donate me a kebab</string>
-    <string name="donate_10">Donate me a large pizza</string>
-    <string name="donate_20">Donate me some fuel</string>
-    <string name="donate_infinite">Lasting support</string>
-    <string name="donate_infinite_price">monthly 1€</string>
-    <string name="donation_thank">Thank you for your support!</string>
+    <string name="donate_action">Soutient au développeur</string>
+    <string name="donate_2">Donner un Hamburger</string>
+    <string name="donate_5">Donner un kebab</string>
+    <string name="donate_10">Donner une grande pizza</string>
+    <string name="donate_20">Donner de l\'essence</string>
+    <string name="donate_infinite">Soutient régulier</string>
+    <string name="donation_thank">Merci pour votre soutient!</string>
+    <string name="monthly">Mensuellement %s</string>
+    <string name="donate_text">Les montants inclus la TVA et 30% de commission pour Google. Si vous préférez, vous pouvez également faire un don PayPal sur le compte dreier.florian@gmail.com.</string>
 
 </resources>
