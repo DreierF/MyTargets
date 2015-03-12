@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,39 +18,44 @@ import de.dreier.mytargets.managers.DatabaseManager;
  * Shows all Trainings
  */
 
-public class ArrowAdapter extends NowListAdapter {
+public class ArrowAdapter extends CursorRecyclerViewAdapter<ArrowAdapter.ViewHolder> {
 
     private final int nameInd, thumbInd;
 
     public ArrowAdapter(Context context) {
-        super(context, DatabaseManager.getInstance(context).getArrows());
+        super(DatabaseManager.getInstance(context).getArrows());
         nameInd = getCursor().getColumnIndex(DatabaseManager.ARROW_NAME);
         thumbInd = getCursor().getColumnIndex(DatabaseManager.ARROW_THUMBNAIL);
-        mNewText = context.getString(R.string.new_arrow);
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        ViewHolder holder = new ViewHolder();
-        View v = mInflater.inflate(R.layout.bow_card, viewGroup, false);
-        holder.name = (TextView) v.findViewById(R.id.name);
-        holder.img = (ImageView) v.findViewById(R.id.image);
-        v.setTag(holder);
-        return v;
+    public ViewHolder onCreateContentItemViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.bow_card, parent, false);
+        return new ViewHolder(itemView);
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        ViewHolder holder = (ViewHolder) view.getTag();
-        holder.name.setText(cursor.getString(nameInd));
+    public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
         byte[] data = cursor.getBlob(thumbInd);
         Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
-        holder.img.setImageBitmap(image);
+        viewHolder.bindCursor(cursor.getString(nameInd), image);
     }
 
-    public static class ViewHolder {
-        public ImageView img;
-        public TextView name;
-        public TextView subtitle;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public ImageView mImg;
+        public TextView mName;
+        public TextView mSubtitle;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            mName = (TextView) itemView.findViewById(R.id.name);
+            mImg = (ImageView) itemView.findViewById(R.id.image);
+        }
+
+        public void bindCursor(String name, Bitmap bmp) {
+            mName.setText(name);
+            mImg.setImageBitmap(bmp);
+        }
     }
 }

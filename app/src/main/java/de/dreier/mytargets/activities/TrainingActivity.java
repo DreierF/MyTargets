@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import java.text.DateFormat;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.adapters.CursorRecyclerViewAdapter;
 import de.dreier.mytargets.adapters.RoundsAdapter;
 import de.dreier.mytargets.models.Training;
 
@@ -16,6 +17,7 @@ import de.dreier.mytargets.models.Training;
  */
 public class TrainingActivity extends NowListActivity {
 
+    CursorRecyclerViewAdapter adapter;
     private long mTraining;
 
     @Override
@@ -85,7 +87,7 @@ public class TrainingActivity extends NowListActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean hasPasses = adapter.getCount() > 1;
+        boolean hasPasses = adapter.getItemCount() > 0;
         menu.findItem(R.id.action_statistics).setVisible(hasPasses);
         return super.onPrepareOptionsMenu(menu);
     }

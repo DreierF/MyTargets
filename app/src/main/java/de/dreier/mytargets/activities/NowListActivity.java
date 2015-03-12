@@ -1,27 +1,20 @@
 package de.dreier.mytargets.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.PluralsRes;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
-import android.view.ActionMode;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.melnykov.fab.FloatingActionButton;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
 
 /**
@@ -31,12 +24,11 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
 
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
-    protected ListView mListView;
-    NowListAdapter adapter;
     protected @PluralsRes int itemTypeRes;
     DatabaseManager db;
     boolean mEnableBackAnimation = true;
     boolean mEditable = false;
+    protected RecyclerView mRecyclerView;
 
     protected int getLayoutResource() {
         return R.layout.fragment_list;
@@ -49,6 +41,10 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
 
         db = DatabaseManager.getInstance(this);
 
+        mRecyclerView = (RecyclerView) findViewById(android.R.id.list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setHasFixedSize(true);
+        /*
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setDividerHeight(0);
         mListView.setOnItemClickListener(this);
@@ -111,23 +107,23 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
                 edit.setVisible(count == 1 && mEditable);
                 return false;
             }
-        });
+        });*/
         init(getIntent(), savedInstanceState);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
-        fab.attachToListView(mListView);
+        fab.attachToRecyclerView(mRecyclerView);
     }
 
     void onEdit(long id) {
     }
 
-    void setListAdapter(NowListAdapter adapter) {
-        mListView.setAdapter(adapter);
+    void setListAdapter(RecyclerView.Adapter adapter) {
+        mRecyclerView.setAdapter(adapter);
     }
 
-    ListAdapter getListAdapter() {
-        return mListView.getAdapter();
+    RecyclerView.Adapter getListAdapter() {
+        return mRecyclerView.getAdapter();
     }
 
     protected abstract void init(Intent intent, Bundle savedInstanceState);

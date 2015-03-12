@@ -9,11 +9,10 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.ksoichiro.android.observablescrollview.ObservableListView;
+import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
@@ -39,6 +38,7 @@ import de.dreier.mytargets.utils.ToolbarUtils;
  */
 public class RoundActivity extends NowListActivity implements ShareDialogFragment.ShareDialogListener, ObservableScrollViewCallbacks {
 
+    private PasseAdapter adapter;
     private long mTraining;
     private long mRound;
 
@@ -71,30 +71,17 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
         mHeader = (Toolbar) findViewById(R.id.round_container);
         mDetails = findViewById(R.id.round_container_content);
         mShadow = findViewById(R.id.shadow);
-        ObservableListView listView = ((ObservableListView) mListView);
+        ObservableRecyclerView listView = ((ObservableRecyclerView) mRecyclerView);
 
         // Set listeners
         listView.setScrollViewCallbacks(this);
         mHeader.setOnClickListener(headerClickListener);
-
-        // Load values for animations
-        mActionBarSize = ToolbarUtils.getActionBarSize(this);
-        mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.ext_toolbar_round_height);
 
         // Set up toolbar
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.round) + " " + db.getRoundInd(mTraining, mRound));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Set padding view for ListView. This is the flexible space.
-        View paddingView = new View(this);
-        AbsListView.LayoutParams lp = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, mHeaderHeight + mActionBarSize);
-        paddingView.setLayoutParams(lp);
-
-        // This is required to disable header's list selector effect
-        paddingView.setClickable(true);
-
-        mListView.addHeaderView(paddingView);
     }
 
     @Override
@@ -103,6 +90,12 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
         mRoundInfo = db.getRound(mRound);
         setRoundInfo();
         adapter = new PasseAdapter(this, mRound, mRoundInfo);
+
+        // Load values for animations
+        mActionBarSize = ToolbarUtils.getActionBarSize(this);
+        mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.ext_toolbar_round_height);
+
+        adapter.setHeaderHeight(mHeaderHeight + mActionBarSize);
         setListAdapter(adapter);
         supportInvalidateOptionsMenu();
     }
@@ -153,7 +146,7 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean hasPasses = adapter.getCount() > 1;
+        boolean hasPasses = adapter.getItemCount() > 0;
         menu.findItem(R.id.action_scoreboard).setVisible(hasPasses);
         menu.findItem(R.id.action_share).setVisible(hasPasses);
         menu.findItem(R.id.action_statistics).setVisible(hasPasses);

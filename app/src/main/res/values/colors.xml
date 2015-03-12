@@ -13,5 +13,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="accent_lighter_transparent">#7F090007</color>
     <color name="accent_lighter">#7F090006</color>
+    <color name="list_background">#FFEEEEEE</color>
 
 </resources>

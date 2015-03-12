@@ -6,11 +6,7 @@
     android:layout_height="match_parent"
     tools:context="de.dreier.mytargets.activities.EditRoundActivity">
 
-    <com.github.ksoichiro.android.observablescrollview.ObservableListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none" />
+    <com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView style="@style/card_list" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/round_container"

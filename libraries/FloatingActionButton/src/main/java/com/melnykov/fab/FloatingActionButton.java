@@ -16,6 +16,7 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -361,6 +362,25 @@ public class FloatingActionButton extends ImageButton {
         scrollView.setOnScrollChangedListener(scrollDetector);
     }
 
+    public void attachToRecyclerView(@NonNull RecyclerView recyclerView) {
+        attachToRecyclerView(recyclerView, null, null);
+    }
+
+    public void attachToRecyclerView(@NonNull RecyclerView recyclerView,
+                                     ScrollDirectionListener scrollDirectionListener) {
+        attachToRecyclerView(recyclerView, scrollDirectionListener, null);
+    }
+
+    public void attachToRecyclerView(@NonNull RecyclerView recyclerView,
+                                     ScrollDirectionListener scrollDirectionlistener,
+                                     RecyclerView.OnScrollListener onScrollListener) {
+        RecyclerViewScrollDetectorImpl scrollDetector = new RecyclerViewScrollDetectorImpl();
+        scrollDetector.setScrollDirectionListener(scrollDirectionlistener);
+        scrollDetector.setOnScrollListener(onScrollListener);
+        scrollDetector.setScrollThreshold(mScrollThreshold);
+        recyclerView.setOnScrollListener(scrollDetector);
+    }
+
     private boolean hasLollipopApi() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
@@ -418,6 +438,53 @@ public class FloatingActionButton extends ImageButton {
             if (mListener != null) {
                 mListener.onScrollUp();
             }
+        }
+    }
+
+    private class RecyclerViewScrollDetectorImpl extends RecyclerViewScrollDetector {
+        private ScrollDirectionListener mScrollDirectionListener;
+        private RecyclerView.OnScrollListener mOnScrollListener;
+
+        private void setScrollDirectionListener(ScrollDirectionListener scrollDirectionListener) {
+            mScrollDirectionListener = scrollDirectionListener;
+        }
+
+        public void setOnScrollListener(RecyclerView.OnScrollListener onScrollListener) {
+            mOnScrollListener = onScrollListener;
+        }
+
+        @Override
+        public void onScrollDown() {
+            show();
+            if (mScrollDirectionListener != null) {
+                mScrollDirectionListener.onScrollDown();
+            }
+        }
+
+        @Override
+        public void onScrollUp() {
+            hide();
+            if (mScrollDirectionListener != null) {
+                mScrollDirectionListener.onScrollUp();
+            }
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            if (mOnScrollListener != null) {
+                mOnScrollListener.onScrolled(recyclerView, dx, dy);
+            }
+
+            super.onScrolled(recyclerView, dx, dy);
+        }
+
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            if (mOnScrollListener != null) {
+                mOnScrollListener.onScrollStateChanged(recyclerView, newState);
+            }
+
+            super.onScrollStateChanged(recyclerView, newState);
         }
     }
 }

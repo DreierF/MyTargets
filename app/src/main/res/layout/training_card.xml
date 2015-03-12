@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/card_padding_horizontal"
-    android:paddingRight="@dimen/card_padding_horizontal"
-    android:paddingTop="@dimen/card_padding_vertical"
-    android:paddingBottom="@dimen/card_padding_vertical">
+<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/CardContainer">-->
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:foreground="@drawable/card_item"
-        app:cardUseCompatPadding="true"
-        app:contentPadding="8dp"
-        app:cardCornerRadius="2dp">
+<android.support.v7.widget.CardView
+    android:id="@+id/card"
+    style="@style/Card"
+    android:clickable="false"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:orientation="vertical">
 
             <TextView
@@ -26,12 +23,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:baselineAligned="false"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:orientation="horizontal">
 
                 <TextView
@@ -39,12 +42,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
                     android:id="@+id/gesTraining"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:gravity="end"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
@@ -52,5 +61,4 @@
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
-
-</FrameLayout>
+<!--</FrameLayout>-->
