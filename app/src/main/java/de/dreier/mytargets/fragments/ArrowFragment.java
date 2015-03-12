@@ -27,13 +27,13 @@ public class ArrowFragment extends NowListFragment {
     }
 
     @Override
-    public boolean onItemClick(Intent i, int pos, long id) {
-        if (pos == 0) {
-            i.setClass(getActivity(), EditArrowActivity.class);
-        } else {
-            i.setClass(getActivity(), EditArrowActivity.class);
-            i.putExtra(EditArrowActivity.ARROW_ID, id);
-        }
-        return true;
+    public void onNewClick(Intent i) {
+        i.setClass(getActivity(), EditArrowActivity.class);
+    }
+
+    @Override
+    public void onItemClick(Intent i, int pos, long id) {
+        i.setClass(getActivity(), EditArrowActivity.class);
+        i.putExtra(EditArrowActivity.ARROW_ID, id);
     }
 }

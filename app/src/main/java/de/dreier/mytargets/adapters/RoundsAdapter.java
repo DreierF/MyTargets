@@ -2,8 +2,10 @@ package de.dreier.mytargets.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
@@ -13,16 +15,23 @@ import de.dreier.mytargets.models.Target;
 /**
  * Shows all rounds of one settings_only
  */
-public class RoundsAdapter extends NowListAdapter {
+public class RoundsAdapter extends CursorAdapter {
 
+    final LayoutInflater mInflater;
+    final DatabaseManager db;
+    final Context mContext;
     private final int unitInd;
     private final int pppInd;
     private final int targetInd, idInd;
     private final int distInd;
     private final int indoorInd;
+    String mNewText;
 
     public RoundsAdapter(Context context, long training) {
-        super(context, DatabaseManager.getInstance(context).getRounds(training));
+        super(context, DatabaseManager.getInstance(context).getRounds(training), 0);
+        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        db = DatabaseManager.getInstance(context);
+        mContext = context;
         idInd = getCursor().getColumnIndex(DatabaseManager.ROUND_ID);
         distInd = getCursor().getColumnIndex(DatabaseManager.ROUND_DISTANCE);
         unitInd = getCursor().getColumnIndex(DatabaseManager.ROUND_UNIT);

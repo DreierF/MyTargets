@@ -1,53 +1,50 @@
 package de.dreier.mytargets.adapters;
 
 import android.content.Context;
-import android.database.Cursor;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.text.DateFormat;
-import java.util.Date;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.models.Training;
 
 /**
  * Shows all Trainings
  */
 
-public class TrainingAdapter extends NowListAdapter {
+public class TrainingAdapter extends ArrayAdapter<Training> {
 
-    private final int titleInd;
-    private final int dateInd;
+    final LayoutInflater mInflater;
     private final DateFormat dateFormat;
 
     public TrainingAdapter(Context context) {
-        super(context, DatabaseManager.getInstance(context).getTrainings());
-        titleInd = getCursor().getColumnIndex(DatabaseManager.TRAINING_TITLE);
-        dateInd = getCursor().getColumnIndex(DatabaseManager.TRAINING_DATE);
+        super(context, R.layout.training_card, DatabaseManager.getInstance(context).getTrainings());
+        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         dateFormat = DateFormat.getDateInstance();
-        mNewText = context.getString(R.string.new_training);
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        ViewHolder holder = new ViewHolder();
-        View v = mInflater.inflate(R.layout.training_card, viewGroup, false);
-        holder.title = (TextView) v.findViewById(R.id.training);
-        holder.subtitle = (TextView) v.findViewById(R.id.training_date);
-        holder.ges = (TextView) v.findViewById(R.id.gesTraining);
-        v.setTag(holder);
-        return v;
-    }
+    public View getView(int pos, View convertView, ViewGroup viewGroup) {
+        if (convertView == null) {
+            ViewHolder holder = new ViewHolder();
+            convertView = mInflater.inflate(R.layout.training_card, viewGroup, false);
+            holder.title = (TextView) convertView.findViewById(R.id.training);
+            holder.subtitle = (TextView) convertView.findViewById(R.id.training_date);
+            holder.ges = (TextView) convertView.findViewById(R.id.gesTraining);
+            convertView.setTag(holder);
+        }
 
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        ViewHolder holder = (ViewHolder) view.getTag();
-        holder.title.setText(cursor.getString(titleInd));
-        holder.subtitle.setText(dateFormat.format(new Date(cursor.getLong(dateInd))));
-        int[] points = db.getTrainingPoints(cursor.getLong(0));
-        holder.ges.setText(points[0] + "/" + points[1]);
+        ViewHolder holder = (ViewHolder) convertView.getTag();
+        Training t = getItem(pos);
+        holder.title.setText(t.title);
+        holder.subtitle.setText(dateFormat.format(t.date));
+        holder.ges.setText(t.reachedPoints + "/" + t.maxPoints);
+        return convertView;
     }
 
     public static class ViewHolder {

@@ -21,7 +21,6 @@ import android.widget.ListView;
 import com.melnykov.fab.FloatingActionButton;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
 
 /**
@@ -32,7 +31,7 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
     protected ListView mListView;
-    NowListAdapter adapter;
+    ListAdapter adapter;
     protected @PluralsRes int itemTypeRes;
     DatabaseManager db;
     boolean mEnableBackAnimation = true;
@@ -61,11 +60,6 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
 
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-                if (!adapter.isSelectable(position)) {
-                    if (checked)
-                        mListView.setItemChecked(position, false);
-                    return;
-                }
                 count += checked ? 1 : -1;
 
                 final String title = getResources().getQuantityString(itemTypeRes, count, count);
@@ -122,7 +116,7 @@ public abstract class NowListActivity extends ActionBarActivity implements ListV
     void onEdit(long id) {
     }
 
-    void setListAdapter(NowListAdapter adapter) {
+    void setListAdapter(ListAdapter adapter) {
         mListView.setAdapter(adapter);
     }
 

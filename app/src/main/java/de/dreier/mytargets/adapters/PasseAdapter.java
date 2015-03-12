@@ -2,8 +2,10 @@ package de.dreier.mytargets.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
@@ -15,13 +17,20 @@ import de.dreier.mytargets.views.PassesView;
 /**
  * Shows all passes of one round
  */
-public class PasseAdapter extends NowListAdapter {
+public class PasseAdapter extends CursorAdapter {
 
+    final LayoutInflater mInflater;
+    final DatabaseManager db;
+    final Context mContext;
     private final int passeIdInd;
     private final Round mRoundInfo;
+    String mNewText;
 
     public PasseAdapter(Context context, long round, Round roundInfo) {
-        super(context, DatabaseManager.getInstance(context).getPasses(round));
+        super(context, DatabaseManager.getInstance(context).getPasses(round), 0);
+        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        db = DatabaseManager.getInstance(context);
+        mContext = context;
         mNewText = context.getString(R.string.new_passe);
         mRoundInfo = roundInfo;
         passeIdInd = getCursor().getColumnIndex(DatabaseManager.PASSE_ID);

@@ -59,7 +59,7 @@ public class Target {
             {0xFF6A6869, 0xFF1C1C1B}, // black -> black/white
             {0xFF9A9A99, 0xFF505050}}; // white -> white/mistake
     // Points for zone
-    private static final int[][] target_points = {
+    public static final int[][] target_points = {
             {10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1}, //WA
             {10, 10, 9, 8, 7, 6, 5}, // WA Spot 5-10
             {10, 10, 9, 8, 7, 6}, // WA Spot 6-10

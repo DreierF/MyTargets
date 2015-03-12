@@ -15,13 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.melnykov.fab.FloatingActionButton;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
 
 /**
@@ -30,7 +30,7 @@ import de.dreier.mytargets.managers.DatabaseManager;
 public abstract class NowListFragment extends Fragment implements ListView.OnItemClickListener, View.OnClickListener {
 
     private ListView mListView;
-    NowListAdapter adapter;
+    BaseAdapter adapter;
     protected int itemTypeRes;
     DatabaseManager db;
     boolean mEditable = false;
@@ -51,11 +51,6 @@ public abstract class NowListFragment extends Fragment implements ListView.OnIte
 
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-                if (!adapter.isSelectable(position)) {
-                    if (checked)
-                        mListView.setItemChecked(position, false);
-                    return;
-                }
                 count += checked ? 1 : -1;
 
                 final String title = getResources().getQuantityString(itemTypeRes, count, count);
@@ -116,9 +111,10 @@ public abstract class NowListFragment extends Fragment implements ListView.OnIte
         init(getArguments(), savedInstanceState);
     }
 
-    void onEdit(long id) {}
+    void onEdit(long id) {
+    }
 
-    void setListAdapter(NowListAdapter adapter) {
+    void setListAdapter(BaseAdapter adapter) {
         mListView.setAdapter(adapter);
     }
 
@@ -133,20 +129,20 @@ public abstract class NowListFragment extends Fragment implements ListView.OnIte
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
         Intent i = new Intent();
-        if (onItemClick(i, pos, id)) {
-            startActivity(i);
-            getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
-        }
+        onItemClick(i, pos, id);
+        startActivity(i);
+        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
-    protected abstract boolean onItemClick(Intent i, int pos, long id);
+    public abstract void onNewClick(Intent i);
+
+    protected abstract void onItemClick(Intent i, int pos, long id);
 
     @Override
     public void onClick(View v) {
         Intent i = new Intent();
-        if (onItemClick(i, 0, 0)) {
-            startActivity(i);
-            getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
-        }
+        onNewClick(i);
+        startActivity(i);
+        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 }

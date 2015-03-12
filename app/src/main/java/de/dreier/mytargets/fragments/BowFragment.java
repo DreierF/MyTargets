@@ -27,13 +27,13 @@ public class BowFragment extends NowListFragment {
     }
 
     @Override
-    public boolean onItemClick(Intent i, int pos, long id) {
-        if (pos == 0) {
-            i.setClass(getActivity(), EditBowActivity.class);
-        } else {
-            i.setClass(getActivity(), EditBowActivity.class);
-            i.putExtra(EditBowActivity.BOW_ID, id);
-        }
-        return true;
+    public void onNewClick(Intent i) {
+        i.setClass(getActivity(), EditBowActivity.class);
+    }
+
+    @Override
+    public void onItemClick(Intent i, int pos, long id) {
+        i.setClass(getActivity(), EditBowActivity.class);
+        i.putExtra(EditBowActivity.BOW_ID, id);
     }
 }

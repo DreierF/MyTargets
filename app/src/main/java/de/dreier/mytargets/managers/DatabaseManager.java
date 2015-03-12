@@ -155,6 +155,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
             "CREATE TABLE IF NOT EXISTS " + TABLE_IMAGE + " (" +
                     IMAGE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     IMAGE_DATA + " BLOB);";
+    private static final String TABLE_ZONE_MATRIX = "ZONE_MATRIX";
+    private static final String CREATE_TABLE_ZONE_MATRIX =
+            "CREATE TABLE IF NOT EXISTS " + TABLE_ZONE_MATRIX + " (" +
+                    "target INTEGER," +
+                    "zone INTEGER," +
+                    "points INTEGER," +
+                    "PRIMARY KEY (target, zone));";
     private static DatabaseManager sInstance;
     private final Context mContext;
     private final SQLiteDatabase db;
@@ -188,6 +195,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_ROUND);
         db.execSQL(CREATE_TABLE_PASSE);
         db.execSQL(CREATE_TABLE_SHOOT);
+        db.execSQL(CREATE_TABLE_ZONE_MATRIX);
+        fillZoneMatrix(db);
+    }
+
+    private void fillZoneMatrix(SQLiteDatabase db) {
+        for (int target = 0; target < Target.target_points.length; target++) {
+            int[] zones = Target.target_points[target];
+            for (int zone = 0; zone < zones.length; zone++) {
+                db.execSQL("REPLACE INTO ZONE_MATRIX(target, zone, points) VALUES (" + target + "," + zone + "," + zones[zone] + ")");
+            }
+        }
     }
 
     @Override
@@ -253,7 +271,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 ContentValues values = new ContentValues();
                 values.put(IMAGE_DATA, imageData);
                 long id = db.insert(TABLE_IMAGE, null, values);
-                db.execSQL("UPDATE BOW SET image=" + id + " WHERE image=\""+fileName+"\"");
+                db.execSQL("UPDATE BOW SET image=" + id + " WHERE image=\"" + fileName + "\"");
             }
             cur.close();
 
@@ -266,7 +284,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 ContentValues values = new ContentValues();
                 values.put(IMAGE_DATA, imageData);
                 long id = db.insert(TABLE_IMAGE, null, values);
-                db.execSQL("UPDATE ARROW SET image=" + id + " WHERE image=\""+fileName+"\"");
+                db.execSQL("UPDATE ARROW SET image=" + id + " WHERE image=\"" + fileName + "\"");
             }
             cur.close();
         }
@@ -275,8 +293,26 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 ////// GET COMPLETE TABLE //////
 
-    public Cursor getTrainings() {
-        return db.query(TABLE_TRAINING, null, null, null, null, null, TRAINING_DATE + " DESC");
+    public ArrayList<Training> getTrainings() {
+        Cursor cursor = db.rawQuery("SELECT t._id, t.datum, t.title, SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=r.target)) " +
+                "FROM TRAINING t, ROUND r, PASSE p, SHOOT s, ZONE_MATRIX m " +
+                "WHERE t._id=r.training AND r._id=p.round AND p._id=s.passe AND s.points=m.zone AND m.target=r.target " +
+                "GROUP BY t._id " +
+                "ORDER BY t.datum DESC", null);
+        ArrayList<Training> list = new ArrayList<>(cursor.getCount());
+        if (cursor.moveToFirst()) {
+            do {
+                Training t = new Training();
+                t.id = cursor.getLong(0);
+                t.date = new Date(cursor.getLong(1));
+                t.title = cursor.getString(2);
+                t.reachedPoints = cursor.getInt(3);
+                t.maxPoints = cursor.getInt(4);
+                list.add(t);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
     }
 
     public Cursor getRounds(long training) {
@@ -464,7 +500,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     private Bitmap loadImage(long imageId) {
-        Cursor res = db.rawQuery("SELECT data FROM IMAGE WHERE _id="+imageId, null);
+        Cursor res = db.rawQuery("SELECT data FROM IMAGE WHERE _id=" + imageId, null);
         Bitmap image = null;
         if (res.moveToFirst()) {
             byte[] data = res.getBlob(0);
@@ -562,25 +598,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
         res.close();
         return history;
-    }
-
-    public int[] getTrainingPoints(long training) {
-        String[] args = {"" + training};
-
-        Cursor res = db.rawQuery("SELECT s.points, r.target" +
-                " FROM ROUND r, PASSE p, SHOOT s" +
-                " WHERE r._id=p.round AND r.training=? AND s.passe=p._id", args);
-        res.moveToFirst();
-        int[] sum = new int[2];
-        for (int i = 0; i < res.getCount(); i++) {
-            int zone = res.getInt(0);
-            int target = res.getInt(1);
-            sum[0] += Target.getPointsByZone(target, zone);
-            sum[1] += Target.getMaxPoints(target);
-            res.moveToNext();
-        }
-        res.close();
-        return sum;
     }
 
     public int getRoundPoints(long round) {
@@ -809,8 +826,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 ////// DELETE ENTRIES //////
 
-    public void deleteTrainings(long[] ids) {
-        deleteEntries(TABLE_TRAINING, ids);
+    public void deleteTraining(long ids) {
+        deleteEntry(TABLE_TRAINING, ids);
     }
 
     public void deleteRounds(long[] ids) {
@@ -831,9 +848,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public void deleteEntries(String table, long[] ids) {
         for (long id : ids) {
-            String[] args = {"" + id};
-            db.delete(table, "_id=?", args);
+            deleteEntry(table, id);
         }
+    }
+
+    public void deleteEntry(String table, long id) {
+        String[] args = {"" + id};
+        db.delete(table, "_id=?", args);
     }
 
 ////// BACKUP DATABASE //////

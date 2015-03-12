@@ -27,17 +27,18 @@ public class TrainingsFragment extends NowListFragment {
 
     @Override
     protected void onDelete(long[] ids) {
-        db.deleteTrainings(ids);
+        for (long id : ids)
+            db.deleteTraining(id);
     }
 
     @Override
-    public boolean onItemClick(Intent i, int pos, long id) {
-        if (pos == 0) {
-            i.setClass(getActivity(), EditRoundActivity.class);
-        } else {
+public void onNewClick(Intent i) {
+        i.setClass(getActivity(), EditRoundActivity.class);
+}
+
+    @Override
+    public void onItemClick(Intent i, int pos, long id) {
             i.setClass(getActivity(), TrainingActivity.class);
             i.putExtra(TrainingActivity.TRAINING_ID, getListAdapter().getItemId(pos));
-        }
-        return true;
     }
 }
