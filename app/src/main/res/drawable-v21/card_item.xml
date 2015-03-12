@@ -2,13 +2,28 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- while selected in actionmode -->
-    <item android:state_checked="true">
+    <item android:state_activated="true" android:state_focused="true" android:state_pressed="true">
         <ripple android:color="#ff00ff" />
     </item>
-    <item android:state_activated="true">
+    <item android:state_activated="false" android:state_focused="true" android:state_pressed="true">
         <ripple android:color="#ff00ff" />
     </item>
-    <item android:state_selected="true">
+    <item android:state_activated="true" android:state_focused="false" android:state_pressed="true">
+        <ripple android:color="#ff00ff" />
+    </item>
+    <item android:state_activated="false" android:state_focused="false" android:state_pressed="true">
+        <ripple android:color="#ff00ff" />
+    </item>
+    <item android:state_activated="true" android:state_focused="true" android:state_pressed="false">
+        <ripple android:color="#ff00ff" />
+    </item>
+    <item android:state_activated="false" android:state_focused="true" android:state_pressed="false">
+        <ripple android:color="#ff00ff" />
+    </item>
+    <item android:state_activated="true" android:state_focused="false" android:state_pressed="false">
+        <ripple android:color="#ff00ff" />
+    </item>
+    <item android:state_activated="false" android:state_focused="false" android:state_pressed="false">
         <ripple android:color="#ff00ff" />
     </item>
 
