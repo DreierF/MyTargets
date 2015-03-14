@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- while selected in actionmode -->
-    <item android:state_focused="true" android:state_activated="true">
-        <ripple android:color="#ff00ff" />
-    </item>
-
-    <!-- while selected in actionmode -->
-    <item android:state_focused="false" android:state_activated="true">
-        <ripple android:color="#ff00ff" />
-    </item>
-
     <!-- I never see this one - the grid items are not focusable -->
     <item android:state_focused="true" android:state_pressed="false">
         <ripple android:color="@color/accent_lighter" />
@@ -20,7 +10,5 @@
     <item android:state_pressed="true">
         <ripple android:color="@color/accent_lighter" />
     </item>
-
-    <item android:drawable="@android:color/transparent" />
 </selector>
 

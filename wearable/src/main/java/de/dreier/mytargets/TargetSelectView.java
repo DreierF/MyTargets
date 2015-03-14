@@ -12,8 +12,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 
 import de.dreier.mytargets.models.Circle;
 import de.dreier.mytargets.models.OnTargetSetListener;
+import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.models.Shot;
 import de.dreier.mytargets.models.Target;
 
 public class TargetSelectView extends View implements View.OnTouchListener {
@@ -35,7 +35,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
     private float mOutToX, mOutToY;
     private int mInZone, mOutZone;
     private int mZoneCount;
-    private Shot[] mPasse;
+    private Passe mPasse;
     private Round roundInfo;
     private int chinHeight;
     private double circRadius;
@@ -62,7 +62,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
         lastSetArrow = -1;
         mCurSelecting = -1;
         for (int i = 0; i < roundInfo.ppp; i++) {
-            mPasse[i].zone = -2;
+            mPasse.shot[i].zone = -2;
         }
         invalidate();
     }
@@ -70,7 +70,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
     public void setRoundInfo(Round r) {
         roundInfo = r;
         mZoneCount = Target.target_rounds[r.target].length;
-        mPasse = Shot.newArray(r.ppp);
+        mPasse = new Passe(r.ppp);
         twoRows = roundInfo.ppp > 3;
         circle = new Circle(density, roundInfo.target);
         reset();
@@ -93,7 +93,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
     protected void onDraw(Canvas canvas) {
         int curZone;
         if (currentArrow < roundInfo.ppp)
-            curZone = mPasse[currentArrow].zone;
+            curZone = mPasse.shot[currentArrow].zone;
         else
             curZone = -2;
 
@@ -133,7 +133,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
             float newX = radius + ((i % 3) - 1) * 25 * density;
             float newY = radius - 25 * density + (i < 3 ? -1 : 1) * (twoRows ? 15 * density : -5 * density);
             if (currentArrow != i && mCurSelecting != i) {
-                circle.draw(canvas, newX, newY, mPasse[i].zone, 10, false);
+                circle.draw(canvas, newX, newY, mPasse.shot[i].zone, 10, false);
             }
         }
     }
@@ -152,8 +152,8 @@ public class TargetSelectView extends View implements View.OnTouchListener {
 
     private void initAnimationPositions() {
         //Calculate positions of outgoing object
-        if (currentArrow < roundInfo.ppp && mPasse[currentArrow].zone >= -1) {
-            mOutZone = mPasse[currentArrow].zone;
+        if (currentArrow < roundInfo.ppp && mPasse.shot[currentArrow].zone >= -1) {
+            mOutZone = mPasse.shot[currentArrow].zone;
             mOutToX = radius + ((currentArrow % 3) - 1) * 25 * density;
             mOutToY = radius - 25 * density + (currentArrow < 3 ? -1 : 1) * (twoRows ? 15 * density : -5 * density);
             float[] coord = getCircularCoords(mOutZone);
@@ -164,8 +164,8 @@ public class TargetSelectView extends View implements View.OnTouchListener {
         }
 
         // Calculate positions for incoming object
-        if (mCurSelecting < roundInfo.ppp && mPasse[mCurSelecting].zone >= -1) {
-            mInZone = mPasse[mCurSelecting].zone;
+        if (mCurSelecting < roundInfo.ppp && mPasse.shot[mCurSelecting].zone >= -1) {
+            mInZone = mPasse.shot[mCurSelecting].zone;
             float[] coord = getCircularCoords(mInZone);
             mInFromX = coord[0];
             mInFromY = coord[1];
@@ -219,10 +219,10 @@ public class TargetSelectView extends View implements View.OnTouchListener {
         }
 
         // If a valid selection was made save it in the passe
-        if (currentArrow < roundInfo.ppp && mPasse[currentArrow].zone != zone) {
-            mPasse[currentArrow].zone = zone;
-            mPasse[currentArrow].x = Target.zoneToX(roundInfo.target, zone);
-            mPasse[currentArrow].y = 0f;
+        if (currentArrow < roundInfo.ppp && mPasse.shot[currentArrow].zone != zone) {
+            mPasse.shot[currentArrow].zone = zone;
+            mPasse.shot[currentArrow].x = Target.zoneToX(roundInfo.target, zone);
+            mPasse.shot[currentArrow].y = 0f;
             invalidate();
         }
 
@@ -235,7 +235,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
             animateSelectCircle(lastSetArrow + 1);
 
             if (lastSetArrow + 1 >= roundInfo.ppp && setListener != null) {
-                setListener.onTargetSet(mPasse.clone(), false);
+                setListener.onTargetSet(new Passe(mPasse), false);
             }
 
             return true;
@@ -278,7 +278,7 @@ public class TargetSelectView extends View implements View.OnTouchListener {
     }
 
     public void restoreState(Bundle b) {
-        mPasse = (Shot[]) b.getSerializable("passe");
+        mPasse = (Passe) b.getSerializable("passe");
         currentArrow = b.getInt("currentArrow");
         lastSetArrow = b.getInt("lastSetArrow");
         roundInfo = (Round) b.getSerializable("roundInfo");

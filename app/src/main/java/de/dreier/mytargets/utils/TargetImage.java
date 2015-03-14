@@ -16,8 +16,8 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.activities.RoundActivity;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.models.Shot;
 import de.dreier.mytargets.models.Target;
 
 public class TargetImage {
@@ -39,7 +39,7 @@ public class TargetImage {
         // Initialize variables
         int radius = size / 2;
         DatabaseManager db = DatabaseManager.getInstance(context);
-        ArrayList<Shot[]> oldOnes = db.getRoundPasses(round, -1);
+        ArrayList<Passe> oldOnes = db.getPasses(round);
         mZoneCount = Target.target_rounds[roundInfo.target].length;
         init();
 
@@ -81,17 +81,17 @@ public class TargetImage {
         }
     }
 
-    private void drawArrows(Canvas canvas, int radius, ArrayList<Shot[]> oldOnes) {
+    private void drawArrows(Canvas canvas, int radius, ArrayList<Passe> oldOnes) {
         float count = 0;
         float sumX = 0;
         float sumY = 0;
-        for (Shot[] p : oldOnes) {
-            for (int i = 0; i < p.length; i++) {
+        for (Passe p : oldOnes) {
+            for (int i = 0; i < p.shot.length; i++) {
                 // For yellow and white background use black font color
-                int colorInd = i == mZoneCount || p[i].zone < 0 ? 0 : target[p[i].zone];
+                int colorInd = i == mZoneCount || p.shot[i].zone < 0 ? 0 : target[p.shot[i].zone];
                 drawColorP.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
-                float selX = p[i].x;
-                float selY = p[i].y;
+                float selX = p.shot[i].x;
+                float selY = p.shot[i].y;
                 sumX += selX;
                 sumY += selY;
                 count++;

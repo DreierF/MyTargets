@@ -14,6 +14,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.LinearSeries;
 import de.dreier.mytargets.models.LinearSeries.LinearPoint;
+import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
 import de.dreier.mytargets.views.ChartView;
@@ -93,14 +94,14 @@ public class StatisticsFragment extends Fragment {
 
     private LinearSeries generateRoundSeries() {
         DatabaseManager db = DatabaseManager.getInstance(getActivity());
-        ArrayList<Shot[]> passes = db.getRoundPasses(mRound, -1);
+        ArrayList<Passe> passes = db.getPasses(mRound);
         Round r = db.getRound(mRound);
 
         LinearSeries series = new LinearSeries();
 
         int x = 0;
-        for (Shot[] passe : passes)
-            for (Shot shot : passe)
+        for (Passe passe : passes)
+            for (Shot shot : passe.shot)
                 series.addPoint(new LinearPoint(x++, (long) shot.zone));
         chartView.setRoundInfo(r);
         return series;

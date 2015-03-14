@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,20 +16,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 import com.bignerdranch.android.recyclerviewchoicemode.ModalMultiSelectorCallback;
 import com.bignerdranch.android.recyclerviewchoicemode.MultiSelector;
+import com.bignerdranch.android.recyclerviewchoicemode.OnCardClickListener;
 import com.melnykov.fab.FloatingActionButton;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.models.IdProvider;
+import de.dreier.mytargets.views.CardItemDecorator;
 
 /**
  * Shows all rounds of one settings_only day
  */
-public abstract class NowListFragment<T> extends Fragment implements View.OnClickListener {
+public abstract class NowListFragment<T extends IdProvider> extends Fragment implements View.OnClickListener, OnCardClickListener<T> {
 
     @PluralsRes
     protected int itemTypeRes;
@@ -36,7 +42,11 @@ public abstract class NowListFragment<T> extends Fragment implements View.OnClic
     DatabaseManager db;
     boolean mEditable = false;
     protected RecyclerView mRecyclerView;
-    protected ArrayList<T> mList;
+    protected NowListAdapter<T> mAdapter;
+
+    // Action mode handling
+    protected MultiSelector mMultiSelector = new MultiSelector();
+    protected ActionMode actionMode = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,8 +54,8 @@ public abstract class NowListFragment<T> extends Fragment implements View.OnClic
 
         mRecyclerView = (RecyclerView) rootView.findViewById(android.R.id.list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.addItemDecoration(new CardItemDecorator(getActivity()));
         mRecyclerView.setHasFixedSize(true);
-        //mMultiSelector.setSelectable(false);
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(this);
@@ -53,50 +63,20 @@ public abstract class NowListFragment<T> extends Fragment implements View.OnClic
         return rootView;
     }
 
-    protected MultiSelector mMultiSelector = new MultiSelector();
-    protected ActionMode actionMode = null;
-    protected ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
-        /*@Override
-        public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-            if (!mAdapter.isSelectable(position)) {
-                if (checked)
-                    mListView.setItemChecked(position, false);
-                return;
-            }
-            count += checked ? 1 : -1;
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        db = DatabaseManager.getInstance(getActivity());
+        init(getArguments(), savedInstanceState);
+    }
 
-            final String title = getResources().getQuantityString(itemTypeRes, count, count);
-            mode.setTitle(title);
-            mode.invalidate();
-        }*/
+    protected ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
 
         @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.action_edit:
-                    mode.finish();
-                    int id = mMultiSelector.getSelectedPositions().get(0);
-                    onEdit(id);
-                    //onResume();
-                    return true;
-                case R.id.action_delete:
-                    mode.finish();
-
-                    /*for (int i = mCrimes.size()-1; i >= 0; i--) {
-                        if (mMultiSelector.isSelected(i, 0)) {
-                            Crime crime = mCrimes.get(i);
-                            CrimeLab.get(getActivity()).deleteCrime(crime);
-                            mRecyclerView.getAdapter().notifyItemRemoved(i);
-                        }
-                    }*/
-
-                    List<Integer> positions = mMultiSelector.getSelectedPositions();
-                    onDelete(positions);
-                    //onResume();
-                    return true;
-                default:
-                    return false;
-            }
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            MenuItem edit = menu.findItem(R.id.action_edit);
+            edit.setVisible(getSelectedCount() == 1 && mEditable);
+            return false;
         }
 
         @Override
@@ -108,41 +88,88 @@ public abstract class NowListFragment<T> extends Fragment implements View.OnClic
         }
 
         @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            super.onDestroyActionMode(mode);
-            actionMode=null;
-            mRecyclerView.getAdapter().notifyDataSetChanged();
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_edit:
+                    int id = mMultiSelector.getSelectedPositions().get(0);
+                    onEdit(mAdapter.getItem(id));
+                    mode.finish();
+                    return true;
+                case R.id.action_delete:
+                    List<Integer> positions = mMultiSelector.getSelectedPositions();
+                    remove(positions);
+                    mode.finish();
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            MenuItem edit = menu.findItem(R.id.action_edit);
-            edit.setVisible(getSelectedCount() == 1 && mEditable);
-            return false;
+        public void onDestroyActionMode(ActionMode mode) {
+            super.onDestroyActionMode(mode);
+            actionMode = null;
         }
     };
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        db = DatabaseManager.getInstance(getActivity());
-        init(getArguments(), savedInstanceState);
+    public void remove(List<Integer> positions) {
+        Collections.sort(positions);
+        Collections.reverse(positions);
+        for (int pos : positions) {
+            db.deleteTraining(mAdapter.getItemId(pos)); //TODO generalize
+            mAdapter.remove(pos);
+        }
+    }
+
+    protected void updateTitle() {
+        if (actionMode == null)
+            return;
+        int count = mMultiSelector.getSelectedPositions().size();
+        if (count == 0) {
+            actionMode.finish();
+        } else {
+            final String title = getResources().getQuantityString(itemTypeRes, count, count);
+            actionMode.setTitle(title);
+            actionMode.invalidate();
+        }
     }
 
     /* On FAB button clicked */
     @Override
     public void onClick(View v) {
         Intent i = new Intent();
-        onNewClick(i);
+        onNew(i);
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
+    @Override
+    public void onClick(CardViewHolder holder, T mItem) {
+        if (mItem == null)
+            return;
+        if (!mMultiSelector.tapSelection(holder)) {
+            onSelected(mItem);
+        } else {
+            updateTitle();
+        }
+    }
+
+    @Override
+    public void onLongClick(CardViewHolder holder) {
+        if (actionMode == null) {
+            ActionBarActivity activity = (ActionBarActivity) getActivity();
+            activity.startSupportActionMode(mDeleteMode);
+            mMultiSelector.setSelectable(true);
+        }
+        mMultiSelector.setSelected(holder, true);
+        updateTitle();
+    }
+
     protected abstract void init(Bundle intent, Bundle savedInstanceState);
 
-    protected abstract void onEdit(int pos);
+    protected abstract void onNew(Intent i);
 
-    protected abstract void onDelete(List<Integer> positions);
+    protected abstract void onSelected(T item);
 
-    protected abstract void onNewClick(Intent i);
+    protected abstract void onEdit(T item);
 }

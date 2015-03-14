@@ -16,13 +16,13 @@ import android.view.View;
 import android.widget.Button;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.WearMessageManager;
 import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.models.OnTargetSetListener;
+import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
 import de.dreier.mytargets.models.Target;
@@ -32,9 +32,9 @@ import de.dreier.mytargets.views.TargetView;
 public class PasseActivity extends ActionBarActivity implements OnTargetSetListener {
 
     public static final String ROUND_ID = "round_id";
-    public static final String PASSE_IND = "passe_ind";
     private static final String TARGET_MODE = "target_mode";
     private static final String SHOW_ALL_MODE = "show_all";
+    public static final String PASSE_IND = "passe_ind";
     private TargetView target;
     private Button next, prev;
     private int curPasse = 1;
@@ -51,12 +51,18 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_passe);
 
+        next = (Button) findViewById(R.id.next_button);
+        prev = (Button) findViewById(R.id.prev_button);
+        target = (TargetView) findViewById(R.id.target_view);
+        target.setOnTargetSetListener(this);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         db = DatabaseManager.getInstance(this);
 
         Intent i = getIntent();
         if (i != null && i.hasExtra(ROUND_ID)) {
             mRound = i.getLongExtra(ROUND_ID, -1);
-            savedPasses = db.getPasses(mRound).getCount();
+            savedPasses = db.getPasses(mRound).size();
             if (i.hasExtra(PASSE_IND)) {
                 curPasse = i.getIntExtra(PASSE_IND, -1);
             } else {
@@ -64,15 +70,9 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
             }
         }
 
-        target = (TargetView) findViewById(R.id.target_view);
-        target.setOnTargetSetListener(this);
-        next = (Button) findViewById(R.id.next_button);
-        prev = (Button) findViewById(R.id.prev_button);
-
         r = db.getRound(mRound);
         mTraining = r.training;
         target.setRoundInfo(r);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         mMode = prefs.getBoolean(TARGET_MODE, true);
         mShowAllMode = prefs.getBoolean(SHOW_ALL_MODE, false);
         target.switchMode(mMode, false);
@@ -144,7 +144,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
 
     void setPasse(int passe) {
         if (passe <= savedPasses) {
-            Shot[] p = db.getPasse(mRound, passe);
+            Passe p = db.getPasse(mRound, passe);
             if (p != null) {
                 target.setZones(p);
             } else {
@@ -153,7 +153,7 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
         } else if (passe != curPasse) {
             target.reset();
         }
-        ArrayList<Shot[]> oldOnes = db.getRoundPasses(mRound, passe);
+        ArrayList<Passe> oldOnes = db.getPasses(mRound);
         target.setOldShoots(oldOnes);
         curPasse = passe;
         updatePasse();
@@ -206,20 +206,17 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
     }
 
     @Override
-    public void onTargetSet(Shot[] passe, boolean remote) {
-        Arrays.sort(passe);
+    public void onTargetSet(Passe passe, boolean remote) {
+        passe.sort();
 
+        db.updatePasse(mRound, passe);
         if (curPasse > savedPasses || remote) {
             savedPasses++;
-            db.addPasseToRound(mRound, passe);
             manager.sendMessage(buildInfo());
             if (remote)
                 curPasse = savedPasses + 1;
-        } else {
-            db.updatePasse(mRound, curPasse, passe);
-            if (curPasse == savedPasses) {
-                manager.sendMessage(buildInfo());
-            }
+        } else if (curPasse == savedPasses) {
+            manager.sendMessage(buildInfo());
         }
         runOnUiThread(new Runnable() {
             @Override
@@ -240,9 +237,9 @@ public class PasseActivity extends ActionBarActivity implements OnTargetSetListe
         String text = "";
 
         // Initialize message text
-        Shot[] lastPasse = db.getPasse(mRound, savedPasses);
+        Passe lastPasse = db.getPasse(mRound, savedPasses);
         if (lastPasse != null) {
-            for (Shot shot : lastPasse) {
+            for (Shot shot : lastPasse.shot) {
                 text += Target.getStringByZone(r.target, shot.zone) + " ";
             }
             text += "\n";

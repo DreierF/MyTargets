@@ -2,8 +2,7 @@ package de.dreier.mytargets.models;
 
 import android.graphics.Bitmap;
 
-public class Arrow {
-    public long id;
+public class Arrow extends IdProvider {
     public String imageFile;
     public String name;
     public String length;

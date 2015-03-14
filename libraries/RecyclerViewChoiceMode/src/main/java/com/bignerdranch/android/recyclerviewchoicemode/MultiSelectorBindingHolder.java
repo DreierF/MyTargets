@@ -1,6 +1,5 @@
 package com.bignerdranch.android.recyclerviewchoicemode;
 
-import android.os.Build;
 import android.support.v7.widget.RebindReportingHolder;
 import android.view.View;
 
@@ -14,6 +13,7 @@ public abstract class MultiSelectorBindingHolder extends RebindReportingHolder i
 
     @Override
     protected void onRebind() {
-        mMultiSelector.bindHolder(this, getPosition(), getItemId());
+        if (mMultiSelector != null)
+            mMultiSelector.bindHolder(this, getPosition(), getItemId());
     }
 }

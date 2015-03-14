@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General -->
+    <string name="app_name">MyTargets</string>
+    <string name="prev">Previous</string>
+    <string name="next">Next</string>
+    <string name="save">Save</string>
+    <string name="custom">Custom</string>
+    <string name="training">Training</string>
+    <string name="bow">Bow</string>
+    <string name="arrow">Arrow</string>
+    <string name="round">Round</string>
+    <string name="points">Points</string>
+    <string name="passe">Passe</string>
+    <string name="passe_n">Passe %d</string>
+    
+    <!-- Overview -->
+    <string name="new_training">New training</string>
+    <string name="new_bow">New bow</string>
+    <string name="new_arrow">New arrow</string>
+    <string name="new_round">New round</string>
+    <string name="new_passe">New passe</string>
+
+    <!--
+    The next section is for generating "counted strings".
+    For russian it's:
+    - "one" is used for numbers like 1, 21, 31, 41, 51, 61 (n mod 10 is 1 and n mod 100 is not 11)
+      where %d is replaced by the number
+    - "few" e.g. 2-4, 22-24, 32-34... (n mod 10 in 2..4 and n mod 100 not in 12..14)
+    - "many" e.g. 0, 5-20, 25-30, 35-40... (n mod 10 is 0 or n mod 10 in 5..9 or n mod 100 in 11..14)
+    - "other" everything else e.g. 1.2, 2.07, 5.94...
+    -->
+    <plurals name="training">
+        <item quantity="one">%d training selected</item>
+        <item quantity="other">%d trainings selected</item>
+        <item quantity="few">%d trainings selected</item>
+        <item quantity="many">%d trainings selected</item>
+    </plurals>
+    <plurals name="bow">
+        <item quantity="one">%d bow selected</item>
+        <item quantity="other">%d bows selected</item>
+        <item quantity="few">%d bows selected</item>
+        <item quantity="many">%d bows selected</item>
+    </plurals>
+    <plurals name="arrow">
+        <item quantity="one">%d arrow selected</item>
+        <item quantity="other">%d arrows selected</item>
+        <item quantity="few">%d arrows selected</item>
+        <item quantity="many">%d arrows selected</item>
+    </plurals>
+    <plurals name="round">
+        <item quantity="one">%d round selected</item>
+        <item quantity="other">%d rounds selected</item>
+        <item quantity="few">%d rounds selected</item>
+        <item quantity="many">%d rounds selected</item>
+    </plurals>
+    <plurals name="passe">
+        <item quantity="one">%d passe selected</item>
+        <item quantity="other">%d passes selected</item>
+        <item quantity="few">%d passes selected</item>
+        <item quantity="many">%d passes selected</item>
+    </plurals>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="statistic">Statistic</string>
+
+    <!-- Share -->
+    <string name="share">Share</string>
+    <string name="my_share_text">Yeah, look at my archery score. If got:\n%1$d times X\n%2$d times 10\n%3$d times 9\nThis makes a total of %4$d out of %5$d rings.</string>
+    <string name="comments">Comments</string>
+    <string name="text">Text</string>
+    <string name="dispersion_pattern">Dispersion pattern</string>
+    <string name="sharing_failed">Sharing failed!</string>
+
+    <!-- Export -->
+    <string name="export">Export</string>
+    <string name="send_exported">Send exported data</string>
+    <string name="exporting_failed">Exporting failed!</string>
+
+    <!-- New bow -->
+    <string name="add_bow">Add bow</string>
+    <string name="name">Name</string>
+    <string name="bow_type">Bow type</string>
+    <string name="recurve_bow">Recurve bow</string>
+    <string name="compound_bow">Compound bow</string>
+    <string name="bare_bow">Bare bow</string>
+    <string name="long_bow">Long bow</string>
+    <string name="horse_bow">Horse bow</string>
+    <string name="yumi">Yumi</string>
+    <string name="properties">Properties</string>
+    <string name="brand">Brand</string>
+    <string name="size">Size</string>
+    <string name="description">Description</string>
+    <string name="height">Brace height</string>
+    <string name="tiller">Tiller</string>
+    <string name="sight_settings">Sight settings</string>
+    <string name="add">Add</string>
+    <string name="select_picture">Select a picture</string>
+    <string name="take_picture">Take a picture</string>
+    <string name="pick_from_gallery">Select a picture from gallery</string>
+
+    <!-- New arrow -->
+    <string name="add_arrow">Add arrow</string>
+    <string name="length">Length</string>
+    <string name="spine">Spine</string>
+    <string name="weight">Weight</string>
+    <string name="vanes">Vanes</string>
+    <string name="nock">Nock</string>
+    <string name="material">Material</string>
+
+    <!-- New round -->
+    <string name="title">Title</string>
+    <string name="outdoor">Outdoor</string>
+    <string name="indoor">Indoor</string>
+    <string name="distance">Distance</string>
+    <string name="arrows_per_passe">Arrows per passe</string>
+    <string name="target_round">Target round</string>
+    <string name="title_compound">Compound?</string>
+    <string name="msg_compound_type">Which bow type are you using? (There is a difference in how many points you get for the golden rings)</string>
+    <string name="other_bow">Other bow</string>
+
+    <!-- Scoreboard -->
+    <string name="scoreboard">Scoreboard</string>
+    <string name="arrows">Arrows</string>
+    <string name="sum">Sum</string>
+    <string name="carry">Carry</string>
+    <string name="action_print">Print</string>
+    <string name="nine">Nine</string>
+    <string name="ten_x">Ten+X</string>
+    <string name="average">Average</string>
+
+    <!-- Input mode -->
+    <string name="switch_mode">Switch input mode</string>
+    <string name="show_all">Show all impacts</string>
+    <string name="comment">Comment</string>
+
+    <!-- Statistics -->
+    <string name="all_trainings">All trainings</string>
+    <string name="entire_training">Entire training</string>
+    <string name="current_round">Current round</string>
+
+    <!-- Import/Backup -->
+    <string name="backup_action">Backup</string>
+    <string name="import_action">Import</string>
+    <string name="select_a_file">Select a file</string>
+    <string name="dir_not_created">Directory could not be created!</string>
+    <string name="backup_successful">Backup successful!</string>
+    <string name="backup_saved_as">Backup was saved as \'%s\'.</string>
+    <string name="backup_failed">Backup failed!</string>
+    <string name="backup_error">An error occurred while creating backup:\n%s</string>
+    <string name="sd_card_not_available_title">SD card not available!</string>
+    <string name="sd_card_not_available_desc">Please mount your sd card and try again!</string>
+    <string name="import_successful">Import successful!</string>
+    <string name="import_failed">Import failed!</string>
+    <string name="file_not_found">File not found!</string>
+    <string name="failed_reading_file">Failed reading file!</string>
+
+    <!-- Donate -->
+    <string name="donate_action">Donate</string>
+    <string name="donate_2">Donate me a burger</string>
+    <string name="donate_5">Donate me a kebab</string>
+    <string name="donate_10">Donate me a large pizza</string>
+    <string name="donate_20">Donate me some fuel</string>
+    <string name="donate_infinite">Lasting support</string>
+    <string name="donation_thank">Thank you for your support!</string>
+    <string name="monthly">monthly %s</string>
+    <string name="donate_text">The amounts are incl. VAT and 30% fees for Google. Alternatively you may gladly donate on the PayPal account dreier.florian@gmail.com.</string>
+</resources>

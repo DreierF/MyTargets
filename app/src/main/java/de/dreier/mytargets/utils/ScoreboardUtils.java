@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
 import de.dreier.mytargets.models.Target;
@@ -24,7 +25,7 @@ public class ScoreboardUtils {
         // Query information from database
         DatabaseManager db = DatabaseManager.getInstance(context);
         Round info = db.getRound(round);
-        ArrayList<Shot[]> passes = db.getRoundPasses(round, -1);
+        ArrayList<Passe> passes = db.getPasses(round);
 
         // Initialize html Strings
         String html = "<html>" + CSS;
@@ -42,11 +43,11 @@ public class ScoreboardUtils {
             int sum = 0, carry = 0, count = 0;
             int i = 0;
             String tmp_html = "";
-            for (Shot[] passe : passes) {
+            for (Passe passe : passes) {
                 int arrows = 0;
                 if (i % 2 == 1) {
                     tmp_html += "<tr>";
-                    for (Shot shot : passe) {
+                    for (Shot shot : passe.shot) {
                         tmp_html += "<td>";
                         tmp_html += Target.getStringByZone(info.target, shot.zone);
                         tmp_html += "</td>";
@@ -64,7 +65,7 @@ public class ScoreboardUtils {
                     sum = 0;
                 } else {
                     html += "<tr>";
-                    for (Shot shot : passe) {
+                    for (Shot shot : passe.shot) {
                         html += "<td>";
                         html += Target.getStringByZone(info.target, shot.zone);
                         html += "</td>";
@@ -106,8 +107,8 @@ public class ScoreboardUtils {
             int commentsCount = 0;
 
             int i = 1;
-            for (Shot[] passe : passes) {
-                for (Shot shot : passe) {
+            for (Passe passe : passes) {
+                for (Shot shot : passe.shot) {
                     if (!TextUtils.isEmpty(shot.comment)) {
                         comments += "<tr><td>" + i + "</td>" +
                                 "<td>" + Target.getStringByZone(info.target, shot.zone) + "</td>" +

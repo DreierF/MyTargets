@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
-public class Shot implements Comparable<Shot>, Serializable {
+public class Shot extends IdProvider implements Comparable<Shot>, Serializable {
     static final long serialVersionUID = 44L;
     public int passe;
     public int zone;
@@ -19,14 +19,5 @@ public class Shot implements Comparable<Shot>, Serializable {
         if (another.zone == zone)
             return 0;
         return ((zone > another.zone && another.zone != -1) || zone == -1) ? 1 : -1;
-    }
-
-    public static Shot[] newArray(int ppp) {
-        Shot[] arr = new Shot[ppp];
-        for (int i = 0; i < arr.length; i++) {
-            arr[i] = new Shot();
-            arr[i].comment = "";
-        }
-        return arr;
     }
 }

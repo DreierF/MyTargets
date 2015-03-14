@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import de.dreier.mytargets.models.OnTargetSetListener;
-import de.dreier.mytargets.models.Shot;
+import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.WearableUtils;
 
 public class WearMessageManager implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, MessageApi.MessageListener {
@@ -120,7 +120,7 @@ public class WearMessageManager implements GoogleApiClient.ConnectionCallbacks, 
     public void onMessageReceived(MessageEvent messageEvent) {
         // Transform byte[] to Bundle
         byte[] data = messageEvent.getData();
-        Shot[] p = null;
+        Passe p = null;
         try {
             p = WearableUtils.deserializeToPasse(data);
         } catch (IOException | ClassNotFoundException e) {

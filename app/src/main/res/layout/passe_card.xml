@@ -1,37 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/CardContainer">
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Card">
 
-    <android.support.v7.widget.CardView style="@style/Card">
-
-        <LinearLayout
-            android:id="@+id/passe_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <view
-                android:id="@+id/shoots"
-                class="de.dreier.mytargets.views.PassesView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/passe"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="5dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/secondary_text_light" />
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-    <View
+    <LinearLayout
+        android:id="@+id/passe_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:attr/selectableItemBackground" />
+        android:orientation="vertical">
 
-</FrameLayout>
+        <view
+            android:id="@+id/shoots"
+            class="de.dreier.mytargets.views.PassesView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/passe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/secondary_text_light" />
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

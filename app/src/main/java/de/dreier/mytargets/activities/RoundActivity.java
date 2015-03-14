@@ -1,17 +1,21 @@
 package de.dreier.mytargets.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -20,25 +24,27 @@ import com.nineoldandroids.view.ViewHelper;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.PasseAdapter;
+import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
 import de.dreier.mytargets.fragments.ShareDialogFragment;
 import de.dreier.mytargets.models.Arrow;
 import de.dreier.mytargets.models.Bow;
+import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Target;
 import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.TargetImage;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.views.PassesView;
 
 /**
  * Shows all passes of one round
  */
-public class RoundActivity extends NowListActivity implements ShareDialogFragment.ShareDialogListener, ObservableScrollViewCallbacks {
+public class RoundActivity extends NowListActivity<Passe> implements ShareDialogFragment.ShareDialogListener, ObservableScrollViewCallbacks {
 
-    private PasseAdapter adapter;
     private long mTraining;
     private long mRound;
 
@@ -55,11 +61,11 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
     }
 
     @Override
-    protected void init(Intent intent, Bundle savedInstanceState) {
+    protected void init(Bundle intent, Bundle savedInstanceState) {
         itemTypeRes = R.plurals.passe;
-        if (intent != null && intent.hasExtra(ROUND_ID)) {
-            mTraining = intent.getLongExtra(TRAINING_ID, -1);
-            mRound = intent.getLongExtra(ROUND_ID, -1);
+        if (intent!=null) {
+            mTraining = intent.getLong(TRAINING_ID, -1);
+            mRound = intent.getLong(ROUND_ID, -1);
         }
         if (savedInstanceState != null) {
             mTraining = savedInstanceState.getLong(TRAINING_ID, -1);
@@ -71,49 +77,56 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
         mHeader = (Toolbar) findViewById(R.id.round_container);
         mDetails = findViewById(R.id.round_container_content);
         mShadow = findViewById(R.id.shadow);
-        ObservableRecyclerView listView = ((ObservableRecyclerView) mRecyclerView);
+        ObservableRecyclerView recyclerView = (ObservableRecyclerView) mRecyclerView;
 
         // Set listeners
-        listView.setScrollViewCallbacks(this);
+        recyclerView.setScrollViewCallbacks(this);
+        onScrollChanged(0, true, true);
         mHeader.setOnClickListener(headerClickListener);
 
         // Set up toolbar
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.round) + " " + db.getRoundInd(mTraining, mRound));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
         mRoundInfo = db.getRound(mRound);
-        setRoundInfo();
-        adapter = new PasseAdapter(this, mRound, mRoundInfo);
+        ArrayList<Passe> list = db.getPasses(mRound);
+        if (mRecyclerView.getAdapter() == null) {
+            mAdapter = new PasseAdapter();
+            mAdapter.setList(list);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.setList(list);
+            mAdapter.notifyDataSetChanged();
+        }
 
         // Load values for animations
         mActionBarSize = ToolbarUtils.getActionBarSize(this);
         mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.ext_toolbar_round_height);
+        mAdapter.setHeaderHeight(mHeaderHeight + mActionBarSize);
 
-        adapter.setHeaderHeight(mHeaderHeight + mActionBarSize);
-        setListAdapter(adapter);
+        setRoundInfo();
         supportInvalidateOptionsMenu();
     }
 
     public void setRoundInfo() {
-        int maxPoints = Target.getMaxPoints(mRoundInfo.target);
-        int reached = db.getRoundPoints(mRound);
-        int maxP = mRoundInfo.ppp * maxPoints * db.getPasses(mRound).getCount();
+        int reached = mRoundInfo.reachedPoints;
+        int max = mRoundInfo.maxPoints;
 
         TextView info = (TextView) findViewById(R.id.detail_round_info);
         TextView score = (TextView) findViewById(R.id.detail_score);
 
         // Set round info
-        String percent = maxP == 0 ? "" : " (" + (reached * 100 / maxP) + "%)";
+        String percent = max == 0 ? "" : " (" + (reached * 100 / max) + "%)";
         String infoText = "<font color=#ffffff>" + getString(R.string.distance) + "</font>: <font color=#ff9100><b>" +
                 mRoundInfo.distance + " - " +
                 getString(mRoundInfo.indoor ? R.string.indoor : R.string.outdoor) + "</b></font><br>" +
-                "<font color=#ffffff>" + getString(R.string.points) + "</font>: <font color=#ff9100><b>" + reached + "/" + maxP + percent + "</b></font><br>" +
+                "<font color=#ffffff>" + getString(R.string.points) + "</font>: <font color=#ff9100><b>" + reached + "/" + max + percent + "</b></font><br>" +
                 "<font color=#ffffff>" + getString(R.string.target_round) + "</font>: <font color=#ff9100><b>" + TargetItemAdapter.targets[mRoundInfo.target] + "</b></font>";
         Bow bow = db.getBow(mRoundInfo.bow, true);
         if (bow != null) {
@@ -146,7 +159,7 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean hasPasses = adapter.getItemCount() > 0;
+        boolean hasPasses = mAdapter.getItemCount() > 0;
         menu.findItem(R.id.action_scoreboard).setVisible(hasPasses);
         menu.findItem(R.id.action_share).setVisible(hasPasses);
         menu.findItem(R.id.action_statistics).setVisible(hasPasses);
@@ -188,7 +201,7 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
         mRoundInfo = db.getRound(mRound);
         int max = Target.getMaxPoints(mRoundInfo.target);
         int reached = db.getRoundPoints(mRound);
-        int maxP = mRoundInfo.ppp * max * db.getPasses(mRound).getCount();
+        int maxP = mRoundInfo.ppp * max * db.getPasses(mRound).size();
         final String text = getString(R.string.my_share_text,
                 mRoundInfo.scoreCount[0], mRoundInfo.scoreCount[1], mRoundInfo.scoreCount[2], reached, maxP);
 
@@ -219,11 +232,6 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
         }).start();
     }
 
-    @Override
-    protected void onDelete(long[] ids) {
-        db.deletePasses(ids);
-    }
-
     private View.OnClickListener headerClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -235,16 +243,23 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
     };
 
     @Override
-    public boolean onItemClick(Intent i, int pos, long id) {
-        if (pos == 1) {
-            i.setClass(this, PasseActivity.class);
-            i.putExtra(PasseActivity.ROUND_ID, mRound);
-        } else {
-            i.setClass(this, PasseActivity.class);
-            i.putExtra(PasseActivity.ROUND_ID, mRound);
-            i.putExtra(PasseActivity.PASSE_IND, pos - 1);
-        }
-        return true;
+    protected void onNew(Intent i) {
+        i.setClass(this, PasseActivity.class);
+        i.putExtra(PasseActivity.ROUND_ID, mRound);
+    }
+
+    @Override
+    public void onSelected(Passe item) {
+        Intent i = new Intent(this, TrainingActivity.class);
+        i.setClass(this, PasseActivity.class);
+        i.putExtra(PasseActivity.ROUND_ID, mRound);
+        i.putExtra(PasseActivity.PASSE_IND, db.getPasseInd(mRound, item.getId()));
+        startActivity(i);
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    @Override
+    protected void onEdit(Passe item) {
     }
 
     @Override
@@ -268,5 +283,32 @@ public class RoundActivity extends NowListActivity implements ShareDialogFragmen
 
     @Override
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+    }
+
+    public class PasseAdapter extends NowListAdapter<Passe> {
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.passe_card, parent, false);
+            return new ViewHolder(itemView);
+        }
+    }
+
+    public class ViewHolder extends CardViewHolder<Passe> {
+        public PassesView mShots;
+        public TextView mSubtitle;
+
+        public ViewHolder(View itemView) {
+            super(itemView, mMultiSelector, RoundActivity.this);
+            mShots = (PassesView) itemView.findViewById(R.id.shoots);
+            mSubtitle = (TextView) itemView.findViewById(R.id.passe);
+        }
+
+        @Override
+        public void bindCursor() {
+            Context context = mSubtitle.getContext();
+            mShots.setPoints(mItem.shot, mRoundInfo.target);
+            mSubtitle.setText(context.getString(R.string.passe_n, getPosition()));
+        }
     }
 }

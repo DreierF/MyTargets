@@ -2,7 +2,7 @@ package de.dreier.mytargets.models;
 
 import java.io.Serializable;
 
-public class Round implements Serializable {
+public class Round extends IdProvider implements Serializable {
     static final long serialVersionUID = 42L;
 
     public int ppp;
@@ -17,4 +17,6 @@ public class Round implements Serializable {
     public int distanceInd;
     public String comment;
     public int arrow;
+    public int reachedPoints;
+    public int maxPoints;
 }

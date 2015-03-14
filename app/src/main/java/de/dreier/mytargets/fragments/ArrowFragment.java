@@ -2,17 +2,22 @@ package de.dreier.mytargets.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import java.util.List;
+import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
+
+import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditArrowActivity;
-import de.dreier.mytargets.adapters.ArrowAdapter;
+import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.models.Arrow;
 
 public class ArrowFragment extends NowListFragment<Arrow> {
-
-    ArrowAdapter adapter;
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
@@ -20,28 +25,61 @@ public class ArrowFragment extends NowListFragment<Arrow> {
     }
 
     @Override
-    protected void onEdit(int pos) {
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        adapter = new ArrowAdapter(getActivity());
-        mRecyclerView.setAdapter(adapter);
+        ArrayList<Arrow> list = db.getArrows();
+        if (mRecyclerView.getAdapter() == null) {
+            mAdapter = new ArrowAdapter();
+            mAdapter.setList(list);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.setList(list);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
-    protected void onDelete(List<Integer> ids) {
-        //TODO db.deleteArrows(ids);
+    protected void onNew(Intent i) {
+        i.setClass(getActivity(), EditArrowActivity.class);
     }
 
     @Override
-    protected void onNewClick(Intent i) {
-        i.setClass(getActivity(), EditArrowActivity.class);
+    public void onSelected(Arrow item) {
+        Intent i = new Intent(getActivity(), EditArrowActivity.class);
+        i.putExtra(EditArrowActivity.ARROW_ID, item.getId());
+        startActivity(i);
+        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
-    public void onItemClick(Intent i, int pos) {
-        i.setClass(getActivity(), EditArrowActivity.class);
-        i.putExtra(EditArrowActivity.ARROW_ID, adapter.getItemId(pos));
+    @Override
+    protected void onEdit(Arrow item) {
+        onSelected(item);
+    }
+
+    public class ArrowAdapter extends NowListAdapter<Arrow> {
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.bow_card, parent, false);
+            return new ViewHolder(itemView);
+        }
+    }
+
+    public class ViewHolder extends CardViewHolder<Arrow> {
+        private final TextView mName;
+        private final ImageView mImg;
+
+        public ViewHolder(View itemView) {
+            super(itemView, mMultiSelector, ArrowFragment.this);
+            mName = (TextView) itemView.findViewById(R.id.name);
+            mImg = (ImageView) itemView.findViewById(R.id.image);
+        }
+
+        @Override
+        public void bindCursor() {
+            mName.setText(mItem.name);
+            mImg.setImageBitmap(mItem.image);
+        }
     }
 }
+

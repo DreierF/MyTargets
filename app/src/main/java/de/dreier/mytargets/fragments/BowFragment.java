@@ -2,17 +2,22 @@ package de.dreier.mytargets.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import java.util.List;
+import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
+
+import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditBowActivity;
-import de.dreier.mytargets.adapters.BowAdapter;
+import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.models.Bow;
 
 public class BowFragment extends NowListFragment<Bow> {
-
-    BowAdapter adapter;
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
@@ -20,27 +25,60 @@ public class BowFragment extends NowListFragment<Bow> {
     }
 
     @Override
-    protected void onEdit(int pos) {}
-
-    @Override
     public void onResume() {
         super.onResume();
-        adapter = new BowAdapter(getActivity());
-        mRecyclerView.setAdapter(adapter);
+        ArrayList<Bow> list = db.getBows();
+        if (mRecyclerView.getAdapter() == null) {
+            mAdapter = new BowAdapter();
+            mAdapter.setList(list);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.setList(list);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
-    protected void onDelete(List<Integer> ids) {
-        //TODO db.deleteBows(ids);
+    protected void onNew(Intent i) {
+        i.setClass(getActivity(), EditBowActivity.class);
     }
 
     @Override
-    protected void onNewClick(Intent i) {
-        i.setClass(getActivity(), EditBowActivity.class);
+    public void onSelected(Bow item) {
+        Intent i = new Intent(getActivity(), EditBowActivity.class);
+        i.putExtra(EditBowActivity.BOW_ID, item.getId());
+        startActivity(i);
+        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
-    public void onItemClick(Intent i, int pos) {
-        i.setClass(getActivity(), EditBowActivity.class);
-        i.putExtra(EditBowActivity.BOW_ID, adapter.getItemId(pos));
+    @Override
+    protected void onEdit(Bow item) {
+        onSelected(item);
+    }
+
+    public class BowAdapter extends NowListAdapter<Bow> {
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.bow_card, parent, false);
+            return new ViewHolder(itemView);
+        }
+    }
+
+    public class ViewHolder extends CardViewHolder<Bow> {
+        private final TextView mName;
+        private final ImageView mImg;
+
+        public ViewHolder(View itemView) {
+            super(itemView, mMultiSelector, BowFragment.this);
+            mName = (TextView) itemView.findViewById(R.id.name);
+            mImg = (ImageView) itemView.findViewById(R.id.image);
+        }
+
+        @Override
+        public void bindCursor() {
+            mName.setText(mItem.name);
+            mImg.setImageBitmap(mItem.image);
+        }
     }
 }

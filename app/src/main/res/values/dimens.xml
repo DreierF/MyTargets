@@ -8,6 +8,6 @@
     <dimen name="flexible_space_show_fab_offset">120dp</dimen>
     <dimen name="left_space_title_toolbar">40dp</dimen>
     <dimen name="ext_toolbar_round_height">120dp</dimen>
-    <dimen name="card_padding_vertical">2dp</dimen>
+    <dimen name="card_padding_vertical">3dp</dimen>
     <dimen name="card_padding_horizontal">6dp</dimen>
 </resources>
