@@ -26,20 +26,14 @@ public class TrainingsFragment extends NowListFragment<Training> {
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
         itemTypeRes = R.plurals.training;
+        newStringRes = R.string.new_training;
     }
 
     @Override
     public void onResume() {
         super.onResume();
         ArrayList<Training> list = db.getTrainings();
-        if (mRecyclerView.getAdapter() == null) {
-            mAdapter = new TrainingAdapter();
-            mAdapter.setList(list);
-            mRecyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.setList(list);
-            mAdapter.notifyDataSetChanged();
-        }
+        setList(list, new TrainingAdapter());
     }
 
     @Override

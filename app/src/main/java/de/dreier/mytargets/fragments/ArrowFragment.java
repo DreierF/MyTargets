@@ -22,20 +22,14 @@ public class ArrowFragment extends NowListFragment<Arrow> {
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
         itemTypeRes = R.plurals.arrow;
+        newStringRes = R.string.new_arrow;
     }
 
     @Override
     public void onResume() {
         super.onResume();
         ArrayList<Arrow> list = db.getArrows();
-        if (mRecyclerView.getAdapter() == null) {
-            mAdapter = new ArrowAdapter();
-            mAdapter.setList(list);
-            mRecyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.setList(list);
-            mAdapter.notifyDataSetChanged();
-        }
+        setList(list, new ArrowAdapter());
     }
 
     @Override

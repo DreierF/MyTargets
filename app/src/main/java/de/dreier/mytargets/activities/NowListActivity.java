@@ -120,7 +120,7 @@ public abstract class NowListActivity<T extends IdProvider> extends ActionBarAct
         Collections.sort(positions);
         Collections.reverse(positions);
         for (int pos : positions) {
-            db.deleteTraining(mAdapter.getItemId(pos)); //TODO generalize
+            db.delete(mAdapter.getItem(pos));
             mAdapter.remove(pos);
         }
     }

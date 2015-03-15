@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="card_pressed">#f8f8f8</color><!-- #ebebeb -->
+    <color name="card_pressed">#f8f8f8</color>
     <color name="card_activated">#500099CC</color>
     <color name="card_action">#4285f4</color>
     <color name="colorPrimary">#259b24</color>
@@ -11,8 +11,9 @@
     <color name="ripple">#FFA733</color>
     <color name="colorAccent_pressed">#CC7400</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="accent_lighter_transparent">#7F090007</color>
-    <color name="accent_lighter">#7F090006</color>
+    <color name="accent_lighter_transparent">#7Fbbbbbb</color>
+    <color name="accent_lighter">#7Fbbbbbb</color>
     <color name="list_background">#FFEEEEEE</color>
+    <color name="new_text_color">#FF666666</color>
 
 </resources>

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
@@ -15,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 import com.bignerdranch.android.recyclerviewchoicemode.ModalMultiSelectorCallback;
@@ -22,6 +24,7 @@ import com.bignerdranch.android.recyclerviewchoicemode.MultiSelector;
 import com.bignerdranch.android.recyclerviewchoicemode.OnCardClickListener;
 import com.melnykov.fab.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,6 +41,8 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
 
     @PluralsRes
     protected int itemTypeRes;
+    @StringRes
+    protected int newStringRes;
 
     DatabaseManager db;
     boolean mEditable = false;
@@ -47,6 +52,10 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
     // Action mode handling
     protected MultiSelector mMultiSelector = new MultiSelector();
     protected ActionMode actionMode = null;
+
+    // New view
+    private View mNewLayout;
+    private TextView mNewText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,6 +69,9 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(this);
         fab.attachToRecyclerView(mRecyclerView);
+
+        mNewLayout = rootView.findViewById(R.id.new_layout);
+        mNewText = (TextView) rootView.findViewById(R.id.new_text);
         return rootView;
     }
 
@@ -68,6 +80,19 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
         super.onActivityCreated(savedInstanceState);
         db = DatabaseManager.getInstance(getActivity());
         init(getArguments(), savedInstanceState);
+    }
+
+    protected void setList(ArrayList<T> list, NowListAdapter<T> adapter) {
+        if (mRecyclerView.getAdapter() == null) {
+            mAdapter = adapter;
+            mAdapter.setList(list);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.setList(list);
+            mAdapter.notifyDataSetChanged();
+        }
+        mNewLayout.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
+        mNewText.setText(newStringRes);
     }
 
     protected ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
@@ -116,7 +141,7 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
         Collections.sort(positions);
         Collections.reverse(positions);
         for (int pos : positions) {
-            db.deleteTraining(mAdapter.getItemId(pos)); //TODO generalize
+            db.delete(mAdapter.getItem(pos));
             mAdapter.remove(pos);
         }
     }

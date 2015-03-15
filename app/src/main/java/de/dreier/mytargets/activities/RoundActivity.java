@@ -94,21 +94,23 @@ public class RoundActivity extends NowListActivity<Passe> implements ShareDialog
     public void onResume() {
         super.onResume();
 
+        // Load values for animations
+        mActionBarSize = ToolbarUtils.getActionBarSize(this);
+        mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.ext_toolbar_round_height);
+
         mRoundInfo = db.getRound(mRound);
         ArrayList<Passe> list = db.getPasses(mRound);
         if (mRecyclerView.getAdapter() == null) {
             mAdapter = new PasseAdapter();
+            mAdapter.setHeaderHeight(mHeaderHeight + mActionBarSize);
             mAdapter.setList(list);
             mRecyclerView.setAdapter(mAdapter);
+            onScrollChanged(0, true, true);
         } else {
+            mAdapter.setHeaderHeight(mHeaderHeight + mActionBarSize);
             mAdapter.setList(list);
             mAdapter.notifyDataSetChanged();
         }
-
-        // Load values for animations
-        mActionBarSize = ToolbarUtils.getActionBarSize(this);
-        mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.ext_toolbar_round_height);
-        mAdapter.setHeaderHeight(mHeaderHeight + mActionBarSize);
 
         setRoundInfo();
         supportInvalidateOptionsMenu();

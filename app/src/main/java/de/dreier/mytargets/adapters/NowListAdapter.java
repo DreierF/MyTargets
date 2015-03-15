@@ -21,7 +21,13 @@ public abstract class NowListAdapter<T extends IdProvider> extends RecyclerView.
 
     @Override
     public long getItemId(int position) {
-        return mList.get(position).getId();
+        if (position == 0 && headerHeight > 0) {
+            return 0;
+        } else if (headerHeight > 0) {
+            return mList.get(position - 1).getId();
+        } else {
+            return mList.get(position).getId();
+        }
     }
 
     @Override
@@ -66,12 +72,23 @@ public abstract class NowListAdapter<T extends IdProvider> extends RecyclerView.
     }
 
     public T getItem(int pos) {
-        return mList.get(pos);
+        if (pos == 0 && headerHeight > 0) {
+            return null;
+        } else if (headerHeight > 0) {
+            return mList.get(pos - 1);
+        } else {
+            return mList.get(pos);
+        }
     }
 
     public void remove(int pos) {
-        mList.remove(pos);
-        notifyItemRemoved(pos);
+        if (headerHeight > 0) {
+            mList.remove(pos - 1);
+            notifyItemRemoved(pos - 1);
+        } else {
+            mList.remove(pos);
+            notifyItemRemoved(pos);
+        }
     }
 
     public void setList(ArrayList<T> list) {

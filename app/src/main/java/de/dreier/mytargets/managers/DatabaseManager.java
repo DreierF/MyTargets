@@ -23,6 +23,7 @@ import de.dreier.mytargets.activities.EditRoundActivity;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
 import de.dreier.mytargets.models.Arrow;
 import de.dreier.mytargets.models.Bow;
+import de.dreier.mytargets.models.IdProvider;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
@@ -900,24 +901,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 ////// DELETE ENTRIES //////
 
-    public void deleteTraining(long ids) {
-        deleteEntry(TABLE_TRAINING, ids);
-    }
-
-    public void deleteRounds(long[] ids) {
-        deleteEntries(TABLE_ROUND, ids);
-    }
-
-    public void deletePasses(long[] ids) {
-        deleteEntries(TABLE_PASSE, ids);
-    }
-
-    public void deleteBows(long[] ids) {
-        deleteEntries(TABLE_BOW, ids);
-    }
-
-    public void deleteArrows(long[] ids) {
-        deleteEntries(TABLE_ARROW, ids);
+    public <T extends IdProvider> void delete(T id) {
+        if(id instanceof Training)
+            deleteEntry(TABLE_TRAINING, id.id);
+        else if(id instanceof Round)
+            deleteEntry(TABLE_ROUND, id.id);
+        else if(id instanceof Passe)
+            deleteEntry(TABLE_PASSE, id.id);
+        else if(id instanceof Bow)
+            deleteEntry(TABLE_BOW, id.id);
+        else if(id instanceof Arrow)
+            deleteEntry(TABLE_ARROW, id.id);
     }
 
     public void deleteEntries(String table, long[] ids) {
