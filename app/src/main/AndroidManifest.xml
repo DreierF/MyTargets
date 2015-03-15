@@ -41,7 +41,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.TrainingActivity"
+            android:name=".activities.RoundActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.MainActivity">
             <meta-data
@@ -49,32 +49,32 @@
                 android:value=".activities.MainActivity" />
         </activity>
         <activity
-            android:name=".activities.RoundActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".activities.TrainingActivity"
-            android:theme="@style/AppTheme.CustomToolbar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.TrainingActivity" />
-        </activity>
-        <activity
             android:name=".activities.PasseActivity"
-            android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.RoundActivity">
+            android:parentActivityName=".activities.RoundActivity"
+            android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.RoundActivity" />
         </activity>
         <activity
+            android:name=".activities.InputActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.PasseActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.PasseActivity" />
+        </activity>
+        <activity
             android:name=".activities.EditRoundActivity"
             android:label="@string/new_round"
-            android:parentActivityName=".activities.TrainingActivity"
+            android:parentActivityName=".activities.RoundActivity"
             android:theme="@style/AppTheme.CustomToolbar"
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.TrainingActivity" />
+                android:value=".activities.RoundActivity" />
         </activity>
         <activity
             android:name=".activities.EditBowActivity"
@@ -99,10 +99,10 @@
         <activity
             android:name=".activities.ScoreboardActivity"
             android:label="@string/scoreboard"
-            android:parentActivityName=".activities.RoundActivity">
+            android:parentActivityName=".activities.PasseActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.RoundActivity" />
+                android:value=".activities.PasseActivity" />
         </activity>
         <activity
             android:name=".activities.StatisticsActivity"

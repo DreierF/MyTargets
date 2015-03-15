@@ -123,6 +123,7 @@ public class TargetView extends View implements View.OnTouchListener {
         lastSetArrow = -1;
         mCurSelecting = -1;
         for (int i = 0; i < roundInfo.ppp; i++) {
+            mPasse.shot[i].id = 0;
             mPasse.shot[i].zone = -2;
         }
         invalidate();

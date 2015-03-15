@@ -39,11 +39,15 @@ import de.dreier.mytargets.views.CardItemDecorator;
  */
 public abstract class NowListFragment<T extends IdProvider> extends Fragment implements View.OnClickListener, OnCardClickListener<T> {
 
+    public static final String TRAINING_ID = "training_id";
+    public static final String ROUND_ID = "round_id";
+
     @PluralsRes
     protected int itemTypeRes;
     @StringRes
     protected int newStringRes;
 
+    protected ActionBarActivity activity;
     DatabaseManager db;
     boolean mEditable = false;
     protected RecyclerView mRecyclerView;
@@ -54,12 +58,16 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
     protected ActionMode actionMode = null;
 
     // New view
-    private View mNewLayout;
-    private TextView mNewText;
+    protected View mNewLayout;
+    protected TextView mNewText;
+
+    protected int getLayoutResource() {
+        return R.layout.fragment_list;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_list, container, false);
+        View rootView = inflater.inflate(getLayoutResource(), container, false);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(android.R.id.list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -78,7 +86,8 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        db = DatabaseManager.getInstance(getActivity());
+        activity = (ActionBarActivity) getActivity();
+        db = DatabaseManager.getInstance(activity);
         init(getArguments(), savedInstanceState);
     }
 

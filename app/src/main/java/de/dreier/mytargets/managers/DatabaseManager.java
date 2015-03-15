@@ -468,7 +468,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public Round getRound(long round) {
         // Get all generic round attributes
-        Cursor res = db.rawQuery("SELECT r.ppp, r.training, r.target, r.indoor, r.distance, r.unit, r.bow, r.arrow, b.type, r.comment " +
+        Cursor res = db.rawQuery("SELECT r.ppp, r.training, r.target, r.indoor, r.distance, " +
+                "r.unit, r.bow, r.arrow, b.type, r.comment " +
                 "FROM ROUND r LEFT JOIN BOW b ON b._id=r.bow WHERE r._id=" + round, null);
         res.moveToFirst();
         Round r = new Round();
@@ -729,11 +730,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
 ////// UPDATE INFORMATION //////
 
     public void updatePasse(long round, Passe passe) {
-        if (passe.id == 0) {
+        if (passe.shot.length == 0)
+            return;
+
+        boolean insert = passe.id == 0;
+        if (insert) {
             ContentValues values = new ContentValues();
             values.put(PASSE_ROUND, round);
             passe.id = db.insert(TABLE_PASSE, null, values);
         }
+
         for (Shot shot : passe.shot) {
             ContentValues values = new ContentValues();
             values.put(SHOOT_PASSE, passe.id);
@@ -741,7 +747,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             values.put(SHOOT_X, shot.x);
             values.put(SHOOT_Y, shot.y);
             values.put(SHOOT_COMMENT, shot.comment);
-            if (shot.id == 0) {
+            if (insert) {
                 shot.id = db.insert(TABLE_SHOOT, null, values);
             } else {
                 String[] args3 = {"" + shot.id};
@@ -902,22 +908,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
 ////// DELETE ENTRIES //////
 
     public <T extends IdProvider> void delete(T id) {
-        if(id instanceof Training)
+        if (id instanceof Training)
             deleteEntry(TABLE_TRAINING, id.id);
-        else if(id instanceof Round)
+        else if (id instanceof Round)
             deleteEntry(TABLE_ROUND, id.id);
-        else if(id instanceof Passe)
+        else if (id instanceof Passe)
             deleteEntry(TABLE_PASSE, id.id);
-        else if(id instanceof Bow)
+        else if (id instanceof Bow)
             deleteEntry(TABLE_BOW, id.id);
-        else if(id instanceof Arrow)
+        else if (id instanceof Arrow)
             deleteEntry(TABLE_ARROW, id.id);
-    }
-
-    public void deleteEntries(String table, long[] ids) {
-        for (long id : ids) {
-            deleteEntry(table, id);
-        }
     }
 
     public void deleteEntry(String table, long id) {

@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.support.v7.app.ActionBarActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,7 +15,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-import de.dreier.mytargets.activities.RoundActivity;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
@@ -125,7 +125,7 @@ public class TargetImage {
         drawColorP.setAntiAlias(true);
     }
 
-    public void generateBitmap(RoundActivity context, int size, Round mRoundInfo, long mRound, File f) throws FileNotFoundException {
+    public void generateBitmap(ActionBarActivity context, int size, Round mRoundInfo, long mRound, File f) throws FileNotFoundException {
         final FileOutputStream fOut = new FileOutputStream(f);
         generateBitmap(context, size, mRoundInfo, mRound, fOut);
     }

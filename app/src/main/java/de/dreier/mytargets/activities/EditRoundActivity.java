@@ -24,6 +24,8 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.ArrowItemAdapter;
 import de.dreier.mytargets.adapters.BowItemAdapter;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
+import de.dreier.mytargets.fragments.PasseFragment;
+import de.dreier.mytargets.fragments.RoundFragment;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.utils.MyBackupAgent;
@@ -285,19 +287,19 @@ public class EditRoundActivity extends ActionBarActivity {
 
         finish();
         if (mRound == -1) {
-            Intent i = new Intent(this, TrainingActivity.class);
-            i.putExtra(TrainingActivity.TRAINING_ID, mTraining);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(i);
-
-            i = new Intent(this, RoundActivity.class);
-            i.putExtra(RoundActivity.ROUND_ID, round);
-            i.putExtra(RoundActivity.TRAINING_ID, mTraining);
+            Intent i = new Intent(this, RoundActivity.class);
+            i.putExtra(RoundFragment.TRAINING_ID, mTraining);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
 
             i = new Intent(this, PasseActivity.class);
-            i.putExtra(PasseActivity.ROUND_ID, round);
+            i.putExtra(PasseFragment.ROUND_ID, round);
+            i.putExtra(PasseFragment.TRAINING_ID, mTraining);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
+
+            i = new Intent(this, InputActivity.class);
+            i.putExtra(InputActivity.ROUND_ID, round);
             startActivity(i);
 
             overridePendingTransition(R.anim.right_in, R.anim.left_out);
