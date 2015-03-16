@@ -287,12 +287,12 @@ public class EditRoundActivity extends ActionBarActivity {
 
         finish();
         if (mRound == -1) {
-            Intent i = new Intent(this, RoundActivity.class);
+            Intent i = new Intent(this, SimpleFragmentActivity.RoundActivity.class);
             i.putExtra(RoundFragment.TRAINING_ID, mTraining);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
 
-            i = new Intent(this, PasseActivity.class);
+            i = new Intent(this, SimpleFragmentActivity.PasseActivity.class);
             i.putExtra(PasseFragment.ROUND_ID, round);
             i.putExtra(PasseFragment.TRAINING_ID, mTraining);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

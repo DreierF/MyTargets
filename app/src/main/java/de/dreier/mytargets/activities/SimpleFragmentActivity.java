@@ -8,6 +8,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.fragments.PasseFragment;
+import de.dreier.mytargets.fragments.RoundFragment;
 
 public abstract class SimpleFragmentActivity extends ActionBarActivity {
 
@@ -39,5 +41,21 @@ public abstract class SimpleFragmentActivity extends ActionBarActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.left_in, R.anim.right_out);
+    }
+
+    public static class RoundActivity extends SimpleFragmentActivity {
+
+        @Override
+        public Fragment instantiateFragment() {
+            return new RoundFragment();
+        }
+    }
+
+    public static class PasseActivity extends SimpleFragmentActivity {
+
+        @Override
+        public Fragment instantiateFragment() {
+            return new PasseFragment();
+        }
     }
 }

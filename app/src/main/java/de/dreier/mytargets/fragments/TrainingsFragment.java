@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditRoundActivity;
-import de.dreier.mytargets.activities.RoundActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.models.Training;
 
@@ -43,7 +43,7 @@ public class TrainingsFragment extends NowListFragment<Training> {
 
     @Override
     public void onSelected(Training item) {
-        Intent i = new Intent(getActivity(), RoundActivity.class);
+        Intent i = new Intent(getActivity(), SimpleFragmentActivity.RoundActivity.class);
         i.putExtra(TRAINING_ID, item.getId());
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);

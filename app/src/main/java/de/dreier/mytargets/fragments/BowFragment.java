@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 
-import java.util.ArrayList;
-
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditBowActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
@@ -28,8 +26,7 @@ public class BowFragment extends NowListFragment<Bow> {
     @Override
     public void onResume() {
         super.onResume();
-        ArrayList<Bow> list = db.getBows();
-        setList(list, new BowAdapter());
+        setList(db.getBows(), new BowAdapter());
     }
 
     @Override

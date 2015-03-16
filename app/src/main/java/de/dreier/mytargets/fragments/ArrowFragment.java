@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 
-import java.util.ArrayList;
-
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditArrowActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
@@ -28,8 +26,7 @@ public class ArrowFragment extends NowListFragment<Arrow> {
     @Override
     public void onResume() {
         super.onResume();
-        ArrayList<Arrow> list = db.getArrows();
-        setList(list, new ArrowAdapter());
+        setList(db.getArrows(), new ArrowAdapter());
     }
 
     @Override

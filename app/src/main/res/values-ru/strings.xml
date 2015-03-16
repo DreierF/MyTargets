@@ -3,167 +3,159 @@
 
     <!-- General -->
     <string name="app_name">MyTargets</string>
-    <string name="prev">Previous</string>
-    <string name="next">Next</string>
-    <string name="save">Save</string>
-    <string name="custom">Custom</string>
-    <string name="training">Training</string>
-    <string name="bow">Bow</string>
-    <string name="arrow">Arrow</string>
-    <string name="round">Round</string>
-    <string name="points">Points</string>
-    <string name="passe">Passe</string>
-    <string name="passe_n">Passe %d</string>
-    
-    <!-- Overview -->
-    <string name="new_training">New training</string>
-    <string name="new_bow">New bow</string>
-    <string name="new_arrow">New arrow</string>
-    <string name="new_round">New round</string>
-    <string name="new_passe">New passe</string>
+    <string name="prev">Назад</string>
+    <string name="next">Далее</string>
+    <string name="save">Сохранить</string>
+    <string name="custom">Настройки</string>
+    <string name="training">Тренировка</string>
+    <string name="bow">Лук</string>
+    <string name="arrow">Стрела</string>
+    <string name="round">Раунд</string>
+    <string name="points">Очки</string>
+    <string name="passe">Серия</string>
+    <string name="passe_n">Серия %d</string>
 
-    <!--
-    The next section is for generating "counted strings".
-    For russian it's:
-    - "one" is used for numbers like 1, 21, 31, 41, 51, 61 (n mod 10 is 1 and n mod 100 is not 11)
-      where %d is replaced by the number
-    - "few" e.g. 2-4, 22-24, 32-34... (n mod 10 in 2..4 and n mod 100 not in 12..14)
-    - "many" e.g. 0, 5-20, 25-30, 35-40... (n mod 10 is 0 or n mod 10 in 5..9 or n mod 100 in 11..14)
-    - "other" everything else e.g. 1.2, 2.07, 5.94...
-    -->
+    <!-- Overview -->
+    <string name="new_training">Новая тренировка</string>
+    <string name="new_bow">Новый лук</string>
+    <string name="new_arrow">Новая стрела</string>
+    <string name="new_round">Новый раунд</string>
+    <string name="new_passe">Новая серия</string>
+
     <plurals name="training">
-        <item quantity="one">%d training selected</item>
-        <item quantity="other">%d trainings selected</item>
-        <item quantity="few">%d trainings selected</item>
-        <item quantity="many">%d trainings selected</item>
+        <item quantity="one">%d тренировка выбрана</item>
+        <item quantity="other">%d тренировки выбраны</item>
+        <item quantity="few">%d тренировки выбраны</item>
+        <item quantity="many">%d тренировок выбраны</item>
     </plurals>
     <plurals name="bow">
-        <item quantity="one">%d bow selected</item>
-        <item quantity="other">%d bows selected</item>
-        <item quantity="few">%d bows selected</item>
-        <item quantity="many">%d bows selected</item>
+        <item quantity="one">%d лук выбран</item>
+        <item quantity="other">%d луков выбраны</item>
+        <item quantity="few">%d лука выбраны</item>
+        <item quantity="many">%d луков выбраны</item>
     </plurals>
     <plurals name="arrow">
-        <item quantity="one">%d arrow selected</item>
-        <item quantity="other">%d arrows selected</item>
-        <item quantity="few">%d arrows selected</item>
-        <item quantity="many">%d arrows selected</item>
+        <item quantity="one">%d стрела выбрана</item>
+        <item quantity="other">%d стрелы выбраны</item>
+        <item quantity="few">%d стрелы выбраны</item>
+        <item quantity="many">%d стрел выбраны</item>
     </plurals>
     <plurals name="round">
-        <item quantity="one">%d round selected</item>
-        <item quantity="other">%d rounds selected</item>
-        <item quantity="few">%d rounds selected</item>
-        <item quantity="many">%d rounds selected</item>
+        <item quantity="one">%d раунд выбран</item>
+        <item quantity="other">%d раундов выбраны</item>
+        <item quantity="few">%d раунда выбраны</item>
+        <item quantity="many">%d раундов выбраны</item>
     </plurals>
     <plurals name="passe">
-        <item quantity="one">%d passe selected</item>
-        <item quantity="other">%d passes selected</item>
-        <item quantity="few">%d passes selected</item>
-        <item quantity="many">%d passes selected</item>
+        <item quantity="one">%d серия выбрана</item>
+        <item quantity="other">%d серий выбраны</item>
+        <item quantity="few">%d серии выбраны</item>
+        <item quantity="many">%d серий выбраны</item>
     </plurals>
-    <string name="edit">Edit</string>
-    <string name="delete">Delete</string>
-    <string name="statistic">Statistic</string>
+    <string name="edit">Редактировать</string>
+    <string name="delete">Удалить</string>
+    <string name="statistic">Статистика</string>
 
     <!-- Share -->
-    <string name="share">Share</string>
-    <string name="my_share_text">Yeah, look at my archery score. If got:\n%1$d times X\n%2$d times 10\n%3$d times 9\nThis makes a total of %4$d out of %5$d rings.</string>
-    <string name="comments">Comments</string>
-    <string name="text">Text</string>
-    <string name="dispersion_pattern">Dispersion pattern</string>
-    <string name="sharing_failed">Sharing failed!</string>
+    <string name="share">Поделиться</string>
+    <string name="my_share_text">Эй! Посмотрите как я стреляю. Я выбил:\n%1$d по X\n%2$d по 10\n%3$d по 9\nИтого %4$d из %5$d возможных.</string>
+    <string name="comments">Комментарии</string>
+    <string name="text">Текст</string>
+    <string name="dispersion_pattern">Расброс</string>
+    <string name="sharing_failed">Не удалось поделиться!</string>
 
     <!-- Export -->
-    <string name="export">Export</string>
-    <string name="send_exported">Send exported data</string>
-    <string name="exporting_failed">Exporting failed!</string>
+    <string name="export">Отправить</string>
+    <string name="send_exported">Данные отправлены</string>
+    <string name="exporting_failed">Передача не удалась!</string>
 
     <!-- New bow -->
-    <string name="add_bow">Add bow</string>
-    <string name="name">Name</string>
-    <string name="bow_type">Bow type</string>
-    <string name="recurve_bow">Recurve bow</string>
-    <string name="compound_bow">Compound bow</string>
-    <string name="bare_bow">Bare bow</string>
-    <string name="long_bow">Long bow</string>
-    <string name="horse_bow">Horse bow</string>
-    <string name="yumi">Yumi</string>
-    <string name="properties">Properties</string>
-    <string name="brand">Brand</string>
-    <string name="size">Size</string>
-    <string name="description">Description</string>
-    <string name="height">Brace height</string>
-    <string name="tiller">Tiller</string>
-    <string name="sight_settings">Sight settings</string>
-    <string name="add">Add</string>
-    <string name="select_picture">Select a picture</string>
-    <string name="take_picture">Take a picture</string>
-    <string name="pick_from_gallery">Select a picture from gallery</string>
+    <string name="add_bow">Добавить лук</string>
+    <string name="name">Название</string>
+    <string name="bow_type">Тип лука</string>
+    <string name="recurve_bow">Спортивный классический лук</string>
+    <string name="compound_bow">Блочный лук</string>
+    <string name="bare_bow">Классический лук без обвесов</string>
+    <string name="long_bow">Длинный английский лук</string>
+    <string name="horse_bow">Короткий традиционный лук</string>
+    <string name="yumi">Азиатский традиционный лук</string>
+    <string name="properties">Параметры</string>
+    <string name="brand">Производитель</string>
+    <string name="size">Размер</string>
+    <string name="description">Описание</string>
+    <string name="height">Общая длина лука</string>
+    <string name="tiller">Режим плечей</string>
+    <string name="sight_settings">Настройки прицела</string>
+    <string name="add">Добавить</string>
+    <string name="select_picture">Выбрать изображение</string>
+    <string name="take_picture">Сделать снимок</string>
+    <string name="pick_from_gallery">выбрать изображение из галереи</string>
 
     <!-- New arrow -->
-    <string name="add_arrow">Add arrow</string>
-    <string name="length">Length</string>
-    <string name="spine">Spine</string>
-    <string name="weight">Weight</string>
-    <string name="vanes">Vanes</string>
-    <string name="nock">Nock</string>
-    <string name="material">Material</string>
+    <string name="add_arrow">Добавить стрелу</string>
+    <string name="length">Длина</string>
+    <string name="spine">Спайн</string>
+    <string name="weight">Вес стрелы</string>
+    <string name="vanes">Перья</string>
+    <string name="nock">Хвостик</string>
+    <string name="material">Материал</string>
 
     <!-- New round -->
-    <string name="title">Title</string>
-    <string name="outdoor">Outdoor</string>
-    <string name="indoor">Indoor</string>
-    <string name="distance">Distance</string>
-    <string name="arrows_per_passe">Arrows per passe</string>
-    <string name="target_round">Target round</string>
-    <string name="title_compound">Compound?</string>
-    <string name="msg_compound_type">Which bow type are you using? (There is a difference in how many points you get for the golden rings)</string>
-    <string name="other_bow">Other bow</string>
+    <string name="title">Название</string>
+    <string name="outdoor">На улице</string>
+    <string name="indoor">В помещении</string>
+    <string name="distance">Дистанция</string>
+    <string name="arrows_per_passe">Количество стрел в серии</string>
+    <string name="target_round">Размер мишени</string>
+    <string name="title_compound">Блочный лук?</string>
+    <string name="msg_compound_type">Из какого лука вы стреляете? (Различие в количестве очков, которые вы получите при попадании в центр)</string>
+    <string name="other_bow">Другой лук</string>
 
     <!-- Scoreboard -->
-    <string name="scoreboard">Scoreboard</string>
-    <string name="arrows">Arrows</string>
-    <string name="sum">Sum</string>
-    <string name="carry">Carry</string>
-    <string name="action_print">Print</string>
-    <string name="nine">Nine</string>
-    <string name="ten_x">Ten+X</string>
-    <string name="average">Average</string>
+    <string name="scoreboard">Результат</string>
+    <string name="arrows">Очки</string>
+    <string name="sum">Сумма</string>
+    <string name="carry">Итог</string>
+    <string name="action_print">Распечатать</string>
+    <string name="nine">Девятки</string>
+    <string name="ten_x">Десятки+X</string>
+    <string name="average">Среднее</string>
 
     <!-- Input mode -->
-    <string name="switch_mode">Switch input mode</string>
-    <string name="show_all">Show all impacts</string>
-    <string name="comment">Comment</string>
+    <string name="switch_mode">Сменить метод ввода</string>
+    <string name="show_all">Показать все попадания</string>
+    <string name="comment">Комментарии</string>
 
     <!-- Statistics -->
-    <string name="all_trainings">All trainings</string>
-    <string name="entire_training">Entire training</string>
-    <string name="current_round">Current round</string>
+    <string name="all_trainings">Все тренировки</string>
+    <string name="entire_training">Текущая тренировка</string>
+    <string name="current_round">Текущий раунд</string>
 
     <!-- Import/Backup -->
-    <string name="backup_action">Backup</string>
-    <string name="import_action">Import</string>
-    <string name="select_a_file">Select a file</string>
-    <string name="dir_not_created">Directory could not be created!</string>
-    <string name="backup_successful">Backup successful!</string>
-    <string name="backup_saved_as">Backup was saved as \'%s\'.</string>
-    <string name="backup_failed">Backup failed!</string>
-    <string name="backup_error">An error occurred while creating backup:\n%s</string>
-    <string name="sd_card_not_available_title">SD card not available!</string>
-    <string name="sd_card_not_available_desc">Please mount your sd card and try again!</string>
-    <string name="import_successful">Import successful!</string>
-    <string name="import_failed">Import failed!</string>
-    <string name="file_not_found">File not found!</string>
-    <string name="failed_reading_file">Failed reading file!</string>
+    <string name="backup_action">Резервное копирование</string>
+    <string name="import_action">Восстановить резервную копию</string>
+    <string name="select_a_file">Выберите файл</string>
+    <string name="dir_not_created">Директория не может быть создана!</string>
+    <string name="backup_successful">Восстановление резервной копии проведено успешно!</string>
+    <string name="backup_saved_as">Резервная копия успешно сохранена как \'%s\'.</string>
+    <string name="backup_failed">Резервное копирование не удалось!</string>
+    <string name="backup_error">Обнаружена ошибка при создании резервной копии:\n%s</string>
+    <string name="sd_card_not_available_title">Флеш-карта не обнаружена!</string>
+    <string name="sd_card_not_available_desc">Пожалуйста, вставьте флеш-карту и попробуйте еще раз!</string>
+    <string name="import_successful">Данные успешно получены!</string>
+    <string name="import_failed">Передача не удалась!</string>
+    <string name="file_not_found">Файл не найден!</string>
+    <string name="failed_reading_file">Не удалось прочитать файл!</string>
 
     <!-- Donate -->
-    <string name="donate_action">Donate</string>
-    <string name="donate_2">Donate me a burger</string>
-    <string name="donate_5">Donate me a kebab</string>
-    <string name="donate_10">Donate me a large pizza</string>
-    <string name="donate_20">Donate me some fuel</string>
-    <string name="donate_infinite">Lasting support</string>
-    <string name="donation_thank">Thank you for your support!</string>
-    <string name="monthly">monthly %s</string>
-    <string name="donate_text">The amounts are incl. VAT and 30% fees for Google. Alternatively you may gladly donate on the PayPal account dreier.florian@gmail.com.</string>
+    <string name="donate_action">Поддержать автора</string>
+    <string name="donate_2">Угостите меня бургером</string>
+    <string name="donate_5">Угостите меня кебабом</string>
+    <string name="donate_10">Угостите меня большой пиццей</string>
+    <string name="donate_20">Заправьте мою машину</string>
+    <string name="donate_infinite">Любая другая поддрежка</string>
+    <string name="donation_thank">Спасибо за вашу поддержку!</string>
+    <string name="monthly">ежемесячно %s</string>
+    <string name="donate_text">Сумма включает НДС и 30% платежи для Google. Вместо этого можете воспользоваться PayPal. Мой аккаунт dreier.florian@gmail.com.</string>
+
 </resources>

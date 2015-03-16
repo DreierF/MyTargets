@@ -41,7 +41,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.RoundActivity"
+            android:name=".activities.SimpleFragmentActivity$RoundActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.MainActivity">
             <meta-data
@@ -49,32 +49,32 @@
                 android:value=".activities.MainActivity" />
         </activity>
         <activity
-            android:name=".activities.PasseActivity"
+            android:name=".activities.SimpleFragmentActivity$PasseActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.RoundActivity"
+            android:parentActivityName=".activities.SimpleFragmentActivity$RoundActivity"
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.RoundActivity" />
+                android:value=".activities.SimpleFragmentActivity$RoundActivity" />
         </activity>
         <activity
             android:name=".activities.InputActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.PasseActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivity$PasseActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.PasseActivity" />
+                android:value=".activities.SimpleFragmentActivity$PasseActivity" />
         </activity>
         <activity
             android:name=".activities.EditRoundActivity"
             android:label="@string/new_round"
-            android:parentActivityName=".activities.RoundActivity"
+            android:parentActivityName=".activities.SimpleFragmentActivity$RoundActivity"
             android:theme="@style/AppTheme.CustomToolbar"
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.RoundActivity" />
+                android:value=".activities.SimpleFragmentActivity$RoundActivity" />
         </activity>
         <activity
             android:name=".activities.EditBowActivity"
@@ -99,10 +99,10 @@
         <activity
             android:name=".activities.ScoreboardActivity"
             android:label="@string/scoreboard"
-            android:parentActivityName=".activities.PasseActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivity$PasseActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.PasseActivity" />
+                android:value=".activities.SimpleFragmentActivity$PasseActivity" />
         </activity>
         <activity
             android:name=".activities.StatisticsActivity"

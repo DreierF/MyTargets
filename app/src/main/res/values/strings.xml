@@ -47,7 +47,7 @@
 
     <!-- Share -->
     <string name="share">Share</string>
-    <string name="my_share_text">Yeah, look at my archery score. If got:\n%1$d times X\n%2$d times 10\n%3$d times 9\nThis makes a total of %4$d out of %5$d rings.</string>
+    <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$d times X\n%2$d times 10\n%3$d times 9\nThis makes a total of %4$d out of %5$d rings.</string>
     <string name="comments">Comments</string>
     <string name="text">Text</string>
     <string name="dispersion_pattern">Dispersion pattern</string>

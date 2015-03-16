@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditRoundActivity;
-import de.dreier.mytargets.activities.PasseActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.models.Round;
@@ -69,7 +69,7 @@ public class RoundFragment extends NowListFragment<Round> {
 
     @Override
     public void onSelected(Round item) {
-        Intent i = new Intent(getActivity(), PasseActivity.class);
+        Intent i = new Intent(getActivity(), SimpleFragmentActivity.PasseActivity.class);
         i.putExtra(PasseFragment.TRAINING_ID, mTraining);
         i.putExtra(PasseFragment.ROUND_ID, item.id);
         startActivity(i);

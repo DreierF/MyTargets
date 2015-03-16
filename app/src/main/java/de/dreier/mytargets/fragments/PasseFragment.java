@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
@@ -91,8 +92,10 @@ public class PasseFragment extends NowListFragment<Passe> implements ShareDialog
 
         // Set up toolbar
         activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setTitle(getString(R.string.round) + " " + db.getRoundInd(mTraining, mRound));
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = activity.getSupportActionBar();
+        actionBar.setTitle(getString(R.string.round) + " " + db.getRoundInd(mTraining, mRound));
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -198,6 +201,7 @@ public class PasseFragment extends NowListFragment<Passe> implements ShareDialog
     void showShareDialog() {
         // Create an instance of the dialog fragment and show it
         ShareDialogFragment dialog = new ShareDialogFragment();
+        dialog.setTargetFragment(this, 0);
         dialog.show(activity.getSupportFragmentManager(), "share_dialog");
     }
 
