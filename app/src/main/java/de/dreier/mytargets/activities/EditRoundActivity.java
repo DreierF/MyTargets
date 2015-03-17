@@ -46,7 +46,7 @@ public class EditRoundActivity extends ActionBarActivity {
     public static final int[] distanceValues = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
     private RadioButton ppp2, ppp3;
     private boolean mCalledFromPasse = false;
-    private int mBowType = -1;
+    private int mBowId = 0;
     private EditText training;
     private FloatLabel comment;
     private View customDist;
@@ -151,9 +151,9 @@ public class EditRoundActivity extends ActionBarActivity {
             ppp2.setChecked(ppp == 2);
             ppp3.setChecked(ppp == 3);
             ppp6.setChecked(ppp == 6);
-            bow.setSelection(prefs.getInt("bow", 0));
-            arrow.setSelection(prefs.getInt("arrow", 0));
-            target.setSelection(prefs.getInt("target", 2));
+            bow.setItemId(prefs.getInt("bow", 0));
+            arrow.setItemId(prefs.getInt("arrow", 0));
+            target.setItemId(prefs.getInt("target", 2));
             comment.setText("");
         } else {
             // Load saved values
@@ -175,9 +175,9 @@ public class EditRoundActivity extends ActionBarActivity {
             ppp2.setChecked(r.ppp == 2);
             ppp3.setChecked(r.ppp == 3);
             ppp6.setChecked(r.ppp == 6);
-            bow.setSelection(r.bow);
-            arrow.setSelection(r.arrow);
-            target.setSelection(r.target);
+            bow.setItemId(r.bow);
+            arrow.setItemId(r.arrow);
+            target.setItemId(r.target);
             comment.setText(r.comment);
 
             ppp2.setEnabled(false);
@@ -223,22 +223,23 @@ public class EditRoundActivity extends ActionBarActivity {
     }
 
     public void onSave() {
-        int tar = target.getSelectedItemPosition();
+        Round round = new Round();
+        round.target = (int) target.getSelectedItemId();
 
-        if (bow.getAdapter().getCount() == 0 && mBowType == -1 && tar == 3) {
+        if (bow.getAdapter().getCount() == 0 && mBowId == 0 && round.target == 3) {
             new AlertDialog.Builder(this).setTitle(R.string.title_compound)
                     .setMessage(R.string.msg_compound_type)
                     .setPositiveButton(R.string.compound_bow, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            mBowType = 1;
+                            mBowId = -2;
                             onSave();
                         }
                     })
                     .setNegativeButton(R.string.other_bow, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            mBowType = 0;
+                            mBowId = -1;
                             onSave();
                         }
                     })
@@ -246,43 +247,41 @@ public class EditRoundActivity extends ActionBarActivity {
             return;
         }
 
-        String title = training.getText().toString();
         DatabaseManager db = DatabaseManager.getInstance(this);
+
+        String title = training.getText().toString();
         if (mTraining == -1) {
             mTraining = db.newTraining(title);
         }
-        long b = bow.getSelectedItemId();
-        if (bow.getAdapter().getCount() == 0) {
-            if (tar == 3) {
-                b = mBowType == 1 ? -2 : -1;
-            } else {
-                b = -1;
-            }
+
+        round.id = mRound;
+        round.training = mTraining;
+        round.bow = bow.getSelectedItemId();
+        round.arrow = arrow.getSelectedItemId();
+        if (round.bow == 0) {
+            round.bow = mBowId;
         }
-        long a = arrow.getSelectedItemId();
-        if (arrow.getAdapter().getCount() == 0) {
-            a = -1;
-        }
-        int dist;
+
         if (custom) {
-            dist = Integer.parseInt(distanceVal.getText().toString());
+            round.distanceVal = Integer.parseInt(distanceVal.getText().toString());
         } else {
-            dist = distanceValues[distance.getSelectedItemPosition()];
+            round.distanceVal = distanceValues[distance.getSelectedItemPosition()];
         }
-        String unit = "m";
-        int p = ppp2.isChecked() ? 2 : (ppp3.isChecked() ? 3 : 6);
-        boolean in = indoor.isChecked();
-        String co = comment.getTextString();
-        long round = db.updateRound(mTraining, mRound, dist, unit, in, p, tar, b, a, co);
+        round.unit = "m";
+
+        round.ppp = ppp2.isChecked() ? 2 : (ppp3.isChecked() ? 3 : 6);
+        round.indoor = indoor.isChecked();
+        round.comment = comment.getTextString();
+        db.updateRound(round);
 
         SharedPreferences prefs = getSharedPreferences(MyBackupAgent.PREFS, 0);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("bow", bow.getSelectedItemPosition());
-        editor.putInt("arrow", arrow.getSelectedItemPosition());
-        editor.putInt("distance", dist);
-        editor.putInt("ppp", p);
-        editor.putInt("target", tar);
-        editor.putBoolean("indoor", in);
+        editor.putInt("bow", (int) bow.getSelectedItemId());
+        editor.putInt("arrow", (int) arrow.getSelectedItemId());
+        editor.putInt("distance", round.distanceVal);
+        editor.putInt("ppp", round.ppp);
+        editor.putInt("target", round.target);
+        editor.putBoolean("indoor", round.indoor);
         editor.apply();
 
         finish();
@@ -293,13 +292,13 @@ public class EditRoundActivity extends ActionBarActivity {
             startActivity(i);
 
             i = new Intent(this, SimpleFragmentActivity.PasseActivity.class);
-            i.putExtra(PasseFragment.ROUND_ID, round);
             i.putExtra(PasseFragment.TRAINING_ID, mTraining);
+            i.putExtra(PasseFragment.ROUND_ID, round.id);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
 
             i = new Intent(this, InputActivity.class);
-            i.putExtra(InputActivity.ROUND_ID, round);
+            i.putExtra(InputActivity.ROUND_ID, round.id);
             startActivity(i);
 
             overridePendingTransition(R.anim.right_in, R.anim.left_out);

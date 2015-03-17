@@ -6,11 +6,25 @@
     android:orientation="vertical"
     tools:context="de.dreier.mytargets.activities.EditBowActivity">
 
-    <ImageView
-        android:id="@+id/image"
+    <FrameLayout
+        android:id="@+id/img_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/flexible_space_image_height"
-        android:scaleType="centerCrop" />
+        android:layout_height="@dimen/flexible_space_image_height">
+
+        <ImageView
+            android:id="@+id/img_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <ProgressBar
+            android:id="@+id/img_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
     <View
         android:id="@+id/overlay"

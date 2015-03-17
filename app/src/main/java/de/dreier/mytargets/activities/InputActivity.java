@@ -111,7 +111,7 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
 
     private void startWearNotification() {
         Bitmap image;
-        if (r.bow > -1) {
+        if (r.bow > 0) {
             Bow bow = DatabaseManager.getInstance(this).getBow(r.bow, true);
             image = bow.image;
         } else {
@@ -248,7 +248,7 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
         }
 
         // Load bow settings
-        if (r.bow > -1) {
+        if (r.bow > 0) {
             text += r.distance + ": " + db.getSetting(r.bow, r.distanceVal);
         }
         return new WearableUtils.NotificationInfo(r, title, text);

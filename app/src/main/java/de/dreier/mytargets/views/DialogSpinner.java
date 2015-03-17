@@ -19,7 +19,6 @@ import de.dreier.mytargets.fragments.SpinnerDialogFragment;
 public class DialogSpinner extends LinearLayout implements View.OnClickListener, SpinnerDialogFragment.SpinnerDialogListener {
 
     private ListAdapter adapter;
-    private int currentSelection = -1;
     private View mView;
 
     @StringRes
@@ -28,6 +27,7 @@ public class DialogSpinner extends LinearLayout implements View.OnClickListener,
     private Button addButton;
     private Intent addIntent;
     private int resAddText;
+    private long currentItemId = 0;
 
     public DialogSpinner(Context context) {
         super(context);
@@ -40,7 +40,11 @@ public class DialogSpinner extends LinearLayout implements View.OnClickListener,
     public void setAdapter(ListAdapter adapter, @StringRes int title) {
         this.adapter = adapter;
         this.resTitle = title;
-        this.size = adapter.getCount();
+        size = adapter.getCount();
+        if (size == 0)
+            currentItemId = 0;
+        else
+            currentItemId = adapter.getItemId(0);
         updateView();
     }
 
@@ -58,12 +62,14 @@ public class DialogSpinner extends LinearLayout implements View.OnClickListener,
     }
 
     private void updateView() {
-        if (currentSelection >= size) {
-            currentSelection = size - 1;
-        } else if (currentSelection < 0 && size > 0) {
-            currentSelection = 0;
+        int currentSelection = 0;
+        for (int i = 0; i < size; i++) {
+            if (adapter.getItemId(i) == currentItemId) {
+                currentSelection = i;
+                break;
+            }
         }
-        if (currentSelection > -1) {
+        if (size > currentSelection) {
             View tmpView = adapter.getView(currentSelection, mView, this);
             tmpView.setOnClickListener(this);
             tmpView.setEnabled(isEnabled());
@@ -88,18 +94,12 @@ public class DialogSpinner extends LinearLayout implements View.OnClickListener,
         updateView();
     }
 
-    public int getSelectedItemPosition() {
-        return currentSelection;
-    }
-
     public long getSelectedItemId() {
-        if (currentSelection > -1 && currentSelection < size)
-            return adapter.getItemId(currentSelection);
-        return -1;
+        return currentItemId;
     }
 
-    public void setSelection(int sel) {
-        currentSelection = sel;
+    public void setItemId(long id) {
+        currentItemId = id;
         updateView();
     }
 
@@ -116,7 +116,8 @@ public class DialogSpinner extends LinearLayout implements View.OnClickListener,
 
     @Override
     public void onDialogConfirmed(int pos) {
-        setSelection(pos);
+        currentItemId = adapter.getItemId(pos);
+        updateView();
     }
 
     @Override

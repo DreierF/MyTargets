@@ -80,6 +80,7 @@ public class EditArrowActivity extends EditWithImageActivity {
         arrow.nock = nock.getTextString();
         arrow.comment = comment.getTextString();
 
+        arrow.imageFile = mImageFile;
         arrow.image = imageBitmap;
 
         mArrowId = db.updateArrow(arrow);

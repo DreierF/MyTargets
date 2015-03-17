@@ -12,6 +12,8 @@ import android.media.ThumbnailUtils;
 import android.preference.PreferenceManager;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -150,13 +152,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     ARROW_COMMENT + " TEXT," +
                     ARROW_THUMBNAIL + " BLOB," +
                     ARROW_IMAGE + " TEXT);";
-    private static final String TABLE_IMAGE = "IMAGE";
-    private static final String IMAGE_ID = "_id";
-    private static final String IMAGE_DATA = "data";
-    private static final String CREATE_TABLE_IMAGE =
-            "CREATE TABLE IF NOT EXISTS " + TABLE_IMAGE + " (" +
-                    IMAGE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    IMAGE_DATA + " BLOB);";
     private static final String TABLE_ZONE_MATRIX = "ZONE_MATRIX";
     private static final String CREATE_TABLE_ZONE_MATRIX =
             "CREATE TABLE IF NOT EXISTS " + TABLE_ZONE_MATRIX + " (" +
@@ -189,7 +184,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_TABLE_IMAGE);
         db.execSQL(CREATE_TABLE_BOW);
         db.execSQL(CREATE_TABLE_VISIER);
         db.execSQL(CREATE_TABLE_ARROW);
@@ -262,31 +256,33 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     "AND (r.bow=-2 OR b.type=1) AND s.points=1 AND r.target=3)");
         }
         if (oldVersion < 6) {
-            db.execSQL(CREATE_TABLE_IMAGE);
+            File filesDir = mContext.getFilesDir();
 
             // Migrate all bow images
             Cursor cur = db.rawQuery("SELECT image FROM BOW WHERE image IS NOT NULL", null);
             if (cur.moveToFirst()) {
                 String fileName = cur.getString(0);
-                Bitmap bmp = BitmapFactory.decodeFile(fileName);
-                byte[] imageData = BitmapUtils.getBitmapAsByteArray(bmp);
-                ContentValues values = new ContentValues();
-                values.put(IMAGE_DATA, imageData);
-                long id = db.insert(TABLE_IMAGE, null, values);
-                db.execSQL("UPDATE BOW SET image=" + id + " WHERE image=\"" + fileName + "\"");
+                try {
+                    File file = File.createTempFile("img_", ".png", filesDir);
+                    BackupUtils.copy(new File(fileName), file);
+                    db.execSQL("UPDATE BOW SET image=\"" + file.getName() + "\" WHERE image=\"" + fileName + "\"");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             cur.close();
 
-            // Migrate all arrow images
+            // Migrate all arrows images
             cur = db.rawQuery("SELECT image FROM ARROW WHERE image IS NOT NULL", null);
             if (cur.moveToFirst()) {
                 String fileName = cur.getString(0);
-                Bitmap bmp = BitmapFactory.decodeFile(fileName);
-                byte[] imageData = BitmapUtils.getBitmapAsByteArray(bmp);
-                ContentValues values = new ContentValues();
-                values.put(IMAGE_DATA, imageData);
-                long id = db.insert(TABLE_IMAGE, null, values);
-                db.execSQL("UPDATE ARROW SET image=" + id + " WHERE image=\"" + fileName + "\"");
+                try {
+                    File file = File.createTempFile("img_", ".png", filesDir);
+                    BackupUtils.copy(new File(fileName), file);
+                    db.execSQL("UPDATE ARROW SET image=\"" + file.getName() + "\" WHERE image=\"" + fileName + "\"");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             cur.close();
         }
@@ -314,6 +310,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 t.title = cursor.getString(2);
                 t.reachedPoints = cursor.getInt(3);
                 t.maxPoints = cursor.getInt(4);
+                if (t.maxPoints <= 10)
+                    t.maxPoints = 0;
                 list.add(t);
             } while (cursor.moveToNext());
         }
@@ -354,6 +352,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     r.comment = "";
                 r.reachedPoints = res.getInt(10);
                 r.maxPoints = res.getInt(11);
+                if (r.maxPoints <= 10)
+                    r.maxPoints = 0;
                 list.add(r);
             } while (res.moveToNext());
         }
@@ -482,9 +482,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
         for (int i = 0; i < EditRoundActivity.distanceValues.length; i++)
             if (EditRoundActivity.distanceValues[i] == r.distanceVal)
                 r.distanceInd = i;
-        r.distance = "" + r.distanceVal + res.getString(5);
-        r.bow = res.getInt(6);
-        r.arrow = res.getInt(7);
+        r.unit = res.getString(5);
+        r.distance = "" + r.distanceVal + r.unit;
+        r.bow = res.getLong(6);
+        r.arrow = res.getLong(7);
         r.compound = r.bow == -2 || res.getInt(8) == 1;
         r.comment = res.getString(9);
         if (r.comment == null)
@@ -555,24 +556,18 @@ public class DatabaseManager extends SQLiteOpenHelper {
             if (small) {
                 byte[] data = res.getBlob(7);
                 bow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
-                res.close();
             } else {
-                bow.image = loadImage(res.getLong(8));
-                res.close();
+                bow.imageFile = res.getString(8);
+                try {
+                    FileInputStream in = mContext.openFileInput(bow.imageFile);
+                    bow.image = BitmapFactory.decodeStream(in);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
+            res.close();
         }
         return bow;
-    }
-
-    private Bitmap loadImage(long imageId) {
-        Cursor res = db.rawQuery("SELECT data FROM IMAGE WHERE _id=" + imageId, null);
-        Bitmap image = null;
-        if (res.moveToFirst()) {
-            byte[] data = res.getBlob(0);
-            image = BitmapFactory.decodeByteArray(data, 0, data.length);
-        }
-        res.close();
-        return image;
     }
 
     public Arrow getArrow(long arrowId, boolean small) {
@@ -594,11 +589,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
             if (small) {
                 byte[] data = res.getBlob(8);
                 arrow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
-                res.close();
             } else {
-                arrow.image = loadImage(res.getLong(9));
-                res.close();
+                arrow.imageFile = res.getString(8);
+                try {
+                    FileInputStream in = mContext.openFileInput(arrow.imageFile);
+                    arrow.image = BitmapFactory.decodeStream(in);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
+            res.close();
         }
         return arrow;
     }
@@ -727,7 +727,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return s;
     }
 
-////// UPDATE INFORMATION //////
+////// CREATE AND UPDATE INFORMATION //////
 
     public void updatePasse(long round, Passe passe) {
         if (passe.shot.length == 0)
@@ -756,24 +756,24 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
     }
 
-    public long updateRound(long training, long round, int distance, String unit, boolean indoor, int ppp, int target, long bow, long arrow, String comment) {
+    public long updateRound(Round round) {
         ContentValues values = new ContentValues();
-        values.put(ROUND_DISTANCE, distance);
-        values.put(ROUND_UNIT, unit);
-        values.put(ROUND_INDOOR, indoor);
-        values.put(ROUND_TARGET, target);
-        values.put(ROUND_BOW, bow);
-        values.put(ROUND_ARROW, arrow);
-        values.put(ROUND_COMMENT, comment);
-        values.put(ROUND_PPP, ppp);
-        values.put(ROUND_TRAINING, training);
-        if (round == -1) {
-            round = db.insert(TABLE_ROUND, null, values);
+        values.put(ROUND_DISTANCE, round.distanceVal);
+        values.put(ROUND_UNIT, round.unit);
+        values.put(ROUND_INDOOR, round.indoor);
+        values.put(ROUND_TARGET, round.target);
+        values.put(ROUND_BOW, round.bow);
+        values.put(ROUND_ARROW, round.arrow);
+        values.put(ROUND_COMMENT, round.comment);
+        values.put(ROUND_PPP, round.ppp);
+        values.put(ROUND_TRAINING, round.training);
+        if (round.id == -1) {
+            round.id = db.insert(TABLE_ROUND, null, values);
         } else {
-            values.put(ROUND_ID, round);
+            values.put(ROUND_ID, round.id);
             db.replace(TABLE_ROUND, null, values);
         }
-        return round;
+        return round.id;
     }
 
     public long updateBow(Bow bow) {
@@ -788,7 +788,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         Bitmap thumb = ThumbnailUtils.extractThumbnail(bow.image, 100, 100);
         byte[] imageData = BitmapUtils.getBitmapAsByteArray(thumb);
         values.put(BOW_THUMBNAIL, imageData);
-        values.put(BOW_IMAGE, saveImage(bow.image));
+        values.put(BOW_IMAGE, bow.imageFile);
         if (bow.id == -1) {
             bow.id = db.insert(TABLE_BOW, null, values);
         } else {
@@ -796,13 +796,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.update(TABLE_BOW, values, BOW_ID + "=?", args);
         }
         return bow.id;
-    }
-
-    private long saveImage(Bitmap image) {
-        byte[] imageData = BitmapUtils.getBitmapAsByteArray(image);
-        ContentValues values = new ContentValues();
-        values.put(IMAGE_DATA, imageData);
-        return db.insert(TABLE_IMAGE, null, values);
     }
 
     public long updateArrow(Arrow arrow) {
@@ -818,7 +811,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         Bitmap thumb = ThumbnailUtils.extractThumbnail(arrow.image, 100, 100);
         byte[] imageData = BitmapUtils.getBitmapAsByteArray(thumb);
         values.put(ARROW_THUMBNAIL, imageData);
-        values.put(ARROW_IMAGE, saveImage(arrow.image));
+        values.put(ARROW_IMAGE, arrow.imageFile);
         if (arrow.id == -1) {
             arrow.id = db.insert(TABLE_ARROW, null, values);
         } else {
@@ -861,6 +854,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 ////// EXPORT ALL //////
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void exportAll(File file) throws IOException {
         Cursor cur = db.rawQuery("SELECT t.title,datetime(t.datum/1000, 'unixepoch') AS date,r.indoor,r.distance," +
                 "r.target, b.name AS bow, s.points AS score " +
@@ -871,8 +865,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         file.getParentFile().mkdirs();
         file.createNewFile();
         FileWriter writer = new FileWriter(file);
-        for (int i = 0; i < names.length; i++) {
-            writer.append("\"").append(names[i]).append("\";");
+        for (String name : names) {
+            writer.append("\"").append(name).append("\";");
         }
         writer.append("\n");
         int targetInd = cur.getColumnIndexOrThrow("target");
@@ -927,18 +921,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 ////// BACKUP DATABASE //////
 
-    public static boolean Import(InputStream st) {
-        File tmp;
+    public static boolean Import(Context context, InputStream in) {
         try {
-            // Copy backup stream to temp file
-            tmp = File.createTempFile("import", ".db");
-            BackupUtils.copy(st, tmp);
+            // Unzip all images and database
+            File file = BackupUtils.unzip(context, in);
 
             // Replace database file
             File db_file = sInstance.mContext.getDatabasePath(DatabaseManager.DATABASE_NAME);
-            sInstance.close();
-            BackupUtils.copy(tmp, db_file);
+            DatabaseManager tmp = sInstance;
             sInstance = null;
+            tmp.close();
+            BackupUtils.copy(file, db_file);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -946,4 +939,20 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return false;
     }
 
+    public String[] getImages() {
+        ArrayList<String> list = new ArrayList<>();
+        Cursor cur = db.rawQuery("SELECT image FROM BOW WHERE image IS NOT NULL", null);
+        if (cur.moveToFirst()) {
+            list.add(cur.getString(0));
+        }
+        cur.close();
+
+        // Migrate all arrow images
+        cur = db.rawQuery("SELECT image FROM ARROW WHERE image IS NOT NULL", null);
+        if (cur.moveToFirst()) {
+            list.add(cur.getString(0));
+        }
+        cur.close();
+        return list.toArray(new String[list.size()]);
+    }
 }

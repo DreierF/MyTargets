@@ -24,6 +24,7 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
@@ -56,7 +57,9 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
     private Toolbar mToolbar;
     private View mOverlayView;
     private TextView mTitleView;
+    private View mImageContainer;
     protected ImageView mImageView;
+    private ProgressBar mImageProgress;
 
     private int layoutRes;
     private int mToolbarColor;
@@ -82,7 +85,9 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
         // Get UI elements
         LinearLayout content = (LinearLayout) findViewById(R.id.content);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mImageView = (ImageView) findViewById(R.id.image);
+        mImageContainer = findViewById(R.id.img_container);
+        mImageView = (ImageView) findViewById(R.id.img_view);
+        mImageProgress = (ProgressBar) findViewById(R.id.img_progress);
         mOverlayView = findViewById(R.id.overlay);
         mTitleView = (TextView) findViewById(R.id.title);
         mFab = findViewById(R.id.fab);
@@ -167,9 +172,14 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            onSave();
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                onSave();
+                return true;
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.left_in, R.anim.right_out);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -182,7 +192,7 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
         float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
         int minOverlayTransitionY = mActionBarSize - mOverlayView.getHeight();
         ViewHelper.setTranslationY(mOverlayView, ScrollUtils.getFloat(-scrollY, minOverlayTransitionY, 0));
-        ViewHelper.setTranslationY(mImageView, ScrollUtils.getFloat(-scrollY / 2, minOverlayTransitionY, 0));
+        ViewHelper.setTranslationY(mImageContainer, ScrollUtils.getFloat(-scrollY / 2, minOverlayTransitionY, 0));
 
         // Change alpha of overlay
         ViewHelper.setAlpha(mOverlayView, ScrollUtils.getFloat((float) scrollY / flexibleRange, 0, 1));
@@ -307,13 +317,25 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
         new AsyncTask<Uri, Void, Boolean>() {
 
             @Override
+            protected void onPreExecute() {
+                mImageProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
             protected Boolean doInBackground(Uri... params) {
                 try {
+                    // Delete old file
+                    if (mImageFile != null) {
+                        File f = new File(getFilesDir(), mImageFile);
+                        //noinspection ResultOfMethodCallIgnored
+                        f.delete();
+                    }
+
                     imageBitmap = BitmapUtils.decodeSampledBitmapFromStream(EditWithImageActivity.this, params[0], mImageView.getWidth(), mImageView.getHeight());
                     File f = File.createTempFile(params[0].getLastPathSegment(), null, getFilesDir());
                     FileOutputStream out = new FileOutputStream(f);
                     imageBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-                    mImageFile = f.getAbsolutePath();
+                    mImageFile = f.getName();
                     return true;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -325,6 +347,7 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
             protected void onPostExecute(Boolean success) {
                 if (success)
                     mImageView.setImageBitmap(imageBitmap);
+                mImageProgress.setVisibility(View.GONE);
             }
         }.execute(selectedImageUri);
     }
@@ -356,7 +379,6 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
         return new File(mediaStorageDir.getPath() + File.separator +
                 "IMG_" + timeStamp + ".jpg");
     }
-
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {

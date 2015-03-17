@@ -329,6 +329,7 @@ public class EditBowActivity extends EditWithImageActivity {
         else
             bow.type = 0;
 
+        bow.imageFile = mImageFile;
         bow.image = imageBitmap;
 
         mBowId = db.updateBow(bow);

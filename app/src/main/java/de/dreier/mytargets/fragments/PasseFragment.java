@@ -26,7 +26,6 @@ import com.nineoldandroids.view.ViewHelper;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditRoundActivity;
@@ -102,27 +101,20 @@ public class PasseFragment extends NowListFragment<Passe> implements ShareDialog
     public void onResume() {
         super.onResume();
 
+        // Set round info
+        mRoundInfo = db.getRound(mRound);
+        setRoundInfo();
+
         // Load values for animations
         mActionBarSize = ToolbarUtils.getActionBarSize(activity);
         mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.ext_toolbar_round_height);
 
-        mRoundInfo = db.getRound(mRound);
-        ArrayList<Passe> list = db.getPasses(mRound);
-        if (mRecyclerView.getAdapter() == null) {
-            mAdapter = new PasseAdapter();
+        if(mRecyclerView.getAdapter() != null) {
             mAdapter.setHeaderHeight(mHeaderHeight + mActionBarSize);
-            mAdapter.setList(list);
-            mRecyclerView.setAdapter(mAdapter);
-            onScrollChanged(0, true, true);
-        } else {
-            mAdapter.setHeaderHeight(mHeaderHeight + mActionBarSize);
-            mAdapter.setList(list);
-            mAdapter.notifyDataSetChanged();
         }
-        mNewLayout.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
-        mNewText.setText(newStringRes);
+        setList(db.getPasses(mRound), new PasseAdapter(mHeaderHeight + mActionBarSize));
+        onScrollChanged(mRecyclerView.getScrollY(), true, true);
 
-        setRoundInfo();
         activity.supportInvalidateOptionsMenu();
     }
 
@@ -296,6 +288,10 @@ public class PasseFragment extends NowListFragment<Passe> implements ShareDialog
     }
 
     public class PasseAdapter extends NowListAdapter<Passe> {
+        public PasseAdapter(int header) {
+            headerHeight = header;
+        }
+
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())

@@ -1,5 +1,6 @@
 package de.dreier.mytargets.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -60,6 +61,7 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
     // New view
     protected View mNewLayout;
     protected TextView mNewText;
+    protected FloatingActionButton mFab;
 
     protected int getLayoutResource() {
         return R.layout.fragment_list;
@@ -74,9 +76,9 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
         mRecyclerView.addItemDecoration(new CardItemDecorator(getActivity()));
         mRecyclerView.setHasFixedSize(true);
 
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        fab.setOnClickListener(this);
-        fab.attachToRecyclerView(mRecyclerView);
+        mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        mFab.setOnClickListener(this);
+        mFab.attachToRecyclerView(mRecyclerView);
 
         mNewLayout = rootView.findViewById(R.id.new_layout);
         mNewText = (TextView) rootView.findViewById(R.id.new_text);
@@ -84,9 +86,21 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (activity != null)
+            db = DatabaseManager.getInstance(activity);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity = (ActionBarActivity) getActivity();
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        activity = (ActionBarActivity) getActivity();
         db = DatabaseManager.getInstance(activity);
         init(getArguments(), savedInstanceState);
     }
@@ -102,6 +116,7 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
         }
         mNewLayout.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
         mNewText.setText(newStringRes);
+        mFab.show(true);
     }
 
     protected ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
@@ -153,6 +168,7 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
             db.delete(mAdapter.getItem(pos));
             mAdapter.remove(pos);
         }
+        onResume();
     }
 
     protected void updateTitle() {

@@ -95,6 +95,7 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
         supportedLanguages.add("en");
         supportedLanguages.add("fr");
         supportedLanguages.add("es");
+        supportedLanguages.add("ru");
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         boolean shown = prefs.getBoolean("translation_dialog_shown", false);
