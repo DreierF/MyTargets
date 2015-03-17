@@ -468,13 +468,18 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public Round getRound(long round) {
         // Get all generic round attributes
-        Cursor res = db.rawQuery("SELECT r.ppp, r.training, r.target, r.indoor, r.distance, " +
-                "r.unit, r.bow, r.arrow, b.type, r.comment " +
-                "FROM ROUND r LEFT JOIN BOW b ON b._id=r.bow WHERE r._id=" + round, null);
+        Cursor res = db.rawQuery("SELECT r._id, r.ppp, r.target, r.indoor, r.distance, r.unit, r.bow, r.arrow, b.type, r.comment, " +
+                "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=r.target)) " +
+                "FROM ROUND r " +
+                "LEFT JOIN PASSE p ON r._id = p.round " +
+                "LEFT JOIN SHOOT s ON p._id = s.passe " +
+                "LEFT JOIN ZONE_MATRIX m ON s.points = m.zone AND m.target = r.target " +
+                "LEFT JOIN BOW b ON b._id = r.bow " +
+                "WHERE r._id=" + round, null);
         res.moveToFirst();
         Round r = new Round();
-        r.ppp = res.getInt(0);
-        r.training = res.getLong(1);
+        r.id = res.getLong(0);
+        r.ppp = res.getInt(1);
         r.target = res.getInt(2);
         r.indoor = res.getInt(3) != 0;
         r.distanceVal = res.getInt(4);
@@ -482,14 +487,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
         for (int i = 0; i < EditRoundActivity.distanceValues.length; i++)
             if (EditRoundActivity.distanceValues[i] == r.distanceVal)
                 r.distanceInd = i;
-        r.unit = res.getString(5);
-        r.distance = "" + r.distanceVal + r.unit;
-        r.bow = res.getLong(6);
-        r.arrow = res.getLong(7);
+        r.distance = "" + r.distanceVal + res.getString(5);
+        r.bow = res.getInt(6);
+        r.arrow = res.getInt(7);
         r.compound = r.bow == -2 || res.getInt(8) == 1;
         r.comment = res.getString(9);
         if (r.comment == null)
             r.comment = "";
+        r.reachedPoints = res.getInt(10);
+        r.maxPoints = res.getInt(11);
+        if (r.maxPoints <= 10)
+            r.maxPoints = 0;
         res.close();
 
         // Get number of X, 10 and 9 score
@@ -590,7 +598,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 byte[] data = res.getBlob(8);
                 arrow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
             } else {
-                arrow.imageFile = res.getString(8);
+                arrow.imageFile = res.getString(9);
                 try {
                     FileInputStream in = mContext.openFileInput(arrow.imageFile);
                     arrow.image = BitmapFactory.decodeStream(in);
