@@ -2,7 +2,6 @@
 <resources>
 
     <!-- General -->
-    <string name="app_name">MyTargets</string>
     <string name="prev">Zurück</string>
     <string name="next">Weiter</string>
     <string name="save">Speichern</string>

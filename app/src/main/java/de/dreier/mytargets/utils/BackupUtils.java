@@ -127,7 +127,7 @@ public class BackupUtils {
         return Uri.fromFile(file);
     }
 
-    public static void zip(Context context, String zipFileName) {
+    private static void zip(Context context, String zipFileName) {
         try {
             BufferedInputStream origin;
             FileOutputStream dest = new FileOutputStream(zipFileName);

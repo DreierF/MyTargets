@@ -26,7 +26,7 @@ import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
 import de.dreier.mytargets.models.Target;
-import de.dreier.mytargets.models.WearableUtils;
+import de.dreier.mytargets.utils.WearableUtils;
 import de.dreier.mytargets.views.TargetView;
 
 public class InputActivity extends ActionBarActivity implements OnTargetSetListener {
@@ -146,7 +146,7 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
         if (passe <= savedPasses) {
             Passe p = db.getPasse(mRound, passe);
             if (p != null) {
-                target.setZones(p);
+                target.setPasse(p);
             } else {
                 target.reset();
             }
@@ -206,7 +206,7 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
     }
 
     @Override
-    public void onTargetSet(Passe passe, boolean remote) {
+    public long onTargetSet(Passe passe, boolean remote) {
         passe.sort();
 
         db.updatePasse(mRound, passe);
@@ -224,6 +224,7 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
                 updatePasse();
             }
         });
+        return passe.id;
     }
 
     @Override

@@ -13,7 +13,8 @@ import de.dreier.mytargets.R;
  * Created by Florian on 13.03.2015.
  */
 public class CardItemDecorator extends RecyclerView.ItemDecoration {
-    private int spaceHorizontal, spaceVertical;
+    private final int spaceHorizontal;
+    private final int spaceVertical;
 
     public CardItemDecorator(Context context) {
         this.spaceHorizontal = (int)context.getResources().getDimension(R.dimen.card_padding_horizontal);

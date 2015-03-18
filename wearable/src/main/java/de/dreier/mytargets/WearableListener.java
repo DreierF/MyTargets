@@ -13,7 +13,7 @@ import com.google.android.gms.wearable.WearableListenerService;
 
 import java.io.IOException;
 
-import de.dreier.mytargets.models.WearableUtils;
+import de.dreier.mytargets.utils.WearableUtils;
 
 public class WearableListener extends WearableListenerService {
 
@@ -52,7 +52,7 @@ public class WearableListener extends WearableListenerService {
         }
     }
 
-    public void showNotification(WearableUtils.NotificationInfo info) {
+    void showNotification(WearableUtils.NotificationInfo info) {
 
         // Build the intent to display our custom notification
         Intent notificationIntent = new Intent(this, MainActivity.class);

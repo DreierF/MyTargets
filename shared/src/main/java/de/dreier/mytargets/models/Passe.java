@@ -19,6 +19,7 @@ public class Passe extends IdProvider implements Serializable {
     }
 
     public Passe(Passe p) {
+        id = p.id;
         shot = p.shot.clone();
     }
 

@@ -61,10 +61,10 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
     protected ImageView mImageView;
     private ProgressBar mImageProgress;
 
-    private int layoutRes;
+    private final int layoutRes;
     private int mToolbarColor;
     private boolean mFabIsShown;
-    private int defaultDrawable;
+    private final int defaultDrawable;
 
     private int mLeftSpace;
     private int mFabMargin;

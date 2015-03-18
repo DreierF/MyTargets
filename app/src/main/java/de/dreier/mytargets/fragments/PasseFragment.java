@@ -127,31 +127,32 @@ public class PasseFragment extends NowListFragment<Passe> implements ShareDialog
 
         // Set round info
         String percent = max == 0 ? "" : " (" + (reached * 100 / max) + "%)";
-        String infoText = "<font color=#ffffff>" + getString(R.string.distance) + "</font>: <font color=#ff9100><b>" +
+        String infoText = "<font color=#ffffff>" + getString(R.string.distance) + ": <b>" +
                 mRoundInfo.distance + " - " +
-                getString(mRoundInfo.indoor ? R.string.indoor : R.string.outdoor) + "</b></font><br>" +
-                "<font color=#ffffff>" + getString(R.string.points) + "</font>: <font color=#ff9100><b>" + reached + "/" + max + percent + "</b></font><br>" +
-                "<font color=#ffffff>" + getString(R.string.target_round) + "</font>: <font color=#ff9100><b>" + TargetItemAdapter.targets[mRoundInfo.target] + "</b></font>";
+                getString(mRoundInfo.indoor ? R.string.indoor : R.string.outdoor) + "</b><br>" +
+                getString(R.string.points) + ": <b>" + reached + "/" + max + percent + "</b><br>" +
+                getString(R.string.target_round) + ": <b>" + TargetItemAdapter.targets[mRoundInfo.target] + "</b>";
         Bow bow = db.getBow(mRoundInfo.bow, true);
         if (bow != null) {
-            infoText += "<br><font color=#ffffff>" + getString(R.string.bow) +
-                    "</font>: <font color=#ff9100><b>" + TextUtils.htmlEncode(bow.name) + "</b></font>";
+            infoText += "<br>" + getString(R.string.bow) +
+                    ": <b>" + TextUtils.htmlEncode(bow.name) + "</b>";
         }
         Arrow arrow = db.getArrow(mRoundInfo.arrow, true);
         if (arrow != null) {
-            infoText += "<br><font color=#ffffff>" + getString(R.string.arrow) +
-                    "</font>: <font color=#ff9100><b>" + TextUtils.htmlEncode(arrow.name) + "</b></font>";
+            infoText += "<br>" + getString(R.string.arrow) +
+                    ": <b>" + TextUtils.htmlEncode(arrow.name) + "</b>";
         }
         if (!mRoundInfo.comment.isEmpty()) {
-            infoText += "<br><font color=#ffffff>" + getString(R.string.comment) +
-                    "</font>: <font color=#ff9100><b>" + TextUtils.htmlEncode(mRoundInfo.comment) + "</b></font>";
+            infoText += "<br>" + getString(R.string.comment) +
+                    ": <b>" + TextUtils.htmlEncode(mRoundInfo.comment) + "</b>";
         }
+        infoText+="</font>";
         info.setText(Html.fromHtml(infoText));
 
         // Set number of X, 10, 9 shoots
-        infoText = "<font color=#ffffff>X</font>: <font color=#ff9100><b>" + mRoundInfo.scoreCount[0] + "</b></font><br>" +
-                "<font color=#ffffff>" + getString(R.string.ten_x) + "</font>: <font color=#ff9100><b>" + (mRoundInfo.scoreCount[0] + mRoundInfo.scoreCount[1]) + "</b></font><br>" +
-                "<font color=#ffffff>" + getString(R.string.nine) + "</font>: <font color=#ff9100><b>" + mRoundInfo.scoreCount[2] + "</b></font>";
+        infoText = "<font color=#ffffff>X: <b>" + mRoundInfo.scoreCount[0] + "</b><br>" +
+                getString(R.string.ten_x) + ": <b>" + (mRoundInfo.scoreCount[0] + mRoundInfo.scoreCount[1]) + "</b><br>" +
+                getString(R.string.nine) + ": <b>" + mRoundInfo.scoreCount[2] + "</b></font>";
         score.setText(Html.fromHtml(infoText));
     }
 
@@ -235,7 +236,7 @@ public class PasseFragment extends NowListFragment<Passe> implements ShareDialog
         }).start();
     }
 
-    private View.OnClickListener headerClickListener = new View.OnClickListener() {
+    private final View.OnClickListener headerClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Intent i = new Intent(activity, EditRoundActivity.class);
@@ -301,8 +302,8 @@ public class PasseFragment extends NowListFragment<Passe> implements ShareDialog
     }
 
     public class ViewHolder extends CardViewHolder<Passe> {
-        public PassesView mShots;
-        public TextView mSubtitle;
+        public final PassesView mShots;
+        public final TextView mSubtitle;
 
         public ViewHolder(View itemView) {
             super(itemView, mMultiSelector, PasseFragment.this);

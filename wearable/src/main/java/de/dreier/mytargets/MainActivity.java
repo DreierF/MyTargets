@@ -27,14 +27,14 @@ import java.util.HashSet;
 import de.dreier.mytargets.models.OnTargetSetListener;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.models.Shot;
-import de.dreier.mytargets.models.WearableUtils;
+import de.dreier.mytargets.utils.WearableUtils;
 
-public class MainActivity extends Activity implements OnTargetSetListener, GoogleApiClient.ConnectionCallbacks {
+public class MainActivity extends Activity implements OnTargetSetListener,
+        GoogleApiClient.ConnectionCallbacks {
 
     public static final String EXTRA_ROUND = "round";
-    public TargetSelectView mTarget;
-    public DelayedConfirmationView confirm;
+    private TargetSelectView mTarget;
+    private DelayedConfirmationView confirm;
     private Round round;
     private GoogleApiClient mGoogleApiClient;
 
@@ -84,7 +84,7 @@ public class MainActivity extends Activity implements OnTargetSetListener, Googl
     }
 
     @Override
-    public void onTargetSet(final Passe passe, boolean remote) {
+    public long onTargetSet(final Passe passe, boolean remote) {
         confirm.setVisibility(View.VISIBLE);
         confirm.setTotalTimeMs(2500);
         confirm.start();
@@ -99,18 +99,20 @@ public class MainActivity extends Activity implements OnTargetSetListener, Googl
             @Override
             public void onTimerFinished(View view) {
                 Intent intent = new Intent(MainActivity.this, ConfirmationActivity.class);
-                intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.SUCCESS_ANIMATION);
+                intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
+                        ConfirmationActivity.SUCCESS_ANIMATION);
                 intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, getString(R.string.saved));
                 startActivity(intent);
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 v.vibrate(200);
                 finish();
-                sendMessage(WearableUtils.FINISHED_INPUT, passe);
+                sendMessage(passe);
             }
         });
+        return 0;
     }
 
-    public Collection<String> getNodes() {
+    Collection<String> getNodes() {
         HashSet<String> results = new HashSet<>();
         NodeApi.GetConnectedNodesResult nodes =
                 Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
@@ -120,7 +122,7 @@ public class MainActivity extends Activity implements OnTargetSetListener, Googl
         return results;
     }
 
-    public void sendMessage(final String path, Passe p) {
+    void sendMessage(Passe p) {
         // Serialize bundle to byte array
         byte[] data = new byte[0];
         try {
@@ -132,7 +134,7 @@ public class MainActivity extends Activity implements OnTargetSetListener, Googl
         new Thread(new Runnable() {
             @Override
             public void run() {
-                sendMessage(path, finalData);
+                sendMessage(WearableUtils.FINISHED_INPUT, finalData);
             }
         }).start();
     }

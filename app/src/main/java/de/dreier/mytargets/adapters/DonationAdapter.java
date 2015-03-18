@@ -17,7 +17,7 @@ public class DonationAdapter extends BaseAdapter {
 
     private final boolean mSupported;
     private final LayoutInflater mInflater;
-    private Context mContext;
+    private final Context mContext;
 
     public DonationAdapter(Context context, boolean supported) {
         mContext = context;

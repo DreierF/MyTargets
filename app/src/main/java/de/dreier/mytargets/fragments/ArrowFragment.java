@@ -35,7 +35,7 @@ public class ArrowFragment extends NowListFragment<Arrow> {
     }
 
     @Override
-    public void onSelected(Arrow item) {
+    protected void onSelected(Arrow item) {
         Intent i = new Intent(getActivity(), EditArrowActivity.class);
         i.putExtra(EditArrowActivity.ARROW_ID, item.getId());
         startActivity(i);
@@ -47,7 +47,7 @@ public class ArrowFragment extends NowListFragment<Arrow> {
         onSelected(item);
     }
 
-    public class ArrowAdapter extends NowListAdapter<Arrow> {
+    protected class ArrowAdapter extends NowListAdapter<Arrow> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())

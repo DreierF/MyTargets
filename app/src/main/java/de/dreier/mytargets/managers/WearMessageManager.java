@@ -20,7 +20,7 @@ import java.util.HashSet;
 
 import de.dreier.mytargets.models.OnTargetSetListener;
 import de.dreier.mytargets.models.Passe;
-import de.dreier.mytargets.models.WearableUtils;
+import de.dreier.mytargets.utils.WearableUtils;
 
 public class WearMessageManager implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, MessageApi.MessageListener {
 

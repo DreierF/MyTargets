@@ -16,7 +16,7 @@ import de.dreier.mytargets.models.IdProvider;
  */
 public abstract class NowListAdapter<T extends IdProvider> extends RecyclerView.Adapter<CardViewHolder<T>> {
 
-    protected ArrayList<T> mList = new ArrayList<>();
+    private ArrayList<T> mList = new ArrayList<>();
     protected int headerHeight = 0;
 
     @Override

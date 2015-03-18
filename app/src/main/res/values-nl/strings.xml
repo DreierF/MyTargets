@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General -->
+    <string name="prev">Vorige</string>
+    <string name="next">Volgende</string>
+    <string name="save">Opslaan</string>
+    <string name="custom">Anders</string>
+    <string name="training">Training</string>
+    <string name="bow">Boog</string>
+    <string name="arrow">Pijl</string>
+    <string name="round">Ronde</string>
+    <string name="points">Punten</string>
+    <string name="passe">Beurt</string>
+    <string name="passe_n">Beurt %d</string>
+
+    <!-- Overview -->
+    <string name="new_training">Nieuwe training</string>
+    <string name="new_bow">Nieuwe boog</string>
+    <string name="new_arrow">Nieuwe pijl</string>
+    <string name="new_round">Nieuwe ronde</string>
+    <string name="new_passe">Nieuwe beurt</string>
+    <plurals name="training">
+        <item quantity="one">Eén training geselecteerd</item>
+        <item quantity="other">%d trainingen geselecteerd</item>
+    </plurals>
+    <plurals name="bow">
+        <item quantity="one">Eén boog geselecteerd</item>
+        <item quantity="other">%d bogen geselecteerd</item>
+    </plurals>
+    <plurals name="arrow">
+        <item quantity="one">Eén pijl geselecteerd</item>
+        <item quantity="other">%d pijlen geselecteerd</item>
+    </plurals>
+    <plurals name="round">
+        <item quantity="one">Eén ronde geselecteerd</item>
+        <item quantity="other">%d ronden geselecteerd</item>
+    </plurals>
+    <plurals name="passe">
+        <item quantity="one">Eén beurt geselecteerd</item>
+        <item quantity="other">%d beurten geselecteerd</item>
+    </plurals>
+    <string name="edit">Wijzigen</string>
+    <string name="delete">Verwijderen</string>
+    <string name="statistic">Statistiek</string>
+
+    <!-- Share -->
+    <string name="share">Delen</string>
+    <string name="my_share_text">Dit is mijn score bij boogschieten:\n%1$d keer X\n%2$d keer 10\n%3$d keer 9\nDit is totaal %4$d uit maximaal %5$d rings.</string>
+    <string name="comments">Opmerkingen</string>
+    <string name="text">Tekst</string>
+    <string name="dispersion_pattern">Spreidings overzicht</string>
+    <string name="sharing_failed">Delen mislukt!</string>
+
+    <!-- Export -->
+    <string name="export">Exporteren</string>
+    <string name="send_exported">Geexporteerde data versturen</string>
+    <string name="exporting_failed">Exporteren mislukt!</string>
+
+    <!-- New bow -->
+    <string name="add_bow">Boog toevoegen</string>
+    <string name="name">Naam</string>
+    <string name="bow_type">Boog type</string>
+    <string name="recurve_bow">Recurve boog</string>
+    <string name="compound_bow">Compound boog</string>
+    <string name="bare_bow">Bare bow</string>
+    <string name="long_bow">Long bow</string>
+    <string name="horse_bow">Paardrij bow</string>
+    <string name="yumi">Yumi</string>
+    <string name="properties">Eigenschappen</string>
+    <string name="brand">Merk</string>
+    <string name="size">Grootte</string>
+    <string name="description">Omschrijving</string>
+    <string name="height">Brace height</string>
+    <string name="tiller">Tiller</string>
+    <string name="sight_settings">Vizier instellingen</string>
+    <string name="add">Toevoegen</string>
+    <string name="select_picture">Kies een afbeelding</string>
+    <string name="take_picture">Neem een foto</string>
+    <string name="pick_from_gallery">Kies een afbeelding uit gallerij</string>
+
+    <!-- New arrow -->
+    <string name="add_arrow">Pijl toevoegen</string>
+    <string name="length">Lengte</string>
+    <string name="spine">Spine</string>
+    <string name="weight">Gewicht</string>
+    <string name="vanes">Veren</string>
+    <string name="nock">Nock</string>
+    <string name="material">Materiaal</string>
+
+    <!-- New round -->
+    <string name="title">Titel</string>
+    <string name="outdoor">Buiten</string>
+    <string name="indoor">Binnen</string>
+    <string name="distance">Afstand</string>
+    <string name="arrows_per_passe">Pijlen per beurt</string>
+    <string name="target_round">Type blazoen</string>
+    <string name="title_compound">Compound?</string>
+    <string name="msg_compound_type">Welk boogtype gebruikt u? (Er is een verschil in punten binnen de gouden ringen)</string>
+    <string name="other_bow">Andere boog</string>
+
+    <!-- Scoreboard -->
+    <string name="scoreboard">Scorebord</string>
+    <string name="arrows">Pijlen</string>
+    <string name="sum">Sub-Totaal</string>
+    <string name="carry">Totaal</string>
+    <string name="action_print">Print</string>
+    <string name="nine">Negen</string>
+    <string name="ten_x">Tien+X</string>
+    <string name="average">Gemiddelde</string>
+
+    <!-- Input mode -->
+    <string name="switch_mode">Wijzig input modus</string>
+    <string name="show_all">Toon alle schoten</string>
+    <string name="comment">Opmerking</string>
+
+    <!-- Statistics -->
+    <string name="all_trainings">Alle trainingen</string>
+    <string name="entire_training">Hele training</string>
+    <string name="current_round">Huidige ronde</string>
+
+    <!-- Import/Backup -->
+    <string name="backup_action">Backup</string>
+    <string name="import_action">Importeren</string>
+    <string name="select_a_file">Kies een bestand</string>
+    <string name="dir_not_created">Map kan niet worden aangemaakt!</string>
+    <string name="backup_successful">Backup gelukt!</string>
+    <string name="backup_saved_as">Backup is opgeslagen  als \'%s\'.</string>
+    <string name="backup_failed">Backup mislukt!</string>
+    <string name="backup_error">Er is bij de backup een fout opgetreden:\n%s</string>
+    <string name="sd_card_not_available_title">SD card niet beschikbaar!</string>
+    <string name="sd_card_not_available_desc">Please mount de sd card en probeer opnieuw!</string>
+    <string name="import_successful">Import gelukt!</string>
+    <string name="import_failed">Import mislukt!</string>
+    <string name="file_not_found">Bestand niet gevonden!</string>
+    <string name="failed_reading_file">Lezen van bestand mislukt!</string>
+
+    <!-- Donate -->
+    <string name="donate_action">Doneren</string>
+    <string name="donate_2">Doneer mij een hamburger</string>
+    <string name="donate_5">Doneer mij een kebab</string>
+    <string name="donate_10">Doneer mij een grote pizza</string>
+    <string name="donate_20">Doneer mij wat benzine</string>
+    <string name="donate_infinite">Duurzame donatie</string>
+    <string name="donation_thank">Bedankt voor uw donatie!</string>
+    <string name="monthly">Maandelijks %s</string>
+    <string name="donate_text">De bedragen zijn inclusief BTW en 30% premie voor Google. Als alternatief mag u graag ook doneren op PayPal account dreier.florian@gmail.com.</string>
+
+</resources>

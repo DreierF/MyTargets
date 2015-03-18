@@ -42,13 +42,12 @@ import util.Purchase;
 public class MainActivity extends ActionBarActivity implements DonateDialogFragment.DonationListener {
 
     private static final String TAG = "main";
-    public static final String BASE64_PUB_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvxNm9AWZrsRqDB04Uic0rJSmsCBlRcDA1OnNPtC14Eth5iy4dTlPKN1HNOUfz+2mqvq4cylrb/NTxpkZSQ1NwLHMqG3pdzJAbwnr7MJoqhum3MKeDxuuM6ptZP8EucPEcFwcGQWQAD5URLFuT2nk9Ezws2TU2EsGnTI97Dpdonv/ans/2NuUz04KW2IrNLuMZp20h+3uekp7CwP1mjs7cqrL63WzEl5cT+RjfFGUH8SpdDvO71duLefnBS/vHftf+tVpv+vD12C+BlfN8Dun3R9EM8QqM32VB6M8ycJcEcmkz+U6IfMu/ShQapOctUCFkud9Bd55tXXnJyoQXEt0YwIDAQAB";
     private static boolean shownThisTime = false;
     private ViewPager viewPager;
 
     // In-app billing
     private IabHelper mHelper;
-    static final int RC_REQUEST = 10001;
+    private static final int RC_REQUEST = 10001;
     private boolean mInfiniteSupported;
 
     @Override
@@ -69,7 +68,7 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
         setSupportActionBar(toolbar);
 
         // Create the helper, passing it our context and the public key to verify signatures with
-        mHelper = new IabHelper(this, BASE64_PUB_KEY);
+        mHelper = new IabHelper(this, getString(R.string.BASE64_PUB_KEY));
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
             public void onIabSetupFinished(IabResult result) {
                 Log.d(TAG, "Setup finished.");
@@ -207,7 +206,7 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
     private boolean mSubscribedToInfinite;
 
     // Listener that's called when we finish querying the items and subscriptions we own
-    IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
+    private final IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
         public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
             Log.d(TAG, "Query inventory finished.");
 
@@ -250,7 +249,7 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
     }
 
     // Callback for when a purchase is finished
-    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
+    private final IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
         public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
 
             // if we were disposed of in the meantime, quit.
@@ -277,7 +276,7 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
     };
 
     // Called when consumption is complete
-    IabHelper.OnConsumeFinishedListener mConsumeFinishedListener = new IabHelper.OnConsumeFinishedListener() {
+    private final IabHelper.OnConsumeFinishedListener mConsumeFinishedListener = new IabHelper.OnConsumeFinishedListener() {
         public void onConsumeFinished(Purchase purchase, IabResult result) {
             if (mHelper == null) return;
 

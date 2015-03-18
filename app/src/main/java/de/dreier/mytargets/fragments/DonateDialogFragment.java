@@ -21,9 +21,9 @@ import de.dreier.mytargets.adapters.DonationAdapter;
  */
 public class DonateDialogFragment extends DialogFragment {
 
-    public static String DONATION_INFINITE = "donation_infinite";
+    public static final String DONATION_INFINITE = "donation_infinite";
 
-    public static ArrayList<String> donations;
+    public static final ArrayList<String> donations;
     public static final HashMap<String, String> prices;
 
     static {

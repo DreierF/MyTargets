@@ -125,9 +125,9 @@ public class RoundFragment extends NowListFragment<Round> {
     }
 
     public class ViewHolder extends CardViewHolder<Round> {
-        public TextView mTitle;
-        public TextView mSubtitle;
-        public TextView mGes;
+        public final TextView mTitle;
+        public final TextView mSubtitle;
+        public final TextView mGes;
 
         public ViewHolder(View itemView) {
             super(itemView, mMultiSelector, RoundFragment.this);

@@ -50,12 +50,12 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
 
     protected ActionBarActivity activity;
     DatabaseManager db;
-    boolean mEditable = false;
+    final boolean mEditable = false;
     protected RecyclerView mRecyclerView;
     protected NowListAdapter<T> mAdapter;
 
     // Action mode handling
-    protected MultiSelector mMultiSelector = new MultiSelector();
+    protected final MultiSelector mMultiSelector = new MultiSelector();
     protected ActionMode actionMode = null;
 
     // New view
@@ -119,7 +119,7 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
         mFab.show(true);
     }
 
-    protected ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
+    protected final ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {

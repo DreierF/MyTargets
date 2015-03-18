@@ -54,7 +54,7 @@ public class TrainingsFragment extends NowListFragment<Training> {
         //TODO
     }
 
-    public class TrainingAdapter extends NowListAdapter<Training> {
+    protected class TrainingAdapter extends NowListAdapter<Training> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())

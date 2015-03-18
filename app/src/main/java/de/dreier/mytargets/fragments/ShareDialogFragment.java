@@ -6,9 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
@@ -20,7 +18,7 @@ public class ShareDialogFragment extends DialogFragment {
     private ArrayList<Integer> mSelectedItems;
 
     public interface ShareDialogListener {
-        void onShareDialogConfirmed(boolean text, boolean dispersion_pattern, boolean scoreboard, boolean comments) throws IOException;
+        void onShareDialogConfirmed(boolean text, boolean dispersion_pattern, boolean scoreboard, boolean comments);
     }
 
     @NonNull
@@ -50,18 +48,13 @@ public class ShareDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
-                        try {
-                            if (!mSelectedItems.isEmpty()) {
-                                mListener = (ShareDialogListener) getTargetFragment();
-                                mListener.onShareDialogConfirmed(
-                                        mSelectedItems.contains(0),
-                                        mSelectedItems.contains(1),
-                                        mSelectedItems.contains(2),
-                                        mSelectedItems.contains(3));
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Toast.makeText(getActivity(), R.string.sharing_failed, Toast.LENGTH_SHORT).show();
+                        if (!mSelectedItems.isEmpty()) {
+                            mListener = (ShareDialogListener) getTargetFragment();
+                            mListener.onShareDialogConfirmed(
+                                    mSelectedItems.contains(0),
+                                    mSelectedItems.contains(1),
+                                    mSelectedItems.contains(2),
+                                    mSelectedItems.contains(3));
                         }
                     }
                 })
