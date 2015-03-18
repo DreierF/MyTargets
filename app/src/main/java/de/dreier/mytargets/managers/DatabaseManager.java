@@ -567,8 +567,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
             } else {
                 bow.imageFile = res.getString(8);
                 try {
-                    FileInputStream in = mContext.openFileInput(bow.imageFile);
-                    bow.image = BitmapFactory.decodeStream(in);
+                    if (bow.imageFile != null) {
+                        FileInputStream in = mContext.openFileInput(bow.imageFile);
+                        bow.image = BitmapFactory.decodeStream(in);
+                    } else {
+                        bow.image = null;
+                    }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -600,8 +604,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
             } else {
                 arrow.imageFile = res.getString(9);
                 try {
-                    FileInputStream in = mContext.openFileInput(arrow.imageFile);
-                    arrow.image = BitmapFactory.decodeStream(in);
+                    if (arrow.imageFile != null) {
+                        FileInputStream in = mContext.openFileInput(arrow.imageFile);
+                        arrow.image = BitmapFactory.decodeStream(in);
+                    } else {
+                        arrow.image = null;
+                    }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }

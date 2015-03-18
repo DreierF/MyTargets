@@ -96,6 +96,7 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
         supportedLanguages.add("fr");
         supportedLanguages.add("es");
         supportedLanguages.add("ru");
+        supportedLanguages.add("nl");
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         boolean shown = prefs.getBoolean("translation_dialog_shown", false);
@@ -107,7 +108,7 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
             final SpannableString s = new SpannableString(Html.fromHtml("If you would like " +
                     "to help make MyTargets even better by translating the app to " +
                     longLang + ", please send me an E-Mail (dreier.florian@gmail.com) " +
-                    "so I can give you access to the translation tool!<br /><br />" +
+                    "so I can give you access to the translation file!<br /><br />" +
                     "Thanks in advance :)"));
             Linkify.addLinks(s, Linkify.EMAIL_ADDRESSES);
             AlertDialog d = new AlertDialog.Builder(this).setTitle("App translation")
