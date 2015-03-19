@@ -14,7 +14,6 @@ public class Passe extends IdProvider implements Serializable {
         shot = new Shot[ppp];
         for (int i = 0; i < ppp; i++) {
             shot[i] = new Shot();
-            shot[i].comment = "";
         }
     }
 

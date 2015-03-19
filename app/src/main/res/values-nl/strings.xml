@@ -46,15 +46,15 @@
 
     <!-- Share -->
     <string name="share">Delen</string>
-    <string name="my_share_text">Dit is mijn score bij boogschieten:\n%1$d keer X\n%2$d keer 10\n%3$d keer 9\nDit is totaal %4$d uit maximaal %5$d rings.</string>
+    <string name="my_share_text">Yeah! Ik heb de volgende punten geschoten:\n%1$d keer X\n%2$d keer 10\n%3$d keer 9\nDit is totaal %4$d uit maximaal %5$d rings.</string>
     <string name="comments">Opmerkingen</string>
     <string name="text">Tekst</string>
-    <string name="dispersion_pattern">Spreidings overzicht</string>
+    <string name="dispersion_pattern">Verspreidingspatroon</string>
     <string name="sharing_failed">Delen mislukt!</string>
 
     <!-- Export -->
     <string name="export">Exporteren</string>
-    <string name="send_exported">Geexporteerde data versturen</string>
+    <string name="send_exported">Geëxporteerde data versturen</string>
     <string name="exporting_failed">Exporteren mislukt!</string>
 
     <!-- New bow -->
@@ -65,13 +65,13 @@
     <string name="compound_bow">Compound boog</string>
     <string name="bare_bow">Bare bow</string>
     <string name="long_bow">Long bow</string>
-    <string name="horse_bow">Paardrij bow</string>
+    <string name="horse_bow">Ruiter boog</string>
     <string name="yumi">Yumi</string>
     <string name="properties">Eigenschappen</string>
     <string name="brand">Merk</string>
     <string name="size">Grootte</string>
     <string name="description">Omschrijving</string>
-    <string name="height">Brace height</string>
+    <string name="height">Peeshoogte</string>
     <string name="tiller">Tiller</string>
     <string name="sight_settings">Vizier instellingen</string>
     <string name="add">Toevoegen</string>
@@ -129,9 +129,9 @@
     <string name="backup_failed">Backup mislukt!</string>
     <string name="backup_error">Er is bij de backup een fout opgetreden:\n%s</string>
     <string name="sd_card_not_available_title">SD card niet beschikbaar!</string>
-    <string name="sd_card_not_available_desc">Please mount de sd card en probeer opnieuw!</string>
-    <string name="import_successful">Import gelukt!</string>
-    <string name="import_failed">Import mislukt!</string>
+    <string name="sd_card_not_available_desc">Plaats de sd card en probeer opnieuw!</string>
+    <string name="import_successful">Importeren gelukt!</string>
+    <string name="import_failed">Importeren mislukt!</string>
     <string name="file_not_found">Bestand niet gevonden!</string>
     <string name="failed_reading_file">Lezen van bestand mislukt!</string>
 
@@ -141,9 +141,9 @@
     <string name="donate_5">Doneer mij een kebab</string>
     <string name="donate_10">Doneer mij een grote pizza</string>
     <string name="donate_20">Doneer mij wat benzine</string>
-    <string name="donate_infinite">Duurzame donatie</string>
+    <string name="donate_infinite">Doorlopende donatie</string>
     <string name="donation_thank">Bedankt voor uw donatie!</string>
     <string name="monthly">Maandelijks %s</string>
-    <string name="donate_text">De bedragen zijn inclusief BTW en 30% premie voor Google. Als alternatief mag u graag ook doneren op PayPal account dreier.florian@gmail.com.</string>
+    <string name="donate_text"> De bedragen zijn inclusief BTW en 30% kosten voor Google. Als alternatief mag u ook doneren via PayPal, op account dreier.florian@gmail.com.</string>
 
 </resources>

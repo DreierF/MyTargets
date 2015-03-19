@@ -456,12 +456,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
         String[] cols = {TRAINING_ID, TRAINING_TITLE, TRAINING_DATE};
         String[] args = {"" + training};
         Cursor res = db.query(TABLE_TRAINING, cols, TRAINING_ID + "=?", args, null, null, null);
-        res.moveToFirst();
-
         Training tr = new Training();
-        tr.id = res.getLong(0);
-        tr.title = res.getString(1);
-        tr.date = new Date(res.getLong(2));
+        if(res.moveToFirst()) {
+            tr.id = res.getLong(0);
+            tr.title = res.getString(1);
+            tr.date = new Date(res.getLong(2));
+        }
         res.close();
         return tr;
     }

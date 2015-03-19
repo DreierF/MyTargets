@@ -12,7 +12,7 @@ public class Shot extends IdProvider implements Comparable<Shot>, Serializable {
     public int passe;
     public int zone = NOTHING_SELECTED;
     public float x, y;
-    public String comment;
+    public String comment = "";
 
     public Shot() {
     }

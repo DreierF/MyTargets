@@ -163,7 +163,7 @@ public class PasseFragment extends NowListFragment<Passe> implements ShareDialog
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        boolean hasPasses = mAdapter.getItemCount() > 0;
+        boolean hasPasses = mAdapter.getItemCount() > 1;
         menu.findItem(R.id.action_scoreboard).setVisible(hasPasses);
         menu.findItem(R.id.action_share).setVisible(hasPasses);
         menu.findItem(R.id.action_statistics).setVisible(hasPasses);

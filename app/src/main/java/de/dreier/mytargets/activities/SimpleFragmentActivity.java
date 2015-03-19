@@ -3,7 +3,6 @@ package de.dreier.mytargets.activities;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
@@ -30,8 +29,7 @@ public abstract class SimpleFragmentActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                overridePendingTransition(R.anim.left_in, R.anim.right_out);
+                onBackPressed();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -39,7 +37,7 @@ public abstract class SimpleFragmentActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        finish();
         overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
