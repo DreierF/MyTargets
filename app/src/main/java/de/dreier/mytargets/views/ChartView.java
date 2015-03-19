@@ -105,13 +105,17 @@ public class ChartView extends RelativeLayout {
     // Reset the visible range to show nothing
     void resetRange() {
         /*Calendar cal = (Calendar)QDateMgr.beg_hj[0].clone();
-		mMinX = cal.getTimeInMillis();
+        mMinX = cal.getTimeInMillis();
 		cal.add(Calendar.MONTH, 1);
 		mMaxX = cal.getTimeInMillis();*/
 
         for (LinearSeries series : mSeries) {
-            if (series.getMinX() < mMinX) mMinX = series.getMinX();
-            if (series.getMaxX() > mMaxX) mMaxX = series.getMaxX();
+            if (series.getMinX() < mMinX) {
+                mMinX = series.getMinX();
+            }
+            if (series.getMaxX() > mMaxX) {
+                mMaxX = series.getMaxX();
+            }
         }
 
         mValueBounds.set(mMinX, mMinY, mMaxX, mMaxY);
@@ -139,8 +143,9 @@ public class ChartView extends RelativeLayout {
         float scaleY = drawGridFixedGap(canvas, Axis.Y);
 
         // Draw on the series
-        for (LinearSeries series : mSeries)
+        for (LinearSeries series : mSeries) {
             series.draw(canvas, mGridBounds, mValueBounds, scaleX, scaleY);
+        }
     }
 
     void setYRange(long min, long max) {
@@ -163,14 +168,14 @@ public class ChartView extends RelativeLayout {
         // Enclose the grid on both sides for neatness
         if (axis == Axis.X) {
             canvas.drawLine(mGridBounds.left, mGridBounds.top,
-                    mGridBounds.left, mGridBounds.bottom, mPaint);
+                            mGridBounds.left, mGridBounds.bottom, mPaint);
             canvas.drawLine(mGridBounds.right, mGridBounds.top,
-                    mGridBounds.right, mGridBounds.bottom, mPaint);
+                            mGridBounds.right, mGridBounds.bottom, mPaint);
         } else {
             canvas.drawLine(mGridBounds.left, mGridBounds.top,
-                    mGridBounds.right, mGridBounds.top, mPaint);
+                            mGridBounds.right, mGridBounds.top, mPaint);
             canvas.drawLine(mGridBounds.left, mGridBounds.bottom,
-                    mGridBounds.right, mGridBounds.bottom, mPaint);
+                            mGridBounds.right, mGridBounds.bottom, mPaint);
         }
 
         int drawn = 0;
@@ -183,7 +188,8 @@ public class ChartView extends RelativeLayout {
             float valueHeight = maxPoint - minPoint;
             final float scaleY = gridHeight / valueHeight;
             long step = valueHeight == 100 ? 10 : 1;
-            for (long point = minPoint; point <= maxPoint && drawn < 50; // Go right up to the maximum
+            for (long point = minPoint;
+                 point <= maxPoint && drawn < 50; // Go right up to the maximum
                 // point, but because this
                 // comparison isn't 100%
                 // reliable, draw at most 50
@@ -200,25 +206,25 @@ public class ChartView extends RelativeLayout {
                 // Points
                 // Draw a horizontal line at this y-value
                 canvas.drawLine(mGridBounds.left, pointCoordinate.floatValue(),
-                        mGridBounds.right, pointCoordinate.floatValue(), mPaint);
+                                mGridBounds.right, pointCoordinate.floatValue(), mPaint);
                 // And the text label
                 if (point <= maxPoint) {
                     if (valueHeight == 100) {
-                        canvas.drawText((100-point)+"%",
-                                mLeftLabelWidth / 2, // centre it in the left label
-                                // gutter
-                                pointCoordinate.floatValue() + (mLabelTextSize / 2),
-                                // since the text is drawn from the middle-bottom we
-                                // need to push it down a little more
-                                mTextPaint);
+                        canvas.drawText((100 - point) + "%",
+                                        mLeftLabelWidth / 2, // centre it in the left label
+                                        // gutter
+                                        pointCoordinate.floatValue() + (mLabelTextSize / 2),
+                                        // since the text is drawn from the middle-bottom we
+                                        // need to push it down a little more
+                                        mTextPaint);
                     } else {
                         canvas.drawText("" + Target.getStringByZone(mRoundInfo.target, (int) point),
-                                mLeftLabelWidth / 2, // centre it in the left label
-                                // gutter
-                                pointCoordinate.floatValue() + (mLabelTextSize / 2),
-                                // since the text is drawn from the middle-bottom we
-                                // need to push it down a little more
-                                mTextPaint);
+                                        mLeftLabelWidth / 2, // centre it in the left label
+                                        // gutter
+                                        pointCoordinate.floatValue() + (mLabelTextSize / 2),
+                                        // since the text is drawn from the middle-bottom we
+                                        // need to push it down a little more
+                                        mTextPaint);
                     }
                 }
             }

@@ -75,7 +75,10 @@ public class EditRoundActivity extends ActionBarActivity {
         }
         SharedPreferences prefs = getSharedPreferences(MyBackupAgent.PREFS, 0);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.distances));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                                                          android.R.layout.simple_spinner_item,
+                                                          getResources().getStringArray(
+                                                                  R.array.distances));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         training = (EditText) findViewById(R.id.training);
         customDist = findViewById(R.id.customDist);
@@ -131,9 +134,11 @@ public class EditRoundActivity extends ActionBarActivity {
             // Initialise with default values
             int distVal = prefs.getInt("distance", 10);
             int distanceInd = -1;
-            for (int j = 0; j < EditRoundActivity.distanceValues.length; j++)
-                if (EditRoundActivity.distanceValues[j] == distVal)
+            for (int j = 0; j < EditRoundActivity.distanceValues.length; j++) {
+                if (EditRoundActivity.distanceValues[j] == distVal) {
                     distanceInd = j;
+                }
+            }
             if (distanceInd == -1) {
                 distance.setVisibility(View.GONE);
                 customDist.setVisibility(View.VISIBLE);
@@ -186,10 +191,10 @@ public class EditRoundActivity extends ActionBarActivity {
             bow.setEnabled(false);
             arrow.setEnabled(false);
             target.setEnabled(false);
-            ((TextView)findViewById(R.id.label_ppp)).setTextColor(0xff444444);
-            ((TextView)findViewById(R.id.label_bow)).setTextColor(0xff444444);
-            ((TextView)findViewById(R.id.label_arrow)).setTextColor(0xff444444);
-            ((TextView)findViewById(R.id.label_target)).setTextColor(0xff444444);
+            ((TextView) findViewById(R.id.label_ppp)).setTextColor(0xff444444);
+            ((TextView) findViewById(R.id.label_bow)).setTextColor(0xff444444);
+            ((TextView) findViewById(R.id.label_arrow)).setTextColor(0xff444444);
+            ((TextView) findViewById(R.id.label_target)).setTextColor(0xff444444);
         }
         if (mTraining == -1) {
             training.setText(getString(R.string.training));
@@ -229,13 +234,14 @@ public class EditRoundActivity extends ActionBarActivity {
         if (bow.getAdapter().getCount() == 0 && mBowId == 0 && round.target == 3) {
             new AlertDialog.Builder(this).setTitle(R.string.title_compound)
                     .setMessage(R.string.msg_compound_type)
-                    .setPositiveButton(R.string.compound_bow, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            mBowId = -2;
-                            onSave();
-                        }
-                    })
+                    .setPositiveButton(R.string.compound_bow,
+                                       new DialogInterface.OnClickListener() {
+                                           @Override
+                                           public void onClick(DialogInterface dialog, int which) {
+                                               mBowId = -2;
+                                               onSave();
+                                           }
+                                       })
                     .setNegativeButton(R.string.other_bow, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -308,9 +314,10 @@ public class EditRoundActivity extends ActionBarActivity {
     @Override
     public void onBackPressed() {
         finish();
-        if (mCalledFromPasse)
+        if (mCalledFromPasse) {
             overridePendingTransition(R.anim.right_in_half, R.anim.left_out_complete);
-        else
+        } else {
             overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        }
     }
 }

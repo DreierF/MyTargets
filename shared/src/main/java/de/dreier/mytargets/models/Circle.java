@@ -47,13 +47,15 @@ public class Circle {
         mTextPaint.setTextSize(22 * density);
         mTextPaint.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
         mTextPaint.setTextSize(font_size * density);
-        can.drawText(Target.getStringByZone(target, zone), x, y + font_size * 7 * density / 22.0f, mTextPaint);
+        can.drawText(Target.getStringByZone(target, zone), x, y + font_size * 7 * density / 22.0f,
+                     mTextPaint);
 
         // Draw red circled + as indicator that this impact is commented
         if (comment) {
             circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
             circleColorP.setColor(0xFFFF0000);
-            can.drawCircle(x + rad * 0.8f * density, y - rad * 0.8f * density, 8 * density, circleColorP);
+            can.drawCircle(x + rad * 0.8f * density, y - rad * 0.8f * density, 8 * density,
+                           circleColorP);
             mTextPaint.setColor(0xFFFFFFFF);
             can.drawText("+", x + rad * 0.8f * density, y - rad * 0.4f * density, mTextPaint);
         }

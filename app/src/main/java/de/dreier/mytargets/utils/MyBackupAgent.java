@@ -20,6 +20,7 @@ public class MyBackupAgent extends BackupAgentHelper {
     public void onCreate() {
         addHelper(PREFS_BACKUP_KEY, new SharedPreferencesBackupHelper(this, PREFS));
         addHelper(SQLITE_BACKUP_KEY, new DbBackupHelper(this));
-        addHelper(IMAGES_BACKUP_KEY, new FileBackupHelper(this, DatabaseManager.getInstance(this).getImages()));
+        addHelper(IMAGES_BACKUP_KEY,
+                  new FileBackupHelper(this, DatabaseManager.getInstance(this).getImages()));
     }
 }

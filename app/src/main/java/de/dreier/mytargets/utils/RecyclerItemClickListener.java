@@ -10,7 +10,7 @@ import android.view.View;
 /**
  * Used for listening to RecyclerView item clicks. You can either implement an OnItemClickListener
  * or extend SimpleOnItemClickListener and override its methods.
- *
+ * <p/>
  * Licence: MIT
  *
  * @author Leo NikkilÃ¤ <hello@lnikki.la>

@@ -32,9 +32,11 @@ public class WearableListener extends WearableListenerService {
             if (data.length != 0) {
                 try {
                     Bundle bundle = WearableUtils.deserializeToBundle(data);
-                    WearableUtils.BitmapDataObject b = (WearableUtils.BitmapDataObject) bundle.getSerializable(WearableUtils.BUNDLE_IMAGE);
+                    WearableUtils.BitmapDataObject b = (WearableUtils.BitmapDataObject) bundle
+                            .getSerializable(WearableUtils.BUNDLE_IMAGE);
                     image = b.getBitmap();
-                    WearableUtils.NotificationInfo info = (WearableUtils.NotificationInfo) bundle.getSerializable(WearableUtils.BUNDLE_INFO);
+                    WearableUtils.NotificationInfo info = (WearableUtils.NotificationInfo) bundle
+                            .getSerializable(WearableUtils.BUNDLE_INFO);
                     showNotification(info);
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
@@ -64,8 +66,8 @@ public class WearableListener extends WearableListenerService {
         Notification page = new Notification.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .extend(new Notification.WearableExtender()
-                        .setCustomSizePreset(Notification.WearableExtender.SIZE_FULL_SCREEN)
-                        .setDisplayIntent(pendingIntent))
+                                .setCustomSizePreset(Notification.WearableExtender.SIZE_FULL_SCREEN)
+                                .setDisplayIntent(pendingIntent))
                 .build();
 
         // Create the ongoing notification
@@ -76,7 +78,7 @@ public class WearableListener extends WearableListenerService {
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setOngoing(true)
                         .extend(new Notification.WearableExtender()
-                                .addPage(page).setBackground(image));
+                                        .addPage(page).setBackground(image));
 
         // Build the notification and show it
         NotificationManager notificationManager =

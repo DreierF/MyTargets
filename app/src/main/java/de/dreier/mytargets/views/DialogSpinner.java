@@ -16,7 +16,8 @@ import de.dreier.mytargets.fragments.SpinnerDialogFragment;
 /**
  * Created by Florian on 23.02.2015.
  */
-public class DialogSpinner extends LinearLayout implements View.OnClickListener, SpinnerDialogFragment.SpinnerDialogListener {
+public class DialogSpinner extends LinearLayout
+        implements View.OnClickListener, SpinnerDialogFragment.SpinnerDialogListener {
 
     private ListAdapter adapter;
     private View mView;
@@ -41,10 +42,11 @@ public class DialogSpinner extends LinearLayout implements View.OnClickListener,
         this.adapter = adapter;
         this.resTitle = title;
         size = adapter.getCount();
-        if (size == 0)
+        if (size == 0) {
             currentItemId = 0;
-        else
+        } else {
             currentItemId = adapter.getItemId(0);
+        }
         updateView();
     }
 
@@ -111,7 +113,8 @@ public class DialogSpinner extends LinearLayout implements View.OnClickListener,
         bundle.putInt("add", resAddText);
         dialog.setArguments(bundle);
         dialog.setListener(this);
-        dialog.show(((ActionBarActivity) getContext()).getSupportFragmentManager(), "spinner_dialog");
+        dialog.show(((ActionBarActivity) getContext()).getSupportFragmentManager(),
+                    "spinner_dialog");
     }
 
     @Override

@@ -47,7 +47,8 @@ import de.dreier.mytargets.views.PassesView;
 /**
  * Shows all passes of one round
  */
-public class PasseFragment extends NowListFragment<Passe> implements ShareDialogFragment.ShareDialogListener, ObservableScrollViewCallbacks {
+public class PasseFragment extends NowListFragment<Passe>
+        implements ShareDialogFragment.ShareDialogListener, ObservableScrollViewCallbacks {
 
     private long mTraining;
     private long mRound;
@@ -109,7 +110,7 @@ public class PasseFragment extends NowListFragment<Passe> implements ShareDialog
         mActionBarSize = ToolbarUtils.getActionBarSize(activity);
         mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.ext_toolbar_round_height);
 
-        if(mRecyclerView.getAdapter() != null) {
+        if (mRecyclerView.getAdapter() != null) {
             mAdapter.setHeaderHeight(mHeaderHeight + mActionBarSize);
         }
         setList(db.getPasses(mRound), new PasseAdapter(mHeaderHeight + mActionBarSize));
@@ -131,7 +132,8 @@ public class PasseFragment extends NowListFragment<Passe> implements ShareDialog
                 mRoundInfo.distance + " - " +
                 getString(mRoundInfo.indoor ? R.string.indoor : R.string.outdoor) + "</b><br>" +
                 getString(R.string.points) + ": <b>" + reached + "/" + max + percent + "</b><br>" +
-                getString(R.string.target_round) + ": <b>" + TargetItemAdapter.targets[mRoundInfo.target] + "</b>";
+                getString(R.string.target_round) + ": <b>" +
+                TargetItemAdapter.targets[mRoundInfo.target] + "</b>";
         Bow bow = db.getBow(mRoundInfo.bow, true);
         if (bow != null) {
             infoText += "<br>" + getString(R.string.bow) +
@@ -146,12 +148,13 @@ public class PasseFragment extends NowListFragment<Passe> implements ShareDialog
             infoText += "<br>" + getString(R.string.comment) +
                     ": <b>" + TextUtils.htmlEncode(mRoundInfo.comment) + "</b>";
         }
-        infoText+="</font>";
+        infoText += "</font>";
         info.setText(Html.fromHtml(infoText));
 
         // Set number of X, 10, 9 shoots
         infoText = "<font color=#ffffff>X: <b>" + mRoundInfo.scoreCount[0] + "</b><br>" +
-                getString(R.string.ten_x) + ": <b>" + (mRoundInfo.scoreCount[0] + mRoundInfo.scoreCount[1]) + "</b><br>" +
+                getString(R.string.ten_x) + ": <b>" +
+                (mRoundInfo.scoreCount[0] + mRoundInfo.scoreCount[1]) + "</b><br>" +
                 getString(R.string.nine) + ": <b>" + mRoundInfo.scoreCount[2] + "</b></font>";
         score.setText(Html.fromHtml(infoText));
     }
@@ -207,30 +210,37 @@ public class PasseFragment extends NowListFragment<Passe> implements ShareDialog
         int reached = db.getRoundPoints(mRound);
         int maxP = mRoundInfo.ppp * max * db.getPasses(mRound).size();
         final String text = getString(R.string.my_share_text,
-                mRoundInfo.scoreCount[0], mRoundInfo.scoreCount[1], mRoundInfo.scoreCount[2], reached, maxP);
+                                      mRoundInfo.scoreCount[0], mRoundInfo.scoreCount[1],
+                                      mRoundInfo.scoreCount[2], reached, maxP);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    final File f = File.createTempFile("target", ".png", activity.getExternalCacheDir());
+                    final File f = File
+                            .createTempFile("target", ".png", activity.getExternalCacheDir());
                     if (dispersion_pattern && !scoreboard && !comments) {
                         new TargetImage().generateBitmap(activity, 800, mRoundInfo, mRound, f);
                     } else {
-                        new ScoreboardImage().generateBitmap(activity, mRound, scoreboard, dispersion_pattern, comments, f);
+                        new ScoreboardImage()
+                                .generateBitmap(activity, mRound, scoreboard, dispersion_pattern,
+                                                comments, f);
                     }
 
                     // Build and fire intent to ask for share provider
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                    if (include_text)
+                    if (include_text) {
                         shareIntent.putExtra(Intent.EXTRA_TEXT, text);
-                    if (dispersion_pattern || scoreboard || comments)
+                    }
+                    if (dispersion_pattern || scoreboard || comments) {
                         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
+                    }
                     shareIntent.setType("*/*");
                     startActivity(shareIntent);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Toast.makeText(activity, getString(R.string.sharing_failed), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, getString(R.string.sharing_failed), Toast.LENGTH_SHORT)
+                            .show();
                 }
             }
         }).start();
@@ -277,7 +287,8 @@ public class PasseFragment extends NowListFragment<Passe> implements ShareDialog
         int translationShadow = Math.max(mActionBarSize, mActionBarSize + mHeaderHeight - scrollY);
         ViewHelper.setTranslationY(mShadow, translationShadow);
         ViewHelper.setTranslationY(mHeader, mActionBarSize - scrollY);
-        ViewHelper.setAlpha(mDetails, ScrollUtils.getFloat((float) (mHeaderHeight - scrollY * 2) / mHeaderHeight, 0, 1));
+        ViewHelper.setAlpha(mDetails, ScrollUtils
+                .getFloat((float) (mHeaderHeight - scrollY * 2) / mHeaderHeight, 0, 1));
     }
 
     @Override

@@ -13,7 +13,6 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.DonationAdapter;
 
 /**

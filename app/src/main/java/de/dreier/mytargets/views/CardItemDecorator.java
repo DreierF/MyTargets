@@ -17,8 +17,10 @@ public class CardItemDecorator extends RecyclerView.ItemDecoration {
     private final int spaceVertical;
 
     public CardItemDecorator(Context context) {
-        this.spaceHorizontal = (int)context.getResources().getDimension(R.dimen.card_padding_horizontal);
-        this.spaceVertical = (int)context.getResources().getDimension(R.dimen.card_padding_vertical);
+        this.spaceHorizontal = (int) context.getResources()
+                .getDimension(R.dimen.card_padding_horizontal);
+        this.spaceVertical = (int) context.getResources()
+                .getDimension(R.dimen.card_padding_vertical);
     }
 
     @Override
@@ -28,7 +30,8 @@ public class CardItemDecorator extends RecyclerView.ItemDecoration {
         outRect.bottom = spaceVertical;
 
         // Add top margin only for the first item to avoid double space between items
-        if(parent.getChildPosition(view) == 0 && !(parent instanceof ObservableRecyclerView))
+        if (parent.getChildPosition(view) == 0 && !(parent instanceof ObservableRecyclerView)) {
             outRect.top = spaceVertical;
+        }
     }
 }

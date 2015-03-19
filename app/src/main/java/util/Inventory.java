@@ -25,27 +25,36 @@ import java.util.Map;
  * An Inventory is returned by such methods as {@link IabHelper#queryInventory}.
  */
 public class Inventory {
-    final Map<String,SkuDetails> mSkuMap = new HashMap<String,SkuDetails>();
-    final Map<String,Purchase> mPurchaseMap = new HashMap<String,Purchase>();
+    final Map<String, SkuDetails> mSkuMap = new HashMap<String, SkuDetails>();
+    final Map<String, Purchase> mPurchaseMap = new HashMap<String, Purchase>();
 
-    Inventory() { }
+    Inventory() {
+    }
 
-    /** Returns the listing details for an in-app product. */
+    /**
+     * Returns the listing details for an in-app product.
+     */
     public SkuDetails getSkuDetails(String sku) {
         return mSkuMap.get(sku);
     }
 
-    /** Returns purchase information for a given product, or null if there is no purchase. */
+    /**
+     * Returns purchase information for a given product, or null if there is no purchase.
+     */
     public Purchase getPurchase(String sku) {
         return mPurchaseMap.get(sku);
     }
 
-    /** Returns whether or not there exists a purchase of the given product. */
+    /**
+     * Returns whether or not there exists a purchase of the given product.
+     */
     public boolean hasPurchase(String sku) {
         return mPurchaseMap.containsKey(sku);
     }
 
-    /** Return whether or not details about the given product are available. */
+    /**
+     * Return whether or not details about the given product are available.
+     */
     public boolean hasDetails(String sku) {
         return mSkuMap.containsKey(sku);
     }
@@ -59,24 +68,34 @@ public class Inventory {
      * a new Inventory.
      */
     public void erasePurchase(String sku) {
-        if (mPurchaseMap.containsKey(sku)) mPurchaseMap.remove(sku);
+        if (mPurchaseMap.containsKey(sku)) {
+            mPurchaseMap.remove(sku);
+        }
     }
 
-    /** Returns a list of all owned product IDs. */
+    /**
+     * Returns a list of all owned product IDs.
+     */
     List<String> getAllOwnedSkus() {
         return new ArrayList<String>(mPurchaseMap.keySet());
     }
 
-    /** Returns a list of all owned product IDs of a given type */
+    /**
+     * Returns a list of all owned product IDs of a given type
+     */
     List<String> getAllOwnedSkus(String itemType) {
         List<String> result = new ArrayList<String>();
         for (Purchase p : mPurchaseMap.values()) {
-            if (p.getItemType().equals(itemType)) result.add(p.getSku());
+            if (p.getItemType().equals(itemType)) {
+                result.add(p.getSku());
+            }
         }
         return result;
     }
 
-    /** Returns a list of all purchases. */
+    /**
+     * Returns a list of all purchases.
+     */
     List<Purchase> getAllPurchases() {
         return new ArrayList<Purchase>(mPurchaseMap.values());
     }

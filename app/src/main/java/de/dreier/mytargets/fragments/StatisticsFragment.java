@@ -30,7 +30,8 @@ public class StatisticsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_statistics, container, false);
+        ViewGroup rootView = (ViewGroup) inflater
+                .inflate(R.layout.fragment_statistics, container, false);
 
         int pos = getArguments().getInt(ARG_POSITION, 0);
         mTraining = getArguments().getLong(ARG_TRAINING_ID, 0);
@@ -73,8 +74,9 @@ public class StatisticsFragment extends Fragment {
         LinearSeries series = new LinearSeries();
 
         int x = 0;
-        for (Integer percent : list)
-                series.addPoint(new LinearPoint(x++, (long) 100-percent));
+        for (Integer percent : list) {
+            series.addPoint(new LinearPoint(x++, (long) 100 - percent));
+        }
         chartView.setRoundInfo(null);
         return series;
     }
@@ -86,8 +88,9 @@ public class StatisticsFragment extends Fragment {
         LinearSeries series = new LinearSeries();
 
         int x = 0;
-        for (Integer percent : list)
-            series.addPoint(new LinearPoint(x++, (long) 100-percent));
+        for (Integer percent : list) {
+            series.addPoint(new LinearPoint(x++, (long) 100 - percent));
+        }
         chartView.setRoundInfo(null);
         return series;
     }
@@ -100,9 +103,11 @@ public class StatisticsFragment extends Fragment {
         LinearSeries series = new LinearSeries();
 
         int x = 0;
-        for (Passe passe : passes)
-            for (Shot shot : passe.shot)
+        for (Passe passe : passes) {
+            for (Shot shot : passe.shot) {
                 series.addPoint(new LinearPoint(x++, (long) shot.zone));
+            }
+        }
         chartView.setRoundInfo(r);
         return series;
     }
@@ -122,8 +127,9 @@ public class StatisticsFragment extends Fragment {
             sum_y += y[n];
             n++;
         }
-        if (n < 1)
+        if (n < 1) {
             return null;
+        }
 
         double x_bar = sum_x / n;
         double y_bar = sum_y / n;

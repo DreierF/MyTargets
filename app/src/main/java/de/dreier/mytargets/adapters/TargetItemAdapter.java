@@ -15,12 +15,14 @@ public class TargetItemAdapter extends BaseAdapter {
     public static final String[] targets = {"WA", "WA Spot 5-10", "WA Spot 6-10", "WA 3er Spot",
             "WA Field", "DFBV Spiegel", "DFBV Spiegel Spot", "DFBV Field"};
 
-    private static final int[] targets_drawable = {R.drawable.wa, R.drawable.wa_spot_5, R.drawable.wa_spot_6, R.drawable.wa_spot_6,
-            R.drawable.wa_field, R.drawable.dfbv_spiegel, R.drawable.dfbv_spiegel_spot, R.drawable.dfbv_field};
+    private static final int[] targets_drawable = {R.drawable.wa, R.drawable.wa_spot_5,
+            R.drawable.wa_spot_6, R.drawable.wa_spot_6,
+            R.drawable.wa_field, R.drawable.dfbv_spiegel, R.drawable.dfbv_spiegel_spot,
+            R.drawable.dfbv_field};
 
-	public TargetItemAdapter(Context context) {
+    public TargetItemAdapter(Context context) {
         mContext = context;
-	}
+    }
 
     @Override
     public int getCount() {
@@ -38,19 +40,19 @@ public class TargetItemAdapter extends BaseAdapter {
     }
 
     @Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View v = convertView;
-		if (v == null) {
-			LayoutInflater vi = (LayoutInflater) mContext.getSystemService(
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View v = convertView;
+        if (v == null) {
+            LayoutInflater vi = (LayoutInflater) mContext.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(R.layout.image_item, parent, false);
-		}
+            v = vi.inflate(R.layout.image_item, parent, false);
+        }
 
         ImageView img = (ImageView) v.findViewById(R.id.image);
         TextView desc = (TextView) v.findViewById(R.id.name);
 
         img.setImageDrawable(mContext.getResources().getDrawable(targets_drawable[position]));
         desc.setText(targets[position]);
-		return v;
-	}
+        return v;
+    }
 }

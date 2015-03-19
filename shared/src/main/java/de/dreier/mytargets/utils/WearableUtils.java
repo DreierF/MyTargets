@@ -56,7 +56,8 @@ public class WearableUtils {
         return out.toByteArray();
     }
 
-    public static NotificationInfo deserializeToInfo(byte[] data) throws IOException, ClassNotFoundException {
+    public static NotificationInfo deserializeToInfo(byte[] data)
+            throws IOException, ClassNotFoundException {
         ByteArrayInputStream in = new ByteArrayInputStream(data);
         ObjectInputStream is = new ObjectInputStream(in);
         return (NotificationInfo) is.readObject();
@@ -68,7 +69,8 @@ public class WearableUtils {
         return (Passe) is.readObject();
     }
 
-    public static Bundle deserializeToBundle(byte[] data) throws IOException, ClassNotFoundException {
+    public static Bundle deserializeToBundle(byte[] data)
+            throws IOException, ClassNotFoundException {
         ByteArrayInputStream in = new ByteArrayInputStream(data);
         ObjectInputStream is = new ObjectInputStream(in);
         Bundle bundle = new Bundle();
@@ -79,16 +81,14 @@ public class WearableUtils {
 
     public static class NotificationInfo implements Serializable {
         static final long serialVersionUID = 43L;
-
+        public String title;
+        public String text;
+        public Round round;
         public NotificationInfo(Round round, String title, String text) {
             this.round = round;
             this.title = title;
             this.text = text;
         }
-
-        public String title;
-        public String text;
-        public Round round;
     }
 
     public static class BitmapDataObject implements Serializable {

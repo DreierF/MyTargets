@@ -117,7 +117,8 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
 
         // If a valid selection was made save it in the passe
-        if (currentArrow < roundInfo.ppp && (mPasse.shot[currentArrow].zone != shot.zone || !mModeEasy)) {
+        if (currentArrow < roundInfo.ppp &&
+                (mPasse.shot[currentArrow].zone != shot.zone || !mModeEasy)) {
             mPasse.shot[currentArrow].zone = shot.zone;
             mPasse.shot[currentArrow].x = shot.x;
             mPasse.shot[currentArrow].y = shot.y;
@@ -158,8 +159,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         });
         selectionAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
-            public void onAnimationEnd(Animator animation)
-            {
+            public void onAnimationEnd(Animator animation) {
                 selectionAnimator = null;
                 currentArrow = i;
                 mCurSelecting = -1;

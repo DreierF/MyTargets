@@ -22,7 +22,9 @@ import de.dreier.mytargets.models.OnTargetSetListener;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.utils.WearableUtils;
 
-public class WearMessageManager implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, MessageApi.MessageListener {
+public class WearMessageManager
+        implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        MessageApi.MessageListener {
 
     private static final String TAG = "wearMessageManager";
     private final OnTargetSetListener mListener;
@@ -41,8 +43,9 @@ public class WearMessageManager implements GoogleApiClient.ConnectionCallbacks, 
                 .build();
         mGoogleApiClient.connect();
 
-        if (!(context instanceof OnTargetSetListener))
+        if (!(context instanceof OnTargetSetListener)) {
             throw new ClassCastException();
+        }
 
         mListener = (OnTargetSetListener) context;
     }
@@ -58,7 +61,8 @@ public class WearMessageManager implements GoogleApiClient.ConnectionCallbacks, 
 
     Collection<String> getNodes() {
         HashSet<String> results = new HashSet<>();
-        NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
+        NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient)
+                .await();
         if (nodes != null) {
             for (Node node : nodes.getNodes()) {
                 results.add(node.getId());

@@ -44,7 +44,8 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.utils.BitmapUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
-public abstract class EditWithImageActivity extends ActionBarActivity implements ObservableScrollViewCallbacks {
+public abstract class EditWithImageActivity extends ActionBarActivity
+        implements ObservableScrollViewCallbacks {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int SELECT_PICTURE = 2;
@@ -99,8 +100,10 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
 
         // Load values used for image animation
-        mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
-        mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
+        mFlexibleSpaceImageHeight = getResources()
+                .getDimensionPixelSize(R.dimen.flexible_space_image_height);
+        mFlexibleSpaceShowFabOffset = getResources()
+                .getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
         mLeftSpace = getResources().getDimensionPixelSize(R.dimen.left_space_title_toolbar);
         mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
         mActionBarSize = ToolbarUtils.getActionBarSize(this);
@@ -150,16 +153,20 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
         } else {
             if (imageBitmap == null) {
                 mImageView.setImageResource(defaultDrawable);
-                mImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        if (imageBitmap == null) {
-                            int width = mImageView.getMeasuredWidth();
-                            int height = mImageView.getMeasuredHeight();
-                            imageBitmap = BitmapUtils.decodeSampledBitmapFromRes(EditWithImageActivity.this, defaultDrawable, width, height);
-                        }
-                    }
-                });
+                mImageView.getViewTreeObserver()
+                        .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
+                                if (imageBitmap == null) {
+                                    int width = mImageView.getMeasuredWidth();
+                                    int height = mImageView.getMeasuredHeight();
+                                    imageBitmap = BitmapUtils
+                                            .decodeSampledBitmapFromRes(EditWithImageActivity.this,
+                                                                        defaultDrawable, width,
+                                                                        height);
+                                }
+                            }
+                        });
             }
         }
     }
@@ -191,11 +198,14 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
         // Translate overlay and image
         float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
         int minOverlayTransitionY = mActionBarSize - mOverlayView.getHeight();
-        ViewHelper.setTranslationY(mOverlayView, ScrollUtils.getFloat(-scrollY, minOverlayTransitionY, 0));
-        ViewHelper.setTranslationY(mImageContainer, ScrollUtils.getFloat(-scrollY / 2, minOverlayTransitionY, 0));
+        ViewHelper.setTranslationY(mOverlayView,
+                                   ScrollUtils.getFloat(-scrollY, minOverlayTransitionY, 0));
+        ViewHelper.setTranslationY(mImageContainer,
+                                   ScrollUtils.getFloat(-scrollY / 2, minOverlayTransitionY, 0));
 
         // Change alpha of overlay
-        ViewHelper.setAlpha(mOverlayView, ScrollUtils.getFloat((float) scrollY / flexibleRange, 0, 1));
+        ViewHelper.setAlpha(mOverlayView,
+                            ScrollUtils.getFloat((float) scrollY / flexibleRange, 0, 1));
 
         // Scale title text
         float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0, 0.3f);
@@ -205,10 +215,12 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
         ViewHelper.setScaleY(mTitleView, scale);
 
         // Translate title text
-        int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - mTitleView.getHeight() * scale);
+        int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight -
+                mTitleView.getHeight() * scale);
         int titleTranslationY = maxTitleTranslationY - scrollY;
         titleTranslationY = Math.max(0, titleTranslationY);
-        float scale2 = ScrollUtils.getFloat((scrollY - flexibleRange + mActionBarSize) / (mActionBarSize), 0, 1);
+        float scale2 = ScrollUtils
+                .getFloat((scrollY - flexibleRange + mActionBarSize) / (mActionBarSize), 0, 1);
         ViewHelper.setTranslationX(mTitleView, (scale2 * mLeftSpace));
         ViewHelper.setTranslationY(mTitleView, titleTranslationY);
 
@@ -226,7 +238,8 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
             lp.topMargin = (int) fabTranslationY;
             mFab.requestLayout();
         } else {
-            ViewHelper.setTranslationX(mFab, mOverlayView.getWidth() - mFabMargin - mFab.getWidth());
+            ViewHelper
+                    .setTranslationX(mFab, mOverlayView.getWidth() - mFabMargin - mFab.getWidth());
             ViewHelper.setTranslationY(mFab, fabTranslationY);
         }
 
@@ -284,7 +297,8 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent,
-                        getString(R.string.select_picture)), SELECT_PICTURE);
+                                                            getString(R.string.select_picture)),
+                                       SELECT_PICTURE);
                 return true;
             case R.id.action_take_picture:
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -331,8 +345,12 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
                         f.delete();
                     }
 
-                    imageBitmap = BitmapUtils.decodeSampledBitmapFromStream(EditWithImageActivity.this, params[0], mImageView.getWidth(), mImageView.getHeight());
-                    File f = File.createTempFile(params[0].getLastPathSegment(), null, getFilesDir());
+                    imageBitmap = BitmapUtils
+                            .decodeSampledBitmapFromStream(EditWithImageActivity.this, params[0],
+                                                           mImageView.getWidth(),
+                                                           mImageView.getHeight());
+                    File f = File
+                            .createTempFile(params[0].getLastPathSegment(), null, getFilesDir());
                     FileOutputStream out = new FileOutputStream(f);
                     imageBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
                     mImageFile = f.getName();
@@ -345,8 +363,9 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
 
             @Override
             protected void onPostExecute(Boolean success) {
-                if (success)
+                if (success) {
                     mImageView.setImageBitmap(imageBitmap);
+                }
                 mImageProgress.setVisibility(View.GONE);
             }
         }.execute(selectedImageUri);
@@ -377,7 +396,7 @@ public abstract class EditWithImageActivity extends ActionBarActivity implements
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
         return new File(mediaStorageDir.getPath() + File.separator +
-                "IMG_" + timeStamp + ".jpg");
+                                "IMG_" + timeStamp + ".jpg");
     }
 
     @Override

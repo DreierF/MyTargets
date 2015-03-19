@@ -43,8 +43,9 @@ public class RoundFragment extends NowListFragment<Round> {
         if (savedInstanceState != null) {
             mTraining = savedInstanceState.getLong(TRAINING_ID, -1);
         }
-        if (mTraining == -1)
+        if (mTraining == -1) {
             throw new IllegalStateException();
+        }
 
         Training tr = db.getTraining(mTraining);
         ActionBar actionBar = activity.getSupportActionBar();
@@ -140,7 +141,8 @@ public class RoundFragment extends NowListFragment<Round> {
         public void bindCursor() {
             Context context = mTitle.getContext();
             mTitle.setText(context.getString(R.string.round) + " " + (1 + getPosition()));
-            mSubtitle.setText(mItem.distance + " - " + context.getString(mItem.indoor ? R.string.indoor : R.string.outdoor));
+            mSubtitle.setText(mItem.distance + " - " + context.getString(
+                    mItem.indoor ? R.string.indoor : R.string.outdoor));
             mGes.setText(mItem.reachedPoints + "/" + mItem.maxPoints);
         }
     }

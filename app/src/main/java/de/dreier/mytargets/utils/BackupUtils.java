@@ -42,8 +42,9 @@ public class BackupUtils {
         AlertDialog.Builder builder = new AlertDialog.Builder(a);
         try {
             InputStream st = a.getContentResolver().openInputStream(uri);
-            if (!DatabaseManager.Import(a, st))
+            if (!DatabaseManager.Import(a, st)) {
                 throw new IllegalStateException();
+            }
 
             Toast.makeText(a, R.string.import_successful, Toast.LENGTH_SHORT).show();
             return true;
@@ -66,7 +67,8 @@ public class BackupUtils {
                 android.os.Environment.MEDIA_MOUNTED)) {
             GregorianCalendar c = new GregorianCalendar();
 
-            String dir = Environment.getExternalStorageDirectory().toString() + "/" + FOLDER_NAME + "/";
+            String dir =
+                    Environment.getExternalStorageDirectory().toString() + "/" + FOLDER_NAME + "/";
             String file = dir + "backup_" + c.get(Calendar.YEAR) + "_"
                     + (c.get(Calendar.MONTH) + 1) + "_" + c.get(Calendar.DATE)
                     + ".zip";
@@ -121,7 +123,8 @@ public class BackupUtils {
         String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");
-        String fileName = "/" + FOLDER_NAME + "/exported_data_" + format.format(new Date()) + ".csv";
+        String fileName =
+                "/" + FOLDER_NAME + "/exported_data_" + format.format(new Date()) + ".csv";
         File file = new File(baseDir + fileName);
         db.exportAll(file);
         return Uri.fromFile(file);

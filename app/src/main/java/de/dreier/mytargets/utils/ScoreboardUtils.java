@@ -32,7 +32,8 @@ public class ScoreboardUtils {
 
         if (scoreboard) {
             html += "<table class=\"myTable\"><tr>" +
-                    "<th colspan=\"" + info.ppp + "\">" + context.getString(R.string.arrows) + "</th>" +
+                    "<th colspan=\"" + info.ppp + "\">" + context.getString(R.string.arrows) +
+                    "</th>" +
                     "<th rowspan=\"2\" colspan=\"2\">" + context.getString(R.string.sum) + "</th>" +
                     "<th rowspan=\"2\">" + context.getString(R.string.carry) + "</th>" +
                     "</tr><tr>";
@@ -112,7 +113,9 @@ public class ScoreboardUtils {
                     if (!TextUtils.isEmpty(shot.comment)) {
                         comments += "<tr><td>" + i + "</td>" +
                                 "<td>" + Target.getStringByZone(info.target, shot.zone) + "</td>" +
-                                "<td>" + TextUtils.htmlEncode(shot.comment).replace("\n", "<br />") + "</td></tr>";
+                                "<td>" +
+                                TextUtils.htmlEncode(shot.comment).replace("\n", "<br />") +
+                                "</td></tr>";
                         commentsCount++;
                     }
                 }
@@ -133,7 +136,8 @@ public class ScoreboardUtils {
             byte[] byteArray = byteArrayOutputStream.toByteArray();
             String imageBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
             String image = "data:image/png;base64," + imageBase64;
-            html += "<div align='center' style=\"padding: 20px;\"><img src='" + image + "' width='60%' /></div>";
+            html += "<div align='center' style=\"padding: 20px;\"><img src='" + image +
+                    "' width='60%' /></div>";
         }
 
         html += "</html>";

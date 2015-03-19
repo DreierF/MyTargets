@@ -137,8 +137,11 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_switch_mode).setIcon(mMode ? R.drawable.ic_target_exact_24dp : R.drawable.ic_target_zone_24dp);
-        menu.findItem(R.id.action_show_all).setIcon(mShowAllMode ? R.drawable.ic_visibility_off_white_24dp : R.drawable.ic_visibility_white_24dp);
+        menu.findItem(R.id.action_switch_mode)
+                .setIcon(mMode ? R.drawable.ic_target_exact_24dp : R.drawable.ic_target_zone_24dp);
+        menu.findItem(R.id.action_show_all).setIcon(
+                mShowAllMode ? R.drawable.ic_visibility_off_white_24dp :
+                        R.drawable.ic_visibility_white_24dp);
         return true;
     }
 
@@ -213,8 +216,9 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
         if (curPasse > savedPasses || remote) {
             savedPasses++;
             manager.sendMessage(buildInfo());
-            if (remote)
+            if (remote) {
                 curPasse = savedPasses + 1;
+            }
         } else if (curPasse == savedPasses) {
             manager.sendMessage(buildInfo());
         }

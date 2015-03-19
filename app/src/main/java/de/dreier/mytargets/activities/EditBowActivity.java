@@ -148,8 +148,9 @@ public class EditBowActivity extends EditWithImageActivity {
             tiller.setText(bow.tiller);
             desc.setText(bow.description);
             imageBitmap = bow.image;
-            if (imageBitmap != null)
+            if (imageBitmap != null) {
                 mImageView.setImageBitmap(imageBitmap);
+            }
             mImageFile = bow.imageFile;
             switch (bow.type) {
                 case 0:
@@ -277,7 +278,9 @@ public class EditBowActivity extends EditWithImageActivity {
             }
         });
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.distances));
+                                                          android.R.layout.simple_spinner_item,
+                                                          getResources().getStringArray(
+                                                                  R.array.distances));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         setting.distance.setAdapter(adapter);
         if (setting.distanceInd == -1) {
@@ -314,28 +317,30 @@ public class EditBowActivity extends EditWithImageActivity {
         bow.tiller = tiller.getTextString();
         bow.description = desc.getTextString();
 
-        if (recurveBow.isChecked())
+        if (recurveBow.isChecked()) {
             bow.type = 0;
-        else if (compoundBow.isChecked())
+        } else if (compoundBow.isChecked()) {
             bow.type = 1;
-        else if (longBow.isChecked())
+        } else if (longBow.isChecked()) {
             bow.type = 2;
-        else if (blank.isChecked())
+        } else if (blank.isChecked()) {
             bow.type = 3;
-        else if (horse.isChecked())
+        } else if (horse.isChecked()) {
             bow.type = 4;
-        else if (yumi.isChecked())
+        } else if (yumi.isChecked()) {
             bow.type = 5;
-        else
+        } else {
             bow.type = 0;
+        }
 
         bow.imageFile = mImageFile;
         bow.image = imageBitmap;
 
         mBowId = db.updateBow(bow);
 
-        for (SightSetting set : sightSettingsList)
+        for (SightSetting set : sightSettingsList) {
             set.update();
+        }
 
         db.updateSightSettings(mBowId, sightSettingsList);
         finish();
@@ -350,8 +355,9 @@ public class EditBowActivity extends EditWithImageActivity {
         outState.putString("height", height.getTextString());
         outState.putString("tiller", tiller.getTextString());
         outState.putString("desc", desc.getTextString());
-        for (SightSetting set : sightSettingsList)
+        for (SightSetting set : sightSettingsList) {
             set.update();
+        }
         outState.putParcelableArrayList("settings", sightSettingsList);
     }
 }

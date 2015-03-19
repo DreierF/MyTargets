@@ -39,7 +39,8 @@ import util.Purchase;
 /**
  * Shows an overview over all trying days
  */
-public class MainActivity extends ActionBarActivity implements DonateDialogFragment.DonationListener {
+public class MainActivity extends ActionBarActivity
+        implements DonateDialogFragment.DonationListener {
 
     private static final String TAG = "main";
     private static boolean shownThisTime = false;
@@ -74,7 +75,9 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
                 Log.d(TAG, "Setup finished.");
 
                 // Have we been disposed of in the meantime? If so, quit.
-                if (mHelper == null) return;
+                if (mHelper == null) {
+                    return;
+                }
 
                 if (!result.isSuccess()) {
                     // Oh noes, there was a problem.
@@ -83,7 +86,8 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
                 }
 
                 mInfiniteSupported = mHelper.subscriptionsSupported();
-                mHelper.queryInventoryAsync(true, DonateDialogFragment.donations, mGotInventoryListener);
+                mHelper.queryInventoryAsync(true, DonateDialogFragment.donations,
+                                            mGotInventoryListener);
             }
         });
     }
@@ -97,7 +101,8 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
         supportedLanguages.add("ru");
         supportedLanguages.add("nl");
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        final SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(MainActivity.this);
         boolean shown = prefs.getBoolean("translation_dialog_shown", false);
 
         String longLang = Locale.getDefault().getDisplayLanguage();
@@ -105,10 +110,11 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
         if (!supportedLanguages.contains(shortLocale) && !shown && !shownThisTime) {
             // Link the e-mail address in the message
             final SpannableString s = new SpannableString(Html.fromHtml("If you would like " +
-                    "to help make MyTargets even better by translating the app to " +
-                    longLang + ", please send me an E-Mail (dreier.florian@gmail.com) " +
-                    "so I can give you access to the translation file!<br /><br />" +
-                    "Thanks in advance :)"));
+                                                                                "to help make MyTargets even better by translating the app to " +
+                                                                                longLang +
+                                                                                ", please send me an E-Mail (dreier.florian@gmail.com) " +
+                                                                                "so I can give you access to the translation file!<br /><br />" +
+                                                                                "Thanks in advance :)"));
             Linkify.addLinks(s, Linkify.EMAIL_ADDRESSES);
             AlertDialog d = new AlertDialog.Builder(this).setTitle("App translation")
                     .setMessage(s)
@@ -127,7 +133,8 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
                         }
                     }).create();
             d.show();
-            ((TextView) d.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+            ((TextView) d.findViewById(android.R.id.message))
+                    .setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
 
@@ -149,13 +156,15 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
                             Intent email = new Intent(Intent.ACTION_SEND);
                             email.putExtra(Intent.EXTRA_STREAM, uri);
                             email.setType("text/csv");
-                            startActivity(Intent.createChooser(email, getString(R.string.send_exported)));
+                            startActivity(
+                                    Intent.createChooser(email, getString(R.string.send_exported)));
                         } catch (IOException e) {
                             e.printStackTrace();
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(MainActivity.this, R.string.exporting_failed, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MainActivity.this, R.string.exporting_failed,
+                                                   Toast.LENGTH_LONG).show();
                                 }
                             });
                         }
@@ -167,11 +176,13 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
                 return true;
             case R.id.action_import:
                 Intent getContentIntent = FileUtils.createGetContentIntent();
-                Intent intent = Intent.createChooser(getContentIntent, getString(R.string.select_a_file));
+                Intent intent = Intent
+                        .createChooser(getContentIntent, getString(R.string.select_a_file));
                 startActivityForResult(intent, 1);
                 return true;
             case R.id.action_donate:
-                DonateDialogFragment newFragment = DonateDialogFragment.newInstance(mInfiniteSupported, mSubscribedToInfinite);
+                DonateDialogFragment newFragment = DonateDialogFragment
+                        .newInstance(mInfiniteSupported, mSubscribedToInfinite);
                 newFragment.show(getSupportFragmentManager(), "dialog");
                 return true;
         }
@@ -211,7 +222,9 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
             Log.d(TAG, "Query inventory finished.");
 
             // Have we been disposed of in the meantime? If so, quit.
-            if (mHelper == null) return;
+            if (mHelper == null) {
+                return;
+            }
 
             // Is it a failure?
             if (result.isFailure()) {
@@ -220,8 +233,10 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
             }
 
             // Do we have the infinite subscription
-            Purchase infinitePurchase = inventory.getPurchase(DonateDialogFragment.DONATION_INFINITE);
-            mSubscribedToInfinite = infinitePurchase != null && infinitePurchase.getOrderId() != null;
+            Purchase infinitePurchase = inventory
+                    .getPurchase(DonateDialogFragment.DONATION_INFINITE);
+            mSubscribedToInfinite =
+                    infinitePurchase != null && infinitePurchase.getOrderId() != null;
 
             for (String sku : DonateDialogFragment.donations) {
                 Purchase purchase = inventory.getPurchase(sku);
@@ -229,8 +244,9 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
 
                 // If consumption failed last time try it again
                 if (purchase != null && !sku.equals(DonateDialogFragment.DONATION_INFINITE)) {
-                    if (purchase.getOrderId() != null)
+                    if (purchase.getOrderId() != null) {
                         mHelper.consumeAsync(inventory.getPurchase(sku), mConsumeFinishedListener);
+                    }
                 }
             }
         }
@@ -240,11 +256,11 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
     public void onDonate(int position) {
         if (position < 4) {
             mHelper.launchPurchaseFlow(this, DonateDialogFragment.donations.get(position),
-                    RC_REQUEST, mPurchaseFinishedListener, "");
+                                       RC_REQUEST, mPurchaseFinishedListener, "");
         } else {
             mHelper.launchPurchaseFlow(this, DonateDialogFragment.donations.get(position),
-                    IabHelper.ITEM_TYPE_SUBS,
-                    RC_REQUEST, mPurchaseFinishedListener, "");
+                                       IabHelper.ITEM_TYPE_SUBS,
+                                       RC_REQUEST, mPurchaseFinishedListener, "");
         }
     }
 
@@ -253,7 +269,9 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
         public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
 
             // if we were disposed of in the meantime, quit.
-            if (mHelper == null) return;
+            if (mHelper == null) {
+                return;
+            }
 
             if (result.isFailure()) {
                 Log.d(TAG, "Error purchasing: " + result);
@@ -264,7 +282,8 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
                 mHelper.consumeAsync(purchase, mConsumeFinishedListener);
             }
 
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+            SharedPreferences prefs = PreferenceManager
+                    .getDefaultSharedPreferences(MainActivity.this);
             prefs.edit().putBoolean("donated", true).apply();
 
             new AlertDialog.Builder(MainActivity.this)
@@ -278,10 +297,13 @@ public class MainActivity extends ActionBarActivity implements DonateDialogFragm
     // Called when consumption is complete
     private final IabHelper.OnConsumeFinishedListener mConsumeFinishedListener = new IabHelper.OnConsumeFinishedListener() {
         public void onConsumeFinished(Purchase purchase, IabResult result) {
-            if (mHelper == null) return;
+            if (mHelper == null) {
+                return;
+            }
 
-            if (!result.isSuccess())
+            if (!result.isSuccess()) {
                 Log.d(TAG, "Error while consuming: " + result);
+            }
 
         }
     };

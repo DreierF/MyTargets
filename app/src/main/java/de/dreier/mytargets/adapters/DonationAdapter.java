@@ -59,7 +59,8 @@ public class DonationAdapter extends BaseAdapter {
         TextView price = (TextView) convertView.findViewById(R.id.price);
         if (position == 4) {
             price.setText(mContext.getString(R.string.monthly,
-                    DonateDialogFragment.prices.get(DonateDialogFragment.DONATION_INFINITE)));
+                                             DonateDialogFragment.prices
+                                                     .get(DonateDialogFragment.DONATION_INFINITE)));
         } else if (position < 4) {
             String sku = DonateDialogFragment.donations.get(position);
             price.setText(DonateDialogFragment.prices.get(sku));

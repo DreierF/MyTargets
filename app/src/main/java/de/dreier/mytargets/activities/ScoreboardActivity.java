@@ -72,7 +72,8 @@ public class ScoreboardActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_scoreboard, menu);
         menu.findItem(R.id.action_print).setVisible(pageLoaded &&
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT);
+                                                            Build.VERSION.SDK_INT >=
+                                                                    Build.VERSION_CODES.KITKAT);
         return true;
     }
 

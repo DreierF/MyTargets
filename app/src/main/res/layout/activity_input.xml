@@ -34,19 +34,19 @@
 
         <Button
             android:id="@+id/prev_button"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:minHeight="48dp"
             android:text="@string/prev" />
 
         <Button
             android:id="@+id/next_button"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:minHeight="48dp"
             android:text="@string/next" />
     </LinearLayout>

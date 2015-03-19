@@ -116,8 +116,8 @@
 
 
                 <TextView
-                    style="@style/Label"
                     android:id="@+id/label_ppp"
+                    style="@style/Label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -153,8 +153,8 @@
                 </RadioGroup>
 
                 <TextView
-                    style="@style/Label"
                     android:id="@+id/label_bow"
+                    style="@style/Label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -182,8 +182,8 @@
                 </de.dreier.mytargets.views.DialogSpinner>
 
                 <TextView
-                    style="@style/Label"
                     android:id="@+id/label_arrow"
+                    style="@style/Label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -211,8 +211,8 @@
                 </de.dreier.mytargets.views.DialogSpinner>
 
                 <TextView
-                    style="@style/Label"
                     android:id="@+id/label_target"
+                    style="@style/Label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"

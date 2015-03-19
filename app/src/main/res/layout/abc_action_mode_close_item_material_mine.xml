@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2014 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2014 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,13 +13,12 @@
      limitations under the License.
 -->
 
-<ImageView
-             xmlns:android="http://schemas.android.com/apk/res/android"
-             android:id="@+id/action_mode_close_button"
-             android:contentDescription="@string/abc_action_mode_done"
-             android:focusable="true"
-             android:clickable="true"
-             android:src="@drawable/ic_arrow_back_white_24dp"
-             style="?attr/actionModeCloseButtonStyle"
-             android:layout_width="wrap_content"
-             android:layout_height="match_parent" />
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/action_mode_close_button"
+    style="?attr/actionModeCloseButtonStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:contentDescription="@string/abc_action_mode_done"
+    android:focusable="true"
+    android:src="@drawable/ic_arrow_back_white_24dp" />

@@ -33,34 +33,34 @@ public class SpinnerDialogFragment extends DialogFragment {
         int add = getArguments().getInt("add");
         if (add != 0) {
             builderSingle.setPositiveButton(add,
-                    new DialogInterface.OnClickListener() {
+                                            new DialogInterface.OnClickListener() {
 
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            mListener.onDialogAdd();
-                            dialog.dismiss();
-                        }
-                    });
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    mListener.onDialogAdd();
+                                                    dialog.dismiss();
+                                                }
+                                            });
         }
 
         builderSingle.setNegativeButton(android.R.string.cancel,
-                new DialogInterface.OnClickListener() {
+                                        new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
         final ListAdapter arrayAdapter = mListener.getAdapter();
         builderSingle.setAdapter(arrayAdapter,
-                new DialogInterface.OnClickListener() {
+                                 new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int pos) {
-                        dialog.dismiss();
-                        mListener.onDialogConfirmed(pos);
-                    }
-                });
+                                     @Override
+                                     public void onClick(DialogInterface dialog, int pos) {
+                                         dialog.dismiss();
+                                         mListener.onDialogConfirmed(pos);
+                                     }
+                                 });
         return builderSingle.create();
     }
 

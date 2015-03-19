@@ -74,9 +74,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/arrow"
-            android:textColor="@color/new_text_color"
             android:layout_centerInParent="true"
             android:paddingBottom="16dp"
+            android:textColor="@color/new_text_color"
             android:textSize="25sp" />
 
     </RelativeLayout>

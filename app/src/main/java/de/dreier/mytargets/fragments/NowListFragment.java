@@ -38,7 +38,8 @@ import de.dreier.mytargets.views.CardItemDecorator;
 /**
  * Shows all rounds of one settings_only day
  */
-public abstract class NowListFragment<T extends IdProvider> extends Fragment implements View.OnClickListener, OnCardClickListener<T> {
+public abstract class NowListFragment<T extends IdProvider> extends Fragment
+        implements View.OnClickListener, OnCardClickListener<T> {
 
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
@@ -88,8 +89,9 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
     @Override
     public void onResume() {
         super.onResume();
-        if (activity != null)
+        if (activity != null) {
             db = DatabaseManager.getInstance(activity);
+        }
     }
 
     @Override
@@ -119,7 +121,8 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
         mFab.show(true);
     }
 
-    protected final ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
+    protected final ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(
+            mMultiSelector) {
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
@@ -172,8 +175,9 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
     }
 
     protected void updateTitle() {
-        if (actionMode == null)
+        if (actionMode == null) {
             return;
+        }
         int count = mMultiSelector.getSelectedPositions().size();
         if (count == 0) {
             actionMode.finish();
@@ -195,8 +199,9 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment imp
 
     @Override
     public void onClick(CardViewHolder holder, T mItem) {
-        if (mItem == null)
+        if (mItem == null) {
             return;
+        }
         if (!mMultiSelector.tapSelection(holder)) {
             onSelected(mItem);
         } else {

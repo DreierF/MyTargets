@@ -100,7 +100,7 @@ public class MainActivity extends Activity implements OnTargetSetListener,
             public void onTimerFinished(View view) {
                 Intent intent = new Intent(MainActivity.this, ConfirmationActivity.class);
                 intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
-                        ConfirmationActivity.SUCCESS_ANIMATION);
+                                ConfirmationActivity.SUCCESS_ANIMATION);
                 intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, getString(R.string.saved));
                 startActivity(intent);
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);

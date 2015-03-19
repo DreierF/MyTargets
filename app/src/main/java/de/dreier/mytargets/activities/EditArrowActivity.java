@@ -50,8 +50,9 @@ public class EditArrowActivity extends EditWithImageActivity {
             nock.setText(arrow.nock);
             comment.setText(arrow.comment);
             imageBitmap = arrow.image;
-            if (imageBitmap != null)
+            if (imageBitmap != null) {
                 mImageView.setImageBitmap(imageBitmap);
+            }
             mImageFile = arrow.imageFile;
         } else if (savedInstanceState != null) {
             name.setText(savedInstanceState.getString("name"));

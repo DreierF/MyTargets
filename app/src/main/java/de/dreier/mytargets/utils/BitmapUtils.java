@@ -13,7 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class BitmapUtils {
-    public static Bitmap decodeSampledBitmapFromStream(Context context, Uri uri, int reqWidth, int reqHeight) throws IOException {
+    public static Bitmap decodeSampledBitmapFromStream(Context context, Uri uri, int reqWidth, int reqHeight)
+            throws IOException {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         InputStream stream = context.getContentResolver().openInputStream(uri);
@@ -67,7 +68,8 @@ public class BitmapUtils {
     // Convert Picture to Bitmap
     static Bitmap pictureDrawable2Bitmap(Picture picture) {
         PictureDrawable pd = new PictureDrawable(picture);
-        Bitmap bitmap = Bitmap.createBitmap(pd.getIntrinsicWidth(), pd.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(pd.getIntrinsicWidth(), pd.getIntrinsicHeight(),
+                                            Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         canvas.drawPicture(pd.getPicture());
         return bitmap;

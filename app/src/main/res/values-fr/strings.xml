@@ -13,7 +13,7 @@
     <string name="points">Points</string>
     <string name="passe">Volée</string>
     <string name="passe_n">Volée %d</string>
-    
+
     <!-- Overview -->
     <string name="new_training">Nouvel entraînement</string>
     <string name="new_bow">Nouvel Arc</string>

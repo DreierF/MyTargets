@@ -14,7 +14,8 @@ import de.dreier.mytargets.models.IdProvider;
 /**
  * Created by Florian on 13.03.2015.
  */
-public abstract class NowListAdapter<T extends IdProvider> extends RecyclerView.Adapter<CardViewHolder<T>> {
+public abstract class NowListAdapter<T extends IdProvider>
+        extends RecyclerView.Adapter<CardViewHolder<T>> {
 
     private ArrayList<T> mList = new ArrayList<>();
     protected int headerHeight = 0;
@@ -51,7 +52,8 @@ public abstract class NowListAdapter<T extends IdProvider> extends RecyclerView.
     public final CardViewHolder<T> onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == 0 && headerHeight > 0) {
             View paddingView = new View(parent.getContext());
-            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, headerHeight);
+            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
+                    AbsListView.LayoutParams.MATCH_PARENT, headerHeight);
             paddingView.setLayoutParams(lp);
             paddingView.setClickable(true);
             return new StaticViewHolder(paddingView);

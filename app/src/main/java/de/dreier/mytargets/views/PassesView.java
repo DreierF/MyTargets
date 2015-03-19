@@ -48,8 +48,8 @@ public class PassesView extends View {
 
         for (int i = 0; i < points.length; i++) {
             circle.draw(canvas, i * placePerShoot + (placePerShoot / 2.0f),
-                    contentHeight / 2.0f, points[i].zone,
-                    17, !TextUtils.isEmpty(points[i].comment));
+                        contentHeight / 2.0f, points[i].zone,
+                        17, !TextUtils.isEmpty(points[i].comment));
         }
     }
 

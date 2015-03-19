@@ -53,20 +53,25 @@ public class TargetImage {
             if (i != 2 || roundInfo.target != 3 || !roundInfo.compound) {
                 float rad = (radius * i) / (float) mZoneCount;
                 canvas.drawCircle(radius, radius, rad, drawColorP);
-                canvas.drawCircle(radius, radius, rad, Target.target_rounds[roundInfo.target][i - 1] == 3 ? thinWhiteBorder : thinBlackBorder);
+                canvas.drawCircle(radius, radius, rad,
+                                  Target.target_rounds[roundInfo.target][i - 1] == 3 ?
+                                          thinWhiteBorder : thinBlackBorder);
             }
         }
 
         // Draw cross in the middle
-        Paint midColor = Target.target_rounds[roundInfo.target][0] == 3 ? thinWhiteBorder : thinBlackBorder;
+        Paint midColor =
+                Target.target_rounds[roundInfo.target][0] == 3 ? thinWhiteBorder : thinBlackBorder;
         if (roundInfo.target < 5) {
             float lineLength = radius / (float) (mZoneCount * 6);
             canvas.drawLine(radius - lineLength, radius, radius + lineLength, radius, midColor);
             canvas.drawLine(radius, radius - lineLength, radius, radius + lineLength, midColor);
         } else {
             float lineLength = radius / (float) (mZoneCount * 4);
-            canvas.drawLine(radius - lineLength, radius - lineLength, radius + lineLength, radius + lineLength, midColor);
-            canvas.drawLine(radius - lineLength, radius + lineLength, radius + lineLength, radius - lineLength, midColor);
+            canvas.drawLine(radius - lineLength, radius - lineLength, radius + lineLength,
+                            radius + lineLength, midColor);
+            canvas.drawLine(radius - lineLength, radius + lineLength, radius + lineLength,
+                            radius - lineLength, midColor);
         }
 
         // Draw exact arrow position
@@ -105,7 +110,8 @@ public class TargetImage {
 
         if (count >= 2) {
             drawColorP.setColor(Color.RED);
-            canvas.drawCircle(radius + (sumX / count) * radius, radius + (sumY / count) * radius, 3 * density, drawColorP);
+            canvas.drawCircle(radius + (sumX / count) * radius, radius + (sumY / count) * radius,
+                              3 * density, drawColorP);
         }
     }
 
@@ -125,7 +131,8 @@ public class TargetImage {
         drawColorP.setAntiAlias(true);
     }
 
-    public void generateBitmap(ActionBarActivity context, int size, Round mRoundInfo, long mRound, File f) throws FileNotFoundException {
+    public void generateBitmap(ActionBarActivity context, int size, Round mRoundInfo, long mRound, File f)
+            throws FileNotFoundException {
         final FileOutputStream fOut = new FileOutputStream(f);
         generateBitmap(context, size, mRoundInfo, mRound, fOut);
     }

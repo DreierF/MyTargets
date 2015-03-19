@@ -52,12 +52,6 @@ public class Target {
             {4, 4, 3}, // DFBV Spiegel Spot
             {3, 3, 4, 4, 3, 3} // DFBV Field
     };
-    private static final int[][] intersectionColor = {
-            {0xFF473414, 0xFF10110B}, // yellow -> yellow/red
-            {0xFF6A1D0B, 0xFF191E38}, // red -> red/blue
-            {0xFF1E4C66, 0xFF12243A}, // blue -> blue/black
-            {0xFF6A6869, 0xFF1C1C1B}, // black -> black/white
-            {0xFF9A9A99, 0xFF505050}}; // white -> white/mistake
     // Points for zone
     public static final int[][] target_points = {
             {10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1}, //WA
@@ -69,6 +63,12 @@ public class Target {
             {5, 5, 4}, // DFBV Spiegel Spot
             {5, 5, 4, 3, 2, 1} // DFBV Field
     };
+    private static final int[][] intersectionColor = {
+            {0xFF473414, 0xFF10110B}, // yellow -> yellow/red
+            {0xFF6A1D0B, 0xFF191E38}, // red -> red/blue
+            {0xFF1E4C66, 0xFF12243A}, // blue -> blue/black
+            {0xFF6A6869, 0xFF1C1C1B}, // black -> black/white
+            {0xFF9A9A99, 0xFF505050}}; // white -> white/mistake
 
     public static String getStringByZone(int target, int zone) {
         final int[] points = target_points[target];
@@ -110,8 +110,9 @@ public class Target {
     public static int getIntersectionColor(int from, int to, boolean darker) {
         int color = Target.intersectionColor[from][from == to ? 0 : 1];
         if (darker) {
-            if (from == 3 && to == 3)
+            if (from == 3 && to == 3) {
                 return 0xFF555555;
+            }
 
             int red = (color << 16 & 0xFF) - 150;
             int green = (color << 8 & 0xFF) - 150;

@@ -5,6 +5,7 @@ package de.dreier.mytargets.models;
  */
 public abstract class IdProvider {
     public long id;
+
     public long getId() {
         return id;
     }

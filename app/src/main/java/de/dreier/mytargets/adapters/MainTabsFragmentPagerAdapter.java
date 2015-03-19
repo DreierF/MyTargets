@@ -11,8 +11,8 @@ import de.dreier.mytargets.fragments.BowFragment;
 import de.dreier.mytargets.fragments.TrainingsFragment;
 
 /**
-* Created by Florian on 05.03.2015.
-*/
+ * Created by Florian on 05.03.2015.
+ */
 public class MainTabsFragmentPagerAdapter extends FragmentPagerAdapter {
     private final Context context;
 

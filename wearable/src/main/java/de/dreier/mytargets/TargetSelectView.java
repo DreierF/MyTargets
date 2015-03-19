@@ -78,14 +78,14 @@ public class TargetSelectView extends TargetViewBase {
             // Draw outgoing object
             if (mOutZone >= -1) {
                 circle.draw(canvas, mOutFromX + (mOutToX - mOutFromX) * mCurAnimationProgress,
-                        mOutFromY + (mOutToY - mOutFromY) * mCurAnimationProgress, mOutZone,
-                        (int) (17 - (17 - 10) * mCurAnimationProgress), false);
+                            mOutFromY + (mOutToY - mOutFromY) * mCurAnimationProgress, mOutZone,
+                            (int) (17 - (17 - 10) * mCurAnimationProgress), false);
             }
             // Draw incoming object
             if (mInZone >= -1) {
                 circle.draw(canvas, mInFromX + (mInToX - mInFromX) * mCurAnimationProgress,
-                        mInFromY + (mInToY - mInFromY) * mCurAnimationProgress, mInZone,
-                        (int) (10 + (17 - 10) * mCurAnimationProgress), false);
+                            mInFromY + (mInToY - mInFromY) * mCurAnimationProgress, mInZone,
+                            (int) (10 + (17 - 10) * mCurAnimationProgress), false);
             }
         }
     }
@@ -95,7 +95,8 @@ public class TargetSelectView extends TargetViewBase {
         twoRows = roundInfo.ppp > 3;
         for (int i = 0; i <= lastSetArrow && i < roundInfo.ppp; i++) {
             float newX = radius + ((i % 3) - 1) * 25 * density;
-            float newY = radius - 25 * density + (i < 3 ? -1 : 1) * (twoRows ? 15 * density : -5 * density);
+            float newY = radius - 25 * density +
+                    (i < 3 ? -1 : 1) * (twoRows ? 15 * density : -5 * density);
             if (currentArrow != i && mCurSelecting != i) {
                 circle.draw(canvas, newX, newY, mPasse.shot[i].zone, 10, false);
             }
@@ -122,7 +123,8 @@ public class TargetSelectView extends TargetViewBase {
         if (currentArrow < roundInfo.ppp && mPasse.shot[currentArrow].zone >= -1) {
             mOutZone = mPasse.shot[currentArrow].zone;
             mOutToX = radius + ((currentArrow % 3) - 1) * 25 * density;
-            mOutToY = radius - 25 * density + (currentArrow < 3 ? -1 : 1) * (twoRows ? 15 * density : -5 * density);
+            mOutToY = radius - 25 * density +
+                    (currentArrow < 3 ? -1 : 1) * (twoRows ? 15 * density : -5 * density);
             float[] coord = getCircularCoords(mOutZone);
             mOutFromX = coord[0];
             mOutFromY = coord[1];
@@ -137,7 +139,8 @@ public class TargetSelectView extends TargetViewBase {
             mInFromX = coord[0];
             mInFromY = coord[1];
             mInToX = radius + ((mCurSelecting % 3) - 1) * 25 * density;
-            mInToY = radius - 25 * density + (mCurSelecting < 3 ? -1 : 1) * (twoRows ? 15 * density : -5 * density);
+            mInToY = radius - 25 * density +
+                    (mCurSelecting < 3 ? -1 : 1) * (twoRows ? 15 * density : -5 * density);
         } else {
             mInZone = -2;
         }
