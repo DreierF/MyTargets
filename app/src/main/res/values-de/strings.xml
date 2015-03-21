@@ -94,6 +94,7 @@
     <string name="indoor">Indoor</string>
     <string name="distance">Entfernung</string>
     <string name="arrows_per_passe">Pfeile pro Passe</string>
+    <string name="show_scoreboard_after">Öffne Scoreboard nach</string>
     <string name="target_round">Auflage</string>
     <string name="title_compound">Compound?</string>
     <string name="msg_compound_type">Welchen Bogentyp verwendest du? (Es entscheidet wie viele Punkte du für die goldenen Ringe bekommst)</string>

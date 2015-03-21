@@ -34,13 +34,12 @@ package de.dreier.mytargets.views;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 
@@ -62,7 +61,7 @@ public class NumberPicker extends LinearLayout {
 
     Button decrement;
     Button increment;
-    public EditText valueText;
+    public TextView valueText;
 
     private Handler repeatUpdateHandler = new Handler();
 
@@ -137,37 +136,7 @@ public class NumberPicker extends LinearLayout {
 
         value = 0;
 
-        valueText = (EditText) findViewById(R.id.number_value);
-
-        // Since we're a number that gets affected by the button, we need to be
-        // ready to change the numeric value with a simple ++/--, so whenever
-        // the value is changed with a keyboard, convert that text value to a
-        // number. We can set the text area to only allow numeric input, but
-        // even so, a carriage return can get hacked through. To prevent this
-        // little quirk from causing a crash, store the value of the internal
-        // number before attempting to parse the changed value in the text area
-        // so we can revert to that in case the text change causes an invalid
-        // number
-        valueText.setOnKeyListener(new OnKeyListener() {
-            public boolean onKey(View v, int arg1, KeyEvent event) {
-                int backupValue = value;
-                try {
-                    value = Integer.parseInt(((EditText) v).getText().toString());
-                } catch (NumberFormatException nfe) {
-                    value = backupValue;
-                }
-                return false;
-            }
-        });
-
-        // Highlight the number when we get focus
-        valueText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    ((EditText) v).selectAll();
-                }
-            }
-        });
+        valueText = (TextView) findViewById(R.id.number_value);
         valueText.setText(value.toString());
     }
 

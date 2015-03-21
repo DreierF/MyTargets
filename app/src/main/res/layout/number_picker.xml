@@ -9,24 +9,24 @@
     <Button
         android:id="@+id/number_decrement"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:text="-"
         tools:ignore="HardcodedText"/>
 
-    <EditText
+    <TextView
         android:id="@+id/number_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#00000000"
         android:gravity="center"
-        android:inputType="number"/>
+        android:textSize="16sp"/>
 
     <Button
         android:id="@+id/number_increment"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:text="+"
         tools:ignore="HardcodedText"/>
 

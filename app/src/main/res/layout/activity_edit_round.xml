@@ -83,58 +83,120 @@
                         android:layout_height="wrap_content"
                         android:layout_weight=".5"
                         android:text="@string/indoor"/>
+
                 </RadioGroup>
 
-                <TextView
-                    style="@style/Label"
+                <TableLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/distance"/>
-
-                <Spinner
-                    android:id="@+id/distance"
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"/>
-
-                <LinearLayout
-                    android:id="@+id/customDist"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <EditText
-                        android:id="@+id/distanceVal"
-                        android:layout_width="60dp"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"/>
+                    <TableRow
+                        android:layout_height="48dp"
+                        android:layout_marginTop="8dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/meter_short"/>
-                </LinearLayout>
+                        <TextView
+                            style="@style/Label"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/distance"/>
 
+                        <Spinner
+                            android:id="@+id/distance"
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"/>
 
-                <TextView
-                    android:id="@+id/label_ppp"
-                    style="@style/Label"
+                        <LinearLayout
+                            android:id="@+id/customDist"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <EditText
+                                android:id="@+id/distanceVal"
+                                android:layout_width="60dp"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/meter_short"/>
+                        </LinearLayout>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_height="48dp"
+                        android:layout_marginTop="8dp">
+
+                        <TextView
+                            android:id="@+id/label_ppp"
+                            style="@style/Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="@string/arrows_per_passe"/>
+
+                        <de.dreier.mytargets.views.NumberPicker
+                            android:id="@+id/ppp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </TableRow>
+                </TableLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/arrows_per_passe"/>
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
 
-                <de.dreier.mytargets.views.NumberPicker
-                    android:id="@+id/ppp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    <CheckBox
+                        android:id="@+id/show_after"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:checked="false"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:orientation="vertical"
+                        android:paddingLeft="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/show_scoreboard_after"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:text="@string/passe"/>
+
+                            <de.dreier.mytargets.views.NumberPicker
+                                android:id="@+id/rounds"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/label_bow"
                     style="@style/Label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:text="@string/bow"/>
 
                 <de.dreier.mytargets.views.DialogSpinner

@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -53,6 +54,8 @@ public class EditRoundActivity extends ActionBarActivity {
     private EditText distanceVal;
     private boolean custom = false;
     private NumberPicker ppp;
+    private CheckBox show_scoreboard;
+    private NumberPicker rounds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +113,10 @@ public class EditRoundActivity extends ActionBarActivity {
         ppp.setMinimum(1);
         ppp.setMaximum(10);
 
+        // Show scoreboard
+        show_scoreboard = (CheckBox)findViewById(R.id.show_after);
+        rounds = (NumberPicker)findViewById(R.id.rounds);
+
         // Bow
         bow = (DialogSpinner) findViewById(R.id.bow);
         bow.setAdapter(new BowItemAdapter(this), R.string.bow);
@@ -154,6 +161,8 @@ public class EditRoundActivity extends ActionBarActivity {
             indoor.setChecked(prefs.getBoolean("indoor", false));
             outdoor.setChecked(!prefs.getBoolean("indoor", false));
             ppp.setValue(prefs.getInt("ppp", 3));
+            show_scoreboard.setChecked(prefs.getBoolean("show", true));
+            rounds.setValue(prefs.getInt("rounds", 10));
             bow.setItemId(prefs.getInt("bow", 0));
             arrow.setItemId(prefs.getInt("arrow", 0));
             target.setItemId(prefs.getInt("target", 2));
@@ -181,6 +190,8 @@ public class EditRoundActivity extends ActionBarActivity {
             target.setItemId(r.target);
             comment.setText(r.comment);
 
+            show_scoreboard.setEnabled(false);
+            rounds.setEnabled(false);
             ppp.setEnabled(false);
             bow.setEnabled(false);
             arrow.setEnabled(false);
@@ -269,6 +280,8 @@ public class EditRoundActivity extends ActionBarActivity {
         }
         round.unit = "m";
 
+        boolean show  = show_scoreboard.isChecked();
+        int after_rounds = rounds.getValue();
         round.ppp = ppp.getValue();
         round.indoor = indoor.isChecked();
         round.comment = comment.getTextString();
@@ -280,6 +293,8 @@ public class EditRoundActivity extends ActionBarActivity {
         editor.putInt("arrow", (int) arrow.getSelectedItemId());
         editor.putInt("distance", round.distanceVal);
         editor.putInt("ppp", round.ppp);
+        editor.putBoolean("show", show);
+        editor.putInt("rounds", after_rounds);
         editor.putInt("target", round.target);
         editor.putBoolean("indoor", round.indoor);
         editor.apply();
@@ -299,6 +314,7 @@ public class EditRoundActivity extends ActionBarActivity {
 
             i = new Intent(this, InputActivity.class);
             i.putExtra(InputActivity.ROUND_ID, round.id);
+            i.putExtra(InputActivity.SHOW_SCOREBOARD_AFTER, show?after_rounds:-1);
             startActivity(i);
 
             overridePendingTransition(R.anim.right_in, R.anim.left_out);

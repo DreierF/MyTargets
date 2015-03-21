@@ -94,6 +94,7 @@
     <string name="indoor">Indoor</string>
     <string name="distance">Distance</string>
     <string name="arrows_per_passe">Arrows per passe</string>
+    <string name="show_scoreboard_after">Show Scoreboard after</string>
     <string name="target_round">Target round</string>
     <string name="title_compound">Compound?</string>
     <string name="msg_compound_type">Which bow type are you using? (There is a difference in how many points you get for the golden rings)</string>

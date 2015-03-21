@@ -21,10 +21,10 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.WearMessageManager;
 import de.dreier.mytargets.models.Bow;
-import de.dreier.mytargets.utils.OnTargetSetListener;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
+import de.dreier.mytargets.utils.OnTargetSetListener;
 import de.dreier.mytargets.utils.Target;
 import de.dreier.mytargets.utils.WearableUtils;
 import de.dreier.mytargets.views.TargetView;
@@ -35,6 +35,7 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
     private static final String TARGET_MODE = "target_mode";
     private static final String SHOW_ALL_MODE = "show_all";
     public static final String PASSE_IND = "passe_ind";
+    public static final String SHOW_SCOREBOARD_AFTER = "show_scoreboard_after";
     private TargetView target;
     private Button next, prev;
     private int curPasse = 1;
@@ -45,6 +46,7 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
     private Round r;
     private boolean mShowAllMode = false;
     private WearMessageManager manager;
+    private int mShowAfter = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
         Intent i = getIntent();
         if (i != null && i.hasExtra(ROUND_ID)) {
             mRound = i.getLongExtra(ROUND_ID, -1);
+            mShowAfter = i.getIntExtra(SHOW_SCOREBOARD_AFTER, -1);
             savedPasses = db.getPasses(mRound).size();
             if (i.hasExtra(PASSE_IND)) {
                 curPasse = i.getIntExtra(PASSE_IND, -1);
@@ -166,6 +169,11 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
         setTitle(getString(R.string.passe_n, curPasse));
         prev.setEnabled(curPasse > 1);
         next.setEnabled(curPasse <= savedPasses);
+        if (savedPasses == mShowAfter) {
+            Intent intent = new Intent(this, ScoreboardActivity.class);
+            intent.putExtra(ScoreboardActivity.ROUND_ID, mRound);
+            startActivity(intent);
+        }
     }
 
     @Override
