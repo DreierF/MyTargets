@@ -74,4 +74,20 @@ public class BitmapUtils {
         canvas.drawPicture(pd.getPicture());
         return bitmap;
     }
+
+    public static int animateColor(int from, int to, float percent) {
+        final int fa = (from >> 24) & 0xFF;
+        final int fr = (from >> 16) & 0xFF;
+        final int fg = (from >> 8) & 0xFF;
+        final int fb = (from) & 0xFF;
+        final int da = ((to >> 24) & 0xFF) - fa;
+        final int dr = ((to >> 16) & 0xFF) - fr;
+        final int dg = ((to >> 8) & 0xFF) - fg;
+        final int db = ((to) & 0xFF) - fb;
+        final int ra = (int) (fa + da * percent);
+        final int rr = (int) (fr + dr * percent);
+        final int rg = (int) (fg + dg * percent);
+        final int rb = (int) (fb + db * percent);
+        return (ra << 24) | (rr << 16) | (rg << 8) | rb;
+    }
 }

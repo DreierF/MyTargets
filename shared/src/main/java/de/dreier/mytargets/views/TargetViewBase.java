@@ -1,26 +1,24 @@
 package de.dreier.mytargets.views;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 
-import de.dreier.mytargets.models.Circle;
-import de.dreier.mytargets.models.OnTargetSetListener;
+import de.dreier.mytargets.models.Coordinate;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
-import de.dreier.mytargets.models.Target;
+import de.dreier.mytargets.utils.OnTargetSetListener;
+import de.dreier.mytargets.utils.PasseDrawer;
+import de.dreier.mytargets.utils.Target;
 
 /**
  * Created by Florian on 18.03.2015.
  */
 public abstract class TargetViewBase extends View implements View.OnTouchListener {
+    protected PasseDrawer mPasseDrawer;
     protected int currentArrow = 0;
     protected int lastSetArrow = -1;
     protected Passe mPasse;
@@ -33,19 +31,22 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected boolean mModeEasy = true;
     protected float density;
     protected int mZoneCount;
-    protected Circle circle;
-    private ValueAnimator selectionAnimator;
+    protected float mOutFromX;
+    protected float mOutFromY;
 
     public TargetViewBase(Context context) {
         super(context);
+        setOnTouchListener(this);
     }
 
     protected TargetViewBase(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setOnTouchListener(this);
     }
 
     protected TargetViewBase(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setOnTouchListener(this);
     }
 
     public void reset() {
@@ -53,17 +54,18 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         lastSetArrow = -1;
         mCurSelecting = -1;
         mPasse = new Passe(roundInfo.ppp);
+        mPasseDrawer.setPasse(mPasse);
         invalidate();
     }
 
     public void setRoundInfo(Round r) {
         roundInfo = r;
         mZoneCount = Target.target_rounds[r.target].length;
-        circle = new Circle(density, roundInfo.target);
+        mPasseDrawer = new PasseDrawer(this, density, roundInfo.target);
         reset();
     }
 
-    protected abstract void initAnimationPositions();
+    protected abstract Coordinate initAnimationPositions(int i);
 
     public void saveState(Bundle b) {
         b.putSerializable("passe", mPasse);
@@ -96,7 +98,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     public boolean onTouch(View view, MotionEvent motionEvent) {
         // Cancel animation
         if (mCurSelecting != -1) {
-            selectionAnimator.cancel();
+            mPasseDrawer.cancel();
         }
 
         float x = motionEvent.getX();
@@ -122,6 +124,8 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             mPasse.shot[currentArrow].zone = shot.zone;
             mPasse.shot[currentArrow].x = shot.x;
             mPasse.shot[currentArrow].y = shot.y;
+            mPasseDrawer.setSelection(currentArrow, initAnimationPositions(currentArrow),
+                    mModeEasy ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
             invalidate();
         }
 
@@ -144,30 +148,12 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     protected void animateSelectCircle(final int i) {
-        mCurSelecting = i;
-        mCurAnimationProgress = 0;
-        initAnimationPositions();
-
-        selectionAnimator = ValueAnimator.ofFloat(0, 1);
-        selectionAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-        selectionAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                mCurAnimationProgress = (Float) valueAnimator.getAnimatedValue();
-                invalidate();
-            }
-        });
-        selectionAnimator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                selectionAnimator = null;
-                currentArrow = i;
-                mCurSelecting = -1;
-                invalidate();
-            }
-        });
-        selectionAnimator.setDuration(300);
-        selectionAnimator.start();
+        if (i > -1 && i < roundInfo.ppp && mPasse.shot[i].zone >= -1) {
+            mPasseDrawer.animateToSelection(i, initAnimationPositions(i), mModeEasy ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
+        } else {
+            mPasseDrawer.animateToSelection(PasseDrawer.NO_SELECTION, null, mModeEasy ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
+        }
+        currentArrow = i;
     }
 
     protected abstract Shot getShotFromPos(float x, float y);

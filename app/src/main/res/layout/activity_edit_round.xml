@@ -1,10 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="de.dreier.mytargets.activities.EditRoundActivity">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="de.dreier.mytargets.activities.EditRoundActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/training_container"
@@ -35,13 +35,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/title"
-                android:textColor="@color/colorAccent" />
+                android:textColor="@color/colorAccent"/>
 
             <EditText
                 android:id="@+id/training"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:inputType="text"/>
 
         </LinearLayout>
 
@@ -75,14 +75,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight=".5"
-                        android:text="@string/outdoor" />
+                        android:text="@string/outdoor"/>
 
                     <RadioButton
                         android:id="@+id/indoor"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight=".5"
-                        android:text="@string/indoor" />
+                        android:text="@string/indoor"/>
                 </RadioGroup>
 
                 <TextView
@@ -90,12 +90,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/distance" />
+                    android:text="@string/distance"/>
 
                 <Spinner
                     android:id="@+id/distance"
                     android:layout_width="70dp"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
                 <LinearLayout
                     android:id="@+id/customDist"
@@ -106,12 +106,12 @@
                         android:id="@+id/distanceVal"
                         android:layout_width="60dp"
                         android:layout_height="wrap_content"
-                        android:inputType="number" />
+                        android:inputType="number"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/meter_short" />
+                        android:text="@string/meter_short"/>
                 </LinearLayout>
 
 
@@ -122,35 +122,12 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginTop="16dp"
-                    android:text="@string/arrows_per_passe" />
+                    android:text="@string/arrows_per_passe"/>
 
-                <RadioGroup
+                <de.dreier.mytargets.views.NumberPicker
+                    android:id="@+id/ppp"
                     android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="horizontal"
-                    android:weightSum="3">
-
-                    <RadioButton
-                        android:id="@+id/ppp2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/two" />
-
-                    <RadioButton
-                        android:id="@+id/ppp3"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/three" />
-
-                    <RadioButton
-                        android:id="@+id/ppp6"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/six" />
-                </RadioGroup>
+                    android:layout_height="match_parent" />
 
                 <TextView
                     android:id="@+id/label_bow"
@@ -158,7 +135,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/bow" />
+                    android:text="@string/bow"/>
 
                 <de.dreier.mytargets.views.DialogSpinner
                     android:id="@+id/bow"
@@ -177,7 +154,7 @@
                         android:paddingRight="15dp"
                         android:paddingTop="5dp"
                         android:text="@string/add_bow"
-                        android:textColor="@android:color/secondary_text_light" />
+                        android:textColor="@android:color/secondary_text_light"/>
 
                 </de.dreier.mytargets.views.DialogSpinner>
 
@@ -187,7 +164,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/arrow" />
+                    android:text="@string/arrow"/>
 
                 <de.dreier.mytargets.views.DialogSpinner
                     android:id="@+id/arrow"
@@ -206,7 +183,7 @@
                         android:paddingRight="15dp"
                         android:paddingTop="5dp"
                         android:text="@string/add_arrow"
-                        android:textColor="@android:color/secondary_text_light" />
+                        android:textColor="@android:color/secondary_text_light"/>
 
                 </de.dreier.mytargets.views.DialogSpinner>
 
@@ -216,13 +193,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/target_round" />
+                    android:text="@string/target_round"/>
 
                 <de.dreier.mytargets.views.DialogSpinner
                     android:id="@+id/target_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    android:orientation="vertical"/>
 
                 <com.iangclifton.android.floatlabel.FloatLabel
                     android:id="@+id/comment"
@@ -230,7 +207,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/comment"
-                    android:inputType="textMultiLine" />
+                    android:inputType="textMultiLine"/>
 
             </LinearLayout>
 
@@ -239,7 +216,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_drop_shadow_height"
-            android:background="@drawable/toolbar_drop_shadow" />
+            android:background="@drawable/toolbar_drop_shadow"/>
     </FrameLayout>
 
 </LinearLayout>

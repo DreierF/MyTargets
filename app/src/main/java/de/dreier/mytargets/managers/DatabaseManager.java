@@ -29,7 +29,7 @@ import de.dreier.mytargets.models.IdProvider;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
-import de.dreier.mytargets.models.Target;
+import de.dreier.mytargets.utils.Target;
 import de.dreier.mytargets.models.Training;
 import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.BitmapUtils;

@@ -7,12 +7,12 @@ import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.Region;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,32 +25,26 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.models.Coordinate;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
-import de.dreier.mytargets.models.Target;
+import de.dreier.mytargets.utils.BitmapUtils;
+import de.dreier.mytargets.utils.PasseDrawer;
+import de.dreier.mytargets.utils.Target;
 
 public class TargetView extends TargetViewBase {
 
     private int radius, midX, midY;
-
     private TextPaint mTextPaint;
     private Paint thinBlackBorder, thinWhiteBorder, drawColorP, rectColorP, circleColorP;
-
-    private float resultX1, resultX2, spacePerResult;
-    private float mInFromX, mInFromY;
-    private float mInToX, mInToY;
-    private float mOutFromX, mOutFromY;
-    private float mOutToX, mOutToY;
-    private int mInZone, mOutZone;
-    private int mCurPressed = -1;
-    private Paint grayBackground;
     private int[] target;
-    private int oldRadius;
-    private float oldSpacePerResult, oldResultX1;
     private boolean showAll = false;
     private ArrayList<Passe> mOldShots;
     private Timer longPressTimer;
+    private Paint thinLine;
+    private final Handler h = new Handler();
+    private int oldRadius;
     private final Runnable task = new Runnable() {
         @Override
         public void run() {
@@ -63,34 +57,32 @@ public class TargetView extends TargetViewBase {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.comment_dialog, null);
             final EditText input = (EditText) view.findViewById(R.id.shot_comment);
-            input.setText(mPasse.shot[mCurPressed].comment);
+            input.setText(mPasse.shot[mPasseDrawer.getPressed()].comment);
 
             new AlertDialog.Builder(getContext())
                     .setTitle(R.string.comment)
                     .setView(view)
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            mPasse.shot[mCurPressed].comment = input.getText().toString();
+                            mPasse.shot[mPasseDrawer.getPressed()].comment = input.getText().toString();
                             if (lastSetArrow + 1 >= roundInfo.ppp && setListener != null) {
                                 setListener.onTargetSet(new Passe(mPasse), false);
                             }
-                            mCurPressed = -1;
+                            mPasseDrawer.setPressed(-1);
                             invalidate();
                             dialog.dismiss();
                         }
                     })
                     .setNegativeButton(android.R.string.cancel,
-                                       new DialogInterface.OnClickListener() {
-                                           public void onClick(DialogInterface dialog, int whichButton) {
-                                               mCurPressed = -1;
-                                               invalidate();
-                                               dialog.dismiss();
-                                           }
-                                       }).show();
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    mPasseDrawer.setPressed(-1);
+                                    invalidate();
+                                    dialog.dismiss();
+                                }
+                            }).show();
         }
     };
-    private Paint thinLine;
-    private final Handler h = new Handler();
 
     public TargetView(Context context) {
         super(context);
@@ -111,6 +103,8 @@ public class TargetView extends TargetViewBase {
         currentArrow = passe.shot.length;
         lastSetArrow = passe.shot.length;
         mPasse = passe;
+        mPasseDrawer.setSelection(currentArrow, null, PasseDrawer.MAX_CIRCLE_SIZE);
+        mPasseDrawer.setPasse(passe);
         invalidate();
     }
 
@@ -159,10 +153,6 @@ public class TargetView extends TargetViewBase {
         rectColorP = new Paint();
         rectColorP.setAntiAlias(true);
 
-        grayBackground = new Paint();
-        grayBackground.setColor(0xFFDDDDDD);
-        grayBackground.setAntiAlias(true);
-
         circleColorP = new Paint();
         circleColorP.setAntiAlias(true);
         circleColorP.setStrokeWidth(2 * density);
@@ -171,12 +161,11 @@ public class TargetView extends TargetViewBase {
         thinLine.setAntiAlias(true);
         thinLine.setStyle(Paint.Style.STROKE);
 
-        setOnTouchListener(this);
-
         if (isInEditMode()) {
             roundInfo = new Round();
             roundInfo.ppp = 3;
             mPasse = new Passe(3);
+            mPasseDrawer.setPasse(mPasse);
         }
     }
 
@@ -193,8 +182,8 @@ public class TargetView extends TargetViewBase {
         // Draw target with highlighted zone
         if (mCurSelecting == -2) {
             drawTarget(canvas, (int) (mOutFromX + (midX - mOutFromX) * mCurAnimationProgress),
-                       (int) (mOutFromY + (midY - mOutFromY) * mCurAnimationProgress),
-                       (int) (oldRadius + (radius - oldRadius) * mCurAnimationProgress));
+                    (int) (mOutFromY + (midY - mOutFromY) * mCurAnimationProgress),
+                    (int) (oldRadius + (radius - oldRadius) * mCurAnimationProgress));
         } else {
             drawTarget(canvas, midX, midY, radius);
         }
@@ -204,27 +193,18 @@ public class TargetView extends TargetViewBase {
 
         // Draw zoomed in target
         if (!mModeEasy && curZone >= -1) {
-            canvas.save(Canvas.CLIP_SAVE_FLAG);
-            float px = mPasse.shot[currentArrow].x;
-            float py = mPasse.shot[currentArrow].y;
-            int append = (px < 0 && py < 0) ? 1 : 0;
-            canvas.clipRect(midX - radius + append * radius, 0,
-                            midX - radius + radius * (append + 1), midY, Region.Op.REPLACE);
-            int x = (int) (midX + radius * (append - 2 * px - 0.5));
-            int y = (int) (midY + radius * (-2 * py - 0.5));
-            drawTarget(canvas, x, y, radius * 2);
-            canvas.restore();
+            drawZoomedInTarget(canvas);
         }
 
         // Draw selection for currentArrow
-        if (curZone >= -1 && mCurSelecting == -1 && mModeEasy) {
+        if (curZone >= -1 && !mPasseDrawer.isAnimating() && mCurSelecting == -1 && mModeEasy) {
             float circleY;
             if (curZone == -1) {
                 circleY = midY + radius;
             } else {
                 circleY = midY + radius * (curZone + 1) / (float) mZoneCount;
             }
-            circle.draw(canvas, midX + radius + 27 * density, circleY, curZone, 17, false);
+            //mCircle.draw(canvas, midX + radius + 27 * density, circleY, curZone, 17, false);
             if (curZone > -1) {
                 int colorInd = curZone > -1 ? target[curZone] : 3;
                 circleColorP.setColor(Target.circleStrokeColor[colorInd]);
@@ -232,63 +212,21 @@ public class TargetView extends TargetViewBase {
             }
         }
 
-        // Draw touch feedback if arrow is pressed
-        if (mCurPressed != -1) {
-            canvas.drawRect(midX + spacePerResult * mCurPressed + resultX1,
-                            midY + radius * 1.3f - 20 * density,
-                            spacePerResult * (mCurPressed + 1) + resultX1,
-                            midY + radius * 1.3f + 20 * density, grayBackground);
-        }
-
         // Draw all points of this passe at the bottom
-        for (int i = 0; i <= lastSetArrow && i < roundInfo.ppp; i++) {
-            float newX = spacePerResult * i + resultX1 + (spacePerResult / 2.0f);
-            float newY = midY + radius * 1.3f;
-            if (currentArrow != i && mCurSelecting != i) {
-                if (mCurSelecting == -2) {
-                    float oldX = oldSpacePerResult * i + oldResultX1 + (oldSpacePerResult / 2.0f);
-                    float oldY = mOutFromY + oldRadius * 1.3f;
-                    circle.draw(canvas, oldX + (newX - oldX) * mCurAnimationProgress,
-                                oldY + (newY - oldY) * mCurAnimationProgress, mPasse.shot[i].zone,
-                                17, false);
-                } else {
-                    circle.draw(canvas, newX, newY, mPasse.shot[i].zone, 17,
-                                !TextUtils.isEmpty(mPasse.shot[i].comment));
-                }
-            }
-        }
+        mPasseDrawer.draw(canvas);
+    }
 
-        // Draw animation
-        if (mCurSelecting > -1) {
-            // Draw outgoing object
-            if (mOutZone >= -1) {
-                circle.draw(canvas, mOutFromX + (mOutToX - mOutFromX) * mCurAnimationProgress,
-                            mOutFromY + (mOutToY - mOutFromY) * mCurAnimationProgress, mOutZone, 17,
-                            false);
-                if (mOutZone > -1 && mModeEasy) {
-                    int colorInd =
-                            mOutZone > -1 ? Target.target_rounds[roundInfo.target][mOutZone] : 3;
-                    int color = Target.circleStrokeColor[colorInd];
-                    circleColorP.setColor(animateColor(color, color & 0xFFFFFF));
-                    canvas.drawLine(midX, mOutFromY, midX + radius + 10 * density, mOutFromY,
-                                    circleColorP);
-                }
-            }
-            // Draw incoming object
-            if (mInZone >= -1) {
-                circle.draw(canvas, mInFromX + (mInToX - mInFromX) * mCurAnimationProgress,
-                            mInFromY + (mInToY - mInFromY) * mCurAnimationProgress, mInZone, 17,
-                            false);
-                if (mInZone > -1 && mModeEasy) {
-                    int colorInd =
-                            mInZone > -1 ? Target.target_rounds[roundInfo.target][mInZone] : 3;
-                    int color = Target.circleStrokeColor[colorInd];
-                    circleColorP.setColor(animateColor(color & 0xFFFFFF, color));
-                    canvas.drawLine(midX, mInToY, midX + radius + 10 * density, mInToY,
-                                    circleColorP);
-                }
-            }
-        }
+    private void drawZoomedInTarget(Canvas canvas) {
+        canvas.save(Canvas.CLIP_SAVE_FLAG);
+        float px = mPasse.shot[currentArrow].x;
+        float py = mPasse.shot[currentArrow].y;
+        int append = (px < 0 && py < 0) ? 1 : 0;
+        canvas.clipRect(midX - radius + append * radius, 0,
+                midX - radius + radius * (append + 1), midY, Region.Op.REPLACE);
+        int x = (int) (midX + radius * (append - 2 * px - 0.5));
+        int y = (int) (midY + radius * (-2 * py - 0.5));
+        drawTarget(canvas, x, y, radius * 2);
+        canvas.restore();
     }
 
     private void drawTarget(Canvas canvas, int x, int y, int radius) {
@@ -325,9 +263,9 @@ public class TargetView extends TargetViewBase {
         } else {
             float lineLength = radius / (float) (mZoneCount * 4);
             canvas.drawLine(x - lineLength, y - lineLength, x + lineLength, y + lineLength,
-                            midColor);
+                    midColor);
             canvas.drawLine(x - lineLength, y + lineLength, x + lineLength, y - lineLength,
-                            midColor);
+                    midColor);
         }
 
         // Draw exact arrow position
@@ -346,11 +284,23 @@ public class TargetView extends TargetViewBase {
             if (m.count >= 2) {
                 drawColorP.setColor(Color.RED);
                 canvas.drawCircle(x + (m.sumX / m.count) * radius, y + (m.sumY / m.count) * radius,
-                                  3 * density, drawColorP);
+                        3 * density, drawColorP);
             }
         }
     }
 
+    /**
+     * Draws all shots of a passe as dots onto the target.
+     * The currently selected shot is drawn as a cross.
+     *
+     * @param canvas Canvas to draw on
+     * @param x      X-coordinate of the middle of the target
+     * @param y      Y-coordinate of the middle of the target
+     * @param radius The targets radius in pixels
+     * @param m      Midpoint object where the information about this shot is added
+     * @param p      The passe to be drawn
+     * @param old    True if the provided passe is not the current one
+     */
     private void drawPasseShots(Canvas canvas, int x, int y, int radius, Midpoint m, Passe p, boolean old) {
         for (int i = 0;
              !old ? (i <= lastSetArrow + 1 && i < roundInfo.ppp && p.shot[i].zone != -2) :
@@ -381,6 +331,11 @@ public class TargetView extends TargetViewBase {
         }
     }
 
+    /**
+     * Draws a rect on the right that shows all possible points.
+     *
+     * @param canvas Canvas to draw on
+     */
     private void drawRightSelectorBar(Canvas canvas) {
         if (mModeEasy || mCurSelecting == -2) {
             for (int i = 0; i <= mZoneCount; i++) {
@@ -416,54 +371,26 @@ public class TargetView extends TargetViewBase {
                 // For yellow and white background use black font color
                 mTextPaint.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
                 canvas.drawText(Target.getStringByZone(roundInfo.target, i), X1 + (X2 - X1) / 2,
-                                Y1 + (Y2 - Y1) / 2 + 10 * density, mTextPaint);
+                        Y1 + (Y2 - Y1) / 2 + 10 * density, mTextPaint);
             }
         }
     }
 
     @Override
-    protected void initAnimationPositions() {
-        //Calculate positions of outgoing object
-        if (currentArrow > -1 && currentArrow < roundInfo.ppp &&
-                mPasse.shot[currentArrow].zone >= -1) {
-            mOutZone = mPasse.shot[currentArrow].zone;
-            mOutToX = spacePerResult * currentArrow + resultX1 + (spacePerResult / 2.0f);
-            mOutToY = midY + radius * 1.3f;
-            if (mModeEasy) {
-                mOutFromX = midX + radius + 27 * density;
-                if (mOutZone == -1) {
-                    mOutFromY = midY + radius;
-                } else {
-                    mOutFromY = midY + radius * (mOutZone + 1) / (float) mZoneCount;
-                }
+    protected Coordinate initAnimationPositions(int i) {
+        Coordinate coordinate = new Coordinate();
+        if (mModeEasy) {
+            coordinate.x = midX + radius + 27 * density;
+            if (mPasse.shot[i].zone == -1) {
+                coordinate.y = midY + radius;
             } else {
-                mOutFromX = midX + radius * mPasse.shot[currentArrow].x;
-                mOutFromY = midY + radius * mPasse.shot[currentArrow].y;
+                coordinate.y = midY + radius * (mPasse.shot[i].zone + 1) / (float) mZoneCount;
             }
         } else {
-            mOutZone = -2;
+            coordinate.x = midX + radius * mPasse.shot[i].x;
+            coordinate.y = midY + radius * mPasse.shot[i].y;
         }
-
-        // Calculate positions for incoming object
-        if (mCurSelecting > -1 && mCurSelecting < roundInfo.ppp &&
-                mPasse.shot[mCurSelecting].zone >= -1) {
-            mInZone = mPasse.shot[mCurSelecting].zone;
-            mInFromX = spacePerResult * mCurSelecting + resultX1 + (spacePerResult / 2.0f);
-            mInFromY = midY + radius * 1.3f;
-            if (mModeEasy) {
-                mInToX = midX + radius + 27 * density;
-                if (mInZone == -1) {
-                    mInToY = midY + radius;
-                } else {
-                    mInToY = midY + radius * (mInZone + 1) / (float) mZoneCount;
-                }
-            } else {
-                mInToX = midX + radius * mPasse.shot[mCurSelecting].x;
-                mInToY = midY + radius * mPasse.shot[mCurSelecting].y;
-            }
-        } else {
-            mInZone = -2;
-        }
+        return coordinate;
     }
 
     private int getZoneColor(int zone) {
@@ -475,34 +402,22 @@ public class TargetView extends TargetViewBase {
             curZone = -2;
         }
 
-        if ((mCurSelecting > -1 && zone == mInZone && mModeEasy) ||
-                (!mModeEasy && mCurSelecting == -2)) {
-            return animateColor(Target.grayColor[target[zone]],
-                                Target.highlightColor[target[zone]]);
-        } else if ((mCurSelecting > -1 && zone == mOutZone && mModeEasy) ||
-                (mModeEasy && mCurSelecting == -2)) {
-            return animateColor(Target.highlightColor[target[zone]],
-                                Target.grayColor[target[zone]]);
-        } else {
-            return (zone == curZone || !mModeEasy ? Target.highlightColor :
-                    Target.grayColor)[target[zone]];
+        int gray = Target.grayColor[target[zone]];
+        int highlight = Target.highlightColor[target[zone]];
+        if (mPasseDrawer.isAnimating() && mModeEasy) {
+            if (zone == mPasseDrawer.getSelectedZone()) {
+                return BitmapUtils.animateColor(gray, highlight, mPasseDrawer.getProgress());
+            } else if (zone == mPasseDrawer.getOldSelectedZone()) {
+                return BitmapUtils.animateColor(highlight, gray, mPasseDrawer.getProgress());
+            }
+        } else if (mCurSelecting == -2) {
+            if (mModeEasy) {
+                return BitmapUtils.animateColor(highlight, gray, mCurAnimationProgress);
+            } else {
+                return BitmapUtils.animateColor(gray, highlight, mCurAnimationProgress);
+            }
         }
-    }
-
-    int animateColor(int from, int to) {
-        final int fa = (from >> 24) & 0xFF;
-        final int fr = (from >> 16) & 0xFF;
-        final int fg = (from >> 8) & 0xFF;
-        final int fb = (from) & 0xFF;
-        final int da = ((to >> 24) & 0xFF) - fa;
-        final int dr = ((to >> 16) & 0xFF) - fr;
-        final int dg = ((to >> 8) & 0xFF) - fg;
-        final int db = ((to) & 0xFF) - fb;
-        final int ra = (int) (fa + da * mCurAnimationProgress);
-        final int rr = (int) (fr + dr * mCurAnimationProgress);
-        final int rg = (int) (fg + dg * mCurAnimationProgress);
-        final int rb = (int) (fb + db * mCurAnimationProgress);
-        return (ra << 24) | (rr << 16) | (rg << 8) | rb;
+        return zone == curZone || !mModeEasy ? highlight : gray;
     }
 
     @Override
@@ -524,9 +439,12 @@ public class TargetView extends TargetViewBase {
         radius = (int) (Math.min(radW, radH));
         midX = mModeEasy ? 0 : contentWidth / 2;
         midY = radius + (int) (10 * density);
-        resultX1 = 30 * density;
-        resultX2 = contentWidth - (mModeEasy ? 80 : 30) * density;
-        spacePerResult = (resultX2 - resultX1) / roundInfo.ppp;
+        RectF rect = new RectF();
+        rect.left = (mModeEasy ? 20 : 30) * density;
+        rect.right = contentWidth - (mModeEasy ? 80 : 30) * density;
+        rect.top = midY + radius;
+        rect.bottom = contentHeight;
+        mPasseDrawer.animateToRect(rect);
     }
 
     @Override
@@ -555,34 +473,31 @@ public class TargetView extends TargetViewBase {
     @Override
     protected boolean selectPreviousShots(MotionEvent motionEvent, float x, float y) {
         // Handle selection of already saved shoots
-        if (x > resultX1 && x < resultX2 && y > midY + radius * 1.3f - 20 * density &&
-                y < midY + radius * 1.3f + 20 * density) {
-            final int arrow = (int) ((x - resultX1) / spacePerResult);
-            if (arrow < roundInfo.ppp && mPasse.shot[arrow].zone >= -1 && arrow != currentArrow) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    if (longPressTimer != null) {
-                        mCurPressed = -1;
-                        longPressTimer.cancel();
-                        longPressTimer = null;
-                        animateSelectCircle(arrow);
-                    }
-                } else if (mCurPressed != arrow) {
-                    // If new item gets selected cancel old timer and start new one
-                    mCurPressed = arrow;
-                    if (longPressTimer != null) {
-                        longPressTimer.cancel();
-                    }
-                    longPressTimer = new Timer();
-                    longPressTimer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            h.post(task);
-                        }
-                    }, 1500);
+        int arrow = mPasseDrawer.getPressedPosition(x, y);
+        if (arrow != -1) {
+            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                if (longPressTimer != null) {
+                    mPasseDrawer.setPressed(-1);
+                    longPressTimer.cancel();
+                    longPressTimer = null;
+                    animateSelectCircle(arrow);
                 }
-                invalidate();
-                return true;
+            } else if (mPasseDrawer.getPressed() != arrow) {
+                // If new item gets selected cancel old timer and start new one
+                mPasseDrawer.setPressed(arrow);
+                if (longPressTimer != null) {
+                    longPressTimer.cancel();
+                }
+                longPressTimer = new Timer();
+                longPressTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        h.post(task);
+                    }
+                }, 1500);
             }
+            invalidate();
+            return true;
         }
         return false;
     }
@@ -590,11 +505,9 @@ public class TargetView extends TargetViewBase {
     private void animateMode() {
         mCurSelecting = -2;
         mCurAnimationProgress = 0;
-        oldRadius = radius;
-        oldResultX1 = resultX1;
-        oldSpacePerResult = spacePerResult;
         mOutFromX = midX;
         mOutFromY = midY;
+        oldRadius = radius;
         calcSizes();
 
         final ValueAnimator moveAnimator = ValueAnimator.ofFloat(0, 1);

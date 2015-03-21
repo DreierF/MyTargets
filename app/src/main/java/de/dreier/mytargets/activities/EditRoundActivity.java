@@ -30,6 +30,7 @@ import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.utils.MyBackupAgent;
 import de.dreier.mytargets.views.DialogSpinner;
+import de.dreier.mytargets.views.NumberPicker;
 
 public class EditRoundActivity extends ActionBarActivity {
 
@@ -44,7 +45,6 @@ public class EditRoundActivity extends ActionBarActivity {
     private DialogSpinner arrow;
     private DialogSpinner target;
     public static final int[] distanceValues = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
-    private RadioButton ppp2, ppp3;
     private boolean mCalledFromPasse = false;
     private int mBowId = 0;
     private EditText training;
@@ -52,6 +52,7 @@ public class EditRoundActivity extends ActionBarActivity {
     private View customDist;
     private EditText distanceVal;
     private boolean custom = false;
+    private NumberPicker ppp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +77,9 @@ public class EditRoundActivity extends ActionBarActivity {
         SharedPreferences prefs = getSharedPreferences(MyBackupAgent.PREFS, 0);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                                                          android.R.layout.simple_spinner_item,
-                                                          getResources().getStringArray(
-                                                                  R.array.distances));
+                android.R.layout.simple_spinner_item,
+                getResources().getStringArray(
+                        R.array.distances));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         training = (EditText) findViewById(R.id.training);
         customDist = findViewById(R.id.customDist);
@@ -105,9 +106,9 @@ public class EditRoundActivity extends ActionBarActivity {
         indoor = (RadioButton) findViewById(R.id.indoor);
 
         // Points per passe
-        ppp2 = (RadioButton) findViewById(R.id.ppp2);
-        ppp3 = (RadioButton) findViewById(R.id.ppp3);
-        RadioButton ppp6 = (RadioButton) findViewById(R.id.ppp6);
+        ppp = (NumberPicker) findViewById(R.id.ppp);
+        ppp.setMinimum(1);
+        ppp.setMaximum(10);
 
         // Bow
         bow = (DialogSpinner) findViewById(R.id.bow);
@@ -152,10 +153,7 @@ public class EditRoundActivity extends ActionBarActivity {
             }
             indoor.setChecked(prefs.getBoolean("indoor", false));
             outdoor.setChecked(!prefs.getBoolean("indoor", false));
-            int ppp = prefs.getInt("ppp", 3);
-            ppp2.setChecked(ppp == 2);
-            ppp3.setChecked(ppp == 3);
-            ppp6.setChecked(ppp == 6);
+            ppp.setValue(prefs.getInt("ppp", 3));
             bow.setItemId(prefs.getInt("bow", 0));
             arrow.setItemId(prefs.getInt("arrow", 0));
             target.setItemId(prefs.getInt("target", 2));
@@ -177,17 +175,13 @@ public class EditRoundActivity extends ActionBarActivity {
             }
             indoor.setChecked(r.indoor);
             outdoor.setChecked(!r.indoor);
-            ppp2.setChecked(r.ppp == 2);
-            ppp3.setChecked(r.ppp == 3);
-            ppp6.setChecked(r.ppp == 6);
+            ppp.setValue(r.ppp);
             bow.setItemId(r.bow);
             arrow.setItemId(r.arrow);
             target.setItemId(r.target);
             comment.setText(r.comment);
 
-            ppp2.setEnabled(false);
-            ppp3.setEnabled(false);
-            ppp6.setEnabled(false);
+            ppp.setEnabled(false);
             bow.setEnabled(false);
             arrow.setEnabled(false);
             target.setEnabled(false);
@@ -235,13 +229,13 @@ public class EditRoundActivity extends ActionBarActivity {
             new AlertDialog.Builder(this).setTitle(R.string.title_compound)
                     .setMessage(R.string.msg_compound_type)
                     .setPositiveButton(R.string.compound_bow,
-                                       new DialogInterface.OnClickListener() {
-                                           @Override
-                                           public void onClick(DialogInterface dialog, int which) {
-                                               mBowId = -2;
-                                               onSave();
-                                           }
-                                       })
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    mBowId = -2;
+                                    onSave();
+                                }
+                            })
                     .setNegativeButton(R.string.other_bow, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -275,7 +269,7 @@ public class EditRoundActivity extends ActionBarActivity {
         }
         round.unit = "m";
 
-        round.ppp = ppp2.isChecked() ? 2 : (ppp3.isChecked() ? 3 : 6);
+        round.ppp = ppp.getValue();
         round.indoor = indoor.isChecked();
         round.comment = comment.getTextString();
         db.updateRound(round);

@@ -100,6 +100,7 @@ public class MainActivity extends ActionBarActivity
         supportedLanguages.add("es");
         supportedLanguages.add("ru");
         supportedLanguages.add("nl");
+        supportedLanguages.add("it");
 
         final SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(MainActivity.this);

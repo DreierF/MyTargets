@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General -->
+    <string name="prev">Precedente</string>
+    <string name="next">Successivo</string>
+    <string name="save">Salva</string>
+    <string name="custom">Personalizzato</string>
+    <string name="training">Allenamento</string>
+    <string name="bow">Arco</string>
+    <string name="arrow">Freccia</string>
+    <string name="round">Round</string>
+    <string name="points">Punti</string>
+    <string name="passe">Volée</string>
+    <string name="passe_n">Volée %d</string>
+    
+    <!-- Overview -->
+    <string name="new_training">Nuovo allenamento</string>
+    <string name="new_bow">Nuovo arco</string>
+    <string name="new_arrow">Nuova freccia</string>
+    <string name="new_round">Nuovo round</string>
+    <string name="new_passe">Nuova volée</string>
+    <plurals name="training">
+        <item quantity="one">Un allenamento selezionato</item>
+        <item quantity="other">%d allenamenti selezionati</item>
+    </plurals>
+    <plurals name="bow">
+        <item quantity="one">Un arco selezionato</item>
+        <item quantity="other">%d archi selezionati</item>
+    </plurals>
+    <plurals name="arrow">
+        <item quantity="one">Una freccia selezionata</item>
+        <item quantity="other">%d frecce selezionate</item>
+    </plurals>
+    <plurals name="round">
+        <item quantity="one">Un round selezionato</item>
+        <item quantity="other">%d round selezionati</item>
+    </plurals>
+    <plurals name="passe">
+        <item quantity="one">Una volée selezionata</item>
+        <item quantity="other">%d volée selezionate</item>
+    </plurals>
+    <string name="edit">Modifica</string>
+    <string name="delete">Elimina</string>
+    <string name="statistic">Statistiche</string>
+
+    <!-- Share -->
+    <string name="share">Condividi</string>
+    <string name="my_share_text">Ehi, guarda il mio punteggio sul campo di tiro!\n%1$d volte X\n%2$d volte 10\n%3$d volte 9\n Per un totale di %4$d fuori da %5$d anelli.</string>
+    <string name="comments">Commenti</string>
+    <string name="text">Testo</string>
+    <string name="dispersion_pattern">modello di dispersione</string>
+    <string name="sharing_failed">Condivisione fallita!</string>
+
+    <!-- Export -->
+    <string name="export">Esporta</string>
+    <string name="send_exported">Invia dati esportati</string>
+    <string name="exporting_failed">Esportazione fallita!</string>
+
+    <!-- New bow -->
+    <string name="add_bow">Aggiungi arco</string>
+    <string name="name">Nome</string>
+    <string name="bow_type">Tipo di arco</string>
+    <string name="recurve_bow">Arco ricurvo</string>
+    <string name="compound_bow">Arco compound</string>
+    <string name="bare_bow">Arco nudo</string>
+    <string name="long_bow">Arco lungo</string>
+    <string name="horse_bow">Arco da cavallo</string>
+    <string name="yumi">Yumi</string>
+    <string name="properties">Proprietà</string>
+    <string name="brand">Marca</string>
+    <string name="size">Misura</string>
+    <string name="description">Descrizione</string>
+    <string name="height">Altezza brace</string>
+    <string name="tiller">Timone</string>
+    <string name="sight_settings">Impstazioni vista</string>
+    <string name="add">Aggiungi</string>
+    <string name="select_picture">Seleziona un\'immagine</string>
+    <string name="take_picture">Scatta una foto</string>
+    <string name="pick_from_gallery">Seleziona un\'immagine dalla galleria</string>
+
+    <!-- New arrow -->
+    <string name="add_arrow">Aggiungi freccia</string>
+    <string name="length">Lunghezza</string>
+    <string name="spine">Punta</string>
+    <string name="weight">Peso</string>
+    <string name="vanes">Alette</string>
+    <string name="nock">Cocca</string>
+    <string name="material">Materiale</string>
+
+    <!-- New round -->
+    <string name="title">Titolo</string>
+    <string name="outdoor">Outdoor</string>
+    <string name="indoor">Indoor</string>
+    <string name="distance">Distanza</string>
+    <string name="arrows_per_passe">Frecce per volée</string>
+    <string name="target_round">Targa</string>
+    <string name="title_compound">Compound?</string>
+    <string name="msg_compound_type">Che tipo di arco stai usando? (C\'è una differenza in quanti punti prenderai per il cerchio giallo)</string>
+    <string name="other_bow">Altro arco</string>
+
+    <!-- Scoreboard -->
+    <string name="scoreboard">Segnapunti</string>
+    <string name="arrows">Frecce</string>
+    <string name="sum">Totale</string>
+    <string name="carry">Sposta</string>
+    <string name="action_print">Stampa</string>
+    <string name="nine">Nove</string>
+    <string name="ten_x">Dieci+X</string>
+    <string name="average">Media</string>
+
+    <!-- Input mode -->
+    <string name="switch_mode">Cambia modalità di input</string>
+    <string name="show_all">Mostra tutti gli impatti</string>
+    <string name="comment">Commento</string>
+
+    <!-- Statistics -->
+    <string name="all_trainings">Tutti gli allenamenti</string>
+    <string name="entire_training">Allenamento intero</string>
+    <string name="current_round">Round corrente</string>
+
+    <!-- Import/Backup -->
+    <string name="backup_action">Backup</string>
+    <string name="import_action">Importa</string>
+    <string name="select_a_file">Seleziona un file</string>
+    <string name="dir_not_created">La directory non può essere creata!</string>
+    <string name="backup_successful">Backup completato con successo!</string>
+    <string name="backup_saved_as">Il backup è stato salvato in \'%s\'.</string>
+    <string name="backup_failed">Backup fallito!</string>
+    <string name="backup_error">Un errore si è verificato durante il backup:\n%s</string>
+    <string name="sd_card_not_available_title">Scheda SD non disponibile!</string>
+    <string name="sd_card_not_available_desc">Perfavore inserisci una SD card e riprova!</string>
+    <string name="import_successful">Importazione completata con successo!</string>
+    <string name="import_failed">Importazione fallita!</string>
+    <string name="file_not_found">File non trovato!</string>
+    <string name="failed_reading_file">Lettura del file fallita!</string>
+
+    <!-- Donate -->
+    <string name="donate_action">Dona</string>
+    <string name="donate_2">Donami un hambuger</string>
+    <string name="donate_5">Donami un kebab</string>
+    <string name="donate_10">Donami una pizza farcita</string>
+    <string name="donate_20">Donami un po\' di benzina</string>
+    <string name="donate_infinite">Supporto mensile</string>
+    <string name="donation_thank">Grazie per il tuo supporto!</string>
+    <string name="monthly">mensile %s</string>
+    <string name="donate_text">I prezzi sono inclusi di VAT e del 30% a Google. Alternativamente puoi donare sul mio account PayPal dreier.florian@gmail.com.</string>
+
+</resources>

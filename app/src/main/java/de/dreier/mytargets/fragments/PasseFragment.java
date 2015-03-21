@@ -38,11 +38,11 @@ import de.dreier.mytargets.models.Arrow;
 import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.models.Target;
+import de.dreier.mytargets.utils.Target;
 import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.TargetImage;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.views.PassesView;
+import de.dreier.mytargets.views.PasseView;
 
 /**
  * Shows all passes of one round
@@ -313,19 +313,19 @@ public class PasseFragment extends NowListFragment<Passe>
     }
 
     public class ViewHolder extends CardViewHolder<Passe> {
-        public final PassesView mShots;
+        public final PasseView mShots;
         public final TextView mSubtitle;
 
         public ViewHolder(View itemView) {
             super(itemView, mMultiSelector, PasseFragment.this);
-            mShots = (PassesView) itemView.findViewById(R.id.shoots);
+            mShots = (PasseView) itemView.findViewById(R.id.shoots);
             mSubtitle = (TextView) itemView.findViewById(R.id.passe);
         }
 
         @Override
         public void bindCursor() {
             Context context = mSubtitle.getContext();
-            mShots.setPoints(mItem.shot, mRoundInfo.target);
+            mShots.setPoints(mItem, mRoundInfo.target);
             mSubtitle.setText(context.getString(R.string.passe_n, getPosition()));
         }
     }

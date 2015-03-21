@@ -10,7 +10,7 @@
 
         <view
             android:id="@+id/shoots"
-            class="de.dreier.mytargets.views.PassesView"
+            class="de.dreier.mytargets.views.PasseView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

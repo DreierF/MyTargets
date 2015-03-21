@@ -21,11 +21,11 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.WearMessageManager;
 import de.dreier.mytargets.models.Bow;
-import de.dreier.mytargets.models.OnTargetSetListener;
+import de.dreier.mytargets.utils.OnTargetSetListener;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
-import de.dreier.mytargets.models.Target;
+import de.dreier.mytargets.utils.Target;
 import de.dreier.mytargets.utils.WearableUtils;
 import de.dreier.mytargets.views.TargetView;
 

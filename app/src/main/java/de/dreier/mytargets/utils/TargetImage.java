@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.models.Target;
 
 public class TargetImage {
 

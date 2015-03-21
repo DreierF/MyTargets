@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
-import de.dreier.mytargets.models.OnTargetSetListener;
+import de.dreier.mytargets.utils.OnTargetSetListener;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.utils.WearableUtils;
 

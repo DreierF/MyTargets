@@ -3,11 +3,15 @@ package de.dreier.mytargets;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import de.dreier.mytargets.models.Coordinate;
+import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
-import de.dreier.mytargets.models.Target;
+import de.dreier.mytargets.utils.Circle;
+import de.dreier.mytargets.utils.Target;
 import de.dreier.mytargets.views.TargetViewBase;
 
 public class TargetSelectView extends TargetViewBase {
@@ -16,14 +20,9 @@ public class TargetSelectView extends TargetViewBase {
 
     private Paint drawColorP;
 
-    private float mInFromX, mInFromY;
-    private float mInToX, mInToY;
-    private float mOutFromX, mOutFromY;
-    private float mOutToX, mOutToY;
-    private int mInZone, mOutZone;
     private int chinHeight;
     private double circRadius;
-    private boolean twoRows;
+    private Circle mCircle;
 
     public TargetSelectView(Context context) {
         super(context);
@@ -52,6 +51,12 @@ public class TargetSelectView extends TargetViewBase {
     }
 
     @Override
+    public void setRoundInfo(Round r) {
+        super.setRoundInfo(r);
+        mCircle = new Circle(density, r.target);
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         int curZone;
         if (currentArrow < roundInfo.ppp) {
@@ -66,90 +71,41 @@ public class TargetSelectView extends TargetViewBase {
 
         // Draw all possible points in a circular
         for (int i = -1; i < mZoneCount; i++) {
-            float[] coord = getCircularCoords(i);
-            circle.draw(canvas, coord[0], coord[1], i, i == curZone ? 23 : 17, false);
+            Coordinate coord = getCircularCoords(i);
+            mCircle.draw(canvas, coord.x, coord.y, i, i == curZone ? 23 : 17, false);
         }
 
         // Draw all points of this passe in the center
-        drawSelectedPointsInCenter(canvas);
-
-        // Draw animation
-        if (mCurSelecting > -1) {
-            // Draw outgoing object
-            if (mOutZone >= -1) {
-                circle.draw(canvas, mOutFromX + (mOutToX - mOutFromX) * mCurAnimationProgress,
-                            mOutFromY + (mOutToY - mOutFromY) * mCurAnimationProgress, mOutZone,
-                            (int) (17 - (17 - 10) * mCurAnimationProgress), false);
-            }
-            // Draw incoming object
-            if (mInZone >= -1) {
-                circle.draw(canvas, mInFromX + (mInToX - mInFromX) * mCurAnimationProgress,
-                            mInFromY + (mInToY - mInFromY) * mCurAnimationProgress, mInZone,
-                            (int) (10 + (17 - 10) * mCurAnimationProgress), false);
-            }
-        }
+        mPasseDrawer.draw(canvas);
     }
 
-    private void drawSelectedPointsInCenter(Canvas canvas) {
-        // Draw the points
-        twoRows = roundInfo.ppp > 3;
-        for (int i = 0; i <= lastSetArrow && i < roundInfo.ppp; i++) {
-            float newX = radius + ((i % 3) - 1) * 25 * density;
-            float newY = radius - 25 * density +
-                    (i < 3 ? -1 : 1) * (twoRows ? 15 * density : -5 * density);
-            if (currentArrow != i && mCurSelecting != i) {
-                circle.draw(canvas, newX, newY, mPasse.shot[i].zone, 10, false);
-            }
-        }
-    }
-
-    private float[] getCircularCoords(int zone) {
+    private Coordinate getCircularCoords(int zone) {
         double degree = Math.toRadians(zone * 360.0 / (double) (mZoneCount + 1));
-        float[] coord = new float[2];
-        coord[0] = (float) (radius + (Math.cos(degree) * circRadius));
-        coord[1] = (float) (radius + (Math.sin(degree) * circRadius));
+        Coordinate coord = new Coordinate();
+        coord.x = (float) (radius + (Math.cos(degree) * circRadius));
+        coord.y = (float) (radius + (Math.sin(degree) * circRadius));
         float bound = contentHeight - (chinHeight + 15) * density;
-        if (coord[1] > bound) {
-            coord[1] = bound;
+        if (coord.y > bound) {
+            coord.y = bound;
         }
         return coord;
     }
 
     @Override
-    protected void initAnimationPositions() {
-        twoRows = roundInfo.ppp > 3;
-
-        //Calculate positions of outgoing object
-        if (currentArrow < roundInfo.ppp && mPasse.shot[currentArrow].zone >= -1) {
-            mOutZone = mPasse.shot[currentArrow].zone;
-            mOutToX = radius + ((currentArrow % 3) - 1) * 25 * density;
-            mOutToY = radius - 25 * density +
-                    (currentArrow < 3 ? -1 : 1) * (twoRows ? 15 * density : -5 * density);
-            float[] coord = getCircularCoords(mOutZone);
-            mOutFromX = coord[0];
-            mOutFromY = coord[1];
-        } else {
-            mOutZone = -2;
-        }
-
-        // Calculate positions for incoming object
-        if (mCurSelecting < roundInfo.ppp && mPasse.shot[mCurSelecting].zone >= -1) {
-            mInZone = mPasse.shot[mCurSelecting].zone;
-            float[] coord = getCircularCoords(mInZone);
-            mInFromX = coord[0];
-            mInFromY = coord[1];
-            mInToX = radius + ((mCurSelecting % 3) - 1) * 25 * density;
-            mInToY = radius - 25 * density +
-                    (mCurSelecting < 3 ? -1 : 1) * (twoRows ? 15 * density : -5 * density);
-        } else {
-            mInZone = -2;
-        }
+    protected Coordinate initAnimationPositions(int i) {
+        return getCircularCoords(mPasse.shot[currentArrow].zone);
     }
 
     @Override
     protected void calcSizes() {
         radius = (int) (contentWidth / 2.0);
         circRadius = radius - 25 * density;
+        RectF rect = new RectF();
+        rect.left = radius - 35 * density;
+        rect.right = radius + 35 * density;
+        rect.top = radius / 2;
+        rect.bottom = radius;
+        mPasseDrawer.animateToRect(rect);
     }
 
     @Override
