@@ -21,31 +21,31 @@
     <string name="new_round">Новый раунд</string>
     <string name="new_passe">Новая серия</string>
 
-    <plurals name="training">
+    <plurals name="training_selected">
         <item quantity="one">%d тренировка выбрана</item>
         <item quantity="other">%d тренировки выбраны</item>
         <item quantity="few">%d тренировки выбраны</item>
         <item quantity="many">%d тренировок выбраны</item>
     </plurals>
-    <plurals name="bow">
+    <plurals name="bow_selected">
         <item quantity="one">%d лук выбран</item>
         <item quantity="other">%d луков выбраны</item>
         <item quantity="few">%d лука выбраны</item>
         <item quantity="many">%d луков выбраны</item>
     </plurals>
-    <plurals name="arrow">
+    <plurals name="arrow_selected">
         <item quantity="one">%d стрела выбрана</item>
         <item quantity="other">%d стрелы выбраны</item>
         <item quantity="few">%d стрелы выбраны</item>
         <item quantity="many">%d стрел выбраны</item>
     </plurals>
-    <plurals name="round">
+    <plurals name="round_selected">
         <item quantity="one">%d раунд выбран</item>
         <item quantity="other">%d раундов выбраны</item>
         <item quantity="few">%d раунда выбраны</item>
         <item quantity="many">%d раундов выбраны</item>
     </plurals>
-    <plurals name="passe">
+    <plurals name="passe_selected">
         <item quantity="one">%d серия выбрана</item>
         <item quantity="other">%d серий выбраны</item>
         <item quantity="few">%d серии выбраны</item>
@@ -104,7 +104,23 @@
     <string name="outdoor">На улице</string>
     <string name="indoor">В помещении</string>
     <string name="distance">Дистанция</string>
-    <string name="arrows_per_passe">Количество стрел в серии</string>
+    <string name="format">Format</string>
+
+    <!-- x passes with y arrows -->
+    <plurals name="passe">
+        <item quantity="one">%d серия</item>
+        <item quantity="other">%d серий</item>
+        <item quantity="few">%d серии</item>
+        <item quantity="many">%d серий</item>
+    </plurals>
+    <string name="with">with</string>
+    <plurals name="arrow">
+        <item quantity="one">%d стрела</item>
+        <item quantity="other">%d стрелы</item>
+        <item quantity="few">%d стрелы</item>
+        <item quantity="many">%d стрел</item>
+    </plurals>
+
     <string name="target_round">Размер мишени</string>
     <string name="title_compound">Блочный лук?</string>
     <string name="msg_compound_type">Из какого лука вы стреляете? (Различие в количестве очков, которые вы получите при попадании в центр)</string>
@@ -124,6 +140,14 @@
     <string name="switch_mode">Сменить метод ввода</string>
     <string name="show_all">Показать все попадания</string>
     <string name="comment">Комментарии</string>
+    <plurals name="passes_finished">
+        <item quantity="one">%d серия отделкой</item>
+        <item quantity="other">%d серий отделкой</item>
+        <item quantity="few">%d серии отделкой</item>
+        <item quantity="many">%d серий отделкой</item>
+    </plurals>
+    <string name="passes_finished_now_what">You have finished your round. What would you like to do now?</string>
+    <string name="continue_with_next">Continue</string>
 
     <!-- Statistics -->
     <string name="all_trainings">Все тренировки</string>

@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.utils;
 
 import android.content.Context;
@@ -53,8 +60,8 @@ public class TargetImage {
                 float rad = (radius * i) / (float) mZoneCount;
                 canvas.drawCircle(radius, radius, rad, drawColorP);
                 canvas.drawCircle(radius, radius, rad,
-                                  Target.target_rounds[roundInfo.target][i - 1] == 3 ?
-                                          thinWhiteBorder : thinBlackBorder);
+                        Target.target_rounds[roundInfo.target][i - 1] == 3 ?
+                                thinWhiteBorder : thinBlackBorder);
             }
         }
 
@@ -68,9 +75,9 @@ public class TargetImage {
         } else {
             float lineLength = radius / (float) (mZoneCount * 4);
             canvas.drawLine(radius - lineLength, radius - lineLength, radius + lineLength,
-                            radius + lineLength, midColor);
+                    radius + lineLength, midColor);
             canvas.drawLine(radius - lineLength, radius + lineLength, radius + lineLength,
-                            radius - lineLength, midColor);
+                    radius - lineLength, midColor);
         }
 
         // Draw exact arrow position
@@ -110,7 +117,7 @@ public class TargetImage {
         if (count >= 2) {
             drawColorP.setColor(Color.RED);
             canvas.drawCircle(radius + (sumX / count) * radius, radius + (sumY / count) * radius,
-                              3 * density, drawColorP);
+                    3 * density, drawColorP);
         }
     }
 

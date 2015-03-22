@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.views;
 
 import android.content.Context;
@@ -168,14 +175,14 @@ public class ChartView extends RelativeLayout {
         // Enclose the grid on both sides for neatness
         if (axis == Axis.X) {
             canvas.drawLine(mGridBounds.left, mGridBounds.top,
-                            mGridBounds.left, mGridBounds.bottom, mPaint);
+                    mGridBounds.left, mGridBounds.bottom, mPaint);
             canvas.drawLine(mGridBounds.right, mGridBounds.top,
-                            mGridBounds.right, mGridBounds.bottom, mPaint);
+                    mGridBounds.right, mGridBounds.bottom, mPaint);
         } else {
             canvas.drawLine(mGridBounds.left, mGridBounds.top,
-                            mGridBounds.right, mGridBounds.top, mPaint);
+                    mGridBounds.right, mGridBounds.top, mPaint);
             canvas.drawLine(mGridBounds.left, mGridBounds.bottom,
-                            mGridBounds.right, mGridBounds.bottom, mPaint);
+                    mGridBounds.right, mGridBounds.bottom, mPaint);
         }
 
         int drawn = 0;
@@ -206,25 +213,25 @@ public class ChartView extends RelativeLayout {
                 // Points
                 // Draw a horizontal line at this y-value
                 canvas.drawLine(mGridBounds.left, pointCoordinate.floatValue(),
-                                mGridBounds.right, pointCoordinate.floatValue(), mPaint);
+                        mGridBounds.right, pointCoordinate.floatValue(), mPaint);
                 // And the text label
                 if (point <= maxPoint) {
                     if (valueHeight == 100) {
                         canvas.drawText((100 - point) + "%",
-                                        mLeftLabelWidth / 2, // centre it in the left label
-                                        // gutter
-                                        pointCoordinate.floatValue() + (mLabelTextSize / 2),
-                                        // since the text is drawn from the middle-bottom we
-                                        // need to push it down a little more
-                                        mTextPaint);
+                                mLeftLabelWidth / 2, // centre it in the left label
+                                // gutter
+                                pointCoordinate.floatValue() + (mLabelTextSize / 2),
+                                // since the text is drawn from the middle-bottom we
+                                // need to push it down a little more
+                                mTextPaint);
                     } else {
                         canvas.drawText("" + Target.getStringByZone(mRoundInfo.target, (int) point),
-                                        mLeftLabelWidth / 2, // centre it in the left label
-                                        // gutter
-                                        pointCoordinate.floatValue() + (mLabelTextSize / 2),
-                                        // since the text is drawn from the middle-bottom we
-                                        // need to push it down a little more
-                                        mTextPaint);
+                                mLeftLabelWidth / 2, // centre it in the left label
+                                // gutter
+                                pointCoordinate.floatValue() + (mLabelTextSize / 2),
+                                // since the text is drawn from the middle-bottom we
+                                // need to push it down a little more
+                                mTextPaint);
                     }
                 }
             }

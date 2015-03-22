@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.views;
 
 import android.content.Context;
@@ -197,7 +204,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
             if (mTabViewLayoutId != 0) {
                 // If there is a custom tab view layout id set, try and inflate it
                 tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip,
-                                                                    false);
+                        false);
                 tabTitleView = (TextView) tabView.findViewById(mTabViewTextViewId);
             }
 
@@ -280,7 +287,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
             if (mViewPagerPageChangeListener != null) {
                 mViewPagerPageChangeListener.onPageScrolled(position, positionOffset,
-                                                            positionOffsetPixels);
+                        positionOffsetPixels);
             }
         }
 

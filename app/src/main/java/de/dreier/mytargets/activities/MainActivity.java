@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.activities;
 
 import android.app.AlertDialog;
@@ -87,7 +94,7 @@ public class MainActivity extends ActionBarActivity
 
                 mInfiniteSupported = mHelper.subscriptionsSupported();
                 mHelper.queryInventoryAsync(true, DonateDialogFragment.donations,
-                                            mGotInventoryListener);
+                        mGotInventoryListener);
             }
         });
     }
@@ -111,11 +118,11 @@ public class MainActivity extends ActionBarActivity
         if (!supportedLanguages.contains(shortLocale) && !shown && !shownThisTime) {
             // Link the e-mail address in the message
             final SpannableString s = new SpannableString(Html.fromHtml("If you would like " +
-                                                                                "to help make MyTargets even better by translating the app to " +
-                                                                                longLang +
-                                                                                ", please send me an E-Mail (dreier.florian@gmail.com) " +
-                                                                                "so I can give you access to the translation file!<br /><br />" +
-                                                                                "Thanks in advance :)"));
+                    "to help make MyTargets even better by translating the app to " +
+                    longLang +
+                    ", please send me an E-Mail (dreier.florian@gmail.com) " +
+                    "so I can give you access to the translation file!<br /><br />" +
+                    "Thanks in advance :)"));
             Linkify.addLinks(s, Linkify.EMAIL_ADDRESSES);
             AlertDialog d = new AlertDialog.Builder(this).setTitle("App translation")
                     .setMessage(s)
@@ -165,7 +172,7 @@ public class MainActivity extends ActionBarActivity
                                 @Override
                                 public void run() {
                                     Toast.makeText(MainActivity.this, R.string.exporting_failed,
-                                                   Toast.LENGTH_LONG).show();
+                                            Toast.LENGTH_LONG).show();
                                 }
                             });
                         }
@@ -257,11 +264,11 @@ public class MainActivity extends ActionBarActivity
     public void onDonate(int position) {
         if (position < 4) {
             mHelper.launchPurchaseFlow(this, DonateDialogFragment.donations.get(position),
-                                       RC_REQUEST, mPurchaseFinishedListener, "");
+                    RC_REQUEST, mPurchaseFinishedListener, "");
         } else {
             mHelper.launchPurchaseFlow(this, DonateDialogFragment.donations.get(position),
-                                       IabHelper.ITEM_TYPE_SUBS,
-                                       RC_REQUEST, mPurchaseFinishedListener, "");
+                    IabHelper.ITEM_TYPE_SUBS,
+                    RC_REQUEST, mPurchaseFinishedListener, "");
         }
     }
 

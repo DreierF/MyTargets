@@ -5,28 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Spinner
-        android:id="@+id/distance"
+    <de.dreier.mytargets.views.DistanceDialogSpinner
+        android:id="@+id/distance_spinner"
         android:layout_width="70dp"
-        android:layout_height="wrap_content" />
-
-    <LinearLayout
-        android:id="@+id/customDist"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/distanceVal"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:inputType="number" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/meter_short" />
-    </LinearLayout>
+        android:orientation="vertical"/>
 
     <EditText
         android:id="@+id/sight_setting"

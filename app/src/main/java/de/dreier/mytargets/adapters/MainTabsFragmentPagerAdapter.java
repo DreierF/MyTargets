@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.adapters;
 
 import android.content.Context;
@@ -10,9 +17,6 @@ import de.dreier.mytargets.fragments.ArrowFragment;
 import de.dreier.mytargets.fragments.BowFragment;
 import de.dreier.mytargets.fragments.TrainingsFragment;
 
-/**
- * Created by Florian on 05.03.2015.
- */
 public class MainTabsFragmentPagerAdapter extends FragmentPagerAdapter {
     private final Context context;
 

@@ -1,7 +1,13 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.views;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBarActivity;
@@ -13,9 +19,7 @@ import android.widget.ListAdapter;
 
 import de.dreier.mytargets.fragments.SpinnerDialogFragment;
 
-/**
- * Created by Florian on 23.02.2015.
- */
+
 public class DialogSpinner extends LinearLayout
         implements View.OnClickListener, SpinnerDialogFragment.SpinnerDialogListener {
 
@@ -26,9 +30,9 @@ public class DialogSpinner extends LinearLayout
     private int resTitle;
     private int size;
     private Button addButton;
-    private Intent addIntent;
     private int resAddText;
     private long currentItemId = 0;
+    private OnClickListener mListener;
 
     public DialogSpinner(Context context) {
         super(context);
@@ -38,9 +42,8 @@ public class DialogSpinner extends LinearLayout
         super(context, attrs);
     }
 
-    public void setAdapter(ListAdapter adapter, @StringRes int title) {
+    public void setAdapter(ListAdapter adapter) {
         this.adapter = adapter;
-        this.resTitle = title;
         size = adapter.getCount();
         if (size == 0) {
             currentItemId = 0;
@@ -50,16 +53,17 @@ public class DialogSpinner extends LinearLayout
         updateView();
     }
 
-    public void setAddButton(Button button, @StringRes int text, Intent intent) {
+    public void setTitle(@StringRes int title) {
+        this.resTitle = title;
+    }
+
+    public void setAddButton(Button button, @StringRes int text, OnClickListener listener) {
         addButton = button;
         resAddText = text;
-        addIntent = intent;
-        addButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onDialogAdd();
-            }
-        });
+        mListener = listener;
+        if (addButton != null) {
+            addButton.setOnClickListener(mListener);
+        }
         updateView();
     }
 
@@ -114,7 +118,7 @@ public class DialogSpinner extends LinearLayout
         dialog.setArguments(bundle);
         dialog.setListener(this);
         dialog.show(((ActionBarActivity) getContext()).getSupportFragmentManager(),
-                    "spinner_dialog");
+                "spinner_dialog");
     }
 
     @Override
@@ -125,7 +129,7 @@ public class DialogSpinner extends LinearLayout
 
     @Override
     public void onDialogAdd() {
-        getContext().startActivity(addIntent);
+        mListener.onClick(this);
     }
 
     @Override

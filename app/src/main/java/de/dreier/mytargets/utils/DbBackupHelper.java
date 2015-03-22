@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.utils;
 
 import android.app.backup.FileBackupHelper;

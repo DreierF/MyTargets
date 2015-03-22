@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.utils;
 
 import android.app.backup.BackupAgentHelper;
@@ -21,6 +28,6 @@ public class MyBackupAgent extends BackupAgentHelper {
         addHelper(PREFS_BACKUP_KEY, new SharedPreferencesBackupHelper(this, PREFS));
         addHelper(SQLITE_BACKUP_KEY, new DbBackupHelper(this));
         addHelper(IMAGES_BACKUP_KEY,
-                  new FileBackupHelper(this, DatabaseManager.getInstance(this).getImages()));
+                new FileBackupHelper(this, DatabaseManager.getInstance(this).getImages()));
     }
 }

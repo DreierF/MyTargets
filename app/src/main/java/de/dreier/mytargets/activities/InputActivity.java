@@ -1,5 +1,14 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -35,7 +44,7 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
     private static final String TARGET_MODE = "target_mode";
     private static final String SHOW_ALL_MODE = "show_all";
     public static final String PASSE_IND = "passe_ind";
-    public static final String SHOW_SCOREBOARD_AFTER = "show_scoreboard_after";
+    public static final String STOP_AFTER = "stop_after";
     private TargetView target;
     private Button next, prev;
     private int curPasse = 1;
@@ -46,7 +55,7 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
     private Round r;
     private boolean mShowAllMode = false;
     private WearMessageManager manager;
-    private int mShowAfter = -1;
+    private int mStopAfter = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +73,7 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
         Intent i = getIntent();
         if (i != null && i.hasExtra(ROUND_ID)) {
             mRound = i.getLongExtra(ROUND_ID, -1);
-            mShowAfter = i.getIntExtra(SHOW_SCOREBOARD_AFTER, -1);
+            mStopAfter = i.getIntExtra(STOP_AFTER, -1);
             savedPasses = db.getPasses(mRound).size();
             if (i.hasExtra(PASSE_IND)) {
                 curPasse = i.getIntExtra(PASSE_IND, -1);
@@ -169,11 +178,34 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
         setTitle(getString(R.string.passe_n, curPasse));
         prev.setEnabled(curPasse > 1);
         next.setEnabled(curPasse <= savedPasses);
-        if (savedPasses == mShowAfter) {
-            Intent intent = new Intent(this, ScoreboardActivity.class);
-            intent.putExtra(ScoreboardActivity.ROUND_ID, mRound);
-            startActivity(intent);
+        if (savedPasses == mStopAfter) {
+            showStopDialog();
         }
+    }
+
+    private void showStopDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(getResources()
+                        .getQuantityString(R.plurals.passes_finished, savedPasses, savedPasses))
+                .setMessage(R.string.passes_finished_now_what)
+                .setPositiveButton(R.string.scoreboard, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(InputActivity.this, ScoreboardActivity.class);
+                        intent.putExtra(ScoreboardActivity.ROUND_ID, mRound);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton(R.string.continue_with_next,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mStopAfter = -1;
+                                dialog.dismiss();
+                            }
+                        })
+                .show();
+
     }
 
     @Override

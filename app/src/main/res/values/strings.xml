@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- APP NAME - NOT TRANSLATABLE -->
+    <string name="app_name" translatable="false">MyTargets</string>
+
     <!-- General -->
     <string name="prev">Previous</string>
     <string name="next">Next</string>
@@ -20,26 +23,27 @@
     <string name="new_arrow">New arrow</string>
     <string name="new_round">New round</string>
     <string name="new_passe">New passe</string>
-    <plurals name="training">
+    <plurals name="training_selected">
         <item quantity="one">One training selected</item>
         <item quantity="other">%d trainings selected</item>
     </plurals>
-    <plurals name="bow">
+    <plurals name="bow_selected">
         <item quantity="one">One bow selected</item>
         <item quantity="other">%d bows selected</item>
     </plurals>
-    <plurals name="arrow">
+    <plurals name="arrow_selected">
         <item quantity="one">One arrow selected</item>
         <item quantity="other">%d arrows selected</item>
     </plurals>
-    <plurals name="round">
+    <plurals name="round_selected">
         <item quantity="one">One round selected</item>
         <item quantity="other">%d rounds selected</item>
     </plurals>
-    <plurals name="passe">
+    <plurals name="passe_selected">
         <item quantity="one">One passe selected</item>
         <item quantity="other">%d passes selected</item>
     </plurals>
+
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="statistic">Statistic</string>
@@ -93,8 +97,19 @@
     <string name="outdoor">Outdoor</string>
     <string name="indoor">Indoor</string>
     <string name="distance">Distance</string>
-    <string name="arrows_per_passe">Arrows per passe</string>
-    <string name="show_scoreboard_after">Show Scoreboard after</string>
+    <string name="format">Format</string>
+
+    <!-- x passes with y arrows -->
+    <plurals name="passe">
+        <item quantity="one">1 passe</item>
+        <item quantity="other">%d passes</item>
+    </plurals>
+    <string name="with">of</string>
+    <plurals name="arrow">
+        <item quantity="one">one arrow</item>
+        <item quantity="other">%d arrows</item>
+    </plurals>
+
     <string name="target_round">Target round</string>
     <string name="title_compound">Compound?</string>
     <string name="msg_compound_type">Which bow type are you using? (There is a difference in how many points you get for the golden rings)</string>
@@ -114,6 +129,12 @@
     <string name="switch_mode">Switch input mode</string>
     <string name="show_all">Show all impacts</string>
     <string name="comment">Comment</string>
+    <plurals name="passes_finished">
+        <item quantity="one">One passe finished</item>
+        <item quantity="other">%d passes finished</item>
+    </plurals>
+    <string name="passes_finished_now_what">You have finished your round. What would you like to do now?</string>
+    <string name="continue_with_next">Continue</string>
 
     <!-- Statistics -->
     <string name="all_trainings">All trainings</string>
@@ -147,11 +168,5 @@
     <string name="monthly">monthly %s</string>
     <string name="donate_text">The amounts are incl. VAT and 30% fees for Google. Alternatively you may gladly donate on the PayPal account dreier.florian@gmail.com.</string>
 
-    <!-- NOT TRANSLATABLE -->
-    <string name="app_name" translatable="false">MyTargets</string>
-    <string name="two" translatable="false">2</string>
-    <string name="three" translatable="false">3</string>
-    <string name="six" translatable="false">6</string>
-    <string name="meter_short" translatable="false">m</string>
 
 </resources>

@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.utils;
 
 import android.content.Context;
@@ -10,9 +17,7 @@ import java.lang.reflect.Field;
 
 import de.dreier.mytargets.R;
 
-/**
- * Created by Florian on 23.02.2015.
- */
+
 public class ToolbarUtils {
     public static TextView getActionBarTextView(Toolbar toolbar) {
         TextView titleTextView = null;

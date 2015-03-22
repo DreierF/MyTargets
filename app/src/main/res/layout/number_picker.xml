@@ -1,33 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:maxWidth="100dp"
-              android:orientation="horizontal">
-
-    <Button
-        android:id="@+id/number_decrement"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:text="-"
-        tools:ignore="HardcodedText"/>
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <TextView
         android:id="@+id/number_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:background="#00000000"
-        android:gravity="center"
         android:textSize="16sp"/>
 
-    <Button
-        android:id="@+id/number_increment"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:text="+"
-        tools:ignore="HardcodedText"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/number_decrement"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="left"
+            android:text="-"
+            tools:ignore="HardcodedText"/>
+
+        <Button
+            android:id="@+id/number_increment"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="right"
+            android:text="+"
+            tools:ignore="HardcodedText"/>
+
+    </LinearLayout>
 
 </LinearLayout>

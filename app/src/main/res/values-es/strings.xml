@@ -24,19 +24,19 @@
         <item quantity="one">Un Entrenamiento Seleccionado</item>
         <item quantity="other">%d Entrenamientos Seleccionados</item>
     </plurals>
-    <plurals name="bow">
+    <plurals name="bow_selected">
         <item quantity="one">Un Arco Seleccionado</item>
         <item quantity="other">%d Arcos Seleccionados</item>
     </plurals>
-    <plurals name="arrow">
+    <plurals name="arrow_selected">
         <item quantity="one">Una Flecha Seleccionada</item>
         <item quantity="other">%d Flechas Seleccionadas</item>
     </plurals>
-    <plurals name="round">
+    <plurals name="round_selected">
         <item quantity="one">Una Serie Seleccionada</item>
         <item quantity="other">%d Series Seleccionadas</item>
     </plurals>
-    <plurals name="passe">
+    <plurals name="passe_selected">
         <item quantity="one">Una Tanda Seleccionada</item>
         <item quantity="other">%d Tandas Seleccionadas</item>
     </plurals>
@@ -93,7 +93,19 @@
     <string name="outdoor">Outdoor</string>
     <string name="indoor">Indoor</string>
     <string name="distance">Distancia</string>
-    <string name="arrows_per_passe">Flechas por Tanda</string>
+    <string name="format">Format</string>
+
+    <!-- x passes with y arrows -->
+    <plurals name="passe">
+        <item quantity="one">1 Tanda</item>
+        <item quantity="other">%d Tandas</item>
+    </plurals>
+    <string name="with">de</string>
+    <plurals name="arrow">
+        <item quantity="one">una Flecha</item>
+        <item quantity="other">%d Flechas</item>
+    </plurals>
+
     <string name="target_round">Tamaño Diana</string>
     <string name="title_compound">Compuesto</string>
     <string name="msg_compound_type">Qué tipo de Arco estas usando? (Hay diferencia en la cantidad de puntos que obtienes si das en el circulo del centro)</string>
@@ -113,6 +125,12 @@
     <string name="switch_mode">Cambiar a introducir datos</string>
     <string name="show_all">Mostrar todas las Tiradas</string>
     <string name="comment">Comentario</string>
+    <plurals name="passes_finished">
+        <item quantity="one">Una Tanda terminado</item>
+        <item quantity="other">%d Tandas terminado</item>
+    </plurals>
+    <string name="passes_finished_now_what">Ha terminado su serie. ¿Qué te gustaría hacer ahora?</string>
+    <string name="continue_with_next">Continuar</string>
 
     <!-- Statistics -->
     <string name="all_trainings">Todos los Entrenamientos</string>
@@ -144,6 +162,6 @@
     <string name="donate_infinite">Soporte infinito..</string>
     <string name="donation_thank">Gracias por tu ayuda!</string>
     <string name="monthly">Mensual %s</string>
-    <string name="donate_text">Los impuestos estan incluidos. IVA y el 30% de tasas para Google. Como alternativa, puedes gustosamente, donar en mi cuenta de PayPal (dreier.florian@gmail.com.)</string>
+    <string name="donate_text">Los impuestos están incluidos. IVA y el 30% de tasas para Google. Como alternativa, puedes gustosamente, donar en mi cuenta de PayPal (dreier.florian@gmail.com.)</string>
 
 </resources>

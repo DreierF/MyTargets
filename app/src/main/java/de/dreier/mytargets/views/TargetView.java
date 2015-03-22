@@ -1,9 +1,14 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.views;
 
 import android.animation.ValueAnimator;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -14,11 +19,8 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -32,6 +34,7 @@ import de.dreier.mytargets.models.Shot;
 import de.dreier.mytargets.utils.BitmapUtils;
 import de.dreier.mytargets.utils.PasseDrawer;
 import de.dreier.mytargets.utils.Target;
+import de.dreier.mytargets.utils.TextInputDialog;
 
 public class TargetView extends TargetViewBase {
 
@@ -53,34 +56,27 @@ public class TargetView extends TargetViewBase {
             v.vibrate(500);
             animateSelectCircle(roundInfo.ppp);
 
-            LayoutInflater inflater = (LayoutInflater) getContext()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.comment_dialog, null);
-            final EditText input = (EditText) view.findViewById(R.id.shot_comment);
-            input.setText(mPasse.shot[mPasseDrawer.getPressed()].comment);
-
-            new AlertDialog.Builder(getContext())
+            new TextInputDialog.Builder(getContext())
                     .setTitle(R.string.comment)
-                    .setView(view)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            mPasse.shot[mPasseDrawer.getPressed()].comment = input.getText().toString();
+                    .setDefaultText(mPasse.shot[mPasseDrawer.getPressed()].comment)
+                    .setOnClickListener(new TextInputDialog.OnClickListener() {
+
+                        @Override
+                        public void onCancelClickListener() {
+                            mPasseDrawer.setPressed(-1);
+                            invalidate();
+                        }
+
+                        @Override
+                        public void onOkClickListener(String input) {
+                            mPasse.shot[mPasseDrawer.getPressed()].comment = input;
                             if (lastSetArrow + 1 >= roundInfo.ppp && setListener != null) {
                                 setListener.onTargetSet(new Passe(mPasse), false);
                             }
                             mPasseDrawer.setPressed(-1);
                             invalidate();
-                            dialog.dismiss();
                         }
-                    })
-                    .setNegativeButton(android.R.string.cancel,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    mPasseDrawer.setPressed(-1);
-                                    invalidate();
-                                    dialog.dismiss();
-                                }
-                            }).show();
+                    }).show();
         }
     };
 

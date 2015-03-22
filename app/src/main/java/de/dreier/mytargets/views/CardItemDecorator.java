@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.views;
 
 import android.content.Context;
@@ -9,9 +16,7 @@ import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 
 import de.dreier.mytargets.R;
 
-/**
- * Created by Florian on 13.03.2015.
- */
+
 public class CardItemDecorator extends RecyclerView.ItemDecoration {
     private final int spaceHorizontal;
     private final int spaceVertical;

@@ -20,23 +20,23 @@
     <string name="new_arrow">Nieuwe pijl</string>
     <string name="new_round">Nieuwe ronde</string>
     <string name="new_passe">Nieuwe beurt</string>
-    <plurals name="training">
+    <plurals name="training_selected">
         <item quantity="one">Eén training geselecteerd</item>
         <item quantity="other">%d trainingen geselecteerd</item>
     </plurals>
-    <plurals name="bow">
+    <plurals name="bow_selected">
         <item quantity="one">Eén boog geselecteerd</item>
         <item quantity="other">%d bogen geselecteerd</item>
     </plurals>
-    <plurals name="arrow">
+    <plurals name="arrow_selected">
         <item quantity="one">Eén pijl geselecteerd</item>
         <item quantity="other">%d pijlen geselecteerd</item>
     </plurals>
-    <plurals name="round">
+    <plurals name="round_selected">
         <item quantity="one">Eén ronde geselecteerd</item>
         <item quantity="other">%d ronden geselecteerd</item>
     </plurals>
-    <plurals name="passe">
+    <plurals name="passe_selected">
         <item quantity="one">Eén beurt geselecteerd</item>
         <item quantity="other">%d beurten geselecteerd</item>
     </plurals>
@@ -93,7 +93,19 @@
     <string name="outdoor">Buiten</string>
     <string name="indoor">Binnen</string>
     <string name="distance">Afstand</string>
-    <string name="arrows_per_passe">Pijlen per beurt</string>
+    <string name="format">Format</string>
+
+    <!-- x passes with y arrows -->
+    <plurals name="passe">
+        <item quantity="one">1 beurt</item>
+        <item quantity="other">%d beurten</item>
+    </plurals>
+    <string name="with">van</string>
+    <plurals name="arrow">
+        <item quantity="one">eén pijl</item>
+        <item quantity="other">%d pijlen</item>
+    </plurals>
+
     <string name="target_round">Type blazoen</string>
     <string name="title_compound">Compound?</string>
     <string name="msg_compound_type">Welk boogtype gebruikt u? (Er is een verschil in punten binnen de gouden ringen)</string>
@@ -113,6 +125,12 @@
     <string name="switch_mode">Wijzig input modus</string>
     <string name="show_all">Toon alle schoten</string>
     <string name="comment">Opmerking</string>
+    <plurals name="passes_finished">
+        <item quantity="one">Eén beurt afgewerkte</item>
+        <item quantity="other">%d beurten afgewerkte</item>
+    </plurals>
+    <string name="passes_finished_now_what">You have finished your round. What would you like to do now?</string>
+    <string name="continue_with_next">Voortzetten</string>
 
     <!-- Statistics -->
     <string name="all_trainings">Alle trainingen</string>

@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.activities;
 
 import android.content.Intent;
@@ -7,14 +14,11 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.Spinner;
 
 import com.iangclifton.android.floatlabel.FloatLabel;
 
@@ -23,6 +27,7 @@ import java.util.ArrayList;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Bow;
+import de.dreier.mytargets.views.DialogSpinner;
 
 public class EditBowActivity extends EditWithImageActivity {
 
@@ -198,14 +203,10 @@ public class EditBowActivity extends EditWithImageActivity {
     }
 
     public static class SightSetting implements Parcelable {
-        Spinner distance;
-        View customDist;
-        EditText distanceText;
-        boolean custom;
+        DialogSpinner distance;
         EditText setting;
         public int distanceVal;
-        public String value = "/";
-        public int distanceInd;
+        public String value = "";
 
         public SightSetting() {
         }
@@ -238,11 +239,7 @@ public class EditBowActivity extends EditWithImageActivity {
         }
 
         public void update() {
-            if (custom) {
-                distanceVal = Integer.parseInt(distanceText.getText().toString());
-            } else {
-                distanceVal = EditRoundActivity.distanceValues[distance.getSelectedItemPosition()];
-            }
+            distanceVal = (int) distance.getSelectedItemId();
             value = setting.getText().toString();
         }
     }
@@ -250,24 +247,7 @@ public class EditBowActivity extends EditWithImageActivity {
     private void addSightSetting(final SightSetting setting, int i) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         final View rel = inflater.inflate(R.layout.sight_settings_item, sight_settings, false);
-        setting.customDist = rel.findViewById(R.id.customDist);
-        setting.distanceText = (EditText) rel.findViewById(R.id.distanceVal);
-        setting.distance = (Spinner) rel.findViewById(R.id.distance);
-        setting.distance.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == EditRoundActivity.distanceValues.length) {
-                    setting.distance.setVisibility(View.GONE);
-                    setting.customDist.setVisibility(View.VISIBLE);
-                    setting.custom = true;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        setting.distance = (DialogSpinner) findViewById(R.id.distance_spinner);
         setting.setting = (EditText) rel.findViewById(R.id.sight_setting);
         ImageButton remove = (ImageButton) rel.findViewById(R.id.remove_sight_setting);
         remove.setOnClickListener(new View.OnClickListener() {
@@ -277,23 +257,7 @@ public class EditBowActivity extends EditWithImageActivity {
                 sightSettingsList.remove(setting);
             }
         });
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                                                          android.R.layout.simple_spinner_item,
-                                                          getResources().getStringArray(
-                                                                  R.array.distances));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        setting.distance.setAdapter(adapter);
-        if (setting.distanceInd == -1) {
-            setting.distance.setVisibility(View.GONE);
-            setting.customDist.setVisibility(View.VISIBLE);
-            setting.distanceText.setText("" + setting.distanceVal);
-            setting.custom = true;
-        } else {
-            setting.distance.setSelection(setting.distanceInd);
-            setting.distance.setVisibility(View.VISIBLE);
-            setting.customDist.setVisibility(View.GONE);
-            setting.custom = false;
-        }
+        setting.distance.setItemId(setting.distanceVal);
         setting.setting.setText(setting.value);
         if (i == -1) {
             i = sightSettingsList.size();

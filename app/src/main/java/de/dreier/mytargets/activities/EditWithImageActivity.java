@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.activities;
 
 import android.annotation.SuppressLint;
@@ -162,8 +169,8 @@ public abstract class EditWithImageActivity extends ActionBarActivity
                                     int height = mImageView.getMeasuredHeight();
                                     imageBitmap = BitmapUtils
                                             .decodeSampledBitmapFromRes(EditWithImageActivity.this,
-                                                                        defaultDrawable, width,
-                                                                        height);
+                                                    defaultDrawable, width,
+                                                    height);
                                 }
                             }
                         });
@@ -199,13 +206,13 @@ public abstract class EditWithImageActivity extends ActionBarActivity
         float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
         int minOverlayTransitionY = mActionBarSize - mOverlayView.getHeight();
         ViewHelper.setTranslationY(mOverlayView,
-                                   ScrollUtils.getFloat(-scrollY, minOverlayTransitionY, 0));
+                ScrollUtils.getFloat(-scrollY, minOverlayTransitionY, 0));
         ViewHelper.setTranslationY(mImageContainer,
-                                   ScrollUtils.getFloat(-scrollY / 2, minOverlayTransitionY, 0));
+                ScrollUtils.getFloat(-scrollY / 2, minOverlayTransitionY, 0));
 
         // Change alpha of overlay
         ViewHelper.setAlpha(mOverlayView,
-                            ScrollUtils.getFloat((float) scrollY / flexibleRange, 0, 1));
+                ScrollUtils.getFloat((float) scrollY / flexibleRange, 0, 1));
 
         // Scale title text
         float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0, 0.3f);
@@ -297,8 +304,8 @@ public abstract class EditWithImageActivity extends ActionBarActivity
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent,
-                                                            getString(R.string.select_picture)),
-                                       SELECT_PICTURE);
+                                getString(R.string.select_picture)),
+                        SELECT_PICTURE);
                 return true;
             case R.id.action_take_picture:
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -347,8 +354,8 @@ public abstract class EditWithImageActivity extends ActionBarActivity
 
                     imageBitmap = BitmapUtils
                             .decodeSampledBitmapFromStream(EditWithImageActivity.this, params[0],
-                                                           mImageView.getWidth(),
-                                                           mImageView.getHeight());
+                                    mImageView.getWidth(),
+                                    mImageView.getHeight());
                     File f = File
                             .createTempFile(params[0].getLastPathSegment(), null, getFilesDir());
                     FileOutputStream out = new FileOutputStream(f);
@@ -396,7 +403,7 @@ public abstract class EditWithImageActivity extends ActionBarActivity
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
         return new File(mediaStorageDir.getPath() + File.separator +
-                                "IMG_" + timeStamp + ".jpg");
+                "IMG_" + timeStamp + ".jpg");
     }
 
     @Override

@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.fragments;
 
 import android.app.Activity;
@@ -15,9 +22,7 @@ import java.util.HashMap;
 
 import de.dreier.mytargets.adapters.DonationAdapter;
 
-/**
- * Created by Florian on 05.03.2015.
- */
+
 public class DonateDialogFragment extends DialogFragment {
 
     public static final String DONATION_INFINITE = "donation_infinite";

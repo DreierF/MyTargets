@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.utils;
 
 import android.content.Context;
@@ -69,7 +76,7 @@ public class BitmapUtils {
     static Bitmap pictureDrawable2Bitmap(Picture picture) {
         PictureDrawable pd = new PictureDrawable(picture);
         Bitmap bitmap = Bitmap.createBitmap(pd.getIntrinsicWidth(), pd.getIntrinsicHeight(),
-                                            Bitmap.Config.ARGB_8888);
+                Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         canvas.drawPicture(pd.getPicture());
         return bitmap;

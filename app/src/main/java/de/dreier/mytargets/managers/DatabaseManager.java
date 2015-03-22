@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.managers;
 
 import android.content.ContentValues;
@@ -18,10 +25,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 
 import de.dreier.mytargets.activities.EditBowActivity;
-import de.dreier.mytargets.activities.EditRoundActivity;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
 import de.dreier.mytargets.models.Arrow;
 import de.dreier.mytargets.models.Bow;
@@ -29,10 +37,10 @@ import de.dreier.mytargets.models.IdProvider;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
-import de.dreier.mytargets.utils.Target;
 import de.dreier.mytargets.models.Training;
 import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.BitmapUtils;
+import de.dreier.mytargets.utils.Target;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 6;
@@ -163,6 +171,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static DatabaseManager sInstance;
     private final Context mContext;
     private final SQLiteDatabase db;
+    public static final Integer[] distanceValues = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
 
     private DatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -218,9 +227,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE SHOOT ADD COLUMN x REAL");
             db.execSQL("ALTER TABLE SHOOT ADD COLUMN y REAL");
             Cursor cur = db.rawQuery("SELECT s._id, s.points, r.target " +
-                                             "FROM SHOOT s, PASSE p, ROUND r " +
-                                             "WHERE s.passe=p._id " +
-                                             "AND p.round=r._id", null);
+                    "FROM SHOOT s, PASSE p, ROUND r " +
+                    "WHERE s.passe=p._id " +
+                    "AND p.round=r._id", null);
             if (cur.moveToFirst()) {
                 do {
                     int shoot = cur.getInt(0);
@@ -236,18 +245,18 @@ public class DatabaseManager extends SQLiteOpenHelper {
             for (String table : new String[]{"ROUND", "VISIER"}) {
                 for (int i = 10; i >= 0; i--) {
                     db.execSQL("UPDATE " + table + " SET distance=" +
-                                       EditRoundActivity.distanceValues[i] + " WHERE distance=" +
-                                       i);
+                            distanceValues[i] + " WHERE distance=" +
+                            i);
                 }
             }
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            int defaultDist = EditRoundActivity.distanceValues[prefs.getInt("distance", 0)];
+            int defaultDist = distanceValues[prefs.getInt("distance", 0)];
             prefs.edit().putInt("distance", defaultDist).apply();
         }
         if (oldVersion < 5) {
             db.execSQL(CREATE_TABLE_ARROW);
             db.execSQL("ALTER TABLE ROUND ADD COLUMN arrow INTEGER REFERENCES " + TABLE_ARROW +
-                               " ON DELETE SET NULL");
+                    " ON DELETE SET NULL");
             db.execSQL("ALTER TABLE ROUND ADD COLUMN comment TEXT DEFAULT ''");
             db.execSQL("ALTER TABLE SHOOT ADD COLUMN comment TEXT DEFAULT ''");
             db.execSQL("UPDATE ROUND SET target=0 WHERE target=1 OR target=2 OR target=3");
@@ -257,9 +266,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("UPDATE ROUND SET target=5 WHERE target=9");
             db.execSQL("UPDATE ROUND SET target=6 WHERE target=10");
             db.execSQL("UPDATE SHOOT SET points=2 WHERE _id IN (SELECT s._id " +
-                               "FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow " +
-                               "WHERE r._id=p.round AND s.passe=p._id " +
-                               "AND (r.bow=-2 OR b.type=1) AND s.points=1 AND r.target=3)");
+                    "FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow " +
+                    "WHERE r._id=p.round AND s.passe=p._id " +
+                    "AND (r.bow=-2 OR b.type=1) AND s.points=1 AND r.target=3)");
         }
         if (oldVersion < 6) {
             File filesDir = mContext.getFilesDir();
@@ -272,7 +281,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     File file = File.createTempFile("img_", ".png", filesDir);
                     BackupUtils.copy(new File(fileName), file);
                     db.execSQL("UPDATE BOW SET image=\"" + file.getName() + "\" WHERE image=\"" +
-                                       fileName + "\"");
+                            fileName + "\"");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -287,7 +296,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     File file = File.createTempFile("img_", ".png", filesDir);
                     BackupUtils.copy(new File(fileName), file);
                     db.execSQL("UPDATE ARROW SET image=\"" + file.getName() + "\" WHERE image=\"" +
-                                       fileName + "\"");
+                            fileName + "\"");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -301,14 +310,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public ArrayList<Training> getTrainings() {
         Cursor cursor = db.rawQuery("SELECT t._id, t.datum, t.title, " +
-                                            "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=r.target)) " +
-                                            "FROM TRAINING t " +
-                                            "LEFT JOIN ROUND r ON t._id = r.training " +
-                                            "LEFT JOIN PASSE p ON r._id = p.round " +
-                                            "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                                            "LEFT JOIN ZONE_MATRIX m ON s.points = m.zone AND m.target = r.target " +
-                                            "GROUP BY t._id " +
-                                            "ORDER BY t.datum DESC", null);
+                "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=r.target)) " +
+                "FROM TRAINING t " +
+                "LEFT JOIN ROUND r ON t._id = r.training " +
+                "LEFT JOIN PASSE p ON r._id = p.round " +
+                "LEFT JOIN SHOOT s ON p._id = s.passe " +
+                "LEFT JOIN ZONE_MATRIX m ON s.points = m.zone AND m.target = r.target " +
+                "GROUP BY t._id " +
+                "ORDER BY t.datum DESC", null);
         ArrayList<Training> list = new ArrayList<>(cursor.getCount());
         if (cursor.moveToFirst()) {
             do {
@@ -349,13 +358,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 r.target = res.getInt(2);
                 r.indoor = res.getInt(3) != 0;
                 r.distanceVal = res.getInt(4);
-                r.distanceInd = -1;
-                for (int i = 0; i < EditRoundActivity.distanceValues.length; i++) {
-                    if (EditRoundActivity.distanceValues[i] == r.distanceVal) {
-                        r.distanceInd = i;
-                    }
-                }
-                r.distance = "" + r.distanceVal + res.getString(5);
+                r.unit = res.getString(5);
+                r.distance = "" + r.distanceVal + r.unit;
                 r.bow = res.getInt(6);
                 r.arrow = res.getInt(7);
                 r.compound = r.bow == -2 || res.getInt(8) == 1;
@@ -378,11 +382,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public ArrayList<Passe> getPasses(long round) {
         String[] args = {"" + round};
         Cursor res = db.rawQuery("SELECT p._id, s._id, s.points, s.x, s.y, s.comment, " +
-                                         "(SELECT COUNT(t._id) FROM SHOOT t WHERE t.passe=p._id) " +
-                                         "FROM PASSE p " +
-                                         "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                                         "WHERE p.round = ? " +
-                                         "ORDER BY p._id ASC, s._id ASC", args);
+                "(SELECT COUNT(t._id) FROM SHOOT t WHERE t.passe=p._id) " +
+                "FROM PASSE p " +
+                "LEFT JOIN SHOOT s ON p._id = s.passe " +
+                "WHERE p.round = ? " +
+                "ORDER BY p._id ASC, s._id ASC", args);
         ArrayList<Passe> list = new ArrayList<>();
         if (res.moveToFirst()) {
             do {
@@ -500,13 +504,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         r.target = res.getInt(2);
         r.indoor = res.getInt(3) != 0;
         r.distanceVal = res.getInt(4);
-        r.distanceInd = -1;
-        for (int i = 0; i < EditRoundActivity.distanceValues.length; i++) {
-            if (EditRoundActivity.distanceValues[i] == r.distanceVal) {
-                r.distanceInd = i;
-            }
-        }
-        r.distance = "" + r.distanceVal + res.getString(5);
+        r.unit = res.getString(5);
+        r.distance = "" + r.distanceVal + r.unit;
         r.bow = res.getInt(6);
         r.arrow = res.getInt(7);
         r.compound = r.bow == -2 || res.getInt(8) == 1;
@@ -523,10 +522,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         // Get number of X, 10 and 9 score
         Cursor cur = db.rawQuery("SELECT s.points AS zone, COUNT(*) " +
-                                         "FROM ROUND r, PASSE p, SHOOT s " +
-                                         "WHERE r._id=p.round AND p.round=" + round +
-                                         " AND s.passe=p._id AND " +
-                                         "s.points<3 AND s.points>-1 GROUP BY zone", null);
+                "FROM ROUND r, PASSE p, SHOOT s " +
+                "WHERE r._id=p.round AND p.round=" + round +
+                " AND s.passe=p._id AND " +
+                "s.points<3 AND s.points>-1 GROUP BY zone", null);
         if (cur.moveToFirst()) {
             do {
                 r.scoreCount[cur.getInt(0)] = cur.getInt(1);
@@ -650,10 +649,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public ArrayList<Integer> getAllTrainings() {
         Cursor res = db.rawQuery("SELECT s.points, r.target, s.passe  " +
-                                         "FROM TRAINING t, ROUND r, PASSE p, SHOOT s " +
-                                         "WHERE t._id=r.training AND r._id=p.round " +
-                                         "AND p._id=s.passe " +
-                                         "ORDER BY t.datum, t._id, r._id, p._id, s._id", null);
+                "FROM TRAINING t, ROUND r, PASSE p, SHOOT s " +
+                "WHERE t._id=r.training AND r._id=p.round " +
+                "AND p._id=s.passe " +
+                "ORDER BY t.datum, t._id, r._id, p._id, s._id", null);
         res.moveToFirst();
 
         int oldPasse = -1;
@@ -680,10 +679,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public ArrayList<Integer> getAllRounds(long training) {
         Cursor res = db.rawQuery("SELECT s.points, r.target, s.passe  " +
-                                         "FROM ROUND r, PASSE p, SHOOT s " +
-                                         "WHERE " + training + "=r.training AND r._id=p.round " +
-                                         "AND p._id=s.passe " +
-                                         "ORDER BY r._id, p._id, s._id", null);
+                "FROM ROUND r, PASSE p, SHOOT s " +
+                "WHERE " + training + "=r.training AND r._id=p.round " +
+                "AND p._id=s.passe " +
+                "ORDER BY r._id, p._id, s._id", null);
         res.moveToFirst();
 
         int oldPasse = -1;
@@ -712,9 +711,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
         String[] args = {"" + round};
 
         Cursor res = db.rawQuery("SELECT s.points, r.target" +
-                                         " FROM ROUND r, PASSE p, SHOOT s" +
-                                         " WHERE r._id=p.round AND p.round=? AND s.passe=p._id",
-                                 args);
+                        " FROM ROUND r, PASSE p, SHOOT s" +
+                        " WHERE r._id=p.round AND p.round=? AND s.passe=p._id",
+                args);
         res.moveToFirst();
         int sum = 0;
         for (int i = 0; i < res.getCount(); i++) {
@@ -731,7 +730,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         String[] cols = {ROUND_ID};
         String[] args = {"" + training};
         Cursor res = db.query(TABLE_ROUND, cols, ROUND_TRAINING + "=?", args, null, null,
-                              ROUND_ID + " ASC");
+                ROUND_ID + " ASC");
         res.moveToFirst();
         for (int i = 1; i < res.getCount() + 1; i++) {
             if (round == res.getLong(0)) {
@@ -766,7 +765,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         String[] args = {"" + bowId, "" + dist};
         Cursor res = db
                 .query(TABLE_VISIER, cols, VISIER_BOW + "=? AND " + VISIER_DISTANCE + "=?", args,
-                       null, null, null);
+                        null, null, null);
         String s = "";
         if (res.moveToFirst()) {
             s = res.getString(0);
@@ -888,12 +887,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
             do {
                 EditBowActivity.SightSetting set = new EditBowActivity.SightSetting();
                 set.distanceVal = res.getInt(0);
-                set.distanceInd = -1;
-                for (int i = 0; i < EditRoundActivity.distanceValues.length; i++) {
-                    if (EditRoundActivity.distanceValues[i] == set.distanceVal) {
-                        set.distanceInd = i;
-                    }
-                }
                 set.value = res.getString(1);
                 list.add(set);
             } while (res.moveToNext());
@@ -1008,5 +1001,36 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
         cur.close();
         return list.toArray(new String[list.size()]);
+    }
+
+    /**
+     * Returns a list of all distances that are either default values or used somewhere in the app
+     *
+     * @param dist Distance to add to the list.
+     * @return List of distances
+     */
+    public ArrayList<Integer> getDistances(int dist) {
+        ArrayList<Integer> distances = new ArrayList<>();
+        distances.addAll(Arrays.asList(distanceValues));
+
+        // Add currently selected distance to list
+        if (!distances.contains(dist)) {
+            distances.add(dist);
+        }
+
+        // Get all distances used in ROUND or VISIER table
+        Cursor cur = db.rawQuery(
+                "SELECT DISTINCT distance FROM ROUND UNION SELECT DISTINCT distance FROM VISIER",
+                null);
+        if (cur.moveToFirst()) {
+            do {
+                if (!distances.contains(cur.getInt(0))) {
+                    distances.add(cur.getInt(0));
+                }
+            } while (cur.moveToNext());
+        }
+        cur.close();
+        Collections.sort(distances);
+        return distances;
     }
 }

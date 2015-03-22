@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.models;
 
 import android.os.Parcel;

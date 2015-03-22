@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.utils;
 
 import android.app.Activity;
@@ -39,7 +46,7 @@ public class ScoreboardImage {
 
                 // Render html to bitmap
                 webView.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8",
-                                            "");
+                        "");
                 webView.setPictureListener(new WebView.PictureListener() {
 
                     public void onNewPicture(WebView view, Picture picture) {

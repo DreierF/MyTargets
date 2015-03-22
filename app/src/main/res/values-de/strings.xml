@@ -20,23 +20,23 @@
     <string name="new_arrow">Neuer Pfeil</string>
     <string name="new_round">Neue Runde</string>
     <string name="new_passe">Neue Passe</string>
-    <plurals name="training">
+    <plurals name="training_selected">
         <item quantity="one">Ein Training ausgewählt</item>
         <item quantity="other">%d Trainings ausgewählt</item>
     </plurals>
-    <plurals name="bow">
+    <plurals name="bow_selected">
         <item quantity="one">Ein Bogen ausgewählt</item>
         <item quantity="other">%d Bögen ausgewählt</item>
     </plurals>
-    <plurals name="arrow">
+    <plurals name="arrow_selected">
         <item quantity="one">Ein Pfeil ausgewählt</item>
         <item quantity="other">%d Pfeile ausgewählt</item>
     </plurals>
-    <plurals name="round">
+    <plurals name="round_selected">
         <item quantity="one">Eine Runde ausgewählt</item>
         <item quantity="other">%d Runden ausgewählt</item>
     </plurals>
-    <plurals name="passe">
+    <plurals name="passe_selected">
         <item quantity="one">Eine Passe ausgewählt</item>
         <item quantity="other">%d Passen ausgewählt</item>
     </plurals>
@@ -93,8 +93,19 @@
     <string name="outdoor">Outdoor</string>
     <string name="indoor">Indoor</string>
     <string name="distance">Entfernung</string>
-    <string name="arrows_per_passe">Pfeile pro Passe</string>
-    <string name="show_scoreboard_after">Öffne Scoreboard nach</string>
+    <string name="format">Format</string>
+
+    <!-- x passes with y arrows -->
+    <plurals name="passe">
+        <item quantity="one">1 Passe</item>
+        <item quantity="other">%d Passen</item>
+    </plurals>
+    <string name="with">mit</string>
+    <plurals name="arrow">
+        <item quantity="one">einem Pfeil</item>
+        <item quantity="other">%d Pfeilen</item>
+    </plurals>
+
     <string name="target_round">Auflage</string>
     <string name="title_compound">Compound?</string>
     <string name="msg_compound_type">Welchen Bogentyp verwendest du? (Es entscheidet wie viele Punkte du für die goldenen Ringe bekommst)</string>
@@ -114,6 +125,12 @@
     <string name="switch_mode">Wechsle Eingabe Modus</string>
     <string name="show_all">Zeige alle Schüsse</string>
     <string name="comment">Kommentar</string>
+    <plurals name="passes_finished">
+        <item quantity="one">Eine Passe beendet</item>
+        <item quantity="other">%d Passen beendet</item>
+    </plurals>
+    <string name="passes_finished_now_what">Du hast deine Runde beendet. Was möchtest du jetzt machen?</string>
+    <string name="continue_with_next">Weitermachen</string>
 
     <!-- Statistics -->
     <string name="all_trainings">Alle Trainings</string>

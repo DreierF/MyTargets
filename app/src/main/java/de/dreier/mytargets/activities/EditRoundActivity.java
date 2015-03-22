@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.activities;
 
 import android.app.AlertDialog;
@@ -10,13 +17,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.iangclifton.android.floatlabel.FloatLabel;
@@ -31,6 +34,7 @@ import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.utils.MyBackupAgent;
 import de.dreier.mytargets.views.DialogSpinner;
+import de.dreier.mytargets.views.DistanceDialogSpinner;
 import de.dreier.mytargets.views.NumberPicker;
 
 public class EditRoundActivity extends ActionBarActivity {
@@ -40,22 +44,16 @@ public class EditRoundActivity extends ActionBarActivity {
     public static final String FROM_PASSE = "from_passe";
     private long mTraining = -1, mRound = -1;
 
-    private Spinner distance;
+    private DistanceDialogSpinner distance;
     private RadioButton indoor;
     private DialogSpinner bow;
     private DialogSpinner arrow;
     private DialogSpinner target;
-    public static final int[] distanceValues = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
     private boolean mCalledFromPasse = false;
     private int mBowId = 0;
     private EditText training;
     private FloatLabel comment;
-    private View customDist;
-    private EditText distanceVal;
-    private boolean custom = false;
-    private NumberPicker ppp;
-    private CheckBox show_scoreboard;
-    private NumberPicker rounds;
+    private NumberPicker rounds, arrows;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,89 +77,62 @@ public class EditRoundActivity extends ActionBarActivity {
         }
         SharedPreferences prefs = getSharedPreferences(MyBackupAgent.PREFS, 0);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item,
-                getResources().getStringArray(
-                        R.array.distances));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         training = (EditText) findViewById(R.id.training);
-        customDist = findViewById(R.id.customDist);
-        distanceVal = (EditText) findViewById(R.id.distanceVal);
-        distance = (Spinner) findViewById(R.id.distance);
-        distance.setAdapter(adapter);
-        distance.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == distanceValues.length) {
-                    distance.setVisibility(View.GONE);
-                    customDist.setVisibility(View.VISIBLE);
-                    custom = true;
-                }
-            }
+        distance = (DistanceDialogSpinner) findViewById(R.id.distance_spinner);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
         // Indoor / outdoor
         RadioButton outdoor = (RadioButton) findViewById(R.id.outdoor);
         indoor = (RadioButton) findViewById(R.id.indoor);
 
-        // Points per passe
-        ppp = (NumberPicker) findViewById(R.id.ppp);
-        ppp.setMinimum(1);
-        ppp.setMaximum(10);
-
         // Show scoreboard
-        show_scoreboard = (CheckBox)findViewById(R.id.show_after);
-        rounds = (NumberPicker)findViewById(R.id.rounds);
+        rounds = (NumberPicker) findViewById(R.id.rounds);
+        rounds.setTextPattern(R.plurals.passe);
+
+        // Points per passe
+        arrows = (NumberPicker) findViewById(R.id.ppp);
+        arrows.setTextPattern(R.plurals.arrow);
+        arrows.setMinimum(1);
+        arrows.setMaximum(10);
 
         // Bow
         bow = (DialogSpinner) findViewById(R.id.bow);
-        bow.setAdapter(new BowItemAdapter(this), R.string.bow);
+        bow.setTitle(R.string.bow);
+        bow.setAdapter(new BowItemAdapter(this));
         Button addBow = (Button) findViewById(R.id.add_bow);
-        i = new Intent(this, EditBowActivity.class);
-        bow.setAddButton(addBow, R.string.add_bow, i);
+
+        bow.setAddButton(addBow, R.string.add_bow, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(EditRoundActivity.this, EditBowActivity.class));
+            }
+        });
 
         // Arrow
         arrow = (DialogSpinner) findViewById(R.id.arrow);
-        arrow.setAdapter(new ArrowItemAdapter(this), R.string.arrow);
+        arrow.setTitle(R.string.arrow);
+        arrow.setAdapter(new ArrowItemAdapter(this));
         Button addArrow = (Button) findViewById(R.id.add_arrow);
-        i = new Intent(this, EditArrowActivity.class);
-        arrow.setAddButton(addArrow, R.string.add_arrow, i);
+        arrow.setAddButton(addArrow, R.string.add_arrow, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(EditRoundActivity.this, EditArrowActivity.class));
+            }
+        });
 
         // Target round
         target = (DialogSpinner) findViewById(R.id.target_spinner);
-        target.setAdapter(new TargetItemAdapter(this), R.string.target_round);
+        target.setTitle(R.string.target_round);
+        target.setAdapter(new TargetItemAdapter(this));
 
         // Comment
         comment = (FloatLabel) findViewById(R.id.comment);
 
         if (mRound == -1) {
             // Initialise with default values
-            int distVal = prefs.getInt("distance", 10);
-            int distanceInd = -1;
-            for (int j = 0; j < EditRoundActivity.distanceValues.length; j++) {
-                if (EditRoundActivity.distanceValues[j] == distVal) {
-                    distanceInd = j;
-                }
-            }
-            if (distanceInd == -1) {
-                distance.setVisibility(View.GONE);
-                customDist.setVisibility(View.VISIBLE);
-                distanceVal.setText("" + distVal);
-                custom = true;
-            } else {
-                distance.setSelection(distanceInd);
-                distance.setVisibility(View.VISIBLE);
-                customDist.setVisibility(View.GONE);
-                custom = false;
-            }
+            distance.setItemId(prefs.getInt("distance", 10));
             indoor.setChecked(prefs.getBoolean("indoor", false));
             outdoor.setChecked(!prefs.getBoolean("indoor", false));
-            ppp.setValue(prefs.getInt("ppp", 3));
-            show_scoreboard.setChecked(prefs.getBoolean("show", true));
+            arrows.setValue(prefs.getInt("ppp", 3));
             rounds.setValue(prefs.getInt("rounds", 10));
             bow.setItemId(prefs.getInt("bow", 0));
             arrow.setItemId(prefs.getInt("arrow", 0));
@@ -171,32 +142,22 @@ public class EditRoundActivity extends ActionBarActivity {
             // Load saved values
             DatabaseManager db = DatabaseManager.getInstance(this);
             Round r = db.getRound(mRound);
-            if (r.distanceInd == -1) {
-                distance.setVisibility(View.GONE);
-                customDist.setVisibility(View.VISIBLE);
-                distanceVal.setText("" + r.distanceVal);
-                custom = true;
-            } else {
-                distance.setSelection(r.distanceInd);
-                distance.setVisibility(View.VISIBLE);
-                customDist.setVisibility(View.GONE);
-                custom = false;
-            }
+            distance.setItemId(r.distanceVal);
             indoor.setChecked(r.indoor);
             outdoor.setChecked(!r.indoor);
-            ppp.setValue(r.ppp);
+            arrows.setValue(r.ppp);
             bow.setItemId(r.bow);
             arrow.setItemId(r.arrow);
             target.setItemId(r.target);
             comment.setText(r.comment);
 
-            show_scoreboard.setEnabled(false);
             rounds.setEnabled(false);
-            ppp.setEnabled(false);
+            arrows.setEnabled(false);
             bow.setEnabled(false);
             arrow.setEnabled(false);
             target.setEnabled(false);
-            ((TextView) findViewById(R.id.label_ppp)).setTextColor(0xff444444);
+            ((TextView) findViewById(R.id.label_format)).setTextColor(0xff444444);
+            ((TextView) findViewById(R.id.label_with)).setTextColor(0xff444444);
             ((TextView) findViewById(R.id.label_bow)).setTextColor(0xff444444);
             ((TextView) findViewById(R.id.label_arrow)).setTextColor(0xff444444);
             ((TextView) findViewById(R.id.label_target)).setTextColor(0xff444444);
@@ -213,8 +174,8 @@ public class EditRoundActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        bow.setAdapter(new BowItemAdapter(this), R.string.bow);
-        arrow.setAdapter(new ArrowItemAdapter(this), R.string.arrow);
+        bow.setAdapter(new BowItemAdapter(this));
+        arrow.setAdapter(new ArrowItemAdapter(this));
     }
 
     @Override
@@ -273,16 +234,11 @@ public class EditRoundActivity extends ActionBarActivity {
             round.bow = mBowId;
         }
 
-        if (custom) {
-            round.distanceVal = Integer.parseInt(distanceVal.getText().toString());
-        } else {
-            round.distanceVal = distanceValues[distance.getSelectedItemPosition()];
-        }
+        round.distanceVal = (int) distance.getSelectedItemId();
         round.unit = "m";
 
-        boolean show  = show_scoreboard.isChecked();
         int after_rounds = rounds.getValue();
-        round.ppp = ppp.getValue();
+        round.ppp = arrows.getValue();
         round.indoor = indoor.isChecked();
         round.comment = comment.getTextString();
         db.updateRound(round);
@@ -293,7 +249,6 @@ public class EditRoundActivity extends ActionBarActivity {
         editor.putInt("arrow", (int) arrow.getSelectedItemId());
         editor.putInt("distance", round.distanceVal);
         editor.putInt("ppp", round.ppp);
-        editor.putBoolean("show", show);
         editor.putInt("rounds", after_rounds);
         editor.putInt("target", round.target);
         editor.putBoolean("indoor", round.indoor);
@@ -314,7 +269,7 @@ public class EditRoundActivity extends ActionBarActivity {
 
             i = new Intent(this, InputActivity.class);
             i.putExtra(InputActivity.ROUND_ID, round.id);
-            i.putExtra(InputActivity.SHOW_SCOREBOARD_AFTER, show?after_rounds:-1);
+            i.putExtra(InputActivity.STOP_AFTER, after_rounds);
             startActivity(i);
 
             overridePendingTransition(R.anim.right_in, R.anim.left_out);

@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.adapters;
 
 import android.support.v7.widget.RecyclerView;
@@ -11,9 +18,7 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.models.IdProvider;
 
-/**
- * Created by Florian on 13.03.2015.
- */
+
 public abstract class NowListAdapter<T extends IdProvider>
         extends RecyclerView.Adapter<CardViewHolder<T>> {
 

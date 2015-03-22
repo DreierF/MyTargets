@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.adapters;
 
 import android.content.Context;
@@ -10,9 +17,6 @@ import android.widget.TextView;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.DonateDialogFragment;
 
-/**
- * Created by Florian on 05.03.2015.
- */
 public class DonationAdapter extends BaseAdapter {
 
     private final boolean mSupported;
@@ -59,8 +63,8 @@ public class DonationAdapter extends BaseAdapter {
         TextView price = (TextView) convertView.findViewById(R.id.price);
         if (position == 4) {
             price.setText(mContext.getString(R.string.monthly,
-                                             DonateDialogFragment.prices
-                                                     .get(DonateDialogFragment.DONATION_INFINITE)));
+                    DonateDialogFragment.prices
+                            .get(DonateDialogFragment.DONATION_INFINITE)));
         } else if (position < 4) {
             String sku = DonateDialogFragment.donations.get(position);
             price.setText(DonateDialogFragment.prices.get(sku));

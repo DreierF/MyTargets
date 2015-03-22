@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.managers;
 
 import android.content.Context;
@@ -18,8 +25,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
-import de.dreier.mytargets.utils.OnTargetSetListener;
 import de.dreier.mytargets.models.Passe;
+import de.dreier.mytargets.utils.OnTargetSetListener;
 import de.dreier.mytargets.utils.WearableUtils;
 
 public class WearMessageManager

@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.fragments;
 
 import android.content.Intent;
@@ -19,7 +26,7 @@ public class BowFragment extends NowListFragment<Bow> {
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
-        itemTypeRes = R.plurals.bow;
+        itemTypeRes = R.plurals.bow_selected;
         newStringRes = R.string.new_bow;
     }
 

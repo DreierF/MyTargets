@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
@@ -34,7 +41,7 @@ public class RoundFragment extends NowListFragment<Round> {
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
-        itemTypeRes = R.plurals.round;
+        itemTypeRes = R.plurals.round_selected;
         newStringRes = R.string.new_round;
 
         if (intent != null) {

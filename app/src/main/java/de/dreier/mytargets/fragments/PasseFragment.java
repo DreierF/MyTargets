@@ -1,3 +1,10 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
@@ -38,8 +45,8 @@ import de.dreier.mytargets.models.Arrow;
 import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.utils.Target;
 import de.dreier.mytargets.utils.ScoreboardImage;
+import de.dreier.mytargets.utils.Target;
 import de.dreier.mytargets.utils.TargetImage;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.views.PasseView;
@@ -67,7 +74,7 @@ public class PasseFragment extends NowListFragment<Passe>
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
-        itemTypeRes = R.plurals.passe;
+        itemTypeRes = R.plurals.passe_selected;
         newStringRes = R.string.new_passe;
         if (intent != null) {
             mTraining = intent.getLong(TRAINING_ID, -1);
@@ -210,8 +217,8 @@ public class PasseFragment extends NowListFragment<Passe>
         int reached = db.getRoundPoints(mRound);
         int maxP = mRoundInfo.ppp * max * db.getPasses(mRound).size();
         final String text = getString(R.string.my_share_text,
-                                      mRoundInfo.scoreCount[0], mRoundInfo.scoreCount[1],
-                                      mRoundInfo.scoreCount[2], reached, maxP);
+                mRoundInfo.scoreCount[0], mRoundInfo.scoreCount[1],
+                mRoundInfo.scoreCount[2], reached, maxP);
 
         new Thread(new Runnable() {
             @Override
@@ -224,7 +231,7 @@ public class PasseFragment extends NowListFragment<Passe>
                     } else {
                         new ScoreboardImage()
                                 .generateBitmap(activity, mRound, scoreboard, dispersion_pattern,
-                                                comments, f);
+                                        comments, f);
                     }
 
                     // Build and fire intent to ask for share provider

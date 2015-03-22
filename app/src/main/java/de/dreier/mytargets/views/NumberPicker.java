@@ -29,10 +29,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.views;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.PluralsRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -67,6 +75,9 @@ public class NumberPicker extends LinearLayout {
 
     private boolean autoIncrement = false;
     private boolean autoDecrement = false;
+
+    @PluralsRes
+    private int mTextPattern;
 
     /**
      * This little guy handles the auto part of the auto incrementing feature.
@@ -133,11 +144,8 @@ public class NumberPicker extends LinearLayout {
     }
 
     private void initValueEditText() {
-
-        value = 0;
-
         valueText = (TextView) findViewById(R.id.number_value);
-        valueText.setText(value.toString());
+        setValue(mMinimum);
     }
 
     private void initDecrementButton() {
@@ -174,39 +182,44 @@ public class NumberPicker extends LinearLayout {
         });
     }
 
+    public void setTextPattern(@PluralsRes int textPattern) {
+        mTextPattern = textPattern;
+    }
+
     public void increment() {
-        if (value < mMaximum) {
-            value = value + 1;
-            valueText.setText(value.toString());
-        }
+        setValue(value + 1);
     }
 
     public void decrement() {
-        if (value > mMinimum) {
-            value = value - 1;
-            valueText.setText(value.toString());
-        }
+        setValue(value - 1);
     }
 
     public void setMinimum(int minimum) {
-        this.mMinimum = minimum;
+        mMinimum = minimum;
     }
 
     public void setMaximum(int maximum) {
-        this.mMaximum = maximum;
+        mMaximum = maximum;
     }
 
     public int getValue() {
         return value;
     }
 
-    public void setValue(int value) {
-        if (value > mMaximum) {
-            value = mMaximum;
+    public void setValue(int val) {
+        if (val > mMaximum) {
+            val = mMaximum;
+            autoIncrement = false;
         }
-        if (value >= 0) {
-            this.value = value;
-            valueText.setText(this.value.toString());
+        if (val < mMinimum) {
+            val = mMinimum;
+            autoDecrement = false;
+        }
+        value = val;
+        if (mTextPattern == 0) {
+            valueText.setText(value.toString());
+        } else {
+            valueText.setText(getResources().getQuantityString(mTextPattern, value, value));
         }
     }
 

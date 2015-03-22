@@ -1,3 +1,16 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
 package de.dreier.mytargets.utils;
 
 import android.annotation.SuppressLint;
@@ -30,9 +43,7 @@ import java.util.zip.ZipOutputStream;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 
-/**
- * Created by Florian on 05.03.2015.
- */
+
 public class BackupUtils {
 
     private static final String FOLDER_NAME = "MyTargets";

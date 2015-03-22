@@ -20,23 +20,23 @@
     <string name="new_arrow">Nouvelle flèche</string>
     <string name="new_round">Nouvelle série</string>
     <string name="new_passe">Nouvelle volée</string>
-    <plurals name="training">
+    <plurals name="training_selected">
         <item quantity="one">%d entraînement sélectionné</item>
         <item quantity="other">%d entraînements sélectionnés</item>
     </plurals>
-    <plurals name="bow">
+    <plurals name="bow_selected">
         <item quantity="one">%d arc sélectionné</item>
         <item quantity="other">%d arcs sélectionnés</item>
     </plurals>
-    <plurals name="arrow">
+    <plurals name="arrow_selected">
         <item quantity="one">%d flèche sélectionnée</item>
         <item quantity="other">%d flèches sélectionnées</item>
     </plurals>
-    <plurals name="round">
+    <plurals name="round_selected">
         <item quantity="one">%d Série sélectionnée</item>
         <item quantity="other">%d Séries sélectionnées</item>
     </plurals>
-    <plurals name="passe">
+    <plurals name="passe_selected">
         <item quantity="one">%d volée sélectionnée</item>
         <item quantity="other">%d volées sélectionnées</item>
     </plurals>
@@ -93,7 +93,19 @@
     <string name="outdoor">Extérieur</string>
     <string name="indoor">Intérieur</string>
     <string name="distance">Distance</string>
-    <string name="arrows_per_passe">Flèches par volée</string>
+    <string name="format">Format</string>
+
+    <!-- x passes with y arrows -->
+    <plurals name="passe">
+        <item quantity="one">%d volée</item>
+        <item quantity="other">%d volées</item>
+    </plurals>
+    <string name="with">de</string>
+    <plurals name="arrow">
+        <item quantity="one">%d flèche</item>
+        <item quantity="other">%d flèches</item>
+    </plurals>
+
     <string name="target_round">Blason</string>
     <string name="title_compound">Arc à poulies?</string>
     <string name="msg_compound_type">Quel type d\'arc utilisez-vous? (différence pour la comptabilisation des points pour 10)</string>
@@ -113,6 +125,12 @@
     <string name="switch_mode">Allez en mode saisie</string>
     <string name="show_all">Montrer tous les tirs</string>
     <string name="comment">Commentaire</string>
+    <plurals name="passes_finished">
+        <item quantity="one">%d volée complétée</item>
+        <item quantity="other">%d volées complétées</item>
+    </plurals>
+    <string name="passes_finished_now_what">Vous avez terminé votre série. Que voudriez-vous faire maintenant?</string>
+    <string name="continue_with_next">Continuer</string>
 
     <!-- Statistics -->
     <string name="all_trainings">Tous les entraînements</string>
