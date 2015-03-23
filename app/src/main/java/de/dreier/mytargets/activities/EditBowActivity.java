@@ -28,6 +28,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.views.DialogSpinner;
+import de.dreier.mytargets.views.DistanceDialogSpinner;
 
 public class EditBowActivity extends EditWithImageActivity {
 
@@ -247,7 +248,7 @@ public class EditBowActivity extends EditWithImageActivity {
     private void addSightSetting(final SightSetting setting, int i) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         final View rel = inflater.inflate(R.layout.sight_settings_item, sight_settings, false);
-        setting.distance = (DialogSpinner) findViewById(R.id.distance_spinner);
+        setting.distance = (DistanceDialogSpinner) rel.findViewById(R.id.distance_spinner);
         setting.setting = (EditText) rel.findViewById(R.id.sight_setting);
         ImageButton remove = (ImageButton) rel.findViewById(R.id.remove_sight_setting);
         remove.setOnClickListener(new View.OnClickListener() {

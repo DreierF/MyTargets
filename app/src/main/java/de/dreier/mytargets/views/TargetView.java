@@ -494,6 +494,14 @@ public class TargetView extends TargetViewBase {
             }
             invalidate();
             return true;
+        } else {
+            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                if (longPressTimer != null) {
+                    longPressTimer.cancel();
+                    longPressTimer = null;
+                }
+            }
+            mPasseDrawer.setPressed(-1);
         }
         return false;
     }

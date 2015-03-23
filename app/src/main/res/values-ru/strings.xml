@@ -104,7 +104,7 @@
     <string name="outdoor">На улице</string>
     <string name="indoor">В помещении</string>
     <string name="distance">Дистанция</string>
-    <string name="format">Format</string>
+    <string name="format">подход</string>
 
     <!-- x passes with y arrows -->
     <plurals name="passe">
@@ -113,7 +113,7 @@
         <item quantity="few">%d серии</item>
         <item quantity="many">%d серий</item>
     </plurals>
-    <string name="with">with</string>
+    <string name="with">по</string>
     <plurals name="arrow">
         <item quantity="one">%d стрела</item>
         <item quantity="other">%d стрелы</item>
@@ -146,8 +146,8 @@
         <item quantity="few">%d серии отделкой</item>
         <item quantity="many">%d серий отделкой</item>
     </plurals>
-    <string name="passes_finished_now_what">You have finished your round. What would you like to do now?</string>
-    <string name="continue_with_next">Continue</string>
+    <string name="passes_finished_now_what">Вы закончили раунд. Что вы хотите делать дальше?</string>
+    <string name="continue_with_next">Продолжить</string>
 
     <!-- Statistics -->
     <string name="all_trainings">Все тренировки</string>

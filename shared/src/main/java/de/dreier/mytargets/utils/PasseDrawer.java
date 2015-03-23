@@ -97,9 +97,12 @@ public class PasseDrawer {
 
         // Draw touch feedback if arrow is pressed
         if (mPressed != NO_SELECTION) {
+            int radius = getRadius(mPressed);
             Coordinate pos = getPosition(mPressed);
-            canvas.drawRect(pos.x - mRadius, pos.y - mRadius,
-                    pos.x + mRadius, pos.y + mRadius, grayBackground);
+            if (radius > 0) {
+                canvas.drawRect(pos.x - radius, pos.y - radius,
+                        pos.x + radius, pos.y + radius, grayBackground);
+            }
         }
 
         // Draw all points of this passe into the given rect
