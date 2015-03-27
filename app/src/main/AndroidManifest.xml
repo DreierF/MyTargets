@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="de.dreier.mytargets">
+<manifest
+    package="de.dreier.mytargets"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="true" />
+        android:required="true"/>
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="com.android.vending.BILLING"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:allowBackup="true"
@@ -24,11 +26,11 @@
 
         <meta-data
             android:name="com.google.android.backup.api_key"
-            android:value="AEdPqrEAAAAIy_jZMyyGuh5M-ICvUll4H1WyF1R9M8cUcN5wVw" />
+            android:value="AEdPqrEAAAAIy_jZMyyGuh5M-ICvUll4H1WyF1R9M8cUcN5wVw"/>
 
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
 
         <activity
             android:name=".activities.MainActivity"
@@ -36,9 +38,9 @@
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.CustomToolbar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
@@ -47,7 +49,7 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value=".activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.SimpleFragmentActivity$PasseActivity"
@@ -56,7 +58,17 @@
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$RoundActivity" />
+                android:value=".activities.SimpleFragmentActivity$RoundActivity"/>
+        </activity>
+        <activity
+            android:name=".activities.SimpleFragmentActivity$TimerActivity"
+            android:label=""
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.InputActivity"
+            android:theme="@style/AppTheme.CustomToolbar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.InputActivity"/>
         </activity>
         <activity
             android:name=".activities.InputActivity"
@@ -65,7 +77,7 @@
             android:parentActivityName=".activities.SimpleFragmentActivity$PasseActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$PasseActivity" />
+                android:value=".activities.SimpleFragmentActivity$PasseActivity"/>
         </activity>
         <activity
             android:name=".activities.EditRoundActivity"
@@ -75,7 +87,7 @@
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$RoundActivity" />
+                android:value=".activities.SimpleFragmentActivity$RoundActivity"/>
         </activity>
         <activity
             android:name=".activities.EditBowActivity"
@@ -85,7 +97,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value=".activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.EditArrowActivity"
@@ -95,7 +107,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value=".activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.ScoreboardActivity"
@@ -103,10 +115,21 @@
             android:parentActivityName=".activities.SimpleFragmentActivity$PasseActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$PasseActivity" />
+                android:value=".activities.SimpleFragmentActivity$PasseActivity"/>
         </activity>
         <activity
             android:name=".activities.StatisticsActivity"
-            android:label="@string/statistic" />
+            android:label="@string/statistic"/>
+
+        <!-- Preferences activity -->
+        <activity
+            android:name=".activities.SimpleFragmentActivity$SettingsActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/preferences"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity"/>
+        </activity>
     </application>
 </manifest>

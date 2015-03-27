@@ -16,10 +16,12 @@ import android.view.MenuItem;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.PasseFragment;
 import de.dreier.mytargets.fragments.RoundFragment;
+import de.dreier.mytargets.fragments.SettingsFragment;
+import de.dreier.mytargets.fragments.TimerFragment;
 
 public abstract class SimpleFragmentActivity extends ActionBarActivity {
 
-    public abstract Fragment instantiateFragment();
+    protected abstract Fragment instantiateFragment();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,22 @@ public abstract class SimpleFragmentActivity extends ActionBarActivity {
         @Override
         public Fragment instantiateFragment() {
             return new RoundFragment();
+        }
+    }
+
+    public static class TimerActivity extends SimpleFragmentActivity {
+
+        @Override
+        public Fragment instantiateFragment() {
+            return new TimerFragment();
+        }
+    }
+
+    public static class SettingsActivity extends SimpleFragmentActivity {
+
+        @Override
+        public Fragment instantiateFragment() {
+            return new SettingsFragment();
         }
     }
 

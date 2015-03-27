@@ -2,6 +2,7 @@
 <resources>
 
     <!-- General -->
+    <string name="preferences">Opciones</string>
     <string name="prev">Previo</string>
     <string name="next">Siguiente</string>
     <string name="save">Guardar</string>
@@ -20,7 +21,7 @@
     <string name="new_arrow">Nueva Flecha</string>
     <string name="new_round">Nueva Serie</string>
     <string name="new_passe">Nueva Tanda</string>
-    <plurals name="Training">
+    <plurals name="training_selected">
         <item quantity="one">Un Entrenamiento Seleccionado</item>
         <item quantity="other">%d Entrenamientos Seleccionados</item>
     </plurals>
@@ -163,5 +164,18 @@
     <string name="donation_thank">Gracias por tu ayuda!</string>
     <string name="monthly">Mensual %s</string>
     <string name="donate_text">Los impuestos están incluidos. IVA y el 30% de tasas para Google. Como alternativa, puedes gustosamente, donar en mi cuenta de PayPal (dreier.florian@gmail.com.)</string>
+
+    <!-- Timer -->
+    <!--<string name="timer">Cronómetro</string>-->
+    <string name="timer">Tiempo</string>
+    <string name="pref_timer_shootingtime">Tiempo de tiro</string>
+    <string name="pref_timer_waitingtime">Tiempo de preparación</string>
+    <string name="pref_timer_warningtime">Tiempo naranja</string>
+    <string name="pref_timer_withsound">Con sonido</string>
+    <string name="stop">STOP</string>
+
+    <!-- Settings -->
+    <string name="licences">Licencias de código abierto</string>
+    <string name="licences_summary">Licencias Aviso legal</string>
 
 </resources>

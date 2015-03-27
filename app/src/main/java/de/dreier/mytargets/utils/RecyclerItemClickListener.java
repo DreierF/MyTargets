@@ -24,7 +24,7 @@ import android.view.View;
  */
 public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
 
-    protected final OnItemClickListener listener;
+    private final OnItemClickListener listener;
 
     private final GestureDetector gestureDetector;
 
@@ -101,7 +101,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 
     }
 
-    protected class GestureListener extends GestureDetector.SimpleOnGestureListener {
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
         @Override
         public boolean onSingleTapUp(MotionEvent event) {

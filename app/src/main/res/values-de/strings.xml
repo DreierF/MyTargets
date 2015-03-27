@@ -2,6 +2,7 @@
 <resources>
 
     <!-- General -->
+    <string name="preferences">Einstellungen</string>
     <string name="prev">Zurück</string>
     <string name="next">Weiter</string>
     <string name="save">Speichern</string>
@@ -163,5 +164,25 @@
     <string name="donation_thank">Vielen Dank für Ihre Unterstützung!</string>
     <string name="monthly">monatlich %s</string>
     <string name="donate_text">Die Beträge sind inkl. Mehrwertsteuer und 30% Gebühren für Google. Alternativ kannst du mir auch gerne auf das PayPal Konto dreier.florian@gmail.com spenden.</string>
+
+    <!-- Timer -->
+    <string name="timer">Schießuhr</string>
+    <string name="pref_timer_shootingtime">Schießzeit</string>
+    <string name="pref_timer_waitingtime">Vorbereitungszeit</string>
+    <string name="pref_timer_warningtime">Gelbphase</string>
+    <string name="pref_timer_withsound">Mit Sound</string>
+    <string name="stop">STOP</string>
+
+    <!-- Settings -->
+    <string name="app_rate">App bewerten</string>
+    <string name="app_share">App teilen</string>
+    <string name="contact_developer">Entwickler kontaktieren</string>
+    <string name="licences">Open Source-Lizenzen</string>
+    <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
+    <string name="exports_as_csv">Exportiert die gespeicherten Daten als *.csv</string>
+    <plurals name="second">
+        <item quantity="one">Eine Sekunde</item>
+        <item quantity="other">%d Sekunden</item>
+    </plurals>
 
 </resources>

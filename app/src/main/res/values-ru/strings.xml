@@ -2,6 +2,7 @@
 <resources>
 
     <!-- General -->
+    <string name="preferences">Options</string>
     <string name="prev">Назад</string>
     <string name="next">Далее</string>
     <string name="save">Сохранить</string>
@@ -181,4 +182,12 @@
     <string name="monthly">ежемесячно %s</string>
     <string name="donate_text">Сумма включает НДС и 30% платежи для Google. Вместо этого можете воспользоваться PayPal. Мой аккаунт dreier.florian@gmail.com.</string>
 
+    <!-- Timer -->
+    <string name="timer">Timer</string>
+    <string name="pref_timer_shootingtime">Shooting Time</string>
+    <string name="pref_timer_waitingtime">Prepare Time</string>
+    <string name="pref_timer_warningtime">Orange Time</string>
+    <string name="pref_timer_withsound">With sound</string>
+
+    <!-- Settings -->
 </resources>

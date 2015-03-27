@@ -28,6 +28,7 @@ public class BowFragment extends NowListFragment<Bow> {
     protected void init(Bundle intent, Bundle savedInstanceState) {
         itemTypeRes = R.plurals.bow_selected;
         newStringRes = R.string.new_bow;
+        mEditable = true;
     }
 
     @Override
@@ -42,7 +43,7 @@ public class BowFragment extends NowListFragment<Bow> {
     }
 
     @Override
-    public void onSelected(Bow item) {
+    protected void onSelected(Bow item) {
         Intent i = new Intent(getActivity(), EditBowActivity.class);
         i.putExtra(EditBowActivity.BOW_ID, item.getId());
         startActivity(i);
@@ -54,7 +55,7 @@ public class BowFragment extends NowListFragment<Bow> {
         onSelected(item);
     }
 
-    public class BowAdapter extends NowListAdapter<Bow> {
+    protected class BowAdapter extends NowListAdapter<Bow> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())

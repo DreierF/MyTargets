@@ -2,6 +2,7 @@
 <resources>
 
     <!-- General -->
+    <string name="preferences">Options</string>
     <string name="prev">Précédent</string>
     <string name="next">Suivant</string>
     <string name="save">Sauver</string>
@@ -163,5 +164,17 @@
     <string name="donation_thank">Merci pour votre soutient!</string>
     <string name="monthly">Mensuellement %s</string>
     <string name="donate_text">Les montants inclus la TVA et 30% de commission pour Google. Si vous préférez, vous pouvez également faire un don PayPal sur le compte dreier.florian@gmail.com.</string>
+
+    <!-- Timer -->
+    <string name="timer">Minuteur</string>
+    <string name="pref_timer_shootingtime">Temps de tir</string>
+    <string name="pref_timer_waitingtime">Temps de préparation</string>
+    <string name="pref_timer_warningtime">Temps orange</string>
+    <string name="pref_timer_withsound">Avec son</string>
+    <string name="stop">STOP</string>
+
+    <!-- Settings -->
+    <string name="licences">Licences open source</string>
+    <string name="licences_summary">Des notes juridiques licences</string>
 
 </resources>

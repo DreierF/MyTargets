@@ -41,7 +41,6 @@ public class EditRoundActivity extends ActionBarActivity {
 
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
-    public static final String FROM_PASSE = "from_passe";
     private long mTraining = -1, mRound = -1;
 
     private DistanceDialogSpinner distance;
@@ -49,7 +48,6 @@ public class EditRoundActivity extends ActionBarActivity {
     private DialogSpinner bow;
     private DialogSpinner arrow;
     private DialogSpinner target;
-    private boolean mCalledFromPasse = false;
     private int mBowId = 0;
     private EditText training;
     private FloatLabel comment;
@@ -73,7 +71,6 @@ public class EditRoundActivity extends ActionBarActivity {
             if (i.hasExtra(ROUND_ID)) {
                 mRound = i.getLongExtra(ROUND_ID, -1);
             }
-            mCalledFromPasse = i.hasExtra(FROM_PASSE);
         }
         SharedPreferences prefs = getSharedPreferences(MyBackupAgent.PREFS, 0);
 
@@ -193,7 +190,7 @@ public class EditRoundActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onSave() {
+    void onSave() {
         Round round = new Round();
         round.target = (int) target.getSelectedItemId();
 
@@ -271,7 +268,6 @@ public class EditRoundActivity extends ActionBarActivity {
             i.putExtra(InputActivity.ROUND_ID, round.id);
             i.putExtra(InputActivity.STOP_AFTER, after_rounds);
             startActivity(i);
-
             overridePendingTransition(R.anim.right_in, R.anim.left_out);
         }
     }
@@ -279,10 +275,6 @@ public class EditRoundActivity extends ActionBarActivity {
     @Override
     public void onBackPressed() {
         finish();
-        if (mCalledFromPasse) {
-            overridePendingTransition(R.anim.right_in_half, R.anim.left_out_complete);
-        } else {
-            overridePendingTransition(R.anim.left_in, R.anim.right_out);
-        }
+        overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 }

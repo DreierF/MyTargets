@@ -126,7 +126,7 @@ public class PasseFragment extends NowListFragment<Passe>
         activity.supportInvalidateOptionsMenu();
     }
 
-    public void setRoundInfo() {
+    void setRoundInfo() {
         int reached = mRoundInfo.reachedPoints;
         int max = mRoundInfo.maxPoints;
 

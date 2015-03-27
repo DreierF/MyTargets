@@ -38,6 +38,7 @@ import de.dreier.mytargets.utils.TextInputDialog;
 
 public class TargetView extends TargetViewBase {
 
+    private static final float ZOOM_FACTOR = 2;
     private int radius, midX, midY;
     private TextPaint mTextPaint;
     private Paint thinBlackBorder, thinWhiteBorder, drawColorP, rectColorP, circleColorP;
@@ -48,6 +49,7 @@ public class TargetView extends TargetViewBase {
     private Paint thinLine;
     private final Handler h = new Handler();
     private int oldRadius;
+    private final RectF mZoomedRect = new RectF();
     private final Runnable task = new Runnable() {
         @Override
         public void run() {
@@ -200,7 +202,7 @@ public class TargetView extends TargetViewBase {
             } else {
                 circleY = midY + radius * (curZone + 1) / (float) mZoneCount;
             }
-            //mCircle.draw(canvas, midX + radius + 27 * density, circleY, curZone, 17, false);
+
             if (curZone > -1) {
                 int colorInd = curZone > -1 ? target[curZone] : 3;
                 circleColorP.setColor(Target.circleStrokeColor[colorInd]);
@@ -216,12 +218,11 @@ public class TargetView extends TargetViewBase {
         canvas.save(Canvas.CLIP_SAVE_FLAG);
         float px = mPasse.shot[currentArrow].x;
         float py = mPasse.shot[currentArrow].y;
-        int append = (px < 0 && py < 0) ? 1 : 0;
-        canvas.clipRect(midX - radius + append * radius, 0,
-                midX - radius + radius * (append + 1), midY, Region.Op.REPLACE);
-        int x = (int) (midX + radius * (append - 2 * px - 0.5));
-        int y = (int) (midY + radius * (-2 * py - 0.5));
-        drawTarget(canvas, x, y, radius * 2);
+        calcZoomedRect(px, py);
+        canvas.clipRect(mZoomedRect, Region.Op.REPLACE);
+        int x = (int) (mZoomedRect.left - radius * (ZOOM_FACTOR * px - 0.5));
+        int y = (int) (mZoomedRect.top - radius * (ZOOM_FACTOR * py - 0.5));
+        drawTarget(canvas, x, y, (int) (radius * ZOOM_FACTOR));
         canvas.restore();
     }
 
@@ -435,12 +436,31 @@ public class TargetView extends TargetViewBase {
         radius = (int) (Math.min(radW, radH));
         midX = mModeEasy ? 0 : contentWidth / 2;
         midY = radius + (int) (10 * density);
+        mZoomedRect.left = midX - radius;
+        mZoomedRect.right = midX;
+        mZoomedRect.top = midY - radius;
+        mZoomedRect.bottom = midY;
         RectF rect = new RectF();
         rect.left = (mModeEasy ? 20 : 30) * density;
         rect.right = contentWidth - (mModeEasy ? 80 : 30) * density;
         rect.top = midY + radius;
         rect.bottom = contentHeight;
         mPasseDrawer.animateToRect(rect);
+    }
+
+    private void calcZoomedRect(float px, float py) {
+        float x = midX + px * radius;
+        float y = midY + py * radius;
+        float inner = 1 / (float) mZoneCount;
+        if (mZoomedRect.contains(x, y)) {
+            boolean isLeftUpperRegion = px < 0 && py < 0;
+            boolean isInnerRegion = px * px + py * py < inner * inner;
+            int x_shift = (isLeftUpperRegion && !isInnerRegion) ? 1 : 0;
+            mZoomedRect.left = midX - radius + x_shift * radius;
+            mZoomedRect.right = midX + radius * x_shift;
+            mZoomedRect.top = midY - radius + x_shift * radius;
+            mZoomedRect.bottom = midY + radius * x_shift;
+        }
     }
 
     @Override

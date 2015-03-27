@@ -43,6 +43,7 @@ public class RoundFragment extends NowListFragment<Round> {
     protected void init(Bundle intent, Bundle savedInstanceState) {
         itemTypeRes = R.plurals.round_selected;
         newStringRes = R.string.new_round;
+        mEditable = true;
 
         if (intent != null) {
             mTraining = intent.getLong(TRAINING_ID, -1);
@@ -123,7 +124,7 @@ public class RoundFragment extends NowListFragment<Round> {
         }
     }
 
-    public class RoundAdapter extends NowListAdapter<Round> {
+    protected class RoundAdapter extends NowListAdapter<Round> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())

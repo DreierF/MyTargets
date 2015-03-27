@@ -45,17 +45,19 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
     private static final String SHOW_ALL_MODE = "show_all";
     public static final String PASSE_IND = "passe_ind";
     public static final String STOP_AFTER = "stop_after";
+    private static final String TIMER_ENABLED = "timer_enabled";
     private TargetView target;
     private Button next, prev;
     private int curPasse = 1;
     private int savedPasses = 0;
-    private long mRound, mTraining;
+    private long mRound;
     private DatabaseManager db;
     private boolean mMode = true;
     private Round r;
     private boolean mShowAllMode = false;
     private WearMessageManager manager;
     private int mStopAfter = -1;
+    private boolean mTimerEnabled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,10 +85,10 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
         }
 
         r = db.getRound(mRound);
-        mTraining = r.training;
         target.setRoundInfo(r);
         mMode = prefs.getBoolean(TARGET_MODE, true);
         mShowAllMode = prefs.getBoolean(SHOW_ALL_MODE, false);
+        mTimerEnabled = prefs.getBoolean(TIMER_ENABLED, false);
         target.switchMode(mMode, false);
         target.showAll(mShowAllMode);
 
@@ -150,10 +152,13 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.action_switch_mode)
-                .setIcon(mMode ? R.drawable.ic_target_exact_24dp : R.drawable.ic_target_zone_24dp);
+                .setIcon(mMode ? R.drawable.ic_target_zone_24dp : R.drawable.ic_target_exact_24dp);
         menu.findItem(R.id.action_show_all).setIcon(
-                mShowAllMode ? R.drawable.ic_visibility_off_white_24dp :
-                        R.drawable.ic_visibility_white_24dp);
+                mShowAllMode ? R.drawable.ic_visibility_white_24dp :
+                        R.drawable.ic_visibility_off_white_24dp);
+        menu.findItem(R.id.action_timer).setIcon(
+                mTimerEnabled ? R.drawable.ic_timer_white_24dp :
+                        R.drawable.ic_timer_off_white_24dp);
         return true;
     }
 
@@ -167,6 +172,9 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
             }
         } else if (passe != curPasse) {
             target.reset();
+            if (mTimerEnabled) {
+                startActivity(new Intent(this, SimpleFragmentActivity.TimerActivity.class));
+            }
         }
         ArrayList<Passe> oldOnes = db.getPasses(mRound);
         target.setOldShoots(oldOnes);
@@ -210,19 +218,17 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent i;
         switch (item.getItemId()) {
-            case R.id.action_new_round:
-                i = new Intent(this, EditRoundActivity.class);
-                i.putExtra(EditRoundActivity.TRAINING_ID, mTraining);
-                i.putExtra(EditRoundActivity.FROM_PASSE, true);
-                startActivity(i);
-                overridePendingTransition(R.anim.left_in_complete, R.anim.right_out_half);
+            case R.id.action_timer:
+                mTimerEnabled = !mTimerEnabled;
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                prefs.edit().putBoolean(TIMER_ENABLED, mTimerEnabled).apply();
+                supportInvalidateOptionsMenu();
                 return true;
             case R.id.action_switch_mode:
                 mMode = !mMode;
                 target.switchMode(mMode, true);
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 prefs.edit().putBoolean(TARGET_MODE, mMode).apply();
                 supportInvalidateOptionsMenu();
                 return true;

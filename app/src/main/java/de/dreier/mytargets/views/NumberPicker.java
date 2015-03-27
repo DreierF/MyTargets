@@ -65,11 +65,9 @@ public class NumberPicker extends LinearLayout {
     private int mMinimum = 1;
     private int mMaximum = 30;
 
-    public Integer value;
+    private Integer value;
 
-    Button decrement;
-    Button increment;
-    public TextView valueText;
+    private TextView valueText;
 
     private Handler repeatUpdateHandler = new Handler();
 
@@ -86,7 +84,7 @@ public class NumberPicker extends LinearLayout {
      *
      * @author Jeffrey F. Cole
      */
-    class RepetetiveUpdater implements Runnable {
+    private class RepetetiveUpdater implements Runnable {
         public void run() {
             if (autoIncrement) {
                 increment();
@@ -112,7 +110,7 @@ public class NumberPicker extends LinearLayout {
     }
 
     private void initIncrementButton() {
-        increment = (Button) findViewById(R.id.number_increment);
+        Button increment = (Button) findViewById(R.id.number_increment);
 
         // Increment once for a click
         increment.setOnClickListener(new OnClickListener() {
@@ -149,7 +147,7 @@ public class NumberPicker extends LinearLayout {
     }
 
     private void initDecrementButton() {
-        decrement = (Button) findViewById(R.id.number_decrement);
+        Button decrement = (Button) findViewById(R.id.number_decrement);
 
 
         // Decrement once for a click
@@ -186,11 +184,11 @@ public class NumberPicker extends LinearLayout {
         mTextPattern = textPattern;
     }
 
-    public void increment() {
+    void increment() {
         setValue(value + 1);
     }
 
-    public void decrement() {
+    void decrement() {
         setValue(value - 1);
     }
 

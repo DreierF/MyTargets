@@ -2,6 +2,7 @@
 <resources>
 
     <!-- General -->
+    <string name="preferences">Opties</string>
     <string name="prev">Vorige</string>
     <string name="next">Volgende</string>
     <string name="save">Opslaan</string>
@@ -163,5 +164,15 @@
     <string name="donation_thank">Bedankt voor uw donatie!</string>
     <string name="monthly">Maandelijks %s</string>
     <string name="donate_text"> De bedragen zijn inclusief BTW en 30% kosten voor Google. Als alternatief mag u ook doneren via PayPal, op account dreier.florian@gmail.com.</string>
+
+    <!-- Timer -->
+    <string name="timer">Tijdklok</string>
+    <string name="pref_timer_shootingtime">Schiettijd</string>
+    <string name="pref_timer_waitingtime">Naar de meet</string>
+    <string name="pref_timer_warningtime">Oranje</string>
+    <string name="pref_timer_withsound">Met geluid</string>
+    <string name="stop">STOP</string>
+
+    <!-- Settings -->
 
 </resources>

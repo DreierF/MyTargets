@@ -28,6 +28,7 @@ public class ArrowFragment extends NowListFragment<Arrow> {
     protected void init(Bundle intent, Bundle savedInstanceState) {
         itemTypeRes = R.plurals.arrow_selected;
         newStringRes = R.string.new_arrow;
+        mEditable = true;
     }
 
     @Override

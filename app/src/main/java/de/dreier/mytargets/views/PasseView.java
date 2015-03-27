@@ -21,7 +21,7 @@ public class PasseView extends View {
     private Passe passe = new Passe(3);
     private float density;
     private PasseDrawer mPasseDrawer;
-    private RectF rect = new RectF();
+    private final RectF rect = new RectF();
 
     public PasseView(Context context) {
         super(context);

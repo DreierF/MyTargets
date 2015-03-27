@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/timer">
+        <EditTextPreference
+            android:defaultValue="20"
+            android:inputType="number"
+            android:key="timer_wait_time"
+            android:title="@string/pref_timer_waitingtime"/>
+        <EditTextPreference
+            android:defaultValue="120"
+            android:inputType="number"
+            android:key="timer_shoot_time"
+            android:title="@string/pref_timer_shootingtime"/>
+        <EditTextPreference
+            android:defaultValue="30"
+            android:inputType="number"
+            android:key="timer_warn_time"
+            android:title="@string/pref_timer_warningtime"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="timer_with_sound"
+            android:title="@string/pref_timer_withsound"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_key_storage_settings"
+        android:title="Daten">
+        <Preference
+            android:key="pref_backup"
+            android:summary="Sichert die gespeicherten Daten"
+            android:title="@string/backup_action"/>
+        <Preference
+            android:key="pref_import"
+            android:summary="Stellt die gespeicherten Daten wieder her"
+            android:title="@string/import_action"/>
+        <Preference
+            android:key="pref_export"
+            android:summary="@string/exports_as_csv"
+            android:title="@string/export"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Info">
+        <Preference
+            android:key="pref_rate"
+            android:title="@string/app_rate"/>
+        <Preference
+            android:key="pref_share"
+            android:title="@string/app_share"/>
+        <Preference
+            android:key="pref_contact"
+            android:title="@string/contact_developer"/>
+        <Preference
+            android:key="pref_donate"
+            android:title="@string/donate_action"/>
+        <com.michaelflisar.licenses.dialog.LicensesDialog
+            android:key="pref_licence"
+            android:summary="@string/licences_summary"
+            android:title="@string/licences"/>
+        <Preference
+            android:key="pref_version"
+            android:title="@string/app_name"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

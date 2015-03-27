@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/libraries/FloatLabel/FloatLabel.iml" filepath="$PROJECT_DIR$/libraries/FloatLabel/FloatLabel.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/FloatingActionButton/FloatingActionButton.iml" filepath="$PROJECT_DIR$/libraries/FloatingActionButton/FloatingActionButton.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/LicensesDialog/LicensesDialog.iml" filepath="$PROJECT_DIR$/libraries/LicensesDialog/LicensesDialog.iml" />
       <module fileurl="file://$PROJECT_DIR$/MyTargets.iml" filepath="$PROJECT_DIR$/MyTargets.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/RecyclerViewChoiceMode/RecyclerViewChoiceMode.iml" filepath="$PROJECT_DIR$/libraries/RecyclerViewChoiceMode/RecyclerViewChoiceMode.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/aFileChooser/aFileChooser.iml" filepath="$PROJECT_DIR$/libraries/aFileChooser/aFileChooser.iml" />

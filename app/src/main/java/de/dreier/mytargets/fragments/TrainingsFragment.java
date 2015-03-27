@@ -34,6 +34,7 @@ public class TrainingsFragment extends NowListFragment<Training> {
     protected void init(Bundle intent, Bundle savedInstanceState) {
         itemTypeRes = R.plurals.training_selected;
         newStringRes = R.string.new_training;
+        //TODO mEditable = true;
     }
 
     @Override
@@ -71,9 +72,9 @@ public class TrainingsFragment extends NowListFragment<Training> {
     }
 
     public class ViewHolder extends CardViewHolder<Training> {
-        public TextView mTitle;
-        public TextView mSubtitle;
-        public TextView mGes;
+        public final TextView mTitle;
+        public final TextView mSubtitle;
+        public final TextView mGes;
 
         public ViewHolder(View itemView) {
             super(itemView, mMultiSelector, TrainingsFragment.this);

@@ -12,4 +12,5 @@
         <item name="android:focusableInTouchMode">false</item>
         <item name="android:focusable">false</item>
     </style>
+
 </resources>

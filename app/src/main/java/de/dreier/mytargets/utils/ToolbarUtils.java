@@ -9,28 +9,12 @@ package de.dreier.mytargets.utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
-import android.widget.TextView;
-
-import java.lang.reflect.Field;
 
 import de.dreier.mytargets.R;
 
 
 public class ToolbarUtils {
-    public static TextView getActionBarTextView(Toolbar toolbar) {
-        TextView titleTextView = null;
-        try {
-            Field f = toolbar.getClass().getDeclaredField("mTitleTextView");
-            f.setAccessible(true);
-            titleTextView = (TextView) f.get(toolbar);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return titleTextView;
-    }
-
     public static int getActionBarSize(Context context) {
         TypedValue typedValue = new TypedValue();
         int[] textSizeAttr = new int[]{R.attr.actionBarSize};

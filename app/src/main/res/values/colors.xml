@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="card_pressed">#f8f8f8</color>
-    <color name="card_activated">#500099CC</color>
-    <color name="card_action">#4285f4</color>
     <color name="colorPrimary">#259b24</color>
     <color name="colorPrimaryDark">#0a7e07</color>
     <color name="colorAccent">#ff9100</color>
@@ -15,5 +12,10 @@
     <color name="accent_lighter">#7Fbbbbbb</color>
     <color name="list_background">#FFEEEEEE</color>
     <color name="new_text_color">#FF666666</color>
+
+    <!-- Timer -->
+    <color name="timer_green">#ff43a047</color>
+    <color name="timer_orange">#fffb8c00</color>
+    <color name="timer_red">#ffe53935</color>
 
 </resources>

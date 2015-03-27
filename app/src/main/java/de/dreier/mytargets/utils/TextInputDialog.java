@@ -5,12 +5,7 @@
  * All rights reserved
  */
 
-package de.dreier.mytargets.utils;/*
- * MyTargets Archery
- *
- * Copyright (C) 2015 Florian Dreier
- * All rights reserved
- */
+package de.dreier.mytargets.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -28,7 +23,7 @@ public class TextInputDialog {
         @StringRes
         private int mTitle;
         private String mDefaultText = "";
-        private Context mContext;
+        private final Context mContext;
         private OnClickListener mClickListener;
 
         public Builder(Context context) {

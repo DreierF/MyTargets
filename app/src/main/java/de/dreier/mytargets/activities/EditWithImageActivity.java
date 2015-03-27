@@ -58,15 +58,15 @@ public abstract class EditWithImageActivity extends ActionBarActivity
     private static final int SELECT_PICTURE = 2;
 
     private Uri fileUri;
-    protected String mImageFile = null;
-    protected Bitmap imageBitmap = null;
+    String mImageFile = null;
+    Bitmap imageBitmap = null;
 
     private View mFab;
     private Toolbar mToolbar;
     private View mOverlayView;
     private TextView mTitleView;
     private View mImageContainer;
-    protected ImageView mImageView;
+    ImageView mImageView;
     private ProgressBar mImageProgress;
 
     private final int layoutRes;

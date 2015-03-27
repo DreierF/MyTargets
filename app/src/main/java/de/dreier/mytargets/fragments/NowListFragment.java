@@ -52,26 +52,26 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
     public static final String ROUND_ID = "round_id";
 
     @PluralsRes
-    protected int itemTypeRes;
+    int itemTypeRes;
     @StringRes
-    protected int newStringRes;
+    int newStringRes;
 
-    protected ActionBarActivity activity;
+    ActionBarActivity activity;
     DatabaseManager db;
-    final boolean mEditable = false;
-    protected RecyclerView mRecyclerView;
-    protected NowListAdapter<T> mAdapter;
+    boolean mEditable = false;
+    RecyclerView mRecyclerView;
+    NowListAdapter<T> mAdapter;
 
     // Action mode handling
-    protected final MultiSelector mMultiSelector = new MultiSelector();
-    protected ActionMode actionMode = null;
+    final MultiSelector mMultiSelector = new MultiSelector();
+    private ActionMode actionMode = null;
 
     // New view
-    protected View mNewLayout;
-    protected TextView mNewText;
-    protected FloatingActionButton mFab;
+    private View mNewLayout;
+    private TextView mNewText;
+    private FloatingActionButton mFab;
 
-    protected int getLayoutResource() {
+    int getLayoutResource() {
         return R.layout.fragment_list;
     }
 
@@ -114,7 +114,7 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
         init(getArguments(), savedInstanceState);
     }
 
-    protected void setList(ArrayList<T> list, NowListAdapter<T> adapter) {
+    void setList(ArrayList<T> list, NowListAdapter<T> adapter) {
         if (mRecyclerView.getAdapter() == null) {
             mAdapter = adapter;
             mAdapter.setList(list);
@@ -128,7 +128,7 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
         mFab.show(true);
     }
 
-    protected final ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(
+    private final ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(
             mMultiSelector) {
 
         @Override
@@ -171,7 +171,7 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
         }
     };
 
-    public void remove(List<Integer> positions) {
+    void remove(List<Integer> positions) {
         Collections.sort(positions);
         Collections.reverse(positions);
         for (int pos : positions) {
@@ -181,7 +181,7 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
         onResume();
     }
 
-    protected void updateTitle() {
+    void updateTitle() {
         if (actionMode == null) {
             return;
         }
