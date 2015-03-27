@@ -29,7 +29,7 @@
     <TextView
         android:id="@+id/timer_time"
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:shadowColor="#666"
         android:shadowDx="0"

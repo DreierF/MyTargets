@@ -64,6 +64,7 @@
             android:name=".activities.SimpleFragmentActivity$TimerActivity"
             android:label=""
             android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize"
             android:parentActivityName=".activities.InputActivity"
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data

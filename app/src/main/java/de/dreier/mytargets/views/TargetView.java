@@ -97,6 +97,10 @@ public class TargetView extends TargetViewBase {
         init();
     }
 
+    public boolean hasPointsSet() {
+        return mPasse.shot[0].zone != -2;
+    }
+
     public void setPasse(Passe passe) {
         currentArrow = passe.shot.length;
         lastSetArrow = passe.shot.length;

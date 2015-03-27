@@ -170,10 +170,12 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
             } else {
                 target.reset();
             }
-        } else if (passe != curPasse) {
-            target.reset();
+        } else {
+            if (passe != curPasse) {
+                target.reset();
+            }
             if (mTimerEnabled) {
-                startActivity(new Intent(this, SimpleFragmentActivity.TimerActivity.class));
+                openTimer();
             }
         }
         ArrayList<Passe> oldOnes = db.getPasses(mRound);
@@ -224,6 +226,9 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 prefs.edit().putBoolean(TIMER_ENABLED, mTimerEnabled).apply();
                 supportInvalidateOptionsMenu();
+                if (mTimerEnabled && !target.hasPointsSet()) {
+                    openTimer();
+                }
                 return true;
             case R.id.action_switch_mode:
                 mMode = !mMode;
@@ -245,6 +250,10 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void openTimer() {
+        startActivity(new Intent(this, SimpleFragmentActivity.TimerActivity.class));
     }
 
     @Override

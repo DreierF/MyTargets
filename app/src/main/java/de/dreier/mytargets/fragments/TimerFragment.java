@@ -57,7 +57,6 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
         root.setOnClickListener(this);
         mStatusField = (TextView) root.findViewById(R.id.timer_status);
         mTimeField = (TextView) root.findViewById(R.id.timer_time);
-        horn = MediaPlayer.create(getActivity(), R.raw.horn);
         return root;
     }
 
@@ -87,12 +86,15 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                 PowerManager.ACQUIRE_CAUSES_WAKEUP |
                 PowerManager.ON_AFTER_RELEASE, "WakeLock");
         wakeLock.acquire();
+        horn = MediaPlayer.create(getActivity(), R.raw.horn);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         wakeLock.release();
+        horn.release();
+        horn = null;
     }
 
     @Override
@@ -168,13 +170,6 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
             }
 
         });
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        horn.release();
-        horn = null;
     }
 
     @Override
