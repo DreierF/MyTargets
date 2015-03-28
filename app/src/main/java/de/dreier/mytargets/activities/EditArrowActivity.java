@@ -91,7 +91,7 @@ public class EditArrowActivity extends EditWithImageActivity {
         arrow.imageFile = mImageFile;
         arrow.image = imageBitmap;
 
-        mArrowId = db.updateArrow(arrow);
+        db.updateArrow(arrow);
         finish();
     }
 

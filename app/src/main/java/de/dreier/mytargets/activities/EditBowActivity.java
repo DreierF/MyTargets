@@ -301,13 +301,13 @@ public class EditBowActivity extends EditWithImageActivity {
         bow.imageFile = mImageFile;
         bow.image = imageBitmap;
 
-        mBowId = db.updateBow(bow);
+        db.updateBow(bow);
 
         for (SightSetting set : sightSettingsList) {
             set.update();
         }
 
-        db.updateSightSettings(mBowId, sightSettingsList);
+        db.updateSightSettings(bow.id, sightSettingsList);
         finish();
     }
 

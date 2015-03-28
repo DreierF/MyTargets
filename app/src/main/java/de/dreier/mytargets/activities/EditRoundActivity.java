@@ -32,6 +32,7 @@ import de.dreier.mytargets.fragments.PasseFragment;
 import de.dreier.mytargets.fragments.RoundFragment;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Round;
+import de.dreier.mytargets.models.Training;
 import de.dreier.mytargets.utils.MyBackupAgent;
 import de.dreier.mytargets.views.DialogSpinner;
 import de.dreier.mytargets.views.DistanceDialogSpinner;
@@ -220,7 +221,10 @@ public class EditRoundActivity extends ActionBarActivity {
 
         String title = training.getText().toString();
         if (mTraining == -1) {
-            mTraining = db.newTraining(title);
+            Training training = new Training();
+            training.title = title;
+            db.updateTraining(training);
+            mTraining = training.id;
         }
 
         round.id = mRound;

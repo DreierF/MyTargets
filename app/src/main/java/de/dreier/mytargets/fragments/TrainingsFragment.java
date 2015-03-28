@@ -24,6 +24,7 @@ import de.dreier.mytargets.activities.EditRoundActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.models.Training;
+import de.dreier.mytargets.utils.TextInputDialog;
 
 /**
  * Shows an overview over all trying days
@@ -34,7 +35,7 @@ public class TrainingsFragment extends NowListFragment<Training> {
     protected void init(Bundle intent, Bundle savedInstanceState) {
         itemTypeRes = R.plurals.training_selected;
         newStringRes = R.string.new_training;
-        //TODO mEditable = true;
+        mEditable = true;
     }
 
     @Override
@@ -58,8 +59,25 @@ public class TrainingsFragment extends NowListFragment<Training> {
     }
 
     @Override
-    protected void onEdit(Training item) {
-        //TODO
+    protected void onEdit(final Training item) {
+        new TextInputDialog.Builder(activity)
+                .setTitle(R.string.training)
+                .setDefaultText(item.title)
+                .setOnClickListener(new TextInputDialog.OnClickListener() {
+                    @Override
+                    public void onCancelClickListener() {
+
+                    }
+
+                    @Override
+                    public void onOkClickListener(String input) {
+                        item.title = input;
+                        db.updateTraining(item);
+                        ArrayList<Training> list = db.getTrainings();
+                        setList(list, new TrainingAdapter());
+                    }
+                })
+                .show();
     }
 
     protected class TrainingAdapter extends NowListAdapter<Training> {
