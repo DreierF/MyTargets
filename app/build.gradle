@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 Properties props = new Properties()
-props.load(new FileInputStream(file(project.property("signing.properties"))))
+props.load(new FileInputStream(file(project.property('signing.properties'))))
 
 android {
     compileSdkVersion 21
@@ -11,15 +11,15 @@ android {
         applicationId 'de.dreier.mytargets'
         minSdkVersion 11
         targetSdkVersion 21
-        versionCode 28
-        versionName '2.0.8'
+        versionCode Integer.parseInt(project.VERSION_CODE)
+        versionName project.VERSION_NAME
     }
 
     signingConfigs {
         release {
             storeFile file(props['keystore'])
             storePassword props['keystore.password']
-            keyAlias "mytargets"
+            keyAlias 'mytargets'
             keyPassword props['keystore.password']
         }
     }

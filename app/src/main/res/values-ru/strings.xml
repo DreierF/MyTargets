@@ -65,7 +65,6 @@
     <string name="sharing_failed">Не удалось поделиться!</string>
 
     <!-- Export -->
-    <string name="export">Отправить</string>
     <string name="send_exported">Данные отправлены</string>
     <string name="exporting_failed">Передача не удалась!</string>
 
@@ -156,8 +155,6 @@
     <string name="current_round">Текущий раунд</string>
 
     <!-- Import/Backup -->
-    <string name="backup_action">Резервное копирование</string>
-    <string name="import_action">Восстановить резервную копию</string>
     <string name="select_a_file">Выберите файл</string>
     <string name="dir_not_created">Директория не может быть создана!</string>
     <string name="backup_successful">Восстановление резервной копии проведено успешно!</string>
@@ -183,11 +180,35 @@
     <string name="donate_text">Сумма включает НДС и 30% платежи для Google. Вместо этого можете воспользоваться PayPal. Мой аккаунт dreier.florian@gmail.com.</string>
 
     <!-- Timer -->
-    <string name="timer">Timer</string>
-    <string name="pref_timer_shootingtime">Shooting Time</string>
-    <string name="pref_timer_waitingtime">Prepare Time</string>
-    <string name="pref_timer_warningtime">Orange Time</string>
-    <string name="pref_timer_withsound">With sound</string>
+    <string name="timer">Таймер</string>
+    <string name="stop">СТОП</string>
+    <string name="touch_to_start">Коснитесь экрана для старта</string>
+    <string name="preparation">Приготовились!</string>
+    <string name="shooting">Стрельба</string>
+
+    <!-- Timer settings -->
+    <string name="timer_shooting_time">Время стрельбы</string>
+    <string name="timer_waiting_time">Время подготовки</string>
+    <string name="timer_warning_time">"Оранжевое" время</string>
+    <string name="timer_sound">звуком</string>
+    <string name="timer_vibrate">вибрация</string>
 
     <!-- Settings -->
+    <string name="backup_action">Резервное копирование</string>
+    <string name="import_action">Восстановить резервную копию</string>
+    <string name="export">Отправить</string>
+    <string name="exports_as_csv">Данные для передачи сохранены как *.csv</string>
+    <string name="app_rate">Оценить приложение</string>
+    <string name="app_share">Поделиться приложением</string>
+    <string name="contact_developer">Связаться с разработчиком</string>
+    <string name="licences">Открытая лицензия</string>
+    <string name="licences_summary">Правовая информация</string>
+    <string name="version">Версия %s</string>
+    <plurals name="second">
+        <item quantity="one">%d секунда</item>
+        <item quantity="other">%d секунды</item>
+        <item quantity="few">%d секунд</item>
+        <item quantity="many">%d секунды</item>
+    </plurals>
+
 </resources>

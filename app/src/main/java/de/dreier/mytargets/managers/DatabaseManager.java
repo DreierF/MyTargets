@@ -374,13 +374,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public ArrayList<Passe> getPasses(long round) {
-        String[] args = {"" + round};
         Cursor res = db.rawQuery("SELECT p._id, s._id, s.points, s.x, s.y, s.comment, " +
                 "(SELECT COUNT(t._id) FROM SHOOT t WHERE t.passe=p._id) " +
                 "FROM PASSE p " +
                 "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                "WHERE p.round = ? " +
-                "ORDER BY p._id ASC, s._id ASC", args);
+                "WHERE p.round = " + round + " " +
+                "ORDER BY p._id ASC, s._id ASC", null);
         ArrayList<Passe> list = new ArrayList<>();
         if (res.moveToFirst()) {
             do {
@@ -459,8 +458,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public Training getTraining(long training) {
         String[] cols = {ID, TRAINING_TITLE, TRAINING_DATE};
-        String[] args = {"" + training};
-        Cursor res = db.query(TABLE_TRAINING, cols, ID + "=?", args, null, null, null);
+        Cursor res = db.query(TABLE_TRAINING, cols, ID + "=" + training, null, null, null, null);
         Training tr = new Training();
         if (res.moveToFirst()) {
             tr.id = res.getLong(0);
@@ -522,9 +520,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     Passe getPasse(long passeId) {
         String[] cols = {ID, SHOOT_ZONE, SHOOT_X, SHOOT_Y, SHOOT_COMMENT};
-        String[] args = {"" + passeId};
         Cursor res = db
-                .query(TABLE_SHOOT, cols, SHOOT_PASSE + "=?", args, null, null, ID + " ASC");
+                .query(TABLE_SHOOT, cols, SHOOT_PASSE + "=" + passeId, null, null, null,
+                        ID + " ASC");
         int count = res.getCount();
 
         Passe p = new Passe(count);
@@ -544,9 +542,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public Passe getPasse(long round, int passe) {
         String[] cols = {ID};
-        String[] args = {"" + round};
         Cursor res = db
-                .query(TABLE_PASSE, cols, PASSE_ROUND + "=?", args, null, null, ID + " ASC");
+                .query(TABLE_PASSE, cols, PASSE_ROUND + "=" + round, null, null, null, ID + " ASC");
         if (!res.moveToPosition(passe - 1)) {
             return null;
         }
@@ -558,8 +555,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public Bow getBow(long bowId, boolean small) {
         String[] cols = {BOW_NAME, BOW_TYPE, BOW_BRAND, BOW_SIZE, BOW_HEIGHT, BOW_TILLER,
                 BOW_DESCRIPTION, BOW_THUMBNAIL, BOW_IMAGE};
-        String[] args = {"" + bowId};
-        Cursor res = db.query(TABLE_BOW, cols, ID + "=?", args, null, null, null);
+        Cursor res = db.query(TABLE_BOW, cols, ID + "=" + bowId, null, null, null, null);
         Bow bow = null;
         if (res.moveToFirst()) {
             bow = new Bow();
@@ -578,6 +574,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 bow.imageFile = res.getString(8);
                 try {
                     if (bow.imageFile != null) {
+                        if (bow.imageFile.contains("/")) {
+                            bow.imageFile = bow.imageFile
+                                    .substring(bow.imageFile.lastIndexOf("/") + 1);
+                        }
                         FileInputStream in = mContext.openFileInput(bow.imageFile);
                         bow.image = BitmapFactory.decodeStream(in);
                     } else {
@@ -595,8 +595,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public Arrow getArrow(long arrowId, boolean small) {
         String[] cols = {ARROW_NAME, ARROW_LENGTH, ARROW_MATERIAL, ARROW_SPINE, ARROW_WEIGHT,
                 ARROW_VANES, ARROW_NOCK, ARROW_COMMENT, ARROW_THUMBNAIL, ARROW_IMAGE};
-        String[] args = {"" + arrowId};
-        Cursor res = db.query(TABLE_ARROW, cols, ID + "=?", args, null, null, null);
+        Cursor res = db.query(TABLE_ARROW, cols, ID + "=" + arrowId, null, null, null, null);
         Arrow arrow = null;
         if (res.moveToFirst()) {
             arrow = new Arrow();
@@ -616,6 +615,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 arrow.imageFile = res.getString(9);
                 try {
                     if (arrow.imageFile != null) {
+                        if (arrow.imageFile.contains("/")) {
+                            arrow.imageFile = arrow.imageFile
+                                    .substring(arrow.imageFile.lastIndexOf("/") + 1);
+                        }
                         FileInputStream in = mContext.openFileInput(arrow.imageFile);
                         arrow.image = BitmapFactory.decodeStream(in);
                     } else {
@@ -693,12 +696,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public int getRoundPoints(long round) {
-        String[] args = {"" + round};
-
         Cursor res = db.rawQuery("SELECT s.points, r.target" +
-                        " FROM ROUND r, PASSE p, SHOOT s" +
-                        " WHERE r._id=p.round AND p.round=? AND s.passe=p._id",
-                args);
+                " FROM ROUND r, PASSE p, SHOOT s" +
+                " WHERE r._id=p.round AND p.round=" + round + " AND s.passe=p._id", null);
         res.moveToFirst();
         int sum = 0;
         for (int i = 0; i < res.getCount(); i++) {
@@ -713,8 +713,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public int getRoundInd(long training, long round) {
         String[] cols = {ID};
-        String[] args = {"" + training};
-        Cursor res = db.query(TABLE_ROUND, cols, ROUND_TRAINING + "=?", args, null, null,
+        Cursor res = db.query(TABLE_ROUND, cols, ROUND_TRAINING + "=" + training, null, null, null,
                 ID + " ASC");
         res.moveToFirst();
         for (int i = 1; i < res.getCount() + 1; i++) {
@@ -730,9 +729,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public int getPasseInd(long round, long passe) {
         String[] cols = {ID};
-        String[] args = {"" + round};
         Cursor res = db
-                .query(TABLE_PASSE, cols, PASSE_ROUND + "=?", args, null, null, ID + " ASC");
+                .query(TABLE_PASSE, cols, PASSE_ROUND + "=" + round, null, null, null, ID + " ASC");
         res.moveToFirst();
         for (int i = 1; i < res.getCount() + 1; i++) {
             if (passe == res.getLong(0)) {
@@ -747,9 +745,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public String getSetting(long bowId, int dist) {
         String[] cols = {VISIER_SETTING};
-        String[] args = {"" + bowId, "" + dist};
         Cursor res = db
-                .query(TABLE_VISIER, cols, VISIER_BOW + "=? AND " + VISIER_DISTANCE + "=?", args,
+                .query(TABLE_VISIER, cols,
+                        VISIER_BOW + "=" + bowId + " AND " + VISIER_DISTANCE + "=" + dist, null,
                         null, null, null);
         String s = "";
         if (res.moveToFirst()) {
@@ -938,8 +936,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     void deleteEntry(String table, long id) {
-        String[] args = {"" + id};
-        db.delete(table, "_id=?", args);
+        db.delete(table, "_id=" + id, null);
     }
 
 ////// BACKUP DATABASE //////

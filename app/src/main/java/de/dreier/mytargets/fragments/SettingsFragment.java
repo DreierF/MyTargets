@@ -38,9 +38,6 @@ public class SettingsFragment extends PreferenceFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActionBar ab = ((ActionBarActivity) getActivity()).getSupportActionBar();
-        ab.setHomeButtonEnabled(true);
-        ab.setDisplayHomeAsUpEnabled(true);
         addPreferencesFromResource(R.xml.preferences);
         LicensesDialog licences = (LicensesDialog) getPreferenceScreen()
                 .findPreference("pref_licence");
@@ -55,6 +52,14 @@ public class SettingsFragment extends PreferenceFragment
         setSecondsSummary("timer_warn_time", "30");
 
         mIABWrapper = new IABHelperWrapper((ActionBarActivity) getActivity());
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ActionBar ab = ((ActionBarActivity) getActivity()).getSupportActionBar();
+        ab.setHomeButtonEnabled(true);
+        ab.setDisplayHomeAsUpEnabled(true);
     }
 
     void setSecondsSummary(String key, String def) {

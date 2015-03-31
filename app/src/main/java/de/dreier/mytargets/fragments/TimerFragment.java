@@ -14,6 +14,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.PowerManager;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -48,7 +49,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
     private int mCurStatus = WAIT_FOR_START;
     private CountDownTimer countdown;
     private MediaPlayer horn;
-    private boolean mWithSound;
+    private boolean mSound, mVibrate;
     private PowerManager.WakeLock wakeLock;
 
     @Override
@@ -63,19 +64,23 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(getActivity());
-        mWaitingTime = Integer.parseInt(prefs.getString("timer_wait_time", "20"));
-        mShootingTime = Integer.parseInt(prefs.getString("timer_shoot_time", "120"));
-        mWarnTime = Integer.parseInt(prefs.getString("timer_warn_time", "30"));
-        mWithSound = prefs.getBoolean("timer_with_sound", true);
-        mStatusField.setText(R.string.touch_to_start);
+        loadPreferenceValues();
 
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
         ActionBarActivity activity = (ActionBarActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);
+    }
+
+    private void loadPreferenceValues() {
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(getActivity());
+        mWaitingTime = Integer.parseInt(prefs.getString("timer_wait_time", "20"));
+        mShootingTime = Integer.parseInt(prefs.getString("timer_shoot_time", "120"));
+        mWarnTime = Integer.parseInt(prefs.getString("timer_warn_time", "30"));
+        mSound = prefs.getBoolean("timer_sound", true);
+        mVibrate = prefs.getBoolean("timer_vibrate", false);
     }
 
     @Override
@@ -87,6 +92,10 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                 PowerManager.ON_AFTER_RELEASE, "WakeLock");
         wakeLock.acquire();
         horn = MediaPlayer.create(getActivity(), R.raw.horn);
+        if (getActivity() != null) {
+            loadPreferenceValues();
+        }
+        changeStatus(mCurStatus);
     }
 
     @Override
@@ -95,6 +104,14 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
         wakeLock.release();
         horn.release();
         horn = null;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (countdown != null) {
+            countdown.cancel();
+        }
     }
 
     @Override
@@ -108,8 +125,13 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
         }
         mCurStatus = status;
         switch (status) {
+            case WAIT_FOR_START:
+                root.setBackgroundResource(R.color.timer_red);
+                mStatusField.setText(R.string.touch_to_start);
+                mTimeField.setText("");
+                break;
             case PREPARATION:
-                playHorn(2);
+                playSignal(2);
                 mStatusField.setText(R.string.preparation);
                 countdown = new CountDownTimer(mWaitingTime * 1000, 100) {
                     public void onTick(long millisUntilFinished) {
@@ -122,7 +144,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                 }.start();
                 break;
             case SHOOTING:
-                playHorn(1);
+                playSignal(1);
                 root.setBackgroundResource(R.color.timer_green);
                 mStatusField.setText(R.string.shooting);
                 countdown = new CountDownTimer(mShootingTime * 1000, 100) {
@@ -139,7 +161,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                 }.start();
                 break;
             case FINISHED:
-                playHorn(3);
+                playSignal(3);
                 root.setBackgroundResource(R.color.timer_red);
                 mTimeField.setText(R.string.stop);
                 countdown = new CountDownTimer(6000, 100) {
@@ -152,13 +174,27 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                         getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
                     }
                 }.start();
+                break;
+        }
+    }
+
+    private void playSignal(final int n) {
+        if (mSound) {
+            playHorn(n);
+        }
+        if (mVibrate) {
+            long[] pattern = new long[1 + n * 2];
+            Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+            pattern[0] = 150;
+            for (int i = 0; i < n; i++) {
+                pattern[i * 2 + 1] = 550;
+                pattern[i * 2 + 2] = 800;
+            }
+            v.vibrate(pattern, -1);
         }
     }
 
     private void playHorn(final int n) {
-        if (!mWithSound) {
-            return;
-        }
         horn.start();
         horn.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 

@@ -54,7 +54,6 @@
     <string name="sharing_failed">Teilen fehlgeschlagen!</string>
 
     <!-- Export -->
-    <string name="export">Export</string>
     <string name="send_exported">Sende exportierte Daten</string>
     <string name="exporting_failed">Export fehlgeschlagen!</string>
 
@@ -139,8 +138,6 @@
     <string name="current_round">Aktuelle Runde</string>
 
     <!-- Import/Backup -->
-    <string name="backup_action">Backup</string>
-    <string name="import_action">Import</string>
     <string name="select_a_file">Wähle eine Datei</string>
     <string name="dir_not_created">Ordner konnte nicht erstellt werden!</string>
     <string name="backup_successful">Backup erfolgreich!</string>
@@ -167,21 +164,31 @@
 
     <!-- Timer -->
     <string name="timer">Schießuhr</string>
-    <string name="pref_timer_shootingtime">Schießzeit</string>
-    <string name="pref_timer_waitingtime">Vorbereitungszeit</string>
-    <string name="pref_timer_warningtime">Gelbphase</string>
-    <string name="pref_timer_withsound">Mit Sound</string>
     <string name="stop">STOP</string>
+    <string name="touch_to_start">Berühren zum starten</string>
+    <string name="preparation">Fertig machen</string>
+    <string name="shooting">Schießen</string>
+
+    <!-- Timer settings -->
+    <string name="timer_shooting_time">Schießzeit</string>
+    <string name="timer_waiting_time">Vorbereitungszeit</string>
+    <string name="timer_warning_time">Gelbphase</string>
+    <string name="timer_sound">Sound</string>
+    <string name="timer_vibrate">Vibration</string>
 
     <!-- Settings -->
+    <string name="backup_action">Backup</string>
+    <string name="import_action">Import</string>
+    <string name="export">Export</string>
+    <string name="exports_as_csv">Exportiert die gespeicherten Daten als *.csv</string>
     <string name="app_rate">App bewerten</string>
     <string name="app_share">App teilen</string>
     <string name="contact_developer">Entwickler kontaktieren</string>
     <string name="licences">Open Source-Lizenzen</string>
     <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
-    <string name="exports_as_csv">Exportiert die gespeicherten Daten als *.csv</string>
+    <string name="version">Version %s</string>
     <plurals name="second">
-        <item quantity="one">Eine Sekunde</item>
+        <item quantity="one">%d Sekunde</item>
         <item quantity="other">%d Sekunden</item>
     </plurals>
 

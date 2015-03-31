@@ -54,7 +54,6 @@
     <string name="sharing_failed">Delen mislukt!</string>
 
     <!-- Export -->
-    <string name="export">Exporteren</string>
     <string name="send_exported">Geëxporteerde data versturen</string>
     <string name="exporting_failed">Exporteren mislukt!</string>
 
@@ -94,7 +93,7 @@
     <string name="outdoor">Buiten</string>
     <string name="indoor">Binnen</string>
     <string name="distance">Afstand</string>
-    <string name="format">Format</string>
+    <string name="format">Formaat</string>
 
     <!-- x passes with y arrows -->
     <plurals name="passe">
@@ -103,7 +102,7 @@
     </plurals>
     <string name="with">van</string>
     <plurals name="arrow">
-        <item quantity="one">eén pijl</item>
+        <item quantity="one">één pijl</item>
         <item quantity="other">%d pijlen</item>
     </plurals>
 
@@ -128,10 +127,10 @@
     <string name="comment">Opmerking</string>
     <plurals name="passes_finished">
         <item quantity="one">Eén beurt afgewerkte</item>
-        <item quantity="other">%d beurten afgewerkte</item>
+        <item quantity="other">%d beurten afgewerkt</item>
     </plurals>
-    <string name="passes_finished_now_what">You have finished your round. What would you like to do now?</string>
-    <string name="continue_with_next">Voortzetten</string>
+    <string name="passes_finished_now_what">Einde van de ronde. Wat wilt u nu doen?</string>
+    <string name="continue_with_next">Doorgaan</string>
 
     <!-- Statistics -->
     <string name="all_trainings">Alle trainingen</string>
@@ -139,8 +138,6 @@
     <string name="current_round">Huidige ronde</string>
 
     <!-- Import/Backup -->
-    <string name="backup_action">Backup</string>
-    <string name="import_action">Importeren</string>
     <string name="select_a_file">Kies een bestand</string>
     <string name="dir_not_created">Map kan niet worden aangemaakt!</string>
     <string name="backup_successful">Backup gelukt!</string>
@@ -166,13 +163,33 @@
     <string name="donate_text"> De bedragen zijn inclusief BTW en 30% kosten voor Google. Als alternatief mag u ook doneren via PayPal, op account dreier.florian@gmail.com.</string>
 
     <!-- Timer -->
-    <string name="timer">Tijdklok</string>
-    <string name="pref_timer_shootingtime">Schiettijd</string>
-    <string name="pref_timer_waitingtime">Naar de meet</string>
-    <string name="pref_timer_warningtime">Oranje</string>
-    <string name="pref_timer_withsound">Met geluid</string>
+    <string name="timer">Schietklok</string>
     <string name="stop">STOP</string>
+    <string name="touch_to_start">Starten</string>
+    <string name="preparation">Naar de meet</string>
+    <string name="shooting">Schieten</string>
+
+    <!-- Timer settings -->
+    <string name="timer_shooting_time">Schiettijd</string>
+    <string name="timer_waiting_time">Voorbereidingstijd</string>
+    <string name="timer_warning_time">Oranje waarschuwingstijd</string>
+    <string name="timer_sound">Geluid</string>
+    <string name="timer_vibrate">Trillen</string>
 
     <!-- Settings -->
+    <string name="backup_action">Backup</string>
+    <string name="import_action">Importeren</string>
+    <string name="export">Exporteren</string>
+    <string name="exports_as_csv">Export opgeslagen als *.csv</string>
+    <string name="app_rate">App beoordelen</string>
+    <string name="app_share">App delen</string>
+    <string name="contact_developer">Contact opnemen met ontwikkelaar</string>
+    <string name="licences">Open Source-Licentie</string>
+    <string name="licences_summary">Licentievoorwaarden</string>
+    <string name="version">Versie %s</string>
+    <plurals name="seconde">
+        <item quantity="one">%d seconde</item>
+        <item quantity="other">%d seconden</item>
+    </plurals>
 
 </resources>

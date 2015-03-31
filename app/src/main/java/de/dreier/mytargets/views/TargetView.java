@@ -53,6 +53,9 @@ public class TargetView extends TargetViewBase {
     private final Runnable task = new Runnable() {
         @Override
         public void run() {
+            if (mPasseDrawer.getPressed() == -1) {
+                return;
+            }
             longPressTimer = null;
             Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
             v.vibrate(500);
@@ -494,7 +497,7 @@ public class TargetView extends TargetViewBase {
     protected boolean selectPreviousShots(MotionEvent motionEvent, float x, float y) {
         // Handle selection of already saved shoots
         int arrow = mPasseDrawer.getPressedPosition(x, y);
-        if (arrow != -1) {
+        if (arrow != -1 && currentArrow != arrow) {
             if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 if (longPressTimer != null) {
                     mPasseDrawer.setPressed(-1);

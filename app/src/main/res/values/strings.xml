@@ -169,17 +169,18 @@
     <!-- Timer -->
     <string name="timer">Timer</string>
     <string name="stop">STOP</string>
-
     <string name="touch_to_start">Touch to start</string>
     <string name="preparation">Get ready</string>
     <string name="shooting">Shooting</string>
 
-    <!-- Settings -->
-    <string name="pref_timer_shootingtime">Shooting Time</string>
-    <string name="pref_timer_waitingtime">Prepare Time</string>
-    <string name="pref_timer_warningtime">Orange Time</string>
-    <string name="pref_timer_withsound">With sound</string>
+    <!-- Timer settings -->
+    <string name="timer_shooting_time">Shooting Time</string>
+    <string name="timer_waiting_time">Prepare Time</string>
+    <string name="timer_warning_time">Warning Time</string>
+    <string name="timer_sound">Sound</string>
+    <string name="timer_vibrate">Vibrate</string>
 
+    <!-- Settings -->
     <string name="backup_action">Backup</string>
     <string name="import_action">Import</string>
     <string name="export">Export</string>
@@ -191,7 +192,7 @@
     <string name="licences_summary">Legal notes to licences</string>
     <string name="version">Version %s</string>
     <plurals name="second">
-        <item quantity="one">One second</item>
+        <item quantity="one">%d second</item>
         <item quantity="other">%d seconds</item>
     </plurals>
 

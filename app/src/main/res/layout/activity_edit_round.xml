@@ -100,111 +100,116 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"/>
 
-                <TextView
-                    android:id="@+id/label_format"
-                    style="@style/Label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/format"/>
-
                 <LinearLayout
+                    android:id="@+id/not_editable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="8dp">
-
-                    <de.dreier.mytargets.views.NumberPicker
-                        android:id="@+id/rounds"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/label_with"
+                        android:id="@+id/label_format"
+                        style="@style/Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="top"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="4dp"
-                        android:text="@string/with"
-                        android:textSize="16sp"/>
+                        android:text="@string/format"/>
 
-                    <de.dreier.mytargets.views.NumberPicker
-                        android:id="@+id/ppp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <de.dreier.mytargets.views.NumberPicker
+                            android:id="@+id/rounds"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:id="@+id/label_with"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:text="@string/with"
+                            android:textSize="16sp"/>
+
+                        <de.dreier.mytargets.views.NumberPicker
+                            android:id="@+id/ppp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        style="@style/Label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bow"/>
+
+                    <de.dreier.mytargets.views.DialogSpinner
+                        android:id="@+id/bow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            android:id="@+id/add_bow"
+                            android:layout_width="match_parent"
+                            android:layout_height="35dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:gravity="start"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:paddingTop="5dp"
+                            android:text="@string/add_bow"
+                            android:textColor="@android:color/secondary_text_light"/>
+
+                    </de.dreier.mytargets.views.DialogSpinner>
+
+                    <TextView
+                        style="@style/Label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/arrow"/>
+
+                    <de.dreier.mytargets.views.DialogSpinner
+                        android:id="@+id/arrow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            android:id="@+id/add_arrow"
+                            android:layout_width="match_parent"
+                            android:layout_height="35dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:gravity="start"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:paddingTop="5dp"
+                            android:text="@string/add_arrow"
+                            android:textColor="@android:color/secondary_text_light"/>
+
+                    </de.dreier.mytargets.views.DialogSpinner>
+
+                    <TextView
+                        style="@style/Label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/target_round"/>
+
+                    <de.dreier.mytargets.views.DialogSpinner
+                        android:id="@+id/target_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"/>
 
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/label_bow"
-                    style="@style/Label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/bow"/>
-
-                <de.dreier.mytargets.views.DialogSpinner
-                    android:id="@+id/bow"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <Button
-                        android:id="@+id/add_bow"
-                        android:layout_width="match_parent"
-                        android:layout_height="35dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:gravity="start"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
-                        android:paddingTop="5dp"
-                        android:text="@string/add_bow"
-                        android:textColor="@android:color/secondary_text_light"/>
-
-                </de.dreier.mytargets.views.DialogSpinner>
-
-                <TextView
-                    android:id="@+id/label_arrow"
-                    style="@style/Label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/arrow"/>
-
-                <de.dreier.mytargets.views.DialogSpinner
-                    android:id="@+id/arrow"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <Button
-                        android:id="@+id/add_arrow"
-                        android:layout_width="match_parent"
-                        android:layout_height="35dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:gravity="start"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
-                        android:paddingTop="5dp"
-                        android:text="@string/add_arrow"
-                        android:textColor="@android:color/secondary_text_light"/>
-
-                </de.dreier.mytargets.views.DialogSpinner>
-
-                <TextView
-                    android:id="@+id/label_target"
-                    style="@style/Label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/target_round"/>
-
-                <de.dreier.mytargets.views.DialogSpinner
-                    android:id="@+id/target_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"/>
 
                 <com.iangclifton.android.floatlabel.FloatLabel
                     android:id="@+id/comment"

@@ -76,6 +76,7 @@ public class NumberPicker extends LinearLayout {
 
     @PluralsRes
     private int mTextPattern;
+    private Button increment, decrement;
 
     /**
      * This little guy handles the auto part of the auto incrementing feature.
@@ -110,7 +111,7 @@ public class NumberPicker extends LinearLayout {
     }
 
     private void initIncrementButton() {
-        Button increment = (Button) findViewById(R.id.number_increment);
+        increment = (Button) findViewById(R.id.number_increment);
 
         // Increment once for a click
         increment.setOnClickListener(new OnClickListener() {
@@ -147,7 +148,7 @@ public class NumberPicker extends LinearLayout {
     }
 
     private void initDecrementButton() {
-        Button decrement = (Button) findViewById(R.id.number_decrement);
+        decrement = (Button) findViewById(R.id.number_decrement);
 
 
         // Decrement once for a click

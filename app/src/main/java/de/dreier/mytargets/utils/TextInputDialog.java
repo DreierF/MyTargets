@@ -25,6 +25,7 @@ public class TextInputDialog {
         private String mDefaultText = "";
         private final Context mContext;
         private OnClickListener mClickListener;
+        private int mInputType;
 
         public Builder(Context context) {
             mContext = context;
@@ -35,6 +36,7 @@ public class TextInputDialog {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.comment_dialog, null);
             final EditText input = (EditText) view.findViewById(R.id.shot_comment);
+            input.setInputType(mInputType);
             input.setText(mDefaultText);
 
             new AlertDialog.Builder(mContext)
@@ -69,6 +71,11 @@ public class TextInputDialog {
 
         public Builder setOnClickListener(OnClickListener listener) {
             mClickListener = listener;
+            return this;
+        }
+
+        public Builder setInputType(int type) {
+            mInputType = type;
             return this;
         }
     }

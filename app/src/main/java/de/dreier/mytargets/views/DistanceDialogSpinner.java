@@ -8,6 +8,7 @@
 package de.dreier.mytargets.views;
 
 import android.content.Context;
+import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -37,6 +38,7 @@ public class DistanceDialogSpinner extends DialogSpinner
             public void onClick(View v) {
                 new TextInputDialog.Builder(getContext())
                         .setTitle(R.string.distance)
+                        .setInputType(InputType.TYPE_CLASS_NUMBER)
                         .setOnClickListener(DistanceDialogSpinner.this)
                         .show();
             }

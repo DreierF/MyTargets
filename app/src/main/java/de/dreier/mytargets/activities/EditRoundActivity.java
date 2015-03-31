@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
 import com.iangclifton.android.floatlabel.FloatLabel;
 
@@ -149,16 +148,8 @@ public class EditRoundActivity extends ActionBarActivity {
             target.setItemId(r.target);
             comment.setText(r.comment);
 
-            rounds.setEnabled(false);
-            arrows.setEnabled(false);
-            bow.setEnabled(false);
-            arrow.setEnabled(false);
-            target.setEnabled(false);
-            ((TextView) findViewById(R.id.label_format)).setTextColor(0xff444444);
-            ((TextView) findViewById(R.id.label_with)).setTextColor(0xff444444);
-            ((TextView) findViewById(R.id.label_bow)).setTextColor(0xff444444);
-            ((TextView) findViewById(R.id.label_arrow)).setTextColor(0xff444444);
-            ((TextView) findViewById(R.id.label_target)).setTextColor(0xff444444);
+            View not_editable = findViewById(R.id.not_editable);
+            not_editable.setVisibility(View.GONE);
         }
         if (mTraining == -1) {
             training.setText(getString(R.string.training));

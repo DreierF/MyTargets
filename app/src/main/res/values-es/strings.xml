@@ -54,7 +54,6 @@
     <string name="sharing_failed">Fallo al Compartir!</string>
 
     <!-- Export -->
-    <string name="export">Exportar</string>
     <string name="send_exported">Enviando Datos Exportados</string>
     <string name="exporting_failed">Fallo en la Exportación!</string>
 
@@ -139,8 +138,6 @@
     <string name="current_round">Serie Actual</string>
 
     <!-- Import/Backup -->
-    <string name="backup_action">Backup</string>
-    <string name="import_action">Importar</string>
     <string name="select_a_file">Seleccciona un archivo</string>
     <string name="dir_not_created">El directorio no puede ser creado!</string>
     <string name="backup_successful">Backup Correcto!</string>
@@ -166,16 +163,33 @@
     <string name="donate_text">Los impuestos están incluidos. IVA y el 30% de tasas para Google. Como alternativa, puedes gustosamente, donar en mi cuenta de PayPal (dreier.florian@gmail.com.)</string>
 
     <!-- Timer -->
-    <!--<string name="timer">Cronómetro</string>-->
-    <string name="timer">Tiempo</string>
-    <string name="pref_timer_shootingtime">Tiempo de tiro</string>
-    <string name="pref_timer_waitingtime">Tiempo de preparación</string>
-    <string name="pref_timer_warningtime">Tiempo naranja</string>
-    <string name="pref_timer_withsound">Con sonido</string>
+    <string name="timer">Cronómetro</string>
     <string name="stop">STOP</string>
+    <string name="touch_to_start">Pulsa para empezar</string>
+    <string name="preparation">Preparación..</string>
+    <string name="shooting">Disparando..</string>
+
+    <!-- Timer settings -->
+    <string name="timer_shooting_time">Tiempo de Disparo</string>
+    <string name="timer_waiting_time">Tiempo de Preparación</string>
+    <string name="timer_warning_time">Tiempo de Precaución</string>
+    <string name="timer_sound">Sonido</string>
+    <string name="timer_vibrate">Vibración</string>
 
     <!-- Settings -->
-    <string name="licences">Licencias de código abierto</string>
-    <string name="licences_summary">Licencias Aviso legal</string>
+    <string name="backup_action">Backup</string>
+    <string name="import_action">Importar</string>
+    <string name="export">Exportar</string>
+    <string name="exports_as_csv">Exportar los datos salvados como *.csv</string>
+    <string name="app_rate">Califica la App</string>
+    <string name="app_share">Comparte la App</string>
+    <string name="contact_developer">Contacta con el desarrollador</string>
+    <string name="licences">Licencias Open Source</string>
+    <string name="licences_summary">Notas legales de la licencia</string>
+    <string name="version">Version %s</string>
+    <plurals name="second">
+        <item quantity="one">%d Segundo</item>
+        <item quantity="other">%d Segundos</item>
+    </plurals>
 
 </resources>

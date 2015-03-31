@@ -5,21 +5,25 @@
             android:defaultValue="20"
             android:inputType="number"
             android:key="timer_wait_time"
-            android:title="@string/pref_timer_waitingtime"/>
+            android:title="@string/timer_waiting_time"/>
         <EditTextPreference
             android:defaultValue="120"
             android:inputType="number"
             android:key="timer_shoot_time"
-            android:title="@string/pref_timer_shootingtime"/>
+            android:title="@string/timer_shooting_time"/>
         <EditTextPreference
             android:defaultValue="30"
             android:inputType="number"
             android:key="timer_warn_time"
-            android:title="@string/pref_timer_warningtime"/>
+            android:title="@string/timer_warning_time"/>
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="timer_with_sound"
-            android:title="@string/pref_timer_withsound"/>
+            android:key="timer_sound"
+            android:title="@string/timer_sound"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="timer_vibrate"
+            android:title="@string/timer_vibrate"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_key_storage_settings"

@@ -54,7 +54,6 @@
     <string name="sharing_failed">Condivisione fallita!</string>
 
     <!-- Export -->
-    <string name="export">Esporta</string>
     <string name="send_exported">Invia dati esportati</string>
     <string name="exporting_failed">Esportazione fallita!</string>
 
@@ -94,6 +93,18 @@
     <string name="outdoor">Outdoor</string>
     <string name="indoor">Indoor</string>
     <string name="distance">Distanza</string>
+    <string name="format">Formato</string>
+
+    <!-- x passes with y arrows -->
+    <plurals name="passe">
+        <item quantity="one">1 volée</item>
+        <item quantity="other">%d volée</item>
+    </plurals>
+    <string name="with">di</string>
+    <plurals name="arrow">
+        <item quantity="one">una freccia</item>
+        <item quantity="other">%d frecce</item>
+    </plurals>
 
     <string name="target_round">Targa</string>
     <string name="title_compound">Compound?</string>
@@ -114,6 +125,12 @@
     <string name="switch_mode">Cambia modalità di input</string>
     <string name="show_all">Mostra tutti gli impatti</string>
     <string name="comment">Commento</string>
+    <plurals name="passes_finished">
+        <item quantity="one">1 volée finito</item>
+        <item quantity="other">%d volée finito</item>
+    </plurals>
+    <string name="passes_finished_now_what">You have finished your round. What would you like to do now?</string>
+    <string name="continue_with_next">Continuare</string>
 
     <!-- Statistics -->
     <string name="all_trainings">Tutti gli allenamenti</string>
@@ -121,8 +138,6 @@
     <string name="current_round">Round corrente</string>
 
     <!-- Import/Backup -->
-    <string name="backup_action">Backup</string>
-    <string name="import_action">Importa</string>
     <string name="select_a_file">Seleziona un file</string>
     <string name="dir_not_created">La directory non può essere creata!</string>
     <string name="backup_successful">Backup completato con successo!</string>
@@ -149,13 +164,32 @@
 
     <!-- Timer -->
     <string name="timer">Tempo</string>
-    <string name="pref_timer_shootingtime">Tempo di tiro</string>
-    <string name="pref_timer_waitingtime">Prepara tempo</string>
-    <string name="pref_timer_warningtime">Tempo Arancione</string>
-    <string name="pref_timer_withsound">Con suoni</string>
     <string name="stop">STOP</string>
+    <string name="touch_to_start">Touch to start</string>
+    <string name="preparation">Get ready</string>
+    <string name="shooting">Shooting</string>
+
+    <!-- Timer settings -->
+    <string name="timer_shooting_time">Tempo di tiro</string>
+    <string name="timer_waiting_time">Prepara tempo</string>
+    <string name="timer_warning_time">Tempo Arancione</string>
+    <string name="timer_sound">Suoni</string>
+    <string name="timer_vibrate">Vibrazione</string>
 
     <!-- Settings -->
-
+    <string name="backup_action">Backup</string>
+    <string name="import_action">Importa</string>
+    <string name="export">Esporta</string>
+    <string name="exports_as_csv">Exports saved data as *.csv</string>
+    <string name="app_rate">Rate app</string>
+    <string name="app_share">Share app</string>
+    <string name="contact_developer">Contact developer</string>
+    <string name="licences">Open Source-Licences</string>
+    <string name="licences_summary">Legal notes to licences</string>
+    <string name="version">Version %s</string>
+    <plurals name="second">
+        <item quantity="one">One second</item>
+        <item quantity="other">%d seconds</item>
+    </plurals>
 
 </resources>
