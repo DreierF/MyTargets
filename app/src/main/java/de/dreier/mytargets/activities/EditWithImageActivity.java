@@ -357,7 +357,7 @@ public abstract class EditWithImageActivity extends ActionBarActivity
                                     mImageView.getWidth(),
                                     mImageView.getHeight());
                     File f = File
-                            .createTempFile("png", null, getFilesDir());
+                            .createTempFile("photo", "png", getFilesDir());
                     FileOutputStream out = new FileOutputStream(f);
                     imageBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
                     mImageFile = f.getName();

@@ -30,12 +30,12 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.WearMessageManager;
 import de.dreier.mytargets.models.Bow;
+import de.dreier.mytargets.models.NotificationInfo;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
 import de.dreier.mytargets.utils.OnTargetSetListener;
 import de.dreier.mytargets.utils.Target;
-import de.dreier.mytargets.utils.WearableUtils;
 import de.dreier.mytargets.views.TargetView;
 
 public class InputActivity extends ActionBarActivity implements OnTargetSetListener {
@@ -133,7 +133,7 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
         }
         image = ThumbnailUtils.extractThumbnail(image, 320, 320);
 
-        WearableUtils.NotificationInfo info = buildInfo();
+        NotificationInfo info = buildInfo();
         manager = new WearMessageManager(this, image, info);
     }
 
@@ -292,7 +292,7 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
         overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
-    private WearableUtils.NotificationInfo buildInfo() {
+    private NotificationInfo buildInfo() {
         String title = getString(R.string.passe_n, savedPasses);
         String text = "";
 
@@ -311,6 +311,6 @@ public class InputActivity extends ActionBarActivity implements OnTargetSetListe
         if (r.bow > 0) {
             text += r.distance + ": " + db.getSetting(r.bow, r.distanceVal);
         }
-        return new WearableUtils.NotificationInfo(r, title, text);
+        return new NotificationInfo(r, title, text);
     }
 }

@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
+import de.dreier.mytargets.models.NotificationInfo;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.utils.OnTargetSetListener;
 import de.dreier.mytargets.utils.WearableUtils;
@@ -35,12 +36,12 @@ public class WearMessageManager
 
     private static final String TAG = "wearMessageManager";
     private final OnTargetSetListener mListener;
-    private final WearableUtils.NotificationInfo info;
+    private final NotificationInfo info;
     private final Bitmap image;
 
     private final GoogleApiClient mGoogleApiClient;
 
-    public WearMessageManager(Context context, Bitmap image, WearableUtils.NotificationInfo info) {
+    public WearMessageManager(Context context, Bitmap image, NotificationInfo info) {
         this.image = image;
         this.info = info;
         mGoogleApiClient = new GoogleApiClient.Builder(context)
@@ -78,7 +79,7 @@ public class WearMessageManager
         return results;
     }
 
-    void sendMessage(Bitmap image, WearableUtils.NotificationInfo info) {
+    void sendMessage(Bitmap image, NotificationInfo info) {
         // Serialize bundle to byte array
         try {
             final byte[] data = WearableUtils.serialize(image, info);
@@ -93,7 +94,7 @@ public class WearMessageManager
         }
     }
 
-    public void sendMessage(WearableUtils.NotificationInfo info) {
+    public void sendMessage(NotificationInfo info) {
         // Serialize info to byte array
         try {
             final byte[] data = WearableUtils.serialize(info);

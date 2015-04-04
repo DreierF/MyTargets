@@ -13,6 +13,8 @@ import com.google.android.gms.wearable.WearableListenerService;
 
 import java.io.IOException;
 
+import de.dreier.mytargets.models.BitmapDataObject;
+import de.dreier.mytargets.models.NotificationInfo;
 import de.dreier.mytargets.utils.WearableUtils;
 
 public class WearableListener extends WearableListenerService {
@@ -32,10 +34,10 @@ public class WearableListener extends WearableListenerService {
             if (data.length != 0) {
                 try {
                     Bundle bundle = WearableUtils.deserializeToBundle(data);
-                    WearableUtils.BitmapDataObject b = (WearableUtils.BitmapDataObject) bundle
+                    BitmapDataObject b = (BitmapDataObject) bundle
                             .getSerializable(WearableUtils.BUNDLE_IMAGE);
                     image = b.getBitmap();
-                    WearableUtils.NotificationInfo info = (WearableUtils.NotificationInfo) bundle
+                    NotificationInfo info = (NotificationInfo) bundle
                             .getSerializable(WearableUtils.BUNDLE_INFO);
                     showNotification(info);
                 } catch (IOException | ClassNotFoundException e) {
@@ -44,7 +46,7 @@ public class WearableListener extends WearableListenerService {
             }
         } else if (messageEvent.getPath().equals(WearableUtils.UPDATE_ROUND)) {
             try {
-                WearableUtils.NotificationInfo info = WearableUtils.deserializeToInfo(data);
+                NotificationInfo info = WearableUtils.deserializeToInfo(data);
                 showNotification(info);
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -54,7 +56,7 @@ public class WearableListener extends WearableListenerService {
         }
     }
 
-    void showNotification(WearableUtils.NotificationInfo info) {
+    void showNotification(NotificationInfo info) {
 
         // Build the intent to display our custom notification
         Intent notificationIntent = new Intent(this, MainActivity.class);

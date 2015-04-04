@@ -61,7 +61,7 @@
     <string name="my_share_text">Эй! Посмотрите как я стреляю. Я выбил:\n%1$d по X\n%2$d по 10\n%3$d по 9\nИтого %4$d из %5$d возможных.</string>
     <string name="comments">Комментарии</string>
     <string name="text">Текст</string>
-    <string name="dispersion_pattern">Расброс</string>
+    <string name="dispersion_pattern">Pазброс</string>
     <string name="sharing_failed">Не удалось поделиться!</string>
 
     <!-- Export -->
@@ -210,9 +210,9 @@
         <item quantity="few">%d секунд</item>
         <item quantity="many">%d секунды</item>
     </plurals>
-    <string name="info">Information</string>
-    <string name="data">Data</string>
-    <string name="create_backup_on_sd">Creates a backup on sd card</string>
-    <string name="restore_backup">Restores a backup</string>
+    <string name="info">Информация</string>
+    <string name="data">Данные</string>
+    <string name="create_backup_on_sd">Сохранить резервную копию на флэш-карте</string>
+    <string name="restore_backup">Восстановить данные из резервной копии</string>
 
 </resources>

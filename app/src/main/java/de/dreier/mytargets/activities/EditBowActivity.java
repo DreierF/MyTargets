@@ -240,8 +240,10 @@ public class EditBowActivity extends EditWithImageActivity {
         }
 
         public void update() {
-            distanceVal = (int) distance.getSelectedItemId();
-            value = setting.getText().toString();
+            if (distance != null && setting != null) {
+                distanceVal = (int) distance.getSelectedItemId();
+                value = setting.getText().toString();
+            }
         }
     }
 

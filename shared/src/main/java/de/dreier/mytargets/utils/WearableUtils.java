@@ -1,7 +1,6 @@
 package de.dreier.mytargets.utils;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import java.io.ByteArrayInputStream;
@@ -9,10 +8,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
+import de.dreier.mytargets.models.BitmapDataObject;
+import de.dreier.mytargets.models.NotificationInfo;
 import de.dreier.mytargets.models.Passe;
-import de.dreier.mytargets.models.Round;
 
 public class WearableUtils {
     public static final String STARTED_ROUND = "round/started";
@@ -77,29 +76,5 @@ public class WearableUtils {
         bundle.putSerializable(BUNDLE_IMAGE, (BitmapDataObject) is.readObject());
         bundle.putSerializable(BUNDLE_INFO, (NotificationInfo) is.readObject());
         return bundle;
-    }
-
-    public static class NotificationInfo implements Serializable {
-        static final long serialVersionUID = 43L;
-        public String title;
-        public String text;
-        public Round round;
-        public NotificationInfo(Round round, String title, String text) {
-            this.round = round;
-            this.title = title;
-            this.text = text;
-        }
-    }
-
-    public static class BitmapDataObject implements Serializable {
-        private static final long serialVersionUID = 111696345129311948L;
-        private byte[] imageByteArray;
-
-        public BitmapDataObject() {
-        }
-
-        public Bitmap getBitmap() {
-            return BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length);
-        }
     }
 }
