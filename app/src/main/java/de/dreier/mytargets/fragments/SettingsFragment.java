@@ -27,7 +27,8 @@ import de.dreier.mytargets.utils.IABHelperWrapper;
 import de.dreier.mytargets.utils.Utils;
 
 public class SettingsFragment extends PreferenceFragment
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+        implements SharedPreferences.OnSharedPreferenceChangeListener,
+        DonateDialogFragment.DonationListener {
     private IABHelperWrapper mIABWrapper;
 
 
@@ -50,13 +51,12 @@ public class SettingsFragment extends PreferenceFragment
         setSecondsSummary("timer_wait_time", "10");
         setSecondsSummary("timer_shoot_time", "120");
         setSecondsSummary("timer_warn_time", "30");
-
-        mIABWrapper = new IABHelperWrapper((ActionBarActivity) getActivity());
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mIABWrapper = new IABHelperWrapper((ActionBarActivity) getActivity());
         ActionBar ab = ((ActionBarActivity) getActivity()).getSupportActionBar();
         ab.setHomeButtonEnabled(true);
         ab.setDisplayHomeAsUpEnabled(true);
@@ -93,7 +93,7 @@ public class SettingsFragment extends PreferenceFragment
         } else if (preference.getKey().equals("pref_contact")) {
             contact();
         } else if (preference.getKey().equals("pref_donate")) {
-            mIABWrapper.showDialog();
+            mIABWrapper.showDialog(this);
         }
 
         return ret;
@@ -220,5 +220,10 @@ public class SettingsFragment extends PreferenceFragment
 
     @Override
     public void onSaveInstanceState(Bundle b) {
+    }
+
+    @Override
+    public void onDonate(int position) {
+        mIABWrapper.startDonationForItem(position);
     }
 }

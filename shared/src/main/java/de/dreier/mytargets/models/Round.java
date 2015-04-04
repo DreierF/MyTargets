@@ -15,7 +15,6 @@ public class Round extends IdProvider implements Serializable {
     public long bow;
     public int[] scoreCount = new int[3];
     public boolean compound;
-    public int distanceInd;
     public String comment;
     public long arrow;
     public int reachedPoints;

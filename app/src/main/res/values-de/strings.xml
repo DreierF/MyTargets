@@ -191,5 +191,9 @@
         <item quantity="one">%d Sekunde</item>
         <item quantity="other">%d Sekunden</item>
     </plurals>
+    <string name="info">Information</string>
+    <string name="data">Daten</string>
+    <string name="create_backup_on_sd">Erzeugt ein Backup auf der SD-Karte</string>
+    <string name="restore_backup">Importiert ein Backup</string>
 
 </resources>

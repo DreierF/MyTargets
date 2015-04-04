@@ -27,14 +27,14 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_key_storage_settings"
-        android:title="Daten">
+        android:title="@string/data">
         <Preference
             android:key="pref_backup"
-            android:summary="Sichert die gespeicherten Daten"
+            android:summary="@string/create_backup_on_sd"
             android:title="@string/backup_action"/>
         <Preference
             android:key="pref_import"
-            android:summary="Stellt die gespeicherten Daten wieder her"
+            android:summary="@string/restore_backup"
             android:title="@string/import_action"/>
         <Preference
             android:key="pref_export"
@@ -42,7 +42,7 @@
             android:title="@string/export"/>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="Info">
+        android:title="@string/info">
         <Preference
             android:key="pref_rate"
             android:title="@string/app_rate"/>

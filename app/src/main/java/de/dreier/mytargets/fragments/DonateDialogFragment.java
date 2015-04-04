@@ -7,7 +7,6 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -45,24 +44,12 @@ public class DonateDialogFragment extends DialogFragment {
         void onDonate(int position);
     }
 
-    private DonationListener mListener;
-
     public static DonateDialogFragment newInstance(boolean supported, boolean subscribed) {
         DonateDialogFragment frag = new DonateDialogFragment();
         Bundle args = new Bundle();
         args.putBoolean("supported", supported && !subscribed);
         frag.setArguments(args);
         return frag;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (!(activity instanceof DonationListener)) {
-            throw new IllegalStateException();
-        }
-
-        mListener = (DonationListener) activity;
     }
 
     @NonNull
@@ -77,7 +64,12 @@ public class DonateDialogFragment extends DialogFragment {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mListener.onDonate(position);
+                try {
+                    DonationListener listener = (DonationListener) getTargetFragment();
+                    listener.onDonate(position);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
         return dialog;

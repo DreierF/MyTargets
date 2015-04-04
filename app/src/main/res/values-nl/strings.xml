@@ -177,10 +177,10 @@
     <string name="timer_vibrate">Trillen</string>
 
     <!-- Settings -->
-    <string name="backup_action">Backup</string>
+    <string name="backup_action">Back-up</string>
     <string name="import_action">Importeren</string>
     <string name="export">Exporteren</string>
-    <string name="exports_as_csv">Export opgeslagen als *.csv</string>
+    <string name="exports_as_csv">Exporteert de opgeslagen gegevens als *.csv</string>
     <string name="app_rate">App beoordelen</string>
     <string name="app_share">App delen</string>
     <string name="contact_developer">Contact opnemen met ontwikkelaar</string>
@@ -191,5 +191,9 @@
         <item quantity="one">%d seconde</item>
         <item quantity="other">%d seconden</item>
     </plurals>
+    <string name="info">Info</string>
+    <string name="data">Gegevens</string>
+    <string name="create_backup_on_sd">Back-up van de opgeslagen gegevens</string>
+    <string name="restore_backup">Gegevens importeren</string>
 
 </resources>

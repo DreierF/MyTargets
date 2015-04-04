@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
@@ -21,7 +22,7 @@ import util.Inventory;
 import util.Purchase;
 
 // In-app billing
-public class IABHelperWrapper implements DonateDialogFragment.DonationListener {
+public class IABHelperWrapper {
 
     private IabHelper mHelper;
     private static final int RC_REQUEST = 10001;
@@ -57,10 +58,11 @@ public class IABHelperWrapper implements DonateDialogFragment.DonationListener {
         });
     }
 
-    public void showDialog() {
+    public void showDialog(Fragment fragment) {
         DonateDialogFragment newFragment = DonateDialogFragment
                 .newInstance(mInfiniteSupported, mSubscribedToInfinite);
-        newFragment.show(mContext.getSupportFragmentManager(), "dialog");
+        newFragment.setTargetFragment(fragment, 1);
+        newFragment.show(fragment.getFragmentManager(), "dialog");
     }
 
     public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
@@ -126,8 +128,7 @@ public class IABHelperWrapper implements DonateDialogFragment.DonationListener {
         }
     };
 
-    @Override
-    public void onDonate(int position) {
+    public void startDonationForItem(int position) {
         if (position < 4) {
             mHelper.launchPurchaseFlow(mContext, DonateDialogFragment.donations.get(position),
                     RC_REQUEST, mPurchaseFinishedListener, "");
