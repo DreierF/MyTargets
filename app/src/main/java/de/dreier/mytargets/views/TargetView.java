@@ -53,7 +53,8 @@ public class TargetView extends TargetViewBase {
     private final Runnable task = new Runnable() {
         @Override
         public void run() {
-            if (mPasseDrawer.getPressed() == -1) {
+            final int pressed = mPasseDrawer.getPressed();
+            if (pressed == -1) {
                 return;
             }
             longPressTimer = null;
@@ -63,7 +64,7 @@ public class TargetView extends TargetViewBase {
 
             new TextInputDialog.Builder(getContext())
                     .setTitle(R.string.comment)
-                    .setDefaultText(mPasse.shot[mPasseDrawer.getPressed()].comment)
+                    .setDefaultText(mPasse.shot[pressed].comment)
                     .setOnClickListener(new TextInputDialog.OnClickListener() {
 
                         @Override
@@ -74,7 +75,7 @@ public class TargetView extends TargetViewBase {
 
                         @Override
                         public void onOkClickListener(String input) {
-                            mPasse.shot[mPasseDrawer.getPressed()].comment = input;
+                            mPasse.shot[pressed].comment = input;
                             if (lastSetArrow + 1 >= roundInfo.ppp && setListener != null) {
                                 setListener.onTargetSet(new Passe(mPasse), false);
                             }

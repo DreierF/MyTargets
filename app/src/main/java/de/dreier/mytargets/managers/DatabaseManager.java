@@ -43,7 +43,7 @@ import de.dreier.mytargets.utils.BitmapUtils;
 import de.dreier.mytargets.utils.Target;
 
 public class DatabaseManager extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     private static final String ID = "_id";
     public static final String DATABASE_NAME = "database";
@@ -299,6 +299,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
         if (oldVersion < 7) {
             cleanup(db);
+        }
+        if (oldVersion < 8) {
+            db.execSQL("UPDATE ROUND SET target=4 WHERE target=8");
+            db.execSQL("UPDATE ROUND SET target=5 WHERE target=9");
+            db.execSQL("UPDATE ROUND SET target=6 WHERE target=10");
         }
         onCreate(db);
     }

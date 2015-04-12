@@ -64,8 +64,14 @@ public class SettingsFragment extends PreferenceFragment
 
     void setSecondsSummary(String key, String def) {
         Preference pref = findPreference(key);
-        int sec = Integer.parseInt(
-                getPreferenceManager().getSharedPreferences().getString(key, def));
+        int sec;
+        try {
+            sec = Integer.parseInt(
+                    getPreferenceManager().getSharedPreferences().getString(key, def));
+        } catch(NumberFormatException e) {
+            sec = Integer.parseInt(def);
+            getPreferenceManager().getSharedPreferences().edit().putString(key, def).apply();
+        }
         pref.setSummary(getResources().getQuantityString(R.plurals.second, sec, sec));
     }
 
