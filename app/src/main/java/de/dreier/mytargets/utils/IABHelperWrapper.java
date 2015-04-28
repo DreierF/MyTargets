@@ -11,7 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import de.dreier.mytargets.R;
@@ -30,9 +30,9 @@ public class IABHelperWrapper {
     private boolean mSubscribedToInfinite;
     private static final String TAG = "iab";
 
-    private final ActionBarActivity mContext;
+    private final AppCompatActivity mContext;
 
-    public IABHelperWrapper(ActionBarActivity context) {
+    public IABHelperWrapper(AppCompatActivity context) {
         mContext = context;
         // Create the helper, passing it our context and the public key to verify signatures with
         mHelper = new IabHelper(mContext, mContext.getString(R.string.BASE64_PUB_KEY));

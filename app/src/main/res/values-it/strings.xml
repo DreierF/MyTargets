@@ -180,9 +180,9 @@
     <string name="backup_action">Backup</string>
     <string name="import_action">Importa</string>
     <string name="export">Esporta</string>
-    <string name="exports_as_csv">L'esportazione salva i dati come *.csv</string>
-    <string name="app_rate">Valuta l'app!</string>
-    <string name="app_share">Condividi l'app</string>
+    <string name="exports_as_csv">L\'esportazione salva i dati come *.csv</string>
+    <string name="app_rate">Valuta l\'app!</string>
+    <string name="app_share">Condividi l\'app</string>
     <string name="contact_developer">Contatta lo sviluppatore</string>
     <string name="licences">Licenze Open Source</string>
     <string name="licences_summary">Note legali sulle licenze</string>

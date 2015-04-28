@@ -12,7 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,7 +37,7 @@ import de.dreier.mytargets.views.DialogSpinner;
 import de.dreier.mytargets.views.DistanceDialogSpinner;
 import de.dreier.mytargets.views.NumberPicker;
 
-public class EditRoundActivity extends ActionBarActivity {
+public class EditRoundActivity extends AppCompatActivity {
 
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";

@@ -19,13 +19,12 @@
     </style>
 
     <style name="AppBaseTheme.Overlay">
-        <item name="android:windowActionBarOverlay">true</item>
         <item name="windowActionBarOverlay">true</item>
     </style>
 
     <style name="AppBaseTheme.CustomToolbar">
         <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
     </style>
 

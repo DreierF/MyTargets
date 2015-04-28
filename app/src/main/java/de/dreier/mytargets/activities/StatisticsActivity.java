@@ -12,13 +12,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.StatisticsFragment;
 
-public class StatisticsActivity extends ActionBarActivity {
+public class StatisticsActivity extends AppCompatActivity {
     public static final String ROUND_ID = "round_id";
     public static final String TRAINING_ID = "training_id";
     private long mTraining;

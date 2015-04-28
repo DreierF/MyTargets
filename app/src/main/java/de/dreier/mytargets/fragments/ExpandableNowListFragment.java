@@ -37,7 +37,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.IdProvider;
 import de.dreier.mytargets.views.CardItemDecorator;
@@ -45,11 +45,10 @@ import de.dreier.mytargets.views.CardItemDecorator;
 /**
  * Shows all rounds of one settings_only day
  */
-public abstract class NowListFragment<T extends IdProvider> extends Fragment
-        implements View.OnClickListener, OnCardClickListener<T> {
+public abstract class ExpandableNowListFragment<H extends IdProvider, C extends IdProvider> extends Fragment
+        implements View.OnClickListener, OnCardClickListener<C> {
 
     public static final String TRAINING_ID = "training_id";
-    public static final String ROUND_ID = "round_id";
 
     @PluralsRes
     int itemTypeRes;
@@ -60,7 +59,7 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
     DatabaseManager db;
     boolean mEditable = false;
     RecyclerView mRecyclerView;
-    NowListAdapter<T> mAdapter;
+    ExpandableNowListAdapter<H,C> mAdapter;
 
     // Action mode handling
     final MultiSelector mMultiSelector = new MultiSelector();
@@ -114,13 +113,13 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
         init(getArguments(), savedInstanceState);
     }
 
-    void setList(ArrayList<T> list, NowListAdapter<T> adapter) {
+    void setList(ArrayList<H> list, ArrayList<C> children, boolean opened, ExpandableNowListAdapter<H,C> adapter) {
         if (mRecyclerView.getAdapter() == null) {
             mAdapter = adapter;
-            mAdapter.setList(list);
+            mAdapter.setList(list, children, opened);
             mRecyclerView.setAdapter(mAdapter);
         } else {
-            mAdapter.setList(list);
+            mAdapter.setList(list, children, opened);
             mAdapter.notifyDataSetChanged();
         }
         mNewLayout.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
@@ -151,7 +150,8 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
             switch (item.getItemId()) {
                 case R.id.action_edit:
                     int id = mMultiSelector.getSelectedPositions().get(0);
-                    onEdit(mAdapter.getItem(id));
+                    IdProvider i = mAdapter.getItem(id);
+                    onEdit((C) i);
                     mode.finish();
                     return true;
                 case R.id.action_delete:
@@ -205,7 +205,7 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
     }
 
     @Override
-    public void onClick(CardViewHolder holder, T mItem) {
+    public void onClick(CardViewHolder holder, C mItem) {
         if (mItem == null) {
             return;
         }
@@ -231,7 +231,7 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
 
     protected abstract void onNew(Intent i);
 
-    protected abstract void onSelected(T item);
+    protected abstract void onSelected(C item);
 
-    protected abstract void onEdit(T item);
+    protected abstract void onEdit(C item);
 }

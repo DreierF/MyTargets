@@ -13,7 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -137,7 +137,7 @@ public class TargetImage {
         drawColorP.setAntiAlias(true);
     }
 
-    public void generateBitmap(ActionBarActivity context, int size, Round mRoundInfo, long mRound, File f)
+    public void generateBitmap(AppCompatActivity context, int size, Round mRoundInfo, long mRound, File f)
             throws FileNotFoundException {
         final FileOutputStream fOut = new FileOutputStream(f);
         generateBitmap(context, size, mRoundInfo, mRound, fOut);

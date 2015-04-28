@@ -29,7 +29,7 @@ import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -44,7 +44,7 @@ import java.io.File;
  * @author paulburke (ipaulpro)
  * 
  */
-public class FileChooserActivity extends ActionBarActivity implements
+public class FileChooserActivity extends AppCompatActivity implements
 		OnBackStackChangedListener {
 
     public static final String PATH = "path";

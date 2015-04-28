@@ -10,7 +10,7 @@ package de.dreier.mytargets.activities;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import de.dreier.mytargets.R;
@@ -19,7 +19,7 @@ import de.dreier.mytargets.fragments.RoundFragment;
 import de.dreier.mytargets.fragments.SettingsFragment;
 import de.dreier.mytargets.fragments.TimerFragment;
 
-public abstract class SimpleFragmentActivity extends ActionBarActivity {
+public abstract class SimpleFragmentActivity extends AppCompatActivity {
 
     protected abstract Fragment instantiateFragment();
 

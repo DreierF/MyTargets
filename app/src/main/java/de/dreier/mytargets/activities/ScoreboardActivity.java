@@ -15,7 +15,7 @@ import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
@@ -25,7 +25,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.utils.ScoreboardUtils;
 
 
-public class ScoreboardActivity extends ActionBarActivity {
+public class ScoreboardActivity extends AppCompatActivity {
 
     public static final String ROUND_ID = "round_id";
 

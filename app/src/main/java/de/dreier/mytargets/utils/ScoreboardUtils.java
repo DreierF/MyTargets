@@ -40,58 +40,32 @@ public class ScoreboardUtils {
             html += "<table class=\"myTable\"><tr>" +
                     "<th colspan=\"" + info.ppp + "\">" + context.getString(R.string.arrows) +
                     "</th>" +
-                    "<th rowspan=\"2\" colspan=\"2\">" + context.getString(R.string.sum) + "</th>" +
+                    "<th rowspan=\"2\">" + context.getString(R.string.sum) + "</th>" +
                     "<th rowspan=\"2\">" + context.getString(R.string.carry) + "</th>" +
                     "</tr><tr>";
             for (int i = 1; i <= info.ppp; i++) {
                 html += "<th>" + i + "</th>";
             }
             html += "</tr>";
-            int sum = 0, carry = 0, count = 0;
+            int carry = 0, count = 0;
             int i = 0;
-            String tmp_html = "";
             for (Passe passe : passes) {
-                int arrows = 0;
-                if (i % 2 == 1) {
-                    tmp_html += "<tr>";
-                    for (Shot shot : passe.shot) {
-                        tmp_html += "<td>";
-                        tmp_html += Target.getStringByZone(info.target, shot.zone);
-                        tmp_html += "</td>";
-                        int points = Target.getPointsByZone(info.target, shot.zone);
-                        arrows += points;
-                        sum += points;
-                        carry += points;
-                        count++;
-                    }
-                    tmp_html += "<td>" + arrows + "</td>";
-                    html += "<td rowspan=\"2\">" + sum + "</td>";
-                    html += "<td rowspan=\"2\">" + carry + "</td>";
-                    html += tmp_html;
-                    tmp_html = "";
-                    sum = 0;
-                } else {
-                    html += "<tr>";
-                    for (Shot shot : passe.shot) {
-                        html += "<td>";
-                        html += Target.getStringByZone(info.target, shot.zone);
-                        html += "</td>";
-                        int points = Target.getPointsByZone(info.target, shot.zone);
-                        arrows += points;
-                        sum += points;
-                        carry += points;
-                        count++;
-                    }
-                    html += "<td>" + arrows + "</td>";
+                html += "<tr>";
+                int sum = 0;
+                for (Shot shot : passe.shot) {
+                    html += "<td>";
+                    html += Target.getStringByZone(info.target, shot.zone);
+                    html += "</td>";
+                    int points = Target.getPointsByZone(info.target, shot.zone);
+                    sum += points;
+                    carry += points;
+                    count++;
                 }
+                html += "<td>" + sum + "</td>";
+                html += "<td>" + carry + "</td>";
+                html += "</tr>";
                 i++;
-                tmp_html += "</tr>";
             }
-            if (i % 2 == 1) {
-                html += "<td rowspan=\"2\">" + sum + "</td>";
-                html += "<td rowspan=\"2\">" + carry + "</td>";
-            }
-            html += tmp_html;
             float avg = ((carry * 100) / count) / 100.0f;
             html += "</table>";
             html += "<table class=\"myTable\" style=\"margin-top:5px;\">" +
@@ -142,8 +116,8 @@ public class ScoreboardUtils {
             byte[] byteArray = byteArrayOutputStream.toByteArray();
             String imageBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
             String image = "data:image/png;base64," + imageBase64;
-            html += "<div align='center' style=\"padding: 20px;\"><img src='" + image +
-                    "' width='60%' /></div>";
+            html += "<div align='center' style=\"padding: 15px;\"><img src='" + image +
+                    "' width='98%' /></div>";
         }
 
         html += "</html>";

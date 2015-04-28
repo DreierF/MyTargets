@@ -18,18 +18,21 @@ import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditRoundActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
-import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
+import de.dreier.mytargets.models.Month;
 import de.dreier.mytargets.models.Training;
 import de.dreier.mytargets.utils.TextInputDialog;
 
 /**
  * Shows an overview over all trying days
  */
-public class TrainingsFragment extends NowListFragment<Training> {
+public class TrainingsFragment extends ExpandableNowListFragment<Month, Training> {
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
@@ -41,8 +44,29 @@ public class TrainingsFragment extends NowListFragment<Training> {
     @Override
     public void onResume() {
         super.onResume();
+        reloadData();
+        mAdapter.expandOrCollapse(0);
+    }
+
+    private void reloadData() {
         ArrayList<Training> list = db.getTrainings();
-        setList(list, new TrainingAdapter());
+        HashMap<Long, Month> monthMap = new HashMap<>();
+        ArrayList<Month> months = new ArrayList<>();
+        for (Training t : list) {
+            Month month;
+            long parentId = t.getParentId();
+            if (!monthMap.containsKey(parentId)) {
+                month = new Month(parentId);
+                monthMap.put(parentId, month);
+                months.add(month);
+            } else {
+                month = monthMap.get(parentId);
+            }
+            month.reachedPoints += t.reachedPoints;
+            month.maxPoints += t.maxPoints;
+        }
+        Collections.sort(months);
+        setList(months, list, false, new TrainingAdapter());
     }
 
     @Override
@@ -73,16 +97,23 @@ public class TrainingsFragment extends NowListFragment<Training> {
                     public void onOkClickListener(String input) {
                         item.title = input;
                         db.updateTraining(item);
-                        ArrayList<Training> list = db.getTrainings();
-                        setList(list, new TrainingAdapter());
+                        reloadData();
                     }
                 })
                 .show();
     }
 
-    protected class TrainingAdapter extends NowListAdapter<Training> {
+    protected class TrainingAdapter extends ExpandableNowListAdapter<Month, Training> {
+
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent) {
+        protected HeaderViewHolder getTopLevelViewHolder(ViewGroup parent) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_month, parent, false);
+            return new HeaderViewHolder(itemView);
+        }
+
+        @Override
+        protected ViewHolder getSecondLevelViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.training_card, parent, false);
             return new ViewHolder(itemView);
@@ -106,6 +137,27 @@ public class TrainingsFragment extends NowListFragment<Training> {
             mTitle.setText(mItem.title);
             mSubtitle.setText(DateFormat.getDateInstance().format(mItem.date));
             mGes.setText(mItem.reachedPoints + "/" + mItem.maxPoints);
+        }
+    }
+
+    public class HeaderViewHolder extends CardViewHolder<Month> {
+        public final TextView mTitle;
+        private final TextView mPoints;
+        private final TextView mPercentage;
+
+        public HeaderViewHolder(View itemView) {
+            super(itemView, null, null);
+            mTitle = (TextView) itemView.findViewById(android.R.id.text1);
+            mPoints = (TextView) itemView.findViewById(R.id.totalPoints);
+            mPercentage = (TextView) itemView.findViewById(R.id.totalPercentage);
+        }
+
+        @Override
+        public void bindCursor() {
+            mTitle.setText(mItem.toString());
+            mPoints.setText(mItem.reachedPoints + "/" + mItem.maxPoints);
+            String percent = mItem.maxPoints == 0 ? "" : " (" + (mItem.reachedPoints * 100 / mItem.maxPoints) + "%)";
+            mPercentage.setText(percent);
         }
     }
 }

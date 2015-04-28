@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Card" parent="CardView.Light">
+    <style name="Card" parent="CardView.Dark">
         <item name="android:foreground">@drawable/card_item</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

@@ -18,7 +18,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,7 +38,7 @@ import de.dreier.mytargets.utils.OnTargetSetListener;
 import de.dreier.mytargets.utils.Target;
 import de.dreier.mytargets.views.TargetView;
 
-public class InputActivity extends ActionBarActivity implements OnTargetSetListener {
+public class InputActivity extends AppCompatActivity implements OnTargetSetListener {
 
     public static final String ROUND_ID = "round_id";
     private static final String TARGET_MODE = "target_mode";

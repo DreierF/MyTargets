@@ -2,17 +2,17 @@ apply plugin: 'com.android.library'
 
 dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:support-v4:22.1.1'
 }
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '21.1.2'
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
 
 
     defaultConfig {
         minSdkVersion 8
-        targetSdkVersion 21
+        targetSdkVersion 22
     }
 
     sourceSets {

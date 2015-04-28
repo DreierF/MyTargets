@@ -10,7 +10,7 @@ package de.dreier.mytargets.adapters;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.ArrowFragment;
@@ -20,7 +20,7 @@ import de.dreier.mytargets.fragments.TrainingsFragment;
 public class MainTabsFragmentPagerAdapter extends FragmentPagerAdapter {
     private final Context context;
 
-    public MainTabsFragmentPagerAdapter(ActionBarActivity context) {
+    public MainTabsFragmentPagerAdapter(AppCompatActivity context) {
         super(context.getSupportFragmentManager());
         this.context = context;
     }

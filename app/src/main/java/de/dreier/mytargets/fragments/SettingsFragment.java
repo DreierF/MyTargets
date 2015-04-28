@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.github.machinarius.preferencefragment.PreferenceFragment;
@@ -56,8 +56,8 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mIABWrapper = new IABHelperWrapper((ActionBarActivity) getActivity());
-        ActionBar ab = ((ActionBarActivity) getActivity()).getSupportActionBar();
+        mIABWrapper = new IABHelperWrapper((AppCompatActivity) getActivity());
+        ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
         ab.setHomeButtonEnabled(true);
         ab.setDisplayHomeAsUpEnabled(true);
     }
@@ -191,7 +191,7 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (mIABWrapper.handleActivityResult(requestCode, resultCode, data)) {
-            if (requestCode == 1 && resultCode == ActionBarActivity.RESULT_OK) {
+            if (requestCode == 1 && resultCode == AppCompatActivity.RESULT_OK) {
                 final Uri uri = data.getData();
                 if (BackupUtils.Import(getActivity(), uri)) {
                     getActivity().finish();

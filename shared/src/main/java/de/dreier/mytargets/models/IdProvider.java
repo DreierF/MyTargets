@@ -8,4 +8,8 @@ public abstract class IdProvider {
     public long getId() {
         return id;
     }
+
+    public long getParentId() {
+        return 0;
+    }
 }

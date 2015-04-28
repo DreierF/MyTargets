@@ -18,7 +18,7 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -67,7 +67,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
         loadPreferenceValues();
 
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
-        ActionBarActivity activity = (ActionBarActivity) getActivity();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);

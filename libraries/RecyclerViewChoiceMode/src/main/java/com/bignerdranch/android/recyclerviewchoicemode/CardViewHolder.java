@@ -31,7 +31,7 @@ public abstract class CardViewHolder<T> extends MultiSelectorBindingHolder imple
     protected T mItem;
 
     /**
-     * Construct a new SelectableHolder hooked up to be controlled by a Multiselector.
+     * Construct a new SelectableHolder hooked up to be controlled by a MultiSelector.
      * <p/>
      * If the MultiSelector is not null, the SelectableHolder can be selected by
      * calling {@link MultiSelector#setSelected(com.bignerdranch.android.recyclerviewchoicemode.SelectableHolder, boolean)}.
@@ -119,4 +119,8 @@ public abstract class CardViewHolder<T> extends MultiSelectorBindingHolder imple
     }
 
     public abstract void bindCursor();
+
+    public void setExpandOnClickListener(View.OnClickListener onClickListener) {
+        itemView.setOnClickListener(onClickListener);
+    }
 }

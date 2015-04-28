@@ -14,7 +14,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.SpannableString;
@@ -34,7 +34,7 @@ import de.dreier.mytargets.views.SlidingTabLayout;
 /**
  * Shows an overview over all trying days
  */
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     private static boolean shownThisTime = false;
 
@@ -81,6 +81,7 @@ public class MainActivity extends ActionBarActivity {
         supportedLanguages.add("ru");
         supportedLanguages.add("nl");
         supportedLanguages.add("it");
+        supportedLanguages.add("sl");
 
         final SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(MainActivity.this);

@@ -10,7 +10,7 @@ package de.dreier.mytargets.views;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -117,7 +117,7 @@ public class DialogSpinner extends LinearLayout
         bundle.putInt("add", resAddText);
         dialog.setArguments(bundle);
         dialog.setListener(this);
-        dialog.show(((ActionBarActivity) getContext()).getSupportFragmentManager(),
+        dialog.show(((AppCompatActivity) getContext()).getSupportFragmentManager(),
                 "spinner_dialog");
     }
 

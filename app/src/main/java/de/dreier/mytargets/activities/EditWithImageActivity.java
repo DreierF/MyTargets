@@ -17,7 +17,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -51,7 +51,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.utils.BitmapUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
-public abstract class EditWithImageActivity extends ActionBarActivity
+public abstract class EditWithImageActivity extends AppCompatActivity
         implements ObservableScrollViewCallbacks {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
