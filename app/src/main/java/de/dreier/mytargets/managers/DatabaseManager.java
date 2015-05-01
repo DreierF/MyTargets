@@ -25,12 +25,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 
 import de.dreier.mytargets.activities.EditBowActivity;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
+import de.dreier.mytargets.fragments.DistanceFragment;
 import de.dreier.mytargets.models.Arrow;
 import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.models.IdProvider;
@@ -381,25 +383,37 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return list;
     }
 
-    public ArrayList<Passe> getPasses(long round) {
-        Cursor res = db.rawQuery("SELECT p._id, s._id, s.points, s.x, s.y, s.comment, " +
-                "(SELECT COUNT(t._id) FROM SHOOT t WHERE t.passe=p._id) " +
-                "FROM PASSE p " +
+    public ArrayList<Passe> getPasses(long training) {
+        Cursor res = db.rawQuery("SELECT r._id, p._id, s._id, s.points, s.x, s.y, s.comment, " +
+                "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id) " +
+                "FROM ROUND r " +
+                "LEFT JOIN PASSE p ON r._id = p.round " +
                 "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                "WHERE p.round = " + round + " " +
-                "ORDER BY p._id ASC, s._id ASC", null);
+                "WHERE r.training = " + training + " " +
+                "ORDER BY r._id ASC, p._id ASC, s._id ASC", null);
         ArrayList<Passe> list = new ArrayList<>();
         if (res.moveToFirst()) {
+            long oldRoundId = -1;
+            int pIndex = 0;
             do {
-                int ppp = res.getInt(6);
+                int ppp = res.getInt(7);
+                if (ppp == 0) {
+                    res.moveToNext();
+                    continue;
+                }
                 Passe passe = new Passe(ppp);
-                passe.id = res.getLong(0);
+                passe.id = res.getLong(1);
+                passe.roundId = res.getLong(0);
+                if (oldRoundId != passe.roundId) {
+                    pIndex = 0;
+                }
+                passe.index = pIndex;
                 for (int i = 0; i < ppp; i++) {
-                    passe.shot[i].id = res.getLong(1);
-                    passe.shot[i].zone = res.getInt(2);
-                    passe.shot[i].x = res.getFloat(3);
-                    passe.shot[i].y = res.getFloat(4);
-                    passe.shot[i].comment = res.getString(5);
+                    passe.shot[i].id = res.getLong(2);
+                    passe.shot[i].zone = res.getInt(3);
+                    passe.shot[i].x = res.getFloat(4);
+                    passe.shot[i].y = res.getFloat(5);
+                    passe.shot[i].comment = res.getString(6);
                     res.moveToNext();
                 }
                 list.add(passe);
@@ -526,7 +540,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return r;
     }
 
-    Passe getPasse(long passeId) {
+    public Passe getPasse(long passeId) {
         String[] cols = {ID, SHOOT_ZONE, SHOOT_X, SHOOT_Y, SHOOT_COMMENT};
         Cursor res = db
                 .query(TABLE_SHOOT, cols, SHOOT_PASSE + "=" + passeId, null, null, null,
@@ -719,38 +733,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return sum;
     }
 
-    public int getRoundInd(long training, long round) {
-        String[] cols = {ID};
-        Cursor res = db.query(TABLE_ROUND, cols, ROUND_TRAINING + "=" + training, null, null, null,
-                ID + " ASC");
-        res.moveToFirst();
-        for (int i = 1; i < res.getCount() + 1; i++) {
-            if (round == res.getLong(0)) {
-                res.close();
-                return i;
-            }
-            res.moveToNext();
-        }
-        res.close();
-        return 0;
-    }
-
-    public int getPasseInd(long round, long passe) {
-        String[] cols = {ID};
-        Cursor res = db
-                .query(TABLE_PASSE, cols, PASSE_ROUND + "=" + round, null, null, null, ID + " ASC");
-        res.moveToFirst();
-        for (int i = 1; i < res.getCount() + 1; i++) {
-            if (passe == res.getLong(0)) {
-                res.close();
-                return i;
-            }
-            res.moveToNext();
-        }
-        res.close();
-        return 0;
-    }
-
     public String getSetting(long bowId, int dist) {
         String[] cols = {VISIER_SETTING};
         Cursor res = db
@@ -903,7 +885,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 for (int i = 0; i < names.length; i++) {
                     writer.append("\"");
                     if (i == targetInd) {
-                        writer.append(TargetItemAdapter.targets[cur.getInt(i)]);
+                        writer.append(TargetItemAdapter.targets.get(cur.getInt(i)).name);
                     } else if (i == indoorInd) {
                         if (cur.getInt(i) == 0) {
                             writer.append("Outdoor");
@@ -988,16 +970,22 @@ public class DatabaseManager extends SQLiteOpenHelper {
     /**
      * Returns a list of all distances that are either default values or used somewhere in the app
      *
-     * @param dist Distance to add to the list.
+     * @param curDist Distance to add to the list.
      * @return List of distances
      */
-    public ArrayList<Integer> getDistances(int dist) {
-        ArrayList<Integer> distances = new ArrayList<>();
-        distances.addAll(Arrays.asList(distanceValues));
+    public List<DistanceFragment.Distance> getDistances(int curDist) {
+        ArrayList<DistanceFragment.Distance> distances = new ArrayList<>();
+        HashSet<Integer> set= new HashSet<>();
+
+        for (Integer dist : distanceValues) {
+            distances.add(new DistanceFragment.Distance(dist));
+            set.add(dist);
+        }
 
         // Add currently selected distance to list
-        if (!distances.contains(dist)) {
-            distances.add(dist);
+        if (!set.contains(curDist)) {
+            distances.add(new DistanceFragment.Distance(curDist));
+            set.add(curDist);
         }
 
         // Get all distances used in ROUND or VISIER table
@@ -1006,8 +994,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 null);
         if (cur.moveToFirst()) {
             do {
-                if (!distances.contains(cur.getInt(0))) {
-                    distances.add(cur.getInt(0));
+                if (!set.contains(cur.getInt(0))) {
+                    distances.add(new DistanceFragment.Distance(cur.getInt(0)));
+                    set.add(cur.getInt(0));
                 }
             } while (cur.moveToNext());
         }

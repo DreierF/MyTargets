@@ -44,21 +44,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SimpleFragmentActivity$RoundActivity"
+            android:name=".activities.SimpleFragmentActivity$TrainingActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity"/>
-        </activity>
-        <activity
-            android:name=".activities.SimpleFragmentActivity$PasseActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivity$RoundActivity"
+            android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$RoundActivity"/>
+                android:value=".activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.SimpleFragmentActivity$TimerActivity"
@@ -75,20 +67,20 @@
             android:name=".activities.InputActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivity$PasseActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivity$TrainingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$PasseActivity"/>
+                android:value=".activities.SimpleFragmentActivity$TrainingActivity"/>
         </activity>
         <activity
             android:name=".activities.EditRoundActivity"
             android:label="@string/new_round"
-            android:parentActivityName=".activities.SimpleFragmentActivity$RoundActivity"
+            android:parentActivityName=".activities.SimpleFragmentActivity$TrainingActivity"
             android:theme="@style/AppTheme.CustomToolbar"
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$RoundActivity"/>
+                android:value=".activities.SimpleFragmentActivity$TrainingActivity"/>
         </activity>
         <activity
             android:name=".activities.EditBowActivity"
@@ -113,14 +105,46 @@
         <activity
             android:name=".activities.ScoreboardActivity"
             android:label="@string/scoreboard"
-            android:parentActivityName=".activities.SimpleFragmentActivity$PasseActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivity$TrainingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$PasseActivity"/>
+                android:value=".activities.SimpleFragmentActivity$TrainingActivity"/>
         </activity>
         <activity
             android:name=".activities.StatisticsActivity"
             android:label="@string/statistic"/>
+        <activity
+            android:name=".activities.SimpleFragmentActivity$ArrowItemSelectActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.EditRoundActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.EditRoundActivity"/>
+        </activity>
+        <activity
+            android:name=".activities.SimpleFragmentActivity$BowItemSelectActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.EditRoundActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.EditRoundActivity"/>
+        </activity>
+        <activity
+            android:name=".activities.SimpleFragmentActivity$TargetItemSelectActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.EditRoundActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.EditRoundActivity"/>
+        </activity>
+        <activity
+            android:name=".activities.SimpleFragmentActivity$DistanceItemSelectActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.EditRoundActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.EditRoundActivity"/>
+        </activity>
 
         <!-- Preferences activity -->
         <activity

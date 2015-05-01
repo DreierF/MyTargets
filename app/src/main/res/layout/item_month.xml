@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="?android:attr/listPreferredItemHeight"
-                android:orientation="vertical"
-                android:paddingLeft="20dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:paddingRight="20dp">
+<RelativeLayout
+    style="@style/header_container"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
         android:id="@android:id/text1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
+        android:layout_centerVertical="true"
         android:text="August 2015"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#000000"/>

@@ -30,7 +30,7 @@ import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 import com.bignerdranch.android.recyclerviewchoicemode.ModalMultiSelectorCallback;
 import com.bignerdranch.android.recyclerviewchoicemode.MultiSelector;
 import com.bignerdranch.android.recyclerviewchoicemode.OnCardClickListener;
-import com.melnykov.fab.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,7 +68,7 @@ public abstract class ExpandableNowListFragment<H extends IdProvider, C extends 
     // New view
     private View mNewLayout;
     private TextView mNewText;
-    private FloatingActionButton mFab;
+    FloatingActionsMenu mFab;
 
     int getLayoutResource() {
         return R.layout.fragment_list;
@@ -83,9 +83,8 @@ public abstract class ExpandableNowListFragment<H extends IdProvider, C extends 
         mRecyclerView.addItemDecoration(new CardItemDecorator(getActivity()));
         mRecyclerView.setHasFixedSize(true);
 
-        mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        mFab = (FloatingActionsMenu)rootView.findViewById(R.id.fab);
         mFab.setOnClickListener(this);
-        mFab.attachToRecyclerView(mRecyclerView);
 
         mNewLayout = rootView.findViewById(R.id.new_layout);
         mNewText = (TextView) rootView.findViewById(R.id.new_text);
@@ -124,7 +123,6 @@ public abstract class ExpandableNowListFragment<H extends IdProvider, C extends 
         }
         mNewLayout.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
         mNewText.setText(newStringRes);
-        mFab.show(true);
     }
 
     private final ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(

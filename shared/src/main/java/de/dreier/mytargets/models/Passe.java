@@ -9,6 +9,8 @@ import java.util.Arrays;
 public class Passe extends IdProvider implements Serializable {
     static final long serialVersionUID = 45L;
     public Shot[] shot;
+    public long roundId;
+    public int index;
 
     public Passe(int ppp) {
         shot = new Shot[ppp];
@@ -20,6 +22,11 @@ public class Passe extends IdProvider implements Serializable {
     public Passe(Passe p) {
         id = p.id;
         shot = p.shot.clone();
+    }
+
+    @Override
+    public long getParentId() {
+        return roundId;
     }
 
     public void sort() {

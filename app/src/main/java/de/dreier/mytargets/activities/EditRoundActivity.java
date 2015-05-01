@@ -27,8 +27,8 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.ArrowItemAdapter;
 import de.dreier.mytargets.adapters.BowItemAdapter;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
+import de.dreier.mytargets.fragments.DistanceFragment;
 import de.dreier.mytargets.fragments.PasseFragment;
-import de.dreier.mytargets.fragments.RoundFragment;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Training;
@@ -41,6 +41,11 @@ public class EditRoundActivity extends AppCompatActivity {
 
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
+    private static final int REQ_SELECTED_ARROW = 1;
+    private static final int REQ_SELECTED_BOW = 2;
+    private static final int REQ_SELECTED_TARGET = 3;
+    private static final int REQ_SELECTED_DISTANCE = 4;
+
     private long mTraining = -1, mRound = -1;
 
     private DistanceDialogSpinner distance;
@@ -53,6 +58,7 @@ public class EditRoundActivity extends AppCompatActivity {
     private FloatLabel comment;
     private NumberPicker rounds, arrows;
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +81,19 @@ public class EditRoundActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences(MyBackupAgent.PREFS, 0);
 
         training = (EditText) findViewById(R.id.training);
+
+        // Distance
         distance = (DistanceDialogSpinner) findViewById(R.id.distance_spinner);
+        distance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(EditRoundActivity.this,
+                        SimpleFragmentActivity.DistanceItemSelectActivity.class);
+                i.putExtra("title", R.string.distance);
+                i.putExtra(DistanceFragment.CUR_DISTANCE, (int) distance.getSelectedItemId());
+                startActivityForResult(i, REQ_SELECTED_DISTANCE);
+            }
+        });
 
         // Indoor / outdoor
         RadioButton outdoor = (RadioButton) findViewById(R.id.outdoor);
@@ -93,33 +111,56 @@ public class EditRoundActivity extends AppCompatActivity {
 
         // Bow
         bow = (DialogSpinner) findViewById(R.id.bow);
-        bow.setTitle(R.string.bow);
         bow.setAdapter(new BowItemAdapter(this));
         Button addBow = (Button) findViewById(R.id.add_bow);
-
-        bow.setAddButton(addBow, R.string.add_bow, new View.OnClickListener() {
+        bow.setAddButton(addBow, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(EditRoundActivity.this, EditBowActivity.class));
             }
         });
+        bow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(EditRoundActivity.this,
+                        SimpleFragmentActivity.BowItemSelectActivity.class);
+                i.putExtra("title", R.string.bow);
+                startActivityForResult(i, REQ_SELECTED_BOW);
+            }
+        });
 
         // Arrow
         arrow = (DialogSpinner) findViewById(R.id.arrow);
-        arrow.setTitle(R.string.arrow);
         arrow.setAdapter(new ArrowItemAdapter(this));
         Button addArrow = (Button) findViewById(R.id.add_arrow);
-        arrow.setAddButton(addArrow, R.string.add_arrow, new View.OnClickListener() {
+        arrow.setAddButton(addArrow, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(EditRoundActivity.this, EditArrowActivity.class));
             }
         });
+        arrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(EditRoundActivity.this,
+                        SimpleFragmentActivity.ArrowItemSelectActivity.class);
+                i.putExtra("title", R.string.bow);
+                startActivityForResult(i, REQ_SELECTED_ARROW);
+            }
+        });
 
         // Target round
         target = (DialogSpinner) findViewById(R.id.target_spinner);
-        target.setTitle(R.string.target_round);
         target.setAdapter(new TargetItemAdapter(this));
+        target.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(EditRoundActivity.this,
+                        SimpleFragmentActivity.TargetItemSelectActivity.class);
+                i.putExtra("title", R.string.target_round);
+                startActivityForResult(i, REQ_SELECTED_TARGET);
+            }
+        });
 
         // Comment
         comment = (FloatLabel) findViewById(R.id.comment);
@@ -158,6 +199,27 @@ public class EditRoundActivity extends AppCompatActivity {
             View training_container = findViewById(R.id.training_container);
             training_container.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            long id = data.getLongExtra("id", 0);
+            if (requestCode == REQ_SELECTED_ARROW) {
+                arrow.setItemId(id);
+                return;
+            } else if (requestCode == REQ_SELECTED_BOW) {
+                bow.setItemId(id);
+                return;
+            } else if (requestCode == REQ_SELECTED_TARGET) {
+                target.setItemId(id);
+                return;
+            } else if (requestCode == REQ_SELECTED_DISTANCE) {
+                distance.setItemId(id);
+                return;
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -248,14 +310,8 @@ public class EditRoundActivity extends AppCompatActivity {
 
         finish();
         if (mRound == -1) {
-            Intent i = new Intent(this, SimpleFragmentActivity.RoundActivity.class);
-            i.putExtra(RoundFragment.TRAINING_ID, mTraining);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(i);
-
-            i = new Intent(this, SimpleFragmentActivity.PasseActivity.class);
+            Intent i = new Intent(this, SimpleFragmentActivity.TrainingActivity.class);
             i.putExtra(PasseFragment.TRAINING_ID, mTraining);
-            i.putExtra(PasseFragment.ROUND_ID, round.id);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
 

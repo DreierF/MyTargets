@@ -76,7 +76,7 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
 
     @Override
     public void onSelected(Training item) {
-        Intent i = new Intent(getActivity(), SimpleFragmentActivity.RoundActivity.class);
+        Intent i = new Intent(getActivity(), SimpleFragmentActivity.TrainingActivity.class);
         i.putExtra(TRAINING_ID, item.getId());
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
@@ -156,7 +156,7 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
         public void bindCursor() {
             mTitle.setText(mItem.toString());
             mPoints.setText(mItem.reachedPoints + "/" + mItem.maxPoints);
-            String percent = mItem.maxPoints == 0 ? "" : " (" + (mItem.reachedPoints * 100 / mItem.maxPoints) + "%)";
+            String percent = mItem.maxPoints == 0 ? "" : (mItem.reachedPoints * 100 / mItem.maxPoints) + "%";
             mPercentage.setText(percent);
         }
     }

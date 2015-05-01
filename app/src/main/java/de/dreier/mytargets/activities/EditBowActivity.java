@@ -25,6 +25,7 @@ import com.iangclifton.android.floatlabel.FloatLabel;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.fragments.DistanceFragment;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.views.DialogSpinner;
@@ -33,6 +34,7 @@ import de.dreier.mytargets.views.DistanceDialogSpinner;
 public class EditBowActivity extends EditWithImageActivity {
 
     public static final String BOW_ID = "bow_id";
+    private static final int REQ_SELECTED_DISTANCE = 1;
     private FloatLabel name;
     private FloatLabel brand;
     private FloatLabel size;
@@ -43,6 +45,7 @@ public class EditBowActivity extends EditWithImageActivity {
     private long mBowId = -1;
     private LinearLayout sight_settings;
     private ArrayList<SightSetting> sightSettingsList;
+    private SightSetting curSetting;
 
     public EditBowActivity() {
         super(R.layout.activity_edit_bow, R.drawable.recurve_bow);
@@ -251,6 +254,17 @@ public class EditBowActivity extends EditWithImageActivity {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         final View rel = inflater.inflate(R.layout.sight_settings_item, sight_settings, false);
         setting.distance = (DistanceDialogSpinner) rel.findViewById(R.id.distance_spinner);
+        setting.distance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(EditBowActivity.this,
+                        SimpleFragmentActivity.DistanceItemSelectActivity.class);
+                i.putExtra("title", R.string.target_round);
+                i.putExtra(DistanceFragment.CUR_DISTANCE, (int) setting.distance.getSelectedItemId());
+                curSetting = setting;
+                startActivityForResult(i, REQ_SELECTED_DISTANCE);
+            }
+        });
         setting.setting = (EditText) rel.findViewById(R.id.sight_setting);
         ImageButton remove = (ImageButton) rel.findViewById(R.id.remove_sight_setting);
         remove.setOnClickListener(new View.OnClickListener() {
@@ -269,6 +283,18 @@ public class EditBowActivity extends EditWithImageActivity {
         setting.distance.setId(548969458 + i * 2);
         setting.setting.setId(548969458 + i * 2 + 1);
         sight_settings.addView(rel);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            long id = data.getLongExtra("id", 0);
+            if (requestCode == REQ_SELECTED_DISTANCE) {
+                curSetting.distance.setItemId(id);
+                return;
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

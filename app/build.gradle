@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId 'de.dreier.mytargets'
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion 22
         versionCode Integer.parseInt(project.VERSION_CODE)
         versionName project.VERSION_NAME

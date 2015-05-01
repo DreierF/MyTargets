@@ -8,31 +8,22 @@
 package de.dreier.mytargets.views;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.StringRes;
-import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 
-import de.dreier.mytargets.fragments.SpinnerDialogFragment;
 
-
-public class DialogSpinner extends LinearLayout
-        implements View.OnClickListener, SpinnerDialogFragment.SpinnerDialogListener {
+public class DialogSpinner extends LinearLayout {
 
     private ListAdapter adapter;
     private View mView;
 
-    @StringRes
-    private int resTitle;
     private int size;
     private Button addButton;
-    private int resAddText;
     private long currentItemId = 0;
-    private OnClickListener mListener;
+    private OnClickListener listener;
 
     public DialogSpinner(Context context) {
         super(context);
@@ -53,20 +44,6 @@ public class DialogSpinner extends LinearLayout
         updateView();
     }
 
-    public void setTitle(@StringRes int title) {
-        this.resTitle = title;
-    }
-
-    public void setAddButton(Button button, @StringRes int text, OnClickListener listener) {
-        addButton = button;
-        resAddText = text;
-        mListener = listener;
-        if (addButton != null) {
-            addButton.setOnClickListener(mListener);
-        }
-        updateView();
-    }
-
     private void updateView() {
         int currentSelection = 0;
         for (int i = 0; i < size; i++) {
@@ -77,7 +54,7 @@ public class DialogSpinner extends LinearLayout
         }
         if (size > currentSelection) {
             View tmpView = adapter.getView(currentSelection, mView, this);
-            tmpView.setOnClickListener(this);
+            tmpView.setOnClickListener(listener);
             tmpView.setEnabled(isEnabled());
             if (mView == null) {
                 mView = tmpView;
@@ -95,6 +72,19 @@ public class DialogSpinner extends LinearLayout
     }
 
     @Override
+    public void setOnClickListener(OnClickListener l) {
+        listener = l;
+    }
+
+    public void setAddButton(Button button, OnClickListener listener) {
+        addButton = button;
+        if (addButton != null) {
+            addButton.setOnClickListener(listener);
+        }
+        updateView();
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         updateView();
@@ -109,30 +99,6 @@ public class DialogSpinner extends LinearLayout
         updateView();
     }
 
-    @Override
-    public void onClick(View v) {
-        SpinnerDialogFragment dialog = new SpinnerDialogFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt("title", resTitle);
-        bundle.putInt("add", resAddText);
-        dialog.setArguments(bundle);
-        dialog.setListener(this);
-        dialog.show(((AppCompatActivity) getContext()).getSupportFragmentManager(),
-                "spinner_dialog");
-    }
-
-    @Override
-    public void onDialogConfirmed(int pos) {
-        currentItemId = adapter.getItemId(pos);
-        updateView();
-    }
-
-    @Override
-    public void onDialogAdd() {
-        mListener.onClick(this);
-    }
-
-    @Override
     public ListAdapter getAdapter() {
         return adapter;
     }

@@ -15,6 +15,7 @@ import android.widget.AbsListView;
 import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.models.IdProvider;
 
@@ -22,7 +23,7 @@ import de.dreier.mytargets.models.IdProvider;
 public abstract class NowListAdapter<T extends IdProvider>
         extends RecyclerView.Adapter<CardViewHolder<T>> {
 
-    private ArrayList<T> mList = new ArrayList<>();
+    private List<T> mList = new ArrayList<>();
     protected int headerHeight = 0;
 
     @Override
@@ -98,7 +99,7 @@ public abstract class NowListAdapter<T extends IdProvider>
         }
     }
 
-    public void setList(ArrayList<T> list) {
+    public void setList(List<T> list) {
         mList = list;
     }
 

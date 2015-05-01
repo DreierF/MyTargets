@@ -30,9 +30,10 @@ import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 import com.bignerdranch.android.recyclerviewchoicemode.ModalMultiSelectorCallback;
 import com.bignerdranch.android.recyclerviewchoicemode.MultiSelector;
 import com.bignerdranch.android.recyclerviewchoicemode.OnCardClickListener;
-import com.melnykov.fab.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
-import java.util.ArrayList;
+import junit.framework.Assert;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -47,9 +48,6 @@ import de.dreier.mytargets.views.CardItemDecorator;
  */
 public abstract class NowListFragment<T extends IdProvider> extends Fragment
         implements View.OnClickListener, OnCardClickListener<T> {
-
-    public static final String TRAINING_ID = "training_id";
-    public static final String ROUND_ID = "round_id";
 
     @PluralsRes
     int itemTypeRes;
@@ -69,7 +67,8 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
     // New view
     private View mNewLayout;
     private TextView mNewText;
-    private FloatingActionButton mFab;
+    private FloatingActionsMenu mFab;
+    private OnItemSelectedListener listener;
 
     int getLayoutResource() {
         return R.layout.fragment_list;
@@ -84,9 +83,8 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
         mRecyclerView.addItemDecoration(new CardItemDecorator(getActivity()));
         mRecyclerView.setHasFixedSize(true);
 
-        mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        mFab = (FloatingActionsMenu) rootView.findViewById(R.id.fab);
         mFab.setOnClickListener(this);
-        mFab.attachToRecyclerView(mRecyclerView);
 
         mNewLayout = rootView.findViewById(R.id.new_layout);
         mNewText = (TextView) rootView.findViewById(R.id.new_text);
@@ -105,6 +103,10 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = (AppCompatActivity) getActivity();
+        if (activity instanceof OnItemSelectedListener) {
+            this.listener = (OnItemSelectedListener) activity;
+        }
+        Assert.assertNotNull(listener);
     }
 
     @Override
@@ -114,7 +116,7 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
         init(getArguments(), savedInstanceState);
     }
 
-    void setList(ArrayList<T> list, NowListAdapter<T> adapter) {
+    void setList(List<T> list, NowListAdapter<T> adapter) {
         if (mRecyclerView.getAdapter() == null) {
             mAdapter = adapter;
             mAdapter.setList(list);
@@ -123,9 +125,12 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
             mAdapter.setList(list);
             mAdapter.notifyDataSetChanged();
         }
-        mNewLayout.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
-        mNewText.setText(newStringRes);
-        mFab.show(true);
+        if (newStringRes != 0) {
+            mNewLayout.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
+            mNewText.setText(newStringRes);
+        } else {
+            mFab.setVisibility(View.GONE);
+        }
     }
 
     private final ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(
@@ -210,7 +215,7 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
             return;
         }
         if (!mMultiSelector.tapSelection(holder)) {
-            onSelected(mItem);
+            listener.onItemSelected(mItem.getId(), mItem.getClass());
         } else {
             updateTitle();
         }
@@ -231,7 +236,9 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
 
     protected abstract void onNew(Intent i);
 
-    protected abstract void onSelected(T item);
-
     protected abstract void onEdit(T item);
+
+    public interface OnItemSelectedListener {
+        public void onItemSelected(long itemId, Class<? extends IdProvider> aClass);
+    }
 }

@@ -89,10 +89,11 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
         if (position == 0 && headerHeight > 0) {
             return;
         }
+        int index = position;
         if (headerHeight > 0) {
-            position--;
+            index--;
         }
-        final DataHolder dh = dataList.get(position);
+        final DataHolder dh = dataList.get(index);
         if (getItemViewType(position) == HEADER_TYPE) {
             viewHolder.setExpandOnClickListener(new View.OnClickListener() {
                 @Override
@@ -117,16 +118,17 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
         HEADER headerGroup = mListHeaders.get(headerPosition);
         List<CHILD> children = childMap.get(headerGroup.getId());
         int childLength = children.size();
+        int realPos = position + (headerHeight > 0 ? 1 : 0);
         if (!isOpen.get(headerPosition)) {
             for (int i = 0; i < childLength; i++) {
                 dataList.add(position + i + 1, new DataHolder(children.get(i), ItemType.ITEM));
             }
-            notifyItemRangeInserted(position + 1, childLength);
+            notifyItemRangeInserted(realPos + 1, childLength);
         } else {
             for (int i = 0; i < childLength; i++) {
                 dataList.remove(position + 1);
             }
-            notifyItemRangeRemoved(position + 1, childLength);
+            notifyItemRangeRemoved(realPos + 1, childLength);
         }
         isOpen.set(headerPosition, !isOpen.get(headerPosition));
     }
@@ -144,12 +146,12 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
 
     public void remove(int pos) {
         if (headerHeight > 0) {
-            mListHeaders.remove(pos - 1);
-            notifyItemRemoved(pos - 1);
-        } else {
-            mListHeaders.remove(pos);
-            notifyItemRemoved(pos);
+            pos--;
         }
+        DataHolder removed = dataList.remove(pos);
+        long parent = removed.getData().getParentId();
+        childMap.get(parent).remove(removed.getData());
+        notifyItemRemoved(pos);
     }
 
     public void setList(ArrayList<HEADER> headers, ArrayList<CHILD> children, boolean opened) {
@@ -157,14 +159,12 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
         dataList.clear();
         childMap.clear();
         isOpen.clear();
+        for (HEADER header : mListHeaders) {
+            childMap.put(header.getId(), new ArrayList<CHILD>());
+        }
         for (CHILD child : children) {
             long parent = child.getParentId();
-            List<CHILD> list = childMap.get(parent);
-            if (list == null) {
-                list = new ArrayList<>();
-                childMap.put(parent, list);
-            }
-            list.add(child);
+            childMap.get(parent).add(child);
         }
         for (HEADER header : mListHeaders) {
             isOpen.add(opened);

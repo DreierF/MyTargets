@@ -40,7 +40,6 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
     private static final int SHOOTING = 2;
     private static final int FINISHED = 3;
 
-
     private int mWaitingTime;
     private int mShootingTime;
     private int mWarnTime;
@@ -76,11 +75,19 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
     private void loadPreferenceValues() {
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(getActivity());
-        mWaitingTime = Integer.parseInt(prefs.getString("timer_wait_time", "20"));
-        mShootingTime = Integer.parseInt(prefs.getString("timer_shoot_time", "120"));
-        mWarnTime = Integer.parseInt(prefs.getString("timer_warn_time", "30"));
+        mWaitingTime = getPrefTime(prefs, "timer_wait_time", "20");
+        mShootingTime = getPrefTime(prefs,"timer_shoot_time", "120");
+        mWarnTime = getPrefTime(prefs,"timer_warn_time", "30");
         mSound = prefs.getBoolean("timer_sound", true);
         mVibrate = prefs.getBoolean("timer_vibrate", false);
+    }
+
+    private int getPrefTime(SharedPreferences prefs, String key, String def) {
+        try {
+            return Integer.parseInt(prefs.getString(key, def));
+        } catch (NumberFormatException e) {
+            return Integer.parseInt(def);
+        }
     }
 
     @Override

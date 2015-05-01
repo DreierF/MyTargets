@@ -1,12 +1,13 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    android:id="@+id/content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="de.dreier.mytargets.activities.EditRoundActivity">
 
-    <com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView style="@style/card_list" />
+    <com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView style="@style/card_list"/>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/round_container"
@@ -30,14 +31,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
 
             <TextView
                 android:id="@+id/detail_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|right"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         </FrameLayout>
 
@@ -49,7 +50,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <RelativeLayout
         android:id="@+id/new_layout"
@@ -67,7 +68,7 @@
             android:layout_height="100dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/arrow" />
+            android:src="@drawable/arrow"/>
 
         <TextView
             android:id="@+id/new_text"
@@ -77,25 +78,52 @@
             android:layout_centerInParent="true"
             android:paddingBottom="16dp"
             android:textColor="@color/new_text_color"
-            android:textSize="25sp" />
+            android:textSize="25sp"/>
 
     </RelativeLayout>
 
-    <com.melnykov.fab.FloatingActionButton
+    <!--
+        app:fab_addButtonPlusIconColor="@color/half_black"
+        app:fab_labelStyle="@style/menu_labels_style"-->
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_add_white_24dp"
-        app:fab_colorNormal="@color/colorAccent"
-        app:fab_colorPressed="@color/colorAccent_pressed"
-        app:fab_colorRipple="@color/ripple" />
+        app:fab_addButtonColorNormal="@color/colorAccent"
+        app:fab_addButtonColorPressed="@color/colorAccent_pressed"
+        app:fab_addButtonSize="normal"
+        app:fab_expandDirection="up"
+        app:fab_labelStyle="@style/menu_labels_style"
+        app:fab_labelsPosition="left">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/new_passe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/white_pressed"
+            app:fab_icon="@drawable/ic_track_changes_grey600_18dp"
+            app:fab_size="mini"
+            app:fab_title="@string/new_passe"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/new_round"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/white_pressed"
+            app:fab_icon="@drawable/ic_replay_grey600_18dp"
+            app:fab_size="mini"
+            app:fab_title="@string/new_round"/>
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
     <View
         android:id="@+id/shadow"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_drop_shadow_height"
-        android:background="@drawable/toolbar_drop_shadow" />
+        android:background="@drawable/toolbar_drop_shadow"/>
 
 </FrameLayout>

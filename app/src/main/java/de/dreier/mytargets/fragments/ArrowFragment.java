@@ -43,23 +43,18 @@ public class ArrowFragment extends NowListFragment<Arrow> {
     }
 
     @Override
-    protected void onSelected(Arrow item) {
+    protected void onEdit(Arrow item) {
         Intent i = new Intent(getActivity(), EditArrowActivity.class);
         i.putExtra(EditArrowActivity.ARROW_ID, item.getId());
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
-    @Override
-    protected void onEdit(Arrow item) {
-        onSelected(item);
-    }
-
     protected class ArrowAdapter extends NowListAdapter<Arrow> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.bow_card, parent, false);
+                    .inflate(R.layout.image_card, parent, false);
             return new ViewHolder(itemView);
         }
     }

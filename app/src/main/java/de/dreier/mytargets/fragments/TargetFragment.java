@@ -1,0 +1,81 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
+
+package de.dreier.mytargets.fragments;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
+
+import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.EditBowActivity;
+import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.adapters.TargetItemAdapter;
+
+public class TargetFragment extends NowListFragment<TargetItemAdapter.Target> {
+
+    @Override
+    protected void init(Bundle intent, Bundle savedInstanceState) {
+        mEditable = false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setList(TargetItemAdapter.targets, new TargetAdapter());
+    }
+
+    @Override
+    protected void onNew(Intent i) {
+        i.setClass(getActivity(), EditBowActivity.class);
+    }
+
+    @Override
+    public void onLongClick(CardViewHolder holder) {
+        onClick(holder, (TargetItemAdapter.Target) holder.getItem());
+    }
+
+    @Override
+    protected void onEdit(TargetItemAdapter.Target item) {
+        Intent i = new Intent(getActivity(), EditBowActivity.class);
+        i.putExtra(EditBowActivity.BOW_ID, item.getId());
+        startActivity(i);
+        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    protected class TargetAdapter extends NowListAdapter<TargetItemAdapter.Target> {
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.image_card, parent, false);
+            return new ViewHolder(itemView);
+        }
+    }
+
+    public class ViewHolder extends CardViewHolder<TargetItemAdapter.Target> {
+        private final TextView mName;
+        private final ImageView mImg;
+
+        public ViewHolder(View itemView) {
+            super(itemView, mMultiSelector, TargetFragment.this);
+            mName = (TextView) itemView.findViewById(R.id.name);
+            mImg = (ImageView) itemView.findViewById(R.id.image);
+        }
+
+        @Override
+        public void bindCursor() {
+            mName.setText(mItem.name);
+            mImg.setImageResource(mItem.drawableRes);
+        }
+    }
+}

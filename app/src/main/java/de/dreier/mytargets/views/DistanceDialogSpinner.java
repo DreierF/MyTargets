@@ -8,17 +8,12 @@
 package de.dreier.mytargets.views;
 
 import android.content.Context;
-import android.text.InputType;
 import android.util.AttributeSet;
-import android.view.View;
 
-import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.DistanceItemAdapter;
-import de.dreier.mytargets.utils.TextInputDialog;
 
 
-public class DistanceDialogSpinner extends DialogSpinner
-        implements TextInputDialog.OnClickListener {
+public class DistanceDialogSpinner extends DialogSpinner {
 
     public DistanceDialogSpinner(Context context) {
         super(context);
@@ -31,29 +26,12 @@ public class DistanceDialogSpinner extends DialogSpinner
     }
 
     private void init() {
-        setTitle(R.string.distance);
         setAdapter(new DistanceItemAdapter(getContext()));
-        setAddButton(null, R.string.custom, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new TextInputDialog.Builder(getContext())
-                        .setTitle(R.string.distance)
-                        .setInputType(InputType.TYPE_CLASS_NUMBER)
-                        .setOnClickListener(DistanceDialogSpinner.this)
-                        .show();
-            }
-        });
     }
 
     @Override
-    public void onCancelClickListener() {
-    }
-
-    @Override
-    public void onOkClickListener(String input) {
-        input = input.replaceAll("[^0-9]", "");
-        int dist = Integer.parseInt(input);
-        setAdapter(new DistanceItemAdapter(getContext(), dist));
-        setItemId(dist);
+    public void setItemId(long id) {
+        setAdapter(new DistanceItemAdapter(getContext(), (int) id));
+        super.setItemId(id);
     }
 }

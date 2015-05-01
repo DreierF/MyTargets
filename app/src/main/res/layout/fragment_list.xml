@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:clipToPadding="false"
+             android:clipChildren="false">
 
-    <android.support.v7.widget.RecyclerView style="@style/card_list" />
+    <android.support.v7.widget.RecyclerView style="@style/card_list"/>
 
     <RelativeLayout
         android:id="@+id/new_layout"
@@ -22,7 +24,7 @@
             android:layout_height="100dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/arrow" />
+            android:src="@drawable/arrow"/>
 
         <TextView
             android:id="@+id/new_text"
@@ -32,19 +34,23 @@
             android:layout_centerInParent="true"
             android:paddingBottom="16dp"
             android:textColor="@color/new_text_color"
-            android:textSize="25sp" />
+            android:textSize="25sp"/>
 
     </RelativeLayout>
 
-    <com.melnykov.fab.FloatingActionButton
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_add_white_24dp"
-        app:fab_colorNormal="@color/colorAccent"
-        app:fab_colorPressed="@color/colorAccent_pressed"
-        app:fab_colorRipple="@color/ripple" />
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:fab_addButtonColorNormal="@color/colorAccent"
+        app:fab_addButtonColorPressed="@color/colorAccent_pressed"
+        app:fab_addButtonSize="normal"
+        app:fab_expandDirection="up"
+        app:fab_labelStyle="@style/menu_labels_style"
+        app:fab_labelsPosition="left"/>
 
 </FrameLayout>

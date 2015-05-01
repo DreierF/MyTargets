@@ -29,12 +29,16 @@ import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
+import de.dreier.mytargets.fragments.NowListFragment;
+import de.dreier.mytargets.models.Arrow;
+import de.dreier.mytargets.models.IdProvider;
 import de.dreier.mytargets.views.SlidingTabLayout;
 
 /**
  * Shows an overview over all trying days
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        NowListFragment.OnItemSelectedListener {
 
     private static boolean shownThisTime = false;
 
@@ -118,5 +122,19 @@ public class MainActivity extends AppCompatActivity {
             ((TextView) d.findViewById(android.R.id.message))
                     .setMovementMethod(LinkMovementMethod.getInstance());
         }
+    }
+
+    @Override
+    public void onItemSelected(long itemId, Class<? extends IdProvider> aClass) {
+        Intent i;
+        if (aClass.equals(Arrow.class)) {
+            i = new Intent(this, EditArrowActivity.class);
+            i.putExtra(EditArrowActivity.ARROW_ID, itemId);
+        } else {
+            i = new Intent(this, EditBowActivity.class);
+            i.putExtra(EditBowActivity.BOW_ID, itemId);
+        }
+        startActivity(i);
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 }

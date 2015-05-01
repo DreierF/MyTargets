@@ -14,9 +14,10 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.fragments.DistanceFragment;
 import de.dreier.mytargets.managers.DatabaseManager;
 
-public class DistanceItemAdapter extends ArrayAdapter<Integer> {
+public class DistanceItemAdapter extends ArrayAdapter<DistanceFragment.Distance> {
 
     public DistanceItemAdapter(Context context) {
         this(context, 10);
@@ -30,12 +31,12 @@ public class DistanceItemAdapter extends ArrayAdapter<Integer> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = super.getView(position, convertView, parent);
-        ((TextView) convertView).setText(getItem(position) + "m");
+        ((TextView) convertView).setText(getItem(position).toString());
         return convertView;
     }
 
     @Override
     public long getItemId(int position) {
-        return getItem(position);
+        return getItem(position).id;
     }
 }
