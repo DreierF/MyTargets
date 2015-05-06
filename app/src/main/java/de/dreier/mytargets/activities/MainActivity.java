@@ -86,6 +86,9 @@ public class MainActivity extends AppCompatActivity implements
         supportedLanguages.add("nl");
         supportedLanguages.add("it");
         supportedLanguages.add("sl");
+        supportedLanguages.add("ca");
+        supportedLanguages.add("zh");
+        supportedLanguages.add("tr");
 
         final SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(MainActivity.this);

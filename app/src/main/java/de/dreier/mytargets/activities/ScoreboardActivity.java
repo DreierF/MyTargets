@@ -27,9 +27,9 @@ import de.dreier.mytargets.utils.ScoreboardUtils;
 
 public class ScoreboardActivity extends AppCompatActivity {
 
-    public static final String ROUND_ID = "round_id";
+    public static final String TRAINING_ID = "training_id";
 
-    private long mRound;
+    private long mTraining;
     private WebView webView;
     private boolean pageLoaded = true;
 
@@ -39,8 +39,8 @@ public class ScoreboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scoreboard);
 
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra(ROUND_ID)) {
-            mRound = intent.getLongExtra(ROUND_ID, -1);
+        if (intent != null && intent.hasExtra(TRAINING_ID)) {
+            mTraining = intent.getLongExtra(TRAINING_ID, -1);
         }
 
         webView = (WebView) findViewById(R.id.webView);
@@ -65,7 +65,7 @@ public class ScoreboardActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            return ScoreboardUtils.getHTMLString(ScoreboardActivity.this, mRound, true, true, true);
+            return ScoreboardUtils.getHTMLString(ScoreboardActivity.this, mTraining, true, true, true);
         }
 
         @Override

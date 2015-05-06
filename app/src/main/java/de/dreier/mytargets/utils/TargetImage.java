@@ -22,9 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Passe;
-import de.dreier.mytargets.models.Round;
 
 public class TargetImage {
 
@@ -36,52 +34,52 @@ public class TargetImage {
     private int[] target;
     private static final int density = 1;
 
-    public void generateBitmap(Context context, int size, Round roundInfo, long round, OutputStream fOut) {
+    public void generateBitmap(Context context, int size, long round, OutputStream fOut) {
         // Create bitmap to draw on
         Bitmap b = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(b);
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
 
         // Initialize variables
-        int radius = size / 2;
-        DatabaseManager db = DatabaseManager.getInstance(context);
-        ArrayList<Passe> oldOnes = db.getPasses(round);
-        mZoneCount = Target.target_rounds[roundInfo.target].length;
-        init();
-
-        // Draw target
-        target = Target.target_rounds[roundInfo.target];
-        for (int i = mZoneCount; i > 0; i--) {
-            // Select colors to draw with
-            drawColorP.setColor(Target.highlightColor[target[i - 1]]);
-
-            // Draw a ring mit separator line
-            if (i != 2 || roundInfo.target != 3 || !roundInfo.compound) {
-                float rad = (radius * i) / (float) mZoneCount;
-                canvas.drawCircle(radius, radius, rad, drawColorP);
-                canvas.drawCircle(radius, radius, rad,
-                        Target.target_rounds[roundInfo.target][i - 1] == 3 ?
-                                thinWhiteBorder : thinBlackBorder);
-            }
-        }
-
-        // Draw cross in the middle
-        Paint midColor =
-                Target.target_rounds[roundInfo.target][0] == 3 ? thinWhiteBorder : thinBlackBorder;
-        if (roundInfo.target < 5) {
-            float lineLength = radius / (float) (mZoneCount * 6);
-            canvas.drawLine(radius - lineLength, radius, radius + lineLength, radius, midColor);
-            canvas.drawLine(radius, radius - lineLength, radius, radius + lineLength, midColor);
-        } else {
-            float lineLength = radius / (float) (mZoneCount * 4);
-            canvas.drawLine(radius - lineLength, radius - lineLength, radius + lineLength,
-                    radius + lineLength, midColor);
-            canvas.drawLine(radius - lineLength, radius + lineLength, radius + lineLength,
-                    radius - lineLength, midColor);
-        }
-
-        // Draw exact arrow position
-        drawArrows(canvas, radius, oldOnes);
+//        int radius = size / 2;
+//        DatabaseManager db = DatabaseManager.getInstance(context);
+//        ArrayList<Passe> oldOnes = db.getPasses(round);
+//        mZoneCount = Target.target_rounds[roundInfo.target].length;
+//        init();
+//
+//        // Draw target
+//        target = Target.target_rounds[roundInfo.target];
+//        for (int i = mZoneCount; i > 0; i--) {
+//            // Select colors to draw with
+//            drawColorP.setColor(Target.highlightColor[target[i - 1]]);
+//
+//            // Draw a ring mit separator line
+//            if (i != 2 || roundInfo.target != 3 || !roundInfo.compound) {
+//                float rad = (radius * i) / (float) mZoneCount;
+//                canvas.drawCircle(radius, radius, rad, drawColorP);
+//                canvas.drawCircle(radius, radius, rad,
+//                        Target.target_rounds[roundInfo.target][i - 1] == 3 ?
+//                                thinWhiteBorder : thinBlackBorder);
+//            }
+//        }
+//
+//        // Draw cross in the middle
+//        Paint midColor =
+//                Target.target_rounds[roundInfo.target][0] == 3 ? thinWhiteBorder : thinBlackBorder;
+//        if (roundInfo.target < 5) {
+//            float lineLength = radius / (float) (mZoneCount * 6);
+//            canvas.drawLine(radius - lineLength, radius, radius + lineLength, radius, midColor);
+//            canvas.drawLine(radius, radius - lineLength, radius, radius + lineLength, midColor);
+//        } else {
+//            float lineLength = radius / (float) (mZoneCount * 4);
+//            canvas.drawLine(radius - lineLength, radius - lineLength, radius + lineLength,
+//                    radius + lineLength, midColor);
+//            canvas.drawLine(radius - lineLength, radius + lineLength, radius + lineLength,
+//                    radius - lineLength, midColor);
+//        }
+//
+//        // Draw exact arrow position
+//        drawArrows(canvas, radius, oldOnes);
 
         try {
             b.compress(Bitmap.CompressFormat.PNG, 100, fOut);
@@ -137,9 +135,9 @@ public class TargetImage {
         drawColorP.setAntiAlias(true);
     }
 
-    public void generateBitmap(AppCompatActivity context, int size, Round mRoundInfo, long mRound, File f)
+    public void generateBitmap(AppCompatActivity context, int size, long mRound, File f)
             throws FileNotFoundException {
         final FileOutputStream fOut = new FileOutputStream(f);
-        generateBitmap(context, size, mRoundInfo, mRound, fOut);
+        generateBitmap(context, size, mRound, fOut);
     }
 }

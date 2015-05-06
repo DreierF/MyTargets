@@ -8,6 +8,7 @@ public class Training extends IdProvider {
     public Date date = new Date();
     public int reachedPoints;
     public int maxPoints;
+    public int[] scoreCount = new int[3];
 
     @Override
     public long getParentId() {

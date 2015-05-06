@@ -76,9 +76,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         if (i != null && i.hasExtra(ROUND_ID)) {
             mRound = i.getLongExtra(ROUND_ID, -1);
             mStopAfter = i.getIntExtra(STOP_AFTER, -1);
-            savedPasses = db.getPasses(mRound).size();
+            savedPasses = db.getPassesOfRound(mRound).size();
             if (i.hasExtra(PASSE_IND)) {
-                curPasse = i.getIntExtra(PASSE_IND, -1);
+                curPasse = i.getIntExtra(PASSE_IND, -1)+1;
             } else {
                 curPasse = savedPasses + 1;
             }
@@ -202,7 +202,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(InputActivity.this, ScoreboardActivity.class);
-                        intent.putExtra(ScoreboardActivity.ROUND_ID, mRound);
+                        intent.putExtra(ScoreboardActivity.TRAINING_ID, r.getParentId());
                         startActivity(intent);
                     }
                 })

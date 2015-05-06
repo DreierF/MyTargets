@@ -9,6 +9,7 @@ package de.dreier.mytargets.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -30,12 +32,15 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditRoundActivity;
 import de.dreier.mytargets.activities.InputActivity;
+import de.dreier.mytargets.activities.ScoreboardActivity;
 import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
@@ -44,8 +49,11 @@ import de.dreier.mytargets.models.Bow;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Training;
+import de.dreier.mytargets.utils.ScoreboardImage;
+import de.dreier.mytargets.utils.TargetImage;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.views.PasseView;
+import de.dreier.mytargets.views.TargetPasseView;
 
 /**
  * Shows all passes of one round
@@ -66,6 +74,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
     boolean bow_equals = true, arrow_equals = true;
     boolean distance_equals = true;
     private FloatingActionButton passe;
+    private boolean mTargetViewMode = false;
 
     @Override
     protected int getLayoutResource() {
@@ -213,19 +222,16 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
                         ": <b>" + TextUtils.htmlEncode(arrow.name) + "</b>";
             }
         }
-        /*if (!mRounds.comment.isEmpty()) {
-            infoText += "<br>" + getString(R.string.comment) +
-                    ": <b>" + TextUtils.htmlEncode(mRounds.comment) + "</b>";
-        }*/
         infoText += "</font>";
         info.setText(Html.fromHtml(infoText));
 
         // Set number of X, 10, 9 shoots
-        /*infoText = "<font color=#ffffff>X: <b>" + mRounds.scoreCount[0] + "</b><br>" +
+        Training training = db.getTraining(mTraining);
+        infoText = "<font color=#ffffff>X: <b>" + training.scoreCount[0] + "</b><br>" +
                 getString(R.string.ten_x) + ": <b>" +
-                (mRounds.scoreCount[0] + mRounds.scoreCount[1]) + "</b><br>" +
-                getString(R.string.nine) + ": <b>" + mRounds.scoreCount[2] + "</b></font>";*/
-        //score.setText(Html.fromHtml(infoText));
+                (training.scoreCount[0] + training.scoreCount[1]) + "</b><br>" +
+                getString(R.string.nine) + ": <b>" + training.scoreCount[2] + "</b></font>";
+        score.setText(Html.fromHtml(infoText));
     }
 
     @Override
@@ -239,16 +245,17 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         menu.findItem(R.id.action_scoreboard).setVisible(hasPasses);
         menu.findItem(R.id.action_share).setVisible(hasPasses);
         menu.findItem(R.id.action_statistics).setVisible(hasPasses);
+        menu.findItem(R.id.action_view_mode).setVisible(hasPasses);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            /*case R.id.action_scoreboard:
+            case R.id.action_scoreboard:
                 Intent intent = new Intent(activity, ScoreboardActivity.class);
-                intent.putExtra(ScoreboardActivity.ROUND_ID, mRound);
+                intent.putExtra(ScoreboardActivity.TRAINING_ID, mTraining);
                 startActivity(intent);
-                return true;*/
+                return true;
             case R.id.action_statistics:
                 Intent i = new Intent(activity, StatisticsActivity.class);
                 i.putExtra(StatisticsActivity.TRAINING_ID, mTraining);
@@ -256,6 +263,11 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
                 return true;
             case R.id.action_share:
                 showShareDialog();
+                return true;
+            case R.id.action_view_mode:
+                mTargetViewMode = !mTargetViewMode;
+                setList(mRounds, db.getPasses(mTraining), true,
+                        new PasseAdapter(mHeaderHeight + mActionBarSize));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -273,45 +285,44 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
     @Override
     public void onShareDialogConfirmed(final boolean include_text, final boolean dispersion_pattern, final boolean scoreboard, final boolean comments) {
         // Construct share intent
-//        mRounds = db.getRound(mRound);
-//        int max = Target.getMaxPoints(mRounds.target);
-//        int reached = db.getRoundPoints(mRound);
-//        int maxP = mRounds.ppp * max * db.getPasses(mRound).size();
-//        final String text = getString(R.string.my_share_text,
-//                mRounds.scoreCount[0], mRounds.scoreCount[1],
-//                mRounds.scoreCount[2], reached, maxP);
-//
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    final File f = File
-//                            .createTempFile("target", ".png", activity.getExternalCacheDir());
-//                    if (dispersion_pattern && !scoreboard && !comments) {
-//                        new TargetImage().generateBitmap(activity, 800, mRounds, mRound, f);
-//                    } else {
-//                        new ScoreboardImage()
-//                                .generateBitmap(activity, mRound, scoreboard, dispersion_pattern,
-//                                        comments, f);
-//                    }
-//
-//                    // Build and fire intent to ask for share provider
-//                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-//                    if (include_text) {
-//                        shareIntent.putExtra(Intent.EXTRA_TEXT, text);
-//                    }
-//                    if (dispersion_pattern || scoreboard || comments) {
-//                        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
-//                    }
-//                    shareIntent.setType("*/*");
-//                    startActivity(shareIntent);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(activity, getString(R.string.sharing_failed), Toast.LENGTH_SHORT)
-//                            .show();
-//                }
-//            }
-//        }).start();
+        mRounds = db.getRounds(mTraining);
+        Training training = db.getTraining(mTraining);
+
+        final String text = getString(R.string.my_share_text,
+                training.scoreCount[0], training.scoreCount[1],
+                training.scoreCount[2], training.reachedPoints, training.maxPoints);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final File f = File
+                            .createTempFile("target", ".png", activity.getExternalCacheDir());
+                    if (dispersion_pattern && !scoreboard && !comments) {
+                        new TargetImage().generateBitmap(activity, 800, mTraining, f);
+                    } else {
+                        new ScoreboardImage()
+                                .generateBitmap(activity, mTraining, scoreboard, dispersion_pattern,
+                                        comments, f);
+                    }
+
+                    // Build and fire intent to ask for share provider
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    if (include_text) {
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+                    }
+                    if (dispersion_pattern || scoreboard || comments) {
+                        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
+                    }
+                    shareIntent.setType("*/*");
+                    startActivity(shareIntent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(activity, getString(R.string.sharing_failed), Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }
+        }).start();
     }
 
     /*private final View.OnClickListener headerClickListener = new View.OnClickListener() {
@@ -377,18 +388,57 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         }
 
         @Override
-        protected ViewHolder getSecondLevelViewHolder(ViewGroup parent) {
-            View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.passe_card, parent, false);
-            return new ViewHolder(itemView);
+        protected CardViewHolder<Passe> getSecondLevelViewHolder(ViewGroup parent) {
+            if (mTargetViewMode) {
+                View itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.target_passe_card, parent, false);
+                return new TargetViewHolder(itemView);
+            } else {
+                View itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.passe_card, parent, false);
+                return new PasseViewHolder(itemView);
+            }
+        }
+
+        @Override
+        public int getMaxSpan() {
+            return mTargetViewMode ? 2 : 1;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            int type = super.getItemViewType(position);
+            if (type == ITEM_TYPE && mTargetViewMode) {
+                type = ITEM_TYPE_2;
+            }
+            return type;
         }
     }
 
-    public class ViewHolder extends CardViewHolder<Passe> {
+    public class TargetViewHolder extends CardViewHolder<Passe> {
+        public final TargetPasseView mShots;
+        public final TextView mSubtitle;
+
+        public TargetViewHolder(View itemView) {
+            super(itemView, mMultiSelector, PasseFragment.this);
+            mShots = (TargetPasseView) itemView.findViewById(R.id.shoots);
+            mSubtitle = (TextView) itemView.findViewById(R.id.passe);
+        }
+
+        @Override
+        public void bindCursor() {
+            Context context = mSubtitle.getContext();
+            Round r = db.getRound(mItem.roundId);
+            mShots.setPasse(mItem, r.target);
+            mSubtitle.setText(context.getString(R.string.passe_n, (mItem.index + 1)));
+        }
+    }
+
+    public class PasseViewHolder extends CardViewHolder<Passe> {
         public final PasseView mShots;
         public final TextView mSubtitle;
 
-        public ViewHolder(View itemView) {
+        public PasseViewHolder(View itemView) {
             super(itemView, mMultiSelector, PasseFragment.this);
             mShots = (PasseView) itemView.findViewById(R.id.shoots);
             mSubtitle = (TextView) itemView.findViewById(R.id.passe);
@@ -402,6 +452,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
             mSubtitle.setText(context.getString(R.string.passe_n, (mItem.index + 1)));
         }
     }
+
 
     public class HeaderViewHolder extends CardViewHolder<Round> {
         public final TextView mTitle;
@@ -458,7 +509,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
                 infoText = infoText.substring(4);
             }
 
-             mSubtitle.setText(Html.fromHtml(infoText));
+            mSubtitle.setText(Html.fromHtml(infoText));
         }
 
         @Override

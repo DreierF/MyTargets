@@ -88,6 +88,8 @@ public abstract class SimpleFragmentActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             int text = getIntent().getIntExtra("title", R.string.app_name);
             setTitle(text);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
         }
 
         @Override

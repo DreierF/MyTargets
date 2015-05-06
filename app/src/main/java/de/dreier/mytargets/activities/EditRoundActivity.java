@@ -126,6 +126,7 @@ public class EditRoundActivity extends AppCompatActivity {
                         SimpleFragmentActivity.BowItemSelectActivity.class);
                 i.putExtra("title", R.string.bow);
                 startActivityForResult(i, REQ_SELECTED_BOW);
+
             }
         });
 

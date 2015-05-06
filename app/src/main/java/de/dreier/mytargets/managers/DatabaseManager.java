@@ -406,14 +406,55 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 passe.roundId = res.getLong(0);
                 if (oldRoundId != passe.roundId) {
                     pIndex = 0;
+                    oldRoundId = passe.roundId;
                 }
-                passe.index = pIndex;
+                passe.index = pIndex++;
                 for (int i = 0; i < ppp; i++) {
                     passe.shot[i].id = res.getLong(2);
                     passe.shot[i].zone = res.getInt(3);
                     passe.shot[i].x = res.getFloat(4);
                     passe.shot[i].y = res.getFloat(5);
                     passe.shot[i].comment = res.getString(6);
+                    res.moveToNext();
+                }
+                list.add(passe);
+            } while (!res.isAfterLast());
+        }
+        res.close();
+        return list;
+    }
+
+    public ArrayList<Passe> getPassesOfRound(long round) {
+        Cursor res = db.rawQuery("SELECT p._id, s._id, s.points, s.x, s.y, s.comment, " +
+                "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id) " +
+                "FROM PASSE p  " +
+                "LEFT JOIN SHOOT s ON p._id = s.passe " +
+                "WHERE p.round = " + round + " " +
+                "ORDER BY p._id ASC, s._id ASC", null);
+        ArrayList<Passe> list = new ArrayList<>();
+        if (res.moveToFirst()) {
+            long oldRoundId = -1;
+            int pIndex = 0;
+            do {
+                int ppp = res.getInt(6);
+                if (ppp == 0) {
+                    res.moveToNext();
+                    continue;
+                }
+                Passe passe = new Passe(ppp);
+                passe.id = res.getLong(0);
+                passe.roundId = round;
+                if (oldRoundId != passe.roundId) {
+                    pIndex = 0;
+                    oldRoundId = passe.roundId;
+                }
+                passe.index = pIndex++;
+                for (int i = 0; i < ppp; i++) {
+                    passe.shot[i].id = res.getLong(1);
+                    passe.shot[i].zone = res.getInt(2);
+                    passe.shot[i].x = res.getFloat(3);
+                    passe.shot[i].y = res.getFloat(4);
+                    passe.shot[i].comment = res.getString(5);
                     res.moveToNext();
                 }
                 list.add(passe);
@@ -488,6 +529,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
             tr.date = new Date(res.getLong(2));
         }
         res.close();
+
+        // Get number of X, 10 and 9 score
+        Cursor cur = db.rawQuery("SELECT s.points AS zone, COUNT(*) " +
+                "FROM ROUND r, PASSE p, SHOOT s " +
+                "WHERE r._id=p.round AND r.training=" + training +
+                " AND s.passe=p._id AND " +
+                "s.points<3 AND s.points>-1 GROUP BY zone", null);
+        if (cur.moveToFirst()) {
+            do {
+                tr.scoreCount[cur.getInt(0)] = cur.getInt(1);
+            } while (cur.moveToNext());
+        }
+        cur.close();
         return tr;
     }
 
@@ -549,6 +603,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         Passe p = new Passe(count);
         p.id = passeId;
+        p.index = -1;
         res.moveToFirst();
         for (int i = 0; i < count; i++) {
             p.shot[i].id = res.getLong(0);
@@ -571,7 +626,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
         long passeId = res.getLong(0);
         res.close();
-        return getPasse(passeId);
+        Passe p = getPasse(passeId);
+        p.index = passe-1;
+        return p;
     }
 
     public Bow getBow(long bowId, boolean small) {
@@ -975,7 +1032,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
      */
     public List<DistanceFragment.Distance> getDistances(int curDist) {
         ArrayList<DistanceFragment.Distance> distances = new ArrayList<>();
-        HashSet<Integer> set= new HashSet<>();
+        HashSet<Integer> set = new HashSet<>();
 
         for (Integer dist : distanceValues) {
             distances.add(new DistanceFragment.Distance(dist));

@@ -199,5 +199,6 @@
     <string name="data">Data</string>
     <string name="create_backup_on_sd">Creates a backup on sd card</string>
     <string name="restore_backup">Restores a backup</string>
+    <string name="switch_view">Switch view mode</string>
 
 </resources>

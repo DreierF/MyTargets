@@ -19,6 +19,7 @@ import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.models.Passe;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Shot;
+import de.dreier.mytargets.models.Training;
 
 public class ScoreboardUtils {
 
@@ -27,79 +28,83 @@ public class ScoreboardUtils {
             ".myTable td, .myTable th { padding:5px; border:1px solid #000; text-align: center; font-family: Roboto, Sans-serif; }\n" +
             "</style>";
 
-    public static String getHTMLString(Context context, long round, boolean scoreboard, boolean withTarget, boolean showComments) {
+    public static String getHTMLString(Context context, long trainingId, boolean scoreboard, boolean withTarget, boolean showComments) {
         // Query information from database
         DatabaseManager db = DatabaseManager.getInstance(context);
-        Round info = db.getRound(round);
-        ArrayList<Passe> passes = db.getPasses(round);
+        Training training = db.getTraining(trainingId);
+        ArrayList<Round> rounds = db.getRounds(trainingId);
 
         // Initialize html Strings
         String html = "<html>" + CSS;
 
         if (scoreboard) {
-            html += "<table class=\"myTable\"><tr>" +
-                    "<th colspan=\"" + info.ppp + "\">" + context.getString(R.string.arrows) +
-                    "</th>" +
-                    "<th rowspan=\"2\">" + context.getString(R.string.sum) + "</th>" +
-                    "<th rowspan=\"2\">" + context.getString(R.string.carry) + "</th>" +
-                    "</tr><tr>";
-            for (int i = 1; i <= info.ppp; i++) {
-                html += "<th>" + i + "</th>";
-            }
-            html += "</tr>";
+            html += "<table class=\"myTable\">";
+            html += getTableHeader(context, rounds.get(0).ppp);
             int carry = 0, count = 0;
-            int i = 0;
-            for (Passe passe : passes) {
-                html += "<tr>";
-                int sum = 0;
-                for (Shot shot : passe.shot) {
-                    html += "<td>";
-                    html += Target.getStringByZone(info.target, shot.zone);
-                    html += "</td>";
-                    int points = Target.getPointsByZone(info.target, shot.zone);
-                    sum += points;
-                    carry += points;
-                    count++;
+            for (Round round : rounds) {
+                ArrayList<Passe> passes = db.getPasses(round.getId());
+                for (Passe passe : passes) {
+                    html += "<tr>";
+                    int sum = 0;
+                    for (Shot shot : passe.shot) {
+                        html += "<td>";
+                        html += Target.getStringByZone(round.target, shot.zone);
+                        html += "</td>";
+                        int points = Target.getPointsByZone(round.target, shot.zone);
+                        sum += points;
+                        carry += points;
+                        count++;
+                    }
+                    html += "<td>" + sum + "</td>";
+                    html += "<td>" + carry + "</td>";
+                    html += "</tr>";
                 }
-                html += "<td>" + sum + "</td>";
-                html += "<td>" + carry + "</td>";
-                html += "</tr>";
-                i++;
             }
-            float avg = ((carry * 100) / count) / 100.0f;
+            float avg = 0;
+            if (count > 0) {
+                avg = ((carry * 100) / count) / 100.0f;
+            }
             html += "</table>";
             html += "<table class=\"myTable\" style=\"margin-top:5px;\">" +
                     "<tr><th>" + context.getString(R.string.nine) + "</th>" +
                     "<th>" + context.getString(R.string.ten_x) + "</th>" +
                     "<th>X</th>" +
                     "<th>" + context.getString(R.string.average) + "</th></tr>" +
-                    "<tr><td>" + info.scoreCount[2] + "</td>" +
-                    "<td>" + (info.scoreCount[0] + info.scoreCount[1]) + "</td>" +
-                    "<td>" + info.scoreCount[0] + "</td>" +
+                    "<tr><td>" + training.scoreCount[2] + "</td>" +
+                    "<td>" + (training.scoreCount[0] + training.scoreCount[1]) + "</td>" +
+                    "<td>" + training.scoreCount[0] + "</td>" +
                     "<td>" + avg + "</td>" +
                     "</tr></table>";
         }
 
         if (showComments) {
             String comments = "<table class=\"myTable\" style=\"margin-top:5px;\">" +
+                    "<th>" + context.getString(R.string.round) + "</th>" +
                     "<th>" + context.getString(R.string.passe) + "</th>" +
                     "<th>" + context.getString(R.string.points) + "</th>" +
                     "<th>" + context.getString(R.string.comment) + "</th></tr>";
             int commentsCount = 0;
 
-            int i = 1;
-            for (Passe passe : passes) {
-                for (Shot shot : passe.shot) {
-                    if (!TextUtils.isEmpty(shot.comment)) {
-                        comments += "<tr><td>" + i + "</td>" +
-                                "<td>" + Target.getStringByZone(info.target, shot.zone) + "</td>" +
-                                "<td>" +
-                                TextUtils.htmlEncode(shot.comment).replace("\n", "<br />") +
-                                "</td></tr>";
-                        commentsCount++;
+            int j = 0;
+            for (Round round : rounds) {
+                int i = 1;
+                ArrayList<Passe> passes = db.getPasses(round.getId());
+                for (Passe passe : passes) {
+                    for (Shot shot : passe.shot) {
+                        if (!TextUtils.isEmpty(shot.comment)) {
+                            comments += "<tr><td>" + j + "</td>" +
+                                    "<td>" + i + "</td>" +
+                                    "<td>" + Target.getStringByZone(round.target, shot.zone) +
+                                    "</td>" +
+                                    "<td>" +
+                                    TextUtils.htmlEncode(shot.comment).replace("\n", "<br />") +
+                                    "</td></tr>";
+                            commentsCount++;
+                        }
                     }
+                    i++;
                 }
-                i++;
+                j++;
             }
 
             // If a minimum of one comment is present show comments table
@@ -110,7 +115,7 @@ public class ScoreboardUtils {
 
         if (withTarget) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            new TargetImage().generateBitmap(context, 800, info, round, byteArrayOutputStream);
+            new TargetImage().generateBitmap(context, 800, trainingId, byteArrayOutputStream);
 
             // Convert bitmap to Base64 encoded image for web
             byte[] byteArray = byteArrayOutputStream.toByteArray();
@@ -121,6 +126,20 @@ public class ScoreboardUtils {
         }
 
         html += "</html>";
+        return html;
+    }
+
+    private static String getTableHeader(Context context, int ppp) {
+        String html = "<tr>" +
+                "<th colspan=\"" + ppp + "\">" + context.getString(R.string.arrows) +
+                "</th>" +
+                "<th rowspan=\"2\">" + context.getString(R.string.sum) + "</th>" +
+                "<th rowspan=\"2\">" + context.getString(R.string.carry) + "</th>" +
+                "</tr><tr>";
+        for (int i = 1; i <= ppp; i++) {
+            html += "<th>" + i + "</th>";
+        }
+        html += "</tr>";
         return html;
     }
 }

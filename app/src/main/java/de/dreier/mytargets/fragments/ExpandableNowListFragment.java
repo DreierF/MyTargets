@@ -16,7 +16,7 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,7 +45,8 @@ import de.dreier.mytargets.views.CardItemDecorator;
 /**
  * Shows all rounds of one settings_only day
  */
-public abstract class ExpandableNowListFragment<H extends IdProvider, C extends IdProvider> extends Fragment
+public abstract class ExpandableNowListFragment<H extends IdProvider, C extends IdProvider>
+        extends Fragment
         implements View.OnClickListener, OnCardClickListener<C> {
 
     public static final String TRAINING_ID = "training_id";
@@ -59,7 +60,7 @@ public abstract class ExpandableNowListFragment<H extends IdProvider, C extends 
     DatabaseManager db;
     boolean mEditable = false;
     RecyclerView mRecyclerView;
-    ExpandableNowListAdapter<H,C> mAdapter;
+    ExpandableNowListAdapter<H, C> mAdapter;
 
     // Action mode handling
     final MultiSelector mMultiSelector = new MultiSelector();
@@ -69,6 +70,7 @@ public abstract class ExpandableNowListFragment<H extends IdProvider, C extends 
     private View mNewLayout;
     private TextView mNewText;
     FloatingActionsMenu mFab;
+    private GridLayoutManager manager;
 
     int getLayoutResource() {
         return R.layout.fragment_list;
@@ -79,11 +81,22 @@ public abstract class ExpandableNowListFragment<H extends IdProvider, C extends 
         View rootView = inflater.inflate(getLayoutResource(), container, false);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(android.R.id.list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new CardItemDecorator(getActivity()));
         mRecyclerView.setHasFixedSize(true);
 
-        mFab = (FloatingActionsMenu)rootView.findViewById(R.id.fab);
+        manager = new GridLayoutManager(getActivity(), 2);
+        mRecyclerView.setLayoutManager(manager);
+        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (mAdapter != null) {
+                    return mAdapter.isHeader(position) ? manager.getSpanCount() : 1;
+                }
+                return 1;
+            }
+        });
+
+        mFab = (FloatingActionsMenu) rootView.findViewById(R.id.fab);
         mFab.setOnClickListener(this);
 
         mNewLayout = rootView.findViewById(R.id.new_layout);
@@ -112,7 +125,7 @@ public abstract class ExpandableNowListFragment<H extends IdProvider, C extends 
         init(getArguments(), savedInstanceState);
     }
 
-    void setList(ArrayList<H> list, ArrayList<C> children, boolean opened, ExpandableNowListAdapter<H,C> adapter) {
+    void setList(ArrayList<H> list, ArrayList<C> children, boolean opened, ExpandableNowListAdapter<H, C> adapter) {
         if (mRecyclerView.getAdapter() == null) {
             mAdapter = adapter;
             mAdapter.setList(list, children, opened);
@@ -123,6 +136,7 @@ public abstract class ExpandableNowListFragment<H extends IdProvider, C extends 
         }
         mNewLayout.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
         mNewText.setText(newStringRes);
+        manager.setSpanCount(adapter.getMaxSpan());
     }
 
     private final ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(
