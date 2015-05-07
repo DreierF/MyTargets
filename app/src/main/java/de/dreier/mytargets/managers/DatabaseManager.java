@@ -851,8 +851,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public void updateTraining(Training training) {
         ContentValues values = new ContentValues();
-        values.put(TRAINING_DATE, System.currentTimeMillis());
         values.put(TRAINING_TITLE, training.title);
+        values.put(TRAINING_DATE, training.date.getTime());
         update(training, values, TABLE_TRAINING);
     }
 

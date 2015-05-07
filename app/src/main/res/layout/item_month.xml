@@ -22,15 +22,17 @@
 
         <TextView
             android:id="@+id/totalPoints"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="right"
             android:text="5462/6000"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <TextView
             android:id="@+id/totalPercentage"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="right"
             android:text="80%"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
     </LinearLayout>

@@ -457,7 +457,8 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
     public class HeaderViewHolder extends CardViewHolder<Round> {
         public final TextView mTitle;
         public final TextView mSubtitle;
-        public final TextView mGes;
+        private final TextView mPoints;
+        private final TextView mPercentage;
 
         public HeaderViewHolder(View itemView) {
             super(itemView, null, null);
@@ -465,16 +466,17 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
             itemView.setOnLongClickListener(this);
             mTitle = (TextView) itemView.findViewById(R.id.round);
             mSubtitle = (TextView) itemView.findViewById(R.id.dist);
-            mGes = (TextView) itemView.findViewById(R.id.gesRound);
+            mPoints = (TextView) itemView.findViewById(R.id.totalPoints);
+            mPercentage = (TextView) itemView.findViewById(R.id.totalPercentage);
         }
 
         @Override
         public void bindCursor() {
             Context context = mTitle.getContext();
             mTitle.setText(context.getString(R.string.round) + " " + (mRounds.indexOf(mItem) + 1));
-            String percent = mItem.maxPoints == 0 ? "" :
-                    " (" + (mItem.reachedPoints * 100 / mItem.maxPoints) + "%)";
-            mGes.setText(mItem.reachedPoints + "/" + mItem.maxPoints + percent);
+            mPoints.setText(mItem.reachedPoints + "/" + mItem.maxPoints);
+            String percent = mItem.maxPoints == 0 ? "" : (mItem.reachedPoints * 100 / mItem.maxPoints) + "%";
+            mPercentage.setText(percent);
 
             String infoText = "";
             if (!distance_equals || !indoor_equals) {

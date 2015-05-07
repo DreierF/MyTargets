@@ -8,6 +8,7 @@
 package de.dreier.mytargets.activities;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,15 +19,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
 import com.iangclifton.android.floatlabel.FloatLabel;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.ArrowItemAdapter;
 import de.dreier.mytargets.adapters.BowItemAdapter;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
+import de.dreier.mytargets.fragments.DatePickerFragment;
 import de.dreier.mytargets.fragments.DistanceFragment;
 import de.dreier.mytargets.fragments.PasseFragment;
 import de.dreier.mytargets.managers.DatabaseManager;
@@ -37,10 +44,11 @@ import de.dreier.mytargets.views.DialogSpinner;
 import de.dreier.mytargets.views.DistanceDialogSpinner;
 import de.dreier.mytargets.views.NumberPicker;
 
-public class EditRoundActivity extends AppCompatActivity {
+public class EditRoundActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
+    public static final String EDIT_TRAINING = "edit_training";
     private static final int REQ_SELECTED_ARROW = 1;
     private static final int REQ_SELECTED_BOW = 2;
     private static final int REQ_SELECTED_TARGET = 3;
@@ -57,6 +65,10 @@ public class EditRoundActivity extends AppCompatActivity {
     private EditText training;
     private FloatLabel comment;
     private NumberPicker rounds, arrows;
+    private Button training_date;
+    private Date date = new Date();
+    private boolean editTraining;
+    private View scrollView;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -77,10 +89,29 @@ public class EditRoundActivity extends AppCompatActivity {
             if (i.hasExtra(ROUND_ID)) {
                 mRound = i.getLongExtra(ROUND_ID, -1);
             }
+            if (i.hasExtra(EDIT_TRAINING)) {
+                editTraining = i.getBooleanExtra(EDIT_TRAINING, false);
+            }
         }
         SharedPreferences prefs = getSharedPreferences(MyBackupAgent.PREFS, 0);
 
         training = (EditText) findViewById(R.id.training);
+        training_date = (Button) findViewById(R.id.training_date);
+        training_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Package bundle with fragment arguments
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(DatePickerFragment.ARG_CURRENT_DATE, date);
+
+                // Create and show date picker
+                DatePickerFragment datePickerDialog = new DatePickerFragment();
+                datePickerDialog.setArguments(bundle);
+                datePickerDialog.show(getSupportFragmentManager(), "datepicker");
+            }
+        });
+
+        scrollView = findViewById(R.id.scrollView);
 
         // Distance
         distance = (DistanceDialogSpinner) findViewById(R.id.distance_spinner);
@@ -193,13 +224,33 @@ public class EditRoundActivity extends AppCompatActivity {
             View not_editable = findViewById(R.id.not_editable);
             not_editable.setVisibility(View.GONE);
         }
+
         if (mTraining == -1) {
             training.setText(getString(R.string.training));
+            setTrainingDate();
             getSupportActionBar().setTitle(R.string.new_training);
+        } else if(editTraining) {
+            DatabaseManager db = DatabaseManager.getInstance(this);
+            Training train = db.getTraining(mTraining);
+            training.setText(train.title);
+            date = train.date;
+            setTrainingDate();
+            getSupportActionBar().setTitle(R.string.new_training);
+            scrollView.setVisibility(View.GONE);
         } else {
             View training_container = findViewById(R.id.training_container);
             training_container.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        date = new Date(new GregorianCalendar(year, monthOfYear, dayOfMonth).getTimeInMillis());
+        setTrainingDate();
+    }
+
+    private void setTrainingDate() {
+        training_date.setText(SimpleDateFormat.getDateInstance().format(date));
     }
 
     @Override
@@ -239,13 +290,34 @@ public class EditRoundActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
-            onSave();
+            finish();
+            if(!editTraining) {
+                if(mTraining==-1){
+                    onSaveTraining();
+                }
+                onSaveRound();
+                overridePendingTransition(R.anim.right_in, R.anim.left_out);
+            } else {
+                onSaveTraining();
+                overridePendingTransition(R.anim.left_in, R.anim.right_out);
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    void onSave() {
+    void onSaveTraining() {
+        DatabaseManager db = DatabaseManager.getInstance(this);
+        String title = training.getText().toString();
+        Training training = new Training();
+        training.id = mTraining;
+        training.title = title;
+        training.date = date;
+        db.updateTraining(training);
+        mTraining = training.id;
+    }
+
+    void onSaveRound() {
         Round round = new Round();
         round.target = (int) target.getSelectedItemId();
 
@@ -257,29 +329,21 @@ public class EditRoundActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     mBowId = -2;
-                                    onSave();
+                                    onSaveRound();
                                 }
                             })
                     .setNegativeButton(R.string.other_bow, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mBowId = -1;
-                            onSave();
+                            onSaveRound();
                         }
-                    })
+                    }).setCancelable(false)
                     .show();
             return;
         }
 
         DatabaseManager db = DatabaseManager.getInstance(this);
-
-        String title = training.getText().toString();
-        if (mTraining == -1) {
-            Training training = new Training();
-            training.title = title;
-            db.updateTraining(training);
-            mTraining = training.id;
-        }
 
         round.id = mRound;
         round.training = mTraining;
@@ -309,7 +373,6 @@ public class EditRoundActivity extends AppCompatActivity {
         editor.putBoolean("indoor", round.indoor);
         editor.apply();
 
-        finish();
         if (mRound == -1) {
             Intent i = new Intent(this, SimpleFragmentActivity.TrainingActivity.class);
             i.putExtra(PasseFragment.TRAINING_ID, mTraining);
@@ -320,7 +383,6 @@ public class EditRoundActivity extends AppCompatActivity {
             i.putExtra(InputActivity.ROUND_ID, round.id);
             i.putExtra(InputActivity.STOP_AFTER, after_rounds);
             startActivity(i);
-            overridePendingTransition(R.anim.right_in, R.anim.left_out);
         }
     }
 

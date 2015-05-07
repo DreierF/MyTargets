@@ -27,7 +27,6 @@ import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
 import de.dreier.mytargets.models.Month;
 import de.dreier.mytargets.models.Training;
-import de.dreier.mytargets.utils.TextInputDialog;
 
 /**
  * Shows an overview over all trying days
@@ -84,23 +83,11 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
 
     @Override
     protected void onEdit(final Training item) {
-        new TextInputDialog.Builder(activity)
-                .setTitle(R.string.training)
-                .setDefaultText(item.title)
-                .setOnClickListener(new TextInputDialog.OnClickListener() {
-                    @Override
-                    public void onCancelClickListener() {
-
-                    }
-
-                    @Override
-                    public void onOkClickListener(String input) {
-                        item.title = input;
-                        db.updateTraining(item);
-                        reloadData();
-                    }
-                })
-                .show();
+        Intent i = new Intent(getActivity(), EditRoundActivity.class);
+        i.putExtra(EditRoundActivity.TRAINING_ID, item.getId());
+        i.putExtra(EditRoundActivity.EDIT_TRAINING, true);
+        startActivity(i);
+        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     protected class TrainingAdapter extends ExpandableNowListAdapter<Month, Training> {

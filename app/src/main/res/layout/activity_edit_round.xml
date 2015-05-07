@@ -37,11 +37,31 @@
                 android:text="@string/title"
                 android:textColor="@color/colorAccent"/>
 
-            <EditText
-                android:id="@+id/training"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"/>
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/training"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/training_date"
+                    android:layout_toStartOf="@+id/training_date"
+                    android:inputType="text"/>
+
+                <Button
+                    android:id="@+id/training_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/training"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingLeft="5dp"
+                    android:textSize="14sp"
+                    android:textStyle="normal"/>
+
+            </RelativeLayout>
 
         </LinearLayout>
 
@@ -52,6 +72,7 @@
         android:layout_height="match_parent">
 
         <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
