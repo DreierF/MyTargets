@@ -33,9 +33,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -72,42 +70,6 @@ public class BackupUtils {
         return false;
     }
 
-    public static void Backup(Activity a) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(a);
-        if (android.os.Environment.getExternalStorageState().equals(
-                android.os.Environment.MEDIA_MOUNTED)) {
-            GregorianCalendar c = new GregorianCalendar();
-
-            String dir =
-                    Environment.getExternalStorageDirectory().toString() + "/" + FOLDER_NAME + "/";
-            String file = dir + "backup_" + c.get(Calendar.YEAR) + "_"
-                    + (c.get(Calendar.MONTH) + 1) + "_" + c.get(Calendar.DATE)
-                    + ".zip";
-            try {
-                File f = new File(dir);
-                //noinspection ResultOfMethodCallIgnored
-                f.mkdir();
-                if (!f.exists() || !f.isDirectory()) {
-                    throw new IOException(a.getString(R.string.dir_not_created));
-                }
-
-                zip(a, file);
-
-                builder.setTitle(R.string.backup_successful);
-                builder.setMessage(a.getString(R.string.backup_saved_as, file));
-            } catch (IOException e) {
-                builder.setTitle(R.string.backup_failed);
-                builder.setMessage(a.getString(R.string.backup_error, e.getMessage()));
-            }
-        } else {
-            builder.setTitle(R.string.sd_card_not_available_title);
-            builder.setMessage(R.string.sd_card_not_available_desc);
-        }
-        builder.setNegativeButton(null, null);
-        builder.setPositiveButton(android.R.string.ok, null).show();
-    }
-
-
     public static void copy(File src, File dst) throws IOException {
         FileInputStream inStream = new FileInputStream(src);
         FileOutputStream outStream = new FileOutputStream(dst);
@@ -136,9 +98,31 @@ public class BackupUtils {
         SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");
         String fileName =
                 "/" + FOLDER_NAME + "/exported_data_" + format.format(new Date()) + ".csv";
+        File f = new File(baseDir);
+        f.mkdir();
+        if (!f.exists() || !f.isDirectory()) {
+            throw new IOException(context.getString(R.string.dir_not_created));
+        }
         File file = new File(baseDir + fileName);
         db.exportAll(file);
         return Uri.fromFile(file);
+    }
+
+    public static Uri backup(Context context) throws IOException {
+        String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");
+        String fileName = baseDir +
+                "/" + FOLDER_NAME + "/backup_" + format.format(new Date()) + ".zip";
+        File f = new File(baseDir);
+        f.mkdir();
+        if (!f.exists() || !f.isDirectory()) {
+            throw new IOException(context.getString(R.string.dir_not_created));
+        }
+
+        zip(context, fileName);
+
+        return Uri.fromFile(new File(fileName));
     }
 
     private static void zip(Context context, String zipFileName) {

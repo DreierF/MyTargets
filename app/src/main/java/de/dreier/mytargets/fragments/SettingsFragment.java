@@ -68,7 +68,7 @@ public class SettingsFragment extends PreferenceFragment
         try {
             sec = Integer.parseInt(
                     getPreferenceManager().getSharedPreferences().getString(key, def));
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             sec = Integer.parseInt(def);
             getPreferenceManager().getSharedPreferences().edit().putString(key, def).apply();
         }
@@ -89,9 +89,9 @@ public class SettingsFragment extends PreferenceFragment
         if (preference.getKey().equals("pref_import")) {
             showFilePicker();
         } else if (preference.getKey().equals("pref_backup")) {
-            BackupUtils.Backup(getActivity());
+            save(false);
         } else if (preference.getKey().equals("pref_export")) {
-            export();
+            save(true);
         } else if (preference.getKey().equals("pref_rate")) {
             rate();
         } else if (preference.getKey().equals("pref_share")) {
@@ -107,7 +107,7 @@ public class SettingsFragment extends PreferenceFragment
 
     private void licence(LicensesDialog licences) {
         Licenses.init(getActivity());
-        final List<LicenseEntry> list = new ArrayList<>();
+        final List<LicenseEntry> list = new ArrayList<>(); //TODO
         list.add(Licenses.createLicense("ksoichiro", "1.5.0", "Android-ObservableScrollView",
                 "Copyright 2014 Soichiro Kashima"));
         list.add(Licenses.createLicense("Machinarius", "0.1.1", "PreferenceFragment-Compat",
@@ -141,13 +141,17 @@ public class SettingsFragment extends PreferenceFragment
         startActivity(sendIntent);
     }
 
-    private void export() {
+    private void save(final boolean export) {
         new AsyncTask<Void, Void, Uri>() {
 
             @Override
             protected Uri doInBackground(Void... params) {
                 try {
-                    return BackupUtils.export(getActivity().getApplicationContext());
+                    if (export) {
+                        return BackupUtils.export(getActivity().getApplicationContext());
+                    } else {
+                        return BackupUtils.backup(getActivity().getApplicationContext());
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;
@@ -160,11 +164,16 @@ public class SettingsFragment extends PreferenceFragment
                 if (uri != null) {
                     Intent email = new Intent(Intent.ACTION_SEND);
                     email.putExtra(Intent.EXTRA_STREAM, uri);
-                    email.setType("text/csv");
+                    if (export) {
+                        email.setType("text/csv");
+                    } else {
+                        email.setType("application/zip");
+                    }
                     startActivity(
                             Intent.createChooser(email, getString(R.string.send_exported)));
                 } else {
-                    Toast.makeText(getActivity(), R.string.exporting_failed,
+                    Toast.makeText(getActivity(),
+                            export ? R.string.exporting_failed : R.string.backup_failed,
                             Toast.LENGTH_LONG).show();
                 }
             }
