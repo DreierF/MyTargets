@@ -13,7 +13,9 @@ import android.content.DialogInterface;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import de.dreier.mytargets.R;
 
@@ -26,6 +28,7 @@ public class TextInputDialog {
         private final Context mContext;
         private OnClickListener mClickListener;
         private int mInputType;
+        private String[] mChoices;
 
         public Builder(Context context) {
             mContext = context;
@@ -38,6 +41,15 @@ public class TextInputDialog {
             final EditText input = (EditText) view.findViewById(R.id.shot_comment);
             input.setInputType(mInputType);
             input.setText(mDefaultText);
+            final Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
+            if (mChoices != null) {
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext,
+                        android.R.layout.simple_spinner_item, mChoices);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+                spinner.setSelection(0);
+                spinner.setVisibility(View.VISIBLE);
+            }
 
             new AlertDialog.Builder(mContext)
                     .setTitle(mTitle)
@@ -45,7 +57,11 @@ public class TextInputDialog {
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            mClickListener.onOkClickListener(input.getText().toString());
+                            String s = input.getText().toString();
+                            if (mChoices != null) {
+                                s += spinner.getSelectedItem();
+                            }
+                            mClickListener.onOkClickListener(s);
                             dialog.dismiss();
                         }
                     })
@@ -78,11 +94,16 @@ public class TextInputDialog {
             mInputType = type;
             return this;
         }
+
+        public Builder setSpinnerItems(String[] strings) {
+            mChoices = strings;
+            return this;
+        }
     }
 
-    public static interface OnClickListener {
-        public void onCancelClickListener();
+    public interface OnClickListener {
+        void onCancelClickListener();
 
-        public void onOkClickListener(String input);
+        void onOkClickListener(String input);
     }
 }

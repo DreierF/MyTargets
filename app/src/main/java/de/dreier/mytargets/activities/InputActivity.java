@@ -309,7 +309,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
         // Load bow settings
         if (r.bow > 0) {
-            text += r.distance + ": " + db.getSetting(r.bow, r.distanceVal);
+            text += r.distance + ": " + db.getSetting(r.bow, r.distance);
         }
         return new NotificationInfo(r, title, text);
     }

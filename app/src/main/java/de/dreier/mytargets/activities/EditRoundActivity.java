@@ -37,6 +37,7 @@ import de.dreier.mytargets.fragments.DatePickerFragment;
 import de.dreier.mytargets.fragments.DistanceFragment;
 import de.dreier.mytargets.fragments.PasseFragment;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.models.Distance;
 import de.dreier.mytargets.models.Round;
 import de.dreier.mytargets.models.Training;
 import de.dreier.mytargets.utils.MyBackupAgent;
@@ -44,7 +45,8 @@ import de.dreier.mytargets.views.DialogSpinner;
 import de.dreier.mytargets.views.DistanceDialogSpinner;
 import de.dreier.mytargets.views.NumberPicker;
 
-public class EditRoundActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class EditRoundActivity extends AppCompatActivity
+        implements DatePickerDialog.OnDateSetListener {
 
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
@@ -121,7 +123,7 @@ public class EditRoundActivity extends AppCompatActivity implements DatePickerDi
                 Intent i = new Intent(EditRoundActivity.this,
                         SimpleFragmentActivity.DistanceItemSelectActivity.class);
                 i.putExtra("title", R.string.distance);
-                i.putExtra(DistanceFragment.CUR_DISTANCE, (int) distance.getSelectedItemId());
+                i.putExtra(DistanceFragment.CUR_DISTANCE, distance.getSelectedItemId());
                 startActivityForResult(i, REQ_SELECTED_DISTANCE);
             }
         });
@@ -199,7 +201,9 @@ public class EditRoundActivity extends AppCompatActivity implements DatePickerDi
 
         if (mRound == -1) {
             // Initialise with default values
-            distance.setItemId(prefs.getInt("distance", 10));
+            int dist = prefs.getInt("distance", 10);
+            String unit = prefs.getString("unit", "m");
+            distance.setItemId(new Distance(dist, unit).getId());
             indoor.setChecked(prefs.getBoolean("indoor", false));
             outdoor.setChecked(!prefs.getBoolean("indoor", false));
             arrows.setValue(prefs.getInt("ppp", 3));
@@ -212,7 +216,7 @@ public class EditRoundActivity extends AppCompatActivity implements DatePickerDi
             // Load saved values
             DatabaseManager db = DatabaseManager.getInstance(this);
             Round r = db.getRound(mRound);
-            distance.setItemId(r.distanceVal);
+            distance.setItemId(r.distance.getId());
             indoor.setChecked(r.indoor);
             outdoor.setChecked(!r.indoor);
             arrows.setValue(r.ppp);
@@ -229,7 +233,7 @@ public class EditRoundActivity extends AppCompatActivity implements DatePickerDi
             training.setText(getString(R.string.training));
             setTrainingDate();
             getSupportActionBar().setTitle(R.string.new_training);
-        } else if(editTraining) {
+        } else if (editTraining) {
             DatabaseManager db = DatabaseManager.getInstance(this);
             Training train = db.getTraining(mTraining);
             training.setText(train.title);
@@ -291,8 +295,8 @@ public class EditRoundActivity extends AppCompatActivity implements DatePickerDi
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
             finish();
-            if(!editTraining) {
-                if(mTraining==-1){
+            if (!editTraining) {
+                if (mTraining == -1) {
                     onSaveTraining();
                 }
                 onSaveRound();
@@ -353,8 +357,7 @@ public class EditRoundActivity extends AppCompatActivity implements DatePickerDi
             round.bow = mBowId;
         }
 
-        round.distanceVal = (int) distance.getSelectedItemId();
-        round.unit = "m";
+        round.distance = Distance.fromId(distance.getSelectedItemId());
 
         int after_rounds = rounds.getValue();
         round.ppp = arrows.getValue();
@@ -366,7 +369,8 @@ public class EditRoundActivity extends AppCompatActivity implements DatePickerDi
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("bow", (int) bow.getSelectedItemId());
         editor.putInt("arrow", (int) arrow.getSelectedItemId());
-        editor.putInt("distance", round.distanceVal);
+        editor.putInt("distance", round.distance.distance);
+        editor.putString("unit", round.distance.unit);
         editor.putInt("ppp", round.ppp);
         editor.putInt("rounds", after_rounds);
         editor.putInt("target", round.target);

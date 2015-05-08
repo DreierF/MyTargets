@@ -68,7 +68,7 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
     private View mNewLayout;
     private TextView mNewText;
     private FloatingActionsMenu mFab;
-    private OnItemSelectedListener listener;
+    protected OnItemSelectedListener listener;
 
     int getLayoutResource() {
         return R.layout.fragment_list;
@@ -239,6 +239,6 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
     protected abstract void onEdit(T item);
 
     public interface OnItemSelectedListener {
-        public void onItemSelected(long itemId, Class<? extends IdProvider> aClass);
+        void onItemSelected(long itemId, Class<? extends IdProvider> aClass);
     }
 }

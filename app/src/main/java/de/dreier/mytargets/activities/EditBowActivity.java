@@ -260,7 +260,7 @@ public class EditBowActivity extends EditWithImageActivity {
                 Intent i = new Intent(EditBowActivity.this,
                         SimpleFragmentActivity.DistanceItemSelectActivity.class);
                 i.putExtra("title", R.string.target_round);
-                i.putExtra(DistanceFragment.CUR_DISTANCE, (int) setting.distance.getSelectedItemId());
+                i.putExtra(DistanceFragment.CUR_DISTANCE, setting.distance.getSelectedItemId());
                 curSetting = setting;
                 startActivityForResult(i, REQ_SELECTED_DISTANCE);
             }

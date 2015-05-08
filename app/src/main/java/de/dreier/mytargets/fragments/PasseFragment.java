@@ -171,7 +171,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         // Aggregate round information
         Round round = mRounds.get(0);
         boolean indoor = round.indoor;
-        String distance = round.distance;
+        String distance = round.distance.toString();
         int target = round.target;
         long bowId = round.bow;
         long arrowId = round.arrow;
@@ -185,7 +185,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
             reached += r.reachedPoints;
             max += r.maxPoints;
             indoor_equals = r.indoor == indoor && indoor_equals;
-            distance_equals = r.distance.equals(distance) && distance_equals;
+            distance_equals = r.distance.toString().equals(distance) && distance_equals;
             target_equals = r.target == target && target_equals;
             bow_equals = r.bow == bowId && bow_equals;
             arrow_equals = r.arrow == arrowId && arrow_equals;

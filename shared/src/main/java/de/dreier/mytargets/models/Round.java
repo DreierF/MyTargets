@@ -9,9 +9,7 @@ public class Round extends IdProvider implements Serializable {
     public int target;
     public long training;
     public boolean indoor;
-    public String distance;
-    public int distanceVal;
-    public String unit;
+    public Distance distance;
     public long bow;
     public int[] scoreCount = new int[3];
     public boolean compound;

@@ -14,18 +14,18 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.fragments.DistanceFragment;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.models.Distance;
 
-public class DistanceItemAdapter extends ArrayAdapter<DistanceFragment.Distance> {
+public class DistanceItemAdapter extends ArrayAdapter<Distance> {
 
     public DistanceItemAdapter(Context context) {
         this(context, 10);
     }
 
-    public DistanceItemAdapter(Context context, int dist) {
+    public DistanceItemAdapter(Context context, long distId) {
         super(context, R.layout.distance_text_item,
-                DatabaseManager.getInstance(context).getDistances(dist));
+                DatabaseManager.getInstance(context).getDistances(distId));
     }
 
     @Override
