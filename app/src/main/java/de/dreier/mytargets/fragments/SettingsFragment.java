@@ -107,19 +107,20 @@ public class SettingsFragment extends PreferenceFragment
 
     private void licence(LicensesDialog licences) {
         Licenses.init(getActivity());
-        final List<LicenseEntry> list = new ArrayList<>(); //TODO
+        final List<LicenseEntry> list = new ArrayList<>();
         list.add(Licenses.createLicense("ksoichiro", "1.5.0", "Android-ObservableScrollView",
                 "Copyright 2014 Soichiro Kashima"));
         list.add(Licenses.createLicense("Machinarius", "0.1.1", "PreferenceFragment-Compat",
                 "Copyright Machinarius"));
         list.add(Licenses.createLicense("iPaulPro", "", "aFileChooser",
-                "Copyright (C) 2011 - 2013 Paul Burke"));
+                "Copyright 2011 - 2013 Paul Burke"));
         list.add(Licenses.createLicense("MichaelFlisar", "1.0", "LicensesDialog",
                 "Copyright 2013 Michael Flisar"));
-        list.add(Licenses.createLicense("makovkastar", "1.0.6", "FloatingActionButton",
-                "Copyright (c) 2014 Oleksandr Melnykov"));
+        list.add(Licenses.createLicense("futuresimple", "1.9.0", "FloatingActionButton",
+                "Copyright 2014 Jerzy Chalupski"));
         list.add(Licenses.createLicense("IanGClifton", "1.0.2", "FloatLabel",
-                "Copyright (c) IanGClifton"));
+                "Copyright IanGClifton"));
+        list.add(Licenses.createLicenseIcon8());
 
         licences.setLicences(list);
     }
