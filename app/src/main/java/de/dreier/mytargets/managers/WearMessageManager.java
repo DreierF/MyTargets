@@ -25,10 +25,10 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
-import de.dreier.mytargets.models.NotificationInfo;
-import de.dreier.mytargets.models.Passe;
-import de.dreier.mytargets.utils.OnTargetSetListener;
-import de.dreier.mytargets.utils.WearableUtils;
+import de.dreier.mytargets.shared.models.NotificationInfo;
+import de.dreier.mytargets.shared.models.Passe;
+import de.dreier.mytargets.shared.utils.OnTargetSetListener;
+import de.dreier.mytargets.shared.utils.WearableUtils;
 
 public class WearMessageManager
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,

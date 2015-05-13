@@ -18,8 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import de.dreier.mytargets.models.IdProvider;
-
+import de.dreier.mytargets.shared.models.IdProvider;
 
 public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD extends IdProvider>
         extends RecyclerView.Adapter<CardViewHolder<IdProvider>> {

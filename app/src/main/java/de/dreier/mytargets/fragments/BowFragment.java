@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditBowActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
-import de.dreier.mytargets.models.Bow;
+import de.dreier.mytargets.shared.models.Bow;
 
 public class BowFragment extends NowListFragment<Bow> {
 

@@ -22,11 +22,10 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.EditRoundActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
 import de.dreier.mytargets.models.Month;
-import de.dreier.mytargets.models.Training;
+import de.dreier.mytargets.shared.models.Training;
 
 /**
  * Shows an overview over all trying days
@@ -70,7 +69,7 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
 
     @Override
     protected void onNew(Intent i) {
-        i.setClass(getActivity(), EditRoundActivity.class);
+        i.setClass(getActivity(), SimpleFragmentActivity.EditRoundActivity.class);
     }
 
     @Override
@@ -83,9 +82,9 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
 
     @Override
     protected void onEdit(final Training item) {
-        Intent i = new Intent(getActivity(), EditRoundActivity.class);
-        i.putExtra(EditRoundActivity.TRAINING_ID, item.getId());
-        i.putExtra(EditRoundActivity.EDIT_TRAINING, true);
+        Intent i = new Intent(getActivity(), SimpleFragmentActivity.EditRoundActivity.class);
+        i.putExtra(EditRoundFragment.TRAINING_ID, item.getId());
+        i.putExtra(EditRoundFragment.EDIT_TRAINING, true);
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="de.dreier.mytargets.activities.EditRoundActivity">
+    tools:context="de.dreier.mytargets.activities.SimpleFragmentActivity.EditRoundActivity">
 
     <com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView style="@style/card_list"/>
 

@@ -13,6 +13,10 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="com.android.vending.BILLING"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -73,7 +77,7 @@
                 android:value=".activities.SimpleFragmentActivity$TrainingActivity"/>
         </activity>
         <activity
-            android:name=".activities.EditRoundActivity"
+            android:name=".activities.SimpleFragmentActivity$EditRoundActivity"
             android:label="@string/new_round"
             android:parentActivityName=".activities.SimpleFragmentActivity$TrainingActivity"
             android:theme="@style/AppTheme.CustomToolbar"
@@ -114,36 +118,60 @@
             android:name=".activities.StatisticsActivity"
             android:label="@string/statistic"/>
         <activity
-            android:name=".activities.SimpleFragmentActivity$ArrowItemSelectActivity"
+            android:name=".activities.ItemSelectActivity$Arrow"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.EditRoundActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivity$EditRoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.EditRoundActivity"/>
+                android:value=".activities.SimpleFragmentActivity$EditRoundActivity"/>
         </activity>
         <activity
-            android:name=".activities.SimpleFragmentActivity$BowItemSelectActivity"
+            android:name=".activities.ItemSelectActivity$Bow"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.EditRoundActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivity$EditRoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.EditRoundActivity"/>
+                android:value=".activities.SimpleFragmentActivity$EditRoundActivity"/>
         </activity>
         <activity
-            android:name=".activities.SimpleFragmentActivity$TargetItemSelectActivity"
+            android:name=".activities.ItemSelectActivity$Environment"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.EditRoundActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivity$EditRoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.EditRoundActivity"/>
+                android:value=".activities.SimpleFragmentActivity$EditRoundActivity"/>
         </activity>
         <activity
-            android:name=".activities.SimpleFragmentActivity$DistanceItemSelectActivity"
+            android:name=".activities.ItemSelectActivity$Target"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.EditRoundActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivity$EditRoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.EditRoundActivity"/>
+                android:value=".activities.SimpleFragmentActivity$EditRoundActivity"/>
+        </activity>
+        <activity
+            android:name=".activities.ItemSelectActivity$Distance"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.SimpleFragmentActivity$EditRoundActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.SimpleFragmentActivity$EditRoundActivity"/>
+        </activity>
+        <activity
+            android:name=".activities.ItemSelectActivity$WindSpeed"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.ItemSelectActivity$Environment">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ItemSelectActivity$Environment"/>
+        </activity>
+        <activity
+            android:name=".activities.ItemSelectActivity$WindDirection"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.ItemSelectActivity$Environment">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ItemSelectActivity$Environment"/>
         </activity>
 
         <!-- Preferences activity -->

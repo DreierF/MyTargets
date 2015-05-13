@@ -44,11 +44,13 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.1.1'
     compile 'com.github.machinarius:preferencefragment:0.1.1'
     compile 'com.github.ksoichiro:android-observablescrollview:1.5.0'
+
     compile project(':libraries:aFileChooser')
     compile project(':libraries:FloatingActionButton')
     compile project(':libraries:FloatLabel')
     compile project(':libraries:RecyclerViewChoiceMode')
     compile project(':libraries:LicensesDialog')
+    compile project(':libraries:YWeatherGetter4a')
     compile project(':shared')
     wearApp project(':wearable')
 }

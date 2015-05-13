@@ -40,7 +40,7 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.models.IdProvider;
+import de.dreier.mytargets.shared.models.IdProvider;
 import de.dreier.mytargets.views.CardItemDecorator;
 
 /**
@@ -240,5 +240,6 @@ public abstract class NowListFragment<T extends IdProvider> extends Fragment
 
     public interface OnItemSelectedListener {
         void onItemSelected(long itemId, Class<? extends IdProvider> aClass);
+        void onItemSelected(IdProvider e);
     }
 }

@@ -1,0 +1,108 @@
+<LinearLayout
+    android:id="@+id/content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+    <TextView
+        style="@style/Label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/weather"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <ImageButton
+            android:id="@+id/sunny"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="@string/sunny"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_sun_outline"/>
+
+        <ImageButton
+            android:id="@+id/partly_cloudy"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="@string/partly_cloudy"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_partly_cloudy"/>
+
+        <ImageButton
+            android:id="@+id/clouds"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="@string/cloudy"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_cloudy_outline"/>
+
+        <ImageButton
+            android:id="@+id/light_rain"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="@string/light_rain"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_light_rain_outline"/>
+
+        <ImageButton
+            android:id="@+id/rain"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="@string/rain"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_rain_outline"/>
+
+    </LinearLayout>
+
+    <TextView
+        style="@style/Label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/wind_speed"/>
+
+    <de.dreier.mytargets.views.DialogSpinner
+        android:id="@+id/wind_speed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        style="@style/Label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/wind_direction"/>
+
+    <de.dreier.mytargets.views.DialogSpinner
+        android:id="@+id/wind_direction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        style="@style/Label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/location"/>
+
+    <de.dreier.mytargets.views.DialogSpinner
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

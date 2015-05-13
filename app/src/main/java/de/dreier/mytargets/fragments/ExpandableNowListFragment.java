@@ -39,7 +39,7 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.models.IdProvider;
+import de.dreier.mytargets.shared.models.IdProvider;
 import de.dreier.mytargets.views.CardItemDecorator;
 
 /**

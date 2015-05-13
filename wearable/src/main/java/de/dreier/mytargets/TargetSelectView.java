@@ -7,19 +7,18 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import de.dreier.mytargets.models.Coordinate;
-import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.models.Shot;
-import de.dreier.mytargets.utils.Circle;
-import de.dreier.mytargets.utils.Target;
-import de.dreier.mytargets.views.TargetViewBase;
+import de.dreier.mytargets.shared.models.Coordinate;
+import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.utils.Circle;
+import de.dreier.mytargets.shared.views.TargetViewBase;
+
 
 public class TargetSelectView extends TargetViewBase {
 
     private int radius;
-
     private Paint drawColorP;
-
     private int chinHeight;
     private double circRadius;
     private Circle mCircle;

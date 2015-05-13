@@ -13,9 +13,9 @@ import com.google.android.gms.wearable.WearableListenerService;
 
 import java.io.IOException;
 
-import de.dreier.mytargets.models.BitmapDataObject;
-import de.dreier.mytargets.models.NotificationInfo;
-import de.dreier.mytargets.utils.WearableUtils;
+import de.dreier.mytargets.shared.models.BitmapDataObject;
+import de.dreier.mytargets.shared.models.NotificationInfo;
+import de.dreier.mytargets.shared.utils.WearableUtils;
 
 public class WearableListener extends WearableListenerService {
 

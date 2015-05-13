@@ -27,13 +27,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.models.Coordinate;
-import de.dreier.mytargets.models.Passe;
-import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.models.Shot;
+import de.dreier.mytargets.shared.models.Coordinate;
+import de.dreier.mytargets.shared.models.Passe;
+import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.utils.BitmapUtils;
-import de.dreier.mytargets.utils.PasseDrawer;
-import de.dreier.mytargets.utils.Target;
+import de.dreier.mytargets.shared.utils.PasseDrawer;
 import de.dreier.mytargets.utils.TextInputDialog;
 
 public class TargetView extends TargetViewBase {

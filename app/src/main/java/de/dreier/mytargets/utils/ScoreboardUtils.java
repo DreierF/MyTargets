@@ -16,10 +16,11 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.models.Passe;
-import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.models.Shot;
-import de.dreier.mytargets.models.Training;
+import de.dreier.mytargets.shared.models.Passe;
+import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.Training;
 
 public class ScoreboardUtils {
 

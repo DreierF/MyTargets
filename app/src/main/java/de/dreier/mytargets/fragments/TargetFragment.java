@@ -20,9 +20,9 @@ import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditBowActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
-import de.dreier.mytargets.adapters.TargetItemAdapter;
+import de.dreier.mytargets.shared.models.Target;
 
-public class TargetFragment extends NowListFragment<TargetItemAdapter.Target> {
+public class TargetFragment extends NowListFragment<Target> {
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class TargetFragment extends NowListFragment<TargetItemAdapter.Target> {
     @Override
     public void onResume() {
         super.onResume();
-        setList(TargetItemAdapter.targets, new TargetAdapter());
+        setList(Target.list, new TargetAdapter());
     }
 
     @Override
@@ -42,18 +42,18 @@ public class TargetFragment extends NowListFragment<TargetItemAdapter.Target> {
 
     @Override
     public void onLongClick(CardViewHolder holder) {
-        onClick(holder, (TargetItemAdapter.Target) holder.getItem());
+        onClick(holder, (Target) holder.getItem());
     }
 
     @Override
-    protected void onEdit(TargetItemAdapter.Target item) {
+    protected void onEdit(Target item) {
         Intent i = new Intent(getActivity(), EditBowActivity.class);
         i.putExtra(EditBowActivity.BOW_ID, item.getId());
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
-    protected class TargetAdapter extends NowListAdapter<TargetItemAdapter.Target> {
+    protected class TargetAdapter extends NowListAdapter<Target> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
@@ -62,7 +62,7 @@ public class TargetFragment extends NowListFragment<TargetItemAdapter.Target> {
         }
     }
 
-    public class ViewHolder extends CardViewHolder<TargetItemAdapter.Target> {
+    public class ViewHolder extends CardViewHolder<Target> {
         private final TextView mName;
         private final ImageView mImg;
 

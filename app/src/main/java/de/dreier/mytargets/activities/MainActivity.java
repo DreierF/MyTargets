@@ -30,8 +30,8 @@ import java.util.Locale;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
 import de.dreier.mytargets.fragments.NowListFragment;
-import de.dreier.mytargets.models.Arrow;
-import de.dreier.mytargets.models.IdProvider;
+import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.shared.models.IdProvider;
 import de.dreier.mytargets.views.SlidingTabLayout;
 
 /**
@@ -139,5 +139,10 @@ public class MainActivity extends AppCompatActivity implements
         }
         startActivity(i);
         overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    @Override
+    public void onItemSelected(IdProvider e) {
+
     }
 }

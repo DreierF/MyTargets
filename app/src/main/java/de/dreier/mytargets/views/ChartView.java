@@ -21,8 +21,8 @@ import java.util.List;
 
 import de.dreier.mytargets.models.LinearSeries;
 import de.dreier.mytargets.models.RectD;
-import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.utils.Target;
+import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.Target;
 
 public class ChartView extends RelativeLayout {
 

@@ -24,7 +24,7 @@ import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditBowActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
-import de.dreier.mytargets.models.Distance;
+import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.utils.TextInputDialog;
 
 public class DistanceFragment extends NowListFragment<Distance>
@@ -99,6 +99,7 @@ public class DistanceFragment extends NowListFragment<Distance>
             }
             distance = new Distance(distanceVal, unit).getId();
         } catch (NumberFormatException e) {
+            // leave distance as it is
         }
         listener.onItemSelected(distance, Distance.class);
     }

@@ -195,5 +195,16 @@
     <string name="data">Daten</string>
     <string name="create_backup_on_sd">Erzeugt ein Backup auf der SD-Karte</string>
     <string name="restore_backup">Importiert ein Backup</string>
+    <string name="switch_view">Wechsle Dasrstellung</string>
+    <string name="weather">Wetter</string>
+    <string name="environment">Umgebung</string>
+    <string name="sunny">Sonnig</string>
+    <string name="partly_cloudy">Teilweise bewölkt</string>
+    <string name="cloudy">Bewölkt</string>
+    <string name="light_rain">Leichter Regen</string>
+    <string name="rain">Regen</string>
+    <string name="wind">Wind</string>
+    <string name="wind_speed">Windgeschwindigkeit</string>
+    <string name="wind_direction">Windrichtung</string>
 
 </resources>

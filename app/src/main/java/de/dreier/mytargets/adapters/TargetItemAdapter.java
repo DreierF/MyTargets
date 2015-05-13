@@ -15,37 +15,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.models.IdProvider;
+import de.dreier.mytargets.shared.models.Target;
 
 public class TargetItemAdapter extends BaseAdapter {
     private final Context mContext;
-
-    public static List<Target> targets;
-    static {
-        targets = new ArrayList<>();
-        targets.add(new Target("WA", R.drawable.wa));
-        targets.add(new Target("WA Spot 5-10", R.drawable.wa_spot_5));
-        targets.add(new Target("WA Spot 6-10", R.drawable.wa_spot_6));
-        targets.add(new Target("WA 3er Spot", R.drawable.wa_spot_6));
-        targets.add(new Target("WA Field",  R.drawable.wa_field));
-        targets.add(new Target("DFBV Spiegel", R.drawable.dfbv_spiegel));
-        targets.add(new Target("DFBV Spiegel Spot", R.drawable.dfbv_spiegel_spot));
-        targets.add(new Target("DFBV Field", R.drawable.dfbv_field));
-    }
-    public static class Target extends IdProvider {
-        public String name;
-        public int drawableRes;
-
-        public Target(String name, int drawableRes) {
-            this.id = targets.size();
-            this.name = name;
-            this.drawableRes = drawableRes;
-        }
-    }
 
     public TargetItemAdapter(Context context) {
         mContext = context;
@@ -53,12 +27,12 @@ public class TargetItemAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return targets.size();
+        return Target.list.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return targets.get(i);
+        return Target.list.get(i);
     }
 
     @Override
@@ -78,8 +52,8 @@ public class TargetItemAdapter extends BaseAdapter {
         ImageView img = (ImageView) v.findViewById(R.id.image);
         TextView desc = (TextView) v.findViewById(R.id.name);
 
-        img.setImageDrawable(mContext.getResources().getDrawable(targets.get(position).drawableRes));
-        desc.setText(targets.get(position).name);
+        img.setImageResource(Target.list.get(position).drawableRes);
+        desc.setText(Target.list.get(position).name);
         return v;
     }
 }

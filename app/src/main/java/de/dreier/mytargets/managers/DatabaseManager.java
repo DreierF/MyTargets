@@ -31,18 +31,17 @@ import java.util.HashSet;
 import java.util.List;
 
 import de.dreier.mytargets.activities.EditBowActivity;
-import de.dreier.mytargets.adapters.TargetItemAdapter;
-import de.dreier.mytargets.models.Arrow;
-import de.dreier.mytargets.models.Bow;
-import de.dreier.mytargets.models.Distance;
-import de.dreier.mytargets.models.IdProvider;
-import de.dreier.mytargets.models.Passe;
-import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.models.Shot;
-import de.dreier.mytargets.models.Training;
+import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.shared.models.IdProvider;
+import de.dreier.mytargets.shared.models.Passe;
+import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.BitmapUtils;
-import de.dreier.mytargets.utils.Target;
+import de.dreier.mytargets.shared.models.Target;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 9;
@@ -941,7 +940,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 for (int i = 0; i < names.length; i++) {
                     writer.append("\"");
                     if (i == targetInd) {
-                        writer.append(TargetItemAdapter.targets.get(cur.getInt(i)).name);
+                        writer.append(Target.list.get(cur.getInt(i)).name);
                     } else if (i == indoorInd) {
                         if (cur.getInt(i) == 0) {
                             writer.append("Outdoor");

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.DistanceFragment;
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.models.Bow;
+import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.views.DialogSpinner;
 import de.dreier.mytargets.views.DistanceDialogSpinner;
 
@@ -258,7 +258,7 @@ public class EditBowActivity extends EditWithImageActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(EditBowActivity.this,
-                        SimpleFragmentActivity.DistanceItemSelectActivity.class);
+                        ItemSelectActivity.Distance.class);
                 i.putExtra("title", R.string.target_round);
                 i.putExtra(DistanceFragment.CUR_DISTANCE, setting.distance.getSelectedItemId());
                 curSetting = setting;

@@ -20,7 +20,7 @@ import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditArrowActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
-import de.dreier.mytargets.models.Arrow;
+import de.dreier.mytargets.shared.models.Arrow;
 
 public class ArrowFragment extends NowListFragment<Arrow> {
 

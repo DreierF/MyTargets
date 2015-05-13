@@ -38,17 +38,17 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.EditRoundActivity;
 import de.dreier.mytargets.activities.InputActivity;
 import de.dreier.mytargets.activities.ScoreboardActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
-import de.dreier.mytargets.adapters.TargetItemAdapter;
-import de.dreier.mytargets.models.Arrow;
-import de.dreier.mytargets.models.Bow;
-import de.dreier.mytargets.models.Passe;
-import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.models.Training;
+import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.Passe;
+import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.TargetImage;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -114,8 +114,8 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         round.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(activity, EditRoundActivity.class);
-                i.putExtra(EditRoundActivity.TRAINING_ID, mTraining);
+                Intent i = new Intent(activity, SimpleFragmentActivity.EditRoundActivity.class);
+                i.putExtra(TRAINING_ID, mTraining);
                 startActivity(i);
                 mFab.collapse();
             }
@@ -206,7 +206,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         }
         if (target_equals) {
             infoText += "<br>" + getString(R.string.target_round) + ": <b>" +
-                    TargetItemAdapter.targets.get(target).name + "</b>";
+                    Target.list.get(target).name + "</b>";
         }
         if (bow_equals) {
             Bow bow = db.getBow(bowId, true);
@@ -486,7 +486,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
             }
             if (!target_equals) {
                 infoText += "<br>" + getString(R.string.target_round) + ": <b>" +
-                        TargetItemAdapter.targets.get(mItem.target).name + "</b>";
+                        Target.list.get(mItem.target).name + "</b>";
             }
             if (!bow_equals) {
                 Bow bow = db.getBow(mItem.bow, true);
@@ -516,9 +516,9 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
 
         @Override
         public boolean onLongClick(View v) {
-            Intent i = new Intent(getActivity(), EditRoundActivity.class);
-            i.putExtra(EditRoundActivity.TRAINING_ID, mTraining);
-            i.putExtra(EditRoundActivity.ROUND_ID, mItem.id);
+            Intent i = new Intent(getActivity(), SimpleFragmentActivity.EditRoundActivity.class);
+            i.putExtra(EditRoundFragment.TRAINING_ID, mTraining);
+            i.putExtra(EditRoundFragment.ROUND_ID, mItem.id);
             startActivity(i);
             return true;
         }

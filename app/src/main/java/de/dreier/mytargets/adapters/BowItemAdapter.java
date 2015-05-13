@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.models.Bow;
+import de.dreier.mytargets.shared.models.Bow;
 
 public class BowItemAdapter extends ArrayAdapter<Bow> {
 

@@ -13,8 +13,8 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
-import de.dreier.mytargets.models.Passe;
-import de.dreier.mytargets.utils.PasseDrawer;
+import de.dreier.mytargets.shared.models.Passe;
+import de.dreier.mytargets.shared.utils.PasseDrawer;
 
 public class PasseView extends View {
 

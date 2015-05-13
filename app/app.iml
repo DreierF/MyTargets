@@ -99,6 +99,7 @@
     <orderEntry type="module" module-name="aFileChooser" exported="" />
     <orderEntry type="module" module-name="FloatLabel" exported="" />
     <orderEntry type="module" module-name="FloatingActionButton" exported="" />
+    <orderEntry type="module" module-name="YWeatherGetter4a" exported="" />
     <orderEntry type="module" module-name="LicensesDialog" exported="" />
     <orderEntry type="module" module-name="RecyclerViewChoiceMode" exported="" />
   </component>

@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.models.Distance;
+import de.dreier.mytargets.shared.models.Distance;
 
 public class DistanceItemAdapter extends ArrayAdapter<Distance> {
 

@@ -17,7 +17,7 @@ import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.dreier.mytargets.models.IdProvider;
+import de.dreier.mytargets.shared.models.IdProvider;
 
 
 public abstract class NowListAdapter<T extends IdProvider>

@@ -15,7 +15,7 @@ import com.iangclifton.android.floatlabel.FloatLabel;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.models.Arrow;
+import de.dreier.mytargets.shared.models.Arrow;
 
 public class EditArrowActivity extends EditWithImageActivity {
 

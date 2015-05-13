@@ -9,7 +9,7 @@
     <string name="custom">Personnaliser</string>
     <string name="training">Entraînement</string>
     <string name="bow">Arc</string>
-    <string name="arrow">Flèche</string>
+    <string name="arrow">Flèches</string>
     <string name="round">Série</string>
     <string name="points">Points</string>
     <string name="passe">Volée</string>
@@ -152,7 +152,7 @@
     <string name="failed_reading_file">Echec de la lecture du fichier!</string>
 
     <!-- Donate -->
-    <string name="donate_action">Soutient au développeur</string>
+    <string name="donate_action">Soutien au développeur</string>
     <string name="donate_2">Donner un Hamburger</string>
     <string name="donate_5">Donner un kebab</string>
     <string name="donate_10">Donner une grande pizza</string>
@@ -179,7 +179,7 @@
     <!-- Settings -->
     <string name="backup_action">Sauvegarde</string>
     <string name="import_action">Import</string>
-    <string name="export">Exporter</string>
+    <string name="export">Export</string>
     <string name="exports_as_csv">Exporter les données au format *.csv</string>
     <string name="app_rate">Noter l\'application</string>
     <string name="app_share">Partager l\'application</string>
@@ -194,6 +194,6 @@
     <string name="info">Information</string>
     <string name="data">Données</string>
     <string name="create_backup_on_sd">Crée une sauvegarde sur la carte SD</string>
-    <string name="restore_backup">Importe une sauvegarde</string>
+    <string name="restore_backup">Importer une sauvegarde</string>
 
 </resources>

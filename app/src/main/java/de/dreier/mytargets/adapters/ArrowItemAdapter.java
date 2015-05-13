@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.models.Arrow;
+import de.dreier.mytargets.shared.models.Arrow;
 
 public class ArrowItemAdapter extends ArrayAdapter<Arrow> {
 

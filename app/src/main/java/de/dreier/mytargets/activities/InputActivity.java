@@ -29,13 +29,13 @@ import java.util.ArrayList;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.WearMessageManager;
-import de.dreier.mytargets.models.Bow;
-import de.dreier.mytargets.models.NotificationInfo;
-import de.dreier.mytargets.models.Passe;
-import de.dreier.mytargets.models.Round;
-import de.dreier.mytargets.models.Shot;
-import de.dreier.mytargets.utils.OnTargetSetListener;
-import de.dreier.mytargets.utils.Target;
+import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.NotificationInfo;
+import de.dreier.mytargets.shared.models.Passe;
+import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.utils.OnTargetSetListener;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.views.TargetView;
 
 public class InputActivity extends AppCompatActivity implements OnTargetSetListener {

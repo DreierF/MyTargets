@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-import de.dreier.mytargets.models.Passe;
+import de.dreier.mytargets.shared.models.Passe;
 
 public class TargetImage {
 
