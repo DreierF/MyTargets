@@ -813,13 +813,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
     }
 
-    public void updatePasse(long round, Passe passe) {
+    public void updatePasse(Passe passe) {
         if (passe.shot.length == 0) {
             return;
         }
 
         ContentValues values = new ContentValues();
-        values.put(PASSE_ROUND, round);
+        values.put(PASSE_ROUND, passe.roundId);
         update(passe, values, TABLE_PASSE);
 
         for (Shot shot : passe.shot) {
@@ -965,6 +965,20 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
 ////// DELETE ENTRIES //////
+
+    public <T extends IdProvider> void add(T id) {
+        if (id instanceof Training) {
+            updateTraining((Training) id);
+        } else if (id instanceof Round) {
+            updateRound((Round) id);
+        } else if (id instanceof Passe) {
+            updatePasse((Passe) id);
+        } else if (id instanceof Bow) {
+            updateBow((Bow) id);
+        } else if (id instanceof Arrow) {
+            updateArrow((Arrow) id);
+        }
+    }
 
     public <T extends IdProvider> void delete(T id) {
         if (id instanceof Training) {

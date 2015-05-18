@@ -30,6 +30,7 @@ public class BowFragment extends NowListFragment<Bow> {
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
         itemTypeRes = R.plurals.bow_selected;
+        itemTypeDelRes = R.plurals.bow_deleted;
         newStringRes = R.string.new_bow;
         mEditable = true;
     }

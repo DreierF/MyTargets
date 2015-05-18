@@ -84,6 +84,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
         itemTypeRes = R.plurals.passe_selected;
+        itemTypeDelRes = R.plurals.passe_deleted;
         newStringRes = R.string.new_round;
 
         if (intent != null) {

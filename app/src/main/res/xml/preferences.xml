@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/timer">
+        <SwitchPreference
+            android:textOn="@string/metric"
+            android:textOff="@string/imperial"
+            android:defaultValue="@string/default_metric"
+            android:key="pref_unit"
+            android:title="@string/unit"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/timer">
         <EditTextPreference
             android:defaultValue="20"
             android:inputType="number"

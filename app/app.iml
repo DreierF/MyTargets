@@ -98,6 +98,7 @@
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="aFileChooser" exported="" />
     <orderEntry type="module" module-name="FloatLabel" exported="" />
+    <orderEntry type="module" module-name="UndoBar" exported="" />
     <orderEntry type="module" module-name="FloatingActionButton" exported="" />
     <orderEntry type="module" module-name="YWeatherGetter4a" exported="" />
     <orderEntry type="module" module-name="LicensesDialog" exported="" />

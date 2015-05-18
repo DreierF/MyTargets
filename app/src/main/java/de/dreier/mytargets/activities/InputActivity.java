@@ -267,7 +267,8 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     public long onTargetSet(Passe passe, boolean remote) {
         passe.sort();
 
-        db.updatePasse(mRound, passe);
+        passe.roundId = mRound;
+        db.updatePasse(passe);
         if (curPasse > savedPasses || remote) {
             savedPasses++;
             manager.sendMessage(buildInfo());

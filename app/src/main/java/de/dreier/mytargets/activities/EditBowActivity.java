@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
+import com.cocosw.undobar.UndoBarController;
 import com.iangclifton.android.floatlabel.FloatLabel;
 
 import java.util.ArrayList;
@@ -31,10 +33,19 @@ import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.views.DialogSpinner;
 import de.dreier.mytargets.views.DistanceDialogSpinner;
 
-public class EditBowActivity extends EditWithImageActivity {
+public class EditBowActivity extends EditWithImageActivity
+        implements UndoBarController.UndoListener {
 
     public static final String BOW_ID = "bow_id";
+    private static final String UNDO_SETTING = "undo_setting";
+    private static final String UNDO_SETTING_IND = "undo_setting_ind";
     private static final int REQ_SELECTED_DISTANCE = 1;
+    public static final int RECURVE_BOW = 0;
+    public static final int COMPOUND_BOW = 1;
+    public static final int LONG_BOW = 2;
+    public static final int BLANK_BOW = 3;
+    public static final int HORSE_BOW = 4;
+    public static final int YUMI = 5;
     private FloatLabel name;
     private FloatLabel brand;
     private FloatLabel size;
@@ -83,67 +94,32 @@ public class EditBowActivity extends EditWithImageActivity {
 
         recurveBow.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                recurveBow.setChecked(true);
-                compoundBow.setChecked(false);
-                longBow.setChecked(false);
-                blank.setChecked(false);
-                horse.setChecked(false);
-                yumi.setChecked(false);
+                setBowType(RECURVE_BOW);
             }
         });
-
         compoundBow.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                recurveBow.setChecked(false);
-                compoundBow.setChecked(true);
-                longBow.setChecked(false);
-                blank.setChecked(false);
-                horse.setChecked(false);
-                yumi.setChecked(false);
+                setBowType(COMPOUND_BOW);
             }
         });
-
         longBow.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                recurveBow.setChecked(false);
-                compoundBow.setChecked(false);
-                longBow.setChecked(true);
-                blank.setChecked(false);
-                horse.setChecked(false);
-                yumi.setChecked(false);
+                setBowType(LONG_BOW);
             }
         });
-
         blank.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                recurveBow.setChecked(false);
-                compoundBow.setChecked(false);
-                longBow.setChecked(false);
-                blank.setChecked(true);
-                horse.setChecked(false);
-                yumi.setChecked(false);
+                setBowType(BLANK_BOW);
             }
         });
-
         horse.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                recurveBow.setChecked(false);
-                compoundBow.setChecked(false);
-                longBow.setChecked(false);
-                blank.setChecked(false);
-                horse.setChecked(true);
-                yumi.setChecked(false);
+                setBowType(HORSE_BOW);
             }
         });
-
         yumi.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                recurveBow.setChecked(false);
-                compoundBow.setChecked(false);
-                longBow.setChecked(false);
-                blank.setChecked(false);
-                horse.setChecked(false);
-                yumi.setChecked(true);
+               setBowType(YUMI);
             }
         });
 
@@ -161,26 +137,7 @@ public class EditBowActivity extends EditWithImageActivity {
                 mImageView.setImageBitmap(imageBitmap);
             }
             mImageFile = bow.imageFile;
-            switch (bow.type) {
-                case 0:
-                    recurveBow.setChecked(true);
-                    break;
-                case 1:
-                    compoundBow.setChecked(true);
-                    break;
-                case 2:
-                    longBow.setChecked(true);
-                    break;
-                case 3:
-                    blank.setChecked(true);
-                    break;
-                case 4:
-                    horse.setChecked(true);
-                    break;
-                case 5:
-                    yumi.setChecked(true);
-                    break;
-            }
+            setBowType(bow.type);
             sightSettingsList = db.getSettings(mBowId);
         } else if (savedInstanceState == null) {
             recurveBow.setChecked(true);
@@ -203,6 +160,17 @@ public class EditBowActivity extends EditWithImageActivity {
                     addSightSetting(sightSettingsList.get(i), i);
                 }
             }
+        }
+    }
+
+    @Override
+    public void onUndo(@Nullable Parcelable token) {
+        if(token!=null) {
+            Bundle b = (Bundle) token;
+            int ind = b.getInt(UNDO_SETTING_IND);
+            SightSetting s = b.getParcelable(UNDO_SETTING);
+            sightSettingsList.add(ind, s);
+            addSightSetting(s,ind);
         }
     }
 
@@ -270,6 +238,14 @@ public class EditBowActivity extends EditWithImageActivity {
         remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final Bundle b = new Bundle();
+                b.putInt(UNDO_SETTING_IND, sightSettingsList.indexOf(setting));
+                b.putParcelable(UNDO_SETTING, setting);
+                new UndoBarController.UndoBar(EditBowActivity.this)
+                        .message(R.string.sight_setting_removed)
+                        .style(UndoBarController.UNDOSTYLE)
+                        .token(b)
+                        .listener(EditBowActivity.this).show();
                 sight_settings.removeView(rel);
                 sightSettingsList.remove(setting);
             }
@@ -309,23 +285,7 @@ public class EditBowActivity extends EditWithImageActivity {
         bow.height = height.getTextString();
         bow.tiller = tiller.getTextString();
         bow.description = desc.getTextString();
-
-        if (recurveBow.isChecked()) {
-            bow.type = 0;
-        } else if (compoundBow.isChecked()) {
-            bow.type = 1;
-        } else if (longBow.isChecked()) {
-            bow.type = 2;
-        } else if (blank.isChecked()) {
-            bow.type = 3;
-        } else if (horse.isChecked()) {
-            bow.type = 4;
-        } else if (yumi.isChecked()) {
-            bow.type = 5;
-        } else {
-            bow.type = 0;
-        }
-
+        bow.type = getType();
         bow.imageFile = mImageFile;
         bow.image = imageBitmap;
 
@@ -337,6 +297,33 @@ public class EditBowActivity extends EditWithImageActivity {
 
         db.updateSightSettings(bow.id, sightSettingsList);
         finish();
+    }
+
+    private void setBowType(int type) {
+        recurveBow.setChecked(type == RECURVE_BOW);
+        compoundBow.setChecked(type == COMPOUND_BOW);
+        longBow.setChecked(type == LONG_BOW);
+        blank.setChecked(type == BLANK_BOW);
+        horse.setChecked(type == HORSE_BOW);
+        yumi.setChecked(type == YUMI);
+    }
+
+    private int getType() {
+        if (recurveBow.isChecked()) {
+            return RECURVE_BOW;
+        } else if (compoundBow.isChecked()) {
+            return COMPOUND_BOW;
+        } else if (longBow.isChecked()) {
+            return LONG_BOW;
+        } else if (blank.isChecked()) {
+            return BLANK_BOW;
+        } else if (horse.isChecked()) {
+            return HORSE_BOW;
+        } else if (yumi.isChecked()) {
+            return YUMI;
+        } else {
+            return RECURVE_BOW;
+        }
     }
 
     @Override

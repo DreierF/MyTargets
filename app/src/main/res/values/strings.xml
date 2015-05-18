@@ -195,6 +195,7 @@
         <item quantity="one">%d second</item>
         <item quantity="other">%d seconds</item>
     </plurals>
+
     <string name="info">Information</string>
     <string name="data">Data</string>
     <string name="create_backup_on_sd">Creates a backup on sd card</string>
@@ -211,5 +212,32 @@
     <string name="wind_speed">Wind speed</string>
     <string name="wind_direction">Wind direction</string>
     <string name="location">Location</string>
+    <string name="sight_setting_removed">Sight setting deleted</string>
+    <string name="metric">Metric</string>
+    <string name="imperial">Imperial</string>
+
+    <!--
+        Do people speaking your language normally prefer imperial or metric units?
+        true = metric
+        false = imperial
+    -->
+    <string name="default_metric">true</string>
+    <string name="unit">Unit</string>
+    <plurals name="arrow_deleted">
+        <item quantity="one">One arrow deleted</item>
+        <item quantity="other">%d arrows deleted</item>
+    </plurals>
+    <plurals name="bow_deleted">
+        <item quantity="one">One bow deleted</item>
+        <item quantity="other">%d bows deleted</item>
+    </plurals>
+    <plurals name="training_deleted">
+        <item quantity="one">One training deleted</item>
+        <item quantity="other">%d trainings deleted</item>
+    </plurals>
+    <plurals name="passe_deleted">
+        <item quantity="one">One passe deleted</item>
+        <item quantity="other">%d passes deleted</item>
+    </plurals>
 
 </resources>

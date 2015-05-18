@@ -35,6 +35,7 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
         itemTypeRes = R.plurals.training_selected;
+        itemTypeDelRes = R.plurals.training_deleted;
         newStringRes = R.string.new_training;
         mEditable = true;
     }
