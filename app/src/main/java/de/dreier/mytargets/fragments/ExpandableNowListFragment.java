@@ -46,6 +46,7 @@ public abstract class ExpandableNowListFragment<H extends IdProvider, C extends 
                 return 1;
             }
         });
+
         return rootView;
     }
 
@@ -71,5 +72,10 @@ public abstract class ExpandableNowListFragment<H extends IdProvider, C extends 
     @Override
     protected C getItem(int id) {
         return (C) mAdapter.getItem(id);
+    }
+
+    @Override
+    protected void removeItem(int pos) {
+        mAdapter.remove(pos);
     }
 }

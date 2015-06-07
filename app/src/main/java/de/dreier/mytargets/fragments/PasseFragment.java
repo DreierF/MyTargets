@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -75,6 +76,12 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
     boolean distance_equals = true;
     private FloatingActionButton passe;
     private boolean mTargetViewMode = false;
+    protected FloatingActionsMenu mFab;
+
+    @Override
+    protected void setFabVisibility(int visibility) {
+        mFab.setVisibility(visibility);
+    }
 
     @Override
     protected int getLayoutResource() {
@@ -86,6 +93,9 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         itemTypeRes = R.plurals.passe_selected;
         itemTypeDelRes = R.plurals.passe_deleted;
         newStringRes = R.string.new_round;
+
+        mFab = (FloatingActionsMenu) rootView.findViewById(R.id.fab);
+        mFab.setOnClickListener(this);
 
         if (intent != null) {
             mTraining = intent.getLong(TRAINING_ID, -1);

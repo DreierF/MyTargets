@@ -221,8 +221,9 @@
         true = metric
         false = imperial
     -->
-    <string name="default_metric">true</string>
+    <string name="default_unit">true</string>
     <string name="unit">Unit</string>
+    <string name="undo">Undo</string>
     <plurals name="arrow_deleted">
         <item quantity="one">One arrow deleted</item>
         <item quantity="other">%d arrows deleted</item>

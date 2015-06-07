@@ -197,6 +197,7 @@
     <string name="data">Dades</string>
     <string name="create_backup_on_sd">S´ha creat una còpia de seguretat en la tarja SD</string>
     <string name="restore_backup">Restaura una còpia de seguretat</string>
+    <string name="undo">Desfés</string>
 
 </resources>
 

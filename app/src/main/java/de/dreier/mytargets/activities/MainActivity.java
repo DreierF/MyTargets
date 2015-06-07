@@ -11,8 +11,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +24,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -32,7 +35,6 @@ import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
 import de.dreier.mytargets.fragments.NowListFragment;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.IdProvider;
-import de.dreier.mytargets.views.SlidingTabLayout;
 
 /**
  * Shows an overview over all trying days
@@ -50,9 +52,9 @@ public class MainActivity extends AppCompatActivity implements
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new MainTabsFragmentPagerAdapter(this));
 
-        SlidingTabLayout slidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
-        //slidingTabLayout.setDistributeEvenly(true);
-        slidingTabLayout.setViewPager(viewPager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setTabTextColors(0xFFEEEEEE, Color.WHITE);
+        tabLayout.setupWithViewPager(viewPager);
 
         askForHelpTranslating();
 

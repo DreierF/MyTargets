@@ -231,5 +231,6 @@
     <string name="data">Podatki</string>
     <string name="create_backup_on_sd">Ustvari varnostno kopijo na SD kartico</string>
     <string name="restore_backup">Obnovi varnostno kopijo</string>
+    <string name="undo">Razveljavi</string>
 
 </resources>

@@ -10,8 +10,7 @@ package de.dreier.mytargets.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-
-import com.iangclifton.android.floatlabel.FloatLabel;
+import android.widget.EditText;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
@@ -21,7 +20,7 @@ public class EditArrowActivity extends EditWithImageActivity {
 
     public static final String ARROW_ID = "arrow_id";
 
-    private FloatLabel name, length, material, spine, weight, vanes, nock, comment;
+    private EditText name, length, material, spine, weight, vanes, nock, comment;
     private long mArrowId = -1;
 
     public EditArrowActivity() {
@@ -37,17 +36,19 @@ public class EditArrowActivity extends EditWithImageActivity {
             mArrowId = intent.getLongExtra(ARROW_ID, -1);
         }
 
-        name = (FloatLabel) findViewById(R.id.arrow_name);
-        length = (FloatLabel) findViewById(R.id.arrow_length);
-        material = (FloatLabel) findViewById(R.id.arrow_material);
-        spine = (FloatLabel) findViewById(R.id.arrow_spine);
-        weight = (FloatLabel) findViewById(R.id.arrow_weight);
-        vanes = (FloatLabel) findViewById(R.id.arrow_vanes);
-        nock = (FloatLabel) findViewById(R.id.arrow_nock);
-        comment = (FloatLabel) findViewById(R.id.arrow_comment);
+        name = (EditText) findViewById(R.id.arrow_name);
+        length = (EditText) findViewById(R.id.arrow_length);
+        material = (EditText) findViewById(R.id.arrow_material);
+        spine = (EditText) findViewById(R.id.arrow_spine);
+        weight = (EditText) findViewById(R.id.arrow_weight);
+        vanes = (EditText) findViewById(R.id.arrow_vanes);
+        nock = (EditText) findViewById(R.id.arrow_nock);
+        comment = (EditText) findViewById(R.id.arrow_comment);
 
+        getSupportActionBar().setTitle(R.string.new_arrow);
         if (savedInstanceState == null && mArrowId != -1) {
             Arrow arrow = DatabaseManager.getInstance(this).getArrow(mArrowId, false);
+            getSupportActionBar().setTitle(arrow.name);
             name.setText(arrow.name);
             length.setText(arrow.length);
             material.setText(arrow.material);
@@ -79,32 +80,31 @@ public class EditArrowActivity extends EditWithImageActivity {
 
         Arrow arrow = new Arrow();
         arrow.id = mArrowId;
-        arrow.name = name.getTextString();
-        arrow.length = length.getTextString();
-        arrow.material = material.getTextString();
-        arrow.spine = spine.getTextString();
-        arrow.weight = weight.getTextString();
-        arrow.vanes = vanes.getTextString();
-        arrow.nock = nock.getTextString();
-        arrow.comment = comment.getTextString();
-
+        arrow.name = name.getText().toString();
+        arrow.length = length.getText().toString();
+        arrow.material = material.getText().toString();
+        arrow.spine = spine.getText().toString();
+        arrow.weight = weight.getText().toString();
+        arrow.vanes = vanes.getText().toString();
+        arrow.nock = nock.getText().toString();
+        arrow.comment = comment.getText().toString();
         arrow.imageFile = mImageFile;
         arrow.image = imageBitmap;
 
-        db.updateArrow(arrow);
+        db.update(arrow);
         finish();
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("name", name.getTextString());
-        outState.putString("length", length.getTextString());
-        outState.putString("material", material.getTextString());
-        outState.putString("spine", spine.getTextString());
-        outState.putString("weight", weight.getTextString());
-        outState.putString("vanes", vanes.getTextString());
-        outState.putString("nock", nock.getTextString());
-        outState.putString("comment", comment.getTextString());
+        outState.putString("name", name.getText().toString());
+        outState.putString("length", length.getText().toString());
+        outState.putString("material", material.getText().toString());
+        outState.putString("spine", spine.getText().toString());
+        outState.putString("weight", weight.getText().toString());
+        outState.putString("vanes", vanes.getText().toString());
+        outState.putString("nock", nock.getText().toString());
+        outState.putString("comment", comment.getText().toString());
     }
 }

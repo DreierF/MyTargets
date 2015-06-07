@@ -195,5 +195,6 @@
     <string name="data">Données</string>
     <string name="create_backup_on_sd">Crée une sauvegarde sur la carte SD</string>
     <string name="restore_backup">Importer une sauvegarde</string>
+    <string name="undo">Annuler</string>
 
 </resources>

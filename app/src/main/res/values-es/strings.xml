@@ -195,5 +195,6 @@
     <string name="data">Datos</string>
     <string name="create_backup_on_sd">Crea una backup en la tarjeta sd</string>
     <string name="restore_backup">Restaura una backup</string>
+    <string name="undo">Deshacer</string>
 
 </resources>

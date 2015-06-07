@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/libraries/FloatLabel/FloatLabel.iml" filepath="$PROJECT_DIR$/libraries/FloatLabel/FloatLabel.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/FloatingActionButton/FloatingActionButton.iml" filepath="$PROJECT_DIR$/libraries/FloatingActionButton/FloatingActionButton.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/LicensesDialog/LicensesDialog.iml" filepath="$PROJECT_DIR$/libraries/LicensesDialog/LicensesDialog.iml" />
       <module fileurl="file://$PROJECT_DIR$/MyTargets.iml" filepath="$PROJECT_DIR$/MyTargets.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/RecyclerViewChoiceMode/RecyclerViewChoiceMode.iml" filepath="$PROJECT_DIR$/libraries/RecyclerViewChoiceMode/RecyclerViewChoiceMode.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libraries/UndoBar/UndoBar.iml" filepath="$PROJECT_DIR$/libraries/UndoBar/UndoBar.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/YWeatherGetter4a/YWeatherGetter4a.iml" filepath="$PROJECT_DIR$/libraries/YWeatherGetter4a/YWeatherGetter4a.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/aFileChooser/aFileChooser.iml" filepath="$PROJECT_DIR$/libraries/aFileChooser/aFileChooser.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />

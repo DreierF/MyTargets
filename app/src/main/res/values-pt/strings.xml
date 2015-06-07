@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General -->
+    <string name="preferences">Opções</string>
+    <string name="prev">Anterior</string>
+    <string name="next">Próximo</string>
+    <string name="save">Salvar</string>
+    <string name="custom">Personalizar</string>
+    <string name="training">Treino</string>
+    <string name="bow">Arco</string>
+    <string name="arrow">Flecha</string>
+    <string name="round">Round</string>
+    <string name="points">Pontos</string>
+    <string name="passe">Série</string>
+    <string name="passe_n">Série %d</string>
+
+    <!-- Overview -->
+    <string name="new_training">Novo treino</string>
+    <string name="new_bow">Novo arco</string>
+    <string name="new_arrow">Nova flecha</string>
+    <string name="new_round">Novo round</string>
+    <string name="new_passe">Nova série</string>
+
+    <plurals name="training_selected">
+        <item quantity="one">Um treino selecionado</item>
+        <item quantity="other">%d treinos selecionados</item>
+    </plurals>
+    <plurals name="bow_selected">
+        <item quantity="one">Um arco selecionado</item>
+        <item quantity="other">%d arcos selecionados</item>
+    </plurals>
+    <plurals name="arrow_selected">
+        <item quantity="one">Uma flecha selecionada</item>
+        <item quantity="other">%d flechas selecionadas</item>
+    </plurals>
+    <plurals name="round_selected">
+        <item quantity="one">Um round selecionada</item>
+        <item quantity="other">%d rounds selecionados</item>
+    </plurals>
+    <plurals name="passe_selected">
+        <item quantity="one">Uma série selecionada</item>
+        <item quantity="other">%d séries selecionadas</item>
+    </plurals>
+
+    <string name="edit">Editar</string>
+    <string name="delete">Apagar</string>
+    <string name="statistic">Estatística</string>
+
+    <!-- Share -->
+    <string name="share">Compartilhar</string>
+    <string name="my_share_text">Ei, Olha minha pontuação de tiro. Acertei:\n%1$d vezes X\n%2$d vezes 10\n%3$d vezes 9\nThis com um total de %4$d em %5$d anéis.</string>
+    <string name="comments">Comentários</string>
+    <string name="text">Texto</string>
+    <string name="dispersion_pattern">Padrão de dispersão</string>
+    <string name="sharing_failed">falha no compartilhamento!</string>
+
+    <!-- Export -->
+    <string name="send_exported">Enviar dados exportados</string>
+    <string name="exporting_failed">Exportação falhou!</string>
+
+    <!-- New bow -->
+    <string name="add_bow">Adicionar arco</string>
+    <string name="name">Nome</string>
+    <string name="bow_type">Tipo de arco</string>
+    <string name="recurve_bow">Recurve bow</string>
+    <string name="compound_bow">Compound bow</string>
+    <string name="bare_bow">Bare bow</string>
+    <string name="long_bow">Long bow</string>
+    <string name="horse_bow">Horse bow</string>
+    <string name="yumi">Yumi</string>
+    <string name="properties">Propriedades</string>
+    <string name="brand">Marca</string>
+    <string name="size">Tamanho</string>
+    <string name="description">Descrição</string>
+    <string name="height">Brace height</string>
+    <string name="tiller">Tiller</string>
+    <string name="sight_settings">Configurações de aparência</string>
+    <string name="add">Adicionar</string>
+    <string name="select_picture">Selecionar uma foto</string>
+    <string name="take_picture">Tirar uma foto</string>
+    <string name="pick_from_gallery">Selecionar uma foto da galeria</string>
+
+    <!-- New arrow -->
+    <string name="add_arrow">Adicionar flecha</string>
+    <string name="length">Comprimento</string>
+    <string name="spine">Spine</string>
+    <string name="weight">Peso</string>
+    <string name="vanes">Vanes</string>
+    <string name="nock">Nock</string>
+    <string name="material">Material</string>
+
+    <!-- New round -->
+    <string name="title">Título</string>
+    <string name="outdoor">Outdoor</string>
+    <string name="indoor">Indoor</string>
+    <string name="distance">Distância</string>
+    <string name="format">Formato</string>
+
+    <!-- x passes of y arrows -->
+    <plurals name="passe">
+        <item quantity="one">1 série</item>
+        <item quantity="other">%d séries</item>
+    </plurals>
+    <string name="with">de</string>
+    <plurals name="arrow">
+        <item quantity="one">1 flecha</item>
+        <item quantity="other">%d flechas</item>
+    </plurals>
+
+    <string name="target_round">Circunferência do alvo</string>
+    <string name="title_compound">Composto?</string>
+    <string name="msg_compound_type">Que tipo de arco você está usando? (Há uma diferença em quantos pontos você ganha pelos anéis amarelos)</string>
+    <string name="other_bow">Other bow</string>
+
+    <!-- Scoreboard -->
+    <string name="scoreboard">Scoreboard</string>
+    <string name="arrows">Flechas</string>
+    <string name="sum">Soma</string>
+    <string name="carry">Acumulado</string>
+    <string name="action_print">Imprimir</string>
+    <string name="nine">Nove</string>
+    <string name="ten_x">Dez+X</string>
+    <string name="average">Média</string>
+
+    <!-- Input mode -->
+    <string name="switch_mode">Mudar o modo de entrada</string>
+    <string name="show_all">Show all impacts</string>
+    <string name="comment">Comentar</string>
+    <plurals name="passes_finished">
+        <item quantity="one">1 série terminada</item>
+        <item quantity="other">%d séries terminadas</item>
+    </plurals>
+    <string name="passes_finished_now_what">Você terminou seu round. O que deseja fazer agora?</string>
+    <string name="continue_with_next">Continuar</string>
+
+    <!-- Statistics -->
+    <string name="all_trainings">Todos os treinos</string>
+    <string name="entire_training">Treino inteiro</string>
+    <string name="current_round">Round atual</string>
+
+    <!-- Import/Backup -->
+    <string name="select_a_file">Selecione um arquivo</string>
+    <string name="dir_not_created">Diretório não pôde ser criado!</string>
+    <string name="backup_successful">Backup bem sucedido!</string>
+    <string name="backup_saved_as">Backup salvo como \'%s\'.</string>
+    <string name="backup_failed">Backup falhou!</string>
+    <string name="backup_error">Ocorreu um erro na criação do backup:\n%s</string>
+    <string name="sd_card_not_available_title">Cartão SD indisponível!</string>
+    <string name="sd_card_not_available_desc">Por favor ajuste seu cartão SD e tente novamente!</string>
+    <string name="import_successful">Importação bem sucedida!</string>
+    <string name="import_failed">Importação falhou!</string>
+    <string name="file_not_found">Arquivo não encontrado!</string>
+    <string name="failed_reading_file">Falha na leitura do arquivo!</string>
+
+    <!-- Donate -->
+    <string name="donate_action">Doar</string>
+    <string name="donate_2">Doe-me um hamburger</string>
+    <string name="donate_5">Doe-me um kebab</string>
+    <string name="donate_10">Doe-me uma pizza grande</string>
+    <string name="donate_20">Doe-me combustível</string>
+    <string name="donate_infinite">Apoio duradouro</string>
+    <string name="donation_thank">Obrigado por seu apoio!</string>
+    <string name="monthly">mensalmente %s</string>
+    <string name="donate_text">Os valores incluem VAT e 30% de fees para o Google. Como alternativa, você pode doar livremente na conta PayPal dreier.florian@gmail.com.</string>
+
+    <!-- Timer -->
+    <string name="timer">Cronômetro</string>
+    <string name="stop">STOP</string>
+    <string name="touch_to_start">Toque para começar</string>
+    <string name="preparation">Preparação</string>
+    <string name="shooting">Atirar</string>
+
+    <!-- Timer settings -->
+    <string name="timer_shooting_time">Tempo de tiro</string>
+    <string name="timer_waiting_time">Tempo de preparo</string>
+    <string name="timer_warning_time">tempo de advertência</string>
+    <string name="timer_sound">Som</string>
+    <string name="timer_vibrate">Vibrar</string>
+
+    <!-- Settings -->
+    <string name="backup_action">Backup</string>
+    <string name="import_action">Importar</string>
+    <string name="export">Exportar</string>
+    <string name="exports_as_csv">Dados exportados salvos como *.csv</string>
+    <string name="app_rate">Avaliar app</string>
+    <string name="app_share">Compartilhar app</string>
+    <string name="contact_developer">Contatar desenvolvedor</string>
+    <string name="licences">Abrir códigos de licenças</string>
+    <string name="licences_summary">Notas legais de Licenças</string>
+    <string name="version">Versão %s</string>
+    <plurals name="second">
+        <item quantity="one">1 segundo</item>
+        <item quantity="other">%d segundos</item>
+    </plurals>
+    <string name="info">Informação</string>
+    <string name="data">Dados</string>
+    <string name="create_backup_on_sd">Criar backup no cartão SD</string>
+    <string name="restore_backup">Restaurar backup</string>
+    <string name="undo">Desfazer</string>
+
+</resources>

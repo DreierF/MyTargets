@@ -206,5 +206,6 @@
     <string name="wind">Wind</string>
     <string name="wind_speed">Windgeschwindigkeit</string>
     <string name="wind_direction">Windrichtung</string>
+    <string name="undo">Rückgängig</string>
 
 </resources>

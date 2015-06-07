@@ -51,6 +51,7 @@ public class SettingsFragment extends PreferenceFragment
         setSecondsSummary("timer_wait_time", "10");
         setSecondsSummary("timer_shoot_time", "120");
         setSecondsSummary("timer_warn_time", "30");
+        setUnitSummary();
     }
 
     @Override
@@ -60,19 +61,6 @@ public class SettingsFragment extends PreferenceFragment
         ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
         ab.setHomeButtonEnabled(true);
         ab.setDisplayHomeAsUpEnabled(true);
-    }
-
-    void setSecondsSummary(String key, String def) {
-        Preference pref = findPreference(key);
-        int sec;
-        try {
-            sec = Integer.parseInt(
-                    getPreferenceManager().getSharedPreferences().getString(key, def));
-        } catch (NumberFormatException e) {
-            sec = Integer.parseInt(def);
-            getPreferenceManager().getSharedPreferences().edit().putString(key, def).apply();
-        }
-        pref.setSummary(getResources().getQuantityString(R.plurals.second, sec, sec));
     }
 
     // We're being destroyed. It's important to dispose of the helper here!
@@ -234,6 +222,28 @@ public class SettingsFragment extends PreferenceFragment
         setSecondsSummary("timer_wait_time", "10");
         setSecondsSummary("timer_shoot_time", "120");
         setSecondsSummary("timer_warn_time", "30");
+        setUnitSummary();
+    }
+
+    void setSecondsSummary(String key, String def) {
+        Preference pref = findPreference(key);
+        int sec;
+        try {
+            sec = Integer.parseInt(
+                    getPreferenceManager().getSharedPreferences().getString(key, def));
+        } catch (NumberFormatException e) {
+            sec = Integer.parseInt(def);
+            getPreferenceManager().getSharedPreferences().edit().putString(key, def).apply();
+        }
+        pref.setSummary(getResources().getQuantityString(R.plurals.second, sec, sec));
+    }
+
+    private void setUnitSummary() {
+        Preference pref = findPreference("pref_unit");
+        Boolean defValue = Boolean.valueOf(getString(R.string.default_unit));
+        boolean val = getPreferenceManager().getSharedPreferences().getBoolean("pref_unit",
+                defValue);
+        pref.setSummary(val ? R.string.metric : R.string.imperial);
     }
 
     @Override

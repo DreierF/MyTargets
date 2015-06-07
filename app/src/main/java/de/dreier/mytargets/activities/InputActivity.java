@@ -268,7 +268,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         passe.sort();
 
         passe.roundId = mRound;
-        db.updatePasse(passe);
+
+        db.update(passe);
+
         if (curPasse > savedPasses || remote) {
             savedPasses++;
             manager.sendMessage(buildInfo());

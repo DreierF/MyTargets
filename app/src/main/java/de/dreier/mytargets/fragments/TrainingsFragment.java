@@ -9,6 +9,7 @@ package de.dreier.mytargets.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +33,23 @@ import de.dreier.mytargets.shared.models.Training;
  */
 public class TrainingsFragment extends ExpandableNowListFragment<Month, Training> {
 
+    private FloatingActionButton mFab;
+
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
         itemTypeRes = R.plurals.training_selected;
         itemTypeDelRes = R.plurals.training_deleted;
         newStringRes = R.string.new_training;
         mEditable = true;
+
+        mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        mFab.setOnClickListener(this);
+    }
+
+
+    @Override
+    protected void setFabVisibility(int visibility) {
+        mFab.setVisibility(visibility);
     }
 
     @Override

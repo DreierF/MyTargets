@@ -12,6 +12,9 @@ import java.io.Serializable;
 
 public class Distance extends IdProvider implements Comparable<Distance>, Serializable {
     static final long serialVersionUID = 53L;
+    public static final Integer[] valuesMetric = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70,
+            90};
+    public static final Integer[] valuesImperial = {20, 25, 30, 40, 50, 60, 80, 100};
 
     public int distance;
     public String unit;

@@ -22,48 +22,42 @@
         android:minHeight="?attr/actionBarSize"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="66dp"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="60dp"
-            android:layout_marginRight="10dp"
-            android:orientation="vertical">
+            android:layout_marginRight="10dp">
 
-            <TextView
-                style="@style/Label"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/training_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/title"
-                android:textColor="@color/colorAccent"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_toLeftOf="@+id/training_date"
+                android:layout_toStartOf="@+id/training_date">
 
                 <EditText
                     android:id="@+id/training"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/training_date"
-                    android:layout_toStartOf="@+id/training_date"
+                    android:hint="@string/title"
                     android:inputType="text"/>
 
-                <Button
-                    android:id="@+id/training_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/training"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:paddingLeft="5dp"
-                    android:textSize="14sp"
-                    android:textStyle="normal"/>
+            </android.support.design.widget.TextInputLayout>
 
-            </RelativeLayout>
+            <Button
+                android:id="@+id/training_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/training_layout"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingLeft="5dp"
+                android:textSize="14sp"
+                android:textStyle="normal"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
 
@@ -245,13 +239,20 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"/>
 
-                <com.iangclifton.android.floatlabel.FloatLabel
-                    android:id="@+id/comment"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:hint="@string/comment"
-                    android:inputType="textMultiLine"/>
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:hint="@string/comment"
+                        android:inputType="textMultiLine"/>
+
+                </android.support.design.widget.TextInputLayout>
+
 
             </LinearLayout>
 

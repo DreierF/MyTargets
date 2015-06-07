@@ -20,6 +20,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.concurrent.CountDownLatch;
 
+import de.dreier.mytargets.shared.utils.BitmapUtils;
+
 public class ScoreboardImage {
     private Bitmap b;
 

@@ -195,5 +195,6 @@
     <string name="data">Gegevens</string>
     <string name="create_backup_on_sd">Back-up van de opgeslagen gegevens</string>
     <string name="restore_backup">Gegevens importeren</string>
+    <string name="undo">Ongedaan maken</string>
 
 </resources>

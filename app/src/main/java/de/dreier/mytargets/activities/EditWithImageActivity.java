@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -28,19 +27,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
-import com.github.ksoichiro.android.observablescrollview.ScrollState;
-import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.view.ViewHelper;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -49,11 +37,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.utils.BitmapUtils;
+import de.dreier.mytargets.shared.utils.BitmapUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
-public abstract class EditWithImageActivity extends AppCompatActivity
-        implements ObservableScrollViewCallbacks {
+public abstract class EditWithImageActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int SELECT_PICTURE = 2;
@@ -63,23 +50,10 @@ public abstract class EditWithImageActivity extends AppCompatActivity
     Bitmap imageBitmap = null;
 
     private View mFab;
-    private Toolbar mToolbar;
-    private View mOverlayView;
-    private TextView mTitleView;
-    private View mImageContainer;
     ImageView mImageView;
-    private ProgressBar mImageProgress;
-
+    //private ProgressBar mImageProgress;
     private final int layoutRes;
-    private int mToolbarColor;
-    private boolean mFabIsShown;
     private final int defaultDrawable;
-
-    private int mLeftSpace;
-    private int mFabMargin;
-    private int mActionBarSize;
-    private int mFlexibleSpaceImageHeight;
-    private int mFlexibleSpaceShowFabOffset;
 
     public EditWithImageActivity(int layoutRes, int defaultDrawable) {
         this.layoutRes = layoutRes;
@@ -93,14 +67,10 @@ public abstract class EditWithImageActivity extends AppCompatActivity
 
         // Get UI elements
         LinearLayout content = (LinearLayout) findViewById(R.id.content);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mImageContainer = findViewById(R.id.img_container);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mImageView = (ImageView) findViewById(R.id.img_view);
-        mImageProgress = (ProgressBar) findViewById(R.id.img_progress);
-        mOverlayView = findViewById(R.id.overlay);
-        mTitleView = (TextView) findViewById(R.id.title);
+        //mImageProgress = (ProgressBar) findViewById(R.id.img_progress);
         mFab = findViewById(R.id.fab);
-        ObservableScrollView scrollView = (ObservableScrollView) findViewById(R.id.scroll);
 
         // Set up Toolbar
         setSupportActionBar(mToolbar);
@@ -108,15 +78,8 @@ public abstract class EditWithImageActivity extends AppCompatActivity
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
 
         // Load values used for image animation
-        mFlexibleSpaceImageHeight = getResources()
-                .getDimensionPixelSize(R.dimen.flexible_space_image_height);
-        mFlexibleSpaceShowFabOffset = getResources()
-                .getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
-        mLeftSpace = getResources().getDimensionPixelSize(R.dimen.left_space_title_toolbar);
-        mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
-        mActionBarSize = ToolbarUtils.getActionBarSize(this);
+        int mActionBarSize = ToolbarUtils.getActionBarSize(this);
         int statusBarSize = ToolbarUtils.getStatusBarSize(this);
-        mToolbarColor = getResources().getColor(R.color.colorPrimary);
 
         // Ensure scrollview is at least as big to fill the screen
         DisplayMetrics metrics = new DisplayMetrics();
@@ -127,29 +90,12 @@ public abstract class EditWithImageActivity extends AppCompatActivity
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         inflater.inflate(layoutRes, content);
 
-        // Set scrollview callbacks
-        scrollView.setScrollViewCallbacks(this);
-
-        // Prepare custom title view
-        mTitleView.setText(getTitle());
-        setTitle(null);
-
         // Initialize FAB button
         registerForContextMenu(mFab);
-        ViewHelper.setScaleX(mFab, 0);
-        ViewHelper.setScaleY(mFab, 0);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mFab.showContextMenu();
-            }
-        });
-
-        // Initialize layout
-        ScrollUtils.addOnGlobalLayoutListener(scrollView, new Runnable() {
-            @Override
-            public void run() {
-                onScrollChanged(0, false, false);
             }
         });
 
@@ -202,136 +148,6 @@ public abstract class EditWithImageActivity extends AppCompatActivity
     protected abstract void onSave();
 
     @Override
-    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-        // Translate overlay and image
-        float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
-        int minOverlayTransitionY = mActionBarSize - mOverlayView.getHeight();
-        ViewHelper.setTranslationY(mOverlayView,
-                ScrollUtils.getFloat(-scrollY, minOverlayTransitionY, 0));
-        ViewHelper.setTranslationY(mImageContainer,
-                ScrollUtils.getFloat(-scrollY / 2, minOverlayTransitionY, 0));
-
-        // Change alpha of overlay
-        ViewHelper.setAlpha(mOverlayView,
-                ScrollUtils.getFloat((float) scrollY / flexibleRange, 0, 1));
-
-        // Scale title text
-        float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0, 0.3f);
-        ViewHelper.setPivotX(mTitleView, 0);
-        ViewHelper.setPivotY(mTitleView, 0);
-        ViewHelper.setScaleX(mTitleView, scale);
-        ViewHelper.setScaleY(mTitleView, scale);
-
-        // Translate title text
-        int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight -
-                mTitleView.getHeight() * scale);
-        int titleTranslationY = maxTitleTranslationY - scrollY;
-        titleTranslationY = Math.max(0, titleTranslationY);
-        float scale2 = ScrollUtils
-                .getFloat((scrollY - flexibleRange + mActionBarSize) / (mActionBarSize), 0, 1);
-        ViewHelper.setTranslationX(mTitleView, (scale2 * mLeftSpace));
-        ViewHelper.setTranslationY(mTitleView, titleTranslationY);
-
-        // Translate FAB
-        int maxFabTranslationY = mFlexibleSpaceImageHeight - mFab.getHeight() / 2;
-        float fabTranslationY = ScrollUtils.getFloat(
-                -scrollY + mFlexibleSpaceImageHeight - mFab.getHeight() / 2,
-                mActionBarSize - mFab.getHeight() / 2,
-                maxFabTranslationY);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            // On pre-honeycomb, ViewHelper.setTranslationX/Y does not set margin,
-            // which causes FAB's OnClickListener not working.
-            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFab.getLayoutParams();
-            lp.leftMargin = mOverlayView.getWidth() - mFabMargin - mFab.getWidth();
-            lp.topMargin = (int) fabTranslationY;
-            mFab.requestLayout();
-        } else {
-            ViewHelper
-                    .setTranslationX(mFab, mOverlayView.getWidth() - mFabMargin - mFab.getWidth());
-            ViewHelper.setTranslationY(mFab, fabTranslationY);
-        }
-
-        // Show/hide FAB
-        if (fabTranslationY < mFlexibleSpaceShowFabOffset) {
-            hideFab();
-        } else {
-            showFab();
-        }
-
-        // Change alpha of toolbar background
-        if (-scrollY + mFlexibleSpaceImageHeight <= mActionBarSize) {
-            mToolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(1, mToolbarColor));
-        } else {
-            mToolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(0, mToolbarColor));
-        }
-    }
-
-    @Override
-    public void onDownMotionEvent() {
-    }
-
-    @Override
-    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-    }
-
-    private void showFab() {
-        if (!mFabIsShown) {
-            ViewPropertyAnimator.animate(mFab).cancel();
-            ViewPropertyAnimator.animate(mFab).scaleX(1).scaleY(1).setDuration(200).setListener(
-                    new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-                            mFab.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-
-                        }
-                    }).start();
-            mFabIsShown = true;
-        }
-    }
-
-    private void hideFab() {
-        if (mFabIsShown) {
-            ViewPropertyAnimator.animate(mFab).cancel();
-            ViewPropertyAnimator.animate(mFab).scaleX(0).scaleY(0).setDuration(200).setListener(
-                    new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            mFab.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-
-                        }
-                    }).start();
-            mFabIsShown = false;
-        }
-    }
-
-    @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
@@ -381,7 +197,7 @@ public abstract class EditWithImageActivity extends AppCompatActivity
 
             @Override
             protected void onPreExecute() {
-                mImageProgress.setVisibility(View.VISIBLE);
+                //mImageProgress.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -415,7 +231,7 @@ public abstract class EditWithImageActivity extends AppCompatActivity
                 if (success) {
                     mImageView.setImageBitmap(imageBitmap);
                 }
-                mImageProgress.setVisibility(View.GONE);
+                //mImageProgress.setVisibility(View.GONE);
             }
         }.execute(selectedImageUri);
     }

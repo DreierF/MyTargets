@@ -1,62 +1,110 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
-    <com.iangclifton.android.floatlabel.FloatLabel
-        android:id="@+id/arrow_name"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/name"
-        android:inputType="textNoSuggestions" />
+        android:layout_height="wrap_content">
 
-    <com.iangclifton.android.floatlabel.FloatLabel
-        android:id="@+id/arrow_length"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/length"
-        android:inputType="textNoSuggestions" />
+        <EditText
+            android:id="@+id/arrow_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/name"
+            android:inputType="textNoSuggestions"/>
 
-    <com.iangclifton.android.floatlabel.FloatLabel
-        android:id="@+id/arrow_material"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/material"
-        android:inputType="textNoSuggestions" />
+    </android.support.design.widget.TextInputLayout>
 
-    <com.iangclifton.android.floatlabel.FloatLabel
-        android:id="@+id/arrow_spine"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/spine"
-        android:inputType="textNoSuggestions" />
+        android:layout_height="wrap_content">
 
-    <com.iangclifton.android.floatlabel.FloatLabel
-        android:id="@+id/arrow_weight"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/weight"
-        android:inputType="textNoSuggestions" />
+        <EditText
+            android:id="@+id/arrow_length"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/length"
+            android:inputType="textNoSuggestions"/>
 
-    <com.iangclifton.android.floatlabel.FloatLabel
-        android:id="@+id/arrow_vanes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/vanes"
-        android:inputType="textNoSuggestions" />
+    </android.support.design.widget.TextInputLayout>
 
-    <com.iangclifton.android.floatlabel.FloatLabel
-        android:id="@+id/arrow_nock"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/nock"
-        android:inputType="textNoSuggestions" />
+        android:layout_height="wrap_content">
 
-    <com.iangclifton.android.floatlabel.FloatLabel
-        android:id="@+id/arrow_comment"
+        <EditText
+            android:id="@+id/arrow_material"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/material"
+            android:inputType="textNoSuggestions"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/comment"
-        android:inputType="textNoSuggestions" />
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/arrow_spine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/spine"
+            android:inputType="textNoSuggestions"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/arrow_weight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/weight"
+            android:inputType="textNoSuggestions"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/arrow_vanes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/vanes"
+            android:inputType="textNoSuggestions"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/arrow_nock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/nock"
+            android:inputType="textNoSuggestions"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/arrow_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/comment"
+            android:inputType="textNoSuggestions"/>
+
+    </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>

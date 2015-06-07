@@ -214,5 +214,6 @@
     <string name="data">Данные</string>
     <string name="create_backup_on_sd">Сохранить резервную копию на флэш-карте</string>
     <string name="restore_backup">Восстановить данные из резервной копии</string>
+    <string name="undo">Отмена</string>
 
 </resources>

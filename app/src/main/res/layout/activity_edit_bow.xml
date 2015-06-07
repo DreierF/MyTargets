@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <TextView
         style="@style/Label"
@@ -9,7 +9,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:layout_weight="1"
-        android:text="@string/bow_type" />
+        android:text="@string/bow_type"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,14 +20,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/recurve_bow" />
+            android:text="@string/recurve_bow"/>
 
         <RadioButton
             android:id="@+id/compound"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/compound_bow" />
+            android:text="@string/compound_bow"/>
     </LinearLayout>
 
     <LinearLayout
@@ -39,14 +39,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/bare_bow" />
+            android:text="@string/bare_bow"/>
 
         <RadioButton
             android:id="@+id/longbow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/long_bow" />
+            android:text="@string/long_bow"/>
     </LinearLayout>
 
     <LinearLayout
@@ -58,14 +58,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/horse_bow" />
+            android:text="@string/horse_bow"/>
 
         <RadioButton
             android:id="@+id/yumi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/yumi" />
+            android:text="@string/yumi"/>
     </LinearLayout>
 
     <TextView
@@ -74,35 +74,51 @@
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:layout_weight="1"
-        android:text="@string/properties" />
+        android:text="@string/properties"/>
 
-    <com.iangclifton.android.floatlabel.FloatLabel
-        android:id="@+id/name"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/name"
-        android:inputType="textNoSuggestions" />
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/name"
+            android:inputType="textNoSuggestions"/>
+    </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.iangclifton.android.floatlabel.FloatLabel
-            android:id="@+id/brand"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/brand"
-            android:inputType="textNoSuggestions" />
+            android:layout_height="wrap_content">
 
-        <com.iangclifton.android.floatlabel.FloatLabel
-            android:id="@+id/size"
+            <EditText
+                android:id="@+id/brand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/brand"
+                android:inputType="textNoSuggestions"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/size"
-            android:inputType="textNoSuggestions" />
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/size"
+                android:inputType="textNoSuggestions"/>
+
+        </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>
 
@@ -111,29 +127,48 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.iangclifton.android.floatlabel.FloatLabel
-            android:id="@+id/height"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/height"
-            android:inputType="textNoSuggestions" />
+            android:layout_height="wrap_content">
 
-        <com.iangclifton.android.floatlabel.FloatLabel
-            android:id="@+id/tiller"
+            <EditText
+                android:id="@+id/brace_height"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/height"
+                android:inputType="textNoSuggestions"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/tiller"
-            android:inputType="textNoSuggestions" />
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/tiller"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/tiller"
+                android:inputType="textNoSuggestions"/>
+
+        </android.support.design.widget.TextInputLayout>
+
     </LinearLayout>
 
-    <com.iangclifton.android.floatlabel.FloatLabel
-        android:id="@+id/desc"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/description"
-        android:inputType="textMultiLine" />
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/description"
+            android:inputType="textMultiLine"/>
+
+    </android.support.design.widget.TextInputLayout>
 
     <TextView
         style="@style/Label"
@@ -141,7 +176,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:layout_weight="1"
-        android:text="@string/sight_settings" />
+        android:text="@string/sight_settings"/>
 
     <LinearLayout
         android:id="@+id/sight_settings"
@@ -163,6 +198,6 @@
         android:paddingRight="15dp"
         android:paddingTop="5dp"
         android:text="@string/add"
-        android:textColor="@android:color/secondary_text_light" />
+        android:textColor="@android:color/secondary_text_light"/>
 
 </LinearLayout>

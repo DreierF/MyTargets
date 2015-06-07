@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -20,9 +20,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-
-import com.cocosw.undobar.UndoBarController;
-import com.iangclifton.android.floatlabel.FloatLabel;
 
 import java.util.ArrayList;
 
@@ -33,8 +30,7 @@ import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.views.DialogSpinner;
 import de.dreier.mytargets.views.DistanceDialogSpinner;
 
-public class EditBowActivity extends EditWithImageActivity
-        implements UndoBarController.UndoListener {
+public class EditBowActivity extends EditWithImageActivity {
 
     public static final String BOW_ID = "bow_id";
     private static final String UNDO_SETTING = "undo_setting";
@@ -46,12 +42,12 @@ public class EditBowActivity extends EditWithImageActivity
     public static final int BLANK_BOW = 3;
     public static final int HORSE_BOW = 4;
     public static final int YUMI = 5;
-    private FloatLabel name;
-    private FloatLabel brand;
-    private FloatLabel size;
-    private FloatLabel height;
-    private FloatLabel tiller;
-    private FloatLabel desc;
+    private EditText name;
+    private EditText brand;
+    private EditText size;
+    private EditText height;
+    private EditText tiller;
+    private EditText desc;
     private RadioButton recurveBow, compoundBow, longBow, blank, horse, yumi;
     private long mBowId = -1;
     private LinearLayout sight_settings;
@@ -71,18 +67,18 @@ public class EditBowActivity extends EditWithImageActivity
             mBowId = intent.getLongExtra(BOW_ID, -1);
         }
 
-        name = (FloatLabel) findViewById(R.id.name);
+        name = (EditText) findViewById(R.id.name);
         recurveBow = (RadioButton) findViewById(R.id.recurve);
         compoundBow = (RadioButton) findViewById(R.id.compound);
         longBow = (RadioButton) findViewById(R.id.longbow);
         blank = (RadioButton) findViewById(R.id.blank);
         horse = (RadioButton) findViewById(R.id.horse);
         yumi = (RadioButton) findViewById(R.id.yumi);
-        brand = (FloatLabel) findViewById(R.id.brand);
-        size = (FloatLabel) findViewById(R.id.size);
-        height = (FloatLabel) findViewById(R.id.height);
-        tiller = (FloatLabel) findViewById(R.id.tiller);
-        desc = (FloatLabel) findViewById(R.id.desc);
+        brand = (EditText) findViewById(R.id.brand);
+        size = (EditText) findViewById(R.id.size);
+        height = (EditText) findViewById(R.id.brace_height);
+        tiller = (EditText) findViewById(R.id.tiller);
+        desc = (EditText) findViewById(R.id.desc);
         sight_settings = (LinearLayout) findViewById(R.id.sight_settings);
         Button add_button = (Button) findViewById(R.id.add_sight_setting_button);
         add_button.setOnClickListener(new View.OnClickListener() {
@@ -126,6 +122,7 @@ public class EditBowActivity extends EditWithImageActivity
         if (savedInstanceState == null && mBowId != -1) {
             DatabaseManager db = DatabaseManager.getInstance(this);
             Bow bow = db.getBow(mBowId, false);
+            getSupportActionBar().setTitle(bow.name);
             name.setText(bow.name);
             brand.setText(bow.brand);
             size.setText(bow.size);
@@ -142,6 +139,7 @@ public class EditBowActivity extends EditWithImageActivity
         } else if (savedInstanceState == null) {
             recurveBow.setChecked(true);
             sightSettingsList = new ArrayList<>();
+            getSupportActionBar().setTitle(R.string.new_bow);
         }
 
         if (savedInstanceState != null) {
@@ -160,17 +158,6 @@ public class EditBowActivity extends EditWithImageActivity
                     addSightSetting(sightSettingsList.get(i), i);
                 }
             }
-        }
-    }
-
-    @Override
-    public void onUndo(@Nullable Parcelable token) {
-        if(token!=null) {
-            Bundle b = (Bundle) token;
-            int ind = b.getInt(UNDO_SETTING_IND);
-            SightSetting s = b.getParcelable(UNDO_SETTING);
-            sightSettingsList.add(ind, s);
-            addSightSetting(s,ind);
         }
     }
 
@@ -238,14 +225,16 @@ public class EditBowActivity extends EditWithImageActivity
         remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Bundle b = new Bundle();
-                b.putInt(UNDO_SETTING_IND, sightSettingsList.indexOf(setting));
-                b.putParcelable(UNDO_SETTING, setting);
-                new UndoBarController.UndoBar(EditBowActivity.this)
-                        .message(R.string.sight_setting_removed)
-                        .style(UndoBarController.UNDOSTYLE)
-                        .token(b)
-                        .listener(EditBowActivity.this).show();
+                final int index = sightSettingsList.indexOf(setting);
+                Snackbar.make(findViewById(R.id.coordinator_layout), R.string.sight_setting_removed,
+                        Snackbar.LENGTH_LONG)
+                        .setAction(R.string.undo, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                sightSettingsList.add(index, setting);
+                                addSightSetting(setting, index);
+                            }
+                        }).show();
                 sight_settings.removeView(rel);
                 sightSettingsList.remove(setting);
             }
@@ -279,17 +268,17 @@ public class EditBowActivity extends EditWithImageActivity
 
         Bow bow = new Bow();
         bow.id = mBowId;
-        bow.name = name.getTextString();
-        bow.brand = brand.getTextString();
-        bow.size = size.getTextString();
-        bow.height = height.getTextString();
-        bow.tiller = tiller.getTextString();
-        bow.description = desc.getTextString();
+        bow.name = name.getText().toString();
+        bow.brand = brand.getText().toString();
+        bow.size = size.getText().toString();
+        bow.height = height.getText().toString();
+        bow.tiller = tiller.getText().toString();
+        bow.description = desc.getText().toString();
         bow.type = getType();
         bow.imageFile = mImageFile;
         bow.image = imageBitmap;
 
-        db.updateBow(bow);
+        db.update(bow);
 
         for (SightSetting set : sightSettingsList) {
             set.update();
@@ -329,12 +318,12 @@ public class EditBowActivity extends EditWithImageActivity
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("name", name.getTextString());
-        outState.putString("brand", brand.getTextString());
-        outState.putString("size", size.getTextString());
-        outState.putString("height", height.getTextString());
-        outState.putString("tiller", tiller.getTextString());
-        outState.putString("desc", desc.getTextString());
+        outState.putString("name", name.getText().toString());
+        outState.putString("brand", brand.getText().toString());
+        outState.putString("size", size.getText().toString());
+        outState.putString("height", height.getText().toString());
+        outState.putString("tiller", tiller.getText().toString());
+        outState.putString("desc", desc.getText().toString());
         for (SightSetting set : sightSettingsList) {
             set.update();
         }

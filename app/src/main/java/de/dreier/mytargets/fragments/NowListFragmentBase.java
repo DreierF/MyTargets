@@ -8,10 +8,10 @@ package de.dreier.mytargets.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
 import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -28,8 +28,6 @@ import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 import com.bignerdranch.android.recyclerviewchoicemode.ModalMultiSelectorCallback;
 import com.bignerdranch.android.recyclerviewchoicemode.MultiSelector;
 import com.bignerdranch.android.recyclerviewchoicemode.OnCardClickListener;
-import com.cocosw.undobar.UndoBarController;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,12 +35,12 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.shared.models.DatabaseSerializable;
 import de.dreier.mytargets.shared.models.IdProvider;
 
 public abstract class NowListFragmentBase<T extends IdProvider> extends Fragment
-        implements View.OnClickListener, OnCardClickListener<T>,UndoBarController.UndoListener {
+        implements View.OnClickListener, OnCardClickListener<T> {
     public static final String TRAINING_ID = "training_id";
-    protected static final String UNDO_DELETE_ITEMS = "undo_delete_items";
 
     @PluralsRes
     int itemTypeRes;
@@ -58,26 +56,27 @@ public abstract class NowListFragmentBase<T extends IdProvider> extends Fragment
     // New view
     protected View mNewLayout;
     protected TextView mNewText;
-    protected FloatingActionsMenu mFab;
 
     AppCompatActivity activity;
     DatabaseManager db;
     boolean mEditable = false;
     RecyclerView mRecyclerView;
+    protected View rootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(getLayoutResource(), container, false);
+        rootView = inflater.inflate(getLayoutResource(), container, false);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(android.R.id.list);
         mRecyclerView.setHasFixedSize(true);
 
-        mFab = (FloatingActionsMenu) rootView.findViewById(R.id.fab);
-        mFab.setOnClickListener(this);
-
         mNewLayout = rootView.findViewById(R.id.new_layout);
         mNewText = (TextView) rootView.findViewById(R.id.new_text);
         return rootView;
+    }
+
+    protected int getLayoutResource() {
+        return R.layout.fragment_list;
     }
 
     @Override
@@ -100,9 +99,11 @@ public abstract class NowListFragmentBase<T extends IdProvider> extends Fragment
             mNewLayout.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
             mNewText.setText(newStringRes);
         } else {
-            mFab.setVisibility(View.GONE);
+            setFabVisibility(View.GONE);
         }
     }
+
+    protected abstract void setFabVisibility(int visibility);
 
     private final ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(
             mMultiSelector) {
@@ -150,32 +151,30 @@ public abstract class NowListFragmentBase<T extends IdProvider> extends Fragment
     void remove(List<Integer> positions) {
         Collections.sort(positions);
         Collections.reverse(positions);
-        ArrayList<T> deleted = new ArrayList<>();
+        final ArrayList<T> deleted = new ArrayList<>();
         for (int pos : positions) {
             T item = getItem(pos);
             deleted.add(item);
-            db.delete(item);
+            removeItem(pos);
         }
-        onResume();
-        final Bundle b = new Bundle();
-        b.putSerializable(UNDO_DELETE_ITEMS, deleted);
-        new UndoBarController.UndoBar(getActivity())
-                .message(getActivity().getResources().getQuantityString(itemTypeDelRes, deleted.size()))
-                .style(UndoBarController.UNDOSTYLE)
-                .token(b)
-                .listener(this).show();
+        String message = getActivity().getResources()
+                .getQuantityString(itemTypeDelRes, deleted.size(), deleted.size());
+        Snackbar.make(rootView, message,
+                Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        for (T item : deleted) {
+                            db.update((DatabaseSerializable) item);
+                        }
+                    }
+                }).show();
+        for (T item : deleted) {
+            db.delete((DatabaseSerializable)item);
+        } //TODO make this more intelligent and support animations
     }
 
-    @Override
-    public void onUndo(@Nullable Parcelable token) {
-        if (token != null) {
-            Bundle b = (Bundle) token;
-            ArrayList<T> list = (ArrayList<T>) b.getSerializable(UNDO_DELETE_ITEMS);
-            for (T item : list) {
-                db.add(item);
-            }
-        }
-    }
+    protected abstract void removeItem(int pos);
 
     void updateTitle() {
         if (actionMode == null) {
@@ -224,10 +223,6 @@ public abstract class NowListFragmentBase<T extends IdProvider> extends Fragment
     }
 
     protected abstract T getItem(int id);
-
-    protected int getLayoutResource() {
-        return R.layout.fragment_list;
-    }
 
     protected abstract void init(Bundle intent, Bundle savedInstanceState);
 

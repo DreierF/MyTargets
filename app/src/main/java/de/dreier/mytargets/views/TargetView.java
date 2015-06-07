@@ -33,7 +33,7 @@ import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.views.TargetViewBase;
-import de.dreier.mytargets.utils.BitmapUtils;
+import de.dreier.mytargets.shared.utils.BitmapUtils;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
 import de.dreier.mytargets.utils.TextInputDialog;
 

@@ -27,8 +27,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
-import com.iangclifton.android.floatlabel.FloatLabel;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -76,7 +74,7 @@ public class EditRoundFragment extends Fragment implements DatePickerDialog.OnDa
     private DialogSpinner target;
     private int mBowId = 0;
     private EditText training;
-    private FloatLabel comment;
+    private EditText comment;
     private NumberPicker rounds, arrows;
     private Button training_date;
     private Date date = new Date();
@@ -100,6 +98,7 @@ public class EditRoundFragment extends Fragment implements DatePickerDialog.OnDa
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+        setHasOptionsMenu(true);
 
         Bundle i = getArguments();
         if (i != null) {
@@ -122,7 +121,7 @@ public class EditRoundFragment extends Fragment implements DatePickerDialog.OnDa
                 DatePickerFragment datePickerDialog = new DatePickerFragment();
                 datePickerDialog.setTargetFragment(EditRoundFragment.this, REQ_SELECTED_DATE);
                 datePickerDialog.setArguments(bundle);
-                datePickerDialog.show(activity.getSupportFragmentManager(), "datepicker");
+                datePickerDialog.show(activity.getSupportFragmentManager(), "date_picker");
             }
         });
 
@@ -224,7 +223,7 @@ public class EditRoundFragment extends Fragment implements DatePickerDialog.OnDa
         environment.setAdapter(new EnvironmentItemAdapter(activity));
 
         // Comment
-        comment = (FloatLabel) rootView.findViewById(R.id.comment);
+        comment = (EditText) rootView.findViewById(R.id.comment);
 
         if (mRound == -1) {
             // Initialise with default values
@@ -349,7 +348,7 @@ public class EditRoundFragment extends Fragment implements DatePickerDialog.OnDa
         training.id = mTraining;
         training.title = title;
         training.date = date;
-        db.updateTraining(training);
+        db.update(training);
         mTraining = training.id;
     }
 
@@ -396,8 +395,8 @@ public class EditRoundFragment extends Fragment implements DatePickerDialog.OnDa
         int after_rounds = rounds.getValue();
         round.ppp = arrows.getValue();
         round.indoor = indoor.isChecked();
-        round.comment = comment.getTextString();
-        db.updateRound(round);
+        round.comment = comment.getText().toString();
+        db.update(round);
 
         SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);
         SharedPreferences.Editor editor = prefs.edit();
