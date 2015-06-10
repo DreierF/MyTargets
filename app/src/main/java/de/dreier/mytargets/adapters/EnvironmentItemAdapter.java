@@ -16,7 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.models.Environment;
+import de.dreier.mytargets.shared.models.EWeather;
+import de.dreier.mytargets.shared.models.Environment;
 
 public class EnvironmentItemAdapter extends BaseAdapter {
     private final Context mContext;
@@ -24,7 +25,7 @@ public class EnvironmentItemAdapter extends BaseAdapter {
 
     public EnvironmentItemAdapter(Context context) {
         mContext = context;
-        environment = new Environment(Environment.WEATHER.SUNNY, 0, 0);
+        environment = new Environment(EWeather.SUNNY, 0, 0);
     }
 
     @Override

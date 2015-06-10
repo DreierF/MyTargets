@@ -203,11 +203,6 @@
     <string name="switch_view">Switch view mode</string>
     <string name="weather">Weather</string>
     <string name="environment">Environment</string>
-    <string name="sunny">Sunny</string>
-    <string name="partly_cloudy">Partly cloudy</string>
-    <string name="cloudy">Cloudy</string>
-    <string name="light_rain">Light rain</string>
-    <string name="rain">Rainy</string>
     <string name="wind">Wind</string>
     <string name="wind_speed">Wind speed</string>
     <string name="wind_direction">Wind direction</string>

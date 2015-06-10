@@ -41,7 +41,7 @@ import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.BackupUtils;
 
 public class DatabaseManager extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10; //TODO set to 9 before publishing
 
     private static final String ID = "_id";
     public static final String DATABASE_NAME = "database";
@@ -200,8 +200,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("UPDATE ROUND SET target=5 WHERE target=9");
             db.execSQL("UPDATE ROUND SET target=6 WHERE target=10");
         }
-        if (oldVersion < 9) {
-            db.execSQL("ALTER TABLE VISIER ADD COLUMN unit TEXT DEFAULT 'm'");
+        if (oldVersion < 10) { //TODO
+//            db.execSQL("ALTER TABLE VISIER ADD COLUMN unit TEXT DEFAULT 'm'"); //TODO uncomment
+            db.execSQL("ALTER TABLE ROUND ADD COLUMN weather INTEGER DEFAULT '0'");
+            db.execSQL("ALTER TABLE ROUND ADD COLUMN wind_speed INTEGER DEFAULT '0'");
+            db.execSQL("ALTER TABLE ROUND ADD COLUMN wind_direction INTEGER DEFAULT '0'");
+            db.execSQL("ALTER TABLE ROUND ADD COLUMN location TEXT DEFAULT ''");
             //TODO
         }
         onCreate(db);
@@ -234,7 +238,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public ArrayList<Round> getRounds(long training) {
         Cursor res = db.rawQuery(
                 "SELECT r._id, r.ppp, r.target, r.indoor, r.distance, r.unit, r.bow, r.arrow, b.type, r.comment, " +
-                        "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=r.target)) " +
+                        "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=r.target)), r.weather, " +
+                        "r.wind_speed, r.wind_direction, r.location " +
                         "FROM ROUND r " +
                         "LEFT JOIN PASSE p ON r._id = p.round " +
                         "LEFT JOIN SHOOT s ON p._id = s.passe " +
@@ -403,7 +408,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         // Get all generic round attributes
         Cursor cursor = db.rawQuery(
                 "SELECT r._id, r.ppp, r.target, r.indoor, r.distance, r.unit, r.bow, r.arrow, b.type, r.comment, " +
-                        "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=r.target)) " +
+                        "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=r.target)), r.weather, " +
+                        "r.wind_speed, r.wind_direction, r.location " +
                         "FROM ROUND r " +
                         "LEFT JOIN PASSE p ON r._id = p.round " +
                         "LEFT JOIN SHOOT s ON p._id = s.passe " +

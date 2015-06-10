@@ -29,7 +29,11 @@ public class Round extends IdProvider implements Serializable, DatabaseSerializa
                     TRAINING + " INTEGER REFERENCES " + Training.TABLE +
                     " ON DELETE CASCADE," +
                     ARROW + " INTEGER REFERENCES " + Arrow.TABLE + " ON DELETE SET NULL," +
-                    COMMENT + " TEXT);";
+                    COMMENT + " TEXT," +
+                    Environment.WEATHER + " INTEGER," +
+                    Environment.WIND_SPEED + " INTEGER," +
+                    Environment.WIND_DIRECTION + " INTEGER," +
+                    Environment.LOCATION + " TEXT);";
 
     public int ppp;
     public int target;
@@ -43,6 +47,7 @@ public class Round extends IdProvider implements Serializable, DatabaseSerializa
     public long arrow;
     public int reachedPoints;
     public int maxPoints;
+    public Environment environment;
 
     @Override
     public String getTableName() {
@@ -61,6 +66,7 @@ public class Round extends IdProvider implements Serializable, DatabaseSerializa
         values.put(COMMENT, comment);
         values.put(PPP, ppp);
         values.put(TRAINING, training);
+        values.putAll(environment.getContentValues());
         return values;
     }
 
@@ -83,5 +89,7 @@ public class Round extends IdProvider implements Serializable, DatabaseSerializa
         if (maxPoints <= 10) {
             maxPoints = 0;
         }
+        environment = new Environment();
+        environment.fromCursor(cursor);
     }
 }

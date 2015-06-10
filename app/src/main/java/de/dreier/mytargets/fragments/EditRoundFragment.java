@@ -42,7 +42,8 @@ import de.dreier.mytargets.adapters.BowItemAdapter;
 import de.dreier.mytargets.adapters.EnvironmentItemAdapter;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.models.Environment;
+import de.dreier.mytargets.shared.models.EWeather;
+import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.MyBackupAgent;
@@ -396,6 +397,7 @@ public class EditRoundFragment extends Fragment implements DatePickerDialog.OnDa
         round.ppp = arrows.getValue();
         round.indoor = indoor.isChecked();
         round.comment = comment.getText().toString();
+        round.environment = ((EnvironmentItemAdapter) environment.getAdapter()).getEnvironment();
         db.update(round);
 
         SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);
@@ -428,15 +430,15 @@ public class EditRoundFragment extends Fragment implements DatePickerDialog.OnDa
         Environment e = new Environment();
         int code = weatherInfo.getCurrentCode();
         if (code == 8 || code == 9) {
-            e.weather = Environment.WEATHER.LIGHT_RAIN;
+            e.weather = EWeather.LIGHT_RAIN;
         } else if (code < 19) {
-            e.weather = Environment.WEATHER.RAIN;
+            e.weather = EWeather.RAIN;
         } else if (code < 27) {
-            e.weather = Environment.WEATHER.CLOUDY;
+            e.weather = EWeather.CLOUDY;
         } else if (code < 31) {
-            e.weather = Environment.WEATHER.PARTLY_CLOUDY;
+            e.weather = EWeather.PARTLY_CLOUDY;
         } else {
-            e.weather = Environment.WEATHER.SUNNY;
+            e.weather = EWeather.SUNNY;
         }
         e.windDirection = 0;
         e.location = weatherInfo.getWOEIDneighborhood();

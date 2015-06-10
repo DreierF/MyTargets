@@ -19,13 +19,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import junit.framework.Assert;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
-import de.dreier.mytargets.models.Environment;
+import de.dreier.mytargets.shared.models.EWeather;
+import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.utils.MyBackupAgent;
 import de.dreier.mytargets.views.DialogSpinner;
 
@@ -37,8 +39,9 @@ public class EnvironmentFragment extends Fragment {
     private DialogSpinner wind_speed, wind_direction;
     private NowListFragment.OnItemSelectedListener listener;
     private Environment mEnvironment;
-    private Environment.WEATHER weather;
+    private EWeather weather;
     private ImageButton sunny, partly_cloudy, cloudy, light_rain, rain;
+    private EditText location;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -59,11 +62,11 @@ public class EnvironmentFragment extends Fragment {
         cloudy = (ImageButton) rootView.findViewById(R.id.clouds);
         light_rain = (ImageButton) rootView.findViewById(R.id.light_rain);
         rain = (ImageButton) rootView.findViewById(R.id.rain);
-        setOnClickWeather(sunny, Environment.WEATHER.SUNNY);
-        setOnClickWeather(partly_cloudy, Environment.WEATHER.PARTLY_CLOUDY);
-        setOnClickWeather(cloudy, Environment.WEATHER.CLOUDY);
-        setOnClickWeather(light_rain, Environment.WEATHER.LIGHT_RAIN);
-        setOnClickWeather(rain, Environment.WEATHER.RAIN);
+        setOnClickWeather(sunny, EWeather.SUNNY);
+        setOnClickWeather(partly_cloudy, EWeather.PARTLY_CLOUDY);
+        setOnClickWeather(cloudy, EWeather.CLOUDY);
+        setOnClickWeather(light_rain, EWeather.LIGHT_RAIN);
+        setOnClickWeather(rain, EWeather.RAIN);
 
         // Wind speed
         wind_speed = (DialogSpinner) rootView.findViewById(R.id.wind_speed);
@@ -93,20 +96,24 @@ public class EnvironmentFragment extends Fragment {
         wind_direction.setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1,
                 activity.getResources().getStringArray(R.array.wind_directions)));
 
+        location = (EditText) rootView.findViewById(R.id.location);
+
         if (mEnvironment == null) {
             // Initialise with default values
             wind_speed.setItemId(prefs.getInt("speed", 2));
             wind_direction.setItemId(prefs.getInt("direction", 0));
+            location.setText(prefs.getString("location", ""));
         } else {
             setWeather(mEnvironment.weather);
             wind_speed.setItemId(mEnvironment.windSpeed);
             wind_direction.setItemId(mEnvironment.windDirection);
+            location.setText("");
         }
         setHasOptionsMenu(true);
         return rootView;
     }
 
-    private void setOnClickWeather(ImageButton b, final Environment.WEATHER w) {
+    private void setOnClickWeather(ImageButton b, final EWeather w) {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,19 +122,19 @@ public class EnvironmentFragment extends Fragment {
         });
     }
 
-    private void setWeather(Environment.WEATHER weather) {
+    private void setWeather(EWeather weather) {
         this.weather = weather;
-        sunny.setImageResource(weather == Environment.WEATHER.SUNNY ? R.drawable.ic_sun :
+        sunny.setImageResource(weather == EWeather.SUNNY ? R.drawable.ic_sun :
                 R.drawable.ic_sun_outline);
         partly_cloudy.setImageResource(
-                weather == Environment.WEATHER.PARTLY_CLOUDY ? R.drawable.ic_partly_cloudy :
+                weather == EWeather.PARTLY_CLOUDY ? R.drawable.ic_partly_cloudy :
                         R.drawable.ic_partly_cloudy_outline);
-        cloudy.setImageResource(weather == Environment.WEATHER.CLOUDY ? R.drawable.ic_cloudy :
+        cloudy.setImageResource(weather == EWeather.CLOUDY ? R.drawable.ic_cloudy :
                 R.drawable.ic_cloudy_outline);
         light_rain.setImageResource(
-                weather == Environment.WEATHER.LIGHT_RAIN ? R.drawable.ic_light_rain :
+                weather == EWeather.LIGHT_RAIN ? R.drawable.ic_light_rain :
                         R.drawable.ic_light_rain_outline);
-        rain.setImageResource(weather == Environment.WEATHER.RAIN ? R.drawable.ic_rain :
+        rain.setImageResource(weather == EWeather.RAIN ? R.drawable.ic_rain :
                 R.drawable.ic_rain_outline);
     }
 
