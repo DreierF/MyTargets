@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,7 @@ import java.util.Locale;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
 import de.dreier.mytargets.fragments.NowListFragment;
+import de.dreier.mytargets.fragments.NowListFragmentBase;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.IdProvider;
 
@@ -40,23 +42,35 @@ import de.dreier.mytargets.shared.models.IdProvider;
  * Shows an overview over all trying days
  */
 public class MainActivity extends AppCompatActivity implements
-        NowListFragment.OnItemSelectedListener {
+        NowListFragment.OnItemSelectedListener, NowListFragmentBase.ContentListener,
+        View.OnClickListener {
 
     private static boolean shownThisTime = false;
+    private FloatingActionButton mFab;
+    protected View mNewLayout;
+    protected TextView mNewText;
+    private ViewPager viewPager;
+    private MainTabsFragmentPagerAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new MainTabsFragmentPagerAdapter(this));
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        adapter = new MainTabsFragmentPagerAdapter(this);
+        viewPager.setAdapter(adapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setTabTextColors(0xFFEEEEEE, Color.WHITE);
         tabLayout.setupWithViewPager(viewPager);
 
         askForHelpTranslating();
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setOnClickListener(this);
+        mNewLayout = findViewById(R.id.new_layout);
+        mNewText = (TextView) findViewById(R.id.new_text);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -91,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements
         supportedLanguages.add("ca");
         supportedLanguages.add("zh");
         supportedLanguages.add("tr");
+        supportedLanguages.add("hu");
 
         final SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(MainActivity.this);
@@ -146,5 +161,25 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onItemSelected(IdProvider e) {
 
+    }
+
+    @Override
+    public void onContentChanged(boolean empty, int stringRes) {
+        if (stringRes != 0) {
+            mNewLayout.setVisibility(empty ? View.VISIBLE : View.GONE);
+            mNewText.setText(stringRes);
+            mFab.setVisibility(View.VISIBLE);
+        } else {
+            mFab.setVisibility(View.GONE);
+        }
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent i = new Intent();
+        adapter.getFragment(viewPager.getCurrentItem()).onNew(i);
+        startActivity(i);
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 }

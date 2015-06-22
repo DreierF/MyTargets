@@ -9,7 +9,6 @@ package de.dreier.mytargets.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +31,6 @@ import de.dreier.mytargets.shared.models.Training;
  * Shows an overview over all trying days
  */
 public class TrainingsFragment extends ExpandableNowListFragment<Month, Training> {
-
-    private FloatingActionButton mFab;
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
@@ -72,7 +69,7 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
     }
 
     @Override
-    protected void onNew(Intent i) {
+    public void onNew(Intent i) {
         i.setClass(getActivity(), SimpleFragmentActivity.EditRoundActivity.class);
     }
 
