@@ -47,9 +47,9 @@ public class Environment extends IdProvider implements DatabaseSerializable {
 
     @Override
     public void fromCursor(Cursor cursor) {
-        weather = EWeather.getOfValue(cursor.getInt(12));
-        windSpeed = cursor.getInt(13);
-        windDirection = cursor.getInt(14);
-        location = cursor.getString(15);
+        weather = EWeather.getOfValue(cursor.getInt(6));
+        windSpeed = cursor.getInt(7);
+        windDirection = cursor.getInt(8);
+        location = cursor.getString(9);
     }
 }

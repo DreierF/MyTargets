@@ -80,6 +80,7 @@
                 android:paddingTop="@dimen/activity_vertical_margin">
 
                 <RadioGroup
+                    android:id="@+id/in_out_group"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
@@ -226,18 +227,26 @@
 
                 </LinearLayout>
 
-                <TextView
-                    style="@style/Label"
+                <LinearLayout
+                    android:id="@+id/environment_spinner_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/environment"/>
+                    android:orientation="vertical">
 
-                <de.dreier.mytargets.views.DialogSpinner
-                    android:id="@+id/environment_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"/>
+                    <TextView
+                        style="@style/Label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/environment"/>
+
+                    <de.dreier.mytargets.views.DialogSpinner
+                        android:id="@+id/environment_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"/>
+
+                </LinearLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"

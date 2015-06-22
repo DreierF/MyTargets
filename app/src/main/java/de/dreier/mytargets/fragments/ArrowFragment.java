@@ -39,7 +39,7 @@ public class ArrowFragment extends NowListFragment<Arrow> {
     }
 
     @Override
-    protected void onNew(Intent i) {
+    public void onNew(Intent i) {
         i.setClass(getActivity(), EditArrowActivity.class);
     }
 

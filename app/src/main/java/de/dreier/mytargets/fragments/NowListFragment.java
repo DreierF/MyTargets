@@ -9,7 +9,6 @@ package de.dreier.mytargets.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -20,7 +19,6 @@ import junit.framework.Assert;
 
 import java.util.List;
 
-import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.shared.models.IdProvider;
 import de.dreier.mytargets.views.CardItemDecorator;
@@ -32,22 +30,13 @@ public abstract class NowListFragment<T extends IdProvider> extends NowListFragm
 
     NowListAdapter<T> mAdapter;
     protected OnItemSelectedListener listener;
-    protected FloatingActionButton mFab;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new CardItemDecorator(getActivity()));
-
-        mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        mFab.setOnClickListener(this);
         return rootView;
-    }
-
-    @Override
-    protected void setFabVisibility(int visibility) {
-        mFab.setVisibility(visibility);
     }
 
     @Override

@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.InputActivity;
 import de.dreier.mytargets.activities.ScoreboardActivity;
-import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
 import de.dreier.mytargets.shared.models.Arrow;
@@ -60,7 +59,8 @@ import de.dreier.mytargets.views.TargetPasseView;
  * Shows all passes of one round
  */
 public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
-        implements ShareDialogFragment.ShareDialogListener, ObservableScrollViewCallbacks {
+        implements ShareDialogFragment.ShareDialogListener, ObservableScrollViewCallbacks,
+        View.OnClickListener {
 
     private long mTraining;
 
@@ -71,17 +71,12 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
     private View mDetails;
     private View mShadow;
 
-    boolean indoor_equals = true, target_equals = true;
+    boolean target_equals = true;
     boolean bow_equals = true, arrow_equals = true;
     boolean distance_equals = true;
     private FloatingActionButton passe;
     private boolean mTargetViewMode = false;
     protected FloatingActionsMenu mFab;
-
-    @Override
-    protected void setFabVisibility(int visibility) {
-        mFab.setVisibility(visibility);
-    }
 
     @Override
     protected int getLayoutResource() {
@@ -125,9 +120,9 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         round.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(activity, SimpleFragmentActivity.EditRoundActivity.class);
-                i.putExtra(TRAINING_ID, mTraining);
-                startActivity(i);
+                //TODO Intent i = new Intent(activity, SimpleFragmentActivity.EditRoundActivity.class);
+                //i.putExtra(TRAINING_ID, mTraining);
+                //startActivity(i);
                 mFab.collapse();
             }
         });
@@ -181,12 +176,12 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         }
         // Aggregate round information
         Round round = mRounds.get(0);
-        boolean indoor = round.indoor;
+       // boolean indoor = round.indoor;
         String distance = round.distance.toString();
         int target = round.target;
         long bowId = round.bow;
         long arrowId = round.arrow;
-        indoor_equals = true;
+        //indoor_equals = true;
         target_equals = true;
         bow_equals = true;
         arrow_equals = true;
@@ -195,7 +190,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         for (Round r : mRounds) {
             reached += r.reachedPoints;
             max += r.maxPoints;
-            indoor_equals = r.indoor == indoor && indoor_equals;
+            //indoor_equals = r.indoor == indoor && indoor_equals;
             distance_equals = r.distance.toString().equals(distance) && distance_equals;
             target_equals = r.target == target && target_equals;
             bow_equals = r.bow == bowId && bow_equals;
@@ -210,10 +205,10 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         String infoText =
                 "<font color=#ffffff>" + getString(R.string.points) + ": <b>" + reached + "/" +
                         max + percent + "</b>";
-        if (distance_equals && indoor_equals) {
+        if (distance_equals) {
             infoText += "<br>" + getString(R.string.distance) + ": <b>" +
-                    distance + " - " +
-                    getString(indoor ? R.string.indoor : R.string.outdoor) + "</b>";
+                    distance ;//+ " - " +
+                    //getString(indoor ? R.string.indoor : R.string.outdoor) + "</b>";
         }
         if (target_equals) {
             infoText += "<br>" + getString(R.string.target_round) + ": <b>" +
@@ -347,7 +342,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
     };*/
 
     @Override
-    protected void onNew(Intent i) {
+    public void onNew(Intent i) {
     }
 
     @Override
@@ -384,6 +379,11 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
 
     @Override
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 
     public class PasseAdapter extends ExpandableNowListAdapter<Round, Passe> {
@@ -490,10 +490,10 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
             mPercentage.setText(percent);
 
             String infoText = "";
-            if (!distance_equals || !indoor_equals) {
+            if (!distance_equals) {
                 infoText += "<br>" + getString(R.string.distance) + ": <b>" +
-                        mItem.distance + " - " +
-                        getString(mItem.indoor ? R.string.indoor : R.string.outdoor) + "</b>";
+                        mItem.distance/* + " - " +
+                        getString(mItem.indoor ? R.string.indoor : R.string.outdoor) + "</b>"*/;
             }
             if (!target_equals) {
                 infoText += "<br>" + getString(R.string.target_round) + ": <b>" +
@@ -527,10 +527,10 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
 
         @Override
         public boolean onLongClick(View v) {
-            Intent i = new Intent(getActivity(), SimpleFragmentActivity.EditRoundActivity.class);
+           /* Intent i = new Intent(getActivity(), SimpleFragmentActivity.EditRoundActivity.class);
             i.putExtra(EditRoundFragment.TRAINING_ID, mTraining);
             i.putExtra(EditRoundFragment.ROUND_ID, mItem.id);
-            startActivity(i);
+            startActivity(i);*/
             return true;
         }
     }

@@ -244,8 +244,6 @@ public class EditRoundFragment extends Fragment implements DatePickerDialog.OnDa
             DatabaseManager db = DatabaseManager.getInstance(activity);
             Round r = db.getRound(mRound);
             distance.setItemId(r.distance.getId());
-            indoor.setChecked(r.indoor);
-            outdoor.setChecked(!r.indoor);
             arrows.setValue(r.ppp);
             bow.setItemId(r.bow);
             arrow.setItemId(r.arrow);
@@ -264,6 +262,8 @@ public class EditRoundFragment extends Fragment implements DatePickerDialog.OnDa
             DatabaseManager db = DatabaseManager.getInstance(activity);
             Training train = db.getTraining(mTraining);
             training.setText(train.title);
+            indoor.setChecked(train.indoor);
+            outdoor.setChecked(!train.indoor);
             date = train.date;
             setTrainingDate();
             activity.getSupportActionBar().setTitle(R.string.new_training);
@@ -271,6 +271,8 @@ public class EditRoundFragment extends Fragment implements DatePickerDialog.OnDa
         } else {
             View training_container = rootView.findViewById(R.id.training_container);
             training_container.setVisibility(View.GONE);
+            rootView.findViewById(R.id.in_out_group).setVisibility(View.GONE);
+            rootView.findViewById(R.id.environment_spinner_layout).setVisibility(View.GONE);
         }
         return rootView;
     }
@@ -349,6 +351,8 @@ public class EditRoundFragment extends Fragment implements DatePickerDialog.OnDa
         training.id = mTraining;
         training.title = title;
         training.date = date;
+        training.indoor = indoor.isChecked();
+        training.environment = ((EnvironmentItemAdapter) environment.getAdapter()).getEnvironment();
         db.update(training);
         mTraining = training.id;
     }
@@ -395,9 +399,7 @@ public class EditRoundFragment extends Fragment implements DatePickerDialog.OnDa
 
         int after_rounds = rounds.getValue();
         round.ppp = arrows.getValue();
-        round.indoor = indoor.isChecked();
         round.comment = comment.getText().toString();
-        round.environment = ((EnvironmentItemAdapter) environment.getAdapter()).getEnvironment();
         db.update(round);
 
         SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);
@@ -409,7 +411,7 @@ public class EditRoundFragment extends Fragment implements DatePickerDialog.OnDa
         editor.putInt("ppp", round.ppp);
         editor.putInt("rounds", after_rounds);
         editor.putInt("target", round.target);
-        editor.putBoolean("indoor", round.indoor);
+        editor.putBoolean("indoor", indoor.isChecked());
         editor.apply();
 
         if (mRound == -1) {

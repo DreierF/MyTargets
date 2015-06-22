@@ -41,15 +41,6 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
         itemTypeDelRes = R.plurals.training_deleted;
         newStringRes = R.string.new_training;
         mEditable = true;
-
-        mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        mFab.setOnClickListener(this);
-    }
-
-
-    @Override
-    protected void setFabVisibility(int visibility) {
-        mFab.setVisibility(visibility);
     }
 
     @Override

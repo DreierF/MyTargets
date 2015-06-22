@@ -42,7 +42,7 @@ public class BowFragment extends NowListFragment<Bow> {
     }
 
     @Override
-    protected void onNew(Intent i) {
+    public void onNew(Intent i) {
         i.setClass(getActivity(), EditBowActivity.class);
     }
 

@@ -36,7 +36,7 @@ public class TargetFragment extends NowListFragment<Target> {
     }
 
     @Override
-    protected void onNew(Intent i) {
+    public void onNew(Intent i) {
         i.setClass(getActivity(), EditBowActivity.class);
     }
 

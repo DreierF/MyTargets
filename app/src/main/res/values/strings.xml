@@ -219,6 +219,7 @@
     <string name="default_unit">true</string>
     <string name="unit">Unit</string>
     <string name="undo">Undo</string>
+    <string name="general">General</string>
     <plurals name="arrow_deleted">
         <item quantity="one">One arrow deleted</item>
         <item quantity="other">%d arrows deleted</item>

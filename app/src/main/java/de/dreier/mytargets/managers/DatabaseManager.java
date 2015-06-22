@@ -41,7 +41,7 @@ import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.BackupUtils;
 
 public class DatabaseManager extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 10; //TODO set to 9 before publishing
+    private static final int DATABASE_VERSION = 11; //TODO set to 9 before publishing
 
     private static final String ID = "_id";
     public static final String DATABASE_NAME = "database";
@@ -200,13 +200,20 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("UPDATE ROUND SET target=5 WHERE target=9");
             db.execSQL("UPDATE ROUND SET target=6 WHERE target=10");
         }
-        if (oldVersion < 10) { //TODO
+        if (oldVersion < 11) { //TODO
 //            db.execSQL("ALTER TABLE VISIER ADD COLUMN unit TEXT DEFAULT 'm'"); //TODO uncomment
-            db.execSQL("ALTER TABLE ROUND ADD COLUMN weather INTEGER DEFAULT '0'");
-            db.execSQL("ALTER TABLE ROUND ADD COLUMN wind_speed INTEGER DEFAULT '0'");
-            db.execSQL("ALTER TABLE ROUND ADD COLUMN wind_direction INTEGER DEFAULT '0'");
-            db.execSQL("ALTER TABLE ROUND ADD COLUMN location TEXT DEFAULT ''");
-            //TODO
+            db.execSQL("ALTER TABLE TRAINING ADD COLUMN indoor INTEGER DEFAULT 'false'");
+            db.execSQL("ALTER TABLE TRAINING ADD COLUMN weather INTEGER DEFAULT '0'");
+            db.execSQL("ALTER TABLE TRAINING ADD COLUMN wind_speed INTEGER DEFAULT '0'");
+            db.execSQL("ALTER TABLE TRAINING ADD COLUMN wind_direction INTEGER DEFAULT '0'");
+            db.execSQL("ALTER TABLE TRAINING ADD COLUMN location TEXT DEFAULT ''");
+            db.execSQL("ALTER TABLE ROUND ADD COLUMN target_unit TEXT DEFAULT 'cm'");
+            db.execSQL("ALTER TABLE ROUND ADD COLUMN target_size INTEGER DEFAULT '60'");
+
+            db.execSQL("UPDATE TRAINING SET indoor=\"true\" " +
+                    "WHERE EXISTS (SELECT * FROM ROUND r WHERE r.training=TRAINING._id AND r.indoor=1)");
+
+            //db.execSQL("ALTER TABLE ROUND DROP COLUMN indoor BOOLEAN DEFAULT 'false'");
         }
         onCreate(db);
     }
@@ -215,7 +222,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public ArrayList<Training> getTrainings() {
         Cursor cursor = db.rawQuery("SELECT t._id, t.title, t.datum, " +
-                "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=r.target)) " +
+                "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=r.target)), t.indoor, t.weather, " +
+                "t.wind_speed, t.wind_direction, t.location " +
                 "FROM TRAINING t " +
                 "LEFT JOIN ROUND r ON t._id = r.training " +
                 "LEFT JOIN PASSE p ON r._id = p.round " +
@@ -237,9 +245,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public ArrayList<Round> getRounds(long training) {
         Cursor res = db.rawQuery(
-                "SELECT r._id, r.ppp, r.target, r.indoor, r.distance, r.unit, r.bow, r.arrow, b.type, r.comment, " +
-                        "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=r.target)), r.weather, " +
-                        "r.wind_speed, r.wind_direction, r.location " +
+                "SELECT r._id, r.ppp, r.target, r.distance, r.unit, r.bow, r.arrow, b.type, r.comment, " +
+                        "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=r.target)) " +
                         "FROM ROUND r " +
                         "LEFT JOIN PASSE p ON r._id = p.round " +
                         "LEFT JOIN SHOOT s ON p._id = s.passe " +
@@ -375,7 +382,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public Training getTraining(long training) {
         Cursor cursor = db.rawQuery("SELECT t._id, t.title, t.datum, " +
-                "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=r.target)) " +
+                "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=r.target)), t.indoor, t.weather, " +
+                "t.wind_speed, t.wind_direction, t.location " +
                 "FROM TRAINING t " +
                 "LEFT JOIN ROUND r ON t._id = r.training " +
                 "LEFT JOIN PASSE p ON r._id = p.round " +
@@ -408,8 +416,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         // Get all generic round attributes
         Cursor cursor = db.rawQuery(
                 "SELECT r._id, r.ppp, r.target, r.indoor, r.distance, r.unit, r.bow, r.arrow, b.type, r.comment, " +
-                        "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=r.target)), r.weather, " +
-                        "r.wind_speed, r.wind_direction, r.location " +
+                        "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=r.target)) "+
                         "FROM ROUND r " +
                         "LEFT JOIN PASSE p ON r._id = p.round " +
                         "LEFT JOIN SHOOT s ON p._id = s.passe " +
@@ -681,7 +688,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void exportAll(File file) throws IOException {
         Cursor cur = db.rawQuery(
-                "SELECT t.title,datetime(t.datum/1000, 'unixepoch') AS date,r.indoor,r.distance," +
+                "SELECT t.title,datetime(t.datum/1000, 'unixepoch') AS date,t.indoor,r.distance," +
                         "r.target, b.name AS bow, s.points AS score " +
                         "FROM TRAINING t, ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow " +
                         "WHERE t._id = r.training AND r._id = p.round AND p._id = s.passe", null);

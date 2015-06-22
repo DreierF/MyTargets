@@ -7,6 +7,13 @@ import java.util.List;
 import de.dreier.mytargets.shared.R;
 
 public class Target extends IdProvider {
+    public static final int WA_10_1 = 0;
+    public static final int WA_10_5 = 1;
+    public static final int WA_10_6 = 2;
+    public static final int WA_10_6_3times = 3;
+   // public static final int GNAS_9_1 = ;
+   // public static final int TARGET_5_1 = ;
+
     public static List<Target> list;
     static {
         list = new ArrayList<>();

@@ -6,6 +6,7 @@
  */
 package de.dreier.mytargets.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,7 +23,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 import com.bignerdranch.android.recyclerviewchoicemode.ModalMultiSelectorCallback;
@@ -39,8 +39,12 @@ import de.dreier.mytargets.shared.models.DatabaseSerializable;
 import de.dreier.mytargets.shared.models.IdProvider;
 
 public abstract class NowListFragmentBase<T extends IdProvider> extends Fragment
-        implements View.OnClickListener, OnCardClickListener<T> {
+        implements OnCardClickListener<T> {
     public static final String TRAINING_ID = "training_id";
+
+    public interface ContentListener {
+        void onContentChanged(boolean empty, int stringRes);
+    }
 
     @PluralsRes
     int itemTypeRes;
@@ -53,15 +57,20 @@ public abstract class NowListFragmentBase<T extends IdProvider> extends Fragment
     final MultiSelector mMultiSelector = new MultiSelector();
     private ActionMode actionMode = null;
 
-    // New view
-    protected View mNewLayout;
-    protected TextView mNewText;
-
     AppCompatActivity activity;
     DatabaseManager db;
     boolean mEditable = false;
     RecyclerView mRecyclerView;
     protected View rootView;
+    private ContentListener listener;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof ContentListener) {
+            listener = (ContentListener) activity;
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,8 +79,6 @@ public abstract class NowListFragmentBase<T extends IdProvider> extends Fragment
         mRecyclerView = (RecyclerView) rootView.findViewById(android.R.id.list);
         mRecyclerView.setHasFixedSize(true);
 
-        mNewLayout = rootView.findViewById(R.id.new_layout);
-        mNewText = (TextView) rootView.findViewById(R.id.new_text);
         return rootView;
     }
 
@@ -95,15 +102,8 @@ public abstract class NowListFragmentBase<T extends IdProvider> extends Fragment
     }
 
     protected void updateFabButton(List list) {
-        if (newStringRes != 0) {
-            mNewLayout.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
-            mNewText.setText(newStringRes);
-        } else {
-            setFabVisibility(View.GONE);
-        }
+        listener.onContentChanged(list.isEmpty(), newStringRes);
     }
-
-    protected abstract void setFabVisibility(int visibility);
 
     private final ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(
             mMultiSelector) {
@@ -170,7 +170,7 @@ public abstract class NowListFragmentBase<T extends IdProvider> extends Fragment
                     }
                 }).show();
         for (T item : deleted) {
-            db.delete((DatabaseSerializable)item);
+            db.delete((DatabaseSerializable) item);
         } //TODO make this more intelligent and support animations
     }
 
@@ -188,15 +188,6 @@ public abstract class NowListFragmentBase<T extends IdProvider> extends Fragment
             actionMode.setTitle(title);
             actionMode.invalidate();
         }
-    }
-
-    /* On FAB button clicked */
-    @Override
-    public void onClick(View v) {
-        Intent i = new Intent();
-        onNew(i);
-        startActivity(i);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     @Override
@@ -226,7 +217,7 @@ public abstract class NowListFragmentBase<T extends IdProvider> extends Fragment
 
     protected abstract void init(Bundle intent, Bundle savedInstanceState);
 
-    protected abstract void onNew(Intent i);
+    public abstract void onNew(Intent i);
 
     protected abstract void onEdit(T item);
 

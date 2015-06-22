@@ -11,23 +11,32 @@ public class Training extends IdProvider implements DatabaseSerializable {
     public static final String TABLE = "TRAINING";
     public static final String TITLE = "title";
     public static final String DATE = "datum";
+    public static final String INDOOR = "indoor";
+    //TODO evtl. save standard round id here
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " ( " +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     DATE + " INTEGER," +
-                    TITLE + " TEXT);";
+                    TITLE + " TEXT," +
+                    INDOOR + " BOOLEAN,"+
+                    Environment.WEATHER + " INTEGER," +
+                    Environment.WIND_SPEED + " INTEGER," +
+                    Environment.WIND_DIRECTION + " INTEGER," +
+                    Environment.LOCATION + " TEXT);";
 
     public String title = "";
     public Date date = new Date();
     public int reachedPoints;
     public int maxPoints;
     public int[] scoreCount = new int[3];
+    public boolean indoor;
+    public Environment environment;
 
     @Override
     public long getParentId() {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(0);
-        c.set(date.getYear()+1900, date.getMonth(),1);
+        c.set(date.getYear() + 1900, date.getMonth(), 1);
         return c.getTimeInMillis();
     }
 
@@ -41,6 +50,8 @@ public class Training extends IdProvider implements DatabaseSerializable {
         ContentValues values = new ContentValues();
         values.put(TITLE, title);
         values.put(DATE, date.getTime());
+        values.put(INDOOR, indoor);
+        values.putAll(environment.getContentValues());
         return values;
     }
 
@@ -54,5 +65,8 @@ public class Training extends IdProvider implements DatabaseSerializable {
         if (maxPoints <= 10) {
             maxPoints = 0;
         }
+        indoor = cursor.getInt(5)==0;
+        environment = new Environment();
+        environment.fromCursor(cursor);
     }
 }
