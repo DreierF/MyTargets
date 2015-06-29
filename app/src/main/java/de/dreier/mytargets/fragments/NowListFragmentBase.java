@@ -42,6 +42,12 @@ public abstract class NowListFragmentBase<T extends IdProvider> extends Fragment
         implements OnCardClickListener<T> {
     public static final String TRAINING_ID = "training_id";
 
+    protected void startActivity(Class<?> activityClass) {
+        Intent i = new Intent(getActivity(), activityClass);
+        startActivity(i);
+        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
     public interface ContentListener {
         void onContentChanged(boolean empty, int stringRes);
     }
@@ -216,8 +222,6 @@ public abstract class NowListFragmentBase<T extends IdProvider> extends Fragment
     protected abstract T getItem(int id);
 
     protected abstract void init(Bundle intent, Bundle savedInstanceState);
-
-    public abstract void onNew(Intent i);
 
     protected abstract void onEdit(T item);
 

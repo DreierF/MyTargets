@@ -36,11 +36,6 @@ public class TargetFragment extends NowListFragment<Target> {
     }
 
     @Override
-    public void onNew(Intent i) {
-        i.setClass(getActivity(), EditBowActivity.class);
-    }
-
-    @Override
     public void onLongClick(CardViewHolder holder) {
         onClick(holder, (Target) holder.getItem());
     }

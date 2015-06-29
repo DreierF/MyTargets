@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -25,18 +26,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
-import com.github.ksoichiro.android.observablescrollview.ScrollState;
-import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
-import com.nineoldandroids.view.ViewHelper;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.InputActivity;
@@ -51,7 +46,6 @@ import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.TargetImage;
-import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.views.PasseView;
 import de.dreier.mytargets.views.TargetPasseView;
 
@@ -59,28 +53,26 @@ import de.dreier.mytargets.views.TargetPasseView;
  * Shows all passes of one round
  */
 public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
-        implements ShareDialogFragment.ShareDialogListener, ObservableScrollViewCallbacks,
+        implements ShareDialogFragment.ShareDialogListener/*, ObservableScrollViewCallbacks*/,
         View.OnClickListener {
 
     private long mTraining;
 
     private ArrayList<Round> mRounds;
-    private Toolbar mHeader;
-    private int mActionBarSize;
-    private int mHeaderHeight;
-    private View mDetails;
-    private View mShadow;
 
     boolean target_equals = true;
-    boolean bow_equals = true, arrow_equals = true;
     boolean distance_equals = true;
-    private FloatingActionButton passe;
+    private FloatingActionButton mFab;
     private boolean mTargetViewMode = false;
-    protected FloatingActionsMenu mFab;
+    private View mNewLayout;
+    private TextView mNewText;
+
+    public PasseFragment() {
+    }
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_round;
+        return R.layout.fragment_training;
     }
 
     @Override
@@ -89,8 +81,10 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         itemTypeDelRes = R.plurals.passe_deleted;
         newStringRes = R.string.new_round;
 
-        mFab = (FloatingActionsMenu) rootView.findViewById(R.id.fab);
+        mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         mFab.setOnClickListener(this);
+        mNewLayout = rootView.findViewById(R.id.new_layout);
+        mNewText = (TextView) rootView.findViewById(R.id.new_text);
 
         if (intent != null) {
             mTraining = intent.getLong(TRAINING_ID, -1);
@@ -101,11 +95,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
 
         // Get UI elements
         Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
-        mHeader = (Toolbar) activity.findViewById(R.id.round_container);
-        mDetails = activity.findViewById(R.id.round_container_content);
-        mShadow = activity.findViewById(R.id.shadow);
-        ObservableRecyclerView recyclerView = (ObservableRecyclerView) mRecyclerView;
-
+/*
         passe = (FloatingActionButton) mFab.findViewById(R.id.new_passe);
         passe.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,11 +115,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
                 //startActivity(i);
                 mFab.collapse();
             }
-        });
-
-        // Set listeners
-        recyclerView.setScrollViewCallbacks(this);
-        onScrollChanged(0, true, true);
+        });*/
 
         // Set up toolbar
         activity.setSupportActionBar(toolbar);
@@ -150,94 +136,84 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         mRounds = db.getRounds(mTraining);
         setRoundInfo();
 
-        if (mRounds.size() == 0) {
-            passe.setVisibility(View.GONE);
-        } else {
-            passe.setVisibility(View.VISIBLE);
-        }
-
-        // Load values for animations
-        mActionBarSize = ToolbarUtils.getActionBarSize(activity);
-        mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.ext_toolbar_round_height);
-
-        if (mRecyclerView.getAdapter() != null) {
-            mAdapter.setHeaderHeight(mHeaderHeight + mActionBarSize);
-        }
         setList(mRounds, db.getPasses(mTraining), true,
-                new PasseAdapter(mHeaderHeight + mActionBarSize));
-        onScrollChanged(mRecyclerView.getScrollY(), true, true);
+                new PasseAdapter());
 
         activity.supportInvalidateOptionsMenu();
     }
 
+    @Override
+    protected void updateFabButton(List list) {
+        if (newStringRes != 0) {
+            mNewLayout.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
+            mNewText.setText(newStringRes);
+            mFab.setVisibility(View.VISIBLE);
+        } else {
+            mFab.setVisibility(View.GONE);
+        }
+    }
+
     void setRoundInfo() {
+        TextView info = (TextView) activity.findViewById(R.id.detail_round_info);
+        TextView score = (TextView) activity.findViewById(R.id.detail_score);
+
+        Training training = db.getTraining(mTraining);
+        boolean indoor = training.standardRound.indoor;
+        long bowId = training.bow;
+        long arrowId = training.arrow;
+
+        // Set number of X, 10, 9 shoots
+        String infoText = "<font color=#ffffff>X: <b>" + training.scoreCount[0] + "</b><br>" +
+                getString(R.string.ten_x) + ": <b>" +
+                (training.scoreCount[0] + training.scoreCount[1]) + "</b><br>" +
+                getString(R.string.nine) + ": <b>" + training.scoreCount[2] + "</b></font>";
+        score.setText(Html.fromHtml(infoText));
+
+        String percent = training.maxPoints == 0 ? "" : " (" + (training.reachedPoints * 100 / training.maxPoints) + "%)";
+        infoText = "<font color=#ffffff>" + getString(R.string.points) + ": <b>" + training.reachedPoints + "/" +
+                        training.maxPoints + percent + "</b>";
+
+        // Set round info
+        Bow bow = db.getBow(bowId, true);
+        if (bow != null) {
+            infoText += "<br>" + getString(R.string.bow) +
+                    ": <b>" + TextUtils.htmlEncode(bow.name) + "</b>";
+        }
+
+        Arrow arrow = db.getArrow(arrowId, true);
+        if (arrow != null) {
+            infoText += "<br>" + getString(R.string.arrow) +
+                    ": <b>" + TextUtils.htmlEncode(arrow.name) + "</b>";
+        }
+
         if (mRounds.size() == 0) {
+            infoText += "</font>";
+            info.setText(Html.fromHtml(infoText));
             return;
         }
         // Aggregate round information
         Round round = mRounds.get(0);
-       // boolean indoor = round.indoor;
-        String distance = round.distance.toString();
-        int target = round.target;
-        long bowId = round.bow;
-        long arrowId = round.arrow;
-        //indoor_equals = true;
+        String distance = round.info.distance.toString();
+        int target = round.info.target;
         target_equals = true;
-        bow_equals = true;
-        arrow_equals = true;
         distance_equals = true;
-        int reached = 0, max = 0;
         for (Round r : mRounds) {
-            reached += r.reachedPoints;
-            max += r.maxPoints;
-            //indoor_equals = r.indoor == indoor && indoor_equals;
-            distance_equals = r.distance.toString().equals(distance) && distance_equals;
-            target_equals = r.target == target && target_equals;
-            bow_equals = r.bow == bowId && bow_equals;
-            arrow_equals = r.arrow == arrowId && arrow_equals;
+            distance_equals = r.info.distance.toString().equals(distance) && distance_equals;
+            target_equals = r.info.target == target && target_equals;
         }
 
-        TextView info = (TextView) activity.findViewById(R.id.detail_round_info);
-        TextView score = (TextView) activity.findViewById(R.id.detail_score);
 
-        // Set round info
-        String percent = max == 0 ? "" : " (" + (reached * 100 / max) + "%)";
-        String infoText =
-                "<font color=#ffffff>" + getString(R.string.points) + ": <b>" + reached + "/" +
-                        max + percent + "</b>";
         if (distance_equals) {
             infoText += "<br>" + getString(R.string.distance) + ": <b>" +
-                    distance ;//+ " - " +
-                    //getString(indoor ? R.string.indoor : R.string.outdoor) + "</b>";
+                    distance + " - " + getString(indoor ? R.string.indoor : R.string.outdoor) + "</b>";
         }
         if (target_equals) {
             infoText += "<br>" + getString(R.string.target_round) + ": <b>" +
                     Target.list.get(target).name + "</b>";
         }
-        if (bow_equals) {
-            Bow bow = db.getBow(bowId, true);
-            if (bow != null) {
-                infoText += "<br>" + getString(R.string.bow) +
-                        ": <b>" + TextUtils.htmlEncode(bow.name) + "</b>";
-            }
-        }
-        if (arrow_equals) {
-            Arrow arrow = db.getArrow(arrowId, true);
-            if (arrow != null) {
-                infoText += "<br>" + getString(R.string.arrow) +
-                        ": <b>" + TextUtils.htmlEncode(arrow.name) + "</b>";
-            }
-        }
+
         infoText += "</font>";
         info.setText(Html.fromHtml(infoText));
-
-        // Set number of X, 10, 9 shoots
-        Training training = db.getTraining(mTraining);
-        infoText = "<font color=#ffffff>X: <b>" + training.scoreCount[0] + "</b><br>" +
-                getString(R.string.ten_x) + ": <b>" +
-                (training.scoreCount[0] + training.scoreCount[1]) + "</b><br>" +
-                getString(R.string.nine) + ": <b>" + training.scoreCount[2] + "</b></font>";
-        score.setText(Html.fromHtml(infoText));
     }
 
     @Override
@@ -273,7 +249,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
             case R.id.action_view_mode:
                 mTargetViewMode = !mTargetViewMode;
                 setList(mRounds, db.getPasses(mTraining), true,
-                        new PasseAdapter(mHeaderHeight + mActionBarSize));
+                        new PasseAdapter());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -334,16 +310,12 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
     /*private final View.OnClickListener headerClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent i = new Intent(activity, EditRoundActivity.class);
-            i.putExtra(EditRoundActivity.TRAINING_ID, mTraining);
-            i.putExtra(EditRoundActivity.ROUND_ID, mRound);
+            Intent i = new Intent(activity, SimpleFragmentActivity.EditRoundActivity.class);
+            i.putExtra(SimpleFragmentActivity.EditRoundActivity.TRAINING_ID, mTraining);
+            i.putExtra(SimpleFragmentActivity.EditRoundActivity.ROUND_ID, mRound);
             startActivity(i);
         }
     };*/
-
-    @Override
-    public void onNew(Intent i) {
-    }
 
     @Override
     public void onSelected(Passe item) {
@@ -363,7 +335,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         super.onSaveInstanceState(outState);
         outState.putLong(TRAINING_ID, mTraining);
     }
-
+/*
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
         int translationShadow = Math.max(mActionBarSize, mActionBarSize + mHeaderHeight - scrollY);
@@ -379,17 +351,16 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
 
     @Override
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-    }
+    }*/
 
     @Override
     public void onClick(View v) {
-
+        Intent i = new Intent(activity, InputActivity.class);
+        i.putExtra(InputActivity.TRAINING_ID, mTraining);
+        startActivity(i);
     }
 
     public class PasseAdapter extends ExpandableNowListAdapter<Round, Passe> {
-        public PasseAdapter(int header) {
-            headerHeight = header;
-        }
 
         @Override
         protected HeaderViewHolder getTopLevelViewHolder(ViewGroup parent) {
@@ -440,7 +411,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         public void bindCursor() {
             Context context = mSubtitle.getContext();
             Round r = db.getRound(mItem.roundId);
-            mShots.setPasse(mItem, r.target);
+            mShots.setPasse(mItem, r.info.target);
             mSubtitle.setText(context.getString(R.string.passe_n, (mItem.index + 1)));
         }
     }
@@ -459,7 +430,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         public void bindCursor() {
             Context context = mSubtitle.getContext();
             Round r = db.getRound(mItem.roundId);
-            mShots.setPoints(mItem, r.target);
+            mShots.setPoints(mItem, r.info.target);
             mSubtitle.setText(context.getString(R.string.passe_n, (mItem.index + 1)));
         }
     }
@@ -492,26 +463,12 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
             String infoText = "";
             if (!distance_equals) {
                 infoText += "<br>" + getString(R.string.distance) + ": <b>" +
-                        mItem.distance/* + " - " +
+                        mItem.info.distance/* + " - " +
                         getString(mItem.indoor ? R.string.indoor : R.string.outdoor) + "</b>"*/;
             }
             if (!target_equals) {
                 infoText += "<br>" + getString(R.string.target_round) + ": <b>" +
-                        Target.list.get(mItem.target).name + "</b>";
-            }
-            if (!bow_equals) {
-                Bow bow = db.getBow(mItem.bow, true);
-                if (bow != null) {
-                    infoText += "<br>" + getString(R.string.bow) +
-                            ": <b>" + TextUtils.htmlEncode(bow.name) + "</b>";
-                }
-            }
-            if (!arrow_equals) {
-                Arrow arrow = db.getArrow(mItem.arrow, true);
-                if (arrow != null) {
-                    infoText += "<br>" + getString(R.string.arrow) +
-                            ": <b>" + TextUtils.htmlEncode(arrow.name) + "</b>";
-                }
+                        Target.list.get(mItem.info.target).name + "</b>";
             }
             if (!mItem.comment.isEmpty()) {
                 infoText += "<br>" + getString(R.string.comment) +
@@ -527,9 +484,10 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
 
         @Override
         public boolean onLongClick(View v) {
-           /* Intent i = new Intent(getActivity(), SimpleFragmentActivity.EditRoundActivity.class);
-            i.putExtra(EditRoundFragment.TRAINING_ID, mTraining);
-            i.putExtra(EditRoundFragment.ROUND_ID, mItem.id);
+            //TODO show dialog (with round info and ) allow to add a comment to the round
+            /*Intent i = new Intent(getActivity(), SimpleFragmentActivity.EditRoundActivity.class);
+            i.putExtra(EditStandardRoundFragment.TRAINING_ID, mTraining);
+            i.putExtra(EditStandardRoundFragment.ROUND_ID, mItem.id);
             startActivity(i);*/
             return true;
         }

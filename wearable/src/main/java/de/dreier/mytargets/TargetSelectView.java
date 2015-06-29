@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.Circle;
@@ -50,15 +50,15 @@ public class TargetSelectView extends TargetViewBase {
     }
 
     @Override
-    public void setRoundInfo(Round r) {
-        super.setRoundInfo(r);
+    public void setRoundTemplate(RoundTemplate r) {
+        super.setRoundTemplate(r);
         mCircle = new Circle(density, r.target);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         int curZone;
-        if (currentArrow < roundInfo.ppp) {
+        if (currentArrow < round.arrowsPerPasse) {
             curZone = mPasse.shot[currentArrow].zone;
         } else {
             curZone = -2;
@@ -109,7 +109,7 @@ public class TargetSelectView extends TargetViewBase {
 
     @Override
     protected Shot getShotFromPos(float x, float y) {
-        int rings = Target.target_rounds[roundInfo.target].length;
+        int rings = Target.target_rounds[round.target].length;
         Shot s = new Shot();
 
         double xDiff = x - radius;
@@ -132,7 +132,7 @@ public class TargetSelectView extends TargetViewBase {
             // Correct points_zone
             s.zone = Shot.MISS;
         }
-        s.x = Target.zoneToX(roundInfo.target, s.zone);
+        s.x = Target.zoneToX(round.target, s.zone);
         s.y = 0f;
         return s;
     }

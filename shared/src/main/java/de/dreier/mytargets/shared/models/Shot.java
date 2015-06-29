@@ -58,8 +58,8 @@ public class Shot extends IdProvider implements Comparable<Shot>, Serializable, 
     }
 
     @Override
-    public void fromCursor(Cursor cursor) {
-        id = cursor.getLong(0);
+    public void fromCursor(Cursor cursor, int startColumnIndex) {
+        setId(cursor.getLong(0));
         passe = cursor.getLong(1);
         zone = cursor.getInt(2);
         x = cursor.getFloat(3);

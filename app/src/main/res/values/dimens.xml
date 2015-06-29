@@ -5,7 +5,6 @@
     <dimen name="toolbar_drop_shadow_height">10dp</dimen>
     <dimen name="margin_standard">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="ext_toolbar_round_height">120dp</dimen>
     <dimen name="card_padding_vertical">3dp</dimen>
     <dimen name="card_padding_horizontal">6dp</dimen>
 </resources>

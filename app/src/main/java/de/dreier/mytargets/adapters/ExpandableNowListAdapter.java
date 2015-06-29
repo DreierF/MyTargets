@@ -10,7 +10,6 @@ package de.dreier.mytargets.adapters;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 
 import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 
@@ -23,15 +22,13 @@ import de.dreier.mytargets.shared.models.IdProvider;
 public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD extends IdProvider>
         extends RecyclerView.Adapter<CardViewHolder<IdProvider>> {
 
-    public static final int PLACEHOLDER_HEADER = 1;
-    public static final int HEADER_TYPE = 2;
-    public static final int ITEM_TYPE = 3;
-    public static final int ITEM_TYPE_2 = 4;
+    public static final int HEADER_TYPE = 1;
+    public static final int ITEM_TYPE = 2;
+    public static final int ITEM_TYPE_2 = 3;
 
     private ArrayList<HEADER> mListHeaders = new ArrayList<>();
     private HashMap<Long, List<CHILD>> childMap = new HashMap<>();
     private ArrayList<Boolean> isOpen = new ArrayList<>();
-    protected int headerHeight = 0;
     private List<DataHolder> dataList = new ArrayList<>();
 
     @Override
@@ -44,27 +41,17 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
     }
 
     private int getDataListPosition(int position) {
-        if (position == 0 && headerHeight > 0) {
-            return -1;
-        } else if (headerHeight > 0) {
-            return position - 1;
-        } else {
-            return position;
-        }
+        return position;
     }
 
     @Override
     public int getItemCount() {
-        int header = headerHeight > 0 ? 1 : 0;
-        return dataList.size() + header;
+        return dataList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
         position = getDataListPosition(position);
-        if (position == -1) {
-            return PLACEHOLDER_HEADER;
-        }
         if (dataList.get(position).getType() == ItemType.ITEM) {
             return ITEM_TYPE;
         }
@@ -73,14 +60,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
 
     @Override
     public CardViewHolder<IdProvider> onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == PLACEHOLDER_HEADER) {
-            View paddingView = new View(parent.getContext());
-            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
-                    AbsListView.LayoutParams.MATCH_PARENT, headerHeight);
-            paddingView.setLayoutParams(lp);
-            paddingView.setClickable(true);
-            return new StaticViewHolder(paddingView);
-        } else if (viewType == HEADER_TYPE) {
+        if (viewType == HEADER_TYPE) {
             return (CardViewHolder<IdProvider>) getTopLevelViewHolder(parent);
         } else {
             return (CardViewHolder<IdProvider>) getSecondLevelViewHolder(parent);
@@ -128,17 +108,16 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
         HEADER headerGroup = mListHeaders.get(headerPosition);
         List<CHILD> children = childMap.get(headerGroup.getId());
         int childLength = children.size();
-        int realPos = position + (headerHeight > 0 ? 1 : 0);
         if (!isOpen.get(headerPosition)) {
             for (int i = 0; i < childLength; i++) {
                 dataList.add(position + i + 1, new DataHolder(children.get(i), ItemType.ITEM));
             }
-            notifyItemRangeInserted(realPos + 1, childLength);
+            notifyItemRangeInserted(position + 1, childLength);
         } else {
             for (int i = 0; i < childLength; i++) {
                 dataList.remove(position + 1);
             }
-            notifyItemRangeRemoved(realPos + 1, childLength);
+            notifyItemRangeRemoved(position + 1, childLength);
         }
         isOpen.set(headerPosition, !isOpen.get(headerPosition));
     }
@@ -153,9 +132,6 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
 
 
     public void remove(int pos) {
-        if (headerHeight > 0) {
-            pos--;
-        }
         DataHolder removed = dataList.remove(pos);
         long parent = removed.getData().getParentId();
         childMap.get(parent).remove(removed.getData());
@@ -186,24 +162,9 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
 
     }
 
-    public void setHeaderHeight(int headerHeight) {
-        this.headerHeight = headerHeight;
-    }
-
     public int getMaxSpan() {
         return 1;
     }
-
-    public class StaticViewHolder extends CardViewHolder<IdProvider> {
-        public StaticViewHolder(View itemView) {
-            super(itemView, null, null);
-        }
-
-        @Override
-        public void bindCursor() {
-        }
-    }
-
 
     protected enum ItemType {
         HEADER, ITEM

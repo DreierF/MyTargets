@@ -40,7 +40,7 @@ public class ScoreboardUtils {
 
         if (scoreboard) {
             html += "<table class=\"myTable\">";
-            html += getTableHeader(context, rounds.get(0).ppp);
+            html += getTableHeader(context, rounds.get(0).info.arrowsPerPasse);
             int carry = 0, count = 0;
             for (Round round : rounds) {
                 ArrayList<Passe> passes = db.getPasses(round.getId());
@@ -49,9 +49,9 @@ public class ScoreboardUtils {
                     int sum = 0;
                     for (Shot shot : passe.shot) {
                         html += "<td>";
-                        html += Target.getStringByZone(round.target, shot.zone);
+                        html += Target.getStringByZone(round.info.target, shot.zone);
                         html += "</td>";
-                        int points = Target.getPointsByZone(round.target, shot.zone);
+                        int points = Target.getPointsByZone(round.info.target, shot.zone);
                         sum += points;
                         carry += points;
                         count++;
@@ -95,7 +95,7 @@ public class ScoreboardUtils {
                         if (!TextUtils.isEmpty(shot.comment)) {
                             comments += "<tr><td>" + j + "</td>" +
                                     "<td>" + i + "</td>" +
-                                    "<td>" + Target.getStringByZone(round.target, shot.zone) +
+                                    "<td>" + Target.getStringByZone(round.info.target, shot.zone) +
                                     "</td>" +
                                     "<td>" +
                                     TextUtils.htmlEncode(shot.comment).replace("\n", "<br />") +

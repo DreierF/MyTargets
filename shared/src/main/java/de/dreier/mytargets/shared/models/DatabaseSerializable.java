@@ -14,5 +14,5 @@ public interface DatabaseSerializable {
     void setId(long id);
     String getTableName();
     ContentValues getContentValues();
-    void fromCursor(Cursor cursor);
+    void fromCursor(Cursor cursor, int startColumnIndex);
 }

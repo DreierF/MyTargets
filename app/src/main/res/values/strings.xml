@@ -220,6 +220,7 @@
     <string name="unit">Unit</string>
     <string name="undo">Undo</string>
     <string name="general">General</string>
+    <string name="standard_rounds">Standard rounds</string>
     <plurals name="arrow_deleted">
         <item quantity="one">One arrow deleted</item>
         <item quantity="other">%d arrows deleted</item>

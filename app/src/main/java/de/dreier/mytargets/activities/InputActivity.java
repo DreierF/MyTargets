@@ -7,8 +7,6 @@
 
 package de.dreier.mytargets.activities;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -33,31 +31,35 @@ import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.views.TargetView;
 
 public class InputActivity extends AppCompatActivity implements OnTargetSetListener {
 
+    public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
+    public static final String PASSE_IND = "passe_ind";
     private static final String TARGET_MODE = "target_mode";
     private static final String SHOW_ALL_MODE = "show_all";
-    public static final String PASSE_IND = "passe_ind";
-    public static final String STOP_AFTER = "stop_after";
     private static final String TIMER_ENABLED = "timer_enabled";
     private TargetView target;
     private Button next, prev;
     private int curPasse = 1;
     private int savedPasses = 0;
+    private long mTraining;
     private long mRound;
     private DatabaseManager db;
     private boolean mMode = true;
     private Round r;
     private boolean mShowAllMode = false;
     private WearMessageManager manager;
-    private int mStopAfter = -1;
     private boolean mTimerEnabled;
+    private Training training;
+    private RoundTemplate template;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,19 +75,48 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         db = DatabaseManager.getInstance(this);
 
         Intent i = getIntent();
-        if (i != null && i.hasExtra(ROUND_ID)) {
-            mRound = i.getLongExtra(ROUND_ID, -1);
-            mStopAfter = i.getIntExtra(STOP_AFTER, -1);
-            savedPasses = db.getPassesOfRound(mRound).size();
-            if (i.hasExtra(PASSE_IND)) {
-                curPasse = i.getIntExtra(PASSE_IND, -1)+1;
-            } else {
-                curPasse = savedPasses + 1;
+        if (i != null) {
+            if (i.hasExtra(TRAINING_ID)) {
+                mTraining = i.getLongExtra(TRAINING_ID, -1);
+                training = db.getTraining(mTraining);
+                ArrayList<Round> rounds = db.getRounds(mTraining);
+                ArrayList<RoundTemplate> roundTemplates = training.standardRound.getRounds();
+                int savedRounds = rounds.size();
+                if (savedRounds == 0) {
+                    template = roundTemplates.get(0);
+                    mRound = -1;
+                    savedPasses = 0;
+                    curPasse = 1;
+                } else {
+                    r = rounds.get(savedRounds - 1);
+                    mRound = r.getId();
+                    ArrayList<Passe> passes = db.getPassesOfRound(mRound);
+                    savedPasses = passes.size();
+                    if (savedPasses == r.info.passes && savedRounds < roundTemplates.size()) {
+                        mRound = -1;
+                        savedPasses = 0;
+                        curPasse = 1;
+                        template = roundTemplates.get(savedRounds - 1);
+                    } else {
+                        curPasse = savedPasses + 1;
+                        template = roundTemplates.get(savedRounds);
+                    }
+                }
+            } else  {
+                mRound = i.getLongExtra(ROUND_ID, -1);
+                r = db.getRound(mRound);
+                template = r.info;
+                training = db.getTraining(r.training);
+                savedPasses = db.getPassesOfRound(mRound).size();
+                if (i.hasExtra(PASSE_IND)) {
+                    curPasse = i.getIntExtra(PASSE_IND, -1) + 1;
+                } else {
+                    curPasse = savedPasses + 1;
+                }
             }
         }
 
-        r = db.getRound(mRound);
-        target.setRoundInfo(r);
+        target.setRoundTemplate(template);
         mMode = prefs.getBoolean(TARGET_MODE, true);
         mShowAllMode = prefs.getBoolean(SHOW_ALL_MODE, false);
         mTimerEnabled = prefs.getBoolean(TIMER_ENABLED, false);
@@ -125,8 +156,8 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
     private void startWearNotification() {
         Bitmap image;
-        if (r.bow > 0) {
-            Bow bow = DatabaseManager.getInstance(this).getBow(r.bow, true);
+        if (training.bow > 0) {
+            Bow bow = DatabaseManager.getInstance(this).getBow(training.bow, true);
             image = bow.image;
         } else {
             image = BitmapFactory.decodeResource(getResources(), R.drawable.wear_bg);
@@ -188,12 +219,13 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         setTitle(getString(R.string.passe_n, curPasse));
         prev.setEnabled(curPasse > 1);
         next.setEnabled(curPasse <= savedPasses);
-        if (savedPasses == mStopAfter) {
-            showStopDialog();
+
+        if (savedPasses == template.passes) {
+            finish();
         }
     }
 
-    private void showStopDialog() {
+    /*private void showStopDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(getResources()
                         .getQuantityString(R.plurals.passes_finished, savedPasses, savedPasses))
@@ -216,7 +248,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                         })
                 .show();
 
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -286,7 +318,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                 updatePasse();
             }
         });
-        return passe.id;
+        return passe.getId();
     }
 
     @Override
@@ -303,7 +335,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         Passe lastPasse = db.getPasse(mRound, savedPasses);
         if (lastPasse != null) {
             for (Shot shot : lastPasse.shot) {
-                text += Target.getStringByZone(r.target, shot.zone) + " ";
+                text += Target.getStringByZone(template.target, shot.zone) + " ";
             }
             text += "\n";
         } else {
@@ -311,8 +343,8 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         }
 
         // Load bow settings
-        if (r.bow > 0) {
-            text += r.distance + ": " + db.getSetting(r.bow, r.distance);
+        if (training.bow > 0) {
+            text += template.distance + ": " + db.getSetting(training.bow, template.distance);
         }
         return new NotificationInfo(r, title, text);
     }

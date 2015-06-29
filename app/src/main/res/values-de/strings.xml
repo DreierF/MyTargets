@@ -195,7 +195,7 @@
     <string name="data">Daten</string>
     <string name="create_backup_on_sd">Erzeugt ein Backup auf der SD-Karte</string>
     <string name="restore_backup">Importiert ein Backup</string>
-    <string name="switch_view">Wechsle Dasrstellung</string>
+    <string name="switch_view">Wechsle Darstellung</string>
     <string name="weather">Wetter</string>
     <string name="environment">Umgebung</string>
     <string name="sunny">Sonnig</string>

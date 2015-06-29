@@ -19,7 +19,7 @@ public class Month extends IdProvider implements Comparable<Month> {
     public int reachedPoints, maxPoints;
 
     public Month(long id) {
-        this.id = id;
+        this.setId(id);
     }
 
     @Override
@@ -29,11 +29,11 @@ public class Month extends IdProvider implements Comparable<Month> {
 
     @Override
     public String toString() {
-        return dateFormat.format(new Date(id));
+        return dateFormat.format(new Date(getId()));
     }
 
     @Override
     public int compareTo(@NonNull Month another) {
-        return (int) (id - another.id);
+        return (int) (getId() - another.getId());
     }
 }

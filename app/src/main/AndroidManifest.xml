@@ -21,7 +21,7 @@
     <application
         android:allowBackup="true"
         android:backupAgent=".utils.MyBackupAgent"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:restoreAnyVersion="false"
         android:supportsRtl="false"
@@ -77,7 +77,7 @@
                 android:value=".activities.SimpleFragmentActivity$TrainingActivity"/>
         </activity>
         <activity
-            android:name=".activities.SimpleFragmentActivity$EditRoundActivity"
+            android:name=".activities.SimpleFragmentActivity$EditTrainingActivity"
             android:label="@string/new_round"
             android:parentActivityName=".activities.SimpleFragmentActivity$TrainingActivity"
             android:theme="@style/AppTheme.CustomToolbar"
@@ -87,11 +87,31 @@
                 android:value=".activities.SimpleFragmentActivity$TrainingActivity"/>
         </activity>
         <activity
+            android:name=".activities.ItemSelectActivity$StandardRound"
+            android:label="@string/new_round"
+            android:parentActivityName=".activities.SimpleFragmentActivity$EditTrainingActivity"
+            android:theme="@style/AppTheme.CustomToolbar"
+            android:windowSoftInputMode="stateAlwaysHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.SimpleFragmentActivity$EditTrainingActivity"/>
+        </activity>
+        <activity
+            android:name=".activities.SimpleFragmentActivity$EditRoundActivity"
+            android:label="@string/new_round"
+            android:parentActivityName=".activities.ItemSelectActivity$StandardRound"
+            android:theme="@style/AppTheme.CustomToolbar"
+            android:windowSoftInputMode="stateAlwaysHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ItemSelectActivity$StandardRound"/>
+        </activity>
+        <activity
             android:name=".activities.EditBowActivity"
             android:label="@string/add_bow"
             android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.CustomToolbar"
-            android:windowSoftInputMode="adjustResize|stateHidden">
+            android:windowSoftInputMode="adjustPan|adjustNothing">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity"/>
@@ -101,7 +121,7 @@
             android:label="@string/add_arrow"
             android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.CustomToolbar"
-            android:windowSoftInputMode="adjustResize|stateHidden">
+            android:windowSoftInputMode="adjustPan|adjustNothing">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity"/>

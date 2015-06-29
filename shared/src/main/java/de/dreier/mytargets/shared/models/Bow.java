@@ -65,8 +65,8 @@ public class Bow extends IdProvider implements DatabaseSerializable {
     }
 
     @Override
-    public void fromCursor(Cursor cursor) {
-        id = cursor.getLong(0);
+    public void fromCursor(Cursor cursor, int startColumnIndex) {
+        setId(cursor.getLong(0));
         name = cursor.getString(1);
         type = cursor.getInt(2);
         brand = cursor.getString(3);

@@ -41,17 +41,16 @@ import de.dreier.mytargets.shared.models.IdProvider;
 /**
  * Shows an overview over all trying days
  */
-public class MainActivity extends AppCompatActivity implements
-        NowListFragment.OnItemSelectedListener, NowListFragmentBase.ContentListener,
-        View.OnClickListener {
+public class MainActivity extends AppCompatActivity
+        implements NowListFragment.OnItemSelectedListener, NowListFragmentBase.ContentListener,
+        View.OnClickListener, ViewPager.OnPageChangeListener {
 
     private static boolean shownThisTime = false;
-    private FloatingActionButton mFab;
+    protected FloatingActionButton mFab;
     protected View mNewLayout;
     protected TextView mNewText;
     private ViewPager viewPager;
     private MainTabsFragmentPagerAdapter adapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +60,10 @@ public class MainActivity extends AppCompatActivity implements
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         adapter = new MainTabsFragmentPagerAdapter(this);
         viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(this);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setTabTextColors(0xFFEEEEEE, Color.WHITE);
+        tabLayout.setTabTextColors(0xCCFFFFFF, Color.WHITE);
         tabLayout.setupWithViewPager(viewPager);
 
         askForHelpTranslating();
@@ -145,6 +145,20 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onClick(View v) {
+        Intent i = new Intent();
+        if (viewPager.getCurrentItem() == 0) {
+            i.setClass(this, SimpleFragmentActivity.EditTrainingActivity.class);
+        } else if (viewPager.getCurrentItem() == 1) {
+            i.setClass(this, EditBowActivity.class);
+        } else if (viewPager.getCurrentItem() == 2) {
+            i.setClass(this, EditArrowActivity.class);
+        }
+        startActivity(i);
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    @Override
     public void onItemSelected(long itemId, Class<? extends IdProvider> aClass) {
         Intent i;
         if (aClass.equals(Arrow.class)) {
@@ -163,23 +177,38 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    boolean empty[] = new boolean[3];
+    int stringRes[] = new int[3];
+
+    {
+        stringRes[0] = R.string.new_training;
+        stringRes[1] = R.string.new_bow;
+        stringRes[2] = R.string.new_arrow;
+    }
+
     @Override
     public void onContentChanged(boolean empty, int stringRes) {
-        if (stringRes != 0) {
-            mNewLayout.setVisibility(empty ? View.VISIBLE : View.GONE);
-            mNewText.setText(stringRes);
-            mFab.setVisibility(View.VISIBLE);
-        } else {
-            mFab.setVisibility(View.GONE);
+        for (int i = 0; i < this.stringRes.length; i++) {
+            if (stringRes == this.stringRes[i]) {
+                this.empty[i] = empty;
+            }
         }
+        onPageSelected(viewPager.getCurrentItem());
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
     }
 
     @Override
-    public void onClick(View v) {
-        Intent i = new Intent();
-        adapter.getFragment(viewPager.getCurrentItem()).onNew(i);
-        startActivity(i);
-        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    public void onPageSelected(int position) {
+        mNewLayout.setVisibility(empty[position] ? View.VISIBLE : View.GONE);
+        mNewText.setText(stringRes[position]);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 }

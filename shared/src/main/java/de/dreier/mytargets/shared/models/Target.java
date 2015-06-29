@@ -11,8 +11,8 @@ public class Target extends IdProvider {
     public static final int WA_10_5 = 1;
     public static final int WA_10_6 = 2;
     public static final int WA_10_6_3times = 3;
-   // public static final int GNAS_9_1 = ;
-   // public static final int TARGET_5_1 = ;
+    public static final int GNAS_9_1 = 8;
+    public static final int TARGET_5_1 = 9;
 
     public static List<Target> list;
     static {
@@ -25,13 +25,15 @@ public class Target extends IdProvider {
         list.add(new Target("DFBV Spiegel", R.drawable.dfbv_spiegel));
         list.add(new Target("DFBV Spiegel Spot", R.drawable.dfbv_spiegel_spot));
         list.add(new Target("DFBV Field", R.drawable.dfbv_field));
+        list.add(new Target("GNAS 9-1", R.drawable.wa));
+        list.add(new Target("Worcester", R.drawable.dfbv_spiegel));
     }
 
     public String name;
     public int drawableRes;
 
     public Target(String name, int drawableRes) {
-        this.id = list.size();
+        this.setId(list.size());
         this.name = name;
         this.drawableRes = drawableRes;
     }
@@ -76,25 +78,31 @@ public class Target extends IdProvider {
     };
     // Indices for target colors starting with the middle one
     public static final int[][] target_rounds = {
-            {0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4}, //WA
+            {0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4}, // WA
             {0, 0, 0, 1, 1, 2, 2}, // WA Spot 5-10
             {0, 0, 0, 1, 1, 2}, // WA Spot 65-10
             {0, 0, 0, 1, 1, 2}, // WA 3er Spot
+            {0, 0, 0, 1, 1, 2}, // WA 3er Spot (Compound)
             {0, 0, 3, 3, 3, 3}, // WA Field
             {4, 4, 3, 3, 3, 3},  // DFBV Spiegel
             {4, 4, 3}, // DFBV Spiegel Spot
-            {3, 3, 4, 4, 3, 3} // DFBV Field
+            {3, 3, 4, 4, 3, 3}, // DFBV Field
+            {0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4}, // GNAS 9-1
+            {4, 3, 3, 3, 3},  // Worcester
     };
     // Points for zone
     public static final int[][] target_points = {
-            {10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1}, //WA
+            {10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1}, // WA
             {10, 10, 9, 8, 7, 6, 5}, // WA Spot 5-10
             {10, 10, 9, 8, 7, 6}, // WA Spot 6-10
             {10, 10, 9, 8, 7, 6}, // WA 3er Spot
+            {10, 9, 9, 8, 7, 6}, // WA 3er Spot (Compound)
             {6, 5, 4, 3, 2, 1}, // WA Field
             {5, 5, 4, 3, 2, 1},  // DFBV Spiegel
             {5, 5, 4}, // DFBV Spiegel Spot
-            {5, 5, 4, 3, 2, 1} // DFBV Field
+            {5, 5, 4, 3, 2, 1}, // DFBV Field
+            {9, 9, 9, 7, 7, 5, 5, 3, 3, 1, 1}, // GNAS 9-1
+            {5, 4, 3, 2, 1},  // Worcester
     };
     private static final int[][] intersectionColor = {
             {0xFF473414, 0xFF10110B}, // yellow -> yellow/red

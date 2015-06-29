@@ -30,8 +30,16 @@ public class Passe extends IdProvider implements Serializable, DatabaseSerializa
     }
 
     public Passe(Passe p) {
-        id = p.id;
+        super.setId(p.getId());
         shot = p.shot.clone();
+    }
+
+    @Override
+    public void setId(long id) {
+        super.setId(id);
+        for (Shot s : shot) {
+            s.passe = id;
+        }
     }
 
     @Override
@@ -59,7 +67,7 @@ public class Passe extends IdProvider implements Serializable, DatabaseSerializa
     }
 
     @Override
-    public void fromCursor(Cursor cursor) {
+    public void fromCursor(Cursor cursor, int startColumnIndex) {
         throw new IllegalArgumentException("Not implemented!");
     }
 }

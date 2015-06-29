@@ -8,11 +8,11 @@ import android.view.View;
 
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
-import de.dreier.mytargets.shared.models.Target;
 
 /**
  * Created by Florian on 18.03.2015.
@@ -22,7 +22,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected int currentArrow = 0;
     protected int lastSetArrow = -1;
     protected Passe mPasse;
-    protected Round roundInfo;
+    protected RoundTemplate round;
     protected int mCurSelecting = -1;
     protected int contentWidth;
     protected int contentHeight;
@@ -53,15 +53,15 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         currentArrow = 0;
         lastSetArrow = -1;
         mCurSelecting = -1;
-        mPasse = new Passe(roundInfo.ppp);
+        mPasse = new Passe(round.arrowsPerPasse);
         mPasseDrawer.setPasse(mPasse);
         invalidate();
     }
 
-    public void setRoundInfo(Round r) {
-        roundInfo = r;
+    public void setRoundTemplate(RoundTemplate r) {
+        round = r;
         mZoneCount = Target.target_rounds[r.target].length;
-        mPasseDrawer = new PasseDrawer(this, density, roundInfo.target);
+        mPasseDrawer = new PasseDrawer(this, density, round.target);
         reset();
     }
 
@@ -69,7 +69,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     public void saveState(Bundle b) {
         b.putSerializable("passe", mPasse);
-        b.putSerializable("roundInfo", roundInfo);
+        b.putSerializable("round", round);
         b.putInt("currentArrow", currentArrow);
         b.putInt("lastSetArrow", lastSetArrow);
     }
@@ -78,7 +78,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         mPasse = (Passe) b.getSerializable("passe");
         currentArrow = b.getInt("currentArrow");
         lastSetArrow = b.getInt("lastSetArrow");
-        roundInfo = (Round) b.getSerializable("roundInfo");
+        round = (RoundTemplate) b.getSerializable("round");
     }
 
     @Override
@@ -114,12 +114,12 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
 
         // Make 3er Spot 9 appear as one
-        if (shot.zone == 1 && roundInfo.target == 3 && roundInfo.compound) {
+        if (shot.zone == 1 && round.target == 4) {
             shot.zone = 2;
         }
 
         // If a valid selection was made save it in the passe
-        if (currentArrow < roundInfo.ppp &&
+        if (currentArrow < round.arrowsPerPasse &&
                 (mPasse.shot[currentArrow].zone != shot.zone || !mModeEasy)) {
             mPasse.shot[currentArrow].zone = shot.zone;
             mPasse.shot[currentArrow].x = shot.x;
@@ -138,8 +138,8 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
             animateSelectCircle(lastSetArrow + 1);
 
-            if (lastSetArrow + 1 >= roundInfo.ppp && setListener != null) {
-                mPasse.id = setListener.onTargetSet(new Passe(mPasse), false);
+            if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
+                mPasse.setId(setListener.onTargetSet(new Passe(mPasse), false));
             }
 
             return true;
@@ -148,7 +148,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     protected void animateSelectCircle(final int i) {
-        if (i > -1 && i < roundInfo.ppp && mPasse.shot[i].zone >= -1) {
+        if (i > -1 && i < round.arrowsPerPasse && mPasse.shot[i].zone >= -1) {
             mPasseDrawer.animateToSelection(i, initAnimationPositions(i), mModeEasy ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
         } else {
             mPasseDrawer.animateToSelection(PasseDrawer.NO_SELECTION, null, mModeEasy ? PasseDrawer.MAX_CIRCLE_SIZE : 0);

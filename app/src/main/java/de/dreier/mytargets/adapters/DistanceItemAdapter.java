@@ -37,6 +37,6 @@ public class DistanceItemAdapter extends ArrayAdapter<Distance> {
 
     @Override
     public long getItemId(int position) {
-        return getItem(position).id;
+        return getItem(position).getId();
     }
 }

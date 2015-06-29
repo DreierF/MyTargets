@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -54,6 +55,7 @@ public abstract class EditWithImageActivity extends AppCompatActivity {
     //private ProgressBar mImageProgress;
     private final int layoutRes;
     private final int defaultDrawable;
+    private CollapsingToolbarLayout collapsingToolbar;
 
     public EditWithImageActivity(int layoutRes, int defaultDrawable) {
         this.layoutRes = layoutRes;
@@ -71,6 +73,9 @@ public abstract class EditWithImageActivity extends AppCompatActivity {
         mImageView = (ImageView) findViewById(R.id.img_view);
         //mImageProgress = (ProgressBar) findViewById(R.id.img_progress);
         mFab = findViewById(R.id.fab);
+
+        collapsingToolbar =
+                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
         // Set up Toolbar
         setSupportActionBar(mToolbar);
@@ -123,6 +128,16 @@ public abstract class EditWithImageActivity extends AppCompatActivity {
                         });
             }
         }
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        collapsingToolbar.setTitle(title);
+    }
+
+    @Override
+    public void setTitle(int title) {
+        collapsingToolbar.setTitle(getString(title));
     }
 
     @Override

@@ -21,8 +21,9 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditArrowActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 
-public class ArrowFragment extends NowListFragment<Arrow> {
+public class ArrowFragment extends NowListFragment<Arrow> implements View.OnClickListener{
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
@@ -39,16 +40,16 @@ public class ArrowFragment extends NowListFragment<Arrow> {
     }
 
     @Override
-    public void onNew(Intent i) {
-        i.setClass(getActivity(), EditArrowActivity.class);
-    }
-
-    @Override
     protected void onEdit(Arrow item) {
         Intent i = new Intent(getActivity(), EditArrowActivity.class);
         i.putExtra(EditArrowActivity.ARROW_ID, item.getId());
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    @Override
+    public void onClick(View v) {
+        startActivity(EditArrowActivity.class);
     }
 
     protected class ArrowAdapter extends NowListAdapter<Arrow> {
@@ -73,7 +74,7 @@ public class ArrowFragment extends NowListFragment<Arrow> {
         @Override
         public void bindCursor() {
             mName.setText(mItem.name);
-            mImg.setImageBitmap(mItem.image);
+            mImg.setImageDrawable(new RoundedAvatarDrawable(mItem.image));
         }
     }
 }

@@ -45,10 +45,10 @@ public class EditArrowActivity extends EditWithImageActivity {
         nock = (EditText) findViewById(R.id.arrow_nock);
         comment = (EditText) findViewById(R.id.arrow_comment);
 
-        getSupportActionBar().setTitle(R.string.new_arrow);
+        setTitle(R.string.new_arrow);
         if (savedInstanceState == null && mArrowId != -1) {
             Arrow arrow = DatabaseManager.getInstance(this).getArrow(mArrowId, false);
-            getSupportActionBar().setTitle(arrow.name);
+            setTitle(arrow.name);
             name.setText(arrow.name);
             length.setText(arrow.length);
             material.setText(arrow.material);
@@ -79,7 +79,7 @@ public class EditArrowActivity extends EditWithImageActivity {
         DatabaseManager db = DatabaseManager.getInstance(this);
 
         Arrow arrow = new Arrow();
-        arrow.id = mArrowId;
+        arrow.setId(mArrowId);
         arrow.name = name.getText().toString();
         arrow.length = length.getText().toString();
         arrow.material = material.getText().toString();

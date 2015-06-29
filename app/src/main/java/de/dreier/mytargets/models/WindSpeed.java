@@ -20,7 +20,7 @@ public class WindSpeed extends IdProvider {
     public String name;
 
     public WindSpeed(long id, String name) {
-        this.id = id;
+        this.setId(id);
         this.name = name;
     }
 

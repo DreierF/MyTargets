@@ -22,10 +22,12 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditBowActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 
-public class BowFragment extends NowListFragment<Bow> {
+public class BowFragment extends NowListFragment<Bow> implements View.OnClickListener {
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
@@ -42,16 +44,16 @@ public class BowFragment extends NowListFragment<Bow> {
     }
 
     @Override
-    public void onNew(Intent i) {
-        i.setClass(getActivity(), EditBowActivity.class);
-    }
-
-    @Override
     protected void onEdit(Bow item) {
         Intent i = new Intent(getActivity(), EditBowActivity.class);
         i.putExtra(EditBowActivity.BOW_ID, item.getId());
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    @Override
+    public void onClick(View v) {
+        startActivity(SimpleFragmentActivity.EditRoundActivity.class);
     }
 
     protected class BowAdapter extends NowListAdapter<Bow> {
@@ -78,7 +80,8 @@ public class BowFragment extends NowListFragment<Bow> {
         @Override
         public void bindCursor() {
             mName.setText(mItem.name);
-            mImg.setImageBitmap(mItem.image);
+            mImg.setImageDrawable(new RoundedAvatarDrawable(mItem.image));
+
             String html = getString(R.string.bow_type) + ": <b>" +
                     getResources().getStringArray(R.array.bow_types)[mItem.type] + "</b>";
             if (!mItem.brand.trim().isEmpty()) {
@@ -89,7 +92,7 @@ public class BowFragment extends NowListFragment<Bow> {
             }
             ArrayList<EditBowActivity.SightSetting> sight = db.getSettings(mItem.getId());
             for (EditBowActivity.SightSetting s : sight) {
-                html += "<br>" + s.distanceVal + "m: <b>" + s.value + "</b>";
+                html += "<br>" + s.distance + "m: <b>" + s.value + "</b>";
             }
             mDetails.setText(Html.fromHtml(html));
         }

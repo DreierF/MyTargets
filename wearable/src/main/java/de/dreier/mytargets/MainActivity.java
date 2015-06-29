@@ -66,7 +66,7 @@ public class MainActivity extends Activity implements OnTargetSetListener,
                 confirm.setVisibility(View.INVISIBLE);
 
                 // Set up target view
-                mTarget.setRoundInfo(round);
+                mTarget.setRoundTemplate(round.info);
                 mTarget.reset();
                 mTarget.setOnTargetSetListener(MainActivity.this);
 

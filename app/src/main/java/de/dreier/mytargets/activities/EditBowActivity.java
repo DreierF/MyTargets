@@ -27,14 +27,14 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.DistanceFragment;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.views.DialogSpinner;
 import de.dreier.mytargets.views.DistanceDialogSpinner;
 
 public class EditBowActivity extends EditWithImageActivity {
 
     public static final String BOW_ID = "bow_id";
-    private static final String UNDO_SETTING = "undo_setting";
-    private static final String UNDO_SETTING_IND = "undo_setting_ind";
     private static final int REQ_SELECTED_DISTANCE = 1;
     public static final int RECURVE_BOW = 0;
     public static final int COMPOUND_BOW = 1;
@@ -122,7 +122,7 @@ public class EditBowActivity extends EditWithImageActivity {
         if (savedInstanceState == null && mBowId != -1) {
             DatabaseManager db = DatabaseManager.getInstance(this);
             Bow bow = db.getBow(mBowId, false);
-            getSupportActionBar().setTitle(bow.name);
+            setTitle(bow.name);
             name.setText(bow.name);
             brand.setText(bow.brand);
             size.setText(bow.size);
@@ -139,7 +139,7 @@ public class EditBowActivity extends EditWithImageActivity {
         } else if (savedInstanceState == null) {
             recurveBow.setChecked(true);
             sightSettingsList = new ArrayList<>();
-            getSupportActionBar().setTitle(R.string.new_bow);
+            setTitle(R.string.new_bow);
         }
 
         if (savedInstanceState != null) {
@@ -162,9 +162,9 @@ public class EditBowActivity extends EditWithImageActivity {
     }
 
     public static class SightSetting implements Parcelable {
-        DialogSpinner distance;
+        DialogSpinner distanceSpinner;
         EditText setting;
-        public int distanceVal;
+        public Distance distance = new Distance(18, Dimension.METER);
         public String value = "";
 
         public SightSetting() {
@@ -177,7 +177,7 @@ public class EditBowActivity extends EditWithImageActivity {
 
         @Override
         public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeInt(distanceVal);
+            parcel.writeSerializable(distance);
             parcel.writeString(value);
         }
 
@@ -193,13 +193,13 @@ public class EditBowActivity extends EditWithImageActivity {
         };
 
         private SightSetting(Parcel in) {
-            distanceVal = in.readInt();
+            distance = (Distance) in.readSerializable();
             value = in.readString();
         }
 
         public void update() {
-            if (distance != null && setting != null) {
-                distanceVal = (int) distance.getSelectedItemId();
+            if (distanceSpinner != null && setting != null) {
+                distance = Distance.fromId(distanceSpinner.getSelectedItemId());
                 value = setting.getText().toString();
             }
         }
@@ -208,14 +208,14 @@ public class EditBowActivity extends EditWithImageActivity {
     private void addSightSetting(final SightSetting setting, int i) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         final View rel = inflater.inflate(R.layout.sight_settings_item, sight_settings, false);
-        setting.distance = (DistanceDialogSpinner) rel.findViewById(R.id.distance_spinner);
-        setting.distance.setOnClickListener(new View.OnClickListener() {
+        setting.distanceSpinner = (DistanceDialogSpinner) rel.findViewById(R.id.distance_spinner);
+        setting.distanceSpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(EditBowActivity.this,
                         ItemSelectActivity.Distance.class);
-                i.putExtra("title", R.string.target_round);
-                i.putExtra(DistanceFragment.CUR_DISTANCE, setting.distance.getSelectedItemId());
+                i.putExtra("title", R.string.distance);
+                i.putExtra(DistanceFragment.CUR_DISTANCE, setting.distanceSpinner.getSelectedItemId());
                 curSetting = setting;
                 startActivityForResult(i, REQ_SELECTED_DISTANCE);
             }
@@ -239,13 +239,13 @@ public class EditBowActivity extends EditWithImageActivity {
                 sightSettingsList.remove(setting);
             }
         });
-        setting.distance.setItemId(setting.distanceVal);
+        setting.distanceSpinner.setItemId(setting.distance.getId());
         setting.setting.setText(setting.value);
         if (i == -1) {
             i = sightSettingsList.size();
             sightSettingsList.add(setting);
         }
-        setting.distance.setId(548969458 + i * 2);
+        setting.distanceSpinner.setId(548969458 + i * 2);
         setting.setting.setId(548969458 + i * 2 + 1);
         sight_settings.addView(rel);
     }
@@ -255,7 +255,7 @@ public class EditBowActivity extends EditWithImageActivity {
         if (resultCode == RESULT_OK) {
             long id = data.getLongExtra("id", 0);
             if (requestCode == REQ_SELECTED_DISTANCE) {
-                curSetting.distance.setItemId(id);
+                curSetting.distanceSpinner.setItemId(id);
                 return;
             }
         }
@@ -267,7 +267,7 @@ public class EditBowActivity extends EditWithImageActivity {
         DatabaseManager db = DatabaseManager.getInstance(this);
 
         Bow bow = new Bow();
-        bow.id = mBowId;
+        bow.setId(mBowId);
         bow.name = name.getText().toString();
         bow.brand = brand.getText().toString();
         bow.size = size.getText().toString();
@@ -284,7 +284,7 @@ public class EditBowActivity extends EditWithImageActivity {
             set.update();
         }
 
-        db.updateSightSettings(bow.id, sightSettingsList);
+        db.updateSightSettings(bow.getId(), sightSettingsList);
         finish();
     }
 

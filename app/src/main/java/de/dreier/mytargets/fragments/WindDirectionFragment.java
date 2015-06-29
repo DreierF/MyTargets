@@ -35,11 +35,6 @@ public class WindDirectionFragment extends NowListFragment<WindDirection> {
     }
 
     @Override
-    public void onNew(Intent i) {
-        i.setClass(getActivity(), EditBowActivity.class);
-    }
-
-    @Override
     public void onLongClick(CardViewHolder holder) {
         onClick(holder, (WindDirection) holder.getItem());
     }

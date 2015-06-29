@@ -14,24 +14,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.fragments.EditRoundFragment;
+import de.dreier.mytargets.fragments.EditStandardRoundFragment;
+import de.dreier.mytargets.fragments.EditTrainingFragment;
 import de.dreier.mytargets.fragments.PasseFragment;
 import de.dreier.mytargets.fragments.SettingsFragment;
 import de.dreier.mytargets.fragments.TimerFragment;
 
 public abstract class SimpleFragmentActivity extends AppCompatActivity {
 
+    protected Fragment childFragment;
+
     protected abstract Fragment instantiateFragment();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.frame_layout);
-        Fragment childFragment = instantiateFragment();
+        setContentView(getLayoutResource());
+        childFragment = instantiateFragment();
         Bundle bundle = getIntent() != null ? getIntent().getExtras() : null;
         childFragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content, childFragment).commit();
+    }
+
+    protected int getLayoutResource() {
+        return R.layout.frame_layout;
     }
 
     @Override
@@ -74,11 +81,19 @@ public abstract class SimpleFragmentActivity extends AppCompatActivity {
         }
     }
 
+    public static class EditTrainingActivity extends SimpleFragmentActivity {
+
+        @Override
+        protected Fragment instantiateFragment() {
+            return new EditTrainingFragment();
+        }
+    }
+
     public static class EditRoundActivity extends SimpleFragmentActivity {
 
         @Override
         protected Fragment instantiateFragment() {
-            return new EditRoundFragment();
+            return new EditStandardRoundFragment();
         }
     }
 }

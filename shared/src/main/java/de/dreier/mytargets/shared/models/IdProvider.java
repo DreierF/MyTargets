@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public abstract class IdProvider implements Serializable {
     public static final String ID = "_id";
-    public long id;
+    private long id;
 
     public long getId() {
         return id;

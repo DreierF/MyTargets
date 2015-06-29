@@ -44,7 +44,9 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
     public void onResume() {
         super.onResume();
         reloadData();
-        mAdapter.expandOrCollapse(0);
+        if (mAdapter.getItemCount() > 0) {
+            mAdapter.expandOrCollapse(0);
+        }
     }
 
     private void reloadData() {
@@ -69,11 +71,6 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
     }
 
     @Override
-    public void onNew(Intent i) {
-        i.setClass(getActivity(), SimpleFragmentActivity.EditRoundActivity.class);
-    }
-
-    @Override
     public void onSelected(Training item) {
         Intent i = new Intent(getActivity(), SimpleFragmentActivity.TrainingActivity.class);
         i.putExtra(TRAINING_ID, item.getId());
@@ -84,8 +81,7 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
     @Override
     protected void onEdit(final Training item) {
         Intent i = new Intent(getActivity(), SimpleFragmentActivity.EditRoundActivity.class);
-        i.putExtra(EditRoundFragment.TRAINING_ID, item.getId());
-        i.putExtra(EditRoundFragment.EDIT_TRAINING, true);
+        i.putExtra(EditTrainingFragment.TRAINING_ID, item.getId());
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
@@ -143,7 +139,8 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
         public void bindCursor() {
             mTitle.setText(mItem.toString());
             mPoints.setText(mItem.reachedPoints + "/" + mItem.maxPoints);
-            String percent = mItem.maxPoints == 0 ? "" : (mItem.reachedPoints * 100 / mItem.maxPoints) + "%";
+            String percent =
+                    mItem.maxPoints == 0 ? "" : (mItem.reachedPoints * 100 / mItem.maxPoints) + "%";
             mPercentage.setText(percent);
         }
     }

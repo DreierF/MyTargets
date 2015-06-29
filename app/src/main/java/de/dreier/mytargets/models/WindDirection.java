@@ -20,7 +20,7 @@ public class WindDirection extends IdProvider {
     public String name;
 
     public WindDirection(long id, String name) {
-        this.id = id;
+        this.setId(id);
         this.name = name;
     }
 

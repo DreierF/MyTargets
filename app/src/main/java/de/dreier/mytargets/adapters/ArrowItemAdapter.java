@@ -18,6 +18,7 @@ import android.widget.TextView;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 
 public class ArrowItemAdapter extends ArrayAdapter<Arrow> {
 
@@ -37,12 +38,12 @@ public class ArrowItemAdapter extends ArrayAdapter<Arrow> {
 
         Arrow item = getItem(position);
         name.setText(item.name);
-        img.setImageBitmap(item.image);
+        img.setImageDrawable(new RoundedAvatarDrawable(item.image));
         return convertView;
     }
 
     @Override
     public long getItemId(int position) {
-        return getItem(position).id;
+        return getItem(position).getId();
     }
 }

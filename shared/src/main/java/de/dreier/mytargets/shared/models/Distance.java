@@ -13,10 +13,10 @@ public class Distance extends Dimension {
 
     public Distance(int distance, String unit) {
         super(distance, unit);
-        this.id = (distance << 1) | (unit.equals("m") ? 1 : 0);
+        this.setId((distance << 1) | (unit.equals(METER) ? 1 : 0));
     }
 
     public static Distance fromId(long id) {
-        return new Distance((int) id >> 1, (id & 1) == 1 ? "m" : "yd");
+        return new Distance((int) id >> 1, (id & 1) == 1 ? METER : YARDS);
     }
 }

@@ -7,28 +7,27 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.text.InputType;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
 
+import java.util.List;
+
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.EditBowActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.utils.TextInputDialog;
+import de.dreier.mytargets.views.CardItemDecorator;
 
 public class DistanceFragment extends NowListFragment<Distance>
-        implements TextInputDialog.OnClickListener {
+        implements TextInputDialog.OnClickListener, View.OnClickListener {
 
     public static final String CUR_DISTANCE = "distance";
     private long distance;
@@ -39,26 +38,7 @@ public class DistanceFragment extends NowListFragment<Distance>
         Bundle bundle = getArguments();
         distance = bundle.getLong(CUR_DISTANCE);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.add, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_add) {
-            new TextInputDialog.Builder(getActivity())
-                    .setTitle(R.string.distance)
-                    .setInputType(InputType.TYPE_CLASS_NUMBER)
-                    .setSpinnerItems(new String[]{"m", "yd"})
-                    .setOnClickListener(this)
-                    .show();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        mRecyclerView.addItemDecoration(new CardItemDecorator(getActivity(), 3));
     }
 
     @Override
@@ -68,8 +48,7 @@ public class DistanceFragment extends NowListFragment<Distance>
     }
 
     @Override
-    public void onNew(Intent i) {
-        i.setClass(getActivity(), EditBowActivity.class);
+    protected void updateFabButton(List list) {
     }
 
     @Override
@@ -92,10 +71,10 @@ public class DistanceFragment extends NowListFragment<Distance>
         try {
             int distanceVal = Integer.parseInt(input.replaceAll("[^0-9]", ""));
             String unit;
-            if (input.endsWith("m")) {
-                unit = "m";
+            if (input.endsWith(Dimension.METER)) {
+                unit = Dimension.METER;
             } else {
-                unit = "yd";
+                unit = Dimension.YARDS;
             }
             distance = new Distance(distanceVal, unit).getId();
         } catch (NumberFormatException e) {
@@ -104,11 +83,21 @@ public class DistanceFragment extends NowListFragment<Distance>
         listener.onItemSelected(distance, Distance.class);
     }
 
+    @Override
+    public void onClick(View v) {
+        new TextInputDialog.Builder(getActivity())
+                .setTitle(R.string.distance)
+                .setInputType(InputType.TYPE_CLASS_NUMBER)
+                .setSpinnerItems(new String[]{Dimension.METER, Dimension.YARDS})
+                .setOnClickListener(this)
+                .show();
+    }
+
     protected class DistanceAdapter extends NowListAdapter<Distance> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.text_card, parent, false);
+                    .inflate(R.layout.centered_text_card, parent, false);
             return new ViewHolder(itemView);
         }
     }
