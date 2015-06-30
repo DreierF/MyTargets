@@ -11,34 +11,27 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import de.dreier.mytargets.R;
+import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.Target;
 
-public class StandardRoundsItemAdapter extends BaseAdapter {
+public class StandardRoundsItemAdapter extends ArrayAdapter<StandardRound> {
     private final Context mContext;
 
-    private StandardRound standardRound;
-
-    public StandardRoundsItemAdapter(Context context, StandardRound round) {
+    public StandardRoundsItemAdapter(Context context) {
+        super(context, 0, DatabaseManager.getInstance(context).getStandardRounds());
         mContext = context;
-        standardRound = round;
     }
 
     @Override
-    public int getCount() {
-        return 1;
-    }
-
-    @Override
-    public Object getItem(int i) {
-        return standardRound;
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return i;
+    public long getItemId(int position) {
+        return getItem(position).getId();
     }
 
     @Override
@@ -47,20 +40,18 @@ public class StandardRoundsItemAdapter extends BaseAdapter {
         if (v == null) {
             LayoutInflater vi = (LayoutInflater) mContext.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(android.R.layout.simple_list_item_1, parent, false);
+            v = vi.inflate(R.layout.standard_round_item, parent, false);
         }
 
-        TextView desc = (TextView) v.findViewById(android.R.id.text1);
+        TextView name = (TextView) v.findViewById(android.R.id.text1);
+        TextView desc = (TextView) v.findViewById(android.R.id.text2);
+        ImageView image = (ImageView) v.findViewById(R.id.image);
 
-        desc.setText(standardRound.getName());
+        StandardRound item = getItem(position);
+        name.setText(item.getName());
+        desc.setText(item.getDescription(mContext));
+        RoundTemplate firstRound = item.getRounds().get(0);
+        image.setImageResource(Target.list.get(firstRound.target).drawableRes);
         return v;
-    }
-
-    public void setStandardRound(StandardRound standardRound) {
-        this.standardRound = standardRound;
-    }
-
-    public StandardRound getStandardRound() {
-        return standardRound;
     }
 }

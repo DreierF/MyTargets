@@ -5,4 +5,5 @@
     <string name="cloudy">Cloudy</string>
     <string name="light_rain">Light rain</string>
     <string name="rain">Rainy</string>
+    <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
 </resources>

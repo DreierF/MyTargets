@@ -354,7 +354,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public ArrayList<Training> getTrainings() {
         Cursor cursor = db.rawQuery("SELECT t._id, t.title, t.datum, t.bow, t.arrow, b.type, " +
                 "t.weather, t.wind_speed, t.wind_direction, t.location, " +
-                "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=a.target)) " +
+                "SUM(m.points), (SELECT MAX(points) FROM ZONE_MATRIX WHERE target=a.target)*a.passes*a.arrows " +
                 "FROM TRAINING t " +
                 "LEFT JOIN ROUND r ON t._id = r.training " +
                 "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
@@ -380,7 +380,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public ArrayList<Round> getRounds(long training) {
         Cursor res = db.rawQuery(
                 "SELECT r._id, r.comment, SUM(m.points), " +
-                        "SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=a.target)), " +
+                        "(SELECT MAX(points) FROM ZONE_MATRIX WHERE target=a.target)*a.passes*a.arrows, " +
                         "a._id, a.r_index, a.arrows, a.target, a.distance, a.unit, " +
                         "a.size, a.target_unit, a.passes, a.sid " +
                         "FROM ROUND r " +
@@ -515,12 +515,24 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return list;
     }
 
+    public ArrayList<StandardRound> getStandardRounds() {
+        Cursor cursor = db.rawQuery("SELECT s._id FROM STANDARD_ROUND_TEMPLATE s", null);
+        ArrayList<StandardRound> list = new ArrayList<>(cursor.getCount());
+        if (cursor.moveToFirst()) {
+            do {
+                list.add(getStandardRound(cursor.getLong(0)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
 ////// GET SINGLE ENTRY AS OBJECT //////
 
     public Training getTraining(long training) {
         Cursor cursor = db.rawQuery("SELECT t._id, t.title, t.datum, t.bow, t.arrow, b.type, " +
                 "t.weather, t.wind_speed, t.wind_direction, t.location, " +
-                "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=a.target)), t.standard_round " +
+                "SUM(m.points), (SELECT MAX(points) FROM ZONE_MATRIX WHERE target=a.target)*a.passes*a.arrows, t.standard_round " +
                 "FROM TRAINING t " +
                 "LEFT JOIN ROUND r ON t._id = r.training " +
                 "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
@@ -556,7 +568,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         // Get all generic round attributes
         Cursor cursor = db.rawQuery(
                 "SELECT r._id, r.comment, SUM(m.points), " +
-                        "SUM(m.points), SUM((SELECT MAX(points) FROM ZONE_MATRIX WHERE target=a.target)) " +
+                        "(SELECT MAX(points) FROM ZONE_MATRIX WHERE target=a.target)*a.passes*a.arrows, " +
                         "a._id, a.r_index, a.arrows, a.target, a.distance, a.unit, " +
                         "a.size, a.target_unit, a.passes, a.sid " +
                         "FROM ROUND r " +
@@ -811,7 +823,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (values == null) {
             return;
         }
-        if(item instanceof Training) {
+        if (item instanceof Training) {
             Training training = (Training) item;
             StandardRound sr = training.standardRound;
             update(sr);

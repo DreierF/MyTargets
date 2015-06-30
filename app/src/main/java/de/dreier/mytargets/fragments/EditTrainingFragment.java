@@ -25,6 +25,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -43,6 +44,7 @@ import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
+import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
@@ -120,7 +122,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
 
         // Format / Standard round
         standardRound = (DialogSpinner) rootView.findViewById(R.id.standard_round);
-        standardRound.setAdapter(new StandardRoundsItemAdapter(activity, getStandardRound()));
+        standardRound.setAdapter(new StandardRoundsItemAdapter(activity));
         standardRound.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,6 +198,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             activity.getSupportActionBar().setTitle(R.string.new_training);
             bow.setItemId(prefs.getInt("bow", -1));
             arrow.setItemId(prefs.getInt("arrow", -1));
+            standardRound.setItemId(prefs.getInt("round", -1));
         } else {
             DatabaseManager db = DatabaseManager.getInstance(activity);
             Training train = db.getTraining(mTraining);
@@ -203,6 +206,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             date = train.date;
             bow.setItemId(train.bow);
             arrow.setItemId(train.arrow);
+            standardRound.setItemId(standardRound.getId());
             setTrainingDate();
             activity.getSupportActionBar().setTitle(R.string.new_training);
             scrollView.setVisibility(View.GONE);
@@ -249,6 +253,10 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
                 Environment env = (Environment) data.getSerializableExtra("item");
                 ((EnvironmentItemAdapter) environment.getAdapter()).setEnvironment(env);
                 environment.setItemId(0);
+                return;
+            } else if (requestCode == REQ_SELECTED_STANDARD_ROUND) {
+                //Environment env = (Environment) data.getSerializableExtra("item");
+                standardRound.setItemId(id);
                 return;
             }
         }
@@ -308,10 +316,21 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         db.update(training);
         mTraining = training.getId();
 
+        ArrayList<RoundTemplate> roundTemplates = training.standardRound.getRounds();
+
+        for(RoundTemplate template : roundTemplates) {
+            Round round = new Round();
+            round.training = mTraining;
+            round.info = template;
+            round.comment = "";
+            db.update(round);
+        }
+
         SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("bow", (int) bow.getSelectedItemId());
         editor.putInt("arrow", (int) arrow.getSelectedItemId());
+        editor.putInt("round", (int) standardRound.getSelectedItemId());
         editor.apply();
     }
 

@@ -68,288 +68,247 @@ public class StandardRound extends IdProvider implements Serializable, DatabaseS
 
     public static ArrayList<StandardRound> initTable(Context context) {
         ArrayList<StandardRound> rounds = new ArrayList<>();
-        rounds.add(build(GNAS, context.getString(R.string.long_metric_v), CAT_OUTDOOR,
+        rounds.add(build(context, GNAS, R.string.long_metric_v, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
-                Target.WA_10_1, 6, 30, 122, 6, 20,
-                122, 6));
-        rounds.add(
-                build(GNAS, context.getString(R.string.short_metric), CAT_OUTDOOR, Dimension.METER,
-                        Dimension.CENTIMETER,
-                        Target.WA_10_1, 6, 50, 80, 6, 30, 80,
-                        6));
-        rounds.add(build(GNAS, context.getString(R.string.short_metric_i), CAT_OUTDOOR,
+                Target.WA_10_1, 6, 30, 122, 6, 20, 122, 6));
+        rounds.add(build(context, GNAS, R.string.short_metric, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
-                Target.WA_10_1, 6, 50, 80, 6, 30,
-                80, 6));
-        rounds.add(build(GNAS, context.getString(R.string.short_metric_ii), CAT_OUTDOOR,
+                Target.WA_10_1, 6, 50, 80, 6, 30, 80, 6));
+        rounds.add(build(context, GNAS, R.string.short_metric_i, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
-                Target.WA_10_1, 6, 40, 80, 6, 30,
-                80, 6));
-        rounds.add(build(GNAS, context.getString(R.string.short_metric_iii), CAT_OUTDOOR,
+                Target.WA_10_1, 6, 50, 80, 6, 30, 80, 6));
+        rounds.add(build(context, GNAS, R.string.short_metric_ii, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
-                Target.WA_10_1, 6, 30, 80, 6, 20,
-                80, 6));
-        rounds.add(build(GNAS, context.getString(R.string.short_metric_iv), CAT_OUTDOOR,
+                Target.WA_10_1, 6, 40, 80, 6, 30, 80, 6));
+        rounds.add(build(context, GNAS, R.string.short_metric_iii, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
-                Target.WA_10_1, 6, 20, 80, 6, 10,
-                80, 6));
-        rounds.add(build(GNAS, context.getString(R.string.short_metric_v), CAT_OUTDOOR,
+                Target.WA_10_1, 6, 30, 80, 6, 20, 80, 6));
+        rounds.add(build(context, GNAS, R.string.short_metric_iv, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
-                Target.WA_10_1, 6, 15, 80, 6, 10,
-                80, 6));
-        rounds.add(build(GNAS, context.getString(R.string.half_metric_i), CAT_OUTDOOR,
+                Target.WA_10_1, 6, 20, 80, 6, 10, 80, 6));
+        rounds.add(build(context, GNAS, R.string.short_metric_v, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
+                Target.WA_10_1, 6, 15, 80, 6, 10, 80, 6));
+        rounds.add(build(context, GNAS, R.string.half_metric_i, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 Target.WA_10_1, 6, 70, 122, 3, 60,
                 122, 3, 50, 80, 3, 30, 80, 3));
-        rounds.add(build(GNAS, context.getString(R.string.half_metric_ii), CAT_OUTDOOR,
+        rounds.add(build(context, GNAS, R.string.half_metric_ii, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
-                Target.WA_10_1, 6, 60, 122, 3, 50,
-                122, 3, 40, 80, 3, 30, 80, 3));
-        rounds.add(build(GNAS, context.getString(R.string.half_metric_iii), CAT_OUTDOOR,
+                Target.WA_10_1, 6, 60, 122, 3, 50, 122, 3, 40, 80, 3, 30, 80, 3));
+        rounds.add(build(context, GNAS, R.string.half_metric_iii, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
-                Target.WA_10_1, 6, 50, 122, 3, 40,
-                122, 3, 30, 80, 3, 20, 80, 3));
-        rounds.add(build(GNAS, context.getString(R.string.half_metric_iv), CAT_OUTDOOR,
+                Target.WA_10_1, 6, 50, 122, 3, 40, 122, 3, 30, 80, 3, 20, 80, 3));
+        rounds.add(build(context, GNAS, R.string.half_metric_iv, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
-                Target.WA_10_1, 6, 40, 122, 3, 30,
-                122, 3, 20, 80, 3, 10, 80, 3));
-        rounds.add(build(GNAS, context.getString(R.string.half_metric_v), CAT_OUTDOOR,
+                Target.WA_10_1, 6, 40, 122, 3, 30, 122, 3, 20, 80, 3, 10, 80, 3));
+        rounds.add(build(context, GNAS, R.string.half_metric_v, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 Target.WA_10_1, 6, 30, 122, 3, 20, 122, 3, 15, 80, 3, 10, 80, 3));
-        rounds.add(
-                build(GNAS, context.getString(R.string.york), CAT_OUTDOOR, Dimension.YARDS,
-                        Dimension.CENTIMETER, Target.GNAS_9_1,
-                        6, 100, 122, 12, 80, 122, 8, 60, 122, 4));
-        rounds.add(build(GNAS, context.getString(R.string.hereford), CAT_OUTDOOR, Dimension.YARDS,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.york, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
+                Target.GNAS_9_1, 6, 100, 122, 12, 80, 122, 8, 60, 122, 4));
+        rounds.add(build(context, GNAS, R.string.hereford, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 80, 122, 12, 60, 122, 8, 50, 122, 4));
-        rounds.add(build(GNAS, context.getString(R.string.bristol_i), CAT_OUTDOOR, Dimension.YARDS,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.bristol_i, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 80, 122, 12, 60, 122, 8, 50, 122, 4));
-        rounds.add(
-                build(GNAS, context.getString(R.string.bristol_ii), CAT_OUTDOOR, Dimension.YARDS,
-                        Dimension.CENTIMETER,
-                        Target.GNAS_9_1, 6, 60, 122, 12, 50, 122, 8, 40, 122, 4));
-        rounds.add(
-                build(GNAS, context.getString(R.string.bristol_iii), CAT_OUTDOOR, Dimension.YARDS,
-                        Dimension.CENTIMETER,
-                        Target.GNAS_9_1, 6, 50, 122, 12, 40, 122, 8, 30, 122, 4));
-        rounds.add(
-                build(GNAS, context.getString(R.string.bristol_iv), CAT_OUTDOOR, Dimension.YARDS,
-                        Dimension.CENTIMETER,
-                        Target.GNAS_9_1, 6, 40, 122, 12, 30, 122, 8, 20, 122, 4));
-        rounds.add(build(GNAS, context.getString(R.string.bristol_v), CAT_OUTDOOR, Dimension.YARDS,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.bristol_ii, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
+                Target.GNAS_9_1, 6, 60, 122, 12, 50, 122, 8, 40, 122, 4));
+        rounds.add(build(context, GNAS, R.string.bristol_iii, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
+                Target.GNAS_9_1, 6, 50, 122, 12, 40, 122, 8, 30, 122, 4));
+        rounds.add(build(context, GNAS, R.string.bristol_iv, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
+                Target.GNAS_9_1, 6, 40, 122, 12, 30, 122, 8, 20, 122, 4));
+        rounds.add(build(context, GNAS, R.string.bristol_v, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 30, 122, 12, 20, 122, 8, 10, 122, 4));
-        rounds.add(build(GNAS, context.getString(R.string.st_george), CAT_OUTDOOR, Dimension.YARDS,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.st_george, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 100, 122, 6, 80, 122, 6, 60, 122, 6));
-        rounds.add(build(GNAS, context.getString(R.string.albion), CAT_OUTDOOR, Dimension.YARDS,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.albion, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 80, 122, 6, 60, 122, 6, 50, 122, 6));
-        rounds.add(build(GNAS, context.getString(R.string.windsor), CAT_OUTDOOR, Dimension.YARDS,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.windsor, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 60, 122, 6, 50, 122, 6, 40, 122, 6));
-        rounds.add(build(GNAS, context.getString(R.string.short_windsor), CAT_OUTDOOR,
+        rounds.add(build(context, GNAS, R.string.short_windsor, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 50, 122, 6, 40, 122, 6, 30, 122, 6));
-        rounds.add(build(GNAS, context.getString(R.string.junior_windsor), CAT_OUTDOOR,
+        rounds.add(build(context, GNAS, R.string.junior_windsor, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 40, 122, 6, 30, 122, 6, 20, 122, 6));
-        rounds.add(
-                build(GNAS, context.getString(R.string.short_junior_windsor), CAT_OUTDOOR,
-                        Dimension.YARDS, Dimension.CENTIMETER,
-                        Target.GNAS_9_1, 6, 30, 122, 6, 20,
-                        122, 6, 10, 122, 6));
-        rounds.add(
-                build(GNAS, context.getString(R.string.new_western), CAT_OUTDOOR, Dimension.YARDS,
-                        Dimension.CENTIMETER,
-                        Target.GNAS_9_1, 6, 100, 122, 8, 80, 122, 8));
-        rounds.add(
-                build(FITA, context.getString(R.string.fita_gents), CAT_OUTDOOR, Dimension.METER,
-                        Dimension.CENTIMETER,
-                        Target.WA_10_1, 6, 90, 122, 6, 70,
-                        122, 6, 50, 80, 6, 30, 80, 6));
-        rounds.add(
-                build(GNAS, context.getString(R.string.long_western), CAT_OUTDOOR, Dimension.YARDS,
-                        Dimension.CENTIMETER,
-                        Target.GNAS_9_1, 6, 80, 122, 8, 60, 122, 8));
-        rounds.add(build(GNAS, context.getString(R.string.western), CAT_OUTDOOR, Dimension.YARDS,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.short_junior_windsor, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
+                Target.GNAS_9_1, 6, 30, 122, 6, 20,
+                122, 6, 10, 122, 6));
+        rounds.add(build(context, GNAS, R.string.new_western, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
+                Target.GNAS_9_1, 6, 100, 122, 8, 80, 122, 8));
+        rounds.add(build(context, FITA, R.string.fita_gents, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
+                Target.WA_10_1, 6, 90, 122, 6, 70,
+                122, 6, 50, 80, 6, 30, 80, 6));
+        rounds.add(build(context, GNAS, R.string.long_western, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
+                Target.GNAS_9_1, 6, 80, 122, 8, 60, 122, 8));
+        rounds.add(build(context, GNAS, R.string.western, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 60, 122, 8, 50, 122, 8));
-        rounds.add(build(GNAS, context.getString(R.string.short_western), CAT_OUTDOOR,
+        rounds.add(build(context, GNAS, R.string.short_western, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 50, 122, 8, 40, 122, 8));
-        rounds.add(build(GNAS, context.getString(R.string.junior_western), CAT_OUTDOOR,
+        rounds.add(build(context, GNAS, R.string.junior_western, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 40, 122, 8, 30, 122, 8));
-        rounds.add(
-                build(GNAS, context.getString(R.string.short_junior_western), CAT_OUTDOOR,
-                        Dimension.YARDS, Dimension.CENTIMETER,
-                        Target.GNAS_9_1, 6, 30, 122, 8, 20, 122, 8));
-        rounds.add(build(GNAS, context.getString(R.string.american), CAT_OUTDOOR, Dimension.YARDS,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.short_junior_western, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
+                Target.GNAS_9_1, 6, 30, 122, 8, 20, 122, 8));
+        rounds.add(build(context, GNAS, R.string.american, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 60, 122, 5, 50, 122, 5, 40, 122, 5));
-        rounds.add(
-                build(GNAS, context.getString(R.string.st_nicholas), CAT_OUTDOOR, Dimension.YARDS,
-                        Dimension.CENTIMETER,
-                        Target.GNAS_9_1, 6, 40, 122, 8, 30, 122, 6));
-        rounds.add(
-                build(GNAS, context.getString(R.string.new_national), CAT_OUTDOOR, Dimension.YARDS,
-                        Dimension.CENTIMETER,
-                        Target.GNAS_9_1, 6, 100, 122, 8, 80, 122, 4));
-        rounds.add(build(GNAS, context.getString(R.string.long_national), CAT_OUTDOOR,
+        rounds.add(build(context, GNAS, R.string.st_nicholas, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
+                Target.GNAS_9_1, 6, 40, 122, 8, 30, 122, 6));
+        rounds.add(build(context, GNAS, R.string.new_national, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
+                Target.GNAS_9_1, 6, 100, 122, 8, 80, 122, 4));
+        rounds.add(build(context, GNAS, R.string.long_national, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 80, 122, 8, 60, 122, 4));
-        rounds.add(build(GNAS, context.getString(R.string.national), CAT_OUTDOOR, Dimension.YARDS,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.national, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 60, 122, 8, 50, 122, 4));
-        rounds.add(build(GNAS, context.getString(R.string.short_national), CAT_OUTDOOR,
+        rounds.add(build(context, GNAS, R.string.short_national, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 50, 122, 8, 40, 122, 4));
-        rounds.add(build(GNAS, context.getString(R.string.junior_national), CAT_OUTDOOR,
+        rounds.add(build(context, GNAS, R.string.junior_national, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 40, 122, 8, 30, 122, 4));
-        rounds.add(
-                build(GNAS, context.getString(R.string.short_junior_national), CAT_OUTDOOR,
-                        Dimension.YARDS, Dimension.CENTIMETER,
-                        Target.GNAS_9_1, 6, 30, 122, 8, 20, 122, 4));
-        rounds.add(
-                build(GNAS, context.getString(R.string.new_warwick), CAT_OUTDOOR, Dimension.YARDS,
-                        Dimension.CENTIMETER,
-                        Target.GNAS_9_1, 6, 100, 122, 4, 80, 122, 4));
-        rounds.add(
-                build(GNAS, context.getString(R.string.long_warwick), CAT_OUTDOOR, Dimension.YARDS,
-                        Dimension.CENTIMETER,
-                        Target.GNAS_9_1, 6, 80, 122, 4, 60, 122, 4));
-        rounds.add(build(GNAS, context.getString(R.string.warwick), CAT_OUTDOOR, Dimension.YARDS,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.short_junior_national, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
+                Target.GNAS_9_1, 6, 30, 122, 8, 20, 122, 4));
+        rounds.add(build(context, GNAS, R.string.new_warwick, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
+                Target.GNAS_9_1, 6, 100, 122, 4, 80, 122, 4));
+        rounds.add(build(context, GNAS, R.string.long_warwick, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
+                Target.GNAS_9_1, 6, 80, 122, 4, 60, 122, 4));
+        rounds.add(build(context, GNAS, R.string.warwick, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 60, 122, 4, 50, 122, 4));
-        rounds.add(build(GNAS, context.getString(R.string.short_warwick), CAT_OUTDOOR,
+        rounds.add(build(context, GNAS, R.string.short_warwick, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 50, 122, 4, 40, 122, 4));
-        rounds.add(build(GNAS, context.getString(R.string.junior_warwick), CAT_OUTDOOR,
+        rounds.add(build(context, GNAS, R.string.junior_warwick, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 Target.GNAS_9_1, 6, 40, 122, 4, 30, 122, 4));
-        rounds.add(
-                build(GNAS, context.getString(R.string.short_junior_warwick), CAT_OUTDOOR,
-                        Dimension.YARDS, Dimension.CENTIMETER,
-                        Target.GNAS_9_1, 6, 30, 122, 4, 20, 122, 4));
-        rounds.add(
-                build(GNAS, context.getString(R.string.bray_i), CAT_INDOOR, Dimension.YARDS,
-                        Dimension.CENTIMETER, Target.WA_10_1,
-                        6, 20, 40, 5));
-        rounds.add(build(GNAS, context.getString(R.string.bray_ii), CAT_INDOOR, Dimension.YARDS,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.short_junior_warwick, CAT_OUTDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
+                Target.GNAS_9_1, 6, 30, 122, 4, 20, 122, 4));
+        rounds.add(build(context, GNAS, R.string.bray_i, CAT_INDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
+                Target.WA_10_1, 6, 20, 40, 5));
+        rounds.add(build(context, GNAS, R.string.bray_ii, CAT_INDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
                 Target.WA_10_1, 6, 25, 60, 5));
-        rounds.add(build(GNAS, context.getString(R.string.portsmouth), CAT_INDOOR, Dimension.YARDS,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.portsmouth, CAT_INDOOR,
+                Dimension.YARDS, Dimension.CENTIMETER,
                 Target.WA_10_1, 6, 20, 60, 10));
-        rounds.add(build(GNAS, context.getString(R.string.worcester), CAT_INDOOR, Dimension.YARDS,
-                Dimension.INCH,
+        rounds.add(build(context, GNAS, R.string.worcester, CAT_INDOOR,
+                Dimension.YARDS, Dimension.INCH,
                 Target.TARGET_5_1, 5, 20, 16, 12));
-        rounds.add(build(GNAS, context.getString(R.string.stafford), CAT_INDOOR, Dimension.METER,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.stafford, CAT_INDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
                 Target.WA_10_1, 6, 30, 80, 12));
-        rounds.add(
-                build(GNAS, context.getString(R.string.vegas), CAT_INDOOR, Dimension.METER,
-                        Dimension.CENTIMETER, Target.WA_10_6,
-                        6, 18, 40, 10));
-        rounds.add(
-                build(FITA, context.getString(R.string.fita_ladies), CAT_OUTDOOR, Dimension.METER,
-                        Dimension.CENTIMETER,
-                        Target.WA_10_1, 6, 70, 122, 6, 60,
-                        122, 6, 50, 80, 6, 30, 80, 6));
-        rounds.add(
-                build(FITA, context.getString(R.string.fita_cadet_ladies), CAT_OUTDOOR,
-                        Dimension.METER, Dimension.CENTIMETER,
-                        Target.WA_10_1, 6, 60, 122, 6,
-                        50, 122, 6, 40, 80, 6, 30, 80, 6));
-        rounds.add(build(FITA, context.getString(R.string.half_fita_gents), CAT_OUTDOOR,
+        rounds.add(build(context, GNAS, R.string.vegas, CAT_INDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
+                Target.WA_10_6, 6, 18, 40, 10));
+        rounds.add(build(context, FITA, R.string.fita_ladies, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
+                Target.WA_10_1, 6, 70, 122, 6, 60,
+                122, 6, 50, 80, 6, 30, 80, 6));
+        rounds.add(build(context, FITA, R.string.fita_cadet_ladies, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
+                Target.WA_10_1, 6, 60, 122, 6,
+                50, 122, 6, 40, 80, 6, 30, 80, 6));
+        rounds.add(build(context, FITA, R.string.half_fita_gents, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 Target.WA_10_1, 6, 90, 122, 3,
                 70, 122, 3, 50, 80, 3, 30, 80, 3));
-        rounds.add(
-                build(FITA, context.getString(R.string.half_fita_ladies), CAT_OUTDOOR,
-                        Dimension.METER, Dimension.CENTIMETER,
-                        Target.WA_10_1, 6, 70, 122, 3,
-                        60, 122, 3, 50, 80, 3, 30, 80, 3));
-        rounds.add(build(FITA, context.getString(R.string.half_fita_cadet_ladies), CAT_OUTDOOR,
-                Dimension.METER,
-                Dimension.METER, Target.WA_10_1, 6, 60,
+        rounds.add(build(context, FITA, R.string.half_fita_ladies, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
+                Target.WA_10_1, 6, 70, 122, 3,
+                60, 122, 3, 50, 80, 3, 30, 80, 3));
+        rounds.add(build(context, FITA, R.string.half_fita_cadet_ladies, CAT_OUTDOOR,
+                Dimension.METER, Dimension.METER,
+                Target.WA_10_1, 6, 60,
                 122, 3, 50, 122, 3, 40, 80, 3, 30, 80, 3));
-        rounds.add(build(FITA, context.getString(R.string.fita_900), CAT_OUTDOOR, Dimension.METER,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, FITA, R.string.fita_900, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
                 Target.WA_10_1, 6, 60, 122, 5, 50, 122, 5,
                 40, 122, 5));
-        rounds.add(build(FITA, context.getString(R.string.fita_70), CAT_OUTDOOR, Dimension.METER,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, FITA, R.string.fita_70, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
                 Target.WA_10_1, 6, 70, 122, 12));
-        rounds.add(build(FITA, context.getString(R.string.fita_60), CAT_OUTDOOR, Dimension.METER,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, FITA, R.string.fita_60, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
                 Target.WA_10_1, 6, 60, 122, 12));
-        rounds.add(build(FITA, context.getString(R.string.fita_standard), CAT_OUTDOOR,
+        rounds.add(build(context, FITA, R.string.fita_standard, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 Target.WA_10_1, 6, 50, 122, 6, 30,
                 122, 6));
-        rounds.add(
-                build(FITA, context.getString(R.string.olympic_round), CAT_OUTDOOR, Dimension.METER,
-                        Dimension.CENTIMETER,
-                        Target.WA_10_1, 3, 70, 122, 4));
-        rounds.add(build(FITA, context.getString(R.string.fita_18), CAT_INDOOR, Dimension.METER,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, FITA, R.string.olympic_round, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
+                Target.WA_10_1, 3, 70, 122, 4));
+        rounds.add(build(context, FITA, R.string.fita_18, CAT_INDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
                 Target.WA_10_6, 6, 18, 40, 10));
-        rounds.add(build(FITA, context.getString(R.string.fita_25), CAT_INDOOR, Dimension.METER,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, FITA, R.string.fita_25, CAT_INDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
                 Target.WA_10_1, 6, 25, 60, 10));
-        rounds.add(
-                build(FITA, context.getString(R.string.combined_fita), CAT_INDOOR, Dimension.METER,
-                        Dimension.CENTIMETER,
-                        Target.WA_10_1, 6, 25, 60, 10, 18, 40, 10));
-        rounds.add(build(FITA, context.getString(R.string.match_round), CAT_INDOOR, Dimension.METER,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, FITA, R.string.combined_fita, CAT_INDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
+                Target.WA_10_1, 6, 25, 60, 10, 18, 40, 10));
+        rounds.add(build(context, FITA, R.string.match_round, CAT_INDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
                 Target.WA_10_6, 3, 18, 40, 4));
-        rounds.add(build(GNAS, context.getString(R.string.metric_i), CAT_OUTDOOR, Dimension.METER,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.metric_i, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
                 Target.WA_10_1, 6, 70, 122, 6, 60, 122, 6, 50, 80, 6, 30, 80, 6));
-        rounds.add(build(GNAS, context.getString(R.string.metric_ii), CAT_OUTDOOR, Dimension.METER,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.metric_ii, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
                 Target.WA_10_1, 6, 60, 122, 6, 50, 122, 6, 40, 80, 6, 30, 80, 6));
-        rounds.add(build(GNAS, context.getString(R.string.metric_iii), CAT_OUTDOOR, Dimension.METER,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.metric_iii, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
                 Target.WA_10_1, 6, 50, 122, 6, 40, 122, 6, 30, 80, 6, 20, 80, 6));
-        rounds.add(build(GNAS, context.getString(R.string.metric_iv), CAT_OUTDOOR, Dimension.METER,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.metric_iv, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
                 Target.WA_10_1, 6, 40, 122, 6, 30, 122, 6, 20, 80, 6, 10, 80, 6));
-        rounds.add(build(GNAS, context.getString(R.string.metric_v), CAT_OUTDOOR, Dimension.METER,
-                Dimension.CENTIMETER,
+        rounds.add(build(context, GNAS, R.string.metric_v, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
                 Target.WA_10_1, 6, 30, 122, 6, 20, 122, 6, 15, 80, 6, 10, 80, 6));
-        rounds.add(
-                build(GNAS, context.getString(R.string.long_metric_gents), CAT_OUTDOOR,
-                        Dimension.METER,
-                        Dimension.CENTIMETER,
-                        Target.WA_10_1, 6, 90, 122, 6, 70, 122, 6));
-        rounds.add(
-                build(GNAS, context.getString(R.string.long_metric_ladies), CAT_OUTDOOR,
-                        Dimension.METER,
-                        Dimension.CENTIMETER,
-                        Target.WA_10_1, 6, 70, 122, 6, 60, 122, 6));
-        rounds.add(
-                build(GNAS, context.getString(R.string.long_metric_i), CAT_OUTDOOR, Dimension.METER,
-                        Dimension.CENTIMETER,
-                        Target.WA_10_1, 6, 70, 122, 6, 60, 122, 6));
-        rounds.add(
-                build(GNAS, context.getString(R.string.long_metric_ii), CAT_OUTDOOR,
-                        Dimension.METER, Dimension.CENTIMETER,
-                        Target.WA_10_1, 6, 60, 122, 6, 50, 122, 6));
-        rounds.add(
-                build(GNAS, context.getString(R.string.long_metric_iii), CAT_OUTDOOR,
-                        Dimension.METER, Dimension.CENTIMETER,
-                        Target.WA_10_1, 6, 50, 122, 6, 40, 122, 6));
-        rounds.add(
-                build(GNAS, context.getString(R.string.long_metric_iv), CAT_OUTDOOR,
-                        Dimension.METER, Dimension.CENTIMETER,
-                        Target.WA_10_1, 6, 40, 122, 6, 30, 122, 6));
+        rounds.add(build(context, GNAS, R.string.long_metric_gents, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
+                Target.WA_10_1, 6, 90, 122, 6, 70, 122, 6));
+        rounds.add(build(context, GNAS, R.string.long_metric_ladies, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
+                Target.WA_10_1, 6, 70, 122, 6, 60, 122, 6));
+        rounds.add(build(context, GNAS, R.string.long_metric_i, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
+                Target.WA_10_1, 6, 70, 122, 6, 60, 122, 6));
+        rounds.add(build(context, GNAS, R.string.long_metric_ii, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
+                Target.WA_10_1, 6, 60, 122, 6, 50, 122, 6));
+        rounds.add(build(context, GNAS, R.string.long_metric_iii, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
+                Target.WA_10_1, 6, 50, 122, 6, 40, 122, 6));
+        rounds.add(build(context, GNAS, R.string.long_metric_iv, CAT_OUTDOOR,
+                Dimension.METER, Dimension.CENTIMETER,
+                Target.WA_10_1, 6, 40, 122, 6, 30, 122, 6));
         return rounds;
     }
 
@@ -366,9 +325,9 @@ public class StandardRound extends IdProvider implements Serializable, DatabaseS
      * @param roundDetails   Per round distance, targetSize and number of passes are expected
      * @return The standard round with the specified properties
      */
-    public static StandardRound build(int institution, String name, boolean indoor, String distanceUnit, String targetUnit, int target, int arrowsPerPasse, int... roundDetails) {
+    public static StandardRound build(Context context, int institution, int name, boolean indoor, String distanceUnit, String targetUnit, int target, int arrowsPerPasse, int... roundDetails) {
         StandardRound standardRound = new StandardRound();
-        standardRound.name = name;
+        standardRound.name = context.getString(name);
         standardRound.indoor = indoor;
         standardRound.institution = institution;
         for (int i = 0; i < roundDetails.length; i += 3) {
@@ -398,6 +357,21 @@ public class StandardRound extends IdProvider implements Serializable, DatabaseS
     }
 
     public String getName() {
-        return name;
+        if (name != null) {
+            return name;
+        }
+        return "";
+    }
+
+    public String getDescription(Context context) {
+        String desc = "";
+        for (RoundTemplate r : rounds) {
+            if (!desc.isEmpty()) {
+                desc += "\n";
+            }
+            desc += context.getString(R.string.round_desc, r.distance, r.passes,
+                    r.arrowsPerPasse, r.targetSize);
+        }
+        return desc;
     }
 }

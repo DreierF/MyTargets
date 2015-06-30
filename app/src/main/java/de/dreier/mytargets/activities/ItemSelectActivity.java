@@ -20,6 +20,7 @@ import de.dreier.mytargets.fragments.DistanceFragment;
 import de.dreier.mytargets.fragments.EnvironmentFragment;
 import de.dreier.mytargets.fragments.NowListFragment;
 import de.dreier.mytargets.fragments.NowListFragmentBase;
+import de.dreier.mytargets.fragments.StandardRoundFragment;
 import de.dreier.mytargets.fragments.TargetFragment;
 import de.dreier.mytargets.fragments.WindDirectionFragment;
 import de.dreier.mytargets.fragments.WindSpeedFragment;
@@ -131,12 +132,12 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
     public static class StandardRound extends ItemSelectActivity implements View.OnClickListener {
         @Override
         protected Fragment instantiateFragment() {
-            return new DistanceFragment();
+            return new StandardRoundFragment();
         }
 
         @Override
         public void onClick(View v) {
-            ((DistanceFragment) childFragment).onClick(v);
+            ((StandardRoundFragment) childFragment).onClick(v);
         }
     }
 

@@ -87,16 +87,6 @@
                 android:value=".activities.SimpleFragmentActivity$TrainingActivity"/>
         </activity>
         <activity
-            android:name=".activities.ItemSelectActivity$StandardRound"
-            android:label="@string/new_round"
-            android:parentActivityName=".activities.SimpleFragmentActivity$EditTrainingActivity"
-            android:theme="@style/AppTheme.CustomToolbar"
-            android:windowSoftInputMode="stateAlwaysHidden">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$EditTrainingActivity"/>
-        </activity>
-        <activity
             android:name=".activities.SimpleFragmentActivity$EditRoundActivity"
             android:label="@string/new_round"
             android:parentActivityName=".activities.ItemSelectActivity$StandardRound"
@@ -192,6 +182,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.ItemSelectActivity$Environment"/>
+        </activity>
+        <activity
+            android:name=".activities.ItemSelectActivity$StandardRound"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.SimpleFragmentActivity$EditTrainingActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.SimpleFragmentActivity$EditTrainingActivity"/>
         </activity>
 
         <!-- Preferences activity -->

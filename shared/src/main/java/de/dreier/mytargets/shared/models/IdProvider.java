@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public abstract class IdProvider implements Serializable {
     public static final String ID = "_id";
-    private long id;
+    protected long id;
 
     public long getId() {
         return id;
@@ -19,5 +19,12 @@ public abstract class IdProvider implements Serializable {
 
     public long getParentId() {
         return 0;
+    }
+
+    @Override
+    public boolean equals(Object another) {
+        return another instanceof IdProvider &&
+                getClass().equals(another.getClass()) &&
+                id == ((IdProvider) another).id;
     }
 }

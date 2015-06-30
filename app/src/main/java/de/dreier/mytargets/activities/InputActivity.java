@@ -51,10 +51,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     private int curPasse = 1;
     private int savedPasses = 0;
     private long mTraining;
-    private long mRound;
+    private Round mRound;
     private DatabaseManager db;
     private boolean mMode = true;
-    private Round r;
     private boolean mShowAllMode = false;
     private WearMessageManager manager;
     private boolean mTimerEnabled;
@@ -74,48 +73,31 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         db = DatabaseManager.getInstance(this);
 
-        Intent i = getIntent();
-        if (i != null) {
-            if (i.hasExtra(TRAINING_ID)) {
-                mTraining = i.getLongExtra(TRAINING_ID, -1);
-                training = db.getTraining(mTraining);
-                ArrayList<Round> rounds = db.getRounds(mTraining);
-                ArrayList<RoundTemplate> roundTemplates = training.standardRound.getRounds();
-                int savedRounds = rounds.size();
-                if (savedRounds == 0) {
-                    template = roundTemplates.get(0);
-                    mRound = -1;
-                    savedPasses = 0;
-                    curPasse = 1;
-                } else {
-                    r = rounds.get(savedRounds - 1);
-                    mRound = r.getId();
-                    ArrayList<Passe> passes = db.getPassesOfRound(mRound);
-                    savedPasses = passes.size();
-                    if (savedPasses == r.info.passes && savedRounds < roundTemplates.size()) {
-                        mRound = -1;
-                        savedPasses = 0;
-                        curPasse = 1;
-                        template = roundTemplates.get(savedRounds - 1);
-                    } else {
-                        curPasse = savedPasses + 1;
-                        template = roundTemplates.get(savedRounds);
-                    }
-                }
-            } else  {
-                mRound = i.getLongExtra(ROUND_ID, -1);
-                r = db.getRound(mRound);
-                template = r.info;
-                training = db.getTraining(r.training);
-                savedPasses = db.getPassesOfRound(mRound).size();
-                if (i.hasExtra(PASSE_IND)) {
-                    curPasse = i.getIntExtra(PASSE_IND, -1) + 1;
-                } else {
-                    curPasse = savedPasses + 1;
+        Intent intent = getIntent();
+        assert intent != null;
+        if (intent.hasExtra(TRAINING_ID)) {
+            mTraining = intent.getLongExtra(TRAINING_ID, -1);
+            ArrayList<Round> rounds = db.getRounds(mTraining);
+            for (int roundIndex = 0; roundIndex < rounds.size(); roundIndex++) {
+                mRound = rounds.get(roundIndex);
+                ArrayList<Passe> passes = db.getPassesOfRound(mRound.getId());
+                savedPasses = passes.size();
+                template = mRound.info;
+                if (savedPasses < template.passes || roundIndex + 1 == rounds.size()) {
+                    curPasse = Math.min(savedPasses + 1, template.passes);
+                    break;
                 }
             }
+        } else {
+            long roundId = intent.getLongExtra(ROUND_ID, -1);
+            curPasse = intent.getIntExtra(PASSE_IND, -1) + 1;
+            mRound = db.getRound(roundId);
+            template = mRound.info;
+            mTraining = mRound.training;
+            savedPasses = db.getPassesOfRound(roundId).size();
         }
 
+        training = db.getTraining(mTraining);
         target.setRoundTemplate(template);
         mMode = prefs.getBoolean(TARGET_MODE, true);
         mShowAllMode = prefs.getBoolean(SHOW_ALL_MODE, false);
@@ -151,6 +133,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                 setPasse(curPasse - 1);
             }
         });
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -195,7 +178,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
     void setPasse(int passe) {
         if (passe <= savedPasses) {
-            Passe p = db.getPasse(mRound, passe);
+            Passe p = db.getPasse(mRound.getId(), passe);
             if (p != null) {
                 target.setPasse(p);
             } else {
@@ -209,7 +192,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                 openTimer();
             }
         }
-        ArrayList<Passe> oldOnes = db.getPasses(mRound);
+        ArrayList<Passe> oldOnes = db.getPasses(mRound.getId());
         target.setOldShoots(oldOnes);
         curPasse = passe;
         updatePasse();
@@ -218,10 +201,11 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     void updatePasse() {
         setTitle(getString(R.string.passe_n, curPasse));
         prev.setEnabled(curPasse > 1);
-        next.setEnabled(curPasse <= savedPasses);
+        next.setEnabled(curPasse <= savedPasses && curPasse <= template.passes);
 
         if (savedPasses == template.passes) {
             finish();
+            overridePendingTransition(R.anim.left_in, R.anim.right_out);
         }
     }
 
@@ -299,7 +283,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     public long onTargetSet(Passe passe, boolean remote) {
         passe.sort();
 
-        passe.roundId = mRound;
+        passe.roundId = mRound.getId();
 
         db.update(passe);
 
@@ -332,7 +316,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         String text = "";
 
         // Initialize message text
-        Passe lastPasse = db.getPasse(mRound, savedPasses);
+        Passe lastPasse = db.getPasse(mRound.getId(), savedPasses);
         if (lastPasse != null) {
             for (Shot shot : lastPasse.shot) {
                 text += Target.getStringByZone(template.target, shot.zone) + " ";
@@ -346,6 +330,6 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         if (training.bow > 0) {
             text += template.distance + ": " + db.getSetting(training.bow, template.distance);
         }
-        return new NotificationInfo(r, title, text);
+        return new NotificationInfo(mRound, title, text);
     }
 }
