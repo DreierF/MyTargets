@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
+import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -103,7 +103,7 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
         }
     }
 
-    public class ViewHolder extends CardViewHolder<Training> {
+    public class ViewHolder extends SelectableViewHolder<Training> {
         public final TextView mTitle;
         public final TextView mSubtitle;
         public final TextView mGes;
@@ -123,25 +123,25 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
         }
     }
 
-    public class HeaderViewHolder extends CardViewHolder<Month> {
+    public class HeaderViewHolder extends SelectableViewHolder<Month> {
         public final TextView mTitle;
-        private final TextView mPoints;
-        private final TextView mPercentage;
+      //  private final TextView mPoints;
+      //  private final TextView mPercentage;
 
         public HeaderViewHolder(View itemView) {
-            super(itemView, null, null);
+            super(itemView, R.id.expand_collapse);
             mTitle = (TextView) itemView.findViewById(android.R.id.text1);
-            mPoints = (TextView) itemView.findViewById(R.id.totalPoints);
-            mPercentage = (TextView) itemView.findViewById(R.id.totalPercentage);
+          //  mPoints = (TextView) itemView.findViewById(R.id.totalPoints);
+          //  mPercentage = (TextView) itemView.findViewById(R.id.totalPercentage);
         }
 
         @Override
         public void bindCursor() {
             mTitle.setText(mItem.toString());
-            mPoints.setText(mItem.reachedPoints + "/" + mItem.maxPoints);
+            /*mPoints.setText(mItem.reachedPoints + "/" + mItem.maxPoints);
             String percent =
                     mItem.maxPoints == 0 ? "" : (mItem.reachedPoints * 100 / mItem.maxPoints) + "%";
-            mPercentage.setText(percent);
+            mPercentage.setText(percent);*/
         }
     }
 }

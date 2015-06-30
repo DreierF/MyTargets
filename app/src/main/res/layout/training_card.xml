@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Card">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:background="?android:attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <TextView
             android:id="@+id/training"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:clickable="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:text="@string/training"
+            android:textColor="@color/primary_text_default_material_light"
+            android:textSize="16sp"/>
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:baselineAligned="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:clickable="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
             android:orientation="horizontal">
 
             <TextView
@@ -35,21 +34,26 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:clickable="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:text="@string/data"
+                android:textColor="@color/secondary_text_default_material_light"
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/gesTraining"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
                 android:gravity="end"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textColor="@color/secondary_text_default_material_light"
+                android:textSize="14sp"/>
         </LinearLayout>
 
     </LinearLayout>
 
-</android.support.v7.widget.CardView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/dividerColor"/>
+
+</RelativeLayout>

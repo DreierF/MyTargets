@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
+import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
 import java.util.ArrayList;
 
@@ -65,7 +65,7 @@ public class BowFragment extends NowListFragment<Bow> implements View.OnClickLis
         }
     }
 
-    public class ViewHolder extends CardViewHolder<Bow> {
+    public class ViewHolder extends SelectableViewHolder<Bow> {
         private final TextView mName;
         private final TextView mDetails;
         private final ImageView mImg;

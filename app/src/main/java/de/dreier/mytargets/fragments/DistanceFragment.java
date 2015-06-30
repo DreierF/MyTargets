@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
+import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class DistanceFragment extends NowListFragment<Distance>
     }
 
     @Override
-    public void onLongClick(CardViewHolder holder) {
+    public void onLongClick(SelectableViewHolder holder) {
         onClick(holder, (Distance) holder.getItem());
     }
 
@@ -102,7 +102,7 @@ public class DistanceFragment extends NowListFragment<Distance>
         }
     }
 
-    public class ViewHolder extends CardViewHolder<Distance> {
+    public class ViewHolder extends SelectableViewHolder<Distance> {
         private final TextView mName;
 
         public ViewHolder(View itemView) {

@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 
-import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
+import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import de.dreier.mytargets.shared.models.IdProvider;
 
 
 public abstract class NowListAdapter<T extends IdProvider>
-        extends RecyclerView.Adapter<CardViewHolder<T>> {
+        extends RecyclerView.Adapter<SelectableViewHolder<T>> {
 
     private List<T> mList = new ArrayList<>();
     protected int headerHeight = 0;
@@ -55,7 +55,7 @@ public abstract class NowListAdapter<T extends IdProvider>
     }
 
     @Override
-    public final CardViewHolder<T> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public final SelectableViewHolder<T> onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == 0 && headerHeight > 0) {
             View paddingView = new View(parent.getContext());
             AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
@@ -68,10 +68,10 @@ public abstract class NowListAdapter<T extends IdProvider>
         }
     }
 
-    protected abstract CardViewHolder<T> onCreateViewHolder(ViewGroup parent);
+    protected abstract SelectableViewHolder<T> onCreateViewHolder(ViewGroup parent);
 
     @Override
-    public final void onBindViewHolder(CardViewHolder<T> viewHolder, int position) {
+    public final void onBindViewHolder(SelectableViewHolder<T> viewHolder, int position) {
         if (position > 0 && headerHeight > 0) {
             viewHolder.bindCursor(mList.get(position - 1));
         } else if (headerHeight == 0) {
@@ -107,7 +107,7 @@ public abstract class NowListAdapter<T extends IdProvider>
         this.headerHeight = headerHeight;
     }
 
-    public class StaticViewHolder extends CardViewHolder<T> {
+    public class StaticViewHolder extends SelectableViewHolder<T> {
         public StaticViewHolder(View itemView) {
             super(itemView, null, null);
         }

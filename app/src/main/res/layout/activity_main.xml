@@ -31,7 +31,6 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <View
@@ -40,6 +39,5 @@
         android:background="@drawable/toolbar_drop_shadow"/>
 
     <include layout="@layout/fab_description_layout"/>
-
 
 </android.support.design.widget.CoordinatorLayout>

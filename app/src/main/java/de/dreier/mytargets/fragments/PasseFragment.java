@@ -25,7 +25,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
+import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,27 +95,6 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
 
         // Get UI elements
         Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
-/*
-        passe = (FloatingActionButton) mFab.findViewById(R.id.new_passe);
-        passe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(activity, InputActivity.class);
-                i.putExtra(InputActivity.ROUND_ID, mRounds.get(mRounds.size() - 1).getId());
-                startActivity(i);
-                mFab.collapse();
-            }
-        });
-        FloatingActionButton round = (FloatingActionButton) mFab.findViewById(R.id.new_round);
-        round.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO Intent i = new Intent(activity, SimpleFragmentActivity.EditRoundActivity.class);
-                //i.putExtra(TRAINING_ID, mTraining);
-                //startActivity(i);
-                mFab.collapse();
-            }
-        });*/
 
         // Set up toolbar
         activity.setSupportActionBar(toolbar);
@@ -370,7 +349,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         }
 
         @Override
-        protected CardViewHolder<Passe> getSecondLevelViewHolder(ViewGroup parent) {
+        protected SelectableViewHolder<Passe> getSecondLevelViewHolder(ViewGroup parent) {
             if (mTargetViewMode) {
                 View itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.target_passe_card, parent, false);
@@ -397,7 +376,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         }
     }
 
-    public class TargetViewHolder extends CardViewHolder<Passe> {
+    public class TargetViewHolder extends SelectableViewHolder<Passe> {
         public final TargetPasseView mShots;
         public final TextView mSubtitle;
 
@@ -416,7 +395,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         }
     }
 
-    public class PasseViewHolder extends CardViewHolder<Passe> {
+    public class PasseViewHolder extends SelectableViewHolder<Passe> {
         public final PasseView mShots;
         public final TextView mSubtitle;
 
@@ -436,29 +415,29 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
     }
 
 
-    public class HeaderViewHolder extends CardViewHolder<Round> {
+    public class HeaderViewHolder extends SelectableViewHolder<Round> {
         public final TextView mTitle;
         public final TextView mSubtitle;
-        private final TextView mPoints;
-        private final TextView mPercentage;
+       // private final TextView mPoints;
+       // private final TextView mPercentage;
 
         public HeaderViewHolder(View itemView) {
-            super(itemView, null, null);
+            super(itemView, R.id.expand_collapse);
             itemView.setLongClickable(true);
             itemView.setOnLongClickListener(this);
             mTitle = (TextView) itemView.findViewById(R.id.round);
             mSubtitle = (TextView) itemView.findViewById(R.id.dist);
-            mPoints = (TextView) itemView.findViewById(R.id.totalPoints);
-            mPercentage = (TextView) itemView.findViewById(R.id.totalPercentage);
+           // mPoints = (TextView) itemView.findViewById(R.id.totalPoints);
+          //  mPercentage = (TextView) itemView.findViewById(R.id.totalPercentage);
         }
 
         @Override
         public void bindCursor() {
             Context context = mTitle.getContext();
             mTitle.setText(context.getString(R.string.round) + " " + (mRounds.indexOf(mItem) + 1));
-            mPoints.setText(mItem.reachedPoints + "/" + mItem.maxPoints);
+            //mPoints.setText(mItem.reachedPoints + "/" + mItem.maxPoints);
             String percent = mItem.maxPoints == 0 ? "" : (mItem.reachedPoints * 100 / mItem.maxPoints) + "%";
-            mPercentage.setText(percent);
+            //mPercentage.setText(percent);
 
             String infoText = "";
             if (!distance_equals) {

@@ -42,53 +42,20 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Card" parent="android:Widget.TextView">
-        <item name="android:foreground">@drawable/card_item</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="cardCornerRadius">2dp</item>
-        <item name="cardUseCompatPadding">true</item>
-        <item name="contentPadding">8dp</item>
-        <item name="android:clickable">false</item>
-        <item name="android:focusableInTouchMode">false</item>
-        <item name="android:focusable">false</item>
-    </style>
-
-    <style name="CardContainer">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingBottom">@dimen/card_padding_vertical</item>
-        <item name="android:paddingTop">@dimen/card_padding_vertical</item>
-        <item name="android:paddingLeft">@dimen/card_padding_horizontal</item>
-        <item name="android:paddingRight">@dimen/card_padding_horizontal</item>
-        <item name="android:clickable">true</item>
-        <item name="android:longClickable">true</item>
-        <item name="android:focusableInTouchMode">true</item>
-        <item name="android:focusable">true</item>
-    </style>
-
     <style name="card_list">
         <item name="android:id">@android:id/list</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:clipToPadding">false</item>
-        <item name="android:background">@color/list_background</item>
         <item name="android:scrollbars">none</item>
-    </style>
-
-    <style name="menu_labels_style">
-        <item name="android:background">@drawable/fab_label_background</item>
-        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="header_container">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>
+        <item name="android:minHeight">48dp</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:paddingLeft">20dp</item>
-        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
-
 </resources>

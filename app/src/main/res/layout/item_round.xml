@@ -7,10 +7,11 @@
         android:id="@+id/round"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="15dp"
+        android:fontFamily="sans-serif-medium"
         android:gravity="center_vertical"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#000000"/>
+        android:paddingTop="16dp"
+        android:textColor="@color/secondary_text_default_material_light"
+        android:textSize="14sp"/>
 
     <TextView
         android:id="@+id/dist"
@@ -18,9 +19,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/round"
         android:layout_gravity="center_vertical"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+        android:textColor="@color/secondary_text_default_material_light"
+        android:textSize="14sp"/>
 
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -43,6 +45,16 @@
             android:gravity="right"
             android:text="80%"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
-    </LinearLayout>
+    </LinearLayout>-->
+
+    <ImageView
+        android:id="@+id/expand_collapse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:clickable="false"
+        android:contentDescription="@string/expand_collapse"
+        android:src="@drawable/ic_expand_more_grey600_24dp"/>
 
 </RelativeLayout>

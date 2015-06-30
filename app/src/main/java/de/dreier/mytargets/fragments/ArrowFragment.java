@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
+import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditArrowActivity;
@@ -61,7 +61,7 @@ public class ArrowFragment extends NowListFragment<Arrow> implements View.OnClic
         }
     }
 
-    public class ViewHolder extends CardViewHolder<Arrow> {
+    public class ViewHolder extends SelectableViewHolder<Arrow> {
         private final TextView mName;
         private final ImageView mImg;
 

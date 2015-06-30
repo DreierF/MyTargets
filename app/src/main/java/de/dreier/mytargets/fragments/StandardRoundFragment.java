@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
+import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
     }
 
     @Override
-    public void onLongClick(CardViewHolder holder) {
+    public void onLongClick(SelectableViewHolder holder) {
         onClick(holder, (StandardRound) holder.getItem());
     }
 
@@ -65,7 +65,7 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
         }
     }
 
-    public class ViewHolder extends CardViewHolder<StandardRound> {
+    public class ViewHolder extends SelectableViewHolder<StandardRound> {
         private final TextView mName;
 
         public ViewHolder(View itemView) {

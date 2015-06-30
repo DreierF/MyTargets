@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
+import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditBowActivity;
@@ -35,7 +35,7 @@ public class WindSpeedFragment extends NowListFragment<WindSpeed> {
     }
 
     @Override
-    public void onLongClick(CardViewHolder holder) {
+    public void onLongClick(SelectableViewHolder holder) {
         onClick(holder, (WindSpeed) holder.getItem());
     }
 
@@ -56,7 +56,7 @@ public class WindSpeedFragment extends NowListFragment<WindSpeed> {
         }
     }
 
-    public class ViewHolder extends CardViewHolder<WindSpeed> {
+    public class ViewHolder extends SelectableViewHolder<WindSpeed> {
         private final TextView mName;
 
         public ViewHolder(View itemView) {

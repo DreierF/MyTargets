@@ -24,7 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
+import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 import com.bignerdranch.android.recyclerviewchoicemode.ModalMultiSelectorCallback;
 import com.bignerdranch.android.recyclerviewchoicemode.MultiSelector;
 import com.bignerdranch.android.recyclerviewchoicemode.OnCardClickListener;
@@ -197,7 +197,7 @@ public abstract class NowListFragmentBase<T extends IdProvider> extends Fragment
     }
 
     @Override
-    public void onClick(CardViewHolder holder, T mItem) {
+    public void onClick(SelectableViewHolder holder, T mItem) {
         if (mItem == null) {
             return;
         }
@@ -209,7 +209,7 @@ public abstract class NowListFragmentBase<T extends IdProvider> extends Fragment
     }
 
     @Override
-    public void onLongClick(CardViewHolder holder) {
+    public void onLongClick(SelectableViewHolder holder) {
         if (actionMode == null) {
             AppCompatActivity activity = (AppCompatActivity) getActivity();
             activity.startSupportActionMode(mDeleteMode);

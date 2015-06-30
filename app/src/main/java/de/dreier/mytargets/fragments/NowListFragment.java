@@ -21,7 +21,6 @@ import java.util.List;
 
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.shared.models.IdProvider;
-import de.dreier.mytargets.views.CardItemDecorator;
 
 /**
  * Shows all rounds of one settings_only day
@@ -35,7 +34,7 @@ public abstract class NowListFragment<T extends IdProvider> extends NowListFragm
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.addItemDecoration(new CardItemDecorator(getActivity()));
+        //mRecyclerView.addItemDecoration(new ListItemDecorator(getActivity()));
         return rootView;
     }
 

@@ -23,7 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:textColor="@color/primary_text_default_material_light"
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/details"
@@ -31,7 +32,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/secondary_text_default_material_light"
+            android:textSize="14sp"
             android:visibility="gone"/>
 
     </LinearLayout>

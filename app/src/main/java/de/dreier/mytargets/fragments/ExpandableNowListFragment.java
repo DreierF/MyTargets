@@ -19,7 +19,6 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
 import de.dreier.mytargets.shared.models.IdProvider;
-import de.dreier.mytargets.views.CardItemDecorator;
 
 /**
  * Shows all rounds of one settings_only day
@@ -34,7 +33,7 @@ public abstract class ExpandableNowListFragment<H extends IdProvider, C extends 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        mRecyclerView.addItemDecoration(new CardItemDecorator(getActivity()));
+        //mRecyclerView.addItemDecoration(new ListItemDecorator(getActivity()));
         manager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(manager);
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {

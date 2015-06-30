@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
+import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditBowActivity;
@@ -36,7 +36,7 @@ public class TargetFragment extends NowListFragment<Target> {
     }
 
     @Override
-    public void onLongClick(CardViewHolder holder) {
+    public void onLongClick(SelectableViewHolder holder) {
         onClick(holder, (Target) holder.getItem());
     }
 
@@ -57,7 +57,7 @@ public class TargetFragment extends NowListFragment<Target> {
         }
     }
 
-    public class ViewHolder extends CardViewHolder<Target> {
+    public class ViewHolder extends SelectableViewHolder<Target> {
         private final TextView mName;
         private final ImageView mImg;
 

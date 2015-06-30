@@ -11,7 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bignerdranch.android.recyclerviewchoicemode.CardViewHolder;
+import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import java.util.List;
 import de.dreier.mytargets.shared.models.IdProvider;
 
 public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD extends IdProvider>
-        extends RecyclerView.Adapter<CardViewHolder<IdProvider>> {
+        extends RecyclerView.Adapter<SelectableViewHolder<IdProvider>> {
 
     public static final int HEADER_TYPE = 1;
     public static final int ITEM_TYPE = 2;
@@ -59,32 +59,33 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
     }
 
     @Override
-    public CardViewHolder<IdProvider> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SelectableViewHolder<IdProvider> onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HEADER_TYPE) {
-            return (CardViewHolder<IdProvider>) getTopLevelViewHolder(parent);
+            return (SelectableViewHolder<IdProvider>) getTopLevelViewHolder(parent);
         } else {
-            return (CardViewHolder<IdProvider>) getSecondLevelViewHolder(parent);
+            return (SelectableViewHolder<IdProvider>) getSecondLevelViewHolder(parent);
         }
     }
 
-    protected abstract CardViewHolder<HEADER> getTopLevelViewHolder(ViewGroup parent);
+    protected abstract SelectableViewHolder<HEADER> getTopLevelViewHolder(ViewGroup parent);
 
-    protected abstract CardViewHolder<CHILD> getSecondLevelViewHolder(ViewGroup parent);
+    protected abstract SelectableViewHolder<CHILD> getSecondLevelViewHolder(ViewGroup parent);
 
     @Override
-    public final void onBindViewHolder(CardViewHolder<IdProvider> viewHolder, int position) {
+    public final void onBindViewHolder(SelectableViewHolder<IdProvider> viewHolder, int position) {
         int index = getDataListPosition(position);
         if (index == -1) {
             return;
         }
         final DataHolder dh = dataList.get(index);
         if (getItemViewType(position) == HEADER_TYPE) {
+            int headerPosition = getHeaderCountUpToPosition(position);
             viewHolder.setExpandOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     expandOrCollapse(dataList.indexOf(dh));
                 }
-            });
+            }, isOpen.get(headerPosition));
         }
         viewHolder.bindCursor(dh.getData());
     }
