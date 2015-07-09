@@ -99,7 +99,7 @@ public class EditStandardRoundFragment extends Fragment {
             public void onClick(View v) {
                 Intent i = new Intent(activity,
                         ItemSelectActivity.Target.class);
-                i.putExtra("title", R.string.target_round);
+                i.putExtra("title", R.string.target_face);
                 startActivityForResult(i, REQ_SELECTED_TARGET);
             }
         });
@@ -120,7 +120,7 @@ public class EditStandardRoundFragment extends Fragment {
             Round r = db.getRound(mStandardRound);
             distance.setItemId(r.info.distance.getId());
             arrows.setValue(r.info.arrowsPerPasse);
-            target.setItemId(r.info.target);
+            target.setItemId(r.info.target.getId());
 
             View not_editable = rootView.findViewById(R.id.not_editable);
             not_editable.setVisibility(View.GONE);

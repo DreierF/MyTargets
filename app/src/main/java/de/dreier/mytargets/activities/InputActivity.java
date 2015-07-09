@@ -33,7 +33,6 @@ import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.views.TargetView;
@@ -319,7 +318,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         Passe lastPasse = db.getPasse(mRound.getId(), savedPasses);
         if (lastPasse != null) {
             for (Shot shot : lastPasse.shot) {
-                text += Target.getStringByZone(template.target, shot.zone) + " ";
+                text += template.target.zoneToString(shot.zone) + " ";
             }
             text += "\n";
         } else {

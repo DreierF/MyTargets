@@ -10,7 +10,6 @@ import android.view.MotionEvent;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.Circle;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
@@ -109,7 +108,7 @@ public class TargetSelectView extends TargetViewBase {
 
     @Override
     protected Shot getShotFromPos(float x, float y) {
-        int rings = Target.target_rounds[round.target].length;
+        int rings = round.target.getZones(); //TODO
         Shot s = new Shot();
 
         double xDiff = x - radius;
@@ -132,7 +131,7 @@ public class TargetSelectView extends TargetViewBase {
             // Correct points_zone
             s.zone = Shot.MISS;
         }
-        s.x = Target.zoneToX(round.target, s.zone);
+        s.x = round.target.zoneToX(s.zone);
         s.y = 0f;
         return s;
     }

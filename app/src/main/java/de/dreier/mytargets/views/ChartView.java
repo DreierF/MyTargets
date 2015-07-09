@@ -22,7 +22,6 @@ import java.util.List;
 import de.dreier.mytargets.models.LinearSeries;
 import de.dreier.mytargets.models.RectD;
 import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.Target;
 
 public class ChartView extends RelativeLayout {
 
@@ -225,7 +224,7 @@ public class ChartView extends RelativeLayout {
                                 // need to push it down a little more
                                 mTextPaint);
                     } else {
-                        canvas.drawText("" + Target.getStringByZone(mRound.info.target, (int) point),
+                        canvas.drawText("" + mRound.info.target.zoneToString((int) point),
                                 mLeftLabelWidth / 2, // centre it in the left label
                                 // gutter
                                 pointCoordinate.floatValue() + (mLabelTextSize / 2),
@@ -242,7 +241,7 @@ public class ChartView extends RelativeLayout {
     public void setRoundInfo(Round round) {
         mRound = round;
         if (round != null) {
-            setYRange(0, Target.target_rounds[round.info.target].length);
+            setYRange(0, round.info.target.getZones());
         } else {
             setYRange(0, 100);
         }

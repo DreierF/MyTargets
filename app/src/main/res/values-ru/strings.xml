@@ -121,7 +121,7 @@
         <item quantity="many">%d стрел</item>
     </plurals>
 
-    <string name="target_round">Размер мишени</string>
+    <string name="target_face">Размер мишени</string>
     <string name="title_compound">Блочный лук?</string>
     <string name="msg_compound_type">Из какого лука вы стреляете? (Различие в количестве очков, которые вы получите при попадании в центр)</string>
     <string name="other_bow">Другой лук</string>

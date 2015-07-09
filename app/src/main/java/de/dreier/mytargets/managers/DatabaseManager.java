@@ -39,8 +39,9 @@ import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.BackupUtils;
 
 public class DatabaseManager extends SQLiteOpenHelper {
@@ -60,13 +61,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     VISIER_DISTANCE + " INTEGER," +
                     VISIER_SETTING + " TEXT, " +
                     VISIER_UNIT + " TEXT);";
-    private static final String TABLE_ZONE_MATRIX = "ZONE_MATRIX";
-    private static final String CREATE_TABLE_ZONE_MATRIX =
-            "CREATE TABLE IF NOT EXISTS " + TABLE_ZONE_MATRIX + " (" +
-                    "target INTEGER," +
-                    "zone INTEGER," +
-                    "points INTEGER," +
-                    "PRIMARY KEY (target, zone));";
     private static DatabaseManager sInstance;
     private final Context mContext;
     private SQLiteDatabase db;
@@ -90,32 +84,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_VISIER);
         db.execSQL(Arrow.CREATE_TABLE);
         db.execSQL(Training.CREATE_TABLE);
-        db.execSQL(StandardRound.CREATE_TABLE);
         db.execSQL(RoundTemplate.CREATE_TABLE);
         db.execSQL(Round.CREATE_TABLE);
         db.execSQL(Passe.CREATE_TABLE);
         db.execSQL(Shot.CREATE_TABLE);
-        db.execSQL(CREATE_TABLE_ZONE_MATRIX);
-        fillZoneMatrix(db);
         fillStandardRound(db);
     }
 
     private void fillStandardRound(SQLiteDatabase db) {
+        db.execSQL(StandardRound.CREATE_TABLE);
         this.db = db;
         ArrayList<StandardRound> rounds = StandardRound.initTable(mContext);
         for (StandardRound round : rounds) {
             update(round);
-        }
-    }
-
-    private void fillZoneMatrix(SQLiteDatabase db) {
-        for (int target = 0; target < Target.target_points.length; target++) {
-            int[] zones = Target.target_points[target];
-            for (int zone = 0; zone < zones.length; zone++) {
-                db.execSQL(
-                        "REPLACE INTO ZONE_MATRIX(target, zone, points) VALUES (" + target + "," +
-                                zone + "," + zones[zone] + ")");
-            }
         }
     }
 
@@ -136,10 +117,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             if (cur.moveToFirst()) {
                 do {
                     int shoot = cur.getInt(0);
-                    int zone = cur.getInt(1);
-                    int target = cur.getInt(2);
-                    float x = Target.zoneToX(target, zone);
-                    db.execSQL("UPDATE SHOOT SET x=" + x + ", y=0 WHERE _id=" + shoot);
+                    db.execSQL("UPDATE SHOOT SET x=0, y=0 WHERE _id=" + shoot);
                 } while (cur.moveToNext());
             }
             cur.close();
@@ -230,9 +208,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     "WHERE (r.bow=-2 OR b.type=1) AND r.target=3)");
             db.execSQL("ALTER TABLE ROUND RENAME TO ROUND_OLD");
 
+            //TODO change all target values
+            //TODO transform before inner points to after inner points
+
             fillStandardRound(db);
 
-            // TODO Transfer all round info to new standard round format if possible
             db.execSQL(Round.CREATE_TABLE);
             Cursor trainings = db.rawQuery("SELECT  FROM ROUND_OLD", null);
             if (trainings.moveToFirst()) {
@@ -304,9 +284,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
             do {
                 RoundTemplate template = new RoundTemplate();
                 template.arrowsPerPasse = res.getInt(0);
-                template.target = res.getInt(1);
-                template.distance = new Distance(res.getInt(2), res.getString(3));
-                template.passes = res.getInt(4);
+                template.target = TargetFactory.getList(mContext).get(res.getInt(1));
+                template.distance = new Distance(res.getInt(3), res.getString(4));
+                template.passes = res.getInt(5);
                 template.targetSize = new Dimension(60, "cm");
                 sr.insert(template);
                 Cursor sids = db.rawQuery("SELECT sid FROM ROUND_TEMPLATE " +
@@ -321,7 +301,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                                 template.distance.unit,
                                 String.valueOf(template.arrowsPerPasse),
                                 String.valueOf(template.passes),
-                                String.valueOf(template.target)
+                                String.valueOf(template.target.getId())
                         });
                 HashSet<Long> sid_tmp = new HashSet<>();
                 if (sids.moveToFirst()) {
@@ -353,14 +333,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public ArrayList<Training> getTrainings() {
         Cursor cursor = db.rawQuery("SELECT t._id, t.title, t.datum, t.bow, t.arrow, b.type, " +
-                "t.weather, t.wind_speed, t.wind_direction, t.location, " +
-                "SUM(m.points), (SELECT MAX(points) FROM ZONE_MATRIX WHERE target=a.target)*a.passes*a.arrows " +
+                "t.weather, t.wind_speed, t.wind_direction, t.location " +
                 "FROM TRAINING t " +
                 "LEFT JOIN ROUND r ON t._id = r.training " +
                 "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
                 "LEFT JOIN PASSE p ON r._id = p.round " +
                 "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                "LEFT JOIN ZONE_MATRIX m ON s.points = m.zone AND m.target = a.target " +
                 "LEFT JOIN BOW b ON b._id = t.bow " +
                 "GROUP BY t._id " +
                 "ORDER BY t.datum DESC", null);
@@ -379,15 +357,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public ArrayList<Round> getRounds(long training) {
         Cursor res = db.rawQuery(
-                "SELECT r._id, r.comment, SUM(m.points), " +
-                        "(SELECT MAX(points) FROM ZONE_MATRIX WHERE target=a.target)*a.passes*a.arrows, " +
-                        "a._id, a.r_index, a.arrows, a.target, a.distance, a.unit, " +
+                "SELECT r._id, r.comment, " +
+                        "a._id, a.r_index, a.arrows, a.target, a.scoring_style, a.distance, a.unit, " +
                         "a.size, a.target_unit, a.passes, a.sid " +
                         "FROM ROUND r " +
                         "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
                         "LEFT JOIN PASSE p ON r._id = p.round " +
                         "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                        "LEFT JOIN ZONE_MATRIX m ON s.points = m.zone AND m.target = a.target " +
                         "WHERE r.training=" + training + " " +
                         "GROUP BY r._id " +
                         "ORDER BY r._id ASC", null);
@@ -397,6 +373,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             do {
                 Round r = new Round();
                 r.fromCursor(res, 0);
+                r.info.target = TargetFactory.createTarget(mContext, res.getInt(7), res.getInt(8));
                 list.add(r);
             } while (res.moveToNext());
         }
@@ -530,22 +507,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
 ////// GET SINGLE ENTRY AS OBJECT //////
 
     public Training getTraining(long training) {
-        Cursor cursor = db.rawQuery("SELECT t._id, t.title, t.datum, t.bow, t.arrow, b.type, " +
-                "t.weather, t.wind_speed, t.wind_direction, t.location, " +
-                "SUM(m.points), (SELECT MAX(points) FROM ZONE_MATRIX WHERE target=a.target)*a.passes*a.arrows, t.standard_round " +
+        Cursor cursor = db.rawQuery("SELECT t._id, t.title, t.datum, t.bow, t.arrow, " +
+                "t.weather, t.wind_speed, t.wind_direction, t.location, t.standard_round " +
                 "FROM TRAINING t " +
                 "LEFT JOIN ROUND r ON t._id = r.training " +
                 "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
                 "LEFT JOIN PASSE p ON r._id = p.round " +
                 "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                "LEFT JOIN ZONE_MATRIX m ON s.points = m.zone AND m.target = a.target " +
-                "LEFT JOIN BOW b ON b._id = t.bow " +
                 "WHERE t._id = " + training, null);
 
         Training tr = new Training();
         if (cursor.moveToFirst()) {
             tr.fromCursor(cursor, 0);
-            tr.standardRound = getStandardRound(cursor.getLong(12));
+            tr.standardRound = getStandardRound(cursor.getLong(9));
         }
         cursor.close();
 
@@ -567,20 +541,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public Round getRound(long round) {
         // Get all generic round attributes
         Cursor cursor = db.rawQuery(
-                "SELECT r._id, r.comment, SUM(m.points), " +
-                        "(SELECT MAX(points) FROM ZONE_MATRIX WHERE target=a.target)*a.passes*a.arrows, " +
-                        "a._id, a.r_index, a.arrows, a.target, a.distance, a.unit, " +
+                "SELECT r._id, r.comment, "+
+                        "a._id, a.r_index, a.arrows, a.target, a.scoring_style, a.distance, a.unit, " +
                         "a.size, a.target_unit, a.passes, a.sid " +
                         "FROM ROUND r " +
                         "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
                         "LEFT JOIN PASSE p ON r._id = p.round " +
                         "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                        "LEFT JOIN ZONE_MATRIX m ON s.points = m.zone AND m.target = a.target " +
                         "WHERE r._id=" + round, null);
 
         cursor.moveToFirst();
         Round r = new Round();
         r.fromCursor(cursor, 0);
+        r.info.target = TargetFactory.createTarget(mContext, cursor.getInt(7), cursor.getInt(8));
         cursor.close();
 
         // Get number of X, 10 and 9 score
@@ -700,7 +673,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public StandardRound getStandardRound(long standardRoundId) {
         Cursor cursor = db.rawQuery("SELECT s._id, s.name, s.institution, s.indoor, " +
-                "a._id, a.r_index, a.arrows, a.target, a.distance, a.unit, " +
+                "a._id, a.r_index, a.arrows, a.target, a.scoring_style, a.distance, a.unit, " +
                 "a.size, a.target_unit, a.passes, a.sid " +
                 "FROM STANDARD_ROUND_TEMPLATE s " +
                 "LEFT JOIN ROUND_TEMPLATE a ON s._id=a.sid " +
@@ -715,6 +688,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 }
                 RoundTemplate r = new RoundTemplate();
                 r.fromCursor(cursor, 4);
+                r.target = TargetFactory.createTarget(mContext, cursor.getInt(7), cursor.getInt(8));
                 sr.insert(r);
             } while (cursor.moveToNext());
         }
@@ -746,8 +720,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 actCounter = 0;
                 maxCounter = 0;
             }
-            actCounter += Target.getPointsByZone(target, zone);
-            maxCounter += Target.getMaxPoints(target);
+            //actCounter += Target.getPointsByZone(target, zone); //TODO
+            //maxCounter += Target.getMaxPoints(target);
             oldPasse = passe;
             res.moveToNext();
         }
@@ -776,8 +750,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 actCounter = 0;
                 maxCounter = 0;
             }
-            actCounter += Target.getPointsByZone(target, zone);
-            maxCounter += Target.getMaxPoints(target);
+            //actCounter += Target.getPointsByZone(target, zone); //TODO
+            //maxCounter += Target.getMaxPoints(target);
             oldPasse = passe;
             res.moveToNext();
         }
@@ -786,15 +760,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public int getRoundPoints(long round) {
-        Cursor res = db.rawQuery("SELECT s.points, r.target" +
+        Cursor res = db.rawQuery("SELECT s.points, r.target, r.scoring_style" +
                 " FROM ROUND r, PASSE p, SHOOT s" +
                 " WHERE r._id=p.round AND p.round=" + round + " AND s.passe=p._id", null);
         res.moveToFirst();
         int sum = 0;
         for (int i = 0; i < res.getCount(); i++) {
             int zone = res.getInt(0);
-            int target = res.getInt(1);
-            sum += Target.getPointsByZone(target, zone);
+            Target target = TargetFactory.createTarget(mContext,res.getInt(1),res.getInt(2));
+            sum += target.getPointsByZone(zone);
             res.moveToNext();
         }
         res.close();
@@ -902,7 +876,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 for (int i = 0; i < names.length; i++) {
                     writer.append("\"");
                     if (i == targetInd) {
-                        writer.append(Target.list.get(cur.getInt(i)).name);
+                        writer.append(TargetFactory.list.get(cur.getInt(i)).name);
                     } else if (i == indoorInd) {
                         if (cur.getInt(i) == 0) {
                             writer.append("Outdoor");
@@ -910,9 +884,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
                             writer.append("Indoor");
                         }
                     } else if (i == scoreInd) {
-                        String x = Target
-                                .getStringByZone(cur.getInt(targetInd), cur.getInt(scoreInd));
-                        writer.append(x);
+                        //String x = Target //TODO
+                        //        .getStringByZone(cur.getInt(targetInd), cur.getInt(scoreInd));
+                        //writer.append(x);
                     } else {
                         writer.append(cur.getString(i));
                     }

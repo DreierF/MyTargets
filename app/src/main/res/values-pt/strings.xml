@@ -108,7 +108,7 @@
         <item quantity="other">%d flechas</item>
     </plurals>
 
-    <string name="target_round">Circunferência do alvo</string>
+    <string name="target_face">Circunferência do alvo</string>
     <string name="title_compound">Composto?</string>
     <string name="msg_compound_type">Que tipo de arco você está usando? (Há uma diferença em quantos pontos você ganha pelos anéis amarelos)</string>
     <string name="other_bow">Other bow</string>

@@ -19,7 +19,6 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.models.Target;
 
 public class StandardRoundsItemAdapter extends ArrayAdapter<StandardRound> {
     private final Context mContext;
@@ -51,7 +50,7 @@ public class StandardRoundsItemAdapter extends ArrayAdapter<StandardRound> {
         name.setText(item.getName());
         desc.setText(item.getDescription(mContext));
         RoundTemplate firstRound = item.getRounds().get(0);
-        image.setImageResource(Target.list.get(firstRound.target).drawableRes);
+        image.setImageDrawable(firstRound.target);
         return v;
     }
 }

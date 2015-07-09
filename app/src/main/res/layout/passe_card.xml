@@ -1,25 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/passe_layout"
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?android:attr/selectableItemBackground"
-    android:orientation="vertical">
+    android:layout_height="72dp"
+    android:background="?android:attr/selectableItemBackground">
 
-    <view
-        android:id="@+id/shoots"
-        class="de.dreier.mytargets.views.PasseView"
+    <LinearLayout
+        android:id="@+id/passe_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:clickable="false"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
-    <TextView
-        android:id="@+id/passe"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="5dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@android:color/secondary_text_light"/>
+        <TextView
+            android:id="@+id/passe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            android:clickable="false"
+            android:textColor="@color/secondary_text_default_material_light"
+            android:textSize="16sp"/>
 
-</LinearLayout>
+        <view
+            android:id="@+id/shoots"
+            class="de.dreier.mytargets.views.PasseView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:clickable="false"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/dividerColor"/>
+
+</RelativeLayout>

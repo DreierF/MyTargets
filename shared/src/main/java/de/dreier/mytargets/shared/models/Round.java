@@ -22,8 +22,6 @@ public class Round extends IdProvider implements Serializable, DatabaseSerializa
     public RoundTemplate info;
     public int[] scoreCount = new int[3];
     public String comment;
-    public int reachedPoints;
-    public int maxPoints;
 
     @Override
     public String getTableName() {
@@ -46,9 +44,7 @@ public class Round extends IdProvider implements Serializable, DatabaseSerializa
         if (comment == null) {
             comment = "";
         }
-        reachedPoints = cursor.getInt(startColumnIndex + 2);
-        maxPoints = cursor.getInt(startColumnIndex + 3);
         info = new RoundTemplate();
-        info.fromCursor(cursor, 4);
+        info.fromCursor(cursor, 2);
     }
 }

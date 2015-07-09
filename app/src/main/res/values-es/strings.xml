@@ -106,7 +106,7 @@
         <item quantity="other">%d Flechas</item>
     </plurals>
 
-    <string name="target_round">Tamaño Diana</string>
+    <string name="target_face">Tamaño Diana</string>
     <string name="title_compound">Compuesto</string>
     <string name="msg_compound_type">Qué tipo de Arco estas usando? (Hay diferencia en la cantidad de puntos que obtienes si das en el circulo del centro)</string>
     <string name="other_bow">Otro Arco</string>

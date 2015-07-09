@@ -19,7 +19,6 @@ import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
 
 public class ScoreboardUtils {
@@ -49,9 +48,9 @@ public class ScoreboardUtils {
                     int sum = 0;
                     for (Shot shot : passe.shot) {
                         html += "<td>";
-                        html += Target.getStringByZone(round.info.target, shot.zone);
+                        html += round.info.target.zoneToString(shot.zone);
                         html += "</td>";
-                        int points = Target.getPointsByZone(round.info.target, shot.zone);
+                        int points = round.info.target.getPointsByZone(shot.zone);
                         sum += points;
                         carry += points;
                         count++;
@@ -95,7 +94,7 @@ public class ScoreboardUtils {
                         if (!TextUtils.isEmpty(shot.comment)) {
                             comments += "<tr><td>" + j + "</td>" +
                                     "<td>" + i + "</td>" +
-                                    "<td>" + Target.getStringByZone(round.info.target, shot.zone) +
+                                    "<td>" + round.info.target.zoneToString(shot.zone) +
                                     "</td>" +
                                     "<td>" +
                                     TextUtils.htmlEncode(shot.comment).replace("\n", "<br />") +

@@ -106,7 +106,7 @@
         <item quantity="other">%d Pfeilen</item>
     </plurals>
 
-    <string name="target_round">Auflage</string>
+    <string name="target_face">Auflage</string>
     <string name="title_compound">Compound?</string>
     <string name="msg_compound_type">Welchen Bogentyp verwendest du? (Es entscheidet wie viele Punkte du für die goldenen Ringe bekommst)</string>
     <string name="other_bow">Anderer Bogen</string>

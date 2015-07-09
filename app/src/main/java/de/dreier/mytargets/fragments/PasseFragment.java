@@ -42,7 +42,7 @@ import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.TargetImage;
@@ -173,12 +173,12 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         // Aggregate round information
         Round round = mRounds.get(0);
         String distance = round.info.distance.toString();
-        int target = round.info.target;
+        Target target = round.info.target;
         target_equals = true;
         distance_equals = true;
         for (Round r : mRounds) {
             distance_equals = r.info.distance.toString().equals(distance) && distance_equals;
-            target_equals = r.info.target == target && target_equals;
+            target_equals = r.info.target.equals(target) && target_equals;
         }
 
 
@@ -187,8 +187,8 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
                     distance + " - " + getString(indoor ? R.string.indoor : R.string.outdoor) + "</b>";
         }
         if (target_equals) {
-            infoText += "<br>" + getString(R.string.target_round) + ": <b>" +
-                    Target.list.get(target).name + "</b>";
+            infoText += "<br>" + getString(R.string.target_face) + ": <b>" +
+                    target + "</b>";
         }
 
         infoText += "</font>";
@@ -436,7 +436,8 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
             Context context = mTitle.getContext();
             mTitle.setText(context.getString(R.string.round) + " " + (mRounds.indexOf(mItem) + 1));
             //mPoints.setText(mItem.reachedPoints + "/" + mItem.maxPoints);
-            String percent = mItem.maxPoints == 0 ? "" : (mItem.reachedPoints * 100 / mItem.maxPoints) + "%";
+            //String percent = mItem.getMaxPoints() == 0 ? "" : (mItem.getReachedPoints() * 100 /
+            //        mItem.getMaxPoints()) + "%";
             //mPercentage.setText(percent);
 
             String infoText = "";
@@ -446,8 +447,8 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
                         getString(mItem.indoor ? R.string.indoor : R.string.outdoor) + "</b>"*/;
             }
             if (!target_equals) {
-                infoText += "<br>" + getString(R.string.target_round) + ": <b>" +
-                        Target.list.get(mItem.info.target).name + "</b>";
+                infoText += "<br>" + getString(R.string.target_face) + ": <b>" +
+                        mItem.info.target + "</b>";
             }
             if (!mItem.comment.isEmpty()) {
                 infoText += "<br>" + getString(R.string.comment) +

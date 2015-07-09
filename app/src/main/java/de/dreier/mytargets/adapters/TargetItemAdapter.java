@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.target.TargetFactory;
 
 public class TargetItemAdapter extends BaseAdapter {
     private final Context mContext;
@@ -27,12 +27,12 @@ public class TargetItemAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return Target.list.size();
+        return TargetFactory.list.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return Target.list.get(i);
+        return TargetFactory.list.get(i);
     }
 
     @Override
@@ -52,8 +52,8 @@ public class TargetItemAdapter extends BaseAdapter {
         ImageView img = (ImageView) v.findViewById(R.id.image);
         TextView desc = (TextView) v.findViewById(R.id.name);
 
-        img.setImageResource(Target.list.get(position).drawableRes);
-        desc.setText(Target.list.get(position).name);
+        img.setImageDrawable(TargetFactory.list.get(position));
+        desc.setText(TargetFactory.list.get(position).name);
         return v;
     }
 }

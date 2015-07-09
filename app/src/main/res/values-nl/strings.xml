@@ -106,7 +106,7 @@
         <item quantity="other">%d pijlen</item>
     </plurals>
 
-    <string name="target_round">Type blazoen</string>
+    <string name="target_face">Type blazoen</string>
     <string name="title_compound">Compound?</string>
     <string name="msg_compound_type">Welk boogtype gebruikt u? (Er is een verschil in punten binnen de gouden ringen)</string>
     <string name="other_bow">Andere boog</string>

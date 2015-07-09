@@ -138,7 +138,7 @@
         <item quantity="other">%d pušèice</item>
     </plurals>
 
-    <string name="target_round">Tarèni krog</string>
+    <string name="target_face">Tarèni krog</string>
     <string name="title_compound">sestavljeni lok?</string>
     <string name="msg_compound_type">Katero vrsto loka uporabljaš? (Razlika je, koliko toèk dobiš z zadetkom notrenjega kroga v rumenem)</string>
     <string name="other_bow">drugi loki</string>

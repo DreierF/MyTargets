@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/target_round"/>
+            android:text="@string/target_face"/>
 
         <de.dreier.mytargets.views.DialogSpinner
             android:id="@+id/target_spinner"

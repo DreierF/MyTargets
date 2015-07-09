@@ -106,7 +106,7 @@
         <item quantity="other">%d flèches</item>
     </plurals>
 
-    <string name="target_round">Blason</string>
+    <string name="target_face">Blason</string>
     <string name="title_compound">Arc à poulies?</string>
     <string name="msg_compound_type">Quel type d\'arc utilisez-vous? (différence pour la comptabilisation des points pour 10)</string>
     <string name="other_bow">Autre arc</string>

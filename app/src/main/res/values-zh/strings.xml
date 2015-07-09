@@ -101,7 +101,7 @@
         <item quantity="other">%d 箭</item>
     </plurals>
 
-    <string name="target_round">靶面</string>
+    <string name="target_face">靶面</string>
     <string name="title_compound">複合弓?</string>
     <string name="msg_compound_type">您正在練習那一類弓?(There is a difference in how many points you get for the golden rings)</string>
     <string name="other_bow">Other bow</string>

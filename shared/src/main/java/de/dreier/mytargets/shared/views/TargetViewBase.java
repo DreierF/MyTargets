@@ -10,7 +10,6 @@ import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
 
@@ -60,7 +59,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     public void setRoundTemplate(RoundTemplate r) {
         round = r;
-        mZoneCount = Target.target_rounds[r.target].length;
+        mZoneCount = r.target.getZones();
         mPasseDrawer = new PasseDrawer(this, density, round.target);
         reset();
     }
@@ -79,6 +78,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         currentArrow = b.getInt("currentArrow");
         lastSetArrow = b.getInt("lastSetArrow");
         round = (RoundTemplate) b.getSerializable("round");
+        round.target.initPaint();
     }
 
     @Override
@@ -111,11 +111,6 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         Shot shot = getShotFromPos(x, y);
         if (shot == null) {
             return true;
-        }
-
-        // Make 3er Spot 9 appear as one
-        if (shot.zone == 1 && round.target == 4) {
-            shot.zone = 2;
         }
 
         // If a valid selection was made save it in the passe

@@ -17,10 +17,10 @@ import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.dreier.mytargets.shared.models.IdProvider;
+import de.dreier.mytargets.shared.models.IIdProvider;
 
 
-public abstract class NowListAdapter<T extends IdProvider>
+public abstract class NowListAdapter<T extends IIdProvider>
         extends RecyclerView.Adapter<SelectableViewHolder<T>> {
 
     private List<T> mList = new ArrayList<>();

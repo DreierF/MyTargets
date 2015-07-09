@@ -24,6 +24,7 @@ import de.dreier.mytargets.fragments.StandardRoundFragment;
 import de.dreier.mytargets.fragments.TargetFragment;
 import de.dreier.mytargets.fragments.WindDirectionFragment;
 import de.dreier.mytargets.fragments.WindSpeedFragment;
+import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.shared.models.IdProvider;
 
 public abstract class ItemSelectActivity extends SimpleFragmentActivity
@@ -69,7 +70,7 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
     }
 
     @Override
-    public void onItemSelected(long itemId, Class<? extends IdProvider> aClass) {
+    public void onItemSelected(long itemId, Class<? extends IIdProvider> aClass) {
         Intent data = new Intent();
         data.putExtra("id", itemId);
         setResult(RESULT_OK, data);

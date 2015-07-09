@@ -31,8 +31,6 @@ import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.utils.BitmapUtils;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.utils.TextInputDialog;
@@ -43,7 +41,6 @@ public class TargetView extends TargetViewBase {
     private int radius, midX, midY;
     private TextPaint mTextPaint;
     private Paint thinBlackBorder, thinWhiteBorder, drawColorP, rectColorP, circleColorP;
-    private int[] target;
     private boolean showAll = false;
     private ArrayList<Passe> mOldShots;
     private Timer longPressTimer;
@@ -178,7 +175,6 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        target = Target.target_rounds[round.target];
         int curZone;
         if (currentArrow > -1 && currentArrow < round.arrowsPerPasse) {
             curZone = mPasse.shot[currentArrow].zone;
@@ -213,8 +209,7 @@ public class TargetView extends TargetViewBase {
             }
 
             if (curZone > -1) {
-                int colorInd = curZone > -1 ? target[curZone] : 3;
-                circleColorP.setColor(Target.circleStrokeColor[colorInd]);
+                circleColorP.setColor(round.target.getZoneColor(curZone));
                 canvas.drawLine(midX, circleY, midX + radius + 10 * density, circleY, circleColorP);
             }
         }
@@ -240,39 +235,9 @@ public class TargetView extends TargetViewBase {
         drawColorP.setColor(0xffeeeeee);
         canvas.drawRect(0, 0, contentWidth, contentHeight, drawColorP);
 
-        for (int i = mZoneCount; i > 0; i--) {
-            // Select colors to draw with
-            drawColorP.setColor(getZoneColor(i - 1));
-
-            // Draw a ring mit separator line
-            if (i != 2 || round.target != 4) {
-                float rad = (radius * i) / (float) mZoneCount;
-                canvas.drawCircle(x, y, rad, drawColorP);
-                int colorIndCur = Target.target_rounds[round.target][i - 1];
-                int colorIndNext = colorIndCur + 1;
-                if (i < mZoneCount) {
-                    colorIndNext = Target.target_rounds[round.target][i];
-                }
-                int color = Target.getIntersectionColor(colorIndCur, colorIndNext, mModeEasy);
-                thinLine.setColor(color);
-                canvas.drawCircle(x, y, rad, thinLine);
-            }
-        }
-
-        // Draw cross in the middle
-        Paint midColor =
-                Target.target_rounds[round.target][0] == 3 ? thinWhiteBorder : thinBlackBorder;
-        if (round.target < 5) {
-            float lineLength = radius / (float) (mZoneCount * 6);
-            canvas.drawLine(x - lineLength, y, x + lineLength, y, midColor);
-            canvas.drawLine(x, y - lineLength, x, y + lineLength, midColor);
-        } else {
-            float lineLength = radius / (float) (mZoneCount * 4);
-            canvas.drawLine(x - lineLength, y - lineLength, x + lineLength, y + lineLength,
-                    midColor);
-            canvas.drawLine(x - lineLength, y + lineLength, x + lineLength, y - lineLength,
-                    midColor);
-        }
+        // Draw actual target face
+        round.target.setBounds(x - radius, y - radius, x + radius, y + radius);
+        round.target.draw(canvas);
 
         // Draw exact arrow position
         if (!mModeEasy) {
@@ -313,8 +278,10 @@ public class TargetView extends TargetViewBase {
                      i < p.shot.length; i++) {
 
             // For yellow and white background use black font color
-            int colorInd = i == mZoneCount || p.shot[i].zone < 0 ? 0 : target[p.shot[i].zone];
-            drawColorP.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
+            int colorInd = i == mZoneCount || p.shot[i].zone < 0 ? 0 :
+                    round.target.getZoneColor(p.shot[i].zone);
+            drawColorP
+                    .setColor(colorInd == 0 || colorInd == Color.WHITE ? Color.BLACK : Color.WHITE);
             float selX = p.shot[i].x;
             float selY = p.shot[i].y;
             if (i != currentArrow || old) {
@@ -354,29 +321,21 @@ public class TargetView extends TargetViewBase {
                 int Y1 = contentHeight * i / (mZoneCount + 1);
                 int Y2 = contentHeight * (i + 1) / (mZoneCount + 1);
 
-                if (round.target == 4) {
-                    if (i == 1) {
-                        continue;
-                    } else if (i == 2) {
-                        Y1 = contentHeight * (i - 1) / (mZoneCount + 1);
-                    }
-                }
-
                 int colorInd = 0;
                 // For all rectangles except mistake draw background
                 if (i != mZoneCount) {
-                    colorInd = target[i];
-                    rectColorP.setColor(Target.rectColor[colorInd]);
+                    rectColorP.setColor(round.target.getZoneColor(i));
                     canvas.drawRect(X1, Y1, X2, Y2, rectColorP);
-                    canvas.drawRect(X1, Y1, X2, Y2, Target.target_rounds[round.target][i] == 3 ?
+                    canvas.drawRect(X1, Y1, X2, Y2, round.target.getStrokeColor(i) == Color.BLACK ?
                             thinWhiteBorder : thinBlackBorder);
                 } else {
                     canvas.drawRect(X1, Y1, X2, Y2, thinBlackBorder);
                 }
 
                 // For yellow and white background use black font color
-                mTextPaint.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
-                canvas.drawText(Target.getStringByZone(round.target, i), X1 + (X2 - X1) / 2,
+                mTextPaint.setColor(
+                        round.target.getZoneColor(i) == Color.BLACK ? Color.WHITE : Color.BLACK);
+                canvas.drawText(round.target.zoneToString(i), X1 + (X2 - X1) / 2,
                         Y1 + (Y2 - Y1) / 2 + 10 * density, mTextPaint);
             }
         }
@@ -400,8 +359,7 @@ public class TargetView extends TargetViewBase {
     }
 
     private int getZoneColor(int zone) {
-        final int[] target = Target.target_rounds[round.target];
-        final int curZone;
+        /*final int curZone;
         if (currentArrow > -1 && currentArrow < round.arrowsPerPasse) {
             curZone = mPasse.shot[currentArrow].zone;
         } else {
@@ -423,7 +381,8 @@ public class TargetView extends TargetViewBase {
                 return BitmapUtils.animateColor(gray, highlight, mCurAnimationProgress);
             }
         }
-        return zone == curZone || !mModeEasy ? highlight : gray;
+        return zone == curZone || !mModeEasy ? highlight : gray;*/
+        return round.target.getZoneColor(zone);
     }
 
     @Override
@@ -474,15 +433,15 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected Shot getShotFromPos(float x, float y) {
-        int rings = Target.target_rounds[round.target].length;
+        int rings = round.target.getZones();
         Shot s = new Shot();
+        s.x = (x - midX) / radius;
+        s.y = (y - midY) / radius;
         // Handle selection via right indicator bar
         if (x > midX + radius + 30 * density && mModeEasy) {
             s.zone = (int) (y * (rings + 1) / (float) contentHeight);
         } else { // Handle via target
-            double xDiff = x - midX;
-            double yDiff = y - midY;
-            s.zone = (int) (Math.sqrt(xDiff * xDiff + yDiff * yDiff) * rings / (float) radius);
+            s.zone = round.target.getZoneFromPoint(s.x, s.y);
         }
 
         // Correct points_zone
@@ -490,8 +449,6 @@ public class TargetView extends TargetViewBase {
             s.zone = Shot.MISS;
         }
 
-        s.x = (x - midX) / radius;
-        s.y = (y - midY) / radius;
         return s;
     }
 

@@ -24,10 +24,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 import com.bignerdranch.android.recyclerviewchoicemode.ModalMultiSelectorCallback;
 import com.bignerdranch.android.recyclerviewchoicemode.MultiSelector;
 import com.bignerdranch.android.recyclerviewchoicemode.OnCardClickListener;
+import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,9 +36,9 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.DatabaseSerializable;
-import de.dreier.mytargets.shared.models.IdProvider;
+import de.dreier.mytargets.shared.models.IIdProvider;
 
-public abstract class NowListFragmentBase<T extends IdProvider> extends Fragment
+public abstract class NowListFragmentBase<T extends IIdProvider> extends Fragment
         implements OnCardClickListener<T> {
     public static final String TRAINING_ID = "training_id";
 

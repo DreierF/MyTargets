@@ -48,6 +48,7 @@ import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.MyBackupAgent;
 import de.dreier.mytargets.views.DialogSpinner;
 import zh.wang.android.apis.yweathergetter4a.WeatherInfo;
@@ -220,7 +221,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         s.institution = StandardRound.FITA;
         s.indoor = false;
         templ = new RoundTemplate();
-        templ.target = 0;
+        templ.target = TargetFactory.getList(getActivity()).get(0);
         templ.targetSize = new Dimension(60, "cm");
         templ.arrowsPerPasse = 3;
         templ.distance = new Distance(18, "m");

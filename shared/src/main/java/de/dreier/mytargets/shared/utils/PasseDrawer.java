@@ -14,6 +14,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.target.Target;
 
 /**
  * Created by Florian on 20.03.2015.
@@ -46,7 +47,7 @@ public class PasseDrawer {
     private int oldRadius, oldSelected, oldSelectedRadius;
     private int mSelectedRadius;
 
-    public PasseDrawer(View parent, float density, int target) {
+    public PasseDrawer(View parent, float density, Target target) {
         mParent = parent;
         mDensity = density;
         mCircle = new Circle(density, target);

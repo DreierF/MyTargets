@@ -6,9 +6,6 @@
  */
 package de.dreier.mytargets.shared.models;
 
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
-
 import de.dreier.mytargets.shared.R;
 
 public enum EWeather {
@@ -22,7 +19,7 @@ public enum EWeather {
     private final int name;
     private final int drawable;
 
-    EWeather(int value, @StringRes int name, @DrawableRes int drawable) {
+    EWeather(int value, int name, int drawable) {
         this.value = value;
         this.name = name;
         this.drawable = drawable;

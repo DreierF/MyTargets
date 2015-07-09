@@ -20,12 +20,13 @@ import junit.framework.Assert;
 import java.util.List;
 
 import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.shared.models.IdProvider;
 
 /**
  * Shows all rounds of one settings_only day
  */
-public abstract class NowListFragment<T extends IdProvider> extends NowListFragmentBase<T> {
+public abstract class NowListFragment<T extends IIdProvider> extends NowListFragmentBase<T> {
 
     NowListAdapter<T> mAdapter;
     protected OnItemSelectedListener listener;
@@ -34,7 +35,6 @@ public abstract class NowListFragment<T extends IdProvider> extends NowListFragm
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        //mRecyclerView.addItemDecoration(new ListItemDecorator(getActivity()));
         return rootView;
     }
 
@@ -75,7 +75,7 @@ public abstract class NowListFragment<T extends IdProvider> extends NowListFragm
     }
 
     public interface OnItemSelectedListener {
-        void onItemSelected(long itemId, Class<? extends IdProvider> aClass);
+        void onItemSelected(long itemId, Class<? extends IIdProvider> aClass);
 
         void onItemSelected(IdProvider e);
     }

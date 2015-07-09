@@ -15,19 +15,16 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.target.Target;
 
 public class TargetPasseView extends View {
 
     private Passe passe = new Passe(3);
     private float density;
-    private Paint thinBlackBorder;
-    private Paint thinWhiteBorder;
     private Paint drawColorP;
-    private int target;
+    private Target target;
     private int mZoneCount;
     private int radius;
-    private int[] targetRound;
 
     public TargetPasseView(Context context) {
         super(context);
@@ -45,28 +42,15 @@ public class TargetPasseView extends View {
     }
 
     private void init() {
-        // Set up a default Paint objects
-        thinBlackBorder = new Paint();
-        thinBlackBorder.setColor(0xFF1C1C1B);
-        thinBlackBorder.setAntiAlias(true);
-        thinBlackBorder.setStyle(Paint.Style.STROKE);
-
-        thinWhiteBorder = new Paint();
-        thinWhiteBorder.setColor(0xFFEEEEEE);
-        thinWhiteBorder.setAntiAlias(true);
-        thinWhiteBorder.setStyle(Paint.Style.STROKE);
-
         drawColorP = new Paint();
         drawColorP.setAntiAlias(true);
-
         density = getResources().getDisplayMetrics().density;
     }
 
-    public void setPasse(Passe p, int tar) {
+    public void setPasse(Passe p, Target tar) {
         passe = p;
         target = tar;
-        targetRound = Target.target_rounds[target];
-        mZoneCount = Target.target_rounds[target].length;
+        mZoneCount = tar.getZones();
         invalidate();
     }
 
@@ -76,35 +60,8 @@ public class TargetPasseView extends View {
         // Initialize variables
         init();
 
-        // Draw target
-        for (int i = mZoneCount; i > 0; i--) {
-            // Select colors to draw with
-            drawColorP.setColor(Target.highlightColor[targetRound[i - 1]]);
-
-            // Draw a ring mit separator line
-            if (i != 2 || target != 3) {
-                float rad = (radius * i) / (float) mZoneCount;
-                canvas.drawCircle(radius, radius, rad, drawColorP);
-                canvas.drawCircle(radius, radius, rad,
-                        Target.target_rounds[target][i - 1] == 3 ?
-                                thinWhiteBorder : thinBlackBorder);
-            }
-        }
-
-        // Draw cross in the middle
-        Paint midColor =
-                Target.target_rounds[target][0] == 3 ? thinWhiteBorder : thinBlackBorder;
-        if (target < 5) {
-            float lineLength = radius / (float) (mZoneCount * 6);
-            canvas.drawLine(radius - lineLength, radius, radius + lineLength, radius, midColor);
-            canvas.drawLine(radius, radius - lineLength, radius, radius + lineLength, midColor);
-        } else {
-            float lineLength = radius / (float) (mZoneCount * 4);
-            canvas.drawLine(radius - lineLength, radius - lineLength, radius + lineLength,
-                    radius + lineLength, midColor);
-            canvas.drawLine(radius - lineLength, radius + lineLength, radius + lineLength,
-                    radius - lineLength, midColor);
-        }
+        target.setBounds(0, 0, 2 * radius, 2 * radius);
+        target.draw(canvas);
 
         // Draw exact arrow position
         drawArrows(canvas);
@@ -116,8 +73,8 @@ public class TargetPasseView extends View {
         float sumY = 0;
         for (int i = 0; i < passe.shot.length; i++) {
             // For yellow and white background use black font color
-            int colorInd = i == mZoneCount || passe.shot[i].zone < 0 ? 0 : targetRound[passe.shot[i].zone];
-            drawColorP.setColor(colorInd == 0 || colorInd == 4 ? Color.BLACK : Color.WHITE);
+            int color = i == mZoneCount || passe.shot[i].zone < 0 ? 0xFF000000 : target.getZoneColor(passe.shot[i].zone);
+            drawColorP.setColor(color);
             float selX = passe.shot[i].x;
             float selY = passe.shot[i].y;
             sumX += selX;

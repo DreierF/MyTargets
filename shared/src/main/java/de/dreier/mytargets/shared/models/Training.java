@@ -35,7 +35,6 @@ public class Training extends IdProvider implements DatabaseSerializable {
     public int[] scoreCount = new int[3];
     public Environment environment;
     public StandardRound standardRound;
-    public boolean compound;
     public long bow;
     public long arrow;
 
@@ -71,13 +70,7 @@ public class Training extends IdProvider implements DatabaseSerializable {
         date = new Date(cursor.getLong(2));
         bow = cursor.getInt(3);
         arrow = cursor.getInt(4);
-        compound = bow == -2 || cursor.getInt(5) == 1;
         environment = new Environment();
         environment.fromCursor(cursor, 6);
-        reachedPoints = cursor.getInt(10);
-        maxPoints = cursor.getInt(11);
-        if (maxPoints <= 10) {
-            maxPoints = 0;
-        }
     }
 }

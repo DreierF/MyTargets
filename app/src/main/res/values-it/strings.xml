@@ -106,7 +106,7 @@
         <item quantity="other">%d frecce</item>
     </plurals>
 
-    <string name="target_round">Targa</string>
+    <string name="target_face">Targa</string>
     <string name="title_compound">Compound?</string>
     <string name="msg_compound_type">Che tipo di arco stai usando? (C\'è una differenza in quanti punti prenderai per il cerchio giallo)</string>
     <string name="other_bow">Altro arco</string>

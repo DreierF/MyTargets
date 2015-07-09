@@ -20,7 +20,8 @@ import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditBowActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
-import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.models.target.TargetFactory;
 
 public class TargetFragment extends NowListFragment<Target> {
 
@@ -32,7 +33,7 @@ public class TargetFragment extends NowListFragment<Target> {
     @Override
     public void onResume() {
         super.onResume();
-        setList(Target.list, new TargetAdapter());
+        setList(TargetFactory.list, new TargetAdapter());
     }
 
     @Override
@@ -70,7 +71,7 @@ public class TargetFragment extends NowListFragment<Target> {
         @Override
         public void bindCursor() {
             mName.setText(mItem.name);
-            mImg.setImageResource(mItem.drawableRes);
+            mImg.setImageDrawable(mItem);
         }
     }
 }

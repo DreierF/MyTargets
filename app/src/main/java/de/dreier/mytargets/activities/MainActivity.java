@@ -36,6 +36,7 @@ import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
 import de.dreier.mytargets.fragments.NowListFragment;
 import de.dreier.mytargets.fragments.NowListFragmentBase;
 import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.shared.models.IdProvider;
 
 /**
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemSelected(long itemId, Class<? extends IdProvider> aClass) {
+    public void onItemSelected(long itemId, Class<? extends IIdProvider> aClass) {
         Intent i;
         if (aClass.equals(Arrow.class)) {
             i = new Intent(this, EditArrowActivity.class);

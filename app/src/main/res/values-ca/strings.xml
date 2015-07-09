@@ -108,7 +108,7 @@
         <item quantity="other">%d fletxes</item>
     </plurals>
 
-    <string name="target_round">Tipus de ronda</string>
+    <string name="target_face">Tipus de ronda</string>
     <string name="title_compound">Compost?</string>
     <string name="msg_compound_type">Quin tipus d´arc estas utilitzant? (There is a difference in how many points you get for the golden rings)</string>
     <string name="other_bow">Altre arc</string>
