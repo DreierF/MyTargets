@@ -27,12 +27,12 @@ public class TargetItemAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return TargetFactory.list.size();
+        return TargetFactory.getList(mContext).size();
     }
 
     @Override
     public Object getItem(int i) {
-        return TargetFactory.list.get(i);
+        return TargetFactory.getList(mContext).get(i);
     }
 
     @Override
@@ -52,8 +52,8 @@ public class TargetItemAdapter extends BaseAdapter {
         ImageView img = (ImageView) v.findViewById(R.id.image);
         TextView desc = (TextView) v.findViewById(R.id.name);
 
-        img.setImageDrawable(TargetFactory.list.get(position));
-        desc.setText(TargetFactory.list.get(position).name);
+        img.setImageDrawable(TargetFactory.getList(mContext).get(position));
+        desc.setText(TargetFactory.getList(mContext).get(position).name);
         return v;
     }
 }

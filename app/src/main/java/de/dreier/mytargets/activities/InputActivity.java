@@ -33,6 +33,7 @@ import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.views.TargetView;
@@ -52,7 +53,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     private long mTraining;
     private Round mRound;
     private DatabaseManager db;
-    private boolean mMode = true;
+    //private boolean mMode = true;
     private boolean mShowAllMode = false;
     private WearMessageManager manager;
     private boolean mTimerEnabled;
@@ -77,6 +78,10 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         if (intent.hasExtra(TRAINING_ID)) {
             mTraining = intent.getLongExtra(TRAINING_ID, -1);
             ArrayList<Round> rounds = db.getRounds(mTraining);
+            training = db.getTraining(mTraining);
+            StandardRound standardRound = db
+                    .getStandardRound(training.standardRoundId);
+            template = standardRound.getRounds().get(0);
             for (int roundIndex = 0; roundIndex < rounds.size(); roundIndex++) {
                 mRound = rounds.get(roundIndex);
                 ArrayList<Passe> passes = db.getPassesOfRound(mRound.getId());
@@ -93,15 +98,15 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
             mRound = db.getRound(roundId);
             template = mRound.info;
             mTraining = mRound.training;
+            training = db.getTraining(mTraining);
             savedPasses = db.getPassesOfRound(roundId).size();
         }
 
-        training = db.getTraining(mTraining);
         target.setRoundTemplate(template);
-        mMode = prefs.getBoolean(TARGET_MODE, true);
+        //mMode = prefs.getBoolean(TARGET_MODE, true);
         mShowAllMode = prefs.getBoolean(SHOW_ALL_MODE, false);
         mTimerEnabled = prefs.getBoolean(TIMER_ENABLED, false);
-        target.switchMode(mMode, false);
+        //target.switchMode(mMode, false);
         target.showAll(mShowAllMode);
 
         // Send message to wearable app, that we are starting a passe
@@ -164,8 +169,8 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_switch_mode)
-                .setIcon(mMode ? R.drawable.ic_target_zone_24dp : R.drawable.ic_target_exact_24dp);
+        //menu.findItem(R.id.action_switch_mode)
+        //        .setIcon(mMode ? R.drawable.ic_target_zone_24dp : R.drawable.ic_target_exact_24dp);
         menu.findItem(R.id.action_show_all).setIcon(
                 mShowAllMode ? R.drawable.ic_visibility_white_24dp :
                         R.drawable.ic_visibility_off_white_24dp);
@@ -245,13 +250,13 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                     openTimer();
                 }
                 return true;
-            case R.id.action_switch_mode:
-                mMode = !mMode;
-                target.switchMode(mMode, true);
-                prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                prefs.edit().putBoolean(TARGET_MODE, mMode).apply();
-                supportInvalidateOptionsMenu();
-                return true;
+            //case R.id.action_switch_mode:
+            //    mMode = !mMode;
+            //    target.switchMode(mMode, true);
+            //    prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            //    prefs.edit().putBoolean(TARGET_MODE, mMode).apply();
+            //    supportInvalidateOptionsMenu();
+            //    return true;
             case R.id.action_show_all:
                 mShowAllMode = !mShowAllMode;
                 target.showAll(mShowAllMode);

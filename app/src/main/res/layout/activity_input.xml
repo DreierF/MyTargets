@@ -1,25 +1,44 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
     android:id="@+id/login_form"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:animateLayoutChanges="false"
     android:gravity="center_horizontal">
 
-    <view
-        android:id="@+id/target_view"
-        class="de.dreier.mytargets.views.TargetView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/divider"
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/but_bar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true">
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignTop="@+id/but_bar"
-        android:background="?android:attr/listDivider" />
+        <view
+            android:id="@+id/target_view"
+            class="de.dreier.mytargets.views.TargetView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageButton
+            android:id="@+id/show_keyboard"
+            android:layout_width="50dp"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="8dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:fontFamily="sans-serif-light"
+            android:src="@drawable/ic_keyboard_grey600_24dp"/>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="bottom"
+            android:background="?android:attr/listDivider"/>
+
+        <include layout="@layout/keyboard"/>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/but_bar"
@@ -39,7 +58,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:minHeight="48dp"
-            android:text="@string/prev" />
+            android:text="@string/prev"/>
 
         <Button
             android:id="@+id/next_button"
@@ -48,7 +67,8 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:minHeight="48dp"
-            android:text="@string/next" />
+            android:text="@string/next"/>
+
     </LinearLayout>
 
 </RelativeLayout>

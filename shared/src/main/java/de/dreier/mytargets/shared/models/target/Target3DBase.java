@@ -13,6 +13,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.support.annotation.StringRes;
+import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.models.Diameter;
 
 public class Target3DBase extends Target {
 
@@ -79,5 +81,14 @@ public class Target3DBase extends Target {
                     43655.09f;
         }
         return false;
+    }
+
+    @Override
+    public Diameter[] getDiameters(Context context) {
+        return new Diameter[] {new Diameter(context,R.string.mini),
+                new Diameter(context,R.string.small),
+                new Diameter(context,R.string.medium),
+                new Diameter(context,R.string.large),
+                new Diameter(context,R.string.xlarge)};
     }
 }

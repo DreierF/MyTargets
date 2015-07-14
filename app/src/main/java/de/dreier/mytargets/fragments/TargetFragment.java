@@ -7,7 +7,6 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.EditBowActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
@@ -33,7 +31,7 @@ public class TargetFragment extends NowListFragment<Target> {
     @Override
     public void onResume() {
         super.onResume();
-        setList(TargetFactory.list, new TargetAdapter());
+        setList(TargetFactory.getList(getActivity()), new TargetAdapter());
     }
 
     @Override
@@ -43,17 +41,13 @@ public class TargetFragment extends NowListFragment<Target> {
 
     @Override
     protected void onEdit(Target item) {
-        Intent i = new Intent(getActivity(), EditBowActivity.class);
-        i.putExtra(EditBowActivity.BOW_ID, item.getId());
-        startActivity(i);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     protected class TargetAdapter extends NowListAdapter<Target> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.image_card, parent, false);
+                    .inflate(R.layout.image_card_simple, parent, false);
             return new ViewHolder(itemView);
         }
     }

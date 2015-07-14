@@ -178,26 +178,10 @@
         android:layout_weight="1"
         android:text="@string/sight_settings"/>
 
-    <LinearLayout
+    <de.dreier.mytargets.views.DynamicItemLayout
         android:id="@+id/sight_settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/add_sight_setting_button"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginBottom="10dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:gravity="start"
-        android:paddingBottom="5dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="5dp"
-        android:text="@string/add"
-        android:textColor="@android:color/secondary_text_light"/>
+        android:orientation="vertical" />
 
 </LinearLayout>

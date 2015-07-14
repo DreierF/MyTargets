@@ -13,6 +13,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.support.annotation.StringRes;
+import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.models.Diameter;
 
 public class TargetOvalBase extends Target {
 
@@ -48,5 +50,13 @@ public class TargetOvalBase extends Target {
     @Override
     protected boolean isInZone(float ax, float ay, int zone) {
         return zones - zone == 2 && region.contains((int) ax, (int) ay);
+    }
+
+    @Override
+    public Diameter[] getDiameters(Context context) {
+        return new Diameter[] {new Diameter(context,R.string.small),
+                new Diameter(context,R.string.medium),
+                new Diameter(context,R.string.large),
+                new Diameter(context,R.string.xlarge)};
     }
 }

@@ -44,8 +44,6 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int text = getIntent().getIntExtra("title", R.string.app_name);
-        setTitle(text);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
@@ -53,9 +51,8 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
             mFab.setOnClickListener((View.OnClickListener) this);
             mNewLayout = findViewById(R.id.new_layout);
             mNewText = (TextView) findViewById(R.id.new_text);
-        } else {
-            mFab.setVisibility(View.GONE);
         }
+        onContentChanged(true, 0);
     }
 
     @Override
@@ -63,6 +60,8 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
         if (stringRes != 0 && mNewText != null) {
             mNewLayout.setVisibility(empty ? View.VISIBLE : View.GONE);
             mNewText.setText(stringRes);
+        }
+        if (this instanceof View.OnClickListener) {
             mFab.setVisibility(View.VISIBLE);
         } else {
             mFab.setVisibility(View.GONE);
@@ -73,6 +72,7 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
     public void onItemSelected(long itemId, Class<? extends IIdProvider> aClass) {
         Intent data = new Intent();
         data.putExtra("id", itemId);
+        data.putExtra("call", getIntent());
         setResult(RESULT_OK, data);
         onBackPressed();
     }

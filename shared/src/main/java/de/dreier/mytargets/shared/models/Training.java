@@ -34,7 +34,7 @@ public class Training extends IdProvider implements DatabaseSerializable {
     public int maxPoints;
     public int[] scoreCount = new int[3];
     public Environment environment;
-    public StandardRound standardRound;
+    public long standardRoundId;
     public long bow;
     public long arrow;
 
@@ -56,7 +56,7 @@ public class Training extends IdProvider implements DatabaseSerializable {
         ContentValues values = new ContentValues();
         values.put(TITLE, title);
         values.put(DATE, date.getTime());
-        values.put(STANDARD_ROUND, standardRound.getId());
+        values.put(STANDARD_ROUND, standardRoundId);
         values.put(BOW, bow);
         values.put(ARROW, arrow);
         values.putAll(environment.getContentValues());
@@ -70,6 +70,7 @@ public class Training extends IdProvider implements DatabaseSerializable {
         date = new Date(cursor.getLong(2));
         bow = cursor.getInt(3);
         arrow = cursor.getInt(4);
+        standardRoundId = cursor.getLong(5);
         environment = new Environment();
         environment.fromCursor(cursor, 6);
     }

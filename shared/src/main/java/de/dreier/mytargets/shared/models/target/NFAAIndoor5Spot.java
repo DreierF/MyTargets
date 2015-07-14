@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
 
 import static android.graphics.Color.WHITE;
@@ -36,7 +37,7 @@ public class NFAAIndoor5Spot extends SpotBase {
                     {6, 5, 4},
                     {7, 5, 4}}; //TODO 6 if inner ring is hit but only 7 if arrow is inside
             showAsX = new boolean[]{true, false, false};
-            diameters = new Dimension[]{new Dimension(40, Dimension.CENTIMETER)};
+            diameters = new Diameter[]{new Diameter(40, Dimension.CENTIMETER)};
         }
 
         @Override
@@ -49,5 +50,10 @@ public class NFAAIndoor5Spot extends SpotBase {
             canvas.drawLine(rect.exactCenterX() - size, rect.exactCenterY() + size,
                     rect.exactCenterX() + size, rect.exactCenterY() - size, paintStroke);
         }
+    }
+    
+    @Override
+    public Diameter[] getDiameters(Context context) {
+        return face.getDiameters(context);
     }
 }

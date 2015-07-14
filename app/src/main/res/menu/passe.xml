@@ -7,11 +7,11 @@
         android:icon="@drawable/ic_trending_up_white_24dp"
         android:title="@string/show_all"
         app:showAsAction="ifRoom" />
-    <item
+    <!--<item
         android:id="@+id/action_switch_mode"
         android:icon="@drawable/ic_target_exact_24dp"
         android:title="@string/switch_mode"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom" />-->
     <item
         android:id="@+id/action_timer"
         android:icon="@drawable/ic_timer_white_24dp"

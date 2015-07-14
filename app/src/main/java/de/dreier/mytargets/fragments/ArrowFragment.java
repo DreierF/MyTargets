@@ -56,7 +56,7 @@ public class ArrowFragment extends NowListFragment<Arrow> implements View.OnClic
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.image_card, parent, false);
+                    .inflate(R.layout.image_card_details, parent, false);
             return new ViewHolder(itemView);
         }
     }

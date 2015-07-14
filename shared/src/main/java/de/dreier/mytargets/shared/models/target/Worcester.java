@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
 
 import static android.graphics.Color.WHITE;
@@ -25,7 +26,7 @@ public class Worcester extends CircularTargetBase {
         strokeWidth = new int[]{4, 4, 4, 4, 0};
         zonePoints = new int[][]{{5, 4, 3, 2, 1}};
         showAsX = new boolean[]{false};
-        diameters = new Dimension[]{new Dimension(16, Dimension.INCH)};
+        diameters = new Diameter[]{new Diameter(16, Dimension.INCH)};
     }
 
     @Override

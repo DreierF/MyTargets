@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -35,11 +35,11 @@
     <style name="AppTheme.CustomToolbar" parent="AppBaseTheme.CustomToolbar" />
 
     <style name="Label">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/colorPrimary</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/secondary_text_default_material_light</item>
+        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-medium</item>
     </style>
 
     <style name="card_list">

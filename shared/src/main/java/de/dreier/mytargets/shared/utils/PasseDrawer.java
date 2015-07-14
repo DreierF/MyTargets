@@ -138,7 +138,7 @@ public class PasseDrawer {
     public Coordinate getAnimatedPosition(int i) {
         Coordinate coordinate = getPosition(i);
         if (mCurAnimationProgress != -1) {
-            float oldX = mOldCoordinate[i].x;
+            float oldX = mOldCoordinate[i].x; ///TODO fix NPE
             float oldY = mOldCoordinate[i].y;
             coordinate.x = oldX + (coordinate.x - oldX) * mCurAnimationProgress;
             coordinate.y = oldY + (coordinate.y - oldY) * mCurAnimationProgress;

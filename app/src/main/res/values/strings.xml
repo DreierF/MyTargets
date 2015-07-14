@@ -222,6 +222,10 @@
     <string name="general">General</string>
     <string name="standard_rounds">Standard rounds</string>
     <string name="expand_collapse">Expand/Collapse</string>
+    <string name="new_round_template">New template</string>
+    <string name="arrow_numbers">Arrow numbers</string>
+    <string name="rounds">Rounds</string>
+    <string name="undo_remove_round">One round deleted!</string>
     <plurals name="arrow_deleted">
         <item quantity="one">One arrow deleted</item>
         <item quantity="other">%d arrows deleted</item>
@@ -237,6 +241,10 @@
     <plurals name="passe_deleted">
         <item quantity="one">One end deleted</item>
         <item quantity="other">%d ends deleted</item>
+    </plurals>
+    <plurals name="rounds">
+        <item quantity="one">Round %d</item>
+        <item quantity="other">Round %d</item>
     </plurals>
 
 </resources>

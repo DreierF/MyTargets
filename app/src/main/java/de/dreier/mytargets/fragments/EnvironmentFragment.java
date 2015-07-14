@@ -77,7 +77,6 @@ public class EnvironmentFragment extends Fragment {
             public void onClick(View v) {
                 Intent i = new Intent(activity,
                         ItemSelectActivity.WindSpeed.class);
-                i.putExtra("title", R.string.wind_speed);
                 startActivityForResult(i, REQ_SELECTED_WIND_SPEED);
             }
         });
@@ -89,7 +88,6 @@ public class EnvironmentFragment extends Fragment {
             public void onClick(View v) {
                 Intent i = new Intent(activity,
                         ItemSelectActivity.WindDirection.class);
-                i.putExtra("title", R.string.wind_direction);
                 startActivityForResult(i, REQ_SELECTED_WIND_DIRECTION);
             }
         });
@@ -161,7 +159,7 @@ public class EnvironmentFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
-            onSaveRound();
+            onSave();
             getActivity().finish();
             getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
             return true;
@@ -179,11 +177,12 @@ public class EnvironmentFragment extends Fragment {
         Assert.assertNotNull(listener);
     }
 
-    void onSaveRound() {
+    void onSave() {
         Environment e = new Environment();
         e.weather = weather;
         e.windSpeed = (int) wind_speed.getSelectedItemId();
         e.windDirection = (int) wind_direction.getSelectedItemId();
+        e.location = location.getText().toString();
 
         SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);
         SharedPreferences.Editor editor = prefs.edit();

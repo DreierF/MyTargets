@@ -53,14 +53,14 @@ public class BowFragment extends NowListFragment<Bow> implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        startActivity(SimpleFragmentActivity.EditRoundActivity.class);
+        startActivity(SimpleFragmentActivity.EditStandardRoundActivity.class);
     }
 
     protected class BowAdapter extends NowListAdapter<Bow> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.image_card, parent, false);
+                    .inflate(R.layout.image_card_details, parent, false);
             return new ViewHolder(itemView);
         }
     }
@@ -92,7 +92,7 @@ public class BowFragment extends NowListFragment<Bow> implements View.OnClickLis
             }
             ArrayList<EditBowActivity.SightSetting> sight = db.getSettings(mItem.getId());
             for (EditBowActivity.SightSetting s : sight) {
-                html += "<br>" + s.distance + "m: <b>" + s.value + "</b>";
+                html += "<br>" + s.distance + ": <b>" + s.value + "</b>";
             }
             mDetails.setText(Html.fromHtml(html));
         }

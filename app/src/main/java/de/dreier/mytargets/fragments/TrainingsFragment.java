@@ -80,7 +80,7 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
 
     @Override
     protected void onEdit(final Training item) {
-        Intent i = new Intent(getActivity(), SimpleFragmentActivity.EditRoundActivity.class);
+        Intent i = new Intent(getActivity(), SimpleFragmentActivity.EditStandardRoundActivity.class);
         i.putExtra(EditTrainingFragment.TRAINING_ID, item.getId());
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);

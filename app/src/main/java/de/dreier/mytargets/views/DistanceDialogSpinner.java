@@ -8,9 +8,13 @@
 package de.dreier.mytargets.views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
+import android.view.View;
 
+import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.adapters.DistanceItemAdapter;
+import de.dreier.mytargets.fragments.DistanceFragment;
 
 
 public class DistanceDialogSpinner extends DialogSpinner {
@@ -27,6 +31,15 @@ public class DistanceDialogSpinner extends DialogSpinner {
 
     private void init() {
         setAdapter(new DistanceItemAdapter(getContext()));
+        setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(),
+                        ItemSelectActivity.Distance.class);
+                i.putExtra(DistanceFragment.CUR_DISTANCE, getSelectedItemId());
+                startIntent(i);
+            }
+        });
     }
 
     @Override

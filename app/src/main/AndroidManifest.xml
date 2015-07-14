@@ -87,10 +87,9 @@
                 android:value=".activities.SimpleFragmentActivity$TrainingActivity"/>
         </activity>
         <activity
-            android:name=".activities.SimpleFragmentActivity$EditRoundActivity"
-            android:label="@string/new_round"
+            android:name=".activities.SimpleFragmentActivity$EditStandardRoundActivity"
+            android:label="@string/new_round_template"
             android:parentActivityName=".activities.ItemSelectActivity$StandardRound"
-            android:theme="@style/AppTheme.CustomToolbar"
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -129,46 +128,52 @@
             android:label="@string/statistic"/>
         <activity
             android:name=".activities.ItemSelectActivity$Arrow"
+            android:label="@string/arrow"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivity$EditRoundActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivity$EditStandardRoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$EditRoundActivity"/>
+                android:value=".activities.SimpleFragmentActivity$EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".activities.ItemSelectActivity$Bow"
+            android:label="@string/bow"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivity$EditRoundActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivity$EditStandardRoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$EditRoundActivity"/>
+                android:value=".activities.SimpleFragmentActivity$EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".activities.ItemSelectActivity$Environment"
+            android:label="@string/environment"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivity$EditRoundActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivity$EditStandardRoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$EditRoundActivity"/>
+                android:value=".activities.SimpleFragmentActivity$EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".activities.ItemSelectActivity$Target"
+            android:label="@string/target_face"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivity$EditRoundActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivity$EditStandardRoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$EditRoundActivity"/>
+                android:value=".activities.SimpleFragmentActivity$EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".activities.ItemSelectActivity$Distance"
+            android:label="@string/distance"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivity$EditRoundActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivity$EditStandardRoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$EditRoundActivity"/>
+                android:value=".activities.SimpleFragmentActivity$EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".activities.ItemSelectActivity$WindSpeed"
+            android:label="@string/wind_speed"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.ItemSelectActivity$Environment">
             <meta-data
@@ -177,6 +182,7 @@
         </activity>
         <activity
             android:name=".activities.ItemSelectActivity$WindDirection"
+            android:label="@string/wind_direction"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.ItemSelectActivity$Environment">
             <meta-data
@@ -185,6 +191,7 @@
         </activity>
         <activity
             android:name=".activities.ItemSelectActivity$StandardRound"
+            android:label="@string/standard_rounds"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.SimpleFragmentActivity$EditTrainingActivity">
             <meta-data

@@ -89,7 +89,7 @@ public abstract class SimpleFragmentActivity extends AppCompatActivity {
         }
     }
 
-    public static class EditRoundActivity extends SimpleFragmentActivity {
+    public static class EditStandardRoundActivity extends SimpleFragmentActivity {
 
         @Override
         protected Fragment instantiateFragment() {

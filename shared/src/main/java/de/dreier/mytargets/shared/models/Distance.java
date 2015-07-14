@@ -7,9 +7,6 @@
 package de.dreier.mytargets.shared.models;
 
 public class Distance extends Dimension {
-    public static final Integer[] valuesMetric = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70,
-            90};
-    public static final Integer[] valuesImperial = {20, 25, 30, 40, 50, 60, 80, 100};
 
     public Distance(int distance, String unit) {
         super(distance, unit);

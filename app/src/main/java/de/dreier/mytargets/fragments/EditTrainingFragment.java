@@ -25,7 +25,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -40,15 +39,12 @@ import de.dreier.mytargets.adapters.BowItemAdapter;
 import de.dreier.mytargets.adapters.EnvironmentItemAdapter;
 import de.dreier.mytargets.adapters.StandardRoundsItemAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
-import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.MyBackupAgent;
 import de.dreier.mytargets.views.DialogSpinner;
 import zh.wang.android.apis.yweathergetter4a.WeatherInfo;
@@ -74,7 +70,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
     private Button training_date;
     private Date date = new Date();
     private DialogSpinner environment;
-    private DialogSpinner standardRound;
+    private DialogSpinner standardRoundSpinner;
     private RoundTemplate templ;
 
     @SuppressWarnings("ConstantConditions")
@@ -122,14 +118,13 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         View scrollView = rootView.findViewById(R.id.scrollView);
 
         // Format / Standard round
-        standardRound = (DialogSpinner) rootView.findViewById(R.id.standard_round);
-        standardRound.setAdapter(new StandardRoundsItemAdapter(activity));
-        standardRound.setOnClickListener(new View.OnClickListener() {
+        standardRoundSpinner = (DialogSpinner) rootView.findViewById(R.id.standard_round);
+        standardRoundSpinner.setAdapter(new StandardRoundsItemAdapter(activity));
+        standardRoundSpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(activity,
                         ItemSelectActivity.StandardRound.class);
-                i.putExtra("title", R.string.standard_rounds);
                 startActivityForResult(i, REQ_SELECTED_STANDARD_ROUND);
             }
         });
@@ -149,7 +144,6 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             public void onClick(View v) {
                 Intent i = new Intent(activity,
                         ItemSelectActivity.Bow.class);
-                i.putExtra("title", R.string.bow);
                 startActivityForResult(i, REQ_SELECTED_BOW);
 
             }
@@ -170,19 +164,18 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             public void onClick(View v) {
                 Intent i = new Intent(activity,
                         ItemSelectActivity.Arrow.class);
-                i.putExtra("title", R.string.bow);
                 startActivityForResult(i, REQ_SELECTED_ARROW);
             }
         });
 
         // Environment
         environment = (DialogSpinner) rootView.findViewById(R.id.environment_spinner);
+        environment.setItemId(0);
         environment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(activity,
                         ItemSelectActivity.Environment.class);
-                i.putExtra("title", R.string.environment);
                 i.putExtra(EnvironmentFragment.ENVIRONMENT,
                         ((EnvironmentItemAdapter) environment.getAdapter()).getEnvironment());
                 startActivityForResult(i, REQ_SELECTED_ENVIRONMENT);
@@ -199,7 +192,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             activity.getSupportActionBar().setTitle(R.string.new_training);
             bow.setItemId(prefs.getInt("bow", -1));
             arrow.setItemId(prefs.getInt("arrow", -1));
-            standardRound.setItemId(prefs.getInt("round", -1));
+            standardRoundSpinner.setItemId(prefs.getInt("standard_round", 0));
         } else {
             DatabaseManager db = DatabaseManager.getInstance(activity);
             Training train = db.getTraining(mTraining);
@@ -207,27 +200,13 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             date = train.date;
             bow.setItemId(train.bow);
             arrow.setItemId(train.arrow);
-            standardRound.setItemId(standardRound.getId());
+            standardRoundSpinner.setItemId(train.standardRoundId);
+            ((EnvironmentItemAdapter) environment.getAdapter()).setEnvironment(train.environment);
             setTrainingDate();
             activity.getSupportActionBar().setTitle(R.string.new_training);
             scrollView.setVisibility(View.GONE);
         }
         return rootView;
-    }
-
-    private StandardRound getStandardRound() {
-        StandardRound s = new StandardRound();
-        s.name = "Test standard round";
-        s.institution = StandardRound.FITA;
-        s.indoor = false;
-        templ = new RoundTemplate();
-        templ.target = TargetFactory.getList(getActivity()).get(0);
-        templ.targetSize = new Dimension(60, "cm");
-        templ.arrowsPerPasse = 3;
-        templ.distance = new Distance(18, "m");
-        templ.passes = 10;
-        s.insert(templ);
-        return s;
     }
 
     @Override
@@ -253,11 +232,16 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             } else if (requestCode == REQ_SELECTED_ENVIRONMENT) {
                 Environment env = (Environment) data.getSerializableExtra("item");
                 ((EnvironmentItemAdapter) environment.getAdapter()).setEnvironment(env);
-                environment.setItemId(0);
                 return;
             } else if (requestCode == REQ_SELECTED_STANDARD_ROUND) {
-                //Environment env = (Environment) data.getSerializableExtra("item");
-                standardRound.setItemId(id);
+                StandardRound sr = (StandardRound) data.getSerializableExtra("item");
+                if (sr.getId() == -1) {
+                    ((StandardRoundsItemAdapter) standardRoundSpinner.getAdapter()).setStandardRound(sr);
+                    standardRoundSpinner.setItemId(0);
+                } else {
+                    ((StandardRoundsItemAdapter) standardRoundSpinner.getAdapter()).setStandardRound(null);
+                    standardRoundSpinner.setItemId(sr.getId());
+                }
                 return;
             }
         }
@@ -313,13 +297,19 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         if (training.bow == 0) {
             training.bow = mBowId;
         }
-        training.standardRound = getStandardRound();
+
+        StandardRound standardRound = ((StandardRoundsItemAdapter) standardRoundSpinner.getAdapter())
+                .getStandardRound();
+        if (standardRound == null) {
+            standardRound = db.getStandardRound(standardRoundSpinner.getSelectedItemId());
+        }
+        db.update(standardRound);
+        training.standardRoundId = standardRound.getId();
+
         db.update(training);
         mTraining = training.getId();
 
-        ArrayList<RoundTemplate> roundTemplates = training.standardRound.getRounds();
-
-        for(RoundTemplate template : roundTemplates) {
+        for (RoundTemplate template : standardRound.getRounds()) {
             Round round = new Round();
             round.training = mTraining;
             round.info = template;
@@ -329,9 +319,9 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
 
         SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);
         SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("standard_round", (int) standardRound.getId());
         editor.putInt("bow", (int) bow.getSelectedItemId());
         editor.putInt("arrow", (int) arrow.getSelectedItemId());
-        editor.putInt("round", (int) standardRound.getSelectedItemId());
         editor.apply();
     }
 

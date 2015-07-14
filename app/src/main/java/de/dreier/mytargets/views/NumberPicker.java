@@ -62,6 +62,10 @@ public class NumberPicker extends LinearLayout {
 
     private static final long REPEAT_DELAY = 50;
 
+    public interface OnValueChangedListener {
+        void onValueChanged(int val);
+    }
+
     private int mMinimum = 1;
     private int mMaximum = 30;
 
@@ -73,10 +77,15 @@ public class NumberPicker extends LinearLayout {
 
     private boolean autoIncrement = false;
     private boolean autoDecrement = false;
+    private OnValueChangedListener changeListener;
 
     @PluralsRes
     private int mTextPattern;
     private Button increment, decrement;
+
+    public void setOnValueChangedListener(OnValueChangedListener listener) {
+        changeListener = listener;
+    }
 
     /**
      * This little guy handles the auto part of the auto incrementing feature.
@@ -220,6 +229,8 @@ public class NumberPicker extends LinearLayout {
         } else {
             valueText.setText(getResources().getQuantityString(mTextPattern, value, value));
         }
+        if (changeListener != null) {
+            changeListener.onValueChanged(val);
+        }
     }
-
 }

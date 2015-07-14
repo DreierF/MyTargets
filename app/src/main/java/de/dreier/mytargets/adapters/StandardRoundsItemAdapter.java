@@ -22,10 +22,16 @@ import de.dreier.mytargets.shared.models.StandardRound;
 
 public class StandardRoundsItemAdapter extends ArrayAdapter<StandardRound> {
     private final Context mContext;
+    private StandardRound standardRound;
 
     public StandardRoundsItemAdapter(Context context) {
         super(context, 0, DatabaseManager.getInstance(context).getStandardRounds());
         mContext = context;
+    }
+
+    @Override
+    public StandardRound getItem(int position) {
+        return standardRound != null ? standardRound : super.getItem(position);
     }
 
     @Override
@@ -52,5 +58,13 @@ public class StandardRoundsItemAdapter extends ArrayAdapter<StandardRound> {
         RoundTemplate firstRound = item.getRounds().get(0);
         image.setImageDrawable(firstRound.target);
         return v;
+    }
+
+    public void setStandardRound(StandardRound sr) {
+        standardRound = sr;
+    }
+
+    public StandardRound getStandardRound() {
+        return standardRound;
     }
 }

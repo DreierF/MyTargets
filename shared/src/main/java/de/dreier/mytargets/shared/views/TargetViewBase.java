@@ -54,6 +54,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         mCurSelecting = -1;
         mPasse = new Passe(round.arrowsPerPasse);
         mPasseDrawer.setPasse(mPasse);
+        animateToZoomSpot();
         invalidate();
     }
 
@@ -78,7 +79,6 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         currentArrow = b.getInt("currentArrow");
         lastSetArrow = b.getInt("lastSetArrow");
         round = (RoundTemplate) b.getSerializable("round");
-        round.target.initPaint();
     }
 
     @Override
@@ -89,7 +89,6 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     protected abstract void calcSizes();
-
 
     public void setOnTargetSetListener(OnTargetSetListener listener) {
         setListener = listener;
@@ -149,7 +148,13 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             mPasseDrawer.animateToSelection(PasseDrawer.NO_SELECTION, null, mModeEasy ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
         }
         currentArrow = i;
+        animateFromZoomSpot();
     }
+
+    protected void animateFromZoomSpot() {
+    }
+
+    protected void animateToZoomSpot() {}
 
     protected abstract Shot getShotFromPos(float x, float y);
 

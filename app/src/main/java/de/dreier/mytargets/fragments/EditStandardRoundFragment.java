@@ -12,37 +12,42 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.Diameter;
+import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.MyBackupAgent;
+import de.dreier.mytargets.utils.ViewId;
 import de.dreier.mytargets.views.DialogSpinner;
 import de.dreier.mytargets.views.DistanceDialogSpinner;
+import de.dreier.mytargets.views.DynamicItemLayout;
 import de.dreier.mytargets.views.NumberPicker;
 
-public class EditStandardRoundFragment extends Fragment {
+public class EditStandardRoundFragment extends Fragment
+        implements DynamicItemLayout.OnBindListener<RoundTemplate> {
     public static String STANDARD_ROUND_ID = "standard_round_id";
-    private static final int REQ_SELECTED_TARGET = 1;
-    private static final int REQ_SELECTED_DISTANCE = 2;
 
     private long mStandardRound = -1;
-
-    private DistanceDialogSpinner distance;
     private RadioButton indoor;
-    private DialogSpinner target;
-    private NumberPicker rounds, arrows;
+    private DynamicItemLayout<RoundTemplate> rounds;
+    private EditText name;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -50,9 +55,7 @@ public class EditStandardRoundFragment extends Fragment {
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_edit_standard_round, container, false);
 
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         final AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
         setHasOptionsMenu(true);
@@ -63,84 +66,44 @@ public class EditStandardRoundFragment extends Fragment {
         }
         SharedPreferences prefs = activity.getSharedPreferences(MyBackupAgent.PREFS, 0);
 
-        View scrollView = rootView.findViewById(R.id.scrollView);
-
-        // Distance
-        distance = (DistanceDialogSpinner) rootView.findViewById(R.id.distance_spinner);
-        distance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(activity, ItemSelectActivity.Distance.class);
-                i.putExtra("title", R.string.distance);
-                i.putExtra(DistanceFragment.CUR_DISTANCE, distance.getSelectedItemId());
-                startActivityForResult(i, REQ_SELECTED_DISTANCE);
-            }
-        });
-
         // Indoor / outdoor
         RadioButton outdoor = (RadioButton) rootView.findViewById(R.id.outdoor);
         indoor = (RadioButton) rootView.findViewById(R.id.indoor);
 
-        // Show scoreboard
-        rounds = (NumberPicker) rootView.findViewById(R.id.rounds);
-        rounds.setTextPattern(R.plurals.passe);
+        // Name
+        name = (EditText) rootView.findViewById(R.id.name);
 
-        // Points per passe
-        arrows = (NumberPicker) rootView.findViewById(R.id.ppp);
-        arrows.setTextPattern(R.plurals.arrow);
-        arrows.setMinimum(1);
-        arrows.setMaximum(10);
-
-        // Target round
-        target = (DialogSpinner) rootView.findViewById(R.id.target_spinner);
-        target.setAdapter(new TargetItemAdapter(activity));
-        target.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(activity,
-                        ItemSelectActivity.Target.class);
-                i.putExtra("title", R.string.target_face);
-                startActivityForResult(i, REQ_SELECTED_TARGET);
-            }
-        });
+        // Rounds
+        //noinspection unchecked
+        rounds = (DynamicItemLayout<RoundTemplate>) rootView.findViewById(R.id.rounds);
+        rounds.setLayoutResource(R.layout.one_round, RoundTemplate.class);
+        rounds.setOnBindListener(this);
+        rounds.rebindOnIndexChanged(true);
 
         if (mStandardRound == -1) {
             // Initialise with default values
-            int dist = prefs.getInt("distance", 10);
-            String unit = prefs.getString("unit", "m");
-            distance.setItemId(new de.dreier.mytargets.shared.models.Distance(dist, unit).getId());
             indoor.setChecked(prefs.getBoolean("indoor", false));
             outdoor.setChecked(!prefs.getBoolean("indoor", false));
-            arrows.setValue(prefs.getInt("ppp", 3));
-            rounds.setValue(prefs.getInt("rounds", 10));
-            target.setItemId(prefs.getInt("target", 2));
+
+            RoundTemplate round = new RoundTemplate();
+            round.arrowsPerPasse = prefs.getInt("ppp", 3);
+            round.passes = prefs.getInt("rounds", 10);
+            int tid = prefs.getInt("target", 0);
+            int scoring = prefs.getInt("scoring", 0);
+            round.target = TargetFactory.createTarget(getActivity(), tid, scoring);
+            long distId = prefs.getLong("distanceId", new Distance(18, "m").getId());
+            round.distance = Distance.fromId(distId);
+            rounds.addItem(round);
         } else {
             // Load saved values
             DatabaseManager db = DatabaseManager.getInstance(activity);
-            Round r = db.getRound(mStandardRound);
-            distance.setItemId(r.info.distance.getId());
-            arrows.setValue(r.info.arrowsPerPasse);
-            target.setItemId(r.info.target.getId());
-
-            View not_editable = rootView.findViewById(R.id.not_editable);
-            not_editable.setVisibility(View.GONE);
+            StandardRound sr = db.getStandardRound(mStandardRound);
+            indoor.setChecked(sr.indoor);
+            outdoor.setChecked(!sr.indoor);
+            name.setText(sr.name);
+            rounds.setList(sr.getRounds());
         }
         return rootView;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            long id = data.getLongExtra("id", 0);
-            if (requestCode == REQ_SELECTED_TARGET) {
-                target.setItemId(id);
-                return;
-            } else if (requestCode == REQ_SELECTED_DISTANCE) {
-                distance.setItemId(id);
-                return;
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -151,25 +114,155 @@ public class EditStandardRoundFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
+            onSave();
             getActivity().finish();
-
-                //TODO return as result onBuildStandardRound();
-                getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
+            getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    StandardRound onBuildStandardRound() {
+    void onSave() {
         StandardRound info = new StandardRound();
-        //info.target = (int) target.getSelectedItemId();
-
         info.setId(mStandardRound);
+        info.institution = StandardRound.CUSTOM;
+        info.name = name.getText().toString();
+        info.indoor = indoor.isChecked();
+        info.setRounds(rounds.getList());
 
-        //info.distance = de.dreier.mytargets.shared.models.Distance
-        //        .fromId(distance.getSelectedItemId());
+        SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("indoor", info.indoor);
 
-        //info.arrowsPerPasse = arrows.getValue();
-        return info;
+        RoundTemplate round = rounds.getList().get(0);
+        editor.putInt("ppp", round.arrowsPerPasse);
+        editor.putInt("rounds", round.passes);
+        editor.putInt("target", (int) round.target.getId());
+        editor.putInt("scoring", round.target.scoringStyle);
+        editor.putLong("distanceId", round.distance.getId());
+
+        editor.apply();
+
+        Intent data = new Intent();
+        data.putExtra("item", info);
+        getActivity().setResult(Activity.RESULT_OK, data);
+    }
+
+    private void updateTargetSize(RoundTemplate round, SeekBar seekBar, TextView label) {
+        Diameter[] diameters = round.target.getDiameters(getActivity());
+        seekBar.setMax(diameters.length - 1);
+        round.targetSize = diameters[seekBar.getProgress()];
+        label.setText(round.targetSize.toString());
+    }
+
+    @Override
+    public void onBind(View view, final RoundTemplate round, int index) {
+        // Initialize empty round with default values
+        if (round.distance == null) {
+            RoundTemplate r = rounds.getList().get(index - 1);
+            round.passes = r.passes;
+            round.arrowsPerPasse = r.arrowsPerPasse;
+            round.distance = r.distance;
+            round.target = r.target;
+            round.targetSize = r.targetSize;
+        }
+
+        // Set title of round
+        TextView title = ((TextView) view.findViewById(R.id.round_number));
+        title.setText(getResources().getQuantityString(R.plurals.rounds, index + 1, index + 1));
+        round.index = index;
+
+        // Distance
+        final DistanceDialogSpinner distanceSpinner = (DistanceDialogSpinner) view
+                .findViewById(R.id.distance_spinner);
+        distanceSpinner.setOnResultListener(new DialogSpinner.OnResultListener() {
+            @Override
+            public void onResult(Intent data) {
+                long id = data.getLongExtra("id", 0);
+                round.distance = Distance.fromId(id);
+                distanceSpinner.setItemId(id);
+            }
+        });
+        distanceSpinner.setItemId(round.distance.getId());
+        distanceSpinner.setId(ViewId.getInstance().getUniqueId());
+
+        // Target round
+        final DialogSpinner targetSpinner = (DialogSpinner) view
+                .findViewById(R.id.target_spinner);
+        final TextView targetSizeLabel = (TextView) view.findViewById(R.id.target_size_label);
+        final SeekBar targetSizeSeekbar = (SeekBar) view.findViewById(R.id.target_size_seekbar);
+        targetSpinner.setAdapter(new TargetItemAdapter(getActivity()));
+        targetSpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                targetSpinner.startIntent(new Intent(getActivity(),
+                        ItemSelectActivity.Target.class));
+            }
+        });
+        targetSpinner.setOnResultListener(new DialogSpinner.OnResultListener() {
+            @Override
+            public void onResult(Intent data) {
+                long id = data.getLongExtra("id", 0);
+                int scoringStyle = round.target.scoringStyle;
+                round.target = TargetFactory.createTarget(getActivity(), (int) id, scoringStyle);
+                targetSpinner.setItemId(id);
+                updateTargetSize(round, targetSizeSeekbar, targetSizeLabel);
+            }
+        });
+        targetSizeSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                updateTargetSize(round, targetSizeSeekbar, targetSizeLabel);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+        targetSpinner.setItemId(round.target.getId());
+        updateTargetSize(round, targetSizeSeekbar, targetSizeLabel);
+        targetSizeSeekbar.setId(ViewId.getInstance().getUniqueId());
+        targetSizeLabel.setId(ViewId.getInstance().getUniqueId());
+        targetSpinner.setId(ViewId.getInstance().getUniqueId());
+
+        // Passes
+        NumberPicker passes = (NumberPicker) view.findViewById(R.id.passes);
+        passes.setTextPattern(R.plurals.passe);
+        passes.setOnValueChangedListener(new NumberPicker.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(int val) {
+                round.passes = val;
+            }
+        });
+        passes.setValue(round.passes);
+
+        // Arrows per passe
+        NumberPicker arrows = (NumberPicker) view.findViewById(R.id.ppp);
+        arrows.setTextPattern(R.plurals.arrow);
+        arrows.setMinimum(1);
+        arrows.setMaximum(10);
+        arrows.setOnValueChangedListener(new NumberPicker.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(int val) {
+                round.arrowsPerPasse = val;
+            }
+        });
+        arrows.setValue(round.arrowsPerPasse);
+
+        ImageButton remove = (ImageButton) view.findViewById(R.id.remove);
+        if (index == 0) {
+            remove.setVisibility(View.GONE);
+        } else {
+            remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    rounds.remove(round, R.string.undo_remove_round);
+                }
+            });
+        }
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 
 public class TargetFactory {
 
-    public static List<Target> list;
+    private static List<Target> list;
 
     public static Target createTarget(Context context, int id, int scoringStyle) {
         Target t;

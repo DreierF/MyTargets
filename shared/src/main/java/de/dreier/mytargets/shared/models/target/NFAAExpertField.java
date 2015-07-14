@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
 
 import static android.graphics.Color.WHITE;
@@ -26,10 +27,10 @@ public class NFAAExpertField extends CircularTargetBase {
         strokeWidth = new int[]{4, 0, 4, 0, 4, 0};
         zonePoints = new int[][]{{6, 5, 4, 3, 2, 1}};
         showAsX = new boolean[]{true};
-        diameters = new Dimension[]{new Dimension(20, Dimension.CENTIMETER),
-                new Dimension(35, Dimension.CENTIMETER),
-                new Dimension(50, Dimension.CENTIMETER),
-                new Dimension(65, Dimension.CENTIMETER)};
+        diameters = new Diameter[]{new Diameter(20, Dimension.CENTIMETER),
+                new Diameter(35, Dimension.CENTIMETER),
+                new Diameter(50, Dimension.CENTIMETER),
+                new Diameter(65, Dimension.CENTIMETER)};
     }
 
     @Override

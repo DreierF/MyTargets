@@ -39,7 +39,7 @@ public class RoundTemplate extends IdProvider implements Serializable, DatabaseS
     public int index;
     public int arrowsPerPasse;
     public Target target;
-    public Dimension targetSize;
+    public Diameter targetSize;
     public Distance distance;
     public int passes;
 
@@ -71,7 +71,7 @@ public class RoundTemplate extends IdProvider implements Serializable, DatabaseS
         arrowsPerPasse = cursor.getInt(startColumnIndex + 2);
         distance = new Distance(cursor.getInt(startColumnIndex + 5),
                 cursor.getString(startColumnIndex + 6));
-        targetSize = new Dimension(cursor.getInt(startColumnIndex + 7),
+        targetSize = new Diameter(cursor.getInt(startColumnIndex + 7),
                 cursor.getString(startColumnIndex + 8));
         passes = cursor.getInt(startColumnIndex + 9);
         standardRound = cursor.getLong(startColumnIndex + 10);

@@ -107,7 +107,7 @@ public class DistanceFragment extends NowListFragment<Distance>
 
         public ViewHolder(View itemView) {
             super(itemView, mMultiSelector, DistanceFragment.this);
-            mName = (TextView) itemView.findViewById(R.id.name);
+            mName = (TextView) itemView.findViewById(android.R.id.text1);
         }
 
         @Override

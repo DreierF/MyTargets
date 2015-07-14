@@ -341,7 +341,7 @@ public class StandardRound extends IdProvider implements Serializable, DatabaseS
             roundTemplate.arrowsPerPasse = arrowsPerPasse;
             roundTemplate.distance = new Distance(roundDetails[i], distanceUnit);
             roundTemplate.target = target;
-            roundTemplate.targetSize = new Dimension(roundDetails[i + 1], targetUnit);
+            roundTemplate.targetSize = new Diameter(roundDetails[i + 1], targetUnit);
             roundTemplate.passes = roundDetails[i + 2];
             standardRound.insert(roundTemplate);
         }
@@ -379,5 +379,9 @@ public class StandardRound extends IdProvider implements Serializable, DatabaseS
                     r.arrowsPerPasse, r.targetSize);
         }
         return desc;
+    }
+
+    public void setRounds(ArrayList<RoundTemplate> rounds) {
+        this.rounds = rounds;
     }
 }

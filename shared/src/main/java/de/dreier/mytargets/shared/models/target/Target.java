@@ -13,6 +13,7 @@ import android.support.annotation.StringRes;
 
 import java.io.Serializable;
 
+import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.IIdProvider;
 
 import static android.graphics.Color.BLACK;
@@ -77,6 +78,9 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     }
 
     protected void draw(Canvas canvas, Rect rect) {
+        if (paintFill == null) {
+            initPaint();
+        }
         for (int zone = zones - 1; zone >= 0; zone--) {
             paintFill.setColor(colorFill[zone]);
             paintStroke.setColor(colorStroke[zone]);
@@ -226,4 +230,6 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     @Override
     public void setColorFilter(ColorFilter arg0) {
     }
+
+    public abstract Diameter[] getDiameters(Context context);
 }

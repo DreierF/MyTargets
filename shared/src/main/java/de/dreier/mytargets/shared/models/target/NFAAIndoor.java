@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
 
 import static android.graphics.Color.WHITE;
@@ -29,7 +30,7 @@ public class NFAAIndoor extends CircularTargetBase {
                 {6, 5, 4, 3, 2, 1},
                 {7, 5, 4, 3, 2, 1}}; //TODO 6 if inner ring is hit but only 7 if arrow is inside
         showAsX = new boolean[]{true, false, false};
-        diameters = new Dimension[]{new Dimension(40, Dimension.CENTIMETER)};
+        diameters = new Diameter[]{new Diameter(40, Dimension.CENTIMETER)};
     }
 
     @Override

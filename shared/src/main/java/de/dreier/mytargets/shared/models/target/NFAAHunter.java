@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
 
 import static android.graphics.Color.WHITE;
@@ -26,10 +27,10 @@ public class NFAAHunter extends CircularTargetBase {
         zonePoints = new int[][]{{5, 5, 4, 3},
                 {6, 5, 4, 3}};
         showAsX = new boolean[]{true, false};
-        diameters = new Dimension[]{new Dimension(20, Dimension.CENTIMETER),
-                new Dimension(35, Dimension.CENTIMETER),
-                new Dimension(50, Dimension.CENTIMETER),
-                new Dimension(65, Dimension.CENTIMETER)};
+        diameters = new Diameter[]{new Diameter(20, Dimension.CENTIMETER),
+                new Diameter(35, Dimension.CENTIMETER),
+                new Diameter(50, Dimension.CENTIMETER),
+                new Diameter(65, Dimension.CENTIMETER)};
     }
 
     @Override

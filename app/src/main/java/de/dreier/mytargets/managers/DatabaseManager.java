@@ -32,15 +32,15 @@ import de.dreier.mytargets.activities.EditBowActivity;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.DatabaseSerializable;
-import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.BackupUtils;
 
@@ -123,15 +123,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
             cur.close();
         }
         if (oldVersion < 4) {
+            int[] valuesMetric = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
             for (String table : new String[]{"ROUND", "VISIER"}) {
                 for (int i = 10; i >= 0; i--) {
                     db.execSQL("UPDATE " + table + " SET distance=" +
-                            Distance.valuesMetric[i] + " WHERE distance=" +
+                            valuesMetric[i] + " WHERE distance=" +
                             i);
                 }
             }
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            int defaultDist = Distance.valuesMetric[prefs.getInt("distance", 0)];
+            int defaultDist = valuesMetric[prefs.getInt("distance", 0)];
             prefs.edit().putInt("distance", defaultDist).apply();
         }
         if (oldVersion < 5) {
@@ -202,13 +203,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN standard_round INTEGER DEFAULT '0'");
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN bow INTEGER DEFAULT '0'");
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN arrow INTEGER DEFAULT '0'");
-            db.execSQL("UPDATE ROUND SET target=target+1 WHERE target>3 OR " +
-                    "_id IN (SELECT r._id FROM ROUND r " +
+            db.execSQL("UPDATE ROUND SET target=4 WHERE target=3"); // WA 3 Spot ->vegas
+            db.execSQL("UPDATE ROUND SET target=13 WHERE target=4"); // WA Field
+            db.execSQL("UPDATE ROUND SET target=10 WHERE target=5"); // DFBV Spiegel
+            db.execSQL("UPDATE ROUND SET target=11 WHERE target=6"); // DFBV Spiegel Spot
+            db.execSQL("UPDATE ROUND SET target=target+1 " +
+                    "WHERE _id IN (SELECT r._id FROM ROUND r " +
                     "LEFT JOIN BOW b ON b._id=r.bow " +
-                    "WHERE (r.bow=-2 OR b.type=1) AND r.target=3)");
+                    "WHERE (r.bow=-2 OR b.type=1) AND r.target=4)"); // Set all compound 3 spot to vertical
             db.execSQL("ALTER TABLE ROUND RENAME TO ROUND_OLD");
 
-            //TODO change all target values
             //TODO transform before inner points to after inner points
 
             fillStandardRound(db);
@@ -284,10 +288,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
             do {
                 RoundTemplate template = new RoundTemplate();
                 template.arrowsPerPasse = res.getInt(0);
-                template.target = TargetFactory.getList(mContext).get(res.getInt(1));
+                int target = res.getInt(1);
+                template.target = TargetFactory.createTarget(mContext,
+                        target == 4 ? 5 : target, target == 5 ? 1 : 0);
                 template.distance = new Distance(res.getInt(3), res.getString(4));
                 template.passes = res.getInt(5);
-                template.targetSize = new Dimension(60, "cm");
+                template.targetSize = new Diameter(60, "cm");
                 sr.insert(template);
                 Cursor sids = db.rawQuery("SELECT sid FROM ROUND_TEMPLATE " +
                                 "WHERE index=? " +
@@ -373,7 +379,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             do {
                 Round r = new Round();
                 r.fromCursor(res, 0);
-                r.info.target = TargetFactory.createTarget(mContext, res.getInt(7), res.getInt(8));
+                r.info.target = TargetFactory.createTarget(mContext, res.getInt(5), res.getInt(6));
                 list.add(r);
             } while (res.moveToNext());
         }
@@ -507,8 +513,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 ////// GET SINGLE ENTRY AS OBJECT //////
 
     public Training getTraining(long training) {
-        Cursor cursor = db.rawQuery("SELECT t._id, t.title, t.datum, t.bow, t.arrow, " +
-                "t.weather, t.wind_speed, t.wind_direction, t.location, t.standard_round " +
+        Cursor cursor = db.rawQuery("SELECT t._id, t.title, t.datum, t.bow, t.arrow, t.standard_round, " +
+                "t.weather, t.wind_speed, t.wind_direction, t.location " +
                 "FROM TRAINING t " +
                 "LEFT JOIN ROUND r ON t._id = r.training " +
                 "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
@@ -519,7 +525,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         Training tr = new Training();
         if (cursor.moveToFirst()) {
             tr.fromCursor(cursor, 0);
-            tr.standardRound = getStandardRound(cursor.getLong(9));
         }
         cursor.close();
 
@@ -541,7 +546,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public Round getRound(long round) {
         // Get all generic round attributes
         Cursor cursor = db.rawQuery(
-                "SELECT r._id, r.comment, "+
+                "SELECT r._id, r.comment, " +
                         "a._id, a.r_index, a.arrows, a.target, a.scoring_style, a.distance, a.unit, " +
                         "a.size, a.target_unit, a.passes, a.sid " +
                         "FROM ROUND r " +
@@ -553,7 +558,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         cursor.moveToFirst();
         Round r = new Round();
         r.fromCursor(cursor, 0);
-        r.info.target = TargetFactory.createTarget(mContext, cursor.getInt(7), cursor.getInt(8));
+        r.info.target = TargetFactory.createTarget(mContext, cursor.getInt(5), cursor.getInt(6));
         cursor.close();
 
         // Get number of X, 10 and 9 score
@@ -767,7 +772,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         int sum = 0;
         for (int i = 0; i < res.getCount(); i++) {
             int zone = res.getInt(0);
-            Target target = TargetFactory.createTarget(mContext,res.getInt(1),res.getInt(2));
+            Target target = TargetFactory.createTarget(mContext, res.getInt(1), res.getInt(2));
             sum += target.getPointsByZone(zone);
             res.moveToNext();
         }
@@ -797,12 +802,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (values == null) {
             return;
         }
-        if (item instanceof Training) {
-            Training training = (Training) item;
-            StandardRound sr = training.standardRound;
-            update(sr);
-            values = item.getContentValues();
-        }
         if (item.getId() <= 0) {
             item.setId(db.insert(item.getTableName(), null, values));
         } else {
@@ -822,7 +821,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
     }
 
-    public void updateSightSettings(long bowId, ArrayList<EditBowActivity.SightSetting> sightSettingsList) {
+    public void updateSightSettings(long bowId, List<EditBowActivity.SightSetting> sightSettingsList) {
         db.delete(TABLE_VISIER, VISIER_BOW + "=" + bowId, null);
         for (EditBowActivity.SightSetting set : sightSettingsList) {
             ContentValues values = new ContentValues();
@@ -836,7 +835,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public ArrayList<EditBowActivity.SightSetting> getSettings(long bowId) {
         String[] cols = {VISIER_DISTANCE, VISIER_UNIT, VISIER_SETTING};
-        Cursor res = db.query(TABLE_VISIER, cols, VISIER_BOW + "=" + bowId, null, null, null, null);
+        Cursor res = db.query(TABLE_VISIER, cols, VISIER_BOW + "=" + bowId, null, null, null,
+                VISIER_DISTANCE + " ASC");
         ArrayList<EditBowActivity.SightSetting> list = new ArrayList<>();
         if (res.moveToFirst()) {
             do {
@@ -876,7 +876,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 for (int i = 0; i < names.length; i++) {
                     writer.append("\"");
                     if (i == targetInd) {
-                        writer.append(TargetFactory.list.get(cur.getInt(i)).name);
+                        writer.append(TargetFactory.getList(mContext).get(cur.getInt(i)).name);
                     } else if (i == indoorInd) {
                         if (cur.getInt(i) == 0) {
                             writer.append("Outdoor");
@@ -957,30 +957,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         boolean defValue = Boolean.parseBoolean(mContext.getString(R.string.default_unit));
         boolean isMetric = prefs.getBoolean("pref_unit", defValue);
-        if (isMetric) {
-            for (Integer dist : Distance.valuesMetric) {
-                Distance d = new Distance(dist, "m");
-                distances.add(d);
-                set.add(d.getId());
-            }
-        } else {
-            for (Integer dist : Distance.valuesImperial) {
-                Distance d = new Distance(dist, "yd");
-                distances.add(d);
-                set.add(d.getId());
-            }
-        }
 
         // Add currently selected distance to list
-        if (!set.contains(curDistId)) {
-            distances.add(Distance.fromId(curDistId));
-            set.add(curDistId);
-        }
+        distances.add(Distance.fromId(curDistId));
+        set.add(curDistId);
 
         // Get all distances used in ROUND or VISIER table
         Cursor cur = db.rawQuery(
-                "SELECT DISTINCT distance, unit FROM ROUND_TEMPLATE UNION SELECT DISTINCT distance, unit FROM VISIER",
-                null);
+                "SELECT * FROM (SELECT DISTINCT distance, unit FROM ROUND_TEMPLATE UNION SELECT DISTINCT distance, unit FROM VISIER) WHERE unit=?",
+                new String[]{isMetric ? Distance.METER : Distance.YARDS});
         if (cur.moveToFirst()) {
             do {
                 Distance d = new Distance(cur.getInt(0), cur.getString(1));

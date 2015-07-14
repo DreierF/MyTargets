@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
 
 import static android.graphics.Color.BLACK;
@@ -30,8 +31,8 @@ public class HitOrMiss extends CircularTargetBase {
         strokeWidth = new int[] {3,3};
         zonePoints = new int[][]{{1,0}};
         showAsX = new boolean[]{false};
-        diameters = new Dimension[]{new Dimension(30, Dimension.CENTIMETER),
-                new Dimension(96, Dimension.CENTIMETER)};
+        diameters = new Diameter[]{new Diameter(30, Dimension.CENTIMETER),
+                new Diameter(96, Dimension.CENTIMETER)};
     }
 
     @Override

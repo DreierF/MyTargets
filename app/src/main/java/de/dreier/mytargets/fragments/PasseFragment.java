@@ -42,6 +42,7 @@ import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.ScoreboardImage;
@@ -137,7 +138,8 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         TextView score = (TextView) activity.findViewById(R.id.detail_score);
 
         Training training = db.getTraining(mTraining);
-        boolean indoor = training.standardRound.indoor;
+        StandardRound standardRound = db.getStandardRound(mTraining);
+        boolean indoor = standardRound.indoor;
         long bowId = training.bow;
         long arrowId = training.arrow;
 

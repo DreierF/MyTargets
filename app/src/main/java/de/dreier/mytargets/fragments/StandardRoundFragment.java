@@ -7,6 +7,7 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,6 +26,8 @@ import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.StandardRound;
 
 public class StandardRoundFragment extends NowListFragment<StandardRound> {
+
+    private static final int NEW_STANDARD_ROUND = 1;
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
@@ -45,15 +48,27 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
 
     @Override
     protected void onEdit(StandardRound item) {
-        Intent i = new Intent(getActivity(), SimpleFragmentActivity.EditRoundActivity.class);
+        Intent i = new Intent(getActivity(),
+                SimpleFragmentActivity.EditStandardRoundActivity.class);
         i.putExtra(EditStandardRoundFragment.STANDARD_ROUND_ID, item.getId());
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     public void onClick(View v) {
-        startActivity(new Intent(getActivity(), SimpleFragmentActivity.EditRoundActivity.class));
+        startActivityForResult(
+                new Intent(getActivity(), SimpleFragmentActivity.EditStandardRoundActivity.class),
+                NEW_STANDARD_ROUND);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && requestCode == NEW_STANDARD_ROUND) {
+            getActivity().setResult(resultCode, data);
+            getActivity().onBackPressed();
+        }
     }
 
     protected class StandardRoundAdapter extends NowListAdapter<StandardRound> {

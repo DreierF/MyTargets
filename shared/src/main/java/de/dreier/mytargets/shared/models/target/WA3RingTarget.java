@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.R;
 
@@ -30,11 +31,11 @@ public class WA3RingTarget extends CircularTargetBase {
                 {5, 5, 5, 4},
                 {9, 9, 9, 7}};
         showAsX = new boolean[]{true, false, false, true, false};
-        diameters = new Dimension[]{new Dimension(40, Dimension.CENTIMETER),
-                new Dimension(60, Dimension.CENTIMETER),
-                new Dimension(80, Dimension.CENTIMETER),
-                new Dimension(92, Dimension.CENTIMETER),
-                new Dimension(122, Dimension.CENTIMETER)};
+        diameters = new Diameter[]{new Diameter(40, Dimension.CENTIMETER),
+                new Diameter(60, Dimension.CENTIMETER),
+                new Diameter(80, Dimension.CENTIMETER),
+                new Diameter(92, Dimension.CENTIMETER),
+                new Diameter(122, Dimension.CENTIMETER)};
     }
 
     @Override
