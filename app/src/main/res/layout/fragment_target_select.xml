@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/training_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="45dp"
+            android:layout_marginRight="16dp"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/scoring_style"
+                android:layout_width="fill_parent"
+                android:layout_marginRight="80dp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"/>
+
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal">
+
+                <SeekBar
+                    android:id="@+id/target_size_seekbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="80dp"
+                    android:thumbTint="@color/white"/>
+
+                <TextView
+                    android:id="@+id/target_size_label"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:gravity="end"
+                    android:text="60cm"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"/>
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v7.widget.RecyclerView style="@style/card_list"/>
+</LinearLayout>

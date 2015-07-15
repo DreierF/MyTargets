@@ -7,6 +7,7 @@
 package de.dreier.mytargets.shared.models;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 
 public class Environment extends IdProvider implements DatabaseSerializable {
@@ -46,7 +47,7 @@ public class Environment extends IdProvider implements DatabaseSerializable {
     }
 
     @Override
-    public void fromCursor(Cursor cursor, int startColumnIndex) {
+    public void fromCursor(Context context, Cursor cursor, int startColumnIndex) {
         weather = EWeather.getOfValue(cursor.getInt(startColumnIndex));
         windSpeed = cursor.getInt(startColumnIndex + 1);
         windDirection = cursor.getInt(startColumnIndex + 2);

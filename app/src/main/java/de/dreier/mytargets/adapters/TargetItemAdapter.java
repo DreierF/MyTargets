@@ -16,10 +16,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 
 public class TargetItemAdapter extends BaseAdapter {
     private final Context mContext;
+    private Target target;
 
     public TargetItemAdapter(Context context) {
         mContext = context;
@@ -32,7 +34,7 @@ public class TargetItemAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        return TargetFactory.getList(mContext).get(i);
+        return target == null ? TargetFactory.getList(mContext).get(i) : target;
     }
 
     @Override
@@ -50,10 +52,18 @@ public class TargetItemAdapter extends BaseAdapter {
         }
 
         ImageView img = (ImageView) v.findViewById(R.id.image);
-        TextView desc = (TextView) v.findViewById(R.id.name);
+        TextView name = (TextView) v.findViewById(R.id.name);
+        TextView details = (TextView) v.findViewById(R.id.details);
+        details.setVisibility(View.VISIBLE);
 
-        img.setImageDrawable(TargetFactory.getList(mContext).get(position));
-        desc.setText(TargetFactory.getList(mContext).get(position).name);
+        Target item = (Target) getItem(position);
+        img.setImageDrawable(item);
+        name.setText(item.name + " (" + item.size + ")");
+        details.setText(item.getScoringStyles().get(item.scoringStyle));
         return v;
+    }
+
+    public void setTarget(Target target) {
+        this.target = target;
     }
 }

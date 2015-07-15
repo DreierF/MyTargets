@@ -11,6 +11,8 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.support.annotation.StringRes;
 
+import java.util.ArrayList;
+
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
 
@@ -25,7 +27,7 @@ public class SpotBase extends Target {
 
     @Override
     protected void draw(Canvas canvas, Rect rect) {
-        for (int i=0;i<facePositions.length;i++) {
+        for (int i = 0; i < facePositions.length; i++) {
             face.draw(canvas, getBounds(i, rect));
         }
         onPostDraw(canvas, rect);
@@ -80,10 +82,10 @@ public class SpotBase extends Target {
     public Rect getBounds(int index, Rect rect) {
         int pos[] = facePositions[index];
         Rect bounds = new Rect();
-        bounds.left = (int) (rect.left + recalc(rect,pos[0] - faceRadius));
-        bounds.top = (int) (rect.top + recalc(rect,pos[1] - faceRadius));
-        bounds.right = (int) (rect.left + recalc(rect,pos[0] + faceRadius));
-        bounds.bottom = (int) (rect.top + recalc(rect,pos[1] + faceRadius));
+        bounds.left = (int) (rect.left + recalc(rect, pos[0] - faceRadius));
+        bounds.top = (int) (rect.top + recalc(rect, pos[1] - faceRadius));
+        bounds.right = (int) (rect.left + recalc(rect, pos[0] + faceRadius));
+        bounds.bottom = (int) (rect.top + recalc(rect, pos[1] + faceRadius));
         return bounds;
     }
 
@@ -91,12 +93,18 @@ public class SpotBase extends Target {
     public int getZoneFromPoint(float x, float y) {
         float ax = x * 500;
         float ay = y * 500;
-        for (int i=0;i<facePositions.length;i++) {
+        for (int i = 0; i < facePositions.length; i++) {
             Rect bounds = getBounds(i, new Rect(0, 0, 500, 500));
-            if(bounds.contains((int) ax, (int) ay)) {
-                return face.getZoneFromPoint((ax-bounds.left)*bounds.width()/500,(ay-bounds.top)*bounds.height()/500);//TODO make more reliable
+            if (bounds.contains((int) ax, (int) ay)) {
+                return face.getZoneFromPoint((ax - bounds.left) * bounds.width() / 500,
+                        (ay - bounds.top) * bounds.height() / 500);//TODO make more reliable
             }
         }
         return -1;
+    }
+
+    @Override
+    public ArrayList<String> getScoringStyles() {
+        return face.getScoringStyles();
     }
 }

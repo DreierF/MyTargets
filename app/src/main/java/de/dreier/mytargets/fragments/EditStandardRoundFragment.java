@@ -21,17 +21,16 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.MyBackupAgent;
 import de.dreier.mytargets.utils.ViewId;
@@ -91,6 +90,7 @@ public class EditStandardRoundFragment extends Fragment
             int tid = prefs.getInt("target", 0);
             int scoring = prefs.getInt("scoring", 0);
             round.target = TargetFactory.createTarget(getActivity(), tid, scoring);
+            round.target.size = round.target.getDiameters(getActivity())[0];
             long distId = prefs.getLong("distanceId", new Distance(18, "m").getId());
             round.distance = Distance.fromId(distId);
             rounds.addItem(round);
@@ -148,13 +148,6 @@ public class EditStandardRoundFragment extends Fragment
         getActivity().setResult(Activity.RESULT_OK, data);
     }
 
-    private void updateTargetSize(RoundTemplate round, SeekBar seekBar, TextView label) {
-        Diameter[] diameters = round.target.getDiameters(getActivity());
-        seekBar.setMax(diameters.length - 1);
-        round.targetSize = diameters[seekBar.getProgress()];
-        label.setText(round.targetSize.toString());
-    }
-
     @Override
     public void onBind(View view, final RoundTemplate round, int index) {
         // Initialize empty round with default values
@@ -164,7 +157,7 @@ public class EditStandardRoundFragment extends Fragment
             round.arrowsPerPasse = r.arrowsPerPasse;
             round.distance = r.distance;
             round.target = r.target;
-            round.targetSize = r.targetSize;
+            round.target.size = r.target.size;
         }
 
         // Set title of round
@@ -189,44 +182,27 @@ public class EditStandardRoundFragment extends Fragment
         // Target round
         final DialogSpinner targetSpinner = (DialogSpinner) view
                 .findViewById(R.id.target_spinner);
-        final TextView targetSizeLabel = (TextView) view.findViewById(R.id.target_size_label);
-        final SeekBar targetSizeSeekbar = (SeekBar) view.findViewById(R.id.target_size_seekbar);
-        targetSpinner.setAdapter(new TargetItemAdapter(getActivity()));
+        final TargetItemAdapter adapter = new TargetItemAdapter(getActivity());
+        targetSpinner.setAdapter(adapter);
         targetSpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                targetSpinner.startIntent(new Intent(getActivity(),
-                        ItemSelectActivity.Target.class));
+                Intent i = new Intent(getActivity(),
+                        ItemSelectActivity.Target.class);
+                i.putExtra("item", round.target);
+                targetSpinner.startIntent(i);
             }
         });
         targetSpinner.setOnResultListener(new DialogSpinner.OnResultListener() {
             @Override
             public void onResult(Intent data) {
-                long id = data.getLongExtra("id", 0);
-                int scoringStyle = round.target.scoringStyle;
-                round.target = TargetFactory.createTarget(getActivity(), (int) id, scoringStyle);
-                targetSpinner.setItemId(id);
-                updateTargetSize(round, targetSizeSeekbar, targetSizeLabel);
+                round.target = (Target) data.getSerializableExtra("item");
+                adapter.setTarget(round.target);
+                targetSpinner.setItemId(0);
             }
         });
-        targetSizeSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                updateTargetSize(round, targetSizeSeekbar, targetSizeLabel);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
-        targetSpinner.setItemId(round.target.getId());
-        updateTargetSize(round, targetSizeSeekbar, targetSizeLabel);
-        targetSizeSeekbar.setId(ViewId.getInstance().getUniqueId());
-        targetSizeLabel.setId(ViewId.getInstance().getUniqueId());
+        adapter.setTarget(round.target);
+        targetSpinner.setItemId(0);
         targetSpinner.setId(ViewId.getInstance().getUniqueId());
 
         // Passes

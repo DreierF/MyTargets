@@ -1,6 +1,7 @@
 package de.dreier.mytargets.shared.models;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
@@ -58,7 +59,7 @@ public class Shot extends IdProvider implements Comparable<Shot>, Serializable, 
     }
 
     @Override
-    public void fromCursor(Cursor cursor, int startColumnIndex) {
+    public void fromCursor(Context context, Cursor cursor, int startColumnIndex) {
         setId(cursor.getLong(0));
         passe = cursor.getLong(1);
         zone = cursor.getInt(2);

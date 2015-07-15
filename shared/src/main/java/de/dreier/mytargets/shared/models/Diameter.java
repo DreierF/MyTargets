@@ -17,7 +17,7 @@ public class Diameter extends Dimension {
     public Diameter(Context context, int size) {
         super(-1, context.getString(size));
     }
-
+//TODO make mini xlarge etc. serializable throgh id
     @Override
     public String toString() {
         if (value == -1) {

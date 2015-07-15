@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.StringRes;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.IIdProvider;
@@ -48,6 +49,7 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     protected int[][] zonePoints;
     protected transient Paint paintFill, paintStroke;
     public int scoringStyle;
+    public Diameter size;
 
     protected Target(Context c, long id, @StringRes int nameRes) {
         this.id = id;
@@ -125,6 +127,10 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     }
 
     public String zoneToString(int zone) {
+        return zoneToString(zone, scoringStyle);
+    }
+
+    private String zoneToString(int zone, int scoringStyle) {
         final int[] points = zonePoints[scoringStyle];
         if (zone <= -1 || zone >= points.length) {
             return "M";
@@ -232,4 +238,19 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     }
 
     public abstract Diameter[] getDiameters(Context context);
+
+    public ArrayList<String> getScoringStyles() {
+        ArrayList<String> styles = new ArrayList<>(zonePoints.length);
+        for (int scoring = 0; scoring < zonePoints.length; scoring++) {
+            String style = "";
+            for (int i = 0; i < zones; i++) {
+                if (!style.isEmpty()) {
+                    style += ", ";
+                }
+                style += zoneToString(i, scoring);
+            }
+            styles.add(style);
+        }
+        return styles;
+    }
 }

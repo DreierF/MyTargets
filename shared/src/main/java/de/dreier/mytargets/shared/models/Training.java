@@ -1,6 +1,7 @@
 package de.dreier.mytargets.shared.models;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 
 import java.util.Calendar;
@@ -64,7 +65,7 @@ public class Training extends IdProvider implements DatabaseSerializable {
     }
 
     @Override
-    public void fromCursor(Cursor cursor, int startColumnIndex) {
+    public void fromCursor(Context context, Cursor cursor, int startColumnIndex) {
         setId(cursor.getLong(0));
         title = cursor.getString(1);
         date = new Date(cursor.getLong(2));
@@ -72,6 +73,6 @@ public class Training extends IdProvider implements DatabaseSerializable {
         arrow = cursor.getInt(4);
         standardRoundId = cursor.getLong(5);
         environment = new Environment();
-        environment.fromCursor(cursor, 6);
+        environment.fromCursor(context, cursor, 6);
     }
 }

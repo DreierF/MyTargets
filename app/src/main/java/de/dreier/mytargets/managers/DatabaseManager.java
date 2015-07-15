@@ -32,7 +32,6 @@ import de.dreier.mytargets.activities.EditBowActivity;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.DatabaseSerializable;
-import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
@@ -293,7 +292,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                         target == 4 ? 5 : target, target == 5 ? 1 : 0);
                 template.distance = new Distance(res.getInt(3), res.getString(4));
                 template.passes = res.getInt(5);
-                template.targetSize = new Diameter(60, "cm");
+                template.target.size = template.target.getDiameters(mContext)[0];
                 sr.insert(template);
                 Cursor sids = db.rawQuery("SELECT sid FROM ROUND_TEMPLATE " +
                                 "WHERE index=? " +
@@ -353,7 +352,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 Training t = new Training();
-                t.fromCursor(cursor, 0);
+                t.fromCursor(mContext, cursor, 0);
                 list.add(t);
             } while (cursor.moveToNext());
         }
@@ -378,7 +377,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (res.moveToFirst()) {
             do {
                 Round r = new Round();
-                r.fromCursor(res, 0);
+                r.fromCursor(mContext, res, 0);
                 r.info.target = TargetFactory.createTarget(mContext, res.getInt(5), res.getInt(6));
                 list.add(r);
             } while (res.moveToNext());
@@ -414,7 +413,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 }
                 passe.index = pIndex++;
                 for (int i = 0; i < ppp; i++) {
-                    passe.shot[i].fromCursor(res, 0);
+                    passe.shot[i].fromCursor(mContext, res, 0);
                     res.moveToNext();
                 }
                 list.add(passe);
@@ -450,7 +449,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 }
                 passe.index = pIndex++;
                 for (int i = 0; i < ppp; i++) {
-                    passe.shot[i].fromCursor(res, 0);
+                    passe.shot[i].fromCursor(mContext, res, 0);
                     res.moveToNext();
                 }
                 list.add(passe);
@@ -469,7 +468,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (res.moveToFirst()) {
             do {
                 Bow bow = new Bow();
-                bow.fromCursor(res, 0);
+                bow.fromCursor(mContext, res, 0);
                 byte[] data = res.getBlob(8);
                 bow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
                 list.add(bow);
@@ -488,7 +487,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (res.moveToFirst()) {
             do {
                 Arrow arrow = new Arrow();
-                arrow.fromCursor(res, 0);
+                arrow.fromCursor(mContext, res, 0);
                 byte[] data = res.getBlob(9);
                 arrow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
                 list.add(arrow);
@@ -513,18 +512,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
 ////// GET SINGLE ENTRY AS OBJECT //////
 
     public Training getTraining(long training) {
-        Cursor cursor = db.rawQuery("SELECT t._id, t.title, t.datum, t.bow, t.arrow, t.standard_round, " +
-                "t.weather, t.wind_speed, t.wind_direction, t.location " +
-                "FROM TRAINING t " +
-                "LEFT JOIN ROUND r ON t._id = r.training " +
-                "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
-                "LEFT JOIN PASSE p ON r._id = p.round " +
-                "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                "WHERE t._id = " + training, null);
+        Cursor cursor = db
+                .rawQuery("SELECT t._id, t.title, t.datum, t.bow, t.arrow, t.standard_round, " +
+                        "t.weather, t.wind_speed, t.wind_direction, t.location " +
+                        "FROM TRAINING t " +
+                        "LEFT JOIN ROUND r ON t._id = r.training " +
+                        "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
+                        "LEFT JOIN PASSE p ON r._id = p.round " +
+                        "LEFT JOIN SHOOT s ON p._id = s.passe " +
+                        "WHERE t._id = " + training, null);
 
         Training tr = new Training();
         if (cursor.moveToFirst()) {
-            tr.fromCursor(cursor, 0);
+            tr.fromCursor(mContext, cursor, 0);
         }
         cursor.close();
 
@@ -557,8 +557,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         cursor.moveToFirst();
         Round r = new Round();
-        r.fromCursor(cursor, 0);
-        r.info.target = TargetFactory.createTarget(mContext, cursor.getInt(5), cursor.getInt(6));
+        r.fromCursor(mContext, cursor, 0);
         cursor.close();
 
         // Get number of X, 10 and 9 score
@@ -588,7 +587,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         p.index = -1;
         res.moveToFirst();
         for (int i = 0; i < count; i++) {
-            p.shot[i].fromCursor(res, 0);
+            p.shot[i].fromCursor(mContext, res, 0);
             res.moveToNext();
         }
         res.close();
@@ -616,7 +615,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         Bow bow = null;
         if (res.moveToFirst()) {
             bow = new Bow();
-            bow.fromCursor(res, 0);
+            bow.fromCursor(mContext, res, 0);
             if (small) {
                 byte[] data = res.getBlob(8);
                 bow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
@@ -650,7 +649,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         Arrow arrow = null;
         if (res.moveToFirst()) {
             arrow = new Arrow();
-            arrow.fromCursor(res, 0);
+            arrow.fromCursor(mContext, res, 0);
             if (small) {
                 byte[] data = res.getBlob(9);
                 arrow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
@@ -686,14 +685,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         StandardRound sr = new StandardRound();
         if (cursor.moveToFirst()) {
-            sr.fromCursor(cursor, 0);
+            sr.fromCursor(mContext, cursor, 0);
             do {
                 if (cursor.getLong(13) == 0) {
                     break;
                 }
                 RoundTemplate r = new RoundTemplate();
-                r.fromCursor(cursor, 4);
-                r.target = TargetFactory.createTarget(mContext, cursor.getInt(7), cursor.getInt(8));
+                r.fromCursor(mContext, cursor, 4);
                 sr.insert(r);
             } while (cursor.moveToNext());
         }

@@ -157,6 +157,7 @@
             android:name=".activities.ItemSelectActivity$Target"
             android:label="@string/target_face"
             android:launchMode="singleTop"
+            android:theme="@style/AppTheme.CustomToolbar"
             android:parentActivityName=".activities.SimpleFragmentActivity$EditStandardRoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

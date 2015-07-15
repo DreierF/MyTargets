@@ -1,6 +1,7 @@
 package de.dreier.mytargets.shared.models;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
@@ -69,7 +70,7 @@ public class Arrow extends IdProvider implements DatabaseSerializable {
     }
 
     @Override
-    public void fromCursor(Cursor cursor, int startColumnIndex) {
+    public void fromCursor(Context context, Cursor cursor, int startColumnIndex) {
         setId(cursor.getLong(0));
         name = cursor.getString(1);
         length = cursor.getString(2);

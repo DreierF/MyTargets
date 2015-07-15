@@ -1,5 +1,7 @@
 package com.bignerdranch.android.recyclerviewchoicemode;
 
+import java.util.List;
+
 public class SingleSelector extends MultiSelector {
     @Override
     public void setSelected(int position, long id, boolean isSelected) {
@@ -11,5 +13,10 @@ public class SingleSelector extends MultiSelector {
             }
         }
         super.setSelected(position, id, isSelected);
+    }
+
+    public int getSelectedPosition() {
+        List<Integer> pos = getSelectedPositions();
+        return pos.isEmpty() ? -1 : pos.get(0);
     }
 }

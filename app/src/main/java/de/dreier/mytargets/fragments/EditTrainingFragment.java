@@ -235,12 +235,14 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
                 return;
             } else if (requestCode == REQ_SELECTED_STANDARD_ROUND) {
                 StandardRound sr = (StandardRound) data.getSerializableExtra("item");
-                if (sr.getId() == -1) {
-                    ((StandardRoundsItemAdapter) standardRoundSpinner.getAdapter()).setStandardRound(sr);
+                if (sr != null) {
+                    ((StandardRoundsItemAdapter) standardRoundSpinner.getAdapter())
+                            .setStandardRound(sr);
                     standardRoundSpinner.setItemId(0);
                 } else {
-                    ((StandardRoundsItemAdapter) standardRoundSpinner.getAdapter()).setStandardRound(null);
-                    standardRoundSpinner.setItemId(sr.getId());
+                    ((StandardRoundsItemAdapter) standardRoundSpinner.getAdapter())
+                            .setStandardRound(null);
+                    standardRoundSpinner.setItemId(id);
                 }
                 return;
             }
@@ -298,7 +300,8 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             training.bow = mBowId;
         }
 
-        StandardRound standardRound = ((StandardRoundsItemAdapter) standardRoundSpinner.getAdapter())
+        StandardRound standardRound = ((StandardRoundsItemAdapter) standardRoundSpinner
+                .getAdapter())
                 .getStandardRound();
         if (standardRound == null) {
             standardRound = db.getStandardRound(standardRoundSpinner.getSelectedItemId());
@@ -366,30 +369,34 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         e.location = weatherInfo.getWOEIDneighborhood();
         String speed = weatherInfo.getWindSpeed();
         String unit = weatherInfo.getSpeedUnit();
-        float sp = Float.parseFloat(speed);
-        if (unit.equals("km/h") || unit.equals("kph")) {
-            sp *= 0.621371192f;
-        }
-        if (sp < 1.2f) {
+        try {
+            float sp = Float.parseFloat(speed);
+            if (unit.equals("km/h") || unit.equals("kph")) {
+                sp *= 0.621371192f;
+            }
+            if (sp < 1.2f) {
+                e.windSpeed = 0;
+            } else if (sp < 4.6) {
+                e.windSpeed = 1;
+            } else if (sp < 8.1) {
+                e.windSpeed = 2;
+            } else if (sp < 12.7) {
+                e.windSpeed = 3;
+            } else if (sp < 18.4) {
+                e.windSpeed = 4;
+            } else if (sp < 25.3) {
+                e.windSpeed = 5;
+            } else if (sp < 32.2) {
+                e.windSpeed = 6;
+            } else if (sp < 39.1) {
+                e.windSpeed = 7;
+            } else if (sp < 47.2) {
+                e.windSpeed = 8;
+            } else if (sp < 55.2) {
+                e.windSpeed = 9;
+            }
+        } catch (NumberFormatException nfe) {
             e.windSpeed = 0;
-        } else if (sp < 4.6) {
-            e.windSpeed = 1;
-        } else if (sp < 8.1) {
-            e.windSpeed = 2;
-        } else if (sp < 12.7) {
-            e.windSpeed = 3;
-        } else if (sp < 18.4) {
-            e.windSpeed = 4;
-        } else if (sp < 25.3) {
-            e.windSpeed = 5;
-        } else if (sp < 32.2) {
-            e.windSpeed = 6;
-        } else if (sp < 39.1) {
-            e.windSpeed = 7;
-        } else if (sp < 47.2) {
-            e.windSpeed = 8;
-        } else if (sp < 55.2) {
-            e.windSpeed = 9;
         }
         ((EnvironmentItemAdapter) environment.getAdapter()).setEnvironment(e);
         environment.setItemId(0);

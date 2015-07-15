@@ -63,29 +63,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"/>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
 
-            <SeekBar
-                android:id="@+id/target_size_seekbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="80dp"/>
-
-            <TextView
-                android:id="@+id/target_size_label"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:gravity="end|center_vertical"
-                android:text="60cm"
-                android:textColor="@color/primary_text_default_material_light"
-                android:textSize="16sp"/>
-
-        </FrameLayout>
 
     </LinearLayout>
 

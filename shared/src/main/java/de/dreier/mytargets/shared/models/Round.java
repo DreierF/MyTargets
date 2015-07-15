@@ -1,6 +1,7 @@
 package de.dreier.mytargets.shared.models;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 
 import java.io.Serializable;
@@ -38,13 +39,13 @@ public class Round extends IdProvider implements Serializable, DatabaseSerializa
     }
 
     @Override
-    public void fromCursor(Cursor cursor, int startColumnIndex) {
+    public void fromCursor(Context context, Cursor cursor, int startColumnIndex) {
         setId(cursor.getLong(startColumnIndex));
         comment = cursor.getString(startColumnIndex + 1);
         if (comment == null) {
             comment = "";
         }
         info = new RoundTemplate();
-        info.fromCursor(cursor, 2);
+        info.fromCursor(context, cursor, 2);
     }
 }

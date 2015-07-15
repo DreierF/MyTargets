@@ -98,7 +98,7 @@ public class TargetFactory {
         if (list == null) {
             list = new ArrayList<>();
             for (int i = 0; i < 23; i++) {
-                list.add(createTarget(context, i, -1));
+                list.add(createTarget(context, i, 0));
             }
         }
         return list;

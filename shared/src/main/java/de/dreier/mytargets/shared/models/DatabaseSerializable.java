@@ -7,6 +7,7 @@
 package de.dreier.mytargets.shared.models;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 
 public interface DatabaseSerializable {
@@ -14,5 +15,5 @@ public interface DatabaseSerializable {
     void setId(long id);
     String getTableName();
     ContentValues getContentValues();
-    void fromCursor(Cursor cursor, int startColumnIndex);
+    void fromCursor(Context context, Cursor cursor, int startColumnIndex);
 }

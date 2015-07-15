@@ -1,6 +1,7 @@
 package de.dreier.mytargets.shared.models;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 
 import java.io.Serializable;
@@ -67,7 +68,7 @@ public class Passe extends IdProvider implements Serializable, DatabaseSerializa
     }
 
     @Override
-    public void fromCursor(Cursor cursor, int startColumnIndex) {
+    public void fromCursor(Context context, Cursor cursor, int startColumnIndex) {
         throw new IllegalArgumentException("Not implemented!");
     }
 }

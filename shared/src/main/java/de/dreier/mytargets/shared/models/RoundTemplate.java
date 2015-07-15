@@ -1,11 +1,13 @@
 package de.dreier.mytargets.shared.models;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 
 import java.io.Serializable;
 
 import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.models.target.TargetFactory;
 
 public class RoundTemplate extends IdProvider implements Serializable, DatabaseSerializable {
     static final long serialVersionUID = 56L;
@@ -39,7 +41,6 @@ public class RoundTemplate extends IdProvider implements Serializable, DatabaseS
     public int index;
     public int arrowsPerPasse;
     public Target target;
-    public Diameter targetSize;
     public Distance distance;
     public int passes;
 
@@ -58,21 +59,23 @@ public class RoundTemplate extends IdProvider implements Serializable, DatabaseS
         values.put(PASSES, passes);
         values.put(ARROWS_PER_PASSE, arrowsPerPasse);
         values.put(TARGET, target.id);
-        values.put(TARGET_SIZE, targetSize.value);
-        values.put(TARGET_SIZE_UNIT, targetSize.unit);
+        values.put(TARGET_SIZE, target.size.value);
+        values.put(TARGET_SIZE_UNIT, target.size.unit);
         values.put(SCORING_STYLE, target.scoringStyle);
         return values;
     }
 
     @Override
-    public void fromCursor(Cursor cursor, int startColumnIndex) {
+    public void fromCursor(Context context, Cursor cursor, int startColumnIndex) {
         setId(cursor.getLong(startColumnIndex));
         index = cursor.getInt(startColumnIndex + 1);
         arrowsPerPasse = cursor.getInt(startColumnIndex + 2);
+        target = TargetFactory.createTarget(context, cursor.getInt(startColumnIndex + 3),
+                cursor.getInt(startColumnIndex + 4));
         distance = new Distance(cursor.getInt(startColumnIndex + 5),
                 cursor.getString(startColumnIndex + 6));
-        targetSize = new Diameter(cursor.getInt(startColumnIndex + 7),
-                cursor.getString(startColumnIndex + 8));
+        target.size = new Diameter(
+                cursor.getInt(startColumnIndex + 7), cursor.getString(startColumnIndex + 8));
         passes = cursor.getInt(startColumnIndex + 9);
         standardRound = cursor.getLong(startColumnIndex + 10);
     }

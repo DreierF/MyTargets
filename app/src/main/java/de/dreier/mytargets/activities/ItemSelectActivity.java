@@ -44,8 +44,10 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+        }
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         if (this instanceof View.OnClickListener) {
             mFab.setOnClickListener((View.OnClickListener) this);

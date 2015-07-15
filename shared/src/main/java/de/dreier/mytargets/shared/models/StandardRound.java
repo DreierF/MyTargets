@@ -61,7 +61,7 @@ public class StandardRound extends IdProvider implements Serializable, DatabaseS
     }
 
     @Override
-    public void fromCursor(Cursor cursor, int startColumnIndex) {
+    public void fromCursor(Context context, Cursor cursor, int startColumnIndex) {
         super.setId(cursor.getLong(0));
         name = cursor.getString(1);
         institution = cursor.getInt(2);
@@ -341,7 +341,7 @@ public class StandardRound extends IdProvider implements Serializable, DatabaseS
             roundTemplate.arrowsPerPasse = arrowsPerPasse;
             roundTemplate.distance = new Distance(roundDetails[i], distanceUnit);
             roundTemplate.target = target;
-            roundTemplate.targetSize = new Diameter(roundDetails[i + 1], targetUnit);
+            roundTemplate.target.size = new Diameter(roundDetails[i + 1], targetUnit);
             roundTemplate.passes = roundDetails[i + 2];
             standardRound.insert(roundTemplate);
         }
@@ -376,7 +376,7 @@ public class StandardRound extends IdProvider implements Serializable, DatabaseS
                 desc += "\n";
             }
             desc += context.getString(R.string.round_desc, r.distance, r.passes,
-                    r.arrowsPerPasse, r.targetSize);
+                    r.arrowsPerPasse, r.target.size);
         }
         return desc;
     }
