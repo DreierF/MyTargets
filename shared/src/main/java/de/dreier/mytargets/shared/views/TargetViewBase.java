@@ -27,7 +27,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected int contentHeight;
     protected OnTargetSetListener setListener = null;
     protected float mCurAnimationProgress;
-    protected boolean mModeEasy = true;
+    protected boolean mKeyboardMode = true;
     protected float density;
     protected int mZoneCount;
     protected float mOutFromX;
@@ -114,12 +114,12 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
         // If a valid selection was made save it in the passe
         if (currentArrow < round.arrowsPerPasse &&
-                (mPasse.shot[currentArrow].zone != shot.zone || !mModeEasy)) {
+                (mPasse.shot[currentArrow].zone != shot.zone || !mKeyboardMode)) {
             mPasse.shot[currentArrow].zone = shot.zone;
             mPasse.shot[currentArrow].x = shot.x;
             mPasse.shot[currentArrow].y = shot.y;
             mPasseDrawer.setSelection(currentArrow, initAnimationPositions(currentArrow),
-                    mModeEasy ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
+                    mKeyboardMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
             invalidate();
         }
 
@@ -143,9 +143,9 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     protected void animateSelectCircle(final int i) {
         if (i > -1 && i < round.arrowsPerPasse && mPasse.shot[i].zone >= -1) {
-            mPasseDrawer.animateToSelection(i, initAnimationPositions(i), mModeEasy ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
+            mPasseDrawer.animateToSelection(i, initAnimationPositions(i), mKeyboardMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
         } else {
-            mPasseDrawer.animateToSelection(PasseDrawer.NO_SELECTION, null, mModeEasy ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
+            mPasseDrawer.animateToSelection(PasseDrawer.NO_SELECTION, null, mKeyboardMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
         }
         currentArrow = i;
         animateFromZoomSpot();

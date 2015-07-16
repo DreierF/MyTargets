@@ -10,11 +10,14 @@ import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +31,11 @@ public class DynamicItemLayout<T> extends LinearLayout implements View.OnClickLi
         void onBind(View view, T t, int index);
     }
 
-    private int layoutResource;
-    private OnBindListener<T> listener;
     private Class<T> clazz;
+    private Button addButton;
+    private int layoutResource;
     private boolean rebind = false;
+    private OnBindListener<T> listener;
     private ArrayList<T> list = new ArrayList<>();
 
     public DynamicItemLayout(Context context) {
@@ -52,7 +56,7 @@ public class DynamicItemLayout<T> extends LinearLayout implements View.OnClickLi
     private void init() {
         LayoutInflater.from(getContext()).inflate(
                 R.layout.add_button, this, true);
-        Button addButton = (Button) findViewById(R.id.add_button);
+        addButton = (Button) findViewById(R.id.add_button);
         addButton.setOnClickListener(this);
     }
 
@@ -80,14 +84,20 @@ public class DynamicItemLayout<T> extends LinearLayout implements View.OnClickLi
     }
 
     public void remove(final T item, @StringRes int undoStringRes) {
-        final int index = list.indexOf(item);
+        int i = 0;
+        for (; i < list.size(); i++) {
+            if (list.get(i) == item) {
+                break;
+            }
+        }
+        final int index = i;
         list.remove(index);
         removeViewAt(index);
         rebindViews(index);
 
-        Snackbar.make(this, R.string.sight_setting_removed,
+        Snackbar.make(this, undoStringRes,
                 Snackbar.LENGTH_LONG)
-                .setAction(undoStringRes, new View.OnClickListener() {
+                .setAction(R.string.undo, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         addItem(index, item);
@@ -133,5 +143,19 @@ public class DynamicItemLayout<T> extends LinearLayout implements View.OnClickLi
         listener.onBind(view, item, index);
         addView(view, index);
         list.add(index, item);
+        ViewParent container = getParent();
+        while (container != null) {
+            if (container instanceof NestedScrollView) {
+                final NestedScrollView scrollView = (NestedScrollView) container;
+                scrollView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                    }
+                }, 200);
+                break;
+            }
+            container = container.getParent();
+        }
     }
 }

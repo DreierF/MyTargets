@@ -225,7 +225,8 @@
     <string name="new_round_template">New template</string>
     <string name="arrow_numbers">Arrow numbers</string>
     <string name="rounds">Rounds</string>
-    <string name="undo_remove_round">One round deleted!</string>
+    <string name="round_removed">One round deleted!</string>
+    <string name="custom_round">Custom round</string>
     <plurals name="arrow_deleted">
         <item quantity="one">One arrow deleted</item>
         <item quantity="other">%d arrows deleted</item>

@@ -9,6 +9,7 @@ package de.dreier.mytargets.shared.models.target;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.support.annotation.StringRes;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class SpotBase extends Target {
     @Override
     protected void draw(Canvas canvas, Rect rect) {
         for (int i = 0; i < facePositions.length; i++) {
-            face.draw(canvas, getBounds(i, rect));
+            face.draw(canvas, getBounds(i,rect));
         }
         onPostDraw(canvas, rect);
     }
@@ -79,6 +80,16 @@ public class SpotBase extends Target {
                 new Diameter(60, Dimension.CENTIMETER)};
     }
 
+    public RectF getBoundsF(int index, Rect rect) {
+        int pos[] = facePositions[index];
+        RectF bounds = new RectF();
+        bounds.left = rect.left + recalc(rect, pos[0] - faceRadius);
+        bounds.top = rect.top + recalc(rect, pos[1] - faceRadius);
+        bounds.right = rect.left + recalc(rect, pos[0] + faceRadius);
+        bounds.bottom = rect.top + recalc(rect, pos[1] + faceRadius);
+        return bounds;
+    }
+
     public Rect getBounds(int index, Rect rect) {
         int pos[] = facePositions[index];
         Rect bounds = new Rect();
@@ -91,20 +102,15 @@ public class SpotBase extends Target {
 
     @Override
     public int getZoneFromPoint(float x, float y) {
-        float ax = x * 500;
-        float ay = y * 500;
-        for (int i = 0; i < facePositions.length; i++) {
-            Rect bounds = getBounds(i, new Rect(0, 0, 500, 500));
-            if (bounds.contains((int) ax, (int) ay)) {
-                return face.getZoneFromPoint((ax - bounds.left) * bounds.width() / 500,
-                        (ay - bounds.top) * bounds.height() / 500);//TODO make more reliable
-            }
-        }
-        return -1;
+        return face.getZoneFromPoint(x, y);
     }
 
     @Override
     public ArrayList<String> getScoringStyles() {
         return face.getScoringStyles();
+    }
+
+    public int getFaceCount() {
+        return facePositions.length;
     }
 }

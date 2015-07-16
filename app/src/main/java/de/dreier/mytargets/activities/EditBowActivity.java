@@ -25,7 +25,6 @@ import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Distance;
-import de.dreier.mytargets.utils.ViewId;
 import de.dreier.mytargets.views.DialogSpinner;
 import de.dreier.mytargets.views.DistanceDialogSpinner;
 import de.dreier.mytargets.views.DynamicItemLayout;
@@ -203,8 +202,6 @@ public class EditBowActivity extends EditWithImageActivity
         });
         distanceSpinner.setItemId(sightSetting.distance.getId());
         setting.setText(sightSetting.value);
-        distanceSpinner.setId(ViewId.getInstance().getUniqueId());
-        setting.setId(ViewId.getInstance().getUniqueId());
     }
 
     @Override

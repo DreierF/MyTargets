@@ -71,7 +71,6 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
     private Date date = new Date();
     private DialogSpinner environment;
     private DialogSpinner standardRoundSpinner;
-    private RoundTemplate templ;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -119,12 +118,15 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
 
         // Format / Standard round
         standardRoundSpinner = (DialogSpinner) rootView.findViewById(R.id.standard_round);
-        standardRoundSpinner.setAdapter(new StandardRoundsItemAdapter(activity));
+        final StandardRoundsItemAdapter standardRoundsItemAdapter = new StandardRoundsItemAdapter(activity);
+        standardRoundSpinner.setAdapter(standardRoundsItemAdapter);
         standardRoundSpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(activity,
                         ItemSelectActivity.StandardRound.class);
+                StandardRound standardRound = (StandardRound) standardRoundSpinner.getSelectedItem();
+                i.putExtra("item", standardRound);
                 startActivityForResult(i, REQ_SELECTED_STANDARD_ROUND);
             }
         });
@@ -200,6 +202,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             date = train.date;
             bow.setItemId(train.bow);
             arrow.setItemId(train.arrow);
+           // comment.setText(train.co); TODO
             standardRoundSpinner.setItemId(train.standardRoundId);
             ((EnvironmentItemAdapter) environment.getAdapter()).setEnvironment(train.environment);
             setTrainingDate();
@@ -300,12 +303,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             training.bow = mBowId;
         }
 
-        StandardRound standardRound = ((StandardRoundsItemAdapter) standardRoundSpinner
-                .getAdapter())
-                .getStandardRound();
-        if (standardRound == null) {
-            standardRound = db.getStandardRound(standardRoundSpinner.getSelectedItemId());
-        }
+        StandardRound standardRound = (StandardRound) standardRoundSpinner.getSelectedItem();
         db.update(standardRound);
         training.standardRoundId = standardRound.getId();
 
@@ -328,7 +326,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         editor.apply();
     }
 
-        /*if (bow.getAdapter().getCount() == 0 && mBowId == 0 && round.info.target == 3) {
+        /*if (bow.getAdapter().getCount() == 0 && mBowId == 0 && round.info.target == 3) { TODO
             new AlertDialog.Builder(getActivity()).setTitle(R.string.title_compound)
                     .setMessage(R.string.msg_compound_type)
                     .setPositiveButton(R.string.compound_bow,

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
+import com.bignerdranch.android.recyclerviewchoicemode.SingleSelector;
 
 import java.util.List;
 
@@ -28,17 +29,18 @@ import de.dreier.mytargets.shared.models.StandardRound;
 public class StandardRoundFragment extends NowListFragment<StandardRound> {
 
     private static final int NEW_STANDARD_ROUND = 1;
+    private SingleSelector mSingleSelector = new SingleSelector();
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
         mEditable = false;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
+        StandardRound sr = (StandardRound) getArguments().getSerializable("item");
         List<StandardRound> list = DatabaseManager.getInstance(getActivity()).getStandardRounds();
+        if(!list.contains(sr)) {
+            list.add(sr);
+        }
         setList(list, new StandardRoundAdapter());
+        mSingleSelector.setSelected(list.indexOf(sr), sr.getId(), true);
     }
 
     @Override
@@ -84,7 +86,7 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
         private final TextView mName;
 
         public ViewHolder(View itemView) {
-            super(itemView, mMultiSelector, StandardRoundFragment.this);
+            super(itemView, mSingleSelector, StandardRoundFragment.this);
             mName = (TextView) itemView.findViewById(R.id.name);
         }
 

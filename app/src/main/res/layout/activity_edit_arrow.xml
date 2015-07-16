@@ -116,6 +116,7 @@
         android:text="@string/arrow_numbers"/>
 
    <!-- <de.dreier.mytargets.views.DynamicItemLayout
+            android:animateLayoutChanges="true"
         android:id="@+id/arrow_numbers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

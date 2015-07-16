@@ -33,7 +33,6 @@ import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.MyBackupAgent;
-import de.dreier.mytargets.utils.ViewId;
 import de.dreier.mytargets.views.DialogSpinner;
 import de.dreier.mytargets.views.DistanceDialogSpinner;
 import de.dreier.mytargets.views.DynamicItemLayout;
@@ -80,6 +79,7 @@ public class EditStandardRoundFragment extends Fragment
         rounds.rebindOnIndexChanged(true);
 
         if (mStandardRound == -1) {
+            name.setText(R.string.custom_round);
             // Initialise with default values
             indoor.setChecked(prefs.getBoolean("indoor", false));
             outdoor.setChecked(!prefs.getBoolean("indoor", false));
@@ -177,7 +177,6 @@ public class EditStandardRoundFragment extends Fragment
             }
         });
         distanceSpinner.setItemId(round.distance.getId());
-        distanceSpinner.setId(ViewId.getInstance().getUniqueId());
 
         // Target round
         final DialogSpinner targetSpinner = (DialogSpinner) view
@@ -203,7 +202,6 @@ public class EditStandardRoundFragment extends Fragment
         });
         adapter.setTarget(round.target);
         targetSpinner.setItemId(0);
-        targetSpinner.setId(ViewId.getInstance().getUniqueId());
 
         // Passes
         NumberPicker passes = (NumberPicker) view.findViewById(R.id.passes);
@@ -236,7 +234,7 @@ public class EditStandardRoundFragment extends Fragment
             remove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    rounds.remove(round, R.string.undo_remove_round);
+                    rounds.remove(round, R.string.round_removed);
                 }
             });
         }

@@ -51,13 +51,7 @@ public class DialogSpinner extends LinearLayout {
     }
 
     private void updateView() {
-        int currentSelection = 0;
-        for (int i = 0; i < size; i++) {
-            if (adapter.getItemId(i) == currentItemId) {
-                currentSelection = i;
-                break;
-            }
-        }
+        int currentSelection = getCurrentSelection();
         if (size > currentSelection) {
             View tmpView = adapter.getView(currentSelection, mView, this);
             tmpView.setOnClickListener(listener);
@@ -75,6 +69,17 @@ public class DialogSpinner extends LinearLayout {
                 addButton.setEnabled(isEnabled());
             }
         }
+    }
+
+    private int getCurrentSelection() {
+        int currentSelection = 0;
+        for (int i = 0; i < size; i++) {
+            if (adapter.getItemId(i) == currentItemId) {
+                currentSelection = i;
+                break;
+            }
+        }
+        return currentSelection;
     }
 
     @Override
@@ -98,6 +103,10 @@ public class DialogSpinner extends LinearLayout {
 
     public long getSelectedItemId() {
         return currentItemId;
+    }
+
+    public Object getSelectedItem() {
+        return adapter.getItem(getCurrentSelection());
     }
 
     public void setItemId(long id) {

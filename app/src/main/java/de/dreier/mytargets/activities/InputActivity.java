@@ -43,7 +43,6 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
     public static final String PASSE_IND = "passe_ind";
-    private static final String TARGET_MODE = "target_mode";
     private static final String SHOW_ALL_MODE = "show_all";
     private static final String TIMER_ENABLED = "timer_enabled";
     private TargetView target;
@@ -53,7 +52,6 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     private long mTraining;
     private Round mRound;
     private DatabaseManager db;
-    //private boolean mMode = true;
     private boolean mShowAllMode = false;
     private WearMessageManager manager;
     private boolean mTimerEnabled;
@@ -103,10 +101,8 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         }
 
         target.setRoundTemplate(template);
-        //mMode = prefs.getBoolean(TARGET_MODE, true);
         mShowAllMode = prefs.getBoolean(SHOW_ALL_MODE, false);
         mTimerEnabled = prefs.getBoolean(TIMER_ENABLED, false);
-        //target.switchMode(mMode, false);
         target.showAll(mShowAllMode);
 
         // Send message to wearable app, that we are starting a passe

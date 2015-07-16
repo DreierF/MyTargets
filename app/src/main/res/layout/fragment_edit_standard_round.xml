@@ -12,6 +12,24 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/name"
+                android:inputType="textNoSuggestions"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/dividerColor"/>
+
         <RadioGroup
             android:id="@+id/in_out_group"
             android:layout_width="match_parent"
@@ -41,28 +59,11 @@
             android:layout_height="1dp"
             android:background="@color/dividerColor"/>
 
-        <android.support.design.widget.TextInputLayout
-            android:padding="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/name"
-                android:inputType="textNoSuggestions"/>
-        </android.support.design.widget.TextInputLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/dividerColor"/>
-
         <de.dreier.mytargets.views.DynamicItemLayout
             android:id="@+id/rounds"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:orientation="vertical"/>
 
     </LinearLayout>
