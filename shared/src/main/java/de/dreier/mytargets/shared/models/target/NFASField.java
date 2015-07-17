@@ -16,7 +16,7 @@ public class NFASField extends TargetOvalBase {
     public NFASField(Context context) {
         super(context, 22, R.string.nfas_field);
         zones = 3;
-        radius = new int[]{81, 0, 500};
+        radius = new float[]{81, 0, 500};
         colorFill = new int[]{TURBO_YELLOW, ORANGE, LIGHTER_GRAY};
         colorStroke = new int[]{BLACK, BLACK, GRAY};
         strokeWidth = new int[]{5, 4, 3};

@@ -18,7 +18,7 @@ public class IBO3D extends Target3DBase {
     public IBO3D(Context context) {
         super(context, 17, R.string.ibo_3d);
         zones = 4;
-        radius = new int[]{0, 0, 0, 500};
+        radius = new float[]{0, 0, 0, 500};
         colorFill = new int[]{RED, CERULEAN_BLUE, LIGHT_GRAY, BROWN};
         colorStroke = new int[]{BLACK, BLACK, BLACK, GRAY};
         strokeWidth = new int[]{3, 4, 3, 5};

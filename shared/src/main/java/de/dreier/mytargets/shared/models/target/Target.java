@@ -41,7 +41,7 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     public long id;
     public String name;
     protected int zones;
-    protected int[] radius;
+    protected float[] radius;
     protected int[] colorFill;
     protected int[] colorStroke;
     protected int[] strokeWidth;
@@ -178,7 +178,7 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
         float ay = y * 500;
         float distance = ax * ax + ay * ay;
         for (int i = 0; i < radius.length; i++) {
-            int ro = radius[i] * radius[i];
+            float ro = radius[i] * radius[i];
             if (ro == 0 && isInZone(500.0f + ax, 500.0f + ay, i) || ro > distance) {
                 return i;
             }

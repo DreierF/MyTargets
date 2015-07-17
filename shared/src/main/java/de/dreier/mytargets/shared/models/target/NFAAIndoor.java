@@ -21,7 +21,7 @@ public class NFAAIndoor extends CircularTargetBase {
     public NFAAIndoor(Context context) {
         super(context, 10, R.string.nfaa_indoor);
         zones = 6;
-        radius = new int[]{50, 100, 200, 300, 400, 500};
+        radius = new float[]{50, 100, 200, 300, 400, 500};
         colorFill = new int[]{WHITE, WHITE, SAPPHIRE_BLUE, SAPPHIRE_BLUE, SAPPHIRE_BLUE,
                 SAPPHIRE_BLUE};
         colorStroke = new int[]{DARK_GRAY, DARK_GRAY, WHITE, WHITE, WHITE, WHITE};

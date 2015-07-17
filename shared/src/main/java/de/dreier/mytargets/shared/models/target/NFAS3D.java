@@ -18,7 +18,7 @@ public class NFAS3D extends Target3DBase {
     public NFAS3D(Context context) {
         super(context, 18, R.string.nfas_3d);
         zones = 4;
-        radius = new int[]{62, 209, 0, 500};
+        radius = new float[]{62, 209, 0, 500};
         colorFill = new int[]{RED, CERULEAN_BLUE, LIGHT_GRAY, BROWN};
         colorStroke = new int[]{BLACK, BLACK, BLACK, GRAY};
         strokeWidth = new int[]{3, 4, 3, 5};

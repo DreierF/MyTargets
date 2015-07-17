@@ -20,7 +20,7 @@ public class WA3RingTarget extends CircularTargetBase {
     public WA3RingTarget(Context context) {
         super(context, 3, R.string.wa_3_ring);
         zones = 4;
-        radius = new int[]{83, 167, 333, 500};
+        radius = new float[]{83, 167, 333, 500};
         colorFill = new int[]{LEMON_YELLOW, LEMON_YELLOW, LEMON_YELLOW, FLAMINGO_RED};
         colorStroke = new int[]{Target.DARK_GRAY, Target.DARK_GRAY, Target.DARK_GRAY,
                 Target.DARK_GRAY};

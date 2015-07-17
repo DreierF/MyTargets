@@ -22,7 +22,7 @@ public class WAFullTarget extends CircularTargetBase {
     public WAFullTarget(Context context) {
         super(context, 0, R.string.wa_full);
         zones = 11;
-        radius = new int[]{25, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500};
+        radius = new float[]{25, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500};
         colorFill = new int[]{LEMON_YELLOW, LEMON_YELLOW, LEMON_YELLOW, FLAMINGO_RED, FLAMINGO_RED,
                 CERULEAN_BLUE, CERULEAN_BLUE, BLACK, BLACK, WHITE,
                 WHITE};

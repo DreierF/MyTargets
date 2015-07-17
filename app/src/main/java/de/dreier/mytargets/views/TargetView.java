@@ -331,8 +331,8 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void calcSizes() {
-        contentHeight = getMeasuredHeight() - (mKeyboardMode ? keyboard.getMeasuredHeight() : 0);
-        float radH = (contentHeight - 10 * density) / 2.45f;
+        int keyboardHeight = mKeyboardMode ? keyboard.getMeasuredHeight() : 0;
+        float radH = (contentHeight - 10 * density - keyboardHeight) / 2.45f;
         float radW = (contentWidth - 20 * density) * 0.5f;
         orgRadius = (int) (Math.min(radW, radH));
         orgMidX = contentWidth / 2;
@@ -346,7 +346,7 @@ public class TargetView extends TargetViewBase {
         rect.left = 30 * density;
         rect.right = contentWidth - 30 * density;
         rect.top = orgMidY + orgRadius;
-        rect.bottom = contentHeight;
+        rect.bottom = contentHeight - keyboardHeight;
         mPasseDrawer.animateToRect(rect);
         animateToZoomSpot();
     }
@@ -394,7 +394,7 @@ public class TargetView extends TargetViewBase {
             } else {
                 keyboard.setVisibility(mode ? VISIBLE : GONE);
             }
-            if(mKeyboardMode) {
+            if (mKeyboardMode) {
                 animateFromZoomSpot();
             } else {
                 animateToZoomSpot();

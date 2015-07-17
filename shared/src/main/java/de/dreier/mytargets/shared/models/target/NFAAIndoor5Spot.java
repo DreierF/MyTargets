@@ -29,7 +29,7 @@ public class NFAAIndoor5Spot extends SpotBase {
         public NFAAIndoorSingleSpot(Context context) {
             super(context, -1, R.string.nfaa_indoor_5_spot);
             zones = 4;
-            radius = new int[]{125, 250, 375, 500};
+            radius = new float[]{125, 250, 375, 500};
             colorFill = new int[]{WHITE, WHITE, SAPPHIRE_BLUE, SAPPHIRE_BLUE};
             colorStroke = new int[]{DARK_GRAY, DARK_GRAY, WHITE, WHITE};
             strokeWidth = new int[]{2, 2, 2, 0};

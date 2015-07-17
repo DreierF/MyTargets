@@ -18,7 +18,7 @@ public class DAIR3D extends Target3DBase {
     public DAIR3D(Context context) {
         super(context, 19, R.string.dair_3d);
         zones = 6;
-        radius = new int[]{0, 0, 0, 0, 0, 500};
+        radius = new float[]{0, 0, 0, 0, 0, 500};
         colorFill = new int[]{GREEN, TURBO_YELLOW, RED, CERULEAN_BLUE, LIGHT_GRAY, BROWN};
         colorStroke = new int[]{BLACK, BLACK, BLACK, BLACK, BLACK, GRAY};
         strokeWidth = new int[]{3, 3, 3, 4, 3, 5};

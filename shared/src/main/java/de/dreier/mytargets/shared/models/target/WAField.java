@@ -20,7 +20,7 @@ public class WAField extends CircularTargetBase {
     public WAField(Context context) {
         super(context, 13, R.string.wa_field);
         zones = 6;
-        radius = new int[]{50, 100, 200, 300, 400, 500};
+        radius = new float[]{50, 100, 200, 300, 400, 500};
         colorFill = new int[]{LEMON_YELLOW, LEMON_YELLOW, DARK_GRAY, DARK_GRAY, DARK_GRAY, DARK_GRAY};
         colorStroke = new int[]{Target.DARK_GRAY, Target.DARK_GRAY, WHITE, WHITE, WHITE, WHITE};
         strokeWidth = new int[]{4, 4, 4, 4, 4, 4};

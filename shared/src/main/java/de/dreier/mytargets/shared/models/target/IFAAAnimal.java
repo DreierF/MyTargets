@@ -16,7 +16,7 @@ public class IFAAAnimal extends TargetOvalBase {
     public IFAAAnimal(Context context) {
         super(context, 20, R.string.ifaa_animal);
         zones = 2;
-        radius = new int[]{0, 500};
+        radius = new float[]{0, 500};
         colorFill = new int[]{ORANGE, LIGHTER_GRAY};
         colorStroke = new int[]{BLACK, BLACK, BLACK, GRAY};
         strokeWidth = new int[]{5, 4, 3};

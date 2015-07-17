@@ -21,7 +21,7 @@ public class NFAAExpertField extends CircularTargetBase {
     public NFAAExpertField(Context context) {
         super(context, 8, R.string.nfaa_expert_field);
         zones = 6;
-        radius = new int[]{50, 100, 200, 300, 400, 500};
+        radius = new float[]{50, 100, 200, 300, 400, 500};
         colorFill = new int[]{DARK_GRAY, DARK_GRAY, WHITE, WHITE, DARK_GRAY, DARK_GRAY};
         colorStroke = new int[]{WHITE, DARK_GRAY, DARK_GRAY, WHITE, WHITE, DARK_GRAY};
         strokeWidth = new int[]{4, 0, 4, 0, 4, 0};

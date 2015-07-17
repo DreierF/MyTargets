@@ -20,7 +20,7 @@ public class Worcester extends CircularTargetBase {
     public Worcester(Context context) {
         super(context, 12, R.string.worcester_face);
         zones = 5;
-        radius = new int[]{100, 200, 300, 400, 500};
+        radius = new float[]{100, 200, 300, 400, 500};
         colorFill = new int[]{WHITE, DARK_GRAY, DARK_GRAY, DARK_GRAY, DARK_GRAY};
         colorStroke = new int[]{WHITE, WHITE, WHITE, WHITE, WHITE};
         strokeWidth = new int[]{4, 4, 4, 4, 0};

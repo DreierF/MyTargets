@@ -20,7 +20,7 @@ public class NFAAHunter extends CircularTargetBase {
     public NFAAHunter(Context context) {
         super(context, 9, R.string.nfaa_hunter);
         zones = 4;
-        radius = new int[]{50, 100, 300, 500};
+        radius = new float[]{50, 100, 300, 500};
         colorFill = new int[]{WHITE, WHITE, DARK_GRAY, DARK_GRAY};
         colorStroke = new int[]{DARK_GRAY, WHITE, WHITE, DARK_GRAY};
         strokeWidth = new int[]{4, 0, 4, 0};

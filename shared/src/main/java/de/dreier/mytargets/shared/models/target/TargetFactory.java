@@ -87,6 +87,9 @@ public class TargetFactory {
             case 22: // NFAS Field
                 t = new NFASField(context);
                 break;
+            case 23: // Beursault
+                t = new Beursault(context);
+                break;
             default:
                 throw new IllegalArgumentException("id out of range");
         }
@@ -97,7 +100,7 @@ public class TargetFactory {
     public static List<Target> getList(Context context) {
         if (list == null) {
             list = new ArrayList<>();
-            for (int i = 0; i < 23; i++) {
+            for (int i = 0; i < 24; i++) {
                 list.add(createTarget(context, i, 0));
             }
         }

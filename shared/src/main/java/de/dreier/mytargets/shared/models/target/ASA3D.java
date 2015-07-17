@@ -18,7 +18,7 @@ public class ASA3D extends Target3DBase {
     public ASA3D(Context context) {
         super(context, 15, R.string.asa_3d);
         zones = 4;
-        radius = new int[]{0, 0, 0, 500};
+        radius = new float[]{0, 0, 0, 500};
         colorFill = new int[]{TURBO_YELLOW, CERULEAN_BLUE, LIGHT_GRAY, BROWN};
         colorStroke = new int[]{BLACK, BLACK, BLACK, GRAY};
         strokeWidth = new int[]{3, 4, 3, 5};

@@ -25,7 +25,7 @@ public class HitOrMiss extends CircularTargetBase {
     public HitOrMiss(Context context) {
         super(context, 14, R.string.hit_or_miss);
         zones = 2;
-        radius = new int[]{125,500};
+        radius = new float[]{125,500};
         colorFill = new int[]{YELLOW, RED};
         colorStroke = new int[]{STROKE_GRAY, STROKE_GRAY};
         strokeWidth = new int[] {3,3};
