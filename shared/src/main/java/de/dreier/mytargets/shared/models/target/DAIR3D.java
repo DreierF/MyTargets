@@ -15,8 +15,10 @@ import de.dreier.mytargets.shared.R;
 import static android.graphics.Color.BLACK;
 
 public class DAIR3D extends Target3DBase {
+    public static final int ID = 19;
+
     public DAIR3D(Context context) {
-        super(context, 19, R.string.dair_3d);
+        super(context, ID, R.string.dair_3d);
         zones = 6;
         radius = new float[]{0, 0, 0, 0, 0, 500};
         colorFill = new int[]{GREEN, TURBO_YELLOW, RED, CERULEAN_BLUE, LIGHT_GRAY, BROWN};

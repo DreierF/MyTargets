@@ -17,8 +17,10 @@ import de.dreier.mytargets.shared.models.Dimension;
 import static android.graphics.Color.WHITE;
 
 public class Worcester extends CircularTargetBase {
+    public static final int ID = 12;
+
     public Worcester(Context context) {
-        super(context, 12, R.string.worcester_face);
+        super(context, ID, R.string.worcester_face);
         zones = 5;
         radius = new float[]{100, 200, 300, 400, 500};
         colorFill = new int[]{WHITE, DARK_GRAY, DARK_GRAY, DARK_GRAY, DARK_GRAY};

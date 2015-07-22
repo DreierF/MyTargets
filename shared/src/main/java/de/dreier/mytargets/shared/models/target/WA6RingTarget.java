@@ -16,8 +16,10 @@ import de.dreier.mytargets.shared.models.Dimension;
 
 public class WA6RingTarget extends CircularTargetBase {
 
+    public static final int ID = 1;
+
     public WA6RingTarget(Context context) {
-        super(context, 1, R.string.wa_6_ring);
+        super(context, ID, R.string.wa_6_ring);
         zones = 7;
         radius = new float[]{42, 83, 167, 250, 333, 417, 500};
         colorFill = new int[]{LEMON_YELLOW, LEMON_YELLOW, LEMON_YELLOW, FLAMINGO_RED, FLAMINGO_RED,

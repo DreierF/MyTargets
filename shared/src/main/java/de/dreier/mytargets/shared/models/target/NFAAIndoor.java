@@ -18,8 +18,10 @@ import static android.graphics.Color.WHITE;
 
 public class NFAAIndoor extends CircularTargetBase {
 
+    public static final int ID = 10;
+
     public NFAAIndoor(Context context) {
-        super(context, 10, R.string.nfaa_indoor);
+        super(context, ID, R.string.nfaa_indoor);
         zones = 6;
         radius = new float[]{50, 100, 200, 300, 400, 500};
         colorFill = new int[]{WHITE, WHITE, SAPPHIRE_BLUE, SAPPHIRE_BLUE, SAPPHIRE_BLUE,
@@ -43,4 +45,5 @@ public class NFAAIndoor extends CircularTargetBase {
         canvas.drawLine(rect.exactCenterX() - size, rect.exactCenterY() + size,
                 rect.exactCenterX() + size, rect.exactCenterY() - size, paintStroke);
     }
+
 }
