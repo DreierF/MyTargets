@@ -27,9 +27,9 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
     public static final int ITEM_TYPE_2 = 3;
 
     private ArrayList<HEADER> mListHeaders = new ArrayList<>();
-    private HashMap<Long, List<CHILD>> childMap = new HashMap<>();
-    private ArrayList<Boolean> isOpen = new ArrayList<>();
-    private List<DataHolder> dataList = new ArrayList<>();
+    private final HashMap<Long, List<CHILD>> childMap = new HashMap<>();
+    private final ArrayList<Boolean> isOpen = new ArrayList<>();
+    private final List<DataHolder> dataList = new ArrayList<>();
 
     @Override
     public long getItemId(int position) {
@@ -80,12 +80,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
         final DataHolder dh = dataList.get(index);
         if (getItemViewType(position) == HEADER_TYPE) {
             int headerPosition = getHeaderCountUpToPosition(position);
-            viewHolder.setExpandOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    expandOrCollapse(dataList.indexOf(dh));
-                }
-            }, isOpen.get(headerPosition));
+            viewHolder.setExpandOnClickListener(v -> expandOrCollapse(dataList.indexOf(dh)), isOpen.get(headerPosition));
         }
         viewHolder.bindCursor(dh.getData());
     }
@@ -172,8 +167,8 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
     }
 
     private class DataHolder {
-        private IdProvider data;
-        private ItemType type;
+        private final IdProvider data;
+        private final ItemType type;
 
         public DataHolder(IdProvider item, ItemType type) {
             this.data = item;

@@ -13,7 +13,9 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.support.annotation.StringRes;
-import de.dreier.mytargets.shared.R;
+
+import java.util.ArrayList;
+
 import de.dreier.mytargets.shared.models.Diameter;
 
 public class TargetOvalBase extends Target {
@@ -23,8 +25,9 @@ public class TargetOvalBase extends Target {
 
     static {
         path.moveTo(670, 252.5f);
-        path.arcTo(new RectF(94.5f, 252.5f, 332+(332-94.5f), 749.5f), -90, -180, false);
-        path.arcTo(new RectF(670 - (332-94.5f), 252.5f, 670 + (332-94.5f), 749.5f), 90, -180, false);
+        path.arcTo(new RectF(94.5f, 252.5f, 332 + (332 - 94.5f), 749.5f), -90, -180, false);
+        path.arcTo(new RectF(670 - (332 - 94.5f), 252.5f, 670 + (332 - 94.5f), 749.5f), 90, -180,
+                false);
         path.close();
         RectF rectF = new RectF();
         path.computeBounds(rectF, true);
@@ -53,10 +56,40 @@ public class TargetOvalBase extends Target {
     }
 
     @Override
-    public Diameter[] getDiameters(Context context) {
-        return new Diameter[] {new Diameter(context,R.string.small),
-                new Diameter(context,R.string.medium),
-                new Diameter(context,R.string.large),
-                new Diameter(context,R.string.xlarge)};
+    public Diameter[] getDiameters() {
+        return new Diameter[] {Diameter.SMALL,
+                Diameter.MEDIUM,
+                Diameter.LARGE,
+                Diameter.XLARGE};
+    }
+
+    @Override
+    public int getPointsByZone(int zone, int arrow) {
+        return zonePoints[arrow][zone];
+    }
+
+    @Override
+    public ArrayList<String> getScoringStyles() {
+        //TODO consider 2nd and 3rd points
+        ArrayList<String> styles = new ArrayList<>(1);
+        String style = "";
+        for (int i = 0; i < zones; i++) {
+            if (!style.isEmpty()) {
+                style += ", ";
+            }
+            style += zoneToString(i, 0, 0);
+        }
+        styles.add(style);
+        return styles;
+    }
+
+    @Override
+    public boolean dependsOnArrowIndex() {
+        return true;
+    }
+
+    @Override
+    public boolean is3DTarget() {
+        return true;
     }
 }

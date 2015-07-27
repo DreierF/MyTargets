@@ -68,6 +68,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
+        //noinspection ConstantConditions
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);
     }
@@ -203,15 +204,10 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
 
     private void playHorn(final int n) {
         horn.start();
-        horn.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                if (n > 1) {
-                    playHorn(n - 1);
-                }
+        horn.setOnCompletionListener(mp -> {
+            if (n > 1) {
+                playHorn(n - 1);
             }
-
         });
     }
 

@@ -6,11 +6,14 @@
  */
 package de.dreier.mytargets.shared.models;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
-public class Dimension extends IdProvider implements Comparable<Distance>,Serializable {
+import de.dreier.mytargets.shared.R;
+
+public class Dimension extends IdProvider implements Comparable<Distance>, Serializable {
     static final long serialVersionUID = 53L;
     public static final String METER = "m";
     public static final String CENTIMETER = "cm";
@@ -32,8 +35,11 @@ public class Dimension extends IdProvider implements Comparable<Distance>,Serial
         return unit.compareTo(another.unit);
     }
 
-    @Override
-    public String toString() {
-        return value + unit;
+    public String toString(Context context) {
+        if (value == -1) {
+            return context.getString(R.string.unknown);
+        } else {
+            return value + unit;
+        }
     }
 }

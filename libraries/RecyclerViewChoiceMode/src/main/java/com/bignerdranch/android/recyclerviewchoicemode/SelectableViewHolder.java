@@ -49,6 +49,7 @@ public abstract class SelectableViewHolder<T> extends MultiSelectorBindingHolder
     private Drawable mDefaultModeBackgroundDrawable;
     private StateListAnimator mSelectionModeStateListAnimator;
     private StateListAnimator mDefaultModeStateListAnimator;
+    private int mPosition;
 
     /**
      * Construct a new SelectableHolder hooked up to be controlled by a MultiSelector.

@@ -2,10 +2,12 @@
 <LinearLayout
     android:id="@+id/passe_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/selectableItemBackground"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <view
         android:id="@+id/shoots"
@@ -20,6 +22,7 @@
         android:layout_gravity="center_vertical"
         android:layout_margin="5dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@android:color/secondary_text_light"/>
+        android:textColor="@android:color/secondary_text_light"
+        tools:text="Passe 1"/>
 
 </LinearLayout>

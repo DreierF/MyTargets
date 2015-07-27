@@ -66,9 +66,9 @@ public class TargetFragment extends NowListFragment<Target>
         Target t = (Target) getArguments().getSerializable("item");
         mSingleSelector.setSelected((int) t.getId(), t.getId(), true);
         updateSettings();
-        Diameter[] diams = t.getDiameters(getActivity());
-        for (int i = 0; i < diams.length; i++) {
-            if (diams[i].equals(t.size)) {
+        Diameter[] diameters = t.getDiameters();
+        for (int i = 0; i < diameters.length; i++) {
+            if (diameters[i].equals(t.size)) {
                 seekBar.setProgress(i);
                 break;
             }
@@ -80,7 +80,7 @@ public class TargetFragment extends NowListFragment<Target>
 
     private void updateSettings() {
         Target target = adapter.getItem(mSingleSelector.getSelectedPosition());
-        Diameter[] diameters = target.getDiameters(getActivity());
+        Diameter[] diameters = target.getDiameters();
         if (seekBar.getProgress() > diameters.length - 1) {
             seekBar.setProgress(diameters.length - 1);
         }
@@ -88,7 +88,7 @@ public class TargetFragment extends NowListFragment<Target>
 
         // Init target size
         Diameter targetSize = diameters[seekBar.getProgress()];
-        label.setText(targetSize.toString());
+        label.setText(targetSize.toString(getActivity()));
 
         // Init scoring styles
         ArrayList<String> styles = target.getScoringStyles();
@@ -144,7 +144,7 @@ public class TargetFragment extends NowListFragment<Target>
         int id = mSingleSelector.getSelectedPosition();
         int scoring = scoringStyle.getSelectedItemPosition();
         Target target = TargetFactory.createTarget(getActivity(), id, scoring);
-        Diameter[] diameters = target.getDiameters(getActivity());
+        Diameter[] diameters = target.getDiameters();
         target.size = diameters[seekBar.getProgress()];
 
         SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);

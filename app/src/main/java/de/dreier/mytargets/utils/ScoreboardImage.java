@@ -32,48 +32,45 @@ public class ScoreboardImage {
                 .getHTMLString(context, mRound, scoreboard, dispersion_pattern, comments);
 
         final CountDownLatch signal = new CountDownLatch(1);
-        context.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // Attach WebView to activity
-                final WebView webView = new WebView(context);
-                webView.setVisibility(View.INVISIBLE);
-                final FrameLayout container = (FrameLayout) context
-                        .findViewById(android.R.id.content);
-                ViewGroup.LayoutParams p = new ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT);
-                webView.setLayoutParams(p);
-                container.addView(webView);
+        context.runOnUiThread(() -> {
+            // Attach WebView to activity
+            final WebView webView = new WebView(context);
+            webView.setVisibility(View.INVISIBLE);
+            final FrameLayout container = (FrameLayout) context
+                    .findViewById(android.R.id.content);
+            ViewGroup.LayoutParams p = new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            webView.setLayoutParams(p);
+            container.addView(webView);
 
-                // Render html to bitmap
-                webView.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8",
-                        "");
-                webView.setPictureListener(new WebView.PictureListener() {
+            // Render html to bitmap
+            webView.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8",
+                    "");
+            webView.setPictureListener(new WebView.PictureListener() {
 
-                    public void onNewPicture(WebView view, Picture picture) {
-                        picture = webView.capturePicture();
+                public void onNewPicture(WebView view, Picture picture) {
+                    picture = webView.capturePicture();
 
-                        b = BitmapUtils.pictureDrawable2Bitmap(picture);
+                    b = BitmapUtils.pictureDrawable2Bitmap(picture);
 
-                        // Write bitmap to stream
-                        try {
-                            OutputStream fOut = new FileOutputStream(f);
-                            b.compress(Bitmap.CompressFormat.PNG, 50, fOut);
-                            fOut.flush();
-                            fOut.close();
-                            b.recycle();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        signal.countDown();
-
-                        // Remove WebView from layout
-                        container.removeView(webView);
+                    // Write bitmap to stream
+                    try {
+                        OutputStream fOut = new FileOutputStream(f);
+                        b.compress(Bitmap.CompressFormat.PNG, 50, fOut);
+                        fOut.flush();
+                        fOut.close();
+                        b.recycle();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                });
-            }
+
+                    signal.countDown();
+
+                    // Remove WebView from layout
+                    container.removeView(webView);
+                }
+            });
         });
 
         // Wait for thread to complete

@@ -125,19 +125,13 @@ public class MainActivity extends AppCompatActivity
             Linkify.addLinks(s, Linkify.EMAIL_ADDRESSES);
             AlertDialog d = new AlertDialog.Builder(this).setTitle("App translation")
                     .setMessage(s)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            prefs.edit().putBoolean("translation_dialog_shown", true).apply();
-                            dialog.dismiss();
-                        }
+                    .setPositiveButton("OK", (dialog, which) -> {
+                        prefs.edit().putBoolean("translation_dialog_shown", true).apply();
+                        dialog.dismiss();
                     })
-                    .setNegativeButton("Remind me later", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            shownThisTime = true;
-                            dialog.dismiss();
-                        }
+                    .setNegativeButton("Remind me later", (dialog, which) -> {
+                        shownThisTime = true;
+                        dialog.dismiss();
                     }).create();
             d.show();
             ((TextView) d.findViewById(android.R.id.message))
@@ -178,8 +172,8 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    boolean empty[] = new boolean[3];
-    int stringRes[] = new int[3];
+    final boolean[] empty = new boolean[3];
+    final int[] stringRes = new int[3];
 
     {
         stringRes[0] = R.string.new_training;

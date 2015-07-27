@@ -19,10 +19,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
@@ -47,7 +47,7 @@ import de.dreier.mytargets.utils.TextInputDialog;
 public class TargetView extends TargetViewBase {
 
     private static final float ZOOM_FACTOR = 2;
-    private static final int SPOT_ZOOMIN = -3;
+    private static final int SPOT_ZOOM_IN = -3;
     private static final int MODE_CHANGE = -2;
     private float radius, midX, midY;
     private Paint drawColorP;
@@ -97,6 +97,7 @@ public class TargetView extends TargetViewBase {
     private boolean spotFocused = false;
     private Paint shadowP;
     private RectF orgRect;
+    private Paint scorePaint;
 
     public TargetView(Context context) {
         super(context);
@@ -146,7 +147,7 @@ public class TargetView extends TargetViewBase {
 
     private void initSpotBounds() {
         Rect rect = new Rect(0, 0, 500, 500);
-        if (round.target instanceof SpotBase) {
+        if (isSpot()) {
             SpotBase spotBase = (SpotBase) round.target;
             spotRects = new RectF[spotBase.getFaceCount()];
             for (int i = 0; i < spotBase.getFaceCount(); i++) {
@@ -167,6 +168,11 @@ public class TargetView extends TargetViewBase {
         shadowP = new Paint();
         shadowP.setAntiAlias(true);
         shadowP.setColor(0xFF009900);
+
+        scorePaint = new TextPaint();
+        scorePaint.setAntiAlias(true);
+        scorePaint.setColor(Color.BLACK);
+        scorePaint.setTextSize(15 * density);
 
         if (isInEditMode()) {
             round = new RoundTemplate();
@@ -291,6 +297,10 @@ public class TargetView extends TargetViewBase {
             float yp = spotRect.top + (1 + selY) * spotRect.height() * 0.5f;
 
             if (i == currentArrow && !old) { // As + if it is currently selected
+                int zone = round.target.getZoneFromPoint(selX, selY);
+                String zoneString = round.target.zoneToString(zone, currentArrow);
+                float width = scorePaint.measureText(zoneString) / 2.0f;
+                canvas.drawText(zoneString, xp - width, yp - 10 * density, scorePaint);
                 canvas.drawCircle(xp, yp, 3 * density, shadowP);
                 canvas.drawLine(xp - 10 * density, yp, xp + 10 * density, yp, shadowP);
                 canvas.drawLine(xp, yp - 10 * density, xp, yp + 10 * density, shadowP);
@@ -353,29 +363,16 @@ public class TargetView extends TargetViewBase {
 
     private void initKeyboard() {
         keyboard = (LinearLayout) ((ViewGroup) getParent()).findViewById(R.id.keyboard);
-        keyboard.findViewById(R.id.hide_keyboard).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchMode(false, true);
-            }
-        });
+        keyboard.findViewById(R.id.hide_keyboard).setOnClickListener(v -> switchMode(false, true));
         ((ViewGroup) getParent()).findViewById(R.id.show_keyboard)
-                .setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        switchMode(true, true);
-                    }
-                });
-        keyboard.findViewById(R.id.backspace).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (currentArrow > 0) {
-                    int index = Math.min(currentArrow, mPasse.shot.length) - 1;
-                    mPasse.shot[index].zone = Shot.NOTHING_SELECTED;
-                    currentArrow = index;
-                    lastSetArrow = index - 1;
-                    invalidate();
-                }
+                .setOnClickListener(v -> switchMode(true, true));
+        keyboard.findViewById(R.id.backspace).setOnClickListener(v -> {
+            if (currentArrow > 0) {
+                int index = Math.min(currentArrow, mPasse.shot.length) - 1;
+                mPasse.shot[index].zone = Shot.NOTHING_SELECTED;
+                currentArrow = index;
+                lastSetArrow = index - 1;
+                invalidate();
             }
         });
 
@@ -405,8 +402,8 @@ public class TargetView extends TargetViewBase {
     }
 
     private class Zone {
-        int zone;
-        String text;
+        final int zone;
+        final String text;
 
         public Zone(int zone, String text) {
             this.zone = zone;
@@ -418,7 +415,7 @@ public class TargetView extends TargetViewBase {
         ArrayList<Zone> list = new ArrayList<>();
         String last = "";
         for (int i = 0; i < round.target.getZones(); i++) {
-            String zone = round.target.zoneToString(i);
+            String zone = round.target.zoneToString(i, currentArrow);
             if (!last.equals(zone)) {
                 list.add(new Zone(i, zone));
             }
@@ -432,15 +429,9 @@ public class TargetView extends TargetViewBase {
         LinearLayout line2 = ((LinearLayout) keyboard.findViewById(R.id.line2));
         LinearLayout line3 = ((LinearLayout) keyboard.findViewById(R.id.line3));
 
-        if (line1.getChildCount() > 0) {
-            line1.removeAllViews();
-        }
-        if (line2.getChildCount() > 0) {
-            line2.removeAllViews();
-        }
-        if (line3.getChildCount() > 0) {
-            line3.removeAllViews();
-        }
+        line1.removeAllViews();
+        line2.removeAllViews();
+        line3.removeAllViews();
 
         // Calculate arrangement
         int lines = (list.size() / 2 < 5 ? 2 : 3);
@@ -459,26 +450,23 @@ public class TargetView extends TargetViewBase {
             Button button = (Button) inflater.inflate(R.layout.key_layout, line, false);
             final Zone zone = list.get(i);
             button.setText(zone.text);
-            button.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (currentArrow < round.arrowsPerPasse) {
-                        mPasse.shot[currentArrow].zone = zone.zone;
-                        mPasse.shot[currentArrow].x = -1;
-                        mPasse.shot[currentArrow].y = -1;
-                        mPasseDrawer.setSelection(currentArrow,
-                                initAnimationPositions(currentArrow),
-                                mKeyboardMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
+            button.setOnClickListener(v -> {
+                if (currentArrow < round.arrowsPerPasse) {
+                    mPasse.shot[currentArrow].zone = zone.zone;
+                    mPasse.shot[currentArrow].x = -1;
+                    mPasse.shot[currentArrow].y = -1;
+                    mPasseDrawer.setSelection(currentArrow,
+                            initAnimationPositions(currentArrow),
+                            mKeyboardMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
 
-                        if (currentArrow == lastSetArrow + 1) {
-                            lastSetArrow++;
-                        }
+                    if (currentArrow == lastSetArrow + 1) {
+                        lastSetArrow++;
+                    }
 
-                        animateSelectCircle(lastSetArrow + 1);
+                    animateSelectCircle(lastSetArrow + 1);
 
-                        if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
-                            mPasse.setId(setListener.onTargetSet(new Passe(mPasse), false));
-                        }
+                    if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
+                        mPasse.setId(setListener.onTargetSet(new Passe(mPasse), false));
                     }
                 }
             });
@@ -550,26 +538,23 @@ public class TargetView extends TargetViewBase {
 
         final ValueAnimator moveAnimator = ValueAnimator.ofFloat(0, 1);
         moveAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-        moveAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                mCurAnimationProgress = (Float) valueAnimator.getAnimatedValue();
-                if (mKeyboardMode) {
-                    keyboard.setTranslationY(
-                            (1 - mCurAnimationProgress) * keyboard.getMeasuredHeight());
-                } else {
-                    keyboard.setTranslationY(mCurAnimationProgress * keyboard.getMeasuredHeight());
-                }
-                if (mCurAnimationProgress == 1.0f) {
-                    moveAnimator.cancel();
-                    mCurSelecting = -1;
-                    if (!mKeyboardMode) {
-                        keyboard.setVisibility(GONE);
-                    }
-                    keyboard.setTranslationY(0);
-                }
-                invalidate();
+        moveAnimator.addUpdateListener(valueAnimator -> {
+            mCurAnimationProgress = (Float) valueAnimator.getAnimatedValue();
+            if (mKeyboardMode) {
+                keyboard.setTranslationY(
+                        (1 - mCurAnimationProgress) * keyboard.getMeasuredHeight());
+            } else {
+                keyboard.setTranslationY(mCurAnimationProgress * keyboard.getMeasuredHeight());
             }
+            if (mCurAnimationProgress == 1.0f) {
+                moveAnimator.cancel();
+                mCurSelecting = -1;
+                if (!mKeyboardMode) {
+                    keyboard.setVisibility(GONE);
+                }
+                keyboard.setTranslationY(0);
+            }
+            invalidate();
         });
         moveAnimator.setDuration(300);
         moveAnimator.start();
@@ -584,8 +569,11 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void animateFromZoomSpot() {
-        if (round.target instanceof SpotBase && spotFocused) {
-            mCurSelecting = SPOT_ZOOMIN;
+        if (round.target.dependsOnArrowIndex()) {
+            populateKeyboard();
+        }
+        if (isSpot() && spotFocused) {
+            mCurSelecting = SPOT_ZOOM_IN;
             initAnimation();
 
             radius = orgRadius;
@@ -596,17 +584,14 @@ public class TargetView extends TargetViewBase {
             moveAnimator.setInterpolator(
                     currentArrow < round.arrowsPerPasse ? new AccelerateInterpolator() :
                             new AccelerateDecelerateInterpolator());
-            moveAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    mCurAnimationProgress = (Float) valueAnimator.getAnimatedValue();
-                    if (mCurAnimationProgress == 1.0f) {
-                        moveAnimator.cancel();
-                        spotFocused = false;
-                        animateToZoomSpot();
-                    }
-                    invalidate();
+            moveAnimator.addUpdateListener(valueAnimator -> {
+                mCurAnimationProgress = (Float) valueAnimator.getAnimatedValue();
+                if (mCurAnimationProgress == 1.0f) {
+                    moveAnimator.cancel();
+                    spotFocused = false;
+                    animateToZoomSpot();
                 }
+                invalidate();
             });
             moveAnimator.setDuration(200);
             moveAnimator.start();
@@ -620,9 +605,9 @@ public class TargetView extends TargetViewBase {
             midX = orgMidX;
             midY = orgMidY;
         }
-        if (round.target instanceof SpotBase && currentArrow < round.arrowsPerPasse && radius > 0 &&
+        if (isSpot() && currentArrow < round.arrowsPerPasse && radius > 0 &&
                 !spotFocused && !mKeyboardMode) {
-            mCurSelecting = SPOT_ZOOMIN;
+            mCurSelecting = SPOT_ZOOM_IN;
             initAnimation();
 
             RectF spotRect = new RectF(spotRects[currentArrow % spotRects.length]);
@@ -641,21 +626,22 @@ public class TargetView extends TargetViewBase {
             moveAnimator.setInterpolator(
                     currentArrow == 0 ? new AccelerateDecelerateInterpolator() :
                             new DecelerateInterpolator());
-            moveAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    mCurAnimationProgress = (Float) valueAnimator.getAnimatedValue();
-                    if (mCurAnimationProgress == 1.0f) {
-                        moveAnimator.cancel();
-                        mCurSelecting = -1;
-                        spotFocused = true;
-                    }
-                    invalidate();
+            moveAnimator.addUpdateListener(valueAnimator -> {
+                mCurAnimationProgress = (Float) valueAnimator.getAnimatedValue();
+                if (mCurAnimationProgress == 1.0f) {
+                    moveAnimator.cancel();
+                    mCurSelecting = -1;
+                    spotFocused = true;
                 }
+                invalidate();
             });
             moveAnimator.setDuration(200);
             moveAnimator.start();
         }
+    }
+
+    private boolean isSpot() {
+        return round.target instanceof SpotBase;
     }
 
     class Midpoint {

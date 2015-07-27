@@ -38,38 +38,29 @@ public class ShareDialogFragment extends DialogFragment {
                 // Specify the list array, the items to be selected by default (null for none),
                 // and the listener through which to receive callbacks when items are selected
                 .setMultiChoiceItems(R.array.share_options, null,
-                        new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                if (isChecked) {
-                                    // If the user checked the item, add it to the selected items
-                                    mSelectedItems.add(which);
-                                } else if (mSelectedItems.contains(which)) {
-                                    // Else, if the item is already in the array, remove it
-                                    mSelectedItems.remove(Integer.valueOf(which));
-                                }
+                        (dialog, which, isChecked) -> {
+                            if (isChecked) {
+                                // If the user checked the item, add it to the selected items
+                                mSelectedItems.add(which);
+                            } else if (mSelectedItems.contains(which)) {
+                                // Else, if the item is already in the array, remove it
+                                mSelectedItems.remove(Integer.valueOf(which));
                             }
                         })
                         // Set the action buttons
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                        if (!mSelectedItems.isEmpty()) {
-                            mListener = (ShareDialogListener) getTargetFragment();
-                            mListener.onShareDialogConfirmed(
-                                    mSelectedItems.contains(0),
-                                    mSelectedItems.contains(1),
-                                    mSelectedItems.contains(2),
-                                    mSelectedItems.contains(3));
-                        }
+                .setPositiveButton(android.R.string.ok, (dialog, id) -> {
+                    dialog.dismiss();
+                    if (!mSelectedItems.isEmpty()) {
+                        mListener = (ShareDialogListener) getTargetFragment();
+                        mListener.onShareDialogConfirmed(
+                                mSelectedItems.contains(0),
+                                mSelectedItems.contains(1),
+                                mSelectedItems.contains(2),
+                                mSelectedItems.contains(3));
                     }
                 })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(android.R.string.cancel, (dialog, id) -> {
+                    dialog.dismiss();
                 });
 
         return builder.create();

@@ -10,6 +10,7 @@ package de.dreier.mytargets.views;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +19,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 
 public class DialogSpinner extends LinearLayout {
@@ -28,7 +33,7 @@ public class DialogSpinner extends LinearLayout {
     private int size;
     private Button addButton;
     private long currentItemId = 0;
-    private OnClickListener listener;
+    private final HashMap<Integer, OnClickListener> listener = new HashMap<>();
     private OnResultListener resultListener;
 
     public DialogSpinner(Context context) {
@@ -54,8 +59,16 @@ public class DialogSpinner extends LinearLayout {
         int currentSelection = getCurrentSelection();
         if (size > currentSelection) {
             View tmpView = adapter.getView(currentSelection, mView, this);
-            tmpView.setOnClickListener(listener);
-            tmpView.setEnabled(isEnabled());
+            Set<Map.Entry<Integer, OnClickListener>> entries = listener
+                    .entrySet();
+            for (Map.Entry<Integer, OnClickListener> entry : entries) {
+                View view = tmpView;
+                if (entry.getKey() != 0) {
+                    view = tmpView.findViewById(entry.getKey());
+                }
+                view.setOnClickListener(entry.getValue());
+                view.setEnabled(isEnabled());
+            }
             if (mView == null) {
                 mView = tmpView;
                 addView(mView);
@@ -84,7 +97,11 @@ public class DialogSpinner extends LinearLayout {
 
     @Override
     public void setOnClickListener(OnClickListener l) {
-        listener = l;
+        setOnClickListener(0, l);
+    }
+
+    public void setOnClickListener(@IdRes int id, OnClickListener l) {
+        listener.put(id, l);
     }
 
     public void setAddButton(Button button, OnClickListener listener) {

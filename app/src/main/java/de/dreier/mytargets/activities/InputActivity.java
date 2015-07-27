@@ -33,7 +33,6 @@ import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.views.TargetView;
@@ -49,7 +48,6 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     private Button next, prev;
     private int curPasse = 1;
     private int savedPasses = 0;
-    private long mTraining;
     private Round mRound;
     private DatabaseManager db;
     private boolean mShowAllMode = false;
@@ -73,18 +71,16 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
         Intent intent = getIntent();
         assert intent != null;
+        long mTraining;
         if (intent.hasExtra(TRAINING_ID)) {
             mTraining = intent.getLongExtra(TRAINING_ID, -1);
             ArrayList<Round> rounds = db.getRounds(mTraining);
             training = db.getTraining(mTraining);
-            StandardRound standardRound = db
-                    .getStandardRound(training.standardRoundId);
-            template = standardRound.getRounds().get(0);
             for (int roundIndex = 0; roundIndex < rounds.size(); roundIndex++) {
                 mRound = rounds.get(roundIndex);
+                template = mRound.info;
                 ArrayList<Passe> passes = db.getPassesOfRound(mRound.getId());
                 savedPasses = passes.size();
-                template = mRound.info;
                 if (savedPasses < template.passes || roundIndex + 1 == rounds.size()) {
                     curPasse = Math.min(savedPasses + 1, template.passes);
                     break;
@@ -106,11 +102,8 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         target.showAll(mShowAllMode);
 
         // Send message to wearable app, that we are starting a passe
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                startWearNotification();
-            }
+        new Thread(() -> {
+            startWearNotification();
         }).start();
 
         if (savedInstanceState != null) {
@@ -121,18 +114,8 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
             setPasse(curPasse);
         }
 
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setPasse(curPasse + 1);
-            }
-        });
-        prev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setPasse(curPasse - 1);
-            }
-        });
+        next.setOnClickListener(view -> setPasse(curPasse + 1));
+        prev.setOnClickListener(view -> setPasse(curPasse - 1));
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -296,12 +279,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         } else if (curPasse == savedPasses) {
             manager.sendMessage(buildInfo());
         }
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                updatePasse();
-            }
-        });
+        runOnUiThread(() -> updatePasse());
         return passe.getId();
     }
 
@@ -319,7 +297,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         Passe lastPasse = db.getPasse(mRound.getId(), savedPasses);
         if (lastPasse != null) {
             for (Shot shot : lastPasse.shot) {
-                text += template.target.zoneToString(shot.zone) + " ";
+                text += template.target.zoneToString(shot.zone, 0) + " ";
             }
             text += "\n";
         } else {
@@ -328,7 +306,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
         // Load bow settings
         if (training.bow > 0) {
-            text += template.distance + ": " + db.getSetting(training.bow, template.distance);
+            text += template.distance.toString(this) + ": " + db.getSetting(training.bow, template.distance);
         }
         return new NotificationInfo(mRound, title, text);
     }

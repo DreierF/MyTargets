@@ -59,6 +59,7 @@ public class SettingsFragment extends PreferenceFragment
         super.onActivityCreated(savedInstanceState);
         mIABWrapper = new IABHelperWrapper((AppCompatActivity) getActivity());
         ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        assert ab != null;
         ab.setHomeButtonEnabled(true);
         ab.setDisplayHomeAsUpEnabled(true);
     }

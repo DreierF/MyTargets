@@ -25,7 +25,6 @@ import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Distance;
-import de.dreier.mytargets.views.DialogSpinner;
 import de.dreier.mytargets.views.DistanceDialogSpinner;
 import de.dreier.mytargets.views.DynamicItemLayout;
 
@@ -82,36 +81,12 @@ public class EditBowActivity extends EditWithImageActivity
         sight_settings.setLayoutResource(R.layout.sight_settings_item, SightSetting.class);
         sight_settings.setOnBindListener(this);
 
-        recurveBow.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setBowType(RECURVE_BOW);
-            }
-        });
-        compoundBow.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setBowType(COMPOUND_BOW);
-            }
-        });
-        longBow.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setBowType(LONG_BOW);
-            }
-        });
-        blank.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setBowType(BLANK_BOW);
-            }
-        });
-        horse.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setBowType(HORSE_BOW);
-            }
-        });
-        yumi.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setBowType(YUMI);
-            }
-        });
+        recurveBow.setOnClickListener(v -> setBowType(RECURVE_BOW));
+        compoundBow.setOnClickListener(v -> setBowType(COMPOUND_BOW));
+        longBow.setOnClickListener(v -> setBowType(LONG_BOW));
+        blank.setOnClickListener(v -> setBowType(BLANK_BOW));
+        horse.setOnClickListener(v -> setBowType(HORSE_BOW));
+        yumi.setOnClickListener(v -> setBowType(YUMI));
 
         ArrayList<SightSetting> sightSettingsList = null;
         if (savedInstanceState == null && mBowId != -1) {
@@ -168,13 +143,10 @@ public class EditBowActivity extends EditWithImageActivity
     public void onBind(View view, final SightSetting sightSetting, int index) {
         final DistanceDialogSpinner distanceSpinner = (DistanceDialogSpinner) view
                 .findViewById(R.id.distance_spinner);
-        distanceSpinner.setOnResultListener(new DialogSpinner.OnResultListener() {
-            @Override
-            public void onResult(Intent data) {
-                long id = data.getLongExtra("id", 0);
-                distanceSpinner.setItemId(id);
-                sightSetting.distance = Distance.fromId(id);
-            }
+        distanceSpinner.setOnResultListener(data -> {
+            long id = data.getLongExtra("id", 0);
+            distanceSpinner.setItemId(id);
+            sightSetting.distance = Distance.fromId(id);
         });
         EditText setting = (EditText) view.findViewById(R.id.sight_setting);
         setting.addTextChangedListener(new TextWatcher() {
@@ -194,12 +166,7 @@ public class EditBowActivity extends EditWithImageActivity
             }
         });
         ImageButton remove = (ImageButton) view.findViewById(R.id.remove_sight_setting);
-        remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sight_settings.remove(sightSetting, R.string.undo);
-            }
-        });
+        remove.setOnClickListener(view1 -> sight_settings.remove(sightSetting, R.string.undo));
         distanceSpinner.setItemId(sightSetting.distance.getId());
         setting.setText(sightSetting.value);
     }

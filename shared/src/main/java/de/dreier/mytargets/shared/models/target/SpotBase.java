@@ -35,14 +35,14 @@ public class SpotBase extends Target {
     }
 
     @Override
-    public String zoneToString(int zone) {
+    public String zoneToString(int zone, int arrow) {
         face.scoringStyle = scoringStyle;
-        return face.zoneToString(zone);
+        return face.zoneToString(zone, arrow);
     }
 
-    public int getPointsByZone(int zone) {
+    public int getPointsByZone(int zone, int arrow) {
         face.scoringStyle = scoringStyle;
-        return face.getPointsByZone(zone);
+        return face.getPointsByZone(zone, arrow);
     }
 
     public int getMaxPoints() {
@@ -75,7 +75,7 @@ public class SpotBase extends Target {
     }
 
     @Override
-    public Diameter[] getDiameters(Context context) {
+    public Diameter[] getDiameters() {
         return new Diameter[]{new Diameter(40, Dimension.CENTIMETER),
                 new Diameter(60, Dimension.CENTIMETER)};
     }

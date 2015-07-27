@@ -58,7 +58,7 @@ public class TargetItemAdapter extends BaseAdapter {
 
         Target item = (Target) getItem(position);
         img.setImageDrawable(item);
-        name.setText(item.name + " (" + item.size + ")");
+        name.setText(item.name + " (" + item.size.toString(mContext) + ")");
         details.setText(item.getScoringStyles().get(item.scoringStyle));
         return v;
     }

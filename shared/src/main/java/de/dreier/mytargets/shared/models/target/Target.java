@@ -126,18 +126,17 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
         canvas.drawCircle(sx, sy, rad, paintStroke);
     }
 
-    public String zoneToString(int zone) {
-        return zoneToString(zone, scoringStyle);
+    public String zoneToString(int zone, int arrow) {
+        return zoneToString(zone, scoringStyle, arrow);
     }
 
-    private String zoneToString(int zone, int scoringStyle) {
-        final int[] points = zonePoints[scoringStyle];
-        if (zone <= -1 || zone >= points.length) {
+    String zoneToString(int zone, int scoringStyle, int arrow) {
+        if (zone <= -1 || zone >= zonePoints[scoringStyle].length) {
             return "M";
         } else if (zone == 0 && showAsX[scoringStyle]) {
             return "X";
         } else {
-            int value = zonePoints[scoringStyle][zone];
+            int value = getPointsByZone(zone, arrow);
             if (value == 0) {
                 return "M";
             }
@@ -145,7 +144,7 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
         }
     }
 
-    public int getPointsByZone(int zone) {
+    public int getPointsByZone(int zone, int arrow) {
         return zonePoints[scoringStyle][zone];
     }
 
@@ -155,10 +154,14 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
 
     public float zoneToX(int zone) {
         int zones = zonePoints[scoringStyle].length;
-        if (zone < 0) { //TODO adapt to new system
+        if (zone < 0) {
             return (zones * 2 + 1) / (float) (zones * 2);
         } else {
-            return (zone * 2 + 1) / (float) (zones * 2);
+            float adjacentZone = zone == zones - 1 ? radius[zone - 1] : radius[zone + 1];
+            float diff = Math
+                    .abs(adjacentZone - radius[zone]);
+            return (radius[zone] + (diff / 2.0f)) / 1000.0f;
+            //TODO test for non circular targets
         }
     }
 
@@ -237,7 +240,7 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     public void setColorFilter(ColorFilter arg0) {
     }
 
-    public abstract Diameter[] getDiameters(Context context);
+    public abstract Diameter[] getDiameters();
 
     public ArrayList<String> getScoringStyles() {
         ArrayList<String> styles = new ArrayList<>(zonePoints.length);
@@ -247,10 +250,22 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
                 if (!style.isEmpty()) {
                     style += ", ";
                 }
-                style += zoneToString(i, scoring);
+                style += zoneToString(i, scoring, 0);
             }
             styles.add(style);
         }
         return styles;
+    }
+
+    public boolean dependsOnArrowIndex() {
+        return false;
+    }
+
+    public boolean isFieldTarget() {
+        return false;
+    }
+
+    public boolean is3DTarget() {
+        return false;
     }
 }

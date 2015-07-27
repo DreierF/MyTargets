@@ -36,7 +36,7 @@ public class DynamicItemLayout<T> extends LinearLayout implements View.OnClickLi
     private int layoutResource;
     private boolean rebind = false;
     private OnBindListener<T> listener;
-    private ArrayList<T> list = new ArrayList<>();
+    private final ArrayList<T> list = new ArrayList<>();
 
     public DynamicItemLayout(Context context) {
         super(context);
@@ -97,12 +97,7 @@ public class DynamicItemLayout<T> extends LinearLayout implements View.OnClickLi
 
         Snackbar.make(this, undoStringRes,
                 Snackbar.LENGTH_LONG)
-                .setAction(R.string.undo, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        addItem(index, item);
-                    }
-                }).show();
+                .setAction(R.string.undo, v -> { addItem(index, item); }).show();
     }
 
     private void rebindViews(int index) {
@@ -147,12 +142,7 @@ public class DynamicItemLayout<T> extends LinearLayout implements View.OnClickLi
         while (container != null) {
             if (container instanceof NestedScrollView) {
                 final NestedScrollView scrollView = (NestedScrollView) container;
-                scrollView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-                    }
-                }, 200);
+                scrollView.postDelayed(() -> scrollView.fullScroll(ScrollView.FOCUS_DOWN), 200);
                 break;
             }
             container = container.getParent();

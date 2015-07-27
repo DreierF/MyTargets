@@ -12,8 +12,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -61,15 +59,12 @@ public class DonateDialogFragment extends DialogFragment {
         final Dialog dialog = new AlertDialog.Builder(getActivity())
                 .setView(list)
                 .create();
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                try {
-                    DonationListener listener = (DonationListener) getTargetFragment();
-                    listener.onDonate(position);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        list.setOnItemClickListener((parent, view, position, id) -> {
+            try {
+                DonationListener listener = (DonationListener) getTargetFragment();
+                listener.onDonate(position);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
         return dialog;

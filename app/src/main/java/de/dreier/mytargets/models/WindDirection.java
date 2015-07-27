@@ -17,7 +17,7 @@ import de.dreier.mytargets.shared.models.IdProvider;
 public class WindDirection extends IdProvider {
     static final long serialVersionUID = 62L;
 
-    public String name;
+    public final String name;
 
     public WindDirection(long id, String name) {
         this.setId(id);

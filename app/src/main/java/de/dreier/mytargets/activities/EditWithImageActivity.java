@@ -97,12 +97,7 @@ public abstract class EditWithImageActivity extends AppCompatActivity {
 
         // Initialize FAB button
         registerForContextMenu(mFab);
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mFab.showContextMenu();
-            }
-        });
+        mFab.setOnClickListener(v -> mFab.showContextMenu());
 
         // Handle saved instance state
         if (savedInstanceState != null) {
@@ -113,17 +108,14 @@ public abstract class EditWithImageActivity extends AppCompatActivity {
             if (imageBitmap == null) {
                 mImageView.setImageResource(defaultDrawable);
                 mImageView.getViewTreeObserver()
-                        .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                            @Override
-                            public void onGlobalLayout() {
-                                if (imageBitmap == null) {
-                                    int width = mImageView.getMeasuredWidth();
-                                    int height = mImageView.getMeasuredHeight();
-                                    imageBitmap = BitmapUtils
-                                            .decodeSampledBitmapFromRes(EditWithImageActivity.this,
-                                                    defaultDrawable, width,
-                                                    height);
-                                }
+                        .addOnGlobalLayoutListener(() -> {
+                            if (imageBitmap == null) {
+                                int width = mImageView.getMeasuredWidth();
+                                int height = mImageView.getMeasuredHeight();
+                                imageBitmap = BitmapUtils
+                                        .decodeSampledBitmapFromRes(EditWithImageActivity.this,
+                                                defaultDrawable, width,
+                                                height);
                             }
                         });
             }

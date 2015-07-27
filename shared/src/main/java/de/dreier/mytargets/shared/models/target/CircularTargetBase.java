@@ -20,7 +20,7 @@ public abstract class CircularTargetBase extends Target {
     }
 
     @Override
-    public Diameter[] getDiameters(Context context) {
+    public Diameter[] getDiameters() {
         return diameters;
     }
 }

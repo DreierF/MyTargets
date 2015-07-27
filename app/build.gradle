@@ -1,9 +1,21 @@
 apply plugin: 'com.android.application'
+apply plugin: 'retrolambda'
 
 Properties props = new Properties()
 props.load(new FileInputStream(file(project.property('signing.properties'))))
 
 android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    retrolambda {
+        jdk System.getenv("JAVA8_HOME")
+        oldJdk System.getenv("JAVA7_HOME")
+        javaVersion JavaVersion.VERSION_1_7
+    }
+
     compileSdkVersion 22
     buildToolsVersion '22.0.1'
 

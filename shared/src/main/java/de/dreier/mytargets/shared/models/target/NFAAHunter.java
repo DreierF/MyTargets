@@ -17,8 +17,10 @@ import de.dreier.mytargets.shared.models.Dimension;
 import static android.graphics.Color.WHITE;
 
 public class NFAAHunter extends CircularTargetBase {
+    public static final int ID = 9;
+
     public NFAAHunter(Context context) {
-        super(context, 9, R.string.nfaa_hunter);
+        super(context, ID, R.string.nfaa_hunter);
         zones = 4;
         radius = new float[]{50, 100, 300, 500};
         colorFill = new int[]{WHITE, WHITE, DARK_GRAY, DARK_GRAY};
@@ -41,5 +43,10 @@ public class NFAAHunter extends CircularTargetBase {
                 rect.exactCenterX() + size, rect.exactCenterY() + size, paintStroke);
         canvas.drawLine(rect.exactCenterX() - size, rect.exactCenterY() + size,
                 rect.exactCenterX() + size, rect.exactCenterY() - size, paintStroke);
+    }
+
+    @Override
+    public boolean isFieldTarget() {
+        return true;
     }
 }

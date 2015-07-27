@@ -14,10 +14,12 @@ public class Passe extends IdProvider implements Serializable, DatabaseSerializa
     static final long serialVersionUID = 55L;
     public static final String TABLE = "PASSE";
     public static final String ROUND = "round";
+    private static final String IMAGE = "image";
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    ROUND + " INTEGER REFERENCES " + Round.TABLE + " ON DELETE CASCADE);";
+                    ROUND + " INTEGER," +
+                    IMAGE + " TEXT);";
 
     public Shot[] shot;
     public long roundId;

@@ -21,7 +21,7 @@ public class RoundTemplate extends IdProvider implements Serializable, DatabaseS
     public static final String TARGET = "target";
     private static final String TARGET_SIZE = "size";
     private static final String TARGET_SIZE_UNIT = "target_unit";
-    private static final String SCORING_STYLE = "scoring_style";
+    static final String SCORING_STYLE = "scoring_style";
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -43,6 +43,7 @@ public class RoundTemplate extends IdProvider implements Serializable, DatabaseS
     public Target target;
     public Distance distance;
     public int passes;
+    public Target targetTemplate;
 
     @Override
     public String getTableName() {
@@ -58,10 +59,10 @@ public class RoundTemplate extends IdProvider implements Serializable, DatabaseS
         values.put(UNIT, distance.unit);
         values.put(PASSES, passes);
         values.put(ARROWS_PER_PASSE, arrowsPerPasse);
-        values.put(TARGET, target.id);
-        values.put(TARGET_SIZE, target.size.value);
-        values.put(TARGET_SIZE_UNIT, target.size.unit);
-        values.put(SCORING_STYLE, target.scoringStyle);
+        values.put(TARGET, targetTemplate.id);
+        values.put(TARGET_SIZE, targetTemplate.size.value);
+        values.put(TARGET_SIZE_UNIT, targetTemplate.size.unit);
+        values.put(SCORING_STYLE, targetTemplate.scoringStyle);
         return values;
     }
 
@@ -70,14 +71,17 @@ public class RoundTemplate extends IdProvider implements Serializable, DatabaseS
         setId(cursor.getLong(startColumnIndex));
         index = cursor.getInt(startColumnIndex + 1);
         arrowsPerPasse = cursor.getInt(startColumnIndex + 2);
-        target = TargetFactory.createTarget(context, cursor.getInt(startColumnIndex + 3),
+        targetTemplate = TargetFactory.createTarget(context, cursor.getInt(startColumnIndex + 3),
                 cursor.getInt(startColumnIndex + 4));
-        distance = new Distance(cursor.getInt(startColumnIndex + 5),
-                cursor.getString(startColumnIndex + 6));
+        target = TargetFactory.createTarget(context, cursor.getInt(startColumnIndex + 5),
+                cursor.getInt(startColumnIndex + 6));
+        distance = new Distance(cursor.getInt(startColumnIndex + 7),
+                cursor.getString(startColumnIndex + 8));
         target.size = new Diameter(
-                cursor.getInt(startColumnIndex + 7), cursor.getString(startColumnIndex + 8));
-        passes = cursor.getInt(startColumnIndex + 9);
-        standardRound = cursor.getLong(startColumnIndex + 10);
+                cursor.getInt(startColumnIndex + 9), cursor.getString(startColumnIndex + 10));
+        targetTemplate.size = target.size;
+        passes = cursor.getInt(startColumnIndex + 11);
+        standardRound = cursor.getLong(startColumnIndex + 12);
     }
 
     public int getMaxPoints() {

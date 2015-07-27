@@ -8,9 +8,7 @@
 package de.dreier.mytargets.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 
 import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
@@ -24,96 +22,44 @@ public abstract class NowListAdapter<T extends IIdProvider>
         extends RecyclerView.Adapter<SelectableViewHolder<T>> {
 
     private List<T> mList = new ArrayList<>();
-    protected int headerHeight = 0;
 
     @Override
     public long getItemId(int position) {
-        if (position == 0 && headerHeight > 0) {
-            return 0;
-        } else if (headerHeight > 0) {
-            return mList.get(position - 1).getId();
-        } else {
-            return mList.get(position).getId();
-        }
+        return mList.get(position).getId();
     }
 
     @Override
     public int getItemCount() {
-        int header = headerHeight > 0 ? 1 : 0;
-        return mList.size() + header;
+        return mList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0 && headerHeight > 0) {
-            return 0;
-        } else if (headerHeight > 0) {
-            return super.getItemViewType(position - 1) + 1;
-        } else {
-            return super.getItemViewType(position) + 1;
-        }
+        return super.getItemViewType(position) + 1;
     }
 
     @Override
     public final SelectableViewHolder<T> onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == 0 && headerHeight > 0) {
-            View paddingView = new View(parent.getContext());
-            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
-                    AbsListView.LayoutParams.MATCH_PARENT, headerHeight);
-            paddingView.setLayoutParams(lp);
-            paddingView.setClickable(true);
-            return new StaticViewHolder(paddingView);
-        } else {
-            return onCreateViewHolder(parent);
-        }
+        return onCreateViewHolder(parent);
     }
 
     protected abstract SelectableViewHolder<T> onCreateViewHolder(ViewGroup parent);
 
     @Override
     public final void onBindViewHolder(SelectableViewHolder<T> viewHolder, int position) {
-        if (position > 0 && headerHeight > 0) {
-            viewHolder.bindCursor(mList.get(position - 1));
-        } else if (headerHeight == 0) {
-            viewHolder.bindCursor(mList.get(position));
-        }
+        viewHolder.bindCursor(mList.get(position));
     }
 
     public T getItem(int pos) {
-        if (pos == 0 && headerHeight > 0) {
-            return null;
-        } else if (headerHeight > 0) {
-            return mList.get(pos - 1);
-        } else {
-            return mList.get(pos);
-        }
+        return mList.get(pos);
     }
 
     public void remove(int pos) {
-        if (headerHeight > 0) {
-            mList.remove(pos - 1);
-            notifyItemRemoved(pos - 1);
-        } else {
-            mList.remove(pos);
-            notifyItemRemoved(pos);
-        }
+        mList.remove(pos);
+        notifyItemRemoved(pos);
     }
 
     public void setList(List<T> list) {
         mList = list;
-    }
-
-    public void setHeaderHeight(int headerHeight) {
-        this.headerHeight = headerHeight;
-    }
-
-    public class StaticViewHolder extends SelectableViewHolder<T> {
-        public StaticViewHolder(View itemView) {
-            super(itemView, null, null);
-        }
-
-        @Override
-        public void bindCursor() {
-        }
     }
 }

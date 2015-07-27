@@ -44,7 +44,6 @@ import android.support.annotation.PluralsRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -73,7 +72,7 @@ public class NumberPicker extends LinearLayout {
 
     private TextView valueText;
 
-    private Handler repeatUpdateHandler = new Handler();
+    private final Handler repeatUpdateHandler = new Handler();
 
     private boolean autoIncrement = false;
     private boolean autoDecrement = false;
@@ -94,14 +93,14 @@ public class NumberPicker extends LinearLayout {
      *
      * @author Jeffrey F. Cole
      */
-    private class RepetetiveUpdater implements Runnable {
+    private class RepetitiveUpdater implements Runnable {
         public void run() {
             if (autoIncrement) {
                 increment();
-                repeatUpdateHandler.postDelayed(new RepetetiveUpdater(), REPEAT_DELAY);
+                repeatUpdateHandler.postDelayed(new RepetitiveUpdater(), REPEAT_DELAY);
             } else if (autoDecrement) {
                 decrement();
-                repeatUpdateHandler.postDelayed(new RepetetiveUpdater(), REPEAT_DELAY);
+                repeatUpdateHandler.postDelayed(new RepetitiveUpdater(), REPEAT_DELAY);
             }
         }
     }
@@ -123,31 +122,23 @@ public class NumberPicker extends LinearLayout {
         increment = (Button) findViewById(R.id.number_increment);
 
         // Increment once for a click
-        increment.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                increment();
-            }
-        });
+        increment.setOnClickListener(v -> increment());
 
         // Auto increment for a long click
         increment.setOnLongClickListener(
-                new OnLongClickListener() {
-                    public boolean onLongClick(View arg0) {
-                        autoIncrement = true;
-                        repeatUpdateHandler.post(new RepetetiveUpdater());
-                        return false;
-                    }
+                arg0 -> {
+                    autoIncrement = true;
+                    repeatUpdateHandler.post(new RepetitiveUpdater());
+                    return false;
                 }
         );
 
         // When the button is released, if we're auto incrementing, stop
-        increment.setOnTouchListener(new OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP && autoIncrement) {
-                    autoIncrement = false;
-                }
-                return false;
+        increment.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP && autoIncrement) {
+                autoIncrement = false;
             }
+            return false;
         });
     }
 
@@ -161,32 +152,24 @@ public class NumberPicker extends LinearLayout {
 
 
         // Decrement once for a click
-        decrement.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                decrement();
-            }
-        });
+        decrement.setOnClickListener(v -> decrement());
 
 
         // Auto Decrement for a long click
         decrement.setOnLongClickListener(
-                new OnLongClickListener() {
-                    public boolean onLongClick(View arg0) {
-                        autoDecrement = true;
-                        repeatUpdateHandler.post(new RepetetiveUpdater());
-                        return false;
-                    }
+                arg0 -> {
+                    autoDecrement = true;
+                    repeatUpdateHandler.post(new RepetitiveUpdater());
+                    return false;
                 }
         );
 
         // When the button is released, if we're auto decrementing, stop
-        decrement.setOnTouchListener(new OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP && autoDecrement) {
-                    autoDecrement = false;
-                }
-                return false;
+        decrement.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP && autoDecrement) {
+                autoDecrement = false;
             }
+            return false;
         });
     }
 

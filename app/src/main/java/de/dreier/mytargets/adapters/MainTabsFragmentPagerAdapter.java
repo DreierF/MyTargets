@@ -20,7 +20,7 @@ import de.dreier.mytargets.fragments.TrainingsFragment;
 
 public class MainTabsFragmentPagerAdapter extends FragmentPagerAdapter {
     private final Context context;
-    private NowListFragmentBase[] fragments = new NowListFragmentBase[3];
+    private final NowListFragmentBase[] fragments = new NowListFragmentBase[3];
     {
         fragments[0] = new TrainingsFragment();
         fragments[1] = new BowFragment();

@@ -53,7 +53,7 @@ public class NFAAIndoor5Spot extends SpotBase {
     }
     
     @Override
-    public Diameter[] getDiameters(Context context) {
-        return face.getDiameters(context);
+    public Diameter[] getDiameters() {
+        return face.getDiameters();
     }
 }

@@ -224,7 +224,7 @@ public class ChartView extends RelativeLayout {
                                 // need to push it down a little more
                                 mTextPaint);
                     } else {
-                        canvas.drawText("" + mRound.info.target.zoneToString((int) point),
+                        canvas.drawText("" + mRound.info.target.zoneToString((int) point, 0),
                                 mLeftLabelWidth / 2, // centre it in the left label
                                 // gutter
                                 pointCoordinate.floatValue() + (mLabelTextSize / 2),

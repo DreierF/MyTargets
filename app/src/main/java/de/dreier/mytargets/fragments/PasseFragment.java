@@ -174,12 +174,12 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         }
         // Aggregate round information
         Round round = mRounds.get(0);
-        String distance = round.info.distance.toString();
+        String distance = round.info.distance.toString(getActivity());
         Target target = round.info.target;
         target_equals = true;
         distance_equals = true;
         for (Round r : mRounds) {
-            distance_equals = r.info.distance.toString().equals(distance) && distance_equals;
+            distance_equals = r.info.distance.toString(getActivity()).equals(distance) && distance_equals;
             target_equals = r.info.target.equals(target) && target_equals;
         }
 
@@ -255,35 +255,32 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
                 training.scoreCount[0], training.scoreCount[1],
                 training.scoreCount[2], training.reachedPoints, training.maxPoints);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final File f = File
-                            .createTempFile("target", ".png", activity.getExternalCacheDir());
-                    if (dispersion_pattern && !scoreboard && !comments) {
-                        new TargetImage().generateBitmap(activity, 800, mTraining, f);
-                    } else {
-                        new ScoreboardImage()
-                                .generateBitmap(activity, mTraining, scoreboard, dispersion_pattern,
-                                        comments, f);
-                    }
-
-                    // Build and fire intent to ask for share provider
-                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                    if (include_text) {
-                        shareIntent.putExtra(Intent.EXTRA_TEXT, text);
-                    }
-                    if (dispersion_pattern || scoreboard || comments) {
-                        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
-                    }
-                    shareIntent.setType("*/*");
-                    startActivity(shareIntent);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(activity, getString(R.string.sharing_failed), Toast.LENGTH_SHORT)
-                            .show();
+        new Thread(() -> {
+            try {
+                final File f = File
+                        .createTempFile("target", ".png", activity.getExternalCacheDir());
+                if (dispersion_pattern && !scoreboard && !comments) {
+                    new TargetImage().generateBitmap(activity, 800, mTraining, f);
+                } else {
+                    new ScoreboardImage()
+                            .generateBitmap(activity, mTraining, scoreboard, dispersion_pattern,
+                                    comments, f);
                 }
+
+                // Build and fire intent to ask for share provider
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                if (include_text) {
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+                }
+                if (dispersion_pattern || scoreboard || comments) {
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
+                }
+                shareIntent.setType("*/*");
+                startActivity(shareIntent);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(activity, getString(R.string.sharing_failed), Toast.LENGTH_SHORT)
+                        .show();
             }
         }).start();
     }
@@ -445,7 +442,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
             String infoText = "";
             if (!distance_equals) {
                 infoText += "<br>" + getString(R.string.distance) + ": <b>" +
-                        mItem.info.distance/* + " - " +
+                        mItem.info.distance.toString(context)/* + " - " +
                         getString(mItem.indoor ? R.string.indoor : R.string.outdoor) + "</b>"*/;
             }
             if (!target_equals) {

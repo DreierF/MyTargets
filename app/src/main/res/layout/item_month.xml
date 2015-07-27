@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     style="@style/header_container"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
         android:id="@android:id/text1"
@@ -10,7 +11,7 @@
         android:layout_centerVertical="true"
         android:clickable="false"
         android:fontFamily="sans-serif-medium"
-        android:text="August 2015"
+        tools:text="August 2015"
         android:textColor="@color/secondary_text_default_material_light"
         android:textSize="14sp"/>
 

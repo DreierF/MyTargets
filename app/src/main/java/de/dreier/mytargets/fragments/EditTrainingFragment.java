@@ -45,6 +45,8 @@ import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.models.target.WAFullTarget;
 import de.dreier.mytargets.utils.MyBackupAgent;
 import de.dreier.mytargets.views.DialogSpinner;
 import zh.wang.android.apis.yweathergetter4a.WeatherInfo;
@@ -59,12 +61,13 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
     private static final int REQ_SELECTED_ENVIRONMENT = 3;
     private static final int REQ_SELECTED_DATE = 4;
     private static final int REQ_SELECTED_STANDARD_ROUND = 5;
+    private static final int REQ_SELECTED_SPECIFIC_TARGET = 6;
 
     private long mTraining = -1;
 
     private DialogSpinner bow;
     private DialogSpinner arrow;
-    private int mBowId = 0;
+    private final int mBowId = 0;
     private EditText training;
     private EditText comment;
     private Button training_date;
@@ -99,35 +102,47 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
 
         training = (EditText) rootView.findViewById(R.id.training);
         training_date = (Button) rootView.findViewById(R.id.training_date);
-        training_date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Package bundle with fragment arguments
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(DatePickerFragment.ARG_CURRENT_DATE, date);
+        training_date.setOnClickListener(v -> {
+            // Package bundle with fragment arguments
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(DatePickerFragment.ARG_CURRENT_DATE, date);
 
-                // Create and show date picker
-                DatePickerFragment datePickerDialog = new DatePickerFragment();
-                datePickerDialog.setTargetFragment(EditTrainingFragment.this, REQ_SELECTED_DATE);
-                datePickerDialog.setArguments(bundle);
-                datePickerDialog.show(activity.getSupportFragmentManager(), "date_picker");
-            }
+            // Create and show date picker
+            DatePickerFragment datePickerDialog = new DatePickerFragment();
+            datePickerDialog.setTargetFragment(EditTrainingFragment.this, REQ_SELECTED_DATE);
+            datePickerDialog.setArguments(bundle);
+            datePickerDialog.show(activity.getSupportFragmentManager(), "date_picker");
         });
 
         View scrollView = rootView.findViewById(R.id.scrollView);
 
         // Format / Standard round
         standardRoundSpinner = (DialogSpinner) rootView.findViewById(R.id.standard_round);
-        final StandardRoundsItemAdapter standardRoundsItemAdapter = new StandardRoundsItemAdapter(activity);
+        final StandardRoundsItemAdapter standardRoundsItemAdapter = new StandardRoundsItemAdapter(
+                activity);
         standardRoundSpinner.setAdapter(standardRoundsItemAdapter);
-        standardRoundSpinner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(activity,
+        standardRoundSpinner.setOnClickListener(R.id.content, v -> {
+            Intent i1 = new Intent(activity,
+                    ItemSelectActivity.StandardRound.class);
+            StandardRound standardRound = (StandardRound) standardRoundSpinner
+                    .getSelectedItem();
+            i1.putExtra("item", standardRound);
+            startActivityForResult(i1, REQ_SELECTED_STANDARD_ROUND);
+        });
+        standardRoundSpinner.setOnClickListener(R.id.image, v -> {
+            StandardRound standardRound = (StandardRound) standardRoundSpinner
+                    .getSelectedItem();
+            Target target = standardRound.getRounds().get(0).targetTemplate;
+            if (target.id == WAFullTarget.ID) {
+                Intent i1 = new Intent(activity,
+                        ItemSelectActivity.Target.class);
+                i1.putExtra("item", target);
+                startActivityForResult(i1, REQ_SELECTED_SPECIFIC_TARGET);
+            } else {
+                Intent i1 = new Intent(activity,
                         ItemSelectActivity.StandardRound.class);
-                StandardRound standardRound = (StandardRound) standardRoundSpinner.getSelectedItem();
-                i.putExtra("item", standardRound);
-                startActivityForResult(i, REQ_SELECTED_STANDARD_ROUND);
+                i1.putExtra("item", standardRound);
+                startActivityForResult(i1, REQ_SELECTED_STANDARD_ROUND);
             }
         });
 
@@ -135,53 +150,35 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         bow = (DialogSpinner) rootView.findViewById(R.id.bow);
         bow.setAdapter(new BowItemAdapter(activity));
         Button addBow = (Button) rootView.findViewById(R.id.add_bow);
-        bow.setAddButton(addBow, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(activity, EditBowActivity.class));
-            }
-        });
-        bow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(activity,
-                        ItemSelectActivity.Bow.class);
-                startActivityForResult(i, REQ_SELECTED_BOW);
+        bow.setAddButton(addBow, v -> startActivity(new Intent(activity, EditBowActivity.class)));
+        bow.setOnClickListener(v -> {
+            Intent i1 = new Intent(activity,
+                    ItemSelectActivity.Bow.class);
+            startActivityForResult(i1, REQ_SELECTED_BOW);
 
-            }
         });
 
         // Arrow
         arrow = (DialogSpinner) rootView.findViewById(R.id.arrow);
         arrow.setAdapter(new ArrowItemAdapter(activity));
         Button addArrow = (Button) rootView.findViewById(R.id.add_arrow);
-        arrow.setAddButton(addArrow, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(activity, EditArrowActivity.class));
-            }
-        });
-        arrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(activity,
-                        ItemSelectActivity.Arrow.class);
-                startActivityForResult(i, REQ_SELECTED_ARROW);
-            }
+        arrow.setAddButton(addArrow,
+                v -> startActivity(new Intent(activity, EditArrowActivity.class)));
+        arrow.setOnClickListener(v -> {
+            Intent i1 = new Intent(activity,
+                    ItemSelectActivity.Arrow.class);
+            startActivityForResult(i1, REQ_SELECTED_ARROW);
         });
 
         // Environment
         environment = (DialogSpinner) rootView.findViewById(R.id.environment_spinner);
         environment.setItemId(0);
-        environment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(activity,
-                        ItemSelectActivity.Environment.class);
-                i.putExtra(EnvironmentFragment.ENVIRONMENT,
-                        ((EnvironmentItemAdapter) environment.getAdapter()).getEnvironment());
-                startActivityForResult(i, REQ_SELECTED_ENVIRONMENT);
-            }
+        environment.setOnClickListener(v -> {
+            Intent i1 = new Intent(activity,
+                    ItemSelectActivity.Environment.class);
+            i1.putExtra(EnvironmentFragment.ENVIRONMENT,
+                    ((EnvironmentItemAdapter) environment.getAdapter()).getEnvironment());
+            startActivityForResult(i1, REQ_SELECTED_ENVIRONMENT);
         });
         environment.setAdapter(new EnvironmentItemAdapter(activity));
 
@@ -202,7 +199,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             date = train.date;
             bow.setItemId(train.bow);
             arrow.setItemId(train.arrow);
-           // comment.setText(train.co); TODO
+            // comment.setText(train.co); TODO
             standardRoundSpinner.setItemId(train.standardRoundId);
             ((EnvironmentItemAdapter) environment.getAdapter()).setEnvironment(train.environment);
             setTrainingDate();
@@ -247,6 +244,17 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
                             .setStandardRound(null);
                     standardRoundSpinner.setItemId(id);
                 }
+                return;
+            } else if (requestCode == REQ_SELECTED_SPECIFIC_TARGET) {
+                Target st = (Target) data.getSerializableExtra("item");
+                StandardRound standardRound = (StandardRound) standardRoundSpinner
+                        .getSelectedItem();
+                for(RoundTemplate template:standardRound.getRounds()) {
+                    template.target = st;
+                }
+                ((StandardRoundsItemAdapter) standardRoundSpinner.getAdapter())
+                        .setStandardRound(standardRound);
+                standardRoundSpinner.setItemId(0);
                 return;
             }
         }

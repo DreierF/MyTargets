@@ -32,6 +32,7 @@ public class StatisticsActivity extends AppCompatActivity {
         mTraining = getIntent().getLongExtra(TRAINING_ID, -1);
         mRound = getIntent().getLongExtra(ROUND_ID, -1);
 
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);

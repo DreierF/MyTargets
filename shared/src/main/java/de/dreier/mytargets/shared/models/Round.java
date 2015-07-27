@@ -6,6 +6,9 @@ import android.database.Cursor;
 
 import java.io.Serializable;
 
+import static de.dreier.mytargets.shared.models.RoundTemplate.SCORING_STYLE;
+import static de.dreier.mytargets.shared.models.RoundTemplate.TARGET;
+
 public class Round extends IdProvider implements Serializable, DatabaseSerializable {
     static final long serialVersionUID = 56L;
     public static final String TABLE = "ROUND";
@@ -17,7 +20,9 @@ public class Round extends IdProvider implements Serializable, DatabaseSerializa
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     TRAINING + " INTEGER," +
                     COMMENT + " TEXT," +
-                    TEMPLATE + " INTEGER);";
+                    TEMPLATE + " INTEGER," +
+                    TARGET + " INTEGER," +
+                    SCORING_STYLE + " INTEGER);";
 
     public long training;
     public RoundTemplate info;
@@ -35,6 +40,8 @@ public class Round extends IdProvider implements Serializable, DatabaseSerializa
         values.put(COMMENT, comment);
         values.put(TRAINING, training);
         values.put(TEMPLATE, info.getId());
+        values.put(TARGET, info.target.getId());
+        values.put(SCORING_STYLE, info.target.getId());
         return values;
     }
 

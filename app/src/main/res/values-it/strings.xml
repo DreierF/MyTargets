@@ -170,9 +170,9 @@
     <string name="shooting">Rilascia</string>
 
     <!-- Timer settings -->
-    <string name="timer_shootingtime">Tempo di rilascio</string>
-    <string name="timer_waitingtime">Tempo di preparazione</string>
-    <string name="timer_warningtime">Tempo critico</string>
+    <string name="timer_shooting_time">Tempo di rilascio</string>
+    <string name="timer_waiting_time">Tempo di preparazione</string>
+    <string name="timer_warning_time">Tempo critico</string>
     <string name="timer_sound">Suono</string>
     <string name="timer_vibrate">Vibrazione</string>
 

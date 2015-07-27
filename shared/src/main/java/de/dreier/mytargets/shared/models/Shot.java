@@ -7,7 +7,8 @@ import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
-public class Shot extends IdProvider implements Comparable<Shot>, Serializable, DatabaseSerializable {
+public class Shot extends IdProvider
+        implements Comparable<Shot>, Serializable, DatabaseSerializable {
     static final long serialVersionUID = 57L;
     public static final String TABLE = "SHOOT";
     public static final String PASSE = "passe";
@@ -15,14 +16,16 @@ public class Shot extends IdProvider implements Comparable<Shot>, Serializable, 
     public static final String X = "x";
     public static final String Y = "y";
     public static final String COMMENT = "comment";
+    public static final String ARROW = "arrow";
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    PASSE + " INTEGER REFERENCES " + Passe.TABLE + " ON DELETE CASCADE," +
+                    PASSE + " INTEGER," +
                     ZONE + " INTEGER," +
                     X + " REAL," +
                     Y + " REAL," +
-                    COMMENT + " TEXT);";
+                    COMMENT + " TEXT," +
+                    ARROW + " INTEGER);";
 
     public static final int NOTHING_SELECTED = -2;
     public int zone = NOTHING_SELECTED;

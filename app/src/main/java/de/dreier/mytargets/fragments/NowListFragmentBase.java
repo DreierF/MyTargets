@@ -167,12 +167,9 @@ public abstract class NowListFragmentBase<T extends IIdProvider> extends Fragmen
                 .getQuantityString(itemTypeDelRes, deleted.size(), deleted.size());
         Snackbar.make(rootView, message,
                 Snackbar.LENGTH_LONG)
-                .setAction(R.string.undo, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        for (T item : deleted) {
-                            db.update((DatabaseSerializable) item);
-                        }
+                .setAction(R.string.undo, v -> {
+                    for (T item : deleted) {
+                        db.update((DatabaseSerializable) item);
                     }
                 }).show();
         for (T item : deleted) {

@@ -39,7 +39,6 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
-import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.BackupUtils;
 
@@ -195,6 +194,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (oldVersion < 9) {
             db.execSQL("DROP TABLE IF EXISTS ZONE_MATRIX");
             db.execSQL("ALTER TABLE VISIER ADD COLUMN unit TEXT DEFAULT 'm'");
+            db.execSQL("ALTER TABLE PASSE ADD COLUMN image TEXT DEFAULT ''");
+            db.execSQL("ALTER TABLE SHOOT ADD COLUMN arrow INTEGER DEFAULT -1");
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN weather INTEGER DEFAULT '0'");
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN wind_speed INTEGER DEFAULT '0'");
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN wind_direction INTEGER DEFAULT '0'");
@@ -210,9 +211,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     "WHERE _id IN (SELECT r._id FROM ROUND r " +
                     "LEFT JOIN BOW b ON b._id=r.bow " +
                     "WHERE (r.bow=-2 OR b.type=1) AND r.target=4)"); // Set all compound 3 spot to vertical
-            db.execSQL("ALTER TABLE ROUND RENAME TO ROUND_OLD");
 
-            //TODO transform before inner points to after inner points
+            // transform before inner points to after inner points
+            db.execSQL("UPDATE SHOOT SET s.x = s.x/2.0, s.y = s.y/2.0 " +
+                    "WHERE _id IN (SELECT s._id " +
+                    "FROM ROUND r " +
+                    "LEFT JOIN PASSE p ON r._id = p.round " +
+                    "LEFT JOIN SHOOT s ON p._id = s.passe " +
+                    "WHERE r.target<11 AND s.points=0);");
+            db.execSQL("ALTER TABLE ROUND RENAME TO ROUND_OLD");
 
             fillStandardRound(db);
 
@@ -292,7 +299,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                         target == 4 ? 5 : target, target == 5 ? 1 : 0);
                 template.distance = new Distance(res.getInt(3), res.getString(4));
                 template.passes = res.getInt(5);
-                template.target.size = template.target.getDiameters(mContext)[0];
+                template.target.size = template.target.getDiameters()[0];
                 sr.insert(template);
                 Cursor sids = db.rawQuery("SELECT sid FROM ROUND_TEMPLATE " +
                                 "WHERE index=? " +
@@ -363,7 +370,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public ArrayList<Round> getRounds(long training) {
         Cursor res = db.rawQuery(
                 "SELECT r._id, r.comment, " +
-                        "a._id, a.r_index, a.arrows, a.target, a.scoring_style, a.distance, a.unit, " +
+                        "a._id, a.r_index, a.arrows, a.target, a.scoring_style, " +
+                        "r.target, r.scoring_style, a.distance, a.unit, " +
                         "a.size, a.target_unit, a.passes, a.sid " +
                         "FROM ROUND r " +
                         "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
@@ -378,7 +386,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
             do {
                 Round r = new Round();
                 r.fromCursor(mContext, res, 0);
-                r.info.target = TargetFactory.createTarget(mContext, res.getInt(5), res.getInt(6));
                 list.add(r);
             } while (res.moveToNext());
         }
@@ -547,7 +554,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         // Get all generic round attributes
         Cursor cursor = db.rawQuery(
                 "SELECT r._id, r.comment, " +
-                        "a._id, a.r_index, a.arrows, a.target, a.scoring_style, a.distance, a.unit, " +
+                        "a._id, a.r_index, a.arrows, a.target, a.scoring_style, " +
+                        "r.target, r.scoring_style, a.distance, a.unit, " +
                         "a.size, a.target_unit, a.passes, a.sid " +
                         "FROM ROUND r " +
                         "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
@@ -677,7 +685,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public StandardRound getStandardRound(long standardRoundId) {
         Cursor cursor = db.rawQuery("SELECT s._id, s.name, s.institution, s.indoor, " +
-                "a._id, a.r_index, a.arrows, a.target, a.scoring_style, a.distance, a.unit, " +
+                "a._id, a.r_index, a.arrows, a.target, a.scoring_style, a.target, a.scoring_style, a.distance, a.unit, " +
                 "a.size, a.target_unit, a.passes, a.sid " +
                 "FROM STANDARD_ROUND_TEMPLATE s " +
                 "LEFT JOIN ROUND_TEMPLATE a ON s._id=a.sid " +
@@ -762,7 +770,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return history;
     }
 
-    public int getRoundPoints(long round) {
+    /*public int getRoundPoints(long round) {
         Cursor res = db.rawQuery("SELECT s.points, r.target, r.scoring_style" +
                 " FROM ROUND r, PASSE p, SHOOT s" +
                 " WHERE r._id=p.round AND p.round=" + round + " AND s.passe=p._id", null);
@@ -771,12 +779,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
         for (int i = 0; i < res.getCount(); i++) {
             int zone = res.getInt(0);
             Target target = TargetFactory.createTarget(mContext, res.getInt(1), res.getInt(2));
-            sum += target.getPointsByZone(zone);
+            //sum += target.getPointsByZone(zone, arrow);
             res.moveToNext();
         }
         res.close();
         return sum;
-    }
+    }*/
 
     public String getSetting(long bowId, Distance dist) {
         String[] cols = {VISIER_SETTING};

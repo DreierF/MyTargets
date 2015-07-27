@@ -1,7 +1,6 @@
 package de.dreier.mytargets.shared.utils;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.TextPaint;
 
@@ -27,7 +26,7 @@ public class Circle {
         mTextPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    public void draw(Canvas can, float x, float y, int zone, int rad, boolean comment) {
+    public void draw(Canvas can, float x, float y, int zone, int rad, boolean comment, int arrow) {
         // Get color index and font size
         int font_size = (int) (1.2323f * rad + 0.7953f);
 
@@ -46,7 +45,7 @@ public class Circle {
         mTextPaint.setTextSize(22 * density);
         mTextPaint.setColor(target.getTextColor(zone));
         mTextPaint.setTextSize(font_size * density);
-        can.drawText(target.zoneToString(zone), x, y + font_size * 7 * density / 22.0f,
+        can.drawText(target.zoneToString(zone, arrow), x, y + font_size * 7 * density / 22.0f,
                      mTextPaint);
 
         // Draw red circled + as indicator that this impact is commented

@@ -72,24 +72,18 @@ public class EnvironmentFragment extends Fragment {
         wind_speed = (DialogSpinner) rootView.findViewById(R.id.wind_speed);
         wind_speed.setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1,
                 activity.getResources().getStringArray(R.array.wind_speeds)));
-        wind_speed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(activity,
-                        ItemSelectActivity.WindSpeed.class);
-                startActivityForResult(i, REQ_SELECTED_WIND_SPEED);
-            }
+        wind_speed.setOnClickListener(v -> {
+            Intent i1 = new Intent(activity,
+                    ItemSelectActivity.WindSpeed.class);
+            startActivityForResult(i1, REQ_SELECTED_WIND_SPEED);
         });
 
         // Wind direction
         wind_direction = (DialogSpinner) rootView.findViewById(R.id.wind_direction);
-        wind_direction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(activity,
-                        ItemSelectActivity.WindDirection.class);
-                startActivityForResult(i, REQ_SELECTED_WIND_DIRECTION);
-            }
+        wind_direction.setOnClickListener(v -> {
+            Intent i1 = new Intent(activity,
+                    ItemSelectActivity.WindDirection.class);
+            startActivityForResult(i1, REQ_SELECTED_WIND_DIRECTION);
         });
         wind_direction.setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1,
                 activity.getResources().getStringArray(R.array.wind_directions)));
@@ -112,12 +106,7 @@ public class EnvironmentFragment extends Fragment {
     }
 
     private void setOnClickWeather(ImageButton b, final EWeather w) {
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setWeather(w);
-            }
-        });
+        b.setOnClickListener(v -> setWeather(w));
     }
 
     private void setWeather(EWeather weather) {

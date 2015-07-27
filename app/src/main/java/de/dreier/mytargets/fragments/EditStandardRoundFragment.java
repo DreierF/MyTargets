@@ -40,7 +40,7 @@ import de.dreier.mytargets.views.NumberPicker;
 
 public class EditStandardRoundFragment extends Fragment
         implements DynamicItemLayout.OnBindListener<RoundTemplate> {
-    public static String STANDARD_ROUND_ID = "standard_round_id";
+    public static final String STANDARD_ROUND_ID = "standard_round_id";
 
     private long mStandardRound = -1;
     private RadioButton indoor;
@@ -90,7 +90,7 @@ public class EditStandardRoundFragment extends Fragment
             int tid = prefs.getInt("target", 0);
             int scoring = prefs.getInt("scoring", 0);
             round.target = TargetFactory.createTarget(getActivity(), tid, scoring);
-            round.target.size = round.target.getDiameters(getActivity())[0];
+            round.target.size = round.target.getDiameters()[0];
             long distId = prefs.getLong("distanceId", new Distance(18, "m").getId());
             round.distance = Distance.fromId(distId);
             rounds.addItem(round);
@@ -168,13 +168,10 @@ public class EditStandardRoundFragment extends Fragment
         // Distance
         final DistanceDialogSpinner distanceSpinner = (DistanceDialogSpinner) view
                 .findViewById(R.id.distance_spinner);
-        distanceSpinner.setOnResultListener(new DialogSpinner.OnResultListener() {
-            @Override
-            public void onResult(Intent data) {
-                long id = data.getLongExtra("id", 0);
-                round.distance = Distance.fromId(id);
-                distanceSpinner.setItemId(id);
-            }
+        distanceSpinner.setOnResultListener(data -> {
+            long id = data.getLongExtra("id", 0);
+            round.distance = Distance.fromId(id);
+            distanceSpinner.setItemId(id);
         });
         distanceSpinner.setItemId(round.distance.getId());
 
@@ -183,22 +180,16 @@ public class EditStandardRoundFragment extends Fragment
                 .findViewById(R.id.target_spinner);
         final TargetItemAdapter adapter = new TargetItemAdapter(getActivity());
         targetSpinner.setAdapter(adapter);
-        targetSpinner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(),
-                        ItemSelectActivity.Target.class);
-                i.putExtra("item", round.target);
-                targetSpinner.startIntent(i);
-            }
+        targetSpinner.setOnClickListener(v -> {
+            Intent i = new Intent(getActivity(),
+                    ItemSelectActivity.Target.class);
+            i.putExtra("item", round.target);
+            targetSpinner.startIntent(i);
         });
-        targetSpinner.setOnResultListener(new DialogSpinner.OnResultListener() {
-            @Override
-            public void onResult(Intent data) {
-                round.target = (Target) data.getSerializableExtra("item");
-                adapter.setTarget(round.target);
-                targetSpinner.setItemId(0);
-            }
+        targetSpinner.setOnResultListener(data -> {
+            round.target = (Target) data.getSerializableExtra("item");
+            adapter.setTarget(round.target);
+            targetSpinner.setItemId(0);
         });
         adapter.setTarget(round.target);
         targetSpinner.setItemId(0);
@@ -206,12 +197,7 @@ public class EditStandardRoundFragment extends Fragment
         // Passes
         NumberPicker passes = (NumberPicker) view.findViewById(R.id.passes);
         passes.setTextPattern(R.plurals.passe);
-        passes.setOnValueChangedListener(new NumberPicker.OnValueChangedListener() {
-            @Override
-            public void onValueChanged(int val) {
-                round.passes = val;
-            }
-        });
+        passes.setOnValueChangedListener(val -> round.passes = val);
         passes.setValue(round.passes);
 
         // Arrows per passe
@@ -219,24 +205,14 @@ public class EditStandardRoundFragment extends Fragment
         arrows.setTextPattern(R.plurals.arrow);
         arrows.setMinimum(1);
         arrows.setMaximum(10);
-        arrows.setOnValueChangedListener(new NumberPicker.OnValueChangedListener() {
-            @Override
-            public void onValueChanged(int val) {
-                round.arrowsPerPasse = val;
-            }
-        });
+        arrows.setOnValueChangedListener(val -> round.arrowsPerPasse = val);
         arrows.setValue(round.arrowsPerPasse);
 
         ImageButton remove = (ImageButton) view.findViewById(R.id.remove);
         if (index == 0) {
             remove.setVisibility(View.GONE);
         } else {
-            remove.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    rounds.remove(round, R.string.round_removed);
-                }
-            });
+            remove.setOnClickListener(view1 -> rounds.remove(round, R.string.round_removed));
         }
     }
 }

@@ -227,6 +227,11 @@
     <string name="rounds">Rounds</string>
     <string name="round_removed">One round deleted!</string>
     <string name="custom_round">Custom round</string>
+    <string name="filter">Filter</string>
+    <string name="club">Club</string>
+    <string name="target">Target</string>
+    <string name="field">Field</string>
+    <string name="three_d">3D</string>
     <plurals name="arrow_deleted">
         <item quantity="one">One arrow deleted</item>
         <item quantity="other">%d arrows deleted</item>

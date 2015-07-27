@@ -13,7 +13,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.support.annotation.StringRes;
-import de.dreier.mytargets.shared.R;
+
 import de.dreier.mytargets.shared.models.Diameter;
 
 public class Target3DBase extends Target {
@@ -84,11 +84,16 @@ public class Target3DBase extends Target {
     }
 
     @Override
-    public Diameter[] getDiameters(Context context) {
-        return new Diameter[] {new Diameter(context,R.string.mini),
-                new Diameter(context,R.string.small),
-                new Diameter(context,R.string.medium),
-                new Diameter(context,R.string.large),
-                new Diameter(context,R.string.xlarge)};
+    public Diameter[] getDiameters() {
+        return new Diameter[] {Diameter.MINI,
+                Diameter.SMALL,
+                Diameter.MEDIUM,
+                Diameter.LARGE,
+                Diameter.XLARGE};
+    }
+
+    @Override
+    public boolean is3DTarget() {
+        return true;
     }
 }

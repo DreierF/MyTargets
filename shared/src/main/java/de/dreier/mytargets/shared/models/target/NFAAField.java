@@ -18,8 +18,10 @@ import static android.graphics.Color.WHITE;
 
 public class NFAAField extends CircularTargetBase {
 
+    public static final int ID = 7;
+
     public NFAAField(Context context) {
-        super(context, 7, R.string.nfaa_field);
+        super(context, ID, R.string.nfaa_field);
         zones = 6;
         radius = new float[]{50, 100, 200, 300, 400, 500};
         colorFill = new int[]{DARK_GRAY, DARK_GRAY, WHITE, WHITE, DARK_GRAY, DARK_GRAY};
@@ -42,5 +44,10 @@ public class NFAAField extends CircularTargetBase {
                 rect.exactCenterX() + size, rect.exactCenterY() + size, paintStroke);
         canvas.drawLine(rect.exactCenterX() - size, rect.exactCenterY() + size,
                 rect.exactCenterX() + size, rect.exactCenterY() - size, paintStroke);
+    }
+
+    @Override
+    public boolean isFieldTarget() {
+        return true;
     }
 }

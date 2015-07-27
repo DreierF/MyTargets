@@ -9,7 +9,6 @@ package de.dreier.mytargets.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,24 +53,18 @@ public class TextInputDialog {
             new AlertDialog.Builder(mContext)
                     .setTitle(mTitle)
                     .setView(view)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            String s = input.getText().toString();
-                            if (mChoices != null) {
-                                s += spinner.getSelectedItem();
-                            }
-                            mClickListener.onOkClickListener(s);
-                            dialog.dismiss();
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        String s = input.getText().toString();
+                        if (mChoices != null) {
+                            s += spinner.getSelectedItem();
                         }
+                        mClickListener.onOkClickListener(s);
+                        dialog.dismiss();
                     })
                     .setNegativeButton(android.R.string.cancel,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    mClickListener.onCancelClickListener();
-                                    dialog.dismiss();
-                                }
+                            (dialog, which) -> {
+                                mClickListener.onCancelClickListener();
+                                dialog.dismiss();
                             }).show();
         }
 
