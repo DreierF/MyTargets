@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:animateLayoutChanges="true"
     android:background="?android:attr/selectableItemBackground"
     android:minHeight="48dp"
     android:padding="8dp">
@@ -29,7 +28,6 @@
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@+id/image"
         android:layout_toRightOf="@+id/image"
-        android:animateLayoutChanges="true"
         android:orientation="vertical">
 
         <TextView

@@ -28,7 +28,7 @@ public class Passe extends IdProvider implements Serializable, DatabaseSerializa
     public Passe(int ppp) {
         shot = new Shot[ppp];
         for (int i = 0; i < ppp; i++) {
-            shot[i] = new Shot();
+            shot[i] = new Shot(i);
         }
     }
 
@@ -52,6 +52,9 @@ public class Passe extends IdProvider implements Serializable, DatabaseSerializa
 
     public void sort() {
         Arrays.sort(shot);
+        for (int i = 0; i < shot.length; i++) {
+            shot[i].index = i;
+        }
     }
 
     @Override

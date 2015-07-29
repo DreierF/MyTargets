@@ -33,7 +33,7 @@ public class Circle {
         // Draw the circles background
         circleColorP.setStrokeWidth(2 * density);
         circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
-        circleColorP.setColor(target.getZoneColor(zone));
+        circleColorP.setColor(target.getFillColor(zone));
         can.drawCircle(x, y, rad * density, circleColorP);
 
         // Draw the circles border
@@ -43,7 +43,7 @@ public class Circle {
 
         // Draw the text inside the circle
         mTextPaint.setTextSize(22 * density);
-        mTextPaint.setColor(target.getTextColor(zone));
+        mTextPaint.setColor(target.getContrastColor(zone));
         mTextPaint.setTextSize(font_size * density);
         can.drawText(target.zoneToString(zone, arrow), x, y + font_size * 7 * density / 22.0f,
                      mTextPaint);

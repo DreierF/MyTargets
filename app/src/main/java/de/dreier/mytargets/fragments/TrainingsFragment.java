@@ -25,6 +25,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
 import de.dreier.mytargets.models.Month;
+import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Training;
 
 /**
@@ -63,8 +64,6 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
             } else {
                 month = monthMap.get(parentId);
             }
-            month.reachedPoints += t.reachedPoints;
-            month.maxPoints += t.maxPoints;
         }
         Collections.sort(months);
         setList(months, list, false, new TrainingAdapter());
@@ -119,7 +118,14 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
         public void bindCursor() {
             mTitle.setText(mItem.title);
             mSubtitle.setText(DateFormat.getDateInstance().format(mItem.date));
-            mGes.setText(mItem.reachedPoints + "/" + mItem.maxPoints);
+            int maxPoints = 0;
+            int reachedPoints = 0;
+            ArrayList<Round> rounds = db.getRounds(mItem.getId());
+            for(Round r:rounds) {
+                maxPoints += r.info.getMaxPoints();
+                reachedPoints += r.reachedPoints;
+            }
+            mGes.setText(reachedPoints + "/" + maxPoints);
         }
     }
 

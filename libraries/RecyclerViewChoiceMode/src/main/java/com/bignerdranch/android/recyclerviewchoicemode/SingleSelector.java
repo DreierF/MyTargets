@@ -3,6 +3,7 @@ package com.bignerdranch.android.recyclerviewchoicemode;
 import java.util.List;
 
 public class SingleSelector extends MultiSelector {
+
     @Override
     public void setSelected(int position, long id, boolean isSelected) {
         if (isSelected) {

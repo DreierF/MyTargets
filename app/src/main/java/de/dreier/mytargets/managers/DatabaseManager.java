@@ -24,8 +24,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditBowActivity;
@@ -39,8 +41,10 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.BackupUtils;
+import de.dreier.mytargets.utils.Pair;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 9; //TODO set to 9 before publishing
@@ -195,7 +199,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS ZONE_MATRIX");
             db.execSQL("ALTER TABLE VISIER ADD COLUMN unit TEXT DEFAULT 'm'");
             db.execSQL("ALTER TABLE PASSE ADD COLUMN image TEXT DEFAULT ''");
-            db.execSQL("ALTER TABLE SHOOT ADD COLUMN arrow INTEGER DEFAULT -1");
+            db.execSQL("ALTER TABLE SHOOT ADD COLUMN arrow INTEGER DEFAULT (-1)");
+            db.execSQL("ALTER TABLE SHOOT ADD COLUMN arrow_index INTEGER DEFAULT (-1)");
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN weather INTEGER DEFAULT '0'");
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN wind_speed INTEGER DEFAULT '0'");
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN wind_direction INTEGER DEFAULT '0'");
@@ -207,10 +212,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("UPDATE ROUND SET target=13 WHERE target=4"); // WA Field
             db.execSQL("UPDATE ROUND SET target=10 WHERE target=5"); // DFBV Spiegel
             db.execSQL("UPDATE ROUND SET target=11 WHERE target=6"); // DFBV Spiegel Spot
+
+            // Set all compound 3 spot to vertical
             db.execSQL("UPDATE ROUND SET target=target+1 " +
                     "WHERE _id IN (SELECT r._id FROM ROUND r " +
                     "LEFT JOIN BOW b ON b._id=r.bow " +
-                    "WHERE (r.bow=-2 OR b.type=1) AND r.target=4)"); // Set all compound 3 spot to vertical
+                    "WHERE (r.bow=-2 OR b.type=1) AND r.target=4)");
+
+            // Add shot indices
+            db.execSQL("UPDATE SHOOT SET arrow_index=( " +
+                    "SELECT COUNT(*) FROM SHOOT s " +
+                    "WHERE s._id<SHOOT._id " +
+                    "AND s.passe=SHOOT.passe) " +
+                    "WHERE arrow_index=-1");
 
             // transform before inner points to after inner points
             db.execSQL("UPDATE SHOOT SET s.x = s.x/2.0, s.y = s.y/2.0 " +
@@ -288,7 +302,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         int index = 0;
         HashSet<Long> sid = new HashSet<>();
         StandardRound sr = new StandardRound();
-        sr.institution = StandardRound.CUSTOM;
+        sr.club = StandardRound.CUSTOM;
         if (res.moveToFirst()) {
             sr.indoor = res.getInt(5) == 1;
             do {
@@ -344,16 +358,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
 ////// GET COMPLETE TABLE //////
 
     public ArrayList<Training> getTrainings() {
-        Cursor cursor = db.rawQuery("SELECT t._id, t.title, t.datum, t.bow, t.arrow, b.type, " +
-                "t.weather, t.wind_speed, t.wind_direction, t.location " +
-                "FROM TRAINING t " +
-                "LEFT JOIN ROUND r ON t._id = r.training " +
-                "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
-                "LEFT JOIN PASSE p ON r._id = p.round " +
-                "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                "LEFT JOIN BOW b ON b._id = t.bow " +
-                "GROUP BY t._id " +
-                "ORDER BY t.datum DESC", null);
+        Cursor cursor = db
+                .rawQuery("SELECT t._id, t.title, t.datum, t.bow, t.arrow, t.standard_round, " +
+                        "t.weather, t.wind_speed, t.wind_direction, t.location " +
+                        "FROM TRAINING t " +
+                        "LEFT JOIN ROUND r ON t._id = r.training " +
+                        "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
+                        "LEFT JOIN PASSE p ON r._id = p.round " +
+                        "LEFT JOIN SHOOT s ON p._id = s.passe " +
+                        "LEFT JOIN BOW b ON b._id = t.bow " +
+                        "GROUP BY t._id " +
+                        "ORDER BY t.datum DESC", null);
 
         ArrayList<Training> list = new ArrayList<>(cursor.getCount());
         if (cursor.moveToFirst()) {
@@ -367,25 +382,80 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return list;
     }
 
-    public ArrayList<Round> getRounds(long training) {
-        Cursor res = db.rawQuery(
-                "SELECT r._id, r.comment, " +
-                        "a._id, a.r_index, a.arrows, a.target, a.scoring_style, " +
-                        "r.target, r.scoring_style, a.distance, a.unit, " +
-                        "a.size, a.target_unit, a.passes, a.sid " +
-                        "FROM ROUND r " +
-                        "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
-                        "LEFT JOIN PASSE p ON r._id = p.round " +
-                        "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                        "WHERE r.training=" + training + " " +
-                        "GROUP BY r._id " +
-                        "ORDER BY r._id ASC", null);
+    public Map<Pair<Integer, String>, Integer> getTrainingScoreDistribution(long training) {
+        Cursor cursor = db.rawQuery("SELECT a.target, a.scoring_style, s.points, s.arrow_index, COUNT(*) " +
+                "FROM ROUND r " +
+                "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
+                "LEFT JOIN PASSE p ON r._id = p.round " +
+                "LEFT JOIN SHOOT s ON p._id = s.passe " +
+                "WHERE r.training=" + training + " " +
+                "GROUP BY a.target, a.scoring_style, s.points, s.arrow_index", null);
 
+        if (!cursor.moveToFirst()) {
+            cursor.close();
+            throw new IllegalStateException("There must be at least one round!");
+        }
+        Target t = TargetFactory.createTarget(mContext, cursor.getInt(0), cursor.getInt(1));
+        Map<Pair<Integer, String>, Integer> scoreCount = new HashMap<>();
+        for (int arrow = 0; arrow < 3; arrow++) {
+            for (int zone = -1; zone < t.getZones(); zone++) {
+                scoreCount.put(new Pair<>(t.getPointsByZone(zone, arrow),
+                        t.zoneToString(zone, arrow)), 0);
+            }
+            if (!t.dependsOnArrowIndex()) {
+                break;
+            }
+        }
+        do {
+            if (cursor.isNull(2)) {
+                continue;
+            }
+            int zone = cursor.getInt(2);
+            int arrow = cursor.getInt(3);
+            int count = cursor.getInt(4);
+            Pair<Integer, String> tuple = new Pair<>(t.getPointsByZone(zone, arrow),
+                    t.zoneToString(zone, arrow));
+            count += scoreCount.get(tuple);
+            scoreCount.put(tuple, count);
+        } while (cursor.moveToNext());
+        cursor.close();
+        return scoreCount;
+    }
+
+    public ArrayList<Pair<String, Integer>> getTrainingTopScoreDistribution(long training) {
+        Map<Pair<Integer, String>, Integer> scoreCount = getTrainingScoreDistribution(training);
+        ArrayList<Pair<Integer, String>> list = new ArrayList<>(scoreCount.keySet());
+        Collections.sort(list, (lhs, rhs) -> {
+            if (lhs.getFirst().equals(rhs.getFirst())) {
+                return -lhs.getSecond().compareTo(rhs.getSecond());
+            }
+            if (lhs.getFirst() > rhs.getFirst()) {
+                return -1;
+            }
+            return 1;
+        });
+        ArrayList<Pair<String, Integer>> topScore = new ArrayList<>();
+        topScore.add(new Pair<>(list.get(0).getSecond(), scoreCount.get(list.get(0))));
+        boolean collapseFirst = list.get(0).getFirst().equals(list.get(1).getFirst());
+        if (collapseFirst) {
+            topScore.add(new Pair<>(list.get(1).getSecond() + "+" + list.get(0).getSecond(),
+                    scoreCount.get(list.get(1)) + scoreCount.get(list.get(0))));
+        } else {
+            topScore.add(new Pair<>(list.get(1).getSecond(), scoreCount.get(list.get(1))));
+        }
+        topScore.add(new Pair<>(list.get(2).getSecond(), scoreCount.get(list.get(2))));
+        return topScore;
+    }
+
+    public ArrayList<Round> getRounds(long training) {
+        Cursor res = db.rawQuery("SELECT r._id " +
+                "FROM ROUND r " +
+                "WHERE r.training=" + training + " " +
+                "ORDER BY r._id ASC", null);
         ArrayList<Round> list = new ArrayList<>(res.getCount());
         if (res.moveToFirst()) {
             do {
-                Round r = new Round();
-                r.fromCursor(mContext, res, 0);
+                Round r = getRound(res.getLong(0));
                 list.add(r);
             } while (res.moveToNext());
         }
@@ -394,26 +464,27 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public ArrayList<Passe> getPasses(long training) {
-        Cursor res = db.rawQuery("SELECT s._id, p._id, s.points, s.x, s.y, s.comment, r._id, " +
-                "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id) " +
-                "FROM ROUND r " +
-                "LEFT JOIN PASSE p ON r._id = p.round " +
-                "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                "WHERE r.training = " + training + " " +
-                "ORDER BY r._id ASC, p._id ASC, s._id ASC", null);
+        Cursor res = db.rawQuery(
+                "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, r._id, " +
+                        "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id) " +
+                        "FROM ROUND r " +
+                        "LEFT JOIN PASSE p ON r._id = p.round " +
+                        "LEFT JOIN SHOOT s ON p._id = s.passe " +
+                        "WHERE r.training = " + training + " " +
+                        "ORDER BY r._id ASC, p._id ASC, s._id ASC", null);
         ArrayList<Passe> list = new ArrayList<>();
         if (res.moveToFirst()) {
             long oldRoundId = -1;
             int pIndex = 0;
             do {
-                int ppp = res.getInt(7);
+                int ppp = res.getInt(9);
                 if (ppp == 0) {
                     res.moveToNext();
                     continue;
                 }
                 Passe passe = new Passe(ppp);
                 passe.setId(res.getLong(1));
-                passe.roundId = res.getLong(6);
+                passe.roundId = res.getLong(8);
                 if (oldRoundId != passe.roundId) {
                     pIndex = 0;
                     oldRoundId = passe.roundId;
@@ -431,18 +502,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public ArrayList<Passe> getPassesOfRound(long round) {
-        Cursor res = db.rawQuery("SELECT s._id, p._id, s.points, s.x, s.y, s.comment, " +
-                "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id) " +
-                "FROM PASSE p  " +
-                "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                "WHERE p.round = " + round + " " +
-                "ORDER BY p._id ASC, s._id ASC", null);
+        Cursor res = db.rawQuery(
+                "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, " +
+                        "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id) " +
+                        "FROM PASSE p  " +
+                        "LEFT JOIN SHOOT s ON p._id = s.passe " +
+                        "WHERE p.round = " + round + " " +
+                        "ORDER BY p._id ASC, s._id ASC", null);
         ArrayList<Passe> list = new ArrayList<>();
         if (res.moveToFirst()) {
             long oldRoundId = -1;
             int pIndex = 0;
             do {
-                int ppp = res.getInt(6);
+                int ppp = res.getInt(8);
                 if (ppp == 0) {
                     res.moveToNext();
                     continue;
@@ -534,19 +606,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
             tr.fromCursor(mContext, cursor, 0);
         }
         cursor.close();
-
-        // Get number of X, 10 and 9 score
-        Cursor cur = db.rawQuery("SELECT s.points AS zone, COUNT(*) " +
-                "FROM ROUND r, PASSE p, SHOOT s " +
-                "WHERE r._id=p.round AND r.training=" + training +
-                " AND s.passe=p._id AND " +
-                "s.points<3 AND s.points>-1 GROUP BY zone", null);
-        if (cur.moveToFirst()) {
-            do {
-                tr.scoreCount[cur.getInt(0)] = cur.getInt(1);
-            } while (cur.moveToNext());
-        }
-        cur.close();
         return tr;
     }
 
@@ -568,15 +627,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
         r.fromCursor(mContext, cursor, 0);
         cursor.close();
 
-        // Get number of X, 10 and 9 score
-        Cursor cur = db.rawQuery("SELECT s.points AS zone, COUNT(*) " +
-                "FROM ROUND r, PASSE p, SHOOT s " +
-                "WHERE r._id=p.round AND p.round=" + round +
-                " AND s.passe=p._id AND " +
-                "s.points<3 AND s.points>-1 GROUP BY zone", null);
+        // Calculate reached points
+        Cursor cur = db.rawQuery("SELECT s.points, s.arrow_index " +
+                "FROM PASSE p, SHOOT s " +
+                "WHERE p.round=" + round + " " +
+                "AND s.passe=p._id", null);
         if (cur.moveToFirst()) {
             do {
-                r.scoreCount[cur.getInt(0)] = cur.getInt(1);
+                r.reachedPoints += r.info.target.getPointsByZone(cur.getInt(0), cur.getInt(1));
             } while (cur.moveToNext());
         }
         cur.close();
@@ -584,7 +642,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public Passe getPasse(long passeId) {
-        String[] cols = {ID, Shot.PASSE, Shot.ZONE, Shot.X, Shot.Y, Shot.COMMENT};
+        String[] cols = {ID, Shot.PASSE, Shot.ZONE, Shot.X, Shot.Y, Shot.COMMENT, Shot.ARROW,
+                Shot.INDEX};
         Cursor res = db
                 .query(Shot.TABLE, cols, Shot.PASSE + "=" + passeId, null, null, null,
                         ID + " ASC");
@@ -684,7 +743,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public StandardRound getStandardRound(long standardRoundId) {
-        Cursor cursor = db.rawQuery("SELECT s._id, s.name, s.institution, s.indoor, " +
+        Cursor cursor = db.rawQuery("SELECT s._id, s.name, s.club, s.indoor, " +
                 "a._id, a.r_index, a.arrows, a.target, a.scoring_style, a.target, a.scoring_style, a.distance, a.unit, " +
                 "a.size, a.target_unit, a.passes, a.sid " +
                 "FROM STANDARD_ROUND_TEMPLATE s " +

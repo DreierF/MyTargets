@@ -17,6 +17,7 @@ public class Shot extends IdProvider
     public static final String Y = "y";
     public static final String COMMENT = "comment";
     public static final String ARROW = "arrow";
+    public static final String INDEX = "arrow_index";
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -25,7 +26,8 @@ public class Shot extends IdProvider
                     X + " REAL," +
                     Y + " REAL," +
                     COMMENT + " TEXT," +
-                    ARROW + " INTEGER);";
+                    ARROW + " INTEGER," +
+                    INDEX + " INTEGER);";
 
     public static final int NOTHING_SELECTED = -2;
     public int zone = NOTHING_SELECTED;
@@ -33,8 +35,11 @@ public class Shot extends IdProvider
     public long passe;
     public float x, y;
     public String comment = "";
+    private int arrow;
+    public int index;
 
-    public Shot() {
+    public Shot(int i) {
+        index = i;
     }
 
     @Override
@@ -58,6 +63,8 @@ public class Shot extends IdProvider
         values.put(Shot.X, x);
         values.put(Shot.Y, y);
         values.put(Shot.COMMENT, comment);
+        values.put(Shot.ARROW, arrow);
+        values.put(Shot.INDEX, index);
         return values;
     }
 
@@ -69,5 +76,7 @@ public class Shot extends IdProvider
         x = cursor.getFloat(3);
         y = cursor.getFloat(4);
         comment = cursor.getString(5);
+        arrow = cursor.getInt(6);
+        index = cursor.getInt(7);
     }
 }

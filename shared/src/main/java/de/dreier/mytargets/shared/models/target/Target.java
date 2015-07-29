@@ -2,6 +2,7 @@ package de.dreier.mytargets.shared.models.target;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -10,12 +11,15 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.StringRes;
+import android.text.TextPaint;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.IIdProvider;
+import de.dreier.mytargets.shared.models.Passe;
+import de.dreier.mytargets.shared.models.Shot;
 
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
@@ -38,6 +42,8 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     protected static final int TURBO_YELLOW = 0xFFFEEA00;
     protected static final int LEMON_YELLOW = 0xFFF6EB0F;
 
+    protected static final float ARROW_RADIUS = 8;
+
     public long id;
     public String name;
     protected int zones;
@@ -47,9 +53,11 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     protected int[] strokeWidth;
     protected boolean[] showAsX;
     protected int[][] zonePoints;
-    protected transient Paint paintFill, paintStroke;
     public int scoringStyle;
     public Diameter size;
+
+    protected transient Paint paintFill, paintStroke;
+    private transient TextPaint paintText;
 
     protected Target(Context c, long id, @StringRes int nameRes) {
         this.id = id;
@@ -63,6 +71,9 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
         paintStroke = new Paint();
         paintStroke.setStyle(Paint.Style.STROKE);
         paintStroke.setAntiAlias(true);
+        paintText = new TextPaint();
+        paintText.setAntiAlias(true);
+        paintText.setColor(Color.BLACK);
     }
 
     @Override
@@ -90,6 +101,70 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
             drawZone(canvas, rect, zone);
         }
         onPostDraw(canvas, rect);
+    }
+
+    public void drawArrows(Canvas canvas, ArrayList<Passe> passes) {
+        for (Passe p : passes) {
+            drawArrows(canvas, p);
+        }
+    }
+
+    public void drawArrows(Canvas canvas, Passe passe) {
+        drawArrows(canvas, passe, getBounds());
+    }
+
+    protected void drawArrows(Canvas canvas, Passe passe, Rect rect) {
+        for (int arrow = 0; arrow < passe.shot.length; arrow++) {
+            drawArrow(canvas, passe.shot[arrow], rect);
+        }
+    }
+
+    public void drawArrow(Canvas canvas, Shot shot) {
+        drawArrow(canvas, shot, getBounds());
+    }
+
+    protected void drawArrow(Canvas canvas, Shot shot, Rect rect) {
+        paintFill.setColor(getContrastColor(shot.zone));
+        float[] pos = getArrowPosition(rect, shot.x, shot.y, shot.index);
+        canvas.drawCircle(pos[0], pos[1], getArrowSize(rect, shot.index), paintFill);
+    }
+
+    protected float[] getArrowPosition(Rect rect, float x, float y, int arrow) {
+        float[] pos = new float[2];
+        pos[0] = rect.left + recalc(rect, (1 + x) * 500);
+        pos[1] = rect.top + recalc(rect, (1 + y) * 500);
+        return pos;
+    }
+
+    public void drawFocusedArrow(Canvas canvas, Shot shot) {
+        drawFocusedArrow(canvas, shot, getBounds());
+    }
+
+    private void drawFocusedArrow(Canvas canvas, Shot shot, Rect rect) {
+        paintFill.setColor(getContrastColor(shot.zone));
+        float[] pos = getArrowPosition(rect, shot.x, shot.y, shot.index);
+        paintFill.setColor(0xFF009900);
+        canvas.drawCircle(pos[0], pos[1], getArrowSize(rect, shot.index), paintFill);
+
+        String zoneString = zoneToString(shot.zone, shot.index);
+        float width = paintText.measureText(zoneString) / 2.0f;
+        paintText.setTextSize(recalc(rect, 15));
+        paintText.setColor(getContrastColor(getZoneFromPoint(shot.x, shot.y - 0.06f)));
+        canvas.drawText(zoneString, pos[0] - width, pos[1] - recalc(rect, 30), paintText);
+        float lineLen = recalc(rect, 20);
+        canvas.drawLine(pos[0] - lineLen, pos[1], pos[0] + lineLen, pos[1], paintFill);
+        canvas.drawLine(pos[0], pos[1] - lineLen, pos[0], pos[1] + lineLen, paintFill);
+    }
+
+    protected float getArrowSize(Rect rect, int arrow) {
+        return recalc(rect, ARROW_RADIUS);
+    }
+
+    public void drawArrowAvg(Canvas canvas, float x, float y, int arrow) {
+        Rect rect = getBounds();
+        paintFill.setColor(Color.RED);
+        float[] pos = getArrowPosition(rect, x, y, arrow);
+        canvas.drawCircle(pos[0], pos[1], getArrowSize(rect, arrow), paintFill);
     }
 
     protected void drawZone(Canvas canvas, Rect rect, int zone) {
@@ -145,6 +220,9 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     }
 
     public int getPointsByZone(int zone, int arrow) {
+        if (zone == -1 || zone >= zones) {
+            return 0;
+        }
         return zonePoints[scoringStyle][zone];
     }
 
@@ -169,7 +247,7 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
         return size * rect.width() / 1000.0f;
     }
 
-    public int getZoneColor(int zone) {
+    public int getFillColor(int zone) {
         if (zone == -1 || zone >= zones) {
             return BLACK;
         }
@@ -194,23 +272,53 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     }
 
     public int getStrokeColor(int zone) {
-        if (zone == -1 || zone >= zones) {
-            return WHITE;
-        }
-        if (colorFill[zone] == WHITE) {
+        if (zone < 0 || zone >= zones) {
             return BLACK;
         }
-        return DARK_GRAY;
+        switch (colorFill[zone]) {
+            case WHITE:
+                return BLACK;
+            case BLACK:
+            case DARK_GRAY:
+            case GRAY:
+            case LIGHT_GRAY:
+            case ORANGE:
+            case GREEN:
+            case BROWN:
+            case CERULEAN_BLUE:
+            case SAPPHIRE_BLUE:
+            case FLAMINGO_RED:
+            case RED:
+            case TURBO_YELLOW:
+            case LEMON_YELLOW:
+                return colorFill[zone];
+            default:
+                return DARK_GRAY;
+        }
     }
 
-    public int getTextColor(int zone) {
-        if (zone == -1 || zone >= zones) {
+    public int getContrastColor(int zone) {
+        if (zone < 0 || zone >= zones) {
             return WHITE;
         }
-        if (colorFill[zone] == WHITE) {
-            return BLACK;
+        switch (colorFill[zone]) {
+            case WHITE:
+            case LIGHTER_GRAY:
+            case LIGHT_GRAY:
+            case TURBO_YELLOW:
+            case LEMON_YELLOW:
+                return BLACK;
+            case ORANGE:
+                return BLACK;
+            case GREEN:
+                return BLACK;
+            case BROWN:
+                return BLACK;
+            case SAPPHIRE_BLUE:
+                return BLACK;
+            default:
+                return WHITE;
         }
-        return WHITE;
     }
 
     @Override

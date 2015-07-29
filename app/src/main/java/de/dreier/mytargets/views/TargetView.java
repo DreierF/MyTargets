@@ -11,7 +11,6 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -19,7 +18,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -95,9 +93,7 @@ public class TargetView extends TargetViewBase {
     };
     private LinearLayout keyboard;
     private boolean spotFocused = false;
-    private Paint shadowP;
     private RectF orgRect;
-    private Paint scorePaint;
 
     public TargetView(Context context) {
         super(context);
@@ -165,15 +161,6 @@ public class TargetView extends TargetViewBase {
         drawColorP = new Paint();
         drawColorP.setAntiAlias(true);
 
-        shadowP = new Paint();
-        shadowP.setAntiAlias(true);
-        shadowP.setColor(0xFF009900);
-
-        scorePaint = new TextPaint();
-        scorePaint.setAntiAlias(true);
-        scorePaint.setColor(Color.BLACK);
-        scorePaint.setTextSize(15 * density);
-
         if (isInEditMode()) {
             round = new RoundTemplate();
             round.arrowsPerPasse = 3;
@@ -231,81 +218,37 @@ public class TargetView extends TargetViewBase {
         // Draw exact arrow position
         if (!mKeyboardMode) {
             Midpoint m = new Midpoint();
-            drawPasseShots(canvas, x, y, radius, m, mPasse, false);
+            for (int i = 0; i < mPasse.shot.length && i <= lastSetArrow+1; i++) {
+                Shot shot = mPasse.shot[i];
+                if (shot.zone == Shot.NOTHING_SELECTED) {
+                    continue;
+                }
+                if (i == currentArrow) {
+                    round.target.drawFocusedArrow(canvas, shot);
+                    continue;
+                }
+                round.target.drawArrow(canvas, shot);
+                m.sumX += shot.x;
+                m.sumY += shot.y;
+                m.count++;
+            }
 
             if (showAll) {
                 for (Passe p : mOldShots) {
                     if (p.getId() != mPasse.getId()) {
-                        drawPasseShots(canvas, x, y, radius, m, p, true);
+                        round.target.drawArrows(canvas, p);
+                        for (Shot shot : p.shot) {
+                            m.sumX += shot.x;
+                            m.sumY += shot.y;
+                            m.count++;
+                        }
                     }
                 }
             }
 
             if (m.count >= 2) {
-                drawColorP.setColor(Color.RED);
-                canvas.drawCircle(x + (m.sumX / m.count) * radius, y + (m.sumY / m.count) * radius,
-                        3 * density, drawColorP);
-            }
-        }
-    }
-
-    /**
-     * Draws all shots of a passe as dots onto the target.
-     * The currently selected shot is drawn as a cross.
-     *
-     * @param canvas Canvas to draw on
-     * @param x      X-coordinate of the middle of the target
-     * @param y      Y-coordinate of the middle of the target
-     * @param radius The targets radius in pixels
-     * @param m      Midpoint object where the information about this shot is added
-     * @param p      The passe to be drawn
-     * @param old    True if the provided passe is not the current one
-     */
-    private void drawPasseShots(Canvas canvas, float x, float y, float radius, Midpoint m, Passe p, boolean old) {
-        RectF rect = new RectF(
-                x - radius,
-                y - radius,
-                x + radius,
-                y + radius);
-        for (int i = 0;
-             old ? i < p.shot.length :
-                     (i <= lastSetArrow + 1 && i < round.arrowsPerPasse &&
-                             p.shot[i].zone != Shot.NOTHING_SELECTED); i++) {
-
-            // For yellow and white background use black font color
-            int colorInd = i == mZoneCount || p.shot[i].zone < 0 ? 0 :
-                    round.target.getZoneColor(p.shot[i].zone);
-            drawColorP.setColor(
-                    colorInd == 0 || colorInd == Color.WHITE ? Color.BLACK : Color.WHITE);
-            float selX = p.shot[i].x;
-            float selY = p.shot[i].y;
-            if (i != currentArrow || old) {
-                m.sumX += selX;
-                m.sumY += selY;
-                m.count++;
-            }
-
-            // Draw arrow position
-            RectF spotRect = new RectF(spotRects[i % spotRects.length]);
-            float scale = radius / 250.0f;
-            spotRect.left = rect.left + spotRect.left * scale;
-            spotRect.top = rect.top + spotRect.top * scale;
-            spotRect.right = rect.left + spotRect.right * scale;
-            spotRect.bottom = rect.top + spotRect.bottom * scale;
-
-            float xp = spotRect.left + (1 + selX) * spotRect.width() * 0.5f;
-            float yp = spotRect.top + (1 + selY) * spotRect.height() * 0.5f;
-
-            if (i == currentArrow && !old) { // As + if it is currently selected
-                int zone = round.target.getZoneFromPoint(selX, selY);
-                String zoneString = round.target.zoneToString(zone, currentArrow);
-                float width = scorePaint.measureText(zoneString) / 2.0f;
-                canvas.drawText(zoneString, xp - width, yp - 10 * density, scorePaint);
-                canvas.drawCircle(xp, yp, 3 * density, shadowP);
-                canvas.drawLine(xp - 10 * density, yp, xp + 10 * density, yp, shadowP);
-                canvas.drawLine(xp, yp - 10 * density, xp, yp + 10 * density, shadowP);
-            } else { // otherwise as dot
-                canvas.drawCircle(xp, yp, 3 * density, drawColorP);
+                round.target.drawArrowAvg(canvas, m.sumX / m.count, m.sumY / m.count,
+                        Math.min(currentArrow, mPasse.shot.length - 1));
             }
         }
     }
@@ -477,7 +420,7 @@ public class TargetView extends TargetViewBase {
     @Override
     protected Shot getShotFromPos(float x, float y) {
         int rings = round.target.getZones();
-        Shot s = new Shot();
+        Shot s = new Shot(currentArrow);
         s.x = (x - orgMidX) / (orgRadius - 30 * density);
         s.y = (y - orgMidY) / (orgRadius - 30 * density);
 

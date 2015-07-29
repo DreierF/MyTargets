@@ -94,6 +94,7 @@ public class TargetFactory {
                 throw new IllegalArgumentException("id out of range");
         }
         t.scoringStyle = scoringStyle;
+        t.size = t.getDiameters()[0];
         return t;
     }
 

@@ -31,9 +31,6 @@ public class Training extends IdProvider implements DatabaseSerializable {
 
     public String title = "";
     public Date date = new Date();
-    public int reachedPoints;
-    public int maxPoints;
-    public int[] scoreCount = new int[3];
     public Environment environment;
     public long standardRoundId;
     public long bow;

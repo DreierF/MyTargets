@@ -29,9 +29,23 @@ public class SpotBase extends Target {
     @Override
     protected void draw(Canvas canvas, Rect rect) {
         for (int i = 0; i < facePositions.length; i++) {
-            face.draw(canvas, getBounds(i,rect));
+            face.draw(canvas, getBounds(i, rect));
         }
         onPostDraw(canvas, rect);
+    }
+
+    @Override
+    protected float[] getArrowPosition(Rect rect, float x, float y, int arrow) {
+        rect = getBounds(arrow, rect);
+        float[] pos = new float[2];
+        pos[0] = rect.left + recalc(rect, (1 + x) * rect.width() * 0.5f);
+        pos[1] = rect.top + recalc(rect, (1 + y) * rect.width() * 0.5f);
+        return pos;
+    }
+
+    @Override
+    protected float getArrowSize(Rect rect, int arrow) {
+        return recalc(getBounds(arrow, rect), ARROW_RADIUS);
     }
 
     @Override
@@ -55,9 +69,9 @@ public class SpotBase extends Target {
         return face.zoneToX(zone);
     }
 
-    public int getZoneColor(int zone) {
+    public int getFillColor(int zone) {
         face.scoringStyle = scoringStyle;
-        return face.getZoneColor(zone);
+        return face.getFillColor(zone);
     }
 
     public int getStrokeColor(int zone) {
@@ -65,9 +79,9 @@ public class SpotBase extends Target {
         return face.getStrokeColor(zone);
     }
 
-    public int getTextColor(int zone) {
+    public int getContrastColor(int zone) {
         face.scoringStyle = scoringStyle;
-        return face.getTextColor(zone);
+        return face.getContrastColor(zone);
     }
 
     public int getZones() {

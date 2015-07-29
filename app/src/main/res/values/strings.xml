@@ -51,7 +51,8 @@
 
     <!-- Share -->
     <string name="share">Share</string>
-    <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$d times X\n%2$d times 10\n%3$d times 9\nThis makes a total of %4$d out of %5$d rings.</string>
+    <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$sThis makes a total of %2$d out of %3$d rings.</string>
+    <string name="d_times_s">%1$d times %2$s\n</string>
     <string name="comments">Comments</string>
     <string name="text">Text</string>
     <string name="dispersion_pattern">Dispersion pattern</string>
@@ -232,6 +233,7 @@
     <string name="target">Target</string>
     <string name="field">Field</string>
     <string name="three_d">3D</string>
+    <string name="standard_round">Standard round</string>
     <plurals name="arrow_deleted">
         <item quantity="one">One arrow deleted</item>
         <item quantity="other">%d arrows deleted</item>

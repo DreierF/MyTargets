@@ -31,7 +31,7 @@ public class DistanceItemAdapter extends ArrayAdapter<Distance> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = super.getView(position, convertView, parent);
-        ((TextView) convertView).setText(getItem(position).toString());
+        ((TextView) convertView).setText(getItem(position).toString(getContext()));
         return convertView;
     }
 

@@ -26,8 +26,8 @@ public class Round extends IdProvider implements Serializable, DatabaseSerializa
 
     public long training;
     public RoundTemplate info;
-    public int[] scoreCount = new int[3];
     public String comment;
+    public int reachedPoints;
 
     @Override
     public String getTableName() {
@@ -41,7 +41,7 @@ public class Round extends IdProvider implements Serializable, DatabaseSerializa
         values.put(TRAINING, training);
         values.put(TEMPLATE, info.getId());
         values.put(TARGET, info.target.getId());
-        values.put(SCORING_STYLE, info.target.getId());
+        values.put(SCORING_STYLE, info.target.scoringStyle);
         return values;
     }
 

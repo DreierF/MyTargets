@@ -125,7 +125,7 @@ public class EditStandardRoundFragment extends Fragment
     void onSave() {
         StandardRound info = new StandardRound();
         info.setId(mStandardRound);
-        info.institution = StandardRound.CUSTOM;
+        info.club = StandardRound.CUSTOM;
         info.name = name.getText().toString();
         info.indoor = indoor.isChecked();
         info.setRounds(rounds.getList());

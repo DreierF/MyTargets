@@ -36,7 +36,9 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.target.Target;
 
@@ -98,25 +100,26 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
         RadioButton target = (RadioButton) rootView.findViewById(R.id.target);
         RadioButton field = (RadioButton) rootView.findViewById(R.id.field);
         RadioButton three_d = (RadioButton) rootView.findViewById(R.id.three_d);
-        if (prefs.getBoolean("filter_indoor", false)) {
+        if (currentSelection.indoor) {
             indoor.setChecked(true);
         } else {
             outdoor.setChecked(true);
         }
-        if (prefs.getBoolean("filter_metric", prefs.getBoolean("pref_unit", true))) {
+        RoundTemplate firstRound = currentSelection.getRounds().get(0);
+        if (firstRound.distance.unit.equals(Dimension.METER)) {
             metric.setChecked(true);
         } else {
             imperial.setChecked(true);
         }
-        int round_typ = prefs.getInt("filter_typ", 0);
-        if (round_typ == 0) {
-            target.setChecked(true);
-        } else if (round_typ == 1) {
+        if (firstRound.target.isFieldTarget()) {
             field.setChecked(true);
-        } else if (round_typ == 2) {
+        } else if (firstRound.target.is3DTarget()) {
             three_d.setChecked(true);
+        } else {
+            target.setChecked(true);
         }
-        int filter = prefs.getInt("filter_club", 0x2FF);
+        int filter = prefs.getInt("filter_club", 0x1FF);
+        filter |= currentSelection.club;
         for (int i = 0; i < clubs.length; i++) {
             clubs[i].setChecked((1 << i & filter) != 0);
         }
@@ -130,10 +133,10 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
             filter |= (clubs[i].isChecked() ? 1 : 0) << i;
         }
         boolean indoor = location.getCheckedRadioButtonId() == R.id.indoor;
-        boolean isImperial = unit.getCheckedRadioButtonId() == R.id.imperial;
-        String unit_distance = isImperial ? Distance.YARDS : Distance.METER;
+        boolean isMetric = unit.getCheckedRadioButtonId() == R.id.metric;
+        String unit_distance = isMetric ? Distance.METER : Distance.YARDS;
         for (StandardRound r : list) {
-            if (((r.institution & filter) != 0 ||
+            if (((r.club & filter) != 0 ||
                     r.name.startsWith("NFAA/IFAA") && (filter & StandardRound.IFAA) != 0) &&
                     r.getRounds().get(0).distance.unit.equals(unit_distance) &&
                     r.indoor == indoor) {
@@ -151,7 +154,14 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
         if (position > -1) {
             mSingleSelector.setSelected(position, currentSelection.getId(), true);
             mRecyclerView.scrollToPosition(position);
+        } else {
+            mSingleSelector.clearSelections();
         }
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor e = prefs.edit();
+        e.putInt("filter_club", filter);
+        e.apply();
     }
 
     @Override

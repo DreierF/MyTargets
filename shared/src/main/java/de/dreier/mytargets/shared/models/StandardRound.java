@@ -51,7 +51,7 @@ public class StandardRound extends IdProvider implements Serializable, DatabaseS
 
     public static final String TABLE = "STANDARD_ROUND_TEMPLATE";
     private static final String NAME = "name";
-    private static final String INSTITUTION = "institution";
+    private static final String INSTITUTION = "club";
     private static final String INDOOR = "indoor";
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
@@ -61,7 +61,7 @@ public class StandardRound extends IdProvider implements Serializable, DatabaseS
                     INDOOR + " INTEGER);";
 
     public String name;
-    public int institution;
+    public int club;
 
     public ArrayList<RoundTemplate> getRounds() {
         return rounds;
@@ -79,7 +79,7 @@ public class StandardRound extends IdProvider implements Serializable, DatabaseS
     public ContentValues getContentValues() {
         ContentValues values = new ContentValues();
         values.put(NAME, name);
-        values.put(INSTITUTION, institution);
+        values.put(INSTITUTION, club);
         values.put(INDOOR, indoor ? 1 : 0);
         return values;
     }
@@ -88,7 +88,7 @@ public class StandardRound extends IdProvider implements Serializable, DatabaseS
     public void fromCursor(Context context, Cursor cursor, int startColumnIndex) {
         super.setId(cursor.getLong(0));
         name = cursor.getString(1);
-        institution = cursor.getInt(2);
+        club = cursor.getInt(2);
         indoor = cursor.getInt(3) == 1;
     }
 
@@ -765,7 +765,7 @@ public class StandardRound extends IdProvider implements Serializable, DatabaseS
         StandardRound standardRound = new StandardRound();
         standardRound.name = context.getString(name);
         standardRound.indoor = indoor;
-        standardRound.institution = institution;
+        standardRound.club = institution;
         for (int i = 0; i < roundDetails.length; i += 3) {
             RoundTemplate roundTemplate = new RoundTemplate();
             roundTemplate.arrowsPerPasse = arrowsPerPasse;

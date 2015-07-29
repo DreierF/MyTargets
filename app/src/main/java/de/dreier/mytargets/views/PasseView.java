@@ -36,12 +36,10 @@ public class PasseView extends View {
         super(context, attrs, defStyle);
     }
 
-    public void setPoints(Passe p, Target tar) {
+    public void setPoints(Passe p, Target target) {
         passe = p;
-        if (mPasseDrawer == null) {
-            density = getResources().getDisplayMetrics().density;
-            mPasseDrawer = new PasseDrawer(this, density, tar);
-        }
+        density = getResources().getDisplayMetrics().density;
+        mPasseDrawer = new PasseDrawer(this, density, target);
         mPasseDrawer.setPasse(p);
         invalidate();
     }

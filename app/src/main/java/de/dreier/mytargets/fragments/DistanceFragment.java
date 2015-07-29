@@ -112,7 +112,7 @@ public class DistanceFragment extends NowListFragment<Distance>
 
         @Override
         public void bindCursor() {
-            mName.setText(mItem.toString());
+            mName.setText(mItem.toString(getActivity()));
         }
     }
 

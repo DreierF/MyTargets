@@ -15,7 +15,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,14 +37,12 @@ import de.dreier.mytargets.activities.InputActivity;
 import de.dreier.mytargets.activities.ScoreboardActivity;
 import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
-import de.dreier.mytargets.shared.models.Arrow;
-import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.ScoreboardImage;
+import de.dreier.mytargets.utils.ScoreboardUtils;
 import de.dreier.mytargets.utils.TargetImage;
 import de.dreier.mytargets.views.PasseView;
 import de.dreier.mytargets.views.TargetPasseView;
@@ -58,15 +55,12 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         View.OnClickListener {
 
     private long mTraining;
-
     private ArrayList<Round> mRounds;
-
-    boolean target_equals = true;
-    boolean distance_equals = true;
     private FloatingActionButton mFab;
     private boolean mTargetViewMode = false;
     private View mNewLayout;
     private TextView mNewText;
+    private boolean[] equals = new boolean[2];
 
     public PasseFragment() {
     }
@@ -135,65 +129,22 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
 
     void setRoundInfo() {
         TextView info = (TextView) activity.findViewById(R.id.detail_round_info);
-        TextView score = (TextView) activity.findViewById(R.id.detail_score);
+        TextView tvScore = (TextView) activity.findViewById(R.id.detail_score);
 
         Training training = db.getTraining(mTraining);
-        StandardRound standardRound = db.getStandardRound(mTraining);
-        boolean indoor = standardRound.indoor;
-        long bowId = training.bow;
-        long arrowId = training.arrow;
 
-        // Set number of X, 10, 9 shoots
-        String infoText = "<font color=#ffffff>X: <b>" + training.scoreCount[0] + "</b><br>" +
-                getString(R.string.ten_x) + ": <b>" +
-                (training.scoreCount[0] + training.scoreCount[1]) + "</b><br>" +
-                getString(R.string.nine) + ": <b>" + training.scoreCount[2] + "</b></font>";
-        score.setText(Html.fromHtml(infoText));
-
-        String percent = training.maxPoints == 0 ? "" : " (" + (training.reachedPoints * 100 / training.maxPoints) + "%)";
-        infoText = "<font color=#ffffff>" + getString(R.string.points) + ": <b>" + training.reachedPoints + "/" +
-                        training.maxPoints + percent + "</b>";
-
-        // Set round info
-        Bow bow = db.getBow(bowId, true);
-        if (bow != null) {
-            infoText += "<br>" + getString(R.string.bow) +
-                    ": <b>" + TextUtils.htmlEncode(bow.name) + "</b>";
+        ArrayList<Pair<String, Integer>> scoreCount = db
+                .getTrainingTopScoreDistribution(mTraining);
+        String infoText = "<font color=#ffffff>";
+        for (Pair<String, Integer> score : scoreCount) {
+            infoText += score.getFirst() + ": <b>" + score.getSecond() + "</b><br>";
         }
-
-        Arrow arrow = db.getArrow(arrowId, true);
-        if (arrow != null) {
-            infoText += "<br>" + getString(R.string.arrow) +
-                    ": <b>" + TextUtils.htmlEncode(arrow.name) + "</b>";
-        }
-
-        if (mRounds.size() == 0) {
-            infoText += "</font>";
-            info.setText(Html.fromHtml(infoText));
-            return;
-        }
-        // Aggregate round information
-        Round round = mRounds.get(0);
-        String distance = round.info.distance.toString(getActivity());
-        Target target = round.info.target;
-        target_equals = true;
-        distance_equals = true;
-        for (Round r : mRounds) {
-            distance_equals = r.info.distance.toString(getActivity()).equals(distance) && distance_equals;
-            target_equals = r.info.target.equals(target) && target_equals;
-        }
-
-
-        if (distance_equals) {
-            infoText += "<br>" + getString(R.string.distance) + ": <b>" +
-                    distance + " - " + getString(indoor ? R.string.indoor : R.string.outdoor) + "</b>";
-        }
-        if (target_equals) {
-            infoText += "<br>" + getString(R.string.target_face) + ": <b>" +
-                    target + "</b>";
-        }
-
         infoText += "</font>";
+        tvScore.setText(Html.fromHtml(infoText));
+
+        // Set training info
+        infoText = ScoreboardUtils
+                .getTrainingInfoHTML(getActivity(), db, training, mRounds, equals);
         info.setText(Html.fromHtml(infoText));
     }
 
@@ -249,11 +200,21 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
     public void onShareDialogConfirmed(final boolean include_text, final boolean dispersion_pattern, final boolean scoreboard, final boolean comments) {
         // Construct share intent
         mRounds = db.getRounds(mTraining);
-        Training training = db.getTraining(mTraining);
 
+        ArrayList<Pair<String, Integer>> scoreCount = db
+                .getTrainingTopScoreDistribution(mTraining);
+        String scoreText = "";
+        for (Pair<String, Integer> score : scoreCount) {
+            scoreText += getString(R.string.d_times_s, score.getSecond(), score.getFirst());
+        }
+        int maxPoints = 0;
+        int reachedPoints = 0;
+        for (Round r : mRounds) {
+            maxPoints += r.info.getMaxPoints();
+            reachedPoints += r.reachedPoints;
+        }
         final String text = getString(R.string.my_share_text,
-                training.scoreCount[0], training.scoreCount[1],
-                training.scoreCount[2], training.reachedPoints, training.maxPoints);
+                scoreText, reachedPoints, maxPoints);
 
         new Thread(() -> {
             try {
@@ -417,8 +378,8 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
     public class HeaderViewHolder extends SelectableViewHolder<Round> {
         public final TextView mTitle;
         public final TextView mSubtitle;
-       // private final TextView mPoints;
-       // private final TextView mPercentage;
+        // private final TextView mPoints;
+        // private final TextView mPercentage;
 
         public HeaderViewHolder(View itemView) {
             super(itemView, R.id.expand_collapse);
@@ -426,8 +387,8 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
             itemView.setOnLongClickListener(this);
             mTitle = (TextView) itemView.findViewById(R.id.round);
             mSubtitle = (TextView) itemView.findViewById(R.id.dist);
-           // mPoints = (TextView) itemView.findViewById(R.id.totalPoints);
-          //  mPercentage = (TextView) itemView.findViewById(R.id.totalPercentage);
+            // mPoints = (TextView) itemView.findViewById(R.id.totalPoints);
+            //  mPercentage = (TextView) itemView.findViewById(R.id.totalPercentage);
         }
 
         @Override
@@ -439,25 +400,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
             //        mItem.getMaxPoints()) + "%";
             //mPercentage.setText(percent);
 
-            String infoText = "";
-            if (!distance_equals) {
-                infoText += "<br>" + getString(R.string.distance) + ": <b>" +
-                        mItem.info.distance.toString(context)/* + " - " +
-                        getString(mItem.indoor ? R.string.indoor : R.string.outdoor) + "</b>"*/;
-            }
-            if (!target_equals) {
-                infoText += "<br>" + getString(R.string.target_face) + ": <b>" +
-                        mItem.info.target + "</b>";
-            }
-            if (!mItem.comment.isEmpty()) {
-                infoText += "<br>" + getString(R.string.comment) +
-                        ": <b>" + TextUtils.htmlEncode(mItem.comment) + "</b>";
-            }
-
-            if (infoText.startsWith("<br>")) {
-                infoText = infoText.substring(4);
-            }
-
+            String infoText = ScoreboardUtils.getRoundInfoHTML(context, mItem, equals);
             mSubtitle.setText(Html.fromHtml(infoText));
         }
 
