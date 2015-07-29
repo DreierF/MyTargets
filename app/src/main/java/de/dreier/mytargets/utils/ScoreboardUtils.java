@@ -57,9 +57,10 @@ public class ScoreboardUtils {
             int carry = 0, count = 0;
             for (int r = 0; r < rounds.size(); r++) {
                 Round round = rounds.get(r);
-                html += "<tr class=\"align_left\"><td colspan=\"" + (round.info.arrowsPerPasse + 2) +
+                html += "<tr class=\"align_left\"><td colspan=\"" +
+                        (round.info.arrowsPerPasse + 2) +
                         "\">";
-                html += "<b>"+context.getString(R.string.round) + " " + (round.info.index + 1) +
+                html += "<b>" + context.getString(R.string.round) + " " + (round.info.index + 1) +
                         "</b><br />" +
                         getRoundInfoHTML(context, round, equals) +
                         "</td></tr>";
@@ -95,7 +96,8 @@ public class ScoreboardUtils {
                         "<th>" + scoreCount.get(1).getFirst() + "</th>" +
                         "<th>" + scoreCount.get(0).getFirst() + "</th>" +
                         "<th>" + context.getString(R.string.average) + "</th></tr>" +
-                        "<tr class=\"align_center\"><td>" + scoreCount.get(2).getSecond() + "</td>" +
+                        "<tr class=\"align_center\"><td>" + scoreCount.get(2).getSecond() +
+                        "</td>" +
                         "<td>" + scoreCount.get(1).getSecond() + "</td>" +
                         "<td>" + scoreCount.get(0).getSecond() + "</td>" +
                         "<td>" + avg + "</td>" +
@@ -104,11 +106,12 @@ public class ScoreboardUtils {
         }
 
         if (showComments) {
-            String comments = "<table class=\"myTable\" style=\"margin-top:5px;\"><tr class=\"align_center\">" +
-                    "<th>" + context.getString(R.string.round) + "</th>" +
-                    "<th>" + context.getString(R.string.passe) + "</th>" +
-                    "<th>" + context.getString(R.string.points) + "</th>" +
-                    "<th>" + context.getString(R.string.comment) + "</th></tr>";
+            String comments =
+                    "<table class=\"myTable\" style=\"margin-top:5px;\"><tr class=\"align_center\">" +
+                            "<th>" + context.getString(R.string.round) + "</th>" +
+                            "<th>" + context.getString(R.string.passe) + "</th>" +
+                            "<th>" + context.getString(R.string.points) + "</th>" +
+                            "<th>" + context.getString(R.string.comment) + "</th></tr>";
             int commentsCount = 0;
 
             int j = 0;
@@ -158,11 +161,15 @@ public class ScoreboardUtils {
     }
 
     public static String getRoundInfoHTML(Context context, Round round, boolean[] equals) {
-        String infoText = "";
+        int maxPoints = round.info.getMaxPoints();
+        int reachedPoints = round.reachedPoints;
+
+        String percent = maxPoints == 0 ? "" : " (" + (reachedPoints * 100 / maxPoints) + "%)";
+        String infoText = context.getString(R.string.points) + ": <b>" +
+                reachedPoints + "/" + maxPoints + percent + "</b>";
         if (!equals[0]) {
             infoText += "<br>" + context.getString(R.string.distance) + ": <b>" +
-                    round.info.distance.toString(context)/* + " - " +
-                        getString(mItem.indoor ? R.string.indoor : R.string.outdoor) + "</b>"*/;
+                    round.info.distance.toString(context);
         }
         if (!equals[1]) {
             infoText += "<br>" + context.getString(R.string.target_face) + ": <b>" +
@@ -171,10 +178,6 @@ public class ScoreboardUtils {
         if (!round.comment.isEmpty()) {
             infoText += "<br>" + context.getString(R.string.comment) +
                     ": <b>" + TextUtils.htmlEncode(round.comment) + "</b>";
-        }
-
-        if (infoText.startsWith("<br>")) {
-            infoText = infoText.substring(4);
         }
         return infoText;
     }
@@ -185,7 +188,7 @@ public class ScoreboardUtils {
 
         int maxPoints = 0;
         int reachedPoints = 0;
-        for(Round r:rounds) {
+        for (Round r : rounds) {
             maxPoints += r.info.getMaxPoints();
             reachedPoints += r.reachedPoints;
         }

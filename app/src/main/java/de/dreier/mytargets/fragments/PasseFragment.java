@@ -112,6 +112,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
 
         setList(mRounds, db.getPasses(mTraining), true,
                 new PasseAdapter());
+        mAdapter.notifyDataSetChanged();
 
         activity.supportInvalidateOptionsMenu();
     }
@@ -378,8 +379,6 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
     public class HeaderViewHolder extends SelectableViewHolder<Round> {
         public final TextView mTitle;
         public final TextView mSubtitle;
-        // private final TextView mPoints;
-        // private final TextView mPercentage;
 
         public HeaderViewHolder(View itemView) {
             super(itemView, R.id.expand_collapse);
@@ -387,18 +386,12 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
             itemView.setOnLongClickListener(this);
             mTitle = (TextView) itemView.findViewById(R.id.round);
             mSubtitle = (TextView) itemView.findViewById(R.id.dist);
-            // mPoints = (TextView) itemView.findViewById(R.id.totalPoints);
-            //  mPercentage = (TextView) itemView.findViewById(R.id.totalPercentage);
         }
 
         @Override
         public void bindCursor() {
             Context context = mTitle.getContext();
             mTitle.setText(context.getString(R.string.round) + " " + (mRounds.indexOf(mItem) + 1));
-            //mPoints.setText(mItem.reachedPoints + "/" + mItem.maxPoints);
-            //String percent = mItem.getMaxPoints() == 0 ? "" : (mItem.getReachedPoints() * 100 /
-            //        mItem.getMaxPoints()) + "%";
-            //mPercentage.setText(percent);
 
             String infoText = ScoreboardUtils.getRoundInfoHTML(context, mItem, equals);
             mSubtitle.setText(Html.fromHtml(infoText));

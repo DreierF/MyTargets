@@ -31,6 +31,7 @@ import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 import com.bignerdranch.android.recyclerviewchoicemode.SingleSelector;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
@@ -42,34 +43,49 @@ import de.dreier.mytargets.utils.MyBackupAgent;
 public class TargetFragment extends NowListFragment<Target>
         implements SeekBar.OnSeekBarChangeListener {
 
+    public static final String TYPE_FIXED = "type_fixed";
     final SingleSelector mSingleSelector = new SingleSelector();
     private Spinner scoringStyle;
     private SeekBar seekBar;
     private TextView label;
-    private TargetAdapter adapter;
+    private boolean typeFixed = false;
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
-        adapter = new TargetAdapter();
-        setList(TargetFactory.getList(getActivity()), adapter);
-        mEditable = false;
-        mSingleSelector.setSelectable(true);
+        // Set up toolbar
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         assert supportActionBar != null;
         supportActionBar.setDisplayHomeAsUpEnabled(true);
         supportActionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+
+        // Process passed arguments
+        Target t = (Target) getArguments().getSerializable("item");
+        typeFixed = getArguments().getBoolean(TYPE_FIXED);
+        List<Target> list;
+        if (typeFixed) {
+            list = TargetFactory.getList(getActivity(), t);
+        } else {
+            list = TargetFactory.getList(getActivity());
+        }
+        setList(list, new TargetAdapter());
+        mEditable = false;
+        mSingleSelector.setSelectable(true);
+
+
         scoringStyle = (Spinner) rootView.findViewById(R.id.scoring_style);
         seekBar = (SeekBar) rootView.findViewById(R.id.target_size_seekbar);
         label = (TextView) rootView.findViewById(R.id.target_size_label);
-        Target t = (Target) getArguments().getSerializable("item");
-        mSingleSelector.setSelected((int) t.getId(), t.getId(), true);
+        mSingleSelector.setSelected(list.indexOf(t), t.getId(), true);
         updateSettings();
+
+        // Set initial target size
         Diameter[] diameters = t.getDiameters();
         for (int i = 0; i < diameters.length; i++) {
             if (diameters[i].equals(t.size)) {
                 seekBar.setProgress(i);
+                label.setText(t.size.toString(getActivity()));
                 break;
             }
         }
@@ -79,12 +95,17 @@ public class TargetFragment extends NowListFragment<Target>
     }
 
     private void updateSettings() {
-        Target target = adapter.getItem(mSingleSelector.getSelectedPosition());
+        Target target = mAdapter.getItem(mSingleSelector.getSelectedPosition());
         Diameter[] diameters = target.getDiameters();
         if (seekBar.getProgress() > diameters.length - 1) {
             seekBar.setProgress(diameters.length - 1);
         }
         seekBar.setMax(diameters.length - 1);
+        if (!typeFixed && diameters.length > 1) {
+            seekBar.setVisibility(View.VISIBLE);
+        } else {
+            seekBar.setVisibility(View.GONE);
+        }
 
         // Init target size
         Diameter targetSize = diameters[seekBar.getProgress()];
@@ -99,6 +120,12 @@ public class TargetFragment extends NowListFragment<Target>
                 android.R.layout.simple_spinner_item, styles);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         scoringStyle.setAdapter(spinnerAdapter);
+        if (styles.size() > 1) {
+            scoringStyle.setVisibility(View.VISIBLE);
+        } else {
+            scoringStyle.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -115,6 +142,9 @@ public class TargetFragment extends NowListFragment<Target>
     public void onClick(SelectableViewHolder holder, Target mItem) {
         if (mItem == null) {
             return;
+        }
+        if(mSingleSelector.getSelectedPosition()==holder.getAdapterPosition()) {
+            onSave();
         }
         mSingleSelector.setSelected(holder, true);
         updateSettings();
@@ -133,17 +163,15 @@ public class TargetFragment extends NowListFragment<Target>
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
             onSave();
-            getActivity().finish();
-            getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     void onSave() {
-        int id = mSingleSelector.getSelectedPosition();
+        Target target = mAdapter.getItem(mSingleSelector.getSelectedPosition());
         int scoring = scoringStyle.getSelectedItemPosition();
-        Target target = TargetFactory.createTarget(getActivity(), id, scoring);
+        target = TargetFactory.createTarget(getActivity(), target.id, scoring);
         Diameter[] diameters = target.getDiameters();
         target.size = diameters[seekBar.getProgress()];
 
@@ -157,6 +185,8 @@ public class TargetFragment extends NowListFragment<Target>
         Intent data = new Intent();
         data.putExtra("item", target);
         getActivity().setResult(Activity.RESULT_OK, data);
+        getActivity().finish();
+        getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
     @Override

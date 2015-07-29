@@ -15,9 +15,9 @@ public class TargetFactory {
 
     private static List<Target> list;
 
-    public static Target createTarget(Context context, int id, int scoringStyle) {
+    public static Target createTarget(Context context, long id, int scoringStyle) {
         Target t;
-        switch (id) {
+        switch ((int)id) {
             case 0: // WA Full
                 t = new WAFullTarget(context);
                 break;
@@ -106,5 +106,22 @@ public class TargetFactory {
             }
         }
         return list;
+    }
+
+    public static List<Target> getList(Context context, Target t) {
+        getList(context);
+        List<Target> out = new ArrayList<>();
+        if (t.id < 7) {
+            int til = t.size.value <= 60 ? 7 : 4;
+            for (int i = 0; i < til; i++) {
+                out.add(list.get(i));
+            }
+        } else if (t.id == 10 || t.id == 11) {
+            out.add(list.get(10));
+            out.add(list.get(11));
+        } else {
+            out.add(list.get((int) t.id));
+        }
+        return out;
     }
 }

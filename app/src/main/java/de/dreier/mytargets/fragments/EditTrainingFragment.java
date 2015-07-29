@@ -39,6 +39,7 @@ import de.dreier.mytargets.adapters.BowItemAdapter;
 import de.dreier.mytargets.adapters.EnvironmentItemAdapter;
 import de.dreier.mytargets.adapters.StandardRoundsItemAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.Round;
@@ -46,6 +47,7 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.shared.models.target.WAFullTarget;
 import de.dreier.mytargets.utils.MyBackupAgent;
 import de.dreier.mytargets.views.DialogSpinner;
@@ -137,6 +139,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
                 Intent i1 = new Intent(activity,
                         ItemSelectActivity.Target.class);
                 i1.putExtra("item", target);
+                i1.putExtra(TargetFragment.TYPE_FIXED, true);
                 startActivityForResult(i1, REQ_SELECTED_SPECIFIC_TARGET);
             } else {
                 Intent i1 = new Intent(activity,
@@ -199,7 +202,6 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             date = train.date;
             bow.setItemId(train.bow);
             arrow.setItemId(train.arrow);
-            // comment.setText(train.co); TODO
             standardRoundSpinner.setItemId(train.standardRoundId);
             ((EnvironmentItemAdapter) environment.getAdapter()).setEnvironment(train.environment);
             setTrainingDate();
@@ -249,8 +251,11 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
                 Target st = (Target) data.getSerializableExtra("item");
                 StandardRound standardRound = (StandardRound) standardRoundSpinner
                         .getSelectedItem();
-                for(RoundTemplate template:standardRound.getRounds()) {
-                    template.target = st;
+                for (RoundTemplate template : standardRound.getRounds()) {
+                    Diameter size = template.target.size;
+                    template.target = TargetFactory
+                            .createTarget(getActivity(), st.getId(), st.scoringStyle);
+                    template.target.size = size;
                 }
                 ((StandardRoundsItemAdapter) standardRoundSpinner.getAdapter())
                         .setStandardRound(standardRound);

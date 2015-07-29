@@ -21,49 +21,68 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="66dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="45dp"
-            android:layout_marginRight="16dp"
-            android:orientation="vertical">
+            android:layout_marginRight="16dp">
 
-            <Spinner
-                android:id="@+id/scoring_style"
-                android:layout_width="fill_parent"
-                android:layout_marginRight="80dp"
-                android:layout_marginLeft="5dp"
-                android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:id="@+id/left_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/target_size_label"
+                android:layout_toStartOf="@+id/target_size_label"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
 
-            <FrameLayout
-                android:layout_width="fill_parent"
-                android:layout_height="48dp"
-                android:orientation="horizontal">
+                <Spinner
+                    android:id="@+id/scoring_style"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"/>
 
                 <SeekBar
                     android:id="@+id/target_size_seekbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="80dp"
                     android:thumbTint="@color/white"/>
+            </LinearLayout>
 
-                <TextView
-                    android:id="@+id/target_size_label"
-                    android:layout_width="75dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|center_vertical"
-                    android:gravity="end"
-                    tools:text="60cm"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"/>
 
-            </FrameLayout>
+            <TextView
+                android:id="@+id/target_size_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/left_layout"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="end|bottom"
+                android:gravity="end|bottom"
+                android:minWidth="70dp"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                tools:text="60cm"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView style="@style/card_list"/>
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView style="@style/card_list"/>
+
+        <View
+            android:id="@+id/shadow"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_drop_shadow_height"
+            android:background="@drawable/toolbar_drop_shadow"/>
+
+    </FrameLayout>
+
 </LinearLayout>

@@ -204,7 +204,7 @@ public class StandardRound extends IdProvider implements Serializable, DatabaseS
                 WAFullTarget.ID, 0, 6, 50, 80, 12));
         rounds.add(build(context, WA, R.string.wa_cub, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
-                WAFullTarget.ID, 0, 6, 50, 122, 6, 40, 80, 6, 30, 122,
+                WAFullTarget.ID, 0, 6, 50, 122, 6, 40, 122, 6, 30, 80,
                 6, 20, 80, 6));
         rounds.add(build(context, WA, R.string.wa_standard, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,

@@ -13,12 +13,13 @@ import android.graphics.Rect;
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.R;
 
 public class WA3RingTarget extends CircularTargetBase {
 
+    public static final int ID = 3;
+
     public WA3RingTarget(Context context) {
-        super(context, 3, R.string.wa_3_ring);
+        super(context, ID, R.string.wa_3_ring);
         zones = 4;
         radius = new float[]{83, 167, 333, 500};
         colorFill = new int[]{LEMON_YELLOW, LEMON_YELLOW, LEMON_YELLOW, FLAMINGO_RED};

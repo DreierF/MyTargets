@@ -11,6 +11,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import de.dreier.mytargets.shared.models.Passe;
@@ -40,6 +41,9 @@ public class PasseView extends View {
         passe = p;
         density = getResources().getDisplayMetrics().density;
         mPasseDrawer = new PasseDrawer(this, density, target);
+        if (rect.width() > 0) {
+            mPasseDrawer.animateToRect(rect);
+        }
         mPasseDrawer.setPasse(p);
         invalidate();
     }
