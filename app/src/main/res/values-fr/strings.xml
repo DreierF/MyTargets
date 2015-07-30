@@ -47,7 +47,8 @@
 
     <!-- Share -->
     <string name="share">Partager</string>
-    <string name="my_share_text">Ouais, regarde mon score au tir à l\'arc. J\'ai eu:\n%1$d fois X\n%2$d fois 10\n%3$d fois 9\nCela fait un total de %4$d sur %5$d.</string>
+    <string name="my_share_text">Ouais, regarde mon score au tir à l\'arc. J\'ai eu:\n%1$sCela fait un total de %2$d sur %3$d.</string>
+    <string name="d_times_s">%1$d fois %2$s\n</string>
     <string name="comments">Commentaires</string>
     <string name="text">Texte</string>
     <string name="dispersion_pattern">Dispersion pattern</string>

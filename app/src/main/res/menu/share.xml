@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="all">
+        <item
+            android:id="@+id/text"
+            android:icon="@drawable/ic_text_48dp"
+            android:title="@string/text">
+        </item>
+        <item
+            android:id="@+id/scoreboard"
+            android:icon="@drawable/ic_grid_48db"
+            android:title="@string/scoreboard">
+        </item>
+        <item
+            android:id="@+id/dispersion_pattern"
+            android:icon="@drawable/ic_dispersion_pattern_48dp"
+            android:title="@string/dispersion_pattern">
+        </item>
+    </group>
+</menu>

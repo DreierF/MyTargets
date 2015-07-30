@@ -65,7 +65,7 @@ public class ScoreboardActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            return ScoreboardUtils.getHTMLString(ScoreboardActivity.this, mTraining, true, true, true);
+            return ScoreboardUtils.getHTMLString(ScoreboardActivity.this, mTraining, true);
         }
 
         @Override

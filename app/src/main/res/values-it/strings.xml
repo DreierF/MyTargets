@@ -47,7 +47,8 @@
 
     <!-- Share -->
     <string name="share">Condividi</string>
-    <string name="my_share_text">Ehi, guarda il mio punteggio sul campo di tiro!\n%1$d volte X\n%2$d volte 10\n%3$d volte 9\n Per un totale di %4$d fuori da %5$d anelli.</string>
+    <string name="my_share_text">Ehi, guarda il mio punteggio sul campo di tiro!\n%1$sPer un totale di %2$d fuori da %3$d anelli.</string>
+    <string name="d_times_s">%1$d volte %2$s\n</string>
     <string name="comments">Commenti</string>
     <string name="text">Testo</string>
     <string name="dispersion_pattern">modello di dispersione</string>

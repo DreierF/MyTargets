@@ -47,7 +47,8 @@
 
     <!-- Share -->
     <string name="share">Delen</string>
-    <string name="my_share_text">Yeah! Ik heb de volgende punten geschoten:\n%1$d keer X\n%2$d keer 10\n%3$d keer 9\nDit is totaal %4$d uit maximaal %5$d rings.</string>
+    <string name="my_share_text">Yeah! Ik heb de volgende punten geschoten:\n%1$sDit is totaal %2$d uit maximaal %3$d rings.</string>
+    <string name="d_times_s">%1$d keer %2$s\n</string>
     <string name="comments">Opmerkingen</string>
     <string name="text">Tekst</string>
     <string name="dispersion_pattern">Verspreidingspatroon</string>

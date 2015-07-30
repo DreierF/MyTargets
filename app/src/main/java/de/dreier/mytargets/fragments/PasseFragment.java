@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -22,9 +23,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
+import com.cocosw.bottomsheet.BottomSheet;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,8 +52,7 @@ import de.dreier.mytargets.views.TargetPasseView;
  * Shows all passes of one round
  */
 public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
-        implements ShareDialogFragment.ShareDialogListener/*, ObservableScrollViewCallbacks*/,
-        View.OnClickListener {
+        implements View.OnClickListener, MenuItem.OnMenuItemClickListener {
 
     private long mTraining;
     private ArrayList<Round> mRounds;
@@ -190,16 +190,56 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
     }
 
     void showShareDialog() {
-        // Create an instance of the dialog fragment and show it
-        ShareDialogFragment dialog = new ShareDialogFragment();
-        dialog.setTargetFragment(this, 0);
-        dialog.show(activity.getSupportFragmentManager(), "share_dialog");
+        new BottomSheet.Builder(getActivity())
+                .title(R.string.share)
+                .grid()
+                .sheet(R.menu.share)
+                .listener(this)
+                .show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.text:
+                shareText();
+                return true;
+            case R.id.scoreboard:
+                shareImage(1);
+                return true;
+            case R.id.dispersion_pattern:
+                shareImage(2);
+                return true;
+        }
+        return false;
     }
 
     /* Called after the user selected with items he wants to share */
-    @Override
-    public void onShareDialogConfirmed(final boolean include_text, final boolean dispersion_pattern, final boolean scoreboard, final boolean comments) {
+    public void shareImage(int typ) {
         // Construct share intent
+        new Thread(() -> {
+            try {
+                File dir = activity.getExternalCacheDir();
+                final File f = File.createTempFile("target", ".png", dir);
+                if (typ == 2) {
+                    new TargetImage().generateBitmap(activity, 800, mTraining, f);
+                } else {
+                    new ScoreboardImage().generateBitmap(activity, mTraining, false, f);
+                }
+
+                // Build and fire intent to ask for share provider
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
+                shareIntent.setType("*/*");
+                startActivity(shareIntent);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Snackbar.make(rootView, R.string.sharing_failed, Snackbar.LENGTH_SHORT).show();
+            }
+        }).start();
+    }
+
+    private void shareText() {
         mRounds = db.getRounds(mTraining);
 
         ArrayList<Pair<String, Integer>> scoreCount = db
@@ -216,35 +256,10 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         }
         final String text = getString(R.string.my_share_text,
                 scoreText, reachedPoints, maxPoints);
-
-        new Thread(() -> {
-            try {
-                final File f = File
-                        .createTempFile("target", ".png", activity.getExternalCacheDir());
-                if (dispersion_pattern && !scoreboard && !comments) {
-                    new TargetImage().generateBitmap(activity, 800, mTraining, f);
-                } else {
-                    new ScoreboardImage()
-                            .generateBitmap(activity, mTraining, scoreboard, dispersion_pattern,
-                                    comments, f);
-                }
-
-                // Build and fire intent to ask for share provider
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                if (include_text) {
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, text);
-                }
-                if (dispersion_pattern || scoreboard || comments) {
-                    shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
-                }
-                shareIntent.setType("*/*");
-                startActivity(shareIntent);
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(activity, getString(R.string.sharing_failed), Toast.LENGTH_SHORT)
-                        .show();
-            }
-        }).start();
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+        shareIntent.setType("*/*");
+        startActivity(shareIntent);
     }
 
     /*private final View.OnClickListener headerClickListener = new View.OnClickListener() {

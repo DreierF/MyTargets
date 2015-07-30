@@ -211,7 +211,7 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
         } else if (zone == 0 && showAsX[scoringStyle]) {
             return "X";
         } else {
-            int value = getPointsByZone(zone, arrow);
+            int value = getPointsByZone(zone, scoringStyle, arrow);
             if (value == 0) {
                 return "M";
             }
@@ -220,6 +220,10 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     }
 
     public int getPointsByZone(int zone, int arrow) {
+        return getPointsByZone(zone, scoringStyle, arrow);
+    }
+
+    protected int getPointsByZone(int zone, int scoringStyle, int arrow) {
         if (zone == -1 || zone >= zones) {
             return 0;
         }
@@ -314,8 +318,6 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
                 return BLACK;
             case BROWN:
                 return BLACK;
-            case SAPPHIRE_BLUE:
-                return BLACK;
             default:
                 return WHITE;
         }
@@ -357,6 +359,9 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
             for (int i = 0; i < zones; i++) {
                 if (!style.isEmpty()) {
                     style += ", ";
+                }
+                if (i == 0 && zonePoints[scoring][0] < zonePoints[scoring][1]) {
+                    continue;
                 }
                 style += zoneToString(i, scoring, 0);
             }

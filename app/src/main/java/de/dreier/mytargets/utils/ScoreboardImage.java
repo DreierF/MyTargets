@@ -25,11 +25,11 @@ import de.dreier.mytargets.shared.utils.BitmapUtils;
 public class ScoreboardImage {
     private Bitmap b;
 
-    public void generateBitmap(final Activity context, final long mRound, boolean scoreboard, boolean dispersion_pattern, boolean comments, final File f) {
+    public void generateBitmap(final Activity context, final long mRound, boolean dispersion_pattern, final File f) {
 
         // Generate html content
         final String content = ScoreboardUtils
-                .getHTMLString(context, mRound, scoreboard, dispersion_pattern, comments);
+                .getHTMLString(context, mRound, dispersion_pattern);
 
         final CountDownLatch signal = new CountDownLatch(1);
         context.runOnUiThread(() -> {

@@ -64,7 +64,7 @@ public class TargetOvalBase extends Target {
     }
 
     @Override
-    public int getPointsByZone(int zone, int arrow) {
+    protected int getPointsByZone(int zone, int scoring, int arrow) {
         return zonePoints[arrow][zone];
     }
 

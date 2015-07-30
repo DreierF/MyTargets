@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
+        android:animateLayoutChanges="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <RelativeLayout
@@ -26,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="45dp"
+            android:animateLayoutChanges="true"
             android:layout_marginRight="16dp">
 
             <LinearLayout
@@ -64,6 +66,7 @@
                 android:minWidth="70dp"
                 android:textColor="@color/white"
                 android:textSize="16sp"
+                android:paddingBottom="5dp"
                 tools:text="60cm"/>
 
         </RelativeLayout>

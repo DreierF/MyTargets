@@ -48,7 +48,6 @@ import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
-import de.dreier.mytargets.shared.models.target.WAFullTarget;
 import de.dreier.mytargets.utils.MyBackupAgent;
 import de.dreier.mytargets.views.DialogSpinner;
 import zh.wang.android.apis.yweathergetter4a.WeatherInfo;
@@ -135,7 +134,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             StandardRound standardRound = (StandardRound) standardRoundSpinner
                     .getSelectedItem();
             Target target = standardRound.getRounds().get(0).targetTemplate;
-            if (target.id == WAFullTarget.ID) {
+            if (target.id < 7 || target.id == 10 || target.id == 11) {
                 Intent i1 = new Intent(activity,
                         ItemSelectActivity.Target.class);
                 i1.putExtra("item", target);

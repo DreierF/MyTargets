@@ -49,7 +49,8 @@
 
     <!-- Share -->
     <string name="share">Compartir</string>
-    <string name="my_share_text">Hola, mira la meva puntuació. He fet:\n%1$d times X\n%2$d times 10\n%3$d times 9\nAixò fa un total de %4$d fora de %5$d anells.</string>
+    <string name="my_share_text">Hola, mira la meva puntuació. He fet:\n%1$sAixò fa un total de %2$d fora de %3$d anells.</string>
+    <string name="d_times_s">%1$d times %2$s\n</string>
     <string name="comments">Comentaris</string>
     <string name="text">Texte</string>
     <string name="dispersion_pattern">Agrupació de fletxes</string>

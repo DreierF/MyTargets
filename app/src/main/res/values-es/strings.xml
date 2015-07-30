@@ -47,7 +47,8 @@
 
     <!-- Share -->
     <string name="share">Compartir</string>
-    <string name="my_share_text">Hey, Mira mi puntuación.  Tengo:\n%1$d veces X\n%2$d Veces 10\n%3$d Veces 9\n Esto hace un total de %4$d sobre %5$d posibles.</string>
+    <string name="my_share_text">Hey, Mira mi puntuación.  Tengo:\n%1$sEsto hace un total de %2$d sobre %3$d posibles.</string>
+    <string name="d_times_s">%1$d Veces %2$s\n</string>
     <string name="comments">Comentarios</string>
     <string name="text">Texto</string>
     <string name="dispersion_pattern">Patrón de Dispersión</string>

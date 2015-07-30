@@ -58,7 +58,8 @@
 
     <!-- Share -->
     <string name="share">Поделиться</string>
-    <string name="my_share_text">Эй! Посмотрите как я стреляю. Я выбил:\n%1$d по X\n%2$d по 10\n%3$d по 9\nИтого %4$d из %5$d возможных.</string>
+    <string name="my_share_text">Эй! Посмотрите как я стреляю. Я выбил:\n%1$sИтого %2$d из %3$d возможных.</string>
+    <string name="d_times_s">%1$d по %2$s\n</string>
     <string name="comments">Комментарии</string>
     <string name="text">Текст</string>
     <string name="dispersion_pattern">Pазброс</string>

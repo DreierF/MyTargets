@@ -57,7 +57,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.github.machinarius:preferencefragment:0.1.1'
     compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.cocosw:bottomsheet:1.1.1'
+    compile 'com.cocosw:bottomsheet:1.1.1@aar'
     compile project(':libraries:aFileChooser')
     compile project(':libraries:RecyclerViewChoiceMode')
     compile project(':libraries:LicensesDialog')

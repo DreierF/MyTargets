@@ -49,7 +49,8 @@
 
     <!-- Share -->
     <string name="share">Compartilhar</string>
-    <string name="my_share_text">Ei, Olha minha pontuação de tiro. Acertei:\n%1$d vezes X\n%2$d vezes 10\n%3$d vezes 9\nThis com um total de %4$d em %5$d anéis.</string>
+    <string name="my_share_text">Ei, Olha minha pontuação de tiro. Acertei:\n%1$sThis com um total de %2$d em %3$d anéis.</string>
+    <string name="d_times_s">%1$d vezes %2$s\n</string>
     <string name="comments">Comentários</string>
     <string name="text">Texto</string>
     <string name="dispersion_pattern">Padrão de dispersão</string>

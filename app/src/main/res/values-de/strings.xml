@@ -47,7 +47,8 @@
 
     <!-- Share -->
     <string name="share">Teilen</string>
-    <string name="my_share_text">Yeah, schaue dir mal meine Bogenschießergebnisse an. Ich habe:\n%1$d mal X\n%2$d mal 10\n%3$d mal 9\nDas macht insgesamt %4$d von %5$d Ringe.</string>
+    <string name="my_share_text">Yeah, schaue dir mal meine Bogenschießergebnisse an. Ich habe:\n%1$sDas macht insgesamt %2$d von %3$d Ringe.</string>
+    <string name="d_times_s">%1$d mal %2$s\n</string>
     <string name="comments">Kommentare</string>
     <string name="text">Text</string>
     <string name="dispersion_pattern">Trefferbild</string>

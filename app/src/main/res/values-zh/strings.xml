@@ -44,7 +44,8 @@
 
     <!-- Share -->
     <string name="share">分享</string>
-    <string name="my_share_text">今天訓練/比賽得分, 我得到:\n%1$d times X\n%2$d times 10\n%3$d times 9\n總分 %4$d 環/ %5$d 環.</string>
+    <string name="my_share_text">今天訓練/比賽得分, 我得到:\n%1$s總分 %2$d 環/ %3$d 環.</string>
+    <string name="d_times_s">%1$d times %2$s\n</string>
     <string name="comments">檢討</string> 
     <string name="text">文字</string>
     <string name="dispersion_pattern">箭的落點</string>

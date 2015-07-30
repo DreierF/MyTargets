@@ -54,9 +54,10 @@ public class SpotBase extends Target {
         return face.zoneToString(zone, arrow);
     }
 
-    public int getPointsByZone(int zone, int arrow) {
+    @Override
+    protected int getPointsByZone(int zone, int scoringStyle, int arrow) {
         face.scoringStyle = scoringStyle;
-        return face.getPointsByZone(zone, arrow);
+        return face.getPointsByZone(zone, scoringStyle, arrow);
     }
 
     public int getMaxPoints() {

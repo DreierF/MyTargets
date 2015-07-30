@@ -75,7 +75,8 @@
 
     <!-- Share -->
     <string name="share">Deli</string>
-    <string name="my_share_text">Too! Poglej si moj rezultat. Imam:\n%1$d -krat X\n%2$d -krat 10\n%3$d -krat 9\nThis skupno %4$d od %5$d možnih krogov.</string>
+    <string name="my_share_text">Too! Poglej si moj rezultat. Imam:\n%1$sThis skupno %2$d od %3$d možnih krogov.</string>
+    <string name="d_times_s">%1$d -krat %2$s\n</string>
     <string name="comments">Komentar</string>
     <string name="text">Besedilo</string>
     <string name="dispersion_pattern">Razporeditov zadetkov</string>

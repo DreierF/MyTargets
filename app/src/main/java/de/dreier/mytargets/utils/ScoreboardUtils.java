@@ -37,7 +37,7 @@ public class ScoreboardUtils {
             ".align_center td {text-align: center; }" +
             "</style>";
 
-    public static String getHTMLString(Context context, long trainingId, boolean scoreboard, boolean withTarget, boolean showComments) {
+    public static String getHTMLString(Context context, long trainingId, boolean withTarget) {
         // Query information from database
         DatabaseManager db = DatabaseManager.getInstance(context);
         Training training = db.getTraining(trainingId);
@@ -46,101 +46,98 @@ public class ScoreboardUtils {
         // Initialize html Strings
         String html = "<html>" + CSS;
 
-        if (scoreboard) {
-            String formattedDate = DateFormat.getDateInstance().format(training.date);
-            html += "<h3>" + training.title + " (" + formattedDate + ")</h3>";
-            boolean[] equals = new boolean[2];
-            html += getTrainingInfoHTML(context, db, training, rounds, equals);
+        String formattedDate = DateFormat.getDateInstance().format(training.date);
+        html += "<h3>" + training.title + " (" + formattedDate + ")</h3>";
+        boolean[] equals = new boolean[2];
+        html += getTrainingInfoHTML(context, db, training, rounds, equals);
 
-            html += "<table class=\"myTable\">";
-            html += getTableHeader(context, rounds.get(0).info.arrowsPerPasse);
-            int carry = 0, count = 0;
-            for (int r = 0; r < rounds.size(); r++) {
-                Round round = rounds.get(r);
-                html += "<tr class=\"align_left\"><td colspan=\"" +
-                        (round.info.arrowsPerPasse + 2) +
-                        "\">";
-                html += "<b>" + context.getString(R.string.round) + " " + (round.info.index + 1) +
-                        "</b><br />" +
-                        getRoundInfoHTML(context, round, equals) +
-                        "</td></tr>";
-                ArrayList<Passe> passes = db.getPassesOfRound(round.getId());
-                for (Passe passe : passes) {
-                    html += "<tr class=\"align_center\">";
-                    int sum = 0;
-                    for (int i = 0; i < passe.shot.length; i++) {
-                        Shot shot = passe.shot[i];
-                        html += "<td>";
-                        html += round.info.target.zoneToString(shot.zone, i);
-                        html += "</td>";
-                        int points = round.info.target.getPointsByZone(shot.zone, i);
-                        sum += points;
-                        carry += points;
-                        count++;
-                    }
-                    html += "<td>" + sum + "</td>";
-                    html += "<td>" + carry + "</td>";
-                    html += "</tr>";
+        html += "<table class=\"myTable\">";
+        html += getTableHeader(context, rounds.get(0).info.arrowsPerPasse);
+        int carry = 0, count = 0;
+        for (int r = 0; r < rounds.size(); r++) {
+            Round round = rounds.get(r);
+            html += "<tr class=\"align_left\"><td colspan=\"" +
+                    (round.info.arrowsPerPasse + 2) +
+                    "\">";
+            html += "<b>" + context.getString(R.string.round) + " " + (round.info.index + 1) +
+                    "</b><br />" +
+                    getRoundInfoHTML(context, round, equals) +
+                    "</td></tr>";
+            ArrayList<Passe> passes = db.getPassesOfRound(round.getId());
+            for (Passe passe : passes) {
+                html += "<tr class=\"align_center\">";
+                int sum = 0;
+                for (int i = 0; i < passe.shot.length; i++) {
+                    Shot shot = passe.shot[i];
+                    html += "<td>";
+                    html += round.info.target.zoneToString(shot.zone, i);
+                    html += "</td>";
+                    int points = round.info.target.getPointsByZone(shot.zone, i);
+                    sum += points;
+                    carry += points;
+                    count++;
                 }
-            }
-            float avg = 0;
-            if (count > 0) {
-                avg = ((carry * 100) / count) / 100.0f;
-            }
-            html += "</table>";
-            if (rounds.size() > 0) {
-                ArrayList<Pair<String, Integer>> scoreCount = db
-                        .getTrainingTopScoreDistribution(trainingId);
-                html += "<table class=\"myTable\" style=\"margin-top:5px;\">" +
-                        "<tr class=\"align_center\"><th>" + scoreCount.get(2).getFirst() + "</th>" +
-                        "<th>" + scoreCount.get(1).getFirst() + "</th>" +
-                        "<th>" + scoreCount.get(0).getFirst() + "</th>" +
-                        "<th>" + context.getString(R.string.average) + "</th></tr>" +
-                        "<tr class=\"align_center\"><td>" + scoreCount.get(2).getSecond() +
-                        "</td>" +
-                        "<td>" + scoreCount.get(1).getSecond() + "</td>" +
-                        "<td>" + scoreCount.get(0).getSecond() + "</td>" +
-                        "<td>" + avg + "</td>" +
-                        "</tr></table>";
+                html += "<td>" + sum + "</td>";
+                html += "<td>" + carry + "</td>";
+                html += "</tr>";
             }
         }
+        float avg = 0;
+        if (count > 0) {
+            avg = ((carry * 100) / count) / 100.0f;
+        }
+        html += "</table>";
+        if (rounds.size() > 0) {
+            ArrayList<Pair<String, Integer>> scoreCount = db
+                    .getTrainingTopScoreDistribution(trainingId);
+            html += "<table class=\"myTable\" style=\"margin-top:5px;\">" +
+                    "<tr class=\"align_center\"><th>" + scoreCount.get(2).getFirst() + "</th>" +
+                    "<th>" + scoreCount.get(1).getFirst() + "</th>" +
+                    "<th>" + scoreCount.get(0).getFirst() + "</th>" +
+                    "<th>" + context.getString(R.string.average) + "</th></tr>" +
+                    "<tr class=\"align_center\"><td>" + scoreCount.get(2).getSecond() +
+                    "</td>" +
+                    "<td>" + scoreCount.get(1).getSecond() + "</td>" +
+                    "<td>" + scoreCount.get(0).getSecond() + "</td>" +
+                    "<td>" + avg + "</td>" +
+                    "</tr></table>";
+        }
 
-        if (showComments) {
-            String comments =
-                    "<table class=\"myTable\" style=\"margin-top:5px;\"><tr class=\"align_center\">" +
-                            "<th>" + context.getString(R.string.round) + "</th>" +
-                            "<th>" + context.getString(R.string.passe) + "</th>" +
-                            "<th>" + context.getString(R.string.points) + "</th>" +
-                            "<th>" + context.getString(R.string.comment) + "</th></tr>";
-            int commentsCount = 0;
 
-            int j = 0;
-            for (Round round : rounds) {
-                int i = 1;
-                ArrayList<Passe> passes = db.getPasses(round.getId());
-                for (Passe passe : passes) {
-                    for (int s = 0; s < passe.shot.length; s++) {
-                        Shot shot = passe.shot[s];
-                        if (!TextUtils.isEmpty(shot.comment)) {
-                            comments += "<tr class=\"align_center\"><td>" + j + "</td>" +
-                                    "<td>" + i + "</td>" +
-                                    "<td>" + round.info.target.zoneToString(shot.zone, s) +
-                                    "</td>" +
-                                    "<td>" +
-                                    TextUtils.htmlEncode(shot.comment).replace("\n", "<br />") +
-                                    "</td></tr>";
-                            commentsCount++;
-                        }
+        String comments =
+                "<table class=\"myTable\" style=\"margin-top:5px;\"><tr class=\"align_center\">" +
+                        "<th>" + context.getString(R.string.round) + "</th>" +
+                        "<th>" + context.getString(R.string.passe) + "</th>" +
+                        "<th>" + context.getString(R.string.points) + "</th>" +
+                        "<th>" + context.getString(R.string.comment) + "</th></tr>";
+        int commentsCount = 0;
+
+        int j = 0;
+        for (Round round : rounds) {
+            int i = 1;
+            ArrayList<Passe> passes = db.getPasses(round.getId());
+            for (Passe passe : passes) {
+                for (int s = 0; s < passe.shot.length; s++) {
+                    Shot shot = passe.shot[s];
+                    if (!TextUtils.isEmpty(shot.comment)) {
+                        comments += "<tr class=\"align_center\"><td>" + j + "</td>" +
+                                "<td>" + i + "</td>" +
+                                "<td>" + round.info.target.zoneToString(shot.zone, s) +
+                                "</td>" +
+                                "<td>" +
+                                TextUtils.htmlEncode(shot.comment).replace("\n", "<br />") +
+                                "</td></tr>";
+                        commentsCount++;
                     }
-                    i++;
                 }
-                j++;
+                i++;
             }
+            j++;
+        }
 
-            // If a minimum of one comment is present show comments table
-            if (commentsCount > 0) {
-                html += comments + "</table>";
-            }
+        // If a minimum of one comment is present show comments table
+        if (commentsCount > 0) {
+            html += comments + "</table>";
         }
 
         if (withTarget) {
