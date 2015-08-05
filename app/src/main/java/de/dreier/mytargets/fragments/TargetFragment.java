@@ -73,7 +73,6 @@ public class TargetFragment extends NowListFragment<Target>
         mEditable = false;
         mSingleSelector.setSelectable(true);
 
-
         scoringStyle = (Spinner) rootView.findViewById(R.id.scoring_style);
         seekBar = (SeekBar) rootView.findViewById(R.id.target_size_seekbar);
         label = (TextView) rootView.findViewById(R.id.target_size_label);
@@ -208,7 +207,7 @@ public class TargetFragment extends NowListFragment<Target>
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.image_card_simple, parent, false);
+                    .inflate(R.layout.card_image_simple, parent, false);
             return new ViewHolder(itemView);
         }
     }

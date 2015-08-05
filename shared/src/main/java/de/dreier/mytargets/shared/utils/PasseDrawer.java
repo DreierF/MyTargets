@@ -108,15 +108,16 @@ public class PasseDrawer {
 
         // Draw all points of this passe into the given rect
         for (int i = 0; i < mPPP; i++) {
-            if (mPasse.shot[i].zone == Shot.NOTHING_SELECTED) {
+            Shot shot = mPasse.shot[i];
+            if (shot.zone == Shot.NOTHING_SELECTED) {
                 break;
             }
 
             Coordinate coordinate = getAnimatedPosition(i);
             int radius = getRadius(i);
             if (radius > 0) {
-                mCircle.draw(canvas, coordinate.x, coordinate.y, mPasse.shot[i].zone, radius,
-                        !TextUtils.isEmpty(mPasse.shot[i].comment) && i != mSelected, i);
+                mCircle.draw(canvas, coordinate.x, coordinate.y, shot.zone, radius,
+                        !TextUtils.isEmpty(shot.comment) && i != mSelected, i, shot.arrow);
             }
         }
     }

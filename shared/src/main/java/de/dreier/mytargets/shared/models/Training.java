@@ -15,6 +15,7 @@ public class Training extends IdProvider implements DatabaseSerializable {
     public static final String ARROW = "arrow";
     public static final String BOW = "bow";
     private static final String STANDARD_ROUND = "standard_round";
+    private static final String ARROW_NUMBERING = "arrow_numbering";
 
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " ( " +
@@ -25,9 +26,10 @@ public class Training extends IdProvider implements DatabaseSerializable {
                     Environment.WIND_SPEED + " INTEGER," +
                     Environment.WIND_DIRECTION + " INTEGER," +
                     Environment.LOCATION + " TEXT," +
-                    STANDARD_ROUND + " INTEGER,"+
+                    STANDARD_ROUND + " INTEGER," +
                     BOW + " INTEGER," +
-                    ARROW + " INTEGER);";
+                    ARROW + " INTEGER," +
+                    ARROW_NUMBERING + " INTEGER);";
 
     public String title = "";
     public Date date = new Date();
@@ -35,6 +37,7 @@ public class Training extends IdProvider implements DatabaseSerializable {
     public long standardRoundId;
     public long bow;
     public long arrow;
+    public boolean arrowNumbering;
 
     @Override
     public long getParentId() {
@@ -57,6 +60,7 @@ public class Training extends IdProvider implements DatabaseSerializable {
         values.put(STANDARD_ROUND, standardRoundId);
         values.put(BOW, bow);
         values.put(ARROW, arrow);
+        values.put(ARROW_NUMBERING, arrowNumbering ? 1 : 0);
         values.putAll(environment.getContentValues());
         return values;
     }
@@ -69,7 +73,8 @@ public class Training extends IdProvider implements DatabaseSerializable {
         bow = cursor.getInt(3);
         arrow = cursor.getInt(4);
         standardRoundId = cursor.getLong(5);
+        arrowNumbering = cursor.getInt(6) == 1;
         environment = new Environment();
-        environment.fromCursor(context, cursor, 6);
+        environment.fromCursor(context, cursor, 7);
     }
 }

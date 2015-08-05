@@ -123,7 +123,12 @@ public class DialogSpinner extends LinearLayout {
     }
 
     public Object getSelectedItem() {
-        return adapter.getItem(getCurrentSelection());
+        int currentSelection = getCurrentSelection();
+        if (currentSelection < adapter.getCount()) {
+            return adapter.getItem(currentSelection);
+        } else {
+            return null;
+        }
     }
 
     public void setItemId(long id) {

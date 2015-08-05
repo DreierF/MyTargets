@@ -51,7 +51,7 @@ public class TargetOvalBase extends Target {
     }
 
     @Override
-    protected boolean isInZone(float ax, float ay, int zone) {
+    protected boolean isInZone(float ax, float ay, int zone, boolean outsideIn) {
         return zones - zone == 2 && region.contains((int) ax, (int) ay);
     }
 

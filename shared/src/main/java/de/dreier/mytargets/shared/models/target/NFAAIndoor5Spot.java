@@ -33,9 +33,9 @@ public class NFAAIndoor5Spot extends SpotBase {
             colorFill = new int[]{WHITE, WHITE, SAPPHIRE_BLUE, SAPPHIRE_BLUE};
             colorStroke = new int[]{DARK_GRAY, DARK_GRAY, WHITE, WHITE};
             strokeWidth = new int[]{2, 2, 2, 0};
-            zonePoints = new int[][]{{5, 5, 4},
-                    {6, 5, 4},
-                    {7, 5, 4}}; //TODO 6 if inner ring is hit but only 7 if arrow is inside
+            zonePoints = new int[][]{{5, 5, 5, 4},
+                    {6, 6, 5, 4},
+                    {7, 6, 5, 4}}; //TODO 6 if inner ring is hit but only 7 if arrow is inside
             showAsX = new boolean[]{true, false, false};
             diameters = new Diameter[]{new Diameter(40, Dimension.CENTIMETER)};
         }

@@ -16,6 +16,6 @@
         android:background="@drawable/toolbar_drop_shadow"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    <include layout="@layout/fab_description_layout"/>
+    <include layout="@layout/layout_fab_description"/>
 
 </android.support.design.widget.CoordinatorLayout>

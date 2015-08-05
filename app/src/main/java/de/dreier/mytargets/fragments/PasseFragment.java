@@ -328,11 +328,11 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         protected SelectableViewHolder<Passe> getSecondLevelViewHolder(ViewGroup parent) {
             if (mTargetViewMode) {
                 View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.target_passe_card, parent, false);
+                        .inflate(R.layout.card_target_passe, parent, false);
                 return new TargetViewHolder(itemView);
             } else {
                 View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.passe_card, parent, false);
+                        .inflate(R.layout.card_end, parent, false);
                 return new PasseViewHolder(itemView);
             }
         }

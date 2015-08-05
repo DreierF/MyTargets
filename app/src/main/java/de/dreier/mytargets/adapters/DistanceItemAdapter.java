@@ -24,7 +24,7 @@ public class DistanceItemAdapter extends ArrayAdapter<Distance> {
     }
 
     public DistanceItemAdapter(Context context, long distId) {
-        super(context, R.layout.distance_text_item,
+        super(context, R.layout.item_distance_text,
                 DatabaseManager.getInstance(context).getDistances(distId));
     }
 

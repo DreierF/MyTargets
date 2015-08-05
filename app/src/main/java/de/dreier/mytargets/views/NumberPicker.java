@@ -110,7 +110,7 @@ public class NumberPicker extends LinearLayout {
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.number_picker, this, true);
+        inflater.inflate(R.layout.layout_number_picker, this, true);
 
         // init the individual elements
         initDecrementButton();

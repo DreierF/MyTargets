@@ -26,7 +26,6 @@ import android.widget.TextView;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.adapters.TargetItemAdapter;
-import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
@@ -40,9 +39,7 @@ import de.dreier.mytargets.views.NumberPicker;
 
 public class EditStandardRoundFragment extends Fragment
         implements DynamicItemLayout.OnBindListener<RoundTemplate> {
-    public static final String STANDARD_ROUND_ID = "standard_round_id";
 
-    private long mStandardRound = -1;
     private RadioButton indoor;
     private DynamicItemLayout<RoundTemplate> rounds;
     private EditText name;
@@ -59,8 +56,9 @@ public class EditStandardRoundFragment extends Fragment
         setHasOptionsMenu(true);
 
         Bundle i = getArguments();
+        StandardRound standardRound = null;
         if (i != null) {
-            mStandardRound = i.getLong(STANDARD_ROUND_ID, -1);
+            standardRound = (StandardRound) i.getSerializable("item");
         }
         SharedPreferences prefs = activity.getSharedPreferences(MyBackupAgent.PREFS, 0);
 
@@ -74,11 +72,11 @@ public class EditStandardRoundFragment extends Fragment
         // Rounds
         //noinspection unchecked
         rounds = (DynamicItemLayout<RoundTemplate>) rootView.findViewById(R.id.rounds);
-        rounds.setLayoutResource(R.layout.one_round, RoundTemplate.class);
+        rounds.setLayoutResource(R.layout.dynamicitem_round, RoundTemplate.class);
         rounds.setOnBindListener(this);
         rounds.rebindOnIndexChanged(true);
 
-        if (mStandardRound == -1) {
+        if (standardRound == null) {
             name.setText(R.string.custom_round);
             // Initialise with default values
             indoor.setChecked(prefs.getBoolean("indoor", false));
@@ -91,17 +89,20 @@ public class EditStandardRoundFragment extends Fragment
             int scoring = prefs.getInt("scoring", 0);
             round.target = TargetFactory.createTarget(getActivity(), tid, scoring);
             round.target.size = round.target.getDiameters()[0];
+            round.targetTemplate = round.target;
             long distId = prefs.getLong("distanceId", new Distance(18, "m").getId());
             round.distance = Distance.fromId(distId);
             rounds.addItem(round);
         } else {
             // Load saved values
-            DatabaseManager db = DatabaseManager.getInstance(activity);
-            StandardRound sr = db.getStandardRound(mStandardRound);
-            indoor.setChecked(sr.indoor);
-            outdoor.setChecked(!sr.indoor);
-            name.setText(sr.name);
-            rounds.setList(sr.getRounds());
+            indoor.setChecked(standardRound.indoor);
+            outdoor.setChecked(!standardRound.indoor);
+            if (standardRound.getId() == -1) {
+                name.setText(standardRound.name);
+            } else {
+                name.setText(getActivity().getString(R.string.custom) + " " + standardRound.name);
+            }
+            rounds.setList(standardRound.getRounds());
         }
         return rootView;
     }
@@ -115,24 +116,22 @@ public class EditStandardRoundFragment extends Fragment
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
             onSave();
-            getActivity().finish();
-            getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     void onSave() {
-        StandardRound info = new StandardRound();
-        info.setId(mStandardRound);
-        info.club = StandardRound.CUSTOM;
-        info.name = name.getText().toString();
-        info.indoor = indoor.isChecked();
-        info.setRounds(rounds.getList());
+        StandardRound standardRound = new StandardRound();
+        standardRound.setId(-1);
+        standardRound.club = StandardRound.CUSTOM;
+        standardRound.name = name.getText().toString();
+        standardRound.indoor = indoor.isChecked();
+        standardRound.setRounds(rounds.getList());
 
         SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("indoor", info.indoor);
+        editor.putBoolean("indoor", standardRound.indoor);
 
         RoundTemplate round = rounds.getList().get(0);
         editor.putInt("ppp", round.arrowsPerPasse);
@@ -144,8 +143,10 @@ public class EditStandardRoundFragment extends Fragment
         editor.apply();
 
         Intent data = new Intent();
-        data.putExtra("item", info);
+        data.putExtra("item", standardRound);
         getActivity().setResult(Activity.RESULT_OK, data);
+        getActivity().finish();
+        getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
     @Override
@@ -158,6 +159,7 @@ public class EditStandardRoundFragment extends Fragment
             round.distance = r.distance;
             round.target = r.target;
             round.target.size = r.target.size;
+            round.targetTemplate = r.targetTemplate;
         }
 
         // Set title of round
@@ -188,6 +190,7 @@ public class EditStandardRoundFragment extends Fragment
         });
         targetSpinner.setOnResultListener(data -> {
             round.target = (Target) data.getSerializableExtra("item");
+            round.targetTemplate = round.target;
             adapter.setTarget(round.target);
             targetSpinner.setItemId(0);
         });

@@ -49,7 +49,7 @@ public class EnvironmentItemAdapter extends BaseAdapter {
         if (v == null) {
             LayoutInflater vi = (LayoutInflater) mContext.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(R.layout.image_item, parent, false);
+            v = vi.inflate(R.layout.item_image, parent, false);
         }
 
         ImageView img = (ImageView) v.findViewById(R.id.image);

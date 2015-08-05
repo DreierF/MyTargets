@@ -37,7 +37,7 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.frame_layout_fab;
+        return R.layout.layout_frame_fab;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -140,7 +140,7 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
 /*
         @Override
         protected int getLayoutResource() {
-            return R.layout.drawer_fab_layout.xml;
+            return R.layout.layout_drawer_fab;
         }*/
 
         @Override

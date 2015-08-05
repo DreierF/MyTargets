@@ -31,7 +31,7 @@ public class BowItemAdapter extends ArrayAdapter<Bow> {
         if (convertView == null) {
             convertView = ((LayoutInflater) parent.getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                    .inflate(R.layout.image_item, parent, false);
+                    .inflate(R.layout.item_image, parent, false);
         }
         ImageView img = (ImageView) convertView.findViewById(R.id.image);
         TextView name = (TextView) convertView.findViewById(R.id.name);

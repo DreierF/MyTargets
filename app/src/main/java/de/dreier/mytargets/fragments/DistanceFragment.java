@@ -97,7 +97,7 @@ public class DistanceFragment extends NowListFragment<Distance>
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.centered_text_card, parent, false);
+                    .inflate(R.layout.card_centered_text, parent, false);
             return new ViewHolder(itemView);
         }
     }

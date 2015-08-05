@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.dreier.mytargets.shared.utils.BitmapUtils;
 
 public class Arrow extends IdProvider implements DatabaseSerializable {
@@ -45,6 +48,7 @@ public class Arrow extends IdProvider implements DatabaseSerializable {
     public String nock;
     public String comment;
     public Bitmap image;
+    public List<Integer> numbers = new ArrayList<>();
     
     @Override
     public String getTableName() {

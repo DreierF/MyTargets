@@ -26,7 +26,7 @@ public class Circle {
         mTextPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    public void draw(Canvas can, float x, float y, int zone, int rad, boolean comment, int arrow) {
+    public void draw(Canvas can, float x, float y, int zone, int rad, boolean comment, int arrow, int number) {
         // Get color index and font size
         int font_size = (int) (1.2323f * rad + 0.7953f);
 
@@ -46,16 +46,26 @@ public class Circle {
         mTextPaint.setColor(target.getContrastColor(zone));
         mTextPaint.setTextSize(font_size * density);
         can.drawText(target.zoneToString(zone, arrow), x, y + font_size * 7 * density / 22.0f,
-                     mTextPaint);
+                mTextPaint);
 
         // Draw red circled + as indicator that this impact is commented
         if (comment) {
             circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
             circleColorP.setColor(0xFFFF0000);
             can.drawCircle(x + rad * 0.8f * density, y - rad * 0.8f * density, 8 * density,
-                           circleColorP);
+                    circleColorP);
             mTextPaint.setColor(0xFFFFFFFF);
             can.drawText("+", x + rad * 0.8f * density, y - rad * 0.4f * density, mTextPaint);
+        }
+        if (number > -1) {
+            circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
+            circleColorP.setColor(0xFF333333);
+            can.drawCircle(x + rad * 0.8f * density, y + rad * 0.8f * density, 8 * density,
+                    circleColorP);
+            mTextPaint.setTextSize(font_size * density*0.5f);
+            mTextPaint.setColor(0xFFFFFFFF);
+            can.drawText(String.valueOf(number), x + rad * 0.8f * density, y + rad * 1.05f * density,
+                    mTextPaint);
         }
     }
 }

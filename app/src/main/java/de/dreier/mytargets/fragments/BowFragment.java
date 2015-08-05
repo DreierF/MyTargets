@@ -60,7 +60,7 @@ public class BowFragment extends NowListFragment<Bow> implements View.OnClickLis
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.image_card_details, parent, false);
+                    .inflate(R.layout.card_image_details, parent, false);
             return new ViewHolder(itemView);
         }
     }
@@ -90,9 +90,9 @@ public class BowFragment extends NowListFragment<Bow> implements View.OnClickLis
             if (!mItem.size.trim().isEmpty()) {
                 html += "<br>" + getString(R.string.size) + ": <b>" + mItem.size + "</b>";
             }
-            ArrayList<EditBowActivity.SightSetting> sight = db.getSettings(mItem.getId());
+            ArrayList<EditBowActivity.SightSetting> sight = db.getSightSettings(mItem.getId());
             for (EditBowActivity.SightSetting s : sight) {
-                html += "<br>" + s.distance + ": <b>" + s.value + "</b>";
+                html += "<br>" + s.distance.toString(getActivity()) + ": <b>" + s.value + "</b>";
             }
             mDetails.setText(Html.fromHtml(html));
         }

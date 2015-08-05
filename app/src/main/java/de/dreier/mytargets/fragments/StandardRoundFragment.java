@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -172,7 +173,7 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
     @Override
     public void onClick(SelectableViewHolder holder, StandardRound mItem) {
         if (currentSelection.equals(mItem)) {
-            super.onClick(holder, mItem);
+            onSave();
         }
         int oldSelectedPosition = mSingleSelector.getSelectedPosition();
         currentSelection = mItem;
@@ -184,16 +185,33 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
 
     @Override
     public void onLongClick(SelectableViewHolder holder) {
-        super.onClick(holder, (StandardRound) holder.getItem());
+        StandardRound item = (StandardRound) holder.getItem();
+        if (item.club == StandardRound.CUSTOM) {
+            Intent i = new Intent(getActivity(),
+                    SimpleFragmentActivity.EditStandardRoundActivity.class);
+            i.putExtra("item", item);
+            getActivity().startActivityForResult(i, NEW_STANDARD_ROUND);
+            getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        } else {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.use_as_template)
+                    .setMessage(R.string.create_copy)
+                    .setIcon(null)
+                    .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                        Intent i = new Intent(getActivity(),
+                                SimpleFragmentActivity.EditStandardRoundActivity.class);
+                        i.putExtra("item", item);
+                        getActivity().startActivityForResult(i, NEW_STANDARD_ROUND);
+                        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
     }
 
     @Override
     protected void onEdit(StandardRound item) {
-        Intent i = new Intent(getActivity(),
-                SimpleFragmentActivity.EditStandardRoundActivity.class);
-        i.putExtra(EditStandardRoundFragment.STANDARD_ROUND_ID, item.getId());
-        startActivity(i);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     @Override
@@ -234,7 +252,7 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.standard_round_select_item, parent, false);
+                    .inflate(R.layout.item_standard_round_select, parent, false);
             return new ViewHolder(itemView);
         }
     }
@@ -265,5 +283,13 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
                 mDetails.setVisibility(View.GONE);
             }
         }
+    }
+
+    void onSave() {
+        Intent data = new Intent();
+        data.putExtra("item", currentSelection);
+        getActivity().setResult(Activity.RESULT_OK, data);
+        getActivity().finish();
+        getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 }

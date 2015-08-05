@@ -54,6 +54,7 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     protected boolean[] showAsX;
     protected int[][] zonePoints;
     public int scoringStyle;
+    private boolean outsideIn = true;
     public Diameter size;
 
     protected transient Paint paintFill, paintStroke;
@@ -141,19 +142,27 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     }
 
     private void drawFocusedArrow(Canvas canvas, Shot shot, Rect rect) {
-        paintFill.setColor(getContrastColor(shot.zone));
         float[] pos = getArrowPosition(rect, shot.x, shot.y, shot.index);
         paintFill.setColor(0xFF009900);
         canvas.drawCircle(pos[0], pos[1], getArrowSize(rect, shot.index), paintFill);
 
-        String zoneString = zoneToString(shot.zone, shot.index);
-        float width = paintText.measureText(zoneString) / 2.0f;
-        paintText.setTextSize(recalc(rect, 15));
-        paintText.setColor(getContrastColor(getZoneFromPoint(shot.x, shot.y - 0.06f)));
-        canvas.drawText(zoneString, pos[0] - width, pos[1] - recalc(rect, 30), paintText);
+        // Draw cross
         float lineLen = recalc(rect, 20);
         canvas.drawLine(pos[0] - lineLen, pos[1], pos[0] + lineLen, pos[1], paintFill);
         canvas.drawLine(pos[0], pos[1] - lineLen, pos[0], pos[1] + lineLen, paintFill);
+
+        // Draw zone points
+        String zoneString = zoneToString(shot.zone, shot.index);
+        Rect tr = new Rect();
+        paintText.getTextBounds(zoneString, 0, zoneString.length(), tr);
+        float width = tr.width() / 2.0f;
+        float height = tr.height() / 2.0f;
+        //float width = paintText.measureText(zoneString) / 2.0f;
+        paintText.setTextSize(recalc(rect, 10));
+        paintText.setColor(0xFFFFFFFF);
+        //paintText.setColor(getContrastColor(getZoneFromPoint(shot.x, shot.y - 0.06f)));
+        canvas.drawText(zoneString, pos[0] - width, pos[1] + height/* - recalc(rect, 30)*/,
+                paintText);
     }
 
     protected float getArrowSize(Rect rect, int arrow) {
@@ -263,15 +272,22 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
         float ay = y * 500;
         float distance = ax * ax + ay * ay;
         for (int i = 0; i < radius.length; i++) {
-            float ro = radius[i] * radius[i];
-            if (ro == 0 && isInZone(500.0f + ax, 500.0f + ay, i) || ro > distance) {
+            float adaptedRadius =
+                    radius[i] + (scoresAsOutSideIn(i) ? ARROW_RADIUS + strokeWidth[i] / 2.0f :
+                            -ARROW_RADIUS);
+            float ro = adaptedRadius * adaptedRadius;
+            if (ro == 0 && isInZone(500.0f + ax, 500.0f + ay, i, outsideIn) || ro > distance) {
                 return i;
             }
         }
         return -1;
     }
 
-    protected boolean isInZone(float ax, float ay, int zone) {
+    private boolean scoresAsOutSideIn(int i) {
+        return outsideIn;
+    }
+
+    protected boolean isInZone(float ax, float ay, int zone, boolean outsideIn) {
         return false;
     }
 
@@ -327,7 +343,7 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     public boolean equals(Object o) {
         if (o instanceof Target) {
             Target t = (Target) o;
-            return t.id == id && t.scoringStyle == scoringStyle;
+            return t.id == id;
         }
         return false;
     }

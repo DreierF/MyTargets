@@ -97,7 +97,7 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
         @Override
         protected ViewHolder getSecondLevelViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.training_card, parent, false);
+                    .inflate(R.layout.card_training, parent, false);
             return new ViewHolder(itemView);
         }
     }

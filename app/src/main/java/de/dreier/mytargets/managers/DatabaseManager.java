@@ -59,10 +59,18 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_VISIER =
             "CREATE TABLE IF NOT EXISTS " + TABLE_VISIER + " ( " +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    VISIER_BOW + " REFERENCES " + Bow.TABLE + " ON DELETE CASCADE," +
+                    VISIER_BOW + " INTEGER," +
                     VISIER_DISTANCE + " INTEGER," +
                     VISIER_SETTING + " TEXT, " +
                     VISIER_UNIT + " TEXT);";
+    private static final String TABLE_NUMBER = "NUMBER";
+    private static final String NUMBER_ARROW = "arrow";
+    private static final String NUMBER_VALUE = "value";
+    private static final String CREATE_TABLE_NUMBER =
+            "CREATE TABLE IF NOT EXISTS " + TABLE_NUMBER + " ( " +
+                    ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    NUMBER_ARROW + " INTEGER," +
+                    NUMBER_VALUE + " INTEGER);";
     private static DatabaseManager sInstance;
     private final Context mContext;
     private SQLiteDatabase db;
@@ -84,6 +92,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(Bow.CREATE_TABLE_BOW);
         db.execSQL(CREATE_TABLE_VISIER);
+        db.execSQL(CREATE_TABLE_NUMBER);
         db.execSQL(Arrow.CREATE_TABLE);
         db.execSQL(Training.CREATE_TABLE);
         db.execSQL(RoundTemplate.CREATE_TABLE);
@@ -208,6 +217,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN standard_round INTEGER DEFAULT '0'");
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN bow INTEGER DEFAULT '0'");
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN arrow INTEGER DEFAULT '0'");
+            db.execSQL("ALTER TABLE TRAINING ADD COLUMN arrow_numbering INTEGER DEFAULT '0'");
             db.execSQL("UPDATE ROUND SET target=4 WHERE target=3"); // WA 3 Spot ->vegas
             db.execSQL("UPDATE ROUND SET target=13 WHERE target=4"); // WA Field
             db.execSQL("UPDATE ROUND SET target=10 WHERE target=5"); // DFBV Spiegel
@@ -360,6 +370,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public ArrayList<Training> getTrainings() {
         Cursor cursor = db
                 .rawQuery("SELECT t._id, t.title, t.datum, t.bow, t.arrow, t.standard_round, " +
+                        "t.arrow_numbering, " +
                         "t.weather, t.wind_speed, t.wind_direction, t.location " +
                         "FROM TRAINING t " +
                         "LEFT JOIN ROUND r ON t._id = r.training " +
@@ -569,6 +580,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 arrow.fromCursor(mContext, res, 0);
                 byte[] data = res.getBlob(9);
                 arrow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
+                arrow.numbers = getArrowNumbers(arrow.getId());
                 list.add(arrow);
             } while (res.moveToNext());
         }
@@ -593,6 +605,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public Training getTraining(long training) {
         Cursor cursor = db
                 .rawQuery("SELECT t._id, t.title, t.datum, t.bow, t.arrow, t.standard_round, " +
+                        "t.arrow_numbering, " +
                         "t.weather, t.wind_speed, t.wind_direction, t.location " +
                         "FROM TRAINING t " +
                         "LEFT JOIN ROUND r ON t._id = r.training " +
@@ -738,6 +751,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 }
             }
             res.close();
+            arrow.numbers = getArrowNumbers(arrowId);
         }
         return arrow;
     }
@@ -883,6 +897,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
             for (RoundTemplate template : sr.getRounds()) {
                 update(template);
             }
+        } else if(item instanceof Arrow) {
+            updateArrowNumbers(item.getId(), ((Arrow) item).numbers);
         }
     }
 
@@ -898,7 +914,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<EditBowActivity.SightSetting> getSettings(long bowId) {
+    public void updateArrowNumbers(long arrowId, List<Integer> arrowNumbersList) {
+        db.delete(TABLE_NUMBER, NUMBER_ARROW + "=" + arrowId, null);
+        for (Integer number : arrowNumbersList) {
+            ContentValues values = new ContentValues();
+            values.put(NUMBER_ARROW, arrowId);
+            values.put(NUMBER_VALUE, number);
+            db.insert(TABLE_NUMBER, null, values);
+        }
+    }
+
+    public ArrayList<EditBowActivity.SightSetting> getSightSettings(long bowId) {
         String[] cols = {VISIER_DISTANCE, VISIER_UNIT, VISIER_SETTING};
         Cursor res = db.query(TABLE_VISIER, cols, VISIER_BOW + "=" + bowId, null, null, null,
                 VISIER_DISTANCE + " ASC");
@@ -909,6 +935,20 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 set.distance = new Distance(res.getInt(0), res.getString(1));
                 set.value = res.getString(2);
                 list.add(set);
+            } while (res.moveToNext());
+        }
+        res.close();
+        return list;
+    }
+
+    public ArrayList<Integer> getArrowNumbers(long arrowId) {
+        String[] cols = {NUMBER_VALUE};
+        Cursor res = db.query(TABLE_NUMBER, cols, NUMBER_ARROW + "=" + arrowId, null, null, null,
+                NUMBER_VALUE + " ASC");
+        ArrayList<Integer> list = new ArrayList<>();
+        if (res.moveToFirst()) {
+            do {
+                list.add(res.getInt(0));
             } while (res.moveToNext());
         }
         res.close();
@@ -1060,5 +1100,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM SHOOT WHERE _id IN (SELECT s._id " +
                 "FROM SHOOT s LEFT JOIN PASSE p ON p._id=s.passe " +
                 "WHERE p._id IS NULL)");
+
+        // Clean up arrow numbers
+        db.execSQL("DELETE FROM NUMBER WHERE _id IN (SELECT s._id " +
+                "FROM NUMBER s LEFT JOIN ARROW a ON a._id=s.arrow " +
+                "WHERE a._id IS NULL)");
     }
 }

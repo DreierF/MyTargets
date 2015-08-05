@@ -38,7 +38,7 @@ public abstract class SimpleFragmentActivity extends AppCompatActivity {
     }
 
     protected int getLayoutResource() {
-        return R.layout.frame_layout;
+        return R.layout.layout_frame;
     }
 
     @Override

@@ -8,6 +8,7 @@
 package de.dreier.mytargets.views;
 
 import android.animation.ValueAnimator;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -18,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,10 +27,13 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -56,44 +61,10 @@ public class TargetView extends TargetViewBase {
     private float oldRadius;
     RectF[] spotRects;
     private float orgRadius, orgMidX, orgMidY;
-    private final Runnable task = new Runnable() {
-        @Override
-        public void run() {
-            final int pressed = mPasseDrawer.getPressed();
-            if (pressed == -1) {
-                return;
-            }
-            longPressTimer = null;
-            Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-            v.vibrate(500);
-            animateSelectCircle(round.arrowsPerPasse);
-
-            new TextInputDialog.Builder(getContext())
-                    .setTitle(R.string.comment)
-                    .setDefaultText(mPasse.shot[pressed].comment)
-                    .setOnClickListener(new TextInputDialog.OnClickListener() {
-
-                        @Override
-                        public void onCancelClickListener() {
-                            mPasseDrawer.setPressed(-1);
-                            invalidate();
-                        }
-
-                        @Override
-                        public void onOkClickListener(String input) {
-                            mPasse.shot[pressed].comment = input;
-                            if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
-                                setListener.onTargetSet(new Passe(mPasse), false);
-                            }
-                            mPasseDrawer.setPressed(-1);
-                            invalidate();
-                        }
-                    }).show();
-        }
-    };
     private LinearLayout keyboard;
     private boolean spotFocused = false;
     private RectF orgRect;
+    private List<Integer> arrowNumbers = new ArrayList<>();
 
     public TargetView(Context context) {
         super(context);
@@ -122,6 +93,10 @@ public class TargetView extends TargetViewBase {
         mPasseDrawer.setPasse(passe);
         animateToZoomSpot();
         invalidate();
+    }
+
+    public void setArrowNumbers(@NonNull List<Integer> arrowNumbers) {
+        this.arrowNumbers = arrowNumbers;
     }
 
     public void showAll(boolean showAll) {
@@ -218,7 +193,7 @@ public class TargetView extends TargetViewBase {
         // Draw exact arrow position
         if (!mKeyboardMode) {
             Midpoint m = new Midpoint();
-            for (int i = 0; i < mPasse.shot.length && i <= lastSetArrow+1; i++) {
+            for (int i = 0; i < mPasse.shot.length && i <= lastSetArrow + 1; i++) {
                 Shot shot = mPasse.shot[i];
                 if (shot.zone == Shot.NOTHING_SELECTED) {
                     continue;
@@ -390,7 +365,7 @@ public class TargetView extends TargetViewBase {
             } else if (i % itemsPerLine == 0 && i > 0) {
                 line = line3;
             }
-            Button button = (Button) inflater.inflate(R.layout.key_layout, line, false);
+            Button button = (Button) inflater.inflate(R.layout.layout_keyboard_key, line, false);
             final Zone zone = list.get(i);
             button.setText(zone.text);
             button.setOnClickListener(v -> {
@@ -406,7 +381,7 @@ public class TargetView extends TargetViewBase {
                         lastSetArrow++;
                     }
 
-                    animateSelectCircle(lastSetArrow + 1);
+                    onArrowChanged(lastSetArrow + 1);
 
                     if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
                         mPasse.setId(setListener.onTargetSet(new Passe(mPasse), false));
@@ -443,7 +418,7 @@ public class TargetView extends TargetViewBase {
                     mPasseDrawer.setPressed(-1);
                     longPressTimer.cancel();
                     longPressTimer = null;
-                    animateSelectCircle(arrow);
+                    onArrowChanged(arrow);
                 }
             } else if (mPasseDrawer.getPressed() != arrow) {
                 // If new item gets selected cancel old timer and start new one
@@ -455,7 +430,7 @@ public class TargetView extends TargetViewBase {
                 longPressTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        h.post(task);
+                        h.post(TargetView.this::onLongPressArrow);
                     }
                 }, 1500);
             }
@@ -581,6 +556,78 @@ public class TargetView extends TargetViewBase {
             moveAnimator.setDuration(200);
             moveAnimator.start();
         }
+    }
+
+    @Override
+    protected void onArrowChanged(int i) {
+        if (!arrowNumbers.isEmpty()) {
+            List<Integer> numbersLeft = new ArrayList<>(arrowNumbers);
+            for (Shot s : mPasse.shot) {
+                numbersLeft.remove((Integer) s.arrow);
+            }
+            if (numbersLeft.size() == 0) {
+                super.onArrowChanged(i);
+                return;
+            } else if (numbersLeft.size() == 1) {
+                mPasse.shot[currentArrow].arrow = numbersLeft.get(0);
+                super.onArrowChanged(i);
+                return;
+            }
+
+            // Prepare grid view
+            GridView gridView = new GridView(getContext());
+
+            // Set grid view to alertDialog
+            AlertDialog dialog = new AlertDialog.Builder(getContext())
+                    .setView(gridView)
+                    .setCancelable(false)
+                    .setTitle(R.string.arrow_numbers).create();
+            gridView.setAdapter(
+                    new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,
+                            numbersLeft));
+            int cols = Math.min(5, numbersLeft.size());
+            gridView.setNumColumns(cols);
+            gridView.setOnItemClickListener((parent, view, position, id) ->
+            {
+                mPasse.shot[currentArrow].arrow = numbersLeft.get(position);
+                dialog.dismiss();
+                super.onArrowChanged(i);
+            });
+            dialog.show();
+        }
+    }
+
+    private void onLongPressArrow() {
+        final int pressed = mPasseDrawer.getPressed();
+        if (pressed == -1) {
+            return;
+        }
+        longPressTimer = null;
+        Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(500);
+        onArrowChanged(round.arrowsPerPasse);
+
+        new TextInputDialog.Builder(getContext())
+                .setTitle(R.string.comment)
+                .setDefaultText(mPasse.shot[pressed].comment)
+                .setOnClickListener(new TextInputDialog.OnClickListener() {
+
+                    @Override
+                    public void onCancelClickListener() {
+                        mPasseDrawer.setPressed(-1);
+                        invalidate();
+                    }
+
+                    @Override
+                    public void onOkClickListener(String input) {
+                        mPasse.shot[pressed].comment = input;
+                        if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
+                            setListener.onTargetSet(new Passe(mPasse), false);
+                        }
+                        mPasseDrawer.setPressed(-1);
+                        invalidate();
+                    }
+                }).show();
     }
 
     private boolean isSpot() {

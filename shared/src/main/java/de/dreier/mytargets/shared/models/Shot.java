@@ -35,7 +35,7 @@ public class Shot extends IdProvider
     public long passe;
     public float x, y;
     public String comment = "";
-    private int arrow;
+    public int arrow = -1;
     public int index;
 
     public Shot(int i) {

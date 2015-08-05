@@ -130,7 +130,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
                 lastSetArrow++;
             }
 
-            animateSelectCircle(lastSetArrow + 1);
+            onArrowChanged(lastSetArrow + 1);
 
             if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
                 mPasse.setId(setListener.onTargetSet(new Passe(mPasse), false));
@@ -141,14 +141,18 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         return true;
     }
 
-    protected void animateSelectCircle(final int i) {
+    protected void onArrowChanged(final int i) {
+        animateCircle(i);
+        animateFromZoomSpot();
+    }
+
+    private void animateCircle(int i) {
         if (i > -1 && i < round.arrowsPerPasse && mPasse.shot[i].zone >= -1) {
             mPasseDrawer.animateToSelection(i, initAnimationPositions(i), mKeyboardMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
         } else {
             mPasseDrawer.animateToSelection(PasseDrawer.NO_SELECTION, null, mKeyboardMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
         }
         currentArrow = i;
-        animateFromZoomSpot();
     }
 
     protected void animateFromZoomSpot() {

@@ -55,7 +55,7 @@ public class DynamicItemLayout<T> extends LinearLayout implements View.OnClickLi
 
     private void init() {
         LayoutInflater.from(getContext()).inflate(
-                R.layout.add_button, this, true);
+                R.layout.layout_add_button, this, true);
         addButton = (Button) findViewById(R.id.add_button);
         addButton.setOnClickListener(this);
     }

@@ -51,7 +51,7 @@ public class WindSpeedFragment extends NowListFragment<WindSpeed> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.text_card, parent, false);
+                    .inflate(R.layout.card_text, parent, false);
             return new ViewHolder(itemView);
         }
     }

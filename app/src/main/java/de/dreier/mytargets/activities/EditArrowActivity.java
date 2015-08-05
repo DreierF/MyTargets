@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.EditText;
 
+import java.util.ArrayList;
+
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Arrow;
@@ -22,6 +24,7 @@ public class EditArrowActivity extends EditWithImageActivity {
 
     private EditText name, length, material, spine, weight, vanes, nock, comment;
     private long mArrowId = -1;
+    private EditText arrowNumbers;
 
     public EditArrowActivity() {
         super(R.layout.activity_edit_arrow, R.drawable.arrows);
@@ -44,25 +47,44 @@ public class EditArrowActivity extends EditWithImageActivity {
         vanes = (EditText) findViewById(R.id.arrow_vanes);
         nock = (EditText) findViewById(R.id.arrow_nock);
         comment = (EditText) findViewById(R.id.arrow_comment);
+        arrowNumbers = (EditText) findViewById(R.id.arrow_numbers);
 
         setTitle(R.string.new_arrow);
-        if (savedInstanceState == null && mArrowId != -1) {
-            Arrow arrow = DatabaseManager.getInstance(this).getArrow(mArrowId, false);
-            setTitle(arrow.name);
-            name.setText(arrow.name);
-            length.setText(arrow.length);
-            material.setText(arrow.material);
-            spine.setText(arrow.spine);
-            weight.setText(arrow.weight);
-            vanes.setText(arrow.vanes);
-            nock.setText(arrow.nock);
-            comment.setText(arrow.comment);
-            imageBitmap = arrow.image;
-            if (imageBitmap != null) {
-                mImageView.setImageBitmap(imageBitmap);
+        ArrayList<Integer> arrowNumbersList = new ArrayList<>();
+        if (savedInstanceState == null) {
+            if (mArrowId != -1) {
+                // Load data from database
+                DatabaseManager db = DatabaseManager.getInstance(this);
+                Arrow arrow = db.getArrow(mArrowId, false);
+                setTitle(arrow.name);
+                name.setText(arrow.name);
+                length.setText(arrow.length);
+                material.setText(arrow.material);
+                spine.setText(arrow.spine);
+                weight.setText(arrow.weight);
+                vanes.setText(arrow.vanes);
+                nock.setText(arrow.nock);
+                comment.setText(arrow.comment);
+                imageBitmap = arrow.image;
+                if (imageBitmap != null) {
+                    mImageView.setImageBitmap(imageBitmap);
+                }
+                mImageFile = arrow.imageFile;
+                arrowNumbersList = db.getArrowNumbers(mArrowId);
+            } else {
+                // Set to default values
+                setTitle(R.string.new_arrow);
             }
-            mImageFile = arrow.imageFile;
-        } else if (savedInstanceState != null) {
+            String text = "";
+            for (Integer number : arrowNumbersList) {
+                if (!text.isEmpty()) {
+                    text += ",";
+                }
+                text += number;
+            }
+            arrowNumbers.setText(text);
+        } else {
+            // Restore values from before orientation change
             name.setText(savedInstanceState.getString("name"));
             length.setText(savedInstanceState.getString("length"));
             material.setText(savedInstanceState.getString("material"));
@@ -71,11 +93,16 @@ public class EditArrowActivity extends EditWithImageActivity {
             vanes.setText(savedInstanceState.getString("vanes"));
             nock.setText(savedInstanceState.getString("nock"));
             comment.setText(savedInstanceState.getString("comment"));
+            arrowNumbers.setText(savedInstanceState.getString("arrows"));
         }
     }
 
     @Override
     public void onSave() {
+        ArrayList<Integer> numbers = getArrowNumbers();
+        if (numbers == null) {
+            return;
+        }
         DatabaseManager db = DatabaseManager.getInstance(this);
 
         Arrow arrow = new Arrow();
@@ -90,9 +117,24 @@ public class EditArrowActivity extends EditWithImageActivity {
         arrow.comment = comment.getText().toString();
         arrow.imageFile = mImageFile;
         arrow.image = imageBitmap;
+        arrow.numbers = numbers;
 
         db.update(arrow);
         finish();
+    }
+
+    private ArrayList<Integer> getArrowNumbers() {
+        String text = arrowNumbers.getText().toString().replace(" ", "");
+        if (!text.matches("([0-9]*(,[0-9]*)*)?")) {
+            arrowNumbers.setError(getString(R.string.not_matches_sheme));
+            return null;
+        }
+        String[] stringNumber = text.split(",");
+        ArrayList<Integer> list = new ArrayList<>();
+        for (String num : stringNumber) {
+            list.add(Integer.parseInt(num));
+        }
+        return list;
     }
 
     @Override
@@ -106,5 +148,6 @@ public class EditArrowActivity extends EditWithImageActivity {
         outState.putString("vanes", vanes.getText().toString());
         outState.putString("nock", nock.getText().toString());
         outState.putString("comment", comment.getText().toString());
+        outState.putString("arrows", arrowNumbers.getText().toString());
     }
 }

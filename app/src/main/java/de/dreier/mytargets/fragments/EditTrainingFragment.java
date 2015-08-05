@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
@@ -39,6 +40,7 @@ import de.dreier.mytargets.adapters.BowItemAdapter;
 import de.dreier.mytargets.adapters.EnvironmentItemAdapter;
 import de.dreier.mytargets.adapters.StandardRoundsItemAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
@@ -57,7 +59,6 @@ import zh.wang.android.apis.yweathergetter4a.YahooWeatherInfoListener;
 public class EditTrainingFragment extends Fragment implements DatePickerDialog.OnDateSetListener,
         YahooWeatherInfoListener {
     public static final String TRAINING_ID = "training_id";
-    private static final int REQ_SELECTED_ARROW = 1;
     private static final int REQ_SELECTED_BOW = 2;
     private static final int REQ_SELECTED_ENVIRONMENT = 3;
     private static final int REQ_SELECTED_DATE = 4;
@@ -75,6 +76,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
     private Date date = new Date();
     private DialogSpinner environment;
     private DialogSpinner standardRoundSpinner;
+    private CheckBox number_arrows;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -141,8 +143,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
                 i1.putExtra(TargetFragment.TYPE_FIXED, true);
                 startActivityForResult(i1, REQ_SELECTED_SPECIFIC_TARGET);
             } else {
-                Intent i1 = new Intent(activity,
-                        ItemSelectActivity.StandardRound.class);
+                Intent i1 = new Intent(activity, ItemSelectActivity.StandardRound.class);
                 i1.putExtra("item", standardRound);
                 startActivityForResult(i1, REQ_SELECTED_STANDARD_ROUND);
             }
@@ -161,15 +162,20 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         });
 
         // Arrow
+        number_arrows = (CheckBox) rootView.findViewById(R.id.number_arrows);
         arrow = (DialogSpinner) rootView.findViewById(R.id.arrow);
         arrow.setAdapter(new ArrowItemAdapter(activity));
         Button addArrow = (Button) rootView.findViewById(R.id.add_arrow);
         arrow.setAddButton(addArrow,
                 v -> startActivity(new Intent(activity, EditArrowActivity.class)));
         arrow.setOnClickListener(v -> {
-            Intent i1 = new Intent(activity,
-                    ItemSelectActivity.Arrow.class);
-            startActivityForResult(i1, REQ_SELECTED_ARROW);
+            Intent i1 = new Intent(activity, ItemSelectActivity.Arrow.class);
+            arrow.startIntent(i1);
+        });
+        arrow.setOnResultListener(data -> {
+            long id = data.getLongExtra("id", 0);
+            arrow.setItemId(id);
+            updateArrowNumbers();
         });
 
         // Environment
@@ -193,7 +199,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             activity.getSupportActionBar().setTitle(R.string.new_training);
             bow.setItemId(prefs.getInt("bow", -1));
             arrow.setItemId(prefs.getInt("arrow", -1));
-            standardRoundSpinner.setItemId(prefs.getInt("standard_round", 0));
+            standardRoundSpinner.setItemId(prefs.getInt("standard_round", 32));
         } else {
             DatabaseManager db = DatabaseManager.getInstance(activity);
             Training train = db.getTraining(mTraining);
@@ -207,7 +213,18 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             activity.getSupportActionBar().setTitle(R.string.new_training);
             scrollView.setVisibility(View.GONE);
         }
+        updateArrowNumbers();
         return rootView;
+    }
+
+    private void updateArrowNumbers() {
+        Arrow selectedItem = (Arrow) arrow.getSelectedItem();
+        if (selectedItem == null || selectedItem.numbers.isEmpty()) {
+            number_arrows.setVisibility(View.GONE);
+        } else {
+            number_arrows.setVisibility(View.VISIBLE);
+            number_arrows.setChecked(true);
+        }
     }
 
     @Override
@@ -224,10 +241,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             long id = data.getLongExtra("id", 0);
-            if (requestCode == REQ_SELECTED_ARROW) {
-                arrow.setItemId(id);
-                return;
-            } else if (requestCode == REQ_SELECTED_BOW) {
+            if (requestCode == REQ_SELECTED_BOW) { //TODO use onresult
                 bow.setItemId(id);
                 return;
             } else if (requestCode == REQ_SELECTED_ENVIRONMENT) {
@@ -311,6 +325,9 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         training.environment = ((EnvironmentItemAdapter) environment.getAdapter()).getEnvironment();
         training.bow = bow.getSelectedItemId();
         training.arrow = arrow.getSelectedItemId();
+        Arrow selectedItem = (Arrow) arrow.getSelectedItem();
+        training.arrowNumbering = !(selectedItem == null || selectedItem.numbers.isEmpty()) &&
+                number_arrows.isChecked();
         if (training.bow == 0) {
             training.bow = mBowId;
         }
@@ -335,6 +352,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         editor.putInt("standard_round", (int) standardRound.getId());
         editor.putInt("bow", (int) bow.getSelectedItemId());
         editor.putInt("arrow", (int) arrow.getSelectedItemId());
+        //TODO save arrow numbering?
         editor.apply();
     }
 

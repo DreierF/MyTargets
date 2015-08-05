@@ -57,7 +57,7 @@ public class DonationAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.donation_item, parent, false);
+            convertView = mInflater.inflate(R.layout.item_donation, parent, false);
         }
         TextView desc = (TextView) convertView.findViewById(R.id.desc);
         TextView price = (TextView) convertView.findViewById(R.id.price);

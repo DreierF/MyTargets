@@ -19,7 +19,6 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 
 import java.util.ArrayList;
@@ -97,14 +96,15 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         }
 
         target.setRoundTemplate(template);
+        if (training.arrowNumbering) {
+            target.setArrowNumbers(db.getArrowNumbers(training.arrow));
+        }
         mShowAllMode = prefs.getBoolean(SHOW_ALL_MODE, false);
         mTimerEnabled = prefs.getBoolean(TIMER_ENABLED, false);
         target.showAll(mShowAllMode);
 
         // Send message to wearable app, that we are starting a passe
-        new Thread(() -> {
-            startWearNotification();
-        }).start();
+        new Thread(this::startWearNotification).start();
 
         if (savedInstanceState != null) {
             target.restoreState(savedInstanceState);
@@ -279,7 +279,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         } else if (curPasse == savedPasses) {
             manager.sendMessage(buildInfo());
         }
-        runOnUiThread(() -> updatePasse());
+        runOnUiThread(this::updatePasse);
         return passe.getId();
     }
 
@@ -306,7 +306,8 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
         // Load bow settings
         if (training.bow > 0) {
-            text += template.distance.toString(this) + ": " + db.getSetting(training.bow, template.distance);
+            text += template.distance.toString(this) + ": " +
+                    db.getSetting(training.bow, template.distance);
         }
         return new NotificationInfo(mRound, title, text);
     }

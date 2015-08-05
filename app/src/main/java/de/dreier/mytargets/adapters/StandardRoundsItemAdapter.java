@@ -45,7 +45,7 @@ public class StandardRoundsItemAdapter extends ArrayAdapter<StandardRound> {
         if (v == null) {
             LayoutInflater vi = (LayoutInflater) mContext.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(R.layout.standard_round_item, parent, false);
+            v = vi.inflate(R.layout.item_standard_round, parent, false);
         }
 
         TextView name = (TextView) v.findViewById(android.R.id.text1);

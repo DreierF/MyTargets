@@ -42,7 +42,7 @@ public class ASA3D extends Target3DBase {
     }
 
     @Override
-    protected boolean isInZone(float ax, float ay, int zone) {
+    protected boolean isInZone(float ax, float ay, int zone, boolean outsideIn) {
         switch (zone) {
             case 0:
                 return (ax - 637.198f) * (ax - 637.198f) + (ay - 455.401f) * (ay - 455.401f) <
@@ -50,7 +50,7 @@ public class ASA3D extends Target3DBase {
                         (ax - 491.448f) * (ax - 491.448f) + (ay - 699.901f) * (ay - 699.901f) <
                                 3844;
             default:
-                return super.isInZone(ax, ay, zone);
+                return super.isInZone(ax, ay, zone, outsideIn);
         }
     }
 }

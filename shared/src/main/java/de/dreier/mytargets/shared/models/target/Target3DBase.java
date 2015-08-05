@@ -73,7 +73,7 @@ public class Target3DBase extends Target {
     }
 
     @Override
-    protected boolean isInZone(float ax, float ay, int zone) {
+    protected boolean isInZone(float ax, float ay, int zone, boolean outsideIn) {
         if (zones - zone == 2) {
             return region.contains((int)ax, (int)ay);
         } else if(zones - zone == 3) {

@@ -37,7 +37,7 @@
             android:layout_gravity="bottom"
             android:background="?android:attr/listDivider"/>
 
-        <include layout="@layout/keyboard"/>
+        <include layout="@layout/layout_keyboard"/>
     </FrameLayout>
 
     <LinearLayout

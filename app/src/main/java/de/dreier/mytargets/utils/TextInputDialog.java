@@ -36,7 +36,7 @@ public class TextInputDialog {
         public void show() {
             LayoutInflater inflater = (LayoutInflater) mContext
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.comment_dialog, null);
+            View view = inflater.inflate(R.layout.dialog_comment, null);
             final EditText input = (EditText) view.findViewById(R.id.shot_comment);
             input.setInputType(mInputType);
             input.setText(mDefaultText);

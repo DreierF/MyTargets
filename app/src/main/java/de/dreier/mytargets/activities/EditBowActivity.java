@@ -48,8 +48,6 @@ public class EditBowActivity extends EditWithImageActivity
     private RadioButton recurveBow, compoundBow, longBow, blank, horse, yumi;
     private long mBowId = -1;
     private DynamicItemLayout<SightSetting> sight_settings;
-    private SightSetting curSetting;
-    private DistanceDialogSpinner curDistanceSpinner;
 
     public EditBowActivity() {
         super(R.layout.activity_edit_bow, R.drawable.recurve_bow);
@@ -78,7 +76,7 @@ public class EditBowActivity extends EditWithImageActivity
         desc = (EditText) findViewById(R.id.desc);
         //noinspection unchecked
         sight_settings = (DynamicItemLayout<SightSetting>) findViewById(R.id.sight_settings);
-        sight_settings.setLayoutResource(R.layout.sight_settings_item, SightSetting.class);
+        sight_settings.setLayoutResource(R.layout.dynamicitem_sight_settings, SightSetting.class);
         sight_settings.setOnBindListener(this);
 
         recurveBow.setOnClickListener(v -> setBowType(RECURVE_BOW));
@@ -88,31 +86,34 @@ public class EditBowActivity extends EditWithImageActivity
         horse.setOnClickListener(v -> setBowType(HORSE_BOW));
         yumi.setOnClickListener(v -> setBowType(YUMI));
 
-        ArrayList<SightSetting> sightSettingsList = null;
-        if (savedInstanceState == null && mBowId != -1) {
-            DatabaseManager db = DatabaseManager.getInstance(this);
-            Bow bow = db.getBow(mBowId, false);
-            setTitle(bow.name);
-            name.setText(bow.name);
-            brand.setText(bow.brand);
-            size.setText(bow.size);
-            height.setText(bow.height);
-            tiller.setText(bow.tiller);
-            desc.setText(bow.description);
-            imageBitmap = bow.image;
-            if (imageBitmap != null) {
-                mImageView.setImageBitmap(imageBitmap);
+        ArrayList<SightSetting> sightSettingsList = new ArrayList<>();
+        if (savedInstanceState == null) {
+            if (mBowId != -1) {
+                // Load data from database
+                DatabaseManager db = DatabaseManager.getInstance(this);
+                Bow bow = db.getBow(mBowId, false);
+                setTitle(bow.name);
+                name.setText(bow.name);
+                brand.setText(bow.brand);
+                size.setText(bow.size);
+                height.setText(bow.height);
+                tiller.setText(bow.tiller);
+                desc.setText(bow.description);
+                imageBitmap = bow.image;
+                if (imageBitmap != null) {
+                    mImageView.setImageBitmap(imageBitmap);
+                }
+                mImageFile = bow.imageFile;
+                setBowType(bow.type);
+                sightSettingsList = db.getSightSettings(mBowId);
+            } else {
+                // Set to default values
+                recurveBow.setChecked(true);
+                setTitle(R.string.new_bow);
+                sightSettingsList.add(new SightSetting());
             }
-            mImageFile = bow.imageFile;
-            setBowType(bow.type);
-            sightSettingsList = db.getSettings(mBowId);
-        } else if (savedInstanceState == null) {
-            recurveBow.setChecked(true);
-            sightSettingsList = new ArrayList<>();
-            setTitle(R.string.new_bow);
-        }
-
-        if (savedInstanceState != null) {
+        } else {
+            // Restore values from before orientation change
             name.setText(savedInstanceState.getString("name"));
             brand.setText(savedInstanceState.getString("brand"));
             size.setText(savedInstanceState.getString("size"));
@@ -120,23 +121,16 @@ public class EditBowActivity extends EditWithImageActivity
             tiller.setText(savedInstanceState.getString("tiller"));
             desc.setText(savedInstanceState.getString("desc"));
             //noinspection unchecked
-            sightSettingsList = (ArrayList<SightSetting>) savedInstanceState.getSerializable(
-                    "settings");
-        } else {
-            if (sightSettingsList == null) {
-                sight_settings.addItem(new SightSetting());
-            } else {
-                sight_settings.setList(sightSettingsList);
-            }
+            sightSettingsList = (ArrayList<SightSetting>) savedInstanceState
+                    .getSerializable("settings");
+
         }
+        sight_settings.setList(sightSettingsList);
     }
 
     public static class SightSetting implements Serializable {
         public Distance distance = new Distance(18, Dimension.METER);
         public String value = "";
-
-        public SightSetting() {
-        }
     }
 
     @Override
@@ -166,7 +160,7 @@ public class EditBowActivity extends EditWithImageActivity
             }
         });
         ImageButton remove = (ImageButton) view.findViewById(R.id.remove_sight_setting);
-        remove.setOnClickListener(view1 -> sight_settings.remove(sightSetting, R.string.undo));
+        remove.setOnClickListener(view1 -> sight_settings.remove(sightSetting, R.string.sight_setting_removed));
         distanceSpinner.setItemId(sightSetting.distance.getId());
         setting.setText(sightSetting.value);
     }

@@ -107,19 +107,18 @@
 
     </android.support.design.widget.TextInputLayout>
 
-    <TextView
-        style="@style/Label"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_weight="1"
-        android:text="@string/arrow_numbers"/>
+        android:layout_height="wrap_content">
 
-   <!-- <de.dreier.mytargets.views.DynamicItemLayout
-            android:animateLayoutChanges="true"
-        android:id="@+id/arrow_numbers"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" />-->
+        <EditText
+            android:id="@+id/arrow_numbers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:digits="0123456789,"
+            android:hint="@string/arrow_numbers"
+            android:inputType="number"/>
+
+    </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>

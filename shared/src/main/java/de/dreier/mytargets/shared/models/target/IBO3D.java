@@ -40,12 +40,12 @@ public class IBO3D extends Target3DBase {
     }
 
     @Override
-    protected boolean isInZone(float ax, float ay, int zone) {
+    protected boolean isInZone(float ax, float ay, int zone, boolean outsideIn) {
         switch (zone) {
             case 0:
                 return (ax - 563.447f) * (ax - 563.447f) + (ay - 576.566f) * (ay - 576.566f) < 3844;
             default:
-                return super.isInZone(ax, ay, zone);
+                return super.isInZone(ax, ay, zone, outsideIn);
         }
     }
 }

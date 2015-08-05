@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.StringRes;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -36,10 +37,13 @@ public class SpotBase extends Target {
 
     @Override
     protected float[] getArrowPosition(Rect rect, float x, float y, int arrow) {
+        Log.d("", x + "," + y);
         rect = getBounds(arrow, rect);
+        Log.d("", rect.toShortString());
         float[] pos = new float[2];
         pos[0] = rect.left + recalc(rect, (1 + x) * rect.width() * 0.5f);
         pos[1] = rect.top + recalc(rect, (1 + y) * rect.width() * 0.5f);
+        Log.d("", pos[0] + "," + pos[1]);
         return pos;
     }
 

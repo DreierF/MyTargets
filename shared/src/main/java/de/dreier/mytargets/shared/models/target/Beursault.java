@@ -27,8 +27,8 @@ public class Beursault extends CircularTargetBase {
         colorStroke = new int[]{Target.DARK_GRAY, Target.DARK_GRAY, Target.DARK_GRAY,
                 Target.DARK_GRAY, Target.DARK_GRAY, Target.DARK_GRAY, Target.DARK_GRAY,
                 Target.DARK_GRAY,};
-        strokeWidth = new int[]{27,6,6,27,6,6,6,27};
-        zonePoints = new int[][]{{4,4,3,3,2,2,1,1}};
+        strokeWidth = new int[]{27, 6, 6, 27, 6, 6, 6, 27};
+        zonePoints = new int[][]{{4, 4, 3, 3, 2, 2, 1, 1}};
         //TODO inside out, see http://scores-sca.org/public/scores_rules.php?R=25&Shoot=108
         showAsX = new boolean[]{false};
         diameters = new Diameter[]{new Diameter(48, Dimension.CENTIMETER)};
