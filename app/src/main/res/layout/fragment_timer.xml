@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             xmlns:tools="http://schemas.android.com/tools"
              android:background="@color/timer_red">
 
     <android.support.v7.widget.Toolbar
@@ -35,7 +36,8 @@
         android:shadowDy="0"
         android:shadowRadius="20"
         android:textColor="@color/white"
-        android:textSize="100sp"
-        android:textStyle="bold"/>
+        android:textSize="@dimen/timer_text_size"
+        android:textStyle="bold"
+        tools:text="STOP"/>
 
 </FrameLayout>

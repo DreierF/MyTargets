@@ -8,4 +8,5 @@
     <dimen name="card_padding_vertical">3dp</dimen>
     <dimen name="card_padding_horizontal">6dp</dimen>
     <dimen name="listheader_padding_bottom">8dp</dimen>
+    <dimen name="timer_text_size">100sp</dimen>
 </resources>
