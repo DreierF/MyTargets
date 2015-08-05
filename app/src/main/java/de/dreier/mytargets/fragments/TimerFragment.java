@@ -77,8 +77,8 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(getActivity());
         mWaitingTime = getPrefTime(prefs, "timer_wait_time", "20");
-        mShootingTime = getPrefTime(prefs,"timer_shoot_time", "120");
-        mWarnTime = getPrefTime(prefs,"timer_warn_time", "30");
+        mShootingTime = getPrefTime(prefs, "timer_shoot_time", "120");
+        mWarnTime = getPrefTime(prefs, "timer_warn_time", "30");
         mSound = prefs.getBoolean("timer_sound", true);
         mVibrate = prefs.getBoolean("timer_vibrate", false);
     }
@@ -182,6 +182,10 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                         getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
                     }
                 }.start();
+                break;
+            case FINISHED + 1:
+                getActivity().finish();
+                getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
                 break;
         }
     }
