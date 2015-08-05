@@ -121,4 +121,9 @@
 
     </android.support.design.widget.TextInputLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/arrow_numbers_desc"/>
+
 </LinearLayout>

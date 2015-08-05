@@ -17,6 +17,7 @@
 
     <TextView
         android:id="@+id/name"
+        style="@style/primary_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -25,9 +26,7 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="16dp"
         android:layout_marginLeft="72dp"
-        android:layout_marginRight="16dp"
-        android:textColor="@color/primary_text_default_material_light"
-        android:textSize="16sp"/>
+        android:layout_marginRight="16dp"/>
 
 </RelativeLayout>
 

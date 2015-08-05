@@ -21,8 +21,7 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="5dp"
             android:clickable="false"
-            android:textColor="@color/secondary_text_default_material_light"
-            android:textSize="16sp"/>
+            style="@style/primary_text"/>
 
         <view
             android:id="@+id/shoots"

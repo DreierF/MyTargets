@@ -15,7 +15,7 @@
         android:paddingTop="@dimen/activity_vertical_margin">
 
         <TextView
-            style="@style/Label"
+            style="@style/secondary_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -75,7 +75,7 @@
         </LinearLayout>
 
         <TextView
-            style="@style/Label"
+            style="@style/secondary_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -87,7 +87,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            style="@style/Label"
+            style="@style/secondary_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -99,7 +99,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            style="@style/Label"
+            style="@style/secondary_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

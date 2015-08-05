@@ -131,7 +131,7 @@
                 android:padding="16dp">
 
                 <TextView
-                    style="@style/Label"
+                    style="@style/secondary_text"
                     android:text="@string/club"/>
 
                 <LinearLayout

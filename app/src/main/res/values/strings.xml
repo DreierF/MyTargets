@@ -237,6 +237,7 @@
     <string name="use_as_template">Use as template?</string>
     <string name="create_copy">This is a standard round!\nDo you want to create a copy in order to edit it?</string>
     <string name="not_matches_sheme">Input does not match the expected format like 1,3,5</string>
+    <string name="arrow_numbers_desc">Enter all arrow number that you use for shooting e.g. 1,2,5,6,7</string>
     <plurals name="arrow_deleted">
         <item quantity="one">One arrow deleted</item>
         <item quantity="other">%d arrows deleted</item>

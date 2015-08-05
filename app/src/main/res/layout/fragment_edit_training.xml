@@ -98,9 +98,9 @@
 
                     <TextView
                         style="@style/Label"
-                        android:layout_marginTop="16dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
                         android:text="@string/bow"/>
 
                     <de.dreier.mytargets.views.DialogSpinner
@@ -110,6 +110,7 @@
 
                         <Button
                             android:id="@+id/add_bow"
+                            style="@style/primary_text"
                             android:layout_width="match_parent"
                             android:layout_height="35dp"
                             android:layout_marginBottom="10dp"
@@ -120,7 +121,7 @@
                             android:paddingRight="15dp"
                             android:paddingTop="5dp"
                             android:text="@string/add_bow"
-                            android:textColor="@android:color/secondary_text_light"/>
+                            android:textStyle="normal"/>
 
                     </de.dreier.mytargets.views.DialogSpinner>
 
@@ -138,6 +139,7 @@
 
                         <Button
                             android:id="@+id/add_arrow"
+                            style="@style/primary_text"
                             android:layout_width="match_parent"
                             android:layout_height="35dp"
                             android:layout_marginBottom="10dp"
@@ -148,7 +150,7 @@
                             android:paddingRight="15dp"
                             android:paddingTop="5dp"
                             android:text="@string/add_arrow"
-                            android:textColor="@android:color/secondary_text_light"/>
+                            android:textStyle="normal"/>
 
                     </de.dreier.mytargets.views.DialogSpinner>
 

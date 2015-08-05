@@ -33,15 +33,13 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/primary_text_default_material_light"
-            android:textSize="16sp"/>
+            style="@style/primary_text"/>
 
         <TextView
             android:id="@+id/details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/secondary_text_default_material_light"
-            android:textSize="14sp"/>
+            style="@style/secondary_text"/>
 
     </LinearLayout>
 

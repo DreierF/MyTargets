@@ -15,12 +15,11 @@
 
         <TextView
             android:id="@+id/training"
+            style="@style/primary_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="false"
-            android:text="@string/training"
-            android:textColor="@color/primary_text_default_material_light"
-            android:textSize="16sp"/>
+            android:text="@string/training"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,22 +29,20 @@
 
             <TextView
                 android:id="@+id/training_date"
+                style="@style/secondary_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:clickable="false"
-                android:text="@string/data"
-                android:textColor="@color/secondary_text_default_material_light"
-                android:textSize="14sp"/>
+                android:text="@string/data"/>
 
             <TextView
                 android:id="@+id/gesTraining"
+                style="@style/secondary_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="false"
-                android:gravity="end"
-                android:textColor="@color/secondary_text_default_material_light"
-                android:textSize="14sp"/>
+                android:gravity="end"/>
         </LinearLayout>
 
     </LinearLayout>

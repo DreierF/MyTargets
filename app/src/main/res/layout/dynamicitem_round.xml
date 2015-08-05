@@ -11,7 +11,7 @@
 
         <TextView
             android:id="@+id/round_number"
-            style="@style/Label"
+            style="@style/secondary_text"
             android:padding="16dp"
             android:text="Round 1"
             android:textSize="16sp"/>
@@ -35,7 +35,7 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/Label"
+            style="@style/secondary_text"
             android:padding="16dp"
             android:text="@string/distance"/>
 
@@ -54,7 +54,7 @@
         android:padding="16dp">
 
         <TextView
-            style="@style/Label"
+            style="@style/secondary_text"
             android:text="@string/target_face"/>
 
         <de.dreier.mytargets.views.DialogSpinner
@@ -73,7 +73,7 @@
 
         <TextView
             android:id="@+id/label_format"
-            style="@style/Label"
+            style="@style/secondary_text"
             android:text="@string/format"/>
 
         <LinearLayout

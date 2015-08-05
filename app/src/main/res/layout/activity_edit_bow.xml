@@ -4,7 +4,7 @@
               android:orientation="vertical">
 
     <TextView
-        style="@style/Label"
+        style="@style/secondary_text"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
@@ -69,7 +69,7 @@
     </LinearLayout>
 
     <TextView
-        style="@style/Label"
+        style="@style/secondary_text"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
@@ -171,7 +171,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <TextView
-        style="@style/Label"
+        style="@style/secondary_text"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"

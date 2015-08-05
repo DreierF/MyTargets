@@ -28,19 +28,11 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
-    <style name="AppTheme" parent="AppBaseTheme" />
+    <style name="AppTheme" parent="AppBaseTheme"/>
 
-    <style name="AppTheme.Overlay" parent="AppBaseTheme.Overlay" />
+    <style name="AppTheme.Overlay" parent="AppBaseTheme.Overlay"/>
 
-    <style name="AppTheme.CustomToolbar" parent="AppBaseTheme.CustomToolbar" />
-
-    <style name="Label">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/secondary_text_default_material_light</item>
-        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-medium</item>
-    </style>
+    <style name="AppTheme.CustomToolbar" parent="AppBaseTheme.CustomToolbar"/>
 
     <style name="card_list">
         <item name="android:id">@android:id/list</item>
@@ -57,6 +49,20 @@
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="primary_text">
+        <item name="android:textColor">@color/primary_text_default_material_light</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="secondary_text">
+        <item name="android:textColor">@color/secondary_text_default_material_light</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Label" parent="secondary_text">
+        <item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif-medium</item>
     </style>
 
 </resources>
