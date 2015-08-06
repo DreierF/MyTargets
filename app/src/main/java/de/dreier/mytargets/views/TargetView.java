@@ -153,7 +153,7 @@ public class TargetView extends TargetViewBase {
             curZone = -2;
         }
 
-        // Draw target with highlighted zone
+        // Draw target
         if (mCurSelecting < -1) {
             drawTarget(canvas, mOutFromX + (midX - mOutFromX) * mCurAnimationProgress,
                     mOutFromY + (midY - mOutFromY) * mCurAnimationProgress,
@@ -560,7 +560,9 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void onArrowChanged(int i) {
-        if (!arrowNumbers.isEmpty()) {
+        if (arrowNumbers.isEmpty()) {
+            super.onArrowChanged(i);
+        } else {
             List<Integer> numbersLeft = new ArrayList<>(arrowNumbers);
             for (Shot s : mPasse.shot) {
                 numbersLeft.remove((Integer) s.arrow);

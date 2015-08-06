@@ -106,6 +106,7 @@ public class EditBowActivity extends EditWithImageActivity
                 mImageFile = bow.imageFile;
                 setBowType(bow.type);
                 sightSettingsList = db.getSightSettings(mBowId);
+                setTitle(R.string.edit_bow);
             } else {
                 // Set to default values
                 recurveBow.setChecked(true);

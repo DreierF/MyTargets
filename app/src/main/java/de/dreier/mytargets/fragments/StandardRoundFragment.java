@@ -22,7 +22,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -71,8 +70,6 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
     }
 
     private void initFilter() {
-        RadioGroup.OnCheckedChangeListener listener_radio_button = (group, checkedId) -> updateFilter();
-        CompoundButton.OnCheckedChangeListener listener_checkbox = (buttonView, isChecked) -> updateFilter();
         location = (RadioGroup) rootView.findViewById(R.id.location);
         unit = (RadioGroup) rootView.findViewById(R.id.unit);
         typ = (RadioGroup) rootView.findViewById(R.id.round_typ);
@@ -85,15 +82,6 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
         clubs[6] = (CheckBox) rootView.findViewById(R.id.nfas);
         clubs[7] = (CheckBox) rootView.findViewById(R.id.wa);
         clubs[8] = (CheckBox) rootView.findViewById(R.id.custom);
-
-        location.setOnCheckedChangeListener(listener_radio_button);
-        unit.setOnCheckedChangeListener(listener_radio_button);
-        typ.setOnCheckedChangeListener(listener_radio_button);
-        for (CheckBox club : clubs) {
-            club.setOnCheckedChangeListener(listener_checkbox);
-        }
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         RadioButton outdoor = (RadioButton) rootView.findViewById(R.id.outdoor);
         RadioButton indoor = (RadioButton) rootView.findViewById(R.id.indoor);
         RadioButton metric = (RadioButton) rootView.findViewById(R.id.metric);
@@ -101,6 +89,9 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
         RadioButton target = (RadioButton) rootView.findViewById(R.id.target);
         RadioButton field = (RadioButton) rootView.findViewById(R.id.field);
         RadioButton three_d = (RadioButton) rootView.findViewById(R.id.three_d);
+
+        // Set default values
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         if (currentSelection.indoor) {
             indoor.setChecked(true);
         } else {
@@ -119,12 +110,22 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
         } else {
             target.setChecked(true);
         }
-        int filter = prefs.getInt("filter_club", 0x1FF);
-        filter |= currentSelection.club;
+        int filterMask = prefs.getInt("filter_club", 0x1FF);
+        filterMask |= currentSelection.club;
         for (int i = 0; i < clubs.length; i++) {
-            clubs[i].setChecked((1 << i & filter) != 0);
+            clubs[i].setChecked((1 << i & filterMask) != 0);
         }
+
+        // Update display set
         updateFilter();
+
+        // Listen for filter setting changes
+        for (CheckBox club : clubs) {
+            club.setOnCheckedChangeListener((buttonView, isChecked) -> updateFilter());
+        }
+        location.setOnCheckedChangeListener((group, checkedId) -> updateFilter());
+        unit.setOnCheckedChangeListener((group, checkedId) -> updateFilter());
+        typ.setOnCheckedChangeListener((group, checkedId) -> updateFilter());
     }
 
     private void updateFilter() {
@@ -252,7 +253,7 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_standard_round_select, parent, false);
+                    .inflate(R.layout.card_standard_round, parent, false);
             return new ViewHolder(itemView);
         }
     }

@@ -24,6 +24,7 @@ import android.widget.Button;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.fragments.TimerFragment;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.WearMessageManager;
 import de.dreier.mytargets.shared.models.Bow;
@@ -42,7 +43,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     public static final String ROUND_ID = "round_id";
     public static final String PASSE_IND = "passe_ind";
     private static final String SHOW_ALL_MODE = "show_all";
-    private static final String TIMER_ENABLED = "timer_enabled";
+    //private static final String TIMER_ENABLED = "timer_enabled";
     private TargetView target;
     private Button next, prev;
     private int curPasse = 1;
@@ -51,9 +52,11 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     private DatabaseManager db;
     private boolean mShowAllMode = false;
     private WearMessageManager manager;
-    private boolean mTimerEnabled;
+    //private boolean mTimerEnabled;
     private Training training;
     private RoundTemplate template;
+    private boolean mExitOnFinish;
+    private ArrayList<Round> rounds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +76,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         long mTraining;
         if (intent.hasExtra(TRAINING_ID)) {
             mTraining = intent.getLongExtra(TRAINING_ID, -1);
-            ArrayList<Round> rounds = db.getRounds(mTraining);
+            rounds = db.getRounds(mTraining);
             training = db.getTraining(mTraining);
             for (int roundIndex = 0; roundIndex < rounds.size(); roundIndex++) {
                 mRound = rounds.get(roundIndex);
@@ -85,6 +88,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                     break;
                 }
             }
+            mExitOnFinish = true;
         } else {
             long roundId = intent.getLongExtra(ROUND_ID, -1);
             curPasse = intent.getIntExtra(PASSE_IND, -1) + 1;
@@ -92,7 +96,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
             template = mRound.info;
             mTraining = mRound.training;
             training = db.getTraining(mTraining);
+            rounds = db.getRounds(mTraining);
             savedPasses = db.getPassesOfRound(roundId).size();
+            mExitOnFinish = false;
         }
 
         target.setRoundTemplate(template);
@@ -100,7 +106,6 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
             target.setArrowNumbers(db.getArrowNumbers(training.arrow));
         }
         mShowAllMode = prefs.getBoolean(SHOW_ALL_MODE, false);
-        mTimerEnabled = prefs.getBoolean(TIMER_ENABLED, false);
         target.showAll(mShowAllMode);
 
         // Send message to wearable app, that we are starting a passe
@@ -148,14 +153,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        //menu.findItem(R.id.action_switch_mode)
-        //        .setIcon(mMode ? R.drawable.ic_target_zone_24dp : R.drawable.ic_target_exact_24dp);
         menu.findItem(R.id.action_show_all).setIcon(
                 mShowAllMode ? R.drawable.ic_visibility_white_24dp :
                         R.drawable.ic_visibility_off_white_24dp);
-        menu.findItem(R.id.action_timer).setIcon(
-                mTimerEnabled ? R.drawable.ic_timer_white_24dp :
-                        R.drawable.ic_timer_off_white_24dp);
         return true;
     }
 
@@ -171,7 +171,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
             if (passe != curPasse) {
                 target.reset();
             }
-            if (mTimerEnabled) {
+            if (training.timePerPasse > 0) {
                 openTimer();
             }
         }
@@ -182,14 +182,28 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     }
 
     void updatePasse() {
-        setTitle(getString(R.string.passe_n, curPasse));
-        prev.setEnabled(curPasse > 1);
-        next.setEnabled(curPasse <= savedPasses && curPasse <= template.passes);
+        assert getActionBar() != null;
+        prev.setEnabled(curPasse > 1 || template.index > 0);
+        next.setEnabled(curPasse <= savedPasses && curPasse <= template.passes ||
+                rounds.size() > template.index + 1 && savedPasses == template.passes);
 
-        if (savedPasses == template.passes) {
-            finish();
-            overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        if (curPasse >= template.passes) {
+            if (rounds.size() > template.index + 1) {
+                mRound = rounds.get(template.index + 1);
+                template = mRound.info;
+                curPasse = 1;
+            } else if (mExitOnFinish) {
+                finish();
+                overridePendingTransition(R.anim.left_in, R.anim.right_out);
+            }
+        } else if (curPasse == 0 && template.index > 0) {
+            mRound = rounds.get(template.index - 1);
+            template = mRound.info;
+            curPasse = template.passes;
         }
+        getSupportActionBar().setTitle(getString(R.string.passe) + " " + curPasse);
+        getSupportActionBar()
+                .setSubtitle(getString(R.string.round) + " " + (mRound.info.index + 1));
     }
 
     /*private void showStopDialog() {
@@ -220,7 +234,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_timer:
+            /*case R.id.action_timer:
                 mTimerEnabled = !mTimerEnabled;
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 prefs.edit().putBoolean(TIMER_ENABLED, mTimerEnabled).apply();
@@ -228,7 +242,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                 if (mTimerEnabled && !target.hasPointsSet()) {
                     openTimer();
                 }
-                return true;
+                return true;*/
             //case R.id.action_switch_mode:
             //    mMode = !mMode;
             //    target.switchMode(mMode, true);
@@ -239,7 +253,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
             case R.id.action_show_all:
                 mShowAllMode = !mShowAllMode;
                 target.showAll(mShowAllMode);
-                prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 prefs.edit().putBoolean(SHOW_ALL_MODE, mShowAllMode).apply();
                 supportInvalidateOptionsMenu();
                 return true;
@@ -252,7 +266,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     }
 
     private void openTimer() {
-        startActivity(new Intent(this, SimpleFragmentActivity.TimerActivity.class));
+        Intent intent = new Intent(this, SimpleFragmentActivity.TimerActivity.class);
+        intent.putExtra(TimerFragment.SHOOTING_TIME, training.timePerPasse);
+        startActivity(intent);
     }
 
     @Override
@@ -264,10 +280,11 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
     @Override
     public long onTargetSet(Passe passe, boolean remote) {
+        if (passe.getId() == -1) {
+            mExitOnFinish = true;
+        }
         passe.sort();
-
         passe.roundId = mRound.getId();
-
         db.update(passe);
 
         if (curPasse > savedPasses || remote) {

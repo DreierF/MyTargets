@@ -11,7 +11,6 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.StringRes;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -30,26 +29,26 @@ public class SpotBase extends Target {
     @Override
     protected void draw(Canvas canvas, Rect rect) {
         for (int i = 0; i < facePositions.length; i++) {
-            face.draw(canvas, getBounds(i, rect));
+            face.draw(canvas, getTargetBounds(rect, i));
         }
         onPostDraw(canvas, rect);
     }
 
-    @Override
+    /*@Override
     protected float[] getArrowPosition(Rect rect, float x, float y, int arrow) {
         Log.d("", x + "," + y);
-        rect = getBounds(arrow, rect);
-        Log.d("", rect.toShortString());
+        Rect spotRect = getBounds(arrow, rect);
+        Log.d("", rect.toShortString() + "," + spotRect.toShortString());
         float[] pos = new float[2];
-        pos[0] = rect.left + recalc(rect, (1 + x) * rect.width() * 0.5f);
-        pos[1] = rect.top + recalc(rect, (1 + y) * rect.width() * 0.5f);
+        pos[0] = spotRect.left + (1 + x) * spotRect.width() * 0.5f;
+        pos[1] = spotRect.top + (1 + y) * spotRect.width() * 0.5f;
         Log.d("", pos[0] + "," + pos[1]);
         return pos;
-    }
+    }*/
 
     @Override
     protected float getArrowSize(Rect rect, int arrow) {
-        return recalc(getBounds(arrow, rect), ARROW_RADIUS);
+        return recalc(getTargetBounds(rect, arrow), ARROW_RADIUS);
     }
 
     @Override
@@ -109,7 +108,8 @@ public class SpotBase extends Target {
         return bounds;
     }
 
-    public Rect getBounds(int index, Rect rect) {
+    @Override
+    public Rect getTargetBounds(Rect rect, int index) {
         int pos[] = facePositions[index];
         Rect bounds = new Rect();
         bounds.left = (int) (rect.left + recalc(rect, pos[0] - faceRadius));

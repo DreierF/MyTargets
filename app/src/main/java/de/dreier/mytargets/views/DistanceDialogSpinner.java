@@ -31,11 +31,11 @@ public class DistanceDialogSpinner extends DialogSpinner {
     private void init() {
         setAdapter(new DistanceItemAdapter(getContext()));
         setOnClickListener(v -> {
-            Intent i = new Intent(getContext(),
-                    ItemSelectActivity.Distance.class);
+            Intent i = new Intent(getContext(), ItemSelectActivity.Distance.class);
             i.putExtra(DistanceFragment.CUR_DISTANCE, getSelectedItemId());
             startIntent(i);
         });
+        setOnResultListener(data -> setItemId(data.getLongExtra("id", -1)));
     }
 
     @Override

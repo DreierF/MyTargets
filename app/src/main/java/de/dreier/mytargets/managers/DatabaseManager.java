@@ -208,8 +208,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS ZONE_MATRIX");
             db.execSQL("ALTER TABLE VISIER ADD COLUMN unit TEXT DEFAULT 'm'");
             db.execSQL("ALTER TABLE PASSE ADD COLUMN image TEXT DEFAULT ''");
-            db.execSQL("ALTER TABLE SHOOT ADD COLUMN arrow INTEGER DEFAULT (-1)");
-            db.execSQL("ALTER TABLE SHOOT ADD COLUMN arrow_index INTEGER DEFAULT (-1)");
+            db.execSQL("ALTER TABLE SHOOT ADD COLUMN arrow INTEGER DEFAULT '-1'");
+            db.execSQL("ALTER TABLE SHOOT ADD COLUMN arrow_index INTEGER DEFAULT '-1'");
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN weather INTEGER DEFAULT '0'");
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN wind_speed INTEGER DEFAULT '0'");
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN wind_direction INTEGER DEFAULT '0'");
@@ -218,6 +218,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN bow INTEGER DEFAULT '0'");
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN arrow INTEGER DEFAULT '0'");
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN arrow_numbering INTEGER DEFAULT '0'");
+            db.execSQL("ALTER TABLE TRAINING ADD COLUMN time INTEGER DEFAULT '-1'");
             db.execSQL("UPDATE ROUND SET target=4 WHERE target=3"); // WA 3 Spot ->vegas
             db.execSQL("UPDATE ROUND SET target=13 WHERE target=4"); // WA Field
             db.execSQL("UPDATE ROUND SET target=10 WHERE target=5"); // DFBV Spiegel
@@ -370,7 +371,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public ArrayList<Training> getTrainings() {
         Cursor cursor = db
                 .rawQuery("SELECT t._id, t.title, t.datum, t.bow, t.arrow, t.standard_round, " +
-                        "t.arrow_numbering, " +
+                        "t.arrow_numbering, t.time, " +
                         "t.weather, t.wind_speed, t.wind_direction, t.location " +
                         "FROM TRAINING t " +
                         "LEFT JOIN ROUND r ON t._id = r.training " +
@@ -605,7 +606,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public Training getTraining(long training) {
         Cursor cursor = db
                 .rawQuery("SELECT t._id, t.title, t.datum, t.bow, t.arrow, t.standard_round, " +
-                        "t.arrow_numbering, " +
+                        "t.arrow_numbering, t.time, " +
                         "t.weather, t.wind_speed, t.wind_direction, t.location " +
                         "FROM TRAINING t " +
                         "LEFT JOIN ROUND r ON t._id = r.training " +

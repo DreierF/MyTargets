@@ -160,7 +160,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         menu.findItem(R.id.action_scoreboard).setVisible(hasPasses);
         menu.findItem(R.id.action_share).setVisible(hasPasses);
         menu.findItem(R.id.action_statistics).setVisible(hasPasses);
-        menu.findItem(R.id.action_view_mode).setVisible(hasPasses);
+        //menu.findItem(R.id.action_view_mode).setVisible(hasPasses);
     }
 
     @Override
@@ -179,11 +179,11 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
             case R.id.action_share:
                 showShareDialog();
                 return true;
-            case R.id.action_view_mode:
+            /*case R.id.action_view_mode:
                 mTargetViewMode = !mTargetViewMode;
                 setList(mRounds, db.getPasses(mTraining), true,
                         new PasseAdapter());
-                return true;
+                return true;*/
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -328,7 +328,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         protected SelectableViewHolder<Passe> getSecondLevelViewHolder(ViewGroup parent) {
             if (mTargetViewMode) {
                 View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.card_target_passe, parent, false);
+                        .inflate(R.layout.card_target_end, parent, false);
                 return new TargetViewHolder(itemView);
             } else {
                 View itemView = LayoutInflater.from(parent.getContext())

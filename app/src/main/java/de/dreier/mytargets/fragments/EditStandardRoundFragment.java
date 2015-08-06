@@ -94,6 +94,7 @@ public class EditStandardRoundFragment extends Fragment
             round.distance = Distance.fromId(distId);
             rounds.addItem(round);
         } else {
+            getActivity().setTitle(R.string.edit_standard_round);
             // Load saved values
             indoor.setChecked(standardRound.indoor);
             outdoor.setChecked(!standardRound.indoor);

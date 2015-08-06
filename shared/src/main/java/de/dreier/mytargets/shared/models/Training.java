@@ -16,6 +16,7 @@ public class Training extends IdProvider implements DatabaseSerializable {
     public static final String BOW = "bow";
     private static final String STANDARD_ROUND = "standard_round";
     private static final String ARROW_NUMBERING = "arrow_numbering";
+    private static final String TIME_PER_PASSE = "time";
 
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " ( " +
@@ -29,7 +30,8 @@ public class Training extends IdProvider implements DatabaseSerializable {
                     STANDARD_ROUND + " INTEGER," +
                     BOW + " INTEGER," +
                     ARROW + " INTEGER," +
-                    ARROW_NUMBERING + " INTEGER);";
+                    ARROW_NUMBERING + " INTEGER," +
+                    TIME_PER_PASSE+" INTEGER);";
 
     public String title = "";
     public Date date = new Date();
@@ -38,6 +40,7 @@ public class Training extends IdProvider implements DatabaseSerializable {
     public long bow;
     public long arrow;
     public boolean arrowNumbering;
+    public int timePerPasse;
 
     @Override
     public long getParentId() {
@@ -61,6 +64,7 @@ public class Training extends IdProvider implements DatabaseSerializable {
         values.put(BOW, bow);
         values.put(ARROW, arrow);
         values.put(ARROW_NUMBERING, arrowNumbering ? 1 : 0);
+        values.put(TIME_PER_PASSE, timePerPasse);
         values.putAll(environment.getContentValues());
         return values;
     }
@@ -74,7 +78,8 @@ public class Training extends IdProvider implements DatabaseSerializable {
         arrow = cursor.getInt(4);
         standardRoundId = cursor.getLong(5);
         arrowNumbering = cursor.getInt(6) == 1;
+        timePerPasse = cursor.getInt(7);
         environment = new Environment();
-        environment.fromCursor(context, cursor, 7);
+        environment.fromCursor(context, cursor, 8);
     }
 }

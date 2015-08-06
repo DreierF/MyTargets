@@ -34,7 +34,7 @@ public class CombinedSpot extends SpotBase {
     @Override
     protected void draw(Canvas canvas, Rect rect) {
         for (int i = 0; i < facePositions.length; i++) {
-            faces[i].draw(canvas, getBounds(i, rect));
+            faces[i].draw(canvas, getTargetBounds(rect, i));
         }
         onPostDraw(canvas, rect);
     }

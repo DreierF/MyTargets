@@ -71,6 +71,7 @@ public class EditArrowActivity extends EditWithImageActivity {
                 }
                 mImageFile = arrow.imageFile;
                 arrowNumbersList = db.getArrowNumbers(mArrowId);
+                setTitle(R.string.edit_arrow);
             } else {
                 // Set to default values
                 setTitle(R.string.new_arrow);

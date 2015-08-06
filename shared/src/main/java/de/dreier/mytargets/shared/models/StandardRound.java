@@ -45,6 +45,7 @@ public class StandardRound extends IdProvider implements Serializable, DatabaseS
     private static final int NFAS = 64;
     private static final int WA = 128;
     public static final int CUSTOM = 256;
+    public static final int CUSTOM_PRACTICE = 512;
 
     private static final boolean CAT_INDOOR = true;
     private static final boolean CAT_OUTDOOR = false;

@@ -16,9 +16,9 @@
         android:icon="@drawable/ic_description_white_24dp"
         android:title="@string/scoreboard"
         app:showAsAction="ifRoom" />
-    <item
+   <!-- <item
         android:id="@+id/action_view_mode"
         android:icon="@drawable/ic_view_module_white_24dp"
         android:title="@string/switch_view"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom" />-->
 </menu>

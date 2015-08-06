@@ -8,7 +8,6 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -21,15 +20,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.SimpleFragmentActivity;
 
 /**
  * Shows all passes of one round
@@ -39,6 +34,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
     private static final int PREPARATION = 1;
     private static final int SHOOTING = 2;
     private static final int FINISHED = 3;
+    public static final String SHOOTING_TIME = "shooting_time";
 
     private int mWaitingTime;
     private int mShootingTime;
@@ -70,7 +66,6 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
         activity.setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setHasOptionsMenu(true);
     }
 
     private void loadPreferenceValues() {
@@ -213,22 +208,5 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                 playHorn(n - 1);
             }
         });
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.settings, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_preferences) {
-            startActivity(
-                    new Intent(getActivity(), SimpleFragmentActivity.SettingsActivity.class));
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
     }
 }

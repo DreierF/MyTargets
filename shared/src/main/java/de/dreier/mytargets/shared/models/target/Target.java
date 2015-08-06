@@ -126,28 +126,34 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
 
     protected void drawArrow(Canvas canvas, Shot shot, Rect rect) {
         paintFill.setColor(getContrastColor(shot.zone));
-        float[] pos = getArrowPosition(rect, shot.x, shot.y, shot.index);
+        Rect targetRect = getTargetBounds(rect, shot.index);
+        float[] pos = new float[2];
+        pos[0] = targetRect.left + (1 + shot.x) * targetRect.width() * 0.5f;
+        pos[1] = targetRect.top + (1 + shot.y) * targetRect.width() * 0.5f;
         canvas.drawCircle(pos[0], pos[1], getArrowSize(rect, shot.index), paintFill);
     }
-
+/*
     protected float[] getArrowPosition(Rect rect, float x, float y, int arrow) {
         float[] pos = new float[2];
         pos[0] = rect.left + recalc(rect, (1 + x) * 500);
         pos[1] = rect.top + recalc(rect, (1 + y) * 500);
         return pos;
-    }
+    }*/
 
     public void drawFocusedArrow(Canvas canvas, Shot shot) {
         drawFocusedArrow(canvas, shot, getBounds());
     }
 
     private void drawFocusedArrow(Canvas canvas, Shot shot, Rect rect) {
-        float[] pos = getArrowPosition(rect, shot.x, shot.y, shot.index);
+        Rect targetRect = getTargetBounds(rect, shot.index);
+        float[] pos = new float[2];
+        pos[0] = targetRect.left + (1 + shot.x) * targetRect.width() * 0.5f;
+        pos[1] = targetRect.top + (1 + shot.y) * targetRect.width() * 0.5f;
         paintFill.setColor(0xFF009900);
         canvas.drawCircle(pos[0], pos[1], getArrowSize(rect, shot.index), paintFill);
 
         // Draw cross
-        float lineLen = recalc(rect, 20);
+        float lineLen = recalc(targetRect, 20);
         canvas.drawLine(pos[0] - lineLen, pos[1], pos[0] + lineLen, pos[1], paintFill);
         canvas.drawLine(pos[0], pos[1] - lineLen, pos[0], pos[1] + lineLen, paintFill);
 
@@ -165,6 +171,10 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
                 paintText);
     }
 
+    protected Rect getTargetBounds(Rect rect, int index) {
+        return rect;
+    }
+
     protected float getArrowSize(Rect rect, int arrow) {
         return recalc(rect, ARROW_RADIUS);
     }
@@ -172,7 +182,10 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     public void drawArrowAvg(Canvas canvas, float x, float y, int arrow) {
         Rect rect = getBounds();
         paintFill.setColor(Color.RED);
-        float[] pos = getArrowPosition(rect, x, y, arrow);
+        Rect targetRect = getTargetBounds(rect, arrow);
+        float[] pos = new float[2];
+        pos[0] = targetRect.left + (1 + x) * targetRect.width() * 0.5f;
+        pos[1] = targetRect.top + (1 + y) * targetRect.width() * 0.5f;
         canvas.drawCircle(pos[0], pos[1], getArrowSize(rect, arrow), paintFill);
     }
 

@@ -137,11 +137,6 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
         protected Fragment instantiateFragment() {
             return new StandardRoundFragment();
         }
-/*
-        @Override
-        protected int getLayoutResource() {
-            return R.layout.layout_drawer_fab;
-        }*/
 
         @Override
         public void onClick(View v) {
