@@ -230,7 +230,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
                 // Build and fire intent to ask for share provider
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
-                shareIntent.setType("*/*");
+                shareIntent.setType("image/png");
                 startActivity(shareIntent);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -258,7 +258,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
                 scoreText, reachedPoints, maxPoints);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_TEXT, text);
-        shareIntent.setType("*/*");
+        shareIntent.setType("text/plain");
         startActivity(shareIntent);
     }
 

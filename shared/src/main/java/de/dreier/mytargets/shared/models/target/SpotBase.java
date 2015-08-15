@@ -34,18 +34,6 @@ public class SpotBase extends Target {
         onPostDraw(canvas, rect);
     }
 
-    /*@Override
-    protected float[] getArrowPosition(Rect rect, float x, float y, int arrow) {
-        Log.d("", x + "," + y);
-        Rect spotRect = getBounds(arrow, rect);
-        Log.d("", rect.toShortString() + "," + spotRect.toShortString());
-        float[] pos = new float[2];
-        pos[0] = spotRect.left + (1 + x) * spotRect.width() * 0.5f;
-        pos[1] = spotRect.top + (1 + y) * spotRect.width() * 0.5f;
-        Log.d("", pos[0] + "," + pos[1]);
-        return pos;
-    }*/
-
     @Override
     protected float getArrowSize(Rect rect, int arrow) {
         return recalc(getTargetBounds(rect, arrow), ARROW_RADIUS);
@@ -129,6 +117,7 @@ public class SpotBase extends Target {
         return face.getScoringStyles();
     }
 
+    @Override
     public int getFaceCount() {
         return facePositions.length;
     }

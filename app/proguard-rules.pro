@@ -1,4 +1,5 @@
 -dontobfuscate
+-dontwarn javax.xml.**
 -keep class !android.support.v7.internal.view.menu.**,android.support.** {*;}
 -keepnames class * implements java.io.Serializable
 -keepclassmembers class * implements java.io.Serializable {

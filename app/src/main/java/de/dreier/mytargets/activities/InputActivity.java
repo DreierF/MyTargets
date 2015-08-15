@@ -43,10 +43,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     public static final String ROUND_ID = "round_id";
     public static final String PASSE_IND = "passe_ind";
     private static final String SHOW_ALL_MODE = "show_all";
-    //private static final String TIMER_ENABLED = "timer_enabled";
     private TargetView target;
     private Button next, prev;
-    private int curPasse = 1;
+    private int curPasse = 0;
     private int savedPasses = 0;
     private Round mRound;
     private DatabaseManager db;
@@ -84,14 +83,14 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                 ArrayList<Passe> passes = db.getPassesOfRound(mRound.getId());
                 savedPasses = passes.size();
                 if (savedPasses < template.passes || roundIndex + 1 == rounds.size()) {
-                    curPasse = Math.min(savedPasses + 1, template.passes);
+                    curPasse = Math.min(savedPasses, template.passes - 1);
                     break;
                 }
             }
             mExitOnFinish = true;
         } else {
             long roundId = intent.getLongExtra(ROUND_ID, -1);
-            curPasse = intent.getIntExtra(PASSE_IND, -1) + 1;
+            curPasse = intent.getIntExtra(PASSE_IND, -1);
             mRound = db.getRound(roundId);
             template = mRound.info;
             mTraining = mRound.training;
@@ -160,6 +159,21 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     }
 
     void setPasse(int passe) {
+        if (passe >= template.passes) {
+            if (rounds.size() > template.index + 1) {
+                mRound = rounds.get(template.index + 1);
+                template = mRound.info;
+                passe = 0;
+                savedPasses = db.getPassesOfRound(mRound.getId()).size();
+            } else if (mExitOnFinish) {
+                finish();
+                overridePendingTransition(R.anim.left_in, R.anim.right_out);
+            }
+        } else if (passe == -1 && template.index > 0) {
+            mRound = rounds.get(template.index - 1);
+            template = mRound.info;
+            passe = template.passes;
+        }
         if (passe <= savedPasses) {
             Passe p = db.getPasse(mRound.getId(), passe);
             if (p != null) {
@@ -175,7 +189,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                 openTimer();
             }
         }
-        ArrayList<Passe> oldOnes = db.getPasses(mRound.getId());
+        ArrayList<Passe> oldOnes = db.getPasses(training.getId());
         target.setOldShoots(oldOnes);
         curPasse = passe;
         updatePasse();
@@ -183,73 +197,18 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
     void updatePasse() {
         assert getActionBar() != null;
-        prev.setEnabled(curPasse > 1 || template.index > 0);
-        next.setEnabled(curPasse <= savedPasses && curPasse <= template.passes ||
-                rounds.size() > template.index + 1 && savedPasses == template.passes);
+        prev.setEnabled(curPasse > 0 || template.index > 0);
+        next.setEnabled(curPasse < savedPasses && curPasse < template.passes ||
+                rounds.size() > template.index + 1);
 
-        if (curPasse >= template.passes) {
-            if (rounds.size() > template.index + 1) {
-                mRound = rounds.get(template.index + 1);
-                template = mRound.info;
-                curPasse = 1;
-            } else if (mExitOnFinish) {
-                finish();
-                overridePendingTransition(R.anim.left_in, R.anim.right_out);
-            }
-        } else if (curPasse == 0 && template.index > 0) {
-            mRound = rounds.get(template.index - 1);
-            template = mRound.info;
-            curPasse = template.passes;
-        }
-        getSupportActionBar().setTitle(getString(R.string.passe) + " " + curPasse);
+        getSupportActionBar().setTitle(getString(R.string.passe) + " " + (curPasse + 1));
         getSupportActionBar()
                 .setSubtitle(getString(R.string.round) + " " + (mRound.info.index + 1));
     }
 
-    /*private void showStopDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle(getResources()
-                        .getQuantityString(R.plurals.passes_finished, savedPasses, savedPasses))
-                .setMessage(R.string.passes_finished_now_what)
-                .setPositiveButton(R.string.scoreboard, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(InputActivity.this, ScoreboardActivity.class);
-                        intent.putExtra(ScoreboardActivity.TRAINING_ID, r.getParentId());
-                        startActivity(intent);
-                    }
-                })
-                .setNegativeButton(R.string.continue_with_next,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mStopAfter = -1;
-                                dialog.dismiss();
-                            }
-                        })
-                .show();
-
-    }*/
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            /*case R.id.action_timer:
-                mTimerEnabled = !mTimerEnabled;
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                prefs.edit().putBoolean(TIMER_ENABLED, mTimerEnabled).apply();
-                supportInvalidateOptionsMenu();
-                if (mTimerEnabled && !target.hasPointsSet()) {
-                    openTimer();
-                }
-                return true;*/
-            //case R.id.action_switch_mode:
-            //    mMode = !mMode;
-            //    target.switchMode(mMode, true);
-            //    prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            //    prefs.edit().putBoolean(TARGET_MODE, mMode).apply();
-            //    supportInvalidateOptionsMenu();
-            //    return true;
             case R.id.action_show_all:
                 mShowAllMode = !mShowAllMode;
                 target.showAll(mShowAllMode);
@@ -283,17 +242,22 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         if (passe.getId() == -1) {
             mExitOnFinish = true;
         }
-        passe.sort();
+
+        // Only sort shots when all arrows are on one target face
+        if (template.target.getFaceCount() == 1) {
+            passe.sort();
+        }
+
         passe.roundId = mRound.getId();
         db.update(passe);
 
-        if (curPasse > savedPasses || remote) {
+        if (curPasse >= savedPasses || remote) {
             savedPasses++;
             manager.sendMessage(buildInfo());
             if (remote) {
                 curPasse = savedPasses + 1;
             }
-        } else if (curPasse == savedPasses) {
+        } else if (curPasse + 1 == savedPasses) {
             manager.sendMessage(buildInfo());
         }
         runOnUiThread(this::updatePasse);
@@ -307,7 +271,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     }
 
     private NotificationInfo buildInfo() {
-        String title = getString(R.string.passe_n, savedPasses);
+        String title = getString(R.string.passe) + " " + (savedPasses + 1);
         String text = "";
 
         // Initialize message text

@@ -132,13 +132,6 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
         pos[1] = targetRect.top + (1 + shot.y) * targetRect.width() * 0.5f;
         canvas.drawCircle(pos[0], pos[1], getArrowSize(rect, shot.index), paintFill);
     }
-/*
-    protected float[] getArrowPosition(Rect rect, float x, float y, int arrow) {
-        float[] pos = new float[2];
-        pos[0] = rect.left + recalc(rect, (1 + x) * 500);
-        pos[1] = rect.top + recalc(rect, (1 + y) * 500);
-        return pos;
-    }*/
 
     public void drawFocusedArrow(Canvas canvas, Shot shot) {
         drawFocusedArrow(canvas, shot, getBounds());
@@ -163,12 +156,9 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
         paintText.getTextBounds(zoneString, 0, zoneString.length(), tr);
         float width = tr.width() / 2.0f;
         float height = tr.height() / 2.0f;
-        //float width = paintText.measureText(zoneString) / 2.0f;
-        paintText.setTextSize(recalc(rect, 10));
+        paintText.setTextSize(recalc(targetRect, 12));
         paintText.setColor(0xFFFFFFFF);
-        //paintText.setColor(getContrastColor(getZoneFromPoint(shot.x, shot.y - 0.06f)));
-        canvas.drawText(zoneString, pos[0] - width, pos[1] + height/* - recalc(rect, 30)*/,
-                paintText);
+        canvas.drawText(zoneString, pos[0] - width, pos[1] + height, paintText);
     }
 
     protected Rect getTargetBounds(Rect rect, int index) {
@@ -409,5 +399,9 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
 
     public boolean is3DTarget() {
         return false;
+    }
+
+    public int getFaceCount() {
+        return 1;
     }
 }

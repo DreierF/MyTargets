@@ -21,7 +21,7 @@ public class RoundTemplate extends IdProvider implements Serializable, DatabaseS
     public static final String TARGET = "target";
     private static final String TARGET_SIZE = "size";
     private static final String TARGET_SIZE_UNIT = "target_unit";
-    static final String SCORING_STYLE = "scoring_style";
+    public static final String SCORING_STYLE = "scoring_style";
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +

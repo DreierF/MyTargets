@@ -76,7 +76,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
     private DialogSpinner bow;
     private DialogSpinner arrow;
     private EditText training;
-    private EditText comment;
+    //private EditText comment;
     private Button training_date;
     private Date date = new Date();
     private DialogSpinner environment;
@@ -245,7 +245,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         timer = (CheckBox) rootView.findViewById(R.id.timer);
 
         // Comment
-        comment = (EditText) rootView.findViewById(R.id.comment);
+        //comment = (EditText) rootView.findViewById(R.id.comment);
 
         if (mTraining == -1) {
             training.setText(getString(R.string.training));

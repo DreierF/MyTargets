@@ -15,25 +15,25 @@
         <item>@string/yumi</item>
     </string-array>
     <string-array name="wind_speeds">
-        <item>0 Bft: Windstill</item>
-        <item>1 Bft: Blätter bewegen sich nicht</item>
-        <item>2 Bft: Blätter fangen an sich zu bewegen</item>
-        <item>3 Bft: Leichte Flaggen bewegen sich</item>
-        <item>4 Bft: kleine Äste bewegen sich</item>
-        <item>5 Bft: kleine Bäume bewegen sich</item>
-        <item>6 Bft: große Äste bewegen sich</item>
-        <item>7 Bft: Ganze Bäume bewegen sich</item>
-        <item>8 Bft: kleine Äste brechen</item>
-        <item>9 Bft: Sturmschäden</item>
+        <item>@string/bft_0</item>
+        <item>@string/bft_1</item>
+        <item>@string/bft_2</item>
+        <item>@string/bft_3</item>
+        <item>@string/bft_4</item>
+        <item>@string/bft_5</item>
+        <item>@string/bft_6</item>
+        <item>@string/bft_7</item>
+        <item>@string/bft_8</item>
+        <item>@string/bft_9</item>
     </string-array>
     <string-array name="wind_directions">
-        <item>von vorne</item>
-        <item>von hinten</item>
-        <item>von links</item>
-        <item>von rechts</item>
-        <item>von links vorne</item>
-        <item>von rechts vorne</item>
-        <item>von links hinten</item>
-        <item>von rechts hinten</item>
+        <item>@string/front</item>
+        <item>@string/back</item>
+        <item>@string/left</item>
+        <item>@string/right</item>
+        <item>@string/left_front</item>
+        <item>@string/right_front</item>
+        <item>@string/left_back</item>
+        <item>@string/right_back</item>
     </string-array>
 </resources>

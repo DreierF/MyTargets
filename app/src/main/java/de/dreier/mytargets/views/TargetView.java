@@ -21,6 +21,7 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -81,10 +82,6 @@ public class TargetView extends TargetViewBase {
         init();
     }
 
-    public boolean hasPointsSet() {
-        return mPasse.shot[0].zone != -2;
-    }
-
     public void setPasse(Passe passe) {
         currentArrow = passe.shot.length;
         lastSetArrow = passe.shot.length;
@@ -118,7 +115,7 @@ public class TargetView extends TargetViewBase {
 
     private void initSpotBounds() {
         Rect rect = new Rect(0, 0, 500, 500);
-        if (isSpot()) {
+        if (round.target.getFaceCount() > 1) {
             SpotBase spotBase = (SpotBase) round.target;
             spotRects = new RectF[spotBase.getFaceCount()];
             for (int i = 0; i < spotBase.getFaceCount(); i++) {
@@ -192,38 +189,48 @@ public class TargetView extends TargetViewBase {
 
         // Draw exact arrow position
         if (!mKeyboardMode) {
-            Midpoint m = new Midpoint();
-            for (int i = 0; i < mPasse.shot.length && i <= lastSetArrow + 1; i++) {
-                Shot shot = mPasse.shot[i];
-                if (shot.zone == Shot.NOTHING_SELECTED) {
-                    continue;
-                }
-                if (i == currentArrow) {
-                    round.target.drawFocusedArrow(canvas, shot);
-                    continue;
-                }
-                round.target.drawArrow(canvas, shot);
-                m.sumX += shot.x;
-                m.sumY += shot.y;
-                m.count++;
-            }
+            drawArrows(canvas);
+        }
+    }
 
-            if (showAll) {
-                for (Passe p : mOldShots) {
-                    if (p.getId() != mPasse.getId()) {
-                        round.target.drawArrows(canvas, p);
-                        for (Shot shot : p.shot) {
-                            m.sumX += shot.x;
-                            m.sumY += shot.y;
-                            m.count++;
-                        }
+    private void drawArrows(Canvas canvas) {
+        int spots = round.target.getFaceCount();
+        Midpoint[] m = new Midpoint[spots];
+        for (int i = 0; i < spots; i++) {
+            m[i] = new Midpoint();
+        }
+        for (int i = 0; i < mPasse.shot.length && i <= lastSetArrow + 1; i++) {
+            Shot shot = mPasse.shot[i];
+            if (shot.zone == Shot.NOTHING_SELECTED) {
+                continue;
+            }
+            if (i == currentArrow) {
+                round.target.drawFocusedArrow(canvas, shot);
+                continue;
+            }
+            round.target.drawArrow(canvas, shot);
+            m[i % spots].sumX += shot.x;
+            m[i % spots].sumY += shot.y;
+            m[i % spots].count++;
+        }
+
+        if (showAll) {
+            for (Passe p : mOldShots) {
+                if (p.getId() != mPasse.getId()) {
+                    round.target.drawArrows(canvas, p);
+                    for (int i = 0; i < p.shot.length; i++) {
+                        m[i % spots].sumX += p.shot[i].x;
+                        m[i % spots].sumY += p.shot[i].y;
+                        m[i % spots].count++;
                     }
                 }
             }
+        }
 
-            if (m.count >= 2) {
-                round.target.drawArrowAvg(canvas, m.sumX / m.count, m.sumY / m.count,
-                        Math.min(currentArrow, mPasse.shot.length - 1));
+        for (int i = 0; i < spots; i++) {
+            if (m[i].count >= 2) {
+                round.target.drawArrowAvg(canvas, m[i].sumX / m[i].count,
+                        m[i].sumY / m[i].count, i);
             }
         }
     }
@@ -260,11 +267,12 @@ public class TargetView extends TargetViewBase {
     @Override
     protected void calcSizes() {
         int keyboardHeight = mKeyboardMode ? keyboard.getMeasuredHeight() : 0;
-        float radH = (contentHeight - 10 * density - keyboardHeight) / 2.45f;
+        float radH = (contentHeight - 20 * density - keyboardHeight) / 2.45f;
         float radW = (contentWidth - 20 * density) * 0.5f;
         orgRadius = (int) (Math.min(radW, radH));
         orgMidX = contentWidth / 2;
-        orgMidY = orgRadius + (int) (10 * density);
+        float passeDrawerHeight = 72 * density;
+        orgMidY = (contentHeight - passeDrawerHeight - keyboardHeight) / 2;
         orgRect = new RectF(
                 orgMidX - orgRadius,
                 orgMidY - orgRadius,
@@ -273,8 +281,8 @@ public class TargetView extends TargetViewBase {
         RectF rect = new RectF();
         rect.left = 30 * density;
         rect.right = contentWidth - 30 * density;
-        rect.top = orgMidY + orgRadius;
         rect.bottom = contentHeight - keyboardHeight;
+        rect.top = rect.bottom - passeDrawerHeight;
         mPasseDrawer.animateToRect(rect);
         animateToZoomSpot();
     }
@@ -449,6 +457,7 @@ public class TargetView extends TargetViewBase {
     }
 
     private void animateMode() {
+        Log.d("", "animate mode");
         mCurSelecting = MODE_CHANGE;
         initAnimation();
         calcSizes();
@@ -487,10 +496,11 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void animateFromZoomSpot() {
+        Log.d("", "animateFromSpot");
         if (round.target.dependsOnArrowIndex()) {
             populateKeyboard();
         }
-        if (isSpot() && spotFocused) {
+        if (round.target.getFaceCount() > 1 && spotFocused) {
             mCurSelecting = SPOT_ZOOM_IN;
             initAnimation();
 
@@ -518,13 +528,13 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void animateToZoomSpot() {
-        if (!spotFocused) {
+        if (!spotFocused && mCurSelecting != SPOT_ZOOM_IN) {
             radius = orgRadius;
             midX = orgMidX;
             midY = orgMidY;
         }
-        if (isSpot() && currentArrow < round.arrowsPerPasse && radius > 0 &&
-                !spotFocused && !mKeyboardMode) {
+        if (round.target.getFaceCount() > 1 && currentArrow < round.arrowsPerPasse && radius > 0 &&
+                !spotFocused && !mKeyboardMode && mCurSelecting != SPOT_ZOOM_IN) {
             mCurSelecting = SPOT_ZOOM_IN;
             initAnimation();
 
@@ -546,6 +556,7 @@ public class TargetView extends TargetViewBase {
                             new DecelerateInterpolator());
             moveAnimator.addUpdateListener(valueAnimator -> {
                 mCurAnimationProgress = (Float) valueAnimator.getAnimatedValue();
+                Log.d("animateToSpot", "" + mCurAnimationProgress);
                 if (mCurAnimationProgress == 1.0f) {
                     moveAnimator.cancel();
                     mCurSelecting = -1;
@@ -553,6 +564,7 @@ public class TargetView extends TargetViewBase {
                 }
                 invalidate();
             });
+            moveAnimator.setStartDelay(500);
             moveAnimator.setDuration(200);
             moveAnimator.start();
         }
@@ -630,10 +642,6 @@ public class TargetView extends TargetViewBase {
                         invalidate();
                     }
                 }).show();
-    }
-
-    private boolean isSpot() {
-        return round.target instanceof SpotBase;
     }
 
     class Midpoint {

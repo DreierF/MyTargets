@@ -70,13 +70,13 @@ public class Shot extends IdProvider
 
     @Override
     public void fromCursor(Context context, Cursor cursor, int startColumnIndex) {
-        setId(cursor.getLong(0));
-        passe = cursor.getLong(1);
-        zone = cursor.getInt(2);
-        x = cursor.getFloat(3);
-        y = cursor.getFloat(4);
-        comment = cursor.getString(5);
-        arrow = cursor.getInt(6);
-        index = cursor.getInt(7);
+        setId(cursor.getLong(startColumnIndex));
+        passe = cursor.getLong(startColumnIndex + 1);
+        zone = cursor.getInt(startColumnIndex + 2);
+        x = cursor.getFloat(startColumnIndex + 3);
+        y = cursor.getFloat(startColumnIndex + 4);
+        comment = cursor.getString(startColumnIndex + 5);
+        arrow = cursor.getInt(startColumnIndex + 6);
+        index = cursor.getInt(startColumnIndex + 7);
     }
 }

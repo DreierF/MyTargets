@@ -48,11 +48,12 @@ public class Round extends IdProvider implements Serializable, DatabaseSerializa
     @Override
     public void fromCursor(Context context, Cursor cursor, int startColumnIndex) {
         setId(cursor.getLong(startColumnIndex));
-        comment = cursor.getString(startColumnIndex + 1);
+        training = cursor.getLong(startColumnIndex + 1);
+        comment = cursor.getString(startColumnIndex + 2);
         if (comment == null) {
             comment = "";
         }
         info = new RoundTemplate();
-        info.fromCursor(context, cursor, 2);
+        info.fromCursor(context, cursor, 3);
     }
 }
