@@ -223,10 +223,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN arrow INTEGER DEFAULT '0'");
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN arrow_numbering INTEGER DEFAULT '0'");
             db.execSQL("ALTER TABLE TRAINING ADD COLUMN time INTEGER DEFAULT '-1'");
-            db.execSQL("UPDATE ROUND SET target=4 WHERE target=3"); // WA 3 Spot ->vegas
-            db.execSQL("UPDATE ROUND SET target=13 WHERE target=4"); // WA Field
-            db.execSQL("UPDATE ROUND SET target=10 WHERE target=5"); // DFBV Spiegel
             db.execSQL("UPDATE ROUND SET target=11 WHERE target=6"); // DFBV Spiegel Spot
+            db.execSQL("UPDATE ROUND SET target=10 WHERE target=5"); // DFBV Spiegel
+            db.execSQL("UPDATE ROUND SET target=13 WHERE target=4"); // WA Field
+            db.execSQL("UPDATE ROUND SET target=4 WHERE target=3"); // WA 3 Spot -> vegas
 
             // Set all compound 3 spot to vertical
             db.execSQL("UPDATE ROUND SET target=target+1 " +
