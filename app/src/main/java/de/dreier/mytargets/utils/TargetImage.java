@@ -26,18 +26,23 @@ import de.dreier.mytargets.shared.models.Round;
 
 public class TargetImage {
 
-    public void generateBitmap(Context context, int size, long roundId, OutputStream fOut) {
+    public void generateBitmap(Context context, int size, long trainingId, OutputStream fOut) {
+        DatabaseManager db = DatabaseManager.getInstance(context);
+
+        ArrayList<Round> rounds = db.getRounds(trainingId);
+        int count = rounds.size();
+
         // Create bitmap to draw on
-        Bitmap b = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+        Bitmap b = Bitmap.createBitmap(size, size * count, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(b);
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
 
-        DatabaseManager db = DatabaseManager.getInstance(context);
-        Round round = db.getRound(roundId);
-        ArrayList<Passe> oldOnes = db.getPasses(roundId);
-        round.info.target.setBounds(0, 0, size, size);
-        round.info.target.draw(canvas);
-        round.info.target.drawArrows(canvas, oldOnes);
+        for (int i = 0; i < rounds.size(); i++) {
+            ArrayList<Passe> oldOnes = db.getPassesOfRound(rounds.get(i).getId());
+            rounds.get(i).info.target.setBounds(0, i * size, size, (i + 1) * size);
+            rounds.get(i).info.target.draw(canvas);
+            rounds.get(i).info.target.drawArrows(canvas, oldOnes);
+        }
 
         try {
             b.compress(Bitmap.CompressFormat.PNG, 100, fOut);

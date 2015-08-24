@@ -10,7 +10,6 @@ package de.dreier.mytargets.utils;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
@@ -153,7 +152,6 @@ public class ScoreboardUtils {
         }
 
         html += "</html>";
-        Log.d("html", html);
         return html;
     }
 
