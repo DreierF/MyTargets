@@ -352,14 +352,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
                             String.valueOf(res.getCount())}));
                 }
                 Cursor sids = db.rawQuery("SELECT sid FROM ROUND_TEMPLATE " +
-                                "WHERE r_index=" + index + " " +
-                                "AND distance=" + template.distance.value + " " +
-                                "AND unit=\"" + template.distance.unit + "\" " +
-                                "AND arrows=" + template.arrowsPerPasse + " " +
-                                "AND passes=" + template.passes + " " +
-                                "AND target=" + tid + " " +
-                                "AND (SELECT COUNT(r._id) FROM ROUND_TEMPLATE r WHERE r.sid=ROUND_TEMPLATE.sid)=" +
-                                res.getCount(), null);
+                        "WHERE r_index=" + index + " " +
+                        "AND distance=" + template.distance.value + " " +
+                        "AND unit=\"" + template.distance.unit + "\" " +
+                        "AND arrows=" + template.arrowsPerPasse + " " +
+                        "AND passes=" + template.passes + " " +
+                        "AND target=" + tid + " " +
+                        "AND (SELECT COUNT(r._id) FROM ROUND_TEMPLATE r WHERE r.sid=ROUND_TEMPLATE.sid)=" +
+                        res.getCount(), null);
                 HashSet<Long> sid_tmp = new HashSet<>();
                 if (sids.moveToFirst()) {
                     do {
@@ -1134,22 +1134,21 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * @param curDistId Distance id to add to the list, because it is the current value.
      * @return List of distances
      */
-    public List<Distance> getDistances(long curDistId) {
+    public List<Distance> getDistances(long curDistId, String unit) {
         ArrayList<Distance> distances = new ArrayList<>();
         HashSet<Long> set = new HashSet<>();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        boolean defValue = Boolean.parseBoolean(mContext.getString(R.string.default_unit));
-        boolean isMetric = prefs.getBoolean("pref_unit", defValue);
-
         // Add currently selected distance to list
-        distances.add(Distance.fromId(curDistId));
-        set.add(curDistId);
+        Distance distance = Distance.fromId(curDistId);
+        if (distance.unit.equals(unit)) {
+            distances.add(distance);
+            set.add(curDistId);
+        }
 
         // Get all distances used in ROUND or VISIER table
         Cursor cur = db.rawQuery(
                 "SELECT * FROM (SELECT DISTINCT distance, unit FROM ROUND_TEMPLATE UNION SELECT DISTINCT distance, unit FROM VISIER) WHERE unit=?",
-                new String[]{isMetric ? Distance.METER : Distance.YARDS});
+                new String[]{unit});
         if (cur.moveToFirst()) {
             do {
                 Distance d = new Distance(cur.getInt(0), cur.getString(1));

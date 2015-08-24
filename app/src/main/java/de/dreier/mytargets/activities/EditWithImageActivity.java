@@ -27,7 +27,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -191,14 +190,17 @@ public abstract class EditWithImageActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Uri selectedImageUri;
+        Uri selectedImageUri = null;
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             selectedImageUri = fileUri;
         } else if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK) {
             selectedImageUri = data.getData();
-        } else {
+        }
+        if (selectedImageUri == null) {
             return;
         }
+        final int width = mImageView.getWidth();
+        final int height = mImageView.getHeight();
 
         new AsyncTask<Uri, Void, Boolean>() {
 
@@ -219,8 +221,7 @@ public abstract class EditWithImageActivity extends AppCompatActivity {
 
                     imageBitmap = BitmapUtils
                             .decodeSampledBitmapFromStream(EditWithImageActivity.this, params[0],
-                                    mImageView.getWidth(),
-                                    mImageView.getHeight());
+                                    width, height);
                     File f = File
                             .createTempFile("photo", "png", getFilesDir());
                     FileOutputStream out = new FileOutputStream(f);

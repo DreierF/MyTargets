@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity
     protected View mNewLayout;
     protected TextView mNewText;
     private ViewPager viewPager;
-    private MainTabsFragmentPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        adapter = new MainTabsFragmentPagerAdapter(this);
+        MainTabsFragmentPagerAdapter adapter = new MainTabsFragmentPagerAdapter(this);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(this);
 

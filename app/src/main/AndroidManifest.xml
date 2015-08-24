@@ -13,10 +13,10 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="com.android.vending.BILLING"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -58,9 +58,9 @@
         </activity>
         <activity
             android:name=".activities.SimpleFragmentActivity$TimerActivity"
+            android:configChanges="orientation|screenSize"
             android:label=""
             android:launchMode="singleTop"
-            android:configChanges="orientation|screenSize"
             android:parentActivityName=".activities.InputActivity"
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
@@ -157,8 +157,8 @@
             android:name=".activities.ItemSelectActivity$Target"
             android:label="@string/target_face"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.CustomToolbar"
-            android:parentActivityName=".activities.SimpleFragmentActivity$EditStandardRoundActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivity$EditStandardRoundActivity"
+            android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.SimpleFragmentActivity$EditStandardRoundActivity"/>
@@ -167,7 +167,8 @@
             android:name=".activities.ItemSelectActivity$Distance"
             android:label="@string/distance"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivity$EditStandardRoundActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivity$EditStandardRoundActivity"
+            android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.SimpleFragmentActivity$EditStandardRoundActivity"/>

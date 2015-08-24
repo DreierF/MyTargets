@@ -7,7 +7,7 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,7 +39,7 @@ public abstract class NowListFragment<T extends IIdProvider> extends NowListFrag
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         this.activity = (AppCompatActivity) getActivity();
         if (activity instanceof OnItemSelectedListener) {

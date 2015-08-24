@@ -6,7 +6,7 @@
  */
 package de.dreier.mytargets.fragments;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -71,7 +71,7 @@ public abstract class NowListFragmentBase<T extends IIdProvider> extends Fragmen
     private ContentListener listener;
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         if (activity instanceof ContentListener) {
             listener = (ContentListener) activity;
