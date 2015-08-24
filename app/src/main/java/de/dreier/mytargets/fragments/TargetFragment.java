@@ -76,7 +76,9 @@ public class TargetFragment extends NowListFragment<Target>
         scoringStyle = (Spinner) rootView.findViewById(R.id.scoring_style);
         seekBar = (SeekBar) rootView.findViewById(R.id.target_size_seekbar);
         label = (TextView) rootView.findViewById(R.id.target_size_label);
-        mSingleSelector.setSelected(list.indexOf(t), t.getId(), true);
+        int position = list.indexOf(t);
+        mSingleSelector.setSelected(position, t.getId(), true);
+        mRecyclerView.scrollToPosition(position);
         updateSettings();
 
         // Set initial target size
@@ -111,6 +113,7 @@ public class TargetFragment extends NowListFragment<Target>
         label.setText(targetSize.toString(getActivity()));
 
         // Init scoring styles
+        int style = scoringStyle.getSelectedItemPosition();
         ArrayList<String> styles = target.getScoringStyles();
         //noinspection ConstantConditions
         Context themedContext = ((AppCompatActivity) getActivity()).getSupportActionBar()
@@ -124,7 +127,7 @@ public class TargetFragment extends NowListFragment<Target>
         } else {
             scoringStyle.setVisibility(View.GONE);
         }
-
+        scoringStyle.setSelection(style < styles.size() ? style : 0, false);
     }
 
     @Override
@@ -142,7 +145,7 @@ public class TargetFragment extends NowListFragment<Target>
         if (mItem == null) {
             return;
         }
-        if(mSingleSelector.getSelectedPosition()==holder.getAdapterPosition()) {
+        if (mSingleSelector.getSelectedPosition() == holder.getAdapterPosition()) {
             onSave();
         }
         mSingleSelector.setSelected(holder, true);
