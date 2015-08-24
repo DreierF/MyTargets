@@ -17,267 +17,242 @@
 
 package zh.wang.android.apis.yweathergetter4a;
 
+import android.content.Context;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.SocketTimeoutException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.ConnectTimeoutException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import android.content.Context;
-
 class WOEIDUtils {
-	
-	public static final String WOEID_NOT_FOUND = "WOEID_NOT_FOUND"; 
-	
-	public static final int QUALITY_NOT_DEFINED = -1;
 
-	private static final String WOEID_QUERY_PREFIX_FIND_BY_PLACE = "http://query.yahooapis.com/v1/public/yql?q=select*from%20geo.places%20where%20text=";
-	private static final String WOEID_QUERY_SUFFIX_FORMAT = "&format=xml";
-	
-	private static final String WOEID_QUERY_PREFIX_FIND_BY_GPS = "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22";
-	private static final String WOEID_QUERY_CONSECTION_FIND_BY_GPS = "%2C";
-	private static final String WOEID_QUERY_SUFFIX_FIND_BY_GPS = "%22%20and%20gflags%3D%22R%22";
+    public static final String WOEID_NOT_FOUND = "WOEID_NOT_FOUND";
 
-	private static WOEIDUtils mInstance = new WOEIDUtils();
-	
-	private YahooWeatherExceptionListener mExceptionListener;
+    public static final int QUALITY_NOT_DEFINED = -1;
 
-	private String yahooAPIsQuery;
-	private Map<String, String> mParsedResult;
-	
-	private WOEIDInfo mWoeidInfo = new WOEIDInfo();
-	
-	public static WOEIDUtils getInstance() {
-		return mInstance;
-	}
-	
-	public void setExceptionListener(final YahooWeatherExceptionListener exceptionListener) {
-	    this.mExceptionListener = exceptionListener;
-	}
-	
-	public String getWOEIDlocation() {
-		String res = "";
-		Iterator<String> it = mParsedResult.keySet().iterator();
-        while (it.hasNext()) {
-            Object o = it.next();
+    private static final String WOEID_QUERY_PREFIX_FIND_BY_PLACE = "http://query.yahooapis.com/v1/public/yql?q=select*from%20geo.places%20where%20text=";
+    private static final String WOEID_QUERY_SUFFIX_FORMAT = "&format=xml";
+
+    private static final String WOEID_QUERY_PREFIX_FIND_BY_GPS = "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22";
+    private static final String WOEID_QUERY_CONSECTION_FIND_BY_GPS = "%2C";
+    private static final String WOEID_QUERY_SUFFIX_FIND_BY_GPS = "%22%20and%20gflags%3D%22R%22";
+
+    private static WOEIDUtils mInstance = new WOEIDUtils();
+
+    private YahooWeatherExceptionListener mExceptionListener;
+
+    private String yahooAPIsQuery;
+    private Map<String, String> mParsedResult;
+
+    private WOEIDInfo mWoeidInfo = new WOEIDInfo();
+
+    public static WOEIDUtils getInstance() {
+        return mInstance;
+    }
+
+    public void setExceptionListener(final YahooWeatherExceptionListener exceptionListener) {
+        this.mExceptionListener = exceptionListener;
+    }
+
+    public String getWOEIDlocation() {
+        String res = "";
+        for (String o : mParsedResult.keySet()) {
             res += (o + " = " + mParsedResult.get(o)) + "\n";
         }
         return res;
-	}
-	
-	protected WOEIDInfo getWoeidInfo() {
+    }
+
+    protected WOEIDInfo getWoeidInfo() {
         return mWoeidInfo;
     }
 
     public String getWOEID(Context context, String cityName) {
-		return queryWOEIDfromYahooAPIs(context, cityName);
-	}
-	
-	public String getWOEID(Context context, String lat, String lon) {
-		return queryWOEIDfromYahooAPIs(context, lat, lon);
-	}
+        return queryWOEIDfromYahooAPIs(context, cityName);
+    }
 
-	private String queryWOEIDfromYahooAPIs(Context context, String uriPlace) {
-		YahooWeatherLog.d("Query WOEID by name of place");
+    public String getWOEID(Context context, String lat, String lon) {
+        return queryWOEIDfromYahooAPIs(context, lat, lon);
+    }
 
-		yahooAPIsQuery = WOEID_QUERY_PREFIX_FIND_BY_PLACE + "%22" + uriPlace + "%22"
-				+ WOEID_QUERY_SUFFIX_FORMAT;
-		
-		yahooAPIsQuery = yahooAPIsQuery.replace(" ", "%20");
-		
-		YahooWeatherLog.d("Query WOEID: " + yahooAPIsQuery);
+    private String queryWOEIDfromYahooAPIs(Context context, String uriPlace) {
+        YahooWeatherLog.d("Query WOEID by name of place");
 
-		String woeidString = fetchWOEIDxmlString(context, yahooAPIsQuery);
-		Document woeidDoc = convertStringToDocument(context, woeidString);
-		if (woeidDoc == null) {
-		    return WOEID_NOT_FOUND;
-		}
-		parseWOEID(woeidDoc);
-		if (mWoeidInfo.getWOEID() == null) {
-		    return WOEID_NOT_FOUND;
-		} else {
-		    return mWoeidInfo.getWOEID();
-		}
-	}
-	
-	private String queryWOEIDfromYahooAPIs(Context context, String lat, String lon) {
-		YahooWeatherLog.d("Query WOEID by latlon");
-		
-		yahooAPIsQuery = WOEID_QUERY_PREFIX_FIND_BY_GPS + lat +
-						 WOEID_QUERY_CONSECTION_FIND_BY_GPS + lon +
-						 WOEID_QUERY_SUFFIX_FIND_BY_GPS;
-		
-		yahooAPIsQuery = yahooAPIsQuery.replace(" ", "%20");
-		
-		YahooWeatherLog.d("Query WOEID: " + yahooAPIsQuery);
-		String woeidString = fetchWOEIDxmlString(context, yahooAPIsQuery);
-		Document woeidDoc = convertStringToDocument(context, woeidString);
-		if (woeidDoc == null) {
-		    return WOEID_NOT_FOUND;
-		}
-		parseWOEID(woeidDoc);
-		if (mWoeidInfo.getWOEID() == null) {
-		    return WOEID_NOT_FOUND;
-		} else {
-		    return mWoeidInfo.getWOEID();
-		}
-	}
-	
-	private String fetchWOEIDxmlString(Context context, String queryString) {
-		YahooWeatherLog.d("fetch WOEID xml string");
-		String qResult = "";
+        yahooAPIsQuery = WOEID_QUERY_PREFIX_FIND_BY_PLACE + "%22" + uriPlace + "%22"
+                + WOEID_QUERY_SUFFIX_FORMAT;
 
-		HttpClient httpClient = NetworkUtils.createHttpClient();
+        yahooAPIsQuery = yahooAPIsQuery.replace(" ", "%20");
 
-		HttpGet httpGet = new HttpGet(queryString);
+        YahooWeatherLog.d("Query WOEID: " + yahooAPIsQuery);
 
-		try {
-			HttpEntity httpEntity = httpClient.execute(httpGet).getEntity();
+        String woeidString = fetchWOEIDxmlString(context, yahooAPIsQuery);
+        Document woeidDoc = convertStringToDocument(woeidString);
+        if (woeidDoc == null) {
+            return WOEID_NOT_FOUND;
+        }
+        parseWOEID(woeidDoc);
+        if (mWoeidInfo.getWOEID() == null) {
+            return WOEID_NOT_FOUND;
+        } else {
+            return mWoeidInfo.getWOEID();
+        }
+    }
 
-			if (httpEntity != null) {
-				InputStream inputStream = httpEntity.getContent();
-				Reader in = new InputStreamReader(inputStream);
-				BufferedReader bufferedreader = new BufferedReader(in);
-				StringBuilder stringBuilder = new StringBuilder();
+    private String queryWOEIDfromYahooAPIs(Context context, String lat, String lon) {
+        YahooWeatherLog.d("Query WOEID by latlon");
 
-				String readLine = null;
+        yahooAPIsQuery = WOEID_QUERY_PREFIX_FIND_BY_GPS + lat +
+                WOEID_QUERY_CONSECTION_FIND_BY_GPS + lon +
+                WOEID_QUERY_SUFFIX_FIND_BY_GPS;
 
-				while ((readLine = bufferedreader.readLine()) != null) {
-					YahooWeatherLog.d(readLine);
-					stringBuilder.append(readLine + "\n");
-				}
+        yahooAPIsQuery = yahooAPIsQuery.replace(" ", "%20");
 
-				qResult = stringBuilder.toString();
-			}
+        YahooWeatherLog.d("Query WOEID: " + yahooAPIsQuery);
+        String woeidString = fetchWOEIDxmlString(context, yahooAPIsQuery);
+        Document woeidDoc = convertStringToDocument(woeidString);
+        if (woeidDoc == null) {
+            return WOEID_NOT_FOUND;
+        }
+        parseWOEID(woeidDoc);
+        if (mWoeidInfo.getWOEID() == null) {
+            return WOEID_NOT_FOUND;
+        } else {
+            return mWoeidInfo.getWOEID();
+        }
+    }
 
-		} catch (ClientProtocolException e) {
-		    YahooWeatherLog.printStack(e);
-			if (mExceptionListener != null) mExceptionListener.onFailConnection(e);
-		} catch (ConnectTimeoutException e) {
-		    YahooWeatherLog.printStack(e);
-			if (mExceptionListener != null) mExceptionListener.onFailConnection(e);
-		} catch (SocketTimeoutException e) {
-		    YahooWeatherLog.printStack(e);
-			if (mExceptionListener != null) mExceptionListener.onFailConnection(e);
-		} catch (IOException e) {
-		    YahooWeatherLog.printStack(e);
-			if (mExceptionListener != null) mExceptionListener.onFailConnection(e);
-		} finally {
-			httpClient.getConnectionManager().shutdown();
-		}
+    private String fetchWOEIDxmlString(Context context, String queryString) {
+        YahooWeatherLog.d("fetch WOEID xml string");
+        String qResult = "";
 
-		return qResult;
-	}
-	
-	private Document convertStringToDocument(Context context, String src) {
-		YahooWeatherLog.d("convert string to document");
-		Document dest = null;
 
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder parser;
+        try {
+            HttpURLConnection http = (HttpURLConnection) new URL(queryString).openConnection();
 
-		try {
-			parser = dbFactory.newDocumentBuilder();
-			dest = parser.parse(new ByteArrayInputStream(src.getBytes()));
-		} catch (ParserConfigurationException e) {
-		    YahooWeatherLog.printStack(e);
-			if (mExceptionListener != null) mExceptionListener.onFailParsing(e);
-		} catch (SAXException e) {
-		    YahooWeatherLog.printStack(e);
-			if (mExceptionListener != null) mExceptionListener.onFailParsing(e);
-		} catch (IOException e) {
-		    YahooWeatherLog.printStack(e);
-			if (mExceptionListener != null) mExceptionListener.onFailParsing(e);
-		}
+            InputStream inputStream = http.getInputStream();
+            Reader in = new InputStreamReader(inputStream);
+            BufferedReader bufferedreader = new BufferedReader(in);
+            StringBuilder stringBuilder = new StringBuilder();
 
-		return dest;
-	}
-	
-	private void parseWOEID(Document srcDoc) {
-		YahooWeatherLog.d("parse WOEID");
-		
-		mParsedResult = new HashMap<String, String>();
-		for (int i = 1; i <= 4; i++) {
-			String name = "line" + i;
-			parseLocationLines(srcDoc, name);
-		}
-		
-		final int n = YahooWeatherConsts.WOEID_RESULT_TAG_LSIT.length;
-		for (int i = 0; i < n; i++) {
-		    getTextContentByTagName(srcDoc, YahooWeatherConsts.WOEID_RESULT_TAG_LSIT[i]);
-		}
-		
-		try {
-    		mWoeidInfo.mQuality = Integer.parseInt(
-    		        getTextContentByTagName(srcDoc, YahooWeatherConsts.XML_TAG_WOEID_QUALITY));
-		} catch (NumberFormatException e) {
-		    mWoeidInfo.mQuality = QUALITY_NOT_DEFINED;
-		}
-		mWoeidInfo.mWOEID = getTextContentByTagName
-		        (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_WOEID);
-		mWoeidInfo.mRadius = getTextContentByTagName
-		        (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_RADIUS);
-		mWoeidInfo.mLatitude = getTextContentByTagName
-		        (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_LATITUDE);
-		mWoeidInfo.mLongtitde = getTextContentByTagName
-		        (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_LONGITUDE);
-		mWoeidInfo.mOffsetLatitude = getTextContentByTagName
-		        (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_OFFSETLATITUDE);
-		mWoeidInfo.mOffsetLongitude = getTextContentByTagName
-		        (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_OFFSETLONGITUDE);
-		mWoeidInfo.mCity = getTextContentByTagName
-		        (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_CITY);
-		mWoeidInfo.mCounty = getTextContentByTagName
-		        (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_COUNTY);
-		mWoeidInfo.mCountry = getTextContentByTagName
-		        (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_COUNTRY);
-		mWoeidInfo.mNeighborhood = getTextContentByTagName
-		        (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_NEIGHBORHOOD);
-		mWoeidInfo.mState = getTextContentByTagName
-		        (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_STATE);
-		mWoeidInfo.mCountrycode = getTextContentByTagName
-		        (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_COUNTRYCODE);
-		mWoeidInfo.mStatecode = getTextContentByTagName
-		        (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_STATECODE);
-		mWoeidInfo.mAddition = getTextContentByTagName
-		        (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_ADDITION);
-		mWoeidInfo.mPostal = getTextContentByTagName
-		        (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_POSTAL);
-	}
-	
-	private String getTextContentByTagName(Document srcDoc, String tagName) {
-		NodeList nodeListDescription = srcDoc.getElementsByTagName(tagName);
-		if (nodeListDescription.getLength() > 0) {
-			Node node = nodeListDescription.item(0);
-			return node.getTextContent();
-		}
-		return null;
-	}
-	
-	private void parseLocationLines(Document srcDoc, String name) {
-		NodeList nodeList = srcDoc.getElementsByTagName(name);
-		if (nodeList.getLength() > 0) {
-			Node node = nodeList.item(0);
-			mParsedResult.put(name, node.getTextContent());
-		} 
-	}
+            String readLine;
+
+            while ((readLine = bufferedreader.readLine()) != null) {
+                YahooWeatherLog.d(readLine);
+                stringBuilder.append(readLine).append("\n");
+            }
+
+            qResult = stringBuilder.toString();
+
+        } catch (IOException e) {
+            YahooWeatherLog.printStack(e);
+            if (mExceptionListener != null) {
+                mExceptionListener.onFailConnection(e);
+            }
+        }
+
+        return qResult;
+    }
+
+    private Document convertStringToDocument(String src) {
+        YahooWeatherLog.d("convert string to document");
+        Document dest = null;
+
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder parser;
+
+        try {
+            parser = dbFactory.newDocumentBuilder();
+            dest = parser.parse(new ByteArrayInputStream(src.getBytes()));
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            YahooWeatherLog.printStack(e);
+            if (mExceptionListener != null) {
+                mExceptionListener.onFailParsing(e);
+            }
+        }
+
+        return dest;
+    }
+
+    private void parseWOEID(Document srcDoc) {
+        YahooWeatherLog.d("parse WOEID");
+
+        mParsedResult = new HashMap<String, String>();
+        for (int i = 1; i <= 4; i++) {
+            String name = "line" + i;
+            parseLocationLines(srcDoc, name);
+        }
+
+        final int n = YahooWeatherConsts.WOEID_RESULT_TAG_LSIT.length;
+        for (int i = 0; i < n; i++) {
+            getTextContentByTagName(srcDoc, YahooWeatherConsts.WOEID_RESULT_TAG_LSIT[i]);
+        }
+
+        try {
+            mWoeidInfo.mQuality = Integer.parseInt(
+                    getTextContentByTagName(srcDoc, YahooWeatherConsts.XML_TAG_WOEID_QUALITY));
+        } catch (NumberFormatException e) {
+            mWoeidInfo.mQuality = QUALITY_NOT_DEFINED;
+        }
+        mWoeidInfo.mWOEID = getTextContentByTagName
+                (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_WOEID);
+        mWoeidInfo.mRadius = getTextContentByTagName
+                (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_RADIUS);
+        mWoeidInfo.mLatitude = getTextContentByTagName
+                (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_LATITUDE);
+        mWoeidInfo.mLongtitde = getTextContentByTagName
+                (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_LONGITUDE);
+        mWoeidInfo.mOffsetLatitude = getTextContentByTagName
+                (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_OFFSETLATITUDE);
+        mWoeidInfo.mOffsetLongitude = getTextContentByTagName
+                (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_OFFSETLONGITUDE);
+        mWoeidInfo.mCity = getTextContentByTagName
+                (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_CITY);
+        mWoeidInfo.mCounty = getTextContentByTagName
+                (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_COUNTY);
+        mWoeidInfo.mCountry = getTextContentByTagName
+                (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_COUNTRY);
+        mWoeidInfo.mNeighborhood = getTextContentByTagName
+                (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_NEIGHBORHOOD);
+        mWoeidInfo.mState = getTextContentByTagName
+                (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_STATE);
+        mWoeidInfo.mCountrycode = getTextContentByTagName
+                (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_COUNTRYCODE);
+        mWoeidInfo.mStatecode = getTextContentByTagName
+                (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_STATECODE);
+        mWoeidInfo.mAddition = getTextContentByTagName
+                (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_ADDITION);
+        mWoeidInfo.mPostal = getTextContentByTagName
+                (srcDoc, YahooWeatherConsts.XML_TAG_WOEID_POSTAL);
+    }
+
+    private String getTextContentByTagName(Document srcDoc, String tagName) {
+        NodeList nodeListDescription = srcDoc.getElementsByTagName(tagName);
+        if (nodeListDescription.getLength() > 0) {
+            Node node = nodeListDescription.item(0);
+            return node.getTextContent();
+        }
+        return null;
+    }
+
+    private void parseLocationLines(Document srcDoc, String name) {
+        NodeList nodeList = srcDoc.getElementsByTagName(name);
+        if (nodeList.getLength() > 0) {
+            Node node = nodeList.item(0);
+            mParsedResult.put(name, node.getTextContent());
+        }
+    }
 }

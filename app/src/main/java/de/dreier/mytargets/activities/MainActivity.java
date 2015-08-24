@@ -8,7 +8,6 @@
 package de.dreier.mytargets.activities;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -106,6 +105,7 @@ public class MainActivity extends AppCompatActivity
         supportedLanguages.add("ca");
         supportedLanguages.add("zh");
         supportedLanguages.add("tr");
+        supportedLanguages.add("hu");
         supportedLanguages.add("hu");
 
         final SharedPreferences prefs = PreferenceManager

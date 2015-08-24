@@ -463,6 +463,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
     @Override
     public void gotWeatherInfo(WeatherInfo weatherInfo) {
         Environment e = new Environment();
+        e.location = weatherInfo.getLocationCity();
         int code = weatherInfo.getCurrentCode();
         if (code == 8 || code == 9) {
             e.weather = EWeather.LIGHT_RAIN;

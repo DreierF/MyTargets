@@ -133,7 +133,9 @@ public class EditArrowActivity extends EditWithImageActivity {
         String[] stringNumber = text.split(",");
         ArrayList<Integer> list = new ArrayList<>();
         for (String num : stringNumber) {
-            list.add(Integer.parseInt(num));
+            if (!num.isEmpty()) {
+                list.add(Integer.parseInt(num));
+            }
         }
         return list;
     }
