@@ -152,8 +152,6 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         arrows.setMinimum(1);
         arrows.setMaximum(10);
 
-
-
         // Comment
         //comment = (EditText) rootView.findViewById(R.id.comment);
 

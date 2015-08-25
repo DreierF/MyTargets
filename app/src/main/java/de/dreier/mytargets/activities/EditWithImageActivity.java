@@ -197,6 +197,7 @@ public abstract class EditWithImageActivity extends AppCompatActivity {
             selectedImageUri = data.getData();
         }
         if (selectedImageUri == null) {
+            super.onActivityResult(requestCode, resultCode, data);
             return;
         }
         final int width = mImageView.getWidth();

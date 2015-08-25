@@ -65,25 +65,14 @@ public class EnvironmentFragment extends Fragment {
         setOnClickWeather(light_rain, EWeather.LIGHT_RAIN);
         setOnClickWeather(rain, EWeather.RAIN);
 
-        // Wind speed
         wind_speed = (WindSpeedDialogSpinner) rootView.findViewById(R.id.wind_speed);
-
-        // Wind direction
         wind_direction = (WindDirectionDialogSpinner) rootView.findViewById(R.id.wind_direction);
-
         location = (EditText) rootView.findViewById(R.id.location);
 
-        if (mEnvironment == null) {
-            // Initialise with default values
-            wind_speed.setItemId(prefs.getInt("speed", 2));
-            wind_direction.setItemId(prefs.getInt("direction", 0));
-            location.setText(prefs.getString("location", ""));
-        } else {
-            setWeather(mEnvironment.weather);
-            wind_speed.setItemId(mEnvironment.windSpeed);
-            wind_direction.setItemId(mEnvironment.windDirection);
-            location.setText(mEnvironment.location);
-        }
+        setWeather(mEnvironment.weather);
+        wind_speed.setItemId(mEnvironment.windSpeed);
+        wind_direction.setItemId(mEnvironment.windDirection);
+        location.setText(mEnvironment.location);
         setHasOptionsMenu(true);
         return rootView;
     }
@@ -140,13 +129,6 @@ public class EnvironmentFragment extends Fragment {
         e.windSpeed = (int) wind_speed.getSelectedItem().getId();
         e.windDirection = (int) wind_direction.getSelectedItem().getId();
         e.location = location.getText().toString();
-
-        SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("speed", e.windSpeed);
-        editor.putInt("direction", e.windDirection);
-        editor.apply();
-
         listener.onItemSelected(e);
     }
 }

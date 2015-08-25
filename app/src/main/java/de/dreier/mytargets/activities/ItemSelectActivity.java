@@ -76,7 +76,6 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
     public void onItemSelected(IIdProvider e) {
         Intent data = new Intent();
         data.putExtra(ITEM, (Serializable) e);
-        //data.putExtra("call", getIntent());
         setResult(RESULT_OK, data);
         onBackPressed();
     }
