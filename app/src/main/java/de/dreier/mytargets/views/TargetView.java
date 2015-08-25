@@ -21,7 +21,6 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -88,7 +87,7 @@ public class TargetView extends TargetViewBase {
         mPasse = passe;
         mPasseDrawer.setSelection(currentArrow, null, PasseDrawer.MAX_CIRCLE_SIZE);
         mPasseDrawer.setPasse(passe);
-        animateToZoomSpot();
+        animateFromZoomSpot();
         invalidate();
     }
 
@@ -426,7 +425,7 @@ public class TargetView extends TargetViewBase {
                     mPasseDrawer.setPressed(-1);
                     longPressTimer.cancel();
                     longPressTimer = null;
-                    onArrowChanged(arrow);
+                    super.onArrowChanged(arrow);
                 }
             } else if (mPasseDrawer.getPressed() != arrow) {
                 // If new item gets selected cancel old timer and start new one
@@ -457,7 +456,6 @@ public class TargetView extends TargetViewBase {
     }
 
     private void animateMode() {
-        Log.d("", "animate mode");
         mCurSelecting = MODE_CHANGE;
         initAnimation();
         calcSizes();
@@ -496,33 +494,38 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void animateFromZoomSpot() {
-        Log.d("", "animateFromSpot");
         if (round.target.dependsOnArrowIndex()) {
             populateKeyboard();
         }
-        if (round.target.getFaceCount() > 1 && spotFocused) {
-            mCurSelecting = SPOT_ZOOM_IN;
-            initAnimation();
+        if (round.target.getFaceCount() > 1) {
+            if (!spotFocused) {
+                mCurSelecting = -1;
+                animateToZoomSpot();
+            } else {
+                mCurSelecting = SPOT_ZOOM_IN;
+                initAnimation();
 
-            radius = orgRadius;
-            midX = orgMidX;
-            midY = orgMidY;
+                radius = orgRadius;
+                midX = orgMidX;
+                midY = orgMidY;
 
-            final ValueAnimator moveAnimator = ValueAnimator.ofFloat(0, 1);
-            moveAnimator.setInterpolator(
-                    currentArrow < round.arrowsPerPasse ? new AccelerateInterpolator() :
-                            new AccelerateDecelerateInterpolator());
-            moveAnimator.addUpdateListener(valueAnimator -> {
-                mCurAnimationProgress = (Float) valueAnimator.getAnimatedValue();
-                if (mCurAnimationProgress == 1.0f) {
-                    moveAnimator.cancel();
-                    spotFocused = false;
-                    animateToZoomSpot();
-                }
-                invalidate();
-            });
-            moveAnimator.setDuration(200);
-            moveAnimator.start();
+                final ValueAnimator moveAnimator = ValueAnimator.ofFloat(0, 1);
+                moveAnimator.setInterpolator(
+                        currentArrow < round.arrowsPerPasse ? new AccelerateInterpolator() :
+                                new AccelerateDecelerateInterpolator());
+                moveAnimator.addUpdateListener(valueAnimator -> {
+                    mCurAnimationProgress = (Float) valueAnimator.getAnimatedValue();
+                    if (mCurAnimationProgress == 1.0f) {
+                        moveAnimator.cancel();
+                        spotFocused = false;
+                        mCurSelecting = -1;
+                        animateToZoomSpot();
+                    }
+                    invalidate();
+                });
+                moveAnimator.setDuration(200);
+                moveAnimator.start();
+            }
         }
     }
 
@@ -556,7 +559,6 @@ public class TargetView extends TargetViewBase {
                             new DecelerateInterpolator());
             moveAnimator.addUpdateListener(valueAnimator -> {
                 mCurAnimationProgress = (Float) valueAnimator.getAnimatedValue();
-                Log.d("animateToSpot", "" + mCurAnimationProgress);
                 if (mCurAnimationProgress == 1.0f) {
                     moveAnimator.cancel();
                     mCurSelecting = -1;
@@ -564,7 +566,9 @@ public class TargetView extends TargetViewBase {
                 }
                 invalidate();
             });
-            moveAnimator.setStartDelay(500);
+            if (currentArrow == 0) {
+                moveAnimator.setStartDelay(500);
+            }
             moveAnimator.setDuration(200);
             moveAnimator.start();
         }
