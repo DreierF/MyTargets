@@ -131,11 +131,6 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             }
 
             onArrowChanged(lastSetArrow + 1);
-
-            if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
-                mPasse.setId(setListener.onTargetSet(new Passe(mPasse), false));
-            }
-
             return true;
         }
         return true;
@@ -144,6 +139,10 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected void onArrowChanged(final int i) {
         animateCircle(i);
         animateFromZoomSpot();
+
+        if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
+            mPasse.setId(setListener.onTargetSet(new Passe(mPasse), false));
+        }
     }
 
     private void animateCircle(int i) {

@@ -6,13 +6,17 @@
  */
 package de.dreier.mytargets.fragments;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -63,7 +67,8 @@ import zh.wang.android.apis.yweathergetter4a.YahooWeatherInfoListener;
 public class EditTrainingFragment extends Fragment implements DatePickerDialog.OnDateSetListener,
         YahooWeatherInfoListener, TabLayout.OnTabSelectedListener, YahooWeatherExceptionListener {
     public static final String TRAINING_ID = "training_id";
-    private static final int REQ_SELECTED_DATE = 4;
+    private static final int REQUEST_LOCATION_PERMISSION = 1;
+    private static final int REQ_SELECTED_DATE = 2;
 
     private long mTraining = -1;
 
@@ -127,7 +132,8 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
 
         View not_editable = rootView.findViewById(R.id.not_editable);
 
-        standardRoundSpinner = (StandardRoundDialogSpinner) rootView.findViewById(R.id.standard_round);
+        standardRoundSpinner = (StandardRoundDialogSpinner) rootView
+                .findViewById(R.id.standard_round);
         distanceSpinner = (DistanceDialogSpinner) rootView.findViewById(R.id.distance_spinner);
         targetSpinner = (TargetDialogSpinner) rootView.findViewById(R.id.target_spinner);
         bow = (BowDialogSpinner) rootView.findViewById(R.id.bow);
@@ -178,14 +184,15 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
                     prefs.getString("unit_target", Diameter.CENTIMETER));
             targetSpinner.setItem(target);
 
-            // Start getting weather for current location
-            try {
-                YahooWeather weather = new YahooWeather();
-                weather.setExceptionListener(this);
-                weather.queryYahooWeatherByGPS(getActivity(), this);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (ContextCompat.checkSelfPermission(activity,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},
+                        REQUEST_LOCATION_PERMISSION);
+            } else {
+                queryWeatherInfo();
             }
+
         } else {
             DatabaseManager db = DatabaseManager.getInstance(activity);
             Training train = db.getTraining(mTraining);
@@ -205,12 +212,35 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         return rootView;
     }
 
+    private void queryWeatherInfo() {
+        // Start getting weather for current location
+        try {
+            YahooWeather weather = new YahooWeather();
+            weather.setExceptionListener(this);
+            weather.queryYahooWeatherByGPS(getActivity(), this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void updateArrowNumbers(Arrow item) {
         if (item == null || item.numbers.isEmpty()) {
             number_arrows.setVisibility(View.GONE);
         } else {
             number_arrows.setVisibility(View.VISIBLE);
             number_arrows.setChecked(true);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_LOCATION_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    queryWeatherInfo();
+                } else {
+                    setDefaultWeather();
+                }
         }
     }
 
