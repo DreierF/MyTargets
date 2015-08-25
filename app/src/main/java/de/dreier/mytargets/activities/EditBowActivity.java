@@ -32,7 +32,6 @@ public class EditBowActivity extends EditWithImageActivity
         implements DynamicItemLayout.OnBindListener<EditBowActivity.SightSetting> {
 
     public static final String BOW_ID = "bow_id";
-    private static final int REQ_SELECTED_DISTANCE = 1;
     public static final int RECURVE_BOW = 0;
     public static final int COMPOUND_BOW = 1;
     public static final int LONG_BOW = 2;
@@ -91,7 +90,7 @@ public class EditBowActivity extends EditWithImageActivity
             if (mBowId != -1) {
                 // Load data from database
                 DatabaseManager db = DatabaseManager.getInstance(this);
-                Bow bow = db.getBow(mBowId, false);
+                Bow bow = db.getBow(mBowId);
                 setTitle(bow.name);
                 name.setText(bow.name);
                 brand.setText(bow.brand);
@@ -99,7 +98,7 @@ public class EditBowActivity extends EditWithImageActivity
                 height.setText(bow.height);
                 tiller.setText(bow.tiller);
                 desc.setText(bow.description);
-                imageBitmap = bow.image;
+                imageBitmap = bow.getImage(this);
                 if (imageBitmap != null) {
                     mImageView.setImageBitmap(imageBitmap);
                 }
@@ -138,11 +137,7 @@ public class EditBowActivity extends EditWithImageActivity
     public void onBind(View view, final SightSetting sightSetting, int index) {
         final DistanceDialogSpinner distanceSpinner = (DistanceDialogSpinner) view
                 .findViewById(R.id.distance_spinner);
-        distanceSpinner.setOnResultListener(data -> {
-            long id = data.getLongExtra("id", 0);
-            distanceSpinner.setItemId(id);
-            sightSetting.distance = Distance.fromId(id);
-        });
+        distanceSpinner.setOnUpdateListener(item -> sightSetting.distance = item);
         EditText setting = (EditText) view.findViewById(R.id.sight_setting);
         setting.addTextChangedListener(new TextWatcher() {
             @Override
@@ -162,7 +157,7 @@ public class EditBowActivity extends EditWithImageActivity
         });
         ImageButton remove = (ImageButton) view.findViewById(R.id.remove_sight_setting);
         remove.setOnClickListener(view1 -> sight_settings.remove(sightSetting, R.string.sight_setting_removed));
-        distanceSpinner.setItemId(sightSetting.distance.getId());
+        distanceSpinner.setItem(sightSetting.distance);
         setting.setText(sightSetting.value);
     }
 
@@ -179,8 +174,7 @@ public class EditBowActivity extends EditWithImageActivity
         bow.tiller = tiller.getText().toString();
         bow.description = desc.getText().toString();
         bow.type = getType();
-        bow.imageFile = mImageFile;
-        bow.image = imageBitmap;
+        bow.setImage(mImageFile, imageBitmap);
 
         db.update(bow);
         db.updateSightSettings(bow.getId(), sight_settings.getList());

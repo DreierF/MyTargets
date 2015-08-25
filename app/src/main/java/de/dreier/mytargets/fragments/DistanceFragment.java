@@ -27,15 +27,16 @@ import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.utils.TextInputDialog;
 
+import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
+
 public class DistanceFragment extends Fragment implements View.OnClickListener,
         TextInputDialog.OnClickListener {
 
-    public static final String CUR_DISTANCE = "distance";
     private NowListFragment.OnItemSelectedListener listener;
-    private long distance;
+    private Distance distance;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        distance = getArguments().getLong(CUR_DISTANCE);
+        distance = (Distance)getArguments().getSerializable(ITEM);
 
         View rootView = inflater.inflate(R.layout.fragment_distance, container, false);
 
@@ -43,7 +44,7 @@ public class DistanceFragment extends Fragment implements View.OnClickListener,
         DistanceTabsFragmentPagerAdapter adapter =
                 new DistanceTabsFragmentPagerAdapter(getActivity(), distance);
         viewPager.setAdapter(adapter);
-        int item = Distance.fromId(distance).unit.equals(Distance.METER) ? 0 : 1;
+        int item = distance.unit.equals(Distance.METER) ? 0 : 1;
         viewPager.setCurrentItem(item, false);
 
         TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.sliding_tabs);
@@ -82,7 +83,7 @@ public class DistanceFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onOkClickListener(String input) {
-        long distance = this.distance;
+        Distance distance = this.distance;
         try {
             int distanceVal = Integer.parseInt(input.replaceAll("[^0-9]", ""));
             String unit;
@@ -91,11 +92,11 @@ public class DistanceFragment extends Fragment implements View.OnClickListener,
             } else {
                 unit = Dimension.YARDS;
             }
-            distance = new Distance(distanceVal, unit).getId();
+            distance = new Distance(distanceVal, unit);
         } catch (NumberFormatException e) {
             // leave distance as it is
         }
-        listener.onItemSelected(distance, Distance.class);
+        listener.onItemSelected(distance);
     }
 
 }

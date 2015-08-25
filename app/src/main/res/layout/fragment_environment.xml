@@ -81,7 +81,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/wind_speed"/>
 
-        <de.dreier.mytargets.views.DialogSpinner
+        <de.dreier.mytargets.views.WindSpeedDialogSpinner
             android:id="@+id/wind_speed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -93,7 +93,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/wind_direction"/>
 
-        <de.dreier.mytargets.views.DialogSpinner
+        <de.dreier.mytargets.views.WindDirectionDialogSpinner
             android:id="@+id/wind_direction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

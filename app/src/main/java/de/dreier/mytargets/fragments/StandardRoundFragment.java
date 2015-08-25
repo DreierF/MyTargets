@@ -42,6 +42,8 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.target.Target;
 
+import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
+
 public class StandardRoundFragment extends NowListFragment<StandardRound> {
 
     private static final int NEW_STANDARD_ROUND = 1;
@@ -60,7 +62,7 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
         mDrawerLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
         rootView.findViewById(R.id.right_drawer);
         mSingleSelector.setSelectable(true);
-        currentSelection = (StandardRound) getArguments().getSerializable("item");
+        currentSelection = (StandardRound) getArguments().getSerializable(ITEM);
         list = DatabaseManager.getInstance(getActivity()).getStandardRounds();
         if (!list.contains(currentSelection)) {
             list.add(currentSelection);
@@ -190,7 +192,7 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
         if (item.club == StandardRound.CUSTOM) {
             Intent i = new Intent(getActivity(),
                     SimpleFragmentActivity.EditStandardRoundActivity.class);
-            i.putExtra("item", item);
+            i.putExtra(ITEM, item);
             getActivity().startActivityForResult(i, NEW_STANDARD_ROUND);
             getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
         } else {
@@ -201,7 +203,7 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
                     .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                         Intent i = new Intent(getActivity(),
                                 SimpleFragmentActivity.EditStandardRoundActivity.class);
-                        i.putExtra("item", item);
+                        i.putExtra(ITEM, item);
                         getActivity().startActivityForResult(i, NEW_STANDARD_ROUND);
                         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
                     })
@@ -288,7 +290,7 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
 
     void onSave() {
         Intent data = new Intent();
-        data.putExtra("item", currentSelection);
+        data.putExtra(ITEM, currentSelection);
         getActivity().setResult(Activity.RESULT_OK, data);
         getActivity().finish();
         getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);

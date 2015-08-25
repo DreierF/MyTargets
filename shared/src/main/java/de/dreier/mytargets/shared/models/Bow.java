@@ -3,12 +3,8 @@ package de.dreier.mytargets.shared.models;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 
-import de.dreier.mytargets.shared.utils.BitmapUtils;
-
-public class Bow extends IdProvider implements DatabaseSerializable {
+public class Bow extends ImageHolder implements DatabaseSerializable {
     static final long serialVersionUID = 52L;
     public static final String TABLE = "BOW";
     public static final String NAME = "name";
@@ -33,7 +29,6 @@ public class Bow extends IdProvider implements DatabaseSerializable {
                     THUMBNAIL + " BLOB," +
                     IMAGE + " TEXT);";
 
-    public String imageFile;
     public String name;
     public int type;
     public String brand;
@@ -41,7 +36,6 @@ public class Bow extends IdProvider implements DatabaseSerializable {
     public String height;
     public String tiller;
     public String description;
-    public Bitmap image;
 
     @Override
     public String getTableName() {
@@ -58,22 +52,22 @@ public class Bow extends IdProvider implements DatabaseSerializable {
         values.put(Bow.HEIGHT, height);
         values.put(Bow.TILLER, tiller);
         values.put(Bow.DESCRIPTION, description);
-        Bitmap thumb = ThumbnailUtils.extractThumbnail(image, 100, 100);
-        byte[] imageData = BitmapUtils.getBitmapAsByteArray(thumb);
-        values.put(Bow.THUMBNAIL, imageData);
+        values.put(Bow.THUMBNAIL, thumb);
         values.put(Bow.IMAGE, imageFile);
         return values;
     }
 
     @Override
     public void fromCursor(Context context, Cursor cursor, int startColumnIndex) {
-        setId(cursor.getLong(0));
-        name = cursor.getString(1);
-        type = cursor.getInt(2);
-        brand = cursor.getString(3);
-        size = cursor.getString(4);
-        height = cursor.getString(5);
-        tiller = cursor.getString(6);
-        description = cursor.getString(7);
+        setId(cursor.getLong(startColumnIndex));
+        name = cursor.getString(startColumnIndex + 1);
+        type = cursor.getInt(startColumnIndex + 2);
+        brand = cursor.getString(startColumnIndex + 3);
+        size = cursor.getString(startColumnIndex + 4);
+        height = cursor.getString(startColumnIndex + 5);
+        tiller = cursor.getString(startColumnIndex + 6);
+        description = cursor.getString(startColumnIndex + 7);
+        thumb = cursor.getBlob(startColumnIndex + 8);
+        imageFile = cursor.getString(startColumnIndex + 9);
     }
 }

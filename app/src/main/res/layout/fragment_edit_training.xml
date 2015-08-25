@@ -104,7 +104,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/format"/>
 
-                        <de.dreier.mytargets.views.DialogSpinner
+                        <de.dreier.mytargets.views.StandardRoundDialogSpinner
                             android:id="@+id/standard_round"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
@@ -182,7 +182,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/target_face"/>
 
-                            <de.dreier.mytargets.views.DialogSpinner
+                            <de.dreier.mytargets.views.TargetDialogSpinner
                                 android:id="@+id/target_spinner"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -255,7 +255,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/bow"/>
 
-                    <de.dreier.mytargets.views.DialogSpinner
+                    <de.dreier.mytargets.views.BowDialogSpinner
                         android:id="@+id/bow"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -274,7 +274,7 @@
                             android:text="@string/add_bow"
                             android:textStyle="normal"/>
 
-                    </de.dreier.mytargets.views.DialogSpinner>
+                    </de.dreier.mytargets.views.BowDialogSpinner>
                 </LinearLayout>
 
                 <View
@@ -294,7 +294,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/arrow"/>
 
-                    <de.dreier.mytargets.views.DialogSpinner
+                    <de.dreier.mytargets.views.ArrowDialogSpinner
                         android:id="@+id/arrow"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -313,7 +313,7 @@
                             android:text="@string/add_arrow"
                             android:textStyle="normal"/>
 
-                    </de.dreier.mytargets.views.DialogSpinner>
+                    </de.dreier.mytargets.views.ArrowDialogSpinner>
                 </LinearLayout>
 
                 <View
@@ -333,7 +333,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/environment"/>
 
-                    <de.dreier.mytargets.views.DialogSpinner
+                    <de.dreier.mytargets.views.EnvironmentDialogSpinner
                         android:id="@+id/environment_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

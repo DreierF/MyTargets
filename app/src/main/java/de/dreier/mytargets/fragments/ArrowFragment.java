@@ -74,7 +74,7 @@ public class ArrowFragment extends NowListFragment<Arrow> implements View.OnClic
         @Override
         public void bindCursor() {
             mName.setText(mItem.name);
-            mImg.setImageDrawable(new RoundedAvatarDrawable(mItem.image));
+            mImg.setImageDrawable(new RoundedAvatarDrawable(mItem.getThumbnail()));
         }
     }
 }

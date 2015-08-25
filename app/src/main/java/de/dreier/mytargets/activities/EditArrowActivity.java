@@ -55,7 +55,7 @@ public class EditArrowActivity extends EditWithImageActivity {
             if (mArrowId != -1) {
                 // Load data from database
                 DatabaseManager db = DatabaseManager.getInstance(this);
-                Arrow arrow = db.getArrow(mArrowId, false);
+                Arrow arrow = db.getArrow(mArrowId);
                 setTitle(arrow.name);
                 name.setText(arrow.name);
                 length.setText(arrow.length);
@@ -65,7 +65,7 @@ public class EditArrowActivity extends EditWithImageActivity {
                 vanes.setText(arrow.vanes);
                 nock.setText(arrow.nock);
                 comment.setText(arrow.comment);
-                imageBitmap = arrow.image;
+                imageBitmap = arrow.getImage(this);
                 if (imageBitmap != null) {
                     mImageView.setImageBitmap(imageBitmap);
                 }
@@ -116,8 +116,7 @@ public class EditArrowActivity extends EditWithImageActivity {
         arrow.vanes = vanes.getText().toString();
         arrow.nock = nock.getText().toString();
         arrow.comment = comment.getText().toString();
-        arrow.imageFile = mImageFile;
-        arrow.image = imageBitmap;
+        arrow.setImage(mImageFile, imageBitmap);
         arrow.numbers = numbers;
 
         db.update(arrow);

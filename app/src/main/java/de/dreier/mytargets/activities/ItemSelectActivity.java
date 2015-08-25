@@ -13,6 +13,8 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.Serializable;
+
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.ArrowFragment;
 import de.dreier.mytargets.fragments.BowFragment;
@@ -25,11 +27,11 @@ import de.dreier.mytargets.fragments.TargetFragment;
 import de.dreier.mytargets.fragments.WindDirectionFragment;
 import de.dreier.mytargets.fragments.WindSpeedFragment;
 import de.dreier.mytargets.shared.models.IIdProvider;
-import de.dreier.mytargets.shared.models.IdProvider;
 
 public abstract class ItemSelectActivity extends SimpleFragmentActivity
         implements NowListFragment.OnItemSelectedListener,
         NowListFragmentBase.ContentListener {
+    public static final String ITEM = "item";
 
     protected FloatingActionButton mFab;
     protected View mNewLayout;
@@ -71,18 +73,10 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
     }
 
     @Override
-    public void onItemSelected(long itemId, Class<? extends IIdProvider> aClass) {
+    public void onItemSelected(IIdProvider e) {
         Intent data = new Intent();
-        data.putExtra("id", itemId);
-        data.putExtra("call", getIntent());
-        setResult(RESULT_OK, data);
-        onBackPressed();
-    }
-
-    @Override
-    public void onItemSelected(IdProvider e) {
-        Intent data = new Intent();
-        data.putExtra("item", e);
+        data.putExtra(ITEM, (Serializable) e);
+        //data.putExtra("call", getIntent());
         setResult(RESULT_OK, data);
         onBackPressed();
     }

@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:text="@string/target_face"/>
 
-        <de.dreier.mytargets.views.DialogSpinner
+        <de.dreier.mytargets.views.TargetDialogSpinner
             android:id="@+id/target_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

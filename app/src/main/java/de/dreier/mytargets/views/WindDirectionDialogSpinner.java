@@ -14,28 +14,32 @@ import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
-import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.models.WindDirection;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class DistanceDialogSpinner extends DialogSpinner<Distance> {
+public class WindDirectionDialogSpinner extends DialogSpinner<WindDirection> {
 
-    public DistanceDialogSpinner(Context context) {
+    public WindDirectionDialogSpinner(Context context) {
         this(context, null);
     }
 
-    public DistanceDialogSpinner(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.item_distance);
+    public WindDirectionDialogSpinner(Context context, AttributeSet attrs) {
+        super(context, attrs, R.layout.item_simple_text);
         setOnClickListener(v -> {
-            Intent i = new Intent(getContext(), ItemSelectActivity.Distance.class);
+            Intent i = new Intent(getContext(), ItemSelectActivity.WindDirection.class);
             i.putExtra(ITEM, item);
-            startIntent(i, data -> setItem((Distance) data.getSerializableExtra(ITEM)));
+            startIntent(i, data -> setItem((WindDirection) data.getSerializableExtra(ITEM)));
         });
     }
 
     @Override
     protected void bindView() {
         TextView name = (TextView) mView.findViewById(android.R.id.text1);
-        name.setText(item.toString(getContext()));
+        name.setText(item.name);
+    }
+
+    public void setItemId(long direction) {
+        setItem(WindDirection.getList(getContext()).get((int) direction));
     }
 }

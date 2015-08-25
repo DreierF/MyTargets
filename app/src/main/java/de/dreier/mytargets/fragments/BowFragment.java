@@ -53,7 +53,7 @@ public class BowFragment extends NowListFragment<Bow> implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        startActivity(SimpleFragmentActivity.EditStandardRoundActivity.class);
+        startActivity(SimpleFragmentActivity.EditStandardRoundActivity.class); //TODO ??
     }
 
     protected class BowAdapter extends NowListAdapter<Bow> {
@@ -80,7 +80,7 @@ public class BowFragment extends NowListFragment<Bow> implements View.OnClickLis
         @Override
         public void bindCursor() {
             mName.setText(mItem.name);
-            mImg.setImageDrawable(new RoundedAvatarDrawable(mItem.image));
+            mImg.setImageDrawable(new RoundedAvatarDrawable(mItem.getThumbnail()));
 
             String html = getString(R.string.bow_type) + ": <b>" +
                     getResources().getStringArray(R.array.bow_types)[mItem.type] + "</b>";

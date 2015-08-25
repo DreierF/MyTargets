@@ -34,9 +34,10 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
 import de.dreier.mytargets.fragments.NowListFragment;
 import de.dreier.mytargets.fragments.NowListFragmentBase;
+import de.dreier.mytargets.fragments.TrainingsFragment;
 import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.IIdProvider;
-import de.dreier.mytargets.shared.models.IdProvider;
 
 /**
  * Shows an overview over all trying days
@@ -153,22 +154,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemSelected(long itemId, Class<? extends IIdProvider> aClass) {
+    public void onItemSelected(IIdProvider item) {
         Intent i;
-        if (aClass.equals(Arrow.class)) {
+        if (item instanceof Arrow) {
             i = new Intent(this, EditArrowActivity.class);
-            i.putExtra(EditArrowActivity.ARROW_ID, itemId);
-        } else {
+            i.putExtra(EditArrowActivity.ARROW_ID, item.getId());
+        } else if (item instanceof Bow) {
             i = new Intent(this, EditBowActivity.class);
-            i.putExtra(EditBowActivity.BOW_ID, itemId);
+            i.putExtra(EditBowActivity.BOW_ID, item.getId());
+        } else {
+            i = new Intent(this, SimpleFragmentActivity.EditTrainingActivity.class);
+            i.putExtra(TrainingsFragment.TRAINING_ID, item.getId());
         }
         startActivity(i);
         overridePendingTransition(R.anim.right_in, R.anim.left_out);
-    }
-
-    @Override
-    public void onItemSelected(IdProvider e) {
-
     }
 
     final boolean[] empty = new boolean[3];

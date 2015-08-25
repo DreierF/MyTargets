@@ -127,8 +127,8 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     private void startWearNotification() {
         Bitmap image;
         if (training.bow > 0) {
-            Bow bow = DatabaseManager.getInstance(this).getBow(training.bow, true);
-            image = bow.image;
+            Bow bow = DatabaseManager.getInstance(this).getBow(training.bow);
+            image = bow.getImage(this);
         } else {
             image = BitmapFactory.decodeResource(getResources(), R.drawable.wear_bg);
         }

@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.fragments;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,16 +33,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.EditArrowActivity;
-import de.dreier.mytargets.activities.EditBowActivity;
 import de.dreier.mytargets.activities.InputActivity;
-import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
-import de.dreier.mytargets.adapters.ArrowItemAdapter;
-import de.dreier.mytargets.adapters.BowItemAdapter;
-import de.dreier.mytargets.adapters.EnvironmentItemAdapter;
-import de.dreier.mytargets.adapters.StandardRoundsItemAdapter;
-import de.dreier.mytargets.adapters.TargetItemAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Diameter;
@@ -57,39 +48,41 @@ import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.MyBackupAgent;
-import de.dreier.mytargets.views.DialogSpinner;
+import de.dreier.mytargets.views.ArrowDialogSpinner;
+import de.dreier.mytargets.views.BowDialogSpinner;
 import de.dreier.mytargets.views.DistanceDialogSpinner;
+import de.dreier.mytargets.views.EnvironmentDialogSpinner;
 import de.dreier.mytargets.views.NumberPicker;
+import de.dreier.mytargets.views.StandardRoundDialogSpinner;
+import de.dreier.mytargets.views.TargetDialogSpinner;
 import zh.wang.android.apis.yweathergetter4a.WeatherInfo;
 import zh.wang.android.apis.yweathergetter4a.YahooWeather;
+import zh.wang.android.apis.yweathergetter4a.YahooWeatherExceptionListener;
 import zh.wang.android.apis.yweathergetter4a.YahooWeatherInfoListener;
 
 public class EditTrainingFragment extends Fragment implements DatePickerDialog.OnDateSetListener,
-        YahooWeatherInfoListener, TabLayout.OnTabSelectedListener {
+        YahooWeatherInfoListener, TabLayout.OnTabSelectedListener, YahooWeatherExceptionListener {
     public static final String TRAINING_ID = "training_id";
     private static final int REQ_SELECTED_DATE = 4;
-    private static final int REQ_SELECTED_STANDARD_ROUND = 5;
-    private static final int REQ_SELECTED_SPECIFIC_TARGET = 6;
 
     private long mTraining = -1;
 
-    private DialogSpinner bow;
-    private DialogSpinner arrow;
+    private BowDialogSpinner bow;
+    private ArrowDialogSpinner arrow;
     private EditText training;
     //private EditText comment;
     private Button training_date;
     private Date date = new Date();
-    private DialogSpinner environment;
-    private DialogSpinner standardRoundSpinner;
+    private EnvironmentDialogSpinner environment;
+    private StandardRoundDialogSpinner standardRoundSpinner;
     private CheckBox number_arrows;
     private CheckBox timer;
     private View practice, roundLayout;
     private RadioButton indoor;
     private TabLayout tabLayout;
-    private DialogSpinner targetSpinner;
+    private TargetDialogSpinner targetSpinner;
     private DistanceDialogSpinner distanceSpinner;
     private NumberPicker passes, arrows;
-    private View not_editable;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -132,64 +125,24 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         practice = rootView.findViewById(R.id.practice_layout);
         roundLayout = rootView.findViewById(R.id.standard_round_layout);
 
-        not_editable = rootView.findViewById(R.id.not_editable);
+        View not_editable = rootView.findViewById(R.id.not_editable);
 
-        // Format / Standard round
-        standardRoundSpinner = (DialogSpinner) rootView.findViewById(R.id.standard_round);
-        final StandardRoundsItemAdapter standardRoundsItemAdapter = new StandardRoundsItemAdapter(
-                activity);
-        standardRoundSpinner.setAdapter(standardRoundsItemAdapter);
-        standardRoundSpinner.setOnClickListener(R.id.content, v -> {
-            Intent i1 = new Intent(activity,
-                    ItemSelectActivity.StandardRound.class);
-            StandardRound standardRound = (StandardRound) standardRoundSpinner
-                    .getSelectedItem();
-            i1.putExtra("item", standardRound);
-            startActivityForResult(i1, REQ_SELECTED_STANDARD_ROUND);
-        });
-        standardRoundSpinner.setOnClickListener(R.id.image, v -> {
-            StandardRound standardRound = (StandardRound) standardRoundSpinner
-                    .getSelectedItem();
-            Target target = standardRound.getRounds().get(0).targetTemplate;
-            if (target.id < 7 || target.id == 10 || target.id == 11) {
-                Intent i = new Intent(activity,
-                        ItemSelectActivity.Target.class);
-                i.putExtra("item", target);
-                i.putExtra(TargetFragment.TYPE_FIXED, true);
-                startActivityForResult(i, REQ_SELECTED_SPECIFIC_TARGET);
-            } else {
-                Intent i1 = new Intent(activity, ItemSelectActivity.StandardRound.class);
-                i1.putExtra("item", standardRound);
-                startActivityForResult(i1, REQ_SELECTED_STANDARD_ROUND);
-            }
-        });
+        standardRoundSpinner = (StandardRoundDialogSpinner) rootView.findViewById(R.id.standard_round);
+        distanceSpinner = (DistanceDialogSpinner) rootView.findViewById(R.id.distance_spinner);
+        targetSpinner = (TargetDialogSpinner) rootView.findViewById(R.id.target_spinner);
+        bow = (BowDialogSpinner) rootView.findViewById(R.id.bow);
+        arrow = (ArrowDialogSpinner) rootView.findViewById(R.id.arrow);
+        environment = (EnvironmentDialogSpinner) rootView.findViewById(R.id.environment_spinner);
+
+        arrow.setOnUpdateListener(this::updateArrowNumbers);
+        number_arrows = (CheckBox) rootView.findViewById(R.id.number_arrows);
 
         // Indoor / outdoor
         RadioButton outdoor = (RadioButton) rootView.findViewById(R.id.outdoor);
         indoor = (RadioButton) rootView.findViewById(R.id.indoor);
 
-        // Distance
-        distanceSpinner = (DistanceDialogSpinner) rootView
-                .findViewById(R.id.distance_spinner);
-
-        // Target round
-        targetSpinner = (DialogSpinner) rootView
-                .findViewById(R.id.target_spinner);
-        final TargetItemAdapter adapter = new TargetItemAdapter(getActivity());
-        targetSpinner.setAdapter(adapter);
-        targetSpinner.setOnClickListener(v -> {
-            Intent i = new Intent(getActivity(),
-                    ItemSelectActivity.Target.class);
-            i.putExtra("item", (Target) targetSpinner.getSelectedItem());
-            targetSpinner.startIntent(i);
-        });
-        targetSpinner.setOnResultListener(data -> {
-            adapter.setTarget((Target) data.getSerializableExtra("item"));
-            targetSpinner.setItemId(0);
-        });
-        targetSpinner.setItemId(0);
-
         // Passes
+        timer = (CheckBox) rootView.findViewById(R.id.timer);
         passes = (NumberPicker) rootView.findViewById(R.id.passes);
         passes.setTextPattern(R.plurals.passe);
 
@@ -199,50 +152,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         arrows.setMinimum(1);
         arrows.setMaximum(10);
 
-        // Bow
-        bow = (DialogSpinner) rootView.findViewById(R.id.bow);
-        bow.setAdapter(new BowItemAdapter(activity));
-        Button addBow = (Button) rootView.findViewById(R.id.add_bow);
-        bow.setAddButton(addBow, v -> startActivity(new Intent(activity, EditBowActivity.class)));
-        bow.setOnClickListener(v -> {
-            bow.startIntent(new Intent(activity,
-                    ItemSelectActivity.Bow.class));
-        });
-        bow.setOnResultListener(data -> bow.setItemId(data.getLongExtra("id", 0)));
 
-        // Arrow
-        number_arrows = (CheckBox) rootView.findViewById(R.id.number_arrows);
-        arrow = (DialogSpinner) rootView.findViewById(R.id.arrow);
-        arrow.setAdapter(new ArrowItemAdapter(activity));
-        Button addArrow = (Button) rootView.findViewById(R.id.add_arrow);
-        arrow.setAddButton(addArrow,
-                v -> startActivity(new Intent(activity, EditArrowActivity.class)));
-        arrow.setOnClickListener(v -> {
-            Intent i1 = new Intent(activity, ItemSelectActivity.Arrow.class);
-            arrow.startIntent(i1);
-        });
-        arrow.setOnResultListener(data -> {
-            arrow.setItemId(data.getLongExtra("id", 0));
-            updateArrowNumbers();
-        });
-
-        // Environment
-        environment = (DialogSpinner) rootView.findViewById(R.id.environment_spinner);
-        environment.setItemId(0);
-        environment.setOnClickListener(v -> {
-            Intent i1 = new Intent(activity,
-                    ItemSelectActivity.Environment.class);
-            i1.putExtra(EnvironmentFragment.ENVIRONMENT,
-                    ((EnvironmentItemAdapter) environment.getAdapter()).getEnvironment());
-            environment.startIntent(i1);
-        });
-        environment.setAdapter(new EnvironmentItemAdapter(activity));
-        environment.setOnResultListener(data -> {
-            Environment env = (Environment) data.getSerializableExtra("item");
-            ((EnvironmentItemAdapter) environment.getAdapter()).setEnvironment(env);
-        });
-
-        timer = (CheckBox) rootView.findViewById(R.id.timer);
 
         // Comment
         //comment = (EditText) rootView.findViewById(R.id.comment);
@@ -259,7 +169,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             timer.setChecked(prefs.getBoolean("timer", false));
             int distance = prefs.getInt("distance", 10);
             String unit = prefs.getString("unit", "m");
-            distanceSpinner.setItemId(new Distance(distance, unit).getId());
+            distanceSpinner.setItem(new Distance(distance, unit));
             indoor.setChecked(prefs.getBoolean("indoor", false));
             outdoor.setChecked(!prefs.getBoolean("indoor", false));
             arrows.setValue(prefs.getInt("ppp", 3));
@@ -268,11 +178,13 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
                     prefs.getInt("scoring_style", 0));
             target.size = new Diameter(prefs.getInt("size_target", 60),
                     prefs.getString("unit_target", Diameter.CENTIMETER));
-            adapter.setTarget(target);
+            targetSpinner.setItem(target);
 
             // Start getting weather for current location
             try {
-                new YahooWeather().queryYahooWeatherByGPS(getActivity(), this);
+                YahooWeather weather = new YahooWeather();
+                weather.setExceptionListener(this);
+                weather.queryYahooWeatherByGPS(getActivity(), this);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -284,20 +196,19 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             bow.setItemId(train.bow);
             arrow.setItemId(train.arrow);
             standardRoundSpinner.setItemId(train.standardRoundId);
-            ((EnvironmentItemAdapter) environment.getAdapter()).setEnvironment(train.environment);
+            environment.setItem(train.environment);
             setTrainingDate();
             activity.getSupportActionBar().setTitle(R.string.new_training);
             not_editable.setVisibility(View.GONE);
             tabLayout.setVisibility(View.GONE);
         }
         updateMode(tabLayout.getTabAt(0));
-        updateArrowNumbers();
+        updateArrowNumbers(arrow.getSelectedItem());
         return rootView;
     }
 
-    private void updateArrowNumbers() {
-        Arrow selectedItem = (Arrow) arrow.getSelectedItem();
-        if (selectedItem == null || selectedItem.numbers.isEmpty()) {
+    private void updateArrowNumbers(Arrow item) {
+        if (item == null || item.numbers.isEmpty()) {
             number_arrows.setVisibility(View.GONE);
         } else {
             number_arrows.setVisibility(View.VISIBLE);
@@ -313,41 +224,6 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
 
     private void setTrainingDate() {
         training_date.setText(SimpleDateFormat.getDateInstance().format(date));
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQ_SELECTED_STANDARD_ROUND) {
-                StandardRound sr = (StandardRound) data.getSerializableExtra("item");
-                ((StandardRoundsItemAdapter) standardRoundSpinner.getAdapter())
-                        .setStandardRound(sr);
-                standardRoundSpinner.setItemId(0);
-                return;
-            } else if (requestCode == REQ_SELECTED_SPECIFIC_TARGET) {
-                Target st = (Target) data.getSerializableExtra("item");
-                StandardRound standardRound = (StandardRound) standardRoundSpinner
-                        .getSelectedItem();
-                for (RoundTemplate template : standardRound.getRounds()) {
-                    Diameter size = template.target.size;
-                    template.target = TargetFactory
-                            .createTarget(getActivity(), st.getId(), st.scoringStyle);
-                    template.target.size = size;
-                }
-                ((StandardRoundsItemAdapter) standardRoundSpinner.getAdapter())
-                        .setStandardRound(standardRound);
-                standardRoundSpinner.setItemId(0);
-                return;
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        bow.setAdapter(new BowItemAdapter(getActivity()));
-        arrow.setAdapter(new ArrowItemAdapter(getActivity()));
     }
 
     @Override
@@ -386,18 +262,18 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         training.setId(mTraining);
         training.title = title;
         training.date = date;
-        training.environment = ((EnvironmentItemAdapter) environment.getAdapter()).getEnvironment();
-        training.bow = bow.getSelectedItemId();
-        training.arrow = arrow.getSelectedItemId();
+        training.environment = environment.getSelectedItem();
+        training.bow = bow.getSelectedItem().getId();
+        training.arrow = arrow.getSelectedItem().getId();
         int time = 120;
         try {
             SharedPreferences prefs = PreferenceManager
                     .getDefaultSharedPreferences(getActivity());
             time = Integer.parseInt(prefs.getString("timer_shoot_time", "120"));
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException ignored) {
         }
         training.timePerPasse = timer.isChecked() ? time : -1;
-        Arrow selectedItem = (Arrow) arrow.getSelectedItem();
+        Arrow selectedItem = arrow.getSelectedItem();
         training.arrowNumbering = !(selectedItem == null || selectedItem.numbers.isEmpty()) &&
                 number_arrows.isChecked();
 
@@ -405,8 +281,8 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         SharedPreferences.Editor editor = prefs.edit();
         StandardRound standardRound;
         if (mTraining != -1) {
-            Training dbtrain = db.getTraining(mTraining);
-            training.standardRoundId = dbtrain.standardRoundId;
+            Training train = db.getTraining(mTraining);
+            training.standardRoundId = train.standardRoundId;
             db.update(training);
         } else {
             getActivity().setTitle(R.string.edit_training);
@@ -418,11 +294,11 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
                 standardRound.indoor = indoor.isChecked();
                 ArrayList<RoundTemplate> rounds = new ArrayList<>();
                 RoundTemplate round = new RoundTemplate();
-                round.target = (Target) targetSpinner.getSelectedItem();
+                round.target = targetSpinner.getSelectedItem();
                 round.targetTemplate = round.target;
                 round.arrowsPerPasse = arrows.getValue();
                 round.passes = passes.getValue();
-                round.distance = (Distance) distanceSpinner.getSelectedItem();
+                round.distance = distanceSpinner.getSelectedItem();
                 rounds.add(round);
                 standardRound.setRounds(rounds);
                 db.update(standardRound);
@@ -436,7 +312,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
                 editor.putInt("size_target", round.target.size.value);
                 editor.putString("unit_target", round.target.size.unit);
             } else {
-                standardRound = (StandardRound) standardRoundSpinner.getSelectedItem();
+                standardRound = standardRoundSpinner.getSelectedItem();
                 db.update(standardRound);
                 editor.putInt("standard_round", (int) standardRound.getId());
             }
@@ -447,14 +323,14 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             for (RoundTemplate template : standardRound.getRounds()) {
                 Round round = new Round();
                 round.training = mTraining;
-                round.info = template; //TODO set target scoring style depending on bow type(compound?) if round is not manually defined
+                round.info = template;
                 round.comment = "";
                 db.update(round);
             }
         }
 
-        editor.putInt("bow", (int) bow.getSelectedItemId());
-        editor.putInt("arrow", (int) arrow.getSelectedItemId());
+        editor.putInt("bow", (int) bow.getSelectedItem().getId());
+        editor.putInt("arrow", (int) arrow.getSelectedItem().getId());
         editor.putBoolean("timer", timer.isChecked());
         editor.putBoolean("numbering", number_arrows.isChecked());
         editor.apply();
@@ -466,7 +342,6 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             return;
         }
         Environment e = new Environment();
-        e.location = weatherInfo.getLocationCity();
         int code = weatherInfo.getCurrentCode();
         if (code == 8 || code == 9) {
             e.weather = EWeather.LIGHT_RAIN;
@@ -480,7 +355,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             e.weather = EWeather.SUNNY;
         }
         e.windDirection = 0;
-        e.location = weatherInfo.getWOEIDneighborhood();
+        e.location = weatherInfo.getLocationCity();
         String speed = weatherInfo.getWindSpeed();
         String unit = weatherInfo.getSpeedUnit();
         try {
@@ -512,8 +387,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         } catch (NumberFormatException nfe) {
             e.windSpeed = 0;
         }
-        ((EnvironmentItemAdapter) environment.getAdapter()).setEnvironment(e);
-        environment.setItemId(0);
+        environment.setItem(e);
     }
 
     @Override
@@ -542,5 +416,24 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
+    }
+
+    @Override
+    public void onFailConnection(Exception e) {
+        setDefaultWeather();
+    }
+
+    @Override
+    public void onFailParsing(Exception e) {
+        setDefaultWeather();
+    }
+
+    @Override
+    public void onFailFindLocation(Exception e) {
+        setDefaultWeather();
+    }
+
+    private void setDefaultWeather() {
+        environment.setItem(new Environment(EWeather.SUNNY, 0, 0));
     }
 }

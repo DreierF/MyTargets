@@ -23,18 +23,19 @@ import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.views.CardItemDecorator;
 
+import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
+
 public class DistanceGridFragment extends NowListFragment<Distance> {
 
-    public static final String CUR_DISTANCE = "distance";
     private static final String DISTANCE_UNIT = "distance_unit";
-    private long distance;
+    private Distance distance;
     private String unit;
 
-    public static DistanceGridFragment newInstance(long distance, String unit) {
+    public static DistanceGridFragment newInstance(Distance distance, String unit) {
         DistanceGridFragment fragment = new DistanceGridFragment();
 
         Bundle args = new Bundle();
-        args.putLong(CUR_DISTANCE, distance);
+        args.putSerializable(ITEM, distance);
         args.putString(DISTANCE_UNIT, unit);
         fragment.setArguments(args);
 
@@ -45,7 +46,7 @@ public class DistanceGridFragment extends NowListFragment<Distance> {
     protected void init(Bundle intent, Bundle savedInstanceState) {
         mEditable = false;
         Bundle bundle = getArguments();
-        distance = bundle.getLong(CUR_DISTANCE);
+        distance = (Distance)bundle.getSerializable(ITEM);
         unit = bundle.getString(DISTANCE_UNIT);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mRecyclerView.addItemDecoration(new CardItemDecorator(getActivity(), 3));

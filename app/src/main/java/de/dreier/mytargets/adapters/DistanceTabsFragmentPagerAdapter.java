@@ -11,7 +11,6 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v7.app.AppCompatActivity;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.DistanceGridFragment;
@@ -22,7 +21,7 @@ public class DistanceTabsFragmentPagerAdapter extends FragmentPagerAdapter {
     private final Context context;
     private final NowListFragmentBase[] fragments = new NowListFragmentBase[2];
 
-    public DistanceTabsFragmentPagerAdapter(FragmentActivity context, long distance) {
+    public DistanceTabsFragmentPagerAdapter(FragmentActivity context, Distance distance) {
         super(context.getSupportFragmentManager());
         this.context = context;
         fragments[0] = DistanceGridFragment.newInstance(distance, Distance.METER);

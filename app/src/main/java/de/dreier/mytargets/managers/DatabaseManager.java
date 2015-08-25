@@ -13,18 +13,13 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -342,15 +337,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 long tid = template.target.getId();
                 tid = tid < 7 ? 0 : tid;
                 tid = tid == 11 ? 10 : tid;
-                if (training == 14) {
-                    Log.d("", Arrays.toString(new String[]{String.valueOf(index),
-                            String.valueOf(template.distance.value),
-                            template.distance.unit,
-                            String.valueOf(template.arrowsPerPasse),
-                            String.valueOf(template.passes),
-                            String.valueOf(tid),
-                            String.valueOf(res.getCount())}));
-                }
                 Cursor sids = db.rawQuery("SELECT sid FROM ROUND_TEMPLATE " +
                         "WHERE r_index=" + index + " " +
                         "AND distance=" + template.distance.value + " " +
@@ -573,7 +559,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public ArrayList<Bow> getBows() {
         Cursor res = db.rawQuery(
-                "SELECT _id, name, type, brand, size, height, tiller, description, thumbnail " +
+                "SELECT _id, name, type, brand, size, height, tiller, description, thumbnail, image " +
                         "FROM BOW " +
                         "ORDER BY _id ASC", null);
         ArrayList<Bow> list = new ArrayList<>(res.getCount());
@@ -581,8 +567,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
             do {
                 Bow bow = new Bow();
                 bow.fromCursor(mContext, res, 0);
-                byte[] data = res.getBlob(8);
-                bow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
                 list.add(bow);
             } while (res.moveToNext());
         }
@@ -592,7 +576,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public ArrayList<Arrow> getArrows() {
         Cursor res = db.rawQuery(
-                "SELECT _id, name, length, material, spine, weight, vanes, nock, comment, thumbnail " +
+                "SELECT _id, name, length, material, spine, weight, vanes, nock, comment, thumbnail, image " +
                         "FROM ARROW " +
                         "ORDER BY _id ASC", null);
         ArrayList<Arrow> list = new ArrayList<>(res.getCount());
@@ -600,8 +584,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
             do {
                 Arrow arrow = new Arrow();
                 arrow.fromCursor(mContext, res, 0);
-                byte[] data = res.getBlob(9);
-                arrow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
                 arrow.numbers = getArrowNumbers(arrow.getId());
                 list.add(arrow);
             } while (res.moveToNext());
@@ -710,7 +692,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return p;
     }
 
-    public Bow getBow(long bowId, boolean small) {
+    public Bow getBow(long bowId) {
         String[] cols = {Bow.ID, Bow.NAME, Bow.TYPE, Bow.BRAND, Bow.SIZE, Bow.HEIGHT, Bow.TILLER,
                 Bow.DESCRIPTION, Bow.THUMBNAIL, Bow.IMAGE};
         Cursor res = db.query(Bow.TABLE, cols, ID + "=" + bowId, null, null, null, null);
@@ -718,32 +700,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (res.moveToFirst()) {
             bow = new Bow();
             bow.fromCursor(mContext, res, 0);
-            if (small) {
-                byte[] data = res.getBlob(8);
-                bow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
-            } else {
-                bow.imageFile = res.getString(9);
-                try {
-                    if (bow.imageFile != null) {
-                        if (bow.imageFile.contains("/")) {
-                            bow.imageFile = bow.imageFile
-                                    .substring(bow.imageFile.lastIndexOf("/") + 1);
-                        }
-                        FileInputStream in = mContext.openFileInput(bow.imageFile);
-                        bow.image = BitmapFactory.decodeStream(in);
-                    } else {
-                        bow.image = null;
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
             res.close();
         }
         return bow;
     }
 
-    public Arrow getArrow(long arrowId, boolean small) {
+    public Arrow getArrow(long arrowId) {
         String[] cols = {Arrow.ID, Arrow.NAME, Arrow.LENGTH, Arrow.MATERIAL, Arrow.SPINE,
                 Arrow.WEIGHT,
                 Arrow.VANES, Arrow.NOCK, Arrow.COMMENT, Arrow.THUMBNAIL, Arrow.IMAGE};
@@ -752,26 +714,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (res.moveToFirst()) {
             arrow = new Arrow();
             arrow.fromCursor(mContext, res, 0);
-            if (small) {
-                byte[] data = res.getBlob(9);
-                arrow.image = BitmapFactory.decodeByteArray(data, 0, data.length);
-            } else {
-                arrow.imageFile = res.getString(10);
-                try {
-                    if (arrow.imageFile != null) {
-                        if (arrow.imageFile.contains("/")) {
-                            arrow.imageFile = arrow.imageFile
-                                    .substring(arrow.imageFile.lastIndexOf("/") + 1);
-                        }
-                        FileInputStream in = mContext.openFileInput(arrow.imageFile);
-                        arrow.image = BitmapFactory.decodeStream(in);
-                    } else {
-                        arrow.image = null;
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
             res.close();
             arrow.numbers = getArrowNumbers(arrowId);
         }
@@ -1131,18 +1073,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
     /**
      * Returns a list of all distances that are either default values or used somewhere in the app
      *
-     * @param curDistId Distance id to add to the list, because it is the current value.
+     * @param distance Distance id to add to the list, because it is the current value.
+     * @param unit     Distances are only returned which match the specified unit
+     *                 (Distance.METER or Distance.YARDS)
      * @return List of distances
      */
-    public List<Distance> getDistances(long curDistId, String unit) {
+    public List<Distance> getDistances(Distance distance, String unit) {
         ArrayList<Distance> distances = new ArrayList<>();
         HashSet<Long> set = new HashSet<>();
 
         // Add currently selected distance to list
-        Distance distance = Distance.fromId(curDistId);
         if (distance.unit.equals(unit)) {
             distances.add(distance);
-            set.add(curDistId);
+            set.add(distance.getId());
         }
 
         // Get all distances used in ROUND or VISIER table

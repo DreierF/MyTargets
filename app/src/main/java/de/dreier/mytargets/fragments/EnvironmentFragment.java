@@ -6,8 +6,7 @@
  */
 package de.dreier.mytargets.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,25 +17,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
 import junit.framework.Assert;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.utils.MyBackupAgent;
-import de.dreier.mytargets.views.DialogSpinner;
+import de.dreier.mytargets.views.WindDirectionDialogSpinner;
+import de.dreier.mytargets.views.WindSpeedDialogSpinner;
 
 public class EnvironmentFragment extends Fragment {
-    private static final int REQ_SELECTED_WIND_SPEED = 1;
-    private static final int REQ_SELECTED_WIND_DIRECTION = 2;
     public static final String ENVIRONMENT = "environment";
 
-    private DialogSpinner wind_speed, wind_direction;
+    private WindSpeedDialogSpinner wind_speed;
+    private WindDirectionDialogSpinner wind_direction;
     private NowListFragment.OnItemSelectedListener listener;
     private Environment mEnvironment;
     private EWeather weather;
@@ -69,24 +66,10 @@ public class EnvironmentFragment extends Fragment {
         setOnClickWeather(rain, EWeather.RAIN);
 
         // Wind speed
-        wind_speed = (DialogSpinner) rootView.findViewById(R.id.wind_speed);
-        wind_speed.setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1,
-                activity.getResources().getStringArray(R.array.wind_speeds)));
-        wind_speed.setOnClickListener(v -> {
-            Intent i1 = new Intent(activity,
-                    ItemSelectActivity.WindSpeed.class);
-            startActivityForResult(i1, REQ_SELECTED_WIND_SPEED);
-        });
+        wind_speed = (WindSpeedDialogSpinner) rootView.findViewById(R.id.wind_speed);
 
         // Wind direction
-        wind_direction = (DialogSpinner) rootView.findViewById(R.id.wind_direction);
-        wind_direction.setOnClickListener(v -> {
-            Intent i1 = new Intent(activity,
-                    ItemSelectActivity.WindDirection.class);
-            startActivityForResult(i1, REQ_SELECTED_WIND_DIRECTION);
-        });
-        wind_direction.setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1,
-                activity.getResources().getStringArray(R.array.wind_directions)));
+        wind_direction = (WindDirectionDialogSpinner) rootView.findViewById(R.id.wind_direction);
 
         location = (EditText) rootView.findViewById(R.id.location);
 
@@ -99,7 +82,7 @@ public class EnvironmentFragment extends Fragment {
             setWeather(mEnvironment.weather);
             wind_speed.setItemId(mEnvironment.windSpeed);
             wind_direction.setItemId(mEnvironment.windDirection);
-            location.setText("");
+            location.setText(mEnvironment.location);
         }
         setHasOptionsMenu(true);
         return rootView;
@@ -126,21 +109,6 @@ public class EnvironmentFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            long id = data.getLongExtra("id", 0);
-            if (requestCode == REQ_SELECTED_WIND_SPEED) {
-                wind_speed.setItemId(id);
-                return;
-            } else if (requestCode == REQ_SELECTED_WIND_DIRECTION) {
-                wind_direction.setItemId(id);
-                return;
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.save, menu);
     }
@@ -157,7 +125,7 @@ public class EnvironmentFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         activity = getActivity();
         if (activity instanceof NowListFragment.OnItemSelectedListener) {
@@ -169,8 +137,8 @@ public class EnvironmentFragment extends Fragment {
     void onSave() {
         Environment e = new Environment();
         e.weather = weather;
-        e.windSpeed = (int) wind_speed.getSelectedItemId();
-        e.windDirection = (int) wind_direction.getSelectedItemId();
+        e.windSpeed = (int) wind_speed.getSelectedItem().getId();
+        e.windDirection = (int) wind_direction.getSelectedItem().getId();
         e.location = location.getText().toString();
 
         SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);

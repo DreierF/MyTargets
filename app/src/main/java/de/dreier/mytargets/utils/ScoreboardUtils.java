@@ -197,13 +197,13 @@ public class ScoreboardUtils {
                 .htmlEncode(standardRound.name) + "</b>";
 
         // Set round info
-        Bow bow = db.getBow(training.bow, true);
+        Bow bow = db.getBow(training.bow);
         if (bow != null) {
             infoText += "<br>" + context.getString(R.string.bow) +
                     ": <b>" + TextUtils.htmlEncode(bow.name) + "</b>";
         }
 
-        Arrow arrow = db.getArrow(training.arrow, true);
+        Arrow arrow = db.getArrow(training.arrow);
         if (arrow != null) {
             infoText += "<br>" + context.getString(R.string.arrow) +
                     ": <b>" + TextUtils.htmlEncode(arrow.name) + "</b>";

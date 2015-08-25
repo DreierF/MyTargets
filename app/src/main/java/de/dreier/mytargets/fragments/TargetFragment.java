@@ -40,6 +40,8 @@ import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.MyBackupAgent;
 
+import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
+
 public class TargetFragment extends NowListFragment<Target>
         implements SeekBar.OnSeekBarChangeListener {
 
@@ -61,7 +63,7 @@ public class TargetFragment extends NowListFragment<Target>
         supportActionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
 
         // Process passed arguments
-        Target t = (Target) getArguments().getSerializable("item");
+        Target t = (Target) getArguments().getSerializable(ITEM);
         typeFixed = getArguments().getBoolean(TYPE_FIXED);
         List<Target> list;
         if (typeFixed) {
@@ -185,7 +187,7 @@ public class TargetFragment extends NowListFragment<Target>
         editor.apply();
 
         Intent data = new Intent();
-        data.putExtra("item", target);
+        data.putExtra(ITEM, target);
         getActivity().setResult(Activity.RESULT_OK, data);
         getActivity().finish();
         getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);

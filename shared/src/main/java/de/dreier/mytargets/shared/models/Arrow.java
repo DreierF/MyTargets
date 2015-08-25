@@ -3,15 +3,11 @@ package de.dreier.mytargets.shared.models;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.dreier.mytargets.shared.utils.BitmapUtils;
-
-public class Arrow extends IdProvider implements DatabaseSerializable {
+public class Arrow extends ImageHolder implements DatabaseSerializable {
     static final long serialVersionUID = 50L;
     public static final String TABLE = "ARROW";
     public static final String NAME = "name";
@@ -38,7 +34,6 @@ public class Arrow extends IdProvider implements DatabaseSerializable {
                     THUMBNAIL + " BLOB," +
                     IMAGE + " TEXT);";
 
-    public String imageFile;
     public String name;
     public String length;
     public String material;
@@ -47,9 +42,8 @@ public class Arrow extends IdProvider implements DatabaseSerializable {
     public String vanes;
     public String nock;
     public String comment;
-    public Bitmap image;
     public List<Integer> numbers = new ArrayList<>();
-    
+
     @Override
     public String getTableName() {
         return TABLE;
@@ -66,23 +60,23 @@ public class Arrow extends IdProvider implements DatabaseSerializable {
         values.put(Arrow.VANES, vanes);
         values.put(Arrow.NOCK, nock);
         values.put(Arrow.COMMENT, comment);
-        Bitmap thumb = ThumbnailUtils.extractThumbnail(image, 100, 100);
-        byte[] imageData = BitmapUtils.getBitmapAsByteArray(thumb);
-        values.put(Arrow.THUMBNAIL, imageData);
+        values.put(Arrow.THUMBNAIL, thumb);
         values.put(Arrow.IMAGE, imageFile);
         return values;
     }
 
     @Override
     public void fromCursor(Context context, Cursor cursor, int startColumnIndex) {
-        setId(cursor.getLong(0));
-        name = cursor.getString(1);
-        length = cursor.getString(2);
-        material = cursor.getString(3);
-        spine = cursor.getString(4);
-        weight = cursor.getString(5);
-        vanes = cursor.getString(6);
-        nock = cursor.getString(7);
-        comment = cursor.getString(8);
+        setId(cursor.getLong(startColumnIndex));
+        name = cursor.getString(startColumnIndex + 1);
+        length = cursor.getString(startColumnIndex + 2);
+        material = cursor.getString(startColumnIndex + 3);
+        spine = cursor.getString(startColumnIndex + 4);
+        weight = cursor.getString(startColumnIndex + 5);
+        vanes = cursor.getString(startColumnIndex + 6);
+        nock = cursor.getString(startColumnIndex + 7);
+        comment = cursor.getString(startColumnIndex + 8);
+        thumb = cursor.getBlob(startColumnIndex + 9);
+        imageFile = cursor.getString(startColumnIndex + 10);
     }
 }

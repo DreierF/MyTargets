@@ -24,18 +24,17 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.ItemSelectActivity;
-import de.dreier.mytargets.adapters.TargetItemAdapter;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.MyBackupAgent;
-import de.dreier.mytargets.views.DialogSpinner;
 import de.dreier.mytargets.views.DistanceDialogSpinner;
 import de.dreier.mytargets.views.DynamicItemLayout;
 import de.dreier.mytargets.views.NumberPicker;
+import de.dreier.mytargets.views.TargetDialogSpinner;
+
+import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 public class EditStandardRoundFragment extends Fragment
         implements DynamicItemLayout.OnBindListener<RoundTemplate> {
@@ -58,7 +57,7 @@ public class EditStandardRoundFragment extends Fragment
         Bundle i = getArguments();
         StandardRound standardRound = null;
         if (i != null) {
-            standardRound = (StandardRound) i.getSerializable("item");
+            standardRound = (StandardRound) i.getSerializable(ITEM);
         }
         SharedPreferences prefs = activity.getSharedPreferences(MyBackupAgent.PREFS, 0);
 
@@ -144,7 +143,7 @@ public class EditStandardRoundFragment extends Fragment
         editor.apply();
 
         Intent data = new Intent();
-        data.putExtra("item", standardRound);
+        data.putExtra(ITEM, standardRound);
         getActivity().setResult(Activity.RESULT_OK, data);
         getActivity().finish();
         getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
@@ -171,32 +170,17 @@ public class EditStandardRoundFragment extends Fragment
         // Distance
         final DistanceDialogSpinner distanceSpinner = (DistanceDialogSpinner) view
                 .findViewById(R.id.distance_spinner);
-        distanceSpinner.setOnResultListener(data -> {
-            long id = data.getLongExtra("id", 0);
-            round.distance = Distance.fromId(id);
-            distanceSpinner.setItemId(id);
-        });
-        distanceSpinner.setItemId(round.distance.getId());
+        distanceSpinner.setItem(round.distance);
+        distanceSpinner.setOnUpdateListener(item -> round.distance = item);
 
         // Target round
-        final DialogSpinner targetSpinner = (DialogSpinner) view
+        final TargetDialogSpinner targetSpinner = (TargetDialogSpinner) view
                 .findViewById(R.id.target_spinner);
-        final TargetItemAdapter adapter = new TargetItemAdapter(getActivity());
-        targetSpinner.setAdapter(adapter);
-        targetSpinner.setOnClickListener(v -> {
-            Intent i = new Intent(getActivity(),
-                    ItemSelectActivity.Target.class);
-            i.putExtra("item", round.target);
-            targetSpinner.startIntent(i);
+        targetSpinner.setOnUpdateListener(item -> {
+            round.target = item;
+            round.targetTemplate = item;
         });
-        targetSpinner.setOnResultListener(data -> {
-            round.target = (Target) data.getSerializableExtra("item");
-            round.targetTemplate = round.target;
-            adapter.setTarget(round.target);
-            targetSpinner.setItemId(0);
-        });
-        adapter.setTarget(round.target);
-        targetSpinner.setItemId(0);
+        targetSpinner.setItem(round.target);
 
         // Passes
         NumberPicker passes = (NumberPicker) view.findViewById(R.id.passes);

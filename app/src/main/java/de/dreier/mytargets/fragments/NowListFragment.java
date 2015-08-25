@@ -21,7 +21,6 @@ import java.util.List;
 
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.shared.models.IIdProvider;
-import de.dreier.mytargets.shared.models.IdProvider;
 
 /**
  * Shows all rounds of one settings_only day
@@ -71,12 +70,10 @@ public abstract class NowListFragment<T extends IIdProvider> extends NowListFrag
     }
 
     protected final void onSelected(T item) {
-        listener.onItemSelected(item.getId(), item.getClass());
+        listener.onItemSelected(item);
     }
 
     public interface OnItemSelectedListener {
-        void onItemSelected(long itemId, Class<? extends IIdProvider> aClass);
-
-        void onItemSelected(IdProvider e);
+        void onItemSelected(IIdProvider e);
     }
 }
