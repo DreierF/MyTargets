@@ -39,11 +39,12 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.release
+            minifyEnabled false
         }
         release {
             signingConfig signingConfigs.release
-            //minifyEnabled true
-            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -54,7 +55,7 @@ dependencies {
     compile 'com.android.support:design:23.0.0'
     compile 'com.android.support:support-annotations:23.0.0'
     compile 'com.android.support:recyclerview-v7:23.0.0'
-    compile 'com.google.android.gms:play-services:7.5.0'
+    compile 'com.google.android.gms:play-services:7.8.0'
     compile 'com.github.machinarius:preferencefragment:0.1.1'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.cocosw:bottomsheet:1.1.1@aar'

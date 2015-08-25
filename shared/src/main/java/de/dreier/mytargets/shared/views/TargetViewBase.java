@@ -72,6 +72,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         b.putSerializable("round", round);
         b.putInt("currentArrow", currentArrow);
         b.putInt("lastSetArrow", lastSetArrow);
+        mPasseDrawer.saveState(b);
     }
 
     public void restoreState(Bundle b) {
@@ -79,6 +80,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         currentArrow = b.getInt("currentArrow");
         lastSetArrow = b.getInt("lastSetArrow");
         round = (RoundTemplate) b.getSerializable("round");
+        mPasseDrawer.restoreState(b);
     }
 
     @Override

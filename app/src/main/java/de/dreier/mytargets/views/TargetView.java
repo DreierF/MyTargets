@@ -257,7 +257,6 @@ public class TargetView extends TargetViewBase {
     @Override
     protected void calcSizes() {
         float passeDrawerHeight = 72 * density;
-        int keyboardHeight = mKeyboardMode ? keyboard.getMeasuredHeight() : 0;
         float radH = (contentHeight - 20 * density) / 2.45f;
         float radW = (contentWidth - 20 * density) * 0.5f;
         orgRadius = (int) (Math.min(radW, radH));

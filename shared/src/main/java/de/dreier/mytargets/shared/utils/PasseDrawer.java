@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
@@ -239,23 +240,23 @@ public class PasseDrawer {
         return -1;
     }
 
-    public float getProgress() {
-        return mCurAnimationProgress;
-    }
-
-    public boolean isAnimating() {
-        return mCurAnimationProgress != -1;
-    }
-
-    public int getSelectedZone() {
-        return mSelected < 0 || mSelected >= mPPP ? -2 : mPasse.shot[mSelected].zone;
-    }
-
-    public int getOldSelectedZone() {
-        return oldSelected < 0 || oldSelected >= mPPP ? -2 : mPasse.shot[oldSelected].zone;
-    }
-
     public int getPressed() {
         return mPressed;
+    }
+
+    public void saveState(Bundle b) {
+        b.putSerializable("pd_passe", mPasse);
+        b.putInt("pd_pressed", mPressed);
+        b.putInt("pd_selected", mSelected);
+        b.putSerializable("pd_selected_pos", mSelectedPosition);
+        b.putInt("pd_selected_radius", mSelectedRadius);
+    }
+
+    public void restoreState(Bundle b) {
+        mPasse = (Passe) b.getSerializable("pd_passe");
+        mPressed = b.getInt("pd_pressed");
+        mSelected = b.getInt("pd_selected");
+        mSelectedPosition = (Coordinate) b.getSerializable("pd_selected_pos");
+        mSelectedRadius = b.getInt("pd_selected_radius");
     }
 }
