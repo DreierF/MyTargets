@@ -237,17 +237,8 @@ public class TargetView extends TargetViewBase {
     @Override
     protected Coordinate initAnimationPositions(int i) {
         Coordinate coordinate = new Coordinate();
-        if (mKeyboardMode) {
-            coordinate.x = midX + radius + 27 * density;
-            if (mPasse.shot[i].zone == -1) {
-                coordinate.y = midY + radius;
-            } else {
-                coordinate.y = midY + radius * (mPasse.shot[i].zone + 1) / (float) mZoneCount;
-            }
-        } else {
-            coordinate.x = midX + radius * mPasse.shot[i].x;
-            coordinate.y = midY + radius * mPasse.shot[i].y;
-        }
+        coordinate.x = orgMidX + orgRadius * mPasse.shot[i].x;
+        coordinate.y = orgMidY + orgRadius * mPasse.shot[i].y;
         return coordinate;
     }
 
@@ -265,13 +256,17 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void calcSizes() {
+        float passeDrawerHeight = 72 * density;
         int keyboardHeight = mKeyboardMode ? keyboard.getMeasuredHeight() : 0;
-        float radH = (contentHeight - 20 * density - keyboardHeight) / 2.45f;
+        float radH = (contentHeight - 20 * density) / 2.45f;
         float radW = (contentWidth - 20 * density) * 0.5f;
         orgRadius = (int) (Math.min(radW, radH));
         orgMidX = contentWidth / 2;
-        float passeDrawerHeight = 72 * density;
-        orgMidY = (contentHeight - passeDrawerHeight - keyboardHeight) / 2;
+        if (mKeyboardMode) {
+            orgMidY = -orgRadius - 10 * density;
+        } else {
+            orgMidY = (contentHeight - passeDrawerHeight) / 2;
+        }
         orgRect = new RectF(
                 orgMidX - orgRadius,
                 orgMidY - orgRadius,
@@ -280,7 +275,7 @@ public class TargetView extends TargetViewBase {
         RectF rect = new RectF();
         rect.left = 30 * density;
         rect.right = contentWidth - 30 * density;
-        rect.bottom = contentHeight - keyboardHeight;
+        rect.bottom = mKeyboardMode ? passeDrawerHeight : contentHeight;
         rect.top = rect.bottom - passeDrawerHeight;
         mPasseDrawer.animateToRect(rect);
         animateToZoomSpot();
@@ -378,11 +373,10 @@ public class TargetView extends TargetViewBase {
             button.setOnClickListener(v -> {
                 if (currentArrow < round.arrowsPerPasse) {
                     mPasse.shot[currentArrow].zone = zone.zone;
-                    mPasse.shot[currentArrow].x = -1;
-                    mPasse.shot[currentArrow].y = -1;
-                    mPasseDrawer.setSelection(currentArrow,
-                            initAnimationPositions(currentArrow),
-                            mKeyboardMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
+                    mPasse.shot[currentArrow].x = round.target.zoneToX(zone.zone);
+                    mPasse.shot[currentArrow].y = 0;
+                    mPasseDrawer
+                            .setSelection(currentArrow, initAnimationPositions(currentArrow), 0);
 
                     if (currentArrow == lastSetArrow + 1) {
                         lastSetArrow++;
@@ -397,21 +391,26 @@ public class TargetView extends TargetViewBase {
             });
             line.addView(button);
         }
+
+        LinearLayout line_s = (LinearLayout) keyboard.findViewById(R.id.lines);
+        line_s.setWeightSum(lines);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Shot getShotFromPos(float x, float y) {
-        int rings = round.target.getZones();
+        // For keyboard mode no selection via target is allowed
+        if (mKeyboardMode) {
+            return null;
+        }
+
+        // Create Shot object
         Shot s = new Shot(currentArrow);
         s.x = (x - orgMidX) / (orgRadius - 30 * density);
         s.y = (y - orgMidY) / (orgRadius - 30 * density);
-
         s.zone = round.target.getZoneFromPoint(s.x, s.y);
-
-        // Correct points_zone
-        if (s.zone < -1 || s.zone >= rings) {
-            s.zone = Shot.MISS;
-        }
         return s;
     }
 
@@ -576,7 +575,7 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void onArrowChanged(int i) {
-        if (arrowNumbers.isEmpty()) {
+        if (arrowNumbers.isEmpty() || mPasse.shot[currentArrow].arrow != -1) {
             super.onArrowChanged(i);
         } else {
             List<Integer> numbersLeft = new ArrayList<>(arrowNumbers);

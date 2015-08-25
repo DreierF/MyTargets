@@ -283,7 +283,7 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
                 return i;
             }
         }
-        return -1;
+        return Shot.MISS;
     }
 
     private boolean scoresAsOutSideIn(int i) {

@@ -198,7 +198,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     void updatePasse() {
         assert getActionBar() != null;
         prev.setEnabled(curPasse > 0 || template.index > 0);
-        next.setEnabled(curPasse < savedPasses && curPasse < template.passes ||
+        next.setEnabled(curPasse+1 < savedPasses && curPasse+1 < template.passes ||
                 rounds.size() > template.index + 1);
 
         getSupportActionBar().setTitle(getString(R.string.passe) + " " + (curPasse + 1));

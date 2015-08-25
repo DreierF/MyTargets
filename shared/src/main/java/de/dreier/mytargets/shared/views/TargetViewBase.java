@@ -118,8 +118,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             mPasse.shot[currentArrow].zone = shot.zone;
             mPasse.shot[currentArrow].x = shot.x;
             mPasse.shot[currentArrow].y = shot.y;
-            mPasseDrawer.setSelection(currentArrow, initAnimationPositions(currentArrow),
-                    mKeyboardMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
+            mPasseDrawer.setSelection(currentArrow, initAnimationPositions(currentArrow), 0);
             invalidate();
         }
 
@@ -146,10 +145,18 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     private void animateCircle(int i) {
-        if (i > -1 && i < round.arrowsPerPasse && mPasse.shot[i].zone >= -1) {
-            mPasseDrawer.animateToSelection(i, initAnimationPositions(i), mKeyboardMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
+        Coordinate pos = null;
+        int nextSel = i;
+        if (i > -1 && i < round.arrowsPerPasse && mPasse.shot[i].zone > Shot.NOTHING_SELECTED) {
+            pos = initAnimationPositions(i);
         } else {
-            mPasseDrawer.animateToSelection(PasseDrawer.NO_SELECTION, null, mKeyboardMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
+            nextSel = PasseDrawer.NO_SELECTION;
+        }
+        if (mKeyboardMode) {
+            mPasseDrawer.setSelection(nextSel, pos, 0);
+            invalidate();
+        } else {
+            mPasseDrawer.animateToSelection(nextSel, pos, 0);
         }
         currentArrow = i;
     }
@@ -157,8 +164,16 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected void animateFromZoomSpot() {
     }
 
-    protected void animateToZoomSpot() {}
+    protected void animateToZoomSpot() {
+    }
 
+    /**
+     * Creates a {@link Shot} object given a position
+     *
+     * @param x X-Coordinate
+     * @param y Y-Coordinate
+     * @return Returns a fully populated {@link Shot} object or null if the position is not a valid shot
+     */
     protected abstract Shot getShotFromPos(float x, float y);
 
     protected abstract boolean selectPreviousShots(MotionEvent motionEvent, float x, float y);
