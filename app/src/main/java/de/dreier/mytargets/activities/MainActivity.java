@@ -47,9 +47,9 @@ public class MainActivity extends AppCompatActivity
         View.OnClickListener, ViewPager.OnPageChangeListener {
 
     private static boolean shownThisTime = false;
-    protected FloatingActionButton mFab;
-    protected View mNewLayout;
-    protected TextView mNewText;
+    private FloatingActionButton mFab;
+    private View mNewLayout;
+    private TextView mNewText;
     private ViewPager viewPager;
 
     @Override
@@ -170,8 +170,8 @@ public class MainActivity extends AppCompatActivity
         overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
-    final boolean[] empty = new boolean[3];
-    final int[] stringRes = new int[3];
+    private final boolean[] empty = new boolean[3];
+    private final int[] stringRes = new int[3];
 
     {
         stringRes[0] = R.string.new_training;

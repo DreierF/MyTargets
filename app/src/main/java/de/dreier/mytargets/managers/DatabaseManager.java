@@ -400,7 +400,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return list;
     }
 
-    public Map<Pair<Integer, String>, Integer> getTrainingScoreDistribution(long training) {
+    private Map<Pair<Integer, String>, Integer> getTrainingScoreDistribution(long training) {
         Cursor cursor = db
                 .rawQuery("SELECT a.target, a.scoring_style, s.points, s.arrow_index, COUNT(*) " +
                         "FROM ROUND r " +
@@ -658,7 +658,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return r;
     }
 
-    public Passe getPasse(long passeId) {
+    private Passe getPasse(long passeId) {
         String[] cols = {ID, Shot.PASSE, Shot.ZONE, Shot.X, Shot.Y, Shot.COMMENT, Shot.ARROW,
                 Shot.INDEX};
         Cursor res = db
@@ -878,7 +878,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
     }
 
-    public void updateArrowNumbers(long arrowId, List<Integer> arrowNumbersList) {
+    private void updateArrowNumbers(long arrowId, List<Integer> arrowNumbersList) {
         db.delete(TABLE_NUMBER, NUMBER_ARROW + "=" + arrowId, null);
         for (Integer number : arrowNumbersList) {
             ContentValues values = new ContentValues();
@@ -1106,7 +1106,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return distances;
     }
 
-    public static void cleanup(SQLiteDatabase db) {
+    private static void cleanup(SQLiteDatabase db) {
         // Clean up rounds
         db.execSQL("DELETE FROM ROUND WHERE _id IN (SELECT r._id " +
                 "FROM ROUND r LEFT JOIN TRAINING t ON t._id=r.training " +

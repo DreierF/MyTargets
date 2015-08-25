@@ -32,7 +32,6 @@ public class DynamicItemLayout<T> extends LinearLayout implements View.OnClickLi
     }
 
     private Class<T> clazz;
-    private Button addButton;
     private int layoutResource;
     private boolean rebind = false;
     private OnBindListener<T> listener;
@@ -56,7 +55,7 @@ public class DynamicItemLayout<T> extends LinearLayout implements View.OnClickLi
     private void init() {
         LayoutInflater.from(getContext()).inflate(
                 R.layout.layout_add_button, this, true);
-        addButton = (Button) findViewById(R.id.add_button);
+        Button addButton = (Button) findViewById(R.id.add_button);
         addButton.setOnClickListener(this);
     }
 
@@ -127,7 +126,7 @@ public class DynamicItemLayout<T> extends LinearLayout implements View.OnClickLi
         inflateView(list.size(), item);
     }
 
-    public void addItem(int index, T item) {
+    private void addItem(int index, T item) {
         inflateView(index, item);
         rebindViews(index + 1);
     }

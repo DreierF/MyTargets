@@ -121,7 +121,7 @@ public class EditStandardRoundFragment extends Fragment
         return super.onOptionsItemSelected(item);
     }
 
-    void onSave() {
+    private void onSave() {
         StandardRound standardRound = new StandardRound();
         standardRound.setId(-1);
         standardRound.club = StandardRound.CUSTOM;

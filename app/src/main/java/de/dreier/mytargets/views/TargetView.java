@@ -59,7 +59,7 @@ public class TargetView extends TargetViewBase {
     private Timer longPressTimer;
     private final Handler h = new Handler();
     private float oldRadius;
-    RectF[] spotRects;
+    private RectF[] spotRects;
     private float orgRadius, orgMidX, orgMidY;
     private LinearLayout keyboard;
     private boolean spotFocused = false;

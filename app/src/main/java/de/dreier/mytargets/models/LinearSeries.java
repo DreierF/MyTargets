@@ -23,7 +23,7 @@ public class LinearSeries {
     private final Paint mPaint = new Paint();
 
     private final SortedSet<LinearPoint> mPoints = Collections
-            .synchronizedSortedSet(new TreeSet<LinearPoint>());
+            .synchronizedSortedSet(new TreeSet<>());
 
     private long mMinX = Long.MAX_VALUE;
     private long mMaxX = Long.MIN_VALUE;
@@ -104,7 +104,7 @@ public class LinearSeries {
         }
     }
 
-    void recalculateRange() {
+    private void recalculateRange() {
         resetRange();
 
         for (LinearPoint point : mPoints) {

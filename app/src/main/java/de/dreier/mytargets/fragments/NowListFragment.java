@@ -28,7 +28,7 @@ import de.dreier.mytargets.shared.models.IIdProvider;
 public abstract class NowListFragment<T extends IIdProvider> extends NowListFragmentBase<T> {
 
     NowListAdapter<T> mAdapter;
-    protected OnItemSelectedListener listener;
+    private OnItemSelectedListener listener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -25,8 +25,8 @@ import java.util.Map;
  * An Inventory is returned by such methods as {@link IabHelper#queryInventory}.
  */
 public class Inventory {
-    final Map<String, SkuDetails> mSkuMap = new HashMap<String, SkuDetails>();
-    final Map<String, Purchase> mPurchaseMap = new HashMap<String, Purchase>();
+    final Map<String, SkuDetails> mSkuMap = new HashMap<>();
+    final Map<String, Purchase> mPurchaseMap = new HashMap<>();
 
     Inventory() {
     }
@@ -77,14 +77,14 @@ public class Inventory {
      * Returns a list of all owned product IDs.
      */
     List<String> getAllOwnedSkus() {
-        return new ArrayList<String>(mPurchaseMap.keySet());
+        return new ArrayList<>(mPurchaseMap.keySet());
     }
 
     /**
      * Returns a list of all owned product IDs of a given type
      */
     List<String> getAllOwnedSkus(String itemType) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         for (Purchase p : mPurchaseMap.values()) {
             if (p.getItemType().equals(itemType)) {
                 result.add(p.getSku());
@@ -97,7 +97,7 @@ public class Inventory {
      * Returns a list of all purchases.
      */
     List<Purchase> getAllPurchases() {
-        return new ArrayList<Purchase>(mPurchaseMap.values());
+        return new ArrayList<>(mPurchaseMap.values());
     }
 
     void addSkuDetails(SkuDetails d) {

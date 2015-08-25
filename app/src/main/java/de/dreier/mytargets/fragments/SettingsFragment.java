@@ -182,7 +182,7 @@ public class SettingsFragment extends PreferenceFragment
         }
     }
 
-    void showFilePicker() {
+    private void showFilePicker() {
         Intent getContentIntent = FileUtils.createGetContentIntent();
         Intent intent = Intent.createChooser(getContentIntent, getString(R.string.select_a_file));
         startActivityForResult(intent, 1);
@@ -224,7 +224,7 @@ public class SettingsFragment extends PreferenceFragment
         setSecondsSummary("timer_warn_time", "30");
     }
 
-    void setSecondsSummary(String key, String def) {
+    private void setSecondsSummary(String key, String def) {
         Preference pref = findPreference(key);
         int sec;
         try {

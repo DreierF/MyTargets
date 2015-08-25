@@ -17,7 +17,6 @@
   <string name="new_bow">új íj</string>
   <string name="new_arrow">Új nyílvesszõ</string>
   <string name="new_round">Új kör</string>
-  <string name="new_passe">Új sorozat</string>
   <plurals name="training_selected">
     <item quantity="one">%d edzés kiválasztása</item>
     <item quantity="other">%d edzés kiválasztása</item>
@@ -30,10 +29,6 @@
     <item quantity="one">%d nyílvesszõk kiválasztása</item>
     <item quantity="other">%d nyílvesszõk kiválasztása</item>
   </plurals>
-  <plurals name="round_selected">
-    <item quantity="one">%d forduló kiválasztása</item>
-    <item quantity="other">%d forduló kiválasztása</item>
-  </plurals>
   <plurals name="passe_selected">
     <item quantity="one">%d sorozat kiválasztása</item>
     <item quantity="other">%d sorozat kiválasztása</item>
@@ -44,10 +39,9 @@
   <string name="share">Megosztás</string>
   <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$sThis makes a total of %2$d out of %3$d rings.</string>
   <string name="d_times_s">%1$d times %2$s\n</string>
-  <string name="comments">Hozzászólás</string>
   <string name="text">Szöveg</string>
   <string name="dispersion_pattern">Szórás kép</string>
-  <string name="sharing_failed">Sikertelen megosztás!</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <string name="send_exported">Küldött adat</string>
   <string name="exporting_failed">Küldés sikertelen!</string>
   <string name="add_bow">Íj hozzáadása</string>
@@ -92,37 +86,20 @@
     <item quantity="other">%d nyílvesszõk</item>
   </plurals>
   <string name="target_face">Target face</string>
-  <string name="title_compound">Összetett?</string>
-  <string name="msg_compound_type">Milyen íj tipust használsz? (There is a difference in how many points you get for the golden rings)</string>
-  <string name="other_bow">Más íj</string>
   <string name="scoreboard">Eredményjelzõ</string>
   <string name="arrows">Nyílvesszõk</string>
   <string name="sum">Összeg</string>
   <string name="carry">Hordás</string>
   <string name="action_print">Nyomtatás</string>
-  <string name="nine">Kilences</string>
-  <string name="ten_x">Tíz+X</string>
   <string name="average">Átlag</string>
-  <string name="switch_mode">Beviteli mód váltás</string>
   <string name="show_all">Összes becsapódás</string>
   <string name="comment">Komment</string>
-  <plurals name="passes_finished">
-    <item quantity="one">%d Befejezett sorozat</item>
-    <item quantity="other">%d Befejezett sorozat</item>
-  </plurals>
-  <string name="passes_finished_now_what">Befejezted a fordulót. Mit szeretnél csinálni?</string>
-  <string name="continue_with_next">Continue</string>
   <string name="all_trainings">Edzések</string>
   <string name="entire_training">Teljes edzés</string>
   <string name="current_round">Jelenlegi forduló</string>
   <string name="select_a_file">Fájl kiválasztása</string>
   <string name="dir_not_created">Mappa nem hozható létre!</string>
-  <string name="backup_successful">Mentés sikeres!</string>
-  <string name="backup_saved_as">Mentés elmentve \'%s\'.</string>
   <string name="backup_failed">Mentés sikertelen!</string>
-  <string name="backup_error">Hiba történt mentés közben:\n%s</string>
-  <string name="sd_card_not_available_title">SD kártya nem elérhetõ!</string>
-  <string name="sd_card_not_available_desc">Csatlakoztassa az SD kártyát és próbálja újra!</string>
   <string name="import_successful">Importálás sikeres!</string>
   <string name="import_failed">Importálás sikertelen!</string>
   <string name="file_not_found">A fájl nem található!</string>
@@ -164,26 +141,21 @@
   <string name="data">Adat</string>
   <string name="create_backup_on_sd">Mentés SD kártyára</string>
   <string name="restore_backup">Mentés visszaállítása</string>
-  <string name="switch_view">Switch view mode</string>
   <string name="weather">Weather</string>
   <string name="environment">Environment</string>
   <string name="wind">Wind</string>
   <string name="wind_speed">Wind speed</string>
   <string name="wind_direction">Wind direction</string>
   <string name="location">Location</string>
-  <string name="sight_setting_removed">Sight setting deleted</string>
+  <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Metric</string>
   <string name="imperial">Imperial</string>
-  <string name="default_unit">true</string>
-  <string name="unit">Unit</string>
   <string name="undo">Undo</string>
-  <string name="general">General</string>
   <string name="standard_rounds">Standard rounds</string>
   <string name="expand_collapse">Expand/Collapse</string>
   <string name="new_round_template">New template</string>
   <string name="arrow_numbers">Arrow numbers</string>
-  <string name="rounds">Rounds</string>
-  <string name="round_removed">One round deleted!</string>
+  <string name="round_removed">Round deleted!</string>
   <string name="custom_round">Custom round</string>
   <string name="filter">Filter</string>
   <string name="club">Club</string>

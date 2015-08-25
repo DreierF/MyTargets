@@ -57,10 +57,10 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
     private long mTraining;
     private ArrayList<Round> mRounds;
     private FloatingActionButton mFab;
-    private boolean mTargetViewMode = false;
+    private final boolean mTargetViewMode = false;
     private View mNewLayout;
     private TextView mNewText;
-    private boolean[] equals = new boolean[2];
+    private final boolean[] equals = new boolean[2];
 
     public PasseFragment() {
     }
@@ -128,7 +128,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         }
     }
 
-    void setRoundInfo() {
+    private void setRoundInfo() {
         TextView info = (TextView) activity.findViewById(R.id.detail_round_info);
         TextView tvScore = (TextView) activity.findViewById(R.id.detail_score);
 
@@ -151,7 +151,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.round, menu);
+        inflater.inflate(R.menu.training, menu);
     }
 
     @Override
@@ -189,7 +189,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         }
     }
 
-    void showShareDialog() {
+    private void showShareDialog() {
         new BottomSheet.Builder(getActivity())
                 .title(R.string.share)
                 .grid()
@@ -215,7 +215,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
     }
 
     /* Called after the user selected with items he wants to share */
-    public void shareImage(int typ) {
+    private void shareImage(int typ) {
         // Construct share intent
         new Thread(() -> {
             try {
@@ -224,7 +224,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
                 if (typ == 2) {
                     new TargetImage().generateBitmap(activity, 800, mTraining, f);
                 } else {
-                    new ScoreboardImage().generateBitmap(activity, mTraining, false, f);
+                    new ScoreboardImage().generateBitmap(activity, mTraining, f);
                 }
 
                 // Build and fire intent to ask for share provider

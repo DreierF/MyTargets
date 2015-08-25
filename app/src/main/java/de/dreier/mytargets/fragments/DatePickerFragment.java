@@ -10,9 +10,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-/**
- * Created by Florian on 14.01.2015.
- */
 public class DatePickerFragment extends DialogFragment {
 
     public static final String ARG_CURRENT_DATE = "current_date";

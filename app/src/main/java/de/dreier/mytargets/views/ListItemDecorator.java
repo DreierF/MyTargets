@@ -16,7 +16,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
 
 
-public class ListItemDecorator extends RecyclerView.ItemDecoration {
+class ListItemDecorator extends RecyclerView.ItemDecoration {
     private final int paddingBottom;
 
     public ListItemDecorator(Context context) {

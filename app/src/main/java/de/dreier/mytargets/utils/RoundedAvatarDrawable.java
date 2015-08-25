@@ -88,11 +88,6 @@ public class RoundedAvatarDrawable extends Drawable {
         return mBitmapHeight;
     }
 
-    public void setAntiAlias(boolean aa) {
-        mPaint.setAntiAlias(aa);
-        invalidateSelf();
-    }
-
     @Override
     public void setFilterBitmap(boolean filter) {
         mPaint.setFilterBitmap(filter);
@@ -104,10 +99,4 @@ public class RoundedAvatarDrawable extends Drawable {
         mPaint.setDither(dither);
         invalidateSelf();
     }
-
-    protected Paint getPaint() {
-        return mPaint;
-    }
-
-    // TODO allow set and use target density, mutate, constant state, changing configurations, etc.
 }

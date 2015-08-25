@@ -283,7 +283,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         return super.onOptionsItemSelected(item);
     }
 
-    void onSaveTraining() {
+    private void onSaveTraining() {
         DatabaseManager db = DatabaseManager.getInstance(getActivity());
         String title = training.getText().toString();
         Training training = new Training();

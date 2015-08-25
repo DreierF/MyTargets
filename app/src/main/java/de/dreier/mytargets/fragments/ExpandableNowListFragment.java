@@ -7,7 +7,7 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -50,7 +50,7 @@ public abstract class ExpandableNowListFragment<H extends IdProvider, C extends 
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         this.activity = (AppCompatActivity) getActivity();
     }

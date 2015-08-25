@@ -19,7 +19,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.StatisticsFragment;
 
 public class StatisticsActivity extends AppCompatActivity {
-    public static final String ROUND_ID = "round_id";
+    private static final String ROUND_ID = "round_id";
     public static final String TRAINING_ID = "training_id";
     private long mTraining;
     private long mRound;

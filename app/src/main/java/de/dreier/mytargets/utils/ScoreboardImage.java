@@ -9,7 +9,6 @@ package de.dreier.mytargets.utils;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.Picture;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -25,11 +24,11 @@ import de.dreier.mytargets.shared.utils.BitmapUtils;
 public class ScoreboardImage {
     private Bitmap b;
 
-    public void generateBitmap(final Activity context, final long mRound, boolean dispersion_pattern, final File f) {
+    public void generateBitmap(final Activity context, final long mRound, final File f) {
 
         // Generate html content
         final String content = ScoreboardUtils
-                .getHTMLString(context, mRound, dispersion_pattern);
+                .getHTMLString(context, mRound, false);
 
         final CountDownLatch signal = new CountDownLatch(1);
         context.runOnUiThread(() -> {
@@ -47,29 +46,26 @@ public class ScoreboardImage {
             // Render html to bitmap
             webView.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8",
                     "");
-            webView.setPictureListener(new WebView.PictureListener() {
+            webView.setPictureListener((view, picture) -> {
+                picture = webView.capturePicture();
 
-                public void onNewPicture(WebView view, Picture picture) {
-                    picture = webView.capturePicture();
+                b = BitmapUtils.pictureDrawable2Bitmap(picture);
 
-                    b = BitmapUtils.pictureDrawable2Bitmap(picture);
-
-                    // Write bitmap to stream
-                    try {
-                        OutputStream fOut = new FileOutputStream(f);
-                        b.compress(Bitmap.CompressFormat.PNG, 50, fOut);
-                        fOut.flush();
-                        fOut.close();
-                        b.recycle();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    signal.countDown();
-
-                    // Remove WebView from layout
-                    container.removeView(webView);
+                // Write bitmap to stream
+                try {
+                    OutputStream fOut = new FileOutputStream(f);
+                    b.compress(Bitmap.CompressFormat.PNG, 50, fOut);
+                    fOut.flush();
+                    fOut.close();
+                    b.recycle();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+                signal.countDown();
+
+                // Remove WebView from layout
+                container.removeView(webView);
             });
         });
 

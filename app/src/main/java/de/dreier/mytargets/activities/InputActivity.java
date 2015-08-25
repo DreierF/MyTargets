@@ -158,7 +158,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         return true;
     }
 
-    void setPasse(int passe) {
+    private void setPasse(int passe) {
         if (passe >= template.passes) {
             if (rounds.size() > template.index + 1) {
                 mRound = rounds.get(template.index + 1);
@@ -195,7 +195,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         updatePasse();
     }
 
-    void updatePasse() {
+    private void updatePasse() {
         assert getActionBar() != null;
         prev.setEnabled(curPasse > 0 || template.index > 0);
         next.setEnabled(curPasse < savedPasses && curPasse+1 < template.passes ||

@@ -17,7 +17,6 @@
   <string name="new_bow">Yeni yay</string>
   <string name="new_arrow">Yeni ok</string>
   <string name="new_round">Yeni tur</string>
-  <string name="new_passe">Yeni Seri</string>
   <plurals name="training_selected">
     <item quantity="one">Bir antrenman seçildi</item>
     <item quantity="other">%d antrenman seçildi</item>
@@ -30,10 +29,6 @@
     <item quantity="one">Bir ok seçildi</item>
     <item quantity="other">%d ok seçildi</item>
   </plurals>
-  <plurals name="round_selected">
-    <item quantity="one">Bir tur seçildi</item>
-    <item quantity="other">%d tur seçildi</item>
-  </plurals>
   <plurals name="passe_selected">
     <item quantity="one">Bir seri seçildi</item>
     <item quantity="other">%d seri seçildi</item>
@@ -44,10 +39,9 @@
   <string name="share">Paylaş</string>
   <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$sThis makes a total of %2$d out of %3$d rings.</string>
   <string name="d_times_s">%1$d times %2$s\n</string>
-  <string name="comments">Yorum</string>
   <string name="text">Metin</string>
   <string name="dispersion_pattern">Dağılım şekli</string>
-  <string name="sharing_failed">Paylaşım başarısız oldu!</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <string name="send_exported">Aktarılan verileri gönder</string>
   <string name="exporting_failed">Dışa aktarma başarısız oldu!</string>
   <string name="add_bow">Yay ekle</string>
@@ -92,37 +86,20 @@
     <item quantity="other">%d ok</item>
   </plurals>
   <string name="target_face">Hedef Yüzü</string>
-  <string name="title_compound">Makaralı?</string>
-  <string name="msg_compound_type">Hangi tip yay kullanıyorsunuz?(Sarı halka puanları arasında fark vardır)</string>
-  <string name="other_bow">Başka yay</string>
   <string name="scoreboard">Puan tablosu</string>
   <string name="arrows">Oklar</string>
   <string name="sum">Toplam</string>
   <string name="carry">Ara toplam</string>
   <string name="action_print">Yazdır</string>
-  <string name="nine">Dokuz</string>
-  <string name="ten_x">On + X</string>
   <string name="average">Ortalama</string>
-  <string name="switch_mode">Giriş moda geç</string>
   <string name="show_all">Tüm etkileri göster</string>
   <string name="comment">Yorum</string>
-  <plurals name="passes_finished">
-    <item quantity="one">Bir seri bitti</item>
-    <item quantity="other">%d seri bitti</item>
-  </plurals>
-  <string name="passes_finished_now_what">Turu tamamladınız. Ne yapmak istersiniz?</string>
-  <string name="continue_with_next">Devam Et</string>
   <string name="all_trainings">Tüm antrenmanlar</string>
   <string name="entire_training">Tüm antrenman</string>
   <string name="current_round">Geçerli tur</string>
   <string name="select_a_file">Dosya seç</string>
   <string name="dir_not_created">Dizin oluşturulamadı!</string>
-  <string name="backup_successful">Yedekleme başarılı!</string>
-  <string name="backup_saved_as">Yedekleme \'%s\' kaydedildi.</string>
   <string name="backup_failed">Yedekleme başarısız oldu!</string>
-  <string name="backup_error">Yedekleme oluşturulurken bir hata oluştu : \n%s</string>
-  <string name="sd_card_not_available_title">SD kart mevcut değil!</string>
-  <string name="sd_card_not_available_desc">Lütfen sd kart takın ve tekrar deneyin!</string>
   <string name="import_successful">Aktarma başarılı!</string>
   <string name="import_failed">Aktarma başarısız!</string>
   <string name="file_not_found">Dosya bulunamadı!</string>
@@ -164,26 +141,21 @@
   <string name="data">Veri</string>
   <string name="create_backup_on_sd">Sd kartta bir yedek oluşturur</string>
   <string name="restore_backup">Bir yedeğini geri yükle</string>
-  <string name="switch_view">Görünüm moda geç</string>
   <string name="weather">Hava durumu</string>
   <string name="environment">Ortam</string>
   <string name="wind">Rüzgar</string>
   <string name="wind_speed">Rüzgar hızı</string>
   <string name="wind_direction">Rüzgar yönü</string>
   <string name="location">Yer</string>
-  <string name="sight_setting_removed">Nişangah ayarı silindi</string>
+  <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Metrik</string>
   <string name="imperial">Imperial</string>
-  <string name="default_unit">true</string>
-  <string name="unit">Birim</string>
   <string name="undo">Geri Al</string>
-  <string name="general">Genel</string>
   <string name="standard_rounds">Standart tur</string>
   <string name="expand_collapse">Genişlet/Daralt</string>
   <string name="new_round_template">Yeni şablon</string>
   <string name="arrow_numbers">Ok numaraları</string>
-  <string name="rounds">Turlar</string>
-  <string name="round_removed">Bir tur silindi!</string>
+  <string name="round_removed">Round deleted!</string>
   <string name="custom_round">Özel Tur</string>
   <string name="filter">Filtrele</string>
   <string name="club">Kulüp</string>

@@ -34,7 +34,7 @@ public class CardItemDecorator extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        int position = parent.getChildPosition(view);
+        int position = parent.getChildAdapterPosition(view);
         if (position % gridSize == 0) {
             outRect.left = spaceHorizontal;
         } else {

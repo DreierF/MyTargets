@@ -17,7 +17,6 @@
   <string name="new_bow">Nieuwe boog</string>
   <string name="new_arrow">Nieuwe pijl</string>
   <string name="new_round">Nieuwe ronde</string>
-  <string name="new_passe">Nieuwe beurt</string>
   <plurals name="training_selected">
     <item quantity="one">Eén training geselecteerd</item>
     <item quantity="other">%d trainingen geselecteerd</item>
@@ -30,10 +29,6 @@
     <item quantity="one">Eén pijl geselecteerd</item>
     <item quantity="other">%d pijlen geselecteerd</item>
   </plurals>
-  <plurals name="round_selected">
-    <item quantity="one">Eén ronde geselecteerd</item>
-    <item quantity="other">%d ronden geselecteerd</item>
-  </plurals>
   <plurals name="passe_selected">
     <item quantity="one">Eén beurt geselecteerd</item>
     <item quantity="other">%d beurten geselecteerd</item>
@@ -44,10 +39,9 @@
   <string name="share">Delen</string>
   <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$sThis makes a total of %2$d out of %3$d rings.</string>
   <string name="d_times_s">%1$d keer %2$s\n</string>
-  <string name="comments">Opmerkingen</string>
   <string name="text">Tekst</string>
   <string name="dispersion_pattern">Verspreidingspatroon</string>
-  <string name="sharing_failed">Delen mislukt!</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <string name="send_exported">Geëxporteerde data versturen</string>
   <string name="exporting_failed">Exporteren mislukt!</string>
   <string name="add_bow">Boog toevoegen</string>
@@ -92,37 +86,20 @@
     <item quantity="other">%d pijlen</item>
   </plurals>
   <string name="target_face">Blazoen</string>
-  <string name="title_compound">Compound?</string>
-  <string name="msg_compound_type">Welk boogtype gebruikt u? (Er is een verschil in punten binnen de gouden ringen)</string>
-  <string name="other_bow">Andere boog</string>
   <string name="scoreboard">Scorebord</string>
   <string name="arrows">Pijlen</string>
   <string name="sum">Sub-Totaal</string>
   <string name="carry">Totaal</string>
   <string name="action_print">Afdrukken</string>
-  <string name="nine">Negen</string>
-  <string name="ten_x">Tien+X</string>
   <string name="average">Gemiddelde</string>
-  <string name="switch_mode">Wijzig input modus</string>
   <string name="show_all">Toon alle schoten</string>
   <string name="comment">Opmerking</string>
-  <plurals name="passes_finished">
-    <item quantity="one">Eén beurt afgewerkte</item>
-    <item quantity="other">%d beurten afgewerkt</item>
-  </plurals>
-  <string name="passes_finished_now_what">Einde van de ronde. Wat wilt u nu doen?</string>
-  <string name="continue_with_next">Doorgaan</string>
   <string name="all_trainings">Alle trainingen</string>
   <string name="entire_training">Hele training</string>
   <string name="current_round">Huidige ronde</string>
   <string name="select_a_file">Kies een bestand</string>
   <string name="dir_not_created">Map kan niet worden aangemaakt!</string>
-  <string name="backup_successful">Backup gelukt!</string>
-  <string name="backup_saved_as">Backup is opgeslagen  als \'%s\'.</string>
   <string name="backup_failed">Backup mislukt!</string>
-  <string name="backup_error">Er is bij de backup een fout opgetreden:\n%s</string>
-  <string name="sd_card_not_available_title">SD card niet beschikbaar!</string>
-  <string name="sd_card_not_available_desc">Plaats de sd card en probeer opnieuw!</string>
   <string name="import_successful">Importeren gelukt!</string>
   <string name="import_failed">Importeren mislukt!</string>
   <string name="file_not_found">Bestand niet gevonden!</string>
@@ -164,26 +141,21 @@
   <string name="data">Gegevens</string>
   <string name="create_backup_on_sd">Back-up van de opgeslagen gegevens</string>
   <string name="restore_backup">Gegevens importeren</string>
-  <string name="switch_view">Wijzig weergavemodus</string>
   <string name="weather">Weer</string>
   <string name="environment">Omgeving</string>
   <string name="wind">Wind</string>
   <string name="wind_speed">Windsnelheid</string>
   <string name="wind_direction">Windrichting</string>
   <string name="location">Locatie</string>
-  <string name="sight_setting_removed">Vizier instelling verwijderd</string>
+  <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Metric</string>
   <string name="imperial">Imperial</string>
-  <string name="default_unit">true</string>
-  <string name="unit">Unit</string>
   <string name="undo">Ongedaan maken</string>
-  <string name="general">General</string>
   <string name="standard_rounds">Standard rounds</string>
   <string name="expand_collapse">Expand/Collapse</string>
   <string name="new_round_template">New template</string>
   <string name="arrow_numbers">Arrow numbers</string>
-  <string name="rounds">Rounds</string>
-  <string name="round_removed">One round deleted!</string>
+  <string name="round_removed">Round deleted!</string>
   <string name="custom_round">Custom round</string>
   <string name="filter">Filter</string>
   <string name="club">Vereniging</string>

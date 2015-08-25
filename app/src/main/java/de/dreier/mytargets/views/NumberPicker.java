@@ -80,7 +80,6 @@ public class NumberPicker extends LinearLayout {
 
     @PluralsRes
     private int mTextPattern;
-    private Button increment, decrement;
 
     public void setOnValueChangedListener(OnValueChangedListener listener) {
         changeListener = listener;
@@ -119,7 +118,7 @@ public class NumberPicker extends LinearLayout {
     }
 
     private void initIncrementButton() {
-        increment = (Button) findViewById(R.id.number_increment);
+        Button increment = (Button) findViewById(R.id.number_increment);
 
         // Increment once for a click
         increment.setOnClickListener(v -> increment());
@@ -148,7 +147,7 @@ public class NumberPicker extends LinearLayout {
     }
 
     private void initDecrementButton() {
-        decrement = (Button) findViewById(R.id.number_decrement);
+        Button decrement = (Button) findViewById(R.id.number_decrement);
 
 
         // Decrement once for a click

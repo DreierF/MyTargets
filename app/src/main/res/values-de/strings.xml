@@ -17,7 +17,6 @@
   <string name="new_bow">Neuer Bogen</string>
   <string name="new_arrow">Neuer Pfeil</string>
   <string name="new_round">Neue Runde</string>
-  <string name="new_passe">Neue Passe</string>
   <plurals name="training_selected">
     <item quantity="one">Ein Training ausgewählt</item>
     <item quantity="other">%d Trainings ausgewählt</item>
@@ -30,10 +29,6 @@
     <item quantity="one">Ein Pfeil ausgewählt</item>
     <item quantity="other">%d Pfeile ausgewählt</item>
   </plurals>
-  <plurals name="round_selected">
-    <item quantity="one">Eine Runde ausgewählt</item>
-    <item quantity="other">%d Runden ausgewählt</item>
-  </plurals>
   <plurals name="passe_selected">
     <item quantity="one">Eine Passe ausgewählt</item>
     <item quantity="other">%d Passen ausgewählt</item>
@@ -44,7 +39,6 @@
   <string name="share">Teilen</string>
   <string name="my_share_text">Yeah, schaue dir mal meine Bogenschießergebnisse an. Ich habe:\n%1$sDas macht insgesamt %2$d von %3$d Ringe.</string>
   <string name="d_times_s">%1$d mal %2$s\n</string>
-  <string name="comments">Kommentare</string>
   <string name="text">Text</string>
   <string name="dispersion_pattern">Trefferbild</string>
   <string name="sharing_failed">Teilen fehlgeschlagen!</string>
@@ -92,37 +86,20 @@
     <item quantity="other">%d Pfeilen</item>
   </plurals>
   <string name="target_face">Auflage</string>
-  <string name="title_compound">Compound?</string>
-  <string name="msg_compound_type">Welchen Bogentyp verwendest du? (Es entscheidet wie viele Punkte du für die goldenen Ringe bekommst)</string>
-  <string name="other_bow">Anderer Bogen</string>
   <string name="scoreboard">Schießzettel</string>
   <string name="arrows">Pfeile</string>
   <string name="sum">Summe</string>
   <string name="carry">Übertrag</string>
   <string name="action_print">Drucken</string>
-  <string name="nine">Neuner</string>
-  <string name="ten_x">Zehner+X</string>
   <string name="average">Schnitt</string>
-  <string name="switch_mode">Wechsle Eingabe Modus</string>
   <string name="show_all">Zeige alle Schüsse</string>
   <string name="comment">Kommentar</string>
-  <plurals name="passes_finished">
-    <item quantity="one">Eine Passe beendet</item>
-    <item quantity="other">%d Passen beendet</item>
-  </plurals>
-  <string name="passes_finished_now_what">Du hast deine Runde beendet. Was möchtest du jetzt machen?</string>
-  <string name="continue_with_next">Weitermachen</string>
   <string name="all_trainings">Alle Trainings</string>
   <string name="entire_training">Gesamtes Training</string>
   <string name="current_round">Aktuelle Runde</string>
   <string name="select_a_file">Wähle eine Datei</string>
   <string name="dir_not_created">Ordner konnte nicht erstellt werden!</string>
-  <string name="backup_successful">Backup erfolgreich!</string>
-  <string name="backup_saved_as">Backup wurde unter \'%s\' gespeichert.</string>
   <string name="backup_failed">Backup gescheitert!</string>
-  <string name="backup_error">Beim Erstellen des Backups ist ein Fehler aufgetreten:\n%s</string>
-  <string name="sd_card_not_available_title">SD Karte nicht verfügbar!</string>
-  <string name="sd_card_not_available_desc">Bitte mounten Sie ihre SD Karte und versuchen Sie es anschließend erneut!</string>
   <string name="import_successful">Import erfolgreich!</string>
   <string name="import_failed">Import gescheitert!</string>
   <string name="file_not_found">Datei nicht gefunden!</string>
@@ -164,26 +141,21 @@
   <string name="data">Daten</string>
   <string name="create_backup_on_sd">Erzeugt ein Backup auf der SD-Karte</string>
   <string name="restore_backup">Importiert ein Backup</string>
-  <string name="switch_view">Wechsle Darstellung</string>
   <string name="weather">Wetter</string>
   <string name="environment">Umgebung</string>
   <string name="wind">Wind</string>
   <string name="wind_speed">Windgeschwindigkeit</string>
   <string name="wind_direction">Windrichtung</string>
   <string name="location">Standort</string>
-  <string name="sight_setting_removed">Visiereinstellung gelöscht</string>
+  <string name="sight_setting_removed">Visier Einstellung gelöscht!</string>
   <string name="metric">Metrisch</string>
   <string name="imperial">Imperial</string>
-  <string name="default_unit">true</string>
-  <string name="unit">Einheit</string>
   <string name="undo">Rückgängig</string>
-  <string name="general">Allgemein</string>
   <string name="standard_rounds">Standard Runden</string>
   <string name="expand_collapse">Ausklappen/Einklappen</string>
   <string name="new_round_template">Neue Vorlage</string>
   <string name="arrow_numbers">Pfeil Nummern</string>
-  <string name="rounds">Runden</string>
-  <string name="round_removed">Eine Runde gelöscht!</string>
+  <string name="round_removed">Round deleted!</string>
   <string name="custom_round">Benutzerdefinierte Runde</string>
   <string name="filter">Filtern</string>
   <string name="club">Verein</string>

@@ -17,7 +17,6 @@
   <string name="new_bow">קשת חדשה</string>
   <string name="new_arrow">חץ חדש</string>
   <string name="new_round">סבב חדש</string>
-  <string name="new_passe">פסה חדש</string>
   <plurals name="training_selected">
     <item quantity="one">נבחר אימון אחד</item>
     <item quantity="other">נבחרו %d אימונים</item>
@@ -30,12 +29,8 @@
     <item quantity="one">נבחר חץ אחד</item>
     <item quantity="other">נבחרו %d חצים</item>
   </plurals>
-  <plurals name="round_selected">
-    <item quantity="one">נבחר סבב אחד</item>
-    <item quantity="other">נבחרו %d סבבים</item>
-  </plurals>
   <plurals name="passe_selected">
-    <item quantity="one">One end selected</item>
+    <item quantity="one">%d end selected</item>
     <item quantity="other">%d ends selected</item>
   </plurals>
   <string name="edit">ערוך</string>
@@ -44,10 +39,9 @@
   <string name="share">שתף</string>
   <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$sThis makes a total of %2$d out of %3$d rings.</string>
   <string name="d_times_s">%1$d times %2$s\n</string>
-  <string name="comments">תגובות</string>
   <string name="text">טקסט</string>
   <string name="dispersion_pattern">דפוס הפיזור</string>
-  <string name="sharing_failed">שיתוף נכשל!</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <string name="send_exported">Send exported data</string>
   <string name="exporting_failed">ייצוא נכשל!</string>
   <string name="add_bow">הוספת קשת</string>
@@ -92,37 +86,20 @@
     <item quantity="other">%d arrows</item>
   </plurals>
   <string name="target_face">Target face</string>
-  <string name="title_compound">Compound?</string>
-  <string name="msg_compound_type">Which bow type are you using? (There is a difference in how many points you get for the golden rings)</string>
-  <string name="other_bow">Other bow</string>
   <string name="scoreboard">Scoreboard</string>
   <string name="arrows">Arrows</string>
   <string name="sum">Sum</string>
   <string name="carry">Carry</string>
   <string name="action_print">Print</string>
-  <string name="nine">Nine</string>
-  <string name="ten_x">Ten+X</string>
   <string name="average">Average</string>
-  <string name="switch_mode">Switch input mode</string>
   <string name="show_all">Show all impacts</string>
   <string name="comment">Comment</string>
-  <plurals name="passes_finished">
-    <item quantity="one">One end finished</item>
-    <item quantity="other">%d ends finished</item>
-  </plurals>
-  <string name="passes_finished_now_what">You have finished your round. What would you like to do now?</string>
-  <string name="continue_with_next">Continue</string>
   <string name="all_trainings">All trainings</string>
   <string name="entire_training">Entire training</string>
   <string name="current_round">Current round</string>
   <string name="select_a_file">Select a file</string>
   <string name="dir_not_created">Directory could not be created!</string>
-  <string name="backup_successful">Backup successful!</string>
-  <string name="backup_saved_as">Backup was saved as \'%s\'.</string>
   <string name="backup_failed">הגיבוי נכשל!</string>
-  <string name="backup_error">אירעה שגיאה בעת יצירת גיבוי: \n%s</string>
-  <string name="sd_card_not_available_title">כרטיס SD לא זמין!</string>
-  <string name="sd_card_not_available_desc">Please mount your sd card and try again!</string>
   <string name="import_successful">יבוא הושלם!</string>
   <string name="import_failed">ייבוא נכשל!</string>
   <string name="file_not_found">קובץ לא נמצא!</string>
@@ -164,26 +141,21 @@
   <string name="data">מידע</string>
   <string name="create_backup_on_sd">יוצר גיבוי על כרטיס sd</string>
   <string name="restore_backup">שחזר גיבוי</string>
-  <string name="switch_view">שנה מצב תצוגה</string>
   <string name="weather">מזג אוויר</string>
   <string name="environment">סביבה</string>
   <string name="wind">רוח</string>
   <string name="wind_speed">מהירות הרוח</string>
   <string name="wind_direction">כיוון הרוח</string>
   <string name="location">מיקום</string>
-  <string name="sight_setting_removed">הגדרת המראה נמחקה</string>
+  <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Metric</string>
   <string name="imperial">Imperial</string>
-  <string name="default_unit">true</string>
-  <string name="unit">Unit</string>
   <string name="undo">Undo</string>
-  <string name="general">General</string>
   <string name="standard_rounds">Standard rounds</string>
   <string name="expand_collapse">Expand/Collapse</string>
   <string name="new_round_template">New template</string>
   <string name="arrow_numbers">Arrow numbers</string>
-  <string name="rounds">Rounds</string>
-  <string name="round_removed">One round deleted!</string>
+  <string name="round_removed">Round deleted!</string>
   <string name="custom_round">Custom round</string>
   <string name="filter">Filter</string>
   <string name="club">Club</string>

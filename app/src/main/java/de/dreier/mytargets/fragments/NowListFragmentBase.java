@@ -42,7 +42,7 @@ public abstract class NowListFragmentBase<T extends IIdProvider> extends Fragmen
         implements OnCardClickListener<T> {
     public static final String TRAINING_ID = "training_id";
 
-    protected void startActivity(Class<?> activityClass) {
+    void startActivity(Class<?> activityClass) {
         Intent i = new Intent(getActivity(), activityClass);
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
@@ -67,7 +67,7 @@ public abstract class NowListFragmentBase<T extends IIdProvider> extends Fragmen
     DatabaseManager db;
     boolean mEditable = false;
     RecyclerView mRecyclerView;
-    protected View rootView;
+    View rootView;
     private ContentListener listener;
 
     @Override
@@ -88,7 +88,7 @@ public abstract class NowListFragmentBase<T extends IIdProvider> extends Fragmen
         return rootView;
     }
 
-    protected int getLayoutResource() {
+    int getLayoutResource() {
         return R.layout.fragment_list;
     }
 
@@ -107,7 +107,7 @@ public abstract class NowListFragmentBase<T extends IIdProvider> extends Fragmen
         init(getArguments(), savedInstanceState);
     }
 
-    protected void updateFabButton(List list) {
+    void updateFabButton(List list) {
         listener.onContentChanged(list.isEmpty(), newStringRes);
     }
 
@@ -154,7 +154,7 @@ public abstract class NowListFragmentBase<T extends IIdProvider> extends Fragmen
         }
     };
 
-    void remove(List<Integer> positions) {
+    private void remove(List<Integer> positions) {
         Collections.sort(positions);
         Collections.reverse(positions);
         final ArrayList<T> deleted = new ArrayList<>();
@@ -179,7 +179,7 @@ public abstract class NowListFragmentBase<T extends IIdProvider> extends Fragmen
 
     protected abstract void removeItem(int pos);
 
-    void updateTitle() {
+    private void updateTitle() {
         if (actionMode == null) {
             return;
         }

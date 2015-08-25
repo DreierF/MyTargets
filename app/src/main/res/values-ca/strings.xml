@@ -17,7 +17,6 @@
   <string name="new_bow">Nou arc</string>
   <string name="new_arrow">Nova fletxa</string>
   <string name="new_round">Nova ronda</string>
-  <string name="new_passe">Nova tirada</string>
   <plurals name="training_selected">
     <item quantity="one">Un entrenament seleccionat</item>
     <item quantity="other">%d entrenaments seleccionats</item>
@@ -30,10 +29,6 @@
     <item quantity="one">Una fletxa seleccionada</item>
     <item quantity="other">%d fletxes seleccionades</item>
   </plurals>
-  <plurals name="round_selected">
-    <item quantity="one">Una ronda seleccinada</item>
-    <item quantity="other">%d rondes seleccionades</item>
-  </plurals>
   <plurals name="passe_selected">
     <item quantity="one">Una tirada seleccionada</item>
     <item quantity="other">%d tirades seleccionades</item>
@@ -44,10 +39,9 @@
   <string name="share">Compartir</string>
   <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$sThis makes a total of %2$d out of %3$d rings.</string>
   <string name="d_times_s">%1$d times %2$s\n</string>
-  <string name="comments">Comentaris</string>
   <string name="text">Texte</string>
   <string name="dispersion_pattern">Agrupació de fletxes</string>
-  <string name="sharing_failed">Error al compartir!</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <string name="send_exported">Enviar dades</string>
   <string name="exporting_failed">Error al exportar!</string>
   <string name="add_bow">Afegir arc</string>
@@ -92,37 +86,20 @@
     <item quantity="other">%d fletxes</item>
   </plurals>
   <string name="target_face">Target face</string>
-  <string name="title_compound">Compost?</string>
-  <string name="msg_compound_type">Quin tipus d´arc estas utilitzant? (There is a difference in how many points you get for the golden rings)</string>
-  <string name="other_bow">Altre arc</string>
   <string name="scoreboard">Marcador</string>
   <string name="arrows">Fletxes</string>
   <string name="sum">Suma</string>
   <string name="carry">Total</string>
   <string name="action_print">Imprimir</string>
-  <string name="nine">Nou</string>
-  <string name="ten_x">Deu+X</string>
   <string name="average">Promig</string>
-  <string name="switch_mode">Canviar la manera d´entrada</string>
   <string name="show_all">Mostra tots els impactes</string>
   <string name="comment">Comentari</string>
-  <plurals name="passes_finished">
-    <item quantity="one">%d tirada acabada</item>
-    <item quantity="other">%d tirades acabades</item>
-  </plurals>
-  <string name="passes_finished_now_what">Has acabat la teva ronda.T´agradaria fer una altre?</string>
-  <string name="continue_with_next">Continue</string>
   <string name="all_trainings">Tots els entrenaments</string>
   <string name="entire_training">Tot el entrenament</string>
   <string name="current_round">Ronda</string>
   <string name="select_a_file">Selecciona un fitxer</string>
   <string name="dir_not_created">El directori podria no estat creat!</string>
-  <string name="backup_successful">Còpia de seguretat correcta!</string>
-  <string name="backup_saved_as">S´ha guardat còpia de seguretat com \'%s\'.</string>
   <string name="backup_failed">Còpia de seguretat fallida!</string>
-  <string name="backup_error">Ha hagut un error quan es creava la còpia de seguretat:\n%s</string>
-  <string name="sd_card_not_available_title">Targa SD no disponible!</string>
-  <string name="sd_card_not_available_desc">Siusplau possa la teva tarja SD i intenta-ho altre vegada!</string>
   <string name="import_successful">Importació correcta!</string>
   <string name="import_failed">Importació fallida!</string>
   <string name="file_not_found">Arxiu no trobat!</string>
@@ -164,26 +141,21 @@
   <string name="data">Dades</string>
   <string name="create_backup_on_sd">S´ha creat una còpia de seguretat en la tarja SD</string>
   <string name="restore_backup">Restaura una còpia de seguretat</string>
-  <string name="switch_view">Switch view mode</string>
   <string name="weather">Weather</string>
   <string name="environment">Environment</string>
   <string name="wind">Wind</string>
   <string name="wind_speed">Wind speed</string>
   <string name="wind_direction">Wind direction</string>
   <string name="location">Location</string>
-  <string name="sight_setting_removed">Sight setting deleted</string>
+  <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Metric</string>
   <string name="imperial">Imperial</string>
-  <string name="default_unit">true</string>
-  <string name="unit">Unit</string>
   <string name="undo">Desfés</string>
-  <string name="general">General</string>
   <string name="standard_rounds">Standard rounds</string>
   <string name="expand_collapse">Expand/Collapse</string>
   <string name="new_round_template">New template</string>
   <string name="arrow_numbers">Arrow numbers</string>
-  <string name="rounds">Rounds</string>
-  <string name="round_removed">One round deleted!</string>
+  <string name="round_removed">Round deleted!</string>
   <string name="custom_round">Custom round</string>
   <string name="filter">Filter</string>
   <string name="club">Club</string>

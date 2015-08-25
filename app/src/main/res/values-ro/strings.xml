@@ -17,29 +17,23 @@
   <string name="new_bow">New bow</string>
   <string name="new_arrow">New arrow</string>
   <string name="new_round">New round</string>
-  <string name="new_passe">New end</string>
   <plurals name="training_selected">
-    <item quantity="one">One training selected</item>
+    <item quantity="one">%d training selected</item>
     <item quantity="few">%d trainings selected</item>
     <item quantity="other">%d trainings selected</item>
   </plurals>
   <plurals name="bow_selected">
-    <item quantity="one">One bow selected</item>
+    <item quantity="one">%d bow selected</item>
     <item quantity="few">%d bows selected</item>
     <item quantity="other">%d bows selected</item>
   </plurals>
   <plurals name="arrow_selected">
-    <item quantity="one">One arrow selected</item>
+    <item quantity="one">%d arrow selected</item>
     <item quantity="few">%d arrows selected</item>
     <item quantity="other">%d arrows selected</item>
   </plurals>
-  <plurals name="round_selected">
-    <item quantity="one">One round selected</item>
-    <item quantity="few">%d rounds selected</item>
-    <item quantity="other">%d rounds selected</item>
-  </plurals>
   <plurals name="passe_selected">
-    <item quantity="one">One end selected</item>
+    <item quantity="one">%d end selected</item>
     <item quantity="few">%d ends selected</item>
     <item quantity="other">%d ends selected</item>
   </plurals>
@@ -49,7 +43,6 @@
   <string name="share">Share</string>
   <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$sThis makes a total of %2$d out of %3$d rings.</string>
   <string name="d_times_s">%1$d times %2$s\n</string>
-  <string name="comments">Comments</string>
   <string name="text">Text</string>
   <string name="dispersion_pattern">Dispersion pattern</string>
   <string name="sharing_failed">Sharing failed!</string>
@@ -99,38 +92,20 @@
     <item quantity="other">%d arrows</item>
   </plurals>
   <string name="target_face">Target face</string>
-  <string name="title_compound">Compound?</string>
-  <string name="msg_compound_type">Which bow type are you using? (There is a difference in how many points you get for the golden rings)</string>
-  <string name="other_bow">Other bow</string>
   <string name="scoreboard">Scoreboard</string>
   <string name="arrows">Arrows</string>
   <string name="sum">Sum</string>
   <string name="carry">Carry</string>
   <string name="action_print">Print</string>
-  <string name="nine">Nine</string>
-  <string name="ten_x">Ten+X</string>
   <string name="average">Average</string>
-  <string name="switch_mode">Switch input mode</string>
   <string name="show_all">Show all impacts</string>
   <string name="comment">Comment</string>
-  <plurals name="passes_finished">
-    <item quantity="one">One end finished</item>
-    <item quantity="few">%d ends finished</item>
-    <item quantity="other">%d ends finished</item>
-  </plurals>
-  <string name="passes_finished_now_what">You have finished your round. What would you like to do now?</string>
-  <string name="continue_with_next">Continue</string>
   <string name="all_trainings">All trainings</string>
   <string name="entire_training">Entire training</string>
   <string name="current_round">Current round</string>
   <string name="select_a_file">Select a file</string>
   <string name="dir_not_created">Directory could not be created!</string>
-  <string name="backup_successful">Backup successful!</string>
-  <string name="backup_saved_as">Backup was saved as \'%s\'.</string>
   <string name="backup_failed">Backup failed!</string>
-  <string name="backup_error">An error occurred while creating backup:\n%s</string>
-  <string name="sd_card_not_available_title">SD card not available!</string>
-  <string name="sd_card_not_available_desc">Please mount your sd card and try again!</string>
   <string name="import_successful">Import successful!</string>
   <string name="import_failed">Import failed!</string>
   <string name="file_not_found">File not found!</string>
@@ -173,26 +148,21 @@
   <string name="data">Data</string>
   <string name="create_backup_on_sd">Creates a backup on sd card</string>
   <string name="restore_backup">Restores a backup</string>
-  <string name="switch_view">Switch view mode</string>
   <string name="weather">Weather</string>
   <string name="environment">Environment</string>
   <string name="wind">Wind</string>
   <string name="wind_speed">Wind speed</string>
   <string name="wind_direction">Wind direction</string>
   <string name="location">Location</string>
-  <string name="sight_setting_removed">Sight setting deleted</string>
+  <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Metric</string>
   <string name="imperial">Imperial</string>
-  <string name="default_unit">true</string>
-  <string name="unit">Unit</string>
   <string name="undo">Undo</string>
-  <string name="general">General</string>
   <string name="standard_rounds">Standard rounds</string>
   <string name="expand_collapse">Expand/Collapse</string>
   <string name="new_round_template">New template</string>
   <string name="arrow_numbers">Arrow numbers</string>
-  <string name="rounds">Rounds</string>
-  <string name="round_removed">One round deleted!</string>
+  <string name="round_removed">Round deleted!</string>
   <string name="custom_round">Custom round</string>
   <string name="filter">Filter</string>
   <string name="club">Club</string>

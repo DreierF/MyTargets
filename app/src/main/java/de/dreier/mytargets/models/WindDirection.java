@@ -19,7 +19,7 @@ public class WindDirection extends IdProvider {
 
     public final String name;
 
-    public WindDirection(long id, String name) {
+    private WindDirection(long id, String name) {
         this.setId(id);
         this.name = name;
     }

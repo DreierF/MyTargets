@@ -31,8 +31,9 @@ public abstract class DialogSpinner<T extends Serializable> extends LinearLayout
         void onUpdate(T item);
     }
 
-    protected View mView, mProgress;
-    protected T item = null;
+    final View mView;
+    private final View mProgress;
+    T item = null;
 
     private Button addButton;
     private OnUpdateListener<T> updateListener;
@@ -61,7 +62,7 @@ public abstract class DialogSpinner<T extends Serializable> extends LinearLayout
 
     protected abstract void bindView();
 
-    public void setAddButton(Button button, OnClickListener listener) {
+    void setAddButton(Button button, OnClickListener listener) {
         addButton = button;
         if (addButton != null) {
             addButton.setOnClickListener(listener);
@@ -97,7 +98,7 @@ public abstract class DialogSpinner<T extends Serializable> extends LinearLayout
 
     // TODO use this to handle on click events without the need to define it in every used location
     // TODO possibly refactor the view to become a fragment
-    public void startIntent(Intent i, OnResultListener resultListener) {
+    void startIntent(Intent i, OnResultListener resultListener) {
         final int requestId = (int) (Math.random() * Short.MAX_VALUE);
         final FragmentManager fm = ((FragmentActivity) getContext()).getSupportFragmentManager();
         Fragment auxiliary = new Fragment() {

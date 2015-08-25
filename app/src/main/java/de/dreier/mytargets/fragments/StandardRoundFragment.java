@@ -44,13 +44,13 @@ import de.dreier.mytargets.shared.models.target.Target;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class StandardRoundFragment extends NowListFragment<StandardRound> {
+public class StandardRoundFragment extends NowListFragment<StandardRound> implements View.OnClickListener {
 
     private static final int NEW_STANDARD_ROUND = 1;
     private final SingleSelector mSingleSelector = new SingleSelector();
     private DrawerLayout mDrawerLayout;
     private ArrayList<StandardRound> list;
-    final CheckBox[] clubs = new CheckBox[9];
+    private final CheckBox[] clubs = new CheckBox[9];
     private RadioGroup location;
     private RadioGroup unit;
     private RadioGroup typ;
@@ -235,6 +235,7 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
     public void onClick(View v) {
         startActivityForResult(
                 new Intent(getActivity(), SimpleFragmentActivity.EditStandardRoundActivity.class),
@@ -288,7 +289,7 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> {
         }
     }
 
-    void onSave() {
+    private void onSave() {
         Intent data = new Intent();
         data.putExtra(ITEM, currentSelection);
         getActivity().setResult(Activity.RESULT_OK, data);

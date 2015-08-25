@@ -32,12 +32,12 @@ public class EditBowActivity extends EditWithImageActivity
         implements DynamicItemLayout.OnBindListener<EditBowActivity.SightSetting> {
 
     public static final String BOW_ID = "bow_id";
-    public static final int RECURVE_BOW = 0;
-    public static final int COMPOUND_BOW = 1;
-    public static final int LONG_BOW = 2;
-    public static final int BLANK_BOW = 3;
-    public static final int HORSE_BOW = 4;
-    public static final int YUMI = 5;
+    private static final int RECURVE_BOW = 0;
+    private static final int COMPOUND_BOW = 1;
+    private static final int LONG_BOW = 2;
+    private static final int BLANK_BOW = 3;
+    private static final int HORSE_BOW = 4;
+    private static final int YUMI = 5;
     private EditText name;
     private EditText brand;
     private EditText size;

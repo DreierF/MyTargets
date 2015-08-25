@@ -8,7 +8,6 @@
 package de.dreier.mytargets.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
@@ -22,7 +21,7 @@ import de.dreier.mytargets.shared.models.IdProvider;
 public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD extends IdProvider>
         extends RecyclerView.Adapter<SelectableViewHolder<IdProvider>> {
 
-    public static final int HEADER_TYPE = 1;
+    private static final int HEADER_TYPE = 1;
     public static final int ITEM_TYPE = 2;
     public static final int ITEM_TYPE_2 = 3;
 
@@ -129,8 +128,9 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
 
     public void remove(int pos) {
         DataHolder removed = dataList.remove(pos);
-        long parent = removed.getData().getParentId();
-        childMap.get(parent).remove(removed.getData());
+        IdProvider data = removed.getData();
+        long parent = data.getParentId();
+        childMap.get(parent).remove(data);
         notifyItemRemoved(pos);
     }
 
@@ -140,7 +140,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
         childMap.clear();
         isOpen.clear();
         for (HEADER header : mListHeaders) {
-            childMap.put(header.getId(), new ArrayList<CHILD>());
+            childMap.put(header.getId(), new ArrayList<>());
         }
         for (CHILD child : children) {
             long parent = child.getParentId();

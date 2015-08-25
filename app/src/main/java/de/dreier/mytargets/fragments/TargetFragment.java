@@ -46,7 +46,7 @@ public class TargetFragment extends NowListFragment<Target>
         implements SeekBar.OnSeekBarChangeListener {
 
     public static final String TYPE_FIXED = "type_fixed";
-    final SingleSelector mSingleSelector = new SingleSelector();
+    private final SingleSelector mSingleSelector = new SingleSelector();
     private Spinner scoringStyle;
     private SeekBar seekBar;
     private TextView label;
@@ -172,7 +172,7 @@ public class TargetFragment extends NowListFragment<Target>
         return super.onOptionsItemSelected(item);
     }
 
-    void onSave() {
+    private void onSave() {
         Target target = mAdapter.getItem(mSingleSelector.getSelectedPosition());
         int scoring = scoringStyle.getSelectedItemPosition();
         target = TargetFactory.createTarget(getActivity(), target.id, scoring);

@@ -33,9 +33,9 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
         NowListFragmentBase.ContentListener {
     public static final String ITEM = "item";
 
-    protected FloatingActionButton mFab;
-    protected View mNewLayout;
-    protected TextView mNewText;
+    private FloatingActionButton mFab;
+    private View mNewLayout;
+    private TextView mNewText;
 
     @Override
     protected int getLayoutResource() {

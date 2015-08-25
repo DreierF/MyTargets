@@ -17,7 +17,6 @@
   <string name="new_bow">Nuovo arco</string>
   <string name="new_arrow">Nuova freccia</string>
   <string name="new_round">Nuovo round</string>
-  <string name="new_passe">Nuova volée</string>
   <plurals name="training_selected">
     <item quantity="one">Un allenamento selezionato</item>
     <item quantity="other">%d allenamenti selezionati</item>
@@ -30,10 +29,6 @@
     <item quantity="one">Una freccia selezionata</item>
     <item quantity="other">%d frecce selezionate</item>
   </plurals>
-  <plurals name="round_selected">
-    <item quantity="one">Un round selezionato</item>
-    <item quantity="other">%d round selezionati</item>
-  </plurals>
   <plurals name="passe_selected">
     <item quantity="one">Una volée selezionata</item>
     <item quantity="other">%d volée selezionate</item>
@@ -44,10 +39,9 @@
   <string name="share">Condividi</string>
   <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$sThis makes a total of %2$d out of %3$d rings.</string>
   <string name="d_times_s">%1$d times %2$s\n</string>
-  <string name="comments">Commenti</string>
   <string name="text">Testo</string>
   <string name="dispersion_pattern">modello di dispersione</string>
-  <string name="sharing_failed">Condivisione fallita!</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <string name="send_exported">Invia dati esportati</string>
   <string name="exporting_failed">Esportazione fallita!</string>
   <string name="add_bow">Aggiungi arco</string>
@@ -92,37 +86,20 @@
     <item quantity="other">%d frecce</item>
   </plurals>
   <string name="target_face">Target face</string>
-  <string name="title_compound">Compound?</string>
-  <string name="msg_compound_type">Che tipo di arco stai usando? (C\'è una differenza in quanti punti prenderai per il cerchio giallo)</string>
-  <string name="other_bow">Altro arco</string>
   <string name="scoreboard">Segnapunti</string>
   <string name="arrows">Frecce</string>
   <string name="sum">Totale</string>
   <string name="carry">Sposta</string>
   <string name="action_print">Stampa</string>
-  <string name="nine">Nove</string>
-  <string name="ten_x">Dieci+X</string>
   <string name="average">Media</string>
-  <string name="switch_mode">Cambia modalità di input</string>
   <string name="show_all">Mostra tutti gli impatti</string>
   <string name="comment">Commento</string>
-  <plurals name="passes_finished">
-    <item quantity="one">1 volée finito</item>
-    <item quantity="other">%d volée finito</item>
-  </plurals>
-  <string name="passes_finished_now_what">You have finished your round. What would you like to do now?</string>
-  <string name="continue_with_next">Continuare</string>
   <string name="all_trainings">Tutti gli allenamenti</string>
   <string name="entire_training">Allenamento intero</string>
   <string name="current_round">Round corrente</string>
   <string name="select_a_file">Seleziona un file</string>
   <string name="dir_not_created">La directory non può essere creata!</string>
-  <string name="backup_successful">Backup completato con successo!</string>
-  <string name="backup_saved_as">Il backup è stato salvato in \'%s\'.</string>
   <string name="backup_failed">Backup fallito!</string>
-  <string name="backup_error">Un errore si è verificato durante il backup:\n%s</string>
-  <string name="sd_card_not_available_title">Scheda SD non disponibile!</string>
-  <string name="sd_card_not_available_desc">Perfavore inserisci una SD card e riprova!</string>
   <string name="import_successful">Importazione completata con successo!</string>
   <string name="import_failed">Importazione fallita!</string>
   <string name="file_not_found">File non trovato!</string>
@@ -164,26 +141,21 @@
   <string name="data">Data</string>
   <string name="create_backup_on_sd">Creates a backup on sd card</string>
   <string name="restore_backup">Restores a backup</string>
-  <string name="switch_view">Switch view mode</string>
   <string name="weather">Weather</string>
   <string name="environment">Environment</string>
   <string name="wind">Wind</string>
   <string name="wind_speed">Wind speed</string>
   <string name="wind_direction">Wind direction</string>
   <string name="location">Location</string>
-  <string name="sight_setting_removed">Sight setting deleted</string>
+  <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Metric</string>
   <string name="imperial">Imperial</string>
-  <string name="default_unit">true</string>
-  <string name="unit">Unit</string>
   <string name="undo">Annulla</string>
-  <string name="general">General</string>
   <string name="standard_rounds">Standard rounds</string>
   <string name="expand_collapse">Expand/Collapse</string>
   <string name="new_round_template">New template</string>
   <string name="arrow_numbers">Arrow numbers</string>
-  <string name="rounds">Rounds</string>
-  <string name="round_removed">One round deleted!</string>
+  <string name="round_removed">Round deleted!</string>
   <string name="custom_round">Custom round</string>
   <string name="filter">Filter</string>
   <string name="club">Club</string>

@@ -6,4 +6,19 @@
         android:icon="@drawable/ic_trending_up_white_24dp"
         android:title="@string/statistic"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share_white_24dp"
+        android:title="@string/share"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_scoreboard"
+        android:icon="@drawable/ic_description_white_24dp"
+        android:title="@string/scoreboard"
+        app:showAsAction="ifRoom" />
+   <!-- <item
+        android:id="@+id/action_view_mode"
+        android:icon="@drawable/ic_view_module_white_24dp"
+        android:title="@string/switch_view"
+        app:showAsAction="ifRoom" />-->
 </menu>

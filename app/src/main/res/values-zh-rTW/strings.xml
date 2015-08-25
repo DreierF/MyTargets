@@ -17,7 +17,6 @@
   <string name="new_bow">加入新弓</string>
   <string name="new_arrow">新的箭</string>
   <string name="new_round">新一輪</string>
-  <string name="new_passe">新一局</string>
   <plurals name="training_selected">
     <item quantity="other">%d 已選擇的訓練</item>
   </plurals>
@@ -26,9 +25,6 @@
   </plurals>
   <plurals name="arrow_selected">
     <item quantity="other">%d 已選擇的箭</item>
-  </plurals>
-  <plurals name="round_selected">
-    <item quantity="other">%d 已選擇的輪次</item>
   </plurals>
   <plurals name="passe_selected">
     <item quantity="other">%d 已選擇的局次</item>
@@ -39,10 +35,9 @@
   <string name="share">分享</string>
   <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$sThis makes a total of %2$d out of %3$d rings.</string>
   <string name="d_times_s">%1$d times %2$s\n</string>
-  <string name="comments">檢討</string>
   <string name="text">文字</string>
   <string name="dispersion_pattern">箭的落點</string>
-  <string name="sharing_failed">分享失敗!</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <string name="send_exported">傳送資料</string>
   <string name="exporting_failed">傳送資料失敗!</string>
   <string name="add_bow">加入新弓</string>
@@ -85,36 +80,20 @@
     <item quantity="other">%d 箭</item>
   </plurals>
   <string name="target_face">Target face</string>
-  <string name="title_compound">複合弓?</string>
-  <string name="msg_compound_type">您正在練習那一類弓?(There is a difference in how many points you get for the golden rings)</string>
-  <string name="other_bow">Other bow</string>
   <string name="scoreboard">分數板</string>
   <string name="arrows">箭數</string>
   <string name="sum">環數</string>
   <string name="carry">總和</string>
   <string name="action_print">列印</string>
-  <string name="nine">9</string>
-  <string name="ten_x">10+X</string>
   <string name="average">平均</string>
-  <string name="switch_mode">切換輸入模式</string>
   <string name="show_all">顯示所有資料</string>
   <string name="comment">備註</string>
-  <plurals name="passes_finished">
-    <item quantity="other">%d 完成一局</item>
-  </plurals>
-  <string name="passes_finished_now_what">您已經完成一局了. 下一步想做甚麼?</string>
-  <string name="continue_with_next">繼續</string>
   <string name="all_trainings">所有訓練</string>
   <string name="entire_training">最近的訓練</string>
   <string name="current_round">目前一輪</string>
   <string name="select_a_file">選擇檔案</string>
   <string name="dir_not_created">未能建立目錄</string>
-  <string name="backup_successful">成功備份!</string>
-  <string name="backup_saved_as">備份已儲存為 \'%s\'.</string>
   <string name="backup_failed">備份失敗!</string>
-  <string name="backup_error">備份途中出現錯誤:\n%s</string>
-  <string name="sd_card_not_available_title">存取SD卡失敗!</string>
-  <string name="sd_card_not_available_desc">請重新插入sd卡後再嘗試!</string>
   <string name="import_successful">存取成功!</string>
   <string name="import_failed">存取失敗!</string>
   <string name="file_not_found">找不到資料!</string>
@@ -155,26 +134,21 @@
   <string name="data">數據</string>
   <string name="create_backup_on_sd">於sd卡建立備份檔案</string>
   <string name="restore_backup">修復備份檔案</string>
-  <string name="switch_view">Switch view mode</string>
   <string name="weather">Weather</string>
   <string name="environment">Environment</string>
   <string name="wind">Wind</string>
   <string name="wind_speed">Wind speed</string>
   <string name="wind_direction">Wind direction</string>
   <string name="location">Location</string>
-  <string name="sight_setting_removed">Sight setting deleted</string>
+  <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Metric</string>
   <string name="imperial">Imperial</string>
-  <string name="default_unit">true</string>
-  <string name="unit">Unit</string>
   <string name="undo">撤销</string>
-  <string name="general">General</string>
   <string name="standard_rounds">Standard rounds</string>
   <string name="expand_collapse">Expand/Collapse</string>
   <string name="new_round_template">New template</string>
   <string name="arrow_numbers">Arrow numbers</string>
-  <string name="rounds">Rounds</string>
-  <string name="round_removed">One round deleted!</string>
+  <string name="round_removed">Round deleted!</string>
   <string name="custom_round">Custom round</string>
   <string name="filter">Filter</string>
   <string name="club">Club</string>

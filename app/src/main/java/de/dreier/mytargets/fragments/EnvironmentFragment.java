@@ -123,7 +123,7 @@ public class EnvironmentFragment extends Fragment {
         Assert.assertNotNull(listener);
     }
 
-    void onSave() {
+    private void onSave() {
         Environment e = new Environment();
         e.weather = weather;
         e.windSpeed = (int) wind_speed.getSelectedItem().getId();

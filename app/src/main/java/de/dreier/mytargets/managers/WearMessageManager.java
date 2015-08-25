@@ -14,7 +14,6 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
@@ -67,7 +66,7 @@ public class WearMessageManager
         sendMessage(image, info);
     }
 
-    Collection<String> getNodes() {
+    private Collection<String> getNodes() {
         HashSet<String> results = new HashSet<>();
         NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient)
                 .await();
@@ -79,7 +78,7 @@ public class WearMessageManager
         return results;
     }
 
-    void sendMessage(Bitmap image, NotificationInfo info) {
+    private void sendMessage(Bitmap image, NotificationInfo info) {
         // Serialize bundle to byte array
         try {
             final byte[] data = WearableUtils.serialize(image, info);

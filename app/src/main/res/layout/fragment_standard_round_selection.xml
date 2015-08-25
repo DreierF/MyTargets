@@ -2,6 +2,7 @@
 <android.support.v4.widget.DrawerLayout
     android:id="@+id/drawer_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -152,25 +153,29 @@
                             android:id="@+id/asa"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
-                            android:text="ASA"/>
+                            android:text="ASA"
+                            tools:ignore="HardcodedText"/>
 
                         <CheckBox
                             android:id="@+id/gnas"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
-                            android:text="GNAS"/>
+                            android:text="GNAS"
+                            tools:ignore="HardcodedText"/>
 
                         <CheckBox
                             android:id="@+id/nasp"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
-                            android:text="NASP"/>
+                            android:text="NASP"
+                            tools:ignore="HardcodedText"/>
 
                         <CheckBox
                             android:id="@+id/nfas"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
-                            android:text="NFAS"/>
+                            android:text="NFAS"
+                            tools:ignore="HardcodedText"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -183,25 +188,29 @@
                             android:id="@+id/aussie"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
-                            android:text="Australia"/>
+                            android:text="AA"
+                            tools:ignore="HardcodedText"/>
 
                         <CheckBox
                             android:id="@+id/ifaa"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
-                            android:text="IFAA"/>
+                            android:text="IFAA"
+                            tools:ignore="HardcodedText"/>
 
                         <CheckBox
                             android:id="@+id/nfaa"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
-                            android:text="NFAA"/>
+                            android:text="NFAA"
+                            tools:ignore="HardcodedText"/>
 
                         <CheckBox
                             android:id="@+id/wa"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
-                            android:text="WA"/>
+                            android:text="WA"
+                            tools:ignore="HardcodedText"/>
                     </LinearLayout>
 
                 </LinearLayout>
