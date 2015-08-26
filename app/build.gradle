@@ -57,7 +57,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.0.0'
     compile 'com.google.android.gms:play-services:7.8.0'
     compile 'com.github.machinarius:preferencefragment:0.1.1'
-    //compile 'com.android.support:preference-v14:23.0.0'
+    compile 'com.github.ksoichiro:android-observablescrollview:1.5.2'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.cocosw:bottomsheet:1.1.1@aar'
     compile project(':libraries:aFileChooser')

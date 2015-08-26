@@ -47,7 +47,6 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     private DatabaseManager db;
     private boolean mShowAllMode = false;
     private WearMessageManager manager;
-    //private boolean mTimerEnabled;
     private Training training;
     private RoundTemplate template;
     private boolean mExitOnFinish;
@@ -161,7 +160,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
             template = mRound.info;
             passe = template.passes;
         }
-        if (passe <= savedPasses) {
+        if (passe < savedPasses) {
             Passe p = db.getPasse(mRound.getId(), passe);
             if (p != null) {
                 target.setPasse(p);

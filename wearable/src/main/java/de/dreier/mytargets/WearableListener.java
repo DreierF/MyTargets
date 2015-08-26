@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.google.android.gms.wearable.MessageEvent;
@@ -65,7 +66,7 @@ public class WearableListener extends WearableListenerService {
                 .build();
 
         // Create the ongoing notification
-        Bitmap image = getResources().getDrawable(R.drawable.wear_bg, null);
+        Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.wear_bg);
         Notification.Builder notificationBuilder =
                 new Notification.Builder(this)
                         .setContentTitle(info.title)

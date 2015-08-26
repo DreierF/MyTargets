@@ -755,7 +755,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 ////// GET AGGREGATED INFORMATION //////
 
     public ArrayList<Integer> getAllTrainings() {
-        Cursor res = db.rawQuery("SELECT s.points, r.target, s.passe  " +
+        Cursor res = db.rawQuery("SELECT s.points, r.target, s.passe, r.scoring_style, s.arrow_index  " +
                 "FROM TRAINING t, ROUND r, PASSE p, SHOOT s " +
                 "WHERE t._id=r.training AND r._id=p.round " +
                 "AND p._id=s.passe " +
@@ -767,7 +767,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         ArrayList<Integer> history = new ArrayList<>();
         for (int i = 0; i < res.getCount(); i++) {
             int zone = res.getInt(0);
-            int target = res.getInt(1);
             int passe = res.getInt(2);
             if (oldPasse != -1 && oldPasse != passe) {
                 float percent = actCounter * 100.0f / (float) maxCounter;
@@ -775,8 +774,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 actCounter = 0;
                 maxCounter = 0;
             }
-            //actCounter += Target.getPointsByZone(target, zone); //TODO
-            //maxCounter += Target.getMaxPoints(target);
+            Target target = TargetFactory.createTarget(mContext, res.getInt(1), res.getInt(3));
+            actCounter += target.getPointsByZone(zone, res.getInt(4));
+            maxCounter += target.getMaxPoints();
             oldPasse = passe;
             res.moveToNext();
         }
@@ -785,7 +785,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public ArrayList<Integer> getAllRounds(long training) {
-        Cursor res = db.rawQuery("SELECT s.points, r.target, s.passe  " +
+        Cursor res = db.rawQuery("SELECT s.points, r.target, s.passe, r.scoring_style, s.arrow_index " +
                 "FROM ROUND r, PASSE p, SHOOT s " +
                 "WHERE " + training + "=r.training AND r._id=p.round " +
                 "AND p._id=s.passe " +
@@ -797,7 +797,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         ArrayList<Integer> history = new ArrayList<>();
         for (int i = 0; i < res.getCount(); i++) {
             int zone = res.getInt(0);
-            int target = res.getInt(1);
             int passe = res.getInt(2);
             if (oldPasse != -1 && oldPasse != passe) {
                 float percent = actCounter * 100.0f / (float) maxCounter;
@@ -805,30 +804,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 actCounter = 0;
                 maxCounter = 0;
             }
-            //actCounter += Target.getPointsByZone(target, zone); //TODO
-            //maxCounter += Target.getMaxPoints(target);
+            Target target = TargetFactory.createTarget(mContext, res.getInt(1), res.getInt(3));
+            actCounter += target.getPointsByZone(zone, res.getInt(4));
+            maxCounter += target.getMaxPoints();
             oldPasse = passe;
             res.moveToNext();
         }
         res.close();
         return history;
     }
-
-    /*public int getRoundPoints(long round) {
-        Cursor res = db.rawQuery("SELECT s.points, r.target, r.scoring_style" +
-                " FROM ROUND r, PASSE p, SHOOT s" +
-                " WHERE r._id=p.round AND p.round=" + round + " AND s.passe=p._id", null);
-        res.moveToFirst();
-        int sum = 0;
-        for (int i = 0; i < res.getCount(); i++) {
-            int zone = res.getInt(0);
-            Target target = TargetFactory.createTarget(mContext, res.getInt(1), res.getInt(2));
-            //sum += target.getPointsByZone(zone, arrow);
-            res.moveToNext();
-        }
-        res.close();
-        return sum;
-    }*/
 
     public String getSetting(long bowId, Distance dist) {
         String[] cols = {VISIER_SETTING};
@@ -1048,7 +1032,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             File file = BackupUtils.unzip(context, in);
 
             // Replace database file
-            File db_file = sInstance.mContext.getDatabasePath(DatabaseManager.DATABASE_NAME);
+            File db_file = context.getDatabasePath(DatabaseManager.DATABASE_NAME);
             DatabaseManager tmp = sInstance;
             sInstance = null;
             tmp.close();

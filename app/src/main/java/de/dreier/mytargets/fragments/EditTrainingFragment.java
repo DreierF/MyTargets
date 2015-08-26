@@ -364,10 +364,10 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             }
         }
 
-        editor.putInt("bow", (int) bow.getSelectedItem().getId());
-        editor.putInt("arrow", (int) arrow.getSelectedItem().getId());
+        editor.putInt("bow", (int) training.bow);
+        editor.putInt("arrow", (int) training.arrow);
         editor.putBoolean("timer", timer.isChecked());
-        editor.putBoolean("numbering", number_arrows.isChecked());
+        editor.putBoolean("numbering", training.arrowNumbering);
         editor.apply();
     }
 
