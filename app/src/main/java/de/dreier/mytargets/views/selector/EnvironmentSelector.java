@@ -5,7 +5,7 @@
  * All rights reserved
  */
 
-package de.dreier.mytargets.views;
+package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,13 +20,13 @@ import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.fragments.EnvironmentFragment;
 import de.dreier.mytargets.shared.models.Environment;
 
-public class EnvironmentDialogSpinner extends DialogSpinner<Environment> {
+public class EnvironmentSelector extends SelectorBase<Environment> {
 
-    public EnvironmentDialogSpinner(Context context) {
+    public EnvironmentSelector(Context context) {
         this(context, null);
     }
 
-    public EnvironmentDialogSpinner(Context context, AttributeSet attrs) {
+    public EnvironmentSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_image);
         setOnClickListener(v -> {
             Intent i = new Intent(getContext(), ItemSelectActivity.Environment.class);

@@ -5,12 +5,11 @@
  * All rights reserved
  */
 
-package de.dreier.mytargets.views;
+package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,13 +20,13 @@ import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 
-public class ArrowDialogSpinner extends DialogSpinner<Arrow> {
+public class ArrowSelector extends SelectorBase<Arrow> {
 
-    public ArrowDialogSpinner(Context context) {
+    public ArrowSelector(Context context) {
         this(context, null);
     }
 
-    public ArrowDialogSpinner(Context context, AttributeSet attrs) {
+    public ArrowSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_image);
         init();
     }
@@ -38,8 +37,7 @@ public class ArrowDialogSpinner extends DialogSpinner<Arrow> {
             i.putExtra(ItemSelectActivity.ITEM, item);
             startIntent(i, data -> setItem((Arrow) data.getSerializableExtra(ItemSelectActivity.ITEM)));
         });
-        setAddButton((Button) mView.findViewById(R.id.add_arrow),
-                v -> getContext().startActivity(new Intent(getContext(), EditArrowActivity.class)));
+        setAddButtonIntent(EditArrowActivity.class);
     }
 
     @Override

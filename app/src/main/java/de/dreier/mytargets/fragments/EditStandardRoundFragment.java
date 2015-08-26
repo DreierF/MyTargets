@@ -29,10 +29,10 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.MyBackupAgent;
-import de.dreier.mytargets.views.DistanceDialogSpinner;
+import de.dreier.mytargets.views.selector.DistanceSelector;
 import de.dreier.mytargets.views.DynamicItemLayout;
 import de.dreier.mytargets.views.NumberPicker;
-import de.dreier.mytargets.views.TargetDialogSpinner;
+import de.dreier.mytargets.views.selector.TargetSelector;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
@@ -168,13 +168,13 @@ public class EditStandardRoundFragment extends Fragment
         round.index = index;
 
         // Distance
-        final DistanceDialogSpinner distanceSpinner = (DistanceDialogSpinner) view
+        final DistanceSelector distanceSpinner = (DistanceSelector) view
                 .findViewById(R.id.distance_spinner);
         distanceSpinner.setItem(round.distance);
         distanceSpinner.setOnUpdateListener(item -> round.distance = item);
 
         // Target round
-        final TargetDialogSpinner targetSpinner = (TargetDialogSpinner) view
+        final TargetSelector targetSpinner = (TargetSelector) view
                 .findViewById(R.id.target_spinner);
         targetSpinner.setOnUpdateListener(item -> {
             round.target = item;

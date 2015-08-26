@@ -3,6 +3,8 @@ package de.dreier.mytargets.shared.models;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import de.dreier.mytargets.shared.R;
 
 public class Bow extends ImageHolder implements DatabaseSerializable {
     static final long serialVersionUID = 52L;
@@ -40,6 +42,15 @@ public class Bow extends ImageHolder implements DatabaseSerializable {
     @Override
     public String getTableName() {
         return TABLE;
+    }
+
+    @Override
+    public Bitmap getImage(Context context) {
+        Bitmap img = super.getImage(context);
+        if (img == null) {
+            context.getResources().getDrawable(R.drawable.recurve_bow, null);
+        }
+        return img;
     }
 
     @Override

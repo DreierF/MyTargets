@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -25,7 +26,7 @@ import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Distance;
-import de.dreier.mytargets.views.DistanceDialogSpinner;
+import de.dreier.mytargets.views.selector.DistanceSelector;
 import de.dreier.mytargets.views.DynamicItemLayout;
 
 public class EditBowActivity extends EditWithImageActivity
@@ -91,19 +92,7 @@ public class EditBowActivity extends EditWithImageActivity
                 // Load data from database
                 DatabaseManager db = DatabaseManager.getInstance(this);
                 Bow bow = db.getBow(mBowId);
-                setTitle(bow.name);
-                name.setText(bow.name);
-                brand.setText(bow.brand);
-                size.setText(bow.size);
-                height.setText(bow.height);
-                tiller.setText(bow.tiller);
-                desc.setText(bow.description);
-                imageBitmap = bow.getImage(this);
-                if (imageBitmap != null) {
-                    mImageView.setImageBitmap(imageBitmap);
-                }
-                mImageFile = bow.imageFile;
-                setBowType(bow.type);
+                setBowValues(bow);
                 sightSettingsList = db.getSightSettings(mBowId);
                 setTitle(R.string.edit_bow);
             } else {
@@ -114,18 +103,30 @@ public class EditBowActivity extends EditWithImageActivity
             }
         } else {
             // Restore values from before orientation change
-            name.setText(savedInstanceState.getString("name"));
-            brand.setText(savedInstanceState.getString("brand"));
-            size.setText(savedInstanceState.getString("size"));
-            height.setText(savedInstanceState.getString("height"));
-            tiller.setText(savedInstanceState.getString("tiller"));
-            desc.setText(savedInstanceState.getString("desc"));
+            Bow bow = (Bow) savedInstanceState.getSerializable("bow");
+            setBowValues(bow);
             //noinspection unchecked
-            sightSettingsList = (ArrayList<SightSetting>) savedInstanceState
+            sightSettingsList = (ArrayList<SightSetting>) savedInstanceState //TODO integrate sight settings list in bow
                     .getSerializable("settings");
 
         }
         sight_settings.setList(sightSettingsList);
+    }
+
+    private void setBowValues(Bow bow) {
+        setTitle(bow.name);
+        name.setText(bow.name);
+        brand.setText(bow.brand);
+        size.setText(bow.size);
+        height.setText(bow.height);
+        tiller.setText(bow.tiller);
+        desc.setText(bow.description);
+        imageBitmap = bow.getImage(this);
+        if (imageBitmap != null) {
+            mImageView.setImageBitmap(imageBitmap);
+        }
+        imageFile = bow.imageFile;
+        setBowType(bow.type);
     }
 
     public static class SightSetting implements Serializable {
@@ -135,7 +136,7 @@ public class EditBowActivity extends EditWithImageActivity
 
     @Override
     public void onBind(View view, final SightSetting sightSetting, int index) {
-        final DistanceDialogSpinner distanceSpinner = (DistanceDialogSpinner) view
+        final DistanceSelector distanceSpinner = (DistanceSelector) view
                 .findViewById(R.id.distance_spinner);
         distanceSpinner.setOnUpdateListener(item -> sightSetting.distance = item);
         EditText setting = (EditText) view.findViewById(R.id.sight_setting);
@@ -164,7 +165,13 @@ public class EditBowActivity extends EditWithImageActivity
     @Override
     public void onSave() {
         DatabaseManager db = DatabaseManager.getInstance(this);
+        Bow bow = buildBow();
+        db.update(bow);
+        db.updateSightSettings(bow.getId(), sight_settings.getList());
+        finish();
+    }
 
+    private Bow buildBow() {
         Bow bow = new Bow();
         bow.setId(mBowId);
         bow.name = name.getText().toString();
@@ -174,11 +181,9 @@ public class EditBowActivity extends EditWithImageActivity
         bow.tiller = tiller.getText().toString();
         bow.description = desc.getText().toString();
         bow.type = getType();
-        bow.setImage(mImageFile, imageBitmap);
-
-        db.update(bow);
-        db.updateSightSettings(bow.getId(), sight_settings.getList());
-        finish();
+        bow.setImage(imageFile, imageBitmap);
+        Log.d("buildBow", imageFile);
+        return bow;
     }
 
     private void setBowType(int type) {
@@ -211,12 +216,7 @@ public class EditBowActivity extends EditWithImageActivity
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("name", name.getText().toString());
-        outState.putString("brand", brand.getText().toString());
-        outState.putString("size", size.getText().toString());
-        outState.putString("height", height.getText().toString());
-        outState.putString("tiller", tiller.getText().toString());
-        outState.putString("desc", desc.getText().toString());
+        outState.putSerializable("bow", buildBow());
         outState.putSerializable("settings", sight_settings.getList());
     }
 }

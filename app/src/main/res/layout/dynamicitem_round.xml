@@ -44,7 +44,7 @@
             android:padding="16dp"
             android:text="@string/distance"/>
 
-        <de.dreier.mytargets.views.DistanceDialogSpinner
+        <de.dreier.mytargets.views.selector.DistanceSelector
             android:id="@+id/distance_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:text="@string/target_face"/>
 
-        <de.dreier.mytargets.views.TargetDialogSpinner
+        <de.dreier.mytargets.views.selector.TargetSelector
             android:id="@+id/target_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

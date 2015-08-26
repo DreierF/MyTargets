@@ -52,18 +52,20 @@ import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.MyBackupAgent;
-import de.dreier.mytargets.views.ArrowDialogSpinner;
-import de.dreier.mytargets.views.BowDialogSpinner;
-import de.dreier.mytargets.views.DistanceDialogSpinner;
-import de.dreier.mytargets.views.EnvironmentDialogSpinner;
+import de.dreier.mytargets.views.selector.ArrowSelector;
+import de.dreier.mytargets.views.selector.BowSelector;
+import de.dreier.mytargets.views.selector.DistanceSelector;
+import de.dreier.mytargets.views.selector.EnvironmentSelector;
 import de.dreier.mytargets.views.NumberPicker;
-import de.dreier.mytargets.views.StandardRoundDialogSpinner;
-import de.dreier.mytargets.views.TargetDialogSpinner;
+import de.dreier.mytargets.views.selector.StandardRoundSelector;
+import de.dreier.mytargets.views.selector.TargetSelector;
 import zh.wang.android.apis.yweathergetter4a.WeatherInfo;
 import zh.wang.android.apis.yweathergetter4a.YahooWeather;
 import zh.wang.android.apis.yweathergetter4a.YahooWeatherExceptionListener;
 import zh.wang.android.apis.yweathergetter4a.YahooWeatherInfoListener;
 
+
+//TODO Refactor a EditFragment superclass
 public class EditTrainingFragment extends Fragment implements DatePickerDialog.OnDateSetListener,
         YahooWeatherInfoListener, TabLayout.OnTabSelectedListener, YahooWeatherExceptionListener {
     public static final String TRAINING_ID = "training_id";
@@ -72,21 +74,21 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
 
     private long mTraining = -1;
 
-    private BowDialogSpinner bow;
-    private ArrowDialogSpinner arrow;
+    private BowSelector bow;
+    private ArrowSelector arrow;
     private EditText training;
     //private EditText comment;
     private Button training_date;
     private Date date = new Date();
-    private EnvironmentDialogSpinner environment;
-    private StandardRoundDialogSpinner standardRoundSpinner;
+    private EnvironmentSelector environment;
+    private StandardRoundSelector standardRoundSpinner;
     private CheckBox number_arrows;
     private CheckBox timer;
     private View practice, roundLayout;
     private RadioButton indoor;
     private TabLayout tabLayout;
-    private TargetDialogSpinner targetSpinner;
-    private DistanceDialogSpinner distanceSpinner;
+    private TargetSelector targetSpinner;
+    private DistanceSelector distanceSpinner;
     private NumberPicker passes, arrows;
 
     @SuppressWarnings("ConstantConditions")
@@ -132,13 +134,13 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
 
         View not_editable = rootView.findViewById(R.id.not_editable);
 
-        standardRoundSpinner = (StandardRoundDialogSpinner) rootView
+        standardRoundSpinner = (StandardRoundSelector) rootView
                 .findViewById(R.id.standard_round);
-        distanceSpinner = (DistanceDialogSpinner) rootView.findViewById(R.id.distance_spinner);
-        targetSpinner = (TargetDialogSpinner) rootView.findViewById(R.id.target_spinner);
-        bow = (BowDialogSpinner) rootView.findViewById(R.id.bow);
-        arrow = (ArrowDialogSpinner) rootView.findViewById(R.id.arrow);
-        environment = (EnvironmentDialogSpinner) rootView.findViewById(R.id.environment_spinner);
+        distanceSpinner = (DistanceSelector) rootView.findViewById(R.id.distance_spinner);
+        targetSpinner = (TargetSelector) rootView.findViewById(R.id.target_spinner);
+        bow = (BowSelector) rootView.findViewById(R.id.bow);
+        arrow = (ArrowSelector) rootView.findViewById(R.id.arrow);
+        environment = (EnvironmentSelector) rootView.findViewById(R.id.environment_spinner);
 
         arrow.setOnUpdateListener(this::updateArrowNumbers);
         number_arrows = (CheckBox) rootView.findViewById(R.id.number_arrows);
@@ -290,9 +292,14 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         training.setId(mTraining);
         training.title = title;
         training.date = date;
+        //TODO move this logic incl. getting weather to {@link EnvironmentDialogSpinner}
         training.environment = environment.getSelectedItem();
-        training.bow = bow.getSelectedItem().getId();
-        training.arrow = arrow.getSelectedItem().getId();
+        if (training.environment == null) {
+            training.environment = new Environment(EWeather.SUNNY, 0, 0);
+        }
+
+        training.bow = bow.getSelectedItem() == null ? 0 : bow.getSelectedItem().getId();
+        training.arrow = arrow.getSelectedItem() == null ? 0 : arrow.getSelectedItem().getId();
         int time = 120;
         try {
             SharedPreferences prefs = PreferenceManager

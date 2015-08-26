@@ -46,7 +46,7 @@ public abstract class EditWithImageActivity extends AppCompatActivity {
     private static final int SELECT_PICTURE = 2;
 
     private Uri fileUri;
-    String mImageFile = null;
+    String imageFile = null;
     Bitmap imageBitmap = null;
 
     private View mFab;
@@ -101,7 +101,7 @@ public abstract class EditWithImageActivity extends AppCompatActivity {
         // Handle saved instance state
         if (savedInstanceState != null) {
             imageBitmap = savedInstanceState.getParcelable("img");
-            mImageFile = savedInstanceState.getString("image_file");
+            imageFile = savedInstanceState.getString("image_file");
             mImageView.setImageBitmap(imageBitmap);
         } else {
             if (imageBitmap == null) {
@@ -214,8 +214,8 @@ public abstract class EditWithImageActivity extends AppCompatActivity {
             protected Boolean doInBackground(Uri... params) {
                 try {
                     // Delete old file
-                    if (mImageFile != null) {
-                        File f = new File(getFilesDir(), mImageFile);
+                    if (imageFile != null) {
+                        File f = new File(getFilesDir(), imageFile);
                         //noinspection ResultOfMethodCallIgnored
                         f.delete();
                     }
@@ -227,7 +227,7 @@ public abstract class EditWithImageActivity extends AppCompatActivity {
                             .createTempFile("photo", "png", getFilesDir());
                     FileOutputStream out = new FileOutputStream(f);
                     imageBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-                    mImageFile = f.getName();
+                    imageFile = f.getName();
                     return true;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -277,6 +277,6 @@ public abstract class EditWithImageActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("img", imageBitmap);
-        outState.putString("image_file", mImageFile);
+        outState.putString("image_file", imageFile);
     }
 }

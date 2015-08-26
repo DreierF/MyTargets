@@ -5,7 +5,7 @@
  * All rights reserved
  */
 
-package de.dreier.mytargets.views;
+package de.dreier.mytargets.views.selector;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,7 +25,7 @@ import java.io.Serializable;
 import de.dreier.mytargets.R;
 
 
-public abstract class DialogSpinner<T extends Serializable> extends LinearLayout {
+public abstract class SelectorBase<T extends Serializable> extends LinearLayout {
 
     public interface OnUpdateListener<T> {
         void onUpdate(T item);
@@ -35,10 +35,11 @@ public abstract class DialogSpinner<T extends Serializable> extends LinearLayout
     private final View mProgress;
     T item = null;
 
-    private Button addButton;
+    private Button mAddButton;
+    private Class<?> addActivity;
     private OnUpdateListener<T> updateListener;
 
-    public DialogSpinner(Context context, AttributeSet attrs, @LayoutRes int layout) {
+    public SelectorBase(Context context, AttributeSet attrs, @LayoutRes int layout) {
         super(context, attrs);
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -46,14 +47,24 @@ public abstract class DialogSpinner<T extends Serializable> extends LinearLayout
         mView = inflater.inflate(layout, this, false);
         addView(mProgress);
         addView(mView);
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        mAddButton = (Button) getChildAt(2);
+        if (mAddButton != null) {
+            mAddButton.setOnClickListener(
+                    v -> getContext().startActivity(new Intent(getContext(), addActivity)));
+        }
         updateView();
     }
 
     private void updateView() {
-        if (addButton != null) {
-            addButton.setVisibility(item == null ? VISIBLE : GONE);
+        if (mAddButton != null) {
+            mAddButton.setVisibility(item == null ? VISIBLE : GONE);
         }
-        mProgress.setVisibility(item == null && addButton == null ? VISIBLE : GONE);
+        mProgress.setVisibility(item == null && mAddButton == null ? VISIBLE : GONE);
         mView.setVisibility(item != null ? VISIBLE : GONE);
         if (item != null) {
             bindView();
@@ -62,12 +73,12 @@ public abstract class DialogSpinner<T extends Serializable> extends LinearLayout
 
     protected abstract void bindView();
 
-    void setAddButton(Button button, OnClickListener listener) {
-        addButton = button;
-        if (addButton != null) {
-            addButton.setOnClickListener(listener);
+    void setAddButtonIntent(Class<?> addActivity) {
+        this.addActivity = addActivity;
+        if (mAddButton != null) {
+            mAddButton.setOnClickListener(
+                    v -> getContext().startActivity(new Intent(getContext(), addActivity)));
         }
-        updateView();
     }
 
     @Override

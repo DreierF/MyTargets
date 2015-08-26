@@ -14,7 +14,7 @@ public class Vertical3Spot extends SpotBase {
 
     public Vertical3Spot(Context context) {
         super(context, ID, R.string.vertical_3_spot);
-        face = new WA5RingTarget(context);
+        face = new WA5RingTarget(context, true);
         facePositions = new int[][]{{500, 160},{500,500},{500,840}};
         faceRadius = 160;
     }

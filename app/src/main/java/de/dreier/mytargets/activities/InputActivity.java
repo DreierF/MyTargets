@@ -9,9 +9,6 @@ package de.dreier.mytargets.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -27,7 +24,6 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.TimerFragment;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.WearMessageManager;
-import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
@@ -125,17 +121,8 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     }
 
     private void startWearNotification() {
-        Bitmap image;
-        if (training.bow > 0) {
-            Bow bow = DatabaseManager.getInstance(this).getBow(training.bow);
-            image = bow.getImage(this);
-        } else {
-            image = BitmapFactory.decodeResource(getResources(), R.drawable.wear_bg);
-        }
-        image = ThumbnailUtils.extractThumbnail(image, 320, 320);
-
         NotificationInfo info = buildInfo();
-        manager = new WearMessageManager(this, image, info);
+        manager = new WearMessageManager(this, info);
     }
 
     @Override
@@ -253,12 +240,12 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
         if (curPasse >= savedPasses || remote) {
             savedPasses++;
-            manager.sendMessage(buildInfo());
+            manager.sendMessageUpdate(buildInfo());
             if (remote) {
                 curPasse = savedPasses + 1;
             }
         } else if (curPasse + 1 == savedPasses) {
-            manager.sendMessage(buildInfo());
+            manager.sendMessageUpdate(buildInfo());
         }
         runOnUiThread(this::updatePasse);
         return passe.getId();

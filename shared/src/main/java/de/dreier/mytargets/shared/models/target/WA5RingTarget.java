@@ -17,6 +17,7 @@ import de.dreier.mytargets.shared.models.Dimension;
 public class WA5RingTarget extends CircularTargetBase {
 
     public static final int ID = 2;
+    private boolean usedAsSpot = false;
 
     public WA5RingTarget(Context context) {
         super(context, ID, R.string.wa_5_ring);
@@ -38,6 +39,19 @@ public class WA5RingTarget extends CircularTargetBase {
                 new Diameter(80, Dimension.CENTIMETER),
                 new Diameter(92, Dimension.CENTIMETER),
                 new Diameter(122, Dimension.CENTIMETER)};
+    }
+
+    public WA5RingTarget(Context context, boolean usedAsSpot) {
+        this(context);
+        this.usedAsSpot = usedAsSpot;
+    }
+
+    @Override
+    protected void drawZone(Canvas canvas, Rect rect, int zone) {
+        // Do not draw second ring if we have a 3 Spot for compound
+        if (!usedAsSpot || scoringStyle != 1 || zone != 1) {
+            super.drawZone(canvas, rect, zone);
+        }
     }
 
     @Override

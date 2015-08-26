@@ -5,7 +5,7 @@
  * All rights reserved
  */
 
-package de.dreier.mytargets.views;
+package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,13 +18,13 @@ import de.dreier.mytargets.models.WindDirection;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class WindDirectionDialogSpinner extends DialogSpinner<WindDirection> {
+public class WindDirectionSelector extends SelectorBase<WindDirection> {
 
-    public WindDirectionDialogSpinner(Context context) {
+    public WindDirectionSelector(Context context) {
         this(context, null);
     }
 
-    public WindDirectionDialogSpinner(Context context, AttributeSet attrs) {
+    public WindDirectionSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_simple_text);
         setOnClickListener(v -> {
             Intent i = new Intent(getContext(), ItemSelectActivity.WindDirection.class);

@@ -98,7 +98,7 @@ public class SpotBase extends Target {
 
     @Override
     public Rect getTargetBounds(Rect rect, int index) {
-        int pos[] = facePositions[index];
+        int pos[] = facePositions[index % facePositions.length];
         Rect bounds = new Rect();
         bounds.left = (int) (rect.left + recalc(rect, pos[0] - faceRadius));
         bounds.top = (int) (rect.top + recalc(rect, pos[1] - faceRadius));

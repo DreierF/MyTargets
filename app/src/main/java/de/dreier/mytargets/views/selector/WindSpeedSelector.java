@@ -5,7 +5,7 @@
  * All rights reserved
  */
 
-package de.dreier.mytargets.views;
+package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,13 +18,13 @@ import de.dreier.mytargets.models.WindSpeed;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class WindSpeedDialogSpinner extends DialogSpinner<WindSpeed> {
+public class WindSpeedSelector extends SelectorBase<WindSpeed> {
 
-    public WindSpeedDialogSpinner(Context context) {
+    public WindSpeedSelector(Context context) {
         this(context, null);
     }
 
-    public WindSpeedDialogSpinner(Context context, AttributeSet attrs) {
+    public WindSpeedSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_simple_text);
         setOnClickListener(v -> {
             Intent i = new Intent(getContext(), ItemSelectActivity.WindSpeed.class);

@@ -104,7 +104,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/format"/>
 
-                        <de.dreier.mytargets.views.StandardRoundDialogSpinner
+                        <de.dreier.mytargets.views.selector.StandardRoundSelector
                             android:id="@+id/standard_round"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
@@ -157,7 +157,7 @@
                                 android:padding="16dp"
                                 android:text="@string/distance"/>
 
-                            <de.dreier.mytargets.views.DistanceDialogSpinner
+                            <de.dreier.mytargets.views.selector.DistanceSelector
                                 android:id="@+id/distance_spinner"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -182,7 +182,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/target_face"/>
 
-                            <de.dreier.mytargets.views.TargetDialogSpinner
+                            <de.dreier.mytargets.views.selector.TargetSelector
                                 android:id="@+id/target_spinner"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -255,13 +255,12 @@
                         android:layout_height="wrap_content"
                         android:text="@string/bow"/>
 
-                    <de.dreier.mytargets.views.BowDialogSpinner
+                    <de.dreier.mytargets.views.selector.BowSelector
                         android:id="@+id/bow"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
                         <Button
-                            android:id="@+id/add_bow"
                             style="@style/primary_text"
                             android:layout_width="match_parent"
                             android:layout_height="35dp"
@@ -274,7 +273,7 @@
                             android:text="@string/add_bow"
                             android:textStyle="normal"/>
 
-                    </de.dreier.mytargets.views.BowDialogSpinner>
+                    </de.dreier.mytargets.views.selector.BowSelector>
                 </LinearLayout>
 
                 <View
@@ -294,13 +293,12 @@
                         android:layout_height="wrap_content"
                         android:text="@string/arrow"/>
 
-                    <de.dreier.mytargets.views.ArrowDialogSpinner
+                    <de.dreier.mytargets.views.selector.ArrowSelector
                         android:id="@+id/arrow"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
                         <Button
-                            android:id="@+id/add_arrow"
                             style="@style/primary_text"
                             android:layout_width="match_parent"
                             android:layout_height="35dp"
@@ -313,7 +311,7 @@
                             android:text="@string/add_arrow"
                             android:textStyle="normal"/>
 
-                    </de.dreier.mytargets.views.ArrowDialogSpinner>
+                    </de.dreier.mytargets.views.selector.ArrowSelector>
                 </LinearLayout>
 
                 <View
@@ -333,7 +331,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/environment"/>
 
-                    <de.dreier.mytargets.views.EnvironmentDialogSpinner
+                    <de.dreier.mytargets.views.selector.EnvironmentSelector
                         android:id="@+id/environment_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

@@ -5,7 +5,7 @@
  * All rights reserved
  */
 
-package de.dreier.mytargets.views;
+package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,13 +23,13 @@ import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 
-public class StandardRoundDialogSpinner extends DialogSpinner<StandardRound> {
+public class StandardRoundSelector extends SelectorBase<StandardRound> {
 
-    public StandardRoundDialogSpinner(Context context) {
+    public StandardRoundSelector(Context context) {
         this(context, null);
     }
 
-    public StandardRoundDialogSpinner(Context context, AttributeSet attrs) {
+    public StandardRoundSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_standard_round);
         mView.findViewById(R.id.content).setOnClickListener(v -> {
             Intent i = new Intent(getContext(), ItemSelectActivity.StandardRound.class);

@@ -574,7 +574,8 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void onArrowChanged(int i) {
-        if (arrowNumbers.isEmpty() || mPasse.shot[currentArrow].arrow != -1) {
+        if (arrowNumbers.isEmpty() ||
+                currentArrow < round.arrowsPerPasse && mPasse.shot[currentArrow].arrow != -1) {
             super.onArrowChanged(i);
         } else {
             List<Integer> numbersLeft = new ArrayList<>(arrowNumbers);

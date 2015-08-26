@@ -253,9 +253,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 do {
                     long training = trainings.getLong(0);
                     long sid = getOrCreateStandardRound(db, training);
-
-                    db.execSQL("UPDATE TRAINING SET standard_round=? WHERE _id=?",
-                            new String[]{"" + sid, "" + training});
+                    if (sid == 0) {
+                        db.execSQL("DELETE FROM TRAINING WHERE _id=?",
+                                new String[]{"" + training});
+                    } else {
+                        db.execSQL("UPDATE TRAINING SET standard_round=? WHERE _id=?",
+                                new String[]{"" + sid, "" + training});
+                    }
 
                     Cursor res = db.rawQuery(
                             "SELECT r._id, r.comment, r.target, r.bow, r.arrow " +
@@ -368,6 +372,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
             return sid.toArray(new Long[sid.size()])[0];
         }
 
+        if (sr.getRounds().isEmpty()) {
+            return 0L;
+        }
         update(sr);
         return sr.getId();
     }

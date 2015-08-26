@@ -5,12 +5,11 @@
  * All rights reserved
  */
 
-package de.dreier.mytargets.views;
+package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,25 +20,20 @@ import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 
-public class BowDialogSpinner extends DialogSpinner<Bow> {
+public class BowSelector extends SelectorBase<Bow> {
 
-    public BowDialogSpinner(Context context) {
+    public BowSelector(Context context) {
         this(context, null);
     }
 
-    public BowDialogSpinner(Context context, AttributeSet attrs) {
+    public BowSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_image);
-        init();
-    }
-
-    private void init() {
         setOnClickListener(v -> {
             Intent i = new Intent(getContext(), ItemSelectActivity.Bow.class);
             i.putExtra(ItemSelectActivity.ITEM, item);
             startIntent(i, data -> setItem((Bow) data.getSerializableExtra(ItemSelectActivity.ITEM)));
         });
-        setAddButton((Button) mView.findViewById(R.id.add_bow),
-                v -> getContext().startActivity(new Intent(getContext(), EditBowActivity.class)));
+        setAddButtonIntent(EditBowActivity.class);
     }
 
     @Override

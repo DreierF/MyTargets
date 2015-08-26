@@ -5,7 +5,7 @@
  * All rights reserved
  */
 
-package de.dreier.mytargets.views;
+package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,13 +18,13 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.shared.models.target.Target;
 
-public class TargetDialogSpinner extends DialogSpinner<Target> {
+public class TargetSelector extends SelectorBase<Target> {
 
-    public TargetDialogSpinner(Context context) {
+    public TargetSelector(Context context) {
         this(context, null);
     }
 
-    public TargetDialogSpinner(Context context, AttributeSet attrs) {
+    public TargetSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_image);
         init();
     }

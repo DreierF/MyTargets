@@ -69,7 +69,7 @@ public class EditArrowActivity extends EditWithImageActivity {
                 if (imageBitmap != null) {
                     mImageView.setImageBitmap(imageBitmap);
                 }
-                mImageFile = arrow.imageFile;
+                imageFile = arrow.imageFile;
                 arrowNumbersList = db.getArrowNumbers(mArrowId);
                 setTitle(R.string.edit_arrow);
             } else {
@@ -116,7 +116,7 @@ public class EditArrowActivity extends EditWithImageActivity {
         arrow.vanes = vanes.getText().toString();
         arrow.nock = nock.getText().toString();
         arrow.comment = comment.getText().toString();
-        arrow.setImage(mImageFile, imageBitmap);
+        arrow.setImage(imageFile, imageBitmap);
         arrow.numbers = numbers;
 
         db.update(arrow);

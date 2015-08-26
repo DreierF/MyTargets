@@ -8,7 +8,6 @@
 package de.dreier.mytargets.managers;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -36,12 +35,10 @@ public class WearMessageManager
     private static final String TAG = "wearMessageManager";
     private final OnTargetSetListener mListener;
     private final NotificationInfo info;
-    private final Bitmap image;
 
     private final GoogleApiClient mGoogleApiClient;
 
-    public WearMessageManager(Context context, Bitmap image, NotificationInfo info) {
-        this.image = image;
+    public WearMessageManager(Context context, NotificationInfo info) {
         this.info = info;
         mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(Wearable.API)
@@ -63,7 +60,7 @@ public class WearMessageManager
             Log.d(TAG, "Connected to Google Api Service");
         }
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
-        sendMessage(image, info);
+        sendMessageStart(info);
     }
 
     private Collection<String> getNodes() {
@@ -78,10 +75,10 @@ public class WearMessageManager
         return results;
     }
 
-    private void sendMessage(Bitmap image, NotificationInfo info) {
+    private void sendMessageStart(NotificationInfo info) {
         // Serialize bundle to byte array
         try {
-            final byte[] data = WearableUtils.serialize(image, info);
+            final byte[] data = WearableUtils.serialize(info);
             new Thread(() -> {
                 sendMessage(WearableUtils.STARTED_ROUND, data);
             }).start();
@@ -90,7 +87,7 @@ public class WearMessageManager
         }
     }
 
-    public void sendMessage(NotificationInfo info) {
+    public void sendMessageUpdate(NotificationInfo info) {
         // Serialize info to byte array
         try {
             final byte[] data = WearableUtils.serialize(info);

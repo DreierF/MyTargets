@@ -5,7 +5,7 @@
  * All rights reserved
  */
 
-package de.dreier.mytargets.views;
+package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,13 +18,13 @@ import de.dreier.mytargets.shared.models.Distance;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class DistanceDialogSpinner extends DialogSpinner<Distance> {
+public class DistanceSelector extends SelectorBase<Distance> {
 
-    public DistanceDialogSpinner(Context context) {
+    public DistanceSelector(Context context) {
         this(context, null);
     }
 
-    public DistanceDialogSpinner(Context context, AttributeSet attrs) {
+    public DistanceSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_distance);
         setOnClickListener(v -> {
             Intent i = new Intent(getContext(), ItemSelectActivity.Distance.class);

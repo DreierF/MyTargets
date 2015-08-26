@@ -26,14 +26,14 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.utils.MyBackupAgent;
-import de.dreier.mytargets.views.WindDirectionDialogSpinner;
-import de.dreier.mytargets.views.WindSpeedDialogSpinner;
+import de.dreier.mytargets.views.selector.WindDirectionSelector;
+import de.dreier.mytargets.views.selector.WindSpeedSelector;
 
 public class EnvironmentFragment extends Fragment {
     public static final String ENVIRONMENT = "environment";
 
-    private WindSpeedDialogSpinner wind_speed;
-    private WindDirectionDialogSpinner wind_direction;
+    private WindSpeedSelector wind_speed;
+    private WindDirectionSelector wind_direction;
     private NowListFragment.OnItemSelectedListener listener;
     private Environment mEnvironment;
     private EWeather weather;
@@ -65,8 +65,8 @@ public class EnvironmentFragment extends Fragment {
         setOnClickWeather(light_rain, EWeather.LIGHT_RAIN);
         setOnClickWeather(rain, EWeather.RAIN);
 
-        wind_speed = (WindSpeedDialogSpinner) rootView.findViewById(R.id.wind_speed);
-        wind_direction = (WindDirectionDialogSpinner) rootView.findViewById(R.id.wind_direction);
+        wind_speed = (WindSpeedSelector) rootView.findViewById(R.id.wind_speed);
+        wind_direction = (WindDirectionSelector) rootView.findViewById(R.id.wind_direction);
         location = (EditText) rootView.findViewById(R.id.location);
 
         setWeather(mEnvironment.weather);
