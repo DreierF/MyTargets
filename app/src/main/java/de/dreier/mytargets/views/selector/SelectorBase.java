@@ -116,8 +116,6 @@ public abstract class SelectorBase<T extends Serializable> extends LinearLayout 
         void onResult(Intent data);
     }
 
-    // TODO use this to handle on click events without the need to define it in every used location
-    // TODO possibly refactor the view to become a fragment
     void startIntent(Intent i, OnResultListener resultListener) {
         final int requestId = (int) (Math.random() * Short.MAX_VALUE);
         final FragmentManager fm = ((FragmentActivity) getContext()).getSupportFragmentManager();

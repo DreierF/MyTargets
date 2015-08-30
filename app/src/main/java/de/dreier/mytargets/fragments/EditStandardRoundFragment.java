@@ -10,12 +10,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -28,38 +23,31 @@ import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
-import de.dreier.mytargets.utils.MyBackupAgent;
-import de.dreier.mytargets.views.selector.DistanceSelector;
 import de.dreier.mytargets.views.DynamicItemLayout;
 import de.dreier.mytargets.views.NumberPicker;
+import de.dreier.mytargets.views.selector.DistanceSelector;
 import de.dreier.mytargets.views.selector.TargetSelector;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class EditStandardRoundFragment extends Fragment
+public class EditStandardRoundFragment extends EditFragmentBase
         implements DynamicItemLayout.OnBindListener<RoundTemplate> {
 
     private RadioButton indoor;
     private DynamicItemLayout<RoundTemplate> rounds;
     private EditText name;
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_edit_standard_round, container, false);
 
-        final AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
-        setHasOptionsMenu(true);
+        setUpToolbar(rootView);
 
-        Bundle i = getArguments();
         StandardRound standardRound = null;
-        if (i != null) {
-            standardRound = (StandardRound) i.getSerializable(ITEM);
+        if (getArguments() != null) {
+            standardRound = (StandardRound) getArguments().getSerializable(ITEM);
         }
-        SharedPreferences prefs = activity.getSharedPreferences(MyBackupAgent.PREFS, 0);
 
         // Indoor / outdoor
         RadioButton outdoor = (RadioButton) rootView.findViewById(R.id.outdoor);
@@ -76,6 +64,7 @@ public class EditStandardRoundFragment extends Fragment
         rounds.rebindOnIndexChanged(true);
 
         if (standardRound == null) {
+            setTitle(R.string.new_round_template);
             name.setText(R.string.custom_round);
             // Initialise with default values
             indoor.setChecked(prefs.getBoolean("indoor", false));
@@ -93,7 +82,7 @@ public class EditStandardRoundFragment extends Fragment
             round.distance = Distance.fromId(distId);
             rounds.addItem(round);
         } else {
-            getActivity().setTitle(R.string.edit_standard_round);
+            setTitle(R.string.edit_standard_round);
             // Load saved values
             indoor.setChecked(standardRound.indoor);
             outdoor.setChecked(!standardRound.indoor);
@@ -108,20 +97,7 @@ public class EditStandardRoundFragment extends Fragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.save, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            onSave();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void onSave() {
+    protected void onSave() {
         StandardRound standardRound = new StandardRound();
         standardRound.setId(-1);
         standardRound.club = StandardRound.CUSTOM;
@@ -129,7 +105,6 @@ public class EditStandardRoundFragment extends Fragment
         standardRound.indoor = indoor.isChecked();
         standardRound.setRounds(rounds.getList());
 
-        SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("indoor", standardRound.indoor);
 

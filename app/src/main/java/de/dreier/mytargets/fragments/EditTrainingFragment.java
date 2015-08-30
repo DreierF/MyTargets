@@ -6,23 +6,14 @@
  */
 package de.dreier.mytargets.fragments;
 
-import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -43,15 +34,12 @@ import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Distance;
-import de.dreier.mytargets.shared.models.EWeather;
-import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
-import de.dreier.mytargets.utils.MyBackupAgent;
 import de.dreier.mytargets.views.NumberPicker;
 import de.dreier.mytargets.views.selector.ArrowSelector;
 import de.dreier.mytargets.views.selector.BowSelector;
@@ -59,16 +47,12 @@ import de.dreier.mytargets.views.selector.DistanceSelector;
 import de.dreier.mytargets.views.selector.EnvironmentSelector;
 import de.dreier.mytargets.views.selector.StandardRoundSelector;
 import de.dreier.mytargets.views.selector.TargetSelector;
-import zh.wang.android.apis.yweathergetter4a.WeatherInfo;
-import zh.wang.android.apis.yweathergetter4a.YahooWeather;
-import zh.wang.android.apis.yweathergetter4a.YahooWeatherExceptionListener;
-import zh.wang.android.apis.yweathergetter4a.YahooWeatherInfoListener;
 
 
-//TODO Refactor a EditFragment superclass
-public class EditTrainingFragment extends Fragment implements DatePickerDialog.OnDateSetListener,
-        YahooWeatherInfoListener, TabLayout.OnTabSelectedListener, YahooWeatherExceptionListener {
+public class EditTrainingFragment extends EditFragmentBase implements DatePickerDialog.OnDateSetListener,
+        TabLayout.OnTabSelectedListener {
     public static final String TRAINING_ID = "training_id";
+
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private static final int REQ_SELECTED_DATE = 2;
 
@@ -94,19 +78,12 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit_training, container, false);
 
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        final AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(toolbar);
-        assert activity.getSupportActionBar() != null;
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
-        setHasOptionsMenu(true);
+        setUpToolbar(rootView);
 
         Bundle arguments = getArguments();
         if (arguments != null) {
             mTraining = arguments.getLong(TRAINING_ID, -1);
         }
-        SharedPreferences prefs = activity.getSharedPreferences(MyBackupAgent.PREFS, 0);
 
         training = (EditText) rootView.findViewById(R.id.training);
         training_date = (Button) rootView.findViewById(R.id.training_date);
@@ -159,9 +136,9 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         arrows.setMaximum(10);
 
         if (mTraining == -1) {
+            setTitle(R.string.new_training);
             training.setText(getString(R.string.training));
             setTrainingDate();
-            activity.getSupportActionBar().setTitle(R.string.new_training);
             tabLayout.getTabAt(prefs.getInt("tab", 0)).select();
             bow.setItemId(prefs.getInt("bow", -1));
             arrow.setItemId(prefs.getInt("arrow", -1));
@@ -180,17 +157,9 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             target.size = new Diameter(prefs.getInt("size_target", 60),
                     prefs.getString("unit_target", Diameter.CENTIMETER));
             targetSpinner.setItem(target);
-
-            if (ContextCompat.checkSelfPermission(activity,
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        REQUEST_LOCATION_PERMISSION);
-            } else {
-                queryWeatherInfo();
-            }
-
+            environment.queryWeather(getActivity(), REQUEST_LOCATION_PERMISSION);
         } else {
+            setTitle(R.string.edit_training);
             DatabaseManager db = DatabaseManager.getInstance(activity);
             Training train = db.getTraining(mTraining);
             training.setText(train.title);
@@ -200,24 +169,12 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             standardRoundSpinner.setItemId(train.standardRoundId);
             environment.setItem(train.environment);
             setTrainingDate();
-            activity.getSupportActionBar().setTitle(R.string.edit_training);
             not_editable.setVisibility(View.GONE);
             tabLayout.setVisibility(View.GONE);
         }
         updateMode(tabLayout.getTabAt(0));
         updateArrowNumbers(arrow.getSelectedItem());
         return rootView;
-    }
-
-    private void queryWeatherInfo() {
-        // Start getting weather for current location
-        try {
-            YahooWeather weather = new YahooWeather();
-            weather.setExceptionListener(this);
-            weather.queryYahooWeatherByGPS(getActivity(), this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void updateArrowNumbers(Arrow item) {
@@ -233,11 +190,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_LOCATION_PERMISSION:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    queryWeatherInfo();
-                } else {
-                    setDefaultWeather();
-                }
+                environment.onPermissionResult(activity, grantResults);
         }
     }
 
@@ -252,20 +205,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.save, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            onSave();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void onSave() {
+    protected void onSave() {
         boolean newTraining = mTraining == -1;
         DatabaseManager db = DatabaseManager.getInstance(getActivity());
         String title = training.getText().toString();
@@ -273,12 +213,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         training1.setId(mTraining);
         training1.title = title;
         training1.date = date;
-        //TODO move this logic incl. getting weather to {@link EnvironmentDialogSpinner}
         training1.environment = environment.getSelectedItem();
-        if (training1.environment == null) {
-            training1.environment = new Environment(EWeather.SUNNY, 0, 0);
-        }
-
         training1.bow = bow.getSelectedItem() == null ? 0 : bow.getSelectedItem().getId();
         training1.arrow = arrow.getSelectedItem() == null ? 0 : arrow.getSelectedItem().getId();
         int time = 120;
@@ -294,7 +229,6 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
                 number_arrows.isChecked();
 
         getActivity().finish();
-        SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);
         SharedPreferences.Editor editor = prefs.edit();
         StandardRound standardRound;
         if (newTraining) {
@@ -370,60 +304,6 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
     }
 
     @Override
-    public void gotWeatherInfo(WeatherInfo weatherInfo) {
-        if (weatherInfo == null) {
-            return;
-        }
-        Environment e = new Environment();
-        int code = weatherInfo.getCurrentCode();
-        if (code == 8 || code == 9) {
-            e.weather = EWeather.LIGHT_RAIN;
-        } else if (code < 19) {
-            e.weather = EWeather.RAIN;
-        } else if (code < 27) {
-            e.weather = EWeather.CLOUDY;
-        } else if (code < 31) {
-            e.weather = EWeather.PARTLY_CLOUDY;
-        } else {
-            e.weather = EWeather.SUNNY;
-        }
-        e.windDirection = 0;
-        e.location = weatherInfo.getLocationCity();
-        String speed = weatherInfo.getWindSpeed();
-        String unit = weatherInfo.getSpeedUnit();
-        try {
-            float sp = Float.parseFloat(speed);
-            if (unit.equals("km/h") || unit.equals("kph")) {
-                sp *= 0.621371192f;
-            }
-            if (sp < 1.2f) {
-                e.windSpeed = 0;
-            } else if (sp < 4.6) {
-                e.windSpeed = 1;
-            } else if (sp < 8.1) {
-                e.windSpeed = 2;
-            } else if (sp < 12.7) {
-                e.windSpeed = 3;
-            } else if (sp < 18.4) {
-                e.windSpeed = 4;
-            } else if (sp < 25.3) {
-                e.windSpeed = 5;
-            } else if (sp < 32.2) {
-                e.windSpeed = 6;
-            } else if (sp < 39.1) {
-                e.windSpeed = 7;
-            } else if (sp < 47.2) {
-                e.windSpeed = 8;
-            } else if (sp < 55.2) {
-                e.windSpeed = 9;
-            }
-        } catch (NumberFormatException nfe) {
-            e.windSpeed = 0;
-        }
-        environment.setItem(e);
-    }
-
-    @Override
     public void onTabSelected(TabLayout.Tab tab) {
         updateMode(tab);
     }
@@ -449,24 +329,5 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
-    }
-
-    @Override
-    public void onFailConnection(Exception e) {
-        setDefaultWeather();
-    }
-
-    @Override
-    public void onFailParsing(Exception e) {
-        setDefaultWeather();
-    }
-
-    @Override
-    public void onFailFindLocation(Exception e) {
-        setDefaultWeather();
-    }
-
-    private void setDefaultWeather() {
-        environment.setItem(new Environment(EWeather.SUNNY, 0, 0));
     }
 }

@@ -480,7 +480,6 @@ public class YahooWeather implements LocationResult {
 
         @Override
         protected void onPostExecute(WeatherInfo result) {
-            // TODO Auto-generated method stub
             super.onPostExecute(result);
             mWeatherInfoResult.gotWeatherInfo(result);
             mContext = null;

@@ -101,6 +101,7 @@
             android:name=".activities.SimpleFragmentActivity$EditStandardRoundActivity"
             android:label="@string/new_round_template"
             android:parentActivityName=".activities.ItemSelectActivity$StandardRound"
+            android:theme="@style/AppTheme.CustomToolbar"
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -22,7 +22,6 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.EditBowActivity;
-import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
@@ -53,7 +52,7 @@ public class BowFragment extends NowListFragment<Bow> implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        startActivity(SimpleFragmentActivity.EditStandardRoundActivity.class); //TODO ??
+        startActivity(EditBowActivity.class);
     }
 
     protected class BowAdapter extends NowListAdapter<Bow> {

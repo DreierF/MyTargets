@@ -109,7 +109,7 @@ public class TargetSelectView extends TargetViewBase {
 
     @Override
     protected Shot getShotFromPos(float x, float y) {
-        int rings = round.target.getZones(); //TODO
+        int rings = round.target.getZones();
         Shot s = new Shot(currentArrow);
 
         double xDiff = x - radius;
