@@ -67,6 +67,7 @@ public class EditRoundFragment extends Fragment {
         SharedPreferences prefs = activity.getSharedPreferences(MyBackupAgent.PREFS, 0);
 
         View not_editable = rootView.findViewById(R.id.not_editable);
+        View distance_layout = rootView.findViewById(R.id.distance_layout);
         distanceSpinner = (DistanceSelector) rootView.findViewById(R.id.distance_spinner);
         targetSpinner = (TargetSelector) rootView.findViewById(R.id.target_spinner);
 
@@ -103,6 +104,10 @@ public class EditRoundFragment extends Fragment {
             distanceSpinner.setItem(round.info.distance);
             comment.setText(round.comment);
             not_editable.setVisibility(View.GONE);
+            StandardRound standardRound = db.getStandardRound(round.info.standardRound);
+            if (standardRound.club != StandardRound.CUSTOM_PRACTICE) {
+                distance_layout.setVisibility(View.GONE);
+            }
         }
         return rootView;
     }
@@ -117,14 +122,14 @@ public class EditRoundFragment extends Fragment {
         if (item.getItemId() == R.id.action_save) {
             getActivity().finish();
             if (mRound == -1) {
-                onSaveTraining();
+                onSaveRound();
                 Intent i = new Intent(getActivity(), InputActivity.class);
                 i.putExtra(InputActivity.ROUND_ID, mRound);
                 i.putExtra(InputActivity.PASSE_IND, 0);
                 startActivity(i);
                 getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
             } else {
-                onSaveTraining();
+                onSaveRound();
                 getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
             }
             return true;
@@ -132,16 +137,17 @@ public class EditRoundFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void onSaveTraining() {
+    private void onSaveRound() {
         DatabaseManager db = DatabaseManager.getInstance(getContext());
+        Training training = db.getTraining(mTraining);
+        StandardRound standardRound = db.getStandardRound(training.standardRoundId);
+
         SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);
         SharedPreferences.Editor editor = prefs.edit();
         Round round;
         if (mRound != -1) {
             round = db.getRound(mRound);
         } else {
-            Training training = db.getTraining(mTraining);
-            StandardRound standardRound = db.getStandardRound(training.standardRoundId);
             round = new Round();
             round.training = mTraining;
             round.info = new RoundTemplate();
@@ -154,8 +160,11 @@ public class EditRoundFragment extends Fragment {
         }
 
         round.comment = comment.getText().toString();
-        round.info.distance = distanceSpinner.getSelectedItem();
-        db.update(round.info);
+
+        if (standardRound.club == StandardRound.CUSTOM_PRACTICE) {
+            round.info.distance = distanceSpinner.getSelectedItem();
+            db.update(round.info);
+        }
         db.update(round);
 
         mRound = round.getId();
