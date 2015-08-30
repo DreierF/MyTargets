@@ -8,7 +8,6 @@
 package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,11 +31,7 @@ public class ArrowSelector extends SelectorBase<Arrow> {
     }
 
     private void init() {
-        setOnClickListener(v -> {
-            Intent i = new Intent(getContext(), ItemSelectActivity.Arrow.class);
-            i.putExtra(ItemSelectActivity.ITEM, item);
-            startIntent(i, data -> setItem((Arrow) data.getSerializableExtra(ItemSelectActivity.ITEM)));
-        });
+        setOnClickActivity(ItemSelectActivity.Arrow.class);
         setAddButtonIntent(EditArrowActivity.class);
     }
 
@@ -49,6 +44,13 @@ public class ArrowSelector extends SelectorBase<Arrow> {
     }
 
     public void setItemId(long arrow) {
-        setItem(DatabaseManager.getInstance(getContext()).getArrow(arrow));
+        Arrow item = null;
+        if (arrow > 0) {
+            item = DatabaseManager.getInstance(getContext()).getArrow(arrow);
+        }
+        if (item == null) {
+            item = DatabaseManager.getInstance(getContext()).getArrows().get(0);
+        }
+        setItem(item);
     }
 }

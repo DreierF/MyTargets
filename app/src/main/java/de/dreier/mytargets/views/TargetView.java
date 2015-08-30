@@ -606,7 +606,9 @@ public class TargetView extends TargetViewBase {
             gridView.setNumColumns(cols);
             gridView.setOnItemClickListener((parent, view, position, id) ->
             {
-                mPasse.shot[currentArrow].arrow = numbersLeft.get(position);
+                if (currentArrow < mPasse.shot.length) {
+                    mPasse.shot[currentArrow].arrow = numbersLeft.get(position);
+                }
                 dialog.dismiss();
                 super.onArrowChanged(i);
             });

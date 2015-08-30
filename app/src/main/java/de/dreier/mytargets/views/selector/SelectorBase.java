@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import java.io.Serializable;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.ItemSelectActivity;
 
 
 public abstract class SelectorBase<T extends Serializable> extends LinearLayout {
@@ -64,11 +65,25 @@ public abstract class SelectorBase<T extends Serializable> extends LinearLayout 
         if (mAddButton != null) {
             mAddButton.setVisibility(item == null ? VISIBLE : GONE);
         }
-        mProgress.setVisibility(item == null && mAddButton == null ? VISIBLE : GONE);
+        boolean progress = item == null && mAddButton == null;
+        setClickable(!progress);
+        setEnabled(!progress);
+        mProgress.setVisibility(progress ? VISIBLE : GONE);
         mView.setVisibility(item != null ? VISIBLE : GONE);
         if (item != null) {
             bindView();
         }
+    }
+
+    protected void setOnClickActivity(Class<?> aClass) {
+        setOnClickListener(v -> {
+            Intent i = new Intent(getContext(), aClass);
+            i.putExtra(ItemSelectActivity.ITEM, item);
+            startIntent(i, data -> {
+                //noinspection unchecked
+                setItem((T) data.getSerializableExtra(ItemSelectActivity.ITEM));
+            });
+        });
     }
 
     protected abstract void bindView();
@@ -79,12 +94,6 @@ public abstract class SelectorBase<T extends Serializable> extends LinearLayout 
             mAddButton.setOnClickListener(
                     v -> getContext().startActivity(new Intent(getContext(), addActivity)));
         }
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        updateView();
     }
 
     public T getSelectedItem() {

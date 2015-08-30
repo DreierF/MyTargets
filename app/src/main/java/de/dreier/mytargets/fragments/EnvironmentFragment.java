@@ -7,10 +7,8 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,12 +23,12 @@ import junit.framework.Assert;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
-import de.dreier.mytargets.utils.MyBackupAgent;
 import de.dreier.mytargets.views.selector.WindDirectionSelector;
 import de.dreier.mytargets.views.selector.WindSpeedSelector;
 
+import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
+
 public class EnvironmentFragment extends Fragment {
-    public static final String ENVIRONMENT = "environment";
 
     private WindSpeedSelector wind_speed;
     private WindDirectionSelector wind_direction;
@@ -48,10 +46,8 @@ public class EnvironmentFragment extends Fragment {
 
         Bundle i = getArguments();
         if (i != null) {
-            mEnvironment = (Environment) i.getSerializable(ENVIRONMENT);
+            mEnvironment = (Environment) i.getSerializable(ITEM);
         }
-        final AppCompatActivity activity = (AppCompatActivity) getActivity();
-        SharedPreferences prefs = activity.getSharedPreferences(MyBackupAgent.PREFS, 0);
 
         // Weather
         sunny = (ImageButton) rootView.findViewById(R.id.sunny);

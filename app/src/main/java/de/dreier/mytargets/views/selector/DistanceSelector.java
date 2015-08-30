@@ -8,15 +8,12 @@
 package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.shared.models.Distance;
-
-import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 public class DistanceSelector extends SelectorBase<Distance> {
 
@@ -26,11 +23,7 @@ public class DistanceSelector extends SelectorBase<Distance> {
 
     public DistanceSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_distance);
-        setOnClickListener(v -> {
-            Intent i = new Intent(getContext(), ItemSelectActivity.Distance.class);
-            i.putExtra(ITEM, item);
-            startIntent(i, data -> setItem((Distance) data.getSerializableExtra(ITEM)));
-        });
+        setOnClickActivity(ItemSelectActivity.Distance.class);
     }
 
     @Override

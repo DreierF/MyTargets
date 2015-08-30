@@ -8,7 +8,6 @@
 package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,11 +29,7 @@ public class TargetSelector extends SelectorBase<Target> {
     }
 
     private void init() {
-        setOnClickListener(v -> {
-            Intent i = new Intent(getContext(), ItemSelectActivity.Target.class);
-            i.putExtra(ItemSelectActivity.ITEM, item);
-            startIntent(i, data -> setItem((Target) data.getSerializableExtra(ItemSelectActivity.ITEM)));
-        });
+        setOnClickActivity(ItemSelectActivity.Target.class);
     }
 
     @Override

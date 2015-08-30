@@ -75,8 +75,8 @@ public class Target3DBase extends Target {
     @Override
     protected boolean isInZone(float ax, float ay, int zone, boolean outsideIn) {
         if (zones - zone == 2) {
-            return region.contains((int)ax, (int)ay);
-        } else if(zones - zone == 3) {
+            return region.contains((int) ax, (int) ay);
+        } else if (zones - zone == 3) {
             return (ax - 564.375f) * (ax - 564.375f) + (ay - 577.813f) * (ay - 577.813f) <
                     43655.09f;
         }
@@ -85,7 +85,7 @@ public class Target3DBase extends Target {
 
     @Override
     public Diameter[] getDiameters() {
-        return new Diameter[] {Diameter.MINI,
+        return new Diameter[]{Diameter.MINI,
                 Diameter.SMALL,
                 Diameter.MEDIUM,
                 Diameter.LARGE,
@@ -95,5 +95,10 @@ public class Target3DBase extends Target {
     @Override
     public boolean is3DTarget() {
         return true;
+    }
+
+    @Override
+    public int getMaxPoints() {
+        return Math.max(zonePoints[scoringStyle][0], zonePoints[scoringStyle][1]);
     }
 }

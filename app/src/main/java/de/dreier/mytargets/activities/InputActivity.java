@@ -35,7 +35,6 @@ import de.dreier.mytargets.views.TargetView;
 
 public class InputActivity extends AppCompatActivity implements OnTargetSetListener {
 
-    public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
     public static final String PASSE_IND = "passe_ind";
     private static final String SHOW_ALL_MODE = "show_all";
@@ -67,33 +66,15 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
         Intent intent = getIntent();
         assert intent != null;
-        long mTraining;
-        if (intent.hasExtra(TRAINING_ID)) {
-            mTraining = intent.getLongExtra(TRAINING_ID, -1);
-            rounds = db.getRounds(mTraining);
-            training = db.getTraining(mTraining);
-            for (int roundIndex = 0; roundIndex < rounds.size(); roundIndex++) {
-                mRound = rounds.get(roundIndex);
-                template = mRound.info;
-                ArrayList<Passe> passes = db.getPassesOfRound(mRound.getId());
-                savedPasses = passes.size();
-                if (savedPasses < template.passes || roundIndex + 1 == rounds.size()) {
-                    curPasse = Math.min(savedPasses, template.passes - 1);
-                    break;
-                }
-            }
-            mExitOnFinish = true;
-        } else {
-            long roundId = intent.getLongExtra(ROUND_ID, -1);
-            curPasse = intent.getIntExtra(PASSE_IND, -1);
-            mRound = db.getRound(roundId);
-            template = mRound.info;
-            mTraining = mRound.training;
-            training = db.getTraining(mTraining);
-            rounds = db.getRounds(mTraining);
-            savedPasses = db.getPassesOfRound(roundId).size();
-            mExitOnFinish = false;
-        }
+
+        long roundId = intent.getLongExtra(ROUND_ID, -1);
+        curPasse = intent.getIntExtra(PASSE_IND, -1);
+        mRound = db.getRound(roundId);
+        template = mRound.info;
+        training = db.getTraining(mRound.training);
+        rounds = db.getRounds(mRound.training);
+        savedPasses = db.getPassesOfRound(roundId).size();
+        mExitOnFinish = savedPasses <= curPasse;
 
         target.setRoundTemplate(template);
         if (training.arrowNumbering) {
@@ -182,11 +163,11 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     }
 
     private void updatePasse() {
-        assert getActionBar() != null;
         prev.setEnabled(curPasse > 0 || template.index > 0);
-        next.setEnabled(curPasse < savedPasses && curPasse+1 < template.passes ||
+        next.setEnabled(curPasse < savedPasses && curPasse + 1 < template.passes ||
                 rounds.size() > template.index + 1);
 
+        assert getSupportActionBar() != null;
         getSupportActionBar().setTitle(getString(R.string.passe) + " " + (curPasse + 1));
         getSupportActionBar()
                 .setSubtitle(getString(R.string.round) + " " + (mRound.info.index + 1));

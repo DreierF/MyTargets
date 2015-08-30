@@ -275,11 +275,11 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
         float ay = y * 500;
         float distance = ax * ax + ay * ay;
         for (int i = 0; i < radius.length; i++) {
-            float adaptedRadius =
-                    radius[i] + (scoresAsOutSideIn(i) ? ARROW_RADIUS + strokeWidth[i] / 2.0f :
-                            -ARROW_RADIUS);
+            float adaptedRadius = radius[i] +
+                    (scoresAsOutSideIn(i) ? ARROW_RADIUS + strokeWidth[i] / 2.0f : -ARROW_RADIUS);
             float ro = adaptedRadius * adaptedRadius;
-            if (ro == 0 && isInZone(500.0f + ax, 500.0f + ay, i, outsideIn) || ro > distance) {
+            if (radius[i] == 0 && isInZone(500.0f + ax, 500.0f + ay, i, outsideIn) ||
+                    ro > distance) {
                 return i;
             }
         }

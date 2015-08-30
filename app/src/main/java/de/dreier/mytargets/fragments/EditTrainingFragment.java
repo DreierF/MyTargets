@@ -52,11 +52,11 @@ import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.MyBackupAgent;
+import de.dreier.mytargets.views.NumberPicker;
 import de.dreier.mytargets.views.selector.ArrowSelector;
 import de.dreier.mytargets.views.selector.BowSelector;
 import de.dreier.mytargets.views.selector.DistanceSelector;
 import de.dreier.mytargets.views.selector.EnvironmentSelector;
-import de.dreier.mytargets.views.NumberPicker;
 import de.dreier.mytargets.views.selector.StandardRoundSelector;
 import de.dreier.mytargets.views.selector.TargetSelector;
 import zh.wang.android.apis.yweathergetter4a.WeatherInfo;
@@ -77,7 +77,6 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
     private BowSelector bow;
     private ArrowSelector arrow;
     private EditText training;
-    //private EditText comment;
     private Button training_date;
     private Date date = new Date();
     private EnvironmentSelector environment;
@@ -91,15 +90,14 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
     private DistanceSelector distanceSpinner;
     private NumberPicker passes, arrows;
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_edit_training, container, false);
 
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         final AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
+        assert activity.getSupportActionBar() != null;
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
         setHasOptionsMenu(true);
@@ -160,9 +158,6 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
         arrows.setMinimum(1);
         arrows.setMaximum(10);
 
-        // Comment
-        //comment = (EditText) rootView.findViewById(R.id.comment);
-
         if (mTraining == -1) {
             training.setText(getString(R.string.training));
             setTrainingDate();
@@ -189,7 +184,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             if (ContextCompat.checkSelfPermission(activity,
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         REQUEST_LOCATION_PERMISSION);
             } else {
                 queryWeatherInfo();
@@ -205,7 +200,7 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             standardRoundSpinner.setItemId(train.standardRoundId);
             environment.setItem(train.environment);
             setTrainingDate();
-            activity.getSupportActionBar().setTitle(R.string.new_training);
+            activity.getSupportActionBar().setTitle(R.string.edit_training);
             not_editable.setVisibility(View.GONE);
             tabLayout.setVisibility(View.GONE);
         }
@@ -264,42 +259,28 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
-            getActivity().finish();
-            if (mTraining == -1) {
-                onSaveTraining();
-                Intent i = new Intent(getActivity(), SimpleFragmentActivity.TrainingActivity.class);
-                i.putExtra(PasseFragment.TRAINING_ID, mTraining);
-                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(i);
-
-                i = new Intent(getActivity(), InputActivity.class);
-                i.putExtra(InputActivity.TRAINING_ID, mTraining);
-                startActivity(i);
-                getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
-            } else {
-                onSaveTraining();
-                getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
-            }
+            onSave();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void onSaveTraining() {
+    private void onSave() {
+        boolean newTraining = mTraining == -1;
         DatabaseManager db = DatabaseManager.getInstance(getActivity());
         String title = training.getText().toString();
-        Training training = new Training();
-        training.setId(mTraining);
-        training.title = title;
-        training.date = date;
+        Training training1 = new Training();
+        training1.setId(mTraining);
+        training1.title = title;
+        training1.date = date;
         //TODO move this logic incl. getting weather to {@link EnvironmentDialogSpinner}
-        training.environment = environment.getSelectedItem();
-        if (training.environment == null) {
-            training.environment = new Environment(EWeather.SUNNY, 0, 0);
+        training1.environment = environment.getSelectedItem();
+        if (training1.environment == null) {
+            training1.environment = new Environment(EWeather.SUNNY, 0, 0);
         }
 
-        training.bow = bow.getSelectedItem() == null ? 0 : bow.getSelectedItem().getId();
-        training.arrow = arrow.getSelectedItem() == null ? 0 : arrow.getSelectedItem().getId();
+        training1.bow = bow.getSelectedItem() == null ? 0 : bow.getSelectedItem().getId();
+        training1.arrow = arrow.getSelectedItem() == null ? 0 : arrow.getSelectedItem().getId();
         int time = 120;
         try {
             SharedPreferences prefs = PreferenceManager
@@ -307,19 +288,16 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
             time = Integer.parseInt(prefs.getString("timer_shoot_time", "120"));
         } catch (NumberFormatException ignored) {
         }
-        training.timePerPasse = timer.isChecked() ? time : -1;
+        training1.timePerPasse = timer.isChecked() ? time : -1;
         Arrow selectedItem = arrow.getSelectedItem();
-        training.arrowNumbering = !(selectedItem == null || selectedItem.numbers.isEmpty()) &&
+        training1.arrowNumbering = !(selectedItem == null || selectedItem.numbers.isEmpty()) &&
                 number_arrows.isChecked();
 
+        getActivity().finish();
         SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);
         SharedPreferences.Editor editor = prefs.edit();
         StandardRound standardRound;
-        if (mTraining != -1) {
-            Training train = db.getTraining(mTraining);
-            training.standardRoundId = train.standardRoundId;
-            db.update(training);
-        } else {
+        if (newTraining) {
             getActivity().setTitle(R.string.edit_training);
             if (tabLayout.getSelectedTabPosition() == 0) {
                 // Generate and save standard round template for practice
@@ -344,6 +322,8 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
                 editor.putInt("rounds", round.passes);
                 editor.putInt("distance", round.distance.value);
                 editor.putString("unit", round.distance.unit);
+                editor.putInt("target", (int) round.target.getId());
+                editor.putInt("scoring_style", round.target.scoringStyle);
                 editor.putInt("size_target", round.target.size.value);
                 editor.putString("unit_target", round.target.size.unit);
             } else {
@@ -351,23 +331,41 @@ public class EditTrainingFragment extends Fragment implements DatePickerDialog.O
                 db.update(standardRound);
                 editor.putInt("standard_round", (int) standardRound.getId());
             }
-            training.standardRoundId = standardRound.getId();
+            training1.standardRoundId = standardRound.getId();
 
-            db.update(training);
-            mTraining = training.getId();
+            db.update(training1);
+            mTraining = training1.getId();
+            ArrayList<Round> rounds = new ArrayList<>();
             for (RoundTemplate template : standardRound.getRounds()) {
                 Round round = new Round();
                 round.training = mTraining;
                 round.info = template;
                 round.comment = "";
                 db.update(round);
+                rounds.add(round);
             }
+            Intent i = new Intent(getActivity(), SimpleFragmentActivity.TrainingActivity.class);
+            i.putExtra(TrainingFragment.TRAINING_ID, mTraining);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
+
+            i = new Intent(getActivity(), InputActivity.class);
+            i.putExtra(InputActivity.ROUND_ID, rounds.get(0).getId());
+            i.putExtra(InputActivity.PASSE_IND, 0);
+            startActivity(i);
+            getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        } else {
+            // Edit training
+            Training train = db.getTraining(mTraining);
+            training1.standardRoundId = train.standardRoundId;
+            db.update(training1);
+            getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
         }
 
-        editor.putInt("bow", (int) training.bow);
-        editor.putInt("arrow", (int) training.arrow);
+        editor.putInt("bow", (int) training1.bow);
+        editor.putInt("arrow", (int) training1.arrow);
         editor.putBoolean("timer", timer.isChecked());
-        editor.putBoolean("numbering", training.arrowNumbering);
+        editor.putBoolean("numbering", training1.arrowNumbering);
         editor.apply();
     }
 

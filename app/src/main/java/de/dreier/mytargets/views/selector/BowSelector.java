@@ -8,7 +8,6 @@
 package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,11 +27,7 @@ public class BowSelector extends SelectorBase<Bow> {
 
     public BowSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_image);
-        setOnClickListener(v -> {
-            Intent i = new Intent(getContext(), ItemSelectActivity.Bow.class);
-            i.putExtra(ItemSelectActivity.ITEM, item);
-            startIntent(i, data -> setItem((Bow) data.getSerializableExtra(ItemSelectActivity.ITEM)));
-        });
+        setOnClickActivity(ItemSelectActivity.Bow.class);
         setAddButtonIntent(EditBowActivity.class);
     }
 
@@ -45,6 +40,13 @@ public class BowSelector extends SelectorBase<Bow> {
     }
 
     public void setItemId(long bow) {
-        setItem(DatabaseManager.getInstance(getContext()).getBow(bow));
+        Bow item = null;
+        if (bow > 0) {
+            item = DatabaseManager.getInstance(getContext()).getBow(bow);
+        }
+        if (item == null) {
+            item = DatabaseManager.getInstance(getContext()).getBows().get(0);
+        }
+        setItem(item);
     }
 }

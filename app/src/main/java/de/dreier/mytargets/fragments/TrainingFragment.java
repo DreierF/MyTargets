@@ -36,6 +36,7 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.InputActivity;
 import de.dreier.mytargets.activities.ScoreboardActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
 import de.dreier.mytargets.shared.models.Passe;
@@ -49,9 +50,9 @@ import de.dreier.mytargets.views.PasseView;
 import de.dreier.mytargets.views.TargetPasseView;
 
 /**
- * Shows all passes of one round
+ * Shows all passes of one training
  */
-public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
+public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
         implements View.OnClickListener, MenuItem.OnMenuItemClickListener {
 
     private long mTraining;
@@ -62,7 +63,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
     private TextView mNewText;
     private final boolean[] equals = new boolean[2];
 
-    public PasseFragment() {
+    public TrainingFragment() {
     }
 
     @Override
@@ -88,10 +89,8 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
             mTraining = savedInstanceState.getLong(TRAINING_ID, -1);
         }
 
-        // Get UI elements
-        Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
-
         // Set up toolbar
+        Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
         activity.setSupportActionBar(toolbar);
         Training tr = db.getTraining(mTraining);
         ActionBar actionBar = activity.getSupportActionBar();
@@ -113,7 +112,6 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         setList(mRounds, db.getPasses(mTraining), true,
                 new PasseAdapter());
         mAdapter.notifyDataSetChanged();
-
         activity.supportInvalidateOptionsMenu();
     }
 
@@ -262,16 +260,6 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         startActivity(shareIntent);
     }
 
-    /*private final View.OnClickListener headerClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent i = new Intent(activity, SimpleFragmentActivity.EditRoundActivity.class);
-            i.putExtra(SimpleFragmentActivity.EditRoundActivity.TRAINING_ID, mTraining);
-            i.putExtra(SimpleFragmentActivity.EditRoundActivity.ROUND_ID, mRound);
-            startActivity(i);
-        }
-    };*/
-
     @Override
     public void onSelected(Passe item) {
         Intent i = new Intent(activity, InputActivity.class);
@@ -290,29 +278,29 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         super.onSaveInstanceState(outState);
         outState.putLong(TRAINING_ID, mTraining);
     }
-/*
-    @Override
-    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-        int translationShadow = Math.max(mActionBarSize, mActionBarSize + mHeaderHeight - scrollY);
-        ViewHelper.setTranslationY(mShadow, translationShadow);
-        ViewHelper.setTranslationY(mHeader, mActionBarSize - scrollY);
-        ViewHelper.setAlpha(mDetails, ScrollUtils
-                .getFloat((float) (mHeaderHeight - scrollY * 2) / mHeaderHeight, 0, 1));
-    }
-
-    @Override
-    public void onDownMotionEvent() {
-    }
-
-    @Override
-    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-    }*/
 
     @Override
     public void onClick(View v) {
-        Intent i = new Intent(activity, InputActivity.class);
-        i.putExtra(InputActivity.TRAINING_ID, mTraining);
-        startActivity(i);
+        ArrayList<Round> rounds = db.getRounds(mTraining);
+        for (int roundIndex = 0; roundIndex < rounds.size(); roundIndex++) {
+            Round mRound = rounds.get(roundIndex);
+            ArrayList<Passe> passes = db.getPassesOfRound(mRound.getId());
+            if (passes.size() < mRound.info.passes) {
+                // Open InputActivity to add new passes
+                Intent i = new Intent(activity, InputActivity.class);
+                i.putExtra(InputActivity.ROUND_ID, mRound.getId());
+                i.putExtra(InputActivity.PASSE_IND, passes.size());
+                startActivity(i);
+                return;
+            }
+
+            // Open dialog to create new round
+            if(roundIndex + 1 == rounds.size()) {
+                Intent i = new Intent(activity, SimpleFragmentActivity.EditRoundActivity.class);
+                i.putExtra(EditRoundFragment.TRAINING_ID, mTraining);
+                startActivity(i);
+            }
+        }
     }
 
     public class PasseAdapter extends ExpandableNowListAdapter<Round, Passe> {
@@ -357,7 +345,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         public final TextView mSubtitle;
 
         public TargetViewHolder(View itemView) {
-            super(itemView, mMultiSelector, PasseFragment.this);
+            super(itemView, mMultiSelector, TrainingFragment.this);
             mShots = (TargetPasseView) itemView.findViewById(R.id.shoots);
             mSubtitle = (TextView) itemView.findViewById(R.id.passe);
         }
@@ -376,7 +364,7 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
         public final TextView mSubtitle;
 
         public PasseViewHolder(View itemView) {
-            super(itemView, mMultiSelector, PasseFragment.this);
+            super(itemView, mMultiSelector, TrainingFragment.this);
             mShots = (PasseView) itemView.findViewById(R.id.shoots);
             mSubtitle = (TextView) itemView.findViewById(R.id.passe);
         }
@@ -414,11 +402,10 @@ public class PasseFragment extends ExpandableNowListFragment<Round, Passe>
 
         @Override
         public boolean onLongClick(View v) {
-            //TODO show dialog (with round info and ) allow to add a comment to the round
-            /*Intent i = new Intent(getActivity(), SimpleFragmentActivity.EditRoundActivity.class);
-            i.putExtra(EditStandardRoundFragment.TRAINING_ID, mTraining);
-            i.putExtra(EditStandardRoundFragment.ROUND_ID, mItem.id);
-            startActivity(i);*/
+            Intent i = new Intent(activity, SimpleFragmentActivity.EditRoundActivity.class);
+            i.putExtra(EditRoundFragment.TRAINING_ID, mTraining);
+            i.putExtra(EditRoundFragment.ROUND_ID, mItem.getId());
+            startActivity(i);
             return true;
         }
     }

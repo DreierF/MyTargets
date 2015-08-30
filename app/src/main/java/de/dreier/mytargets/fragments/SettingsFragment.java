@@ -105,12 +105,8 @@ public class SettingsFragment extends PreferenceFragment
                 "Copyright 2011 - 2013 Paul Burke"));
         list.add(Licenses.createLicense("MichaelFlisar", "1.0", "LicensesDialog",
                 "Copyright 2013 Michael Flisar"));
-        list.add(Licenses.createLicense("futuresimple", "1.9.0", "FloatingActionButton",
-                "Copyright 2014 Jerzy Chalupski"));
         list.add(Licenses.createLicense("IanGClifton", "1.0.2", "FloatLabel",
                 "Copyright IanGClifton"));
-        list.add(Licenses.createLicense("soarcn", "1.1", "UndoBar",
-                "Copyright 2011, 2014 Liao Kai"));
         list.add(Licenses.createLicenseIcon8());
 
         licences.setLicences(list);

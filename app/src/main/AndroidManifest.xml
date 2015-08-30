@@ -88,6 +88,16 @@
                 android:value=".activities.SimpleFragmentActivity$TrainingActivity"/>
         </activity>
         <activity
+            android:name=".activities.SimpleFragmentActivity$EditRoundActivity"
+            android:label="@string/new_round"
+            android:parentActivityName=".activities.SimpleFragmentActivity$TrainingActivity"
+            android:theme="@style/AppTheme.CustomToolbar"
+            android:windowSoftInputMode="stateAlwaysHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.SimpleFragmentActivity$TrainingActivity"/>
+        </activity>
+        <activity
             android:name=".activities.SimpleFragmentActivity$EditStandardRoundActivity"
             android:label="@string/new_round_template"
             android:parentActivityName=".activities.ItemSelectActivity$StandardRound"

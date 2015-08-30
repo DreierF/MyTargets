@@ -8,15 +8,12 @@
 package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.models.WindDirection;
-
-import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 public class WindDirectionSelector extends SelectorBase<WindDirection> {
 
@@ -26,11 +23,7 @@ public class WindDirectionSelector extends SelectorBase<WindDirection> {
 
     public WindDirectionSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_simple_text);
-        setOnClickListener(v -> {
-            Intent i = new Intent(getContext(), ItemSelectActivity.WindDirection.class);
-            i.putExtra(ITEM, item);
-            startIntent(i, data -> setItem((WindDirection) data.getSerializableExtra(ITEM)));
-        });
+        setOnClickActivity(ItemSelectActivity.WindDirection.class);
     }
 
     @Override

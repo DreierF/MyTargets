@@ -164,7 +164,7 @@ public class ScoreboardUtils {
                 reachedPoints + "/" + maxPoints + percent + "</b>";
         if (!equals[0]) {
             infoText += "<br>" + context.getString(R.string.distance) + ": <b>" +
-                    round.info.distance.toString(context);
+                    round.info.distance.toString(context) + "</b>";
         }
         if (!equals[1]) {
             infoText += "<br>" + context.getString(R.string.target_face) + ": <b>" +

@@ -354,34 +354,16 @@
                         android:id="@+id/number_arrows"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:button="@drawable/arrow_numbers"
                         android:text="@string/arrow_numbers"/>
 
                     <CheckBox
                         android:id="@+id/timer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/use_timer"/>
+                        android:button="@drawable/timer"
+                        android:text="@string/timer"/>
                 </LinearLayout>
-
-                <!--<View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/dividerColor"/>
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
-
-                    <EditText
-                        android:id="@+id/comment"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/comment"
-                        android:inputType="textMultiLine"/>
-
-                </android.support.design.widget.TextInputLayout>-->
-
 
             </LinearLayout>
 

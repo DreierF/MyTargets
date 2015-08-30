@@ -8,7 +8,6 @@
 package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
-import de.dreier.mytargets.fragments.EnvironmentFragment;
 import de.dreier.mytargets.shared.models.Environment;
 
 public class EnvironmentSelector extends SelectorBase<Environment> {
@@ -28,11 +26,7 @@ public class EnvironmentSelector extends SelectorBase<Environment> {
 
     public EnvironmentSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_image);
-        setOnClickListener(v -> {
-            Intent i = new Intent(getContext(), ItemSelectActivity.Environment.class);
-            i.putExtra(EnvironmentFragment.ENVIRONMENT, item);
-            startIntent(i, data -> setItem((Environment) data.getSerializableExtra(ItemSelectActivity.ITEM)));
-        });
+        setOnClickActivity(ItemSelectActivity.Environment.class);
     }
 
     @Override
