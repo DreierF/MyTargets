@@ -5,31 +5,30 @@
  * All rights reserved
  */
 
-package de.dreier.mytargets.activities;
+package de.dreier.mytargets.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.models.SightSetting;
 import de.dreier.mytargets.shared.models.Bow;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.views.DynamicItemLayout;
 import de.dreier.mytargets.views.selector.DistanceSelector;
 
-public class EditBowActivity extends EditWithImageActivity
-        implements DynamicItemLayout.OnBindListener<EditBowActivity.SightSetting> {
+public class EditBowFragment extends EditWithImageFragmentBase
+        implements DynamicItemLayout.OnBindListener<SightSetting> {
 
     public static final String BOW_ID = "bow_id";
     private static final int RECURVE_BOW = 0;
@@ -50,35 +49,36 @@ public class EditBowActivity extends EditWithImageActivity
     private long mBowId = -1;
     private DynamicItemLayout<SightSetting> sight_settings;
 
-    public EditBowActivity() {
-        super(R.layout.activity_edit_bow, R.drawable.recurve_bow);
+    public EditBowFragment() {
+        super(R.layout.fragment_edit_bow, R.drawable.recurve_bow);
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra(BOW_ID)) {
-            mBowId = intent.getLongExtra(BOW_ID, -1);
+
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.containsKey(BOW_ID)) {
+            mBowId = bundle.getLong(BOW_ID, -1);
         }
 
-        recurveBow = (RadioButton) findViewById(R.id.recurve);
-        compoundBow = (RadioButton) findViewById(R.id.compound);
-        longBow = (RadioButton) findViewById(R.id.longbow);
-        blank = (RadioButton) findViewById(R.id.blank);
-        horse = (RadioButton) findViewById(R.id.horse);
-        yumi = (RadioButton) findViewById(R.id.yumi);
-        brand = (EditText) findViewById(R.id.brand);
-        size = (EditText) findViewById(R.id.size);
-        height = (EditText) findViewById(R.id.brace_height);
-        tiller = (EditText) findViewById(R.id.tiller);
-        limbs = (EditText) findViewById(R.id.limbs);
-        sight = (EditText) findViewById(R.id.sight);
-        drawWeight = (EditText) findViewById(R.id.draw_weight);
-        desc = (EditText) findViewById(R.id.desc);
+        recurveBow = (RadioButton) rootView.findViewById(R.id.recurve);
+        compoundBow = (RadioButton) rootView.findViewById(R.id.compound);
+        longBow = (RadioButton) rootView.findViewById(R.id.longbow);
+        blank = (RadioButton) rootView.findViewById(R.id.blank);
+        horse = (RadioButton) rootView.findViewById(R.id.horse);
+        yumi = (RadioButton) rootView.findViewById(R.id.yumi);
+        brand = (EditText) rootView.findViewById(R.id.brand);
+        size = (EditText) rootView.findViewById(R.id.size);
+        height = (EditText) rootView.findViewById(R.id.brace_height);
+        tiller = (EditText) rootView.findViewById(R.id.tiller);
+        limbs = (EditText) rootView.findViewById(R.id.limbs);
+        sight = (EditText) rootView.findViewById(R.id.sight);
+        drawWeight = (EditText) rootView.findViewById(R.id.draw_weight);
+        desc = (EditText) rootView.findViewById(R.id.desc);
         //noinspection unchecked
-        sight_settings = (DynamicItemLayout<SightSetting>) findViewById(R.id.sight_settings);
+        sight_settings = (DynamicItemLayout<SightSetting>) rootView.findViewById(R.id.sight_settings);
         sight_settings.setLayoutResource(R.layout.dynamicitem_sight_settings, SightSetting.class);
         sight_settings.setOnBindListener(this);
 
@@ -93,26 +93,23 @@ public class EditBowActivity extends EditWithImageActivity
         if (savedInstanceState == null) {
             if (mBowId != -1) {
                 // Load data from database
-                DatabaseManager db = DatabaseManager.getInstance(this);
+                DatabaseManager db = DatabaseManager.getInstance(getContext());
                 Bow bow = db.getBow(mBowId);
                 setBowValues(bow);
-                sightSettingsList = db.getSightSettings(mBowId);
             } else {
                 // Set to default values
                 recurveBow.setChecked(true);
                 setTitle(R.string.my_bow);
                 sightSettingsList.add(new SightSetting());
+                sight_settings.setList(sightSettingsList);
             }
         } else {
             // Restore values from before orientation change
             Bow bow = (Bow) savedInstanceState.getSerializable("bow");
             setBowValues(bow);
-            //noinspection unchecked
-            sightSettingsList = (ArrayList<SightSetting>) savedInstanceState //TODO integrate sight settings list in bow
-                    .getSerializable("settings");
 
         }
-        sight_settings.setList(sightSettingsList);
+        return rootView;
     }
 
     private void setBowValues(Bow bow) {
@@ -125,17 +122,13 @@ public class EditBowActivity extends EditWithImageActivity
         sight.setText(bow.sight);
         drawWeight.setText(bow.drawWeight);
         desc.setText(bow.description);
-        imageBitmap = bow.getImage(this);
+        imageBitmap = bow.getImage(getContext());
         if (imageBitmap != null) {
             mImageView.setImageBitmap(imageBitmap);
         }
         imageFile = bow.imageFile;
         setBowType(bow.type);
-    }
-
-    public static class SightSetting implements Serializable {
-        public Distance distance = new Distance(18, Dimension.METER);
-        public String value = "";
+        sight_settings.setList(bow.sightSettings);
     }
 
     @Override
@@ -168,11 +161,11 @@ public class EditBowActivity extends EditWithImageActivity
 
     @Override
     public void onSave() {
-        DatabaseManager db = DatabaseManager.getInstance(this);
+        DatabaseManager db = DatabaseManager.getInstance(getContext());
         Bow bow = buildBow();
         db.update(bow);
         db.updateSightSettings(bow.getId(), sight_settings.getList());
-        finish();
+        getActivity().finish();
     }
 
     private Bow buildBow() {
@@ -189,6 +182,7 @@ public class EditBowActivity extends EditWithImageActivity
         bow.description = desc.getText().toString();
         bow.type = getType();
         bow.setImage(imageFile, imageBitmap);
+        bow.sightSettings = sight_settings.getList();
         return bow;
     }
 
@@ -220,9 +214,8 @@ public class EditBowActivity extends EditWithImageActivity
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bow", buildBow());
-        outState.putSerializable("settings", sight_settings.getList());
     }
 }

@@ -32,6 +32,8 @@ import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
+import de.dreier.mytargets.fragments.EditArrowFragment;
+import de.dreier.mytargets.fragments.EditBowFragment;
 import de.dreier.mytargets.fragments.NowListFragment;
 import de.dreier.mytargets.fragments.NowListFragmentBase;
 import de.dreier.mytargets.fragments.TrainingsFragment;
@@ -145,9 +147,9 @@ public class MainActivity extends AppCompatActivity
         if (viewPager.getCurrentItem() == 0) {
             i.setClass(this, SimpleFragmentActivity.EditTrainingActivity.class);
         } else if (viewPager.getCurrentItem() == 1) {
-            i.setClass(this, EditBowActivity.class);
+            i.setClass(this, SimpleFragmentActivity.EditBowActivity.class);
         } else if (viewPager.getCurrentItem() == 2) {
-            i.setClass(this, EditArrowActivity.class);
+            i.setClass(this, SimpleFragmentActivity.EditArrowActivity.class);
         }
         startActivity(i);
         overridePendingTransition(R.anim.right_in, R.anim.left_out);
@@ -157,11 +159,11 @@ public class MainActivity extends AppCompatActivity
     public void onItemSelected(IIdProvider item) {
         Intent i;
         if (item instanceof Arrow) {
-            i = new Intent(this, EditArrowActivity.class);
-            i.putExtra(EditArrowActivity.ARROW_ID, item.getId());
+            i = new Intent(this, SimpleFragmentActivity.EditArrowActivity.class);
+            i.putExtra(EditArrowFragment.ARROW_ID, item.getId());
         } else if (item instanceof Bow) {
-            i = new Intent(this, EditBowActivity.class);
-            i.putExtra(EditBowActivity.BOW_ID, item.getId());
+            i = new Intent(this, SimpleFragmentActivity.EditBowActivity.class);
+            i.putExtra(EditBowFragment.BOW_ID, item.getId());
         } else {
             i = new Intent(this, SimpleFragmentActivity.EditTrainingActivity.class);
             i.putExtra(TrainingsFragment.TRAINING_ID, item.getId());

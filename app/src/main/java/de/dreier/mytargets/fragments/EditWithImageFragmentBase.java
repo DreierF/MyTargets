@@ -5,9 +5,10 @@
  * All rights reserved
  */
 
-package de.dreier.mytargets.activities;
+package de.dreier.mytargets.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -17,16 +18,15 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -50,7 +50,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.utils.BitmapUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
-public abstract class EditWithImageActivity extends AppCompatActivity
+public abstract class EditWithImageFragmentBase extends EditFragmentBase
         implements ObservableScrollViewCallbacks {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -79,33 +79,27 @@ public abstract class EditWithImageActivity extends AppCompatActivity
     private int mFlexibleSpaceImageHeight;
     private int mFlexibleSpaceShowFabOffset;
 
-    public EditWithImageActivity(int layoutRes, int defaultDrawable) {
+    public EditWithImageFragmentBase(int layoutRes, int defaultDrawable) {
         this.layoutRes = layoutRes;
         this.defaultDrawable = defaultDrawable;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_image);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.activity_edit_image, container, false);
+
+        setUpToolbar(rootView);
 
         // Get UI elements
-        LinearLayout content = (LinearLayout) findViewById(R.id.content);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mImageContainer = findViewById(R.id.img_container);
-        mImageView = (ImageView) findViewById(R.id.img_view);
-        mImageProgress = (ProgressBar) findViewById(R.id.img_progress);
-        mOverlayView = findViewById(R.id.overlay);
-        mTitleView = (EditText) findViewById(R.id.title);
-        mFab = findViewById(R.id.fab);
-        ObservableScrollView scrollView = (ObservableScrollView) findViewById(R.id.scroll);
-
-        // Set up Toolbar
-        setSupportActionBar(mToolbar);
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setTitle("");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+        LinearLayout content = (LinearLayout) rootView.findViewById(R.id.content);
+        mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        mImageContainer = rootView.findViewById(R.id.img_container);
+        mImageView = (ImageView) rootView.findViewById(R.id.img_view);
+        mImageProgress = (ProgressBar) rootView.findViewById(R.id.img_progress);
+        mOverlayView = rootView.findViewById(R.id.overlay);
+        mTitleView = (EditText) rootView.findViewById(R.id.title);
+        mFab = rootView.findViewById(R.id.fab);
+        ObservableScrollView scrollView = (ObservableScrollView) rootView.findViewById(R.id.scroll);
 
         // Load values used for image animation
         mFlexibleSpaceImageHeight = getResources()
@@ -114,24 +108,22 @@ public abstract class EditWithImageActivity extends AppCompatActivity
                 .getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
         mLeftSpace = getResources().getDimensionPixelSize(R.dimen.left_space_title_toolbar);
         mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
-        mActionBarSize = ToolbarUtils.getActionBarSize(this);
-        int statusBarSize = ToolbarUtils.getStatusBarSize(this);
+        mActionBarSize = ToolbarUtils.getActionBarSize(getContext());
+        int statusBarSize = ToolbarUtils.getStatusBarSize(getContext());
         mToolbarColor = getResources().getColor(R.color.colorPrimary);
 
         // Ensure scrollview is at least as big to fill the screen
         DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         content.setMinimumHeight(metrics.heightPixels - mActionBarSize - statusBarSize);
 
         // Inflate whole layout
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         inflater.inflate(layoutRes, content);
 
         // Set scrollview callbacks
         scrollView.setScrollViewCallbacks(this);
 
         // Prepare custom title view
-        mTitleView.setText(getTitle());
         setTitle(null);
 
         // Initialize FAB button
@@ -157,21 +149,19 @@ public abstract class EditWithImageActivity extends AppCompatActivity
                                 int width = mImageView.getMeasuredWidth();
                                 int height = mImageView.getMeasuredHeight();
                                 imageBitmap = BitmapUtils
-                                        .decodeSampledBitmapFromRes(EditWithImageActivity.this,
-                                                defaultDrawable, width,
-                                                height);
+                                        .decodeSampledBitmapFromRes(getContext(), defaultDrawable, width, height);
                             }
                         });
             }
         }
+        return rootView;
     }
 
     public String getName() {
         return mTitleView.getText().toString();
     }
 
-    @Override
-    public void setTitle(CharSequence title) {
+    public void setTitle(String title) {
         mTitleView.setText(title);
     }
 
@@ -179,28 +169,6 @@ public abstract class EditWithImageActivity extends AppCompatActivity
     public void setTitle(int title) {
         mTitleView.setText(getString(title));
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.save, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_save:
-                onSave();
-                return true;
-            case android.R.id.home:
-                finish();
-                overridePendingTransition(R.anim.left_in, R.anim.right_out);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    protected abstract void onSave();
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
@@ -218,10 +186,6 @@ public abstract class EditWithImageActivity extends AppCompatActivity
 
         // Scale title text
         float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0, 0.3f);
-        /*ViewHelper.setPivotX(mTitleView, 0);
-        ViewHelper.setPivotY(mTitleView, 0);
-        ViewHelper.setScaleX(mTitleView, scale);
-        ViewHelper.setScaleY(mTitleView, scale);*/
         mTitleView.setTextSize(scale * 19);
 
         // Translate title text
@@ -295,7 +259,7 @@ public abstract class EditWithImageActivity extends AppCompatActivity
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getMenuInflater();
+        MenuInflater inflater = getActivity().getMenuInflater();
         inflater.inflate(R.menu.context_menu_image, menu);
     }
 
@@ -312,7 +276,7 @@ public abstract class EditWithImageActivity extends AppCompatActivity
                 return true;
             case R.id.action_take_picture:
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
                     try {
                         fileUri = getOutputMediaFileUri();
                     } catch (NullPointerException e) {
@@ -328,11 +292,11 @@ public abstract class EditWithImageActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Uri selectedImageUri = null;
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             selectedImageUri = fileUri;
-        } else if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK) {
+        } else if (requestCode == SELECT_PICTURE && resultCode == Activity.RESULT_OK) {
             selectedImageUri = data.getData();
         }
         if (selectedImageUri == null) {
@@ -354,16 +318,14 @@ public abstract class EditWithImageActivity extends AppCompatActivity
                 try {
                     // Delete old file
                     if (imageFile != null) {
-                        File f = new File(getFilesDir(), imageFile);
+                        File f = new File(getContext().getFilesDir(), imageFile);
                         //noinspection ResultOfMethodCallIgnored
                         f.delete();
                     }
 
-                    imageBitmap = BitmapUtils
-                            .decodeSampledBitmapFromStream(EditWithImageActivity.this, params[0],
-                                    width, height);
-                    File f = File
-                            .createTempFile("photo", "png", getFilesDir());
+                    imageBitmap = BitmapUtils.decodeSampledBitmapFromStream(getContext(), params[0],
+                            width, height);
+                    File f = File.createTempFile("photo", "png", getContext().getFilesDir());
                     FileOutputStream out = new FileOutputStream(f);
                     imageBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
                     imageFile = f.getName();
@@ -413,7 +375,7 @@ public abstract class EditWithImageActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("img", imageBitmap);
         outState.putString("image_file", imageFile);

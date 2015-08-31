@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.EditBowActivity;
 import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
@@ -28,7 +28,7 @@ public class BowSelector extends SelectorBase<Bow> {
     public BowSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_image);
         setOnClickActivity(ItemSelectActivity.Bow.class);
-        setAddButtonIntent(EditBowActivity.class);
+        setAddButtonIntent(SimpleFragmentActivity.EditBowActivity.class);
     }
 
     @Override

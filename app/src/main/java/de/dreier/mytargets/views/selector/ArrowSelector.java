@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.EditArrowActivity;
 import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
@@ -32,7 +32,7 @@ public class ArrowSelector extends SelectorBase<Arrow> {
 
     private void init() {
         setOnClickActivity(ItemSelectActivity.Arrow.class);
-        setAddButtonIntent(EditArrowActivity.class);
+        setAddButtonIntent(SimpleFragmentActivity.EditArrowActivity.class);
     }
 
     @Override

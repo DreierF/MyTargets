@@ -7,7 +7,6 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.EditBowActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.models.WindSpeed;
 
@@ -41,10 +39,6 @@ public class WindSpeedFragment extends NowListFragment<WindSpeed> {
 
     @Override
     protected void onEdit(WindSpeed item) {
-        Intent i = new Intent(getActivity(), EditBowActivity.class);
-        i.putExtra(EditBowActivity.BOW_ID, item.getId());
-        startActivity(i);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     protected class WindSpeedAdapter extends NowListAdapter<WindSpeed> {

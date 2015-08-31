@@ -14,12 +14,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.fragments.EditArrowFragment;
+import de.dreier.mytargets.fragments.EditBowFragment;
 import de.dreier.mytargets.fragments.EditRoundFragment;
 import de.dreier.mytargets.fragments.EditStandardRoundFragment;
 import de.dreier.mytargets.fragments.EditTrainingFragment;
-import de.dreier.mytargets.fragments.TrainingFragment;
 import de.dreier.mytargets.fragments.SettingsFragment;
 import de.dreier.mytargets.fragments.TimerFragment;
+import de.dreier.mytargets.fragments.TrainingFragment;
 
 public abstract class SimpleFragmentActivity extends AppCompatActivity {
 
@@ -102,6 +104,22 @@ public abstract class SimpleFragmentActivity extends AppCompatActivity {
         @Override
         protected Fragment instantiateFragment() {
             return new EditStandardRoundFragment();
+        }
+    }
+
+    public static class EditBowActivity extends SimpleFragmentActivity {
+
+        @Override
+        protected Fragment instantiateFragment() {
+            return new EditBowFragment();
+        }
+    }
+
+    public static class EditArrowActivity extends SimpleFragmentActivity {
+
+        @Override
+        protected Fragment instantiateFragment() {
+            return new EditArrowFragment();
         }
     }
 }

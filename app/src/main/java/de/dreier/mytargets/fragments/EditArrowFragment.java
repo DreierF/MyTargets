@@ -5,11 +5,13 @@
  * All rights reserved
  */
 
-package de.dreier.mytargets.activities;
+package de.dreier.mytargets.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Arrow;
 
-public class EditArrowActivity extends EditWithImageActivity {
+public class EditArrowFragment extends EditWithImageFragmentBase {
 
     public static final String ARROW_ID = "arrow_id";
 
@@ -26,34 +28,34 @@ public class EditArrowActivity extends EditWithImageActivity {
     private long mArrowId = -1;
     private EditText arrowNumbers;
 
-    public EditArrowActivity() {
-        super(R.layout.activity_edit_arrow, R.drawable.arrows);
+    public EditArrowFragment() {
+        super(R.layout.fragment_edit_arrow, R.drawable.arrows);
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra(ARROW_ID)) {
-            mArrowId = intent.getLongExtra(ARROW_ID, -1);
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.containsKey(ARROW_ID)) {
+            mArrowId = bundle.getLong(ARROW_ID, -1);
         }
 
-        length = (EditText) findViewById(R.id.arrow_length);
-        material = (EditText) findViewById(R.id.arrow_material);
-        spine = (EditText) findViewById(R.id.arrow_spine);
-        weight = (EditText) findViewById(R.id.arrow_weight);
-        vanes = (EditText) findViewById(R.id.arrow_vanes);
-        nock = (EditText) findViewById(R.id.arrow_nock);
-        comment = (EditText) findViewById(R.id.arrow_comment);
-        arrowNumbers = (EditText) findViewById(R.id.arrow_numbers);
+        length = (EditText) rootView.findViewById(R.id.arrow_length);
+        material = (EditText) rootView.findViewById(R.id.arrow_material);
+        spine = (EditText) rootView.findViewById(R.id.arrow_spine);
+        weight = (EditText) rootView.findViewById(R.id.arrow_weight);
+        vanes = (EditText) rootView.findViewById(R.id.arrow_vanes);
+        nock = (EditText) rootView.findViewById(R.id.arrow_nock);
+        comment = (EditText) rootView.findViewById(R.id.arrow_comment);
+        arrowNumbers = (EditText) rootView.findViewById(R.id.arrow_numbers);
 
         setTitle(R.string.my_arrow);
         ArrayList<Integer> arrowNumbersList = new ArrayList<>();
         if (savedInstanceState == null) {
             if (mArrowId != -1) {
                 // Load data from database
-                DatabaseManager db = DatabaseManager.getInstance(this);
+                DatabaseManager db = DatabaseManager.getInstance(getContext());
                 Arrow arrow = db.getArrow(mArrowId);
                 setTitle(arrow.name);
                 length.setText(arrow.length);
@@ -63,7 +65,7 @@ public class EditArrowActivity extends EditWithImageActivity {
                 vanes.setText(arrow.vanes);
                 nock.setText(arrow.nock);
                 comment.setText(arrow.comment);
-                imageBitmap = arrow.getImage(this);
+                imageBitmap = arrow.getImage(getContext());
                 if (imageBitmap != null) {
                     mImageView.setImageBitmap(imageBitmap);
                 }
@@ -89,16 +91,24 @@ public class EditArrowActivity extends EditWithImageActivity {
             comment.setText(savedInstanceState.getString("comment"));
             arrowNumbers.setText(savedInstanceState.getString("arrows"));
         }
+        return rootView;
     }
 
     @Override
     public void onSave() {
-        ArrayList<Integer> numbers = getArrowNumbers();
-        if (numbers == null) {
+        Arrow arrow = buildArrow();
+        if (arrow == null) {
             return;
         }
-        DatabaseManager db = DatabaseManager.getInstance(this);
+        DatabaseManager.getInstance(getContext()).update(arrow);
+        getActivity().finish();
+    }
 
+    protected Arrow buildArrow() {
+        ArrayList<Integer> numbers = getArrowNumbers();
+        if (numbers == null) {
+            return null;
+        }
         Arrow arrow = new Arrow();
         arrow.setId(mArrowId);
         arrow.name = getName();
@@ -111,9 +121,7 @@ public class EditArrowActivity extends EditWithImageActivity {
         arrow.comment = comment.getText().toString();
         arrow.setImage(imageFile, imageBitmap);
         arrow.numbers = numbers;
-
-        db.update(arrow);
-        finish();
+        return arrow;
     }
 
     private ArrayList<Integer> getArrowNumbers() {
@@ -133,7 +141,7 @@ public class EditArrowActivity extends EditWithImageActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("length", length.getText().toString());
         outState.putString("material", material.getText().toString());

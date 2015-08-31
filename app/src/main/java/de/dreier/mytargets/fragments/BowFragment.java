@@ -18,11 +18,10 @@ import android.widget.TextView;
 
 import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
-import java.util.ArrayList;
-
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.EditBowActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.models.SightSetting;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 
@@ -44,15 +43,15 @@ public class BowFragment extends NowListFragment<Bow> implements View.OnClickLis
 
     @Override
     protected void onEdit(Bow item) {
-        Intent i = new Intent(getActivity(), EditBowActivity.class);
-        i.putExtra(EditBowActivity.BOW_ID, item.getId());
+        Intent i = new Intent(getActivity(), SimpleFragmentActivity.EditBowActivity.class);
+        i.putExtra(EditBowFragment.BOW_ID, item.getId());
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     @Override
     public void onClick(View v) {
-        startActivity(EditBowActivity.class);
+        startActivity(SimpleFragmentActivity.EditBowActivity.class);
     }
 
     protected class BowAdapter extends NowListAdapter<Bow> {
@@ -89,8 +88,7 @@ public class BowFragment extends NowListFragment<Bow> implements View.OnClickLis
             if (!mItem.size.trim().isEmpty()) {
                 html += "<br>" + getString(R.string.size) + ": <b>" + mItem.size + "</b>";
             }
-            ArrayList<EditBowActivity.SightSetting> sight = db.getSightSettings(mItem.getId());
-            for (EditBowActivity.SightSetting s : sight) {
+            for (SightSetting s : mItem.sightSettings) {
                 html += "<br>" + s.distance.toString(getActivity()) + ": <b>" + s.value + "</b>";
             }
             mDetails.setText(Html.fromHtml(html));

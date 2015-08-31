@@ -4,6 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+
+import java.util.ArrayList;
+
+import de.dreier.mytargets.models.SightSetting;
 import de.dreier.mytargets.shared.R;
 
 public class Bow extends ImageHolder implements DatabaseSerializable {
@@ -47,6 +51,7 @@ public class Bow extends ImageHolder implements DatabaseSerializable {
     public String sight;
     public String drawWeight;
     public String description;
+    public ArrayList<SightSetting> sightSettings;
 
     @Override
     public String getTableName() {

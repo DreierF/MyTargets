@@ -108,7 +108,7 @@
                 android:value=".activities.ItemSelectActivity$StandardRound"/>
         </activity>
         <activity
-            android:name=".activities.EditBowActivity"
+            android:name=".activities.SimpleFragmentActivity$EditBowActivity"
             android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.CustomToolbar"
             android:windowSoftInputMode="adjustResize|stateHidden">
@@ -117,7 +117,7 @@
                 android:value=".activities.MainActivity"/>
         </activity>
         <activity
-            android:name=".activities.EditArrowActivity"
+            android:name=".activities.SimpleFragmentActivity$EditArrowActivity"
             android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.CustomToolbar"
             android:windowSoftInputMode="adjustResize|stateHidden">

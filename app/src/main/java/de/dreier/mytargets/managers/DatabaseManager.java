@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.EditBowActivity;
+import de.dreier.mytargets.models.SightSetting;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.DatabaseSerializable;
@@ -579,6 +579,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             do {
                 Bow bow = new Bow();
                 bow.fromCursor(mContext, res, 0);
+                bow.sightSettings = getSightSettings(bow.getId());
                 list.add(bow);
             } while (res.moveToNext());
         }
@@ -713,6 +714,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (res.moveToFirst()) {
             bow = new Bow();
             bow.fromCursor(mContext, res, 0);
+            bow.sightSettings = getSightSettings(bowId);
             res.close();
         }
         return bow;
@@ -862,12 +864,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
             }
         } else if (item instanceof Arrow) {
             updateArrowNumbers(item.getId(), ((Arrow) item).numbers);
+        } else if (item instanceof Bow) {
+            updateSightSettings(item.getId(), ((Bow) item).sightSettings);
         }
     }
 
-    public void updateSightSettings(long bowId, List<EditBowActivity.SightSetting> sightSettingsList) {
+    public void updateSightSettings(long bowId, List<SightSetting> sightSettingsList) {
         db.delete(TABLE_VISIER, VISIER_BOW + "=" + bowId, null);
-        for (EditBowActivity.SightSetting set : sightSettingsList) {
+        for (SightSetting set : sightSettingsList) {
             ContentValues values = new ContentValues();
             values.put(VISIER_BOW, bowId);
             values.put(VISIER_DISTANCE, set.distance.value);
@@ -887,14 +891,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<EditBowActivity.SightSetting> getSightSettings(long bowId) {
+    private ArrayList<SightSetting> getSightSettings(long bowId) {
         String[] cols = {VISIER_DISTANCE, VISIER_UNIT, VISIER_SETTING};
         Cursor res = db.query(TABLE_VISIER, cols, VISIER_BOW + "=" + bowId, null, null, null,
                 VISIER_DISTANCE + " ASC");
-        ArrayList<EditBowActivity.SightSetting> list = new ArrayList<>();
+        ArrayList<SightSetting> list = new ArrayList<>();
         if (res.moveToFirst()) {
             do {
-                EditBowActivity.SightSetting set = new EditBowActivity.SightSetting();
+                SightSetting set = new SightSetting();
                 set.distance = new Distance(res.getInt(0), res.getString(1));
                 set.value = res.getString(2);
                 list.add(set);

@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.EditArrowActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
@@ -41,15 +41,15 @@ public class ArrowFragment extends NowListFragment<Arrow> implements View.OnClic
 
     @Override
     protected void onEdit(Arrow item) {
-        Intent i = new Intent(getActivity(), EditArrowActivity.class);
-        i.putExtra(EditArrowActivity.ARROW_ID, item.getId());
+        Intent i = new Intent(getActivity(), SimpleFragmentActivity.EditArrowActivity.class);
+        i.putExtra(EditArrowFragment.ARROW_ID, item.getId());
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     @Override
     public void onClick(View v) {
-        startActivity(EditArrowActivity.class);
+        startActivity(SimpleFragmentActivity.EditArrowActivity.class);
     }
 
     protected class ArrowAdapter extends NowListAdapter<Arrow> {
