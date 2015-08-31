@@ -27,11 +27,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -63,7 +63,7 @@ public abstract class EditWithImageActivity extends AppCompatActivity
     private View mFab;
     private Toolbar mToolbar;
     private View mOverlayView;
-    private TextView mTitleView;
+    private EditText mTitleView;
     private View mImageContainer;
     ImageView mImageView;
     private ProgressBar mImageProgress;
@@ -96,7 +96,7 @@ public abstract class EditWithImageActivity extends AppCompatActivity
         mImageView = (ImageView) findViewById(R.id.img_view);
         mImageProgress = (ProgressBar) findViewById(R.id.img_progress);
         mOverlayView = findViewById(R.id.overlay);
-        mTitleView = (TextView) findViewById(R.id.title);
+        mTitleView = (EditText) findViewById(R.id.title);
         mFab = findViewById(R.id.fab);
         ObservableScrollView scrollView = (ObservableScrollView) findViewById(R.id.scroll);
 
@@ -166,6 +166,10 @@ public abstract class EditWithImageActivity extends AppCompatActivity
         }
     }
 
+    public String getName() {
+        return mTitleView.getText().toString();
+    }
+
     @Override
     public void setTitle(CharSequence title) {
         mTitleView.setText(title);
@@ -214,10 +218,11 @@ public abstract class EditWithImageActivity extends AppCompatActivity
 
         // Scale title text
         float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0, 0.3f);
-        ViewHelper.setPivotX(mTitleView, 0);
+        /*ViewHelper.setPivotX(mTitleView, 0);
         ViewHelper.setPivotY(mTitleView, 0);
         ViewHelper.setScaleX(mTitleView, scale);
-        ViewHelper.setScaleY(mTitleView, scale);
+        ViewHelper.setScaleY(mTitleView, scale);*/
+        mTitleView.setTextSize(scale * 19);
 
         // Translate title text
         int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight -

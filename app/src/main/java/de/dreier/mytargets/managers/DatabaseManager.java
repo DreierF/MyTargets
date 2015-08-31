@@ -45,7 +45,7 @@ import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.Pair;
 
 public class DatabaseManager extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
 
     private static final String ID = "_id";
     public static final String DATABASE_NAME = "database";
@@ -292,6 +292,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 } while (trainings.moveToNext());
             }
             trainings.close();
+        }
+        if (oldVersion < 10) {
+            db.execSQL("ALTER TABLE BOW ADD COLUMN limbs TEXT DEFAULT ''");
+            db.execSQL("ALTER TABLE BOW ADD COLUMN sight TEXT DEFAULT ''");
+            db.execSQL("ALTER TABLE BOW ADD COLUMN draw_weight TEXT DEFAULT ''");
         }
         onCreate(db);
     }
@@ -566,7 +571,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public ArrayList<Bow> getBows() {
         Cursor res = db.rawQuery(
-                "SELECT _id, name, type, brand, size, height, tiller, description, thumbnail, image " +
+                "SELECT _id, name, type, brand, size, height, tiller, limbs, sight, draw_weight, description, thumbnail, image " +
                         "FROM BOW " +
                         "ORDER BY _id ASC", null);
         ArrayList<Bow> list = new ArrayList<>(res.getCount());
@@ -701,6 +706,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public Bow getBow(long bowId) {
         String[] cols = {Bow.ID, Bow.NAME, Bow.TYPE, Bow.BRAND, Bow.SIZE, Bow.HEIGHT, Bow.TILLER,
+                Bow.LIMBS, Bow.SIGHT, Bow.WEIGHT,
                 Bow.DESCRIPTION, Bow.THUMBNAIL, Bow.IMAGE};
         Cursor res = db.query(Bow.TABLE, cols, ID + "=" + bowId, null, null, null, null);
         Bow bow = null;
@@ -755,11 +761,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
 ////// GET AGGREGATED INFORMATION //////
 
     public ArrayList<Integer> getAllTrainings() {
-        Cursor res = db.rawQuery("SELECT s.points, r.target, s.passe, r.scoring_style, s.arrow_index  " +
-                "FROM TRAINING t, ROUND r, PASSE p, SHOOT s " +
-                "WHERE t._id=r.training AND r._id=p.round " +
-                "AND p._id=s.passe " +
-                "ORDER BY t.datum, t._id, r._id, p._id, s._id", null);
+        Cursor res = db
+                .rawQuery("SELECT s.points, r.target, s.passe, r.scoring_style, s.arrow_index  " +
+                        "FROM TRAINING t, ROUND r, PASSE p, SHOOT s " +
+                        "WHERE t._id=r.training AND r._id=p.round " +
+                        "AND p._id=s.passe " +
+                        "ORDER BY t.datum, t._id, r._id, p._id, s._id", null);
         res.moveToFirst();
 
         int oldPasse = -1;
@@ -785,11 +792,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public ArrayList<Integer> getAllRounds(long training) {
-        Cursor res = db.rawQuery("SELECT s.points, r.target, s.passe, r.scoring_style, s.arrow_index " +
-                "FROM ROUND r, PASSE p, SHOOT s " +
-                "WHERE " + training + "=r.training AND r._id=p.round " +
-                "AND p._id=s.passe " +
-                "ORDER BY r._id, p._id, s._id", null);
+        Cursor res = db
+                .rawQuery("SELECT s.points, r.target, s.passe, r.scoring_style, s.arrow_index " +
+                        "FROM ROUND r, PASSE p, SHOOT s " +
+                        "WHERE " + training + "=r.training AND r._id=p.round " +
+                        "AND p._id=s.passe " +
+                        "ORDER BY r._id, p._id, s._id", null);
         res.moveToFirst();
 
         int oldPasse = -1;

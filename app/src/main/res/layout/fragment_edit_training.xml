@@ -140,10 +140,7 @@
 
                         </RadioGroup>
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/dividerColor"/>
+                        <include layout="@layout/divider"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -165,10 +162,7 @@
 
                         </LinearLayout>
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/dividerColor"/>
+                        <include layout="@layout/divider"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -190,10 +184,7 @@
 
                         </LinearLayout>
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/dividerColor"/>
+                        <include layout="@layout/divider"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -237,10 +228,7 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/dividerColor"/>
+                    <include layout="@layout/divider"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -276,10 +264,7 @@
                     </de.dreier.mytargets.views.selector.BowSelector>
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/dividerColor"/>
+                <include layout="@layout/divider"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -314,10 +299,7 @@
                     </de.dreier.mytargets.views.selector.ArrowSelector>
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/dividerColor"/>
+                <include layout="@layout/divider"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -339,31 +321,25 @@
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/dividerColor"/>
+                <include layout="@layout/divider"/>
 
-                <LinearLayout
+                <CheckBox
+                    android:id="@+id/number_arrows"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:button="@drawable/arrow_numbers"
+                    android:padding="16dp"
+                    android:text="@string/arrow_numbers"/>
 
-                    <CheckBox
-                        android:id="@+id/number_arrows"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:button="@drawable/arrow_numbers"
-                        android:text="@string/arrow_numbers"/>
+                <include layout="@layout/divider"/>
 
-                    <CheckBox
-                        android:id="@+id/timer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:button="@drawable/timer"
-                        android:text="@string/timer"/>
-                </LinearLayout>
+                <CheckBox
+                    android:id="@+id/timer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/timer"
+                    android:padding="16dp"
+                    android:text="@string/timer"/>
 
             </LinearLayout>
 

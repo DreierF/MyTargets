@@ -260,4 +260,8 @@
   <string name="left_back">from back left</string>
   <string name="right_back">from back right</string>
   <string name="date">Date</string>
+  <string name="edit_round">Edit round</string>
+  <string name="draw_weight">Draw weight</string>
+  <string name="sight">Sight</string>
+  <string name="limbs">Limbs</string>
 </resources>

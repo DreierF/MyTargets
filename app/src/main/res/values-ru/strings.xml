@@ -224,4 +224,8 @@
   <string name="left_back">сзади слева</string>
   <string name="right_back">сзади справа</string>
   <string name="date">Дата</string>
+  <string name="edit_round">Edit round</string>
+  <string name="draw_weight">Draw weight</string>
+  <string name="sight">Sight</string>
+  <string name="limbs">Limbs</string>
 </resources>

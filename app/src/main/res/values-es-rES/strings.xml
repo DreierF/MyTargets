@@ -212,4 +212,8 @@
   <string name="left_back">de la parte posterior izquierda</string>
   <string name="right_back">de derecha trasera</string>
   <string name="date">Fecha</string>
+  <string name="edit_round">Edit round</string>
+  <string name="draw_weight">Draw weight</string>
+  <string name="sight">Sight</string>
+  <string name="limbs">Limbs</string>
 </resources>

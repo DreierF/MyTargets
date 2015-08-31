@@ -22,7 +22,7 @@ public class EditArrowActivity extends EditWithImageActivity {
 
     public static final String ARROW_ID = "arrow_id";
 
-    private EditText name, length, material, spine, weight, vanes, nock, comment;
+    private EditText length, material, spine, weight, vanes, nock, comment;
     private long mArrowId = -1;
     private EditText arrowNumbers;
 
@@ -39,7 +39,6 @@ public class EditArrowActivity extends EditWithImageActivity {
             mArrowId = intent.getLongExtra(ARROW_ID, -1);
         }
 
-        name = (EditText) findViewById(R.id.arrow_name);
         length = (EditText) findViewById(R.id.arrow_length);
         material = (EditText) findViewById(R.id.arrow_material);
         spine = (EditText) findViewById(R.id.arrow_spine);
@@ -49,7 +48,7 @@ public class EditArrowActivity extends EditWithImageActivity {
         comment = (EditText) findViewById(R.id.arrow_comment);
         arrowNumbers = (EditText) findViewById(R.id.arrow_numbers);
 
-        setTitle(R.string.new_arrow);
+        setTitle(R.string.my_arrow);
         ArrayList<Integer> arrowNumbersList = new ArrayList<>();
         if (savedInstanceState == null) {
             if (mArrowId != -1) {
@@ -57,7 +56,6 @@ public class EditArrowActivity extends EditWithImageActivity {
                 DatabaseManager db = DatabaseManager.getInstance(this);
                 Arrow arrow = db.getArrow(mArrowId);
                 setTitle(arrow.name);
-                name.setText(arrow.name);
                 length.setText(arrow.length);
                 material.setText(arrow.material);
                 spine.setText(arrow.spine);
@@ -71,10 +69,6 @@ public class EditArrowActivity extends EditWithImageActivity {
                 }
                 imageFile = arrow.imageFile;
                 arrowNumbersList = db.getArrowNumbers(mArrowId);
-                setTitle(R.string.edit_arrow);
-            } else {
-                // Set to default values
-                setTitle(R.string.new_arrow);
             }
             String text = "";
             for (Integer number : arrowNumbersList) {
@@ -86,7 +80,6 @@ public class EditArrowActivity extends EditWithImageActivity {
             arrowNumbers.setText(text);
         } else {
             // Restore values from before orientation change
-            name.setText(savedInstanceState.getString("name"));
             length.setText(savedInstanceState.getString("length"));
             material.setText(savedInstanceState.getString("material"));
             spine.setText(savedInstanceState.getString("spine"));
@@ -108,7 +101,7 @@ public class EditArrowActivity extends EditWithImageActivity {
 
         Arrow arrow = new Arrow();
         arrow.setId(mArrowId);
-        arrow.name = name.getText().toString();
+        arrow.name = getName();
         arrow.length = length.getText().toString();
         arrow.material = material.getText().toString();
         arrow.spine = spine.getText().toString();
@@ -142,7 +135,6 @@ public class EditArrowActivity extends EditWithImageActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("name", name.getText().toString());
         outState.putString("length", length.getText().toString());
         outState.putString("material", material.getText().toString());
         outState.putString("spine", spine.getText().toString());

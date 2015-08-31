@@ -38,11 +38,13 @@ public class EditBowActivity extends EditWithImageActivity
     private static final int BLANK_BOW = 3;
     private static final int HORSE_BOW = 4;
     private static final int YUMI = 5;
-    private EditText name;
     private EditText brand;
     private EditText size;
     private EditText height;
     private EditText tiller;
+    private EditText limbs;
+    private EditText sight;
+    private EditText drawWeight;
     private EditText desc;
     private RadioButton recurveBow, compoundBow, longBow, blank, horse, yumi;
     private long mBowId = -1;
@@ -61,7 +63,6 @@ public class EditBowActivity extends EditWithImageActivity
             mBowId = intent.getLongExtra(BOW_ID, -1);
         }
 
-        name = (EditText) findViewById(R.id.name);
         recurveBow = (RadioButton) findViewById(R.id.recurve);
         compoundBow = (RadioButton) findViewById(R.id.compound);
         longBow = (RadioButton) findViewById(R.id.longbow);
@@ -72,6 +73,9 @@ public class EditBowActivity extends EditWithImageActivity
         size = (EditText) findViewById(R.id.size);
         height = (EditText) findViewById(R.id.brace_height);
         tiller = (EditText) findViewById(R.id.tiller);
+        limbs = (EditText) findViewById(R.id.limbs);
+        sight = (EditText) findViewById(R.id.sight);
+        drawWeight = (EditText) findViewById(R.id.draw_weight);
         desc = (EditText) findViewById(R.id.desc);
         //noinspection unchecked
         sight_settings = (DynamicItemLayout<SightSetting>) findViewById(R.id.sight_settings);
@@ -93,11 +97,10 @@ public class EditBowActivity extends EditWithImageActivity
                 Bow bow = db.getBow(mBowId);
                 setBowValues(bow);
                 sightSettingsList = db.getSightSettings(mBowId);
-                setTitle(R.string.edit_bow);
             } else {
                 // Set to default values
                 recurveBow.setChecked(true);
-                setTitle(R.string.new_bow);
+                setTitle(R.string.my_bow);
                 sightSettingsList.add(new SightSetting());
             }
         } else {
@@ -114,11 +117,13 @@ public class EditBowActivity extends EditWithImageActivity
 
     private void setBowValues(Bow bow) {
         setTitle(bow.name);
-        name.setText(bow.name);
         brand.setText(bow.brand);
         size.setText(bow.size);
         height.setText(bow.height);
         tiller.setText(bow.tiller);
+        limbs.setText(bow.limbs);
+        sight.setText(bow.sight);
+        drawWeight.setText(bow.drawWeight);
         desc.setText(bow.description);
         imageBitmap = bow.getImage(this);
         if (imageBitmap != null) {
@@ -173,11 +178,14 @@ public class EditBowActivity extends EditWithImageActivity
     private Bow buildBow() {
         Bow bow = new Bow();
         bow.setId(mBowId);
-        bow.name = name.getText().toString();
+        bow.name = getName();
         bow.brand = brand.getText().toString();
         bow.size = size.getText().toString();
         bow.height = height.getText().toString();
         bow.tiller = tiller.getText().toString();
+        bow.limbs = limbs.getText().toString();
+        bow.sight = sight.getText().toString();
+        bow.drawWeight = drawWeight.getText().toString();
         bow.description = desc.getText().toString();
         bow.type = getType();
         bow.setImage(imageFile, imageBitmap);

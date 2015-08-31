@@ -18,6 +18,9 @@ public class Bow extends ImageHolder implements DatabaseSerializable {
     public static final String TILLER = "tiller";
     public static final String DESCRIPTION = "description";
     public static final String IMAGE = "image";
+    public static final String LIMBS = "limbs";
+    public static final String SIGHT = "sight";
+    public static final String WEIGHT = "draw_weight";
     public static final String CREATE_TABLE_BOW =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " ( " +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -27,6 +30,9 @@ public class Bow extends ImageHolder implements DatabaseSerializable {
                     SIZE + " INTEGER," +
                     HEIGHT + " TEXT," +
                     TILLER + " TEXT," +
+                    LIMBS + " TEXT," +
+                    SIGHT + " TEXT," +
+                    WEIGHT + " TEXT," +
                     DESCRIPTION + " TEXT," +
                     THUMBNAIL + " BLOB," +
                     IMAGE + " TEXT);";
@@ -37,6 +43,9 @@ public class Bow extends ImageHolder implements DatabaseSerializable {
     public String size;
     public String height;
     public String tiller;
+    public String limbs;
+    public String sight;
+    public String drawWeight;
     public String description;
 
     @Override
@@ -62,6 +71,9 @@ public class Bow extends ImageHolder implements DatabaseSerializable {
         values.put(Bow.SIZE, size);
         values.put(Bow.HEIGHT, height);
         values.put(Bow.TILLER, tiller);
+        values.put(Bow.LIMBS, limbs);
+        values.put(Bow.SIGHT, sight);
+        values.put(Bow.WEIGHT, drawWeight);
         values.put(Bow.DESCRIPTION, description);
         values.put(Bow.THUMBNAIL, thumb);
         values.put(Bow.IMAGE, imageFile);
@@ -77,8 +89,11 @@ public class Bow extends ImageHolder implements DatabaseSerializable {
         size = cursor.getString(startColumnIndex + 4);
         height = cursor.getString(startColumnIndex + 5);
         tiller = cursor.getString(startColumnIndex + 6);
-        description = cursor.getString(startColumnIndex + 7);
-        thumb = cursor.getBlob(startColumnIndex + 8);
-        imageFile = cursor.getString(startColumnIndex + 9);
+        limbs = cursor.getString(startColumnIndex + 7);
+        sight = cursor.getString(startColumnIndex + 8);
+        drawWeight = cursor.getString(startColumnIndex + 9);
+        description = cursor.getString(startColumnIndex + 10);
+        thumb = cursor.getBlob(startColumnIndex + 11);
+        imageFile = cursor.getString(startColumnIndex + 12);
     }
 }
