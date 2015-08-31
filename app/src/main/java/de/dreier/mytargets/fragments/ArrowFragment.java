@@ -20,23 +20,24 @@ import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 
-public class ArrowFragment extends NowListFragment<Arrow> implements View.OnClickListener{
+public class ArrowFragment extends EditableNowListFragment<Arrow> implements View.OnClickListener{
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
         itemTypeRes = R.plurals.arrow_selected;
         itemTypeDelRes = R.plurals.arrow_deleted;
         newStringRes = R.string.new_arrow;
-        mEditable = true;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        setList(db.getArrows(), new ArrowAdapter());
+        ArrowDataSource dataSource = new ArrowDataSource(getContext());
+        setList(dataSource, dataSource.getAll(), new ArrowAdapter());
     }
 
     @Override

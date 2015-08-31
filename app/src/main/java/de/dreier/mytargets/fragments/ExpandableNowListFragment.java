@@ -15,7 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
 import de.dreier.mytargets.shared.models.IdProvider;
@@ -24,7 +24,7 @@ import de.dreier.mytargets.shared.models.IdProvider;
  * Shows all rounds of one settings_only day
  */
 public abstract class ExpandableNowListFragment<H extends IdProvider, C extends IdProvider>
-        extends NowListFragmentBase<C> {
+        extends EditableNowListFragmentBase<C> {
 
     ExpandableNowListAdapter<H, C> mAdapter;
     private GridLayoutManager manager;
@@ -55,7 +55,7 @@ public abstract class ExpandableNowListFragment<H extends IdProvider, C extends 
         this.activity = (AppCompatActivity) getActivity();
     }
 
-    void setList(ArrayList<H> list, ArrayList<C> children, boolean opened, ExpandableNowListAdapter<H, C> adapter) {
+    void setList(List<H> list, List<C> children, boolean opened, ExpandableNowListAdapter<H, C> adapter) {
         if (mRecyclerView.getAdapter() == null) {
             mAdapter = adapter;
             mAdapter.setList(list, children, opened);

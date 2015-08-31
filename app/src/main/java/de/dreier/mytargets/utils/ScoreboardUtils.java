@@ -17,6 +17,12 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.managers.dao.ArrowDataSource;
+import de.dreier.mytargets.managers.dao.BowDataSource;
+import de.dreier.mytargets.managers.dao.PasseDataSource;
+import de.dreier.mytargets.managers.dao.RoundDataSource;
+import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
+import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.Passe;
@@ -38,9 +44,9 @@ public class ScoreboardUtils {
 
     public static String getHTMLString(Context context, long trainingId, boolean withTarget) {
         // Query information from database
-        DatabaseManager db = DatabaseManager.getInstance(context);
-        Training training = db.getTraining(trainingId);
-        ArrayList<Round> rounds = db.getRounds(trainingId);
+        RoundDataSource roundDataSource = new RoundDataSource(context);
+        Training training = new TrainingDataSource(context).get(trainingId);
+        ArrayList<Round> rounds = roundDataSource.getAll(trainingId);
 
         // Initialize html Strings
         String html = "<html>" + CSS;
@@ -48,11 +54,12 @@ public class ScoreboardUtils {
         String formattedDate = DateFormat.getDateInstance().format(training.date);
         html += "<h3>" + training.title + " (" + formattedDate + ")</h3>";
         boolean[] equals = new boolean[2];
-        html += getTrainingInfoHTML(context, db, training, rounds, equals);
+        html += getTrainingInfoHTML(context, training, rounds, equals);
 
         html += "<table class=\"myTable\">";
         html += getTableHeader(context, rounds.get(0).info.arrowsPerPasse);
         int carry = 0, count = 0;
+        DatabaseManager db = DatabaseManager.getInstance(context);
         for (int r = 0; r < rounds.size(); r++) {
             Round round = rounds.get(r);
             html += "<tr class=\"align_left\"><td colspan=\"" +
@@ -62,7 +69,7 @@ public class ScoreboardUtils {
                     "</b><br />" +
                     getRoundInfoHTML(context, round, equals) +
                     "</td></tr>";
-            ArrayList<Passe> passes = db.getPassesOfRound(round.getId());
+            ArrayList<Passe> passes = new PasseDataSource(context).getAll(round.getId());
             for (Passe passe : passes) {
                 html += "<tr class=\"align_center\">";
                 int sum = 0;
@@ -114,7 +121,7 @@ public class ScoreboardUtils {
         int j = 0;
         for (Round round : rounds) {
             int i = 1;
-            ArrayList<Passe> passes = db.getPasses(round.getId());
+            ArrayList<Passe> passes = new PasseDataSource(context).getAll(round.getId());
             for (Passe passe : passes) {
                 for (int s = 0; s < passe.shot.length; s++) {
                     Shot shot = passe.shot[s];
@@ -177,8 +184,9 @@ public class ScoreboardUtils {
         return infoText;
     }
 
-    public static String getTrainingInfoHTML(Context context, DatabaseManager db, Training training, ArrayList<Round> rounds, boolean[] equals) {
-        StandardRound standardRound = db.getStandardRound(training.standardRoundId);
+    public static String getTrainingInfoHTML(Context context, Training training, ArrayList<Round> rounds, boolean[] equals) {
+        StandardRound standardRound = new StandardRoundDataSource(context).get(
+                training.standardRoundId);
         boolean indoor = standardRound.indoor;
 
         int maxPoints = 0;
@@ -197,13 +205,13 @@ public class ScoreboardUtils {
                 .htmlEncode(standardRound.name) + "</b>";
 
         // Set round info
-        Bow bow = db.getBow(training.bow);
+        Bow bow = new BowDataSource(context).get(training.bow);
         if (bow != null) {
             infoText += "<br>" + context.getString(R.string.bow) +
                     ": <b>" + TextUtils.htmlEncode(bow.name) + "</b>";
         }
 
-        Arrow arrow = db.getArrow(training.arrow);
+        Arrow arrow = new ArrowDataSource(context).get(training.arrow);
         if (arrow != null) {
             infoText += "<br>" + context.getString(R.string.arrow) +
                     ": <b>" + TextUtils.htmlEncode(arrow.name) + "</b>";

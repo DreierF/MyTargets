@@ -21,24 +21,25 @@ import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
-import de.dreier.mytargets.models.SightSetting;
+import de.dreier.mytargets.managers.dao.BowDataSource;
+import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 
-public class BowFragment extends NowListFragment<Bow> implements View.OnClickListener {
+public class BowFragment extends EditableNowListFragment<Bow> implements View.OnClickListener {
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
         itemTypeRes = R.plurals.bow_selected;
         itemTypeDelRes = R.plurals.bow_deleted;
         newStringRes = R.string.new_bow;
-        mEditable = true;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        setList(db.getBows(), new BowAdapter());
+        BowDataSource dataSource = new BowDataSource(getContext());
+        setList(dataSource, dataSource.getAll(), new BowAdapter());
     }
 
     @Override

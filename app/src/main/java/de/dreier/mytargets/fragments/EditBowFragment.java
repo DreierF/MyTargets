@@ -21,9 +21,9 @@ import android.widget.RadioButton;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.models.SightSetting;
+import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.views.DynamicItemLayout;
 import de.dreier.mytargets.views.selector.DistanceSelector;
 
@@ -93,8 +93,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
         if (savedInstanceState == null) {
             if (mBowId != -1) {
                 // Load data from database
-                DatabaseManager db = DatabaseManager.getInstance(getContext());
-                Bow bow = db.getBow(mBowId);
+                Bow bow = new BowDataSource(getContext()).get(mBowId);
                 setBowValues(bow);
             } else {
                 // Set to default values
@@ -161,10 +160,8 @@ public class EditBowFragment extends EditWithImageFragmentBase
 
     @Override
     public void onSave() {
-        DatabaseManager db = DatabaseManager.getInstance(getContext());
-        Bow bow = buildBow();
-        db.update(bow);
-        db.updateSightSettings(bow.getId(), sight_settings.getList());
+        new BowDataSource(getContext())
+                .update(buildBow());
         getActivity().finish();
     }
 

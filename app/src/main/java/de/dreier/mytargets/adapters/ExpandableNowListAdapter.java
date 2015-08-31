@@ -25,7 +25,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
     public static final int ITEM_TYPE = 2;
     public static final int ITEM_TYPE_2 = 3;
 
-    private ArrayList<HEADER> mListHeaders = new ArrayList<>();
+    private List<HEADER> mListHeaders = new ArrayList<>();
     private final HashMap<Long, List<CHILD>> childMap = new HashMap<>();
     private final ArrayList<Boolean> isOpen = new ArrayList<>();
     private final List<DataHolder> dataList = new ArrayList<>();
@@ -134,7 +134,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
         notifyItemRemoved(pos);
     }
 
-    public void setList(ArrayList<HEADER> headers, ArrayList<CHILD> children, boolean opened) {
+    public void setList(List<HEADER> headers, List<CHILD> children, boolean opened) {
         mListHeaders = headers;
         dataList.clear();
         childMap.clear();

@@ -15,7 +15,7 @@ import android.widget.TextView;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
-import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 
@@ -41,11 +41,12 @@ public class BowSelector extends SelectorBase<Bow> {
 
     public void setItemId(long bow) {
         Bow item = null;
+        BowDataSource bowDataSource = new BowDataSource(getContext());
         if (bow > 0) {
-            item = DatabaseManager.getInstance(getContext()).getBow(bow);
+            item = bowDataSource.get(bow);
         }
         if (item == null) {
-            item = DatabaseManager.getInstance(getContext()).getBows().get(0);
+            item = bowDataSource.getAll().get(0);
         }
         setItem(item);
     }

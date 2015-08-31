@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
-import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
@@ -58,12 +58,11 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> implem
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
-        mEditable = false;
         mDrawerLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
         rootView.findViewById(R.id.right_drawer);
         mSingleSelector.setSelectable(true);
         currentSelection = (StandardRound) getArguments().getSerializable(ITEM);
-        list = DatabaseManager.getInstance(getActivity()).getStandardRounds();
+        list = new StandardRoundDataSource(getContext()).getAll();
         if (!list.contains(currentSelection)) {
             list.add(currentSelection);
         }
@@ -211,10 +210,6 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> implem
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }
-    }
-
-    @Override
-    protected void onEdit(StandardRound item) {
     }
 
     @Override

@@ -39,6 +39,10 @@ import de.dreier.mytargets.activities.ScoreboardActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
+import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.managers.dao.PasseDataSource;
+import de.dreier.mytargets.managers.dao.RoundDataSource;
+import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Training;
@@ -62,6 +66,9 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
     private View mNewLayout;
     private TextView mNewText;
     private final boolean[] equals = new boolean[2];
+    private Training training;
+    private RoundDataSource roundDataSource;
+    private PasseDataSource passeDataSource;
 
     public TrainingFragment() {
     }
@@ -82,21 +89,23 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
         mNewLayout = rootView.findViewById(R.id.new_layout);
         mNewText = (TextView) rootView.findViewById(R.id.new_text);
 
+        // Get training
         if (intent != null) {
             mTraining = intent.getLong(TRAINING_ID, -1);
         }
         if (savedInstanceState != null) {
             mTraining = savedInstanceState.getLong(TRAINING_ID, -1);
         }
+        TrainingDataSource trainingDataSource = new TrainingDataSource(getContext());
+        training = trainingDataSource.get(mTraining);
 
         // Set up toolbar
         Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
         activity.setSupportActionBar(toolbar);
-        Training tr = db.getTraining(mTraining);
         ActionBar actionBar = activity.getSupportActionBar();
         assert actionBar != null;
-        actionBar.setTitle(tr.title);
-        actionBar.setSubtitle(DateFormat.getDateInstance().format(tr.date));
+        actionBar.setTitle(training.title);
+        actionBar.setSubtitle(DateFormat.getDateInstance().format(training.date));
         actionBar.setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);
     }
@@ -106,10 +115,12 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
         super.onResume();
 
         // Set round info
-        mRounds = db.getRounds(mTraining);
+        roundDataSource=new RoundDataSource(getContext());
+        passeDataSource = new PasseDataSource(getContext());
+        mRounds = roundDataSource.getAll(mTraining);
         setRoundInfo();
 
-        setList(mRounds, db.getPasses(mTraining), true,
+        setList(mRounds, passeDataSource.getAllByTraining(mTraining), true,
                 new PasseAdapter());
         mAdapter.notifyDataSetChanged();
         activity.supportInvalidateOptionsMenu();
@@ -130,8 +141,8 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
         TextView info = (TextView) activity.findViewById(R.id.detail_round_info);
         TextView tvScore = (TextView) activity.findViewById(R.id.detail_score);
 
-        Training training = db.getTraining(mTraining);
 
+        DatabaseManager db = DatabaseManager.getInstance(getContext());
         ArrayList<Pair<String, Integer>> scoreCount = db
                 .getTrainingTopScoreDistribution(mTraining);
         String infoText = "<font color=#ffffff>";
@@ -143,7 +154,7 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
 
         // Set training info
         infoText = ScoreboardUtils
-                .getTrainingInfoHTML(getActivity(), db, training, mRounds, equals);
+                .getTrainingInfoHTML(getActivity(), training, mRounds, equals);
         info.setText(Html.fromHtml(infoText));
     }
 
@@ -238,8 +249,9 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
     }
 
     private void shareText() {
-        mRounds = db.getRounds(mTraining);
+        mRounds = roundDataSource.getAll(mTraining);
 
+        DatabaseManager db = DatabaseManager.getInstance(getContext());
         ArrayList<Pair<String, Integer>> scoreCount = db
                 .getTrainingTopScoreDistribution(mTraining);
         String scoreText = "";
@@ -281,10 +293,10 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
 
     @Override
     public void onClick(View v) {
-        ArrayList<Round> rounds = db.getRounds(mTraining);
+        ArrayList<Round> rounds = roundDataSource.getAll(mTraining);
         for (int roundIndex = 0; roundIndex < rounds.size(); roundIndex++) {
             Round mRound = rounds.get(roundIndex);
-            ArrayList<Passe> passes = db.getPassesOfRound(mRound.getId());
+            ArrayList<Passe> passes = passeDataSource.getAll(mRound.getId());
             if (passes.size() < mRound.info.passes) {
                 // Open InputActivity to add new passes
                 Intent i = new Intent(activity, InputActivity.class);
@@ -353,7 +365,7 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
         @Override
         public void bindCursor() {
             Context context = mSubtitle.getContext();
-            Round r = db.getRound(mItem.roundId);
+            Round r = roundDataSource.get(mItem.roundId);
             mShots.setPasse(mItem, r.info.target);
             mSubtitle.setText(context.getString(R.string.passe_n, (mItem.index + 1)));
         }
@@ -372,7 +384,7 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
         @Override
         public void bindCursor() {
             Context context = mSubtitle.getContext();
-            Round r = db.getRound(mItem.roundId);
+            Round r = roundDataSource.get(mItem.roundId);
             mShots.setPoints(mItem, r.info.target);
             mSubtitle.setText(context.getString(R.string.passe_n, (mItem.index + 1)));
         }

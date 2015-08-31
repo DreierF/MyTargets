@@ -30,7 +30,9 @@ import java.util.GregorianCalendar;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.InputActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
-import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.managers.dao.RoundDataSource;
+import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
+import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Distance;
@@ -160,8 +162,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             environment.queryWeather(getActivity(), REQUEST_LOCATION_PERMISSION);
         } else {
             setTitle(R.string.edit_training);
-            DatabaseManager db = DatabaseManager.getInstance(activity);
-            Training train = db.getTraining(mTraining);
+            Training train = new TrainingDataSource(getContext()).get(mTraining);
             training.setText(train.title);
             date = train.date;
             bow.setItemId(train.bow);
@@ -207,7 +208,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     @Override
     protected void onSave() {
         boolean newTraining = mTraining == -1;
-        DatabaseManager db = DatabaseManager.getInstance(getActivity());
         String title = training.getText().toString();
         Training training1 = new Training();
         training1.setId(mTraining);
@@ -231,6 +231,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         getActivity().finish();
         SharedPreferences.Editor editor = prefs.edit();
         StandardRound standardRound;
+        TrainingDataSource trainingDataSource = new TrainingDataSource(getContext());
+        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(getContext());
         if (newTraining) {
             getActivity().setTitle(R.string.edit_training);
             if (tabLayout.getSelectedTabPosition() == 0) {
@@ -248,7 +250,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                 round.distance = distanceSpinner.getSelectedItem();
                 rounds.add(round);
                 standardRound.setRounds(rounds);
-                db.update(standardRound);
+                standardRoundDataSource.update(standardRound);
 
                 editor.putInt("tab", tabLayout.getSelectedTabPosition());
                 editor.putBoolean("indoor", standardRound.indoor);
@@ -262,20 +264,21 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                 editor.putString("unit_target", round.target.size.unit);
             } else {
                 standardRound = standardRoundSpinner.getSelectedItem();
-                db.update(standardRound);
+                standardRoundDataSource.update(standardRound);
                 editor.putInt("standard_round", (int) standardRound.getId());
             }
             training1.standardRoundId = standardRound.getId();
 
-            db.update(training1);
+            trainingDataSource.update(training1);
             mTraining = training1.getId();
             ArrayList<Round> rounds = new ArrayList<>();
+            RoundDataSource roundDataSource = new RoundDataSource(getContext());
             for (RoundTemplate template : standardRound.getRounds()) {
                 Round round = new Round();
                 round.training = mTraining;
                 round.info = template;
                 round.comment = "";
-                db.update(round);
+                roundDataSource.update(round);
                 rounds.add(round);
             }
             Intent i = new Intent(getActivity(), SimpleFragmentActivity.TrainingActivity.class);
@@ -290,9 +293,9 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
         } else {
             // Edit training
-            Training train = db.getTraining(mTraining);
+            Training train = trainingDataSource.get(mTraining);
             training1.standardRoundId = train.standardRoundId;
-            db.update(training1);
+            trainingDataSource.update(training1);
             getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
         }
 

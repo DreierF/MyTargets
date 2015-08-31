@@ -38,6 +38,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.shared.models.ArrowNumber;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.RoundTemplate;
@@ -64,7 +65,7 @@ public class TargetView extends TargetViewBase {
     private LinearLayout keyboard;
     private boolean spotFocused = false;
     private RectF orgRect;
-    private List<Integer> arrowNumbers = new ArrayList<>();
+    private List<ArrowNumber> arrowNumbers = new ArrayList<>();
 
     public TargetView(Context context) {
         super(context);
@@ -91,7 +92,7 @@ public class TargetView extends TargetViewBase {
         invalidate();
     }
 
-    public void setArrowNumbers(@NonNull List<Integer> arrowNumbers) {
+    public void setArrowNumbers(@NonNull List<ArrowNumber> arrowNumbers) {
         this.arrowNumbers = arrowNumbers;
     }
 
@@ -578,7 +579,7 @@ public class TargetView extends TargetViewBase {
                 currentArrow < round.arrowsPerPasse && mPasse.shot[currentArrow].arrow != -1) {
             super.onArrowChanged(i);
         } else {
-            List<Integer> numbersLeft = new ArrayList<>(arrowNumbers);
+            List<ArrowNumber> numbersLeft = new ArrayList<>(arrowNumbers);
             for (Shot s : mPasse.shot) {
                 numbersLeft.remove((Integer) s.arrow);
             }
@@ -586,7 +587,7 @@ public class TargetView extends TargetViewBase {
                 super.onArrowChanged(i);
                 return;
             } else if (numbersLeft.size() == 1) {
-                mPasse.shot[currentArrow].arrow = numbersLeft.get(0);
+                mPasse.shot[currentArrow].arrow = numbersLeft.get(0).number;
                 super.onArrowChanged(i);
                 return;
             }
@@ -607,7 +608,7 @@ public class TargetView extends TargetViewBase {
             gridView.setOnItemClickListener((parent, view, position, id) ->
             {
                 if (currentArrow < mPasse.shot.length) {
-                    mPasse.shot[currentArrow].arrow = numbersLeft.get(position);
+                    mPasse.shot[currentArrow].arrow = numbersLeft.get(position).number;
                 }
                 dialog.dismiss();
                 super.onArrowChanged(i);

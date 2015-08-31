@@ -64,16 +64,7 @@ public abstract class NowListFragment<T extends IIdProvider> extends NowListFrag
         return mAdapter.getItem(id);
     }
 
-    @Override
-    protected void removeItem(int pos) {
-        mAdapter.remove(pos);
-    }
-
     protected final void onSelected(T item) {
         listener.onItemSelected(item);
-    }
-
-    public interface OnItemSelectedListener {
-        void onItemSelected(IIdProvider e);
     }
 }

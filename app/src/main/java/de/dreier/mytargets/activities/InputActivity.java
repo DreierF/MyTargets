@@ -22,8 +22,12 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.TimerFragment;
-import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.WearMessageManager;
+import de.dreier.mytargets.managers.dao.ArrowNumberDataSource;
+import de.dreier.mytargets.managers.dao.PasseDataSource;
+import de.dreier.mytargets.managers.dao.RoundDataSource;
+import de.dreier.mytargets.managers.dao.SightSettingDataSource;
+import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
@@ -43,13 +47,13 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     private int curPasse = 0;
     private int savedPasses = 0;
     private Round mRound;
-    private DatabaseManager db;
     private boolean mShowAllMode = false;
     private WearMessageManager manager;
     private Training training;
     private RoundTemplate template;
     private boolean mExitOnFinish;
     private ArrayList<Round> rounds;
+    private PasseDataSource passeDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,23 +66,25 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         target.setOnTargetSetListener(this);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        db = DatabaseManager.getInstance(this);
+        RoundDataSource roundDataSource = new RoundDataSource(getApplicationContext());
+        passeDataSource = new PasseDataSource(getApplicationContext());
 
         Intent intent = getIntent();
         assert intent != null;
 
         long roundId = intent.getLongExtra(ROUND_ID, -1);
         curPasse = intent.getIntExtra(PASSE_IND, -1);
-        mRound = db.getRound(roundId);
+        mRound = roundDataSource.get(roundId);
         template = mRound.info;
-        training = db.getTraining(mRound.training);
-        rounds = db.getRounds(mRound.training);
-        savedPasses = db.getPassesOfRound(roundId).size();
+        training = new TrainingDataSource(this).get(mRound.training);
+        rounds = roundDataSource.getAll(mRound.training);
+        savedPasses = passeDataSource.getAll(roundId).size();
         mExitOnFinish = savedPasses <= curPasse;
 
         target.setRoundTemplate(template);
         if (training.arrowNumbering) {
-            target.setArrowNumbers(db.getArrowNumbers(training.arrow));
+            target.setArrowNumbers(new ArrowNumberDataSource(getApplicationContext()).getAll(
+                    training.arrow));
         }
         mShowAllMode = prefs.getBoolean(SHOW_ALL_MODE, false);
         target.showAll(mShowAllMode);
@@ -131,7 +137,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                 mRound = rounds.get(template.index + 1);
                 template = mRound.info;
                 passe = 0;
-                savedPasses = db.getPassesOfRound(mRound.getId()).size();
+                savedPasses = passeDataSource.getAll(mRound.getId()).size();
             } else if (mExitOnFinish) {
                 finish();
                 overridePendingTransition(R.anim.left_in, R.anim.right_out);
@@ -142,7 +148,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
             passe = template.passes;
         }
         if (passe < savedPasses) {
-            Passe p = db.getPasse(mRound.getId(), passe);
+            Passe p = passeDataSource.get(mRound.getId(), passe);
             if (p != null) {
                 target.setPasse(p);
             } else {
@@ -156,7 +162,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                 openTimer();
             }
         }
-        ArrayList<Passe> oldOnes = db.getPasses(training.getId());
+        ArrayList<Passe> oldOnes = passeDataSource.getAll(training.getId());
         target.setOldShoots(oldOnes);
         curPasse = passe;
         updatePasse();
@@ -216,7 +222,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         }
 
         passe.roundId = mRound.getId();
-        db.update(passe);
+        passeDataSource.update(passe);
 
         if (curPasse >= savedPasses || remote) {
             savedPasses++;
@@ -242,7 +248,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         String text = "";
 
         // Initialize message text
-        Passe lastPasse = db.getPasse(mRound.getId(), savedPasses);
+        Passe lastPasse = passeDataSource.get(mRound.getId(), savedPasses);
         if (lastPasse != null) {
             for (Shot shot : lastPasse.shot) {
                 text += template.target.zoneToString(shot.zone, 0) + " ";
@@ -255,7 +261,8 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         // Load bow settings
         if (training.bow > 0) {
             text += template.distance.toString(this) + ": " +
-                    db.getSetting(training.bow, template.distance);
+                    new SightSettingDataSource(getApplicationContext()).get(training.bow,
+                            template.distance);
         }
         return new NotificationInfo(mRound, title, text);
     }

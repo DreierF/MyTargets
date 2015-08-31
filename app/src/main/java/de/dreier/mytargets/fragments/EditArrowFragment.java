@@ -15,10 +15,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.shared.models.ArrowNumber;
 
 public class EditArrowFragment extends EditWithImageFragmentBase {
 
@@ -51,12 +53,12 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         arrowNumbers = (EditText) rootView.findViewById(R.id.arrow_numbers);
 
         setTitle(R.string.my_arrow);
-        ArrayList<Integer> arrowNumbersList = new ArrayList<>();
+        List<ArrowNumber> arrowNumbersList = new ArrayList<>();
         if (savedInstanceState == null) {
             if (mArrowId != -1) {
                 // Load data from database
-                DatabaseManager db = DatabaseManager.getInstance(getContext());
-                Arrow arrow = db.getArrow(mArrowId);
+                ArrowDataSource db = new ArrowDataSource(getContext());
+                Arrow arrow = db.get(mArrowId);
                 setTitle(arrow.name);
                 length.setText(arrow.length);
                 material.setText(arrow.material);
@@ -70,14 +72,14 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
                     mImageView.setImageBitmap(imageBitmap);
                 }
                 imageFile = arrow.imageFile;
-                arrowNumbersList = db.getArrowNumbers(mArrowId);
+                arrowNumbersList = arrow.numbers;
             }
             String text = "";
-            for (Integer number : arrowNumbersList) {
+            for (ArrowNumber arrowNumber : arrowNumbersList) {
                 if (!text.isEmpty()) {
                     text += ",";
                 }
-                text += number;
+                text += arrowNumber.number;
             }
             arrowNumbers.setText(text);
         } else {
@@ -100,12 +102,12 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         if (arrow == null) {
             return;
         }
-        DatabaseManager.getInstance(getContext()).update(arrow);
+        new ArrowDataSource(getContext()).update(arrow);
         getActivity().finish();
     }
 
     protected Arrow buildArrow() {
-        ArrayList<Integer> numbers = getArrowNumbers();
+        ArrayList<ArrowNumber> numbers = getArrowNumbers();
         if (numbers == null) {
             return null;
         }
@@ -124,17 +126,19 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         return arrow;
     }
 
-    private ArrayList<Integer> getArrowNumbers() {
+    private ArrayList<ArrowNumber> getArrowNumbers() {
         String text = arrowNumbers.getText().toString().replace(" ", "");
         if (!text.matches("([0-9]*(,[0-9]*)*)?")) {
             arrowNumbers.setError(getString(R.string.not_matches_sheme));
             return null;
         }
         String[] stringNumber = text.split(",");
-        ArrayList<Integer> list = new ArrayList<>();
+        ArrayList<ArrowNumber> list = new ArrayList<>();
         for (String num : stringNumber) {
             if (!num.isEmpty()) {
-                list.add(Integer.parseInt(num));
+                ArrowNumber an = new ArrowNumber();
+                an.number = Integer.parseInt(num);
+                list.add(an);
             }
         }
         return list;

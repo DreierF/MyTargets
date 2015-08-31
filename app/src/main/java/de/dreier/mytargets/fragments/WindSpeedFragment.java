@@ -23,7 +23,6 @@ public class WindSpeedFragment extends NowListFragment<WindSpeed> {
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
-        mEditable = false;
     }
 
     @Override
@@ -35,10 +34,6 @@ public class WindSpeedFragment extends NowListFragment<WindSpeed> {
     @Override
     public void onLongClick(SelectableViewHolder holder) {
         onClick(holder, (WindSpeed) holder.getItem());
-    }
-
-    @Override
-    protected void onEdit(WindSpeed item) {
     }
 
     protected class WindSpeedAdapter extends NowListAdapter<WindSpeed> {

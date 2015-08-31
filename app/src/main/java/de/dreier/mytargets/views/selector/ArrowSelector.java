@@ -15,7 +15,7 @@ import android.widget.TextView;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
-import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 
@@ -45,11 +45,12 @@ public class ArrowSelector extends SelectorBase<Arrow> {
 
     public void setItemId(long arrow) {
         Arrow item = null;
+        ArrowDataSource arrowDataSource = new ArrowDataSource(getContext());
         if (arrow > 0) {
-            item = DatabaseManager.getInstance(getContext()).getArrow(arrow);
+            item = arrowDataSource.get(arrow);
         }
         if (item == null) {
-            item = DatabaseManager.getInstance(getContext()).getArrows().get(0);
+            item = arrowDataSource.getAll().get(0);
         }
         setItem(item);
     }

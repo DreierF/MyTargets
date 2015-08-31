@@ -86,7 +86,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.activity_edit_image, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_edit_image, container, false);
 
         setUpToolbar(rootView);
 
@@ -124,7 +124,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
         scrollView.setScrollViewCallbacks(this);
 
         // Prepare custom title view
-        setTitle(null);
+        activity.getSupportActionBar().setTitle(null);
 
         // Initialize FAB button
         registerForContextMenu(mFab);

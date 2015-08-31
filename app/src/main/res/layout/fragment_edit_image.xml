@@ -79,29 +79,18 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
-        <!--<TextView
+        <EditText
             android:id="@+id/title"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
+            android:background="@color/transparent"
             android:gravity="center_vertical"
+            android:hint="@string/name"
+            android:inputType="textNoSuggestions"
             android:maxLines="1"
             android:minHeight="?attr/actionBarSize"
             android:textColor="@android:color/white"
-            android:textSize="20sp"/>-->
-
-            <EditText
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:hint="@string/name"
-                android:gravity="center_vertical"
-                android:inputType="textNoSuggestions"
-                android:maxLines="1"
-                android:minHeight="?attr/actionBarSize"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"/>
+            android:textSize="20sp"/>
 
         <View
             android:layout_width="match_parent"

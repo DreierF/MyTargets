@@ -20,6 +20,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.managers.dao.DistanceDataSource;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.views.CardItemDecorator;
 
@@ -44,7 +45,6 @@ public class DistanceGridFragment extends NowListFragment<Distance> {
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
-        mEditable = false;
         Bundle bundle = getArguments();
         distance = (Distance)bundle.getSerializable(ITEM);
         unit = bundle.getString(DISTANCE_UNIT);
@@ -55,16 +55,12 @@ public class DistanceGridFragment extends NowListFragment<Distance> {
     @Override
     public void onResume() {
         super.onResume();
-        setList(db.getDistances(distance, unit), new DistanceAdapter());
+        DistanceDataSource dataSource = new DistanceDataSource(getContext());
+        setList(dataSource.getAll(distance, unit), new DistanceAdapter());
     }
 
     @Override
     protected void updateFabButton(List list) {
-    }
-
-    @Override
-    protected void onEdit(Distance item) {
-
     }
 
     @Override

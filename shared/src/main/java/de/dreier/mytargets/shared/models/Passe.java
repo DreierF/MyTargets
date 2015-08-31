@@ -1,25 +1,12 @@
 package de.dreier.mytargets.shared.models;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-
-import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * Created by Florian on 13.03.2015.
  */
-public class Passe extends IdProvider implements Serializable, DatabaseSerializable {
+public class Passe extends IdProvider {
     static final long serialVersionUID = 55L;
-    public static final String TABLE = "PASSE";
-    public static final String ROUND = "round";
-    private static final String IMAGE = "image";
-    public static final String CREATE_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
-                    ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    ROUND + " INTEGER," +
-                    IMAGE + " TEXT);";
 
     public Shot[] shot;
     public long roundId;
@@ -55,25 +42,5 @@ public class Passe extends IdProvider implements Serializable, DatabaseSerializa
         for (int i = 0; i < shot.length; i++) {
             shot[i].index = i;
         }
-    }
-
-    @Override
-    public String getTableName() {
-        return TABLE;
-    }
-
-    @Override
-    public ContentValues getContentValues() {
-        if (shot.length == 0) {
-            return null;
-        }
-        ContentValues values = new ContentValues();
-        values.put(ROUND, roundId);
-        return values;
-    }
-
-    @Override
-    public void fromCursor(Context context, Cursor cursor, int startColumnIndex) {
-        throw new IllegalArgumentException("Not implemented!");
     }
 }

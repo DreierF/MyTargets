@@ -16,7 +16,10 @@ import android.widget.EditText;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.InputActivity;
-import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.managers.dao.RoundDataSource;
+import de.dreier.mytargets.managers.dao.RoundTemplateDataSource;
+import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
+import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.Round;
@@ -85,12 +88,13 @@ public class EditRoundFragment extends EditFragmentBase {
             comment.setText("");
         } else {
             setTitle(R.string.edit_round);
-            DatabaseManager db = DatabaseManager.getInstance(activity);
-            Round round = db.getRound(mRound);
+            RoundDataSource roundDataSource = new RoundDataSource(getContext());
+            Round round = roundDataSource.get(mRound);
             distanceSpinner.setItem(round.info.distance);
             comment.setText(round.comment);
             not_editable.setVisibility(View.GONE);
-            StandardRound standardRound = db.getStandardRound(round.info.standardRound);
+            StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(getContext());
+            StandardRound standardRound = standardRoundDataSource.get(round.info.standardRound);
             if (standardRound.club != StandardRound.CUSTOM_PRACTICE) {
                 distance_layout.setVisibility(View.GONE);
             }
@@ -115,14 +119,15 @@ public class EditRoundFragment extends EditFragmentBase {
     }
 
     private void onSaveRound() {
-        DatabaseManager db = DatabaseManager.getInstance(getContext());
-        Training training = db.getTraining(mTraining);
-        StandardRound standardRound = db.getStandardRound(training.standardRoundId);
+        RoundDataSource roundDataSource = new RoundDataSource(getContext());
+        Training training = new TrainingDataSource(getContext()).get(mTraining);
+        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(getContext());
+        StandardRound standardRound = standardRoundDataSource.get(training.standardRoundId);
 
         SharedPreferences.Editor editor = prefs.edit();
         Round round;
         if (mRound != -1) {
-            round = db.getRound(mRound);
+            round = roundDataSource.get(mRound);
         } else {
             round = new Round();
             round.training = mTraining;
@@ -139,9 +144,9 @@ public class EditRoundFragment extends EditFragmentBase {
 
         if (standardRound.club == StandardRound.CUSTOM_PRACTICE) {
             round.info.distance = distanceSpinner.getSelectedItem();
-            db.update(round.info);
+            new RoundTemplateDataSource(getContext()).update(round.info);
         }
-        db.update(round);
+        roundDataSource.update(round);
 
         mRound = round.getId();
 

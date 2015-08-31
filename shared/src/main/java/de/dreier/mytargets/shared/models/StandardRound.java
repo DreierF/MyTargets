@@ -6,12 +6,9 @@
  */
 package de.dreier.mytargets.shared.models;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +31,7 @@ import de.dreier.mytargets.shared.models.target.WAField;
 import de.dreier.mytargets.shared.models.target.WAFullTarget;
 import de.dreier.mytargets.shared.models.target.Worcester;
 
-public class StandardRound extends IdProvider implements Serializable, DatabaseSerializable {
+public class StandardRound extends IdProvider {
     static final long serialVersionUID = 56L;
     private static final int ASA = 1;
     private static final int AUSTRALIAN = 2;
@@ -50,47 +47,13 @@ public class StandardRound extends IdProvider implements Serializable, DatabaseS
     private static final boolean CAT_INDOOR = true;
     private static final boolean CAT_OUTDOOR = false;
 
-    public static final String TABLE = "STANDARD_ROUND_TEMPLATE";
-    private static final String NAME = "name";
-    private static final String INSTITUTION = "club";
-    private static final String INDOOR = "indoor";
-    public static final String CREATE_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
-                    ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    NAME + " TEXT," +
-                    INSTITUTION + " INTEGER," +
-                    INDOOR + " INTEGER);";
-
     public String name;
     public int club;
-
-    public ArrayList<RoundTemplate> getRounds() {
-        return rounds;
-    }
-
     private ArrayList<RoundTemplate> rounds = new ArrayList<>();
     public boolean indoor;
 
-    @Override
-    public String getTableName() {
-        return TABLE;
-    }
-
-    @Override
-    public ContentValues getContentValues() {
-        ContentValues values = new ContentValues();
-        values.put(NAME, name);
-        values.put(INSTITUTION, club);
-        values.put(INDOOR, indoor ? 1 : 0);
-        return values;
-    }
-
-    @Override
-    public void fromCursor(Context context, Cursor cursor, int startColumnIndex) {
-        super.setId(cursor.getLong(0));
-        name = cursor.getString(1);
-        club = cursor.getInt(2);
-        indoor = cursor.getInt(3) == 1;
+    public ArrayList<RoundTemplate> getRounds() {
+        return rounds;
     }
 
     public static ArrayList<StandardRound> initTable(Context context) {

@@ -21,6 +21,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.managers.dao.PasseDataSource;
+import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 
@@ -29,7 +31,7 @@ public class TargetImage {
     public void generateBitmap(Context context, int size, long trainingId, OutputStream fOut) {
         DatabaseManager db = DatabaseManager.getInstance(context);
 
-        ArrayList<Round> rounds = db.getRounds(trainingId);
+        ArrayList<Round> rounds = new RoundDataSource(context).getAll(trainingId);
         int count = rounds.size();
 
         // Create bitmap to draw on
@@ -38,7 +40,7 @@ public class TargetImage {
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
 
         for (int i = 0; i < rounds.size(); i++) {
-            ArrayList<Passe> oldOnes = db.getPassesOfRound(rounds.get(i).getId());
+            ArrayList<Passe> oldOnes = new PasseDataSource(context).getAll(rounds.get(i).getId());
             rounds.get(i).info.target.setBounds(0, i * size, size, (i + 1) * size);
             rounds.get(i).info.target.draw(canvas);
             rounds.get(i).info.target.drawArrows(canvas, oldOnes);

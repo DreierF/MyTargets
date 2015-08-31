@@ -23,7 +23,6 @@ public class WindDirectionFragment extends NowListFragment<WindDirection> {
 
     @Override
     protected void init(Bundle intent, Bundle savedInstanceState) {
-        mEditable = false;
     }
 
     @Override
@@ -35,10 +34,6 @@ public class WindDirectionFragment extends NowListFragment<WindDirection> {
     @Override
     public void onLongClick(SelectableViewHolder holder) {
         onClick(holder, (WindDirection) holder.getItem());
-    }
-
-    @Override
-    protected void onEdit(WindDirection item) {
     }
 
     protected class WindDirectionAdapter extends NowListAdapter<WindDirection> {

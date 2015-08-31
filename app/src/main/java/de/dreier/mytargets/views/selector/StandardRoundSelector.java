@@ -16,7 +16,7 @@ import android.widget.TextView;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.fragments.TargetFragment;
-import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
@@ -73,6 +73,6 @@ public class StandardRoundSelector extends SelectorBase<StandardRound> {
     }
 
     public void setItemId(long standardRound) {
-        setItem(DatabaseManager.getInstance(getContext()).getStandardRound(standardRound));
+        setItem(new StandardRoundDataSource(getContext()).get(standardRound));
     }
 }

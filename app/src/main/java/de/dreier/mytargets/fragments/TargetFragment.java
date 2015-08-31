@@ -72,7 +72,6 @@ public class TargetFragment extends NowListFragment<Target>
             list = TargetFactory.getList(getActivity());
         }
         setList(list, new TargetAdapter());
-        mEditable = false;
         mSingleSelector.setSelectable(true);
 
         scoringStyle = (Spinner) rootView.findViewById(R.id.scoring_style);
@@ -152,10 +151,6 @@ public class TargetFragment extends NowListFragment<Target>
         }
         mSingleSelector.setSelected(holder, true);
         updateSettings();
-    }
-
-    @Override
-    protected void onEdit(Target item) {
     }
 
     @Override

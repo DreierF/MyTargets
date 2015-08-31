@@ -19,6 +19,8 @@ import java.util.SortedSet;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.managers.dao.PasseDataSource;
+import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.models.LinearSeries;
 import de.dreier.mytargets.models.LinearSeries.LinearPoint;
 import de.dreier.mytargets.shared.models.Passe;
@@ -103,9 +105,10 @@ public class StatisticsFragment extends Fragment {
     }
 
     private LinearSeries generateRoundSeries() {
-        DatabaseManager db = DatabaseManager.getInstance(getActivity());
-        ArrayList<Passe> passes = db.getPasses(mRound);
-        Round r = db.getRound(mRound);
+        PasseDataSource passeDataSource = new PasseDataSource(getContext());
+        ArrayList<Passe> passes = passeDataSource.getAll(mRound);
+        RoundDataSource roundDataSource = new RoundDataSource(getContext());
+        Round r = roundDataSource.get(mRound);
 
         LinearSeries series = new LinearSeries();
 

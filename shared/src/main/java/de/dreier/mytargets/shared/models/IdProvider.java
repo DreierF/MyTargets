@@ -1,10 +1,13 @@
+/*
+ * MyTargets Archery
+ *
+ * Copyright (C) 2015 Florian Dreier
+ * All rights reserved
+ */
 package de.dreier.mytargets.shared.models;
 
 import java.io.Serializable;
 
-/**
- * Created by Florian on 13.03.2015.
- */
 public abstract class IdProvider implements Serializable, IIdProvider {
     public static final String ID = "_id";
     protected long id;
