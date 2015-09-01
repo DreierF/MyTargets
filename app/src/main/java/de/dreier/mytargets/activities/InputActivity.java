@@ -193,8 +193,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                 NavUtils.navigateUpFromSameTask(this);
                 overridePendingTransition(R.anim.left_in, R.anim.right_out);
                 return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     private void openTimer() {
