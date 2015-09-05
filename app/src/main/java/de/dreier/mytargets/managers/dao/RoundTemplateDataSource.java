@@ -85,7 +85,6 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
     }
 
     public RoundTemplate get(long sid, int index) {
-        open();
         Cursor cursor = database.rawQuery("SELECT _id, r_index, arrows, target, scoring_style, " +
                         "target, scoring_style, distance, unit, size, target_unit, passes, sid " +
                         "FROM ROUND_TEMPLATE WHERE sid=? AND r_index=?",

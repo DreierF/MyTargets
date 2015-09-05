@@ -11,9 +11,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -46,6 +49,7 @@ import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.ScoreboardUtils;
@@ -71,6 +75,9 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
     private PasseDataSource passeDataSource;
 
     public TrainingFragment() {
+        itemTypeRes = R.plurals.passe_selected;
+        itemTypeDelRes = R.plurals.passe_deleted;
+        newStringRes = R.string.new_round;
     }
 
     @Override
@@ -79,19 +86,16 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
     }
 
     @Override
-    protected void init(Bundle intent, Bundle savedInstanceState) {
-        itemTypeRes = R.plurals.passe_selected;
-        itemTypeDelRes = R.plurals.passe_deleted;
-        newStringRes = R.string.new_round;
-
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         mFab.setOnClickListener(this);
         mNewLayout = rootView.findViewById(R.id.new_layout);
         mNewText = (TextView) rootView.findViewById(R.id.new_text);
 
         // Get training
-        if (intent != null) {
-            mTraining = intent.getLong(TRAINING_ID, -1);
+        if (getArguments() != null) {
+            mTraining = getArguments().getLong(TRAINING_ID, -1);
         }
         if (savedInstanceState != null) {
             mTraining = savedInstanceState.getLong(TRAINING_ID, -1);
@@ -100,30 +104,37 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
         training = trainingDataSource.get(mTraining);
 
         // Set up toolbar
-        Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         ActionBar actionBar = activity.getSupportActionBar();
         assert actionBar != null;
-        actionBar.setTitle(training.title);
-        actionBar.setSubtitle(DateFormat.getDateInstance().format(training.date));
         actionBar.setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);
+
+        actionBar.setTitle(training.title);
+        actionBar.setSubtitle(DateFormat.getDateInstance().format(training.date));
+
+        roundDataSource = new RoundDataSource(getContext());
+        passeDataSource = new PasseDataSource(getContext());
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public Loader<List<Passe>> onCreateLoader(int id, Bundle args) {
+        return new DataLoader<>(getContext(), new PasseDataSource(getContext()),
+                () -> passeDataSource.getAllByTraining(
+                        mTraining));
+    }
 
+    @Override
+    public void onLoadFinished(Loader<List<Passe>> loader, List<Passe> data) {
         // Set round info
-        roundDataSource=new RoundDataSource(getContext());
-        passeDataSource = new PasseDataSource(getContext());
         mRounds = roundDataSource.getAll(mTraining);
         setRoundInfo();
 
-        setList(mRounds, passeDataSource.getAllByTraining(mTraining), true,
-                new PasseAdapter());
+        setList(passeDataSource, mRounds, data, true, new PasseAdapter());
         mAdapter.notifyDataSetChanged();
-        activity.supportInvalidateOptionsMenu();
+        getActivity().supportInvalidateOptionsMenu();
     }
 
     @Override
@@ -138,9 +149,8 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
     }
 
     private void setRoundInfo() {
-        TextView info = (TextView) activity.findViewById(R.id.detail_round_info);
-        TextView tvScore = (TextView) activity.findViewById(R.id.detail_score);
-
+        TextView info = (TextView) rootView.findViewById(R.id.detail_round_info);
+        TextView tvScore = (TextView) rootView.findViewById(R.id.detail_score);
 
         DatabaseManager db = DatabaseManager.getInstance(getContext());
         ArrayList<Pair<String, Integer>> scoreCount = db
@@ -165,7 +175,7 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        boolean hasPasses = mAdapter.getItemCount() > 1;
+        boolean hasPasses = mAdapter != null && mAdapter.getItemCount() > 1;
         menu.findItem(R.id.action_scoreboard).setVisible(hasPasses);
         menu.findItem(R.id.action_share).setVisible(hasPasses);
         menu.findItem(R.id.action_statistics).setVisible(hasPasses);
@@ -176,12 +186,12 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_scoreboard:
-                Intent intent = new Intent(activity, ScoreboardActivity.class);
+                Intent intent = new Intent(getContext(), ScoreboardActivity.class);
                 intent.putExtra(ScoreboardActivity.TRAINING_ID, mTraining);
                 startActivity(intent);
                 return true;
             case R.id.action_statistics:
-                Intent i = new Intent(activity, StatisticsActivity.class);
+                Intent i = new Intent(getContext(), StatisticsActivity.class);
                 i.putExtra(StatisticsActivity.TRAINING_ID, mTraining);
                 startActivity(i);
                 return true;
@@ -228,12 +238,12 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
         // Construct share intent
         new Thread(() -> {
             try {
-                File dir = activity.getExternalCacheDir();
+                File dir = getContext().getExternalCacheDir();
                 final File f = File.createTempFile("target", ".png", dir);
                 if (typ == 2) {
-                    new TargetImage().generateBitmap(activity, 800, mTraining, f);
+                    new TargetImage().generateBitmap(getContext(), 800, mTraining, f);
                 } else {
-                    new ScoreboardImage().generateBitmap(activity, mTraining, f);
+                    new ScoreboardImage().generateBitmap(getActivity(), mTraining, f);
                 }
 
                 // Build and fire intent to ask for share provider
@@ -274,11 +284,11 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
 
     @Override
     public void onSelected(Passe item) {
-        Intent i = new Intent(activity, InputActivity.class);
+        Intent i = new Intent(getContext(), InputActivity.class);
         i.putExtra(InputActivity.ROUND_ID, item.roundId);
         i.putExtra(InputActivity.PASSE_IND, item.index);
         startActivity(i);
-        activity.overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     @Override
@@ -299,7 +309,7 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
             ArrayList<Passe> passes = passeDataSource.getAll(mRound.getId());
             if (passes.size() < mRound.info.passes) {
                 // Open InputActivity to add new passes
-                Intent i = new Intent(activity, InputActivity.class);
+                Intent i = new Intent(getContext(), InputActivity.class);
                 i.putExtra(InputActivity.ROUND_ID, mRound.getId());
                 i.putExtra(InputActivity.PASSE_IND, passes.size());
                 startActivity(i);
@@ -307,8 +317,8 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
             }
 
             // Open dialog to create new round
-            if(roundIndex + 1 == rounds.size()) {
-                Intent i = new Intent(activity, SimpleFragmentActivity.EditRoundActivity.class);
+            if (roundIndex + 1 == rounds.size()) {
+                Intent i = new Intent(getContext(), SimpleFragmentActivity.EditRoundActivity.class);
                 i.putExtra(EditRoundFragment.TRAINING_ID, mTraining);
                 startActivity(i);
             }
@@ -357,7 +367,7 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
         public final TextView mSubtitle;
 
         public TargetViewHolder(View itemView) {
-            super(itemView, mMultiSelector, TrainingFragment.this);
+            super(itemView, mSelector, TrainingFragment.this);
             mShots = (TargetPasseView) itemView.findViewById(R.id.shoots);
             mSubtitle = (TextView) itemView.findViewById(R.id.passe);
         }
@@ -376,7 +386,7 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
         public final TextView mSubtitle;
 
         public PasseViewHolder(View itemView) {
-            super(itemView, mMultiSelector, TrainingFragment.this);
+            super(itemView, mSelector, TrainingFragment.this);
             mShots = (PasseView) itemView.findViewById(R.id.shoots);
             mSubtitle = (TextView) itemView.findViewById(R.id.passe);
         }
@@ -414,7 +424,7 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
 
         @Override
         public boolean onLongClick(View v) {
-            Intent i = new Intent(activity, SimpleFragmentActivity.EditRoundActivity.class);
+            Intent i = new Intent(getContext(), SimpleFragmentActivity.EditRoundActivity.class);
             i.putExtra(EditRoundFragment.TRAINING_ID, mTraining);
             i.putExtra(EditRoundFragment.ROUND_ID, mItem.getId());
             startActivity(i);

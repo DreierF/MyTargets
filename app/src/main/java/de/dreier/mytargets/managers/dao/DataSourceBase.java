@@ -7,7 +7,6 @@
 package de.dreier.mytargets.managers.dao;
 
 import android.content.Context;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import de.dreier.mytargets.managers.DatabaseManager;
@@ -22,14 +21,11 @@ public abstract class DataSourceBase<T> {
     public DataSourceBase(Context context) {
         dbHelper = DatabaseManager.getInstance(context);
         this.context = context;
+        this.database = dbHelper.getWritableDatabase();
     }
 
     protected Context getContext() {
         return context;
-    }
-
-    public void open() throws SQLException {
-        database = dbHelper.getWritableDatabase();
     }
 
     public void close() {

@@ -7,9 +7,7 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +16,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
+import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IdProvider;
 
 /**
@@ -33,7 +32,6 @@ public abstract class ExpandableNowListFragment<H extends IdProvider, C extends 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        //mRecyclerView.addItemDecoration(new ListItemDecorator(getActivity()));
         manager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(manager);
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -49,13 +47,8 @@ public abstract class ExpandableNowListFragment<H extends IdProvider, C extends 
         return rootView;
     }
 
-    @Override
-    public void onAttach(Context activity) {
-        super.onAttach(activity);
-        this.activity = (AppCompatActivity) getActivity();
-    }
-
-    void setList(List<H> list, List<C> children, boolean opened, ExpandableNowListAdapter<H, C> adapter) {
+    void setList(IdProviderDataSource<C> dataSource, List<H> list, List<C> children, boolean opened, ExpandableNowListAdapter<H, C> adapter) {
+        this.dataSource = dataSource;
         if (mRecyclerView.getAdapter() == null) {
             mAdapter = adapter;
             mAdapter.setList(list, children, opened);

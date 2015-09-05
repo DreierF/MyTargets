@@ -61,7 +61,6 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
 
 
     public StandardRound get(long standardRoundId) {
-        open();
         Cursor cursor = database.rawQuery("SELECT s._id, s.name, s.club, s.indoor, " +
                 "a._id, a.r_index, a.arrows, a.target, a.scoring_style, a.target, a.scoring_style, a.distance, a.unit, " +
                 "a.size, a.target_unit, a.passes, a.sid " +
@@ -85,7 +84,6 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
     }
 
     public ArrayList<StandardRound> getAll() {
-        open();
         Cursor cursor = database.rawQuery("SELECT s._id FROM STANDARD_ROUND_TEMPLATE s", null);
         ArrayList<StandardRound> list = new ArrayList<>(cursor.getCount());
         if (cursor.moveToFirst()) {

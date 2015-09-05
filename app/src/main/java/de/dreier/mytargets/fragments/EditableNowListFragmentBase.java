@@ -6,21 +6,17 @@
  */
 package de.dreier.mytargets.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
-import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.bignerdranch.android.recyclerviewchoicemode.ModalMultiSelectorCallback;
 import com.bignerdranch.android.recyclerviewchoicemode.MultiSelector;
@@ -36,59 +32,34 @@ import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IdProvider;
 
 public abstract class EditableNowListFragmentBase<T extends IdProvider> extends NowListFragmentBase<T>
-        implements OnCardClickListener<T> {
-    public IdProviderDataSource<T> dataSource;
-
-    @PluralsRes
-    int itemTypeRes;
-    @PluralsRes
-    int itemTypeDelRes;
-    @StringRes
-    int newStringRes;
+        implements OnCardClickListener<T>, LoaderManager.LoaderCallbacks<List<T>> {
 
     // Action mode handling
-    final MultiSelector mMultiSelector = new MultiSelector();
-    private ActionMode actionMode = null;
+    final MultiSelector mSelector = new MultiSelector();
+    @PluralsRes
+    int itemTypeDelRes;
 
-    AppCompatActivity activity;
-    RecyclerView mRecyclerView;
-    View rootView;
-    private ContentListener listener;
-
-    @Override
-    public void onAttach(Context activity) {
-        super.onAttach(activity);
-        if (activity instanceof ContentListener) {
-            listener = (ContentListener) activity;
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(getLayoutResource(), container, false);
-
-        mRecyclerView = (RecyclerView) rootView.findViewById(android.R.id.list);
-        mRecyclerView.setHasFixedSize(true);
-
-        return rootView;
-    }
-
-    int getLayoutResource() {
-        return R.layout.fragment_list;
-    }
+    public IdProviderDataSource<T> dataSource;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        init(getArguments(), savedInstanceState);
+        getLoaderManager().initLoader(0, null, this);
     }
 
-    void updateFabButton(List list) {
-        listener.onContentChanged(list.isEmpty(), newStringRes);
+    @Override
+    public void onResume() {
+        super.onResume();
+        getLoaderManager().restartLoader(0, null, this);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<T>> loader) {
+
     }
 
     private final ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(
-            mMultiSelector) {
+            mSelector) {
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
@@ -109,12 +80,12 @@ public abstract class EditableNowListFragmentBase<T extends IdProvider> extends 
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_edit:
-                    int id = mMultiSelector.getSelectedPositions().get(0);
+                    int id = mSelector.getSelectedPositions().get(0);
                     onEdit(getItem(id));
                     mode.finish();
                     return true;
                 case R.id.action_delete:
-                    List<Integer> positions = mMultiSelector.getSelectedPositions();
+                    List<Integer> positions = mSelector.getSelectedPositions();
                     remove(positions);
                     mode.finish();
                     return true;
@@ -159,7 +130,7 @@ public abstract class EditableNowListFragmentBase<T extends IdProvider> extends 
         if (actionMode == null) {
             return;
         }
-        int count = mMultiSelector.getSelectedPositions().size();
+        int count = mSelector.getSelectedPositions().size();
         if (count == 0) {
             actionMode.finish();
         } else {
@@ -169,12 +140,11 @@ public abstract class EditableNowListFragmentBase<T extends IdProvider> extends 
         }
     }
 
-    @Override
     public void onClick(SelectableViewHolder holder, T mItem) {
         if (mItem == null) {
             return;
         }
-        if (!mMultiSelector.tapSelection(holder)) {
+        if (!mSelector.tapSelection(holder)) {
             onSelected(mItem);
         } else {
             updateTitle();
@@ -186,9 +156,9 @@ public abstract class EditableNowListFragmentBase<T extends IdProvider> extends 
         if (actionMode == null) {
             AppCompatActivity activity = (AppCompatActivity) getActivity();
             activity.startSupportActionMode(mDeleteMode);
-            mMultiSelector.setSelectable(true);
+            mSelector.setSelectable(true);
         }
-        mMultiSelector.setSelected(holder, true);
+        mSelector.setSelected(holder, true);
         updateTitle();
     }
 

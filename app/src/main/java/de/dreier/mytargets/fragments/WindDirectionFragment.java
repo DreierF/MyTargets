@@ -7,7 +7,6 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +18,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.models.WindDirection;
 
-public class WindDirectionFragment extends NowListFragment<WindDirection> {
-
-    @Override
-    protected void init(Bundle intent, Bundle savedInstanceState) {
-    }
+public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
 
     @Override
     public void onResume() {
@@ -49,7 +44,7 @@ public class WindDirectionFragment extends NowListFragment<WindDirection> {
         private final TextView mName;
 
         public ViewHolder(View itemView) {
-            super(itemView, mMultiSelector, WindDirectionFragment.this);
+            super(itemView, mSelector, WindDirectionFragment.this);
             mName = (TextView) itemView.findViewById(R.id.name);
         }
 

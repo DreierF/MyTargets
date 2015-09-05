@@ -7,7 +7,6 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +18,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.models.WindSpeed;
 
-public class WindSpeedFragment extends NowListFragment<WindSpeed> {
-
-    @Override
-    protected void init(Bundle intent, Bundle savedInstanceState) {
-    }
+public class WindSpeedFragment extends SelectItemFragment<WindSpeed> {
 
     @Override
     public void onResume() {
@@ -49,7 +44,7 @@ public class WindSpeedFragment extends NowListFragment<WindSpeed> {
         private final TextView mName;
 
         public ViewHolder(View itemView) {
-            super(itemView, mMultiSelector, WindSpeedFragment.this);
+            super(itemView, mSelector, WindSpeedFragment.this);
             mName = (TextView) itemView.findViewById(R.id.name);
         }
 

@@ -41,7 +41,6 @@ public class DistanceDataSource extends DataSourceBase<Distance> {
             set.add(distance.getId());
         }
 
-        open();
         // Get all distances used in ROUND or VISIER table
         Cursor cur = database.rawQuery(
                 "SELECT * FROM (SELECT DISTINCT distance, unit FROM ROUND_TEMPLATE UNION SELECT DISTINCT distance, unit FROM VISIER) WHERE unit=?",

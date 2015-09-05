@@ -38,7 +38,6 @@ public class ArrowNumberDataSource extends IdProviderDataSource<ArrowNumber> {
     }
 
     public void update(long arrowId, List<ArrowNumber> arrowNumbersList) {
-        open();
         database.delete(TABLE, NUMBER_ARROW + "=" + arrowId, null);
         for (ArrowNumber number : arrowNumbersList) {
             ContentValues contentValues = getContentValues(number);
@@ -48,7 +47,6 @@ public class ArrowNumberDataSource extends IdProviderDataSource<ArrowNumber> {
     }
 
     public ArrayList<ArrowNumber> getAll(long arrowId) {
-        open();
         Cursor res = database
                 .query(TABLE, new String[]{NUMBER_VALUE}, NUMBER_ARROW + "=" + arrowId, null, null,
                         null,

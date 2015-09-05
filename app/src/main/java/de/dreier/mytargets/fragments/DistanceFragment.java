@@ -32,7 +32,7 @@ import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 public class DistanceFragment extends Fragment implements View.OnClickListener,
         TextInputDialog.OnClickListener {
 
-    private NowListFragment.OnItemSelectedListener listener;
+    private SelectItemFragment.OnItemSelectedListener listener;
     private Distance distance;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,8 +60,8 @@ public class DistanceFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onAttach(Context activity) {
         super.onAttach(activity);
-        if (activity instanceof NowListFragment.OnItemSelectedListener) {
-            this.listener = (NowListFragment.OnItemSelectedListener) activity;
+        if (activity instanceof SelectItemFragment.OnItemSelectedListener) {
+            this.listener = (SelectItemFragment.OnItemSelectedListener) activity;
         }
         Assert.assertNotNull(listener);
     }

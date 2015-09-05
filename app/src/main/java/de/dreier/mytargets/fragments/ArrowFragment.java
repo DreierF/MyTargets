@@ -9,6 +9,7 @@ package de.dreier.mytargets.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,27 +18,32 @@ import android.widget.TextView;
 
 import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
+import java.util.List;
+
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 
 public class ArrowFragment extends EditableNowListFragment<Arrow> implements View.OnClickListener{
 
-    @Override
-    protected void init(Bundle intent, Bundle savedInstanceState) {
+    public ArrowFragment() {
         itemTypeRes = R.plurals.arrow_selected;
         itemTypeDelRes = R.plurals.arrow_deleted;
         newStringRes = R.string.new_arrow;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        ArrowDataSource dataSource = new ArrowDataSource(getContext());
-        setList(dataSource, dataSource.getAll(), new ArrowAdapter());
+    public Loader<List<Arrow>> onCreateLoader(int id, Bundle args) {
+        return new DataLoader<>(getContext(), new ArrowDataSource(getContext()), () -> new ArrowDataSource(getContext()).getAll());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Arrow>> loader, List<Arrow> data) {
+        setList(dataSource, data, new ArrowAdapter());
     }
 
     @Override
@@ -67,7 +73,7 @@ public class ArrowFragment extends EditableNowListFragment<Arrow> implements Vie
         private final ImageView mImg;
 
         public ViewHolder(View itemView) {
-            super(itemView, mMultiSelector, ArrowFragment.this);
+            super(itemView, mSelector, ArrowFragment.this);
             mName = (TextView) itemView.findViewById(R.id.name);
             mImg = (ImageView) itemView.findViewById(R.id.image);
         }

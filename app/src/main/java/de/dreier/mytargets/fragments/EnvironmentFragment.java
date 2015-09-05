@@ -32,7 +32,7 @@ public class EnvironmentFragment extends Fragment {
 
     private WindSpeedSelector wind_speed;
     private WindDirectionSelector wind_direction;
-    private NowListFragment.OnItemSelectedListener listener;
+    private SelectItemFragment.OnItemSelectedListener listener;
     private Environment mEnvironment;
     private EWeather weather;
     private ImageButton sunny, partly_cloudy, cloudy, light_rain, rain;
@@ -113,8 +113,8 @@ public class EnvironmentFragment extends Fragment {
     public void onAttach(Context activity) {
         super.onAttach(activity);
         activity = getActivity();
-        if (activity instanceof NowListFragment.OnItemSelectedListener) {
-            listener = (NowListFragment.OnItemSelectedListener) activity;
+        if (activity instanceof SelectItemFragment.OnItemSelectedListener) {
+            listener = (SelectItemFragment.OnItemSelectedListener) activity;
         }
         Assert.assertNotNull(listener);
     }

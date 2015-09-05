@@ -57,7 +57,7 @@ public class TargetOvalBase extends Target {
 
     @Override
     public Diameter[] getDiameters() {
-        return new Diameter[] {Diameter.SMALL,
+        return new Diameter[]{Diameter.SMALL,
                 Diameter.MEDIUM,
                 Diameter.LARGE,
                 Diameter.XLARGE};
@@ -65,7 +65,10 @@ public class TargetOvalBase extends Target {
 
     @Override
     protected int getPointsByZone(int zone, int scoring, int arrow) {
-        return zonePoints[arrow][zone];
+        if (zone == -1 || zone >= zones) {
+            return 0;
+        }
+        return zonePoints[arrow < zonePoints.length ? arrow : zonePoints.length - 1][zone];
     }
 
     @Override

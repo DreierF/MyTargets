@@ -8,6 +8,7 @@
 package de.dreier.mytargets.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +27,7 @@ import de.dreier.mytargets.views.CardItemDecorator;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class DistanceGridFragment extends NowListFragment<Distance> {
+public class DistanceGridFragment extends SelectItemFragment<Distance> {
 
     private static final String DISTANCE_UNIT = "distance_unit";
     private Distance distance;
@@ -44,7 +45,8 @@ public class DistanceGridFragment extends NowListFragment<Distance> {
     }
 
     @Override
-    protected void init(Bundle intent, Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         Bundle bundle = getArguments();
         distance = (Distance)bundle.getSerializable(ITEM);
         unit = bundle.getString(DISTANCE_UNIT);
@@ -81,7 +83,7 @@ public class DistanceGridFragment extends NowListFragment<Distance> {
         private final TextView mName;
 
         public ViewHolder(View itemView) {
-            super(itemView, mMultiSelector, DistanceGridFragment.this);
+            super(itemView, mSelector, DistanceGridFragment.this);
             mName = (TextView) itemView.findViewById(android.R.id.text1);
         }
 

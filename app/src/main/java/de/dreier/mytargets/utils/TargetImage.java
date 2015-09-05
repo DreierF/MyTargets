@@ -11,7 +11,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff;
-import android.support.v7.app.AppCompatActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -55,7 +54,7 @@ public class TargetImage {
         }
     }
 
-    public void generateBitmap(AppCompatActivity context, int size, long mRound, File f)
+    public void generateBitmap(Context context, int size, long mRound, File f)
             throws FileNotFoundException {
         final FileOutputStream fOut = new FileOutputStream(f);
         generateBitmap(context, size, mRound, fOut);

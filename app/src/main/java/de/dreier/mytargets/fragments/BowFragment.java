@@ -9,6 +9,7 @@ package de.dreier.mytargets.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.Loader;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,28 +19,33 @@ import android.widget.TextView;
 
 import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
+import java.util.List;
+
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.managers.dao.BowDataSource;
-import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.SightSetting;
+import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 
 public class BowFragment extends EditableNowListFragment<Bow> implements View.OnClickListener {
 
-    @Override
-    protected void init(Bundle intent, Bundle savedInstanceState) {
+    public BowFragment() {
         itemTypeRes = R.plurals.bow_selected;
         itemTypeDelRes = R.plurals.bow_deleted;
         newStringRes = R.string.new_bow;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        BowDataSource dataSource = new BowDataSource(getContext());
-        setList(dataSource, dataSource.getAll(), new BowAdapter());
+    public Loader<List<Bow>> onCreateLoader(int id, Bundle args) {
+        return new DataLoader<>(getContext(), new BowDataSource(getContext()), () -> new BowDataSource(getContext()).getAll());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Bow>> loader, List<Bow> data) {
+        setList(dataSource, data, new BowAdapter());
     }
 
     @Override
@@ -70,7 +76,7 @@ public class BowFragment extends EditableNowListFragment<Bow> implements View.On
         private final ImageView mImg;
 
         public ViewHolder(View itemView) {
-            super(itemView, mMultiSelector, BowFragment.this);
+            super(itemView, mSelector, BowFragment.this);
             mName = (TextView) itemView.findViewById(R.id.name);
             mDetails = (TextView) itemView.findViewById(R.id.details);
             mImg = (ImageView) itemView.findViewById(R.id.image);

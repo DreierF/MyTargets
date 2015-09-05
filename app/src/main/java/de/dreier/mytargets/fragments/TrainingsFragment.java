@@ -9,7 +9,6 @@ package de.dreier.mytargets.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,21 +37,14 @@ import de.dreier.mytargets.utils.DataLoader;
 /**
  * Shows an overview over all trying days
  */
-public class TrainingsFragment extends ExpandableNowListFragment<Month, Training>
-        implements LoaderManager.LoaderCallbacks<List<Training>> {
+public class TrainingsFragment extends ExpandableNowListFragment<Month, Training> {
 
-    @Override
-    protected void init(Bundle intent, Bundle savedInstanceState) {
+    private TrainingDataSource trainingDataSource;
+
+    public TrainingsFragment() {
         itemTypeRes = R.plurals.training_selected;
         itemTypeDelRes = R.plurals.training_deleted;
         newStringRes = R.string.new_training;
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getLoaderManager().restartLoader(0, null, this);
     }
 
     @Override
@@ -73,7 +65,8 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
 
     @Override
     public Loader<List<Training>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader<>(getContext(), new TrainingDataSource(getContext()), () -> new TrainingDataSource(getContext()).getAll());
+        trainingDataSource = new TrainingDataSource(getContext());
+        return new DataLoader<>(getContext(), trainingDataSource, trainingDataSource::getAll);
     }
 
     @Override
@@ -88,15 +81,10 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
             }
         }
         Collections.sort(months);
-        setList(months, data, false, new TrainingAdapter());
+        setList(trainingDataSource, months, data, false, new TrainingAdapter());
         if (mAdapter.getItemCount() > 0) {
             mAdapter.expandOrCollapse(0);
         }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<Training>> loader) {
-
     }
 
     protected class TrainingAdapter extends ExpandableNowListAdapter<Month, Training> {
@@ -122,7 +110,7 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
         public final TextView mGes;
 
         public ViewHolder(View itemView) {
-            super(itemView, mMultiSelector, TrainingsFragment.this);
+            super(itemView, mSelector, TrainingsFragment.this);
             mTitle = (TextView) itemView.findViewById(R.id.training);
             mSubtitle = (TextView) itemView.findViewById(R.id.training_date);
             mGes = (TextView) itemView.findViewById(R.id.gesTraining);

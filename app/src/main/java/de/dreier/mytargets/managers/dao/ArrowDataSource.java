@@ -84,7 +84,6 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
     }
 
     public Arrow get(long arrow) {
-        open();
         Cursor cursor = database.rawQuery("SELECT _id, name, length, material, " +
                 "spine, weight, vanes, nock, comment, thumbnail, image " +
                 "FROM ARROW WHERE _id = " + arrow, null);
@@ -98,7 +97,6 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
     }
 
     public ArrayList<Arrow> getAll() {
-        open();
         Cursor res = database.rawQuery(
                 "SELECT _id, name, length, material, spine, weight, vanes, nock, comment, thumbnail, image " +
                         "FROM ARROW ORDER BY _id ASC", null);

@@ -87,7 +87,6 @@ public class TrainingDataSource extends IdProviderDataSource<Training> {
     }
 
     public Training get(long training) {
-        open();
         Cursor cursor = database.rawQuery(
                 "SELECT t._id, t.title, t.datum, t.bow, t.arrow, t.standard_round, " +
                         "t.arrow_numbering, t.time, " +
@@ -108,7 +107,6 @@ public class TrainingDataSource extends IdProviderDataSource<Training> {
     }
 
     public ArrayList<Training> getAll() {
-        open();
         Cursor cursor = database.rawQuery(
                 "SELECT t._id, t.title, t.datum, t.bow, t.arrow, t.standard_round, " +
                         "t.arrow_numbering, t.time, " +

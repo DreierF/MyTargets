@@ -24,7 +24,6 @@ public abstract class IdProviderDataSource<T extends IdProvider> extends DataSou
     }
 
     public void update(T item) {
-        open();
         ContentValues values = getContentValues(item);
         if (values == null) {
             return;
@@ -38,7 +37,6 @@ public abstract class IdProviderDataSource<T extends IdProvider> extends DataSou
     }
 
     public void delete(T item) {
-        open();
         database.delete(TABLE, ID + "=" + item.getId(), null);
         DatabaseManager.cleanup(database);
     }

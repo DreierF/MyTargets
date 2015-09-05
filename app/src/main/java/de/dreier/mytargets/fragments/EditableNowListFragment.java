@@ -9,7 +9,6 @@ package de.dreier.mytargets.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +40,6 @@ public abstract class EditableNowListFragment<T extends IdProvider> extends Edit
     @Override
     public void onAttach(Context activity) {
         super.onAttach(activity);
-        this.activity = (AppCompatActivity) getActivity();
         if (activity instanceof OnItemSelectedListener) {
             this.listener = (OnItemSelectedListener) activity;
         }

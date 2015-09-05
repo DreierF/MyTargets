@@ -49,7 +49,6 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     }
 
     public Passe get(long round, int passe) {
-        open();
         Cursor cursor = database
                 .rawQuery("SELECT _id FROM PASSE WHERE round = " + round + " ORDER BY _id ASC",
                         null);
@@ -84,7 +83,6 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     }
 
     public ArrayList<Passe> getAll(long round) {
-        open();
         Cursor res = database.rawQuery(
                 "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, " +
                         "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id) " +
@@ -122,7 +120,6 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     }
 
     public ArrayList<Passe> getAllByTraining(long training) {
-        open();
         Cursor res = database.rawQuery(
                 "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, r._id, " +
                         "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id) " +

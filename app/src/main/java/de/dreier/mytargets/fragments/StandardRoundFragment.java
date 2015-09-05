@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
@@ -28,7 +29,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
-import com.bignerdranch.android.recyclerviewchoicemode.SingleSelector;
 
 import java.util.ArrayList;
 
@@ -44,10 +44,9 @@ import de.dreier.mytargets.shared.models.target.Target;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class StandardRoundFragment extends NowListFragment<StandardRound> implements View.OnClickListener {
+public class StandardRoundFragment extends SelectItemFragment<StandardRound> implements View.OnClickListener {
 
     private static final int NEW_STANDARD_ROUND = 1;
-    private final SingleSelector mSingleSelector = new SingleSelector();
     private DrawerLayout mDrawerLayout;
     private ArrayList<StandardRound> list;
     private final CheckBox[] clubs = new CheckBox[9];
@@ -56,11 +55,12 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> implem
     private RadioGroup typ;
     private StandardRound currentSelection;
 
+
     @Override
-    protected void init(Bundle intent, Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         mDrawerLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
-        rootView.findViewById(R.id.right_drawer);
-        mSingleSelector.setSelectable(true);
+        mSelector.setSelectable(true);
         currentSelection = (StandardRound) getArguments().getSerializable(ITEM);
         list = new StandardRoundDataSource(getContext()).getAll();
         if (!list.contains(currentSelection)) {
@@ -155,10 +155,10 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> implem
         setList(displayList, new StandardRoundAdapter());
         int position = displayList.indexOf(currentSelection);
         if (position > -1) {
-            mSingleSelector.setSelected(position, currentSelection.getId(), true);
+            mSelector.setSelected(position, currentSelection.getId(), true);
             mRecyclerView.scrollToPosition(position);
         } else {
-            mSingleSelector.clearSelections();
+            mSelector.clearSelections();
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -177,10 +177,10 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> implem
         if (currentSelection.equals(mItem)) {
             onSave();
         }
-        int oldSelectedPosition = mSingleSelector.getSelectedPosition();
+        int oldSelectedPosition = mSelector.getSelectedPosition();
         currentSelection = mItem;
         int position = holder.getAdapterPosition();
-        mSingleSelector.setSelected(position, currentSelection.getId(), true);
+        mSelector.setSelected(position, currentSelection.getId(), true);
         mAdapter.notifyItemChanged(oldSelectedPosition);
         mAdapter.notifyItemChanged(position);
     }
@@ -262,7 +262,7 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> implem
         private final TextView mDetails;
 
         public ViewHolder(View itemView) {
-            super(itemView, mSingleSelector, StandardRoundFragment.this);
+            super(itemView, mSelector, StandardRoundFragment.this);
             mImage = (ImageView) itemView.findViewById(R.id.image);
             mName = (TextView) itemView.findViewById(android.R.id.text1);
             mDetails = (TextView) itemView.findViewById(android.R.id.text2);
@@ -284,11 +284,8 @@ public class StandardRoundFragment extends NowListFragment<StandardRound> implem
         }
     }
 
-    private void onSave() {
-        Intent data = new Intent();
-        data.putExtra(ITEM, currentSelection);
-        getActivity().setResult(Activity.RESULT_OK, data);
-        getActivity().finish();
-        getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
+    @Override
+    protected StandardRound onSave() {
+        return currentSelection;
     }
 }

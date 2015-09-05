@@ -66,7 +66,6 @@ public class SightSettingDataSource extends IdProviderDataSource<SightSetting> {
     }
 
     public SightSetting get(long bowId, Distance distance) {
-        open();
         Cursor cursor = database.rawQuery(
                 "SELECT distance, unit, setting, bow " +
                         "FROM VISIER " +
@@ -82,7 +81,6 @@ public class SightSettingDataSource extends IdProviderDataSource<SightSetting> {
     }
 
     public ArrayList<SightSetting> getAll(long bow) {
-        open();
         Cursor cursor = database.rawQuery(
                 "SELECT distance, unit, setting, bow " +
                         "FROM VISIER " +

@@ -8,4 +8,9 @@ package de.dreier.mytargets.shared.models;
 
 public class ArrowNumber extends IdProvider {
     public int number;
+
+    @Override
+    public String toString() {
+        return String.valueOf(number);
+    }
 }

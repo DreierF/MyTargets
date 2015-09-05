@@ -7,18 +7,14 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -28,7 +24,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
-import com.bignerdranch.android.recyclerviewchoicemode.SingleSelector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,18 +37,18 @@ import de.dreier.mytargets.utils.MyBackupAgent;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class TargetFragment extends NowListFragment<Target>
+public class TargetFragment extends SelectItemFragment<Target>
         implements SeekBar.OnSeekBarChangeListener {
 
     public static final String TYPE_FIXED = "type_fixed";
-    private final SingleSelector mSingleSelector = new SingleSelector();
     private Spinner scoringStyle;
     private SeekBar seekBar;
     private TextView label;
     private boolean typeFixed = false;
 
     @Override
-    protected void init(Bundle intent, Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         // Set up toolbar
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -61,6 +56,7 @@ public class TargetFragment extends NowListFragment<Target>
         assert supportActionBar != null;
         supportActionBar.setDisplayHomeAsUpEnabled(true);
         supportActionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+        setHasOptionsMenu(true);
 
         // Process passed arguments
         Target t = (Target) getArguments().getSerializable(ITEM);
@@ -72,13 +68,13 @@ public class TargetFragment extends NowListFragment<Target>
             list = TargetFactory.getList(getActivity());
         }
         setList(list, new TargetAdapter());
-        mSingleSelector.setSelectable(true);
+        mSelector.setSelectable(true);
 
         scoringStyle = (Spinner) rootView.findViewById(R.id.scoring_style);
         seekBar = (SeekBar) rootView.findViewById(R.id.target_size_seekbar);
         label = (TextView) rootView.findViewById(R.id.target_size_label);
         int position = list.indexOf(t);
-        mSingleSelector.setSelected(position, t.getId(), true);
+        mSelector.setSelected(position, t.getId(), true);
         mRecyclerView.scrollToPosition(position);
         updateSettings();
 
@@ -93,11 +89,19 @@ public class TargetFragment extends NowListFragment<Target>
         }
         scoringStyle.setSelection(t.scoringStyle);
         seekBar.setOnSeekBarChangeListener(this);
-        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onClick(SelectableViewHolder holder, Target mItem) {
+        super.onClick(holder, mItem);
+        if (mItem == null) {
+            return;
+        }
+        updateSettings();
     }
 
     private void updateSettings() {
-        Target target = mAdapter.getItem(mSingleSelector.getSelectedPosition());
+        Target target = mAdapter.getItem(mSelector.getSelectedPosition());
         Diameter[] diameters = target.getDiameters();
         if (seekBar.getProgress() > diameters.length - 1) {
             seekBar.setProgress(diameters.length - 1);
@@ -142,33 +146,8 @@ public class TargetFragment extends NowListFragment<Target>
     }
 
     @Override
-    public void onClick(SelectableViewHolder holder, Target mItem) {
-        if (mItem == null) {
-            return;
-        }
-        if (mSingleSelector.getSelectedPosition() == holder.getAdapterPosition()) {
-            onSave();
-        }
-        mSingleSelector.setSelected(holder, true);
-        updateSettings();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.save, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            onSave();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void onSave() {
-        Target target = mAdapter.getItem(mSingleSelector.getSelectedPosition());
+    protected Target onSave() {
+        Target target = super.onSave();
         int scoring = scoringStyle.getSelectedItemPosition();
         target = TargetFactory.createTarget(getActivity(), target.id, scoring);
         Diameter[] diameters = target.getDiameters();
@@ -180,12 +159,7 @@ public class TargetFragment extends NowListFragment<Target>
         editor.putInt("scoring", target.scoringStyle);
         editor.putLong("size", target.size.getId());
         editor.apply();
-
-        Intent data = new Intent();
-        data.putExtra(ITEM, target);
-        getActivity().setResult(Activity.RESULT_OK, data);
-        getActivity().finish();
-        getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        return target;
     }
 
     @Override
@@ -217,7 +191,7 @@ public class TargetFragment extends NowListFragment<Target>
         private final ImageView mImg;
 
         public ViewHolder(View itemView) {
-            super(itemView, mSingleSelector, TargetFragment.this);
+            super(itemView, mSelector, TargetFragment.this);
             mName = (TextView) itemView.findViewById(R.id.name);
             mImg = (ImageView) itemView.findViewById(R.id.image);
         }

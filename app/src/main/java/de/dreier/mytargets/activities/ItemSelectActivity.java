@@ -20,7 +20,7 @@ import de.dreier.mytargets.fragments.ArrowFragment;
 import de.dreier.mytargets.fragments.BowFragment;
 import de.dreier.mytargets.fragments.DistanceFragment;
 import de.dreier.mytargets.fragments.EnvironmentFragment;
-import de.dreier.mytargets.fragments.NowListFragment;
+import de.dreier.mytargets.fragments.SelectItemFragment;
 import de.dreier.mytargets.fragments.NowListFragmentBase;
 import de.dreier.mytargets.fragments.StandardRoundFragment;
 import de.dreier.mytargets.fragments.TargetFragment;
@@ -29,7 +29,7 @@ import de.dreier.mytargets.fragments.WindSpeedFragment;
 import de.dreier.mytargets.shared.models.IIdProvider;
 
 public abstract class ItemSelectActivity extends SimpleFragmentActivity
-        implements NowListFragment.OnItemSelectedListener,
+        implements SelectItemFragment.OnItemSelectedListener,
         NowListFragmentBase.ContentListener {
     public static final String ITEM = "item";
 

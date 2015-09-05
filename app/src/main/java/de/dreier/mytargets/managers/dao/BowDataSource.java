@@ -92,7 +92,6 @@ public class BowDataSource extends IdProviderDataSource<Bow> {
     }
 
     public Bow get(long bow) {
-        open();
         Cursor cursor = database.rawQuery(
                 "SELECT _id, name, type, brand, size, height, tiller, limbs, sight, draw_weight, description, thumbnail, image " +
                         "FROM BOW WHERE _id = " + bow, null);
@@ -106,7 +105,6 @@ public class BowDataSource extends IdProviderDataSource<Bow> {
     }
 
     public ArrayList<Bow> getAll() {
-        open();
         Cursor res = database.rawQuery(
                 "SELECT _id, name, type, brand, size, height, tiller, limbs, sight, draw_weight, description, thumbnail, image " +
                         "FROM BOW " +

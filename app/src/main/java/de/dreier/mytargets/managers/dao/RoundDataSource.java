@@ -61,7 +61,6 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
     }
 
     public Round get(long round) {
-        open();
         Cursor cursor = database.rawQuery(
                 "SELECT r._id, r.training, r.comment, " +
                         "a._id, a.r_index, a.arrows, a.target, a.scoring_style, " +
@@ -94,7 +93,6 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
     }
 
     public ArrayList<Round> getAll(long training) {
-        open();
         Cursor res = database.rawQuery("SELECT r._id " +
                 "FROM ROUND r " +
                 "WHERE r.training=" + training + " " +
