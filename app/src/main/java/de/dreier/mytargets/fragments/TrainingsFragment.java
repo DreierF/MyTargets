@@ -105,9 +105,9 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
     }
 
     private class ViewHolder extends SelectableViewHolder<Training> {
-        public final TextView mTitle;
-        public final TextView mSubtitle;
-        public final TextView mGes;
+        private final TextView mTitle;
+        private final TextView mSubtitle;
+        private final TextView mGes;
 
         public ViewHolder(View itemView) {
             super(itemView, mSelector, TrainingsFragment.this);
@@ -133,7 +133,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
     }
 
     private class HeaderViewHolder extends SelectableViewHolder<Month> {
-        public final TextView mTitle;
+        private final TextView mTitle;
 
         public HeaderViewHolder(View itemView) {
             super(itemView, R.id.expand_collapse);

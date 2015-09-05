@@ -13,7 +13,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +27,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 
 import de.dreier.mytargets.R;
@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity
         View.OnClickListener, ViewPager.OnPageChangeListener {
 
     private static boolean shownThisTime = false;
-    private FloatingActionButton mFab;
     private View mNewLayout;
     private TextView mNewText;
     private ViewPager viewPager;
@@ -68,13 +67,11 @@ public class MainActivity extends AppCompatActivity
         tabLayout.setupWithViewPager(viewPager);
 
         askForHelpTranslating();
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mFab.setOnClickListener(this);
+        findViewById(R.id.fab).setOnClickListener(this);
         mNewLayout = findViewById(R.id.new_layout);
         mNewText = (TextView) findViewById(R.id.new_text);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
     }
 
     @Override
@@ -95,36 +92,27 @@ public class MainActivity extends AppCompatActivity
 
     private void askForHelpTranslating() {
         ArrayList<String> supportedLanguages = new ArrayList<>();
-        supportedLanguages.add("de");
-        supportedLanguages.add("en");
-        supportedLanguages.add("fr");
-        supportedLanguages.add("es");
-        supportedLanguages.add("ru");
-        supportedLanguages.add("nl");
-        supportedLanguages.add("it");
-        supportedLanguages.add("sl");
-        supportedLanguages.add("ca");
-        supportedLanguages.add("zh");
-        supportedLanguages.add("tr");
-        supportedLanguages.add("hu");
-        supportedLanguages.add("hu");
+        Collections.addAll(supportedLanguages, "de", "en", "fr", "es", "ru", "nl", "it", "sl", "ca",
+                "zh", "tr", "hu", "sl");
 
         final SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(MainActivity.this);
         boolean shown = prefs.getBoolean("translation_dialog_shown", false);
 
-        String longLang = Locale.getDefault().getDisplayLanguage();
-        String shortLocale = Locale.getDefault().getLanguage();
+        String longLang = Locale.getDefault()
+                .getDisplayLanguage();
+        String shortLocale = Locale.getDefault()
+                .getLanguage();
         if (!supportedLanguages.contains(shortLocale) && !shown && !shownThisTime) {
             // Link the e-mail address in the message
             final SpannableString s = new SpannableString(Html.fromHtml("If you would like " +
                     "to help make MyTargets even better by translating the app to " +
                     longLang +
-                    ", please send me an E-Mail (dreier.florian@gmail.com) " +
-                    "so I can give you access to the translation file!<br /><br />" +
+                    " visit <a href=\"https://crowdin.com/project/mytargets\">crowdin</a>!<br /><br />" +
                     "Thanks in advance :)"));
             Linkify.addLinks(s, Linkify.EMAIL_ADDRESSES);
-            AlertDialog d = new AlertDialog.Builder(this).setTitle("App translation")
+            AlertDialog d = new AlertDialog.Builder(this)
+                    .setTitle("App translation")
                     .setMessage(s)
                     .setPositiveButton("OK", (dialog, which) -> {
                         prefs.edit().putBoolean("translation_dialog_shown", true).apply();

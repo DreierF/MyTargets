@@ -38,8 +38,8 @@ public abstract class EditableFragmentBase<T extends IdProvider> extends Fragmen
     @PluralsRes
     protected int itemTypeDelRes;
 
-    public IdProviderDataSource<T> dataSource;
-    final MultiSelector mSelector = new MultiSelector();
+    protected IdProviderDataSource<T> dataSource;
+    final protected MultiSelector mSelector = new MultiSelector();
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -165,13 +165,13 @@ public abstract class EditableFragmentBase<T extends IdProvider> extends Fragmen
     protected abstract void onEdit(T item);
 
     /**
-     *
      * @param item
      */
     protected abstract void onSelected(T item);
 
     /**
      * Gets the item by a given id
+     *
      * @param id Id to get the item for
      * @return Item with the given id
      */

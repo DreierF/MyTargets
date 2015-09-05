@@ -382,8 +382,8 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
     }
 
     private class PasseViewHolder extends SelectableViewHolder<Passe> {
-        public final PasseView mShots;
-        public final TextView mSubtitle;
+        private final PasseView mShots;
+        private final TextView mSubtitle;
 
         public PasseViewHolder(View itemView) {
             super(itemView, mSelector, TrainingFragment.this);
@@ -402,8 +402,8 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
 
 
     private class HeaderViewHolder extends SelectableViewHolder<Round> {
-        public final TextView mTitle;
-        public final TextView mSubtitle;
+        private final TextView mTitle;
+        private final TextView mSubtitle;
 
         public HeaderViewHolder(View itemView) {
             super(itemView, R.id.expand_collapse);

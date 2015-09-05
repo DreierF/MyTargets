@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
@@ -73,30 +74,18 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
         location = (RadioGroup) rootView.findViewById(R.id.location);
         unit = (RadioGroup) rootView.findViewById(R.id.unit);
         typ = (RadioGroup) rootView.findViewById(R.id.round_typ);
-        clubs[0] = (CheckBox) rootView.findViewById(R.id.asa);
-        clubs[1] = (CheckBox) rootView.findViewById(R.id.aussie);
-        clubs[2] = (CheckBox) rootView.findViewById(R.id.gnas);
-        clubs[3] = (CheckBox) rootView.findViewById(R.id.ifaa);
-        clubs[4] = (CheckBox) rootView.findViewById(R.id.nasp);
-        clubs[5] = (CheckBox) rootView.findViewById(R.id.nfaa);
-        clubs[6] = (CheckBox) rootView.findViewById(R.id.nfas);
-        clubs[7] = (CheckBox) rootView.findViewById(R.id.wa);
-        clubs[8] = (CheckBox) rootView.findViewById(R.id.custom);
+        getClubs();
         RadioButton outdoor = (RadioButton) rootView.findViewById(R.id.outdoor);
         RadioButton indoor = (RadioButton) rootView.findViewById(R.id.indoor);
         RadioButton metric = (RadioButton) rootView.findViewById(R.id.metric);
         RadioButton imperial = (RadioButton) rootView.findViewById(R.id.imperial);
         RadioButton target = (RadioButton) rootView.findViewById(R.id.target);
         RadioButton field = (RadioButton) rootView.findViewById(R.id.field);
-        RadioButton three_d = (RadioButton) rootView.findViewById(R.id.three_d);
+        RadioButton threeD = (RadioButton) rootView.findViewById(R.id.three_d);
 
         // Set default values
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        if (currentSelection.indoor) {
-            indoor.setChecked(true);
-        } else {
-            outdoor.setChecked(true);
-        }
+        indoor.setChecked(currentSelection.indoor);
+        outdoor.setChecked(!currentSelection.indoor);
         RoundTemplate firstRound = currentSelection.getRounds().get(0);
         if (firstRound.distance.unit.equals(Dimension.METER)) {
             metric.setChecked(true);
@@ -106,17 +95,11 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
         if (firstRound.target.isFieldTarget()) {
             field.setChecked(true);
         } else if (firstRound.target.is3DTarget()) {
-            three_d.setChecked(true);
+            threeD.setChecked(true);
         } else {
             target.setChecked(true);
         }
-        int filterMask = prefs.getInt("filter_club", 0x1FF);
-        filterMask |= currentSelection.club;
-        for (int i = 0; i < clubs.length; i++) {
-            clubs[i].setChecked((1 << i & filterMask) != 0);
-        }
-
-        // Update display set
+        setInitialFilterMask();
         updateFilter();
 
         // Listen for filter setting changes
@@ -128,12 +111,48 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
         typ.setOnCheckedChangeListener((group, checkedId) -> updateFilter());
     }
 
-    private void updateFilter() {
-        ArrayList<StandardRound> displayList = new ArrayList<>();
-        int filter = 0;
+    private void setInitialFilterMask() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        int filterMask = prefs.getInt("filter_club", 0x1FF);
+        filterMask |= currentSelection.club;
         for (int i = 0; i < clubs.length; i++) {
-            filter |= (clubs[i].isChecked() ? 1 : 0) << i;
+            clubs[i].setChecked((1 << i & filterMask) != 0);
         }
+    }
+
+    private void getClubs() {
+        clubs[0] = (CheckBox) rootView.findViewById(R.id.asa);
+        clubs[1] = (CheckBox) rootView.findViewById(R.id.aussie);
+        clubs[2] = (CheckBox) rootView.findViewById(R.id.gnas);
+        clubs[3] = (CheckBox) rootView.findViewById(R.id.ifaa);
+        clubs[4] = (CheckBox) rootView.findViewById(R.id.nasp);
+        clubs[5] = (CheckBox) rootView.findViewById(R.id.nfaa);
+        clubs[6] = (CheckBox) rootView.findViewById(R.id.nfas);
+        clubs[7] = (CheckBox) rootView.findViewById(R.id.wa);
+        clubs[8] = (CheckBox) rootView.findViewById(R.id.custom);
+    }
+
+    private void updateFilter() {
+        int filter = getFilter();
+        List<StandardRound> displayList = getFilteredStandardRound(filter);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor e = prefs.edit();
+        e.putInt("filter_club", filter);
+        e.apply();
+
+        setList(displayList, new StandardRoundAdapter());
+        int position = displayList.indexOf(currentSelection);
+        if (position > -1) {
+            mSelector.setSelected(position, currentSelection.getId(), true);
+            mRecyclerView.scrollToPosition(position);
+        } else {
+            mSelector.clearSelections();
+        }
+    }
+
+    private List<StandardRound> getFilteredStandardRound(int filter) {
+        ArrayList<StandardRound> displayList = new ArrayList<>();
         boolean indoor = location.getCheckedRadioButtonId() == R.id.indoor;
         boolean isMetric = unit.getCheckedRadioButtonId() == R.id.metric;
         String unitDistance = isMetric ? Distance.METER : Distance.YARDS;
@@ -150,20 +169,15 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
                 }
             }
         }
+        return displayList;
+    }
 
-        setList(displayList, new StandardRoundAdapter());
-        int position = displayList.indexOf(currentSelection);
-        if (position > -1) {
-            mSelector.setSelected(position, currentSelection.getId(), true);
-            mRecyclerView.scrollToPosition(position);
-        } else {
-            mSelector.clearSelections();
+    private int getFilter() {
+        int filter = 0;
+        for (int i = 0; i < clubs.length; i++) {
+            filter |= (clubs[i].isChecked() ? 1 : 0) << i;
         }
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences.Editor e = prefs.edit();
-        e.putInt("filter_club", filter);
-        e.apply();
+        return filter;
     }
 
     @Override
