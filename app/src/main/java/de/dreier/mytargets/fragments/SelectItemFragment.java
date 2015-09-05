@@ -38,15 +38,30 @@ import de.dreier.mytargets.shared.models.IIdProvider;
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 /**
- * Shows all rounds of one settings_only day
+ * Base class for handling single item selection
+ * <p>
+ * Parent activity must implement {@link de.dreier.mytargets.fragments.FragmentBase.OnItemSelectedListener}.
  */
-public abstract class SelectItemFragment<T extends IIdProvider> extends NowListFragmentBase<T> {
+public abstract class SelectItemFragment<T extends IIdProvider> extends FragmentBase<T> {
 
-    // Action mode handling
+    /**
+     * Selector which manages the item selection
+     */
     final SingleSelector mSelector = new SingleSelector();
-    NowListAdapter<T> mAdapter;
+
+    /**
+     * Adapter for the fragment's RecyclerView
+     */
+    protected NowListAdapter<T> mAdapter;
+
+    /**
+     * Listener which gets called when item gets selected
+     */
     private OnItemSelectedListener listener;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
@@ -54,6 +69,9 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends NowListF
         return rootView;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -67,10 +85,11 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends NowListF
         setHasOptionsMenu(true);
 
         mSelector.setSelectable(true);
-    /*  int position = list.indexOf(t);
-        mSelector.setSelected(position, t.getId(), true);*/
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onAttach(Context activity) {
         super.onAttach(activity);
@@ -80,7 +99,16 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends NowListF
         Assert.assertNotNull(listener);
     }
 
-    void setList(List<T> list, NowListAdapter<T> adapter) {
+    /**
+     * Sets the given list to the fragment's {@link android.support.v7.widget.RecyclerView}.
+     * If there is already an adapter attached the adapters content is updated, otherwise the
+     * given adapter is initialized with the list and set to the
+     * {@link android.support.v7.widget.RecyclerView}.
+     *
+     * @param list    Content to show
+     * @param adapter New instance of an adapter which is able to show the given list
+     */
+    protected void setList(List<T> list, NowListAdapter<T> adapter) {
         if (mRecyclerView.getAdapter() == null) {
             mAdapter = adapter;
             mAdapter.setList(list);
@@ -92,20 +120,17 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends NowListF
         updateFabButton(list);
     }
 
-    @Override
-    protected T getItem(int id) {
-        return mAdapter.getItem(id);
-    }
-
-    protected final void onSelected(T item) {
-        listener.onItemSelected(item);
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.save, menu);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
@@ -115,6 +140,9 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends NowListF
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onClick(SelectableViewHolder holder, T mItem) {
         if (mItem == null) {
@@ -126,14 +154,22 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends NowListF
         mSelector.setSelected(holder, true);
     }
 
+    /**
+     * Returns the selected item to the calling activity
+     */
     private void onSaveItem() {
         Intent data = new Intent();
-        data.putExtra(ITEM, (Serializable)onSave());
+        data.putExtra(ITEM, (Serializable) onSave());
         getActivity().setResult(Activity.RESULT_OK, data);
         getActivity().finish();
         getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
+    /**
+     * Gets the item that has been selected by the user
+     *
+     * @return The selected item
+     */
     protected T onSave() {
         return mAdapter.getItem(mSelector.getSelectedPosition());
     }

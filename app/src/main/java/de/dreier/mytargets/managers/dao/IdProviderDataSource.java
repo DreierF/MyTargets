@@ -16,11 +16,11 @@ public abstract class IdProviderDataSource<T extends IdProvider> extends DataSou
     public static final String ID = "_id";
 
     // Database fields
-    private String TABLE;
+    private String table;
 
     public IdProviderDataSource(Context context, String table) {
         super(context);
-        TABLE = table;
+        this.table = table;
     }
 
     public void update(T item) {
@@ -29,15 +29,15 @@ public abstract class IdProviderDataSource<T extends IdProvider> extends DataSou
             return;
         }
         if (item.getId() <= 0) {
-            item.setId(database.insert(TABLE, null, values));
+            item.setId(database.insert(table, null, values));
         } else {
             values.put(ID, item.getId());
-            database.replace(TABLE, null, values);
+            database.replace(table, null, values);
         }
     }
 
     public void delete(T item) {
-        database.delete(TABLE, ID + "=" + item.getId(), null);
+        database.delete(table, ID + "=" + item.getId(), null);
         DatabaseManager.cleanup(database);
     }
 

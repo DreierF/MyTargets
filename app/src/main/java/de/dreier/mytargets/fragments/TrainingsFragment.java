@@ -37,12 +37,12 @@ import de.dreier.mytargets.utils.DataLoader;
 /**
  * Shows an overview over all trying days
  */
-public class TrainingsFragment extends ExpandableNowListFragment<Month, Training> {
+public class TrainingsFragment extends ExpandableFragment<Month, Training> {
 
     private TrainingDataSource trainingDataSource;
 
     public TrainingsFragment() {
-        itemTypeRes = R.plurals.training_selected;
+        itemTypeSelRes = R.plurals.training_selected;
         itemTypeDelRes = R.plurals.training_deleted;
         newStringRes = R.string.new_training;
     }

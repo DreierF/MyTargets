@@ -22,8 +22,8 @@ import de.dreier.mytargets.shared.models.IdProvider;
 /**
  * Shows all rounds of one settings_only day
  */
-public abstract class ExpandableNowListFragment<H extends IdProvider, C extends IdProvider>
-        extends EditableNowListFragmentBase<C> {
+public abstract class ExpandableFragment<H extends IdProvider, C extends IdProvider>
+        extends EditableFragmentBase<C> {
 
     ExpandableNowListAdapter<H, C> mAdapter;
     private GridLayoutManager manager;

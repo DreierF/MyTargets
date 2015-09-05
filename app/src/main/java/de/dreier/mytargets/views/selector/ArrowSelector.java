@@ -27,10 +27,6 @@ public class ArrowSelector extends SelectorBase<Arrow> {
 
     public ArrowSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_image);
-        init();
-    }
-
-    private void init() {
         setOnClickActivity(ArrowActivity.class);
         setAddButtonIntent(SimpleFragmentActivity.EditArrowActivity.class);
     }

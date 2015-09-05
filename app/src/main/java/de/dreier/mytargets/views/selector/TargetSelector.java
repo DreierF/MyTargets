@@ -25,10 +25,6 @@ public class TargetSelector extends SelectorBase<Target> {
 
     public TargetSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_image);
-        init();
-    }
-
-    private void init() {
         setOnClickActivity(TargetActivity.class);
     }
 

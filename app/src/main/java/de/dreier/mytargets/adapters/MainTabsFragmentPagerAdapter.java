@@ -15,12 +15,12 @@ import android.support.v7.app.AppCompatActivity;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.ArrowFragment;
 import de.dreier.mytargets.fragments.BowFragment;
-import de.dreier.mytargets.fragments.NowListFragmentBase;
+import de.dreier.mytargets.fragments.FragmentBase;
 import de.dreier.mytargets.fragments.TrainingsFragment;
 
 public class MainTabsFragmentPagerAdapter extends FragmentPagerAdapter {
     private final Context context;
-    private final NowListFragmentBase[] fragments = new NowListFragmentBase[3];
+    private final FragmentBase[] fragments = new FragmentBase[3];
     {
         fragments[0] = new TrainingsFragment();
         fragments[1] = new BowFragment();
@@ -53,7 +53,7 @@ public class MainTabsFragmentPagerAdapter extends FragmentPagerAdapter {
         }
     }
 
-    public NowListFragmentBase getFragment(int i) {
+    public FragmentBase getFragment(int i) {
         return fragments[i];
     }
 }

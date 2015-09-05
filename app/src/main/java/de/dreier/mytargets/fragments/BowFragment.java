@@ -30,10 +30,10 @@ import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 
-public class BowFragment extends EditableNowListFragment<Bow> implements View.OnClickListener {
+public class BowFragment extends EditableFragment<Bow> implements View.OnClickListener {
 
     public BowFragment() {
-        itemTypeRes = R.plurals.bow_selected;
+        itemTypeSelRes = R.plurals.bow_selected;
         itemTypeDelRes = R.plurals.bow_deleted;
         newStringRes = R.string.new_bow;
     }

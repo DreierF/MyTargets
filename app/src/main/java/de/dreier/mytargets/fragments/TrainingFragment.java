@@ -60,7 +60,7 @@ import de.dreier.mytargets.views.TargetPasseView;
 /**
  * Shows all passes of one training
  */
-public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
+public class TrainingFragment extends ExpandableFragment<Round, Passe>
         implements View.OnClickListener, MenuItem.OnMenuItemClickListener {
 
     private long mTraining;
@@ -75,7 +75,7 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
     private PasseDataSource passeDataSource;
 
     public TrainingFragment() {
-        itemTypeRes = R.plurals.passe_selected;
+        itemTypeSelRes = R.plurals.passe_selected;
         itemTypeDelRes = R.plurals.passe_deleted;
         newStringRes = R.string.new_round;
     }

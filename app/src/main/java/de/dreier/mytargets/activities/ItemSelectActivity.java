@@ -15,13 +15,13 @@ import android.widget.TextView;
 import java.io.Serializable;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.fragments.NowListFragmentBase;
+import de.dreier.mytargets.fragments.FragmentBase;
 import de.dreier.mytargets.fragments.SelectItemFragment;
 import de.dreier.mytargets.shared.models.IIdProvider;
 
 public abstract class ItemSelectActivity extends SimpleFragmentActivity
         implements SelectItemFragment.OnItemSelectedListener,
-        NowListFragmentBase.ContentListener {
+        FragmentBase.ContentListener {
     public static final String ITEM = "item";
 
     private FloatingActionButton mFab;
@@ -63,9 +63,9 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
     }
 
     @Override
-    public void onItemSelected(IIdProvider e) {
+    public void onItemSelected(IIdProvider item) {
         Intent data = new Intent();
-        data.putExtra(ITEM, (Serializable) e);
+        data.putExtra(ITEM, (Serializable) item);
         setResult(RESULT_OK, data);
         onBackPressed();
     }

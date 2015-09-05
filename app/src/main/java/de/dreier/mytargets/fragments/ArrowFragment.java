@@ -28,10 +28,10 @@ import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 
-public class ArrowFragment extends EditableNowListFragment<Arrow> implements View.OnClickListener{
+public class ArrowFragment extends EditableFragment<Arrow> implements View.OnClickListener{
 
     public ArrowFragment() {
-        itemTypeRes = R.plurals.arrow_selected;
+        itemTypeSelRes = R.plurals.arrow_selected;
         itemTypeDelRes = R.plurals.arrow_deleted;
         newStringRes = R.string.new_arrow;
     }

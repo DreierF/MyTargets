@@ -31,15 +31,15 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IdProvider;
 
-public abstract class EditableNowListFragmentBase<T extends IdProvider> extends NowListFragmentBase<T>
+public abstract class EditableFragmentBase<T extends IdProvider> extends FragmentBase<T>
         implements OnCardClickListener<T>, LoaderManager.LoaderCallbacks<List<T>> {
 
-    // Action mode handling
-    final MultiSelector mSelector = new MultiSelector();
+
     @PluralsRes
-    int itemTypeDelRes;
+    protected int itemTypeDelRes;
 
     public IdProviderDataSource<T> dataSource;
+    final MultiSelector mSelector = new MultiSelector();
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -134,7 +134,7 @@ public abstract class EditableNowListFragmentBase<T extends IdProvider> extends 
         if (count == 0) {
             actionMode.finish();
         } else {
-            final String title = getResources().getQuantityString(itemTypeRes, count, count);
+            final String title = getResources().getQuantityString(itemTypeSelRes, count, count);
             actionMode.setTitle(title);
             actionMode.invalidate();
         }
@@ -163,4 +163,17 @@ public abstract class EditableNowListFragmentBase<T extends IdProvider> extends 
     }
 
     protected abstract void onEdit(T item);
+
+    /**
+     *
+     * @param item
+     */
+    protected abstract void onSelected(T item);
+
+    /**
+     * Gets the item by a given id
+     * @param id Id to get the item for
+     * @return Item with the given id
+     */
+    protected abstract T getItem(int id);
 }

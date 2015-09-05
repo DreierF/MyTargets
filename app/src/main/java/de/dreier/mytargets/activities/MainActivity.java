@@ -34,7 +34,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
 import de.dreier.mytargets.fragments.EditArrowFragment;
 import de.dreier.mytargets.fragments.EditBowFragment;
-import de.dreier.mytargets.fragments.NowListFragmentBase;
+import de.dreier.mytargets.fragments.FragmentBase;
 import de.dreier.mytargets.fragments.TrainingsFragment;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Bow;
@@ -44,7 +44,7 @@ import de.dreier.mytargets.shared.models.IIdProvider;
  * Shows an overview over all trying days
  */
 public class MainActivity extends AppCompatActivity
-        implements NowListFragmentBase.OnItemSelectedListener, NowListFragmentBase.ContentListener,
+        implements FragmentBase.OnItemSelectedListener, FragmentBase.ContentListener,
         View.OnClickListener, ViewPager.OnPageChangeListener {
 
     private static boolean shownThisTime = false;

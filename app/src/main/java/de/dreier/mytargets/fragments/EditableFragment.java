@@ -25,7 +25,7 @@ import de.dreier.mytargets.shared.models.IdProvider;
 /**
  * Shows all rounds of one settings_only day
  */
-public abstract class EditableNowListFragment<T extends IdProvider> extends EditableNowListFragmentBase<T> {
+public abstract class EditableFragment<T extends IdProvider> extends EditableFragmentBase<T> {
 
     NowListAdapter<T> mAdapter;
     private OnItemSelectedListener listener;

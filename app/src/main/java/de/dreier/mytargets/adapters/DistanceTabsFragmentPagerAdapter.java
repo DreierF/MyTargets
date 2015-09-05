@@ -14,12 +14,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.DistanceGridFragment;
-import de.dreier.mytargets.fragments.NowListFragmentBase;
+import de.dreier.mytargets.fragments.FragmentBase;
 import de.dreier.mytargets.shared.models.Distance;
 
 public class DistanceTabsFragmentPagerAdapter extends FragmentPagerAdapter {
     private final Context context;
-    private final NowListFragmentBase[] fragments = new NowListFragmentBase[2];
+    private final FragmentBase[] fragments = new FragmentBase[2];
 
     public DistanceTabsFragmentPagerAdapter(FragmentActivity context, Distance distance) {
         super(context.getSupportFragmentManager());
