@@ -94,15 +94,11 @@ public class MainActivity extends AppCompatActivity
         ArrayList<String> supportedLanguages = new ArrayList<>();
         Collections.addAll(supportedLanguages, "de", "en", "fr", "es", "ru", "nl", "it", "sl", "ca",
                 "zh", "tr", "hu", "sl");
-
         final SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(MainActivity.this);
         boolean shown = prefs.getBoolean("translation_dialog_shown", false);
-
-        String longLang = Locale.getDefault()
-                .getDisplayLanguage();
-        String shortLocale = Locale.getDefault()
-                .getLanguage();
+        String longLang = Locale.getDefault().getDisplayLanguage();
+        String shortLocale = Locale.getDefault().getLanguage();
         if (!supportedLanguages.contains(shortLocale) && !shown && !shownThisTime) {
             // Link the e-mail address in the message
             final SpannableString s = new SpannableString(Html.fromHtml("If you would like " +

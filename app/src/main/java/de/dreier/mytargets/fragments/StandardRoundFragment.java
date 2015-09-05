@@ -75,30 +75,12 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
         unit = (RadioGroup) rootView.findViewById(R.id.unit);
         typ = (RadioGroup) rootView.findViewById(R.id.round_typ);
         getClubs();
-        RadioButton outdoor = (RadioButton) rootView.findViewById(R.id.outdoor);
-        RadioButton indoor = (RadioButton) rootView.findViewById(R.id.indoor);
-        RadioButton metric = (RadioButton) rootView.findViewById(R.id.metric);
-        RadioButton imperial = (RadioButton) rootView.findViewById(R.id.imperial);
-        RadioButton target = (RadioButton) rootView.findViewById(R.id.target);
-        RadioButton field = (RadioButton) rootView.findViewById(R.id.field);
-        RadioButton threeD = (RadioButton) rootView.findViewById(R.id.three_d);
 
         // Set default values
-        indoor.setChecked(currentSelection.indoor);
-        outdoor.setChecked(!currentSelection.indoor);
         RoundTemplate firstRound = currentSelection.getRounds().get(0);
-        if (firstRound.distance.unit.equals(Dimension.METER)) {
-            metric.setChecked(true);
-        } else {
-            imperial.setChecked(true);
-        }
-        if (firstRound.target.isFieldTarget()) {
-            field.setChecked(true);
-        } else if (firstRound.target.is3DTarget()) {
-            threeD.setChecked(true);
-        } else {
-            target.setChecked(true);
-        }
+        setLocation();
+        setMeasurementType(firstRound);
+        setRoundType(firstRound);
         setInitialFilterMask();
         updateFilter();
 
@@ -109,6 +91,36 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
         location.setOnCheckedChangeListener((group, checkedId) -> updateFilter());
         unit.setOnCheckedChangeListener((group, checkedId) -> updateFilter());
         typ.setOnCheckedChangeListener((group, checkedId) -> updateFilter());
+    }
+
+    private void setLocation() {
+        RadioButton outdoor = (RadioButton) rootView.findViewById(R.id.outdoor);
+        RadioButton indoor = (RadioButton) rootView.findViewById(R.id.indoor);
+        indoor.setChecked(currentSelection.indoor);
+        outdoor.setChecked(!currentSelection.indoor);
+    }
+
+    private void setMeasurementType(RoundTemplate firstRound) {
+        RadioButton metric = (RadioButton) rootView.findViewById(R.id.metric);
+        RadioButton imperial = (RadioButton) rootView.findViewById(R.id.imperial);
+        if (firstRound.distance.unit.equals(Dimension.METER)) {
+            metric.setChecked(true);
+        } else {
+            imperial.setChecked(true);
+        }
+    }
+
+    private void setRoundType(RoundTemplate firstRound) {
+        RadioButton target = (RadioButton) rootView.findViewById(R.id.target);
+        RadioButton field = (RadioButton) rootView.findViewById(R.id.field);
+        RadioButton threeD = (RadioButton) rootView.findViewById(R.id.three_d);
+        if (firstRound.target.isFieldTarget()) {
+            field.setChecked(true);
+        } else if (firstRound.target.is3DTarget()) {
+            threeD.setChecked(true);
+        } else {
+            target.setChecked(true);
+        }
     }
 
     private void setInitialFilterMask() {

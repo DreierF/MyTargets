@@ -77,7 +77,7 @@ public class DistanceGridFragment extends SelectItemFragment<Distance> {
         }
     }
 
-    public class ViewHolder extends SelectableViewHolder<Distance> {
+    private class ViewHolder extends SelectableViewHolder<Distance> {
         private final TextView mName;
 
         public ViewHolder(View itemView) {
