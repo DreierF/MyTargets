@@ -12,7 +12,7 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.activities.WindSpeedActivity;
 import de.dreier.mytargets.models.WindSpeed;
 
 public class WindSpeedSelector extends SelectorBase<WindSpeed> {
@@ -23,7 +23,7 @@ public class WindSpeedSelector extends SelectorBase<WindSpeed> {
 
     public WindSpeedSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_simple_text);
-        setOnClickActivity(ItemSelectActivity.WindSpeed.class);
+        setOnClickActivity(WindSpeedActivity.class);
     }
 
     @Override

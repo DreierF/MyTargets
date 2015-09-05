@@ -381,7 +381,7 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
         }
     }
 
-    public class PasseViewHolder extends SelectableViewHolder<Passe> {
+    private class PasseViewHolder extends SelectableViewHolder<Passe> {
         public final PasseView mShots;
         public final TextView mSubtitle;
 
@@ -401,7 +401,7 @@ public class TrainingFragment extends ExpandableNowListFragment<Round, Passe>
     }
 
 
-    public class HeaderViewHolder extends SelectableViewHolder<Round> {
+    private class HeaderViewHolder extends SelectableViewHolder<Round> {
         public final TextView mTitle;
         public final TextView mSubtitle;
 

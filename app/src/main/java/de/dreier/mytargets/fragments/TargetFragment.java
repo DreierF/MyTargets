@@ -11,9 +11,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,14 +47,6 @@ public class TargetFragment extends SelectItemFragment<Target>
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // Set up toolbar
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        assert supportActionBar != null;
-        supportActionBar.setDisplayHomeAsUpEnabled(true);
-        supportActionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
-        setHasOptionsMenu(true);
 
         // Process passed arguments
         Target t = (Target) getArguments().getSerializable(ITEM);
@@ -68,7 +58,6 @@ public class TargetFragment extends SelectItemFragment<Target>
             list = TargetFactory.getList(getActivity());
         }
         setList(list, new TargetAdapter());
-        mSelector.setSelectable(true);
 
         scoringStyle = (Spinner) rootView.findViewById(R.id.scoring_style);
         seekBar = (SeekBar) rootView.findViewById(R.id.target_size_seekbar);
@@ -177,7 +166,7 @@ public class TargetFragment extends SelectItemFragment<Target>
 
     }
 
-    protected class TargetAdapter extends NowListAdapter<Target> {
+    private class TargetAdapter extends NowListAdapter<Target> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
@@ -186,7 +175,7 @@ public class TargetFragment extends SelectItemFragment<Target>
         }
     }
 
-    public class ViewHolder extends SelectableViewHolder<Target> {
+    private class ViewHolder extends SelectableViewHolder<Target> {
         private final TextView mName;
         private final ImageView mImg;
 

@@ -61,7 +61,7 @@ public class BowFragment extends EditableNowListFragment<Bow> implements View.On
         startActivity(SimpleFragmentActivity.EditBowActivity.class);
     }
 
-    protected class BowAdapter extends NowListAdapter<Bow> {
+    private class BowAdapter extends NowListAdapter<Bow> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
@@ -70,7 +70,7 @@ public class BowFragment extends EditableNowListFragment<Bow> implements View.On
         }
     }
 
-    public class ViewHolder extends SelectableViewHolder<Bow> {
+    private class ViewHolder extends SelectableViewHolder<Bow> {
         private final TextView mName;
         private final TextView mDetails;
         private final ImageView mImg;

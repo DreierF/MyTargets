@@ -59,7 +59,7 @@ public class ArrowFragment extends EditableNowListFragment<Arrow> implements Vie
         startActivity(SimpleFragmentActivity.EditArrowActivity.class);
     }
 
-    protected class ArrowAdapter extends NowListAdapter<Arrow> {
+    private class ArrowAdapter extends NowListAdapter<Arrow> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
@@ -68,7 +68,7 @@ public class ArrowFragment extends EditableNowListFragment<Arrow> implements Vie
         }
     }
 
-    public class ViewHolder extends SelectableViewHolder<Arrow> {
+    private class ViewHolder extends SelectableViewHolder<Arrow> {
         private final TextView mName;
         private final ImageView mImg;
 

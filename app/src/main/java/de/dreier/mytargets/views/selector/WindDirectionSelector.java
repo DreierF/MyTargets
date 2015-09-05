@@ -12,7 +12,7 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.activities.WindDirectionActivity;
 import de.dreier.mytargets.models.WindDirection;
 
 public class WindDirectionSelector extends SelectorBase<WindDirection> {
@@ -23,7 +23,7 @@ public class WindDirectionSelector extends SelectorBase<WindDirection> {
 
     public WindDirectionSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_simple_text);
-        setOnClickActivity(ItemSelectActivity.WindDirection.class);
+        setOnClickActivity(WindDirectionActivity.class);
     }
 
     @Override

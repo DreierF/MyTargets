@@ -31,7 +31,7 @@ public class WindSpeedFragment extends SelectItemFragment<WindSpeed> {
         onClick(holder, (WindSpeed) holder.getItem());
     }
 
-    protected class WindSpeedAdapter extends NowListAdapter<WindSpeed> {
+    private class WindSpeedAdapter extends NowListAdapter<WindSpeed> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
@@ -40,7 +40,7 @@ public class WindSpeedFragment extends SelectItemFragment<WindSpeed> {
         }
     }
 
-    public class ViewHolder extends SelectableViewHolder<WindSpeed> {
+    private class ViewHolder extends SelectableViewHolder<WindSpeed> {
         private final TextView mName;
 
         public ViewHolder(View itemView) {

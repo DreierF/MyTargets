@@ -31,7 +31,7 @@ public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
         onClick(holder, (WindDirection) holder.getItem());
     }
 
-    protected class WindDirectionAdapter extends NowListAdapter<WindDirection> {
+    private class WindDirectionAdapter extends NowListAdapter<WindDirection> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
@@ -40,7 +40,7 @@ public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
         }
     }
 
-    public class ViewHolder extends SelectableViewHolder<WindDirection> {
+    private class ViewHolder extends SelectableViewHolder<WindDirection> {
         private final TextView mName;
 
         public ViewHolder(View itemView) {

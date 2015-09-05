@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.activities.ArrowActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
@@ -31,7 +31,7 @@ public class ArrowSelector extends SelectorBase<Arrow> {
     }
 
     private void init() {
-        setOnClickActivity(ItemSelectActivity.Arrow.class);
+        setOnClickActivity(ArrowActivity.class);
         setAddButtonIntent(SimpleFragmentActivity.EditArrowActivity.class);
     }
 

@@ -67,7 +67,6 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
             list.add(currentSelection);
         }
         initFilter();
-        setHasOptionsMenu(true);
     }
 
     private void initFilter() {
@@ -137,11 +136,11 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
         }
         boolean indoor = location.getCheckedRadioButtonId() == R.id.indoor;
         boolean isMetric = unit.getCheckedRadioButtonId() == R.id.metric;
-        String unit_distance = isMetric ? Distance.METER : Distance.YARDS;
+        String unitDistance = isMetric ? Distance.METER : Distance.YARDS;
         for (StandardRound r : list) {
             if (((r.club & filter) != 0 ||
                     r.name.startsWith("NFAA/IFAA") && (filter & StandardRound.IFAA) != 0) &&
-                    r.getRounds().get(0).distance.unit.equals(unit_distance) &&
+                    r.getRounds().get(0).distance.unit.equals(unitDistance) &&
                     r.indoor == indoor) {
                 int checked = typ.getCheckedRadioButtonId();
                 Target target = r.getRounds().get(0).target;

@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.activities.TargetActivity;
 import de.dreier.mytargets.shared.models.target.Target;
 
 public class TargetSelector extends SelectorBase<Target> {
@@ -29,7 +29,7 @@ public class TargetSelector extends SelectorBase<Target> {
     }
 
     private void init() {
-        setOnClickActivity(ItemSelectActivity.Target.class);
+        setOnClickActivity(TargetActivity.class);
     }
 
     @Override

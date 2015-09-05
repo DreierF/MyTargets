@@ -12,7 +12,7 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.activities.DistanceActivity;
 import de.dreier.mytargets.shared.models.Distance;
 
 public class DistanceSelector extends SelectorBase<Distance> {
@@ -23,7 +23,7 @@ public class DistanceSelector extends SelectorBase<Distance> {
 
     public DistanceSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_distance);
-        setOnClickActivity(ItemSelectActivity.Distance.class);
+        setOnClickActivity(DistanceActivity.class);
     }
 
     @Override

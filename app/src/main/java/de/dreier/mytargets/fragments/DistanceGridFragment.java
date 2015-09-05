@@ -35,12 +35,10 @@ public class DistanceGridFragment extends SelectItemFragment<Distance> {
 
     public static DistanceGridFragment newInstance(Distance distance, String unit) {
         DistanceGridFragment fragment = new DistanceGridFragment();
-
         Bundle args = new Bundle();
         args.putSerializable(ITEM, distance);
         args.putString(DISTANCE_UNIT, unit);
         fragment.setArguments(args);
-
         return fragment;
     }
 

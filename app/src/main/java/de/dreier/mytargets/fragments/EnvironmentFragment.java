@@ -30,15 +30,14 @@ import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 public class EnvironmentFragment extends Fragment {
 
-    private WindSpeedSelector wind_speed;
-    private WindDirectionSelector wind_direction;
+    private WindSpeedSelector windSpeed;
+    private WindDirectionSelector windDirection;
     private SelectItemFragment.OnItemSelectedListener listener;
     private Environment mEnvironment;
     private EWeather weather;
-    private ImageButton sunny, partly_cloudy, cloudy, light_rain, rain;
+    private ImageButton sunny, partlyCloudy, cloudy, lightRain, rain;
     private EditText location;
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,23 +50,23 @@ public class EnvironmentFragment extends Fragment {
 
         // Weather
         sunny = (ImageButton) rootView.findViewById(R.id.sunny);
-        partly_cloudy = (ImageButton) rootView.findViewById(R.id.partly_cloudy);
+        partlyCloudy = (ImageButton) rootView.findViewById(R.id.partly_cloudy);
         cloudy = (ImageButton) rootView.findViewById(R.id.clouds);
-        light_rain = (ImageButton) rootView.findViewById(R.id.light_rain);
+        lightRain = (ImageButton) rootView.findViewById(R.id.light_rain);
         rain = (ImageButton) rootView.findViewById(R.id.rain);
         setOnClickWeather(sunny, EWeather.SUNNY);
-        setOnClickWeather(partly_cloudy, EWeather.PARTLY_CLOUDY);
+        setOnClickWeather(partlyCloudy, EWeather.PARTLY_CLOUDY);
         setOnClickWeather(cloudy, EWeather.CLOUDY);
-        setOnClickWeather(light_rain, EWeather.LIGHT_RAIN);
+        setOnClickWeather(lightRain, EWeather.LIGHT_RAIN);
         setOnClickWeather(rain, EWeather.RAIN);
 
-        wind_speed = (WindSpeedSelector) rootView.findViewById(R.id.wind_speed);
-        wind_direction = (WindDirectionSelector) rootView.findViewById(R.id.wind_direction);
+        windSpeed = (WindSpeedSelector) rootView.findViewById(R.id.wind_speed);
+        windDirection = (WindDirectionSelector) rootView.findViewById(R.id.wind_direction);
         location = (EditText) rootView.findViewById(R.id.location);
 
         setWeather(mEnvironment.weather);
-        wind_speed.setItemId(mEnvironment.windSpeed);
-        wind_direction.setItemId(mEnvironment.windDirection);
+        windSpeed.setItemId(mEnvironment.windSpeed);
+        windDirection.setItemId(mEnvironment.windDirection);
         location.setText(mEnvironment.location);
         setHasOptionsMenu(true);
         return rootView;
@@ -81,12 +80,12 @@ public class EnvironmentFragment extends Fragment {
         this.weather = weather;
         sunny.setImageResource(weather == EWeather.SUNNY ? R.drawable.ic_sun :
                 R.drawable.ic_sun_outline);
-        partly_cloudy.setImageResource(
+        partlyCloudy.setImageResource(
                 weather == EWeather.PARTLY_CLOUDY ? R.drawable.ic_partly_cloudy :
                         R.drawable.ic_partly_cloudy_outline);
         cloudy.setImageResource(weather == EWeather.CLOUDY ? R.drawable.ic_cloudy :
                 R.drawable.ic_cloudy_outline);
-        light_rain.setImageResource(
+        lightRain.setImageResource(
                 weather == EWeather.LIGHT_RAIN ? R.drawable.ic_light_rain :
                         R.drawable.ic_light_rain_outline);
         rain.setImageResource(weather == EWeather.RAIN ? R.drawable.ic_rain :
@@ -122,8 +121,8 @@ public class EnvironmentFragment extends Fragment {
     private void onSave() {
         Environment e = new Environment();
         e.weather = weather;
-        e.windSpeed = (int) wind_speed.getSelectedItem().getId();
-        e.windDirection = (int) wind_direction.getSelectedItem().getId();
+        e.windSpeed = (int) windSpeed.getSelectedItem().getId();
+        e.windDirection = (int) windDirection.getSelectedItem().getId();
         e.location = location.getText().toString();
         listener.onItemSelected(e);
     }

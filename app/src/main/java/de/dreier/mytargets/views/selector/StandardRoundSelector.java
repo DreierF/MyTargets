@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.activities.StandardRoundActivity;
+import de.dreier.mytargets.activities.TargetActivity;
 import de.dreier.mytargets.fragments.TargetFragment;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.shared.models.Diameter;
@@ -32,14 +34,14 @@ public class StandardRoundSelector extends SelectorBase<StandardRound> {
     public StandardRoundSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_standard_round);
         mView.findViewById(R.id.content).setOnClickListener(v -> {
-            Intent i = new Intent(getContext(), ItemSelectActivity.StandardRound.class);
+            Intent i = new Intent(getContext(), StandardRoundActivity.class);
             i.putExtra(ItemSelectActivity.ITEM, item);
             startIntent(i, data -> setItem((StandardRound) data.getSerializableExtra(ItemSelectActivity.ITEM)));
         });
         mView.findViewById(R.id.image).setOnClickListener(v -> {
             Target target = item.getRounds().get(0).targetTemplate;
             if (target.id < 7 || target.id == 10 || target.id == 11) {
-                Intent i = new Intent(getContext(), ItemSelectActivity.Target.class);
+                Intent i = new Intent(getContext(), TargetActivity.class);
                 i.putExtra(ItemSelectActivity.ITEM, target);
                 i.putExtra(TargetFragment.TYPE_FIXED, true);
                 startIntent(i, data -> {
@@ -53,7 +55,7 @@ public class StandardRoundSelector extends SelectorBase<StandardRound> {
                     setItem(item);
                 });
             } else {
-                Intent i = new Intent(getContext(), ItemSelectActivity.StandardRound.class);
+                Intent i = new Intent(getContext(), StandardRoundActivity.class);
                 i.putExtra(ItemSelectActivity.ITEM, item);
                 startIntent(i, data -> setItem((StandardRound) data.getSerializableExtra(ItemSelectActivity.ITEM)));
             }

@@ -87,7 +87,7 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
         }
     }
 
-    protected class TrainingAdapter extends ExpandableNowListAdapter<Month, Training> {
+    private class TrainingAdapter extends ExpandableNowListAdapter<Month, Training> {
 
         @Override
         protected HeaderViewHolder getTopLevelViewHolder(ViewGroup parent) {
@@ -104,7 +104,7 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
         }
     }
 
-    public class ViewHolder extends SelectableViewHolder<Training> {
+    private class ViewHolder extends SelectableViewHolder<Training> {
         public final TextView mTitle;
         public final TextView mSubtitle;
         public final TextView mGes;
@@ -132,7 +132,7 @@ public class TrainingsFragment extends ExpandableNowListFragment<Month, Training
         }
     }
 
-    public class HeaderViewHolder extends SelectableViewHolder<Month> {
+    private class HeaderViewHolder extends SelectableViewHolder<Month> {
         public final TextView mTitle;
 
         public HeaderViewHolder(View itemView) {
