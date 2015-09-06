@@ -85,14 +85,14 @@
   <string name="distance">Distance</string>
   <string name="format">Format</string>
   <plurals name="passe">
-    <item quantity="one">1 end</item>
+    <item quantity="one">%d end</item>
     <item quantity="few">%d ends</item>
     <item quantity="many">%d ends</item>
     <item quantity="other">%d ends</item>
   </plurals>
   <string name="with">of</string>
   <plurals name="arrow">
-    <item quantity="one">one arrow</item>
+    <item quantity="one">%d arrow</item>
     <item quantity="few">%d arrows</item>
     <item quantity="many">%d arrows</item>
     <item quantity="other">%d arrows</item>
@@ -188,25 +188,25 @@
   <string name="edit_bow">Edit Bow</string>
   <string name="edit_arrow">Edit Arrow</string>
   <plurals name="arrow_deleted">
-    <item quantity="one">One arrow deleted</item>
+    <item quantity="one">%d arrow deleted</item>
     <item quantity="few">%d arrows deleted</item>
     <item quantity="many">%d arrows deleted</item>
     <item quantity="other">%d arrows deleted</item>
   </plurals>
   <plurals name="bow_deleted">
-    <item quantity="one">One bow deleted</item>
+    <item quantity="one">%d bow deleted</item>
     <item quantity="few">%d bows deleted</item>
     <item quantity="many">%d bows deleted</item>
     <item quantity="other">%d bows deleted</item>
   </plurals>
   <plurals name="training_deleted">
-    <item quantity="one">One training deleted</item>
+    <item quantity="one">%d training deleted</item>
     <item quantity="few">%d trainings deleted</item>
     <item quantity="many">%d trainings deleted</item>
     <item quantity="other">%d trainings deleted</item>
   </plurals>
   <plurals name="passe_deleted">
-    <item quantity="one">One end deleted</item>
+    <item quantity="one">%d end deleted</item>
     <item quantity="few">%d ends deleted</item>
     <item quantity="many">%d ends deleted</item>
     <item quantity="other">%d ends deleted</item>
@@ -240,4 +240,6 @@
   <string name="draw_weight">Draw weight</string>
   <string name="sight">Sight</string>
   <string name="limbs">Limbs</string>
+  <string name="my_bow">My bow</string>
+  <string name="my_arrow">My arrow</string>
 </resources>

@@ -12,36 +12,36 @@
   <string name="round">Kolo</string>
   <string name="points">Body</string>
   <string name="passe">Koniec</string>
-  <string name="passe_n">Koniec %d</string>
+  <string name="passe_n">Sada %d</string>
   <string name="new_training">Nové tréning</string>
   <string name="new_bow">Nový luk</string>
   <string name="new_arrow">Nové šípy</string>
   <string name="new_round">Nové kolo</string>
   <plurals name="training_selected">
-    <item quantity="one">%d výcvikom vybraných</item>
-    <item quantity="few">%d tréningy vybraných</item>
-    <item quantity="other">%d tréningy vybraných</item>
+    <item quantity="one">Vybraných tréningov: %d</item>
+    <item quantity="few">Vybraných tréningov: %d</item>
+    <item quantity="other">Vybraných tréningov: %d</item>
   </plurals>
   <plurals name="bow_selected">
-    <item quantity="one">%d luk vybraný</item>
-    <item quantity="few">%d luk vybraný</item>
-    <item quantity="other">%d luk vybraný</item>
+    <item quantity="one">Vybraných lukov: %d</item>
+    <item quantity="few">Vybraných lukov: %d</item>
+    <item quantity="other">Vybraných lukov: %d</item>
   </plurals>
   <plurals name="arrow_selected">
-    <item quantity="one">%d šípy vybrané</item>
-    <item quantity="few">%d šípy vybrané</item>
-    <item quantity="other">%d šípy vybrané</item>
+    <item quantity="one">Vybraných šípov: %d</item>
+    <item quantity="few">Vybraných šípov: %d</item>
+    <item quantity="other">Vybraných šípov: %d</item>
   </plurals>
   <plurals name="passe_selected">
-    <item quantity="one">%d koniec vybraných</item>
-    <item quantity="few">%d koniec vybraných</item>
-    <item quantity="other">%d koniec vybraných</item>
+    <item quantity="one">Vybraných sád: %d</item>
+    <item quantity="few">Vybraných sád: %d</item>
+    <item quantity="other">Vybraných sád: %d</item>
   </plurals>
   <string name="edit">Upraviť</string>
   <string name="delete">Vymazať</string>
   <string name="statistic">Štatistika</string>
   <string name="share">Zdieľanie</string>
-  <string name="my_share_text">Áno, pozrite sa na svoje skóre. Mám: \n%1$s To robí celkom %2$d z %3$d zásahov.</string>
+  <string name="my_share_text">Wow, pozri sa na moje lukostrelecké skóre. Nastrielal som: \n%1$sTo robí %2$d bodov z celkových %3$d.</string>
   <string name="d_times_s">%1$d krát %2$s\n</string>
   <string name="text">Text</string>
   <string name="dispersion_pattern">Rozptyl</string>
@@ -59,20 +59,20 @@
   <string name="yumi">Yumi</string>
   <string name="properties">Vlastnosti</string>
   <string name="brand">Značka</string>
-  <string name="size">Velkosť</string>
+  <string name="size">Veľkosť</string>
   <string name="description">Popis</string>
   <string name="height">Vzdialenosť tetivy</string>
   <string name="tiller">Tiler</string>
   <string name="sight_settings">Nastavenie zameriavača</string>
-  <string name="add">Přidat</string>
+  <string name="add">Pridať</string>
   <string name="select_picture">Vybrať obrázok</string>
   <string name="take_picture">Odfotiť</string>
-  <string name="pick_from_gallery">Vyberte obrázok z galérie</string>
+  <string name="pick_from_gallery">Vybrať obrázok z galérie</string>
   <string name="add_arrow">Pridať šíp</string>
   <string name="length">Dĺžka</string>
   <string name="spine">Tvrdosť</string>
   <string name="weight">Váha</string>
-  <string name="vanes">Kridielka</string>
+  <string name="vanes">Krídielka</string>
   <string name="nock">Končík</string>
   <string name="material">Materiál</string>
   <string name="title">Názov</string>
@@ -81,9 +81,9 @@
   <string name="distance">Vzdialenosť</string>
   <string name="format">Formát</string>
   <plurals name="passe">
-    <item quantity="one">1 kolo</item>
-    <item quantity="few">1 kolo</item>
-    <item quantity="other">1 kolo</item>
+    <item quantity="one">Sady: %d</item>
+    <item quantity="few">Sady: %d</item>
+    <item quantity="other">Sady: %d</item>
   </plurals>
   <string name="with">z</string>
   <plurals name="arrow">
@@ -91,14 +91,14 @@
     <item quantity="few">Jeden šíp</item>
     <item quantity="other">Jeden šíp</item>
   </plurals>
-  <string name="target_face">Terč</string>
-  <string name="scoreboard">Hodnotiaca správa</string>
+  <string name="target_face">Typ terča</string>
+  <string name="scoreboard">Výsledková tabuľa</string>
   <string name="arrows">Šípy</string>
   <string name="sum">Súčet</string>
-  <string name="carry">Statostlivosť</string>
+  <string name="carry">Kumulatív</string>
   <string name="action_print">Tlačiť</string>
   <string name="average">Priemer</string>
-  <string name="show_all">Zobraziť všetky zäsahy</string>
+  <string name="show_all">Zobraziť všetky zásahy</string>
   <string name="comment">Komentár</string>
   <string name="all_trainings">Všetky tréningy</string>
   <string name="entire_training">Celý tréning</string>
@@ -181,9 +181,9 @@
   <string name="edit_bow">Upraviť luk</string>
   <string name="edit_arrow">Upraviť šípy</string>
   <plurals name="arrow_deleted">
-    <item quantity="one">%d šíp odstránený</item>
-    <item quantity="few">%d arrows deleted</item>
-    <item quantity="other">%d arrows deleted</item>
+    <item quantity="one">Odstránených šípov: %d</item>
+    <item quantity="few">Odstránených šípov: %d</item>
+    <item quantity="other">Odstránených šípov: %d</item>
   </plurals>
   <plurals name="bow_deleted">
     <item quantity="one">Odstranené luky: %d</item>
@@ -196,9 +196,9 @@
     <item quantity="other">Odstranené tréningy: %d</item>
   </plurals>
   <plurals name="passe_deleted">
-    <item quantity="one">Odstranené konce: %d</item>
-    <item quantity="few">Odstranené konce: %d</item>
-    <item quantity="other">Odstranené konce: %d</item>
+    <item quantity="one">Odstranené sady: %d</item>
+    <item quantity="few">Odstranené sady: %d</item>
+    <item quantity="other">Odstranené sady: %d</item>
   </plurals>
   <plurals name="rounds">
     <item quantity="one">Kolo %d</item>
@@ -206,13 +206,13 @@
     <item quantity="other">Kolo %d</item>
   </plurals>
   <string name="bft_0">0 Bft: Bezvetrie</string>
-  <string name="bft_1">1 Bft: Listy sa nepohybujú</string>
+  <string name="bft_1">1 Bft: Listy sa nehýbu</string>
   <string name="bft_2">2 Bft: Listy sa začínajú pohybovať</string>
   <string name="bft_3">3 Bft: Ľahké vlajky sa začínajú pohybovať</string>
-  <string name="bft_4">4 Bft: Malé vetvy sa začínajú pohybovať</string>
-  <string name="bft_5">5 Bft: Malé stromy sa pohybujú</string>
-  <string name="bft_6">6 Bft: Veľké konáre sa pohybujú</string>
-  <string name="bft_7">7 Bft: Celé stromy sa pohybujú</string>
+  <string name="bft_4">4 Bft: Malé vetvy sa začínajú knísať</string>
+  <string name="bft_5">5 Bft: Malé stromy sa kníšu</string>
+  <string name="bft_6">6 Bft: Veľké konáre sa hýbu</string>
+  <string name="bft_7">7 Bft: Celé stromy sa kníšu</string>
   <string name="bft_8">8 Bft: Malé konáre sa lámu</string>
   <string name="bft_9">9 Bft: Ničivá búrka</string>
   <string name="front">spredu</string>
@@ -224,8 +224,10 @@
   <string name="left_back">zozadu z ľava</string>
   <string name="right_back">zozadu z prava</string>
   <string name="date">Dátum</string>
-  <string name="edit_round">Edit round</string>
-  <string name="draw_weight">Draw weight</string>
-  <string name="sight">Sight</string>
-  <string name="limbs">Limbs</string>
+  <string name="edit_round">Edituj kolo</string>
+  <string name="draw_weight">Sila náťahu</string>
+  <string name="sight">Zameriavač</string>
+  <string name="limbs">Ramená</string>
+  <string name="my_bow">Môj luk</string>
+  <string name="my_arrow">Moje šípy</string>
 </resources>

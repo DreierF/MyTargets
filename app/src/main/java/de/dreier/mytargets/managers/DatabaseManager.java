@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 
 import de.dreier.mytargets.R;
@@ -130,7 +129,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
         if (oldVersion < 5) {
             db.execSQL(ArrowDataSource.CREATE_TABLE);
-            db.execSQL("ALTER TABLE ROUND ADD COLUMN arrow INTEGER REFERENCES " + ArrowDataSource.TABLE +
+            db.execSQL("ALTER TABLE ROUND ADD COLUMN arrow INTEGER REFERENCES " +
+                    ArrowDataSource.TABLE +
                     " ON DELETE SET NULL");
             db.execSQL("ALTER TABLE ROUND ADD COLUMN comment TEXT DEFAULT ''");
             db.execSQL("ALTER TABLE SHOOT ADD COLUMN comment TEXT DEFAULT ''");
@@ -266,8 +266,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
                             contentValues.put(RoundDataSource.COMMENT, res.getString(1));
                             contentValues.put(RoundDataSource.TRAINING, training);
                             contentValues.put(RoundDataSource.TEMPLATE, info.getId());
-                            contentValues.put(RoundTemplateDataSource.TARGET, target == 4 ? 5 : target);
-                            contentValues.put(RoundTemplateDataSource.SCORING_STYLE, target == 5 ? 1 : 0);
+                            contentValues
+                                    .put(RoundTemplateDataSource.TARGET, target == 4 ? 5 : target);
+                            contentValues.put(RoundTemplateDataSource.SCORING_STYLE,
+                                    target == 5 ? 1 : 0);
                             db.insert(RoundDataSource.TABLE, null, contentValues);
                             index++;
                         } while (res.moveToNext());
@@ -411,16 +413,21 @@ public class DatabaseManager extends SQLiteOpenHelper {
         ArrayList<Pair<String, Integer>> topScore = new ArrayList<>();
         topScore.add(new Pair<>(list.get(0).getSecond(), scoreCount.get(list.get(0))));
         boolean collapseFirst = list.get(0).getFirst().equals(list.get(1).getFirst());
+        if (list.size() == 1) {
+            return topScore;
+        }
         if (collapseFirst) {
             topScore.add(new Pair<>(list.get(1).getSecond() + "+" + list.get(0).getSecond(),
                     scoreCount.get(list.get(1)) + scoreCount.get(list.get(0))));
         } else {
             topScore.add(new Pair<>(list.get(1).getSecond(), scoreCount.get(list.get(1))));
         }
+        if (list.size() == 2) {
+            return topScore;
+        }
         topScore.add(new Pair<>(list.get(2).getSecond(), scoreCount.get(list.get(2))));
         return topScore;
     }
-
 
 
 ////// GET AGGREGATED INFORMATION //////

@@ -30,6 +30,7 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IdProvider;
+import de.dreier.mytargets.utils.Pair;
 
 public abstract class EditableFragmentBase<T extends IdProvider> extends FragmentBase<T>
         implements OnCardClickListener<T>, LoaderManager.LoaderCallbacks<List<T>> {
@@ -104,25 +105,38 @@ public abstract class EditableFragmentBase<T extends IdProvider> extends Fragmen
     private void remove(List<Integer> positions) {
         Collections.sort(positions);
         Collections.reverse(positions);
-        final ArrayList<T> deleted = new ArrayList<>();
+        final ArrayList<Pair<Integer, T>> deleted = new ArrayList<>();
         for (int pos : positions) {
-            T item = getItem(pos);
-            deleted.add(item);
+            deleted.add(new Pair<>(pos, getItem(pos)));
             removeItem(pos);
         }
-        String message = getActivity().getResources()
-                .getQuantityString(itemTypeDelRes, deleted.size(), deleted.size());
-        Snackbar.make(rootView, message,
-                Snackbar.LENGTH_LONG)
+        Collections.reverse(deleted);
+        String message = getResources().getQuantityString(itemTypeDelRes, deleted.size(),
+                deleted.size());
+        Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, v -> {
-                    for (T item : deleted) {
-                        dataSource.update(item);
+                    for (Pair<Integer, T> item : deleted) {
+                        addItem(item.getFirst(), item.getSecond());
                     }
-                }).show();
-        for (T item : deleted) {
-            dataSource.delete(item);
-        } //TODO make this more intelligent and support animations
+                    deleted.clear();
+                })
+                .setCallback(
+                        new Snackbar.Callback() {
+                            @Override
+                            public void onDismissed(Snackbar snackbar, int event) {
+                                for (Pair<Integer, T> item : deleted) {
+                                    dataSource.delete(item.getSecond());
+                                }
+                            }
+
+                            @Override
+                            public void onShown(Snackbar snackbar) {
+                            }
+                        })
+                .show();
     }
+
+    protected abstract void addItem(int pos, T item);
 
     protected abstract void removeItem(int pos);
 

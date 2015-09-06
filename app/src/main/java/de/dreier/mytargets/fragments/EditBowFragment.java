@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
@@ -178,6 +179,13 @@ public class EditBowFragment extends EditWithImageFragmentBase
         bow.drawWeight = drawWeight.getText().toString();
         bow.description = desc.getText().toString();
         bow.type = getType();
+
+        // Delete old file
+        if (oldImageFile != null) {
+            File f = new File(getContext().getFilesDir(), oldImageFile);
+            //noinspection ResultOfMethodCallIgnored
+            f.delete();
+        }
         bow.setImage(imageFile, imageBitmap);
         bow.sightSettings = sight_settings.getList();
         return bow;

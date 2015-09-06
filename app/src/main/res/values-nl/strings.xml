@@ -212,8 +212,10 @@
   <string name="left_back">van linksachter</string>
   <string name="right_back">van rechtsachter</string>
   <string name="date">Datum</string>
-  <string name="edit_round">Edit round</string>
-  <string name="draw_weight">Draw weight</string>
-  <string name="sight">Sight</string>
-  <string name="limbs">Limbs</string>
+  <string name="edit_round">Ronde wijzigen</string>
+  <string name="draw_weight">Trekgewicht</string>
+  <string name="sight">Vizier</string>
+  <string name="limbs">Latten</string>
+  <string name="my_bow">My bow</string>
+  <string name="my_arrow">My arrow</string>
 </resources>

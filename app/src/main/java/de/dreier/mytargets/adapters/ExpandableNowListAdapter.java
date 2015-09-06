@@ -32,15 +32,10 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
 
     @Override
     public long getItemId(int position) {
-        position = getDataListPosition(position);
         if (position == -1) {
             return 0;
         }
         return dataList.get(position).getId();
-    }
-
-    private int getDataListPosition(int position) {
-        return position;
     }
 
     @Override
@@ -50,7 +45,6 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
 
     @Override
     public int getItemViewType(int position) {
-        position = getDataListPosition(position);
         if (dataList.get(position).getType() == ItemType.ITEM) {
             return ITEM_TYPE;
         }
@@ -72,14 +66,14 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
 
     @Override
     public final void onBindViewHolder(SelectableViewHolder<IdProvider> viewHolder, int position) {
-        int index = getDataListPosition(position);
-        if (index == -1) {
+        if (position == -1) {
             return;
         }
-        final DataHolder dh = dataList.get(index);
+        final DataHolder dh = dataList.get(position);
         if (getItemViewType(position) == HEADER_TYPE) {
             int headerPosition = getHeaderCountUpToPosition(position);
-            viewHolder.setExpandOnClickListener(v -> expandOrCollapse(dataList.indexOf(dh)), isOpen.get(headerPosition));
+            viewHolder.setExpandOnClickListener(v -> expandOrCollapse(dataList.indexOf(dh)),
+                    isOpen.get(headerPosition));
         }
         viewHolder.bindCursor(dh.getData());
     }
@@ -87,14 +81,26 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
     private int getHeaderCountUpToPosition(int position) {
         int counter = 0;
         for (int i = 0; i < position; i++) {
-            counter += dataList.get(i).getType() == ItemType.HEADER ? 1 : 0;
+            if (isHeader(i)) {
+                counter++;
+            }
         }
         return counter;
     }
 
+    private int getItemCountUpToHeader(long header) {
+        int items = 0;
+        for (int i = 0; i < dataList.size(); i++) {
+            if (dataList.get(i).getType() == ItemType.HEADER && dataList.get(i).getId() == header) {
+                items++;
+                break;
+            }
+            items++;
+        }
+        return items;
+    }
 
     public boolean isHeader(int position) {
-        position = getDataListPosition(position);
         return position == -1 || dataList.get(position).getType() == ItemType.HEADER;
     }
 
@@ -118,13 +124,18 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
     }
 
     public IdProvider getItem(int position) {
-        position = getDataListPosition(position);
         if (position == -1) {
             return null;
         }
         return dataList.get(position).getData();
     }
 
+    public void add(int pos, CHILD item) {
+        dataList.add(pos, new DataHolder(item, ItemType.ITEM));
+        long parent = item.getParentId();
+        childMap.get(parent).add(pos - getItemCountUpToHeader(parent), item);
+        notifyItemInserted(pos);
+    }
 
     public void remove(int pos) {
         DataHolder removed = dataList.remove(pos);

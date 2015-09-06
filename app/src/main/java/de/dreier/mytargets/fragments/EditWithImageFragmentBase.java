@@ -57,7 +57,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
     private static final int SELECT_PICTURE = 2;
 
     private Uri fileUri;
-    String imageFile = null;
+    String imageFile = null, oldImageFile = null;
     Bitmap imageBitmap = null;
 
     private View mFab;
@@ -316,18 +316,12 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
             @Override
             protected Boolean doInBackground(Uri... params) {
                 try {
-                    // Delete old file
-                    if (imageFile != null) {
-                        File f = new File(getContext().getFilesDir(), imageFile);
-                        //noinspection ResultOfMethodCallIgnored
-                        f.delete();
-                    }
-
                     imageBitmap = BitmapUtils.decodeSampledBitmapFromStream(getContext(), params[0],
                             width, height);
                     File f = File.createTempFile("photo", "png", getContext().getFilesDir());
                     FileOutputStream out = new FileOutputStream(f);
                     imageBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                    oldImageFile = imageFile;
                     imageFile = f.getName();
                     return true;
                 } catch (IOException e) {

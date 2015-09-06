@@ -174,7 +174,7 @@
   <string name="edit_bow">Editar Arco</string>
   <string name="edit_arrow">Editar Flecha</string>
   <plurals name="arrow_deleted">
-    <item quantity="one">One arrow deleted</item>
+    <item quantity="one">%d arrow deleted</item>
     <item quantity="other">%d flechas apagadas</item>
   </plurals>
   <plurals name="bow_deleted">
@@ -182,11 +182,11 @@
     <item quantity="other">%d bows deleted</item>
   </plurals>
   <plurals name="training_deleted">
-    <item quantity="one">One training deleted</item>
+    <item quantity="one">%d training deleted</item>
     <item quantity="other">%d treinos apagados</item>
   </plurals>
   <plurals name="passe_deleted">
-    <item quantity="one">One end deleted</item>
+    <item quantity="one">%d end deleted</item>
     <item quantity="other">%d entradas apagadas</item>
   </plurals>
   <plurals name="rounds">
@@ -216,4 +216,6 @@
   <string name="draw_weight">Draw weight</string>
   <string name="sight">Sight</string>
   <string name="limbs">Limbs</string>
+  <string name="my_bow">My bow</string>
+  <string name="my_arrow">My arrow</string>
 </resources>

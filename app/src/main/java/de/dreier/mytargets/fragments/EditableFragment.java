@@ -65,6 +65,11 @@ public abstract class EditableFragment<T extends IdProvider> extends EditableFra
     }
 
     @Override
+    protected void addItem(int pos, T item) {
+        mAdapter.add(pos, item);
+    }
+
+    @Override
     protected void removeItem(int pos) {
         mAdapter.remove(pos);
     }

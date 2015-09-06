@@ -54,6 +54,11 @@ public abstract class NowListAdapter<T extends IIdProvider>
         return mList.get(pos);
     }
 
+    public void add(int pos, T item) {
+        mList.add(pos, item);
+        notifyItemInserted(pos);
+    }
+
     public void remove(int pos) {
         mList.remove(pos);
         notifyItemRemoved(pos);
@@ -62,4 +67,5 @@ public abstract class NowListAdapter<T extends IIdProvider>
     public void setList(List<T> list) {
         mList = list;
     }
+
 }

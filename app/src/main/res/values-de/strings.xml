@@ -18,15 +18,15 @@
   <string name="new_arrow">Neuer Pfeil</string>
   <string name="new_round">Neue Runde</string>
   <plurals name="training_selected">
-    <item quantity="one">Ein Training ausgewählt</item>
+    <item quantity="one">%d Training ausgewählt</item>
     <item quantity="other">%d Trainings ausgewählt</item>
   </plurals>
   <plurals name="bow_selected">
-    <item quantity="one">Ein Bogen ausgewählt</item>
+    <item quantity="one">%d Bogen ausgewählt</item>
     <item quantity="other">%d Bögen ausgewählt</item>
   </plurals>
   <plurals name="arrow_selected">
-    <item quantity="one">Ein Pfeil ausgewählt</item>
+    <item quantity="one">%d Pfeil ausgewählt</item>
     <item quantity="other">%d Pfeile ausgewählt</item>
   </plurals>
   <plurals name="passe_selected">
@@ -154,7 +154,7 @@
   <string name="standard_rounds">Standardrunden</string>
   <string name="expand_collapse">Ausklappen/Einklappen</string>
   <string name="new_round_template">Neue Vorlage</string>
-  <string name="arrow_numbers">Pfeil Nummern</string>
+  <string name="arrow_numbers">Pfeile nummerieren</string>
   <string name="round_removed">Round deleted!</string>
   <string name="custom_round">Benutzerdefinierte Runde</string>
   <string name="filter">Filtern</string>
@@ -216,4 +216,6 @@
   <string name="draw_weight">Zugkraft</string>
   <string name="sight">Visier</string>
   <string name="limbs">Wurfarme</string>
+  <string name="my_bow">Mein Bogen</string>
+  <string name="my_arrow">Mein Pfeil</string>
 </resources>

@@ -67,6 +67,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
         if (!list.contains(currentSelection)) {
             list.add(currentSelection);
         }
+        setHasOptionsMenu(true);
         initFilter();
     }
 
@@ -200,7 +201,8 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
     @Override
     public void onClick(SelectableViewHolder holder, StandardRound mItem) {
         if (currentSelection.equals(mItem)) {
-            onSave();
+            onSaveItem();
+            return;
         }
         int oldSelectedPosition = mSelector.getSelectedPosition();
         currentSelection = mItem;

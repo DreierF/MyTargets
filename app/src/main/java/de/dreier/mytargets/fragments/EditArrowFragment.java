@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,6 +122,13 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         arrow.vanes = vanes.getText().toString();
         arrow.nock = nock.getText().toString();
         arrow.comment = comment.getText().toString();
+
+        // Delete old file
+        if (oldImageFile != null) {
+            File f = new File(getContext().getFilesDir(), oldImageFile);
+            //noinspection ResultOfMethodCallIgnored
+            f.delete();
+        }
         arrow.setImage(imageFile, imageBitmap);
         arrow.numbers = numbers;
         return arrow;

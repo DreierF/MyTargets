@@ -58,6 +58,7 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
      * Listener which gets called when item gets selected
      */
     private OnItemSelectedListener listener;
+    private boolean useDoubleClickSelection;
 
     /**
      * {@inheritDoc}
@@ -77,12 +78,15 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
         super.onActivityCreated(savedInstanceState);
         // Set up toolbar
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        assert supportActionBar != null;
-        supportActionBar.setDisplayHomeAsUpEnabled(true);
-        supportActionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
-        setHasOptionsMenu(true);
+        useDoubleClickSelection = toolbar != null;
+        if(useDoubleClickSelection) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            assert supportActionBar != null;
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+            setHasOptionsMenu(true);
+        }
 
         mSelector.setSelectable(true);
     }
@@ -148,16 +152,17 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
         if (mItem == null) {
             return;
         }
-        if (mSelector.getSelectedPosition() == holder.getAdapterPosition()) {
+        boolean alreadySelected = mSelector.getSelectedPosition() == holder.getAdapterPosition();
+        mSelector.setSelected(holder, true);
+        if (alreadySelected || !useDoubleClickSelection) {
             onSaveItem();
         }
-        mSelector.setSelected(holder, true);
     }
 
     /**
      * Returns the selected item to the calling activity
      */
-    private void onSaveItem() {
+    protected void onSaveItem() {
         Intent data = new Intent();
         data.putExtra(ITEM, (Serializable) onSave());
         getActivity().setResult(Activity.RESULT_OK, data);

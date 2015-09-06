@@ -70,4 +70,9 @@ public abstract class ExpandableFragment<H extends IdProvider, C extends IdProvi
     protected void removeItem(int pos) {
         mAdapter.remove(pos);
     }
+
+    @Override
+    protected void addItem(int pos, C item) {
+        mAdapter.add(pos, item);
+    }
 }

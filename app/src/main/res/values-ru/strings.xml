@@ -228,4 +228,6 @@
   <string name="draw_weight">Draw weight</string>
   <string name="sight">Sight</string>
   <string name="limbs">Limbs</string>
+  <string name="my_bow">My bow</string>
+  <string name="my_arrow">My arrow</string>
 </resources>
