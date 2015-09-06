@@ -10,7 +10,9 @@ package de.dreier.mytargets.managers.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
+import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
@@ -45,6 +47,10 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
 
     public RoundTemplateDataSource(Context context) {
         super(context, TABLE);
+    }
+
+    public RoundTemplateDataSource(Context context, DatabaseManager dbHelper, SQLiteDatabase database) {
+        super(context, TABLE, dbHelper, database);
     }
 
     @Override

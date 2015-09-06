@@ -10,9 +10,11 @@ package de.dreier.mytargets.managers.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
+import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 
@@ -28,6 +30,10 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
                     INSTITUTION + " INTEGER," +
                     INDOOR + " INTEGER);";
 
+    public StandardRoundDataSource(Context context, DatabaseManager dbHelper, SQLiteDatabase db) {
+        super(context, TABLE, dbHelper, db);
+    }
+
     public StandardRoundDataSource(Context context) {
         super(context, TABLE);
     }
@@ -35,7 +41,7 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
     @Override
     public void update(StandardRound item) {
         super.update(item);
-        RoundTemplateDataSource rtds = new RoundTemplateDataSource(getContext());
+        RoundTemplateDataSource rtds = new RoundTemplateDataSource(getContext(), dbHelper, database);
         for (RoundTemplate template : item.getRounds()) {
             rtds.update(template);
         }

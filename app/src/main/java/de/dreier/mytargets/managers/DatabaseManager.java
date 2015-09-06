@@ -52,12 +52,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
     private static DatabaseManager sInstance;
     private final Context mContext;
-    private SQLiteDatabase db;
 
     private DatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
-        db = getWritableDatabase();
     }
 
     public static DatabaseManager getInstance(Context context) {
@@ -84,9 +82,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private void fillStandardRound(SQLiteDatabase db) {
         db.execSQL(StandardRoundDataSource.CREATE_TABLE);
         db.execSQL(RoundTemplateDataSource.CREATE_TABLE);
-        this.db = db;
         ArrayList<StandardRound> rounds = StandardRound.initTable(mContext);
-        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(mContext);
+        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(mContext, this, db);
         for (StandardRound round : rounds) {
             standardRoundDataSource.update(round);
         }
@@ -231,7 +228,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             fillStandardRound(db);
 
             db.execSQL(RoundDataSource.CREATE_TABLE);
-            RoundTemplateDataSource roundTemplateDataSource = new RoundTemplateDataSource(mContext);
+            RoundTemplateDataSource roundTemplateDataSource = new RoundTemplateDataSource(mContext, this, db);
 
             Cursor trainings = db.rawQuery("SELECT _id FROM TRAINING", null);
             if (trainings.moveToFirst()) {
@@ -351,13 +348,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (sr.getRounds().isEmpty()) {
             return 0L;
         }
-        new StandardRoundDataSource(mContext).update(sr);
+        new StandardRoundDataSource(mContext, this, db).update(sr);
         return sr.getId();
     }
 
 ////// SCOREBOARD //////
 
     private Map<Pair<Integer, String>, Integer> getTrainingScoreDistribution(long training) {
+        SQLiteDatabase db = getWritableDatabase();
         Cursor cursor = db
                 .rawQuery("SELECT a.target, a.scoring_style, s.points, s.arrow_index, COUNT(*) " +
                         "FROM ROUND r " +
@@ -433,6 +431,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 ////// GET AGGREGATED INFORMATION //////
 
     public ArrayList<Integer> getAllTrainings() {
+        SQLiteDatabase db = getWritableDatabase();
         Cursor res = db
                 .rawQuery("SELECT s.points, r.target, s.passe, r.scoring_style, s.arrow_index  " +
                         "FROM TRAINING t, ROUND r, PASSE p, SHOOT s " +
@@ -464,6 +463,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public ArrayList<Integer> getAllRounds(long training) {
+        SQLiteDatabase db = getWritableDatabase();
         Cursor res = db
                 .rawQuery("SELECT s.points, r.target, s.passe, r.scoring_style, s.arrow_index " +
                         "FROM ROUND r, PASSE p, SHOOT s " +
@@ -499,6 +499,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void exportAll(File file) throws IOException {
+        SQLiteDatabase db = getWritableDatabase();
         Cursor cur = db.rawQuery(
                 "SELECT t.title,sr.name AS standard_round,datetime(t.datum/1000, 'unixepoch') AS date,sr.indoor,i.distance, i.unit," +
                         "r.target, r.scoring_style, i.size, i.target_unit, s.arrow_index, a.name, s.arrow, b.name AS bow, s.points AS score " +
@@ -624,6 +625,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public String[] getImages() {
         ArrayList<String> list = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
         Cursor cur = db.rawQuery("SELECT image FROM BOW WHERE image IS NOT NULL", null);
         if (cur.moveToFirst()) {
             list.add(cur.getString(0));

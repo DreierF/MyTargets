@@ -8,6 +8,7 @@ package de.dreier.mytargets.managers.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.IdProvider;
@@ -16,10 +17,15 @@ public abstract class IdProviderDataSource<T extends IdProvider> extends DataSou
     public static final String ID = "_id";
 
     // Database fields
-    private String table;
+    protected String table;
 
     public IdProviderDataSource(Context context, String table) {
         super(context);
+        this.table = table;
+    }
+
+    public IdProviderDataSource(Context context, String table, DatabaseManager dbHelper, SQLiteDatabase database) {
+        super(context, dbHelper, database);
         this.table = table;
     }
 
