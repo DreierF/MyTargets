@@ -43,7 +43,7 @@ public class Circle {
 
         // Draw the text inside the circle
         mTextPaint.setTextSize(22 * density);
-        mTextPaint.setColor(target.getContrastColor(zone));
+        mTextPaint.setColor(target.getTextColor(zone));
         mTextPaint.setTextSize(font_size * density);
         can.drawText(target.zoneToString(zone, arrow), x, y + font_size * 7 * density / 22.0f,
                 mTextPaint);

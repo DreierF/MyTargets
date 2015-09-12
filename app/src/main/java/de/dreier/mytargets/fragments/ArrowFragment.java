@@ -28,7 +28,9 @@ import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 
-public class ArrowFragment extends EditableFragment<Arrow> implements View.OnClickListener{
+public class ArrowFragment extends EditableFragment<Arrow> implements View.OnClickListener {
+
+    private ArrowDataSource arrowDataSource;
 
     public ArrowFragment() {
         itemTypeSelRes = R.plurals.arrow_selected;
@@ -38,12 +40,13 @@ public class ArrowFragment extends EditableFragment<Arrow> implements View.OnCli
 
     @Override
     public Loader<List<Arrow>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader<>(getContext(), new ArrowDataSource(getContext()), () -> new ArrowDataSource(getContext()).getAll());
+        arrowDataSource = new ArrowDataSource(getContext());
+        return new DataLoader<>(getContext(), arrowDataSource, arrowDataSource::getAll);
     }
 
     @Override
     public void onLoadFinished(Loader<List<Arrow>> loader, List<Arrow> data) {
-        setList(dataSource, data, new ArrowAdapter());
+        setList(arrowDataSource, data, new ArrowAdapter());
     }
 
     @Override

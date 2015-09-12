@@ -6,6 +6,7 @@
  */
 package de.dreier.mytargets.fragments;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
@@ -49,6 +50,7 @@ public abstract class EditFragmentBase extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
+            getActivity().setResult(Activity.RESULT_OK);
             onSave();
             return true;
         }

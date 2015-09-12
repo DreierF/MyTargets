@@ -37,7 +37,7 @@ public abstract class SelectorBase<T extends Serializable> extends LinearLayout 
     T item = null;
 
     private Button mAddButton;
-    private Class<?> addActivity;
+    private OnClickListener onAddClickListener;
     private OnUpdateListener<T> updateListener;
 
     public SelectorBase(Context context, AttributeSet attrs, @LayoutRes int layout) {
@@ -55,8 +55,7 @@ public abstract class SelectorBase<T extends Serializable> extends LinearLayout 
         super.onFinishInflate();
         mAddButton = (Button) getChildAt(2);
         if (mAddButton != null) {
-            mAddButton.setOnClickListener(
-                    v -> getContext().startActivity(new Intent(getContext(), addActivity)));
+            mAddButton.setOnClickListener(onAddClickListener);
         }
         updateView();
     }
@@ -88,11 +87,10 @@ public abstract class SelectorBase<T extends Serializable> extends LinearLayout 
 
     protected abstract void bindView();
 
-    void setAddButtonIntent(Class<?> addActivity) {
-        this.addActivity = addActivity;
+    void setAddButtonIntent(Class<?> addActivity, OnResultListener resultListener) {
+        this.onAddClickListener = v -> startIntent(new Intent(getContext(), addActivity), resultListener);
         if (mAddButton != null) {
-            mAddButton.setOnClickListener(
-                    v -> getContext().startActivity(new Intent(getContext(), addActivity)));
+            mAddButton.setOnClickListener(onAddClickListener);
         }
     }
 

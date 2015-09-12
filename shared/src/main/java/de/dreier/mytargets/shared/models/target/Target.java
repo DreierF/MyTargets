@@ -322,7 +322,7 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
 
     public int getContrastColor(int zone) {
         if (zone < 0 || zone >= zones) {
-            return WHITE;
+            return BLACK;
         }
         switch (colorFill[zone]) {
             case WHITE:
@@ -340,6 +340,13 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
             default:
                 return WHITE;
         }
+    }
+
+    public int getTextColor(int zone) {
+        if (zone < 0 || zone >= zones) {
+            return WHITE;
+        }
+        return getContrastColor(zone);
     }
 
     @Override

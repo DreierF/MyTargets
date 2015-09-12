@@ -32,6 +32,8 @@ import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 
 public class BowFragment extends EditableFragment<Bow> implements View.OnClickListener {
 
+    private BowDataSource bowDataSource;
+
     public BowFragment() {
         itemTypeSelRes = R.plurals.bow_selected;
         itemTypeDelRes = R.plurals.bow_deleted;
@@ -40,12 +42,13 @@ public class BowFragment extends EditableFragment<Bow> implements View.OnClickLi
 
     @Override
     public Loader<List<Bow>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader<>(getContext(), new BowDataSource(getContext()), () -> new BowDataSource(getContext()).getAll());
+        bowDataSource = new BowDataSource(getContext());
+        return new DataLoader<>(getContext(), bowDataSource, bowDataSource::getAll);
     }
 
     @Override
     public void onLoadFinished(Loader<List<Bow>> loader, List<Bow> data) {
-        setList(dataSource, data, new BowAdapter());
+        setList(bowDataSource, data, new BowAdapter());
     }
 
     @Override
