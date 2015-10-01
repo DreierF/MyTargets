@@ -33,5 +33,5 @@
         android:layout_centerVertical="true"
         android:background="?android:attr/selectableItemBackground"
         android:contentDescription="@string/delete"
-        android:src="@drawable/ic_action_cancel" />
+        android:src="@drawable/ic_cancel_grey600_24dp" />
 </RelativeLayout>
