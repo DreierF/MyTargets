@@ -34,7 +34,7 @@
                 android:layout_weight="1"
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@string/sunny"
-                android:src="@drawable/ic_sun_outline"/>
+                android:src="@drawable/ic_sun_outline_48dp"/>
 
             <ImageButton
                 android:id="@+id/partly_cloudy"
@@ -43,7 +43,7 @@
                 android:layout_weight="1"
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@string/partly_cloudy"
-                android:src="@drawable/ic_partly_cloudy"/>
+                android:src="@drawable/ic_partly_cloudy_48dp"/>
 
             <ImageButton
                 android:id="@+id/clouds"
@@ -52,7 +52,7 @@
                 android:layout_weight="1"
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@string/cloudy"
-                android:src="@drawable/ic_cloudy_outline"/>
+                android:src="@drawable/ic_cloudy_outline_48dp"/>
 
             <ImageButton
                 android:id="@+id/light_rain"
@@ -61,7 +61,7 @@
                 android:layout_weight="1"
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@string/light_rain"
-                android:src="@drawable/ic_light_rain_outline"/>
+                android:src="@drawable/ic_light_rain_outline_48dp"/>
 
             <ImageButton
                 android:id="@+id/rain"
@@ -70,7 +70,7 @@
                 android:layout_weight="1"
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@string/rain"
-                android:src="@drawable/ic_rain_outline"/>
+                android:src="@drawable/ic_rain_outline_48dp"/>
 
         </LinearLayout>
 

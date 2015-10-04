@@ -15,7 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.BowActivity;
+import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.Bow;
@@ -29,7 +29,7 @@ public class BowSelector extends SelectorBase<Bow> {
 
     public BowSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_image);
-        setOnClickActivity(BowActivity.class);
+        setOnClickActivity(ItemSelectActivity.BowActivity.class);
         setAddButtonIntent(SimpleFragmentActivity.EditBowActivity.class, (data) -> setItemId(0));
     }
 

@@ -78,18 +78,18 @@ public class EnvironmentFragment extends Fragment {
 
     private void setWeather(EWeather weather) {
         this.weather = weather;
-        sunny.setImageResource(weather == EWeather.SUNNY ? R.drawable.ic_sun :
-                R.drawable.ic_sun_outline);
+        sunny.setImageResource(weather == EWeather.SUNNY ? R.drawable.ic_sun_48dp :
+                R.drawable.ic_sun_outline_48dp);
         partlyCloudy.setImageResource(
-                weather == EWeather.PARTLY_CLOUDY ? R.drawable.ic_partly_cloudy :
-                        R.drawable.ic_partly_cloudy_outline);
-        cloudy.setImageResource(weather == EWeather.CLOUDY ? R.drawable.ic_cloudy :
-                R.drawable.ic_cloudy_outline);
+                weather == EWeather.PARTLY_CLOUDY ? R.drawable.ic_partly_cloudy_48dp :
+                        R.drawable.ic_partly_cloudy_outline_48dp);
+        cloudy.setImageResource(weather == EWeather.CLOUDY ? R.drawable.ic_cloudy_48dp :
+                R.drawable.ic_cloudy_outline_48dp);
         lightRain.setImageResource(
-                weather == EWeather.LIGHT_RAIN ? R.drawable.ic_light_rain :
-                        R.drawable.ic_light_rain_outline);
-        rain.setImageResource(weather == EWeather.RAIN ? R.drawable.ic_rain :
-                R.drawable.ic_rain_outline);
+                weather == EWeather.LIGHT_RAIN ? R.drawable.ic_light_rain_48dp :
+                        R.drawable.ic_light_rain_outline_48dp);
+        rain.setImageResource(weather == EWeather.RAIN ? R.drawable.ic_rain_48dp :
+                R.drawable.ic_rain_outline_48dp);
     }
 
     @Override

@@ -9,11 +9,11 @@ package de.dreier.mytargets.shared.models;
 import de.dreier.mytargets.shared.R;
 
 public enum EWeather {
-    SUNNY(0, R.string.sunny, R.drawable.ic_sun),
-    PARTLY_CLOUDY(1, R.string.partly_cloudy, R.drawable.ic_partly_cloudy),
-    CLOUDY(2, R.string.cloudy, R.drawable.ic_cloudy),
-    LIGHT_RAIN(3, R.string.light_rain, R.drawable.ic_light_rain),
-    RAIN(4, R.string.rain, R.drawable.ic_rain);
+    SUNNY(0, R.string.sunny, R.drawable.ic_sun_48dp),
+    PARTLY_CLOUDY(1, R.string.partly_cloudy, R.drawable.ic_partly_cloudy_48dp),
+    CLOUDY(2, R.string.cloudy, R.drawable.ic_cloudy_48dp),
+    LIGHT_RAIN(3, R.string.light_rain, R.drawable.ic_light_rain_48dp),
+    RAIN(4, R.string.rain, R.drawable.ic_rain_48dp);
 
     private final int value;
     private final int name;

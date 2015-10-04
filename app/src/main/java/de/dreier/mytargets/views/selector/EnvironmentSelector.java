@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.EnvironmentActivity;
+import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import zh.wang.android.apis.yweathergetter4a.WeatherInfo;
@@ -36,7 +36,7 @@ public class EnvironmentSelector extends SelectorBase<Environment> implements
 
     public EnvironmentSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.item_image);
-        setOnClickActivity(EnvironmentActivity.class);
+        setOnClickActivity(ItemSelectActivity.EnvironmentActivity.class);
     }
 
     @Override

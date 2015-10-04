@@ -2,18 +2,20 @@
 <!-- Generator: Adobe Illustrator 17.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Ebene_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="97px" height="91.25px" viewBox="0 0 97 91.25" enable-background="new 0 0 97 91.25" xml:space="preserve">
-<path d="M63.25,21.75C59-2,22,0.25,23.25,28.25C-1.25,28.75,5.75,60,19.75,60c17,0,55.25-0.5,55.25-0.5
-	C102,53.75,91.75,10.5,63.25,21.75z M74.715,57.004C71.359,57.047,35.819,57.5,19.75,57.5c-5.765,0-10.148-7.434-10.216-14.08
-	c-0.038-3.725,1.228-12.415,13.767-12.671l2.561-0.052l-0.114-2.559c-0.271-6.069,1.422-11.198,4.897-14.832
-	c3.253-3.401,7.988-5.352,12.993-5.352c6.737,0,15.271,3.728,17.151,14.235l0.538,3.006l2.841-1.122
-	c2.831-1.118,5.559-1.684,8.105-1.684c9.753,0,15.054,8.152,15.852,15.727C88.881,45.301,85.813,54.521,74.715,57.004z"/>
+	 width="122px" height="122px" viewBox="-12.5 -15.375 122 122" enable-background="new -12.5 -15.375 122 122"
+	 xml:space="preserve">
+<path d="M62.865,23.272c-4.25-23.75-41.25-21.5-40,6.5c-24.5,0.5-17.5,31.75-3.5,31.75c17,0,55.25-0.5,55.25-0.5
+	C101.615,55.272,91.365,12.022,62.865,23.272z M74.33,58.526c-3.356,0.043-38.896,0.496-54.965,0.496
+	c-5.765,0-10.148-7.434-10.216-14.08c-0.038-3.725,1.228-12.415,13.767-12.671l2.561-0.052l-0.114-2.559
+	c-0.271-6.069,1.422-11.198,4.897-14.832c3.253-3.401,7.988-5.352,12.993-5.352c6.737,0,15.271,3.728,17.151,14.235l0.538,3.006
+	l2.841-1.122c2.831-1.118,5.559-1.684,8.105-1.684c9.753,0,15.054,8.152,15.852,15.727C88.496,46.823,85.428,56.043,74.33,58.526z"
+	/>
 <g>
-	<line fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" x1="51.75" y1="82.75" x2="57" y2="77.5"/>
-	<line fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" x1="62.5" y1="72.25" x2="67.75" y2="67"/>
-	<line fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" x1="33.75" y1="80.5" x2="39" y2="75.25"/>
-	<line fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" x1="44.5" y1="70" x2="49.75" y2="64.75"/>
-	<line fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" x1="11.5" y1="82.75" x2="16.75" y2="77.5"/>
-	<line fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" x1="22.25" y1="72.25" x2="27.5" y2="67"/>
+	<line fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" x1="51.365" y1="84.272" x2="56.615" y2="79.022"/>
+	<line fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" x1="62.115" y1="73.772" x2="67.365" y2="68.522"/>
+	<line fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" x1="33.365" y1="82.022" x2="38.615" y2="76.772"/>
+	<line fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" x1="44.115" y1="71.522" x2="49.365" y2="66.272"/>
+	<line fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" x1="11.115" y1="84.272" x2="16.365" y2="79.022"/>
+	<line fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" x1="21.865" y1="73.772" x2="27.115" y2="68.522"/>
 </g>
 </svg>
