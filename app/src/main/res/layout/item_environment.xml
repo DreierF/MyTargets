@@ -8,52 +8,48 @@
 
     <TextView
         style="@style/Label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/format" />
-
-    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="48dp">
+        android:text="@string/environment" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/image"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:background="?android:attr/selectableItemBackground"
-            android:padding="8dp"
+            android:padding="5dp"
             android:scaleType="fitCenter" />
 
         <LinearLayout
-            android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_toEndOf="@+id/image"
-            android:layout_toRightOf="@+id/image"
-            android:orientation="vertical"
-            android:padding="8dp">
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@android:id/text1"
-                android:layout_width="match_parent"
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:textColor="@color/primary_text_default_material_light"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@android:id/text2"
-                android:layout_width="match_parent"
+                android:id="@+id/details"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:textColor="@color/secondary_text_default_material_light"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="gone" />
 
         </LinearLayout>
-    </RelativeLayout>
+
+    </LinearLayout>
+
 </LinearLayout>

@@ -40,7 +40,7 @@ public class EnvironmentSelector extends SelectorBase<Environment> {
     }
 
     public EnvironmentSelector(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.item_image);
+        super(context, attrs, R.layout.item_environment);
         setOnClickActivity(ItemSelectActivity.EnvironmentActivity.class);
     }
 

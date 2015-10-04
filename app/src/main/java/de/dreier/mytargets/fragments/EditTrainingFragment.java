@@ -54,6 +54,8 @@ import de.dreier.mytargets.views.selector.EnvironmentSelector;
 import de.dreier.mytargets.views.selector.StandardRoundSelector;
 import de.dreier.mytargets.views.selector.TargetSelector;
 
+import static de.dreier.mytargets.fragments.DatePickerFragment.ARG_CURRENT_DATE;
+
 
 public class EditTrainingFragment extends EditFragmentBase implements DatePickerDialog.OnDateSetListener {
     public static final String TRAINING_ID = "training_id";
@@ -66,8 +68,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private static final int REQ_SELECTED_DATE = 2;
 
-    private long mTraining = -1;
-    private int mTrainingType = 0;
+    private long trainingId = -1;
+    private int trainingType = 0;
     private Date date = new Date();
 
     @Bind(R.id.bow)
@@ -77,7 +79,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     ArrowSelector arrow;
 
     @Bind(R.id.training)
-    EditText training;
+    EditText trainingTitle;
 
     @Bind(R.id.trainingDate)
     Button training_date;
@@ -96,9 +98,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
     @Bind(R.id.practiceLayout)
     View practice;
-
-    @Bind(R.id.standardRoundLayout)
-    View roundLayout;
 
     @Bind(R.id.indoor)
     RadioButton indoor;
@@ -130,8 +129,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            mTraining = arguments.getLong(TRAINING_ID, -1);
-            mTrainingType = arguments.getInt(TRAINING_TYPE, FREE_TRAINING);
+            trainingId = arguments.getLong(TRAINING_ID, -1);
+            trainingType = arguments.getInt(TRAINING_TYPE, FREE_TRAINING);
         }
 
         arrow.setOnUpdateListener(this::updateArrowNumbers);
@@ -152,9 +151,9 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             }
         });
 
-        if (mTraining == -1) {
+        if (trainingId == -1) {
             setTitle(R.string.new_training);
-            training.setText(getString(R.string.training));
+            trainingTitle.setText(getString(trainingType == COMPETITION ? R.string.training : R.string.competition));
             setTrainingDate();
             bow.setItemId(prefs.getInt("bow", -1));
             arrow.setItemId(prefs.getInt("arrow", -1));
@@ -175,8 +174,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
         } else {
             setTitle(R.string.edit_training);
-            Training train = new TrainingDataSource(getContext()).get(mTraining);
-            training.setText(train.title);
+            Training train = new TrainingDataSource(getContext()).get(trainingId);
+            trainingTitle.setText(train.title);
             date = train.date;
             bow.setItemId(train.bow);
             arrow.setItemId(train.arrow);
@@ -192,17 +191,17 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     }
 
     private void updateArrowsLabel() {
-        arrowsLabel.setText(getResources().getQuantityText(R.plurals.arrow, arrows.getProgress()));
+        arrowsLabel.setText(getResources().getQuantityString(R.plurals.arrow, arrows.getProgress(), arrows.getProgress()));
     }
 
     private void applyTrainingType() {
         View in, out;
-        if (mTrainingType == 0) {
+        if (trainingType == 0) {
             in = practice;
-            out = roundLayout;
+            out = standardRoundSpinner;
         } else {
             out = practice;
-            in = roundLayout;
+            in = standardRoundSpinner;
         }
         in.setVisibility(View.VISIBLE);
         out.setVisibility(View.GONE);
@@ -212,7 +211,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     void onDateClick() {
         // Package bundle with fragment arguments
         Bundle bundle = new Bundle();
-        bundle.putSerializable(DatePickerFragment.ARG_CURRENT_DATE, date);
+        bundle.putSerializable(ARG_CURRENT_DATE, date);
 
         // Create and show date picker
         DatePickerFragment datePickerDialog = new DatePickerFragment();
@@ -250,15 +249,15 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
     @Override
     protected void onSave() {
-        boolean newTraining = mTraining == -1;
-        String title = training.getText().toString();
-        Training training1 = new Training();
-        training1.setId(mTraining);
-        training1.title = title;
-        training1.date = date;
-        training1.environment = environment.getSelectedItem();
-        training1.bow = bow.getSelectedItem() == null ? 0 : bow.getSelectedItem().getId();
-        training1.arrow = arrow.getSelectedItem() == null ? 0 : arrow.getSelectedItem().getId();
+        boolean newTraining = trainingId == -1;
+        String title = trainingTitle.getText().toString();
+        Training training = new Training();
+        training.setId(trainingId);
+        training.title = title;
+        training.date = date;
+        training.environment = environment.getSelectedItem();
+        training.bow = bow.getSelectedItem() == null ? 0 : bow.getSelectedItem().getId();
+        training.arrow = arrow.getSelectedItem() == null ? 0 : arrow.getSelectedItem().getId();
         int time = 120;
         try {
             SharedPreferences prefs = PreferenceManager
@@ -266,9 +265,9 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             time = Integer.parseInt(prefs.getString("timer_shoot_time", "120"));
         } catch (NumberFormatException ignored) {
         }
-        training1.timePerPasse = timer.isChecked() ? time : -1;
+        training.timePerPasse = timer.isChecked() ? time : -1;
         Arrow selectedItem = arrow.getSelectedItem();
-        training1.arrowNumbering = !(selectedItem == null || selectedItem.numbers.isEmpty()) &&
+        training.arrowNumbering = !(selectedItem == null || selectedItem.numbers.isEmpty()) &&
                 numberArrows.isChecked();
 
         getActivity().finish();
@@ -278,7 +277,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(getContext());
         if (newTraining) {
             getActivity().setTitle(R.string.edit_training);
-            if (mTrainingType == 0) {
+            if (trainingType == 0) {
                 // Generate and save standard round template for practice
                 standardRound = new StandardRound();
                 standardRound.club = StandardRound.CUSTOM_PRACTICE;
@@ -309,22 +308,22 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                 standardRoundDataSource.update(standardRound);
                 editor.putInt("standard_round", (int) standardRound.getId());
             }
-            training1.standardRoundId = standardRound.getId();
+            training.standardRoundId = standardRound.getId();
 
-            trainingDataSource.update(training1);
-            mTraining = training1.getId();
+            trainingDataSource.update(training);
+            trainingId = training.getId();
             ArrayList<Round> rounds = new ArrayList<>();
             RoundDataSource roundDataSource = new RoundDataSource(getContext());
             for (RoundTemplate template : standardRound.getRounds()) {
                 Round round = new Round();
-                round.training = mTraining;
+                round.training = trainingId;
                 round.info = template;
                 round.comment = "";
                 roundDataSource.update(round);
                 rounds.add(round);
             }
             Intent i = new Intent(getActivity(), SimpleFragmentActivity.TrainingActivity.class);
-            i.putExtra(TrainingFragment.ITEM_ID, mTraining);
+            i.putExtra(TrainingFragment.ITEM_ID, trainingId);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
 
@@ -335,16 +334,16 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
         } else {
             // Edit training
-            Training train = trainingDataSource.get(mTraining);
-            training1.standardRoundId = train.standardRoundId;
-            trainingDataSource.update(training1);
+            Training train = trainingDataSource.get(trainingId);
+            training.standardRoundId = train.standardRoundId;
+            trainingDataSource.update(training);
             getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
         }
 
-        editor.putInt("bow", (int) training1.bow);
-        editor.putInt("arrow", (int) training1.arrow);
+        editor.putInt("bow", (int) training.bow);
+        editor.putInt("arrow", (int) training.arrow);
         editor.putBoolean("timer", timer.isChecked());
-        editor.putBoolean("numbering", training1.arrowNumbering);
+        editor.putBoolean("numbering", training.arrowNumbering);
         editor.apply();
     }
 }

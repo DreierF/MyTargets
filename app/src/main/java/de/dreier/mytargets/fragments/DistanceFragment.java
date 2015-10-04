@@ -8,7 +8,6 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -21,6 +20,7 @@ import android.view.ViewGroup;
 import junit.framework.Assert;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.DistanceTabsFragmentPagerAdapter;
@@ -34,25 +34,32 @@ public class DistanceFragment extends Fragment implements TextInputDialog.OnClic
 
     @Bind(R.id.viewPager)
     ViewPager viewPager;
+
     @Bind(R.id.slidingTabs)
     TabLayout tabLayout;
+
     private SelectItemFragment.OnItemSelectedListener listener;
     private Distance distance;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        distance = (Distance) getArguments().getSerializable(ITEM);
-
         View rootView = inflater.inflate(R.layout.fragment_distance, container, false);
+        ButterKnife.bind(this, rootView);
+
+        distance = (Distance) getArguments().getSerializable(ITEM);
 
         DistanceTabsFragmentPagerAdapter adapter =
                 new DistanceTabsFragmentPagerAdapter(getActivity(), distance);
         viewPager.setAdapter(adapter);
         int item = distance.unit.equals(Distance.METER) ? 0 : 1;
         viewPager.setCurrentItem(item, false);
-
-        tabLayout.setTabTextColors(0xCCFFFFFF, Color.WHITE);
         tabLayout.setupWithViewPager(viewPager);
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override
