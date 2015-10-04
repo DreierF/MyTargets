@@ -15,7 +15,7 @@ import java.util.Locale;
 import de.dreier.mytargets.shared.models.IdProvider;
 
 public class Month extends IdProvider implements Comparable<Month> {
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM yyyy", Locale.GERMAN);
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
 
     public Month(long id) {
         this.setId(id);
