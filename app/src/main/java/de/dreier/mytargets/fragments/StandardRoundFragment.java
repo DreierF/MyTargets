@@ -28,8 +28,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +40,7 @@ import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.utils.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 

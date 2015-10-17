@@ -18,12 +18,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bignerdranch.android.recyclerviewchoicemode.OnCardClickListener;
-
 import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.IIdProvider;
+import de.dreier.mytargets.utils.OnCardClickListener;
 
 /**
  * Generic fragment class used as base for most fragments.

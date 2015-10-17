@@ -23,9 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
-import com.bignerdranch.android.recyclerviewchoicemode.SingleSelector;
-
 import junit.framework.Assert;
 
 import java.io.Serializable;
@@ -34,6 +31,8 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.shared.models.IIdProvider;
+import de.dreier.mytargets.utils.SelectableViewHolder;
+import de.dreier.mytargets.utils.SingleSelector;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 

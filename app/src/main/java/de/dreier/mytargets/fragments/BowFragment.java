@@ -17,8 +17,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
-
 import java.util.List;
 
 import de.dreier.mytargets.R;
@@ -29,6 +27,7 @@ import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
+import de.dreier.mytargets.utils.SelectableViewHolder;
 
 public class BowFragment extends EditableFragment<Bow> implements View.OnClickListener {
 

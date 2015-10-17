@@ -10,13 +10,12 @@ package de.dreier.mytargets.adapters;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.IdProvider;
+import de.dreier.mytargets.utils.SelectableViewHolder;
 
 public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD extends IdProvider>
         extends RecyclerView.Adapter<SelectableViewHolder<IdProvider>> {

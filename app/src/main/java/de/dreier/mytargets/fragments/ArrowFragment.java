@@ -16,8 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
-
 import java.util.List;
 
 import de.dreier.mytargets.R;
@@ -27,6 +25,7 @@ import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.RoundedAvatarDrawable;
+import de.dreier.mytargets.utils.SelectableViewHolder;
 
 public class ArrowFragment extends EditableFragment<Arrow> implements View.OnClickListener {
 

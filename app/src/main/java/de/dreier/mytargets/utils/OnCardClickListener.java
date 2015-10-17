@@ -1,4 +1,4 @@
-package com.bignerdranch.android.recyclerviewchoicemode;
+package de.dreier.mytargets.utils;
 
 /**
  * Created by Florian on 13.03.2015.

@@ -5,7 +5,7 @@
       <GradleProjectSettings>
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="C:\Program Files\Android\Android Studio\gradle\gradle-2.4" />
+        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.4" />
         <option name="gradleJvm" value="1.8" />
         <option name="modules">
           <set>
@@ -13,7 +13,6 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/libraries" />
             <option value="$PROJECT_DIR$/libraries/LicensesDialog" />
-            <option value="$PROJECT_DIR$/libraries/RecyclerViewChoiceMode" />
             <option value="$PROJECT_DIR$/libraries/YWeatherGetter4a" />
             <option value="$PROJECT_DIR$/libraries/aFileChooser" />
             <option value="$PROJECT_DIR$/shared" />

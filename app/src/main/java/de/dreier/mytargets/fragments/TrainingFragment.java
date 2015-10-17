@@ -27,7 +27,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
 import com.cocosw.bottomsheet.BottomSheet;
 
 import java.io.File;
@@ -53,6 +52,7 @@ import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.ScoreboardUtils;
+import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.TargetImage;
 import de.dreier.mytargets.views.PasseView;
 import de.dreier.mytargets.views.TargetPasseView;

@@ -15,14 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
-
 import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.managers.dao.DistanceDataSource;
 import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.views.CardItemDecorator;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;

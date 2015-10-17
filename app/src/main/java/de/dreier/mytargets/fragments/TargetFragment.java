@@ -21,8 +21,6 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +30,7 @@ import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.MyBackupAgent;
+import de.dreier.mytargets.utils.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 

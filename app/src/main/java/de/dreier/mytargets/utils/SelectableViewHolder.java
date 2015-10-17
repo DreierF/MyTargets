@@ -1,4 +1,4 @@
-package com.bignerdranch.android.recyclerviewchoicemode;
+package de.dreier.mytargets.utils;
 
 import android.animation.AnimatorInflater;
 import android.animation.StateListAnimator;
@@ -13,6 +13,12 @@ import android.util.StateSet;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+
+import com.bignerdranch.android.multiselector.MultiSelector;
+import com.bignerdranch.android.multiselector.MultiSelectorBindingHolder;
+import com.bignerdranch.android.multiselector.SelectableHolder;
+
+import de.dreier.mytargets.R;
 
 /**
  * A holder extended to support having a selectable mode with a different

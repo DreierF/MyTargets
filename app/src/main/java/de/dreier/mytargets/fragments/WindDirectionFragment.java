@@ -12,11 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bignerdranch.android.recyclerviewchoicemode.SelectableViewHolder;
-
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.models.WindDirection;
+import de.dreier.mytargets.utils.SelectableViewHolder;
 
 public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
 
