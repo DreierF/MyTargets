@@ -7,18 +7,23 @@
 
 package de.dreier.mytargets.adapters;
 
+import android.support.v7.widget.RebindReportingHolder;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+
+import com.bignerdranch.android.multiselector.SelectableHolder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.IdProvider;
+import de.dreier.mytargets.utils.HeaderBindingHolder;
+import de.dreier.mytargets.utils.ItemBindingHolder;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
 public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD extends IdProvider>
-        extends RecyclerView.Adapter<SelectableViewHolder<IdProvider>> {
+        extends RecyclerView.Adapter<ItemBindingHolder<IdProvider>> {
 
     private static final int HEADER_TYPE = 1;
     public static final int ITEM_TYPE = 2;
@@ -51,27 +56,28 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
     }
 
     @Override
-    public SelectableViewHolder<IdProvider> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ItemBindingHolder<IdProvider> onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HEADER_TYPE) {
-            return (SelectableViewHolder<IdProvider>) getTopLevelViewHolder(parent);
+            return (ItemBindingHolder<IdProvider>) getTopLevelViewHolder(parent);
         } else {
-            return (SelectableViewHolder<IdProvider>) getSecondLevelViewHolder(parent);
+            return (ItemBindingHolder<IdProvider>) getSecondLevelViewHolder(parent);
         }
     }
 
-    protected abstract SelectableViewHolder<HEADER> getTopLevelViewHolder(ViewGroup parent);
+    protected abstract HeaderBindingHolder<HEADER> getTopLevelViewHolder(ViewGroup parent);
 
     protected abstract SelectableViewHolder<CHILD> getSecondLevelViewHolder(ViewGroup parent);
 
     @Override
-    public final void onBindViewHolder(SelectableViewHolder<IdProvider> viewHolder, int position) {
+    public final void onBindViewHolder(ItemBindingHolder<IdProvider> viewHolder, int position) {
         if (position == -1) {
             return;
         }
         final DataHolder dh = dataList.get(position);
-        if (getItemViewType(position) == HEADER_TYPE) {
+        if (viewHolder instanceof HeaderBindingHolder) {
+            HeaderBindingHolder header = (HeaderBindingHolder) viewHolder;
             int headerPosition = getHeaderCountUpToPosition(position);
-            viewHolder.setExpandOnClickListener(v -> expandOrCollapse(dataList.indexOf(dh)),
+            header.setExpandOnClickListener(v -> expandOrCollapse(dataList.indexOf(dh)),
                     isOpen.get(headerPosition));
         }
         viewHolder.bindCursor(dh.getData());

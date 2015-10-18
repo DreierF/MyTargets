@@ -42,26 +42,22 @@ import de.dreier.mytargets.R;
  *
  * @see <a href="https://github.com/kurtisnelson/">https://github.com/kurtisnelson/</a>)
  */
-public abstract class SelectableViewHolder<T> extends MultiSelectorBindingHolder
-        implements SelectableHolder, View.OnClickListener, View.OnLongClickListener {
-    private View expandCollapseView = null;
+public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
+        implements View.OnClickListener, View.OnLongClickListener {
+    private final MultiSelector mMultiSelector;
     private OnCardClickListener<T> mListener;
-    protected T mItem;
-    private View.OnClickListener expandListener;
-    private boolean expanded = false;
     private boolean mIsSelectable = false;
 
     private Drawable mSelectionModeBackgroundDrawable;
     private Drawable mDefaultModeBackgroundDrawable;
     private StateListAnimator mSelectionModeStateListAnimator;
     private StateListAnimator mDefaultModeStateListAnimator;
-    private int mPosition;
 
     /**
      * Construct a new SelectableHolder hooked up to be controlled by a MultiSelector.
      * <p/>
      * If the MultiSelector is not null, the SelectableHolder can be selected by
-     * calling {@link MultiSelector#setSelected(com.bignerdranch.android.recyclerviewchoicemode.SelectableHolder, boolean)}.
+     * calling {@link MultiSelector#setSelected(SelectableHolder, boolean)}.
      * <p/>
      * If the MultiSelector is null, the SelectableHolder acts as a standalone
      * ViewHolder that you can control manually by setting {@link #setSelectable(boolean)}
@@ -71,8 +67,8 @@ public abstract class SelectableViewHolder<T> extends MultiSelectorBindingHolder
      * @param multiSelector A selector set to bind this holder to
      */
     public SelectableViewHolder(View itemView, MultiSelector multiSelector, OnCardClickListener<T> listener) {
-        super(itemView, multiSelector);
-
+        super(itemView);
+        this.mMultiSelector = multiSelector;
         itemView.setOnClickListener(this);
         if (multiSelector != null) {
             itemView.setLongClickable(true);
@@ -90,15 +86,9 @@ public abstract class SelectableViewHolder<T> extends MultiSelectorBindingHolder
         }
     }
 
-    /**
-     * Special constructor for header items
-     *
-     * @param itemView        Header view
-     * @param expand_collapse Expand/Collapse ImageView's resource id
-     */
-    public SelectableViewHolder(View itemView, @IdRes int expand_collapse) {
-        this(itemView, null, null);
-        expandCollapseView = itemView.findViewById(expand_collapse);
+
+    protected void onRebind() {
+        this.mMultiSelector.bindHolder(this, this.getAdapterPosition(), this.getItemId());
     }
 
     /**
@@ -112,13 +102,7 @@ public abstract class SelectableViewHolder<T> extends MultiSelectorBindingHolder
     }
 
     /**
-     * Turns selection mode on and off. When in selection mode,
-     * {@link #itemView}'s background drawable is swapped out
-     * for the value of {@link #getSelectionModeBackgroundDrawable()}.
-     * When not, it is set to {@link #getDefaultModeBackgroundDrawable()}.
-     * If in Lollipop or greater versions, the same applies to
-     * {@link #getSelectionModeStateListAnimator()} and
-     * {@link #getDefaultModeStateListAnimator()}.
+     * Turns selection mode on and off.
      *
      * @param isSelectable True if selectable.
      */
@@ -141,14 +125,7 @@ public abstract class SelectableViewHolder<T> extends MultiSelectorBindingHolder
 
     @Override
     public void onClick(View v) {
-        if (expandListener != null) {
-            expandListener.onClick(v);
-            expandCollapseView.animate()
-                    .rotation(expanded ? 0 : 180)
-                    .setInterpolator(new AccelerateDecelerateInterpolator())
-                    .start();
-            expanded = !expanded;
-        } else if (mListener != null) {
+        if (mListener != null) {
             mListener.onClick(this, mItem);
         }
     }
@@ -166,22 +143,6 @@ public abstract class SelectableViewHolder<T> extends MultiSelectorBindingHolder
 
     public abstract void bindCursor();
 
-    public void setExpandOnClickListener(View.OnClickListener onClickListener, boolean expanded) {
-        expandListener = onClickListener;
-        this.expanded = expanded;
-        expandCollapseView.setRotation(expanded ? 180 : 0);
-    }
-
-    /**
-     * Background drawable to use in selection mode. This defaults to
-     * a state list drawable that uses the colorAccent theme value when
-     * <code>state_activated==true</code>.
-     * @return A background drawable
-     */
-    public Drawable getSelectionModeBackgroundDrawable() {
-        return mSelectionModeBackgroundDrawable;
-    }
-
     /**
      * Set the background drawable to be used in selection mode.
      * @param selectionModeBackgroundDrawable A background drawable
@@ -192,15 +153,6 @@ public abstract class SelectableViewHolder<T> extends MultiSelectorBindingHolder
         if (mIsSelectable) {
             itemView.setBackgroundDrawable(selectionModeBackgroundDrawable);
         }
-    }
-
-    /**
-     * Background drawable to use when not in selection mode. This defaults
-     * to the drawable that was set on {@link #itemView} at construction time.
-     * @return A background drawable
-     */
-    public Drawable getDefaultModeBackgroundDrawable() {
-        return mDefaultModeBackgroundDrawable;
     }
 
     /**
@@ -216,47 +168,6 @@ public abstract class SelectableViewHolder<T> extends MultiSelectorBindingHolder
     }
 
     /**
-     * State list animator to use when in selection mode. This defaults
-     * to an animator that raises the view when <code>state_activated==true</code>.
-     * @return A state list animator
-     */
-    public StateListAnimator getSelectionModeStateListAnimator() {
-        return mSelectionModeStateListAnimator;
-    }
-
-    /**
-     * Set the state list animator to use when in selection mode. If not run
-     * on a Lollipop device, this method is a no-op.
-     * @param resId A state list animator resource id. Ignored prior to Lollipop.
-     */
-    public void setSelectionModeStateListAnimator(int resId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            StateListAnimator animator =
-                    AnimatorInflater.loadStateListAnimator(itemView.getContext(), resId);
-
-            setSelectionModeStateListAnimator(animator);
-        }
-    }
-
-    /**
-     * Set the state list animator to use when in selection mode.
-     * @param selectionModeStateListAnimator A state list animator
-     */
-    public void setSelectionModeStateListAnimator(StateListAnimator selectionModeStateListAnimator) {
-        mSelectionModeStateListAnimator = selectionModeStateListAnimator;
-    }
-
-    /**
-     * Get the state list animator to use when not in selection mode.
-     * This value defaults to the animator set on {@link #itemView} at
-     * construction time.
-     * @return A state list animator
-     */
-    public StateListAnimator getDefaultModeStateListAnimator() {
-        return mDefaultModeStateListAnimator;
-    }
-
-    /**
      * Set the state list animator to use when not in selection mode.
      *
      * @param defaultModeStateListAnimator A state list animator
@@ -265,20 +176,6 @@ public abstract class SelectableViewHolder<T> extends MultiSelectorBindingHolder
         mDefaultModeStateListAnimator = defaultModeStateListAnimator;
     }
 
-    /**
-     * Set the state list animator to use when in default mode. If not run
-     * on a Lollipop device, this method is a no-op.
-     * @param resId A state list animator resource id. Ignored prior to Lollipop.
-     */
-    public void setDefaultModeStateListAnimator(int resId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            StateListAnimator animator =
-                    AnimatorInflater.loadStateListAnimator(itemView.getContext(), resId);
-
-            setDefaultModeStateListAnimator(animator);
-        }
-
-    }
     /**
      * Calls through to {@link #itemView#setActivated}.
      *
@@ -329,12 +226,4 @@ public abstract class SelectableViewHolder<T> extends MultiSelectorBindingHolder
 
         return stateListDrawable;
     }
-
-    /*private static StateListAnimator getRaiseStateListAnimator(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return AnimatorInflater.loadStateListAnimator(context, R.anim.raise);
-        } else {
-            return null;
-        }
-    }*/
 }

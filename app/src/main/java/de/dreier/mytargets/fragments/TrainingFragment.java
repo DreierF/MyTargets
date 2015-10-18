@@ -49,6 +49,7 @@ import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.DataLoader;
+import de.dreier.mytargets.utils.HeaderBindingHolder;
 import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.ScoreboardUtils;
@@ -401,7 +402,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
     }
 
 
-    private class HeaderViewHolder extends SelectableViewHolder<Round> {
+    private class HeaderViewHolder extends HeaderBindingHolder<Round> {
         private final TextView mTitle;
         private final TextView mSubtitle;
 

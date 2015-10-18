@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -159,7 +160,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             target.size = new Diameter(prefs.getInt("size_target", 60),
                     prefs.getString("unit_target", Diameter.CENTIMETER));
             targetSpinner.setItem(target);
-            environment.queryWeather(getActivity(), REQUEST_LOCATION_PERMISSION);
+            environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
         } else {
             setTitle(R.string.edit_training);
             Training train = new TrainingDataSource(getContext()).get(mTraining);

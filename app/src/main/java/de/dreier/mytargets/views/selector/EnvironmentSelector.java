@@ -11,7 +11,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -61,22 +64,22 @@ public class EnvironmentSelector extends SelectorBase<Environment> implements
     }
 
 
-    public void queryWeather(Activity activity, int request_code) {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
+    public void queryWeather(Fragment fragment, int request_code) {
+        if (ContextCompat.checkSelfPermission(fragment.getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+            fragment.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     request_code);
         } else {
-            queryWeatherInfo(activity);
+            queryWeatherInfo(fragment.getContext());
         }
     }
 
     // Start getting weather for current location
-    protected void queryWeatherInfo(Activity activity) {
+    protected void queryWeatherInfo(Context context) {
         try {
             YahooWeather weather = new YahooWeather();
             weather.setExceptionListener(this);
-            weather.queryYahooWeatherByGPS(activity, this);
+            weather.queryYahooWeatherByGPS(context, this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -156,7 +159,7 @@ public class EnvironmentSelector extends SelectorBase<Environment> implements
 
     @Override
     public void onFailFindLocation(Exception e) {
-        setDefaultWeather();
+        post(EnvironmentSelector.this::setDefaultWeather);
     }
 
     private void setDefaultWeather() {

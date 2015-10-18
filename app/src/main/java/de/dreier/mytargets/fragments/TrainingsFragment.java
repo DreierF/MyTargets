@@ -31,6 +31,7 @@ import de.dreier.mytargets.models.Month;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.DataLoader;
+import de.dreier.mytargets.utils.HeaderBindingHolder;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
 /**
@@ -131,7 +132,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
         }
     }
 
-    private class HeaderViewHolder extends SelectableViewHolder<Month> {
+    private class HeaderViewHolder extends HeaderBindingHolder<Month> {
         private final TextView mTitle;
 
         public HeaderViewHolder(View itemView) {
