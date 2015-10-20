@@ -12,6 +12,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -20,17 +21,14 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +51,7 @@ public class TargetView extends TargetViewBase {
     private static final float ZOOM_FACTOR = 2;
     private static final int SPOT_ZOOM_IN = -3;
     private static final int MODE_CHANGE = -2;
+    private static final int NONE = -1;
     private float radius, midX, midY;
     private Paint drawColorP;
     private boolean showAll = false;
@@ -62,10 +61,11 @@ public class TargetView extends TargetViewBase {
     private float oldRadius;
     private RectF[] spotRects;
     private float orgRadius, orgMidX, orgMidY;
-    private LinearLayout keyboard;
     private boolean spotFocused = false;
     private RectF orgRect;
     private List<ArrowNumber> arrowNumbers = new ArrayList<>();
+    private TextPaint mTextPaint;
+    private List<Zone> selectableZones = new ArrayList<>();
 
     public TargetView(Context context) {
         super(context);
@@ -111,6 +111,7 @@ public class TargetView extends TargetViewBase {
         super.setRoundTemplate(r);
         initKeyboard();
         initSpotBounds();
+        selectableZones = getZoneList();
     }
 
     private void initSpotBounds() {
@@ -130,6 +131,13 @@ public class TargetView extends TargetViewBase {
     private void init() {
         // Set up a default TextPaint object
         density = getResources().getDisplayMetrics().density;
+        mTextPaint = new TextPaint();
+        mTextPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
+        mTextPaint.setTextAlign(Paint.Align.LEFT);
+        mTextPaint.setColor(Color.BLACK);
+        mTextPaint.setTextSize(22 * density);
+        mTextPaint.setTextAlign(Paint.Align.CENTER);
+
         drawColorP = new Paint();
         drawColorP.setAntiAlias(true);
 
@@ -156,12 +164,15 @@ public class TargetView extends TargetViewBase {
                     mOutFromY + (midY - mOutFromY) * mCurAnimationProgress,
                     oldRadius + (radius - oldRadius) * mCurAnimationProgress);
         } else {
-            if (!mKeyboardMode && curZone >= -1) {
+            if (!mZoneSelectionMode && curZone >= -1) {
                 drawZoomedInTarget(canvas);
             } else {
                 drawTarget(canvas, midX, midY, radius);
             }
         }
+
+        // Draw right indicator
+        drawRightSelectorBar(canvas);
 
         // Draw all points of this passe at the bottom
         mPasseDrawer.draw(canvas);
@@ -188,7 +199,7 @@ public class TargetView extends TargetViewBase {
         round.target.draw(canvas);
 
         // Draw exact arrow position
-        if (!mKeyboardMode) {
+        if (!mZoneSelectionMode) {
             drawArrows(canvas);
         }
     }
@@ -257,143 +268,46 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void calcSizes() {
-        float passeDrawerHeight = 72 * density;
-        float radH = (contentHeight - 20 * density) / 2.45f;
-        float radW = (contentWidth - 20 * density) * 0.5f;
+        int availableWidth = mZoneSelectionMode ? (int) (contentWidth - 60 * density) : contentWidth;
+        float radH = (contentHeight - 10 * density) / 2.45f;
+        float radW = (availableWidth - (mZoneSelectionMode ? 70 : 20) * density) * 0.5f;
         orgRadius = (int) (Math.min(radW, radH));
-        orgMidX = contentWidth / 2;
-        if (mKeyboardMode) {
-            orgMidY = -orgRadius - 10 * density;
-        } else {
-            orgMidY = (contentHeight - passeDrawerHeight) / 2;
-        }
-        orgRect = new RectF(
+        orgMidX = availableWidth / 2;
+        orgMidY = orgRadius + (int) (10 * density);
+        orgRect = new RectF(/**/
                 orgMidX - orgRadius,
                 orgMidY - orgRadius,
                 orgMidX + orgRadius,
                 orgMidY + orgRadius);
         RectF rect = new RectF();
         rect.left = 30 * density;
-        rect.right = contentWidth - 30 * density;
-        rect.bottom = mKeyboardMode ? passeDrawerHeight : contentHeight;
-        rect.top = rect.bottom - passeDrawerHeight;
+        rect.right = availableWidth - 30 * density;
+        rect.top = midY + orgRadius;
+        rect.bottom = contentHeight;
         mPasseDrawer.animateToRect(rect);
         animateToZoomSpot();
     }
 
     private void initKeyboard() {
-        keyboard = (LinearLayout) ((ViewGroup) getParent()).findViewById(R.id.keyboard);
-        keyboard.findViewById(R.id.hide_keyboard).setOnClickListener(v -> switchMode(false, true));
-        ((ViewGroup) getParent()).findViewById(R.id.show_keyboard)
-                .setOnClickListener(v -> switchMode(true, true));
-        keyboard.findViewById(R.id.backspace).setOnClickListener(v -> {
-            if (currentArrow > 0) {
-                int index = Math.min(currentArrow, mPasse.shot.length) - 1;
-                mPasse.shot[index].zone = Shot.NOTHING_SELECTED;
-                currentArrow = index;
-                lastSetArrow = index - 1;
-                invalidate();
-            }
-        });
-
-        populateKeyboard();
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         boolean mode = prefs.getBoolean("target_mode", false);
         switchMode(mode, false);
     }
 
-    private void switchMode(boolean mode, boolean animate) {
-        if (mode != mKeyboardMode) {
-            mKeyboardMode = mode;
+    public void switchMode(boolean mode, boolean animate) {
+        if (mode != mZoneSelectionMode) {
+            mZoneSelectionMode = mode;
             if (animate) {
                 animateMode();
-            } else {
-                keyboard.setVisibility(mode ? VISIBLE : GONE);
             }
-            if (mKeyboardMode) {
+            if (mZoneSelectionMode) {
                 animateFromZoomSpot();
             } else {
                 animateToZoomSpot();
             }
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-            prefs.edit().putBoolean("target_mode", mKeyboardMode).apply();
+            prefs.edit().putBoolean("target_mode", mZoneSelectionMode).apply();
         }
-    }
-
-    private class Zone {
-        final int zone;
-        final String text;
-
-        public Zone(int zone, String text) {
-            this.zone = zone;
-            this.text = text;
-        }
-    }
-
-    private void populateKeyboard() {
-        ArrayList<Zone> list = new ArrayList<>();
-        String last = "";
-        for (int i = 0; i < round.target.getZones(); i++) {
-            String zone = round.target.zoneToString(i, currentArrow);
-            if (!last.equals(zone)) {
-                list.add(new Zone(i, zone));
-            }
-            last = zone;
-        }
-        if (!last.equals("M")) {
-            list.add(new Zone(-1, "M"));
-        }
-
-        LinearLayout line1 = ((LinearLayout) keyboard.findViewById(R.id.line1));
-        LinearLayout line2 = ((LinearLayout) keyboard.findViewById(R.id.line2));
-        LinearLayout line3 = ((LinearLayout) keyboard.findViewById(R.id.line3));
-
-        line1.removeAllViews();
-        line2.removeAllViews();
-        line3.removeAllViews();
-
-        // Calculate arrangement
-        int lines = (list.size() / 2 < 5 ? 2 : 3);
-        int itemsPerLine = list.size() / lines;
-        keyboard.findViewById(R.id.line2_container).setVisibility(lines < 3 ? GONE : VISIBLE);
-
-        // Add buttons to layout
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        LinearLayout line = line1;
-        for (int i = 0; i < list.size(); i++) {
-            if (i == itemsPerLine && lines == 3) {
-                line = line2;
-            } else if (i % itemsPerLine == 0 && i > 0) {
-                line = line3;
-            }
-            Button button = (Button) inflater.inflate(R.layout.layout_keyboard_key, line, false);
-            final Zone zone = list.get(i);
-            button.setText(zone.text);
-            button.setOnClickListener(v -> {
-                if (currentArrow < round.arrowsPerPasse) {
-                    mPasse.shot[currentArrow].zone = zone.zone;
-                    mPasse.shot[currentArrow].x = round.target.zoneToX(zone.zone);
-                    mPasse.shot[currentArrow].y = 0;
-                    mPasseDrawer
-                            .setSelection(currentArrow, initAnimationPositions(currentArrow), 0);
-
-                    if (currentArrow == lastSetArrow + 1) {
-                        lastSetArrow++;
-                    }
-
-                    onArrowChanged(lastSetArrow + 1);
-
-                    if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
-                        mPasse.setId(setListener.onTargetSet(new Passe(mPasse), false));
-                    }
-                }
-            });
-            line.addView(button);
-        }
-
-        LinearLayout line_s = (LinearLayout) keyboard.findViewById(R.id.lines);
-        line_s.setWeightSum(lines);
     }
 
     /**
@@ -401,16 +315,22 @@ public class TargetView extends TargetViewBase {
      */
     @Override
     protected Shot getShotFromPos(float x, float y) {
-        // For keyboard mode no selection via target is allowed
-        if (mKeyboardMode) {
-            return null;
-        }
-
         // Create Shot object
         Shot s = new Shot(currentArrow);
-        s.x = (x - orgMidX) / (orgRadius - 30 * density);
-        s.y = (y - orgMidY) / (orgRadius - 30 * density);
-        s.zone = round.target.getZoneFromPoint(s.x, s.y);
+        if (mZoneSelectionMode) {
+            if (x > midX + radius + 30 * density) {
+                int i = (int) (y * selectableZones.size() / (float) contentHeight);
+                s.x = round.target.getXFromZone(s.zone);
+                s.y = 0;
+                s.zone = selectableZones.get(i).zone;
+            } else {
+                return null;
+            }
+        } else { // Handle via target
+            s.x = (x - orgMidX) / (orgRadius - 30 * density);
+            s.y = (y - orgMidY) / (orgRadius - 30 * density);
+            s.zone = round.target.getZoneFromPoint(s.x, s.y);
+        }
         return s;
     }
 
@@ -458,25 +378,14 @@ public class TargetView extends TargetViewBase {
         mCurSelecting = MODE_CHANGE;
         initAnimation();
         calcSizes();
-        keyboard.setVisibility(VISIBLE);
 
         final ValueAnimator moveAnimator = ValueAnimator.ofFloat(0, 1);
         moveAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         moveAnimator.addUpdateListener(valueAnimator -> {
             mCurAnimationProgress = (Float) valueAnimator.getAnimatedValue();
-            if (mKeyboardMode) {
-                keyboard.setTranslationY(
-                        (1 - mCurAnimationProgress) * keyboard.getMeasuredHeight());
-            } else {
-                keyboard.setTranslationY(mCurAnimationProgress * keyboard.getMeasuredHeight());
-            }
             if (mCurAnimationProgress == 1.0f) {
                 moveAnimator.cancel();
-                mCurSelecting = -1;
-                if (!mKeyboardMode) {
-                    keyboard.setVisibility(GONE);
-                }
-                keyboard.setTranslationY(0);
+                mCurSelecting = NONE;
             }
             invalidate();
         });
@@ -494,7 +403,7 @@ public class TargetView extends TargetViewBase {
     @Override
     protected void animateFromZoomSpot() {
         if (round.target.dependsOnArrowIndex()) {
-            populateKeyboard();
+            selectableZones = getZoneList();
         }
         if (round.target.getFaceCount() > 1) {
             if (!spotFocused) {
@@ -536,7 +445,7 @@ public class TargetView extends TargetViewBase {
             midY = orgMidY;
         }
         if (round.target.getFaceCount() > 1 && currentArrow < round.arrowsPerPasse && radius > 0 &&
-                !spotFocused && !mKeyboardMode && mCurSelecting != SPOT_ZOOM_IN) {
+                !spotFocused && !mZoneSelectionMode && mCurSelecting != SPOT_ZOOM_IN) {
             mCurSelecting = SPOT_ZOOM_IN;
             initAnimation();
 
@@ -560,7 +469,7 @@ public class TargetView extends TargetViewBase {
                 mCurAnimationProgress = (Float) valueAnimator.getAnimatedValue();
                 if (mCurAnimationProgress == 1.0f) {
                     moveAnimator.cancel();
-                    mCurSelecting = -1;
+                    mCurSelecting = NONE;
                     spotFocused = true;
                 }
                 invalidate();
@@ -570,7 +479,7 @@ public class TargetView extends TargetViewBase {
             }
             moveAnimator.setDuration(200);
             moveAnimator.start();
-        }
+        }/**/
     }
 
     @Override
@@ -617,6 +526,36 @@ public class TargetView extends TargetViewBase {
         }
     }
 
+    /**
+     * Draws a rect on the right that shows all possible points.
+     *
+     * @param canvas Canvas to draw on
+     */
+    private void drawRightSelectorBar(Canvas canvas) {
+        if (mZoneSelectionMode || mCurSelecting == MODE_CHANGE) {
+            int selectableZonesCount = selectableZones.size();
+            for (int i = 0; i < selectableZonesCount; i++) {
+                Zone zone = selectableZones.get(i);
+
+                float percent = 1;
+                if (mCurSelecting == MODE_CHANGE) {
+                    percent = mZoneSelectionMode ? mCurAnimationProgress : 1 - mCurAnimationProgress;
+                }
+                int X1 = (int) (contentWidth - 60 * percent * density);
+                int X2 = (int) (X1 + 40 * density);
+                int Y1 = contentHeight * i / selectableZonesCount;
+                int Y2 = contentHeight * (i + 1) / selectableZonesCount;
+
+                drawColorP.setColor(round.target.getFillColor(zone.zone));
+                canvas.drawRect(X1, Y1 + density, X2, Y2 - density, drawColorP);
+
+                // For yellow and white background use black font color
+                mTextPaint.setColor(round.target.getTextColor(zone.zone));
+                canvas.drawText(zone.text, X1 + (X2 - X1) / 2, Y1 + (Y2 - Y1) / 2 + 10 * density, mTextPaint);
+            }
+        }
+    }
+
     private void onLongPressArrow() {
         final int pressed = mPasseDrawer.getPressed();
         if (pressed == -1) {
@@ -648,6 +587,36 @@ public class TargetView extends TargetViewBase {
                         invalidate();
                     }
                 }).show();
+    }
+
+    private ArrayList<Zone> getZoneList() {
+        ArrayList<Zone> list = new ArrayList<>();
+        String last = "";
+        for (int i = 0; i < round.target.getZones(); i++) {
+            String zone = round.target.zoneToString(i, currentArrow);
+            if (!last.equals(zone)) {
+                list.add(new Zone(i, zone));
+            }
+            last = zone;
+        }
+        if (!last.equals("M")) {
+            list.add(new Zone(-1, "M"));
+        }
+        return list;
+    }
+
+    public boolean getInputMode() {
+        return mZoneSelectionMode;
+    }
+
+    private class Zone {
+        final int zone;
+        final String text;
+
+        public Zone(int zone, String text) {
+            this.zone = zone;
+            this.text = text;
+        }
     }
 
     class Midpoint {

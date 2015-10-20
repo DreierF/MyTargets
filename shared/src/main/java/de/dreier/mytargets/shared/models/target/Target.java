@@ -246,7 +246,7 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
         return zonePoints[scoringStyle][0];
     }
 
-    public float zoneToX(int zone) {
+    public float getXFromZone(int zone) {
         int zones = zonePoints[scoringStyle].length;
         if (zone < 0) {
             return (zones * 2 + 1) / (float) (zones * 2);

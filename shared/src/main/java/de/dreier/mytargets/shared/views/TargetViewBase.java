@@ -27,7 +27,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected int contentHeight;
     protected OnTargetSetListener setListener = null;
     protected float mCurAnimationProgress;
-    protected boolean mKeyboardMode = true;
+    protected boolean mZoneSelectionMode = true;
     protected float density;
     protected int mZoneCount;
     protected float mOutFromX;
@@ -116,7 +116,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
         // If a valid selection was made save it in the passe
         if (currentArrow < round.arrowsPerPasse &&
-                (mPasse.shot[currentArrow].zone != shot.zone || !mKeyboardMode)) {
+                (mPasse.shot[currentArrow].zone != shot.zone || !mZoneSelectionMode)) {
             mPasse.shot[currentArrow].zone = shot.zone;
             mPasse.shot[currentArrow].x = shot.x;
             mPasse.shot[currentArrow].y = shot.y;
@@ -154,7 +154,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         } else {
             nextSel = PasseDrawer.NO_SELECTION;
         }
-        if (mKeyboardMode) {
+        if (mZoneSelectionMode) {
             mPasseDrawer.setSelection(nextSel, pos, 0);
             invalidate();
         } else {

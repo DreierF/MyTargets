@@ -20,24 +20,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <ImageButton
-            android:id="@+id/show_keyboard"
-            android:layout_width="50dp"
-            android:layout_height="48dp"
-            android:layout_gravity="bottom|end"
-            android:layout_marginBottom="8dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:fontFamily="sans-serif-light"
-            android:src="@drawable/ic_keyboard_grey600_24dp"/>
-
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_gravity="bottom"
             android:background="?android:attr/listDivider"/>
-
-        <include layout="@layout/layout_keyboard"/>
     </FrameLayout>
 
     <LinearLayout

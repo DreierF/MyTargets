@@ -128,6 +128,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         menu.findItem(R.id.action_show_all).setIcon(
                 mShowAllMode ? R.drawable.ic_visibility_white_24dp :
                         R.drawable.ic_visibility_off_white_24dp);
+        menu.findItem(R.id.action_show_sidebar).setIcon(
+                target.getInputMode() ? R.drawable.ic_album_24dp :
+                        R.drawable.ic_grain_24dp);
         return true;
     }
 
@@ -187,6 +190,10 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                 target.showAll(mShowAllMode);
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 prefs.edit().putBoolean(SHOW_ALL_MODE, mShowAllMode).apply();
+                supportInvalidateOptionsMenu();
+                return true;
+            case R.id.action_show_sidebar:
+                target.switchMode(!target.getInputMode(), true);
                 supportInvalidateOptionsMenu();
                 return true;
             case android.R.id.home:
