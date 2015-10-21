@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import de.dreier.mytargets.R;
@@ -72,6 +73,7 @@ public class EditRoundFragment extends EditFragmentBase {
         // Comment
         comment = (EditText) rootView.findViewById(R.id.comment);
 
+        Button remove = (Button) rootView.findViewById(R.id.remove_button);
 
         if (mRound == -1) {
             setTitle(R.string.new_round);
@@ -86,6 +88,7 @@ public class EditRoundFragment extends EditFragmentBase {
                     prefs.getString("unit_target", Diameter.CENTIMETER));
             targetSpinner.setItem(target);
             comment.setText("");
+            remove.setVisibility(View.GONE);
         } else {
             setTitle(R.string.edit_round);
             RoundDataSource roundDataSource = new RoundDataSource(getContext());
@@ -97,6 +100,13 @@ public class EditRoundFragment extends EditFragmentBase {
             StandardRound standardRound = standardRoundDataSource.get(round.info.standardRound);
             if (standardRound.club != StandardRound.CUSTOM_PRACTICE) {
                 distance_layout.setVisibility(View.GONE);
+            } else if (standardRound.getRounds().size() > 1) {
+                remove.setOnClickListener(v -> {
+                    roundDataSource.delete(round);
+                    getActivity().finish();
+                });
+            } else {
+                remove.setVisibility(View.GONE);
             }
         }
         return rootView;

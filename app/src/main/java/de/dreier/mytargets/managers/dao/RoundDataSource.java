@@ -9,10 +9,14 @@ package de.dreier.mytargets.managers.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.view.View;
 
 import java.util.ArrayList;
 
+import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.RoundTemplate;
+import de.dreier.mytargets.shared.models.StandardRound;
 
 import static de.dreier.mytargets.managers.dao.RoundTemplateDataSource.SCORING_STYLE;
 import static de.dreier.mytargets.managers.dao.RoundTemplateDataSource.TARGET;
@@ -53,9 +57,9 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
         round.setId(cursor.getLong(startColumnIndex));
         round.training = cursor.getLong(startColumnIndex + 1);
         round.comment = cursor.getString(startColumnIndex + 2);
-            if (round.comment == null) {
-                round.comment = "";
-            }
+        if (round.comment == null) {
+            round.comment = "";
+        }
         round.info = RoundTemplateDataSource.cursorToRoundTemplate(cursor, getContext(), 3);
         return round;
     }
@@ -106,5 +110,39 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
         }
         res.close();
         return list;
+    }
+
+    @Override
+    public void delete(Round item) {
+        // Get list of RoundTemplates for the current standard round
+        long standardRoundId = item.info.standardRound;
+        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(context);
+        StandardRound standardRound = standardRoundDataSource.get(standardRoundId);
+        ArrayList<RoundTemplate> roundTemplates = standardRound.getRounds();
+
+        if (standardRound.club != StandardRound.CUSTOM_PRACTICE) {
+            throw new IllegalStateException("Only practice rounds may be deleted!");
+        }
+        if (standardRound.getRounds().size() < 1) {
+            throw new IllegalStateException("There must be at least one round!");
+        }
+
+        // Remove round
+        super.delete(item);
+
+        // Remove current round template
+        RoundTemplate removedTemplate = roundTemplates.get(item.info.index);
+        RoundTemplateDataSource roundTemplateDataSource = new RoundTemplateDataSource(getContext());
+        roundTemplateDataSource.delete(removedTemplate);
+        roundTemplates.remove(removedTemplate);
+
+        // Update templates indices
+        for (RoundTemplate roundTemplate : roundTemplates) {
+            if (roundTemplate.index > item.info.index) {
+                roundTemplate.index--;
+            }
+        }
+        standardRound.setRounds(roundTemplates);
+        standardRoundDataSource.update(standardRound);
     }
 }
