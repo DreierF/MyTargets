@@ -56,9 +56,9 @@ public class SpotBase extends Target {
         return face.getMaxPoints();
     }
 
-    public float zoneToX(int zone) {
+    public float getXFromZone(int zone) {
         face.scoringStyle = scoringStyle;
-        return face.zoneToX(zone);
+        return face.getXFromZone(zone);
     }
 
     public int getFillColor(int zone) {
