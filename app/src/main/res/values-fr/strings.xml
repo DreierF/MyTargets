@@ -212,10 +212,10 @@
   <string name="left_back">de l\'arrière gauche</string>
   <string name="right_back">de l\'arrière droit</string>
   <string name="date">Date</string>
-  <string name="edit_round">Edit round</string>
-  <string name="draw_weight">Draw weight</string>
-  <string name="sight">Sight</string>
-  <string name="limbs">Limbs</string>
-  <string name="my_bow">My bow</string>
-  <string name="my_arrow">My arrow</string>
+  <string name="edit_round">Modifier la manche</string>
+  <string name="draw_weight">Puissance</string>
+  <string name="sight">Viseur</string>
+  <string name="limbs">Branches</string>
+  <string name="my_bow">Mon arc</string>
+  <string name="my_arrow">Mes flèches</string>
 </resources>
