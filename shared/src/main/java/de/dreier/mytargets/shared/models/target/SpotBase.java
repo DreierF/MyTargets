@@ -51,31 +51,43 @@ public class SpotBase extends Target {
         return face.getPointsByZone(zone, scoringStyle, arrow);
     }
 
+    @Override
     public int getMaxPoints() {
         face.scoringStyle = scoringStyle;
         return face.getMaxPoints();
     }
 
+    @Override
     public float getXFromZone(int zone) {
         face.scoringStyle = scoringStyle;
         return face.getXFromZone(zone);
     }
 
+    @Override
     public int getFillColor(int zone) {
         face.scoringStyle = scoringStyle;
         return face.getFillColor(zone);
     }
 
+    @Override
     public int getStrokeColor(int zone) {
         face.scoringStyle = scoringStyle;
         return face.getStrokeColor(zone);
     }
 
+    @Override
     public int getContrastColor(int zone) {
         face.scoringStyle = scoringStyle;
         return face.getContrastColor(zone);
     }
 
+    @Override
+    public int getTextColor(int zone) {
+        face.scoringStyle = scoringStyle;
+        return face.getTextColor(zone);
+    }
+
+    @Override
     public int getZones() {
         return face.zones;
     }

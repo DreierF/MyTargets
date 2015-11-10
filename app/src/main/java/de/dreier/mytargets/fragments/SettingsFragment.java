@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.MainActivity;
 import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.IABHelperWrapper;
 import de.dreier.mytargets.utils.Utils;
@@ -191,7 +192,9 @@ public class SettingsFragment extends PreferenceFragment
             if (requestCode == 1 && resultCode == AppCompatActivity.RESULT_OK) {
                 final Uri uri = data.getData();
                 if (BackupUtils.Import(getActivity(), uri)) {
-                    getActivity().finish();
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }
             }
             super.onActivityResult(requestCode, resultCode, data);

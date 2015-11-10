@@ -52,20 +52,21 @@ public class TargetView extends TargetViewBase {
     private static final int SPOT_ZOOM_IN = -3;
     private static final int MODE_CHANGE = -2;
     private static final int NONE = -1;
+    private final Handler h = new Handler();
     private float radius, midX, midY;
-    private Paint drawColorP;
+    private Paint fillPaint;
     private boolean showAll = false;
     private ArrayList<Passe> mOldShots;
     private Timer longPressTimer;
-    private final Handler h = new Handler();
     private float oldRadius;
     private RectF[] spotRects;
     private float orgRadius, orgMidX, orgMidY;
     private boolean spotFocused = false;
     private RectF orgRect;
     private List<ArrowNumber> arrowNumbers = new ArrayList<>();
-    private TextPaint mTextPaint;
+    private TextPaint textPaint;
     private List<Zone> selectableZones = new ArrayList<>();
+    private Paint borderPaint;
 
     public TargetView(Context context) {
         super(context);
@@ -85,9 +86,9 @@ public class TargetView extends TargetViewBase {
     public void setPasse(Passe passe) {
         currentArrow = passe.shot.length;
         lastSetArrow = passe.shot.length;
-        mPasse = passe;
-        mPasseDrawer.setSelection(currentArrow, null, PasseDrawer.MAX_CIRCLE_SIZE);
-        mPasseDrawer.setPasse(passe);
+        this.passe = passe;
+        passeDrawer.setSelection(currentArrow, null, PasseDrawer.MAX_CIRCLE_SIZE);
+        passeDrawer.setPasse(passe);
         animateFromZoomSpot();
         invalidate();
     }
@@ -131,21 +132,26 @@ public class TargetView extends TargetViewBase {
     private void init() {
         // Set up a default TextPaint object
         density = getResources().getDisplayMetrics().density;
-        mTextPaint = new TextPaint();
-        mTextPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setTextAlign(Paint.Align.LEFT);
-        mTextPaint.setColor(Color.BLACK);
-        mTextPaint.setTextSize(22 * density);
-        mTextPaint.setTextAlign(Paint.Align.CENTER);
+        textPaint = new TextPaint();
+        textPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
+        textPaint.setTextAlign(Paint.Align.LEFT);
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(22 * density);
+        textPaint.setTextAlign(Paint.Align.CENTER);
 
-        drawColorP = new Paint();
-        drawColorP.setAntiAlias(true);
+        fillPaint = new Paint();
+        fillPaint.setAntiAlias(true);
+
+        borderPaint = new Paint();
+        borderPaint.setColor(0xFF1C1C1B);
+        borderPaint.setAntiAlias(true);
+        borderPaint.setStyle(Paint.Style.STROKE);
 
         if (isInEditMode()) {
             round = new RoundTemplate();
             round.arrowsPerPasse = 3;
-            mPasse = new Passe(3);
-            mPasseDrawer.setPasse(mPasse);
+            passe = new Passe(3);
+            passeDrawer.setPasse(passe);
         }
     }
 
@@ -153,7 +159,7 @@ public class TargetView extends TargetViewBase {
     protected void onDraw(Canvas canvas) {
         int curZone;
         if (currentArrow > -1 && currentArrow < round.arrowsPerPasse) {
-            curZone = mPasse.shot[currentArrow].zone;
+            curZone = passe.shot[currentArrow].zone;
         } else {
             curZone = -2;
         }
@@ -175,12 +181,12 @@ public class TargetView extends TargetViewBase {
         drawRightSelectorBar(canvas);
 
         // Draw all points of this passe at the bottom
-        mPasseDrawer.draw(canvas);
+        passeDrawer.draw(canvas);
     }
 
     private void drawZoomedInTarget(Canvas canvas) {
-        float px = mPasse.shot[currentArrow].x;
-        float py = mPasse.shot[currentArrow].y;
+        float px = passe.shot[currentArrow].x;
+        float py = passe.shot[currentArrow].y;
         int radius2 = (int) (radius * ZOOM_FACTOR);
         int x = (int) ((midX - orgMidX) * ZOOM_FACTOR + orgMidX - px * (orgRadius + 30 * density));
         int y = (int) ((midY - orgMidY) * ZOOM_FACTOR + orgMidY - py * (orgRadius + 30 * density) -
@@ -190,8 +196,8 @@ public class TargetView extends TargetViewBase {
 
     private void drawTarget(Canvas canvas, float x, float y, float radius) {
         // Erase background
-        drawColorP.setColor(0xfffafafa);
-        canvas.drawRect(0, 0, contentWidth, contentHeight, drawColorP);
+        fillPaint.setColor(0xfffafafa);
+        canvas.drawRect(0, 0, contentWidth, contentHeight, fillPaint);
 
         // Draw actual target face
         round.target.setBounds((int) (x - radius), (int) (y - radius), (int) (x + radius),
@@ -210,8 +216,8 @@ public class TargetView extends TargetViewBase {
         for (int i = 0; i < spots; i++) {
             m[i] = new Midpoint();
         }
-        for (int i = 0; i < mPasse.shot.length && i <= lastSetArrow + 1; i++) {
-            Shot shot = mPasse.shot[i];
+        for (int i = 0; i < passe.shot.length && i <= lastSetArrow + 1; i++) {
+            Shot shot = passe.shot[i];
             if (shot.zone == Shot.NOTHING_SELECTED) {
                 continue;
             }
@@ -227,7 +233,7 @@ public class TargetView extends TargetViewBase {
 
         if (showAll) {
             for (Passe p : mOldShots) {
-                if (p.getId() != mPasse.getId()) {
+                if (p.getId() != passe.getId()) {
                     round.target.drawArrows(canvas, p);
                     for (int i = 0; i < p.shot.length; i++) {
                         m[i % spots].sumX += p.shot[i].x;
@@ -249,8 +255,15 @@ public class TargetView extends TargetViewBase {
     @Override
     protected Coordinate initAnimationPositions(int i) {
         Coordinate coordinate = new Coordinate();
-        coordinate.x = orgMidX + orgRadius * mPasse.shot[i].x;
-        coordinate.y = orgMidY + orgRadius * mPasse.shot[i].y;
+        if (mZoneSelectionMode) {
+            coordinate.x = contentWidth - 100 * density;
+            int index = selectableZones.indexOf(new Zone(passe.shot[i].zone, ""));
+            int indicatorHeight = contentHeight / selectableZones.size();
+            coordinate.y = indicatorHeight * index + indicatorHeight / 2.0f;
+        } else {
+            coordinate.x = orgMidX + orgRadius * passe.shot[i].x;
+            coordinate.y = orgMidY + orgRadius * passe.shot[i].y;
+        }
         return coordinate;
     }
 
@@ -274,7 +287,7 @@ public class TargetView extends TargetViewBase {
         orgRadius = (int) (Math.min(radW, radH));
         orgMidX = availableWidth / 2;
         orgMidY = orgRadius + (int) (10 * density);
-        orgRect = new RectF(/**/
+        orgRect = new RectF(
                 orgMidX - orgRadius,
                 orgMidY - orgRadius,
                 orgMidX + orgRadius,
@@ -284,7 +297,7 @@ public class TargetView extends TargetViewBase {
         rect.right = availableWidth - 30 * density;
         rect.top = midY + orgRadius;
         rect.bottom = contentHeight;
-        mPasseDrawer.animateToRect(rect);
+        passeDrawer.animateToRect(rect);
         animateToZoomSpot();
     }
 
@@ -337,18 +350,18 @@ public class TargetView extends TargetViewBase {
     @Override
     protected boolean selectPreviousShots(MotionEvent motionEvent, float x, float y) {
         // Handle selection of already saved shoots
-        int arrow = mPasseDrawer.getPressedPosition(x, y);
+        int arrow = passeDrawer.getPressedPosition(x, y);
         if (arrow != -1 && currentArrow != arrow) {
             if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 if (longPressTimer != null) {
-                    mPasseDrawer.setPressed(-1);
+                    passeDrawer.setPressed(-1);
                     longPressTimer.cancel();
                     longPressTimer = null;
                     super.onArrowChanged(arrow);
                 }
-            } else if (mPasseDrawer.getPressed() != arrow) {
+            } else if (passeDrawer.getPressed() != arrow) {
                 // If new item gets selected cancel old timer and start new one
-                mPasseDrawer.setPressed(arrow);
+                passeDrawer.setPressed(arrow);
                 if (longPressTimer != null) {
                     longPressTimer.cancel();
                 }
@@ -369,7 +382,7 @@ public class TargetView extends TargetViewBase {
                     longPressTimer = null;
                 }
             }
-            mPasseDrawer.setPressed(-1);
+            passeDrawer.setPressed(-1);
         }
         return false;
     }
@@ -485,18 +498,18 @@ public class TargetView extends TargetViewBase {
     @Override
     protected void onArrowChanged(int i) {
         if (arrowNumbers.isEmpty() ||
-                currentArrow < round.arrowsPerPasse && mPasse.shot[currentArrow].arrow != -1) {
+                currentArrow < round.arrowsPerPasse && passe.shot[currentArrow].arrow != -1) {
             super.onArrowChanged(i);
         } else {
             List<ArrowNumber> numbersLeft = new ArrayList<>(arrowNumbers);
-            for (Shot s : mPasse.shot) {
+            for (Shot s : passe.shot) {
                 numbersLeft.remove((Integer) s.arrow);
             }
-            if (numbersLeft.size() == 0) {
+            if (numbersLeft.size() == 0 || currentArrow >= round.arrowsPerPasse) {
                 super.onArrowChanged(i);
                 return;
             } else if (numbersLeft.size() == 1) {
-                mPasse.shot[currentArrow].arrow = numbersLeft.get(0).number;
+                passe.shot[currentArrow].arrow = numbersLeft.get(0).number;
                 super.onArrowChanged(i);
                 return;
             }
@@ -516,8 +529,8 @@ public class TargetView extends TargetViewBase {
             gridView.setNumColumns(cols);
             gridView.setOnItemClickListener((parent, view, position, id) ->
             {
-                if (currentArrow < mPasse.shot.length) {
-                    mPasse.shot[currentArrow].arrow = numbersLeft.get(position).number;
+                if (currentArrow < passe.shot.length) {
+                    passe.shot[currentArrow].arrow = numbersLeft.get(position).number;
                 }
                 dialog.dismiss();
                 super.onArrowChanged(i);
@@ -546,18 +559,21 @@ public class TargetView extends TargetViewBase {
                 int Y1 = contentHeight * i / selectableZonesCount;
                 int Y2 = contentHeight * (i + 1) / selectableZonesCount;
 
-                drawColorP.setColor(round.target.getFillColor(zone.zone));
-                canvas.drawRect(X1, Y1 + density, X2, Y2 - density, drawColorP);
+                fillPaint.setColor(round.target.getFillColor(zone.zone));
+                canvas.drawRect(X1, Y1 + density, X2, Y2 - density, fillPaint);
+
+                borderPaint.setColor(round.target.getStrokeColor(zone.zone));
+                canvas.drawRect(X1, Y1 + density, X2, Y2 - density, borderPaint);
 
                 // For yellow and white background use black font color
-                mTextPaint.setColor(round.target.getTextColor(zone.zone));
-                canvas.drawText(zone.text, X1 + (X2 - X1) / 2, Y1 + (Y2 - Y1) / 2 + 10 * density, mTextPaint);
+                textPaint.setColor(round.target.getTextColor(zone.zone));
+                canvas.drawText(zone.text, X1 + (X2 - X1) / 2, Y1 + (Y2 - Y1) / 2 + 10 * density, textPaint);
             }
         }
     }
 
     private void onLongPressArrow() {
-        final int pressed = mPasseDrawer.getPressed();
+        final int pressed = passeDrawer.getPressed();
         if (pressed == -1) {
             return;
         }
@@ -568,22 +584,22 @@ public class TargetView extends TargetViewBase {
 
         new TextInputDialog.Builder(getContext())
                 .setTitle(R.string.comment)
-                .setDefaultText(mPasse.shot[pressed].comment)
+                .setDefaultText(passe.shot[pressed].comment)
                 .setOnClickListener(new TextInputDialog.OnClickListener() {
 
                     @Override
                     public void onCancelClickListener() {
-                        mPasseDrawer.setPressed(-1);
+                        passeDrawer.setPressed(-1);
                         invalidate();
                     }
 
                     @Override
                     public void onOkClickListener(String input) {
-                        mPasse.shot[pressed].comment = input;
+                        passe.shot[pressed].comment = input;
                         if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
-                            setListener.onTargetSet(new Passe(mPasse), false);
+                            setListener.onTargetSet(new Passe(passe), false);
                         }
-                        mPasseDrawer.setPressed(-1);
+                        passeDrawer.setPressed(-1);
                         invalidate();
                     }
                 }).show();
@@ -616,6 +632,11 @@ public class TargetView extends TargetViewBase {
         public Zone(int zone, String text) {
             this.zone = zone;
             this.text = text;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof Zone && zone == ((Zone) o).zone;
         }
     }
 

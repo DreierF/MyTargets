@@ -46,10 +46,9 @@ import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.Pair;
 
 public class DatabaseManager extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 10;
-
-    private static final String ID = "_id";
     public static final String DATABASE_NAME = "database";
+    private static final int DATABASE_VERSION = 10;
+    private static final String ID = "_id";
     private static DatabaseManager sInstance;
     private final Context mContext;
 
@@ -63,6 +62,48 @@ public class DatabaseManager extends SQLiteOpenHelper {
             sInstance = new DatabaseManager(context.getApplicationContext());
         }
         return sInstance;
+    }
+
+    public static boolean Import(Context context, InputStream in) {
+        try {
+            // Unzip all images and database
+            File file = BackupUtils.unzip(context, in);
+
+            // Replace database file
+            File db_file = context.getDatabasePath(DatabaseManager.DATABASE_NAME);
+            DatabaseManager tmp = sInstance;
+            sInstance = null;
+            if (tmp != null) {
+                tmp.close();
+            }
+            BackupUtils.copy(file, db_file);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static void cleanup(SQLiteDatabase db) {
+        // Clean up rounds
+        db.execSQL("DELETE FROM ROUND WHERE _id IN (SELECT r._id " +
+                "FROM ROUND r LEFT JOIN TRAINING t ON t._id=r.training " +
+                "WHERE t._id IS NULL)");
+
+        // Clean up passes
+        db.execSQL("DELETE FROM PASSE WHERE _id IN (SELECT p._id " +
+                "FROM PASSE p LEFT JOIN ROUND r ON r._id=p.round " +
+                "WHERE r._id IS NULL)");
+
+        // Clean up shots
+        db.execSQL("DELETE FROM SHOOT WHERE _id IN (SELECT s._id " +
+                "FROM SHOOT s LEFT JOIN PASSE p ON p._id=s.passe " +
+                "WHERE p._id IS NULL)");
+
+        // Clean up arrow numbers
+        db.execSQL("DELETE FROM NUMBER WHERE _id IN (SELECT s._id " +
+                "FROM NUMBER s LEFT JOIN ARROW a ON a._id=s.arrow " +
+                "WHERE a._id IS NULL)");
     }
 
     @Override
@@ -88,6 +129,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
             standardRoundDataSource.update(round);
         }
     }
+
+////// SCOREBOARD //////
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -352,7 +395,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return sr.getId();
     }
 
-////// SCOREBOARD //////
+
+////// GET AGGREGATED INFORMATION //////
 
     private Map<Pair<Integer, String>, Integer> getTrainingScoreDistribution(long training) {
         SQLiteDatabase db = getWritableDatabase();
@@ -428,7 +472,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
 
-////// GET AGGREGATED INFORMATION //////
+////// EXPORT ALL //////
 
     public ArrayList<Integer> getAllTrainings() {
         SQLiteDatabase db = getWritableDatabase();
@@ -462,6 +506,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return history;
     }
 
+////// BACKUP DATABASE //////
+
     public ArrayList<Integer> getAllRounds(long training) {
         SQLiteDatabase db = getWritableDatabase();
         Cursor res = db
@@ -493,9 +539,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         res.close();
         return history;
     }
-
-
-////// EXPORT ALL //////
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void exportAll(File file) throws IOException {
@@ -603,26 +646,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         cur.close();
     }
 
-////// BACKUP DATABASE //////
-
-    public static boolean Import(Context context, InputStream in) {
-        try {
-            // Unzip all images and database
-            File file = BackupUtils.unzip(context, in);
-
-            // Replace database file
-            File db_file = context.getDatabasePath(DatabaseManager.DATABASE_NAME);
-            DatabaseManager tmp = sInstance;
-            sInstance = null;
-            tmp.close();
-            BackupUtils.copy(file, db_file);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public String[] getImages() {
         ArrayList<String> list = new ArrayList<>();
         SQLiteDatabase db = getWritableDatabase();
@@ -639,28 +662,5 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
         cur.close();
         return list.toArray(new String[list.size()]);
-    }
-
-
-    public static void cleanup(SQLiteDatabase db) {
-        // Clean up rounds
-        db.execSQL("DELETE FROM ROUND WHERE _id IN (SELECT r._id " +
-                "FROM ROUND r LEFT JOIN TRAINING t ON t._id=r.training " +
-                "WHERE t._id IS NULL)");
-
-        // Clean up passes
-        db.execSQL("DELETE FROM PASSE WHERE _id IN (SELECT p._id " +
-                "FROM PASSE p LEFT JOIN ROUND r ON r._id=p.round " +
-                "WHERE r._id IS NULL)");
-
-        // Clean up shots
-        db.execSQL("DELETE FROM SHOOT WHERE _id IN (SELECT s._id " +
-                "FROM SHOOT s LEFT JOIN PASSE p ON p._id=s.passe " +
-                "WHERE p._id IS NULL)");
-
-        // Clean up arrow numbers
-        db.execSQL("DELETE FROM NUMBER WHERE _id IN (SELECT s._id " +
-                "FROM NUMBER s LEFT JOIN ARROW a ON a._id=s.arrow " +
-                "WHERE a._id IS NULL)");
     }
 }

@@ -10,7 +10,7 @@ public class Distance extends Dimension {
 
     public Distance(int distance, String unit) {
         super(distance, unit);
-        this.setId((distance << 1) | (unit.equals(METER) ? 1 : 0));
+        this.setId((distance << 1) | (METER.equals(unit) ? 1 : 0));
     }
 
     public static Distance fromId(long id) {

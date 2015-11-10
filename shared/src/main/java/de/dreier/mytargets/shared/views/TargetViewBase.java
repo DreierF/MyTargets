@@ -17,10 +17,10 @@ import de.dreier.mytargets.shared.utils.PasseDrawer;
  * Created by Florian on 18.03.2015.
  */
 public abstract class TargetViewBase extends View implements View.OnTouchListener {
-    protected PasseDrawer mPasseDrawer;
+    protected PasseDrawer passeDrawer;
     protected int currentArrow = 0;
     protected int lastSetArrow = -1;
-    protected Passe mPasse;
+    protected Passe passe;
     protected RoundTemplate round;
     protected int mCurSelecting = -1;
     protected int contentWidth;
@@ -52,8 +52,8 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         currentArrow = 0;
         lastSetArrow = -1;
         mCurSelecting = -1;
-        mPasse = new Passe(round.arrowsPerPasse);
-        mPasseDrawer.setPasse(mPasse);
+        passe = new Passe(round.arrowsPerPasse);
+        passeDrawer.setPasse(passe);
         animateToZoomSpot();
         invalidate();
     }
@@ -61,26 +61,26 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     public void setRoundTemplate(RoundTemplate r) {
         round = r;
         mZoneCount = r.target.getZones();
-        mPasseDrawer = new PasseDrawer(this, density, round.target);
+        passeDrawer = new PasseDrawer(this, density, round.target);
         reset();
     }
 
     protected abstract Coordinate initAnimationPositions(int i);
 
     public void saveState(Bundle b) {
-        b.putSerializable("passe", mPasse);
+        b.putSerializable("passe", passe);
         b.putSerializable("round", round);
         b.putInt("currentArrow", currentArrow);
         b.putInt("lastSetArrow", lastSetArrow);
-        mPasseDrawer.saveState(b);
+        passeDrawer.saveState(b);
     }
 
     public void restoreState(Bundle b) {
-        mPasse = (Passe) b.getSerializable("passe");
+        passe = (Passe) b.getSerializable("passe");
         currentArrow = b.getInt("currentArrow");
         lastSetArrow = b.getInt("lastSetArrow");
         round = (RoundTemplate) b.getSerializable("round");
-        mPasseDrawer.restoreState(b);
+        passeDrawer.restoreState(b);
     }
 
     @Override
@@ -99,13 +99,14 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     public boolean onTouch(View view, MotionEvent motionEvent) {
         // Cancel animation
         if (mCurSelecting != -1) {
-            mPasseDrawer.cancel();
+            passeDrawer.cancel();
         }
 
         float x = motionEvent.getX();
         float y = motionEvent.getY();
 
-        if (selectPreviousShots(motionEvent, x, y)) {
+        boolean currentlySelecting = currentArrow < round.arrowsPerPasse && passe.shot[currentArrow].zone != Shot.NOTHING_SELECTED;
+        if (selectPreviousShots(motionEvent, x, y) && !currentlySelecting) {
             return true;
         }
 
@@ -116,11 +117,12 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
         // If a valid selection was made save it in the passe
         if (currentArrow < round.arrowsPerPasse &&
-                (mPasse.shot[currentArrow].zone != shot.zone || !mZoneSelectionMode)) {
-            mPasse.shot[currentArrow].zone = shot.zone;
-            mPasse.shot[currentArrow].x = shot.x;
-            mPasse.shot[currentArrow].y = shot.y;
-            mPasseDrawer.setSelection(currentArrow, initAnimationPositions(currentArrow), 0);
+                (passe.shot[currentArrow].zone != shot.zone || !mZoneSelectionMode)) {
+            passe.shot[currentArrow].zone = shot.zone;
+            passe.shot[currentArrow].x = shot.x;
+            passe.shot[currentArrow].y = shot.y;
+            passeDrawer.setSelection(currentArrow, initAnimationPositions(currentArrow),
+                    mZoneSelectionMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
             invalidate();
         }
 
@@ -142,24 +144,20 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         animateFromZoomSpot();
 
         if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
-            mPasse.setId(setListener.onTargetSet(new Passe(mPasse), false));
+            passe.setId(setListener.onTargetSet(new Passe(passe), false));
         }
     }
 
     private void animateCircle(int i) {
         Coordinate pos = null;
         int nextSel = i;
-        if (i > -1 && i < round.arrowsPerPasse && mPasse.shot[i].zone > Shot.NOTHING_SELECTED) {
+        if (i > -1 && i < round.arrowsPerPasse && passe.shot[i].zone > Shot.NOTHING_SELECTED) {
             pos = initAnimationPositions(i);
         } else {
             nextSel = PasseDrawer.NO_SELECTION;
         }
-        if (mZoneSelectionMode) {
-            mPasseDrawer.setSelection(nextSel, pos, 0);
-            invalidate();
-        } else {
-            mPasseDrawer.animateToSelection(nextSel, pos, 0);
-        }
+        int initialSize = mZoneSelectionMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0;
+        passeDrawer.animateToSelection(nextSel, pos, initialSize);
         currentArrow = i;
     }
 

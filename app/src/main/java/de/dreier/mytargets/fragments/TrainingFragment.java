@@ -44,9 +44,11 @@ import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
+import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.HeaderBindingHolder;
@@ -64,13 +66,13 @@ import de.dreier.mytargets.views.TargetPasseView;
 public class TrainingFragment extends ExpandableFragment<Round, Passe>
         implements View.OnClickListener, MenuItem.OnMenuItemClickListener {
 
+    private final boolean mTargetViewMode = false;
+    private final boolean[] equals = new boolean[2];
     private long mTraining;
     private ArrayList<Round> mRounds;
     private FloatingActionButton mFab;
-    private final boolean mTargetViewMode = false;
     private View mNewLayout;
     private TextView mNewText;
-    private final boolean[] equals = new boolean[2];
     private Training training;
     private RoundDataSource roundDataSource;
     private PasseDataSource passeDataSource;
@@ -123,8 +125,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
     @Override
     public Loader<List<Passe>> onCreateLoader(int id, Bundle args) {
         return new DataLoader<>(getContext(), new PasseDataSource(getContext()),
-                () -> passeDataSource.getAllByTraining(
-                        mTraining));
+                () -> passeDataSource.getAllByTraining(mTraining));
     }
 
     @Override
@@ -318,10 +319,14 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
             }
 
             // Open dialog to create new round
-            if (roundIndex + 1 == rounds.size()) {
+            StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(getContext());
+            StandardRound standardRound = standardRoundDataSource.get(training.standardRoundId);
+            if (roundIndex + 1 == rounds.size() &&
+                    standardRound.club == StandardRound.CUSTOM_PRACTICE) {
                 Intent i = new Intent(getContext(), SimpleFragmentActivity.EditRoundActivity.class);
                 i.putExtra(EditRoundFragment.TRAINING_ID, mTraining);
                 startActivity(i);
+                return;
             }
         }
     }

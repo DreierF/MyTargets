@@ -46,7 +46,7 @@ dependencies {
     compile 'com.android.support:design:23.1.0'
     compile 'com.android.support:support-annotations:23.1.0'
     compile 'com.android.support:recyclerview-v7:23.1.0'
-    compile 'com.google.android.gms:play-services:8.1.0'
+    compile 'com.google.android.gms:play-services:8.3.0'
     compile 'com.github.machinarius:preferencefragment:0.1.1'
     compile 'com.github.ksoichiro:android-observablescrollview:1.5.2'
     compile 'com.nineoldandroids:library:2.4.0'

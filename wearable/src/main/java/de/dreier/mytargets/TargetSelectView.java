@@ -58,7 +58,7 @@ public class TargetSelectView extends TargetViewBase {
     protected void onDraw(Canvas canvas) {
         int curZone;
         if (currentArrow < round.arrowsPerPasse) {
-            curZone = mPasse.shot[currentArrow].zone;
+            curZone = passe.shot[currentArrow].zone;
         } else {
             curZone = -2;
         }
@@ -75,7 +75,7 @@ public class TargetSelectView extends TargetViewBase {
         }
 
         // Draw all points of this passe in the center
-        mPasseDrawer.draw(canvas);
+        passeDrawer.draw(canvas);
     }
 
     private Coordinate getCircularCoords(int zone) {
@@ -92,7 +92,7 @@ public class TargetSelectView extends TargetViewBase {
 
     @Override
     protected Coordinate initAnimationPositions(int i) {
-        return getCircularCoords(mPasse.shot[currentArrow].zone);
+        return getCircularCoords(passe.shot[currentArrow].zone);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class TargetSelectView extends TargetViewBase {
         rect.right = radius + 35 * density;
         rect.top = radius / 2;
         rect.bottom = radius;
-        mPasseDrawer.animateToRect(rect);
+        passeDrawer.animateToRect(rect);
     }
 
     @Override

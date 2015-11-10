@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conqat-architecture xmlns="http://conqat.cs.tum.edu/ns/architecture" policy="deny" file-based="true" scope-include="" scope-exclude="">
+  <component name="LicensesDialog" dim="120,40" pos="531,331">
+    <code-mapping type="include" regex="libraries/LicensesDialog.*" />
+  </component>
+  <component name="RecyclerViewChoiceMode" dim="120,40" pos="671,331">
+    <code-mapping type="include" regex="libraries/RecyclerViewChoiceMode.*" />
+  </component>
+  <component name="YWeatherGetter4a" dim="120,40" pos="671,381">
+    <code-mapping type="include" regex="libraries/YWeatherGetter4a.*" />
+  </component>
+  <component name="aFileChooser" dim="120,40" pos="531,381">
+    <code-mapping type="include" regex="libraries/aFileChooser.*" />
+  </component>
+  <component name="app" dim="120,40" pos="401,71">
+    <code-mapping type="include" regex="app.*" />
+  </component>
+  <component name="shared" dim="120,40" pos="321,281">
+    <code-mapping type="include" regex="shared.*" />
+  </component>
+  <component name="wearable" dim="120,40" pos="181,71">
+    <code-mapping type="include" regex="wearable.*" />
+  </component>
+  <allow source="app" target="aFileChooser" />
+  <allow source="app" target="LicensesDialog" />
+  <allow source="app" target="RecyclerViewChoiceMode" />
+  <allow source="app" target="shared" />
+  <allow source="app" target="YWeatherGetter4a" />
+  <allow source="wearable" target="shared" />
+</conqat-architecture>

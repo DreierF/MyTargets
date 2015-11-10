@@ -26,7 +26,7 @@ public class Bow extends ImageHolder {
     public Bitmap getImage(Context context) {
         Bitmap img = super.getImage(context);
         if (img == null) {
-            context.getResources().getDrawable(R.drawable.recurve_bow, null);
+            context.getResources().getDrawable(R.drawable.recurve_bow);
         }
         return img;
     }
