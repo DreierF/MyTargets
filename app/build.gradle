@@ -18,24 +18,34 @@ android {
         versionName '2.2.0beta4'
     }
 
-    signingConfigs {
-        release {
-            storeFile file(KEYSTORE)
-            storePassword KEYSTORE_PASSWORD
-            keyAlias 'mytargets'
-            keyPassword KEYSTORE_PASSWORD
+    /*
+    * Add a gradle.properties file to the root of the project in order to sign the app.
+    * You should follow the following template:
+    * KEYSTORE=<path to keystore>
+    * KEYSTORE_PASSWORD=android
+    * KEY_ALIAS=androiddebugkey
+    * KEY_PASSWORD=android
+    * */
+    if(new File("gradle.properties").exists()) {
+        signingConfigs {
+            release {
+                storeFile file(KEYSTORE)
+                storePassword KEYSTORE_PASSWORD
+                keyAlias KEY_ALIAS
+                keyPassword KEY_PASSWORD
+            }
         }
-    }
 
-    buildTypes {
-        debug {
-            signingConfig signingConfigs.release
-            minifyEnabled false
-        }
-        release {
-            signingConfig signingConfigs.release
-            //minifyEnabled true
-            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        buildTypes {
+            debug {
+                signingConfig signingConfigs.release
+                minifyEnabled false
+            }
+            release {
+                signingConfig signingConfigs.release
+                //minifyEnabled true
+                //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
         }
     }
 }
