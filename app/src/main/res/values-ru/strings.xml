@@ -45,7 +45,7 @@
   <string name="d_times_s">%1$d раз %2$s\n</string>
   <string name="text">Текст</string>
   <string name="dispersion_pattern">Pазброс</string>
-  <string name="sharing_failed">Sharing failed!</string>
+  <string name="sharing_failed">Сбой передачи!</string>
   <string name="send_exported">Данные отправлены</string>
   <string name="exporting_failed">Передача не удалась!</string>
   <string name="add_bow">Добавить лук</string>
@@ -154,7 +154,7 @@
   <string name="wind_speed">Скорость ветра</string>
   <string name="wind_direction">Направление ветра</string>
   <string name="location">Местоположение</string>
-  <string name="sight_setting_removed">Sight setting deleted!</string>
+  <string name="sight_setting_removed">Настройки прицела удалены!</string>
   <string name="metric">Метрическая система</string>
   <string name="imperial">Британская система мер</string>
   <string name="undo">Отмена</string>
@@ -162,7 +162,7 @@
   <string name="expand_collapse">Развернуть/свернуть</string>
   <string name="new_round_template">Новый шаблон</string>
   <string name="arrow_numbers">Номера стрел</string>
-  <string name="round_removed">Round deleted!</string>
+  <string name="round_removed">Раунд удален!</string>
   <string name="custom_round">Пользовательский раунд</string>
   <string name="filter">Фильтр</string>
   <string name="club">Клуб</string>
@@ -182,7 +182,7 @@
   <string name="edit_arrow">Редактировать стрелу</string>
   <plurals name="arrow_deleted">
     <item quantity="one">Одна стрела удалена</item>
-    <item quantity="few">%d arrows deleted</item>
+    <item quantity="few">%d стрел удалены</item>
     <item quantity="other">%d стрел удалены</item>
   </plurals>
   <plurals name="bow_deleted">
@@ -192,17 +192,17 @@
   </plurals>
   <plurals name="training_deleted">
     <item quantity="one">Одна тренировка удалена</item>
-    <item quantity="few">%d trainings deleted</item>
+    <item quantity="few">%d тренировок удалено</item>
     <item quantity="other">%d тренировки удалены</item>
   </plurals>
   <plurals name="passe_deleted">
     <item quantity="one">Одна серия удалена</item>
-    <item quantity="few">%d ends deleted</item>
+    <item quantity="few">%d серии удалены</item>
     <item quantity="other">%d серии удалены</item>
   </plurals>
   <plurals name="rounds">
     <item quantity="one">Раунд %d</item>
-    <item quantity="few">Round %d</item>
+    <item quantity="few">Раунд %d</item>
     <item quantity="other">Раунд %d</item>
   </plurals>
   <string name="bft_0">0 Bft: безветренно</string>
@@ -224,10 +224,10 @@
   <string name="left_back">сзади слева</string>
   <string name="right_back">сзади справа</string>
   <string name="date">Дата</string>
-  <string name="edit_round">Edit round</string>
-  <string name="draw_weight">Draw weight</string>
-  <string name="sight">Sight</string>
-  <string name="limbs">Limbs</string>
-  <string name="my_bow">My bow</string>
-  <string name="my_arrow">My arrow</string>
+  <string name="edit_round">Редактировать раунд</string>
+  <string name="draw_weight">Сила натяжения</string>
+  <string name="sight">Прицел</string>
+  <string name="limbs">Плечи</string>
+  <string name="my_bow">Мой лук</string>
+  <string name="my_arrow">Моя стрела</string>
 </resources>

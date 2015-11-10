@@ -216,6 +216,6 @@
   <string name="draw_weight">Trekgewicht</string>
   <string name="sight">Vizier</string>
   <string name="limbs">Latten</string>
-  <string name="my_bow">My bow</string>
-  <string name="my_arrow">My arrow</string>
+  <string name="my_bow">Mijn boog</string>
+  <string name="my_arrow">Mijn pijl</string>
 </resources>
