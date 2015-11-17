@@ -7,6 +7,8 @@
 
 package de.dreier.mytargets.views;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -67,6 +69,7 @@ public class TargetView extends TargetViewBase {
     private TextPaint textPaint;
     private List<Zone> selectableZones = new ArrayList<>();
     private Paint borderPaint;
+    private ValueAnimator animator;
 
     public TargetView(Context context) {
         super(context);
@@ -166,9 +169,9 @@ public class TargetView extends TargetViewBase {
 
         // Draw target
         if (mCurSelecting < -1) {
-            drawTarget(canvas, mOutFromX + (midX - mOutFromX) * mCurAnimationProgress,
-                    mOutFromY + (midY - mOutFromY) * mCurAnimationProgress,
-                    oldRadius + (radius - oldRadius) * mCurAnimationProgress);
+            drawTarget(canvas, outFromX + (midX - outFromX) * curAnimationProgress,
+                    outFromY + (midY - outFromY) * curAnimationProgress,
+                    oldRadius + (radius - oldRadius) * curAnimationProgress);
         } else {
             if (!mZoneSelectionMode && curZone >= -1) {
                 drawZoomedInTarget(canvas);
@@ -295,7 +298,7 @@ public class TargetView extends TargetViewBase {
         RectF rect = new RectF();
         rect.left = 30 * density;
         rect.right = availableWidth - 30 * density;
-        rect.top = midY + orgRadius;
+        rect.top = orgMidY + orgRadius;
         rect.bottom = contentHeight;
         passeDrawer.animateToRect(rect);
         animateToZoomSpot();
@@ -388,28 +391,40 @@ public class TargetView extends TargetViewBase {
     }
 
     private void animateMode() {
-        mCurSelecting = MODE_CHANGE;
-        initAnimation();
-        calcSizes();
-
-        final ValueAnimator moveAnimator = ValueAnimator.ofFloat(0, 1);
-        moveAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-        moveAnimator.addUpdateListener(valueAnimator -> {
-            mCurAnimationProgress = (Float) valueAnimator.getAnimatedValue();
-            if (mCurAnimationProgress == 1.0f) {
-                moveAnimator.cancel();
-                mCurSelecting = NONE;
-            }
+        cancelPendingAnimations();
+        animator = ValueAnimator.ofFloat(0, 1);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.addUpdateListener(valueAnimator -> {
+            curAnimationProgress = (Float) valueAnimator.getAnimatedValue();
             invalidate();
         });
-        moveAnimator.setDuration(300);
-        moveAnimator.start();
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mCurSelecting = MODE_CHANGE;
+                initAnimation();
+                calcSizes();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                onAnimationEnd(animation);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mCurSelecting = NONE;
+                invalidate();
+            }
+        });
+        animator.setDuration(300);
+        animator.start();
     }
 
     private void initAnimation() {
-        mCurAnimationProgress = 0;
-        mOutFromX = midX;
-        mOutFromY = midY;
+        curAnimationProgress = 0;
+        outFromX = midX;
+        outFromY = midY;
         oldRadius = radius;
     }
 
@@ -423,29 +438,40 @@ public class TargetView extends TargetViewBase {
                 mCurSelecting = -1;
                 animateToZoomSpot();
             } else {
-                mCurSelecting = SPOT_ZOOM_IN;
-                initAnimation();
-
-                radius = orgRadius;
-                midX = orgMidX;
-                midY = orgMidY;
-
-                final ValueAnimator moveAnimator = ValueAnimator.ofFloat(0, 1);
-                moveAnimator.setInterpolator(
+                cancelPendingAnimations();
+                animator = ValueAnimator.ofFloat(0, 1);
+                animator.setInterpolator(
                         currentArrow < round.arrowsPerPasse ? new AccelerateInterpolator() :
                                 new AccelerateDecelerateInterpolator());
-                moveAnimator.addUpdateListener(valueAnimator -> {
-                    mCurAnimationProgress = (Float) valueAnimator.getAnimatedValue();
-                    if (mCurAnimationProgress == 1.0f) {
-                        moveAnimator.cancel();
+                animator.addUpdateListener(valueAnimator -> {
+                    curAnimationProgress = (Float) valueAnimator.getAnimatedValue();
+                    invalidate();
+                });
+                animator.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        mCurSelecting = SPOT_ZOOM_IN;
+                        initAnimation();
+                        radius = orgRadius;
+                        midX = orgMidX;
+                        midY = orgMidY;
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        onAnimationEnd(animation);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
                         spotFocused = false;
                         mCurSelecting = -1;
                         animateToZoomSpot();
+                        invalidate();
                     }
-                    invalidate();
                 });
-                moveAnimator.setDuration(200);
-                moveAnimator.start();
+                animator.setDuration(200);
+                animator.start();
             }
         }
     }
@@ -459,40 +485,52 @@ public class TargetView extends TargetViewBase {
         }
         if (round.target.getFaceCount() > 1 && currentArrow < round.arrowsPerPasse && radius > 0 &&
                 !spotFocused && !mZoneSelectionMode && mCurSelecting != SPOT_ZOOM_IN) {
-            mCurSelecting = SPOT_ZOOM_IN;
-            initAnimation();
-
-            RectF spotRect = new RectF(spotRects[currentArrow % spotRects.length]);
-            float scale = orgRadius / 250;
-            spotRect.left = orgRect.left + spotRect.left * scale;
-            spotRect.top = orgRect.top + spotRect.top * scale;
-            spotRect.right = orgRect.left + spotRect.right * scale;
-            spotRect.bottom = orgRect.top + spotRect.bottom * scale;
-
-            float zoomFactor = orgRadius * 2.0f / spotRect.width();
-            radius = (int) (orgRadius * zoomFactor);
-            midX = (int) (radius + orgMidX + (orgRect.left - spotRect.centerX()) * zoomFactor);
-            midY = (int) (radius + orgMidY + (orgRect.top - spotRect.centerY()) * zoomFactor);
-
-            final ValueAnimator moveAnimator = ValueAnimator.ofFloat(0, 1);
-            moveAnimator.setInterpolator(
+            cancelPendingAnimations();
+            animator = ValueAnimator.ofFloat(0, 1);
+            animator.setInterpolator(
                     currentArrow == 0 ? new AccelerateDecelerateInterpolator() :
                             new DecelerateInterpolator());
-            moveAnimator.addUpdateListener(valueAnimator -> {
-                mCurAnimationProgress = (Float) valueAnimator.getAnimatedValue();
-                if (mCurAnimationProgress == 1.0f) {
-                    moveAnimator.cancel();
-                    mCurSelecting = NONE;
-                    spotFocused = true;
-                }
+            animator.addUpdateListener(valueAnimator -> {
+                curAnimationProgress = (Float) valueAnimator.getAnimatedValue();
                 invalidate();
             });
+            animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    mCurSelecting = SPOT_ZOOM_IN;
+                    initAnimation();
+
+                    RectF spotRect = new RectF(spotRects[currentArrow % spotRects.length]);
+                    float scale = orgRadius / 250;
+                    spotRect.left = orgRect.left + spotRect.left * scale;
+                    spotRect.top = orgRect.top + spotRect.top * scale;
+                    spotRect.right = orgRect.left + spotRect.right * scale;
+                    spotRect.bottom = orgRect.top + spotRect.bottom * scale;
+
+                    float zoomFactor = orgRadius * 2.0f / spotRect.width();
+                    radius = (int) (orgRadius * zoomFactor);
+                    midX = (int) (radius + orgMidX + (orgRect.left - spotRect.centerX()) * zoomFactor);
+                    midY = (int) (radius + orgMidY + (orgRect.top - spotRect.centerY()) * zoomFactor);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    onAnimationEnd(animation);
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mCurSelecting = NONE;
+                    spotFocused = true;
+                    invalidate();
+                }
+            });
             if (currentArrow == 0) {
-                moveAnimator.setStartDelay(500);
+                animator.setStartDelay(500);
             }
-            moveAnimator.setDuration(200);
-            moveAnimator.start();
-        }/**/
+            animator.setDuration(200);
+            animator.start();
+        }
     }
 
     @Override
@@ -552,7 +590,7 @@ public class TargetView extends TargetViewBase {
 
                 float percent = 1;
                 if (mCurSelecting == MODE_CHANGE) {
-                    percent = mZoneSelectionMode ? mCurAnimationProgress : 1 - mCurAnimationProgress;
+                    percent = mZoneSelectionMode ? curAnimationProgress : 1 - curAnimationProgress;
                 }
                 int X1 = (int) (contentWidth - 60 * percent * density);
                 int X2 = (int) (X1 + 40 * density);
@@ -644,5 +682,13 @@ public class TargetView extends TargetViewBase {
         float count = 0;
         float sumX = 0;
         float sumY = 0;
+    }
+
+    private void cancelPendingAnimations() {
+        if(animator != null) {
+            ValueAnimator tmp = animator;
+            animator = null;
+            tmp.cancel();
+        }
     }
 }

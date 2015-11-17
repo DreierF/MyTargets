@@ -26,12 +26,12 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected int contentWidth;
     protected int contentHeight;
     protected OnTargetSetListener setListener = null;
-    protected float mCurAnimationProgress;
+    protected float curAnimationProgress;
     protected boolean mZoneSelectionMode = true;
     protected float density;
     protected int mZoneCount;
-    protected float mOutFromX;
-    protected float mOutFromY;
+    protected float outFromX;
+    protected float outFromY;
 
     public TargetViewBase(Context context) {
         super(context);
