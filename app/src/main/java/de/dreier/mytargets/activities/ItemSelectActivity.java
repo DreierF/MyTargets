@@ -28,7 +28,7 @@ import de.dreier.mytargets.fragments.WindSpeedFragment;
 import de.dreier.mytargets.shared.models.IIdProvider;
 
 public abstract class ItemSelectActivity extends SimpleFragmentActivity
-        implements SelectItemFragment.OnItemSelectedListener,
+        implements FragmentBase.OnItemSelectedListener,
         FragmentBase.ContentListener {
     public static final String ITEM = "item";
 
