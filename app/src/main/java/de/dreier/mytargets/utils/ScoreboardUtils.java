@@ -8,6 +8,7 @@
 package de.dreier.mytargets.utils;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -147,19 +148,24 @@ public class ScoreboardUtils {
         }
 
         if (withTarget) {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            new TargetImage().generateBitmap(context, 800, trainingId, byteArrayOutputStream);
-
-            // Convert bitmap to Base64 encoded image for web
-            byte[] byteArray = byteArrayOutputStream.toByteArray();
-            String imageBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
-            String image = "data:image/png;base64," + imageBase64;
-            html += "<div align='center' style=\"padding: 15px;\"><img src='" + image +
-                    "' width='98%' /></div>";
+            html += getTargetHTML(context, trainingId);
         }
 
         html += "</html>";
         return html;
+    }
+
+    @NonNull
+    private static String getTargetHTML(Context context, long trainingId) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        new TargetImage().generateTrainingBitmap(context, 800, trainingId, byteArrayOutputStream);
+
+        // Convert bitmap to Base64 encoded image for web
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        String imageBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
+        String image = "data:image/png;base64," + imageBase64;
+        return "<div align='center' style=\"padding: 15px;\"><img src='" + image +
+                "' width='98%' /></div>";
     }
 
     public static String getRoundInfoHTML(Context context, Round round, boolean[] equals) {

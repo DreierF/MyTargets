@@ -18,8 +18,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.shared.models.Passe;
@@ -27,14 +28,11 @@ import de.dreier.mytargets.shared.models.Round;
 
 public class TargetImage {
 
-    public void generateBitmap(Context context, int size, long trainingId, OutputStream fOut) {
-        DatabaseManager db = DatabaseManager.getInstance(context);
-
-        ArrayList<Round> rounds = new RoundDataSource(context).getAll(trainingId);
-        int count = rounds.size();
+    public void generateTrainingBitmap(Context context, int size, long trainingId, OutputStream fOut) {
+        List<Round> rounds = new RoundDataSource(context).getAll(trainingId);
 
         // Create bitmap to draw on
-        Bitmap b = Bitmap.createBitmap(size, size * count, Bitmap.Config.ARGB_8888);
+        Bitmap b = Bitmap.createBitmap(size, size * rounds.size(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(b);
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
 
@@ -54,9 +52,9 @@ public class TargetImage {
         }
     }
 
-    public void generateBitmap(Context context, int size, long mRound, File f)
+    public void generateTrainingBitmap(Context context, int size, long trainingId, File f)
             throws FileNotFoundException {
         final FileOutputStream fOut = new FileOutputStream(f);
-        generateBitmap(context, size, mRound, fOut);
+        generateTrainingBitmap(context, size, trainingId, fOut);
     }
 }
