@@ -83,7 +83,7 @@ public class IABHelperWrapper {
             Log.d(TAG, "Query inventory finished.");
 
             // Have we been disposed of in the meantime? If so, quit.
-            if (mHelper == null) {
+            if (mHelper == null || result == null) {
                 return;
             }
 

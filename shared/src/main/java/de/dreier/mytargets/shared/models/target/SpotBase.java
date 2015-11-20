@@ -133,4 +133,27 @@ public class SpotBase extends Target {
     public int getFaceCount() {
         return facePositions.length;
     }
+
+    @Override
+    public int getWidth() {
+        return getDiff(0);
+    }
+
+    @Override
+    public int getHeight() {
+        return getDiff(1);
+    }
+
+    private int getDiff(int coordinate) {
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        for (int[] facePosition : facePositions) {
+            if (facePosition[coordinate] < min) {
+                min = facePosition[coordinate];
+            }
+            if (facePosition[coordinate] > max) {
+                max = facePosition[coordinate];
+            }
+        }
+        return max - min + faceRadius*2;
+    }
 }

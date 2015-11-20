@@ -18,15 +18,12 @@ import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
 
 public class HitOrMiss extends CircularTargetBase {
-    private static final int STROKE_GRAY = 0xFF221F1F;
-    protected static final int RED = 0xFFEE3D36;
-    protected static final int YELLOW = 0xFFFFEB52;
 
     public HitOrMiss(Context context) {
         super(context, 14, R.string.hit_or_miss);
         zones = 2;
         radius = new float[]{125,500};
-        colorFill = new int[]{YELLOW, RED};
+        colorFill = new int[]{YELLOW, RED_MISS};
         colorStroke = new int[]{STROKE_GRAY, STROKE_GRAY};
         strokeWidth = new int[] {3,3};
         zonePoints = new int[][]{{1,0}};

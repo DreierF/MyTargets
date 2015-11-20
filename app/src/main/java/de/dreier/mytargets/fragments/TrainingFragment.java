@@ -243,7 +243,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
                 File dir = getContext().getExternalCacheDir();
                 final File f = File.createTempFile("target", ".png", dir);
                 if (typ == 2) {
-                    new TargetImage().generateBitmap(getContext(), 800, mTraining, f);
+                    new TargetImage().generateTrainingBitmap(getContext(), 800, mTraining, f);
                 } else {
                     new ScoreboardImage().generateBitmap(getActivity(), mTraining, f);
                 }

@@ -41,6 +41,9 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     protected static final int RED = 0xFFFF000D;
     protected static final int TURBO_YELLOW = 0xFFFEEA00;
     protected static final int LEMON_YELLOW = 0xFFF6EB0F;
+    protected static final int STROKE_GRAY = 0xFF221F1F;
+    protected static final int RED_MISS = 0xFFEE3D36;
+    protected static final int YELLOW = 0xFFFFEB52;
 
     protected static final float ARROW_RADIUS = 8;
 
@@ -330,6 +333,7 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
             case LIGHT_GRAY:
             case TURBO_YELLOW:
             case LEMON_YELLOW:
+            case YELLOW:
                 return BLACK;
             case ORANGE:
                 return BLACK;
@@ -410,5 +414,13 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
 
     public int getFaceCount() {
         return 1;
+    }
+
+    public int getWidth() {
+        return 500;
+    }
+
+    public int getHeight() {
+        return 500;
     }
 }
