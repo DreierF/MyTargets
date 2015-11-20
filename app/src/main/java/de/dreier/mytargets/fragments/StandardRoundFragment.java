@@ -218,18 +218,17 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
             Intent i = new Intent(getActivity(),
                     SimpleFragmentActivity.EditStandardRoundActivity.class);
             i.putExtra(ITEM, item);
-            getActivity().startActivityForResult(i, NEW_STANDARD_ROUND);
+            startActivityForResult(i, NEW_STANDARD_ROUND);
             getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
         } else {
             new AlertDialog.Builder(getActivity())
                     .setTitle(R.string.use_as_template)
                     .setMessage(R.string.create_copy)
-                    .setIcon(null)
                     .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                         Intent i = new Intent(getActivity(),
                                 SimpleFragmentActivity.EditStandardRoundActivity.class);
                         i.putExtra(ITEM, item);
-                        getActivity().startActivityForResult(i, NEW_STANDARD_ROUND);
+                        startActivityForResult(i, NEW_STANDARD_ROUND);
                         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
                     })
                     .setNegativeButton(android.R.string.cancel, null)

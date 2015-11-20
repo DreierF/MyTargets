@@ -18,8 +18,12 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
@@ -86,12 +90,16 @@ public class EditStandardRoundFragment extends EditFragmentBase
             // Load saved values
             indoor.setChecked(standardRound.indoor);
             outdoor.setChecked(!standardRound.indoor);
-            if (standardRound.getId() == -1) {
+            ArrayList<RoundTemplate> rounds = standardRound.getRounds();
+            if (standardRound.club == StandardRound.CUSTOM) {
                 name.setText(standardRound.name);
             } else {
                 name.setText(getActivity().getString(R.string.custom) + " " + standardRound.name);
+                for(RoundTemplate round : rounds) {
+                    round.setId(-1);
+                }
             }
-            rounds.setList(standardRound.getRounds());
+            this.rounds.setList(rounds);
         }
         return rootView;
     }
@@ -104,6 +112,7 @@ public class EditStandardRoundFragment extends EditFragmentBase
         standardRound.name = name.getText().toString();
         standardRound.indoor = indoor.isChecked();
         standardRound.setRounds(rounds.getList());
+        new StandardRoundDataSource(getContext()).update(standardRound);
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("indoor", standardRound.indoor);
