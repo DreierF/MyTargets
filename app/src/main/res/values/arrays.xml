@@ -3,8 +3,8 @@
     <string-array name="bow_types">
         <item>@string/recurve_bow</item>
         <item>@string/compound_bow</item>
-        <item>@string/bare_bow</item>
         <item>@string/long_bow</item>
+        <item>@string/bare_bow</item>
         <item>@string/horse_bow</item>
         <item>@string/yumi</item>
     </string-array>

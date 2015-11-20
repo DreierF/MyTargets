@@ -35,7 +35,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
     private static final int RECURVE_BOW = 0;
     private static final int COMPOUND_BOW = 1;
     private static final int LONG_BOW = 2;
-    private static final int BLANK_BOW = 3;
+    private static final int BARE_BOW = 3;
     private static final int HORSE_BOW = 4;
     private static final int YUMI = 5;
     private EditText brand;
@@ -86,7 +86,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
         recurveBow.setOnClickListener(v -> setBowType(RECURVE_BOW));
         compoundBow.setOnClickListener(v -> setBowType(COMPOUND_BOW));
         longBow.setOnClickListener(v -> setBowType(LONG_BOW));
-        blank.setOnClickListener(v -> setBowType(BLANK_BOW));
+        blank.setOnClickListener(v -> setBowType(BARE_BOW));
         horse.setOnClickListener(v -> setBowType(HORSE_BOW));
         yumi.setOnClickListener(v -> setBowType(YUMI));
 
@@ -195,7 +195,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
         recurveBow.setChecked(type == RECURVE_BOW);
         compoundBow.setChecked(type == COMPOUND_BOW);
         longBow.setChecked(type == LONG_BOW);
-        blank.setChecked(type == BLANK_BOW);
+        blank.setChecked(type == BARE_BOW);
         horse.setChecked(type == HORSE_BOW);
         yumi.setChecked(type == YUMI);
     }
@@ -208,7 +208,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
         } else if (longBow.isChecked()) {
             return LONG_BOW;
         } else if (blank.isChecked()) {
-            return BLANK_BOW;
+            return BARE_BOW;
         } else if (horse.isChecked()) {
             return HORSE_BOW;
         } else if (yumi.isChecked()) {
