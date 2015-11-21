@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import de.dreier.mytargets.managers.DatabaseManager;
 
-public abstract class DataSourceBase<T> {
+public abstract class DataSourceBase {
     protected Context context;
 
     // Database fields
@@ -32,9 +32,5 @@ public abstract class DataSourceBase<T> {
 
     protected Context getContext() {
         return context;
-    }
-
-    public void close() {
-        dbHelper.close();
     }
 }

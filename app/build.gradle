@@ -61,8 +61,9 @@ dependencies {
     compile 'com.github.ksoichiro:android-observablescrollview:1.5.2'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.cocosw:bottomsheet:1.1.1@aar'
-    compile project(':libraries:aFileChooser')
     compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
+    compile project(':libraries:aFileChooser')
     compile project(':libraries:LicensesDialog')
     compile project(':libraries:YWeatherGetter4a')
     compile project(':shared')

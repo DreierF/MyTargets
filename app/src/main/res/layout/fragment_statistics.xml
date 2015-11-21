@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:padding="4dp">
 
-    <de.dreier.mytargets.views.ChartView
+    <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

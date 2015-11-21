@@ -17,7 +17,7 @@ import java.util.List;
 
 import de.dreier.mytargets.shared.models.Distance;
 
-public class DistanceDataSource extends DataSourceBase<Distance> {
+public class DistanceDataSource extends DataSourceBase {
 
     public DistanceDataSource(Context context) {
         super(context);

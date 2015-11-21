@@ -14,26 +14,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedSet;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.managers.dao.PasseDataSource;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
+import de.dreier.mytargets.managers.dao.StatisticsDataSource;
 import de.dreier.mytargets.models.LinearSeries;
 import de.dreier.mytargets.models.LinearSeries.LinearPoint;
-import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.views.ChartView;
 
 public class StatisticsFragment extends Fragment {
     public static final String ARG_POSITION = "position";
     public static final String ARG_TRAINING_ID = "training_id";
     public static final String ARG_ROUND_ID = "round_id";
-    private ChartView chartView;
-    private long mRound;
     private long mTraining;
 
 
@@ -44,67 +42,49 @@ public class StatisticsFragment extends Fragment {
 
         int pos = getArguments().getInt(ARG_POSITION, 0);
         mTraining = getArguments().getLong(ARG_TRAINING_ID, 0);
-        mRound = getArguments().getLong(ARG_ROUND_ID, 0);
 
-        chartView = (ChartView) rootView.findViewById(R.id.chart_view);
+        LineChart chartView = (LineChart) rootView.findViewById(R.id.chart_view);
 
-        LinearSeries series;
+        LineDataSet series;
 
         switch (pos) {
             case 0:
                 series = generateAllSeries();
                 break;
-            case 1:
+            default:
                 series = generateTrainingSeries();
                 break;
-            default:
-                series = generateRoundSeries();
+            //default:
+            //    series = generateRoundSeries();
         }
-
+        LineData data = new LineData();
         DisplayMetrics metrics = getResources().getDisplayMetrics();
-        LinearSeries regression = generateLinearRegression(series);
+        /*LineDataSet regression = generateLinearRegression(series);
         if (regression != null) {
             regression.setLineColor(0xFFAA66CC);
             regression.setLineWidth(1.3f * metrics.density);
-            chartView.addSeries(regression);
-        }
+            data.addDataSet(regression);
+        }*/
 
-        series.setLineColor(0xFF33B5E5);
+        series.setColors(new int[]{0xFF33B5E5});
         series.setLineWidth(2 * metrics.density);
-        chartView.addSeries(series);
+        data.addDataSet(series);
+        chartView.setData(data);
 
         return rootView;
     }
 
-    private LinearSeries generateAllSeries() {
-        DatabaseManager db = DatabaseManager.getInstance(getActivity());
-        ArrayList<Integer> list = db.getAllTrainings();
-
-        LinearSeries series = new LinearSeries();
-
-        int x = 0;
-        for (Integer percent : list) {
-            series.addPoint(new LinearPoint(x++, (long) 100 - percent));
-        }
-        chartView.setRoundInfo(null);
-        return series;
+    private LineDataSet generateAllSeries() {
+        List<Entry> list = new StatisticsDataSource(getContext()).getAllTrainings();
+        return new LineDataSet(list, "All trainings");
     }
 
-    private LinearSeries generateTrainingSeries() {
-        DatabaseManager db = DatabaseManager.getInstance(getActivity());
-        ArrayList<Integer> list = db.getAllRounds(mTraining);
-
-        LinearSeries series = new LinearSeries();
-
-        int x = 0;
-        for (Integer percent : list) {
-            series.addPoint(new LinearPoint(x++, (long) 100 - percent));
-        }
-        chartView.setRoundInfo(null);
-        return series;
+    private LineDataSet generateTrainingSeries() {
+        ArrayList<Entry> list = new StatisticsDataSource(getContext()).getAllRounds(mTraining);
+        return new LineDataSet(list, "Training");
     }
 
-    private LinearSeries generateRoundSeries() {
+    /*private LineDataSet generateRoundSeries() {
         PasseDataSource passeDataSource = new PasseDataSource(getContext());
         ArrayList<Passe> passes = passeDataSource.getAll(mRound);
         RoundDataSource roundDataSource = new RoundDataSource(getContext());
@@ -118,9 +98,9 @@ public class StatisticsFragment extends Fragment {
                 series.addPoint(new LinearPoint(x++, (long) shot.zone));
             }
         }
-        chartView.setRoundInfo(r);
+        //chartView.setRoundInfo(r);
         return series;
-    }
+    }*/
 
     private LinearSeries generateLinearRegression(LinearSeries data) {
         SortedSet<LinearPoint> points = data.getPoints();

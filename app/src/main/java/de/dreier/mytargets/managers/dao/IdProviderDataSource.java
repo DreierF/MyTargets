@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.IdProvider;
 
-public abstract class IdProviderDataSource<T extends IdProvider> extends DataSourceBase<T> {
+public abstract class IdProviderDataSource<T extends IdProvider> extends DataSourceBase {
     public static final String ID = "_id";
 
     // Database fields
