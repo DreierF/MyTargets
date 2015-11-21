@@ -1,10 +1,15 @@
+
+
 # MyTargets
 Android app, which helps archers keep track of their training progress.
+
+![Version](https://img.shields.io/badge/version-2.2.0%20Beta%204-orange.svg)
+![Licence](https://img.shields.io/badge/licence-GNU%20GPLv2-blue.svg)
 
 ## Build ##
 The project can be built using Android Studio 1.4 or newer.
 
-In order to correctly compile it you have to install JDK 7 AND JDK 8 and set the accoring environment variables accordingly. More information this can be found [here](https://github.com/evant/gradle-retrolambda/blob/master/README.md).
+In order to correctly compile it you have to install JDK 7 AND JDK 8 and set the environment variables accordingly. More information this can be found [here](https://github.com/evant/gradle-retrolambda/blob/master/README.md).
 
 ## Contribute
 Every contribution is very welcome.
