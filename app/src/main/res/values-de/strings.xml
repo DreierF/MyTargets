@@ -218,4 +218,5 @@
   <string name="limbs">Wurfarme</string>
   <string name="my_bow">Mein Bogen</string>
   <string name="my_arrow">Mein Pfeil</string>
+  <string name="tip_weight">Spitzengewicht</string>
 </resources>

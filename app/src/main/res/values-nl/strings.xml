@@ -218,4 +218,5 @@
   <string name="limbs">Latten</string>
   <string name="my_bow">Mijn boog</string>
   <string name="my_arrow">Mijn pijl</string>
+  <string name="tip_weight">Tip weight</string>
 </resources>

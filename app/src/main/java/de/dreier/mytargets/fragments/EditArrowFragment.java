@@ -27,7 +27,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
 
     public static final String ARROW_ID = "arrow_id";
 
-    private EditText length, material, spine, weight, vanes, nock, comment;
+    private EditText length, material, spine, weight, tipWeight, vanes, nock, comment;
     private long mArrowId = -1;
     private EditText arrowNumbers;
 
@@ -48,6 +48,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         material = (EditText) rootView.findViewById(R.id.arrow_material);
         spine = (EditText) rootView.findViewById(R.id.arrow_spine);
         weight = (EditText) rootView.findViewById(R.id.arrow_weight);
+        tipWeight = (EditText) rootView.findViewById(R.id.arrow_tip_weight);
         vanes = (EditText) rootView.findViewById(R.id.arrow_vanes);
         nock = (EditText) rootView.findViewById(R.id.arrow_nock);
         comment = (EditText) rootView.findViewById(R.id.arrow_comment);
@@ -65,6 +66,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
                 material.setText(arrow.material);
                 spine.setText(arrow.spine);
                 weight.setText(arrow.weight);
+                tipWeight.setText(arrow.tipWeight);
                 vanes.setText(arrow.vanes);
                 nock.setText(arrow.nock);
                 comment.setText(arrow.comment);
@@ -89,6 +91,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
             material.setText(savedInstanceState.getString("material"));
             spine.setText(savedInstanceState.getString("spine"));
             weight.setText(savedInstanceState.getString("weight"));
+            tipWeight.setText(savedInstanceState.getString("tipWeight"));
             vanes.setText(savedInstanceState.getString("vanes"));
             nock.setText(savedInstanceState.getString("nock"));
             comment.setText(savedInstanceState.getString("comment"));
@@ -119,6 +122,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         arrow.material = material.getText().toString();
         arrow.spine = spine.getText().toString();
         arrow.weight = weight.getText().toString();
+        arrow.tipWeight = tipWeight.getText().toString();
         arrow.vanes = vanes.getText().toString();
         arrow.nock = nock.getText().toString();
         arrow.comment = comment.getText().toString();
@@ -159,6 +163,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         outState.putString("material", material.getText().toString());
         outState.putString("spine", spine.getText().toString());
         outState.putString("weight", weight.getText().toString());
+        outState.putString("tipWeight", tipWeight.getText().toString());
         outState.putString("vanes", vanes.getText().toString());
         outState.putString("nock", nock.getText().toString());
         outState.putString("comment", comment.getText().toString());

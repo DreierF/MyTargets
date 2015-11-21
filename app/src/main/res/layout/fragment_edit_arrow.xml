@@ -132,6 +132,36 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:src="@drawable/ic_arrow_tip_weight_grey600_24dp"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="56dp">
+
+            <EditText
+                android:id="@+id/arrow_tip_weight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:hint="@string/tip_weight"
+                android:inputType="textNoSuggestions"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+    </FrameLayout>
+
+    <include layout="@layout/divider_inset"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:src="@drawable/ic_arrow_vanes_grey600_24dp"/>
 
         <android.support.design.widget.TextInputLayout

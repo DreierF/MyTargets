@@ -11,6 +11,7 @@ public class Arrow extends ImageHolder {
     public String material;
     public String spine;
     public String weight;
+    public String tipWeight;
     public String vanes;
     public String nock;
     public String comment;

@@ -206,4 +206,5 @@
   <string name="limbs">弓片</string>
   <string name="my_bow">我的弓</string>
   <string name="my_arrow">我的箭支</string>
+  <string name="tip_weight">Tip weight</string>
 </resources>

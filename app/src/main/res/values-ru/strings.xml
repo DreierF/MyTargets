@@ -230,4 +230,5 @@
   <string name="limbs">Плечи</string>
   <string name="my_bow">Мой лук</string>
   <string name="my_arrow">Моя стрела</string>
+  <string name="tip_weight">Tip weight</string>
 </resources>

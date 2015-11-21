@@ -23,6 +23,7 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
     public static final String MATERIAL = "material";
     public static final String SPINE = "spine";
     public static final String WEIGHT = "weight";
+    public static final String TIP_WEIGHT = "tip_weight";
     public static final String VANES = "vanes";
     public static final String NOCK = "nock";
     public static final String COMMENT = "comment";
@@ -35,6 +36,7 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
                     MATERIAL + " TEXT," +
                     SPINE + " TEXT," +
                     WEIGHT + " TEXT," +
+                    TIP_WEIGHT + " TEXT,"+
                     VANES + " TEXT," +
                     NOCK + " TEXT," +
                     COMMENT + " TEXT," +
@@ -59,6 +61,7 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
         values.put(MATERIAL, arrow.material);
         values.put(SPINE, arrow.spine);
         values.put(WEIGHT, arrow.weight);
+        values.put(TIP_WEIGHT, arrow.tipWeight);
         values.put(VANES, arrow.vanes);
         values.put(NOCK, arrow.nock);
         values.put(COMMENT, arrow.comment);
@@ -75,17 +78,18 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
         arrow.material = cursor.getString(startColumnIndex + 3);
         arrow.spine = cursor.getString(startColumnIndex + 4);
         arrow.weight = cursor.getString(startColumnIndex + 5);
-        arrow.vanes = cursor.getString(startColumnIndex + 6);
-        arrow.nock = cursor.getString(startColumnIndex + 7);
-        arrow.comment = cursor.getString(startColumnIndex + 8);
-        arrow.thumb = cursor.getBlob(startColumnIndex + 9);
-        arrow.imageFile = cursor.getString(startColumnIndex + 10);
+        arrow.tipWeight = cursor.getString(startColumnIndex + 6);
+        arrow.vanes = cursor.getString(startColumnIndex + 7);
+        arrow.nock = cursor.getString(startColumnIndex + 8);
+        arrow.comment = cursor.getString(startColumnIndex + 9);
+        arrow.thumb = cursor.getBlob(startColumnIndex + 10);
+        arrow.imageFile = cursor.getString(startColumnIndex + 11);
         return arrow;
     }
 
     public Arrow get(long arrow) {
         Cursor cursor = database.rawQuery("SELECT _id, name, length, material, " +
-                "spine, weight, vanes, nock, comment, thumbnail, image " +
+                "spine, weight, tip_weight, vanes, nock, comment, thumbnail, image " +
                 "FROM ARROW WHERE _id = " + arrow, null);
         Arrow a = null;
         if (cursor.moveToFirst()) {
@@ -98,7 +102,8 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
 
     public ArrayList<Arrow> getAll() {
         Cursor res = database.rawQuery(
-                "SELECT _id, name, length, material, spine, weight, vanes, nock, comment, thumbnail, image " +
+                "SELECT _id, name, length, material, spine, weight, tip_weight, vanes, " +
+                        "nock, comment, thumbnail, image " +
                         "FROM ARROW ORDER BY _id ASC", null);
         ArrayList<Arrow> list = new ArrayList<>(res.getCount());
         if (res.moveToFirst()) {

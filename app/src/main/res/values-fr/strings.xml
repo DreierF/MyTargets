@@ -218,4 +218,5 @@
   <string name="limbs">Branches</string>
   <string name="my_bow">Mon arc</string>
   <string name="my_arrow">Ma flèche</string>
+  <string name="tip_weight">Tip weight</string>
 </resources>

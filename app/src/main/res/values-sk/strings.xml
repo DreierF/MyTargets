@@ -230,4 +230,5 @@
   <string name="limbs">Ramená</string>
   <string name="my_bow">Môj luk</string>
   <string name="my_arrow">Moje šípy</string>
+  <string name="tip_weight">Tip weight</string>
 </resources>

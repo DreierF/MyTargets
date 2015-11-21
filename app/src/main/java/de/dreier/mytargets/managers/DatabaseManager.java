@@ -47,8 +47,7 @@ import de.dreier.mytargets.utils.Pair;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
-    private static final int DATABASE_VERSION = 10;
-    private static final String ID = "_id";
+    private static final int DATABASE_VERSION = 11;
     private static DatabaseManager sInstance;
     private final Context mContext;
 
@@ -135,9 +134,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 2) {
-            db.execSQL("DROP TABLE IF EXISTS " + BowDataSource.TABLE);
+            db.execSQL("DROP TABLE IF EXISTS BOW");
             db.execSQL("DROP TABLE IF EXISTS BOW_IMAGE");
-            db.execSQL("DROP TABLE IF EXISTS " + SightSettingDataSource.TABLE);
+            db.execSQL("DROP TABLE IF EXISTS VISIER");
         }
         if (oldVersion < 3) {
             db.execSQL("ALTER TABLE SHOOT ADD COLUMN x REAL");
@@ -324,6 +323,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE BOW ADD COLUMN limbs TEXT DEFAULT ''");
             db.execSQL("ALTER TABLE BOW ADD COLUMN sight TEXT DEFAULT ''");
             db.execSQL("ALTER TABLE BOW ADD COLUMN draw_weight TEXT DEFAULT ''");
+        }
+        if (oldVersion < 11) {
+            db.execSQL("ALTER TABLE ARROW ADD COLUMN tip_weight TEXT DEFAULT ''");
         }
         onCreate(db);
     }
