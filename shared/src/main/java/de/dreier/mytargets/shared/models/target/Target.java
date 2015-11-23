@@ -25,8 +25,7 @@ import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
 
 public abstract class Target extends Drawable implements IIdProvider, Serializable {
-    static final long serialVersionUID = 62L;
-
+    public static final int SAPPHIRE_BLUE = 0xFF2E489F;
     protected static final int DARK_GRAY = 0xFF221F1F;
     protected static final int GRAY = 0xFF686868;
     protected static final int LIGHTER_GRAY = 0xFFB7B7B7;
@@ -36,7 +35,6 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     protected static final int GREEN = 0xFF009F23;
     protected static final int BROWN = 0xFF9F7800;
     protected static final int CERULEAN_BLUE = 0xFF00ADEF;
-    public static final int SAPPHIRE_BLUE = 0xFF2E489F;
     protected static final int FLAMINGO_RED = 0xFFEF4E4C;
     protected static final int RED = 0xFFFF000D;
     protected static final int TURBO_YELLOW = 0xFFFEEA00;
@@ -44,11 +42,12 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     protected static final int STROKE_GRAY = 0xFF221F1F;
     protected static final int RED_MISS = 0xFFEE3D36;
     protected static final int YELLOW = 0xFFFFEB52;
-
     protected static final float ARROW_RADIUS = 8;
-
+    static final long serialVersionUID = 62L;
     public long id;
     public String name;
+    public int scoringStyle;
+    public Diameter size;
     protected int zones;
     protected float[] radius;
     protected int[] colorFill;
@@ -56,11 +55,8 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     protected int[] strokeWidth;
     protected boolean[] showAsX;
     protected int[][] zonePoints;
-    public int scoringStyle;
-    private boolean outsideIn = true;
-    public Diameter size;
-
     protected transient Paint paintFill, paintStroke;
+    private boolean outsideIn = true;
     private transient TextPaint paintText;
 
     protected Target(Context c, long id, @StringRes int nameRes) {
@@ -174,12 +170,18 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
 
     public void drawArrowAvg(Canvas canvas, float x, float y, int arrow) {
         Rect rect = getBounds();
-        paintFill.setColor(Color.RED);
+        int zone = getZoneFromPoint(x, y);
+        int color = getContrastColor(zone);
+        paintStroke.setColor(color);
+        paintStroke.setStrokeWidth(recalc(rect, 2));
         Rect targetRect = getTargetBounds(rect, arrow);
         float[] pos = new float[2];
         pos[0] = targetRect.left + (1 + x) * targetRect.width() * 0.5f;
         pos[1] = targetRect.top + (1 + y) * targetRect.width() * 0.5f;
-        canvas.drawCircle(pos[0], pos[1], getArrowSize(rect, arrow), paintFill);
+        float radius = getArrowSize(rect, arrow);
+        canvas.drawCircle(pos[0], pos[1], radius, paintStroke);
+        canvas.drawLine(pos[0], pos[1] + radius, pos[0], pos[1] - radius, paintStroke);
+        canvas.drawLine(pos[0] - radius, pos[1], pos[0] + radius, pos[1], paintStroke);
     }
 
     protected void drawZone(Canvas canvas, Rect rect, int zone) {

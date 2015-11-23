@@ -69,6 +69,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         Cursor cursor = database
                 .rawQuery("SELECT exact FROM PASSE WHERE _id = " + passeId,
                         null);
+        cursor.moveToFirst();
         boolean exact = cursor.getInt(0) != 0;
         cursor.close();
         Cursor res = database.rawQuery(
