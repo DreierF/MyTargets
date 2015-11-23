@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -283,7 +282,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                 rounds.add(round);
             }
             Intent i = new Intent(getActivity(), SimpleFragmentActivity.TrainingActivity.class);
-            i.putExtra(TrainingFragment.TRAINING_ID, mTraining);
+            i.putExtra(TrainingFragment.ITEM_ID, mTraining);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
 

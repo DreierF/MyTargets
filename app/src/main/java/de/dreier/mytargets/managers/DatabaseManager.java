@@ -326,6 +326,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
         if (oldVersion < 11) {
             db.execSQL("ALTER TABLE ARROW ADD COLUMN tip_weight TEXT DEFAULT ''");
+            db.execSQL("ALTER TABLE PASSE ADD COLUMN exact INTEGER DEFAULT 0");
+            db.execSQL("UPDATE PASSE SET exact=1 WHERE _id IN (SELECT DISTINCT p._id " +
+                    "FROM PASSE p, SHOOT s " +
+                    "WHERE p._id=s.passe " +
+                    "AND s.x!=0)");
         }
         onCreate(db);
     }

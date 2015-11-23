@@ -98,10 +98,10 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
 
         // Get training
         if (getArguments() != null) {
-            mTraining = getArguments().getLong(TRAINING_ID, -1);
+            mTraining = getArguments().getLong(ITEM_ID, -1);
         }
         if (savedInstanceState != null) {
-            mTraining = savedInstanceState.getLong(TRAINING_ID, -1);
+            mTraining = savedInstanceState.getLong(ITEM_ID, -1);
         }
         TrainingDataSource trainingDataSource = new TrainingDataSource(getContext());
         training = trainingDataSource.get(mTraining);
@@ -300,7 +300,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong(TRAINING_ID, mTraining);
+        outState.putLong(ITEM_ID, mTraining);
     }
 
     @Override

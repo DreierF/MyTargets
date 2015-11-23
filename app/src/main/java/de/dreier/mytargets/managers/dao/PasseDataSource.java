@@ -19,11 +19,13 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     public static final String TABLE = "PASSE";
     public static final String ROUND = "round";
     private static final String IMAGE = "image";
+    private static final String EXACT = "exact";
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     ROUND + " INTEGER," +
-                    IMAGE + " TEXT);";
+                    IMAGE + " TEXT," +
+                    EXACT + " INTEGER);";
 
     public PasseDataSource(Context context) {
         super(context, TABLE);
@@ -45,6 +47,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         }
         ContentValues values = new ContentValues();
         values.put(ROUND, passe.roundId);
+        values.put(EXACT, passe.exact ? 1 : 0);
         return values;
     }
 
@@ -63,6 +66,11 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     }
 
     private Passe get(long passeId) {
+        Cursor cursor = database
+                .rawQuery("SELECT exact FROM PASSE WHERE _id = " + passeId,
+                        null);
+        boolean exact = cursor.getInt(0) != 0;
+        cursor.close();
         Cursor res = database.rawQuery(
                 "SELECT _id, passe, points, x, y, comment, arrow, arrow_index " +
                         "FROM SHOOT s " +
@@ -72,6 +80,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
 
         Passe p = new Passe(count);
         p.setId(passeId);
+        p.exact = exact;
         p.index = -1;
         res.moveToFirst();
         for (int i = 0; i < count; i++) {
@@ -85,7 +94,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     public ArrayList<Passe> getAll(long round) {
         Cursor res = database.rawQuery(
                 "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, " +
-                        "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id) " +
+                        "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id), p.exact " +
                         "FROM PASSE p  " +
                         "LEFT JOIN SHOOT s ON p._id = s.passe " +
                         "WHERE p.round = " + round + " " +
@@ -102,6 +111,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                 }
                 Passe passe = new Passe(ppp);
                 passe.setId(res.getLong(1));
+                passe.exact = res.getInt(9) != 0;
                 passe.roundId = round;
                 if (oldRoundId != passe.roundId) {
                     pIndex = 0;
@@ -122,7 +132,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     public ArrayList<Passe> getAllByTraining(long training) {
         Cursor res = database.rawQuery(
                 "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, r._id, " +
-                        "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id) " +
+                        "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id), p.exact " +
                         "FROM ROUND r " +
                         "LEFT JOIN PASSE p ON r._id = p.round " +
                         "LEFT JOIN SHOOT s ON p._id = s.passe " +
@@ -141,6 +151,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                 Passe passe = new Passe(ppp);
                 passe.setId(res.getLong(1));
                 passe.roundId = res.getLong(8);
+                passe.exact = res.getInt(9) != 0;
                 if (oldRoundId != passe.roundId) {
                     pIndex = 0;
                     oldRoundId = passe.roundId;

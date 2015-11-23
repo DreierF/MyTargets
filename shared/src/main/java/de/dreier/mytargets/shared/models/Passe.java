@@ -2,15 +2,13 @@ package de.dreier.mytargets.shared.models;
 
 import java.util.Arrays;
 
-/**
- * Created by Florian on 13.03.2015.
- */
 public class Passe extends IdProvider {
     static final long serialVersionUID = 55L;
 
     public Shot[] shot;
     public long roundId;
     public int index;
+    public boolean exact;
 
     public Passe(int ppp) {
         shot = new Shot[ppp];

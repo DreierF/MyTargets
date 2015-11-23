@@ -43,9 +43,11 @@ public class StatisticsFragment extends Fragment {
         switch (pos) {
             case 0:
                 data = new StatisticsDataSource(getContext()).getAllTrainings();
+                chartView.setDescription("Shows for all passes the percentage of reached points");
                 break;
             default:
                 data = new StatisticsDataSource(getContext()).getAllRounds(training);
+                chartView.setDescription("");
                 break;
             //default:
             //    series = generateRoundSeries();
@@ -61,7 +63,6 @@ public class StatisticsFragment extends Fragment {
         chartView.getAxisRight().setEnabled(false);
         chartView.setData(data);
         chartView.getLegend().setEnabled(false);
-        chartView.setDescription("");
         chartView.animateXY(2000, 2000);
 
         return rootView;

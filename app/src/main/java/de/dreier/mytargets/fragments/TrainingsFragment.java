@@ -50,7 +50,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
     @Override
     public void onSelected(Training item) {
         Intent i = new Intent(getActivity(), SimpleFragmentActivity.TrainingActivity.class);
-        i.putExtra(TRAINING_ID, item.getId());
+        i.putExtra(ITEM_ID, item.getId());
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }

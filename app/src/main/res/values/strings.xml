@@ -260,5 +260,6 @@
     <string name="my_bow">My bow</string>
     <string name="my_arrow">My arrow</string>
     <string name="tip_weight">Tip weight</string>
+    <string name="arrow_ranking">Arrow ranking</string>
 
 </resources>

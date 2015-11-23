@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity
             i.putExtra(EditBowFragment.BOW_ID, item.getId());
         } else {
             i = new Intent(this, SimpleFragmentActivity.EditTrainingActivity.class);
-            i.putExtra(TrainingsFragment.TRAINING_ID, item.getId());
+            i.putExtra(TrainingsFragment.ITEM_ID, item.getId());
         }
         startActivity(i);
         overridePendingTransition(R.anim.right_in, R.anim.left_out);

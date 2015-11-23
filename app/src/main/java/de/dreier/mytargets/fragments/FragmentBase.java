@@ -37,7 +37,7 @@ import de.dreier.mytargets.utils.OnCardClickListener;
 public abstract class FragmentBase<T extends IIdProvider> extends Fragment
         implements OnCardClickListener<T> {
 
-    public static final String TRAINING_ID = "training_id";
+    public static final String ITEM_ID = "id";
 
     /** Used for communication with FragmentBase's parent activity */
     public interface ContentListener {
