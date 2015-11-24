@@ -7,6 +7,7 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,11 +25,12 @@ import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.ArrowRankingDetailsActivity;
 import de.dreier.mytargets.managers.dao.ArrowStatisticDataSource;
 import de.dreier.mytargets.managers.dao.DataSourceBase;
 import de.dreier.mytargets.models.ArrowStatistic;
 import de.dreier.mytargets.utils.DataLoaderBase;
-import de.dreier.mytargets.utils.RoundedAvatarDrawable;
+import de.dreier.mytargets.utils.RoundedTextDrawable;
 
 public class ArrowRankingFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<ArrowStatistic>> {
 
@@ -93,7 +95,7 @@ public class ArrowRankingFragment extends Fragment implements LoaderManager.Load
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.card_image_details, parent, false);
+                    .inflate(R.layout.card_image_simple, parent, false);
             return new ViewHolder(itemView);
         }
 
@@ -110,23 +112,25 @@ public class ArrowRankingFragment extends Fragment implements LoaderManager.Load
 
     private class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView mName;
-        private final TextView mDetails;
         private final ImageView mImg;
+        private ArrowStatistic mItem;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            itemView.setClickable(true);
+            itemView.setOnClickListener(v -> {
+                Intent i = new Intent(getContext(), ArrowRankingDetailsActivity.class);
+                i.putExtra(ArrowRankingDetailsActivity.ITEM, mItem);
+                startActivity(i);
+            });
             mName = (TextView) itemView.findViewById(R.id.name);
-            mDetails = (TextView) itemView.findViewById(R.id.details);
             mImg = (ImageView) itemView.findViewById(R.id.image);
         }
 
         public void bindItem(ArrowStatistic item) {
-            String tendence = "";
-            tendence += item.avgY() > 0 ? "lower " : "upper ";
-            tendence += item.avgX() > 0 ? "right" : "left";
-            mName.setText(String.format("%d with avg of %.1f Rings (%s)", item.arrowNumber, item.avgPoints(), tendence));
-            mImg.setImageDrawable(new RoundedAvatarDrawable(item.arrow.getThumbnail()));
-            mDetails.setText(item.arrow.name);
+            mItem = item;
+            mName.setText(getString(R.string.arrow_x_of_set_of_arrows, item.arrowNumber, item.arrowName));
+            mImg.setImageDrawable(new RoundedTextDrawable(item));
         }
     }
 }
