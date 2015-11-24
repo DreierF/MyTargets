@@ -8,11 +8,13 @@
 package de.dreier.mytargets.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.HashSet;
 import java.util.List;
 
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
@@ -27,6 +29,7 @@ public abstract class ExpandableFragment<H extends IdProvider, C extends IdProvi
 
     ExpandableNowListAdapter<H, C> mAdapter;
     private GridLayoutManager manager;
+    private Bundle savedInstanceState;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,17 +50,23 @@ public abstract class ExpandableFragment<H extends IdProvider, C extends IdProvi
         return rootView;
     }
 
-    void setList(IdProviderDataSource<C> dataSource, List<H> list, List<C> children, boolean opened, ExpandableNowListAdapter<H, C> adapter) {
+    void setList(IdProviderDataSource<C> dataSource, List<H> headers, List<C> children, boolean opened, ExpandableNowListAdapter<H, C> adapter) {
         this.dataSource = dataSource;
         if (mRecyclerView.getAdapter() == null) {
             mAdapter = adapter;
-            mAdapter.setList(list, children, opened);
+            mAdapter.setList(headers, children, opened);
+            if (savedInstanceState != null) {
+                mAdapter.setExpandedIds((HashSet<Long>) savedInstanceState.getSerializable("expanded"));
+            } else if (!opened && mAdapter.getItemCount() > 0) {
+                mAdapter.expandOrCollapse(0);
+            }
             mRecyclerView.setAdapter(mAdapter);
         } else {
-            mAdapter.setList(list, children, opened);
+            mAdapter.setList(headers, children);
             mAdapter.notifyDataSetChanged();
         }
-        updateFabButton(list);
+
+        updateFabButton(headers);
         manager.setSpanCount(adapter.getMaxSpan());
     }
 
@@ -74,5 +83,17 @@ public abstract class ExpandableFragment<H extends IdProvider, C extends IdProvi
     @Override
     protected void addItem(int pos, C item) {
         mAdapter.add(pos, item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("expanded", mAdapter.getExpandedIds());
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        this.savedInstanceState = savedInstanceState;
     }
 }

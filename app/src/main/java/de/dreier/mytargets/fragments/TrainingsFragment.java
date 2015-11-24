@@ -82,9 +82,6 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
         }
         Collections.sort(months);
         setList(trainingDataSource, months, data, false, new TrainingAdapter());
-        if (mAdapter.getItemCount() > 0) {
-            mAdapter.expandOrCollapse(0);
-        }
     }
 
     private class TrainingAdapter extends ExpandableNowListAdapter<Month, Training> {

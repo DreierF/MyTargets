@@ -2,6 +2,8 @@ package de.dreier.mytargets.shared.views;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,6 +34,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected int mZoneCount;
     protected float outFromX;
     protected float outFromY;
+    private int stateToSave;
 
     public TargetViewBase(Context context) {
         super(context);
@@ -67,20 +70,33 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     protected abstract Coordinate initAnimationPositions(int i);
 
-    public void saveState(Bundle b) {
-        b.putSerializable("passe", passe);
-        b.putSerializable("round", round);
-        b.putInt("currentArrow", currentArrow);
-        b.putInt("lastSetArrow", lastSetArrow);
-        passeDrawer.saveState(b);
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState ss = new SavedState(superState);
+        ss.currentArrow = this.currentArrow;
+        ss.lastSetArrow = this.lastSetArrow;
+        ss.passe = this.passe;
+        ss.round = this.round;
+        ss.passeDrawer = new Bundle();
+        passeDrawer.saveState(ss.passeDrawer);
+        return ss;
     }
 
-    public void restoreState(Bundle b) {
-        passe = (Passe) b.getSerializable("passe");
-        currentArrow = b.getInt("currentArrow");
-        lastSetArrow = b.getInt("lastSetArrow");
-        round = (RoundTemplate) b.getSerializable("round");
-        passeDrawer.restoreState(b);
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        if (!(state instanceof SavedState)) {
+            super.onRestoreInstanceState(state);
+            return;
+        }
+
+        SavedState ss = (SavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+        this.currentArrow = ss.currentArrow;
+        this.lastSetArrow = ss.lastSetArrow;
+        this.passe = ss.passe;
+        this.round = ss.round;
+        this.passeDrawer.restoreState(ss.passeDrawer);
     }
 
     @Override
@@ -177,4 +193,46 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected abstract Shot getShotFromPos(float x, float y);
 
     protected abstract boolean selectPreviousShots(MotionEvent motionEvent, float x, float y);
+
+    static class SavedState extends BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR =
+                new Parcelable.Creator<SavedState>() {
+                    public SavedState createFromParcel(Parcel in) {
+                        return new SavedState(in);
+                    }
+
+                    public SavedState[] newArray(int size) {
+                        return new SavedState[size];
+                    }
+                };
+
+        public Bundle passeDrawer;
+        private int currentArrow;
+        private int lastSetArrow;
+        private Passe passe;
+        private RoundTemplate round;
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        private SavedState(Parcel in) {
+            super(in);
+            this.currentArrow = in.readInt();
+            this.lastSetArrow = in.readInt();
+            this.passe = (Passe) in.readSerializable();
+            this.round = (RoundTemplate) in.readSerializable();
+            this.passeDrawer = in.readBundle();
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeInt(this.currentArrow);
+            out.writeInt(this.lastSetArrow);
+            out.writeSerializable(this.passe);
+            out.writeSerializable(this.round);
+            out.writeBundle(this.passeDrawer);
+        }
+    }
 }

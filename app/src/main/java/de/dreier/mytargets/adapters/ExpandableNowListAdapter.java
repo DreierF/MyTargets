@@ -7,14 +7,12 @@
 
 package de.dreier.mytargets.adapters;
 
-import android.support.v7.widget.RebindReportingHolder;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.bignerdranch.android.multiselector.SelectableHolder;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.IdProvider;
@@ -25,14 +23,13 @@ import de.dreier.mytargets.utils.SelectableViewHolder;
 public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD extends IdProvider>
         extends RecyclerView.Adapter<ItemBindingHolder<IdProvider>> {
 
-    private static final int HEADER_TYPE = 1;
     public static final int ITEM_TYPE = 2;
     public static final int ITEM_TYPE_2 = 3;
-
-    private List<HEADER> mListHeaders = new ArrayList<>();
+    private static final int HEADER_TYPE = 1;
     private final HashMap<Long, List<CHILD>> childMap = new HashMap<>();
     private final ArrayList<Boolean> isOpen = new ArrayList<>();
     private final List<DataHolder> dataList = new ArrayList<>();
+    private List<HEADER> mListHeaders = new ArrayList<>();
 
     @Override
     public long getItemId(int position) {
@@ -150,6 +147,26 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
         notifyItemRemoved(pos);
     }
 
+    public void setList(List<HEADER> headers, List<CHILD> children) {
+        HashSet<Long> oldExpanded = getExpandedIds();
+        mListHeaders = headers;
+        dataList.clear();
+        childMap.clear();
+        isOpen.clear();
+        for (HEADER header : mListHeaders) {
+            childMap.put(header.getId(), new ArrayList<>());
+        }
+        for (CHILD child : children) {
+            long parent = child.getParentId();
+            childMap.get(parent).add(child);
+        }
+        for (HEADER header : mListHeaders) {
+            isOpen.add(false);
+            dataList.add(new DataHolder(header, ItemType.HEADER));
+        }
+        setExpandedIds(oldExpanded);
+    }
+
     public void setList(List<HEADER> headers, List<CHILD> children, boolean opened) {
         mListHeaders = headers;
         dataList.clear();
@@ -171,11 +188,30 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
                 }
             }
         }
-
     }
 
     public int getMaxSpan() {
         return 1;
+    }
+
+    public HashSet<Long> getExpandedIds() {
+        HashSet<Long> ids = new HashSet<>();
+        for (int i = 0; i < isOpen.size(); i++) {
+            if (isOpen.get(i)) {
+                ids.add(mListHeaders.get(i).getId());
+            }
+        }
+        return ids;
+    }
+
+    public void setExpandedIds(HashSet<Long> expanded) {
+        for (int i = 0; i < mListHeaders.size(); i++) {
+            long headerId = mListHeaders.get(i).getId();
+            boolean expand = expanded.contains(headerId);
+            if (isOpen.get(i) != expand) {
+                expandOrCollapse(getItemCountUpToHeader(headerId) - 1);
+            }
+        }
     }
 
     protected enum ItemType {

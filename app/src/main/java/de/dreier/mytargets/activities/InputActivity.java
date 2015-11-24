@@ -93,7 +93,6 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         new Thread(this::startWearNotification).start();
 
         if (savedInstanceState != null) {
-            target.restoreState(savedInstanceState);
             curPasse = savedInstanceState.getInt("curPasse");
             updatePasse();
         } else {
@@ -215,7 +214,6 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("curPasse", curPasse);
-        target.saveState(outState);
     }
 
     @Override

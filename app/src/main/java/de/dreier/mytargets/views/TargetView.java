@@ -18,8 +18,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -58,7 +59,7 @@ public class TargetView extends TargetViewBase {
     private float radius, midX, midY;
     private Paint fillPaint;
     private boolean showAll = false;
-    private ArrayList<Passe> mOldShots;
+    private ArrayList<Passe> oldPasses;
     private Timer longPressTimer;
     private float oldRadius;
     private RectF[] spotRects;
@@ -106,7 +107,7 @@ public class TargetView extends TargetViewBase {
     }
 
     public void setOldShoots(ArrayList<Passe> oldOnes) {
-        mOldShots = oldOnes;
+        oldPasses = oldOnes;
         invalidate();
     }
 
@@ -235,7 +236,7 @@ public class TargetView extends TargetViewBase {
         }
 
         if (showAll) {
-            for (Passe p : mOldShots) {
+            for (Passe p : oldPasses) {
                 if (p.getId() != passe.getId()) {
                     round.target.drawArrows(canvas, p);
                     for (int i = 0; i < p.shot.length; i++) {
@@ -271,15 +272,23 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    public void saveState(Bundle b) {
-        super.saveState(b);
-        b.putSerializable("oldShots", mOldShots);
+    public Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState ss = new SavedState(superState);
+        ss.oldPasses = this.oldPasses;
+        return ss;
     }
 
     @Override
-    public void restoreState(Bundle b) {
-        super.restoreState(b);
-        mOldShots = (ArrayList<Passe>) b.getSerializable("oldShots");
+    public void onRestoreInstanceState(Parcelable state) {
+        if (!(state instanceof SavedState)) {
+            super.onRestoreInstanceState(state);
+            return;
+        }
+
+        SavedState ss = (SavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+        this.oldPasses = ss.oldPasses;
     }
 
     @Override
@@ -689,6 +698,36 @@ public class TargetView extends TargetViewBase {
             ValueAnimator tmp = animator;
             animator = null;
             tmp.cancel();
+        }
+    }
+
+    static class SavedState extends BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR =
+                new Parcelable.Creator<SavedState>() {
+                    public SavedState createFromParcel(Parcel in) {
+                        return new SavedState(in);
+                    }
+
+                    public SavedState[] newArray(int size) {
+                        return new SavedState[size];
+                    }
+                };
+
+        public ArrayList<Passe> oldPasses;
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        private SavedState(Parcel in) {
+            super(in);
+            this.oldPasses = (ArrayList<Passe>) in.readSerializable();
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeSerializable(this.oldPasses);
         }
     }
 }
