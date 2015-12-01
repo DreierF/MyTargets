@@ -219,4 +219,6 @@
   <string name="my_bow">Mein Bogen</string>
   <string name="my_arrow">Mein Pfeil</string>
   <string name="tip_weight">Spitzengewicht</string>
+  <string name="arrow_ranking">Pfeil-Rangliste</string>
+  <string name="arrow_x_of_set_of_arrows">Pfeil %1$d von %2$s</string>
 </resources>

@@ -147,7 +147,8 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         } else if (passe == -1 && template.index > 0) {
             mRound = rounds.get(template.index - 1);
             template = mRound.info;
-            passe = template.passes;
+            passe = template.passes - 1;
+            savedPasses = template.passes;
         }
         if (passe < savedPasses) {
             Passe p = passeDataSource.get(mRound.getId(), passe);
@@ -164,7 +165,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                 openTimer();
             }
         }
-        ArrayList<Passe> oldOnes = passeDataSource.getAll(training.getId());
+        ArrayList<Passe> oldOnes = passeDataSource.getAllByTraining(training.getId());
         target.setOldShoots(oldOnes);
         curPasse = passe;
         updatePasse();
@@ -234,7 +235,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
             savedPasses++;
             manager.sendMessageUpdate(buildInfo());
             if (remote) {
-                curPasse = savedPasses + 1;
+                curPasse = savedPasses;
             }
         } else if (curPasse + 1 == savedPasses) {
             manager.sendMessageUpdate(buildInfo());
