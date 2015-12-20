@@ -14,8 +14,8 @@ android {
         applicationId "de.dreier.mytargets"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 35
-        versionName '2.2.0beta5'
+        versionCode 36
+        versionName '2.2.0beta6'
     }
 
     /*

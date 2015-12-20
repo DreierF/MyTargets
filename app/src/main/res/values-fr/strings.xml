@@ -219,6 +219,6 @@
   <string name="my_bow">Mon arc</string>
   <string name="my_arrow">Ma flèche</string>
   <string name="tip_weight">Poids de la pointe</string>
-  <string name="arrow_ranking">Arrow ranking</string>
-  <string name="arrow_x_of_set_of_arrows">Arrow %1$d of %2$s</string>
+  <string name="arrow_ranking">Classement des flêches</string>
+  <string name="arrow_x_of_set_of_arrows">Flèche %1$d sur %2$s</string>
 </resources>

@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 23
-        versionCode 35
-        versionName '2.2.0beta5'
+        versionCode 36
+        versionName '2.2.0beta6'
     }
 
     if(new File("gradle.properties").exists()) {
