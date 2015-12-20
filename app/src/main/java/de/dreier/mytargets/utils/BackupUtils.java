@@ -58,6 +58,7 @@ public class BackupUtils {
             Toast.makeText(a, R.string.import_successful, Toast.LENGTH_SHORT).show();
             return true;
         } catch (FileNotFoundException ioe) {
+            ioe.printStackTrace();
             builder.setTitle(R.string.import_failed);
             builder.setMessage(a.getString(R.string.file_not_found));
         } catch (Exception e) {
@@ -112,9 +113,8 @@ public class BackupUtils {
         String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");
-        String fileName = baseDir +
-                "/" + FOLDER_NAME + "/backup_" + format.format(new Date()) + ".zip";
-        File f = new File(baseDir);
+        String fileName = baseDir + "/" + FOLDER_NAME + "/backup_" + format.format(new Date()) + ".zip";
+        File f = new File(baseDir + "/" + FOLDER_NAME);
         f.mkdir();
         if (!f.exists() || !f.isDirectory()) {
             throw new IOException(context.getString(R.string.dir_not_created));

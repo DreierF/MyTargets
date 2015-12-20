@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.shared.models.Distance;
-import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
@@ -40,6 +39,7 @@ public class EditStandardRoundFragment extends EditFragmentBase
     private RadioButton indoor;
     private DynamicItemLayout<RoundTemplate> rounds;
     private EditText name;
+    private long standardRoundId = -1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,6 +93,7 @@ public class EditStandardRoundFragment extends EditFragmentBase
             ArrayList<RoundTemplate> rounds = standardRound.getRounds();
             if (standardRound.club == StandardRound.CUSTOM) {
                 name.setText(standardRound.name);
+                standardRoundId = standardRound.getId();
             } else {
                 name.setText(getActivity().getString(R.string.custom) + " " + standardRound.name);
                 for(RoundTemplate round : rounds) {
@@ -107,7 +108,7 @@ public class EditStandardRoundFragment extends EditFragmentBase
     @Override
     protected void onSave() {
         StandardRound standardRound = new StandardRound();
-        standardRound.setId(-1);
+        standardRound.setId(standardRoundId);
         standardRound.club = StandardRound.CUSTOM;
         standardRound.name = name.getText().toString();
         standardRound.indoor = indoor.isChecked();

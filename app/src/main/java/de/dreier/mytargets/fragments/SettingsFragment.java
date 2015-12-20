@@ -1,15 +1,19 @@
 package de.dreier.mytargets.fragments;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.github.machinarius.preferencefragment.PreferenceFragment;
@@ -31,6 +35,9 @@ import de.dreier.mytargets.utils.Utils;
 public class SettingsFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener,
         DonateDialogFragment.DonationListener {
+    private static final int REQUEST_READ_STORAGE = 1;
+    private static final int REQUEST_WRITE_STORAGE_EXPORT = 2;
+    private static final int REQUEST_WRITE_STORAGE_BACKUP = 3;
     private IABHelperWrapper mIABWrapper;
 
 
@@ -77,11 +84,11 @@ public class SettingsFragment extends PreferenceFragment
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, @NonNull Preference preference) {
         boolean ret = super.onPreferenceTreeClick(preferenceScreen, preference);
         if (preference.getKey().equals("pref_import")) {
-            showFilePicker();
+            doImport();
         } else if (preference.getKey().equals("pref_backup")) {
-            save(false);
+            doBackup();
         } else if (preference.getKey().equals("pref_export")) {
-            save(true);
+            doExport();
         } else if (preference.getKey().equals("pref_rate")) {
             rate();
         } else if (preference.getKey().equals("pref_share")) {
@@ -177,6 +184,64 @@ public class SettingsFragment extends PreferenceFragment
         } catch (android.content.ActivityNotFoundException anfe) {
             startActivity(new Intent(Intent.ACTION_VIEW,
                     Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
+    }
+
+    private void doImport() {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            showFilePicker();
+            return;
+        }
+
+        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                REQUEST_READ_STORAGE);
+    }
+
+    private void doBackup() {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            save(false);
+            return;
+        }
+
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                REQUEST_WRITE_STORAGE_BACKUP);
+    }
+
+    private void doExport() {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            save(true);
+            return;
+        }
+
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                REQUEST_WRITE_STORAGE_EXPORT);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_READ_STORAGE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    showFilePicker();
+                } else {
+                    Log.e("Permission", "Denied");
+                }
+                break;
+            case REQUEST_WRITE_STORAGE_BACKUP:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    save(false);
+                } else {
+                    Log.e("Permission", "Denied");
+                }
+                break;
+            case REQUEST_WRITE_STORAGE_EXPORT:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    save(true);
+                } else {
+                    Log.e("Permission", "Denied");
+                }
+                break;
+
         }
     }
 

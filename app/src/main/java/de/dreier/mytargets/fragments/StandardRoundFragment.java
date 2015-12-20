@@ -47,14 +47,13 @@ import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 public class StandardRoundFragment extends SelectItemFragment<StandardRound> implements View.OnClickListener {
 
     private static final int NEW_STANDARD_ROUND = 1;
+    private final CheckBox[] clubs = new CheckBox[9];
     private DrawerLayout mDrawerLayout;
     private ArrayList<StandardRound> list;
-    private final CheckBox[] clubs = new CheckBox[9];
     private RadioGroup location;
     private RadioGroup unit;
     private RadioGroup typ;
     private StandardRound currentSelection;
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -169,12 +168,13 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
         boolean isMetric = unit.getCheckedRadioButtonId() == R.id.metric;
         String unitDistance = isMetric ? Distance.METER : Distance.YARDS;
         for (StandardRound r : list) {
-            if (((r.club & filter) != 0 ||
+            ArrayList<RoundTemplate> rounds = r.getRounds();
+            if (rounds.size() > 0 && ((r.club & filter) != 0 ||
                     r.name.startsWith("NFAA/IFAA") && (filter & StandardRound.IFAA) != 0) &&
-                    r.getRounds().get(0).distance.unit.equals(unitDistance) &&
+                    rounds.get(0).distance.unit.equals(unitDistance) &&
                     r.indoor == indoor) {
                 int checked = typ.getCheckedRadioButtonId();
-                Target target = r.getRounds().get(0).target;
+                Target target = rounds.get(0).target;
                 if ((checked != R.id.field || target.isFieldTarget()) &&
                         (checked != R.id.three_d || target.is3DTarget())) {
                     displayList.add(r);
@@ -272,6 +272,11 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
         }
     }
 
+    @Override
+    protected StandardRound onSave() {
+        return currentSelection;
+    }
+
     protected class StandardRoundAdapter extends NowListAdapter<StandardRound> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
@@ -307,10 +312,5 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
                 mDetails.setVisibility(View.GONE);
             }
         }
-    }
-
-    @Override
-    protected StandardRound onSave() {
-        return currentSelection;
     }
 }

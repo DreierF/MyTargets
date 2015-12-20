@@ -347,7 +347,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         HashSet<Long> sid = new HashSet<>();
         StandardRound sr = new StandardRound();
         sr.name = mContext.getString(R.string.practice);
-        sr.club = StandardRound.CUSTOM;
+        sr.club = StandardRound.CUSTOM_PRACTICE;
         if (res.moveToFirst()) {
             sr.indoor = res.getInt(5) == 1;
             do {
