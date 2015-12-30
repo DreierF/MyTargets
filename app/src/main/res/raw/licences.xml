@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<notices>
+    <notice>
+        <name>Android-ObservableScrollView</name>
+        <url>https://github.com/ksoichiro/Android-ObservableScrollView</url>
+        <copyright>Copyright 2014 Soichiro Kashima</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>aFileChooser</name>
+        <url>https://github.com/iPaulPro/aFileChooser</url>
+        <copyright>Copyright 2011 - 2013 Paul Burke</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>YWeatherGetter4a</name>
+        <url>https://github.com/zh-wang/YWeatherGetter4a</url>
+        <copyright>Copyright 2014 Zhenghong Wang</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Nine Old Androids</name>
+        <url>http://nineoldandroids.com/</url>
+        <copyright>Copyright (C) 2010 The Android Open Source Project</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>LicensesDialog</name>
+        <url>https://github.com/PSDev/LicensesDialog</url>
+        <copyright>Copyright 2013 Philip Schiffer</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>MPAndroidChart</name>
+        <url>https://github.com/PhilJay/MPAndroidChart/</url>
+        <copyright>Copyright 2015 Philipp Jahoda</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>RecyclerView Multiselect</name>
+        <url>https://github.com/bignerdranch/recyclerview-multiselect</url>
+        <copyright>Copyright (c) 2014 Big Nerd Ranch</copyright>
+        <license>MIT License</license>
+    </notice>
+    <notice>
+        <name>BottomSheet</name>
+        <url>https://github.com/soarcn/BottomSheet</url>
+        <copyright>Copyright 2011, 2015 Kai Liao</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+</notices>

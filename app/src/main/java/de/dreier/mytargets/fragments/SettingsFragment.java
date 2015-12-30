@@ -7,32 +7,27 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.github.machinarius.preferencefragment.PreferenceFragment;
 import com.ipaulpro.afilechooser.utils.FileUtils;
-import com.michaelflisar.licenses.dialog.LicensesDialog;
-import com.michaelflisar.licenses.licenses.LicenseEntry;
-import com.michaelflisar.licenses.licenses.Licenses;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.MainActivity;
 import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.IABHelperWrapper;
 import de.dreier.mytargets.utils.Utils;
+import de.psdev.licensesdialog.LicensesDialog;
 
-public class SettingsFragment extends PreferenceFragment
+public class SettingsFragment extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener,
         DonateDialogFragment.DonationListener {
     private static final int REQUEST_READ_STORAGE = 1;
@@ -45,16 +40,11 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public void onCreatePreferences(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.preferences);
-        LicensesDialog licences = (LicensesDialog) getPreferenceScreen()
-                .findPreference("pref_licence");
-        licence(licences);
 
         Preference version = getPreferenceScreen().findPreference("pref_version");
-        String versionName = Utils.getAppVersionInfo(getActivity()).versionName;
+        String versionName = Utils.getAppVersionInfo(getContext()).versionName;
         version.setSummary(getString(R.string.version, versionName));
 
         setSecondsSummary("timer_wait_time", "10");
@@ -79,10 +69,9 @@ public class SettingsFragment extends PreferenceFragment
         mIABWrapper.onDestroy();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
-    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, @NonNull Preference preference) {
-        boolean ret = super.onPreferenceTreeClick(preferenceScreen, preference);
+    public boolean onPreferenceTreeClick(@NonNull Preference preference) {
+        boolean ret = super.onPreferenceTreeClick(preference);
         if (preference.getKey().equals("pref_import")) {
             doImport();
         } else if (preference.getKey().equals("pref_backup")) {
@@ -97,27 +86,14 @@ public class SettingsFragment extends PreferenceFragment
             contact();
         } else if (preference.getKey().equals("pref_donate")) {
             mIABWrapper.showDialog(this);
+        } else if (preference.getKey().equals("pref_licence")) {
+            new LicensesDialog.Builder(getActivity())
+                    .setTitle(R.string.licences)
+                    .setNotices(R.raw.licences)
+                    .setIncludeOwnLicense(false).build().show();
         }
 
         return ret;
-    }
-
-    private void licence(LicensesDialog licences) {
-        Licenses.init(getActivity());
-        final List<LicenseEntry> list = new ArrayList<>();
-        list.add(Licenses.createLicense("ksoichiro", "1.5.0", "Android-ObservableScrollView",
-                "Copyright 2014 Soichiro Kashima"));
-        list.add(Licenses.createLicense("Machinarius", "0.1.1", "PreferenceFragment-Compat",
-                "Copyright Machinarius"));
-        list.add(Licenses.createLicense("iPaulPro", "", "aFileChooser",
-                "Copyright 2011 - 2013 Paul Burke"));
-        list.add(Licenses.createLicense("MichaelFlisar", "1.0", "LicensesDialog",
-                "Copyright 2013 Michael Flisar"));
-        list.add(Licenses.createLicense("IanGClifton", "1.0.2", "FloatLabel",
-                "Copyright IanGClifton"));
-        list.add(Licenses.createLicenseIcon8());
-
-        licences.setLicences(list);
     }
 
     private void contact() {

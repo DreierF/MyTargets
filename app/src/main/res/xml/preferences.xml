@@ -55,7 +55,7 @@
         <Preference
             android:key="pref_donate"
             android:title="@string/donate_action"/>
-        <com.michaelflisar.licenses.dialog.LicensesDialog
+        <Preference
             android:key="pref_licence"
             android:summary="@string/licences_summary"
             android:title="@string/licences"/>

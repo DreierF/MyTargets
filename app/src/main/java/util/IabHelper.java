@@ -293,7 +293,11 @@ public class IabHelper {
         if (mServiceConn != null) {
             logDebug("Unbinding from service.");
             if (mContext != null) {
-                mContext.unbindService(mServiceConn);
+                try {
+                    mContext.unbindService(mServiceConn);
+                } catch(RuntimeException e) {
+                    e.printStackTrace();
+                }
             }
         }
         mDisposed = true;
