@@ -12,11 +12,17 @@ import android.content.Context;
 import android.database.Cursor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.models.target.TargetFactory;
+import de.dreier.mytargets.utils.Pair;
 
 public class TrainingDataSource extends IdProviderDataSource<Training> {
     public static final String TABLE = "TRAINING";

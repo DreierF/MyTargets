@@ -22,7 +22,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.utils.ScoreboardUtils;
+import de.dreier.mytargets.utils.HTMLUtils;
 
 
 public class ScoreboardActivity extends AppCompatActivity {
@@ -65,7 +65,7 @@ public class ScoreboardActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            return ScoreboardUtils.getHTMLString(ScoreboardActivity.this, mTraining, true);
+            return HTMLUtils.getScorebard(ScoreboardActivity.this, mTraining, true);
         }
 
         @Override

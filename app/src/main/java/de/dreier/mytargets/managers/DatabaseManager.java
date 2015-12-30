@@ -20,10 +20,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
@@ -43,7 +40,6 @@ import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.BackupUtils;
-import de.dreier.mytargets.utils.Pair;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
@@ -404,79 +400,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 
 ////// GET AGGREGATED INFORMATION //////
-
-    private Map<Pair<Integer, String>, Integer> getTrainingScoreDistribution(long training) {
-        SQLiteDatabase db = getWritableDatabase();
-        Cursor cursor = db
-                .rawQuery("SELECT a.target, a.scoring_style, s.points, s.arrow_index, COUNT(*) " +
-                        "FROM ROUND r " +
-                        "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
-                        "LEFT JOIN PASSE p ON r._id = p.round " +
-                        "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                        "WHERE r.training=" + training + " " +
-                        "GROUP BY a.target, a.scoring_style, s.points, s.arrow_index", null);
-
-        if (!cursor.moveToFirst()) {
-            cursor.close();
-            throw new IllegalStateException("There must be at least one round!");
-        }
-        Target t = TargetFactory.createTarget(mContext, cursor.getInt(0), cursor.getInt(1));
-        Map<Pair<Integer, String>, Integer> scoreCount = new HashMap<>();
-        for (int arrow = 0; arrow < 3; arrow++) {
-            for (int zone = -1; zone < t.getZones(); zone++) {
-                scoreCount.put(new Pair<>(t.getPointsByZone(zone, arrow),
-                        t.zoneToString(zone, arrow)), 0);
-            }
-            if (!t.dependsOnArrowIndex()) {
-                break;
-            }
-        }
-        do {
-            if (cursor.isNull(2)) {
-                continue;
-            }
-            int zone = cursor.getInt(2);
-            int arrow = cursor.getInt(3);
-            int count = cursor.getInt(4);
-            Pair<Integer, String> tuple = new Pair<>(t.getPointsByZone(zone, arrow),
-                    t.zoneToString(zone, arrow));
-            count += scoreCount.get(tuple);
-            scoreCount.put(tuple, count);
-        } while (cursor.moveToNext());
-        cursor.close();
-        return scoreCount;
-    }
-
-    public ArrayList<Pair<String, Integer>> getTrainingTopScoreDistribution(long training) {
-        Map<Pair<Integer, String>, Integer> scoreCount = getTrainingScoreDistribution(training);
-        ArrayList<Pair<Integer, String>> list = new ArrayList<>(scoreCount.keySet());
-        Collections.sort(list, (lhs, rhs) -> {
-            if (lhs.getFirst().equals(rhs.getFirst())) {
-                return -lhs.getSecond().compareTo(rhs.getSecond());
-            }
-            if (lhs.getFirst() > rhs.getFirst()) {
-                return -1;
-            }
-            return 1;
-        });
-        ArrayList<Pair<String, Integer>> topScore = new ArrayList<>();
-        topScore.add(new Pair<>(list.get(0).getSecond(), scoreCount.get(list.get(0))));
-        boolean collapseFirst = list.get(0).getFirst().equals(list.get(1).getFirst());
-        if (list.size() == 1) {
-            return topScore;
-        }
-        if (collapseFirst) {
-            topScore.add(new Pair<>(list.get(1).getSecond() + "+" + list.get(0).getSecond(),
-                    scoreCount.get(list.get(1)) + scoreCount.get(list.get(0))));
-        } else {
-            topScore.add(new Pair<>(list.get(1).getSecond(), scoreCount.get(list.get(1))));
-        }
-        if (list.size() == 2) {
-            return topScore;
-        }
-        topScore.add(new Pair<>(list.get(2).getSecond(), scoreCount.get(list.get(2))));
-        return topScore;
-    }
 
 
 ////// EXPORT ALL //////

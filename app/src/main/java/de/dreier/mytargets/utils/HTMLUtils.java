@@ -17,7 +17,6 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
@@ -33,7 +32,7 @@ import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.models.target.Target;
 
-public class ScoreboardUtils {
+public class HTMLUtils {
 
     private static final String CSS = "<style type=\"text/css\">\n" +
             "body{font-family: Roboto, Sans-serif;}\n" +
@@ -43,7 +42,7 @@ public class ScoreboardUtils {
             ".align_center td {text-align: center; }" +
             "</style>";
 
-    public static String getHTMLString(Context context, long trainingId, boolean withTarget) {
+    public static String getScorebard(Context context, long trainingId, boolean withTarget) {
         // Query information from database
         RoundDataSource roundDataSource = new RoundDataSource(context);
         Training training = new TrainingDataSource(context).get(trainingId);
@@ -55,12 +54,14 @@ public class ScoreboardUtils {
         String formattedDate = DateFormat.getDateInstance().format(training.date);
         html += "<h3>" + training.title + " (" + formattedDate + ")</h3>";
         boolean[] equals = new boolean[2];
-        html += getTrainingInfoHTML(context, training, rounds, equals);
+        html += "<table width=\"100%\" style=\"border:0px;\"><tr>" +
+                "<td width=\"50%\">" + getTrainingInfoHTML(context, training, rounds, equals) + "</td>" +
+                "<td width=\"50%\">" + getTrainingTopScoreDistribution(context, trainingId) + "</td>" +
+                "</tr></table>";
 
         html += "<table class=\"myTable\">";
         html += getTableHeader(context, rounds.get(0).info.arrowsPerPasse);
-        int carry = 0, count = 0;
-        DatabaseManager db = DatabaseManager.getInstance(context);
+        int carry = 0;
         for (int r = 0; r < rounds.size(); r++) {
             Round round = rounds.get(r);
             html += "<tr class=\"align_left\"><td colspan=\"" +
@@ -70,7 +71,7 @@ public class ScoreboardUtils {
                     "</b><br />" +
                     getRoundInfoHTML(context, round, equals) +
                     "</td></tr>";
-            ArrayList<Passe> passes = new PasseDataSource(context).getAll(round.getId());
+            ArrayList<Passe> passes = new PasseDataSource(context).getAllByRound(round.getId());
             for (Passe passe : passes) {
                 html += "<tr class=\"align_center\">";
                 int sum = 0;
@@ -82,34 +83,13 @@ public class ScoreboardUtils {
                     int points = round.info.target.getPointsByZone(shot.zone, i);
                     sum += points;
                     carry += points;
-                    count++;
                 }
                 html += "<td>" + sum + "</td>";
                 html += "<td>" + carry + "</td>";
                 html += "</tr>";
             }
         }
-        float avg = 0;
-        if (count > 0) {
-            avg = ((carry * 100) / count) / 100.0f;
-        }
         html += "</table>";
-        if (rounds.size() > 0) {
-            ArrayList<Pair<String, Integer>> scoreCount = db
-                    .getTrainingTopScoreDistribution(trainingId);
-            html += "<table class=\"myTable\" style=\"margin-top:5px;\">" +
-                    "<tr class=\"align_center\"><th>" + scoreCount.get(2).getFirst() + "</th>" +
-                    "<th>" + scoreCount.get(1).getFirst() + "</th>" +
-                    "<th>" + scoreCount.get(0).getFirst() + "</th>" +
-                    "<th>" + context.getString(R.string.average) + "</th></tr>" +
-                    "<tr class=\"align_center\"><td>" + scoreCount.get(2).getSecond() +
-                    "</td>" +
-                    "<td>" + scoreCount.get(1).getSecond() + "</td>" +
-                    "<td>" + scoreCount.get(0).getSecond() + "</td>" +
-                    "<td>" + avg + "</td>" +
-                    "</tr></table>";
-        }
-
 
         String comments =
                 "<table class=\"myTable\" style=\"margin-top:5px;\"><tr class=\"align_center\">" +
@@ -122,7 +102,7 @@ public class ScoreboardUtils {
         int j = 0;
         for (Round round : rounds) {
             int i = 1;
-            ArrayList<Passe> passes = new PasseDataSource(context).getAll(round.getId());
+            ArrayList<Passe> passes = new PasseDataSource(context).getAllByRound(round.getId());
             for (Passe passe : passes) {
                 for (int s = 0; s < passe.shot.length; s++) {
                     Shot shot = passe.shot[s];
@@ -190,24 +170,45 @@ public class ScoreboardUtils {
         return infoText;
     }
 
-    public static String getTrainingInfoHTML(Context context, Training training, ArrayList<Round> rounds, boolean[] equals) {
-        StandardRound standardRound = new StandardRoundDataSource(context).get(
-                training.standardRoundId);
-        boolean indoor = standardRound.indoor;
-
+    @NonNull
+    public static String getTrainingTopScoreDistribution(Context context, long training) {
+        String infoText = "";
         int maxPoints = 0;
         int reachedPoints = 0;
+        ArrayList<Round> rounds = new RoundDataSource(context).getAll(training);
         for (Round r : rounds) {
             maxPoints += r.info.getMaxPoints();
             reachedPoints += r.reachedPoints;
         }
         String percent = maxPoints == 0 ? "" :
                 " (" + (reachedPoints * 100 / maxPoints) + "%)";
-        String infoText = context.getString(R.string.points) + ": <b>" +
-                reachedPoints + "/" +
-                maxPoints + percent + "</b>";
+        String value = reachedPoints + "/" + maxPoints + percent;
+        infoText += getKeyValueLine(context.getString(R.string.points), value);
 
-        infoText += "<br>" + context.getString(R.string.standard_round) + ": <b>" + TextUtils
+        PasseDataSource passeDataSource = new PasseDataSource(context);
+
+        ArrayList<Pair<String, Integer>> scoreCount = passeDataSource.getTopScoreDistribution(training);
+        for (Pair<String, Integer> score : scoreCount) {
+            infoText += getKeyValueLine(score.getFirst(), score.getSecond());
+        }
+        ;
+        infoText += getKeyValueLine(context.getString(R.string.average),
+                passeDataSource.getAverageScore(training));
+        return infoText;
+    }
+
+    @NonNull
+    private static String getKeyValueLine(String key, Object value) {
+        return key + ": <b>" + value + "</b><br>";
+    }
+
+    public static String getTrainingInfoHTML(Context context, Training training, ArrayList<Round> rounds, boolean[] equals) {
+        StandardRound standardRound = new StandardRoundDataSource(context).get(
+                training.standardRoundId);
+        boolean indoor = standardRound.indoor;
+
+        String infoText = "";
+        infoText += context.getString(R.string.standard_round) + ": <b>" + TextUtils
                 .htmlEncode(standardRound.name) + "</b>";
 
         // Set round info

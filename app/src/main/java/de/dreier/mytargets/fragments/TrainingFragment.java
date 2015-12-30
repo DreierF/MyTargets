@@ -41,7 +41,6 @@ import de.dreier.mytargets.activities.ScoreboardActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
-import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
@@ -54,7 +53,7 @@ import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.HeaderBindingHolder;
 import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.ScoreboardImage;
-import de.dreier.mytargets.utils.ScoreboardUtils;
+import de.dreier.mytargets.utils.HTMLUtils;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.TargetImage;
 import de.dreier.mytargets.views.PasseView;
@@ -154,20 +153,10 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         TextView info = (TextView) rootView.findViewById(R.id.detail_round_info);
         TextView tvScore = (TextView) rootView.findViewById(R.id.detail_score);
 
-        DatabaseManager db = DatabaseManager.getInstance(getContext());
-        ArrayList<Pair<String, Integer>> scoreCount = db
-                .getTrainingTopScoreDistribution(mTraining);
-        String infoText = "<font color=#ffffff>";
-        for (Pair<String, Integer> score : scoreCount) {
-            infoText += score.getFirst() + ": <b>" + score.getSecond() + "</b><br>";
-        }
-        infoText += "</font>";
-        tvScore.setText(Html.fromHtml(infoText));
+        tvScore.setText(Html.fromHtml(HTMLUtils.getTrainingTopScoreDistribution(getContext(), mTraining)));
 
         // Set training info
-        infoText = ScoreboardUtils
-                .getTrainingInfoHTML(getActivity(), training, mRounds, equals);
-        info.setText(Html.fromHtml(infoText));
+        info.setText(Html.fromHtml(HTMLUtils.getTrainingInfoHTML(getActivity(), training, mRounds, equals)));
     }
 
     @Override
@@ -262,10 +251,8 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
 
     private void shareText() {
         mRounds = roundDataSource.getAll(mTraining);
-
-        DatabaseManager db = DatabaseManager.getInstance(getContext());
-        ArrayList<Pair<String, Integer>> scoreCount = db
-                .getTrainingTopScoreDistribution(mTraining);
+        ArrayList<Pair<String, Integer>> scoreCount = passeDataSource
+                .getTopScoreDistribution(mTraining);
         String scoreText = "";
         for (Pair<String, Integer> score : scoreCount) {
             scoreText += getString(R.string.d_times_s, score.getSecond(), score.getFirst());
@@ -308,7 +295,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         ArrayList<Round> rounds = roundDataSource.getAll(mTraining);
         for (int roundIndex = 0; roundIndex < rounds.size(); roundIndex++) {
             Round mRound = rounds.get(roundIndex);
-            ArrayList<Passe> passes = passeDataSource.getAll(mRound.getId());
+            ArrayList<Passe> passes = passeDataSource.getAllByRound(mRound.getId());
             if (passes.size() < mRound.info.passes) {
                 // Open InputActivity to add new passes
                 Intent i = new Intent(getContext(), InputActivity.class);
@@ -424,7 +411,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
             Context context = mTitle.getContext();
             mTitle.setText(context.getString(R.string.round) + " " + (mRounds.indexOf(mItem) + 1));
 
-            String infoText = ScoreboardUtils.getRoundInfoHTML(context, mItem, equals);
+            String infoText = HTMLUtils.getRoundInfoHTML(context, mItem, equals);
             mSubtitle.setText(Html.fromHtml(infoText));
         }
 

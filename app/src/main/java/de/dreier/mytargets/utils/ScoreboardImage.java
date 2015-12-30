@@ -27,8 +27,8 @@ public class ScoreboardImage {
     public void generateBitmap(final Activity context, final long mRound, final File f) {
 
         // Generate html content
-        final String content = ScoreboardUtils
-                .getHTMLString(context, mRound, false);
+        final String content = HTMLUtils
+                .getScorebard(context, mRound, false);
 
         final CountDownLatch signal = new CountDownLatch(1);
         context.runOnUiThread(() -> {

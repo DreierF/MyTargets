@@ -78,7 +78,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         template = mRound.info;
         training = new TrainingDataSource(this).get(mRound.training);
         rounds = roundDataSource.getAll(mRound.training);
-        savedPasses = passeDataSource.getAll(roundId).size();
+        savedPasses = passeDataSource.getAllByRound(roundId).size();
         mExitOnFinish = savedPasses <= curPasse;
 
         target.setRoundTemplate(template);
@@ -139,7 +139,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                 mRound = rounds.get(template.index + 1);
                 template = mRound.info;
                 passe = 0;
-                savedPasses = passeDataSource.getAll(mRound.getId()).size();
+                savedPasses = passeDataSource.getAllByRound(mRound.getId()).size();
             } else if (mExitOnFinish) {
                 finish();
                 overridePendingTransition(R.anim.left_in, R.anim.right_out);

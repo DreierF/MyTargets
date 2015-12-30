@@ -11,9 +11,15 @@ import android.content.Context;
 import android.database.Cursor;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.models.target.TargetFactory;
+import de.dreier.mytargets.utils.Pair;
 
 public class PasseDataSource extends IdProviderDataSource<Passe> {
     public static final String TABLE = "PASSE";
@@ -92,7 +98,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         return p;
     }
 
-    public ArrayList<Passe> getAll(long round) {
+    public ArrayList<Passe> getAllByRound(long round) {
         Cursor res = database.rawQuery(
                 "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, " +
                         "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id), p.exact " +
@@ -167,5 +173,102 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         }
         res.close();
         return list;
+    }
+
+    public float getAverageScore(long training) {
+        Cursor res = database.rawQuery(
+                "SELECT s.points, a.target, a.scoring_style, s.arrow_index " +
+                        "FROM ROUND r " +
+                        "LEFT JOIN PASSE p ON r._id = p.round " +
+                        "LEFT JOIN SHOOT s ON p._id = s.passe " +
+                        "LEFT JOIN ROUND_TEMPLATE a ON a._id = r.template " +
+                        "WHERE r.training = " + training + " " +
+                        "ORDER BY r._id ASC, p._id ASC, s._id ASC", null);
+        int count = 0;
+        int sum = 0;
+        if (res.moveToFirst()) {
+            do {
+                count++;
+                sum += TargetFactory.createTarget(context, res.getInt(1), res.getInt(2)).getPointsByZone(res.getInt(0), res.getInt(3));
+            } while (res.moveToNext());
+        }
+        res.close();
+        float average = 0;
+        if (count > 0) {
+            average = ((sum * 100) / count) / 100.0f;
+        }
+        return average;
+    }
+
+    private Map<Pair<Integer, String>, Integer> getScoreDistribution(long training) {
+        Cursor cursor = database
+                .rawQuery("SELECT a.target, a.scoring_style, s.points, s.arrow_index, COUNT(*) " +
+                        "FROM ROUND r " +
+                        "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
+                        "LEFT JOIN PASSE p ON r._id = p.round " +
+                        "LEFT JOIN SHOOT s ON p._id = s.passe " +
+                        "WHERE r.training=" + training + " " +
+                        "GROUP BY a.target, a.scoring_style, s.points, s.arrow_index", null);
+
+        if (!cursor.moveToFirst()) {
+            cursor.close();
+            throw new IllegalStateException("There must be at least one round!");
+        }
+        Target t = TargetFactory.createTarget(context, cursor.getInt(0), cursor.getInt(1));
+        Map<Pair<Integer, String>, Integer> scoreCount = new HashMap<>();
+        for (int arrow = 0; arrow < 3; arrow++) {
+            for (int zone = -1; zone < t.getZones(); zone++) {
+                scoreCount.put(new Pair<>(t.getPointsByZone(zone, arrow),
+                        t.zoneToString(zone, arrow)), 0);
+            }
+            if (!t.dependsOnArrowIndex()) {
+                break;
+            }
+        }
+        do {
+            if (cursor.isNull(2)) {
+                continue;
+            }
+            int zone = cursor.getInt(2);
+            int arrow = cursor.getInt(3);
+            int count = cursor.getInt(4);
+            Pair<Integer, String> tuple = new Pair<>(t.getPointsByZone(zone, arrow),
+                    t.zoneToString(zone, arrow));
+            count += scoreCount.get(tuple);
+            scoreCount.put(tuple, count);
+        } while (cursor.moveToNext());
+        cursor.close();
+        return scoreCount;
+    }
+
+    public ArrayList<Pair<String, Integer>> getTopScoreDistribution(long training) {
+        Map<Pair<Integer, String>, Integer> scoreCount = getScoreDistribution(training);
+        ArrayList<Pair<Integer, String>> list = new ArrayList<>(scoreCount.keySet());
+        Collections.sort(list, (lhs, rhs) -> {
+            if (lhs.getFirst().equals(rhs.getFirst())) {
+                return -lhs.getSecond().compareTo(rhs.getSecond());
+            }
+            if (lhs.getFirst() > rhs.getFirst()) {
+                return -1;
+            }
+            return 1;
+        });
+        ArrayList<Pair<String, Integer>> topScore = new ArrayList<>();
+        topScore.add(new Pair<>(list.get(0).getSecond(), scoreCount.get(list.get(0))));
+        boolean collapseFirst = list.get(0).getFirst().equals(list.get(1).getFirst());
+        if (list.size() == 1) {
+            return topScore;
+        }
+        if (collapseFirst) {
+            topScore.add(new Pair<>(list.get(1).getSecond() + "+" + list.get(0).getSecond(),
+                    scoreCount.get(list.get(1)) + scoreCount.get(list.get(0))));
+        } else {
+            topScore.add(new Pair<>(list.get(1).getSecond(), scoreCount.get(list.get(1))));
+        }
+        if (list.size() == 2) {
+            return topScore;
+        }
+        topScore.add(new Pair<>(list.get(2).getSecond(), scoreCount.get(list.get(2))));
+        return topScore;
     }
 }
