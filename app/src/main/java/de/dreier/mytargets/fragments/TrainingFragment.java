@@ -411,7 +411,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
             Context context = mTitle.getContext();
             mTitle.setText(context.getString(R.string.round) + " " + (mRounds.indexOf(mItem) + 1));
 
-            String infoText = HTMLUtils.getRoundInfoHTML(context, mItem, equals);
+            String infoText = HTMLUtils.getRoundInfo(context, mItem, equals);
             mSubtitle.setText(Html.fromHtml(infoText));
         }
 

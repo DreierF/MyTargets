@@ -14,8 +14,8 @@ android {
         applicationId "de.dreier.mytargets"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 36
-        versionName '2.2.0beta6'
+        versionCode versionCode
+        versionName versionName
     }
 
     /*
@@ -52,20 +52,24 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:23.1.1'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
-    compile 'com.android.support:support-annotations:23.1.1'
-    compile 'com.android.support:preference-v7:23.1.1'
-    compile 'com.android.support:preference-v14:23.1.1'
-    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile "com.android.support:support-v4:${supportLibVersion}"
+    compile "com.android.support:appcompat-v7:${supportLibVersion}"
+    compile "com.android.support:design:${supportLibVersion}"
+    compile "com.android.support:support-annotations:${supportLibVersion}"
+    compile "com.android.support:preference-v7:${supportLibVersion}"
+    compile "com.android.support:preference-v14:${supportLibVersion}"
+    compile "com.android.support:recyclerview-v7:${supportLibVersion}"
+    compile "com.android.support:preference-v14:${supportLibVersion}"
+
     compile 'com.google.android.gms:play-services-wearable:8.4.0'
+
     compile 'com.github.ksoichiro:android-observablescrollview:1.5.2'
+    compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'
+    compile 'de.psdev.licensesdialog:licensesdialog:1.7.0'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.cocosw:bottomsheet:1.1.1@aar'
-    compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'
-    compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
-    compile 'de.psdev.licensesdialog:licensesdialog:1.7.0'
+
     compile project(':libraries:aFileChooser')
     compile project(':libraries:YWeatherGetter4a')
     compile project(':shared')

@@ -1,8 +1,10 @@
 package de.dreier.mytargets.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -14,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.ipaulpro.afilechooser.utils.FileUtils;
@@ -40,16 +43,42 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     @Override
-    public void onCreatePreferences(Bundle bundle, String s) {
-        addPreferencesFromResource(R.xml.preferences);
+    public void onCreatePreferences(Bundle bundle, String rootKey) {
+        setPreferencesFromResource(R.xml.preferences, rootKey);
 
+        if (rootKey == null) {
+            initRoot();
+            getActivity().setTitle(R.string.preferences);
+        } else if (rootKey.equals("timer")) {
+            getActivity().setTitle(R.string.timer);
+        } else if (rootKey.equals("scoreboard")) {
+            getActivity().setTitle(R.string.scoreboard);
+        }
+    }
+
+    private void initRoot() {
         Preference version = getPreferenceScreen().findPreference("pref_version");
-        String versionName = Utils.getAppVersionInfo(getContext()).versionName;
-        version.setSummary(getString(R.string.version, versionName));
+        PackageInfo appVersionInfo = Utils.getAppVersionInfo(getContext());
+        if (appVersionInfo != null) {
+            String versionName = appVersionInfo.versionName;
+            version.setSummary(getString(R.string.version, versionName));
+        } else {
+            version.setSummary(getString(R.string.version, "unknown"));
+        }
 
         setSecondsSummary("timer_wait_time", "10");
         setSecondsSummary("timer_shoot_time", "120");
         setSecondsSummary("timer_warn_time", "30");
+    }
+
+    @SuppressLint("PrivateResource")
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Set the default white background in the view so as to avoid transparency
+        view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.background_material_light));
+
     }
 
     @Override
@@ -71,29 +100,37 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     @Override
     public boolean onPreferenceTreeClick(@NonNull Preference preference) {
-        boolean ret = super.onPreferenceTreeClick(preference);
-        if (preference.getKey().equals("pref_import")) {
-            doImport();
-        } else if (preference.getKey().equals("pref_backup")) {
-            doBackup();
-        } else if (preference.getKey().equals("pref_export")) {
-            doExport();
-        } else if (preference.getKey().equals("pref_rate")) {
-            rate();
-        } else if (preference.getKey().equals("pref_share")) {
-            share();
-        } else if (preference.getKey().equals("pref_contact")) {
-            contact();
-        } else if (preference.getKey().equals("pref_donate")) {
-            mIABWrapper.showDialog(this);
-        } else if (preference.getKey().equals("pref_licence")) {
-            new LicensesDialog.Builder(getActivity())
-                    .setTitle(R.string.licences)
-                    .setNotices(R.raw.licences)
-                    .setIncludeOwnLicense(false).build().show();
+        switch (preference.getKey()) {
+            case "pref_import":
+                doImport();
+                return true;
+            case "pref_backup":
+                doBackup();
+                return true;
+            case "pref_export":
+                doExport();
+                return true;
+            case "pref_rate":
+                rate();
+                return true;
+            case "pref_share":
+                share();
+                return true;
+            case "pref_contact":
+                contact();
+                return true;
+            case "pref_donate":
+                mIABWrapper.showDialog(this);
+                return true;
+            case "pref_licence":
+                new LicensesDialog.Builder(getActivity())
+                        .setTitle(R.string.licences)
+                        .setNotices(R.raw.licences)
+                        .setIncludeOwnLicense(false).build().show();
+                return true;
+            default:
+                return super.onPreferenceTreeClick(preference);
         }
-
-        return ret;
     }
 
     private void contact() {
@@ -260,9 +297,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        setSecondsSummary("timer_wait_time", "10");
-        setSecondsSummary("timer_shoot_time", "120");
-        setSecondsSummary("timer_warn_time", "30");
+        if (key.startsWith("timer_")) {
+            setSecondsSummary("timer_wait_time", "10");
+            setSecondsSummary("timer_shoot_time", "120");
+            setSecondsSummary("timer_warn_time", "30");
+        }
     }
 
     private void setSecondsSummary(String key, String def) {

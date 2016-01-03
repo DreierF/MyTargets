@@ -28,7 +28,7 @@ public class ScoreboardImage {
 
         // Generate html content
         final String content = HTMLUtils
-                .getScorebard(context, mRound, false);
+                .getScoreboard(context, mRound, ScoreboardConfiguration.fromShareSettings(context));
 
         final CountDownLatch signal = new CountDownLatch(1);
         context.runOnUiThread(() -> {

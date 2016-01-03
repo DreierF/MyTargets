@@ -21,7 +21,6 @@ import de.dreier.mytargets.fragments.BowFragment;
 import de.dreier.mytargets.fragments.DistanceFragment;
 import de.dreier.mytargets.fragments.EnvironmentFragment;
 import de.dreier.mytargets.fragments.FragmentBase;
-import de.dreier.mytargets.fragments.SelectItemFragment;
 import de.dreier.mytargets.fragments.TargetFragment;
 import de.dreier.mytargets.fragments.WindDirectionFragment;
 import de.dreier.mytargets.fragments.WindSpeedFragment;
@@ -72,6 +71,12 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
         data.putExtra(ITEM, (Serializable) item);
         setResult(RESULT_OK, data);
         onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
     public static class ArrowActivity extends ItemSelectActivity {

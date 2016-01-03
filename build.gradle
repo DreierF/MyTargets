@@ -14,6 +14,14 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven { url "https://jitpack.io" }
+        maven {
+            url "https://jitpack.io"
+        }
     }
+}
+
+ext {
+    supportLibVersion = '23.1.1'
+    versionName = '2.2.0beta6'
+    versionCode = 36
 }

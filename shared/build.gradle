@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 23
-        versionCode 36
-        versionName '2.2.0beta6'
+        versionCode versionCode
+        versionName versionName
     }
 
     if(new File("gradle.properties").exists()) {
@@ -38,5 +38,5 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-annotations:23.1.1'
+    compile "com.android.support:support-annotations:${supportLibVersion}"
 }

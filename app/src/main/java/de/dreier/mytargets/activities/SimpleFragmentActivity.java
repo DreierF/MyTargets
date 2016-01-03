@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceScreen;
 import android.view.MenuItem;
 
 import de.dreier.mytargets.R;
@@ -25,6 +27,7 @@ import de.dreier.mytargets.fragments.TrainingFragment;
 
 public abstract class SimpleFragmentActivity extends AppCompatActivity {
 
+    private static final String FRAGMENT_TAG = "fragment";
     protected Fragment childFragment;
 
     protected abstract Fragment instantiateFragment();
@@ -33,11 +36,21 @@ public abstract class SimpleFragmentActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResource());
-        childFragment = instantiateFragment();
-        Bundle bundle = getIntent() != null ? getIntent().getExtras() : null;
-        childFragment.setArguments(bundle);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content, childFragment).commit();
+
+        if (savedInstanceState == null) {
+            // Create the fragment only when the activity is created for the first time.
+            // ie. not after orientation changes
+             childFragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+            if (childFragment == null) {
+                childFragment = instantiateFragment();
+                Bundle bundle = getIntent() != null ? getIntent().getExtras() : null;
+                childFragment.setArguments(bundle);
+            }
+
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content, childFragment, FRAGMENT_TAG);
+            ft.commit();
+        }
     }
 
     protected int getLayoutResource() {
@@ -54,25 +67,40 @@ public abstract class SimpleFragmentActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        finish();
-        overridePendingTransition(R.anim.left_in, R.anim.right_out);
-    }
-
     public static class TimerActivity extends SimpleFragmentActivity {
 
         @Override
         public Fragment instantiateFragment() {
             return new TimerFragment();
         }
+
+        @Override
+        public void onBackPressed() {
+            finish();
+            overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        }
     }
 
-    public static class SettingsActivity extends SimpleFragmentActivity {
+    public static class SettingsActivity extends SimpleFragmentActivity implements
+            PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
         @Override
         public Fragment instantiateFragment() {
             return new SettingsFragment();
+        }
+
+        @Override
+        public boolean onPreferenceStartScreen(PreferenceFragmentCompat preferenceFragmentCompat,
+                                               PreferenceScreen preferenceScreen) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            SettingsFragment fragment = new SettingsFragment();
+            Bundle args = new Bundle();
+            args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, preferenceScreen.getKey());
+            fragment.setArguments(args);
+            ft.add(R.id.content, fragment, preferenceScreen.getKey());
+            ft.addToBackStack(preferenceScreen.getKey());
+            ft.commit();
+            return true;
         }
     }
 
@@ -82,6 +110,12 @@ public abstract class SimpleFragmentActivity extends AppCompatActivity {
         public Fragment instantiateFragment() {
             return new TrainingFragment();
         }
+
+        @Override
+        public void onBackPressed() {
+            finish();
+            overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        }
     }
 
     public static class EditTrainingActivity extends SimpleFragmentActivity {
@@ -90,12 +124,25 @@ public abstract class SimpleFragmentActivity extends AppCompatActivity {
         protected Fragment instantiateFragment() {
             return new EditTrainingFragment();
         }
+
+        @Override
+        public void onBackPressed() {
+            finish();
+            overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        }
     }
+
     public static class EditRoundActivity extends SimpleFragmentActivity {
 
         @Override
         protected Fragment instantiateFragment() {
             return new EditRoundFragment();
+        }
+
+        @Override
+        public void onBackPressed() {
+            finish();
+            overridePendingTransition(R.anim.left_in, R.anim.right_out);
         }
     }
 
@@ -105,6 +152,12 @@ public abstract class SimpleFragmentActivity extends AppCompatActivity {
         protected Fragment instantiateFragment() {
             return new EditStandardRoundFragment();
         }
+
+        @Override
+        public void onBackPressed() {
+            finish();
+            overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        }
     }
 
     public static class EditBowActivity extends SimpleFragmentActivity {
@@ -113,6 +166,12 @@ public abstract class SimpleFragmentActivity extends AppCompatActivity {
         protected Fragment instantiateFragment() {
             return new EditBowFragment();
         }
+
+        @Override
+        public void onBackPressed() {
+            finish();
+            overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        }
     }
 
     public static class EditArrowActivity extends SimpleFragmentActivity {
@@ -120,6 +179,12 @@ public abstract class SimpleFragmentActivity extends AppCompatActivity {
         @Override
         protected Fragment instantiateFragment() {
             return new EditArrowFragment();
+        }
+
+        @Override
+        public void onBackPressed() {
+            finish();
+            overridePendingTransition(R.anim.left_in, R.anim.right_out);
         }
     }
 }

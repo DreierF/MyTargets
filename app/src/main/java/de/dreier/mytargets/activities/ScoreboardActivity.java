@@ -18,11 +18,17 @@ import android.print.PrintManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.utils.HTMLUtils;
+import de.dreier.mytargets.utils.ScoreboardConfiguration;
+
+import static android.support.v7.preference.PreferenceFragmentCompat.ARG_PREFERENCE_ROOT;
 
 
 public class ScoreboardActivity extends AppCompatActivity {
@@ -57,22 +63,27 @@ public class ScoreboardActivity extends AppCompatActivity {
             }
         });
 
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        loadScoreboardTask.execute();
     }
 
-    private final AsyncTask<Void, Void, String> loadScoreboardTask = new AsyncTask<Void, Void, String>() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new AsyncTask<Void, Void, String>() {
 
-        @Override
-        protected String doInBackground(Void... params) {
-            return HTMLUtils.getScorebard(ScoreboardActivity.this, mTraining, true);
-        }
+            @Override
+            protected String doInBackground(Void... params) {
+                return HTMLUtils.getScoreboard(ScoreboardActivity.this, mTraining,
+                        ScoreboardConfiguration.fromDisplaySettings(getApplicationContext()));
+            }
 
-        @Override
-        protected void onPostExecute(String s) {
-            webView.loadDataWithBaseURL("file:///android_asset/", s, "text/html", "UTF-8", "");
-        }
-    };
+            @Override
+            protected void onPostExecute(String s) {
+                webView.loadDataWithBaseURL("file:///android_asset/", s, "text/html", "UTF-8", "");
+            }
+        }.execute();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,24 +97,51 @@ public class ScoreboardActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_print) {
-            print();
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_print:
+                print();
+                return true;
+            case R.id.action_settings:
+                Intent i = new Intent(this, SimpleFragmentActivity.SettingsActivity.class);
+                i.putExtra(ARG_PREFERENCE_ROOT, "scoreboard");
+                startActivity(i);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("deprecation")
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void print() {
-        // Get a PrintManager instance
-        PrintManager printManager = (PrintManager) getSystemService(PRINT_SERVICE);
-
         // Get a print adapter instance
-        PrintDocumentAdapter printAdapter = webView.createPrintDocumentAdapter();
+        final WebView webViewPrint = new WebView(this);
+        webViewPrint.setVisibility(View.INVISIBLE);
+        final FrameLayout container = (FrameLayout) findViewById(android.R.id.content);
+        ViewGroup.LayoutParams p = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        webViewPrint.setLayoutParams(p);
+        container.addView(webViewPrint);
 
-        // Create a print job with name and adapter instance
-        String jobName = getString(R.string.scoreboard) + " Document";
-        printManager.print(jobName, printAdapter, new PrintAttributes.Builder().build());
+        new AsyncTask<Void, Void, String>() {
+
+            @Override
+            protected String doInBackground(Void... params) {
+                return HTMLUtils.getScoreboard(ScoreboardActivity.this, mTraining,
+                        ScoreboardConfiguration.fromPrintSettings(getApplicationContext()));
+            }
+
+            @SuppressWarnings("deprecation")
+            @Override
+            protected void onPostExecute(String s) {
+                webViewPrint.loadDataWithBaseURL("file:///android_asset/", s, "text/html", "UTF-8", "");
+                PrintDocumentAdapter printAdapter = webViewPrint.createPrintDocumentAdapter();
+
+                // Create a print job with name and adapter instance
+                PrintManager printManager = (PrintManager) getSystemService(PRINT_SERVICE);
+                String jobName = getString(R.string.scoreboard) + " Document";
+                printManager.print(jobName, printAdapter, new PrintAttributes.Builder().build());
+            }
+        }.execute();
     }
 }
