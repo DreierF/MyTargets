@@ -221,4 +221,11 @@
   <string name="tip_weight">Spitzengewicht</string>
   <string name="arrow_ranking">Pfeil-Rangliste</string>
   <string name="arrow_x_of_set_of_arrows">Pfeil %1$d von %2$s</string>
+  <string name="display">Anzeige</string>
+  <string name="print">Drucken</string>
+  <string name="table">Tabelle</string>
+  <string name="comments">Kommentare</string>
+  <string name="show_points_colored">Ringe farbig anzeigen</string>
+  <string name="stabilizer">Stabilisator</string>
+  <string name="clicker">Klicker</string>
 </resources>

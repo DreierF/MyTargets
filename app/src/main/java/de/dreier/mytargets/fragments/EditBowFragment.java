@@ -45,6 +45,8 @@ public class EditBowFragment extends EditWithImageFragmentBase
     private EditText limbs;
     private EditText sight;
     private EditText drawWeight;
+    private EditText stabilizer;
+    private EditText clicker;
     private EditText desc;
     private RadioButton recurveBow, compoundBow, longBow, blank, horse, yumi;
     private long mBowId = -1;
@@ -57,7 +59,6 @@ public class EditBowFragment extends EditWithImageFragmentBase
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
-
 
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey(BOW_ID)) {
@@ -77,6 +78,8 @@ public class EditBowFragment extends EditWithImageFragmentBase
         limbs = (EditText) rootView.findViewById(R.id.limbs);
         sight = (EditText) rootView.findViewById(R.id.sight);
         drawWeight = (EditText) rootView.findViewById(R.id.draw_weight);
+        stabilizer = (EditText) rootView.findViewById(R.id.stabilizer);
+        clicker = (EditText) rootView.findViewById(R.id.clicker);
         desc = (EditText) rootView.findViewById(R.id.desc);
         //noinspection unchecked
         sight_settings = (DynamicItemLayout<SightSetting>) rootView.findViewById(R.id.sight_settings);
@@ -121,6 +124,8 @@ public class EditBowFragment extends EditWithImageFragmentBase
         limbs.setText(bow.limbs);
         sight.setText(bow.sight);
         drawWeight.setText(bow.drawWeight);
+        stabilizer.setText(bow.stabilizer);
+        clicker.setText(bow.clicker);
         desc.setText(bow.description);
         imageBitmap = bow.getImage(getContext());
         if (imageBitmap != null) {
@@ -177,6 +182,8 @@ public class EditBowFragment extends EditWithImageFragmentBase
         bow.limbs = limbs.getText().toString();
         bow.sight = sight.getText().toString();
         bow.drawWeight = drawWeight.getText().toString();
+        bow.stabilizer = stabilizer.getText().toString();
+        bow.clicker = clicker.getText().toString();
         bow.description = desc.getText().toString();
         bow.type = getType();
 

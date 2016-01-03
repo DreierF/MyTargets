@@ -43,7 +43,7 @@ import de.dreier.mytargets.utils.BackupUtils;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
     private static DatabaseManager sInstance;
     private final Context mContext;
 
@@ -327,6 +327,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     "FROM PASSE p, SHOOT s " +
                     "WHERE p._id=s.passe " +
                     "AND s.x!=0)");
+        }
+        if (oldVersion < 12) {
+            // Add new properties to bow
+            db.execSQL("ALTER TABLE BOW ADD COLUMN stabilizer TEXT DEFAULT ''");
+            db.execSQL("ALTER TABLE BOW ADD COLUMN clicker TEXT DEFAULT ''");
         }
         onCreate(db);
     }

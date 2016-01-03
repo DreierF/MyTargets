@@ -268,5 +268,7 @@
     <string name="table">Table</string>
     <string name="comments">Comments</string>
     <string name="show_points_colored">Show points colored</string>
+    <string name="stabilizer">Stabilizer</string>
+    <string name="clicker">Clicker</string>
 
 </resources>

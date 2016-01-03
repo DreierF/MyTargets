@@ -19,6 +19,8 @@ public class Bow extends ImageHolder {
     public String limbs;
     public String sight;
     public String drawWeight;
+    public String stabilizer;
+    public String clicker;
     public String description;
     public ArrayList<SightSetting> sightSettings;
 

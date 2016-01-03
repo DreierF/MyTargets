@@ -29,6 +29,8 @@ public class BowDataSource extends IdProviderDataSource<Bow> {
     public static final String LIMBS = "limbs";
     public static final String SIGHT = "sight";
     public static final String WEIGHT = "draw_weight";
+    public static final String STABILIZER = "stabilizer";
+    public static final String CLICKER = "clicker";
     public static final String CREATE_TABLE_BOW =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " ( " +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -41,6 +43,8 @@ public class BowDataSource extends IdProviderDataSource<Bow> {
                     LIMBS + " TEXT," +
                     SIGHT + " TEXT," +
                     WEIGHT + " TEXT," +
+                    STABILIZER + " TEXT," +
+                    CLICKER + " TEXT," +
                     DESCRIPTION + " TEXT," +
                     THUMBNAIL + " BLOB," +
                     IMAGE + " TEXT);";
@@ -67,6 +71,8 @@ public class BowDataSource extends IdProviderDataSource<Bow> {
         values.put(LIMBS, bow.limbs);
         values.put(SIGHT, bow.sight);
         values.put(WEIGHT, bow.drawWeight);
+        values.put(STABILIZER, bow.stabilizer);
+        values.put(CLICKER, bow.clicker);
         values.put(DESCRIPTION, bow.description);
         values.put(THUMBNAIL, bow.thumb);
         values.put(IMAGE, bow.imageFile);
@@ -85,15 +91,17 @@ public class BowDataSource extends IdProviderDataSource<Bow> {
         bow.limbs = cursor.getString(startColumnIndex + 7);
         bow.sight = cursor.getString(startColumnIndex + 8);
         bow.drawWeight = cursor.getString(startColumnIndex + 9);
-        bow.description = cursor.getString(startColumnIndex + 10);
-        bow.thumb = cursor.getBlob(startColumnIndex + 11);
-        bow.imageFile = cursor.getString(startColumnIndex + 12);
+        bow.stabilizer = cursor.getString(startColumnIndex + 10);
+        bow.clicker = cursor.getString(startColumnIndex + 11);
+        bow.description = cursor.getString(startColumnIndex + 12);
+        bow.thumb = cursor.getBlob(startColumnIndex + 13);
+        bow.imageFile = cursor.getString(startColumnIndex + 14);
         return bow;
     }
 
     public Bow get(long bow) {
         Cursor cursor = database.rawQuery(
-                "SELECT _id, name, type, brand, size, height, tiller, limbs, sight, draw_weight, description, thumbnail, image " +
+                "SELECT _id, name, type, brand, size, height, tiller, limbs, sight, draw_weight, stabilizer, clicker, description, thumbnail, image " +
                         "FROM BOW WHERE _id = " + bow, null);
         Bow b = null;
         if (cursor.moveToFirst()) {
@@ -106,13 +114,13 @@ public class BowDataSource extends IdProviderDataSource<Bow> {
 
     public ArrayList<Bow> getAll() {
         Cursor res = database.rawQuery(
-                "SELECT _id, name, type, brand, size, height, tiller, limbs, sight, draw_weight, description, thumbnail, image " +
+                "SELECT _id, name, type, brand, size, height, tiller, limbs, sight, draw_weight, stabilizer, clicker, description, thumbnail, image " +
                         "FROM BOW " +
                         "ORDER BY _id ASC", null);
         ArrayList<Bow> list = new ArrayList<>(res.getCount());
         if (res.moveToFirst()) {
             do {
-                Bow bow = cursorToBow(res,0);
+                Bow bow = cursorToBow(res, 0);
                 bow.sightSettings = new SightSettingDataSource(getContext()).getAll(bow.getId());
                 list.add(bow);
             } while (res.moveToNext());

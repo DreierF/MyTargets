@@ -233,4 +233,11 @@
   <string name="tip_weight">Tip weight</string>
   <string name="arrow_ranking">Arrow ranking</string>
   <string name="arrow_x_of_set_of_arrows">Arrow %1$d of %2$s</string>
+  <string name="display">Display</string>
+  <string name="print">Print</string>
+  <string name="table">Table</string>
+  <string name="comments">Comments</string>
+  <string name="show_points_colored">Show points colored</string>
+  <string name="stabilizer">Stabilizer</string>
+  <string name="clicker">Clicker</string>
 </resources>
