@@ -2,7 +2,7 @@
 ![Version](https://img.shields.io/badge/version-2.2.0%20Beta%204-orange.svg)
 ![Licence](https://img.shields.io/badge/licence-GNU%20GPLv2-blue.svg)
 ![API](https://img.shields.io/badge/API-14+-green.svg)
-[![Build Status](https://travis-ci.org/DreierF/MyTargets.svg?branch=master)](https://travis-ci.org/DreierF/MyTargets)
+[![Build Status](https://travis-ci.org/DreierF/MyTargets.svg?branch=develop)](https://travis-ci.org/DreierF/MyTargets)
 
 # MyTargets
 Android app, which helps archers keep track of their training progress.
