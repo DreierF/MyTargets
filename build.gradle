@@ -6,8 +6,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
-        classpath 'me.tatarka:gradle-retrolambda:3.2.3'
+        classpath 'com.android.tools.build:gradle:2.1.0-alpha5'
+        classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
     }
 }
 
@@ -21,7 +21,7 @@ allprojects {
 }
 
 ext {
-    supportLibVersion = '23.1.1'
+    supportLibVersion = '23.2.1'
     versionName = '2.2.0beta6'
     versionCode = 36
 }

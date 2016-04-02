@@ -149,10 +149,8 @@ public class NumberPicker extends LinearLayout {
     private void initDecrementButton() {
         Button decrement = (Button) findViewById(R.id.number_decrement);
 
-
         // Decrement once for a click
         decrement.setOnClickListener(v -> decrement());
-
 
         // Auto Decrement for a long click
         decrement.setOnLongClickListener(

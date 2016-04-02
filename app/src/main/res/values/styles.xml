@@ -10,6 +10,11 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
+    <style name="AppTheme.BottomSheetDialog" parent="Theme.Design.BottomSheetDialog">
+        <!-- This changes the overlay background -->
+        <item name="android:background">@color/colorAccent</item>
+    </style>
+
     <style name="LStyled.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
         <item name="titleTextStyle">@style/LStyled.ActionMode.Title</item>
         <item name="closeItemLayout">@layout/abc_action_mode_close_item_material_mine</item>
@@ -44,7 +49,7 @@
 
     <style name="header_container">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:minHeight">48dp</item>
         <item name="android:orientation">vertical</item>
         <item name="android:paddingLeft">16dp</item>

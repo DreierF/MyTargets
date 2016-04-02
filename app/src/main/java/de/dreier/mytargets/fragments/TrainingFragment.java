@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.Loader;
@@ -26,8 +27,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.cocosw.bottomsheet.BottomSheet;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,10 +49,10 @@ import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.DataLoader;
+import de.dreier.mytargets.utils.HTMLUtils;
 import de.dreier.mytargets.utils.HeaderBindingHolder;
 import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.ScoreboardImage;
-import de.dreier.mytargets.utils.HTMLUtils;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.TargetImage;
 import de.dreier.mytargets.views.PasseView;
@@ -63,7 +62,7 @@ import de.dreier.mytargets.views.TargetPasseView;
  * Shows all passes of one training
  */
 public class TrainingFragment extends ExpandableFragment<Round, Passe>
-        implements View.OnClickListener, MenuItem.OnMenuItemClickListener {
+        implements View.OnClickListener {
 
     private final boolean mTargetViewMode = false;
     private final boolean[] equals = new boolean[2];
@@ -200,28 +199,13 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
     }
 
     private void showShareDialog() {
-        new BottomSheet.Builder(getActivity())
-                .title(R.string.share)
-                .grid()
-                .sheet(R.menu.share)
-                .listener(this)
-                .show();
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.text:
-                shareText();
-                return true;
-            case R.id.scoreboard:
-                shareImage(1);
-                return true;
-            case R.id.dispersion_pattern:
-                shareImage(2);
-                return true;
-        }
-        return false;
+        BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(getContext());
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_share_sheet, null);
+        view.findViewById(R.id.text).setOnClickListener(v->shareText());
+        view.findViewById(R.id.scoreboard).setOnClickListener(v->shareImage(1));
+        view.findViewById(R.id.dispersion_pattern).setOnClickListener(v->shareImage(2));
+        mBottomSheetDialog.setContentView(view);
+        mBottomSheetDialog.show();
     }
 
     /* Called after the user selected with items he wants to share */
