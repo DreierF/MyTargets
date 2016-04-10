@@ -68,7 +68,7 @@ public class EditRoundFragment extends EditFragmentBase {
         arrows = (NumberPicker) rootView.findViewById(R.id.ppp);
         arrows.setTextPattern(R.plurals.arrow);
         arrows.setMinimum(1);
-        arrows.setMaximum(10);
+        arrows.setMaximum(12);
 
         // Comment
         comment = (EditText) rootView.findViewById(R.id.comment);

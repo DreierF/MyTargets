@@ -177,7 +177,7 @@ public class EditStandardRoundFragment extends EditFragmentBase
         NumberPicker arrows = (NumberPicker) view.findViewById(R.id.ppp);
         arrows.setTextPattern(R.plurals.arrow);
         arrows.setMinimum(1);
-        arrows.setMaximum(10);
+        arrows.setMaximum(12);
         arrows.setOnValueChangedListener(val -> round.arrowsPerPasse = val);
         arrows.setValue(round.arrowsPerPasse);
 

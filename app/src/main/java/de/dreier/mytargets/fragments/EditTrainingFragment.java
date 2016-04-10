@@ -135,7 +135,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         arrows = (NumberPicker) rootView.findViewById(R.id.ppp);
         arrows.setTextPattern(R.plurals.arrow);
         arrows.setMinimum(1);
-        arrows.setMaximum(10);
+        arrows.setMaximum(12);
 
         if (mTraining == -1) {
             setTitle(R.string.new_training);
