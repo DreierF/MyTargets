@@ -15,8 +15,8 @@ plugins {
 }
 
 crowdinDownload {
-    apiKey = CROWDIN_API_KEY
-    projectId = CROWDIN_PROJECT_ID
+    apiKey = CROWDIN_API_KEY ?: System.getenv('CROWDIN_API_KEY')
+    projectId = CROWDIN_PROJECT_ID ?: System.getenv('CROWDIN_PROJECT_ID')
     destination = "$projectDir"
 }
 
