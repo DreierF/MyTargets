@@ -21,19 +21,35 @@
   <string name="new_arrow">New arrow</string>
   <string name="new_round">New round</string>
   <plurals name="training_selected">
+    <item quantity="zero">%d trainings selected</item>
     <item quantity="one">%d training selected</item>
+    <item quantity="two">%d trainings selected</item>
+    <item quantity="few">%d trainings selected</item>
+    <item quantity="many">%d trainings selected</item>
     <item quantity="other">%d trainings selected</item>
   </plurals>
   <plurals name="bow_selected">
+    <item quantity="zero">%d bows selected</item>
     <item quantity="one">%d bow selected</item>
+    <item quantity="two">%d bows selected</item>
+    <item quantity="few">%d bows selected</item>
+    <item quantity="many">%d bows selected</item>
     <item quantity="other">%d bows selected</item>
   </plurals>
   <plurals name="arrow_selected">
+    <item quantity="zero">%d arrows selected</item>
     <item quantity="one">%d arrow selected</item>
+    <item quantity="two">%d arrows selected</item>
+    <item quantity="few">%d arrows selected</item>
+    <item quantity="many">%d arrows selected</item>
     <item quantity="other">%d arrows selected</item>
   </plurals>
   <plurals name="passe_selected">
+    <item quantity="zero">%d ends selected</item>
     <item quantity="one">%d end selected</item>
+    <item quantity="two">%d ends selected</item>
+    <item quantity="few">%d ends selected</item>
+    <item quantity="many">%d ends selected</item>
     <item quantity="other">%d ends selected</item>
   </plurals>
   <string name="edit">Edit</string>
@@ -86,12 +102,20 @@
   <string name="format">Format</string>
   <!-- x ends of y arrows -->
   <plurals name="passe">
+    <item quantity="zero">%d ends</item>
     <item quantity="one">%d end</item>
+    <item quantity="two">%d ends</item>
+    <item quantity="few">%d ends</item>
+    <item quantity="many">%d ends</item>
     <item quantity="other">%d ends</item>
   </plurals>
   <string name="with">of</string>
   <plurals name="arrow">
+    <item quantity="zero">%d arrows</item>
     <item quantity="one">%d arrow</item>
+    <item quantity="two">%d arrows</item>
+    <item quantity="few">%d arrows</item>
+    <item quantity="many">%d arrows</item>
     <item quantity="other">%d arrows</item>
   </plurals>
   <string name="target_face">Target face</string>
@@ -151,7 +175,11 @@
   <string name="licences_summary">Legal notes to licences</string>
   <string name="version">Version %s</string>
   <plurals name="second">
+    <item quantity="zero">%d seconds</item>
     <item quantity="one">%d second</item>
+    <item quantity="two">%d seconds</item>
+    <item quantity="few">%d seconds</item>
+    <item quantity="many">%d seconds</item>
     <item quantity="other">%d seconds</item>
   </plurals>
   <string name="info">Information</string>
@@ -191,23 +219,43 @@
   <string name="edit_bow">Edit Bow</string>
   <string name="edit_arrow">Edit Arrow</string>
   <plurals name="arrow_deleted">
+    <item quantity="zero">%d arrows deleted</item>
     <item quantity="one">%d arrow deleted</item>
+    <item quantity="two">%d arrows deleted</item>
+    <item quantity="few">%d arrows deleted</item>
+    <item quantity="many">%d arrows deleted</item>
     <item quantity="other">%d arrows deleted</item>
   </plurals>
   <plurals name="bow_deleted">
+    <item quantity="zero">%d bows deleted</item>
     <item quantity="one">%d bow deleted</item>
+    <item quantity="two">%d bows deleted</item>
+    <item quantity="few">%d bows deleted</item>
+    <item quantity="many">%d bows deleted</item>
     <item quantity="other">%d bows deleted</item>
   </plurals>
   <plurals name="training_deleted">
+    <item quantity="zero">%d trainings deleted</item>
     <item quantity="one">%d training deleted</item>
+    <item quantity="two">%d trainings deleted</item>
+    <item quantity="few">%d trainings deleted</item>
+    <item quantity="many">%d trainings deleted</item>
     <item quantity="other">%d trainings deleted</item>
   </plurals>
   <plurals name="passe_deleted">
+    <item quantity="zero">%d ends deleted</item>
     <item quantity="one">%d end deleted</item>
+    <item quantity="two">%d ends deleted</item>
+    <item quantity="few">%d ends deleted</item>
+    <item quantity="many">%d ends deleted</item>
     <item quantity="other">%d ends deleted</item>
   </plurals>
   <plurals name="rounds">
+    <item quantity="zero">Round %d</item>
     <item quantity="one">Round %d</item>
+    <item quantity="two">Round %d</item>
+    <item quantity="few">Round %d</item>
+    <item quantity="many">Round %d</item>
     <item quantity="other">Round %d</item>
   </plurals>
   <string name="bft_0">0 Bft: Windless</string>

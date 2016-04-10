@@ -3,156 +3,156 @@
 <resources>
   <!-- APP NAME - NOT TRANSLATABLE -->
   <!-- General -->
-  <string name="preferences">Options</string>
-  <string name="prev">Previous</string>
-  <string name="next">Next</string>
-  <string name="save">Save</string>
-  <string name="custom">Custom</string>
-  <string name="training">Training</string>
-  <string name="bow">Bow</string>
-  <string name="arrow">Arrow</string>
+  <string name="preferences">Opzioni</string>
+  <string name="prev">Precedente</string>
+  <string name="next">Successivo</string>
+  <string name="save">Salva</string>
+  <string name="custom">Personalizzato</string>
+  <string name="training">Allenamento</string>
+  <string name="bow">Arco</string>
+  <string name="arrow">Freccia</string>
   <string name="round">Round</string>
-  <string name="points">Points</string>
-  <string name="passe">End</string>
-  <string name="passe_n">End %d</string>
+  <string name="points">Punti</string>
+  <string name="passe">Volée</string>
+  <string name="passe_n">Volée %d</string>
   <!-- Overview -->
-  <string name="new_training">New training</string>
-  <string name="new_bow">New bow</string>
-  <string name="new_arrow">New arrow</string>
-  <string name="new_round">New round</string>
+  <string name="new_training">Nuovo allenamento</string>
+  <string name="new_bow">Nuovo arco</string>
+  <string name="new_arrow">Nuova freccia</string>
+  <string name="new_round">Nuovo round</string>
   <plurals name="training_selected">
-    <item quantity="one">%d training selected</item>
-    <item quantity="other">%d trainings selected</item>
+    <item quantity="one">Un allenamento selezionato</item>
+    <item quantity="other">%d allenamenti selezionati</item>
   </plurals>
   <plurals name="bow_selected">
-    <item quantity="one">%d bow selected</item>
-    <item quantity="other">%d bows selected</item>
+    <item quantity="one">Un arco selezionato</item>
+    <item quantity="other">%d archi selezionati</item>
   </plurals>
   <plurals name="arrow_selected">
-    <item quantity="one">%d arrow selected</item>
-    <item quantity="other">%d arrows selected</item>
+    <item quantity="one">Una freccia selezionata</item>
+    <item quantity="other">%d frecce selezionate</item>
   </plurals>
   <plurals name="passe_selected">
-    <item quantity="one">%d end selected</item>
-    <item quantity="other">%d ends selected</item>
+    <item quantity="one">Una volée selezionata</item>
+    <item quantity="other">%d volée selezionate</item>
   </plurals>
-  <string name="edit">Edit</string>
-  <string name="delete">Delete</string>
-  <string name="statistic">Statistic</string>
+  <string name="edit">Modifica</string>
+  <string name="delete">Elimina</string>
+  <string name="statistic">Statistiche</string>
   <!-- Share -->
-  <string name="share">Share</string>
+  <string name="share">Condividi</string>
   <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$sThis makes a total of %2$d out of %3$d rings.</string>
   <string name="d_times_s">%1$d times %2$s\n</string>
-  <string name="text">Text</string>
-  <string name="dispersion_pattern">Dispersion pattern</string>
+  <string name="text">Testo</string>
+  <string name="dispersion_pattern">modello di dispersione</string>
   <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
-  <string name="send_exported">Send exported data</string>
-  <string name="exporting_failed">Exporting failed!</string>
+  <string name="send_exported">Invia dati esportati</string>
+  <string name="exporting_failed">Esportazione fallita!</string>
   <!-- New bow -->
-  <string name="add_bow">Add bow</string>
-  <string name="name">Name</string>
-  <string name="bow_type">Bow type</string>
-  <string name="recurve_bow">Recurve bow</string>
-  <string name="compound_bow">Compound bow</string>
-  <string name="bare_bow">Bare bow</string>
-  <string name="long_bow">Long bow</string>
-  <string name="horse_bow">Horse bow</string>
+  <string name="add_bow">Aggiungi arco</string>
+  <string name="name">Nome</string>
+  <string name="bow_type">Tipo di arco</string>
+  <string name="recurve_bow">Arco ricurvo</string>
+  <string name="compound_bow">Arco compound</string>
+  <string name="bare_bow">Arco nudo</string>
+  <string name="long_bow">Arco lungo</string>
+  <string name="horse_bow">Arco da cavallo</string>
   <string name="yumi">Yumi</string>
-  <string name="properties">Properties</string>
-  <string name="brand">Brand</string>
-  <string name="size">Size</string>
-  <string name="description">Description</string>
-  <string name="height">Brace height</string>
-  <string name="tiller">Tiller</string>
-  <string name="sight_settings">Sight settings</string>
-  <string name="add">Add</string>
-  <string name="select_picture">Select a picture</string>
-  <string name="take_picture">Take a picture</string>
-  <string name="pick_from_gallery">Select a picture from gallery</string>
+  <string name="properties">Proprietà</string>
+  <string name="brand">Marca</string>
+  <string name="size">Misura</string>
+  <string name="description">Descrizione</string>
+  <string name="height">Altezza brace</string>
+  <string name="tiller">Timone</string>
+  <string name="sight_settings">Impstazioni vista</string>
+  <string name="add">Aggiungi</string>
+  <string name="select_picture">Seleziona un\'immagine</string>
+  <string name="take_picture">Scatta una foto</string>
+  <string name="pick_from_gallery">Seleziona un\'immagine dalla galleria</string>
   <!-- New arrow -->
-  <string name="add_arrow">Add arrow</string>
-  <string name="length">Length</string>
-  <string name="spine">Spine</string>
-  <string name="weight">Weight</string>
-  <string name="vanes">Vanes</string>
-  <string name="nock">Nock</string>
-  <string name="material">Material</string>
+  <string name="add_arrow">Aggiungi freccia</string>
+  <string name="length">Lunghezza</string>
+  <string name="spine">Punta</string>
+  <string name="weight">Peso</string>
+  <string name="vanes">Alette</string>
+  <string name="nock">Cocca</string>
+  <string name="material">Materiale</string>
   <!-- New round -->
-  <string name="title">Title</string>
+  <string name="title">Titolo</string>
   <string name="outdoor">Outdoor</string>
   <string name="indoor">Indoor</string>
-  <string name="distance">Distance</string>
-  <string name="format">Format</string>
+  <string name="distance">Distanza</string>
+  <string name="format">Formato</string>
   <!-- x ends of y arrows -->
   <plurals name="passe">
-    <item quantity="one">%d end</item>
-    <item quantity="other">%d ends</item>
+    <item quantity="one">1 volée</item>
+    <item quantity="other">%d volée</item>
   </plurals>
-  <string name="with">of</string>
+  <string name="with">di</string>
   <plurals name="arrow">
-    <item quantity="one">%d arrow</item>
-    <item quantity="other">%d arrows</item>
+    <item quantity="one">una freccia</item>
+    <item quantity="other">%d frecce</item>
   </plurals>
   <string name="target_face">Target face</string>
   <!-- Scoreboard -->
-  <string name="scoreboard">Scoreboard</string>
-  <string name="arrows">Arrows</string>
-  <string name="sum">Sum</string>
-  <string name="carry">Carry</string>
-  <string name="action_print">Print</string>
-  <string name="average">Average</string>
+  <string name="scoreboard">Segnapunti</string>
+  <string name="arrows">Frecce</string>
+  <string name="sum">Totale</string>
+  <string name="carry">Sposta</string>
+  <string name="action_print">Stampa</string>
+  <string name="average">Media</string>
   <!-- Input mode -->
-  <string name="show_all">Show all impacts</string>
-  <string name="comment">Comment</string>
+  <string name="show_all">Mostra tutti gli impatti</string>
+  <string name="comment">Commento</string>
   <!-- Statistics -->
-  <string name="all_trainings">All trainings</string>
-  <string name="entire_training">Entire training</string>
-  <string name="current_round">Current round</string>
+  <string name="all_trainings">Tutti gli allenamenti</string>
+  <string name="entire_training">Allenamento intero</string>
+  <string name="current_round">Round corrente</string>
   <!-- Import/Backup -->
-  <string name="select_a_file">Select a file</string>
-  <string name="dir_not_created">Directory could not be created!</string>
-  <string name="backup_failed">Backup failed!</string>
-  <string name="import_successful">Import successful!</string>
-  <string name="import_failed">Import failed!</string>
-  <string name="file_not_found">File not found!</string>
-  <string name="failed_reading_file">Failed reading file!</string>
+  <string name="select_a_file">Seleziona un file</string>
+  <string name="dir_not_created">La directory non può essere creata!</string>
+  <string name="backup_failed">Backup fallito!</string>
+  <string name="import_successful">Importazione completata con successo!</string>
+  <string name="import_failed">Importazione fallita!</string>
+  <string name="file_not_found">File non trovato!</string>
+  <string name="failed_reading_file">Lettura del file fallita!</string>
   <!-- Donate -->
-  <string name="donate_action">Donate</string>
-  <string name="donate_2">Donate me a burger</string>
-  <string name="donate_5">Donate me a kebab</string>
-  <string name="donate_10">Donate me a large pizza</string>
-  <string name="donate_20">Donate me some fuel</string>
-  <string name="donate_infinite">Lasting support</string>
-  <string name="donation_thank">Thank you for your support!</string>
-  <string name="monthly">monthly %s</string>
-  <string name="donate_text">The amounts are incl. VAT and 30% fees for Google. Alternatively you may gladly donate on the PayPal account dreier.florian@gmail.com.</string>
+  <string name="donate_action">Dona</string>
+  <string name="donate_2">Donami un hambuger</string>
+  <string name="donate_5">Donami un kebab</string>
+  <string name="donate_10">Donami una pizza farcita</string>
+  <string name="donate_20">Donami un po\' di benzina</string>
+  <string name="donate_infinite">Supporto mensile</string>
+  <string name="donation_thank">Grazie per il tuo supporto!</string>
+  <string name="monthly">mensile %s</string>
+  <string name="donate_text">I prezzi sono inclusi di VAT e del 30% a Google. Alternativamente puoi donare sul mio account PayPal dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Timer</string>
   <string name="stop">STOP</string>
-  <string name="touch_to_start">Touch to start</string>
-  <string name="preparation">Get ready</string>
-  <string name="shooting">Shooting</string>
+  <string name="touch_to_start">Tocca per avviare</string>
+  <string name="preparation">Stai pronto</string>
+  <string name="shooting">Rilascia</string>
   <!-- Timer settings -->
   <string name="timer_shooting_time">Shooting Time</string>
   <string name="timer_waiting_time">Prepare Time</string>
   <string name="timer_warning_time">Warning Time</string>
-  <string name="timer_sound">Sound</string>
-  <string name="timer_vibrate">Vibrate</string>
+  <string name="timer_sound">Suono</string>
+  <string name="timer_vibrate">Vibrazione</string>
   <!-- Settings -->
   <string name="backup_action">Backup</string>
-  <string name="import_action">Import</string>
-  <string name="export">Export</string>
-  <string name="exports_as_csv">Exports saved data as *.csv</string>
-  <string name="app_rate">Rate app</string>
-  <string name="app_share">Share app</string>
-  <string name="contact_developer">Contact developer</string>
-  <string name="licences">Open Source-Licences</string>
-  <string name="licences_summary">Legal notes to licences</string>
-  <string name="version">Version %s</string>
+  <string name="import_action">Importa</string>
+  <string name="export">Esporta</string>
+  <string name="exports_as_csv">L\'esportazione salva i dati come *.csv</string>
+  <string name="app_rate">Valuta l\'app!</string>
+  <string name="app_share">Condividi l\'app</string>
+  <string name="contact_developer">Contatta lo sviluppatore</string>
+  <string name="licences">Licenze Open Source</string>
+  <string name="licences_summary">Note legali sulle licenze</string>
+  <string name="version">Versione %s</string>
   <plurals name="second">
-    <item quantity="one">%d second</item>
-    <item quantity="other">%d seconds</item>
+    <item quantity="one">%d secondo</item>
+    <item quantity="other">%d secondi</item>
   </plurals>
   <string name="info">Information</string>
   <string name="data">Data</string>
@@ -167,7 +167,7 @@
   <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Metric</string>
   <string name="imperial">Imperial</string>
-  <string name="undo">Undo</string>
+  <string name="undo">Annulla</string>
   <string name="standard_rounds">Standard rounds</string>
   <string name="expand_collapse">Expand/Collapse</string>
   <string name="new_round_template">New template</string>

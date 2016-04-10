@@ -11,6 +11,6 @@
   <string name="small">Pequeno</string>
   <string name="medium">Médio</string>
   <string name="large">Grande</string>
-  <string name="xlarge">Extra Largo</string>
+  <string name="xlarge">Extra Grande</string>
   <string name="unknown">Desconhecido</string>
 </resources>

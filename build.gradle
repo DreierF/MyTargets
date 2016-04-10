@@ -14,7 +14,7 @@ plugins {
     id "com.mendhak.gradlecrowdin" version "0.0.8"
 }
 
-task crowdinDownloadAll(group: "crowdin", type: com.mendhak.gradlecrowdin.DownloadTranslationsTask) {
+crowdinDownload {
     apiKey = CROWDIN_API_KEY
     projectId = CROWDIN_PROJECT_ID
     destination = "$projectDir"

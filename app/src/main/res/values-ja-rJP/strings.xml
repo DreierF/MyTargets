@@ -3,16 +3,16 @@
 <resources>
   <!-- APP NAME - NOT TRANSLATABLE -->
   <!-- General -->
-  <string name="preferences">Options</string>
-  <string name="prev">Previous</string>
-  <string name="next">Next</string>
-  <string name="save">Save</string>
-  <string name="custom">Custom</string>
-  <string name="training">Training</string>
-  <string name="bow">Bow</string>
-  <string name="arrow">Arrow</string>
-  <string name="round">Round</string>
-  <string name="points">Points</string>
+  <string name="preferences">設定</string>
+  <string name="prev">前へ</string>
+  <string name="next">次へ</string>
+  <string name="save">保存</string>
+  <string name="custom">カスタム</string>
+  <string name="training">トレーニング</string>
+  <string name="bow">ボウ</string>
+  <string name="arrow">矢</string>
+  <string name="round">ラウンド</string>
+  <string name="points">ポイント</string>
   <string name="passe">End</string>
   <string name="passe_n">End %d</string>
   <!-- Overview -->
@@ -21,19 +21,15 @@
   <string name="new_arrow">New arrow</string>
   <string name="new_round">New round</string>
   <plurals name="training_selected">
-    <item quantity="one">%d training selected</item>
     <item quantity="other">%d trainings selected</item>
   </plurals>
   <plurals name="bow_selected">
-    <item quantity="one">%d bow selected</item>
     <item quantity="other">%d bows selected</item>
   </plurals>
   <plurals name="arrow_selected">
-    <item quantity="one">%d arrow selected</item>
     <item quantity="other">%d arrows selected</item>
   </plurals>
   <plurals name="passe_selected">
-    <item quantity="one">%d end selected</item>
     <item quantity="other">%d ends selected</item>
   </plurals>
   <string name="edit">Edit</string>
@@ -43,39 +39,39 @@
   <string name="share">Share</string>
   <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$sThis makes a total of %2$d out of %3$d rings.</string>
   <string name="d_times_s">%1$d times %2$s\n</string>
-  <string name="text">Text</string>
+  <string name="text">テキスト</string>
   <string name="dispersion_pattern">Dispersion pattern</string>
-  <string name="sharing_failed">Sharing failed!</string>
+  <string name="sharing_failed">共有に失敗しました!</string>
   <!-- Export -->
-  <string name="send_exported">Send exported data</string>
-  <string name="exporting_failed">Exporting failed!</string>
+  <string name="send_exported">エクスポートされたデータを送信します。</string>
+  <string name="exporting_failed">エクスポートに失敗しました。</string>
   <!-- New bow -->
   <string name="add_bow">Add bow</string>
   <string name="name">Name</string>
-  <string name="bow_type">Bow type</string>
-  <string name="recurve_bow">Recurve bow</string>
-  <string name="compound_bow">Compound bow</string>
-  <string name="bare_bow">Bare bow</string>
-  <string name="long_bow">Long bow</string>
-  <string name="horse_bow">Horse bow</string>
-  <string name="yumi">Yumi</string>
-  <string name="properties">Properties</string>
-  <string name="brand">Brand</string>
-  <string name="size">Size</string>
-  <string name="description">Description</string>
-  <string name="height">Brace height</string>
-  <string name="tiller">Tiller</string>
-  <string name="sight_settings">Sight settings</string>
-  <string name="add">Add</string>
-  <string name="select_picture">Select a picture</string>
-  <string name="take_picture">Take a picture</string>
-  <string name="pick_from_gallery">Select a picture from gallery</string>
+  <string name="bow_type">ボウのタイプ</string>
+  <string name="recurve_bow">リカーブボウ</string>
+  <string name="compound_bow">コンパウンドボウ</string>
+  <string name="bare_bow">ベアボウ</string>
+  <string name="long_bow">ロング ボウ</string>
+  <string name="horse_bow">ホースボウ</string>
+  <string name="yumi">和弓</string>
+  <string name="properties">プロパティ</string>
+  <string name="brand">メーカー:</string>
+  <string name="size">サイズ</string>
+  <string name="description">説明</string>
+  <string name="height">ブレースハイト</string>
+  <string name="tiller">ティラー</string>
+  <string name="sight_settings">サイトの設定</string>
+  <string name="add">追加</string>
+  <string name="select_picture">画像を選択</string>
+  <string name="take_picture">写真を撮る</string>
+  <string name="pick_from_gallery">画像を選択します。</string>
   <!-- New arrow -->
-  <string name="add_arrow">Add arrow</string>
-  <string name="length">Length</string>
+  <string name="add_arrow">アローを追加します。</string>
+  <string name="length">長さ</string>
   <string name="spine">Spine</string>
-  <string name="weight">Weight</string>
-  <string name="vanes">Vanes</string>
+  <string name="weight">ウェイト</string>
+  <string name="vanes">矢羽</string>
   <string name="nock">Nock</string>
   <string name="material">Material</string>
   <!-- New round -->
@@ -86,12 +82,10 @@
   <string name="format">Format</string>
   <!-- x ends of y arrows -->
   <plurals name="passe">
-    <item quantity="one">%d end</item>
     <item quantity="other">%d ends</item>
   </plurals>
   <string name="with">of</string>
   <plurals name="arrow">
-    <item quantity="one">%d arrow</item>
     <item quantity="other">%d arrows</item>
   </plurals>
   <string name="target_face">Target face</string>
@@ -151,7 +145,6 @@
   <string name="licences_summary">Legal notes to licences</string>
   <string name="version">Version %s</string>
   <plurals name="second">
-    <item quantity="one">%d second</item>
     <item quantity="other">%d seconds</item>
   </plurals>
   <string name="info">Information</string>
@@ -191,23 +184,18 @@
   <string name="edit_bow">Edit Bow</string>
   <string name="edit_arrow">Edit Arrow</string>
   <plurals name="arrow_deleted">
-    <item quantity="one">%d arrow deleted</item>
     <item quantity="other">%d arrows deleted</item>
   </plurals>
   <plurals name="bow_deleted">
-    <item quantity="one">%d bow deleted</item>
     <item quantity="other">%d bows deleted</item>
   </plurals>
   <plurals name="training_deleted">
-    <item quantity="one">%d training deleted</item>
     <item quantity="other">%d trainings deleted</item>
   </plurals>
   <plurals name="passe_deleted">
-    <item quantity="one">%d end deleted</item>
     <item quantity="other">%d ends deleted</item>
   </plurals>
   <plurals name="rounds">
-    <item quantity="one">Round %d</item>
     <item quantity="other">Round %d</item>
   </plurals>
   <string name="bft_0">0 Bft: Windless</string>
