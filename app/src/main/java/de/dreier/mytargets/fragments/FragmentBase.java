@@ -9,6 +9,7 @@ package de.dreier.mytargets.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.PluralsRes;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
@@ -84,6 +85,7 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
 
     /** {@inheritDoc} */
     @Override
+    @CallSuper
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(getLayoutResource(), container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(android.R.id.list);
@@ -101,6 +103,7 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
 
     /** {@inheritDoc} */
     @Override
+    @CallSuper
     public void onAttach(Context activity) {
         super.onAttach(activity);
         if (activity instanceof ContentListener) {

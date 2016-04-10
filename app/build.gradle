@@ -69,8 +69,17 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     compile 'com.nineoldandroids:library:2.4.0'
 
+    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+
+    compile 'com.squareup.retrofit2:retrofit:2.0.1'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.1'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.1'
+
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.0'
+
     compile project(':libraries:aFileChooser')
-    compile project(':libraries:YWeatherGetter4a')
     compile project(':shared')
     wearApp project(':wearable')
 }

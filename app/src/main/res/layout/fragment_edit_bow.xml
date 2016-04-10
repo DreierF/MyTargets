@@ -95,7 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/brand"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-                <EditText
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/size"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
 
-                    <EditText
+                    <android.support.design.widget.TextInputEditText
                         android:id="@+id/draw_weight"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -167,7 +167,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-                <EditText
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/brace_height"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -181,7 +181,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-                <EditText
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/tiller"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -204,7 +204,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-                <EditText
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/limbs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -218,7 +218,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-                <EditText
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/sight"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -241,7 +241,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-                <EditText
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/stabilizer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -255,7 +255,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-                <EditText
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/clicker"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -270,7 +270,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
