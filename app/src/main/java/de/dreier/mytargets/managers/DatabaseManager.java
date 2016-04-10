@@ -416,7 +416,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         Cursor cur = db.rawQuery(
                 "SELECT t.title,sr.name AS standard_round,datetime(t.datum/1000, 'unixepoch') AS date,sr.indoor,i.distance, i.unit," +
-                        "r.target, r.scoring_style, i.size, i.target_unit, s.arrow_index, a.name, s.arrow, b.name AS bow, s.points AS score " +
+                        "r.target, r.scoring_style, i.size, i.target_unit, s.arrow_index, a.name, s.x, s.y, s.arrow, b.name AS bow, s.points AS score " +
                         "FROM TRAINING t, ROUND r, PASSE p, SHOOT s " +
                         "LEFT JOIN BOW b ON b._id=t.bow " +
                         "LEFT JOIN ARROW a ON a._id=t.arrow " +
@@ -435,6 +435,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 .append(mContext.getString(R.string.distance)).append("\";\"")
                 .append(mContext.getString(R.string.target)).append("\";\"")
                 .append(mContext.getString(R.string.points)).append("\";\"")
+                .append("x").append("\";\"")
+                .append("y").append("\";\"")
                 .append(mContext.getString(R.string.bow)).append("\";\"")
                 .append(mContext.getString(R.string.arrow)).append("\"\n");
         int titleInd = cur.getColumnIndexOrThrow("title");
@@ -447,6 +449,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         int styleInd = cur.getColumnIndexOrThrow("scoring_style");
         int targetSizeInd = cur.getColumnIndexOrThrow("size");
         int bowInd = cur.getColumnIndexOrThrow("bow");
+        int xInd = cur.getColumnIndexOrThrow("x");
+        int yInd = cur.getColumnIndexOrThrow("y");
         int targetUnitInd = cur.getColumnIndexOrThrow("target_unit");
         int arrowInd = cur.getColumnIndexOrThrow("name");
         int arrowNumberInd = cur.getColumnIndexOrThrow("arrow");
@@ -492,6 +496,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
                 // Score
                 writer.append(target.zoneToString(cur.getInt(scoreInd), cur.getInt(shotInd)));
+                writer.append("\";\"");
+
+                // Coordinates (X, Y)
+                writer.append(String.valueOf(cur.getFloat(xInd)));
+                writer.append("\";\"");
+                writer.append(String.valueOf(cur.getFloat(yInd)));
                 writer.append("\";\"");
 
                 // Bow

@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <android.support.v7.widget.Toolbar
@@ -34,6 +34,8 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="60dp"
                 android:layout_marginRight="10dp"
+                android:layout_marginStart="60dp"
+                android:layout_marginEnd="10dp"
                 android:baselineAligned="false"
                 android:orientation="horizontal">
 
@@ -41,7 +43,7 @@
                     android:id="@+id/detail_round_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
+                    android:layout_gravity="start"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/white"/>
 
@@ -49,7 +51,7 @@
                     android:id="@+id/detail_score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|right"
+                    android:layout_gravity="center_vertical|end"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/white"/>
 
