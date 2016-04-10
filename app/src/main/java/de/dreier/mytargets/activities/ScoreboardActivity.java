@@ -30,7 +30,6 @@ import de.dreier.mytargets.utils.ScoreboardConfiguration;
 
 import static android.support.v7.preference.PreferenceFragmentCompat.ARG_PREFERENCE_ROOT;
 
-
 public class ScoreboardActivity extends AppCompatActivity {
 
     public static final String TRAINING_ID = "training_id";

@@ -1,13 +1,29 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.0-alpha5'
         classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
-    }
+        classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.0.8'
+}
+}
+
+plugins {
+    id "com.mendhak.gradlecrowdin" version "0.0.8"
+}
+
+task crowdinDownloadAll(group: "crowdin", type: com.mendhak.gradlecrowdin.DownloadTranslationsTask) {
+    apiKey = CROWDIN_API_KEY
+    projectId = CROWDIN_PROJECT_ID
+    destination = "$projectDir"
+}
+
+ext {
+    supportLibVersion = '23.3.0'
+    versionName = '2.2.0beta6'
+    versionCode = 36
 }
 
 allprojects {
@@ -17,10 +33,4 @@ allprojects {
             url "https://jitpack.io"
         }
     }
-}
-
-ext {
-    supportLibVersion = '23.3.0'
-    versionName = '2.2.0beta6'
-    versionCode = 36
 }

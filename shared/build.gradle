@@ -15,10 +15,14 @@ android {
     if(new File("gradle.properties").exists()) {
         signingConfigs {
             release {
-                storeFile file(KEYSTORE)
-                storePassword KEYSTORE_PASSWORD
-                keyAlias KEY_ALIAS
-                keyPassword KEY_PASSWORD
+                try {
+                    storeFile file(KEYSTORE)
+                    storePassword KEYSTORE_PASSWORD
+                    keyAlias KEY_ALIAS
+                    keyPassword KEY_PASSWORD
+                } catch (ignored) {
+                    throw new InvalidUserDataException("You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.")
+                }
             }
         }
 

@@ -19,8 +19,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.ipaulpro.afilechooser.utils.FileUtils;
-
 import java.io.IOException;
 
 import de.dreier.mytargets.R;
@@ -259,7 +257,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     private void showFilePicker() {
-        Intent getContentIntent = FileUtils.createGetContentIntent();
+        final Intent getContentIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        getContentIntent.setType("*/*");
+        getContentIntent.addCategory(Intent.CATEGORY_OPENABLE);
         Intent intent = Intent.createChooser(getContentIntent, getString(R.string.select_a_file));
         startActivityForResult(intent, 1);
     }
