@@ -80,7 +80,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
                 months.add(new Month(parentId));
             }
         }
-        Collections.sort(months);
+        Collections.sort(months, Collections.reverseOrder());
         setList(trainingDataSource, months, data, false, new TrainingAdapter());
     }
 

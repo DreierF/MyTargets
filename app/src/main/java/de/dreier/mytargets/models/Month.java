@@ -33,6 +33,6 @@ public class Month extends IdProvider implements Comparable<Month> {
 
     @Override
     public int compareTo(@NonNull Month another) {
-        return (int) (getId() - another.getId());
+        return (int) ((getId() - another.getId()) / 1000L);
     }
 }
