@@ -28,7 +28,7 @@ public class StatisticsActivity extends AppCompatActivity {
     private long mRound;
 
     @Bind(R.id.pager)
-    private ViewPager pager;
+    ViewPager pager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

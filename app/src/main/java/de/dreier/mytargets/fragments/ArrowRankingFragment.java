@@ -119,7 +119,7 @@ public class ArrowRankingFragment extends Fragment implements LoaderManager.Load
         }
     }
 
-    private class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.name)
         TextView mName;
 

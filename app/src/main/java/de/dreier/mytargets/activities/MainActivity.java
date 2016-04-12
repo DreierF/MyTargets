@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity
     private static boolean shownThisTime = false;
     private final boolean[] empty = new boolean[3];
     private final int[] stringRes = new int[3];
+    private boolean isFabOpen = false;
 
     @Bind(R.id.new_layout)
     View mNewLayout;
@@ -76,16 +77,25 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
-    private boolean isFabOpen = false;
-    private FloatingActionButton fab;
-    private FloatingActionButton fab1;
-    private FloatingActionButton fab2;
+    @Bind(R.id.fab)
+    FloatingActionButton fab;
+
+    @Bind(R.id.fab1)
+    FloatingActionButton fab1;
+
+    @Bind(R.id.fab2)
+    FloatingActionButton fab2;
+
+    @Bind(R.id.fab1Label)
+    FabLabel fab1Label;
+
+    @Bind(R.id.fab2Label)
+    FabLabel fab2Label;
+
     private Animation fabOpen;
     private Animation fabClose;
     private Animation rotateForward;
     private Animation rotateBackward;
-    private FabLabel fab1Label;
-    private FabLabel fab2Label;
 
     {
         stringRes[0] = R.string.new_training;
@@ -107,11 +117,6 @@ public class MainActivity extends AppCompatActivity
         tabLayout.setupWithViewPager(viewPager);
 
         askForHelpTranslating();
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab1 = (FloatingActionButton) findViewById(R.id.fab1);
-        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
-        fab1Label = (FabLabel) findViewById(R.id.fab1_label);
-        fab2Label = (FabLabel) findViewById(R.id.fab2_label);
         fabOpen = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fabClose = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
         rotateForward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_forward);
@@ -121,8 +126,6 @@ public class MainActivity extends AppCompatActivity
         fab2.setOnClickListener(this);
         fab1Label.setOnClickListener(this);
         fab2Label.setOnClickListener(this);
-        fab1Label.setFab(fab1);
-        fab2Label.setFab(fab2);
 
         setSupportActionBar(toolbar);
     }
@@ -196,12 +199,12 @@ public class MainActivity extends AppCompatActivity
                     startActivityAnimated(EditArrowActivity.class);
                 }
                 break;
-            case R.id.fab1_label:
+            case R.id.fab1Label:
             case R.id.fab1:
                 startActivityAnimated(EditTrainingActivity.class);
                 animateFAB();
                 break;
-            case R.id.fab2_label:
+            case R.id.fab2Label:
             case R.id.fab2:
                 startActivityAnimated(EditTrainingActivity.class);
                 animateFAB();

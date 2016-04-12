@@ -84,7 +84,7 @@ public class DistanceGridFragment extends SelectItemFragment<Distance> {
         }
     }
 
-    private class ViewHolder extends SelectableViewHolder<Distance> {
+    class ViewHolder extends SelectableViewHolder<Distance> {
         @Bind(android.R.id.text1)
         TextView mName;
 

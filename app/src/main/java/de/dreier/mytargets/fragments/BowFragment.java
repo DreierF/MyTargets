@@ -80,7 +80,7 @@ public class BowFragment extends EditableFragment<Bow> implements View.OnClickLi
         }
     }
 
-    private class ViewHolder extends SelectableViewHolder<Bow> {
+    class ViewHolder extends SelectableViewHolder<Bow> {
         @Bind(R.id.name)
         TextView mName;
 

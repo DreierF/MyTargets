@@ -78,7 +78,7 @@ public class ArrowFragment extends EditableFragment<Arrow> implements View.OnCli
         }
     }
 
-    private class ViewHolder extends SelectableViewHolder<Arrow> {
+    class ViewHolder extends SelectableViewHolder<Arrow> {
         @Bind(R.id.name)
         TextView mName;
 

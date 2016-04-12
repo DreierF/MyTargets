@@ -44,7 +44,7 @@
         android:layout_marginRight="80dp">
 
         <de.dreier.mytargets.views.FabLabel
-            android:id="@+id/fab2_label"
+            android:id="@+id/fab2Label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -81,7 +81,7 @@
         android:layout_marginRight="80dp">
 
         <de.dreier.mytargets.views.FabLabel
-            android:id="@+id/fab1_label"
+            android:id="@+id/fab1Label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
