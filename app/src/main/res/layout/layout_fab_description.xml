@@ -43,7 +43,7 @@
         android:layout_marginEnd="80dp"
         android:layout_marginRight="80dp">
 
-        <de.dreier.mytargets.views.FabLabel
+        <TextView
             android:id="@+id/fab2Label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,10 +51,7 @@
             android:background="@drawable/fab_label_background"
             android:text="@string/training_with_standard_round"
             android:textColor="@color/white"
-            android:visibility="invisible"
-            app:backgroundTint="#2196F3"
-            app:elevation="6dp"
-            app:pressedTranslationZ="12dp" />
+            android:visibility="invisible" />
 
     </FrameLayout>
 
@@ -80,7 +77,7 @@
         android:layout_marginEnd="80dp"
         android:layout_marginRight="80dp">
 
-        <de.dreier.mytargets.views.FabLabel
+        <TextView
             android:id="@+id/fab1Label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -88,10 +85,7 @@
             android:background="@drawable/fab_label_background"
             android:text="@string/free_training"
             android:textColor="@color/white"
-            android:visibility="invisible"
-            app:backgroundTint="#2196F3"
-            app:elevation="6dp"
-            app:pressedTranslationZ="12dp" />
+            android:visibility="invisible" />
 
     </FrameLayout>
 

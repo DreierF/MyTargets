@@ -48,14 +48,12 @@ import de.dreier.mytargets.fragments.TrainingsFragment;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.IIdProvider;
-import de.dreier.mytargets.views.FabLabel;
 
 /**
  * Shows an overview over all trying days
  */
 public class MainActivity extends AppCompatActivity
-        implements FragmentBase.OnItemSelectedListener, FragmentBase.ContentListener,
-        View.OnClickListener, ViewPager.OnPageChangeListener {
+        implements FragmentBase.OnItemSelectedListener, FragmentBase.ContentListener, ViewPager.OnPageChangeListener {
 
     private static boolean shownThisTime = false;
     private final boolean[] empty = new boolean[3];
@@ -87,15 +85,17 @@ public class MainActivity extends AppCompatActivity
     FloatingActionButton fab2;
 
     @Bind(R.id.fab1Label)
-    FabLabel fab1Label;
+    TextView fab1Label;
 
     @Bind(R.id.fab2Label)
-    FabLabel fab2Label;
+    TextView fab2Label;
 
     private Animation fabOpen;
     private Animation fabClose;
     private Animation rotateForward;
     private Animation rotateBackward;
+    private Animation fabShowAnimation;
+    private Animation fabHideAnimation;
 
     {
         stringRes[0] = R.string.new_training;
@@ -121,11 +121,8 @@ public class MainActivity extends AppCompatActivity
         fabClose = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
         rotateForward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_forward);
         rotateBackward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_backward);
-        fab.setOnClickListener(this);
-        fab1.setOnClickListener(this);
-        fab2.setOnClickListener(this);
-        fab1Label.setOnClickListener(this);
-        fab2Label.setOnClickListener(this);
+        fabShowAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_label_show);
+        fabHideAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_label_hide);
 
         setSupportActionBar(toolbar);
     }
@@ -186,7 +183,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @OnClick(R.id.fab)
+    @OnClick({R.id.fab, R.id.fab1, R.id.fab2, R.id.fab1Label, R.id.fab2Label})
     public void onClick(View v) {
         int currentTab = viewPager.getCurrentItem();
         switch (v.getId()) {
@@ -223,21 +220,25 @@ public class MainActivity extends AppCompatActivity
             fab.startAnimation(rotateBackward);
             fab1.startAnimation(fabClose);
             fab2.startAnimation(fabClose);
-            fab1Label.hide(true);
-            fab2Label.hide(true);
-            fab1.setClickable(false);
-            fab2.setClickable(false);
+            fab1Label.startAnimation(fabHideAnimation);
+            fab2Label.startAnimation(fabHideAnimation);
+            fab1Label.setVisibility(View.INVISIBLE);
+            fab2Label.setVisibility(View.INVISIBLE);
             isFabOpen = false;
         } else {
             fab.startAnimation(rotateForward);
             fab1.startAnimation(fabOpen);
             fab2.startAnimation(fabOpen);
-            fab1Label.show(true);
-            fab2Label.show(true);
-            fab1.setClickable(true);
-            fab2.setClickable(true);
+            fab1Label.startAnimation(fabShowAnimation);
+            fab2Label.startAnimation(fabShowAnimation);
+            fab1Label.setVisibility(View.VISIBLE);
+            fab2Label.setVisibility(View.VISIBLE);
             isFabOpen = true;
         }
+        fab1.setClickable(isFabOpen);
+        fab2.setClickable(isFabOpen);
+        fab1Label.setClickable(isFabOpen);
+        fab2Label.setClickable(isFabOpen);
     }
 
     @Override
