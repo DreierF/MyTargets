@@ -246,4 +246,6 @@
   <string name="show_points_colored">Boyanmış noktaları göster</string>
   <string name="stabilizer">Stabilizatör</string>
   <string name="clicker">Kliker</string>
+  <string name="training_with_standard_round">Training with Standard Round</string>
+  <string name="free_training">Free Training</string>
 </resources>
