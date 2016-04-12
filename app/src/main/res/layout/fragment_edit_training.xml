@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              tools:context="de.dreier.mytargets.activities.SimpleFragmentActivity.EditTrainingActivity">
+              tools:context="de.dreier.mytargets.activities.SimpleFragmentActivity$EditTrainingActivity">
 
     <include layout="@layout/common_toolbar"/>
 
@@ -32,8 +32,8 @@
                     android:id="@+id/training_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/training_date"
-                    android:layout_toStartOf="@+id/training_date">
+                    android:layout_toLeftOf="@+id/trainingDate"
+                    android:layout_toStartOf="@+id/trainingDate">
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/training"
@@ -45,7 +45,7 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <Button
-                    android:id="@+id/training_date"
+                    android:id="@+id/trainingDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/training_layout"
@@ -59,12 +59,6 @@
 
 
             </RelativeLayout>
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:tabMode="fixed"/>
 
         </LinearLayout>
 
@@ -85,14 +79,14 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/not_editable"
+                    android:id="@+id/notEditable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:animateLayoutChanges="true"
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/standard_round_layout"
+                        android:id="@+id/standardRoundLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
@@ -105,13 +99,13 @@
                             android:text="@string/format"/>
 
                         <de.dreier.mytargets.views.selector.StandardRoundSelector
-                            android:id="@+id/standard_round"
+                            android:id="@+id/standardRound"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/practice_layout"
+                        android:id="@+id/practiceLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -300,7 +294,7 @@
                 </LinearLayout>
 
                 <CheckBox
-                    android:id="@+id/number_arrows"
+                    android:id="@+id/numberArrows"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
@@ -323,7 +317,7 @@
                         android:text="@string/environment"/>
 
                     <de.dreier.mytargets.views.selector.EnvironmentSelector
-                        android:id="@+id/environment_spinner"
+                        android:id="@+id/environmentSpinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"/>

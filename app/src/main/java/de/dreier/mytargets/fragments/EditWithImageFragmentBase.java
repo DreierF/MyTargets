@@ -61,22 +61,27 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int SELECT_PICTURE = 2;
     
-    @Bind(R.id.img_view)
+    @Bind(R.id.imgView)
     ImageView imageView;
-    @Bind(R.id.img_progress)
+
+    @Bind(R.id.imgProgress)
     ProgressBar imgProgress;
-    @Bind(R.id.img_container)
+
+    @Bind(R.id.imgContainer)
     FrameLayout imgContainer;
+
     @Bind(R.id.overlay)
     View overlay;
-    @Bind(R.id.content)
-    LinearLayout content;
+    
     @Bind(R.id.scrollView)
     ObservableScrollView scrollView;
+
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
     @Bind(R.id.title)
     EditText titleView;
+
     @Bind(R.id.fab)
     FloatingActionButton fab;
 
@@ -114,7 +119,6 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit_image, container, false);
-        ButterKnife.bind(this, rootView);
         setUpToolbar(rootView);
 
         // Load values used for image animation
@@ -124,10 +128,13 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
         // Ensure scrollview is at least as big to fill the screen
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        LinearLayout content = (LinearLayout) rootView.findViewById(R.id.content);
         content.setMinimumHeight(metrics.heightPixels - mActionBarSize - statusBarSize);
 
         // Inflate whole layout
         inflater.inflate(layoutRes, content);
+        ButterKnife.bind(this, rootView);
 
         // Set scrollview callbacks
         scrollView.setScrollViewCallbacks(this);

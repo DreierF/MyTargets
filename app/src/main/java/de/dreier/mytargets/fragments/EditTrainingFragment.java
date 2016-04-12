@@ -12,7 +12,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.InputActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
@@ -51,8 +53,7 @@ import de.dreier.mytargets.views.selector.StandardRoundSelector;
 import de.dreier.mytargets.views.selector.TargetSelector;
 
 
-public class EditTrainingFragment extends EditFragmentBase implements DatePickerDialog.OnDateSetListener,
-        TabLayout.OnTabSelectedListener {
+public class EditTrainingFragment extends EditFragmentBase implements DatePickerDialog.OnDateSetListener {
     public static final String TRAINING_ID = "training_id";
     public static final String TRAINING_TYPE = "training_type";
 
@@ -64,28 +65,64 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private static final int REQ_SELECTED_DATE = 2;
 
     private long mTraining = -1;
-
-    private BowSelector bow;
-    private ArrowSelector arrow;
-    private EditText training;
-    private Button training_date;
+    private int mTrainingType = 0;
     private Date date = new Date();
-    private EnvironmentSelector environment;
-    private StandardRoundSelector standardRoundSpinner;
-    private CheckBox number_arrows;
-    private CheckBox timer;
-    private View practice, roundLayout;
-    private RadioButton indoor;
-    private TabLayout tabLayout;
-    private TargetSelector targetSpinner;
-    private DistanceSelector distanceSpinner;
-    private NumberPicker passes, arrows;
 
-    private int mTrainingType;
+    @Bind(R.id.bow)
+    BowSelector bow;
+
+    @Bind(R.id.arrow)
+    ArrowSelector arrow;
+
+    @Bind(R.id.training)
+    EditText training;
+
+    @Bind(R.id.trainingDate)
+    Button training_date;
+
+    @Bind(R.id.environmentSpinner)
+    EnvironmentSelector environment;
+
+    @Bind(R.id.standardRound)
+    StandardRoundSelector standardRoundSpinner;
+
+    @Bind(R.id.numberArrows)
+    CheckBox number_arrows;
+
+    @Bind(R.id.timer)
+    CheckBox timer;
+
+    @Bind(R.id.practiceLayout)
+    View practice;
+
+    @Bind(R.id.standardRoundLayout)
+    View roundLayout;
+
+    @Bind(R.id.indoor)
+    RadioButton indoor;
+
+    @Bind(R.id.outdoor)
+    RadioButton outdoor;
+
+    @Bind(R.id.targetSpinner)
+    TargetSelector targetSpinner;
+
+    @Bind(R.id.distanceSpinner)
+    DistanceSelector distanceSpinner;
+
+    @Bind(R.id.passes)
+    NumberPicker passes;
+
+    @Bind(R.id.arrows)
+    NumberPicker arrows;
+
+    @Bind(R.id.notEditable)
+    View notEditable;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit_training, container, false);
+        ButterKnife.bind(this, rootView);
 
         setUpToolbar(rootView);
 
@@ -95,52 +132,12 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             mTrainingType = arguments.getInt(TRAINING_TYPE, FREE_TRAINING);
         }
 
-        training = (EditText) rootView.findViewById(R.id.training);
-        training_date = (Button) rootView.findViewById(R.id.training_date);
-        training_date.setOnClickListener(v -> {
-            // Package bundle with fragment arguments
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(DatePickerFragment.ARG_CURRENT_DATE, date);
-
-            // Create and show date picker
-            DatePickerFragment datePickerDialog = new DatePickerFragment();
-            datePickerDialog.setTargetFragment(EditTrainingFragment.this, REQ_SELECTED_DATE);
-            datePickerDialog.setArguments(bundle);
-            datePickerDialog.show(activity.getSupportFragmentManager(), "date_picker");
-        });
-
-        tabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.practice));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.standard_round));
-        tabLayout.setOnTabSelectedListener(this);
-
-        practice = rootView.findViewById(R.id.practice_layout);
-        roundLayout = rootView.findViewById(R.id.standard_round_layout);
-
-        View not_editable = rootView.findViewById(R.id.not_editable);
-
-        standardRoundSpinner = (StandardRoundSelector) rootView
-                .findViewById(R.id.standard_round);
-        distanceSpinner = (DistanceSelector) rootView.findViewById(R.id.distanceSpinner);
-        targetSpinner = (TargetSelector) rootView.findViewById(R.id.targetSpinner);
-        bow = (BowSelector) rootView.findViewById(R.id.bow);
-        arrow = (ArrowSelector) rootView.findViewById(R.id.arrow);
-        environment = (EnvironmentSelector) rootView.findViewById(R.id.environment_spinner);
-
         arrow.setOnUpdateListener(this::updateArrowNumbers);
-        number_arrows = (CheckBox) rootView.findViewById(R.id.number_arrows);
-
-        // Indoor / outdoor
-        RadioButton outdoor = (RadioButton) rootView.findViewById(R.id.outdoor);
-        indoor = (RadioButton) rootView.findViewById(R.id.indoor);
 
         // Passes
-        timer = (CheckBox) rootView.findViewById(R.id.timer);
-        passes = (NumberPicker) rootView.findViewById(R.id.passes);
         passes.setTextPattern(R.plurals.passe);
 
         // Arrows per passe
-        arrows = (NumberPicker) rootView.findViewById(R.id.arrows);
         arrows.setTextPattern(R.plurals.arrow);
         arrows.setMinimum(1);
         arrows.setMaximum(12);
@@ -149,7 +146,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             setTitle(R.string.new_training);
             training.setText(getString(R.string.training));
             setTrainingDate();
-            tabLayout.getTabAt(prefs.getInt("tab", 0)).select();
             bow.setItemId(prefs.getInt("bow", -1));
             arrow.setItemId(prefs.getInt("arrow", -1));
             standardRoundSpinner.setItemId(prefs.getInt("standard_round", 32));
@@ -178,12 +174,37 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             standardRoundSpinner.setItemId(train.standardRoundId);
             environment.setItem(train.environment);
             setTrainingDate();
-            not_editable.setVisibility(View.GONE);
-            tabLayout.setVisibility(View.GONE);
+            notEditable.setVisibility(View.GONE);
         }
-        updateMode(tabLayout.getTabAt(0));
+        applyTrainingType();
         updateArrowNumbers(arrow.getSelectedItem());
         return rootView;
+    }
+
+    private void applyTrainingType() {
+        View in, out;
+        if (mTrainingType == 0) {
+            in = practice;
+            out = roundLayout;
+        } else {
+            out = practice;
+            in = roundLayout;
+        }
+        in.setVisibility(View.VISIBLE);
+        out.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.trainingDate)
+    void onDateClick() {
+        // Package bundle with fragment arguments
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(DatePickerFragment.ARG_CURRENT_DATE, date);
+
+        // Create and show date picker
+        DatePickerFragment datePickerDialog = new DatePickerFragment();
+        datePickerDialog.setTargetFragment(EditTrainingFragment.this, REQ_SELECTED_DATE);
+        datePickerDialog.setArguments(bundle);
+        datePickerDialog.show(activity.getSupportFragmentManager(), "date_picker");
     }
 
     private void updateArrowNumbers(Arrow item) {
@@ -243,7 +264,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(getContext());
         if (newTraining) {
             getActivity().setTitle(R.string.edit_training);
-            if (tabLayout.getSelectedTabPosition() == 0) {
+            if (mTrainingType == 0) {
                 // Generate and save standard round template for practice
                 standardRound = new StandardRound();
                 standardRound.club = StandardRound.CUSTOM_PRACTICE;
@@ -260,7 +281,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                 standardRound.setRounds(rounds);
                 standardRoundDataSource.update(standardRound);
 
-                editor.putInt("tab", tabLayout.getSelectedTabPosition());
                 editor.putBoolean("indoor", standardRound.indoor);
                 editor.putInt("ppp", round.arrowsPerPasse);
                 editor.putInt("rounds", round.passes);
@@ -312,33 +332,5 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         editor.putBoolean("timer", timer.isChecked());
         editor.putBoolean("numbering", training1.arrowNumbering);
         editor.apply();
-    }
-
-    @Override
-    public void onTabSelected(TabLayout.Tab tab) {
-        updateMode(tab);
-    }
-
-    private void updateMode(TabLayout.Tab tab) {
-        View in, out;
-        if (tab.getPosition() == 0) {
-            in = practice;
-            out = roundLayout;
-        } else {
-            out = practice;
-            in = roundLayout;
-        }
-        in.setVisibility(View.VISIBLE);
-        out.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
-
-    }
-
-    @Override
-    public void onTabReselected(TabLayout.Tab tab) {
-
     }
 }

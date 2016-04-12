@@ -15,5 +15,6 @@
     <color name="timer_red">#ffe53935</color>
     <color name="dividerColor">#1F000000</color>
     <color name="transparent">#00ffffff</color>
+    <color name="dim_overlay">#55000000</color>
 
 </resources>

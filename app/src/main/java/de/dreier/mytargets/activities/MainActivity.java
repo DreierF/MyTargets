@@ -49,6 +49,9 @@ import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.IIdProvider;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 /**
  * Shows an overview over all trying days
  */
@@ -58,38 +61,30 @@ public class MainActivity extends AppCompatActivity
     private static boolean shownThisTime = false;
     private final boolean[] empty = new boolean[3];
     private final int[] stringRes = new int[3];
-    private boolean isFabOpen = false;
-
     @Bind(R.id.new_layout)
     View mNewLayout;
-
     @Bind(R.id.new_text)
     TextView mNewText;
-
     @Bind(R.id.viewPager)
     ViewPager viewPager;
-
     @Bind(R.id.slidingTabs)
     TabLayout tabLayout;
-
     @Bind(R.id.toolbar)
     Toolbar toolbar;
-
     @Bind(R.id.fab)
     FloatingActionButton fab;
-
     @Bind(R.id.fab1)
     FloatingActionButton fab1;
-
     @Bind(R.id.fab2)
     FloatingActionButton fab2;
-
     @Bind(R.id.fab1Label)
     TextView fab1Label;
-
     @Bind(R.id.fab2Label)
     TextView fab2Label;
+    @Bind(R.id.overlayView)
+    View overlayView;
 
+    private boolean isFabOpen = false;
     private Animation fabOpen;
     private Animation fabClose;
     private Animation rotateForward;
@@ -131,6 +126,12 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        applyFabState(isFabOpen);
     }
 
     @Override
@@ -199,12 +200,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.fab1Label:
             case R.id.fab1:
                 startActivityAnimated(EditTrainingActivity.class);
-                animateFAB();
+                applyFabState(false);
                 break;
             case R.id.fab2Label:
             case R.id.fab2:
                 startActivityAnimated(EditTrainingActivity.class);
-                animateFAB();
+                applyFabState(false);
                 break;
         }
     }
@@ -222,23 +223,33 @@ public class MainActivity extends AppCompatActivity
             fab2.startAnimation(fabClose);
             fab1Label.startAnimation(fabHideAnimation);
             fab2Label.startAnimation(fabHideAnimation);
-            fab1Label.setVisibility(View.INVISIBLE);
-            fab2Label.setVisibility(View.INVISIBLE);
-            isFabOpen = false;
+            applyFabState(false);
         } else {
             fab.startAnimation(rotateForward);
             fab1.startAnimation(fabOpen);
             fab2.startAnimation(fabOpen);
             fab1Label.startAnimation(fabShowAnimation);
             fab2Label.startAnimation(fabShowAnimation);
-            fab1Label.setVisibility(View.VISIBLE);
-            fab2Label.setVisibility(View.VISIBLE);
-            isFabOpen = true;
+            applyFabState(true);
         }
+    }
+
+    public void applyFabState(boolean state) {
+        isFabOpen = state;
+        final int visibility = isFabOpen ? VISIBLE : INVISIBLE;
+        fab1Label.setVisibility(visibility);
+        fab2Label.setVisibility(visibility);
+        fab.setRotation(isFabOpen ? 135f : 0f);
         fab1.setClickable(isFabOpen);
         fab2.setClickable(isFabOpen);
         fab1Label.setClickable(isFabOpen);
         fab2Label.setClickable(isFabOpen);
+        overlayView.setVisibility(visibility);
+    }
+
+    @OnClick(R.id.overlayView)
+    public void dismissFabMenu() {
+        animateFAB();
     }
 
     @Override
@@ -278,7 +289,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onPageSelected(int position) {
-        mNewLayout.setVisibility(empty[position] ? View.VISIBLE : View.GONE);
+        mNewLayout.setVisibility(empty[position] ? VISIBLE : View.GONE);
         mNewText.setText(stringRes[position]);
     }
 

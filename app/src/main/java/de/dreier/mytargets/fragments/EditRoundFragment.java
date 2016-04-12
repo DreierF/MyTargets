@@ -60,7 +60,7 @@ public class EditRoundFragment extends EditFragmentBase {
     @Bind(R.id.distance_layout)
     View distanceLayout;
 
-    @Bind(R.id.not_editable)
+    @Bind(R.id.notEditable)
     View notEditable;
 
     @Bind(R.id.remove_button)
