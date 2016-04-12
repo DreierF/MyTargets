@@ -54,6 +54,11 @@ import de.dreier.mytargets.views.selector.TargetSelector;
 public class EditTrainingFragment extends EditFragmentBase implements DatePickerDialog.OnDateSetListener,
         TabLayout.OnTabSelectedListener {
     public static final String TRAINING_ID = "training_id";
+    public static final String TRAINING_TYPE = "training_type";
+
+    public static final int FREE_TRAINING = 0;
+    public static final int TRAINING_WITH_STANDARD_ROUND = 1;
+    public static final int COMPETITION = 2;
 
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private static final int REQ_SELECTED_DATE = 2;
@@ -76,6 +81,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private DistanceSelector distanceSpinner;
     private NumberPicker passes, arrows;
 
+    private int mTrainingType;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit_training, container, false);
@@ -85,6 +92,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         Bundle arguments = getArguments();
         if (arguments != null) {
             mTraining = arguments.getLong(TRAINING_ID, -1);
+            mTrainingType = arguments.getInt(TRAINING_TYPE, FREE_TRAINING);
         }
 
         training = (EditText) rootView.findViewById(R.id.training);
