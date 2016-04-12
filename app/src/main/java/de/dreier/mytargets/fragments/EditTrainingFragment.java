@@ -113,8 +113,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
         standardRoundSpinner = (StandardRoundSelector) rootView
                 .findViewById(R.id.standard_round);
-        distanceSpinner = (DistanceSelector) rootView.findViewById(R.id.distance_spinner);
-        targetSpinner = (TargetSelector) rootView.findViewById(R.id.target_spinner);
+        distanceSpinner = (DistanceSelector) rootView.findViewById(R.id.distanceSpinner);
+        targetSpinner = (TargetSelector) rootView.findViewById(R.id.targetSpinner);
         bow = (BowSelector) rootView.findViewById(R.id.bow);
         arrow = (ArrowSelector) rootView.findViewById(R.id.arrow);
         environment = (EnvironmentSelector) rootView.findViewById(R.id.environment_spinner);
@@ -132,7 +132,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         passes.setTextPattern(R.plurals.passe);
 
         // Arrows per passe
-        arrows = (NumberPicker) rootView.findViewById(R.id.ppp);
+        arrows = (NumberPicker) rootView.findViewById(R.id.arrows);
         arrows.setTextPattern(R.plurals.arrow);
         arrows.setMinimum(1);
         arrows.setMaximum(12);

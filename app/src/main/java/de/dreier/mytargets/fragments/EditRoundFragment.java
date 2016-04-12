@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.InputActivity;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
@@ -37,16 +39,37 @@ public class EditRoundFragment extends EditFragmentBase {
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
 
-    private long mTraining = -1, mRound = -1;
+    private long mTraining = -1;
+    private long mRound = -1;
 
-    private DistanceSelector distanceSpinner;
-    private TargetSelector targetSpinner;
-    private NumberPicker passes, arrows;
-    private EditText comment;
+    @Bind(R.id.distanceSpinner)
+    DistanceSelector distanceSpinner;
+
+    @Bind(R.id.targetSpinner)
+    TargetSelector targetSpinner;
+
+    @Bind(R.id.passes)
+    NumberPicker passes;
+
+    @Bind(R.id.arrows)
+    NumberPicker arrows;
+
+    @Bind(R.id.comment)
+    EditText comment;
+
+    @Bind(R.id.distance_layout)
+    View distanceLayout;
+
+    @Bind(R.id.not_editable)
+    View notEditable;
+
+    @Bind(R.id.remove_button)
+    Button remove;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit_round, container, false);
+        ButterKnife.bind(this, rootView);
 
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -55,25 +78,13 @@ public class EditRoundFragment extends EditFragmentBase {
         }
         setUpToolbar(rootView);
 
-        View not_editable = rootView.findViewById(R.id.not_editable);
-        View distance_layout = rootView.findViewById(R.id.distance_layout);
-        distanceSpinner = (DistanceSelector) rootView.findViewById(R.id.distance_spinner);
-        targetSpinner = (TargetSelector) rootView.findViewById(R.id.target_spinner);
-
         // Passes
-        passes = (NumberPicker) rootView.findViewById(R.id.passes);
         passes.setTextPattern(R.plurals.passe);
 
         // Arrows per passe
-        arrows = (NumberPicker) rootView.findViewById(R.id.ppp);
         arrows.setTextPattern(R.plurals.arrow);
         arrows.setMinimum(1);
         arrows.setMaximum(12);
-
-        // Comment
-        comment = (EditText) rootView.findViewById(R.id.comment);
-
-        Button remove = (Button) rootView.findViewById(R.id.remove_button);
 
         if (mRound == -1) {
             setTitle(R.string.new_round);
@@ -95,11 +106,11 @@ public class EditRoundFragment extends EditFragmentBase {
             Round round = roundDataSource.get(mRound);
             distanceSpinner.setItem(round.info.distance);
             comment.setText(round.comment);
-            not_editable.setVisibility(View.GONE);
+            notEditable.setVisibility(View.GONE);
             StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(getContext());
             StandardRound standardRound = standardRoundDataSource.get(round.info.standardRound);
             if (standardRound.club != StandardRound.CUSTOM_PRACTICE) {
-                distance_layout.setVisibility(View.GONE);
+                distanceLayout.setVisibility(View.GONE);
             } else if (standardRound.getRounds().size() > 1) {
                 remove.setOnClickListener(v -> {
                     roundDataSource.delete(round);
@@ -110,6 +121,12 @@ public class EditRoundFragment extends EditFragmentBase {
             }
         }
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     @Override

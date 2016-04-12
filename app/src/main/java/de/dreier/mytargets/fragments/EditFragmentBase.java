@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.utils.MyBackupAgent;
 
@@ -45,6 +46,12 @@ public abstract class EditFragmentBase extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.save, menu);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override

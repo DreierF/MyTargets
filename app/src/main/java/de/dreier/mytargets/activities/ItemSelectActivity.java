@@ -8,6 +8,7 @@ package de.dreier.mytargets.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import java.io.Serializable;
 
+import butterknife.Bind;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.ArrowFragment;
 import de.dreier.mytargets.fragments.BowFragment;
@@ -31,9 +33,15 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
         FragmentBase.ContentListener {
     public static final String ITEM = "item";
 
-    private FloatingActionButton mFab;
-    private View mNewLayout;
-    private TextView mNewText;
+    @Bind(R.id.fab)
+    FloatingActionButton mFab;
+
+    @Nullable
+    @Bind(R.id.new_layout)
+    View mNewLayout;
+
+    @Bind(R.id.new_text)
+    TextView mNewText;
 
     @Override
     protected int getLayoutResource() {
@@ -43,18 +51,15 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
         if (childFragment instanceof View.OnClickListener) {
             mFab.setOnClickListener(((View.OnClickListener) childFragment)::onClick);
-            mNewLayout = findViewById(R.id.new_layout);
-            mNewText = (TextView) findViewById(R.id.new_text);
         }
         onContentChanged(true, 0);
     }
 
     @Override
     public void onContentChanged(boolean empty, int stringRes) {
-        if (stringRes != 0 && mNewText != null) {
+        if (stringRes != 0 && mNewText != null && mNewLayout != null) {
             mNewLayout.setVisibility(empty ? View.VISIBLE : View.GONE);
             mNewText.setText(stringRes);
         }

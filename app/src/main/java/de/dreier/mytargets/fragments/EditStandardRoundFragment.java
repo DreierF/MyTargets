@@ -154,13 +154,13 @@ public class EditStandardRoundFragment extends EditFragmentBase
 
         // Distance
         final DistanceSelector distanceSpinner = (DistanceSelector) view
-                .findViewById(R.id.distance_spinner);
+                .findViewById(R.id.distanceSpinner);
         distanceSpinner.setItem(round.distance);
         distanceSpinner.setOnUpdateListener(item -> round.distance = item);
 
         // Target round
         final TargetSelector targetSpinner = (TargetSelector) view
-                .findViewById(R.id.target_spinner);
+                .findViewById(R.id.targetSpinner);
         targetSpinner.setOnUpdateListener(item -> {
             round.target = item;
             round.targetTemplate = item;
@@ -174,7 +174,7 @@ public class EditStandardRoundFragment extends EditFragmentBase
         passes.setValue(round.passes);
 
         // Arrows per passe
-        NumberPicker arrows = (NumberPicker) view.findViewById(R.id.ppp);
+        NumberPicker arrows = (NumberPicker) view.findViewById(R.id.arrows);
         arrows.setTextPattern(R.plurals.arrow);
         arrows.setMinimum(1);
         arrows.setMaximum(12);

@@ -10,7 +10,6 @@ package de.dreier.mytargets.fragments;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -21,6 +20,8 @@ import android.view.ViewGroup;
 
 import junit.framework.Assert;
 
+import butterknife.Bind;
+import butterknife.OnClick;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.DistanceTabsFragmentPagerAdapter;
 import de.dreier.mytargets.shared.models.Dimension;
@@ -29,31 +30,28 @@ import de.dreier.mytargets.utils.TextInputDialog;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class DistanceFragment extends Fragment implements View.OnClickListener,
-        TextInputDialog.OnClickListener {
+public class DistanceFragment extends Fragment implements TextInputDialog.OnClickListener {
 
+    @Bind(R.id.viewPager)
+    ViewPager viewPager;
+    @Bind(R.id.slidingTabs)
+    TabLayout tabLayout;
     private SelectItemFragment.OnItemSelectedListener listener;
     private Distance distance;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        distance = (Distance)getArguments().getSerializable(ITEM);
+        distance = (Distance) getArguments().getSerializable(ITEM);
 
         View rootView = inflater.inflate(R.layout.fragment_distance, container, false);
 
-        ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
         DistanceTabsFragmentPagerAdapter adapter =
                 new DistanceTabsFragmentPagerAdapter(getActivity(), distance);
         viewPager.setAdapter(adapter);
         int item = distance.unit.equals(Distance.METER) ? 0 : 1;
         viewPager.setCurrentItem(item, false);
 
-        TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.sliding_tabs);
         tabLayout.setTabTextColors(0xCCFFFFFF, Color.WHITE);
         tabLayout.setupWithViewPager(viewPager);
-
-        FloatingActionButton mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        mFab.setOnClickListener(this);
-
         return rootView;
     }
 
@@ -66,8 +64,8 @@ public class DistanceFragment extends Fragment implements View.OnClickListener,
         Assert.assertNotNull(listener);
     }
 
-    @Override
-    public void onClick(View v) {
+    @OnClick(R.id.fab)
+    public void onClick() {
         new TextInputDialog.Builder(getActivity())
                 .setTitle(R.string.distance)
                 .setInputType(InputType.TYPE_CLASS_NUMBER)

@@ -30,6 +30,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
 import de.dreier.mytargets.fragments.EditArrowFragment;
@@ -48,30 +51,44 @@ public class MainActivity extends AppCompatActivity
         View.OnClickListener, ViewPager.OnPageChangeListener {
 
     private static boolean shownThisTime = false;
-    private View mNewLayout;
-    private TextView mNewText;
-    private ViewPager viewPager;
+
+    @Bind(R.id.new_layout)
+    View mNewLayout;
+
+    @Bind(R.id.new_text)
+    TextView mNewText;
+
+    @Bind(R.id.viewPager)
+    ViewPager viewPager;
+
+    @Bind(R.id.slidingTabs)
+    TabLayout tabLayout;
+
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
         MainTabsFragmentPagerAdapter adapter = new MainTabsFragmentPagerAdapter(this);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(this);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setTabTextColors(0xCCFFFFFF, Color.WHITE);
         tabLayout.setupWithViewPager(viewPager);
 
         askForHelpTranslating();
-        findViewById(R.id.fab).setOnClickListener(this);
-        mNewLayout = findViewById(R.id.new_layout);
-        mNewText = (TextView) findViewById(R.id.new_text);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        setSupportActionBar(toolbar);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     @Override
@@ -124,7 +141,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
+    @OnClick(R.id.fab)
     public void onClick(View v) {
         Intent i = new Intent();
         if (viewPager.getCurrentItem() == 0) {

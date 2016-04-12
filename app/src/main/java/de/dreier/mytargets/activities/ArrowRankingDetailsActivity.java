@@ -5,6 +5,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.models.ArrowStatistic;
 import de.dreier.mytargets.views.ArrowDispersionView;
@@ -13,13 +15,16 @@ public class ArrowRankingDetailsActivity extends AppCompatActivity {
 
     public static final String ITEM = "item";
 
+    @Bind(R.id.dispersionView)
+    ArrowDispersionView adv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_arrow_ranking_details);
+        ButterKnife.bind(this);
 
         ArrowStatistic item = (ArrowStatistic) getIntent().getSerializableExtra(ITEM);
-        ArrowDispersionView adv = (ArrowDispersionView) findViewById(R.id.dispersionView);
         adv.setShoots(item.shots);
         adv.setTarget(item.target);
 
@@ -27,6 +32,12 @@ public class ArrowRankingDetailsActivity extends AppCompatActivity {
         actionBar.setTitle("Arrow number " + item.arrowNumber);
         actionBar.setSubtitle(item.arrowName);
         actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     @Override

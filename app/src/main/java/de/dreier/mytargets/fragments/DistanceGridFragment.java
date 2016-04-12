@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.managers.dao.DistanceDataSource;
@@ -74,14 +76,21 @@ public class DistanceGridFragment extends SelectItemFragment<Distance> {
                     .inflate(R.layout.card_distance, parent, false);
             return new ViewHolder(itemView);
         }
+
+        @Override
+        public void onViewRecycled(SelectableViewHolder<Distance> holder) {
+            super.onViewRecycled(holder);
+            ButterKnife.unbind(holder);
+        }
     }
 
     private class ViewHolder extends SelectableViewHolder<Distance> {
-        private final TextView mName;
+        @Bind(android.R.id.text1)
+        TextView mName;
 
         public ViewHolder(View itemView) {
             super(itemView, mSelector, DistanceGridFragment.this);
-            mName = (TextView) itemView.findViewById(android.R.id.text1);
+            ButterKnife.bind(this, itemView);
         }
 
         @Override

@@ -13,7 +13,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +23,9 @@ import android.widget.TextView;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ArrowRankingDetailsActivity;
 import de.dreier.mytargets.managers.dao.ArrowStatisticDataSource;
@@ -35,7 +37,9 @@ import de.dreier.mytargets.utils.RoundedTextDrawable;
 public class ArrowRankingFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<ArrowStatistic>> {
 
     private ArrowStatisticDataSource arrowStatisticDataSource;
-    private RecyclerView recyclerView;
+
+    @Bind(android.R.id.list)
+    RecyclerView recyclerView;
     private List<ArrowStatistic> data;
     private ArrowStatisticAdapter adapter;
 
@@ -48,8 +52,7 @@ public class ArrowRankingFragment extends Fragment implements LoaderManager.Load
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
-        recyclerView = (RecyclerView) rootView.findViewById(android.R.id.list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        ButterKnife.bind(this, rootView);
         recyclerView.setHasFixedSize(true);
         arrowStatisticDataSource = new ArrowStatisticDataSource(getContext());
         return rootView;
@@ -108,23 +111,34 @@ public class ArrowRankingFragment extends Fragment implements LoaderManager.Load
         public int getItemCount() {
             return data.size();
         }
+
+        @Override
+        public void onViewRecycled(ViewHolder holder) {
+            super.onViewRecycled(holder);
+            ButterKnife.unbind(holder);
+        }
     }
 
     private class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView mName;
-        private final ImageView mImg;
+        @Bind(R.id.name)
+        TextView mName;
+
+        @Bind(R.id.image)
+        ImageView mImg;
+
         private ArrowStatistic mItem;
 
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setClickable(true);
-            itemView.setOnClickListener(v -> {
-                Intent i = new Intent(getContext(), ArrowRankingDetailsActivity.class);
-                i.putExtra(ArrowRankingDetailsActivity.ITEM, mItem);
-                startActivity(i);
-            });
-            mName = (TextView) itemView.findViewById(R.id.name);
-            mImg = (ImageView) itemView.findViewById(R.id.image);
+            ButterKnife.bind(this, itemView);
+        }
+
+        @OnClick(R.id.content)
+        public void onItemClicked() {
+            Intent i = new Intent(getContext(), ArrowRankingDetailsActivity.class);
+            i.putExtra(ArrowRankingDetailsActivity.ITEM, mItem);
+            startActivity(i);
         }
 
         public void bindItem(ArrowStatistic item) {
