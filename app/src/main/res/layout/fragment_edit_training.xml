@@ -155,7 +155,7 @@
                                 android:text="@string/distance"/>
 
                             <de.dreier.mytargets.views.selector.DistanceSelector
-                                android:id="@+id/distance_spinner"
+                                android:id="@+id/distanceSpinner"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"/>
@@ -177,7 +177,7 @@
                                 android:text="@string/target_face"/>
 
                             <de.dreier.mytargets.views.selector.TargetSelector
-                                android:id="@+id/target_spinner"
+                                android:id="@+id/targetSpinner"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"/>
@@ -220,7 +220,7 @@
                                     android:textSize="16sp"/>
 
                                 <de.dreier.mytargets.views.NumberPicker
-                                    android:id="@+id/ppp"
+                                    android:id="@+id/arrows"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"/>
 

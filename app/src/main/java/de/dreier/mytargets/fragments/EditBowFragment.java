@@ -21,6 +21,8 @@ import android.widget.RadioButton;
 import java.io.File;
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.Bow;
@@ -38,19 +40,45 @@ public class EditBowFragment extends EditWithImageFragmentBase
     private static final int BARE_BOW = 3;
     private static final int HORSE_BOW = 4;
     private static final int YUMI = 5;
-    private EditText brand;
-    private EditText size;
-    private EditText height;
-    private EditText tiller;
-    private EditText limbs;
-    private EditText sight;
-    private EditText drawWeight;
-    private EditText stabilizer;
-    private EditText clicker;
-    private EditText desc;
-    private RadioButton recurveBow, compoundBow, longBow, blank, horse, yumi;
-    private long mBowId = -1;
-    private DynamicItemLayout<SightSetting> sight_settings;
+
+    long mBowId = -1;
+
+    @Bind(R.id.recurve)
+    RadioButton recurveBow;
+    @Bind(R.id.compound)
+    RadioButton compoundBow;
+    @Bind(R.id.longbow)
+    RadioButton longBow;
+    @Bind(R.id.blank)
+    RadioButton blankBow;
+    @Bind(R.id.horse)
+    RadioButton horseBow;
+    @Bind(R.id.yumi)
+    RadioButton yumiBow;
+
+    @Bind(R.id.brand)
+    EditText brand;
+    @Bind(R.id.size)
+    EditText size;
+    @Bind(R.id.braceHeight)
+    EditText braceHeight;
+    @Bind(R.id.tiller)
+    EditText tiller;
+    @Bind(R.id.limbs)
+    EditText limbs;
+    @Bind(R.id.sight)
+    EditText sight;
+    @Bind(R.id.drawWeight)
+    EditText drawWeight;
+    @Bind(R.id.stabilizer)
+    EditText stabilizer;
+    @Bind(R.id.clicker)
+    EditText clicker;
+    @Bind(R.id.desc)
+    EditText desc;
+
+    @Bind(R.id.sightSettings)
+    private DynamicItemLayout<SightSetting> sightSettings;
 
     public EditBowFragment() {
         super(R.layout.fragment_edit_bow, R.drawable.recurve_bow);
@@ -59,39 +87,22 @@ public class EditBowFragment extends EditWithImageFragmentBase
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.bind(this, rootView);
 
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey(BOW_ID)) {
             mBowId = bundle.getLong(BOW_ID, -1);
         }
 
-        recurveBow = (RadioButton) rootView.findViewById(R.id.recurve);
-        compoundBow = (RadioButton) rootView.findViewById(R.id.compound);
-        longBow = (RadioButton) rootView.findViewById(R.id.longbow);
-        blank = (RadioButton) rootView.findViewById(R.id.blank);
-        horse = (RadioButton) rootView.findViewById(R.id.horse);
-        yumi = (RadioButton) rootView.findViewById(R.id.yumi);
-        brand = (EditText) rootView.findViewById(R.id.brand);
-        size = (EditText) rootView.findViewById(R.id.size);
-        height = (EditText) rootView.findViewById(R.id.brace_height);
-        tiller = (EditText) rootView.findViewById(R.id.tiller);
-        limbs = (EditText) rootView.findViewById(R.id.limbs);
-        sight = (EditText) rootView.findViewById(R.id.sight);
-        drawWeight = (EditText) rootView.findViewById(R.id.draw_weight);
-        stabilizer = (EditText) rootView.findViewById(R.id.stabilizer);
-        clicker = (EditText) rootView.findViewById(R.id.clicker);
-        desc = (EditText) rootView.findViewById(R.id.desc);
-        //noinspection unchecked
-        sight_settings = (DynamicItemLayout<SightSetting>) rootView.findViewById(R.id.sight_settings);
-        sight_settings.setLayoutResource(R.layout.dynamicitem_sight_settings, SightSetting.class);
-        sight_settings.setOnBindListener(this);
+        sightSettings.setLayoutResource(R.layout.dynamicitem_sight_settings, SightSetting.class);
+        sightSettings.setOnBindListener(this);
 
         recurveBow.setOnClickListener(v -> setBowType(RECURVE_BOW));
         compoundBow.setOnClickListener(v -> setBowType(COMPOUND_BOW));
         longBow.setOnClickListener(v -> setBowType(LONG_BOW));
-        blank.setOnClickListener(v -> setBowType(BARE_BOW));
-        horse.setOnClickListener(v -> setBowType(HORSE_BOW));
-        yumi.setOnClickListener(v -> setBowType(YUMI));
+        blankBow.setOnClickListener(v -> setBowType(BARE_BOW));
+        horseBow.setOnClickListener(v -> setBowType(HORSE_BOW));
+        yumiBow.setOnClickListener(v -> setBowType(YUMI));
 
         ArrayList<SightSetting> sightSettingsList = new ArrayList<>();
         if (savedInstanceState == null) {
@@ -104,7 +115,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
                 recurveBow.setChecked(true);
                 setTitle(R.string.my_bow);
                 sightSettingsList.add(new SightSetting());
-                sight_settings.setList(sightSettingsList);
+                sightSettings.setList(sightSettingsList);
             }
         } else {
             // Restore values from before orientation change
@@ -119,7 +130,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
         setTitle(bow.name);
         brand.setText(bow.brand);
         size.setText(bow.size);
-        height.setText(bow.height);
+        braceHeight.setText(bow.height);
         tiller.setText(bow.tiller);
         limbs.setText(bow.limbs);
         sight.setText(bow.sight);
@@ -129,17 +140,17 @@ public class EditBowFragment extends EditWithImageFragmentBase
         desc.setText(bow.description);
         imageBitmap = bow.getImage(getContext());
         if (imageBitmap != null) {
-            mImageView.setImageBitmap(imageBitmap);
+            imageView.setImageBitmap(imageBitmap);
         }
         imageFile = bow.imageFile;
         setBowType(bow.type);
-        sight_settings.setList(bow.sightSettings);
+        sightSettings.setList(bow.sightSettings);
     }
 
     @Override
     public void onBind(View view, final SightSetting sightSetting, int index) {
         final DistanceSelector distanceSpinner = (DistanceSelector) view
-                .findViewById(R.id.distance_spinner);
+                .findViewById(R.id.distanceSpinner);
         distanceSpinner.setOnUpdateListener(item -> sightSetting.distance = item);
         EditText setting = (EditText) view.findViewById(R.id.sight_setting);
         setting.addTextChangedListener(new TextWatcher() {
@@ -159,7 +170,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
             }
         });
         ImageButton remove = (ImageButton) view.findViewById(R.id.remove_sight_setting);
-        remove.setOnClickListener(view1 -> sight_settings.remove(sightSetting, R.string.sight_setting_removed));
+        remove.setOnClickListener(view1 -> sightSettings.remove(sightSetting, R.string.sight_setting_removed));
         distanceSpinner.setItem(sightSetting.distance);
         setting.setText(sightSetting.value);
     }
@@ -177,7 +188,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
         bow.name = getName();
         bow.brand = brand.getText().toString();
         bow.size = size.getText().toString();
-        bow.height = height.getText().toString();
+        bow.height = braceHeight.getText().toString();
         bow.tiller = tiller.getText().toString();
         bow.limbs = limbs.getText().toString();
         bow.sight = sight.getText().toString();
@@ -194,7 +205,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
             f.delete();
         }
         bow.setImage(imageFile, imageBitmap);
-        bow.sightSettings = sight_settings.getList();
+        bow.sightSettings = sightSettings.getList();
         return bow;
     }
 
@@ -202,9 +213,9 @@ public class EditBowFragment extends EditWithImageFragmentBase
         recurveBow.setChecked(type == RECURVE_BOW);
         compoundBow.setChecked(type == COMPOUND_BOW);
         longBow.setChecked(type == LONG_BOW);
-        blank.setChecked(type == BARE_BOW);
-        horse.setChecked(type == HORSE_BOW);
-        yumi.setChecked(type == YUMI);
+        blankBow.setChecked(type == BARE_BOW);
+        horseBow.setChecked(type == HORSE_BOW);
+        yumiBow.setChecked(type == YUMI);
     }
 
     private int getType() {
@@ -214,11 +225,11 @@ public class EditBowFragment extends EditWithImageFragmentBase
             return COMPOUND_BOW;
         } else if (longBow.isChecked()) {
             return LONG_BOW;
-        } else if (blank.isChecked()) {
+        } else if (blankBow.isChecked()) {
             return BARE_BOW;
-        } else if (horse.isChecked()) {
+        } else if (horseBow.isChecked()) {
             return HORSE_BOW;
-        } else if (yumi.isChecked()) {
+        } else if (yumiBow.isChecked()) {
             return YUMI;
         } else {
             return RECURVE_BOW;

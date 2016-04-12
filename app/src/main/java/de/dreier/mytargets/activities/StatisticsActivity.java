@@ -15,6 +15,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.ArrowRankingFragment;
 import de.dreier.mytargets.fragments.StatisticsFragment;
@@ -25,10 +27,14 @@ public class StatisticsActivity extends AppCompatActivity {
     private long mTraining;
     private long mRound;
 
+    @Bind(R.id.pager)
+    private ViewPager pager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
+        ButterKnife.bind(this);
 
         mTraining = getIntent().getLongExtra(TRAINING_ID, -1);
         mRound = getIntent().getLongExtra(ROUND_ID, -1);
@@ -36,9 +42,14 @@ public class StatisticsActivity extends AppCompatActivity {
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(new StatisticsPagerAdapter(getSupportFragmentManager()));
         pager.setCurrentItem(mRound == -1 ? 1 : 2, false);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     @Override

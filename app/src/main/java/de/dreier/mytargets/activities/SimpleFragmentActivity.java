@@ -15,6 +15,7 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 import android.view.MenuItem;
 
+import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.EditArrowFragment;
 import de.dreier.mytargets.fragments.EditBowFragment;
@@ -36,11 +37,12 @@ public abstract class SimpleFragmentActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResource());
+        ButterKnife.bind(this);
 
         if (savedInstanceState == null) {
             // Create the fragment only when the activity is created for the first time.
             // ie. not after orientation changes
-             childFragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+            childFragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
             if (childFragment == null) {
                 childFragment = instantiateFragment();
                 Bundle bundle = getIntent() != null ? getIntent().getExtras() : null;
@@ -51,6 +53,12 @@ public abstract class SimpleFragmentActivity extends AppCompatActivity {
             ft.replace(R.id.content, childFragment, FRAGMENT_TAG);
             ft.commit();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     protected int getLayoutResource() {

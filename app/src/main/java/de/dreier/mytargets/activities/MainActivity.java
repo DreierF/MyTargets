@@ -33,6 +33,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivity.EditArrowActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity.EditBowActivity;
@@ -57,9 +60,22 @@ public class MainActivity extends AppCompatActivity
     private static boolean shownThisTime = false;
     private final boolean[] empty = new boolean[3];
     private final int[] stringRes = new int[3];
-    private View mNewLayout;
-    private TextView mNewText;
-    private ViewPager viewPager;
+
+    @Bind(R.id.new_layout)
+    View mNewLayout;
+
+    @Bind(R.id.new_text)
+    TextView mNewText;
+
+    @Bind(R.id.viewPager)
+    ViewPager viewPager;
+
+    @Bind(R.id.slidingTabs)
+    TabLayout tabLayout;
+
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+
     private boolean isFabOpen = false;
     private FloatingActionButton fab;
     private FloatingActionButton fab1;
@@ -81,13 +97,12 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
         MainTabsFragmentPagerAdapter adapter = new MainTabsFragmentPagerAdapter(this);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(this);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setTabTextColors(0xCCFFFFFF, Color.WHITE);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -109,10 +124,13 @@ public class MainActivity extends AppCompatActivity
         fab1Label.setFab(fab1);
         fab2Label.setFab(fab2);
 
-        mNewLayout = findViewById(R.id.new_layout);
-        mNewText = (TextView) findViewById(R.id.new_text);
+        setSupportActionBar(toolbar);
+    }
 
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     @Override
@@ -165,7 +183,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
+    @OnClick(R.id.fab)
     public void onClick(View v) {
         int currentTab = viewPager.getCurrentItem();
         switch (v.getId()) {

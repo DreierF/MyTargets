@@ -24,6 +24,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
+import butterknife.Bind;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.utils.HTMLUtils;
 import de.dreier.mytargets.utils.ScoreboardConfiguration;
@@ -35,8 +36,13 @@ public class ScoreboardActivity extends AppCompatActivity {
     public static final String TRAINING_ID = "training_id";
 
     private long mTraining;
-    private WebView webView;
     private boolean pageLoaded = true;
+
+    @Bind(R.id.webView)
+    WebView webView;
+
+    @Bind(android.R.id.content)
+    FrameLayout container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +54,7 @@ public class ScoreboardActivity extends AppCompatActivity {
             mTraining = intent.getLongExtra(TRAINING_ID, -1);
         }
 
-        webView = (WebView) findViewById(R.id.webView);
         webView.setWebViewClient(new WebViewClient() {
-
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 return false;
             }
@@ -115,7 +119,6 @@ public class ScoreboardActivity extends AppCompatActivity {
         // Get a print adapter instance
         final WebView webViewPrint = new WebView(this);
         webViewPrint.setVisibility(View.INVISIBLE);
-        final FrameLayout container = (FrameLayout) findViewById(android.R.id.content);
         ViewGroup.LayoutParams p = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);

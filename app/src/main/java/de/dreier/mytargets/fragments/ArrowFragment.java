@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
@@ -68,16 +70,24 @@ public class ArrowFragment extends EditableFragment<Arrow> implements View.OnCli
                     .inflate(R.layout.card_image_details, parent, false);
             return new ViewHolder(itemView);
         }
+
+        @Override
+        public void onViewRecycled(SelectableViewHolder<Arrow> holder) {
+            super.onViewRecycled(holder);
+            ButterKnife.unbind(holder);
+        }
     }
 
     private class ViewHolder extends SelectableViewHolder<Arrow> {
-        private final TextView mName;
-        private final ImageView mImg;
+        @Bind(R.id.name)
+        TextView mName;
+
+        @Bind(R.id.image)
+        ImageView mImg;
 
         public ViewHolder(View itemView) {
             super(itemView, mSelector, ArrowFragment.this);
-            mName = (TextView) itemView.findViewById(R.id.name);
-            mImg = (ImageView) itemView.findViewById(R.id.image);
+            ButterKnife.bind(this, itemView);
         }
 
         @Override

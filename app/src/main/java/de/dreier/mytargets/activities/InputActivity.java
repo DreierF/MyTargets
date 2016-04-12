@@ -20,6 +20,8 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.TimerFragment;
 import de.dreier.mytargets.managers.WearMessageManager;
@@ -42,8 +44,16 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     public static final String ROUND_ID = "round_id";
     public static final String PASSE_IND = "passe_ind";
     private static final String SHOW_ALL_MODE = "show_all";
-    private TargetView target;
-    private Button next, prev;
+
+    @Bind(R.id.target_view)
+    TargetView target;
+
+    @Bind(R.id.next_button)
+    Button next;
+
+    @Bind(R.id.prev_button)
+    Button prev;
+
     private int curPasse = 0;
     private int savedPasses = 0;
     private Round mRound;
@@ -59,10 +69,8 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input);
+        ButterKnife.bind(this);
 
-        next = (Button) findViewById(R.id.next_button);
-        prev = (Button) findViewById(R.id.prev_button);
-        target = (TargetView) findViewById(R.id.target_view);
         target.setOnTargetSetListener(this);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -83,8 +91,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
         target.setRoundTemplate(template);
         if (training.arrowNumbering) {
-            target.setArrowNumbers(new ArrowNumberDataSource(getApplicationContext()).getAll(
-                    training.arrow));
+            target.setArrowNumbers(new ArrowNumberDataSource(getApplicationContext()).getAll(training.arrow));
         }
         mShowAllMode = prefs.getBoolean(SHOW_ALL_MODE, false);
         target.showAll(mShowAllMode);
@@ -113,6 +120,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ButterKnife.unbind(this);
         manager.close();
     }
 

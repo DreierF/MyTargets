@@ -8,7 +8,6 @@
 package de.dreier.mytargets.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
@@ -26,10 +26,34 @@ import de.dreier.mytargets.shared.models.ArrowNumber;
 public class EditArrowFragment extends EditWithImageFragmentBase {
 
     public static final String ARROW_ID = "arrow_id";
-
-    private EditText length, material, spine, weight, tipWeight, vanes, nock, comment;
     private long mArrowId = -1;
-    private EditText arrowNumbers;
+
+    @Bind(R.id.arrow_length)
+    EditText length;
+
+    @Bind(R.id.arrow_material)
+    EditText material;
+
+    @Bind(R.id.arrow_spine)
+    EditText spine;
+
+    @Bind(R.id.arrow_weight)
+    EditText weight;
+
+    @Bind(R.id.arrow_tip_weight)
+    EditText tipWeight;
+
+    @Bind(R.id.arrow_vanes)
+    EditText vanes;
+
+    @Bind(R.id.arrow_nock)
+    EditText nock;
+
+    @Bind(R.id.arrow_comment)
+    EditText comment;
+
+    @Bind(R.id.arrow_numbers)
+    EditText arrowNumbers;
 
     public EditArrowFragment() {
         super(R.layout.fragment_edit_arrow, R.drawable.arrows);
@@ -43,16 +67,6 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         if (bundle != null && bundle.containsKey(ARROW_ID)) {
             mArrowId = bundle.getLong(ARROW_ID, -1);
         }
-
-        length = (EditText) rootView.findViewById(R.id.arrow_length);
-        material = (EditText) rootView.findViewById(R.id.arrow_material);
-        spine = (EditText) rootView.findViewById(R.id.arrow_spine);
-        weight = (EditText) rootView.findViewById(R.id.arrow_weight);
-        tipWeight = (EditText) rootView.findViewById(R.id.arrow_tip_weight);
-        vanes = (EditText) rootView.findViewById(R.id.arrow_vanes);
-        nock = (EditText) rootView.findViewById(R.id.arrow_nock);
-        comment = (EditText) rootView.findViewById(R.id.arrow_comment);
-        arrowNumbers = (EditText) rootView.findViewById(R.id.arrow_numbers);
 
         setTitle(R.string.my_arrow);
         List<ArrowNumber> arrowNumbersList = new ArrayList<>();
@@ -72,7 +86,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
                 comment.setText(arrow.comment);
                 imageBitmap = arrow.getImage(getContext());
                 if (imageBitmap != null) {
-                    mImageView.setImageBitmap(imageBitmap);
+                    imageView.setImageBitmap(imageBitmap);
                 }
                 imageFile = arrow.imageFile;
                 arrowNumbersList = arrow.numbers;
@@ -85,17 +99,6 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
                 text += arrowNumber.number;
             }
             arrowNumbers.setText(text);
-        } else {
-            // Restore values from before orientation change
-            length.setText(savedInstanceState.getString("length"));
-            material.setText(savedInstanceState.getString("material"));
-            spine.setText(savedInstanceState.getString("spine"));
-            weight.setText(savedInstanceState.getString("weight"));
-            tipWeight.setText(savedInstanceState.getString("tipWeight"));
-            vanes.setText(savedInstanceState.getString("vanes"));
-            nock.setText(savedInstanceState.getString("nock"));
-            comment.setText(savedInstanceState.getString("comment"));
-            arrowNumbers.setText(savedInstanceState.getString("arrows"));
         }
         return rootView;
     }
@@ -154,19 +157,5 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
             }
         }
         return list;
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("length", length.getText().toString());
-        outState.putString("material", material.getText().toString());
-        outState.putString("spine", spine.getText().toString());
-        outState.putString("weight", weight.getText().toString());
-        outState.putString("tipWeight", tipWeight.getText().toString());
-        outState.putString("vanes", vanes.getText().toString());
-        outState.putString("nock", nock.getText().toString());
-        outState.putString("comment", comment.getText().toString());
-        outState.putString("arrows", arrowNumbers.getText().toString());
     }
 }

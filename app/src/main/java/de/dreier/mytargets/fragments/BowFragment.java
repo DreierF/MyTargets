@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
@@ -70,18 +72,27 @@ public class BowFragment extends EditableFragment<Bow> implements View.OnClickLi
                     .inflate(R.layout.card_image_details, parent, false);
             return new ViewHolder(itemView);
         }
+
+        @Override
+        public void onViewRecycled(SelectableViewHolder<Bow> holder) {
+            super.onViewRecycled(holder);
+            ButterKnife.unbind(holder);
+        }
     }
 
     private class ViewHolder extends SelectableViewHolder<Bow> {
-        private final TextView mName;
-        private final TextView mDetails;
-        private final ImageView mImg;
+        @Bind(R.id.name)
+        TextView mName;
+
+        @Bind(R.id.details)
+        TextView mDetails;
+
+        @Bind(R.id.image)
+        ImageView mImg;
 
         public ViewHolder(View itemView) {
             super(itemView, mSelector, BowFragment.this);
-            mName = (TextView) itemView.findViewById(R.id.name);
-            mDetails = (TextView) itemView.findViewById(R.id.details);
-            mImg = (ImageView) itemView.findViewById(R.id.image);
+            ButterKnife.bind(this, itemView);
         }
 
         @Override

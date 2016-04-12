@@ -57,6 +57,8 @@ dependencies {
     compile "com.android.support:recyclerview-v7:${supportLibVersion}"
     compile "com.android.support:preference-v14:${supportLibVersion}"
 
+    compile 'com.jakewharton:butterknife:7.0.1'
+
     compile 'com.google.android.gms:play-services-wearable:8.4.0'
 
     compile 'com.github.ksoichiro:android-observablescrollview:1.5.2'
