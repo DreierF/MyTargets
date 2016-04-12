@@ -78,7 +78,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
     EditText desc;
 
     @Bind(R.id.sightSettings)
-    private DynamicItemLayout<SightSetting> sightSettings;
+    DynamicItemLayout<SightSetting> sightSettings;
 
     public EditBowFragment() {
         super(R.layout.fragment_edit_bow, R.drawable.recurve_bow);
