@@ -137,7 +137,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         arrows.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-
+                updateArrowsLabel();
             }
 
             @Override
@@ -147,13 +147,12 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
             @Override
             public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-                updateArrowsLabel();
             }
         });
 
         if (trainingId == -1) {
             setTitle(R.string.new_training);
-            trainingTitle.setText(getString(trainingType == COMPETITION ? R.string.training : R.string.competition));
+            trainingTitle.setText(getString(trainingType == COMPETITION ? R.string.competition : R.string.training));
             setTrainingDate();
             bow.setItemId(prefs.getInt("bow", -1));
             arrow.setItemId(prefs.getInt("arrow", -1));
