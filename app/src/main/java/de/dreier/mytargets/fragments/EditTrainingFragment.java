@@ -20,6 +20,9 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
+
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,7 +47,6 @@ import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.models.target.Target;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
-import de.dreier.mytargets.views.NumberPicker;
 import de.dreier.mytargets.views.selector.ArrowSelector;
 import de.dreier.mytargets.views.selector.BowSelector;
 import de.dreier.mytargets.views.selector.DistanceSelector;
@@ -87,7 +89,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     StandardRoundSelector standardRoundSpinner;
 
     @Bind(R.id.numberArrows)
-    CheckBox number_arrows;
+    CheckBox numberArrows;
 
     @Bind(R.id.timer)
     CheckBox timer;
@@ -110,14 +112,14 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     @Bind(R.id.distanceSpinner)
     DistanceSelector distanceSpinner;
 
-    @Bind(R.id.passes)
-    NumberPicker passes;
-
     @Bind(R.id.arrows)
-    NumberPicker arrows;
+    DiscreteSeekBar arrows;
 
     @Bind(R.id.notEditable)
     View notEditable;
+
+    @Bind(R.id.arrowsLabel)
+    TextView arrowsLabel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -133,14 +135,22 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         }
 
         arrow.setOnUpdateListener(this::updateArrowNumbers);
+        arrows.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+            @Override
+            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
 
-        // Passes
-        passes.setTextPattern(R.plurals.passe);
+            }
 
-        // Arrows per passe
-        arrows.setTextPattern(R.plurals.arrow);
-        arrows.setMinimum(1);
-        arrows.setMaximum(12);
+            @Override
+            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+                updateArrowsLabel();
+            }
+        });
 
         if (mTraining == -1) {
             setTitle(R.string.new_training);
@@ -149,15 +159,14 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             bow.setItemId(prefs.getInt("bow", -1));
             arrow.setItemId(prefs.getInt("arrow", -1));
             standardRoundSpinner.setItemId(prefs.getInt("standard_round", 32));
-            number_arrows.setChecked(prefs.getBoolean("numbering", number_arrows.isChecked()));
+            numberArrows.setChecked(prefs.getBoolean("numbering", numberArrows.isChecked()));
             timer.setChecked(prefs.getBoolean("timer", false));
             int distance = prefs.getInt("distance", 10);
             String unit = prefs.getString("unit", "m");
             distanceSpinner.setItem(new Distance(distance, unit));
             indoor.setChecked(prefs.getBoolean("indoor", false));
             outdoor.setChecked(!prefs.getBoolean("indoor", false));
-            arrows.setValue(prefs.getInt("ppp", 3));
-            passes.setValue(prefs.getInt("rounds", 10));
+            arrows.setProgress(prefs.getInt("ppp", 3));
             Target target = TargetFactory.createTarget(activity, prefs.getInt("target", 0),
                     prefs.getInt("scoring_style", 0));
             target.size = new Diameter(prefs.getInt("size_target", 60),
@@ -177,8 +186,13 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             notEditable.setVisibility(View.GONE);
         }
         applyTrainingType();
+        updateArrowsLabel();
         updateArrowNumbers(arrow.getSelectedItem());
         return rootView;
+    }
+
+    private void updateArrowsLabel() {
+        arrowsLabel.setText(getResources().getQuantityText(R.plurals.arrow, arrows.getProgress()));
     }
 
     private void applyTrainingType() {
@@ -209,10 +223,10 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
     private void updateArrowNumbers(Arrow item) {
         if (item == null || item.numbers.isEmpty()) {
-            number_arrows.setVisibility(View.GONE);
+            numberArrows.setVisibility(View.GONE);
         } else {
-            number_arrows.setVisibility(View.VISIBLE);
-            number_arrows.setChecked(true);
+            numberArrows.setVisibility(View.VISIBLE);
+            numberArrows.setChecked(true);
         }
     }
 
@@ -255,7 +269,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         training1.timePerPasse = timer.isChecked() ? time : -1;
         Arrow selectedItem = arrow.getSelectedItem();
         training1.arrowNumbering = !(selectedItem == null || selectedItem.numbers.isEmpty()) &&
-                number_arrows.isChecked();
+                numberArrows.isChecked();
 
         getActivity().finish();
         SharedPreferences.Editor editor = prefs.edit();
@@ -274,8 +288,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                 RoundTemplate round = new RoundTemplate();
                 round.target = targetSpinner.getSelectedItem();
                 round.targetTemplate = round.target;
-                round.arrowsPerPasse = arrows.getValue();
-                round.passes = passes.getValue();
+                round.arrowsPerPasse = arrows.getProgress();
+                round.passes = 1;
                 round.distance = distanceSpinner.getSelectedItem();
                 rounds.add(round);
                 standardRound.setRounds(rounds);

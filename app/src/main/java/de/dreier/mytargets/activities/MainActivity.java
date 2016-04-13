@@ -10,7 +10,6 @@ package de.dreier.mytargets.activities;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -41,16 +40,19 @@ import de.dreier.mytargets.activities.SimpleFragmentActivity.EditArrowActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity.EditBowActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity.EditTrainingActivity;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
-import de.dreier.mytargets.fragments.EditArrowFragment;
-import de.dreier.mytargets.fragments.EditBowFragment;
 import de.dreier.mytargets.fragments.FragmentBase;
-import de.dreier.mytargets.fragments.TrainingsFragment;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.IIdProvider;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static de.dreier.mytargets.fragments.EditArrowFragment.ARROW_ID;
+import static de.dreier.mytargets.fragments.EditBowFragment.BOW_ID;
+import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
+import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_TYPE;
+import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND;
+import static de.dreier.mytargets.fragments.FragmentBase.ITEM_ID;
 
 /**
  * Shows an overview over all trying days
@@ -104,11 +106,13 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        if (savedInstanceState != null) {
+            isFabOpen = savedInstanceState.getBoolean("fab_open");
+        }
+
         MainTabsFragmentPagerAdapter adapter = new MainTabsFragmentPagerAdapter(this);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(this);
-
-        tabLayout.setTabTextColors(0xCCFFFFFF, Color.WHITE);
         tabLayout.setupWithViewPager(viewPager);
 
         askForHelpTranslating();
@@ -120,17 +124,6 @@ public class MainActivity extends AppCompatActivity
         fabHideAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_label_hide);
 
         setSupportActionBar(toolbar);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        ButterKnife.unbind(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         applyFabState(isFabOpen);
     }
 
@@ -148,6 +141,18 @@ public class MainActivity extends AppCompatActivity
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        applyFabState(isFabOpen);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     private void askForHelpTranslating() {
@@ -199,12 +204,12 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.fab1Label:
             case R.id.fab1:
-                startActivityAnimated(EditTrainingActivity.class);
+                startActivityAnimated(EditTrainingActivity.class, TRAINING_TYPE, FREE_TRAINING);
                 applyFabState(false);
                 break;
             case R.id.fab2Label:
             case R.id.fab2:
-                startActivityAnimated(EditTrainingActivity.class);
+                startActivityAnimated(EditTrainingActivity.class, TRAINING_TYPE, TRAINING_WITH_STANDARD_ROUND);
                 applyFabState(false);
                 break;
         }
@@ -212,6 +217,20 @@ public class MainActivity extends AppCompatActivity
 
     private void startActivityAnimated(Class<?> aClass) {
         Intent i = new Intent(this, aClass);
+        startActivity(i);
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    private void startActivityAnimated(Class<?> aClass, String key, long value) {
+        Intent i = new Intent(this, aClass);
+        i.putExtra(key, value);
+        startActivity(i);
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    private void startActivityAnimated(Class<?> aClass, String key, int value) {
+        Intent i = new Intent(this, aClass);
+        i.putExtra(key, value);
         startActivity(i);
         overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
@@ -254,19 +273,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onItemSelected(IIdProvider item) {
-        Intent i;
         if (item instanceof Arrow) {
-            i = new Intent(this, EditArrowActivity.class);
-            i.putExtra(EditArrowFragment.ARROW_ID, item.getId());
+            startActivityAnimated(EditArrowActivity.class, ARROW_ID, item.getId());
         } else if (item instanceof Bow) {
-            i = new Intent(this, EditBowActivity.class);
-            i.putExtra(EditBowFragment.BOW_ID, item.getId());
+            startActivityAnimated(EditBowActivity.class, BOW_ID, item.getId());
         } else {
-            i = new Intent(this, EditTrainingActivity.class);
-            i.putExtra(TrainingsFragment.ITEM_ID, item.getId());
+            startActivityAnimated(EditTrainingActivity.class, ITEM_ID, item.getId());
         }
-        startActivity(i);
-        overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     @Override
@@ -296,5 +309,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("fab_open", isFabOpen);
     }
 }

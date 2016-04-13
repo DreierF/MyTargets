@@ -7,19 +7,11 @@ buildscript {
         classpath 'com.android.tools.build:gradle:2.1.0-alpha5'
         classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
         classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.0.8'
-}
+    }
 }
 
 plugins {
     id "com.mendhak.gradlecrowdin" version "0.0.8"
-}
-
-if(new File("gradle.properties").exists()) {
-    crowdinDownload {
-        apiKey = CROWDIN_API_KEY
-        projectId = CROWDIN_PROJECT_ID
-        destination = "$projectDir"
-    }
 }
 
 ext {
@@ -32,7 +24,25 @@ allprojects {
     repositories {
         jcenter()
         maven {
-            url "https://jitpack.io"
+            url 'https://jitpack.io'
         }
     }
+}
+
+if (new File('gradle.properties').exists()) {
+    crowdinDownload {
+        apiKey = CROWDIN_API_KEY
+        projectId = CROWDIN_PROJECT_ID
+        destination = "$projectDir"
+    }
+
+    task crowdinUploadAll(group: "crowdin", dependsOn: ':app:crowdinAppUpload') {}
+
+    task crowdinUploadAndDownload(group: "crowdin", dependsOn: 'crowdinUploadAll') {
+        crowdinDownload.execute()
+    }
+
+    /*afterEvaluate {
+        project(':app').tasks.assembleRelease.dependsOn crowdinUploadAndDownload
+    }*/
 }
