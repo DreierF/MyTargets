@@ -25,6 +25,7 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.utils.HTMLUtils;
 import de.dreier.mytargets.utils.ScoreboardConfiguration;
@@ -48,6 +49,7 @@ public class ScoreboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scoreboard);
+        ButterKnife.bind(this);
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(TRAINING_ID)) {

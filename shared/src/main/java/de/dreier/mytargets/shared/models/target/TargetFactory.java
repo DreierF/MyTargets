@@ -90,6 +90,9 @@ public class TargetFactory {
             case 23: // Beursault
                 t = new Beursault(context);
                 break;
+            case 24: // SCA Period
+                t = new SCAPeriodTarget(context);
+                break;
             default:
                 throw new IllegalArgumentException("id out of range");
         }
@@ -101,7 +104,7 @@ public class TargetFactory {
     public static List<Target> getList(Context context) {
         if (list == null) {
             list = new ArrayList<>();
-            for (int i = 0; i < 24; i++) {
+            for (int i = 0; i < 25; i++) {
                 list.add(createTarget(context, i, 0));
             }
         }
