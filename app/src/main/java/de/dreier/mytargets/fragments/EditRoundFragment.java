@@ -57,7 +57,7 @@ public class EditRoundFragment extends EditFragmentBase {
     @Bind(R.id.comment)
     EditText comment;
 
-    @Bind(R.id.distance_layout)
+    @Bind(R.id.distanceLayout)
     View distanceLayout;
 
     @Bind(R.id.notEditable)

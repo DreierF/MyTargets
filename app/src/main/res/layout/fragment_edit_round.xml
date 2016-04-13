@@ -22,7 +22,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/distance_layout"
+                    android:id="@+id/distanceLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
