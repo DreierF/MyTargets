@@ -3,7 +3,7 @@
 <resources>
   <!-- Indoor -->
   <string name="australian_combined_indoor">Австралийский комбинированный для крытых помещений</string>
-  <string name="australian_indoor_1">Австралийский Крытый 1</string>
+  <string name="australian_indoor_1">Австралийский крытый 1</string>
   <string name="australian_indoor_2">Австралийский крытый 2</string>
   <string name="dair_380">DAIR 380</string>
   <string name="wa_18_40cm">WA 18 (40 см)</string>
@@ -11,7 +11,7 @@
   <string name="wa_3_spot">WA 3-х</string>
   <string name="wa_25">WA 25</string>
   <string name="wa_combined">WA смешанный</string>
-  <string name="match_round">Match Round</string>
+  <string name="match_round">Матч раунд</string>
   <string name="stafford">Stafford</string>
   <string name="bray_i">Bray I</string>
   <string name="bray_ii">Bray II</string>

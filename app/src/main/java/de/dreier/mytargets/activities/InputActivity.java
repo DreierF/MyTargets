@@ -94,9 +94,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         curPasse = intent.getIntExtra(PASSE_IND, -1);
         round = roundDataSource.get(roundId);
         template = round.info;
-        training = new TrainingDataSource(this).get(round.training);
+        training = new TrainingDataSource(this).get(round.trainingId);
         standardRound = new StandardRoundDataSource(this).get(training.standardRoundId);
-        rounds = roundDataSource.getAll(round.training);
+        rounds = roundDataSource.getAll(round.trainingId);
         savedPasses = passeDataSource.getAllByRound(roundId).size();
         mExitOnFinish = savedPasses <= curPasse && standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE;
 

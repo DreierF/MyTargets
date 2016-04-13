@@ -115,7 +115,7 @@ public class EditRoundFragment extends EditRoundPropertiesFragmentBase {
             round = roundDataSource.get(roundId);
         } else {
             round = new Round();
-            round.training = trainingId;
+            round.trainingId = trainingId;
             round.info = getRoundTemplate();
             round.info.standardRound = standardRound.getId();
         }

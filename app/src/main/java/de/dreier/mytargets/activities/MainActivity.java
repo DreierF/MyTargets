@@ -138,9 +138,8 @@ public class MainActivity extends AppCompatActivity
 
     private void askForHelpTranslating() {
         ArrayList<String> supportedLanguages = new ArrayList<>();
-        //TODO update
-        Collections.addAll(supportedLanguages, "de", "en", "fr", "es", "ru", "nl", "it", "sl", "ca",
-                "zh", "tr", "hu", "sl");
+        Collections.addAll(supportedLanguages, "ca", "cs", "de", "en", "es", "fr", "hu", "it", "iw",
+                "ja", "nl", "no", "pl", "pt", "ru", "sk", "sl", "sv", "tr", "zh");
         final SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(MainActivity.this);
         boolean shown = prefs.getBoolean("translation_dialog_shown", false);

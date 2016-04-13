@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.github.triplet.play'
 
 android {
     compileOptions {
@@ -47,6 +48,41 @@ android {
                 proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
             }
         }
+    }
+    productFlavors {
+        regular {}
+        screengrab {}
+    }
+}
+
+if (new File("gradle.properties").exists()) {
+    afterEvaluate {
+        task renameFolders {
+            file('app/src/main/play/ca-ES').renameTo(file('app/src/main/play/ca'))
+            file('app/src/main/play/sk-SK').renameTo(file('app/src/main/play/sk'))
+            file('app/src/main/play/sl-SI').renameTo(file('app/src/main/play/sl'))
+        }
+
+        def generateReleasePlayResources = project.tasks.getByName('generateRegularReleasePlayResources')
+        generateReleasePlayResources.dependsOn(':crowdinDownload')
+        generateReleasePlayResources.dependsOn renameFolders
+        generateReleasePlayResources.doLast {
+            file('app/src/main/play/ca').renameTo(file('app/src/main/play/ca-ES'))
+            file('app/src/main/play/sk').renameTo(file('app/src/main/play/sk-SK'))
+            file('app/src/main/play/sl').renameTo(file('app/src/main/play/sl-SI'))
+        }
+
+        task generateLocalizedScreenshots(type: Exec, group: 'play store') {
+            workingDir '..'
+            commandLine './make_screenshots.sh'
+        }
+        generateLocalizedScreenshots.dependsOn(':crowdinDownload')
+        generateLocalizedScreenshots.dependsOn assembleScreengrabDebugAndroidTest
+        generateLocalizedScreenshots.dependsOn assembleScreengrabDebug
+    }
+    play {
+        jsonFile = file(PLAY_STORE_JSON)
+        uploadImages = true
     }
 }
 
@@ -111,6 +147,9 @@ dependencies {
 
     androidTestCompile 'com.google.code.findbugs:jsr305:3.0.0'
     androidTestCompile "com.android.support:support-annotations:$supportLibVersion"
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile 'tools.fastlane:screengrab:0.3.2'
     androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 }

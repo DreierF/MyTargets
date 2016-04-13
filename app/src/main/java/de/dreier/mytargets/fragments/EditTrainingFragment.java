@@ -8,9 +8,7 @@ package de.dreier.mytargets.fragments;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -258,7 +256,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
         RoundDataSource roundDataSource = new RoundDataSource(getContext());
         for (RoundTemplate template : standardRound.getRounds()) {
             Round round = new Round();
-            round.training = training.getId();
+            round.trainingId = training.getId();
             round.info = template;
             round.comment = "";
             roundDataSource.update(round);

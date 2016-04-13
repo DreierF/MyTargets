@@ -9,6 +9,7 @@ package de.dreier.mytargets.managers.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.VisibleForTesting;
 
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.IIdSettable;
@@ -48,4 +49,9 @@ public abstract class IdProviderDataSource<T extends IIdSettable> extends DataSo
     }
 
     protected abstract ContentValues getContentValues(T item);
+
+    @VisibleForTesting
+    void deleteAll() {
+        database.delete(table, null, null);
+    }
 }
