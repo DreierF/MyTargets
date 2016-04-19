@@ -132,7 +132,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         mRounds = roundDataSource.getAll(mTraining);
         setRoundInfo();
 
-        setList(passeDataSource, mRounds, data, true, new PasseAdapter());
+        setList(passeDataSource, mRounds, data, child -> child.roundId, true, new PasseAdapter());
         mAdapter.notifyDataSetChanged();
         getActivity().supportInvalidateOptionsMenu();
     }

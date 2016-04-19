@@ -18,13 +18,15 @@ import java.util.HashSet;
 import java.util.List;
 
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
+import de.dreier.mytargets.interfaces.PartitionDelegate;
 import de.dreier.mytargets.managers.dao.IdProviderDataSource;
-import de.dreier.mytargets.shared.models.IdProvider;
+import de.dreier.mytargets.shared.models.IIdProvider;
+import de.dreier.mytargets.shared.models.IIdSettable;
 
 /**
  * Shows all rounds of one settings_only day
  */
-public abstract class ExpandableFragment<H extends IdProvider, C extends IdProvider>
+public abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSettable>
         extends EditableFragmentBase<C> {
 
     ExpandableNowListAdapter<H, C> mAdapter;
@@ -50,11 +52,11 @@ public abstract class ExpandableFragment<H extends IdProvider, C extends IdProvi
         return rootView;
     }
 
-    void setList(IdProviderDataSource<C> dataSource, List<H> headers, List<C> children, boolean opened, ExpandableNowListAdapter<H, C> adapter) {
+    void setList(IdProviderDataSource<C> dataSource, List<H> headers, List<C> children, PartitionDelegate<C> parentDelegate, boolean opened, ExpandableNowListAdapter<H, C> adapter) {
         this.dataSource = dataSource;
         if (mRecyclerView.getAdapter() == null) {
             mAdapter = adapter;
-            mAdapter.setList(headers, children, opened);
+            mAdapter.setList(headers, children, parentDelegate, opened);
             if (savedInstanceState != null) {
                 mAdapter.setExpandedIds((HashSet<Long>) savedInstanceState.getSerializable("expanded"));
             } else if (!opened && mAdapter.getItemCount() > 0) {
@@ -62,7 +64,7 @@ public abstract class ExpandableFragment<H extends IdProvider, C extends IdProvi
             }
             mRecyclerView.setAdapter(mAdapter);
         } else {
-            mAdapter.setList(headers, children);
+            mAdapter.setList(headers, children, parentDelegate);
             mAdapter.notifyDataSetChanged();
         }
 

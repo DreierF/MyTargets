@@ -3,7 +3,8 @@ package de.dreier.mytargets.shared.models;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Training extends IdProvider {
+public class Training implements IIdSettable {
+    public static final String ID = "_id";
     static final long serialVersionUID = 58L;
 
     public String title = "";
@@ -14,12 +15,20 @@ public class Training extends IdProvider {
     public long arrow;
     public boolean arrowNumbering;
     public int timePerPasse;
+    protected long id;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     @Override
-    public long getParentId() {
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(0);
-        c.set(date.getYear() + 1900, date.getMonth(), 1);
-        return c.getTimeInMillis();
+    public boolean equals(Object another) {
+        return another instanceof Training &&
+                getClass().equals(another.getClass()) &&
+                id == ((Training) another).id;
     }
 }

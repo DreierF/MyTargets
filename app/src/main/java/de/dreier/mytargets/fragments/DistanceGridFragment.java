@@ -76,12 +76,6 @@ public class DistanceGridFragment extends SelectItemFragment<Distance> {
                     .inflate(R.layout.card_distance, parent, false);
             return new ViewHolder(itemView);
         }
-
-        @Override
-        public void onViewRecycled(SelectableViewHolder<Distance> holder) {
-            super.onViewRecycled(holder);
-            ButterKnife.unbind(holder);
-        }
     }
 
     class ViewHolder extends SelectableViewHolder<Distance> {

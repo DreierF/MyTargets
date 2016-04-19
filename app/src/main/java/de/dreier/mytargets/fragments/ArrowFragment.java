@@ -70,12 +70,6 @@ public class ArrowFragment extends EditableFragment<Arrow> implements View.OnCli
                     .inflate(R.layout.card_image_details, parent, false);
             return new ViewHolder(itemView);
         }
-
-        @Override
-        public void onViewRecycled(SelectableViewHolder<Arrow> holder) {
-            super.onViewRecycled(holder);
-            ButterKnife.unbind(holder);
-        }
     }
 
     class ViewHolder extends SelectableViewHolder<Arrow> {

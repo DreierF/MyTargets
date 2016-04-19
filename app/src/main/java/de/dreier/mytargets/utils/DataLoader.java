@@ -10,9 +10,9 @@ package de.dreier.mytargets.utils;
 import android.content.Context;
 
 import de.dreier.mytargets.managers.dao.IdProviderDataSource;
-import de.dreier.mytargets.shared.models.IdProvider;
+import de.dreier.mytargets.shared.models.IIdSettable;
 
-public class DataLoader<T extends IdProvider> extends DataLoaderBase<T, IdProviderDataSource<T>> {
+public class DataLoader<T extends IIdSettable> extends DataLoaderBase<T, IdProviderDataSource<T>> {
 
     public DataLoader(Context context, IdProviderDataSource<T> dataSource, BackgroundAction<T> a) {
         super(context, dataSource, a);

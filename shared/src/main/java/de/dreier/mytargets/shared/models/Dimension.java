@@ -13,7 +13,8 @@ import java.io.Serializable;
 
 import de.dreier.mytargets.shared.R;
 
-public class Dimension extends IdProvider implements Comparable<Distance>, Serializable {
+public class Dimension implements IIdSettable, Comparable<Distance>, Serializable {
+    public static final String ID = "_id";
     static final long serialVersionUID = 53L;
     public static final String METER = "m";
     public static final String CENTIMETER = "cm";
@@ -21,6 +22,7 @@ public class Dimension extends IdProvider implements Comparable<Distance>, Seria
     public static final String INCH = "in";
     public int value;
     public String unit;
+    protected long id;
 
     public Dimension(int value, String unit) {
         this.value = value;
@@ -41,5 +43,20 @@ public class Dimension extends IdProvider implements Comparable<Distance>, Seria
         } else {
             return value + unit;
         }
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object another) {
+        return another instanceof Dimension &&
+                getClass().equals(another.getClass()) &&
+                id == ((Dimension) another).id;
     }
 }

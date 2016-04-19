@@ -2,13 +2,15 @@ package de.dreier.mytargets.shared.models;
 
 import java.util.Arrays;
 
-public class Passe extends IdProvider {
+public class Passe implements IIdSettable {
+    public static final String ID = "_id";
     static final long serialVersionUID = 55L;
 
     public Shot[] shot;
     public long roundId;
     public int index;
     public boolean exact;
+    protected long id;
 
     public Passe(int ppp) {
         shot = new Shot[ppp];
@@ -18,21 +20,15 @@ public class Passe extends IdProvider {
     }
 
     public Passe(Passe p) {
-        super.setId(p.getId());
+        setId(p.getId());
         shot = p.shot.clone();
     }
 
-    @Override
     public void setId(long id) {
-        super.setId(id);
+        this.id = id;
         for (Shot s : shot) {
             s.passe = id;
         }
-    }
-
-    @Override
-    public long getParentId() {
-        return roundId;
     }
 
     public void sort() {
@@ -40,5 +36,16 @@ public class Passe extends IdProvider {
         for (int i = 0; i < shot.length; i++) {
             shot[i].index = i;
         }
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object another) {
+        return another instanceof Passe &&
+                getClass().equals(another.getClass()) &&
+                id == ((Passe) another).id;
     }
 }

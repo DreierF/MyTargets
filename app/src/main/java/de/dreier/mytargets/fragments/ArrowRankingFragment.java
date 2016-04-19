@@ -111,12 +111,6 @@ public class ArrowRankingFragment extends Fragment implements LoaderManager.Load
         public int getItemCount() {
             return data.size();
         }
-
-        @Override
-        public void onViewRecycled(ViewHolder holder) {
-            super.onViewRecycled(holder);
-            ButterKnife.unbind(holder);
-        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

@@ -12,12 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.shared.models.IdProvider;
+import de.dreier.mytargets.shared.models.IIdProvider;
 
-public class WindDirection extends IdProvider {
+public class WindDirection implements IIdProvider {
     static final long serialVersionUID = 62L;
 
     public final String name;
+    protected long id;
 
     private WindDirection(long id, String name) {
         this.setId(id);
@@ -31,5 +32,20 @@ public class WindDirection extends IdProvider {
             list.add(new WindDirection(i, arrays[i]));
         }
         return list;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object another) {
+        return another instanceof WindDirection &&
+                getClass().equals(another.getClass()) &&
+                id == ((WindDirection) another).id;
     }
 }

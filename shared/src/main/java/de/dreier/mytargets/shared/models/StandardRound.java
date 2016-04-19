@@ -31,7 +31,8 @@ import de.dreier.mytargets.shared.models.target.WAField;
 import de.dreier.mytargets.shared.models.target.WAFullTarget;
 import de.dreier.mytargets.shared.models.target.Worcester;
 
-public class StandardRound extends IdProvider {
+public class StandardRound implements IIdSettable {
+    public static final String ID = "_id";
     static final long serialVersionUID = 56L;
     private static final int ASA = 1;
     private static final int AUSTRALIAN = 2;
@@ -49,6 +50,7 @@ public class StandardRound extends IdProvider {
 
     public String name;
     public int club;
+    protected long id;
     private ArrayList<RoundTemplate> rounds = new ArrayList<>();
     public boolean indoor;
 
@@ -755,9 +757,8 @@ public class StandardRound extends IdProvider {
         rounds.add(template);
     }
 
-    @Override
     public void setId(long id) {
-        super.setId(id);
+        this.id = id;
         for (RoundTemplate r : rounds) {
             r.standardRound = id;
         }
@@ -792,5 +793,16 @@ public class StandardRound extends IdProvider {
             targets.add(r.target);
         }
         return new CombinedSpot(context, targets);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object another) {
+        return another instanceof StandardRound &&
+                getClass().equals(another.getClass()) &&
+                id == ((StandardRound) another).id;
     }
 }

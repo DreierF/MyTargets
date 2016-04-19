@@ -15,13 +15,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import de.dreier.mytargets.shared.models.IdProvider;
+import de.dreier.mytargets.interfaces.PartitionDelegate;
+import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.utils.HeaderBindingHolder;
 import de.dreier.mytargets.utils.ItemBindingHolder;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
-public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD extends IdProvider>
-        extends RecyclerView.Adapter<ItemBindingHolder<IdProvider>> {
+public abstract class ExpandableNowListAdapter<HEADER extends IIdProvider, CHILD extends IIdProvider>
+        extends RecyclerView.Adapter<ItemBindingHolder<IIdProvider>> {
 
     public static final int ITEM_TYPE = 2;
     public static final int ITEM_TYPE_2 = 3;
@@ -30,6 +31,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
     private final ArrayList<Boolean> isOpen = new ArrayList<>();
     private final List<DataHolder> dataList = new ArrayList<>();
     private List<HEADER> mListHeaders = new ArrayList<>();
+    private PartitionDelegate<CHILD> partitionDelegate;
 
     @Override
     public long getItemId(int position) {
@@ -53,11 +55,11 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
     }
 
     @Override
-    public ItemBindingHolder<IdProvider> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ItemBindingHolder<IIdProvider> onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HEADER_TYPE) {
-            return (ItemBindingHolder<IdProvider>) getTopLevelViewHolder(parent);
+            return (ItemBindingHolder<IIdProvider>) getTopLevelViewHolder(parent);
         } else {
-            return (ItemBindingHolder<IdProvider>) getSecondLevelViewHolder(parent);
+            return (ItemBindingHolder<IIdProvider>) getSecondLevelViewHolder(parent);
         }
     }
 
@@ -66,7 +68,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
     protected abstract SelectableViewHolder<CHILD> getSecondLevelViewHolder(ViewGroup parent);
 
     @Override
-    public final void onBindViewHolder(ItemBindingHolder<IdProvider> viewHolder, int position) {
+    public final void onBindViewHolder(ItemBindingHolder<IIdProvider> viewHolder, int position) {
         if (position == -1) {
             return;
         }
@@ -125,7 +127,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
         isOpen.set(headerPosition, !isOpen.get(headerPosition));
     }
 
-    public IdProvider getItem(int position) {
+    public IIdProvider getItem(int position) {
         if (position == -1) {
             return null;
         }
@@ -134,20 +136,21 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
 
     public void add(int pos, CHILD item) {
         dataList.add(pos, new DataHolder(item, ItemType.ITEM));
-        long parent = item.getParentId();
+        long parent = partitionDelegate.getParentId(item);
         childMap.get(parent).add(pos - getItemCountUpToHeader(parent), item);
         notifyItemInserted(pos);
     }
 
     public void remove(int pos) {
         DataHolder removed = dataList.remove(pos);
-        IdProvider data = removed.getData();
-        long parent = data.getParentId();
+        CHILD data = (CHILD) removed.getData();
+        long parent = partitionDelegate.getParentId(data);
         childMap.get(parent).remove(data);
         notifyItemRemoved(pos);
     }
 
-    public void setList(List<HEADER> headers, List<CHILD> children) {
+    public void setList(List<HEADER> headers, List<CHILD> children, PartitionDelegate<CHILD> partitionDelegate) {
+        this.partitionDelegate = partitionDelegate;
         HashSet<Long> oldExpanded = getExpandedIds();
         mListHeaders = headers;
         dataList.clear();
@@ -157,7 +160,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
             childMap.put(header.getId(), new ArrayList<>());
         }
         for (CHILD child : children) {
-            long parent = child.getParentId();
+            long parent = partitionDelegate.getParentId(child);
             childMap.get(parent).add(child);
         }
         for (HEADER header : mListHeaders) {
@@ -167,7 +170,8 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
         setExpandedIds(oldExpanded);
     }
 
-    public void setList(List<HEADER> headers, List<CHILD> children, boolean opened) {
+    public void setList(List<HEADER> headers, List<CHILD> children, PartitionDelegate<CHILD> partitionDelegate, boolean opened) {
+        this.partitionDelegate = partitionDelegate;
         mListHeaders = headers;
         dataList.clear();
         childMap.clear();
@@ -176,7 +180,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
             childMap.put(header.getId(), new ArrayList<>());
         }
         for (CHILD child : children) {
-            long parent = child.getParentId();
+            long parent = partitionDelegate.getParentId(child);
             childMap.get(parent).add(child);
         }
         for (HEADER header : mListHeaders) {
@@ -219,10 +223,10 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
     }
 
     private class DataHolder {
-        private final IdProvider data;
+        private final IIdProvider data;
         private final ItemType type;
 
-        public DataHolder(IdProvider item, ItemType type) {
+        public DataHolder(IIdProvider item, ItemType type) {
             this.data = item;
             this.type = type;
         }
@@ -231,7 +235,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IdProvider, CHILD 
             return data.getId();
         }
 
-        public IdProvider getData() {
+        public IIdProvider getData() {
             return data;
         }
 

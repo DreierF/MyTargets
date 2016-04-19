@@ -2,7 +2,8 @@ package de.dreier.mytargets.shared.models;
 
 import android.support.annotation.NonNull;
 
-public class Shot extends IdProvider implements Comparable<Shot> {
+public class Shot implements IIdSettable, Comparable<Shot> {
+    public static final String ID = "_id";
     static final long serialVersionUID = 57L;
 
     public static final int NOTHING_SELECTED = -2;
@@ -13,6 +14,7 @@ public class Shot extends IdProvider implements Comparable<Shot> {
     public String comment = "";
     public int arrow = -1;
     public int index;
+    protected long id;
 
     public Shot(int i) {
         index = i;
@@ -24,5 +26,20 @@ public class Shot extends IdProvider implements Comparable<Shot> {
             return 0;
         }
         return ((zone > another.zone && another.zone != MISS) || zone == MISS) ? 1 : -1;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object another) {
+        return another instanceof Shot &&
+                getClass().equals(another.getClass()) &&
+                id == ((Shot) another).id;
     }
 }
