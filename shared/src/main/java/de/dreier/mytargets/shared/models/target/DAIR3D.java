@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.utils.Color;
 
 import static android.graphics.Color.BLACK;
 
@@ -20,8 +21,8 @@ public class DAIR3D extends Target3DBase {
         super(ID, R.string.dair_3d);
         zones = 6;
         radius = new float[]{0, 0, 0, 0, 0, 500};
-        colorFill = new int[]{GREEN, TURBO_YELLOW, RED, CERULEAN_BLUE, LIGHT_GRAY, BROWN};
-        colorStroke = new int[]{BLACK, BLACK, BLACK, BLACK, BLACK, GRAY};
+        colorFill = new int[]{Color.GREEN, Color.TURBO_YELLOW, Color.RED, Color.CERULEAN_BLUE, Color.LIGHT_GRAY, Color.BROWN};
+        colorStroke = new int[]{BLACK, BLACK, BLACK, BLACK, BLACK, Color.GRAY};
         strokeWidth = new int[]{3, 3, 3, 4, 3, 5};
         zonePoints = new int[][]{
                 {8, 12, 11, 10, 8, 0},

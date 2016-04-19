@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.utils.Color;
 
 import static android.graphics.Color.BLACK;
 
@@ -18,8 +19,8 @@ public class NFAS3D extends Target3DBase {
         super(18, R.string.nfas_3d);
         zones = 4;
         radius = new float[]{62, 209, 0, 500};
-        colorFill = new int[]{RED, CERULEAN_BLUE, LIGHT_GRAY, BROWN};
-        colorStroke = new int[]{BLACK, BLACK, BLACK, GRAY};
+        colorFill = new int[]{Color.RED, Color.CERULEAN_BLUE, Color.LIGHT_GRAY, Color.BROWN};
+        colorStroke = new int[]{BLACK, BLACK, BLACK, Color.GRAY};
         strokeWidth = new int[]{3, 4, 3, 5};
         zonePoints = new int[][]{{24, 20, 16, 0}};
         showAsX = new boolean[]{false};

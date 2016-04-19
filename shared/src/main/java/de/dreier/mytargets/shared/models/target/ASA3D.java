@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.utils.Color;
 
 import static android.graphics.Color.BLACK;
 
@@ -18,8 +19,8 @@ public class ASA3D extends Target3DBase {
         super(15, R.string.asa_3d);
         zones = 4;
         radius = new float[]{0, 0, 0, 500};
-        colorFill = new int[]{TURBO_YELLOW, CERULEAN_BLUE, LIGHT_GRAY, BROWN};
-        colorStroke = new int[]{BLACK, BLACK, BLACK, GRAY};
+        colorFill = new int[]{Color.TURBO_YELLOW, Color.CERULEAN_BLUE, Color.LIGHT_GRAY, Color.BROWN};
+        colorStroke = new int[]{BLACK, BLACK, BLACK, Color.GRAY};
         strokeWidth = new int[]{3, 4, 3, 5};
         zonePoints = new int[][]{{12, 10, 8, 5}};
         showAsX = new boolean[]{false};

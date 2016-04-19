@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.utils.Color;
 
 import static android.graphics.Color.WHITE;
 
@@ -22,8 +23,8 @@ public class NFAAHunter extends CircularTargetBase {
         super(ID, R.string.nfaa_hunter);
         zones = 4;
         radius = new float[]{50, 100, 300, 500};
-        colorFill = new int[]{WHITE, WHITE, DARK_GRAY, DARK_GRAY};
-        colorStroke = new int[]{DARK_GRAY, WHITE, WHITE, DARK_GRAY};
+        colorFill = new int[]{WHITE, WHITE, Color.DARK_GRAY, Color.DARK_GRAY};
+        colorStroke = new int[]{Color.DARK_GRAY, WHITE, WHITE, Color.DARK_GRAY};
         strokeWidth = new int[]{4, 0, 4, 0};
         zonePoints = new int[][]{{5, 5, 4, 3},
                 {6, 5, 4, 3}};
@@ -36,7 +37,7 @@ public class NFAAHunter extends CircularTargetBase {
 
     @Override
     protected void onPostDraw(Canvas canvas, Rect rect) {
-        paintStroke.setColor(DARK_GRAY);
+        paintStroke.setColor(Color.DARK_GRAY);
         final float size = recalc(rect, 7.307f);
         canvas.drawLine(rect.exactCenterX() - size, rect.exactCenterY() - size,
                 rect.exactCenterX() + size, rect.exactCenterY() + size, paintStroke);

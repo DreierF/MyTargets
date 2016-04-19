@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.utils.Color;
 
 public class WA6RingTarget extends CircularTargetBase {
 
@@ -21,11 +22,11 @@ public class WA6RingTarget extends CircularTargetBase {
         super(ID, R.string.wa_6_ring);
         zones = 7;
         radius = new float[]{42, 83, 167, 250, 333, 417, 500};
-        colorFill = new int[]{LEMON_YELLOW, LEMON_YELLOW, LEMON_YELLOW, FLAMINGO_RED, FLAMINGO_RED,
-                CERULEAN_BLUE, CERULEAN_BLUE};
-        colorStroke = new int[]{TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY,
-                TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY,
-                TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY};
+        colorFill = new int[]{Color.LEMON_YELLOW, Color.LEMON_YELLOW, Color.LEMON_YELLOW, Color.FLAMINGO_RED, Color.FLAMINGO_RED,
+                Color.CERULEAN_BLUE, Color.CERULEAN_BLUE};
+        colorStroke = new int[]{Color.DARK_GRAY, Color.DARK_GRAY, Color.DARK_GRAY,
+                Color.DARK_GRAY, Color.DARK_GRAY,
+                Color.DARK_GRAY, Color.DARK_GRAY};
         strokeWidth = new int[] {3, 3, 3, 3, 3, 3, 3};
         zonePoints = new int[][]{{10, 10, 9, 8, 7, 6, 5},
                 {10, 9, 9, 8, 7, 6, 5},
@@ -42,7 +43,7 @@ public class WA6RingTarget extends CircularTargetBase {
 
     @Override
     protected void onPostDraw(Canvas canvas, Rect rect) {
-        paintStroke.setColor(TargetDrawable.DARK_GRAY);
+        paintStroke.setColor(Color.DARK_GRAY);
         final float size = recalc(rect,8.333f);
         canvas.drawLine(rect.exactCenterX() - size, rect.exactCenterY(),
                 rect.exactCenterX() + size, rect.exactCenterY(), paintStroke);

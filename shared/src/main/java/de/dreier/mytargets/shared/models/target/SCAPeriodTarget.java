@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.utils.Color;
 
 import static android.graphics.Color.WHITE;
 
@@ -17,8 +18,8 @@ public class SCAPeriodTarget extends CircularTargetBase {
         super(ID, R.string.sca_period);
         zones = 3;
         radius = new float[]{50, 200, 500};
-        colorFill = new int[]{LEMON_YELLOW, GREEN, WHITE};
-        colorStroke = new int[]{TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY};
+        colorFill = new int[]{Color.LEMON_YELLOW, Color.GREEN, WHITE};
+        colorStroke = new int[]{Color.DARK_GRAY, Color.DARK_GRAY, Color.DARK_GRAY};
         strokeWidth = new int[]{2, 2, 2};
         zonePoints = new int[][]{{8, 4, 2}};
         showAsX = new boolean[]{false};
@@ -27,7 +28,7 @@ public class SCAPeriodTarget extends CircularTargetBase {
 
     @Override
     protected void onPostDraw(Canvas canvas, Rect rect) {
-        paintStroke.setColor(TargetDrawable.DARK_GRAY);
+        paintStroke.setColor(Color.DARK_GRAY);
         final float size = recalc(rect, 5);
         paintStroke.setStrokeWidth(4 * rect.width() / 1000f);
         canvas.drawLine(rect.exactCenterX() - size, rect.exactCenterY(),

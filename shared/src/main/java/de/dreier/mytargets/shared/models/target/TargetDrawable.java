@@ -25,23 +25,7 @@ import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
 
 public abstract class TargetDrawable extends Drawable implements IIdProvider {
-    public static final int SAPPHIRE_BLUE = 0xFF2E489F;
-    protected static final int DARK_GRAY = 0xFF221F1F;
-    protected static final int GRAY = 0xFF686868;
-    protected static final int LIGHTER_GRAY = 0xFFB7B7B7;
-    protected static final int LIGHT_GRAY = 0xFFDBDBDA;
 
-    protected static final int ORANGE = 0xFFFFA663;
-    protected static final int GREEN = 0xFF009F23;
-    protected static final int BROWN = 0xFF9F7800;
-    protected static final int CERULEAN_BLUE = 0xFF00ADEF;
-    protected static final int FLAMINGO_RED = 0xFFEF4E4C;
-    protected static final int RED = 0xFFFF000D;
-    protected static final int TURBO_YELLOW = 0xFFFEEA00;
-    protected static final int LEMON_YELLOW = 0xFFF6EB0F;
-    protected static final int STROKE_GRAY = 0xFF221F1F;
-    protected static final int RED_MISS = 0xFFEE3D36;
-    protected static final int YELLOW = 0xFFFFEB52;
     protected static final float ARROW_RADIUS = 8;
     public Target target;
 
@@ -307,21 +291,21 @@ public abstract class TargetDrawable extends Drawable implements IIdProvider {
             case WHITE:
                 return BLACK;
             case BLACK:
-            case DARK_GRAY:
-            case GRAY:
-            case LIGHT_GRAY:
-            case ORANGE:
-            case GREEN:
-            case BROWN:
-            case CERULEAN_BLUE:
-            case SAPPHIRE_BLUE:
-            case FLAMINGO_RED:
-            case RED:
-            case TURBO_YELLOW:
-            case LEMON_YELLOW:
+            case de.dreier.mytargets.shared.utils.Color.DARK_GRAY:
+            case de.dreier.mytargets.shared.utils.Color.GRAY:
+            case de.dreier.mytargets.shared.utils.Color.LIGHT_GRAY:
+            case de.dreier.mytargets.shared.utils.Color.ORANGE:
+            case de.dreier.mytargets.shared.utils.Color.GREEN:
+            case de.dreier.mytargets.shared.utils.Color.BROWN:
+            case de.dreier.mytargets.shared.utils.Color.CERULEAN_BLUE:
+            case de.dreier.mytargets.shared.utils.Color.SAPPHIRE_BLUE:
+            case de.dreier.mytargets.shared.utils.Color.FLAMINGO_RED:
+            case de.dreier.mytargets.shared.utils.Color.RED:
+            case de.dreier.mytargets.shared.utils.Color.TURBO_YELLOW:
+            case de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW:
                 return colorFill[zone];
             default:
-                return DARK_GRAY;
+                return de.dreier.mytargets.shared.utils.Color.DARK_GRAY;
         }
     }
 
@@ -331,17 +315,17 @@ public abstract class TargetDrawable extends Drawable implements IIdProvider {
         }
         switch (colorFill[zone]) {
             case WHITE:
-            case LIGHTER_GRAY:
-            case LIGHT_GRAY:
-            case TURBO_YELLOW:
-            case LEMON_YELLOW:
-            case YELLOW:
+            case de.dreier.mytargets.shared.utils.Color.LIGHTER_GRAY:
+            case de.dreier.mytargets.shared.utils.Color.LIGHT_GRAY:
+            case de.dreier.mytargets.shared.utils.Color.TURBO_YELLOW:
+            case de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW:
+            case de.dreier.mytargets.shared.utils.Color.YELLOW:
                 return BLACK;
-            case ORANGE:
+            case de.dreier.mytargets.shared.utils.Color.ORANGE:
                 return BLACK;
-            case GREEN:
+            case de.dreier.mytargets.shared.utils.Color.GREEN:
                 return BLACK;
-            case BROWN:
+            case de.dreier.mytargets.shared.utils.Color.BROWN:
                 return BLACK;
             default:
                 return WHITE;

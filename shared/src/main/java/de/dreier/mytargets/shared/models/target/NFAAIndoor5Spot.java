@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.utils.Color;
 
 import static android.graphics.Color.WHITE;
 
@@ -29,8 +30,8 @@ public class NFAAIndoor5Spot extends SpotBase {
             super(-1, R.string.nfaa_indoor_5_spot);
             zones = 4;
             radius = new float[]{125, 250, 375, 500};
-            colorFill = new int[]{WHITE, WHITE, SAPPHIRE_BLUE, SAPPHIRE_BLUE};
-            colorStroke = new int[]{DARK_GRAY, DARK_GRAY, WHITE, WHITE};
+            colorFill = new int[]{WHITE, WHITE, Color.SAPPHIRE_BLUE, Color.SAPPHIRE_BLUE};
+            colorStroke = new int[]{Color.DARK_GRAY, Color.DARK_GRAY, WHITE, WHITE};
             strokeWidth = new int[]{2, 2, 2, 0};
             zonePoints = new int[][]{{5, 5, 5, 4},
                     {6, 6, 5, 4},
@@ -41,7 +42,7 @@ public class NFAAIndoor5Spot extends SpotBase {
 
         @Override
         protected void onPostDraw(Canvas canvas, Rect rect) {
-            paintStroke.setColor(DARK_GRAY);
+            paintStroke.setColor(Color.DARK_GRAY);
             final float size = recalc(rect, 25f);
             paintStroke.setStrokeWidth(9 * rect.width() / 1000f);
             canvas.drawLine(rect.exactCenterX() - size, rect.exactCenterY() - size,

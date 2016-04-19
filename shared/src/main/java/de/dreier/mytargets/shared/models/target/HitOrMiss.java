@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.utils.Color;
 
 public class HitOrMiss extends CircularTargetBase {
 
@@ -19,8 +20,8 @@ public class HitOrMiss extends CircularTargetBase {
         super(14, R.string.hit_or_miss);
         zones = 2;
         radius = new float[]{125,500};
-        colorFill = new int[]{YELLOW, RED_MISS};
-        colorStroke = new int[]{STROKE_GRAY, STROKE_GRAY};
+        colorFill = new int[]{Color.YELLOW, Color.RED_MISS};
+        colorStroke = new int[]{Color.STROKE_GRAY, Color.STROKE_GRAY};
         strokeWidth = new int[] {3,3};
         zonePoints = new int[][]{{1,0}};
         showAsX = new boolean[]{false};
@@ -30,7 +31,7 @@ public class HitOrMiss extends CircularTargetBase {
 
     @Override
     protected void onPostDraw(Canvas canvas, Rect rect) {
-        paintStroke.setColor(STROKE_GRAY);
+        paintStroke.setColor(Color.STROKE_GRAY);
         final float size = recalc(rect, 4.188f);
         canvas.drawLine(rect.exactCenterX() - size, rect.exactCenterY(),
                 rect.exactCenterX() + size, rect.exactCenterY(), paintStroke);

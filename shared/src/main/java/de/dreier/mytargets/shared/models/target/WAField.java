@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.utils.Color;
 
 import static android.graphics.Color.WHITE;
 
@@ -22,8 +23,8 @@ public class WAField extends CircularTargetBase {
         super(ID, R.string.wa_field);
         zones = 6;
         radius = new float[]{50, 100, 200, 300, 400, 500};
-        colorFill = new int[]{LEMON_YELLOW, LEMON_YELLOW, DARK_GRAY, DARK_GRAY, DARK_GRAY, DARK_GRAY};
-        colorStroke = new int[]{TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY, WHITE, WHITE, WHITE, WHITE};
+        colorFill = new int[]{Color.LEMON_YELLOW, Color.LEMON_YELLOW, Color.DARK_GRAY, Color.DARK_GRAY, Color.DARK_GRAY, Color.DARK_GRAY};
+        colorStroke = new int[]{Color.DARK_GRAY, Color.DARK_GRAY, WHITE, WHITE, WHITE, WHITE};
         strokeWidth = new int[]{4, 4, 4, 4, 4, 4};
         zonePoints = new int[][]{{5, 5, 4, 3, 2, 1},
                 {6, 5, 4, 3, 2, 1}};
@@ -36,7 +37,7 @@ public class WAField extends CircularTargetBase {
 
     @Override
     protected void onPostDraw(Canvas canvas, Rect rect) {
-        paintStroke.setColor(TargetDrawable.DARK_GRAY);
+        paintStroke.setColor(Color.DARK_GRAY);
         final float size = recalc(rect, 10.5f);
         paintStroke.setStrokeWidth(4 * rect.width() / 1000f);
         canvas.drawLine(rect.exactCenterX() - size, rect.exactCenterY(),

@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.utils.Color;
 
 import static android.graphics.Color.WHITE;
 
@@ -23,8 +24,8 @@ public class NFAAField extends CircularTargetBase {
         super(ID, R.string.nfaa_field);
         zones = 6;
         radius = new float[]{50, 100, 200, 300, 400, 500};
-        colorFill = new int[]{DARK_GRAY, DARK_GRAY, WHITE, WHITE, DARK_GRAY, DARK_GRAY};
-        colorStroke = new int[]{WHITE, DARK_GRAY, DARK_GRAY, WHITE, WHITE, DARK_GRAY};
+        colorFill = new int[]{Color.DARK_GRAY, Color.DARK_GRAY, WHITE, WHITE, Color.DARK_GRAY, Color.DARK_GRAY};
+        colorStroke = new int[]{WHITE, Color.DARK_GRAY, Color.DARK_GRAY, WHITE, WHITE, Color.DARK_GRAY};
         strokeWidth = new int[]{4, 0, 4, 0, 4, 0};
         zonePoints = new int[][]{{5, 5, 4, 4, 3, 3},
                 {6, 5, 4, 4, 3, 3}};
