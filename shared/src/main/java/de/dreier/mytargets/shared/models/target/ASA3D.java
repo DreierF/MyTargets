@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
@@ -15,8 +14,8 @@ import de.dreier.mytargets.shared.R;
 import static android.graphics.Color.BLACK;
 
 public class ASA3D extends Target3DBase {
-    public ASA3D(Context context) {
-        super(context, 15, R.string.asa_3d);
+    public ASA3D() {
+        super(15, R.string.asa_3d);
         zones = 4;
         radius = new float[]{0, 0, 0, 500};
         colorFill = new int[]{TURBO_YELLOW, CERULEAN_BLUE, LIGHT_GRAY, BROWN};

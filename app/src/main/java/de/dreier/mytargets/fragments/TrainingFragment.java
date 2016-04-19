@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.InputActivity;
@@ -353,7 +354,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         public void bindCursor() {
             Context context = mSubtitle.getContext();
             Round r = roundDataSource.get(mItem.roundId);
-            mShots.setPasse(mItem, r.info.target);
+            mShots.setPasse(mItem, r.info.target.getDrawable());
             mSubtitle.setText(context.getString(R.string.passe_n, (mItem.index + 1)));
         }
     }
@@ -372,7 +373,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         public void bindCursor() {
             Context context = mSubtitle.getContext();
             Round r = roundDataSource.get(mItem.roundId);
-            mShots.setPoints(mItem, r.info.target);
+            mShots.setPoints(mItem, r.info.target.getDrawable());
             mSubtitle.setText(context.getString(R.string.passe_n, (mItem.index + 1)));
         }
     }
@@ -393,7 +394,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         @Override
         public void bindCursor() {
             Context context = mTitle.getContext();
-            mTitle.setText(context.getString(R.string.round) + " " + (mRounds.indexOf(mItem) + 1));
+            mTitle.setText(String.format(Locale.ENGLISH, "%s %d", context.getString(R.string.round), mRounds.indexOf(mItem) + 1));
 
             String infoText = HTMLUtils.getRoundInfo(context, mItem, equals);
             mSubtitle.setText(Html.fromHtml(infoText));

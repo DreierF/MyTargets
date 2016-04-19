@@ -15,14 +15,14 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.models.target.TargetDrawable;
 
 public class TargetPasseView extends View {
 
     private Passe passe = new Passe(3);
     private float density;
     private Paint drawColorP;
-    private Target target;
+    private TargetDrawable target;
     private int mZoneCount;
     private int radius;
 
@@ -47,7 +47,7 @@ public class TargetPasseView extends View {
         density = getResources().getDisplayMetrics().density;
     }
 
-    public void setPasse(Passe p, Target tar) {
+    public void setPasse(Passe p, TargetDrawable tar) {
         passe = p;
         target = tar;
         mZoneCount = tar.getZones();

@@ -6,9 +6,10 @@
  */
 package de.dreier.mytargets.shared.models;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class Environment implements IIdSettable {
-    public static final String ID = "_id";
-    static final long serialVersionUID = 60L;
     public EWeather weather;
     public int windSpeed;
     public int windDirection;

@@ -1,12 +1,12 @@
 package de.dreier.mytargets.shared.models;
 
-import java.util.Calendar;
+import org.parceler.Parcel;
+
 import java.util.Date;
 
+@Parcel
 public class Training implements IIdSettable {
-    public static final String ID = "_id";
-    static final long serialVersionUID = 58L;
-
+    protected long id;
     public String title = "";
     public Date date = new Date();
     public Environment environment;
@@ -15,7 +15,6 @@ public class Training implements IIdSettable {
     public long arrow;
     public boolean arrowNumbering;
     public int timePerPasse;
-    protected long id;
 
     public long getId() {
         return id;

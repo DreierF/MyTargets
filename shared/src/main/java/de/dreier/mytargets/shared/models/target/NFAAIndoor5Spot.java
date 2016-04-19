@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
@@ -17,17 +16,17 @@ import de.dreier.mytargets.shared.models.Dimension;
 import static android.graphics.Color.WHITE;
 
 public class NFAAIndoor5Spot extends SpotBase {
-    public NFAAIndoor5Spot(Context context) {
-        super(context, 11, R.string.nfaa_indoor_5_spot);
-        face = new NFAAIndoorSingleSpot(context);
+    public NFAAIndoor5Spot() {
+        super(11, R.string.nfaa_indoor_5_spot);
+        face = new NFAAIndoorSingleSpot();
         facePositions = new int[][]{{200, 200}, {800, 200},
                 {500, 500}, {200, 800}, {800, 800}};
         faceRadius = 200;
     }
 
     private class NFAAIndoorSingleSpot extends CircularTargetBase {
-        public NFAAIndoorSingleSpot(Context context) {
-            super(context, -1, R.string.nfaa_indoor_5_spot);
+        public NFAAIndoorSingleSpot() {
+            super(-1, R.string.nfaa_indoor_5_spot);
             zones = 4;
             radius = new float[]{125, 250, 375, 500};
             colorFill = new int[]{WHITE, WHITE, SAPPHIRE_BLUE, SAPPHIRE_BLUE};

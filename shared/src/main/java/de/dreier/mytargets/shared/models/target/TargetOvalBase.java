@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Rect;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.models.Diameter;
 
-public class TargetOvalBase extends Target {
+public class TargetOvalBase extends TargetDrawable {
 
     private static final Path path = new Path();
     private static final Region region;
@@ -36,8 +35,8 @@ public class TargetOvalBase extends Target {
                 (int) rectF.bottom));
     }
 
-    public TargetOvalBase(Context context, long id, @StringRes int name) {
-        super(context, id, name);
+    public TargetOvalBase(long id, @StringRes int name) {
+        super(id, name);
     }
 
     @Override

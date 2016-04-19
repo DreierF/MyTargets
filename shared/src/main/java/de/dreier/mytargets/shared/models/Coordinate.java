@@ -1,11 +1,9 @@
 package de.dreier.mytargets.shared.models;
 
-import java.io.Serializable;
+import org.parceler.Parcel;
 
-/**
-* Created by Florian on 20.03.2015.
-*/
-public class Coordinate implements Serializable {
+@Parcel
+public class Coordinate {
     public float x;
     public float y;
 

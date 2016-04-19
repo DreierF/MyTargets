@@ -6,9 +6,7 @@
  */
 package de.dreier.mytargets.shared.models;
 
-import java.io.Serializable;
-
-public interface IIdProvider extends Serializable {
+public interface IIdProvider {
     long getId();
 }
 

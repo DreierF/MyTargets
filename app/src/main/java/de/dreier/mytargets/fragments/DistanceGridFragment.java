@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.parceler.Parcels;
+
 import java.util.List;
 
 import butterknife.Bind;
@@ -37,7 +39,7 @@ public class DistanceGridFragment extends SelectItemFragment<Distance> {
     public static DistanceGridFragment newInstance(Distance distance, String unit) {
         DistanceGridFragment fragment = new DistanceGridFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ITEM, distance);
+        args.putParcelable(ITEM, Parcels.wrap(distance));
         args.putString(DISTANCE_UNIT, unit);
         fragment.setArguments(args);
         return fragment;
@@ -47,7 +49,7 @@ public class DistanceGridFragment extends SelectItemFragment<Distance> {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Bundle bundle = getArguments();
-        distance = (Distance)bundle.getSerializable(ITEM);
+        distance = Parcels.unwrap(bundle.getParcelable(ITEM));
         unit = bundle.getString(DISTANCE_UNIT);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mRecyclerView.addItemDecoration(new CardItemDecorator(getActivity(), 3));

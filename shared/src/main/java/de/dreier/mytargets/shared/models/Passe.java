@@ -1,16 +1,18 @@
 package de.dreier.mytargets.shared.models;
 
+import org.parceler.Parcel;
+
 import java.util.Arrays;
 
+@Parcel
 public class Passe implements IIdSettable {
-    public static final String ID = "_id";
-    static final long serialVersionUID = 55L;
-
+    protected long id;
     public Shot[] shot;
     public long roundId;
     public int index;
     public boolean exact;
-    protected long id;
+
+    public Passe() {}
 
     public Passe(int ppp) {
         shot = new Shot[ppp];

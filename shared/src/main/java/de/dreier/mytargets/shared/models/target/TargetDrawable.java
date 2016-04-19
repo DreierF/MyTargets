@@ -13,18 +13,18 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.StringRes;
 import android.text.TextPaint;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.Target;
 
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
 
-public abstract class Target extends Drawable implements IIdProvider, Serializable {
+public abstract class TargetDrawable extends Drawable implements IIdProvider {
     public static final int SAPPHIRE_BLUE = 0xFF2E489F;
     protected static final int DARK_GRAY = 0xFF221F1F;
     protected static final int GRAY = 0xFF686868;
@@ -43,11 +43,9 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     protected static final int RED_MISS = 0xFFEE3D36;
     protected static final int YELLOW = 0xFFFFEB52;
     protected static final float ARROW_RADIUS = 8;
-    static final long serialVersionUID = 62L;
-    public long id;
-    public String name;
-    public int scoringStyle;
-    public Diameter size;
+    public Target target;
+
+    protected int nameRes;
     protected int zones;
     protected float[] radius;
     protected int[] colorFill;
@@ -56,12 +54,14 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     protected boolean[] showAsX;
     protected int[][] zonePoints;
     protected transient Paint paintFill, paintStroke;
-    private boolean outsideIn = true;
+    public boolean outsideIn = true;
     private transient TextPaint paintText;
 
-    protected Target(Context c, long id, @StringRes int nameRes) {
-        this.id = id;
-        name = c.getString(nameRes);
+    public TargetDrawable() {}
+
+    protected TargetDrawable(long id, @StringRes int nameRes) {
+        this.target.id = id;
+        this.nameRes = nameRes;
         initPaint();
     }
 
@@ -78,7 +78,7 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
 
     @Override
     public long getId() {
-        return id;
+        return target.id;
     }
 
     public int getZones() {
@@ -219,7 +219,7 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     }
 
     public String zoneToString(int zone, int arrow) {
-        return zoneToString(zone, scoringStyle, arrow);
+        return zoneToString(zone, target.scoringStyle, arrow);
     }
 
     String zoneToString(int zone, int scoringStyle, int arrow) {
@@ -237,7 +237,7 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     }
 
     public int getPointsByZone(int zone, int arrow) {
-        return getPointsByZone(zone, scoringStyle, arrow);
+        return getPointsByZone(zone, target.scoringStyle, arrow);
     }
 
     protected int getPointsByZone(int zone, int scoringStyle, int arrow) {
@@ -248,11 +248,11 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
     }
 
     public int getMaxPoints() {
-        return zonePoints[scoringStyle][0];
+        return zonePoints[target.scoringStyle][0];
     }
 
     public float getXFromZone(int zone) {
-        int zones = zonePoints[scoringStyle].length;
+        int zones = zonePoints[target.scoringStyle].length;
         if (zone < 0) {
             return (zones * 2 + 1) / (float) (zones * 2);
         } else {
@@ -357,16 +357,11 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof Target) {
-            Target t = (Target) o;
-            return t.id == id;
+        if (o instanceof TargetDrawable) {
+            TargetDrawable t = (TargetDrawable) o;
+            return t.target.id == target.id;
         }
         return false;
-    }
-
-    @Override
-    public String toString() {
-        return name;
     }
 
     @Override
@@ -424,5 +419,9 @@ public abstract class Target extends Drawable implements IIdProvider, Serializab
 
     public int getHeight() {
         return 500;
+    }
+
+    public String getName(Context context) {
+        return context.getString(nameRes);
     }
 }

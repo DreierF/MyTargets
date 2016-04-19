@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
@@ -20,8 +19,8 @@ public class NFAAField extends CircularTargetBase {
 
     public static final int ID = 7;
 
-    public NFAAField(Context context) {
-        super(context, ID, R.string.nfaa_field);
+    public NFAAField() {
+        super(ID, R.string.nfaa_field);
         zones = 6;
         radius = new float[]{50, 100, 200, 300, 400, 500};
         colorFill = new int[]{DARK_GRAY, DARK_GRAY, WHITE, WHITE, DARK_GRAY, DARK_GRAY};

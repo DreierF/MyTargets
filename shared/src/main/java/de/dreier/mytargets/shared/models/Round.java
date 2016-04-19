@@ -1,9 +1,9 @@
 package de.dreier.mytargets.shared.models;
 
-public class Round implements IIdSettable {
-    public static final String ID = "_id";
-    static final long serialVersionUID = 56L;
+import org.parceler.Parcel;
 
+@Parcel
+public class Round implements IIdSettable {
     public long training;
     public RoundTemplate info;
     public String comment;

@@ -10,6 +10,8 @@ package de.dreier.mytargets.views.selector;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -20,13 +22,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import java.io.Serializable;
+import org.parceler.Parcels;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.shared.models.IIdProvider;
 
 
-public abstract class SelectorBase<T extends Serializable> extends LinearLayout {
+public abstract class SelectorBase<T extends IIdProvider> extends LinearLayout {
 
     public interface OnUpdateListener<T> {
         void onUpdate(T item);
@@ -77,10 +80,10 @@ public abstract class SelectorBase<T extends Serializable> extends LinearLayout 
     protected void setOnClickActivity(Class<?> aClass) {
         setOnClickListener(v -> {
             Intent i = new Intent(getContext(), aClass);
-            i.putExtra(ItemSelectActivity.ITEM, item);
+            i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(item));
             startIntent(i, data -> {
                 //noinspection unchecked
-                setItem((T) data.getSerializableExtra(ItemSelectActivity.ITEM));
+                setItem(Parcels.unwrap(data.getParcelableExtra(ItemSelectActivity.ITEM)));
             });
         });
     }

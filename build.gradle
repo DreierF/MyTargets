@@ -5,9 +5,11 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.0-alpha5'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.3'
         classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
         classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.0.8'
-}
+        classpath 'io.realm:realm-gradle-plugin:0.88.3'
+    }
 }
 
 plugins {
@@ -15,17 +17,18 @@ plugins {
 }
 
 if(new File("gradle.properties").exists()) {
+ext {
+    supportLibVersion = '23.3.0'
+    playServiceVersion = '8.4.0'
+    versionName = '2.2.0beta6'
+    versionCode = 36
+}
+
     crowdinDownload {
         apiKey = CROWDIN_API_KEY
         projectId = CROWDIN_PROJECT_ID
         destination = "$projectDir"
     }
-}
-
-ext {
-    supportLibVersion = '23.3.0'
-    versionName = '2.2.0beta6'
-    versionCode = 36
 }
 
 allprojects {

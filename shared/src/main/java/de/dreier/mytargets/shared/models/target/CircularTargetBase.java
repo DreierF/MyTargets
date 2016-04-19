@@ -6,17 +6,16 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
 import android.support.annotation.StringRes;
 
 import de.dreier.mytargets.shared.models.Diameter;
 
-public abstract class CircularTargetBase extends Target {
+public abstract class CircularTargetBase extends TargetDrawable {
 
     protected Diameter[] diameters;
 
-    public CircularTargetBase(Context context, long id, @StringRes int name) {
-        super(context, id, name);
+    public CircularTargetBase(long id, @StringRes int name) {
+        super(id, name);
     }
 
     @Override

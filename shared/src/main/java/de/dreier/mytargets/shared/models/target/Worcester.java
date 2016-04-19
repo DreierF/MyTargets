@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
@@ -19,8 +18,8 @@ import static android.graphics.Color.WHITE;
 public class Worcester extends CircularTargetBase {
     public static final int ID = 12;
 
-    public Worcester(Context context) {
-        super(context, ID, R.string.worcester_face);
+    public Worcester() {
+        super(ID, R.string.worcester_face);
         zones = 5;
         radius = new float[]{100, 200, 300, 400, 500};
         colorFill = new int[]{WHITE, DARK_GRAY, DARK_GRAY, DARK_GRAY, DARK_GRAY};
@@ -33,7 +32,7 @@ public class Worcester extends CircularTargetBase {
 
     @Override
     protected void onPostDraw(Canvas canvas, Rect rect) {
-        paintStroke.setColor(Target.DARK_GRAY);
+        paintStroke.setColor(TargetDrawable.DARK_GRAY);
         final float size = recalc(rect, 10.5f);
         paintStroke.setStrokeWidth(4 * rect.width() / 1000f);
         canvas.drawLine(rect.exactCenterX() - size, rect.exactCenterY(),

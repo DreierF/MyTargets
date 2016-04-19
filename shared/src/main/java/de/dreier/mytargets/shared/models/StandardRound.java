@@ -9,6 +9,8 @@ package de.dreier.mytargets.shared.models;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,18 +24,15 @@ import de.dreier.mytargets.shared.models.target.NFAAField;
 import de.dreier.mytargets.shared.models.target.NFAAHunter;
 import de.dreier.mytargets.shared.models.target.NFAAIndoor;
 import de.dreier.mytargets.shared.models.target.NFASField;
-import de.dreier.mytargets.shared.models.target.Target;
-import de.dreier.mytargets.shared.models.target.TargetFactory;
+import de.dreier.mytargets.shared.models.target.TargetDrawable;
 import de.dreier.mytargets.shared.models.target.Vertical3Spot;
 import de.dreier.mytargets.shared.models.target.WA5RingTarget;
 import de.dreier.mytargets.shared.models.target.WA6RingTarget;
 import de.dreier.mytargets.shared.models.target.WAField;
 import de.dreier.mytargets.shared.models.target.WAFullTarget;
 import de.dreier.mytargets.shared.models.target.Worcester;
-
+@Parcel
 public class StandardRound implements IIdSettable {
-    public static final String ID = "_id";
-    static final long serialVersionUID = 56L;
     private static final int ASA = 1;
     private static final int AUSTRALIAN = 2;
     private static final int GNAS = 4;
@@ -50,8 +49,8 @@ public class StandardRound implements IIdSettable {
 
     public String name;
     public int club;
-    protected long id;
-    private ArrayList<RoundTemplate> rounds = new ArrayList<>();
+    public long id;
+    public ArrayList<RoundTemplate> rounds = new ArrayList<>();
     public boolean indoor;
 
     public ArrayList<RoundTemplate> getRounds() {
@@ -653,7 +652,7 @@ public class StandardRound implements IIdSettable {
                 NFAAHunter.ID, 0, 4, -1, -1, 14, -1, -1, 14));
         rounds.add(build(context, NFAA, R.string.nfaa_field_hunter_560, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
-                NFAAField.ID, 0, TargetFactory.createTarget(context, NFAAHunter.ID, 0), 4, -1, -1,
+                NFAAField.ID, 0, new Target(NFAAHunter.ID, 0, null), 4, -1, -1,
                 14, -1, -1, 14));
         rounds.add(build(context, WA, R.string.wa_field_unmarked_marked_red, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
@@ -733,9 +732,7 @@ public class StandardRound implements IIdSettable {
             RoundTemplate roundTemplate = new RoundTemplate();
             roundTemplate.arrowsPerPasse = arrowsPerPasse;
             roundTemplate.distance = new Distance(roundDetails[i], distanceUnit);
-            roundTemplate.targetTemplate = TargetFactory
-                    .createTarget(context, target, scoringStyle);
-            roundTemplate.targetTemplate.size = new Diameter(roundDetails[i + 1], targetUnit);
+            roundTemplate.targetTemplate = new Target(target, scoringStyle, new Diameter(roundDetails[i + 1], targetUnit));
             roundTemplate.passes = roundDetails[i + 2];
             standardRound.insert(roundTemplate);
         }
@@ -787,12 +784,12 @@ public class StandardRound implements IIdSettable {
         this.rounds = rounds;
     }
 
-    public Drawable getTargetDrawable(Context context) {
-        List<Target> targets = new ArrayList<>();
+    public Drawable getTargetDrawable() {
+        List<TargetDrawable> targets = new ArrayList<>();
         for(RoundTemplate r: rounds) {
-            targets.add(r.target);
+            targets.add(r.target.getDrawable());
         }
-        return new CombinedSpot(context, targets);
+        return new CombinedSpot(targets);
     }
 
     public long getId() {

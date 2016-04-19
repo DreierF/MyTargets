@@ -29,8 +29,9 @@ import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
-import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.models.target.TargetDrawable;
 
 public class HTMLUtils {
 
@@ -87,18 +88,19 @@ public class HTMLUtils {
                     for (int i = 0; i < passe.shot.length; i++) {
                         Shot shot = passe.shot[i];
                         html += "<td>";
+                        final TargetDrawable target = round.info.target.getDrawable();
                         if (configuration.showPointsColored) {
-                            int fillColor = round.info.target.getFillColor(shot.zone);
-                            int color = round.info.target.getTextColor(shot.zone);
+                            int fillColor = target.getFillColor(shot.zone);
+                            int color = target.getTextColor(shot.zone);
                             html += String.format("<div class=\"circle\" style='background: #%06X; color: #%06X'>",
                                     fillColor & 0xFFFFFF, color & 0xFFFFFF);
                         }
-                        html += round.info.target.zoneToString(shot.zone, i);
+                        html += target.zoneToString(shot.zone, i);
                         if (configuration.showPointsColored) {
                             html += "</div>";
                         }
                         html += "</td>";
-                        int points = round.info.target.getPointsByZone(shot.zone, i);
+                        int points = target.getPointsByZone(shot.zone, i);
                         sum += points;
                         carry += points;
                     }
@@ -141,7 +143,7 @@ public class HTMLUtils {
                     if (!TextUtils.isEmpty(shot.comment)) {
                         comments += "<tr class=\"align_center\"><td>" + j + "</td>" +
                                 "<td>" + i + "</td>" +
-                                "<td>" + round.info.target.zoneToString(shot.zone, s) +
+                                "<td>" + round.info.target.getDrawable().zoneToString(shot.zone, s) +
                                 "</td>" +
                                 "<td>" +
                                 TextUtils.htmlEncode(shot.comment).replace("\n", "<br />") +

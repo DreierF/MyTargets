@@ -6,8 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
-
 import de.dreier.mytargets.shared.R;
 
 import static android.graphics.Color.BLACK;
@@ -15,8 +13,8 @@ import static android.graphics.Color.BLACK;
 public class IFAAAnimal extends TargetOvalBase {
     public static final int ID = 20;
 
-    public IFAAAnimal(Context context) {
-        super(context, ID, R.string.ifaa_animal);
+    public IFAAAnimal() {
+        super(ID, R.string.ifaa_animal);
         zones = 2;
         radius = new float[]{0, 500};
         colorFill = new int[]{ORANGE, LIGHTER_GRAY};

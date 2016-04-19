@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Rect;
@@ -16,7 +15,7 @@ import android.support.annotation.StringRes;
 
 import de.dreier.mytargets.shared.models.Diameter;
 
-public class Target3DBase extends Target {
+public class Target3DBase extends TargetDrawable {
 
     private static final Path path = new Path();
     private static final Region region;
@@ -53,8 +52,8 @@ public class Target3DBase extends Target {
                 (int) rectF.bottom));
     }
 
-    public Target3DBase(Context context, long id, @StringRes int name) {
-        super(context, id, name);
+    public Target3DBase(long id, @StringRes int name) {
+        super(id, name);
     }
 
     @Override
@@ -99,6 +98,6 @@ public class Target3DBase extends Target {
 
     @Override
     public int getMaxPoints() {
-        return Math.max(zonePoints[scoringStyle][0], zonePoints[scoringStyle][1]);
+        return Math.max(zonePoints[target.scoringStyle][0], zonePoints[target.scoringStyle][1]);
     }
 }

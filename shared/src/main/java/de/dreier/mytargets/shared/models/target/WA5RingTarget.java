@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
@@ -19,14 +18,14 @@ public class WA5RingTarget extends CircularTargetBase {
     public static final int ID = 2;
     private boolean usedAsSpot = false;
 
-    public WA5RingTarget(Context context) {
-        super(context, ID, R.string.wa_5_ring);
+    public WA5RingTarget() {
+        super(ID, R.string.wa_5_ring);
         zones = 6;
         radius = new float[]{50, 100, 200, 300, 400, 500};
         colorFill = new int[]{LEMON_YELLOW, LEMON_YELLOW, LEMON_YELLOW, FLAMINGO_RED, FLAMINGO_RED,
                 CERULEAN_BLUE};
-        colorStroke = new int[]{Target.DARK_GRAY, Target.DARK_GRAY, Target.DARK_GRAY,
-                Target.DARK_GRAY, Target.DARK_GRAY, Target.DARK_GRAY};
+        colorStroke = new int[]{TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY,
+                TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY};
         strokeWidth = new int[] {4, 4, 4, 4, 4, 4};
         zonePoints = new int[][]{{10, 10, 9, 8, 7, 6},
                 {10, 9, 9, 8, 7, 6},
@@ -41,22 +40,22 @@ public class WA5RingTarget extends CircularTargetBase {
                 new Diameter(122, Dimension.CENTIMETER)};
     }
 
-    public WA5RingTarget(Context context, boolean usedAsSpot) {
-        this(context);
+    public WA5RingTarget(boolean usedAsSpot) {
+        this();
         this.usedAsSpot = usedAsSpot;
     }
 
     @Override
     protected void drawZone(Canvas canvas, Rect rect, int zone) {
         // Do not draw second ring if we have a 3 Spot for compound
-        if (!usedAsSpot || scoringStyle != 1 || zone != 1) {
+        if (!usedAsSpot || target.scoringStyle != 1 || zone != 1) {
             super.drawZone(canvas, rect, zone);
         }
     }
 
     @Override
     protected void onPostDraw(Canvas canvas, Rect rect) {
-        paintStroke.setColor(Target.DARK_GRAY);
+        paintStroke.setColor(TargetDrawable.DARK_GRAY);
         final float size = recalc(rect,10);
         paintStroke.setStrokeWidth(4 * rect.width() / 1000f);
         canvas.drawLine(rect.exactCenterX() - size, rect.exactCenterY(),

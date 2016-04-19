@@ -6,13 +6,16 @@
  */
 package de.dreier.mytargets.shared.models;
 
-import java.io.Serializable;
+import org.parceler.Parcel;
 
-public class NotificationInfo implements Serializable {
-    static final long serialVersionUID = 54L;
+@Parcel
+public class NotificationInfo {
     public String title;
     public String text;
     public Round round;
+
+    public NotificationInfo() {}
+
     public NotificationInfo(Round round, String title, String text) {
         this.round = round;
         this.title = title;

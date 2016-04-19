@@ -81,7 +81,7 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
                 if (cursor.getLong(13) == 0) {
                     break;
                 }
-                sr.insert(RoundTemplateDataSource.cursorToRoundTemplate(cursor, getContext(), 4));
+                sr.insert(RoundTemplateDataSource.cursorToRoundTemplate(cursor, 4));
             } while (cursor.moveToNext());
         }
         cursor.close();

@@ -6,7 +6,12 @@
  */
 package de.dreier.mytargets.shared.models;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class Distance extends Dimension {
+
+    public Distance() {}
 
     public Distance(int distance, String unit) {
         super(distance, unit);

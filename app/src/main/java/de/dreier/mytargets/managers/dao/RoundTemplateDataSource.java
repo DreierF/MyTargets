@@ -16,7 +16,7 @@ import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
-import de.dreier.mytargets.shared.models.target.TargetFactory;
+import de.dreier.mytargets.shared.models.Target;
 
 public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate> {
     public static final String TABLE = "ROUND_TEMPLATE";
@@ -69,22 +69,19 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
         return values;
     }
 
-    static RoundTemplate cursorToRoundTemplate(Cursor cursor, Context context, int startColumnIndex) {
+    static RoundTemplate cursorToRoundTemplate(Cursor cursor, int startColumnIndex) {
         RoundTemplate roundTemplate = new RoundTemplate();
         roundTemplate.setId(cursor.getLong(startColumnIndex));
         roundTemplate.index = cursor.getInt(startColumnIndex + 1);
         roundTemplate.arrowsPerPasse = cursor.getInt(startColumnIndex + 2);
-        roundTemplate.targetTemplate = TargetFactory
-                .createTarget(context, cursor.getInt(startColumnIndex + 3),
-                        cursor.getInt(startColumnIndex + 4));
-        roundTemplate.target = TargetFactory
-                .createTarget(context, cursor.getInt(startColumnIndex + 5),
-                        cursor.getInt(startColumnIndex + 6));
+        final Diameter diameter = new Diameter(
+                cursor.getInt(startColumnIndex + 9), cursor.getString(startColumnIndex + 10));
+        roundTemplate.targetTemplate = new Target(cursor.getInt(startColumnIndex + 3),
+                        cursor.getInt(startColumnIndex + 4), diameter);
+        roundTemplate.target = new Target(cursor.getInt(startColumnIndex + 5),
+                        cursor.getInt(startColumnIndex + 6), diameter);
         roundTemplate.distance = new Distance(cursor.getInt(startColumnIndex + 7),
                 cursor.getString(startColumnIndex + 8));
-        roundTemplate.target.size = new Diameter(
-                cursor.getInt(startColumnIndex + 9), cursor.getString(startColumnIndex + 10));
-        roundTemplate.targetTemplate.size = roundTemplate.target.size;
         roundTemplate.passes = cursor.getInt(startColumnIndex + 11);
         roundTemplate.standardRound = cursor.getLong(startColumnIndex + 12);
         return roundTemplate;
@@ -99,7 +96,7 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
                 });
         RoundTemplate r = null;
         if (cursor.moveToFirst()) {
-            r = cursorToRoundTemplate(cursor, getContext(), 0);
+            r = cursorToRoundTemplate(cursor, 0);
         }
         cursor.close();
         return r;

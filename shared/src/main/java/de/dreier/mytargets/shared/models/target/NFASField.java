@@ -6,8 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
-
 import de.dreier.mytargets.shared.R;
 
 import static android.graphics.Color.BLACK;
@@ -15,8 +13,8 @@ import static android.graphics.Color.BLACK;
 public class NFASField extends TargetOvalBase {
     public static final int ID = 22;
 
-    public NFASField(Context context) {
-        super(context, ID, R.string.nfas_field);
+    public NFASField() {
+        super(ID, R.string.nfas_field);
         zones = 3;
         radius = new float[]{81, 0, 500};
         colorFill = new int[]{TURBO_YELLOW, ORANGE, LIGHTER_GRAY};

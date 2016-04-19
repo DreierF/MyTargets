@@ -48,18 +48,18 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:support-v4:${supportLibVersion}"
-    compile "com.android.support:appcompat-v7:${supportLibVersion}"
-    compile "com.android.support:design:${supportLibVersion}"
-    compile "com.android.support:support-annotations:${supportLibVersion}"
-    compile "com.android.support:preference-v7:${supportLibVersion}"
-    compile "com.android.support:preference-v14:${supportLibVersion}"
-    compile "com.android.support:recyclerview-v7:${supportLibVersion}"
-    compile "com.android.support:preference-v14:${supportLibVersion}"
+    compile "com.android.support:support-v4:$supportLibVersion"
+    compile "com.android.support:appcompat-v7:$supportLibVersion"
+    compile "com.android.support:design:$supportLibVersion"
+    compile "com.android.support:support-annotations:$supportLibVersion"
+    compile "com.android.support:preference-v7:$supportLibVersion"
+    compile "com.android.support:preference-v14:$supportLibVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibVersion"
+    compile "com.android.support:preference-v14:$supportLibVersion"
 
     compile 'com.jakewharton:butterknife:7.0.1'
 
-    compile 'com.google.android.gms:play-services-wearable:8.4.0'
+    compile "com.google.android.gms:play-services-wearable:$playServiceVersion"
 
     compile 'com.github.ksoichiro:android-observablescrollview:1.5.2'
     compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'

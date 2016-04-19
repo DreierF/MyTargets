@@ -6,8 +6,10 @@
  */
 package de.dreier.mytargets.shared.models;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class ArrowNumber implements IIdSettable {
-    public static final String ID = "_id";
     public int number;
     protected long id;
 

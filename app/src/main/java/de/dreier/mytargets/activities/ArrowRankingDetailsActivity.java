@@ -5,6 +5,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import org.parceler.Parcels;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
@@ -24,7 +26,7 @@ public class ArrowRankingDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_arrow_ranking_details);
         ButterKnife.bind(this);
 
-        ArrowStatistic item = (ArrowStatistic) getIntent().getSerializableExtra(ITEM);
+        ArrowStatistic item = Parcels.unwrap(getIntent().getParcelableExtra(ITEM));
         adv.setShoots(item.shots);
         adv.setTarget(item.target);
 

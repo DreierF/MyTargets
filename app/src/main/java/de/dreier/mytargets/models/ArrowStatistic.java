@@ -2,13 +2,15 @@ package de.dreier.mytargets.models;
 
 import android.support.annotation.NonNull;
 
-import java.io.Serializable;
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.models.target.TargetDrawable;
 
-public class ArrowStatistic implements Comparable<ArrowStatistic>, Serializable {
+@Parcel
+public class ArrowStatistic implements Comparable<ArrowStatistic> {
 
     public String arrowName;
     public int arrowNumber;
@@ -19,7 +21,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic>, Serializable 
     public float maxPointsSum = 0;
     private static final int[] BG_COLORS = {0xFFF44336, 0xFFFF5722, 0xFFFF9800, 0xFFFFC107, 0xFFFFEB3B, 0xFFCDDC39, 0xFF8BC34A, 0xFF4CAF50};
     private static final int[] TEXT_COLORS = {0xFFFFFFFF, 0xFFFFFFFF, 0xFF000002, 0xFF000002, 0xFF000002, 0xFF000002, 0xFF000002, 0xFF000002};
-    public Target target;
+    public TargetDrawable target;
     public ArrayList<Shot> shots = new ArrayList<>();
 
     public float avgX() {

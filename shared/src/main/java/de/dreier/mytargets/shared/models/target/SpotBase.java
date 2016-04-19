@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -17,13 +16,13 @@ import java.util.ArrayList;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
 
-public class SpotBase extends Target {
+public class SpotBase extends TargetDrawable {
     protected int faceRadius;
-    protected Target face;
+    protected TargetDrawable face;
     protected int[][] facePositions;
 
-    protected SpotBase(Context c, long id, @StringRes int nameRes) {
-        super(c, id, nameRes);
+    protected SpotBase(long id, @StringRes int nameRes) {
+        super(id, nameRes);
     }
 
     @Override
@@ -41,49 +40,49 @@ public class SpotBase extends Target {
 
     @Override
     public String zoneToString(int zone, int arrow) {
-        face.scoringStyle = scoringStyle;
+        face.target.scoringStyle = target.scoringStyle;
         return face.zoneToString(zone, arrow);
     }
 
     @Override
     protected int getPointsByZone(int zone, int scoringStyle, int arrow) {
-        face.scoringStyle = scoringStyle;
+        face.target.scoringStyle = scoringStyle;
         return face.getPointsByZone(zone, scoringStyle, arrow);
     }
 
     @Override
     public int getMaxPoints() {
-        face.scoringStyle = scoringStyle;
+        face.target.scoringStyle = target.scoringStyle;
         return face.getMaxPoints();
     }
 
     @Override
     public float getXFromZone(int zone) {
-        face.scoringStyle = scoringStyle;
+        face.target.scoringStyle = target.scoringStyle;
         return face.getXFromZone(zone);
     }
 
     @Override
     public int getFillColor(int zone) {
-        face.scoringStyle = scoringStyle;
+        face.target.scoringStyle = target.scoringStyle;
         return face.getFillColor(zone);
     }
 
     @Override
     public int getStrokeColor(int zone) {
-        face.scoringStyle = scoringStyle;
+        face.target.scoringStyle = target.scoringStyle;
         return face.getStrokeColor(zone);
     }
 
     @Override
     public int getContrastColor(int zone) {
-        face.scoringStyle = scoringStyle;
+        face.target.scoringStyle = target.scoringStyle;
         return face.getContrastColor(zone);
     }
 
     @Override
     public int getTextColor(int zone) {
-        face.scoringStyle = scoringStyle;
+        face.target.scoringStyle = target.scoringStyle;
         return face.getTextColor(zone);
     }
 

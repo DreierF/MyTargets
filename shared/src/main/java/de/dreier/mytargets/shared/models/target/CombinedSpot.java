@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
@@ -16,11 +15,11 @@ import de.dreier.mytargets.shared.R;
 
 public class CombinedSpot extends SpotBase {
 
-    private final Target[] faces;
+    private final TargetDrawable[] faces;
 
-    public CombinedSpot(Context context, List<Target> faces) {
-        super(context, -1, R.string.small);
-        this.faces = faces.toArray(new Target[faces.size()]);
+    public CombinedSpot(List<TargetDrawable> faces) {
+        super(-1, R.string.small);
+        this.faces = faces.toArray(new TargetDrawable[faces.size()]);
         facePositions = new int[faces.size()][];
         faceRadius = Math.max(500 - 62 * faces.size(), 250);
         int x = (500 - faceRadius) / Math.max(faces.size() - 1, 1);

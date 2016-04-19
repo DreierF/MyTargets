@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
@@ -15,8 +14,8 @@ import de.dreier.mytargets.shared.R;
 import static android.graphics.Color.BLACK;
 
 public class IBO3D extends Target3DBase {
-    public IBO3D(Context context) {
-        super(context, 17, R.string.ibo_3d);
+    public IBO3D() {
+        super(17, R.string.ibo_3d);
         zones = 4;
         radius = new float[]{0, 0, 0, 500};
         colorFill = new int[]{RED, CERULEAN_BLUE, LIGHT_GRAY, BROWN};

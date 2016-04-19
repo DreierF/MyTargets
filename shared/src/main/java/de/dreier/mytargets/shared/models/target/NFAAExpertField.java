@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
@@ -20,8 +19,8 @@ public class NFAAExpertField extends CircularTargetBase {
 
     public static final int ID = 8;
 
-    public NFAAExpertField(Context context) {
-        super(context, ID, R.string.nfaa_expert_field);
+    public NFAAExpertField() {
+        super(ID, R.string.nfaa_expert_field);
         zones = 6;
         radius = new float[]{50, 100, 200, 300, 400, 500};
         colorFill = new int[]{DARK_GRAY, DARK_GRAY, WHITE, WHITE, DARK_GRAY, DARK_GRAY};

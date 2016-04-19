@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
@@ -14,13 +13,10 @@ import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
 
-import static android.graphics.Color.BLACK;
-import static android.graphics.Color.WHITE;
-
 public class HitOrMiss extends CircularTargetBase {
 
-    public HitOrMiss(Context context) {
-        super(context, 14, R.string.hit_or_miss);
+    public HitOrMiss() {
+        super(14, R.string.hit_or_miss);
         zones = 2;
         radius = new float[]{125,500};
         colorFill = new int[]{YELLOW, RED_MISS};

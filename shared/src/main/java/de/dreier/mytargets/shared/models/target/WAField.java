@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
@@ -19,12 +18,12 @@ import static android.graphics.Color.WHITE;
 public class WAField extends CircularTargetBase {
     public static final int ID = 13;
 
-    public WAField(Context context) {
-        super(context, ID, R.string.wa_field);
+    public WAField() {
+        super(ID, R.string.wa_field);
         zones = 6;
         radius = new float[]{50, 100, 200, 300, 400, 500};
         colorFill = new int[]{LEMON_YELLOW, LEMON_YELLOW, DARK_GRAY, DARK_GRAY, DARK_GRAY, DARK_GRAY};
-        colorStroke = new int[]{Target.DARK_GRAY, Target.DARK_GRAY, WHITE, WHITE, WHITE, WHITE};
+        colorStroke = new int[]{TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY, WHITE, WHITE, WHITE, WHITE};
         strokeWidth = new int[]{4, 4, 4, 4, 4, 4};
         zonePoints = new int[][]{{5, 5, 4, 3, 2, 1},
                 {6, 5, 4, 3, 2, 1}};
@@ -37,7 +36,7 @@ public class WAField extends CircularTargetBase {
 
     @Override
     protected void onPostDraw(Canvas canvas, Rect rect) {
-        paintStroke.setColor(Target.DARK_GRAY);
+        paintStroke.setColor(TargetDrawable.DARK_GRAY);
         final float size = recalc(rect, 10.5f);
         paintStroke.setStrokeWidth(4 * rect.width() / 1000f);
         canvas.drawLine(rect.exactCenterX() - size, rect.exactCenterY(),

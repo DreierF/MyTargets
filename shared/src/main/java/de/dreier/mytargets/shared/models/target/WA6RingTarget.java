@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
@@ -18,15 +17,15 @@ public class WA6RingTarget extends CircularTargetBase {
 
     public static final int ID = 1;
 
-    public WA6RingTarget(Context context) {
-        super(context, ID, R.string.wa_6_ring);
+    public WA6RingTarget() {
+        super(ID, R.string.wa_6_ring);
         zones = 7;
         radius = new float[]{42, 83, 167, 250, 333, 417, 500};
         colorFill = new int[]{LEMON_YELLOW, LEMON_YELLOW, LEMON_YELLOW, FLAMINGO_RED, FLAMINGO_RED,
                 CERULEAN_BLUE, CERULEAN_BLUE};
-        colorStroke = new int[]{Target.DARK_GRAY, Target.DARK_GRAY, Target.DARK_GRAY,
-                Target.DARK_GRAY, Target.DARK_GRAY,
-                Target.DARK_GRAY, Target.DARK_GRAY};
+        colorStroke = new int[]{TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY,
+                TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY,
+                TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY};
         strokeWidth = new int[] {3, 3, 3, 3, 3, 3, 3};
         zonePoints = new int[][]{{10, 10, 9, 8, 7, 6, 5},
                 {10, 9, 9, 8, 7, 6, 5},
@@ -43,7 +42,7 @@ public class WA6RingTarget extends CircularTargetBase {
 
     @Override
     protected void onPostDraw(Canvas canvas, Rect rect) {
-        paintStroke.setColor(Target.DARK_GRAY);
+        paintStroke.setColor(TargetDrawable.DARK_GRAY);
         final float size = recalc(rect,8.333f);
         canvas.drawLine(rect.exactCenterX() - size, rect.exactCenterY(),
                 rect.exactCenterX() + size, rect.exactCenterY(), paintStroke);

@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
@@ -21,17 +20,17 @@ public class WAFullTarget extends CircularTargetBase {
 
     public static final int ID = 0;
 
-    public WAFullTarget(Context context) {
-        super(context, ID, R.string.wa_full);
+    public WAFullTarget() {
+        super(ID, R.string.wa_full);
         zones = 11;
         radius = new float[]{25, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500};
         colorFill = new int[]{LEMON_YELLOW, LEMON_YELLOW, LEMON_YELLOW, FLAMINGO_RED, FLAMINGO_RED,
                 CERULEAN_BLUE, CERULEAN_BLUE, BLACK, BLACK, WHITE,
                 WHITE};
-        colorStroke = new int[]{Target.DARK_GRAY, Target.DARK_GRAY, Target.DARK_GRAY,
-                Target.DARK_GRAY, Target.DARK_GRAY,
-                Target.DARK_GRAY, Target.DARK_GRAY, Target.DARK_GRAY, Target.DARK_GRAY,
-                Target.DARK_GRAY, Target.DARK_GRAY};
+        colorStroke = new int[]{TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY,
+                TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY,
+                TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY,
+                TargetDrawable.DARK_GRAY, TargetDrawable.DARK_GRAY};
         strokeWidth = new int[] {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2};
         zonePoints = new int[][]{{10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1},
                 {10, 9, 9, 8, 7, 6, 5, 4, 3, 2, 1},
@@ -48,7 +47,7 @@ public class WAFullTarget extends CircularTargetBase {
 
     @Override
     protected void onPostDraw(Canvas canvas, Rect rect) {
-        paintStroke.setColor(Target.DARK_GRAY);
+        paintStroke.setColor(TargetDrawable.DARK_GRAY);
         final float size = recalc(rect, 5);
         paintStroke.setStrokeWidth(4 * rect.width() / 1000f);
         canvas.drawLine(rect.exactCenterX() - size, rect.exactCenterY(),

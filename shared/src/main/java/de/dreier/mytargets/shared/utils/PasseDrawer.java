@@ -12,14 +12,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
+import org.parceler.Parcels;
+
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.models.target.TargetDrawable;
 
-/**
- * Created by Florian on 20.03.2015.
- */
 public class PasseDrawer {
     public static final int NO_SELECTION = -1;
     private static final int MIN_PADDING = 2;
@@ -48,7 +47,7 @@ public class PasseDrawer {
     private int oldRadius, oldSelected, oldSelectedRadius;
     private int mSelectedRadius;
 
-    public PasseDrawer(View parent, float density, Target target) {
+    public PasseDrawer(View parent, float density, TargetDrawable target) {
         mParent = parent;
         mDensity = density;
         mCircle = new Circle(density, target);
@@ -245,10 +244,10 @@ public class PasseDrawer {
     }
 
     public void saveState(Bundle b) {
-        b.putSerializable("pd_passe", mPasse);
+        b.putParcelable("pd_passe", Parcels.wrap(mPasse));
         b.putInt("pd_pressed", mPressed);
         b.putInt("pd_selected", mSelected);
-        b.putSerializable("pd_selected_pos", mSelectedPosition);
+        b.putParcelable("pd_selected_pos", Parcels.wrap(mSelectedPosition));
         b.putInt("pd_selected_radius", mSelectedRadius);
     }
 

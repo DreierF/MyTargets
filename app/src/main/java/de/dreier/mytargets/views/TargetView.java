@@ -121,8 +121,8 @@ public class TargetView extends TargetViewBase {
 
     private void initSpotBounds() {
         Rect rect = new Rect(0, 0, 500, 500);
-        if (round.target.getFaceCount() > 1) {
-            SpotBase spotBase = (SpotBase) round.target;
+        if (target.getFaceCount() > 1) {
+            SpotBase spotBase = (SpotBase) target;
             spotRects = new RectF[spotBase.getFaceCount()];
             for (int i = 0; i < spotBase.getFaceCount(); i++) {
                 spotRects[i] = spotBase.getBoundsF(i, rect);
@@ -204,9 +204,9 @@ public class TargetView extends TargetViewBase {
         canvas.drawRect(0, 0, contentWidth, contentHeight, fillPaint);
 
         // Draw actual target face
-        round.target.setBounds((int) (x - radius), (int) (y - radius), (int) (x + radius),
+        target.setBounds((int) (x - radius), (int) (y - radius), (int) (x + radius),
                 (int) (y + radius));
-        round.target.draw(canvas);
+        target.draw(canvas);
 
         // Draw exact arrow position
         if (!mZoneSelectionMode) {
@@ -215,7 +215,7 @@ public class TargetView extends TargetViewBase {
     }
 
     private void drawArrows(Canvas canvas) {
-        int spots = round.target.getFaceCount();
+        int spots = target.getFaceCount();
         Midpoint[] m = new Midpoint[spots];
         for (int i = 0; i < spots; i++) {
             m[i] = new Midpoint();
@@ -226,10 +226,10 @@ public class TargetView extends TargetViewBase {
                 continue;
             }
             if (i == currentArrow) {
-                round.target.drawFocusedArrow(canvas, shot);
+                target.drawFocusedArrow(canvas, shot);
                 continue;
             }
-            round.target.drawArrow(canvas, shot);
+            target.drawArrow(canvas, shot);
             m[i % spots].sumX += shot.x;
             m[i % spots].sumY += shot.y;
             m[i % spots].count++;
@@ -238,7 +238,7 @@ public class TargetView extends TargetViewBase {
         if (showAll) {
             for (Passe p : oldPasses) {
                 if (p.getId() != passe.getId()) {
-                    round.target.drawArrows(canvas, p);
+                    target.drawArrows(canvas, p);
                     for (int i = 0; i < p.shot.length; i++) {
                         m[i % spots].sumX += p.shot[i].x;
                         m[i % spots].sumY += p.shot[i].y;
@@ -250,7 +250,7 @@ public class TargetView extends TargetViewBase {
 
         for (int i = 0; i < spots; i++) {
             if (m[i].count >= 2) {
-                round.target.drawArrowAvg(canvas, m[i].sumX / m[i].count,
+                target.drawArrowAvg(canvas, m[i].sumX / m[i].count,
                         m[i].sumY / m[i].count, i);
             }
         }
@@ -345,7 +345,7 @@ public class TargetView extends TargetViewBase {
         if (mZoneSelectionMode) {
             if (x > midX + radius + 30 * density) {
                 int i = (int) (y * selectableZones.size() / (float) contentHeight);
-                s.x = round.target.getXFromZone(s.zone);
+                s.x = target.getXFromZone(s.zone);
                 s.y = 0;
                 s.zone = selectableZones.get(i).zone;
             } else {
@@ -354,7 +354,7 @@ public class TargetView extends TargetViewBase {
         } else { // Handle via target
             s.x = (x - orgMidX) / (orgRadius - 30 * density);
             s.y = (y - orgMidY) / (orgRadius - 30 * density);
-            s.zone = round.target.getZoneFromPoint(s.x, s.y);
+            s.zone = target.getZoneFromPoint(s.x, s.y);
         }
         return s;
     }
@@ -439,10 +439,10 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void animateFromZoomSpot() {
-        if (round.target.dependsOnArrowIndex()) {
+        if (target.dependsOnArrowIndex()) {
             selectableZones = getZoneList();
         }
-        if (round.target.getFaceCount() > 1) {
+        if (target.getFaceCount() > 1) {
             if (!spotFocused) {
                 mCurSelecting = -1;
                 animateToZoomSpot();
@@ -492,7 +492,7 @@ public class TargetView extends TargetViewBase {
             midX = orgMidX;
             midY = orgMidY;
         }
-        if (round.target.getFaceCount() > 1 && currentArrow < round.arrowsPerPasse && radius > 0 &&
+        if (target.getFaceCount() > 1 && currentArrow < round.arrowsPerPasse && radius > 0 &&
                 !spotFocused && !mZoneSelectionMode && mCurSelecting != SPOT_ZOOM_IN) {
             cancelPendingAnimations();
             animator = ValueAnimator.ofFloat(0, 1);
@@ -606,14 +606,14 @@ public class TargetView extends TargetViewBase {
                 int Y1 = contentHeight * i / selectableZonesCount;
                 int Y2 = contentHeight * (i + 1) / selectableZonesCount;
 
-                fillPaint.setColor(round.target.getFillColor(zone.zone));
+                fillPaint.setColor(target.getFillColor(zone.zone));
                 canvas.drawRect(X1, Y1 + density, X2, Y2 - density, fillPaint);
 
-                borderPaint.setColor(round.target.getStrokeColor(zone.zone));
+                borderPaint.setColor(target.getStrokeColor(zone.zone));
                 canvas.drawRect(X1, Y1 + density, X2, Y2 - density, borderPaint);
 
                 // For yellow and white background use black font color
-                textPaint.setColor(round.target.getTextColor(zone.zone));
+                textPaint.setColor(target.getTextColor(zone.zone));
                 canvas.drawText(zone.text, X1 + (X2 - X1) / 2, Y1 + (Y2 - Y1) / 2 + 10 * density, textPaint);
             }
         }
@@ -655,8 +655,8 @@ public class TargetView extends TargetViewBase {
     private ArrayList<Zone> getZoneList() {
         ArrayList<Zone> list = new ArrayList<>();
         String last = "";
-        for (int i = 0; i < round.target.getZones(); i++) {
-            String zone = round.target.zoneToString(i, currentArrow);
+        for (int i = 0; i < target.getZones(); i++) {
+            String zone = target.zoneToString(i, currentArrow);
             if (!last.equals(zone)) {
                 list.add(new Zone(i, zone));
             }

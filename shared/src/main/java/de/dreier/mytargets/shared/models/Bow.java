@@ -5,15 +5,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.utils.BitmapUtils;
 
+@Parcel
 public class Bow implements IIdSettable {
-    public static final String ID = "_id";
-    static final long serialVersionUID = 52L;
-
     public String name;
     public int type;
     public String brand;

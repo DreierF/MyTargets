@@ -20,6 +20,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.parceler.Parcels;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -131,7 +133,7 @@ public class ArrowRankingFragment extends Fragment implements LoaderManager.Load
         @OnClick(R.id.content)
         public void onItemClicked() {
             Intent i = new Intent(getContext(), ArrowRankingDetailsActivity.class);
-            i.putExtra(ArrowRankingDetailsActivity.ITEM, mItem);
+            i.putExtra(ArrowRankingDetailsActivity.ITEM, Parcels.wrap(mItem));
             startActivity(i);
         }
 

@@ -14,7 +14,7 @@ import java.util.List;
 
 import de.dreier.mytargets.models.ArrowStatistic;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.models.target.TargetDrawable;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 
 public class ArrowStatisticDataSource extends DataSourceBase {
@@ -42,7 +42,7 @@ public class ArrowStatisticDataSource extends DataSourceBase {
                 long arrowId = res.getLong(0);
                 int arrowNumber = res.getInt(1);
 
-                Target target = TargetFactory.createTarget(context, res.getInt(5), res.getInt(6));
+                TargetDrawable target = TargetFactory.createTarget(res.getInt(5), res.getInt(6));
                 if (statistic == null || lastArrowId != arrowId || lastArrowNumber != arrowNumber) {
                     statistic = new ArrowStatistic();
                     statistic.arrowName = res.getString(8);

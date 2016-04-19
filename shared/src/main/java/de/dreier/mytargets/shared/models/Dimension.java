@@ -9,13 +9,12 @@ package de.dreier.mytargets.shared.models;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import java.io.Serializable;
+import org.parceler.Parcel;
 
 import de.dreier.mytargets.shared.R;
 
-public class Dimension implements IIdSettable, Comparable<Distance>, Serializable {
-    public static final String ID = "_id";
-    static final long serialVersionUID = 53L;
+@Parcel
+public class Dimension implements IIdSettable, Comparable<Distance> {
     public static final String METER = "m";
     public static final String CENTIMETER = "cm";
     public static final String YARDS = "yd";
@@ -23,6 +22,8 @@ public class Dimension implements IIdSettable, Comparable<Distance>, Serializabl
     public int value;
     public String unit;
     protected long id;
+
+    public Dimension() {}
 
     public Dimension(int value, String unit) {
         this.value = value;

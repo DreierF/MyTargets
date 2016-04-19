@@ -10,14 +10,13 @@ import android.support.wearable.view.DelayedConfirmationView;
 import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowInsets;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
+
+import org.parceler.Parcels;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -44,7 +43,7 @@ public class MainActivity extends Activity implements OnTargetSetListener,
 
         Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null) {
-            round = (Round) intent.getExtras().getSerializable(EXTRA_ROUND);
+            round = Parcels.unwrap(intent.getExtras().getParcelable(EXTRA_ROUND));
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -54,31 +53,24 @@ public class MainActivity extends Activity implements OnTargetSetListener,
         mGoogleApiClient.connect();
 
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
-        stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
+        stub.setOnLayoutInflatedListener(stub1 -> {
+            mTarget = (TargetSelectView) stub1.findViewById(R.id.target);
+            confirm = (DelayedConfirmationView) stub1.findViewById(R.id.delayed_confirm);
 
-            @Override
-            public void onLayoutInflated(WatchViewStub stub) {
-                mTarget = (TargetSelectView) stub.findViewById(R.id.target);
-                confirm = (DelayedConfirmationView) stub.findViewById(R.id.delayed_confirm);
+            // Workaround to avoid crash happening when setting invisible via xml layout
+            confirm.setVisibility(View.INVISIBLE);
 
-                // Workaround to avoid crash happening when setting invisible via xml layout
-                confirm.setVisibility(View.INVISIBLE);
+            // Set up target view
+            mTarget.setRoundTemplate(round.info);
+            mTarget.reset();
+            mTarget.setOnTargetSetListener(MainActivity.this);
 
-                // Set up target view
-                mTarget.setRoundTemplate(round.info);
-                mTarget.reset();
-                mTarget.setOnTargetSetListener(MainActivity.this);
-
-                // Ensure Moto 360 is not cut off at the bottom
-                stub.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
-                    @Override
-                    public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
-                        int chinHeight = insets.getSystemWindowInsetBottom();
-                        mTarget.setChinHeight(chinHeight);
-                        return insets;
-                    }
-                });
-            }
+            // Ensure Moto 360 is not cut off at the bottom
+            stub1.setOnApplyWindowInsetsListener((v, insets) -> {
+                int chinHeight = insets.getSystemWindowInsetBottom();
+                mTarget.setChinHeight(chinHeight);
+                return insets;
+            });
         });
     }
 
@@ -130,11 +122,8 @@ public class MainActivity extends Activity implements OnTargetSetListener,
             e.printStackTrace();
         }
         final byte[] finalData = data;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                sendMessage(WearableUtils.FINISHED_INPUT, finalData);
-            }
+        new Thread(() -> {
+            sendMessage(WearableUtils.FINISHED_INPUT, finalData);
         }).start();
     }
 
@@ -144,13 +133,10 @@ public class MainActivity extends Activity implements OnTargetSetListener,
         for (String nodeId : nodes) {
             Wearable.MessageApi.sendMessage(
                     mGoogleApiClient, nodeId, path, data).setResultCallback(
-                    new ResultCallback<MessageApi.SendMessageResult>() {
-                        @Override
-                        public void onResult(MessageApi.SendMessageResult sendMessageResult) {
-                            if (!sendMessageResult.getStatus().isSuccess()) {
-                                Log.e("", "Failed to send message with status code: "
-                                        + sendMessageResult.getStatus().getStatusCode());
-                            }
+                    sendMessageResult -> {
+                        if (!sendMessageResult.getStatus().isSuccess()) {
+                            Log.e("", "Failed to send message with status code: "
+                                    + sendMessageResult.getStatus().getStatusCode());
                         }
                     }
             );

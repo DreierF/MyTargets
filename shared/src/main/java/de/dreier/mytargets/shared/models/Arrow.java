@@ -5,15 +5,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.utils.BitmapUtils;
 
-
+@Parcel
 public class Arrow implements IIdSettable {
-    public static final String ID = "_id";
-    protected long id;
+    public long id;
     public String name;
     public String length;
     public String material;
@@ -26,6 +27,7 @@ public class Arrow implements IIdSettable {
     public List<ArrowNumber> numbers = new ArrayList<>();
     public byte[] thumb;
     public String imageFile;
+
     private transient Bitmap thumbnail;
     private transient Bitmap image;
 

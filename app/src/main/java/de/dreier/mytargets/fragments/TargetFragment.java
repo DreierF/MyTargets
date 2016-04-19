@@ -27,14 +27,14 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.shared.models.Diameter;
-import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.models.target.TargetDrawable;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.MyBackupAgent;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class TargetFragment extends SelectItemFragment<Target>
+public class TargetFragment extends SelectItemFragment<TargetDrawable>
         implements SeekBar.OnSeekBarChangeListener {
 
     public static final String TYPE_FIXED = "type_fixed";
@@ -48,13 +48,13 @@ public class TargetFragment extends SelectItemFragment<Target>
         super.onActivityCreated(savedInstanceState);
 
         // Process passed arguments
-        Target t = (Target) getArguments().getSerializable(ITEM);
+        TargetDrawable t = (TargetDrawable) getArguments().getSerializable(ITEM);
         typeFixed = getArguments().getBoolean(TYPE_FIXED);
-        List<Target> list;
+        List<TargetDrawable> list;
         if (typeFixed) {
-            list = TargetFactory.getList(getActivity(), t);
+            list = TargetFactory.getList(t);
         } else {
-            list = TargetFactory.getList(getActivity());
+            list = TargetFactory.getList();
         }
         setList(list, new TargetAdapter());
 
@@ -69,18 +69,18 @@ public class TargetFragment extends SelectItemFragment<Target>
         // Set initial target size
         Diameter[] diameters = t.getDiameters();
         for (int i = 0; i < diameters.length; i++) {
-            if (diameters[i].equals(t.size)) {
+            if (diameters[i].equals(t.target.size)) {
                 seekBar.setProgress(i);
-                label.setText(t.size.toString(getActivity()));
+                label.setText(t.target.size.toString(getActivity()));
                 break;
             }
         }
-        scoringStyle.setSelection(t.scoringStyle);
+        scoringStyle.setSelection(t.target.scoringStyle);
         seekBar.setOnSeekBarChangeListener(this);
     }
 
     @Override
-    public void onClick(SelectableViewHolder holder, Target mItem) {
+    public void onClick(SelectableViewHolder holder, TargetDrawable mItem) {
         super.onClick(holder, mItem);
         if (mItem == null) {
             return;
@@ -89,7 +89,7 @@ public class TargetFragment extends SelectItemFragment<Target>
     }
 
     private void updateSettings() {
-        Target target = mAdapter.getItem(mSelector.getSelectedPosition());
+        TargetDrawable target = mAdapter.getItem(mSelector.getSelectedPosition());
         Diameter[] diameters = target.getDiameters();
         if (seekBar.getProgress() > diameters.length - 1) {
             seekBar.setProgress(diameters.length - 1);
@@ -130,22 +130,22 @@ public class TargetFragment extends SelectItemFragment<Target>
 
     @Override
     public void onLongClick(SelectableViewHolder holder) {
-        onClick(holder, (Target) holder.getItem());
+        onClick(holder, (TargetDrawable) holder.getItem());
     }
 
     @Override
-    protected Target onSave() {
-        Target target = super.onSave();
+    protected TargetDrawable onSave() {
+        TargetDrawable target = super.onSave();
         int scoring = scoringStyle.getSelectedItemPosition();
-        target = TargetFactory.createTarget(getActivity(), target.id, scoring);
+        target = TargetFactory.createTarget(target.target.id, scoring);
         Diameter[] diameters = target.getDiameters();
-        target.size = diameters[seekBar.getProgress()];
+        target.target.size = diameters[seekBar.getProgress()];
 
         SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("target", (int) target.getId());
-        editor.putInt("scoring", target.scoringStyle);
-        editor.putLong("size", target.size.getId());
+        editor.putInt("scoring", target.target.scoringStyle);
+        editor.putLong("size", target.target.size.getId());
         editor.apply();
         return target;
     }
@@ -165,7 +165,7 @@ public class TargetFragment extends SelectItemFragment<Target>
 
     }
 
-    private class TargetAdapter extends NowListAdapter<Target> {
+    private class TargetAdapter extends NowListAdapter<TargetDrawable> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
@@ -174,7 +174,7 @@ public class TargetFragment extends SelectItemFragment<Target>
         }
     }
 
-    private class ViewHolder extends SelectableViewHolder<Target> {
+    private class ViewHolder extends SelectableViewHolder<TargetDrawable> {
         private final TextView mName;
         private final ImageView mImg;
 
@@ -186,7 +186,7 @@ public class TargetFragment extends SelectItemFragment<Target>
 
         @Override
         public void bindCursor() {
-            mName.setText(mItem.name);
+            mName.setText(mItem.getName(getContext()));
             mImg.setImageDrawable(mItem);
         }
     }

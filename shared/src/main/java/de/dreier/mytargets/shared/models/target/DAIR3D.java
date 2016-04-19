@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.shared.models.target;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
@@ -17,8 +16,8 @@ import static android.graphics.Color.BLACK;
 public class DAIR3D extends Target3DBase {
     public static final int ID = 19;
 
-    public DAIR3D(Context context) {
-        super(context, ID, R.string.dair_3d);
+    public DAIR3D() {
+        super(ID, R.string.dair_3d);
         zones = 6;
         radius = new float[]{0, 0, 0, 0, 0, 500};
         colorFill = new int[]{GREEN, TURBO_YELLOW, RED, CERULEAN_BLUE, LIGHT_GRAY, BROWN};

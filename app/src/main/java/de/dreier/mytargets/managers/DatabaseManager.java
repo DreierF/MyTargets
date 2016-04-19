@@ -37,7 +37,8 @@ import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.target.TargetDrawable;
 import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.utils.BackupUtils;
 
@@ -355,11 +356,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 RoundTemplate template = new RoundTemplate();
                 template.arrowsPerPasse = res.getInt(0);
                 int target = res.getInt(1);
-                template.target = TargetFactory.createTarget(mContext,
-                        target == 4 ? 5 : target, target == 5 ? 1 : 0);
+                template.target = new Target(target == 4 ? 5 : target, target == 5 ? 1 : 0);
                 template.distance = new Distance(res.getInt(2), res.getString(3));
                 template.passes = res.getInt(4);
-                template.target.size = template.target.getDiameters()[0];
                 template.targetTemplate = template.target;
                 sr.insert(template);
                 long tid = template.target.getId();
@@ -486,12 +485,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 writer.append("\";\"");
 
                 // Target
-                Target target = TargetFactory.createTarget(mContext, cur.getInt(targetInd),
+                TargetDrawable target = TargetFactory.createTarget(cur.getInt(targetInd),
                         cur.getInt(styleInd));
-                target.size = new Diameter(cur.getInt(targetSizeInd), cur.getString(targetUnitInd));
-                writer.append(target.name)
+                target.target.size = new Diameter(cur.getInt(targetSizeInd), cur.getString(targetUnitInd));
+                writer.append(target.getName(mContext))
                         .append(" (")
-                        .append(target.size.toString(mContext))
+                        .append(target.target.size.toString(mContext))
                         .append(")\";\"");
 
                 // Score

@@ -2,10 +2,10 @@ package de.dreier.mytargets.shared.models;
 
 import android.support.annotation.NonNull;
 
-public class Shot implements IIdSettable, Comparable<Shot> {
-    public static final String ID = "_id";
-    static final long serialVersionUID = 57L;
+import org.parceler.Parcel;
 
+@Parcel
+public class Shot implements IIdSettable, Comparable<Shot> {
     public static final int NOTHING_SELECTED = -2;
     public int zone = NOTHING_SELECTED;
     public static final int MISS = -1;
@@ -15,6 +15,8 @@ public class Shot implements IIdSettable, Comparable<Shot> {
     public int arrow = -1;
     public int index;
     protected long id;
+
+    public Shot() {}
 
     public Shot(int i) {
         index = i;

@@ -51,7 +51,7 @@ public class TargetSelectView extends TargetViewBase {
     @Override
     public void setRoundTemplate(RoundTemplate r) {
         super.setRoundTemplate(r);
-        mCircle = new Circle(density, r.target);
+        mCircle = new Circle(density, r.target.getDrawable());
     }
 
     @Override
@@ -69,8 +69,8 @@ public class TargetSelectView extends TargetViewBase {
 
         // Draw all possible points in a circular
         for (int i = -1; i < mZoneCount; i++) {
-            Coordinate coord = getCircularCoords(i);
-            mCircle.draw(canvas, coord.x, coord.y, i, i == curZone ? 23 : 17, false, currentArrow,
+            Coordinate coordinate = getCircularCoords(i);
+            mCircle.draw(canvas, coordinate.x, coordinate.y, i, i == curZone ? 23 : 17, false, currentArrow,
                     -1);
         }
 
@@ -109,7 +109,7 @@ public class TargetSelectView extends TargetViewBase {
 
     @Override
     protected Shot getShotFromPos(float x, float y) {
-        int rings = round.target.getZones();
+        int rings = target.getZones();
         Shot s = new Shot(currentArrow);
 
         double xDiff = x - radius;
@@ -132,7 +132,7 @@ public class TargetSelectView extends TargetViewBase {
             // Correct points_zone
             s.zone = Shot.MISS;
         }
-        s.x = round.target.getXFromZone(s.zone);
+        s.x = target.getXFromZone(s.zone);
         s.y = 0f;
         return s;
     }
