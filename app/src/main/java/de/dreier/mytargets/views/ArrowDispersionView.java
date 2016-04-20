@@ -24,7 +24,7 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
     protected int contentWidth;
     protected int contentHeight;
     protected float density;
-    protected int mZoneCount;
+    protected int zoneCount;
     private Paint fillPaint;
     private ArrayList<Shot> shots;
     private float orgRadius, orgMidX, orgMidY;
@@ -83,7 +83,7 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
 
     public void setTarget(TargetDrawable target) {
         this.target = target;
-        mZoneCount = target.getZones();
+        zoneCount = target.getModel().getZoneCount();
         reset();
     }
 

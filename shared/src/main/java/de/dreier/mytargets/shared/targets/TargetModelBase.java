@@ -1,14 +1,21 @@
 package de.dreier.mytargets.shared.targets;
 
 import android.content.Context;
+import android.support.annotation.ColorInt;
 import android.support.annotation.StringRes;
 
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Diameter;
+import de.dreier.mytargets.shared.models.IIdProvider;
+import de.dreier.mytargets.shared.utils.Color;
 
-public class TargetModelBase {
+import static de.dreier.mytargets.shared.utils.Color.BLACK;
+import static de.dreier.mytargets.shared.utils.Color.WHITE;
+
+public class TargetModelBase implements IIdProvider {
+    public boolean isFieldTarget;
     protected long id;
     protected int nameRes;
     protected Zone[] zones;
@@ -20,19 +27,21 @@ public class TargetModelBase {
     protected boolean[] showPoints;
 
     protected int faceRadius;
-    protected TargetDrawable face;
     protected Coordinate[] facePositions;
 
     protected boolean is3DTarget;
-    public boolean isFieldTarget;
     protected CenterMark centerMark;
-
 
     protected TargetModelBase(long id, @StringRes int nameRes) {
         this.id = id;
         this.nameRes = nameRes;
         this.faceRadius = 500;
-        this.facePositions = new Coordinate[] { new Coordinate(500,500) };
+        this.facePositions = new Coordinate[]{new Coordinate(500, 500)};
+    }
+
+    @Override
+    public long getId() {
+        return id;
     }
 
     public String getName(Context context) {
@@ -71,20 +80,15 @@ public class TargetModelBase {
         return zones.length;
     }
 
-    public int getFillColor(int zone) {
-        return getZone(zone).fillColor;
-    }
-
-    public int getStrokeColor(int zone) {
-        return getZone(zone).strokeColor;
-    }
-
     public int getStrokeWidth(int zone) {
         return getZone(zone).strokeWidth;
     }
 
     public int getPointsByZone(int zone, int scoringStyle, int arrow) {
-        return 0; //TODO
+        if (isOutOfRange(zone)) {
+            return 0;
+        }
+        return getZonePoints(scoringStyle, zone);
     }
 
     public ArrayList<String> getScoringStyles() {
@@ -146,4 +150,41 @@ public class TargetModelBase {
     public CenterMark getCenterMark() {
         return centerMark;
     }
+
+    @ColorInt
+    public int getFillColor(int zone) {
+        if (isOutOfRange(zone)) {
+            return BLACK;
+        }
+        return getZone(zone).fillColor;
+    }
+
+    public int getStrokeColor(int zone) {
+        // Handle Miss-shots
+        if (isOutOfRange(zone)) {
+            return BLACK;
+        }
+        return de.dreier.mytargets.shared.utils.Color.getStrokeColor(getZone(zone).fillColor);
+    }
+
+    public int getContrastColor(int zone) {
+        // Handle Miss-shots
+        if (isOutOfRange(zone)) {
+            return BLACK;
+        }
+        return Color.getContrast(getZone(zone).fillColor);
+    }
+
+    public int getTextColor(int zone) {
+        // Handle Miss-shots
+        if (isOutOfRange(zone)) {
+            return WHITE;
+        }
+        return Color.getContrast(getZone(zone).fillColor);
+    }
+
+    private boolean isOutOfRange(int zone) {
+        return zone < 0 || zone >= getZoneCount();
+    }
+
 }

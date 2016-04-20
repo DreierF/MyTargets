@@ -44,7 +44,6 @@ import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.targets.SpotBase;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.utils.TextInputDialog;
@@ -121,11 +120,10 @@ public class TargetView extends TargetViewBase {
 
     private void initSpotBounds() {
         Rect rect = new Rect(0, 0, 500, 500);
-        if (target.getFaceCount() > 1) {
-            SpotBase spotBase = (SpotBase) target;
-            spotRects = new RectF[spotBase.getFaceCount()];
-            for (int i = 0; i < spotBase.getFaceCount(); i++) {
-                spotRects[i] = spotBase.getBoundsF(i, rect);
+        if (targetModel.getFaceCount() > 1) {
+            spotRects = new RectF[targetModel.getFaceCount()];
+            for (int i = 0; i < targetModel.getFaceCount(); i++) {
+                spotRects[i] = targetDrawable.getBoundsF(i, rect);
             }
         } else {
             spotRects = new RectF[1];
@@ -204,9 +202,9 @@ public class TargetView extends TargetViewBase {
         canvas.drawRect(0, 0, contentWidth, contentHeight, fillPaint);
 
         // Draw actual target face
-        target.setBounds((int) (x - radius), (int) (y - radius), (int) (x + radius),
+        targetDrawable.setBounds((int) (x - radius), (int) (y - radius), (int) (x + radius),
                 (int) (y + radius));
-        target.draw(canvas);
+        targetDrawable.draw(canvas);
 
         // Draw exact arrow position
         if (!mZoneSelectionMode) {
@@ -215,7 +213,7 @@ public class TargetView extends TargetViewBase {
     }
 
     private void drawArrows(Canvas canvas) {
-        int spots = target.getFaceCount();
+        int spots = targetModel.getFaceCount();
         Midpoint[] m = new Midpoint[spots];
         for (int i = 0; i < spots; i++) {
             m[i] = new Midpoint();
@@ -226,10 +224,10 @@ public class TargetView extends TargetViewBase {
                 continue;
             }
             if (i == currentArrow) {
-                target.drawFocusedArrow(canvas, shot);
+                targetDrawable.drawFocusedArrow(canvas, shot);
                 continue;
             }
-            target.drawArrow(canvas, shot);
+            targetDrawable.drawArrow(canvas, shot);
             m[i % spots].sumX += shot.x;
             m[i % spots].sumY += shot.y;
             m[i % spots].count++;
@@ -238,7 +236,7 @@ public class TargetView extends TargetViewBase {
         if (showAll) {
             for (Passe p : oldPasses) {
                 if (p.getId() != passe.getId()) {
-                    target.drawArrows(canvas, p);
+                    targetDrawable.drawArrows(canvas, p);
                     for (int i = 0; i < p.shot.length; i++) {
                         m[i % spots].sumX += p.shot[i].x;
                         m[i % spots].sumY += p.shot[i].y;
@@ -250,7 +248,7 @@ public class TargetView extends TargetViewBase {
 
         for (int i = 0; i < spots; i++) {
             if (m[i].count >= 2) {
-                target.drawArrowAvg(canvas, m[i].sumX / m[i].count,
+                targetDrawable.drawArrowAvg(canvas, m[i].sumX / m[i].count,
                         m[i].sumY / m[i].count, i);
             }
         }
@@ -345,7 +343,7 @@ public class TargetView extends TargetViewBase {
         if (mZoneSelectionMode) {
             if (x > midX + radius + 30 * density) {
                 int i = (int) (y * selectableZones.size() / (float) contentHeight);
-                s.x = target.getXFromZone(s.zone);
+                s.x = targetDrawable.getXFromZone(s.zone);
                 s.y = 0;
                 s.zone = selectableZones.get(i).zone;
             } else {
@@ -354,7 +352,7 @@ public class TargetView extends TargetViewBase {
         } else { // Handle via target
             s.x = (x - orgMidX) / (orgRadius - 30 * density);
             s.y = (y - orgMidY) / (orgRadius - 30 * density);
-            s.zone = target.getZoneFromPoint(s.x, s.y);
+            s.zone = targetDrawable.getZoneFromPoint(s.x, s.y);
         }
         return s;
     }
@@ -439,10 +437,10 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void animateFromZoomSpot() {
-        if (target.dependsOnArrowIndex()) {
+        if (targetModel.dependsOnArrowIndex()) {
             selectableZones = getZoneList();
         }
-        if (target.getFaceCount() > 1) {
+        if (targetModel.getFaceCount() > 1) {
             if (!spotFocused) {
                 mCurSelecting = -1;
                 animateToZoomSpot();
@@ -492,7 +490,7 @@ public class TargetView extends TargetViewBase {
             midX = orgMidX;
             midY = orgMidY;
         }
-        if (target.getFaceCount() > 1 && currentArrow < round.arrowsPerPasse && radius > 0 &&
+        if (targetModel.getFaceCount() > 1 && currentArrow < round.arrowsPerPasse && radius > 0 &&
                 !spotFocused && !mZoneSelectionMode && mCurSelecting != SPOT_ZOOM_IN) {
             cancelPendingAnimations();
             animator = ValueAnimator.ofFloat(0, 1);
@@ -606,14 +604,14 @@ public class TargetView extends TargetViewBase {
                 int Y1 = contentHeight * i / selectableZonesCount;
                 int Y2 = contentHeight * (i + 1) / selectableZonesCount;
 
-                fillPaint.setColor(target.getFillColor(zone.zone));
+                fillPaint.setColor(targetModel.getFillColor(zone.zone));
                 canvas.drawRect(X1, Y1 + density, X2, Y2 - density, fillPaint);
 
-                borderPaint.setColor(target.getStrokeColor(zone.zone));
+                borderPaint.setColor(targetModel.getStrokeColor(zone.zone));
                 canvas.drawRect(X1, Y1 + density, X2, Y2 - density, borderPaint);
 
                 // For yellow and white background use black font color
-                textPaint.setColor(target.getTextColor(zone.zone));
+                textPaint.setColor(targetModel.getTextColor(zone.zone));
                 canvas.drawText(zone.text, X1 + (X2 - X1) / 2, Y1 + (Y2 - Y1) / 2 + 10 * density, textPaint);
             }
         }
@@ -655,7 +653,7 @@ public class TargetView extends TargetViewBase {
     private ArrayList<Zone> getZoneList() {
         ArrayList<Zone> list = new ArrayList<>();
         String last = "";
-        for (int i = 0; i < target.getZones(); i++) {
+        for (int i = 0; i < zoneCount; i++) {
             String zone = target.zoneToString(i, currentArrow);
             if (!last.equals(zone)) {
                 list.add(new Zone(i, zone));

@@ -14,7 +14,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.targets.TargetDrawable;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
 
 public class PasseView extends View {
@@ -36,7 +36,7 @@ public class PasseView extends View {
         super(context, attrs, defStyle);
     }
 
-    public void setPoints(Passe p, TargetDrawable target) {
+    public void setPoints(Passe p, Target target) {
         passe = p;
         density = getResources().getDisplayMetrics().density;
         mPasseDrawer = new PasseDrawer(this, density, target);

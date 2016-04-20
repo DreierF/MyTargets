@@ -22,7 +22,7 @@ public class Passe implements IIdSettable {
     }
 
     public Passe(Passe p) {
-        setId(p.getId());
+        this.id = p.getId();
         shot = p.shot.clone();
     }
 

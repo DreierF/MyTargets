@@ -354,7 +354,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         public void bindCursor() {
             Context context = mSubtitle.getContext();
             Round r = roundDataSource.get(mItem.roundId);
-            mShots.setPasse(mItem, r.info.target.getDrawable());
+            mShots.setPasse(mItem, r.info.target);
             mSubtitle.setText(context.getString(R.string.passe_n, (mItem.index + 1)));
         }
     }
@@ -373,11 +373,10 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         public void bindCursor() {
             Context context = mSubtitle.getContext();
             Round r = roundDataSource.get(mItem.roundId);
-            mShots.setPoints(mItem, r.info.target.getDrawable());
+            mShots.setPoints(mItem, r.info.target);
             mSubtitle.setText(context.getString(R.string.passe_n, (mItem.index + 1)));
         }
     }
-
 
     private class HeaderViewHolder extends HeaderBindingHolder<Round> {
         private final TextView mTitle;

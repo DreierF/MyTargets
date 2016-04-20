@@ -28,10 +28,11 @@ public class ArrowRankingDetailsActivity extends AppCompatActivity {
 
         ArrowStatistic item = Parcels.unwrap(getIntent().getParcelableExtra(ITEM));
         adv.setShoots(item.shots);
-        adv.setTarget(item.target);
+        adv.setTarget(item.target.getDrawable());
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Arrow number " + item.arrowNumber);
+        assert actionBar != null;
+        actionBar.setTitle(getString(R.string.arrow_number_x, item.arrowNumber));
         actionBar.setSubtitle(item.arrowName);
         actionBar.setDisplayHomeAsUpEnabled(true);
     }

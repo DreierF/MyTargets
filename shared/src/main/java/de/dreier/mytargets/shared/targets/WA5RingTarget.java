@@ -16,12 +16,14 @@ import static de.dreier.mytargets.shared.utils.Color.FLAMINGO_RED;
 import static de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW;
 
 public class WA5RingTarget extends TargetModelBase {
-
     public static final int ID = 2;
-    private boolean usedAsSpot = false;
 
     public WA5RingTarget() {
-        super(ID, R.string.wa_5_ring);
+        this(ID, R.string.wa_5_ring);
+    }
+
+    protected WA5RingTarget(int id, int nameRes) {
+        super(id, nameRes);
         zones = new Zone[] {
                 new Zone(50, LEMON_YELLOW, DARK_GRAY, 4),
                 new Zone(100, LEMON_YELLOW, DARK_GRAY, 4),
@@ -44,14 +46,4 @@ public class WA5RingTarget extends TargetModelBase {
         centerMark = new CenterMark(DARK_GRAY, 10f, 4, false);
     }
 
-    public WA5RingTarget(boolean usedAsSpot) {
-        this();
-        this.usedAsSpot = usedAsSpot;
-    }
-
-    @Override
-    public boolean shouldDrawZone(int zone, int scoringStyle) {
-        // Do not draw second ring if we have a 3 Spot for compound
-        return !(usedAsSpot && scoringStyle == 1 && zone == 1);
-    }
 }

@@ -16,7 +16,6 @@ import android.widget.TextView;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.targets.TargetDrawable;
 
 public class TargetSelector extends SelectorBase<Target> {
 
@@ -35,9 +34,8 @@ public class TargetSelector extends SelectorBase<Target> {
         TextView name = (TextView) mView.findViewById(R.id.name);
         TextView details = (TextView) mView.findViewById(R.id.details);
         details.setVisibility(View.VISIBLE);
-        final TargetDrawable drawable = item.getDrawable();
-        img.setImageDrawable(drawable);
-        name.setText(String.format("%s (%s)", drawable.getName(getContext()), item.size.toString(getContext())));
-        details.setText(drawable.getScoringStyles().get(item.scoringStyle));
+        img.setImageDrawable(item.getDrawable());
+        name.setText(String.format("%s (%s)", item.getModel().getName(getContext()), item.size.toString(getContext())));
+        details.setText(item.getModel().getScoringStyles().get(item.scoringStyle));
     }
 }

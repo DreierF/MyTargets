@@ -82,7 +82,7 @@ public class EditStandardRoundFragment extends EditFragmentBase
             int tid = prefs.getInt("target", 0);
             int scoring = prefs.getInt("scoring", 0);
             round.target = new Target(tid, scoring);
-            round.target.size = round.target.getDrawable().getDiameters()[0];
+            round.target.size = round.target.getModel().getDiameters()[0];
             round.targetTemplate = round.target;
             long distId = prefs.getLong("distanceId", new Distance(18, "m").getId());
             round.distance = Distance.fromId(distId);
@@ -97,7 +97,7 @@ public class EditStandardRoundFragment extends EditFragmentBase
                 name.setText(standardRound.name);
                 standardRoundId = standardRound.getId();
             } else {
-                name.setText(getActivity().getString(R.string.custom) + " " + standardRound.name);
+                name.setText(String.format("%s %s", getString(R.string.custom), standardRound.name));
                 for(RoundTemplate round : rounds) {
                     round.setId(-1);
                 }

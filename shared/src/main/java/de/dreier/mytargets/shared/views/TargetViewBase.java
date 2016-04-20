@@ -14,7 +14,9 @@ import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
+import de.dreier.mytargets.shared.targets.TargetModelBase;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
 
@@ -31,10 +33,12 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected float curAnimationProgress;
     protected boolean mZoneSelectionMode = true;
     protected float density;
-    protected int mZoneCount;
+    protected int zoneCount;
     protected float outFromX;
     protected float outFromY;
-    protected TargetDrawable target;
+    protected TargetDrawable targetDrawable;
+    protected Target target;
+    protected TargetModelBase targetModel;
 
     public TargetViewBase(Context context) {
         super(context);
@@ -55,7 +59,6 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         currentArrow = 0;
         lastSetArrow = -1;
         mCurSelecting = -1;
-        target = round.target.getDrawable();
         passe = new Passe(round.arrowsPerPasse);
         passeDrawer.setPasse(passe);
         animateToZoomSpot();
@@ -64,8 +67,11 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     public void setRoundTemplate(RoundTemplate r) {
         round = r;
-        mZoneCount = r.target.getDrawable().getZones();
-        passeDrawer = new PasseDrawer(this, density, round.target.getDrawable());
+        target = r.target;
+        targetModel = r.target.getModel();
+        targetDrawable = r.target.getDrawable();
+        zoneCount = targetModel.getZoneCount();
+        passeDrawer = new PasseDrawer(this, density, r.target);
         reset();
     }
 

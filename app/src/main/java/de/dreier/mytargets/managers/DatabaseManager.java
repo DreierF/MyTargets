@@ -38,8 +38,6 @@ import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.targets.TargetDrawable;
-import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.utils.BackupUtils;
 
 public class DatabaseManager extends SQLiteOpenHelper {
@@ -485,12 +483,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 writer.append("\";\"");
 
                 // Target
-                TargetDrawable target = TargetFactory.createTarget(cur.getInt(targetInd),
-                        cur.getInt(styleInd));
-                target.target.size = new Diameter(cur.getInt(targetSizeInd), cur.getString(targetUnitInd));
-                writer.append(target.getName(mContext))
+                Target target = new Target(cur.getInt(targetInd), cur.getInt(styleInd),
+                        new Diameter(cur.getInt(targetSizeInd), cur.getString(targetUnitInd)));
+                writer.append(target.getModel().getName(mContext))
                         .append(" (")
-                        .append(target.target.size.toString(mContext))
+                        .append(target.size.toString(mContext))
                         .append(")\";\"");
 
                 // Score

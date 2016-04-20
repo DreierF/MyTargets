@@ -19,16 +19,11 @@ public class WA3RingTarget extends TargetModelBase {
     public static final int ID = 3;
 
     public WA3RingTarget() {
-        super(ID, R.string.wa_3_ring);
-        setUp();
+        this(ID, R.string.wa_3_ring);
     }
 
-    public WA3RingTarget(int id, int nameRes) {
+    protected WA3RingTarget(int id, int nameRes) {
         super(id, nameRes);
-        setUp();
-    }
-
-    private void setUp() {
         zones = new Zone[] {
                 new Zone(83, LEMON_YELLOW, DARK_GRAY, 4),
                 new Zone(167, LEMON_YELLOW, DARK_GRAY, 4),
@@ -48,4 +43,5 @@ public class WA3RingTarget extends TargetModelBase {
                 new Diameter(122, Dimension.CENTIMETER)};
         centerMark = new CenterMark(DARK_GRAY, 16.667f, 4, false);
     }
+
 }

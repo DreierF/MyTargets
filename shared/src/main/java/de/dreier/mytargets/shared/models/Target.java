@@ -12,6 +12,7 @@ public class Target implements IIdProvider {
     public int scoringStyle;
     public Diameter size;
     private transient TargetModelBase model;
+    private transient TargetDrawable drawable;
 
     public Target() {
     }
@@ -37,7 +38,10 @@ public class Target implements IIdProvider {
     }*/
 
     public TargetDrawable getDrawable() {
-        return new TargetDrawable(this);
+        if (drawable == null) {
+            drawable = new TargetDrawable(this);
+        }
+        return drawable;
     }
 
     public String zoneToString(int zone, int arrow) {
@@ -61,9 +65,14 @@ public class Target implements IIdProvider {
     }
 
     public TargetModelBase getModel() {
-        if(model==null) {
+        if (model == null) {
             model = TargetFactory.getTarget(id);
         }
         return model;
+    }
+
+
+    public int getPointsByZone(int zone, int arrow) {
+        return model.getPointsByZone(zone, scoringStyle, arrow);
     }
 }

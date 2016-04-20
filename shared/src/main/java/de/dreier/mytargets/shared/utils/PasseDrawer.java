@@ -17,7 +17,7 @@ import org.parceler.Parcels;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.targets.TargetDrawable;
+import de.dreier.mytargets.shared.models.Target;
 
 public class PasseDrawer {
     public static final int NO_SELECTION = -1;
@@ -47,7 +47,7 @@ public class PasseDrawer {
     private int oldRadius, oldSelected, oldSelectedRadius;
     private int mSelectedRadius;
 
-    public PasseDrawer(View parent, float density, TargetDrawable target) {
+    public PasseDrawer(View parent, float density, Target target) {
         mParent = parent;
         mDensity = density;
         mCircle = new Circle(density, target);

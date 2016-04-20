@@ -5,10 +5,8 @@ import android.os.Parcelable;
 import org.parceler.Parcels;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.Passe;
@@ -19,27 +17,14 @@ public class WearableUtils {
     public static final String FINISHED_INPUT = "passe/finished";
     public static final String STOPPED_ROUND = "round/stopped";
 
-    public static byte[] serialize(Passe p) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ObjectOutputStream os = new ObjectOutputStream(out);
-        os.writeObject(Parcels.wrap(p));
-        os.flush();
-        return out.toByteArray();
-    }
-
-    public static byte[] serialize(NotificationInfo info) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ObjectOutputStream os = new ObjectOutputStream(out);
-        os.writeObject(Parcels.wrap(info));
-        os.flush();
-        return out.toByteArray();
+    public static <T> byte[] serialize(T p) throws IOException {
+        return ParcelableUtil.marshall(Parcels.wrap(p));
     }
 
     public static NotificationInfo deserializeToInfo(byte[] data)
             throws IOException, ClassNotFoundException {
-        ByteArrayInputStream in = new ByteArrayInputStream(data);
-        ObjectInputStream is = new ObjectInputStream(in);
-        return Parcels.unwrap((Parcelable) is.readObject());
+
+        return Parcels.unwrap(ParcelableUtil.unmarshall(data));
     }
 
     public static Passe deserializeToPasse(byte[] data) throws IOException, ClassNotFoundException {

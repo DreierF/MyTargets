@@ -41,7 +41,7 @@ import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.targets.TargetDrawable;
+import de.dreier.mytargets.shared.targets.TargetModelBase;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
@@ -115,9 +115,9 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
         RadioButton target = (RadioButton) rootView.findViewById(R.id.target);
         RadioButton field = (RadioButton) rootView.findViewById(R.id.field);
         RadioButton threeD = (RadioButton) rootView.findViewById(R.id.three_d);
-        if (firstRound.target.getDrawable().isFieldTarget()) {
+        if (firstRound.target.getModel().isFieldTarget()) {
             field.setChecked(true);
-        } else if (firstRound.target.getDrawable().is3DTarget()) {
+        } else if (firstRound.target.getModel().is3DTarget()) {
             threeD.setChecked(true);
         } else {
             target.setChecked(true);
@@ -176,7 +176,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
                     rounds.get(0).distance.unit.equals(unitDistance) &&
                     r.indoor == indoor) {
                 int checked = typ.getCheckedRadioButtonId();
-                TargetDrawable target = rounds.get(0).target.getDrawable();
+                TargetModelBase target = rounds.get(0).target.getModel();
                 if ((checked != R.id.field || target.isFieldTarget()) &&
                         (checked != R.id.three_d || target.is3DTarget())) {
                     displayList.add(r);

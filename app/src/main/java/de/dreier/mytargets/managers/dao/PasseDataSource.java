@@ -17,8 +17,7 @@ import java.util.Map;
 
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.targets.TargetDrawable;
-import de.dreier.mytargets.shared.targets.TargetFactory;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.utils.Pair;
 
 public class PasseDataSource extends IdProviderDataSource<Passe> {
@@ -189,7 +188,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         if (res.moveToFirst()) {
             do {
                 count++;
-                sum += TargetFactory.createTarget(res.getInt(1), res.getInt(2)).getPointsByZone(res.getInt(0), res.getInt(3));
+                sum += new Target(res.getInt(1), res.getInt(2)).getPointsByZone(res.getInt(0), res.getInt(3));
             } while (res.moveToNext());
         }
         res.close();
@@ -214,14 +213,14 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
             cursor.close();
             throw new IllegalStateException("There must be at least one round!");
         }
-        TargetDrawable t = TargetFactory.createTarget(cursor.getInt(0), cursor.getInt(1));
+        Target t = new Target(cursor.getInt(0), cursor.getInt(1));
         Map<Pair<Integer, String>, Integer> scoreCount = new HashMap<>();
         for (int arrow = 0; arrow < 3; arrow++) {
-            for (int zone = -1; zone < t.getZones(); zone++) {
+            for (int zone = -1; zone < t.getModel().getZoneCount(); zone++) {
                 scoreCount.put(new Pair<>(t.getPointsByZone(zone, arrow),
                         t.zoneToString(zone, arrow)), 0);
             }
-            if (!t.dependsOnArrowIndex()) {
+            if (!t.getModel().dependsOnArrowIndex()) {
                 break;
             }
         }

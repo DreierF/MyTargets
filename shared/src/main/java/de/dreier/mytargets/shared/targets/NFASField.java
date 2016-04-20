@@ -7,9 +7,9 @@
 package de.dreier.mytargets.shared.targets;
 
 import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.utils.Color;
 
-import static android.graphics.Color.BLACK;
+import static de.dreier.mytargets.shared.targets.ZoneType.ELLIPSE;
+import static de.dreier.mytargets.shared.utils.Color.BLACK;
 import static de.dreier.mytargets.shared.utils.Color.GRAY;
 import static de.dreier.mytargets.shared.utils.Color.LIGHTER_GRAY;
 import static de.dreier.mytargets.shared.utils.Color.ORANGE;
@@ -20,12 +20,12 @@ public class NFASField extends TargetOvalBase {
 
     public NFASField() {
         super(ID, R.string.nfas_field);
-        zones = 3;
-        radius = new float[]{81, 0, 500};
-        colorFill = new int[]{TURBO_YELLOW, ORANGE, LIGHTER_GRAY};
-        colorStroke = new int[]{BLACK, BLACK, GRAY};
-        strokeWidth = new int[]{5, 4, 3};
-        zonePoints = new int[][]{{24, 20, 16},{14, 14, 10},{8,8,4}};
+        zones = new Zone[]{
+                new Zone(81, TURBO_YELLOW, BLACK, 5),
+                new Zone(ELLIPSE, 500, 500, 500, ORANGE, BLACK, 4),
+                new Zone(500, LIGHTER_GRAY, GRAY, 3)
+        };
+        zonePoints = new int[][]{{24, 20, 16}, {14, 14, 10}, {8, 8, 4}};
         showAsX = new boolean[]{false};
         isFieldTarget = true;
     }

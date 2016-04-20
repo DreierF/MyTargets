@@ -24,7 +24,6 @@ import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.targets.TargetDrawable;
 
 public class StandardRoundSelector extends SelectorBase<StandardRound> {
 
@@ -46,10 +45,10 @@ public class StandardRoundSelector extends SelectorBase<StandardRound> {
                 i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(target));
                 i.putExtra(TargetFragment.TYPE_FIXED, true);
                 startIntent(i, data -> {
-                    TargetDrawable st = (TargetDrawable) data.getSerializableExtra(ItemSelectActivity.ITEM);
+                    Target st = (Target) data.getSerializableExtra(ItemSelectActivity.ITEM);
                     for (RoundTemplate template : item.getRounds()) {
                         Diameter size = template.target.size;
-                        template.target = new Target(st.getId(), st.target.scoringStyle, size);
+                        template.target = new Target(st.id, st.scoringStyle, size);
                     }
                     setItem(item);
                 });

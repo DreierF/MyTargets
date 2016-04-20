@@ -87,7 +87,7 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
                 "AND s.passe=p._id", null);
         if (cur.moveToFirst()) {
             do {
-                r.reachedPoints += r.info.target.getDrawable().getPointsByZone(cur.getInt(0), cur.getInt(1));
+                r.reachedPoints += r.info.target.getPointsByZone(cur.getInt(0), cur.getInt(1));
             } while (cur.moveToNext());
         }
         cur.close();

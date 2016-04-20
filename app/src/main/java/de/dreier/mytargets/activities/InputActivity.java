@@ -232,7 +232,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         }
 
         // Only sort shots when all arrows are on one target face
-        if (template.target.getDrawable().getFaceCount() == 1) {
+        if (template.target.getModel().getFaceCount() == 1) {
             passe.sort();
         }
 
@@ -266,7 +266,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         Passe lastPasse = passeDataSource.get(mRound.getId(), savedPasses);
         if (lastPasse != null) {
             for (Shot shot : lastPasse.shot) {
-                text += template.target.getDrawable().zoneToString(shot.zone, 0) + " ";
+                text += template.target.zoneToString(shot.zone, 0) + " ";
             }
             text += "\n";
         } else {

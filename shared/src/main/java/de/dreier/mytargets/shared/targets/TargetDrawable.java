@@ -20,9 +20,6 @@ import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.Color;
 
-import static de.dreier.mytargets.shared.utils.Color.BLACK;
-import static de.dreier.mytargets.shared.utils.Color.WHITE;
-
 public class TargetDrawable extends Drawable {
 
     protected static final float ARROW_RADIUS = 8;
@@ -78,19 +75,24 @@ public class TargetDrawable extends Drawable {
 
     private Target target;
     private TargetModelBase model;
-
     private Paint paintFill;
     private Paint paintStroke;
     private TextPaint paintText;
-
     public TargetDrawable() {
         initPaint();
     }
-
     public TargetDrawable(Target target) {
         this.target = target;
         this.model = target.getModel();
         initPaint();
+    }
+
+    public Target getTarget() {
+        return target;
+    }
+
+    public TargetModelBase getModel() {
+        return model;
     }
 
     public void initPaint() {
@@ -104,7 +106,7 @@ public class TargetDrawable extends Drawable {
         paintText.setColor(Color.BLACK);
     }
 
-    public int getZones() {
+    private int getZones() {
         return model.getZoneCount();
     }
 
@@ -150,7 +152,7 @@ public class TargetDrawable extends Drawable {
     }
 
     protected void drawArrow(Canvas canvas, Shot shot, Rect rect) {
-        paintFill.setColor(getContrastColor(shot.zone));
+        paintFill.setColor(model.getContrastColor(shot.zone));
         Rect targetRect = getTargetBounds(rect, shot.index);
         float[] pos = new float[2];
         pos[0] = targetRect.left + (1 + shot.x) * targetRect.width() * 0.5f;
@@ -203,7 +205,7 @@ public class TargetDrawable extends Drawable {
     public void drawArrowAvg(Canvas canvas, float x, float y, int arrow) {
         Rect rect = getBounds();
         int zone = getZoneFromPoint(x, y);
-        int color = getContrastColor(zone);
+        int color = model.getContrastColor(zone);
         paintStroke.setColor(color);
         paintStroke.setStrokeWidth(reCalc(rect, 2));
         Rect targetRect = getTargetBounds(rect, arrow);
@@ -248,17 +250,6 @@ public class TargetDrawable extends Drawable {
         final float sy = reCalc(rect, y) + rect.top;
         canvas.drawCircle(sx, sy, rad, paintFill);
         canvas.drawCircle(sx, sy, rad, paintStroke);
-    }
-
-    public int getPointsByZone(int zone, int arrow) {
-        return getPointsByZone(zone, target.scoringStyle, arrow);
-    }
-
-    protected int getPointsByZone(int zone, int scoringStyle, int arrow) {
-        if (zone == -1 || zone >= getZones()) {
-            return 0;
-        }
-        return target.getZonePoints(zone);
     }
 
     public float getXFromZone(int zone) {
@@ -342,41 +333,6 @@ public class TargetDrawable extends Drawable {
             canvas.drawLine(rect.exactCenterX(), rect.exactCenterY() - size,
                     rect.exactCenterX(), rect.exactCenterY() + size, paintStroke);
         }
-    }
-
-    public int getFillColor(int zone) {
-        if (zone == -1 || zone >= getZones()) {
-            return BLACK;
-        }
-        return model.getFillColor(zone);
-    }
-
-    public int getStrokeColor(int zone) {
-        // Handle Miss-shots
-        if (isOutOfRange(zone)) {
-            return BLACK;
-        }
-        return de.dreier.mytargets.shared.utils.Color.getStrokeColor(model.getFillColor(zone));
-    }
-
-    public int getContrastColor(int zone) {
-        // Handle Miss-shots
-        if (isOutOfRange(zone)) {
-            return BLACK;
-        }
-        return Color.getContrast(model.getFillColor(zone));
-    }
-
-    public int getTextColor(int zone) {
-        // Handle Miss-shots
-        if (isOutOfRange(zone)) {
-            return WHITE;
-        }
-        return Color.getContrast(model.getFillColor(zone));
-    }
-
-    private boolean isOutOfRange(int zone) {
-        return zone < 0 || zone >= getZones();
     }
 
     @Override

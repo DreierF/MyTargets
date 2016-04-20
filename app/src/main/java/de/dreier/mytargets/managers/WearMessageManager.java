@@ -67,10 +67,8 @@ public class WearMessageManager
         HashSet<String> results = new HashSet<>();
         NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient)
                 .await();
-        if (nodes != null) {
-            for (Node node : nodes.getNodes()) {
-                results.add(node.getId());
-            }
+        for (Node node : nodes.getNodes()) {
+            results.add(node.getId());
         }
         return results;
     }
