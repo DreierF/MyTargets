@@ -41,7 +41,7 @@ import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.models.target.TargetDrawable;
+import de.dreier.mytargets.shared.targets.TargetDrawable;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;

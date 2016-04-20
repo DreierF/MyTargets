@@ -17,8 +17,8 @@ import java.util.Map;
 
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.models.target.TargetDrawable;
-import de.dreier.mytargets.shared.models.target.TargetFactory;
+import de.dreier.mytargets.shared.targets.TargetDrawable;
+import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.utils.Pair;
 
 public class PasseDataSource extends IdProviderDataSource<Passe> {

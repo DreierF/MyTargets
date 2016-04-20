@@ -16,7 +16,7 @@ import android.widget.TextView;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.target.TargetDrawable;
+import de.dreier.mytargets.shared.targets.TargetDrawable;
 
 public class TargetSelector extends SelectorBase<Target> {
 

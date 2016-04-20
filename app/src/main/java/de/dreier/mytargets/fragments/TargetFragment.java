@@ -27,8 +27,8 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.shared.models.Diameter;
-import de.dreier.mytargets.shared.models.target.TargetDrawable;
-import de.dreier.mytargets.shared.models.target.TargetFactory;
+import de.dreier.mytargets.shared.targets.TargetDrawable;
+import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.utils.MyBackupAgent;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 

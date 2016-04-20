@@ -14,8 +14,8 @@ import java.util.List;
 
 import de.dreier.mytargets.models.ArrowStatistic;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.models.target.TargetDrawable;
-import de.dreier.mytargets.shared.models.target.TargetFactory;
+import de.dreier.mytargets.shared.targets.TargetDrawable;
+import de.dreier.mytargets.shared.targets.TargetFactory;
 
 public class ArrowStatisticDataSource extends DataSourceBase {
 

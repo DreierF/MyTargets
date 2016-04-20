@@ -28,7 +28,7 @@ import de.dreier.mytargets.managers.dao.PasseDataSource;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.target.TargetDrawable;
+import de.dreier.mytargets.shared.targets.TargetDrawable;
 
 public class TargetImage {
 

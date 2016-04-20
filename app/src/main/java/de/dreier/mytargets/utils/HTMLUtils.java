@@ -31,7 +31,7 @@ import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
-import de.dreier.mytargets.shared.models.target.TargetDrawable;
+import de.dreier.mytargets.shared.targets.TargetDrawable;
 
 public class HTMLUtils {
 

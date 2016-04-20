@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.text.TextPaint;
 
-import de.dreier.mytargets.shared.models.target.TargetDrawable;
+import de.dreier.mytargets.shared.targets.TargetDrawable;
 
 public class Circle {
     private final float density;

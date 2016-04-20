@@ -15,22 +15,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.target.CombinedSpot;
-import de.dreier.mytargets.shared.models.target.DAIR3D;
-import de.dreier.mytargets.shared.models.target.IFAAAnimal;
-import de.dreier.mytargets.shared.models.target.NFAAAnimal;
-import de.dreier.mytargets.shared.models.target.NFAAExpertField;
-import de.dreier.mytargets.shared.models.target.NFAAField;
-import de.dreier.mytargets.shared.models.target.NFAAHunter;
-import de.dreier.mytargets.shared.models.target.NFAAIndoor;
-import de.dreier.mytargets.shared.models.target.NFASField;
-import de.dreier.mytargets.shared.models.target.TargetDrawable;
-import de.dreier.mytargets.shared.models.target.Vertical3Spot;
-import de.dreier.mytargets.shared.models.target.WA5RingTarget;
-import de.dreier.mytargets.shared.models.target.WA6RingTarget;
-import de.dreier.mytargets.shared.models.target.WAField;
-import de.dreier.mytargets.shared.models.target.WAFullTarget;
-import de.dreier.mytargets.shared.models.target.Worcester;
+import de.dreier.mytargets.shared.targets.CombinedSpot;
+import de.dreier.mytargets.shared.targets.DAIR3D;
+import de.dreier.mytargets.shared.targets.IFAAAnimal;
+import de.dreier.mytargets.shared.targets.NFAAAnimal;
+import de.dreier.mytargets.shared.targets.NFAAExpertField;
+import de.dreier.mytargets.shared.targets.NFAAField;
+import de.dreier.mytargets.shared.targets.NFAAHunter;
+import de.dreier.mytargets.shared.targets.NFAAIndoor;
+import de.dreier.mytargets.shared.targets.NFASField;
+import de.dreier.mytargets.shared.targets.TargetDrawable;
+import de.dreier.mytargets.shared.targets.Vertical3Spot;
+import de.dreier.mytargets.shared.targets.WA5RingTarget;
+import de.dreier.mytargets.shared.targets.WA6RingTarget;
+import de.dreier.mytargets.shared.targets.WAField;
+import de.dreier.mytargets.shared.targets.WAFullTarget;
+import de.dreier.mytargets.shared.targets.Worcester;
 @Parcel
 public class StandardRound implements IIdSettable {
     private static final int ASA = 1;

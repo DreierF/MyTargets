@@ -16,8 +16,8 @@ import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
 
-import de.dreier.mytargets.shared.models.target.TargetDrawable;
-import de.dreier.mytargets.shared.models.target.TargetFactory;
+import de.dreier.mytargets.shared.targets.TargetDrawable;
+import de.dreier.mytargets.shared.targets.TargetFactory;
 
 public class StatisticsDataSource extends DataSourceBase {
 

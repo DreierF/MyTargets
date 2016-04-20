@@ -17,7 +17,7 @@ import android.view.View;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.models.target.TargetDrawable;
+import de.dreier.mytargets.shared.targets.TargetDrawable;
 
 public class ArrowDispersionView extends View implements View.OnTouchListener {
     private static final float ZOOM_FACTOR = 3;

@@ -7,7 +7,7 @@ import org.parceler.Parcel;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.models.target.TargetDrawable;
+import de.dreier.mytargets.shared.targets.TargetDrawable;
 
 @Parcel
 public class ArrowStatistic implements Comparable<ArrowStatistic> {

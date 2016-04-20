@@ -24,7 +24,7 @@ import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.target.TargetDrawable;
+import de.dreier.mytargets.shared.targets.TargetDrawable;
 
 public class StandardRoundSelector extends SelectorBase<StandardRound> {
 
