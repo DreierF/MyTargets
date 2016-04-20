@@ -12,8 +12,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-import org.parceler.Parcels;
-
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Shot;
@@ -244,10 +242,10 @@ public class PasseDrawer {
     }
 
     public void saveState(Bundle b) {
-        b.putParcelable("pd_passe", Parcels.wrap(mPasse));
+        b.putParcelable("pd_passe", mPasse);
         b.putInt("pd_pressed", mPressed);
         b.putInt("pd_selected", mSelected);
-        b.putParcelable("pd_selected_pos", Parcels.wrap(mSelectedPosition));
+        b.putParcelable("pd_selected_pos", mSelectedPosition);
         b.putInt("pd_selected_radius", mSelectedRadius);
     }
 
@@ -255,7 +253,7 @@ public class PasseDrawer {
         mPasse = (Passe) b.getSerializable("pd_passe");
         mPressed = b.getInt("pd_pressed");
         mSelected = b.getInt("pd_selected");
-        mSelectedPosition = (Coordinate) b.getSerializable("pd_selected_pos");
+        mSelectedPosition = (Coordinate) b.getParcelable("pd_selected_pos");
         mSelectedRadius = b.getInt("pd_selected_radius");
     }
 }

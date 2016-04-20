@@ -19,7 +19,6 @@ public class TargetModelBase implements IIdProvider {
     protected long id;
     protected int nameRes;
     protected Zone[] zones;
-    protected boolean outsideIn = true;
     protected Diameter[] diameters;
     protected TargetDecoration decoration;
     protected boolean[] showAsX;
@@ -48,24 +47,12 @@ public class TargetModelBase implements IIdProvider {
         return context.getString(nameRes);
     }
 
-    public ZoneType getZoneType(int zone) {
-        return getZone(zone).type;
-    }
-
-    private Zone getZone(int zone) {
+    public Zone getZone(int zone) {
         return zones[zone];
-    }
-
-    public Coordinate getZoneMidpoint(int zone) {
-        return getZone(zone).midpoint;
     }
 
     public float getRadius(int zone) {
         return getZone(zone).radius;
-    }
-
-    public boolean scoresAsOutSideIn(int zone) {
-        return outsideIn;
     }
 
     public Diameter[] getDiameters() {
@@ -78,10 +65,6 @@ public class TargetModelBase implements IIdProvider {
 
     public int getZoneCount() {
         return zones.length;
-    }
-
-    public int getStrokeWidth(int zone) {
-        return getZone(zone).strokeWidth;
     }
 
     public int getPointsByZone(int zone, int scoringStyle, int arrow) {

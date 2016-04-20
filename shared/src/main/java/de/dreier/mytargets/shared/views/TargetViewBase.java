@@ -18,6 +18,7 @@ import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
+import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
 
 public abstract class TargetViewBase extends View implements View.OnTouchListener {
@@ -87,12 +88,12 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         ss.round = this.round;
         ss.passeDrawer = new Bundle();
         passeDrawer.saveState(ss.passeDrawer);
-        return Parcels.wrap(ss);
+        return ss;
     }
 
     @Override
     public void onRestoreInstanceState(Parcelable state) {
-        SavedState ss = Parcels.unwrap(state);
+        SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(ss.superState);
         this.currentArrow = ss.currentArrow;
         this.lastSetArrow = ss.lastSetArrow;
@@ -197,12 +198,25 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected abstract boolean selectPreviousShots(MotionEvent motionEvent, float x, float y);
 
     @Parcel
-    public static class SavedState {
+    public static class SavedState implements Parcelable {
+        public static final Creator<SavedState> CREATOR
+                = new ParcelableUtil.Creator<>(SavedState.class);
         public Parcelable superState;
         public Bundle passeDrawer;
         public int currentArrow;
         public int lastSetArrow;
         public Passe passe;
         public RoundTemplate round;
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(android.os.Parcel parcel, int flags) {
+            parcel.writeParcelable(Parcels.wrap(this), flags);
+        }
+
     }
 }

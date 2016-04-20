@@ -78,9 +78,7 @@ public class TargetDrawable extends Drawable {
     private Paint paintFill;
     private Paint paintStroke;
     private TextPaint paintText;
-    public TargetDrawable() {
-        initPaint();
-    }
+
     public TargetDrawable(Target target) {
         this.target = target;
         this.model = target.getModel();
@@ -119,12 +117,15 @@ public class TargetDrawable extends Drawable {
         if (paintFill == null) {
             initPaint();
         }
-        for (int i = 0; i < model.facePositions.length; i++) {
-            Rect targetRect = getTargetBounds(rect, i);
-            for (int zone = getZones() - 1; zone >= 0; zone--) {
-                paintFill.setColor(model.getFillColor(zone));
-                paintStroke.setColor(model.getStrokeColor(zone));
-                paintStroke.setStrokeWidth(model.getStrokeWidth(zone) * targetRect.width() / 1000.0f);
+        for (int faceIndex = 0; faceIndex < model.facePositions.length; faceIndex++) {
+            Rect targetRect = getTargetBounds(rect, faceIndex);
+            for (int i = getZones() - 1; i >= 0; i--) {
+                if(!model.shouldDrawZone(i, target.scoringStyle))
+                    continue;
+                Zone zone = model.getZone(i);
+                paintFill.setColor(zone.fillColor);
+                paintStroke.setColor(zone.strokeColor);
+                paintStroke.setStrokeWidth(zone.strokeWidth * targetRect.width() / 1000.0f);
                 drawZone(canvas, targetRect, zone);
             }
             onPostDraw(canvas, targetRect);
@@ -218,11 +219,11 @@ public class TargetDrawable extends Drawable {
         canvas.drawLine(pos[0] - radius, pos[1], pos[0] + radius, pos[1], paintStroke);
     }
 
-    public void drawZone(Canvas canvas, Rect rect, int zone) {
-        switch (model.getZoneType(zone)) {
+    public void drawZone(Canvas canvas, Rect rect, Zone zone) {
+        switch (zone.type) {
             case CIRCLE:
-                final Coordinate midpoint = model.getZoneMidpoint(zone);
-                drawStrokeCircle(canvas, rect, midpoint.x, midpoint.y, model.getRadius(zone));
+                final Coordinate midpoint = zone.midpoint;
+                drawStrokeCircle(canvas, rect, midpoint.x, midpoint.y, zone.radius);
                 break;
             case HEART:
                 drawStrokePath(canvas, rect, heart);
@@ -274,7 +275,7 @@ public class TargetDrawable extends Drawable {
         float ax = x * 500;
         float ay = y * 500;
         for (int i = 0; i < getZones(); i++) {
-            if (isInZone(500.0f + ax, 500.0f + ay, i, model.scoresAsOutSideIn(i))) {
+            if (isInZone(500.0f + ax, 500.0f + ay, model.getZone(i))) {
                 return i;
             }
         }
@@ -285,16 +286,15 @@ public class TargetDrawable extends Drawable {
      * @param ax        x-Coordinate scaled to a 0 ... 1000 coordinate system
      * @param ay        y-Coordinate scaled to a 0 ... 1000 coordinate system
      * @param zone      0-based zone index where 0 is the smallest zone in the middle of the target
-     * @param outsideIn
      * @return
      */
-    protected boolean isInZone(float ax, float ay, int zone, boolean outsideIn) {
-        switch (model.getZoneType(zone)) {
+    protected boolean isInZone(float ax, float ay, Zone zone) {
+        switch (zone.type) {
             case CIRCLE:
-                Coordinate midpoint = model.getZoneMidpoint(zone);
+                Coordinate midpoint = zone.midpoint;
                 float distance = (ax - midpoint.x) * (ax - midpoint.x) + (ay - midpoint.y) * (ay - midpoint.y);
-                float adaptedRadius = model.getRadius(zone) +
-                        (model.scoresAsOutSideIn(zone) ? ARROW_RADIUS + model.getStrokeWidth(zone) / 2.0f : -ARROW_RADIUS);
+                float adaptedRadius = zone.radius +
+                        (zone.scoresAsOutsideIn ? ARROW_RADIUS + zone.strokeWidth / 2.0f : -ARROW_RADIUS);
                 return adaptedRadius * adaptedRadius > distance;
             case HEART:
                 return heartRegion.contains((int) ax, (int) ay);

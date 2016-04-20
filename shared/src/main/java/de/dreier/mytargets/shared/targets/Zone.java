@@ -9,6 +9,7 @@ public class Zone {
     final int fillColor;
     final int strokeColor;
     final int strokeWidth;
+    final boolean scoresAsOutsideIn = true;
 
     public Zone(float radius, int fillColor, int strokeColor, int strokeWidth) {
         this.type = ZoneType.CIRCLE;

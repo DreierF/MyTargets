@@ -1,18 +1,27 @@
 package de.dreier.mytargets.shared.models;
 
-import org.parceler.Parcel;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import org.parceler.Parcels;
 
 import java.util.Arrays;
 
-@Parcel
-public class Passe implements IIdSettable {
+import de.dreier.mytargets.shared.utils.ParcelableUtil;
+
+@org.parceler.Parcel
+public class Passe implements IIdSettable, Parcelable {
+    public static final ParcelableUtil.Creator<Passe> CREATOR
+            = new ParcelableUtil.Creator<>(Passe.class);
+
     protected long id;
-    public Shot[] shot;
-    public long roundId;
     public int index;
+    public long roundId;
+    public Shot[] shot;
     public boolean exact;
 
-    public Passe() {}
+    public Passe() {
+    }
 
     public Passe(int ppp) {
         shot = new Shot[ppp];
@@ -26,11 +35,14 @@ public class Passe implements IIdSettable {
         shot = p.shot.clone();
     }
 
-    public void setId(long id) {
-        this.id = id;
-        for (Shot s : shot) {
-            s.passe = id;
-        }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeParcelable(Parcels.wrap(this), flags);
     }
 
     public void sort() {
@@ -42,6 +54,13 @@ public class Passe implements IIdSettable {
 
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+        for (Shot s : shot) {
+            s.passe = id;
+        }
     }
 
     @Override
