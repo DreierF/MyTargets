@@ -14,6 +14,9 @@
     <string name="xlarge">XLarge</string>
     <string name="unknown">Unknown</string>
 
+    <string name="wind">Wind</string>
+    <string name="location">Location</string>
+
     <string name="bft_0">0 Bft: Windless</string>
     <string name="bft_1">1 Bft: Leaves do not move</string>
     <string name="bft_2">2 Bft: Leaves begin to move</string>

@@ -31,7 +31,7 @@ public class ArrowNumberDataSource extends IdProviderDataSource<ArrowNumber> {
     }
 
     @Override
-    public ContentValues getContentValues(ArrowNumber arrowNumber) {
+    protected ContentValues getContentValues(ArrowNumber arrowNumber) {
         ContentValues values = new ContentValues();
         values.put(NUMBER_VALUE, arrowNumber.number);
         return values;

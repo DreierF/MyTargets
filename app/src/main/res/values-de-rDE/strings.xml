@@ -45,7 +45,7 @@
   <string name="d_times_s">%1$d mal %2$s\n</string>
   <string name="text">Text</string>
   <string name="dispersion_pattern">Trefferbild</string>
-  <string name="sharing_failed">Teilen fehlgeschlagen!</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
   <string name="send_exported">Sende exportierte Daten</string>
   <string name="exporting_failed">Export fehlgeschlagen!</string>
@@ -160,11 +160,9 @@
   <string name="restore_backup">Importiert ein Backup</string>
   <string name="weather">Wetter</string>
   <string name="environment">Umgebung</string>
-  <string name="wind">Wind</string>
   <string name="wind_speed">Windgeschwindigkeit</string>
   <string name="wind_direction">Windrichtung</string>
-  <string name="location">Standort</string>
-  <string name="sight_setting_removed">Visier Einstellung gelöscht!</string>
+  <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Metrisch</string>
   <string name="imperial">Imperial</string>
   <string name="undo">Rückgängig</string>
@@ -185,11 +183,8 @@
   <string name="not_matches_sheme">Die Eingabe entspricht nicht dem erwarteten Format wie z.B. 1,3,5</string>
   <string name="arrow_numbers_desc">Gib hier alle Pfeil Nummern ein die du zum Schießen verwendest z.B. 1,2,5,6,7</string>
   <string name="practice">Übung</string>
-  <string name="use_timer">Verwende Schießuhr</string>
   <string name="edit_training">Training bearbeiten</string>
   <string name="edit_standard_round">Standardrunde bearbeiten</string>
-  <string name="edit_bow">Bogen bearbeiten</string>
-  <string name="edit_arrow">Pfeil bearbeiten</string>
   <plurals name="arrow_deleted">
     <item quantity="one">Ein Pfeil gelöscht</item>
     <item quantity="other">%d Pfeile gelöscht</item>

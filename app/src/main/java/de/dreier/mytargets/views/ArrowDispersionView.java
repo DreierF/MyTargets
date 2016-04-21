@@ -21,11 +21,10 @@ import de.dreier.mytargets.shared.targets.TargetDrawable;
 
 public class ArrowDispersionView extends View implements View.OnTouchListener {
     private static final float ZOOM_FACTOR = 3;
-    protected int contentWidth;
-    protected int contentHeight;
-    protected float density;
-    protected int zoneCount;
-    private Paint fillPaint;
+    private int contentWidth;
+    private int contentHeight;
+    private final float density;
+    private final Paint fillPaint;
     private ArrayList<Shot> shots;
     private float orgRadius, orgMidX, orgMidY;
     private TargetDrawable target;
@@ -46,7 +45,7 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         density = getResources().getDisplayMetrics().density;
     }
 
-    public void reset() {
+    private void reset() {
         invalidate();
     }
 
@@ -83,7 +82,6 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
 
     public void setTarget(TargetDrawable target) {
         this.target = target;
-        zoneCount = target.getModel().getZoneCount();
         reset();
     }
 
@@ -138,7 +136,7 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         }
     }
 
-    protected void calcSizes() {
+    private void calcSizes() {
         float radH = (contentHeight - 10 * density) / 2.45f;
         float radW = (contentWidth - 20 * density) * 0.5f;
         orgRadius = (int) (Math.min(radW, radH));

@@ -21,8 +21,8 @@ import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.utils.Pair;
 
 public class PasseDataSource extends IdProviderDataSource<Passe> {
-    public static final String TABLE = "PASSE";
-    public static final String ROUND = "round";
+    private static final String TABLE = "PASSE";
+    private static final String ROUND = "round";
     private static final String IMAGE = "image";
     private static final String EXACT = "exact";
     public static final String CREATE_TABLE =

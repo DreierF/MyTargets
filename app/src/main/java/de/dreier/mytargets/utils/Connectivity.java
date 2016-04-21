@@ -5,14 +5,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 
-public class Connectivity {
+class Connectivity {
   
 	/**
 	 * Get the network info
 	 * @param context
 	 * @return
 	 */
-	public static NetworkInfo getNetworkInfo(Context context){
+	private static NetworkInfo getNetworkInfo(Context context){
 	    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 	    return cm.getActiveNetworkInfo();
 	}
@@ -63,7 +63,7 @@ public class Connectivity {
 	 * @param subType
 	 * @return
 	 */
-	public static boolean isConnectionFast(int type, int subType){
+	private static boolean isConnectionFast(int type, int subType){
 		if(type==ConnectivityManager.TYPE_WIFI){
 			return true;
 		}else if(type==ConnectivityManager.TYPE_MOBILE){

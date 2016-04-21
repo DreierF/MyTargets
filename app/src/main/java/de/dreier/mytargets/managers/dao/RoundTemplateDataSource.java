@@ -19,13 +19,13 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Target;
 
 public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate> {
-    public static final String TABLE = "ROUND_TEMPLATE";
+    private static final String TABLE = "ROUND_TEMPLATE";
     private static final String STANDARD_ID = "sid";
     private static final String INDEX = "r_index";
-    public static final String DISTANCE = "distance";
-    public static final String UNIT = "unit";
+    private static final String DISTANCE = "distance";
+    private static final String UNIT = "unit";
     private static final String PASSES = "passes";
-    public static final String ARROWS_PER_PASSE = "arrows";
+    private static final String ARROWS_PER_PASSE = "arrows";
     public static final String TARGET = "target";
     private static final String TARGET_SIZE = "size";
     private static final String TARGET_SIZE_UNIT = "target_unit";

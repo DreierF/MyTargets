@@ -13,4 +13,24 @@
   <string name="large">Duży</string>
   <string name="xlarge">Bardzo duży</string>
   <string name="unknown">Nieznany</string>
+  <string name="wind">Wind</string>
+  <string name="location">Location</string>
+  <string name="bft_0">0 Bft: Windless</string>
+  <string name="bft_1">1 Bft: Leaves do not move</string>
+  <string name="bft_2">2 Bft: Leaves begin to move</string>
+  <string name="bft_3">3 Bft: Light flags begin to move</string>
+  <string name="bft_4">4 Bft: Small branches begin to move</string>
+  <string name="bft_5">5 Bft: Small trees move</string>
+  <string name="bft_6">6 Bft: Big branches move</string>
+  <string name="bft_7">7 Bft: Complete trees move</string>
+  <string name="bft_8">8 Bft: Small branches break</string>
+  <string name="bft_9">9 Bft: Storm damage</string>
+  <string name="front">from front</string>
+  <string name="back">from back</string>
+  <string name="left">from left</string>
+  <string name="right">from right</string>
+  <string name="left_front">from front left</string>
+  <string name="right_front">from front right</string>
+  <string name="left_back">from back left</string>
+  <string name="right_back">from back right</string>
 </resources>

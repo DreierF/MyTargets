@@ -147,7 +147,7 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
      * Set the background drawable to be used in selection mode.
      * @param selectionModeBackgroundDrawable A background drawable
      */
-    public void setSelectionModeBackgroundDrawable(Drawable selectionModeBackgroundDrawable) {
+    private void setSelectionModeBackgroundDrawable(Drawable selectionModeBackgroundDrawable) {
         mSelectionModeBackgroundDrawable = selectionModeBackgroundDrawable;
 
         if (mIsSelectable) {
@@ -159,7 +159,7 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
      * Set the background drawable to use when not in selection mode.
      * @param defaultModeBackgroundDrawable A background drawable
      */
-    public void setDefaultModeBackgroundDrawable(Drawable defaultModeBackgroundDrawable) {
+    private void setDefaultModeBackgroundDrawable(Drawable defaultModeBackgroundDrawable) {
         mDefaultModeBackgroundDrawable = defaultModeBackgroundDrawable;
 
         if (!mIsSelectable) {
@@ -172,7 +172,7 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
      *
      * @param defaultModeStateListAnimator A state list animator
      */
-    public void setDefaultModeStateListAnimator(StateListAnimator defaultModeStateListAnimator) {
+    private void setDefaultModeStateListAnimator(StateListAnimator defaultModeStateListAnimator) {
         mDefaultModeStateListAnimator = defaultModeStateListAnimator;
     }
 

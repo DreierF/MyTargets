@@ -146,6 +146,6 @@ public class EnvironmentFragment extends Fragment {
         e.windSpeed = (int) windSpeed.getSelectedItem().getId();
         e.windDirection = (int) windDirection.getSelectedItem().getId();
         e.location = location.getText().toString();
-        listener.onItemSelected(e);
+        listener.onItemSelected(Parcels.wrap(e));
     }
 }

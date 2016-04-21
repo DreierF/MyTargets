@@ -37,10 +37,10 @@ public abstract class EditableFragmentBase<T extends IIdSettable> extends Fragme
 
 
     @PluralsRes
-    protected int itemTypeDelRes;
+    int itemTypeDelRes;
 
-    protected IdProviderDataSource<T> dataSource;
-    final protected MultiSelector mSelector = new MultiSelector();
+    IdProviderDataSource<T> dataSource;
+    final MultiSelector mSelector = new MultiSelector();
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

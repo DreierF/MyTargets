@@ -17,14 +17,14 @@ public abstract class IdProviderDataSource<T extends IIdSettable> extends DataSo
     public static final String ID = "_id";
 
     // Database fields
-    protected String table;
+    private final String table;
 
-    public IdProviderDataSource(Context context, String table) {
+    IdProviderDataSource(Context context, String table) {
         super(context);
         this.table = table;
     }
 
-    public IdProviderDataSource(Context context, String table, DatabaseManager dbHelper, SQLiteDatabase database) {
+    IdProviderDataSource(Context context, String table, DatabaseManager dbHelper, SQLiteDatabase database) {
         super(context, dbHelper, database);
         this.table = table;
     }

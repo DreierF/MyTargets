@@ -29,8 +29,8 @@ public class Locator implements LocationListener {
         NETWORK_THEN_GPS
     }
 
-    private Context context;
-    private LocationManager locationManager;
+    private final Context context;
+    private final LocationManager locationManager;
     private Locator.Method method;
     private Locator.Listener callback;
 

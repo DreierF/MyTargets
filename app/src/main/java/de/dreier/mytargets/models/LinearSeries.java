@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class LinearSeries {
+class LinearSeries {
 
     private final Paint mPaint = new Paint();
 

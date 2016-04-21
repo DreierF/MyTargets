@@ -35,14 +35,14 @@ import android.os.Parcelable;
  */
 public class RectD implements Parcelable {
     public long left;
-    public long top;
-    public long right;
+    private long top;
+    private long right;
     public long bottom;
 
     /**
      * Create a new empty RectD. All coordinates are initialized to 0.
      */
-    public RectD() {
+    private RectD() {
     }
 
     @Override
@@ -131,7 +131,7 @@ public class RectD implements Parcelable {
      *
      * @param in The parcel to read the rectangle's coordinates from
      */
-    void readFromParcel(Parcel in) {
+    private void readFromParcel(Parcel in) {
         left = in.readLong();
         top = in.readLong();
         right = in.readLong();

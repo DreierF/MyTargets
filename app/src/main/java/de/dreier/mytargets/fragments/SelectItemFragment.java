@@ -52,7 +52,7 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
     /**
      * Adapter for the fragment's RecyclerView
      */
-    protected NowListAdapter<T> mAdapter;
+    NowListAdapter<T> mAdapter;
 
     /**
      * Listener which gets called when item gets selected
@@ -112,7 +112,7 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
      * @param list    Content to show
      * @param adapter New instance of an adapter which is able to show the given list
      */
-    protected void setList(List<T> list, NowListAdapter<T> adapter) {
+    void setList(List<T> list, NowListAdapter<T> adapter) {
         if (mRecyclerView.getAdapter() == null) {
             mAdapter = adapter;
             mAdapter.setList(list);
@@ -162,7 +162,7 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
     /**
      * Returns the selected item to the calling activity
      */
-    protected void onSaveItem() {
+    void onSaveItem() {
         Intent data = new Intent();
         data.putExtra(ITEM, Parcels.wrap(onSave()));
         getActivity().setResult(Activity.RESULT_OK, data);
@@ -175,7 +175,7 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
      *
      * @return The selected item
      */
-    protected T onSave() {
+    T onSave() {
         return mAdapter.getItem(mSelector.getSelectedPosition());
     }
 }

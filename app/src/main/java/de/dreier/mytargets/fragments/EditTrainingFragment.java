@@ -46,6 +46,7 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.views.selector.ArrowSelector;
 import de.dreier.mytargets.views.selector.BowSelector;
 import de.dreier.mytargets.views.selector.DistanceSelector;
@@ -62,7 +63,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
     public static final int FREE_TRAINING = 0;
     public static final int TRAINING_WITH_STANDARD_ROUND = 1;
-    public static final int COMPETITION = 2;
+    private static final int COMPETITION = 2;
 
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private static final int REQ_SELECTED_DATE = 2;
@@ -277,7 +278,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             if (trainingType == 0) {
                 // Generate and save standard round template for practice
                 standardRound = new StandardRound();
-                standardRound.club = StandardRound.CUSTOM_PRACTICE;
+                standardRound.club = StandardRoundFactory.CUSTOM_PRACTICE;
                 standardRound.name = getString(R.string.practice);
                 standardRound.indoor = indoor.isChecked();
                 ArrayList<RoundTemplate> rounds = new ArrayList<>();

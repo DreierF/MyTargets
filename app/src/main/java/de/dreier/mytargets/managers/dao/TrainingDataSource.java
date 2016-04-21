@@ -19,18 +19,18 @@ import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.Training;
 
 public class TrainingDataSource extends IdProviderDataSource<Training> {
-    public static final String TABLE = "TRAINING";
-    public static final String TITLE = "title";
-    public static final String DATE = "datum";
-    public static final String ARROW = "arrow";
-    public static final String BOW = "bow";
+    private static final String TABLE = "TRAINING";
+    private static final String TITLE = "title";
+    private static final String DATE = "datum";
+    private static final String ARROW = "arrow";
+    private static final String BOW = "bow";
     private static final String STANDARD_ROUND = "standard_round";
     private static final String ARROW_NUMBERING = "arrow_numbering";
     private static final String TIME_PER_PASSE = "time";
-    public static final String WEATHER = "weather";
-    public static final String WIND_SPEED = "wind_speed";
-    public static final String WIND_DIRECTION = "wind_direction";
-    public static final String LOCATION = "location";
+    private static final String WEATHER = "weather";
+    private static final String WIND_SPEED = "wind_speed";
+    private static final String WIND_DIRECTION = "wind_direction";
+    private static final String LOCATION = "location";
 
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " ( " +

@@ -16,10 +16,10 @@ public class RoundedTextDrawable extends Drawable {
     private final Paint mPaint;
     private final RectF mRectF;
     private final String mText;
-    private Paint mTextPaint;
-    private Rect mTextBounds;
+    private final Paint mTextPaint;
+    private final Rect mTextBounds;
 
-    public RoundedTextDrawable(String text, int bgColor, int textColor) {
+    private RoundedTextDrawable(String text, int bgColor, int textColor) {
         mRectF = new RectF();
         mTextBounds = new Rect();
         mPaint = new Paint();

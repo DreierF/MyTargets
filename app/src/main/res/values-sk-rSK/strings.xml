@@ -49,7 +49,7 @@
   <string name="d_times_s">%1$d krát %2$s\n</string>
   <string name="text">Text</string>
   <string name="dispersion_pattern">Rozptyl</string>
-  <string name="sharing_failed">Zdieľanie zlyhalo!</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
   <string name="send_exported">Poslať exportované údaje</string>
   <string name="exporting_failed">Exportovanie zlyhalo!</string>
@@ -167,11 +167,9 @@
   <string name="restore_backup">Obnovenie zálohy</string>
   <string name="weather">Počasie</string>
   <string name="environment">Prostredie</string>
-  <string name="wind">Vietor</string>
   <string name="wind_speed">Rýchlosť vetra</string>
   <string name="wind_direction">Smer vetra</string>
-  <string name="location">Poloha</string>
-  <string name="sight_setting_removed">Nastavenie zameriavača zmazané!</string>
+  <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Metrické</string>
   <string name="imperial">Imperiálne</string>
   <string name="undo">Späť</string>
@@ -179,7 +177,7 @@
   <string name="expand_collapse">Rozbaliť alebo zbaliť</string>
   <string name="new_round_template">Nová šablóna</string>
   <string name="arrow_numbers">Čísla šípov</string>
-  <string name="round_removed">Kolo odstránené!</string>
+  <string name="round_removed">Round deleted!</string>
   <string name="custom_round">Vlastné kolo</string>
   <string name="filter">Filter</string>
   <string name="club">Klub</string>
@@ -192,11 +190,8 @@
   <string name="not_matches_sheme">Vstup nezodpovedá očakávanému formátu ako 1,3,5</string>
   <string name="arrow_numbers_desc">Zadajte všetky čísla šípov, ktoré používate pre streľbu napr 1,2,5,6,7</string>
   <string name="practice">Tréning</string>
-  <string name="use_timer">Použiť časovač</string>
   <string name="edit_training">Upraviť tréning</string>
   <string name="edit_standard_round">Úprava štandardného kola</string>
-  <string name="edit_bow">Upraviť luk</string>
-  <string name="edit_arrow">Upraviť šípy</string>
   <plurals name="arrow_deleted">
     <item quantity="one">%d šíp odstránený</item>
     <item quantity="few">%d šípy odstránené</item>

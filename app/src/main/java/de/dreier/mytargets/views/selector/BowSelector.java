@@ -9,36 +9,24 @@ package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.Bow;
-import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 
-public class BowSelector extends SelectorBase<Bow> {
+public class BowSelector extends ImageSelectorBase<Bow> {
 
     public BowSelector(Context context) {
         this(context, null);
     }
 
     public BowSelector(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.item_image);
+        super(context, attrs);
         setOnClickActivity(ItemSelectActivity.BowActivity.class);
         setAddButtonIntent(SimpleFragmentActivity.EditBowActivity.class, (data) -> setItemId(0));
-    }
-
-    @Override
-    protected void bindView() {
-        ImageView img = (ImageView) mView.findViewById(R.id.image);
-        TextView name = (TextView) mView.findViewById(R.id.name);
-        name.setText(item.name);
-        img.setImageDrawable(new RoundedAvatarDrawable(item.getThumbnail()));
     }
 
     public void setItemId(long bow) {

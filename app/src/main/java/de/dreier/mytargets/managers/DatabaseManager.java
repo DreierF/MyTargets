@@ -38,6 +38,7 @@ import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.BackupUtils;
 
 public class DatabaseManager extends SQLiteOpenHelper {
@@ -117,7 +118,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private void fillStandardRound(SQLiteDatabase db) {
         db.execSQL(StandardRoundDataSource.CREATE_TABLE);
         db.execSQL(RoundTemplateDataSource.CREATE_TABLE);
-        ArrayList<StandardRound> rounds = StandardRound.initTable(mContext);
+        ArrayList<StandardRound> rounds = StandardRoundFactory.initTable(mContext);
         StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(mContext, this, db);
         for (StandardRound round : rounds) {
             standardRoundDataSource.update(round);
@@ -347,7 +348,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         HashSet<Long> sid = new HashSet<>();
         StandardRound sr = new StandardRound();
         sr.name = mContext.getString(R.string.practice);
-        sr.club = StandardRound.CUSTOM_PRACTICE;
+        sr.club = StandardRoundFactory.CUSTOM_PRACTICE;
         if (res.moveToFirst()) {
             sr.indoor = res.getInt(5) == 1;
             do {

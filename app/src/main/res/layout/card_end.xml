@@ -6,7 +6,6 @@
     android:background="?android:attr/selectableItemBackground">
 
     <LinearLayout
-        android:id="@+id/passe_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="false"

@@ -8,9 +8,9 @@ import java.util.List;
 import de.dreier.mytargets.managers.dao.DataSourceBase;
 
 public class DataLoaderBase<T, DS extends DataSourceBase> extends AsyncTaskLoader<List<T>> {
-    protected DS mDataSource;
-    protected BackgroundAction<T> backgroundAction;
-    protected List<T> mLastDataList = null;
+    final DS mDataSource;
+    private final BackgroundAction<T> backgroundAction;
+    private List<T> mLastDataList = null;
 
     public DataLoaderBase(Context context, DS dataSource, BackgroundAction<T> a) {
         super(context);
@@ -104,7 +104,7 @@ public class DataLoaderBase<T, DS extends DataSourceBase> extends AsyncTaskLoade
         mLastDataList = null;
     }
 
-    protected void emptyDataList(List<T> dataList) {
+    private void emptyDataList(List<T> dataList) {
         if (dataList != null && dataList.size() > 0) {
             for (int i = 0; i < dataList.size(); i++) {
                 dataList.remove(i);

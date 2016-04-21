@@ -45,7 +45,7 @@
   <string name="d_times_s">%1$d fois %2$s\n</string>
   <string name="text">Texte</string>
   <string name="dispersion_pattern">Diagramme de dispersion</string>
-  <string name="sharing_failed">Échec du partage!</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
   <string name="send_exported">Envoyer les données exportées</string>
   <string name="exporting_failed">L\'export n\'a pas fonctionné!</string>
@@ -160,11 +160,9 @@
   <string name="restore_backup">Importer une sauvegarde</string>
   <string name="weather">Météo</string>
   <string name="environment">Environnement</string>
-  <string name="wind">Vent</string>
   <string name="wind_speed">Vitesse du vent</string>
   <string name="wind_direction">Direction du vent</string>
-  <string name="location">Lieu</string>
-  <string name="sight_setting_removed">Réglage du viseur effacé!</string>
+  <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Métrique</string>
   <string name="imperial">Imperial</string>
   <string name="undo">Annuler</string>
@@ -172,7 +170,7 @@
   <string name="expand_collapse">Développer/réduire</string>
   <string name="new_round_template">Nouveau modèle</string>
   <string name="arrow_numbers">Numéros de flèche</string>
-  <string name="round_removed">Série effacée !</string>
+  <string name="round_removed">Round deleted!</string>
   <string name="custom_round">Série personnalisée</string>
   <string name="filter">Filtre</string>
   <string name="club">Compagnie/Club</string>
@@ -185,11 +183,8 @@
   <string name="not_matches_sheme">L\'entrée ne correspond pas au format attendu, par exemple 1,3,5</string>
   <string name="arrow_numbers_desc">Entrez tous les numéros de flèche que vous utilisez pour le tir, par exemple 1,2,5,6,7</string>
   <string name="practice">Entraînement</string>
-  <string name="use_timer">Utiliser le chronomètre</string>
   <string name="edit_training">Modifier la séance</string>
   <string name="edit_standard_round">Modifier l\'épreuve standard</string>
-  <string name="edit_bow">Modifier l\'arc</string>
-  <string name="edit_arrow">Modifier la flèche</string>
   <plurals name="arrow_deleted">
     <item quantity="one">Une flèche effacée</item>
     <item quantity="other">%d flèches supprimés</item>

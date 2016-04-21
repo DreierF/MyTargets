@@ -135,8 +135,5 @@ class UploadSourceFileTask extends DefaultTask {
                 println file.getName() + " uploaded to crowdin"
             }
         }
-
-
     }
-
 }

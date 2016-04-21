@@ -174,10 +174,8 @@
   <string name="restore_backup">Obnovi varnostno kopijo</string>
   <string name="weather">Weather</string>
   <string name="environment">Environment</string>
-  <string name="wind">Wind</string>
   <string name="wind_speed">Wind speed</string>
   <string name="wind_direction">Wind direction</string>
-  <string name="location">Location</string>
   <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Metric</string>
   <string name="imperial">Imperial</string>
@@ -199,11 +197,8 @@
   <string name="not_matches_sheme">Input does not match the expected format like 1,3,5</string>
   <string name="arrow_numbers_desc">Enter all arrow number that you use for shooting e.g. 1,2,5,6,7</string>
   <string name="practice">Practice</string>
-  <string name="use_timer">Use timer</string>
   <string name="edit_training">Edit Training</string>
   <string name="edit_standard_round">Edit Standard Round</string>
-  <string name="edit_bow">Edit Bow</string>
-  <string name="edit_arrow">Edit Arrow</string>
   <plurals name="arrow_deleted">
     <item quantity="one">%d arrow deleted</item>
     <item quantity="two">%d arrows deleted</item>

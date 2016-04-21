@@ -11,11 +11,15 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
+import butterknife.Bind;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.models.WindDirection;
 
 public class WindDirectionSelector extends SelectorBase<WindDirection> {
+
+    @Bind(android.R.id.text1)
+    TextView name;
 
     public WindDirectionSelector(Context context) {
         this(context, null);
@@ -28,7 +32,6 @@ public class WindDirectionSelector extends SelectorBase<WindDirection> {
 
     @Override
     protected void bindView() {
-        TextView name = (TextView) mView.findViewById(android.R.id.text1);
         name.setText(item.name);
     }
 

@@ -18,7 +18,7 @@ import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.SightSetting;
 
 public class SightSettingDataSource extends IdProviderDataSource<SightSetting> {
-    public static final String TABLE = "VISIER";
+    private static final String TABLE = "VISIER";
     private static final String BOW = "bow";
     private static final String DISTANCE = "distance";
     private static final String UNIT = "unit";

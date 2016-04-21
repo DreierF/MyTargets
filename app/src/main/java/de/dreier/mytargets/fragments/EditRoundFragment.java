@@ -30,6 +30,7 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.views.NumberPicker;
 import de.dreier.mytargets.views.selector.DistanceSelector;
 import de.dreier.mytargets.views.selector.TargetSelector;
@@ -107,7 +108,7 @@ public class EditRoundFragment extends EditFragmentBase {
             notEditable.setVisibility(View.GONE);
             StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(getContext());
             StandardRound standardRound = standardRoundDataSource.get(round.info.standardRound);
-            if (standardRound.club != StandardRound.CUSTOM_PRACTICE) {
+            if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
                 distanceLayout.setVisibility(View.GONE);
             } else if (standardRound.getRounds().size() > 1) {
                 remove.setOnClickListener(v -> {
@@ -167,7 +168,7 @@ public class EditRoundFragment extends EditFragmentBase {
 
         round.comment = comment.getText().toString();
 
-        if (standardRound.club == StandardRound.CUSTOM_PRACTICE) {
+        if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE) {
             round.info.distance = distanceSpinner.getSelectedItem();
             new RoundTemplateDataSource(getContext()).update(round.info);
         }

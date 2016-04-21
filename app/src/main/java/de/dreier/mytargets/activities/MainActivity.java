@@ -11,6 +11,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -27,6 +28,8 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -123,6 +126,40 @@ public class MainActivity extends AppCompatActivity
         fabShowAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_label_show);
         fabHideAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_label_hide);
 
+        fabOpen.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                applyFabState(true);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        fabClose.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                applyFabState(false);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
         setSupportActionBar(toolbar);
         applyFabState(isFabOpen);
     }
@@ -146,6 +183,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        if(!isFabOpen) {
+            fab.setAnimation(null);
+            fab1.setAnimation(null);
+            fab2.setAnimation(null);
+            fab1Label.setAnimation(null);
+            fab2Label.setAnimation(null);
+        }
         applyFabState(isFabOpen);
     }
 
@@ -205,12 +249,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.fab1Label:
             case R.id.fab1:
                 startActivityAnimated(EditTrainingActivity.class, TRAINING_TYPE, FREE_TRAINING);
-                applyFabState(false);
+                isFabOpen = false;
                 break;
             case R.id.fab2Label:
             case R.id.fab2:
                 startActivityAnimated(EditTrainingActivity.class, TRAINING_TYPE, TRAINING_WITH_STANDARD_ROUND);
-                applyFabState(false);
+                isFabOpen = false;
                 break;
         }
     }
@@ -235,30 +279,35 @@ public class MainActivity extends AppCompatActivity
         overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
-    public void animateFAB() {
+    private void animateFAB() {
         if (isFabOpen) {
             fab.startAnimation(rotateBackward);
             fab1.startAnimation(fabClose);
             fab2.startAnimation(fabClose);
             fab1Label.startAnimation(fabHideAnimation);
             fab2Label.startAnimation(fabHideAnimation);
-            applyFabState(false);
+            overlayView.setAlpha(1);
+            overlayView.animate().alpha(0).start();
         } else {
             fab.startAnimation(rotateForward);
             fab1.startAnimation(fabOpen);
             fab2.startAnimation(fabOpen);
             fab1Label.startAnimation(fabShowAnimation);
             fab2Label.startAnimation(fabShowAnimation);
-            applyFabState(true);
+            overlayView.setAlpha(0);
+            overlayView.setVisibility(VISIBLE);
+            overlayView.animate().alpha(1).start();
         }
     }
 
-    public void applyFabState(boolean state) {
+    private void applyFabState(boolean state) {
         isFabOpen = state;
         final int visibility = isFabOpen ? VISIBLE : INVISIBLE;
+        //fab.setRotation(isFabOpen ? 135 : 0);
+        //fab1.setVisibility(visibility);
+        //fab2.setVisibility(visibility);
         fab1Label.setVisibility(visibility);
         fab2Label.setVisibility(visibility);
-        fab.setRotation(isFabOpen ? 135f : 0f);
         fab1.setClickable(isFabOpen);
         fab2.setClickable(isFabOpen);
         fab1Label.setClickable(isFabOpen);
@@ -272,11 +321,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemSelected(IIdProvider item) {
+    public void onItemSelected(Parcelable passedItem) {
+        IIdProvider item = Parcels.unwrap(passedItem);
         if (item instanceof Arrow) {
-            startActivityAnimated(EditArrowActivity.class, ARROW_ID, item.getId());
+            startActivityAnimated(EditArrowActivity.class, ARROW_ID, ((Arrow) item).getId());
         } else if (item instanceof Bow) {
-            startActivityAnimated(EditBowActivity.class, BOW_ID, item.getId());
+            startActivityAnimated(EditBowActivity.class, BOW_ID, ((Bow) item).getId());
         } else {
             startActivityAnimated(EditTrainingActivity.class, ITEM_ID, item.getId());
         }

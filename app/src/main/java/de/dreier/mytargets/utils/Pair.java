@@ -9,10 +9,10 @@ package de.dreier.mytargets.utils;
 public class Pair<S, T> {
 
     /** The first element. */
-    protected S first;
+    private S first;
 
     /** The second element. */
-    protected T second;
+    private T second;
 
     /** Constructor. */
     public Pair(S first, T second) {

@@ -95,14 +95,14 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
     private boolean fabIsShown;
     
     private final int defaultDrawable;
-    int mToolbarColor;
-    int mFlexibleSpaceImageHeight;
-    int mFlexibleSpaceShowFabOffset;
-    int mLeftSpace;
-    int fabMargin;
+    private int mToolbarColor;
+    private int mFlexibleSpaceImageHeight;
+    private int mFlexibleSpaceShowFabOffset;
+    private int mLeftSpace;
+    private int fabMargin;
     private int mActionBarSize;
 
-    public EditWithImageFragmentBase(int layoutRes, int defaultDrawable) {
+    EditWithImageFragmentBase(int layoutRes, int defaultDrawable) {
         this.layoutRes = layoutRes;
         this.defaultDrawable = defaultDrawable;
     }
@@ -172,11 +172,11 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
         return rootView;
     }
 
-    public String getName() {
+    String getName() {
         return titleView.getText().toString();
     }
 
-    public void setTitle(String title) {
+    void setTitle(String title) {
         titleView.setText(title);
     }
 

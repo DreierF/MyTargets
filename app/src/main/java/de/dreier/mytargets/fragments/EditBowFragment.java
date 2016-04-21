@@ -43,7 +43,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
     private static final int HORSE_BOW = 4;
     private static final int YUMI = 5;
 
-    long mBowId = -1;
+    private long mBowId = -1;
 
     @Bind(R.id.recurve)
     RadioButton recurveBow;

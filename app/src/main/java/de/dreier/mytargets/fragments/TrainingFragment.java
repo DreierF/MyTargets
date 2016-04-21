@@ -49,6 +49,7 @@ import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.HTMLUtils;
 import de.dreier.mytargets.utils.HeaderBindingHolder;
@@ -294,7 +295,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
             StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(getContext());
             StandardRound standardRound = standardRoundDataSource.get(training.standardRoundId);
             if (roundIndex + 1 == rounds.size() &&
-                    standardRound.club == StandardRound.CUSTOM_PRACTICE) {
+                    standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE) {
                 Intent i = new Intent(getContext(), SimpleFragmentActivity.EditRoundActivity.class);
                 i.putExtra(EditRoundFragment.TRAINING_ID, mTraining);
                 startActivity(i);
@@ -308,7 +309,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         @Override
         protected HeaderViewHolder getTopLevelViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_round, parent, false);
+                    .inflate(R.layout.item_header_round, parent, false);
             return new HeaderViewHolder(itemView);
         }
 

@@ -1,4 +1,4 @@
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.shared.utils;
 
 /*
  * Copyright 2013 Evelio Tarazona Cáceres <evelio@evelio.info>

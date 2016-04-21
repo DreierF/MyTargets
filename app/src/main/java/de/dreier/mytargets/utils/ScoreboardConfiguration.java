@@ -12,7 +12,7 @@ public class ScoreboardConfiguration {
     boolean showDispersionPattern;
     boolean showPointsColored;
 
-    public ScoreboardConfiguration() {
+    private ScoreboardConfiguration() {
     }
 
     public static ScoreboardConfiguration fromDisplaySettings(Context context) {

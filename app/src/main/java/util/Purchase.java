@@ -23,15 +23,15 @@ import org.json.JSONObject;
  */
 public class Purchase {
     final String mItemType;  // ITEM_TYPE_INAPP or ITEM_TYPE_SUBS
-    String mOrderId;
-    String mPackageName;
-    String mSku;
-    long mPurchaseTime;
-    int mPurchaseState;
-    String mDeveloperPayload;
-    String mToken;
-    final String mOriginalJson;
-    String mSignature;
+    private String mOrderId;
+    private String mPackageName;
+    private String mSku;
+    private long mPurchaseTime;
+    private int mPurchaseState;
+    private String mDeveloperPayload;
+    private String mToken;
+    private final String mOriginalJson;
+    private String mSignature;
 
     public Purchase(String itemType, String jsonPurchaseInfo, String signature)
             throws JSONException {

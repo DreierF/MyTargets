@@ -8,13 +8,12 @@ package de.dreier.mytargets.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.TextView;
-
-import org.parceler.Parcels;
 
 import butterknife.Bind;
 import de.dreier.mytargets.R;
@@ -26,7 +25,6 @@ import de.dreier.mytargets.fragments.FragmentBase;
 import de.dreier.mytargets.fragments.TargetFragment;
 import de.dreier.mytargets.fragments.WindDirectionFragment;
 import de.dreier.mytargets.fragments.WindSpeedFragment;
-import de.dreier.mytargets.shared.models.IIdProvider;
 
 public abstract class ItemSelectActivity extends SimpleFragmentActivity
         implements FragmentBase.OnItemSelectedListener,
@@ -71,9 +69,9 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
     }
 
     @Override
-    public void onItemSelected(IIdProvider item) {
+    public void onItemSelected(Parcelable item) {
         Intent data = new Intent();
-        data.putExtra(ITEM, Parcels.wrap(item));
+        data.putExtra(ITEM, item);
         setResult(RESULT_OK, data);
         onBackPressed();
     }

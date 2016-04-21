@@ -103,7 +103,7 @@ public class DistanceFragment extends Fragment implements TextInputDialog.OnClic
         } catch (NumberFormatException e) {
             // leave distance as it is
         }
-        listener.onItemSelected(distance);
+        listener.onItemSelected(Parcels.wrap(distance));
     }
 
 }

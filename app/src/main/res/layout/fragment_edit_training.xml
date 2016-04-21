@@ -9,7 +9,6 @@
     <include layout="@layout/common_toolbar" />
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/training_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
@@ -99,7 +98,6 @@
                         android:orientation="vertical">
 
                         <RadioGroup
-                            android:id="@+id/in_out_group"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="horizontal"

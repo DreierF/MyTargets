@@ -26,18 +26,19 @@ import android.widget.LinearLayout;
 
 import org.parceler.Parcels;
 
+import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.shared.models.IIdProvider;
 
 
-public abstract class SelectorBase<T extends IIdProvider> extends LinearLayout {
+public abstract class SelectorBase<T> extends LinearLayout {
 
     public interface OnUpdateListener<T> {
         void onUpdate(T item);
     }
 
-    final View mView;
+    private final View mView;
     private final View mProgress;
     T item = null;
 
@@ -51,6 +52,7 @@ public abstract class SelectorBase<T extends IIdProvider> extends LinearLayout {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mProgress = inflater.inflate(R.layout.item_process, this, false);
         mView = inflater.inflate(layout, this, false);
+        ButterKnife.bind(this, mView);
         addView(mProgress);
         addView(mView);
     }
@@ -79,7 +81,7 @@ public abstract class SelectorBase<T extends IIdProvider> extends LinearLayout {
         }
     }
 
-    protected void setOnClickActivity(Class<?> aClass) {
+    void setOnClickActivity(Class<?> aClass) {
         setOnClickListener(v -> {
             Intent i = new Intent(getContext(), aClass);
             i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(item));

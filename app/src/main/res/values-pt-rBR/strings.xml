@@ -45,7 +45,7 @@
   <string name="d_times_s">%1$d vezes %2$s\n</string>
   <string name="text">Texto</string>
   <string name="dispersion_pattern">Padrão de dispersão</string>
-  <string name="sharing_failed">Falha ao compartilhar!</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
   <string name="send_exported">Enviar dados exportados</string>
   <string name="exporting_failed">Exportação falhou!</string>
@@ -160,11 +160,9 @@
   <string name="restore_backup">Restaurar backup</string>
   <string name="weather">Clima</string>
   <string name="environment">Ambiente</string>
-  <string name="wind">Vento</string>
   <string name="wind_speed">Velocidade do vento</string>
   <string name="wind_direction">Direção do vento</string>
-  <string name="location">Local</string>
-  <string name="sight_setting_removed">Ajuste de mira excluído!</string>
+  <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Métrico</string>
   <string name="imperial">Imperial</string>
   <string name="undo">Desfazer</string>
@@ -172,7 +170,7 @@
   <string name="expand_collapse">Expandir/recolher</string>
   <string name="new_round_template">Novo modelo</string>
   <string name="arrow_numbers">Números de Flecha</string>
-  <string name="round_removed">Round removido!</string>
+  <string name="round_removed">Round deleted!</string>
   <string name="custom_round">Partida personalizada</string>
   <string name="filter">Filtro</string>
   <string name="club">Infantil</string>
@@ -185,11 +183,8 @@
   <string name="not_matches_sheme">Entrada não bate com o formato ( 1,3,5 )</string>
   <string name="arrow_numbers_desc">Insira os números das flechas utilizadas ex: 1,2,5,6,7</string>
   <string name="practice">Treinar</string>
-  <string name="use_timer">Temporizador de uso</string>
   <string name="edit_training">Editar o treino</string>
   <string name="edit_standard_round">Editar Partida Padrão</string>
-  <string name="edit_bow">Editar Arco</string>
-  <string name="edit_arrow">Editar Flecha</string>
   <plurals name="arrow_deleted">
     <item quantity="one">%d flecha eliminada</item>
     <item quantity="other">%d flechas apagadas</item>

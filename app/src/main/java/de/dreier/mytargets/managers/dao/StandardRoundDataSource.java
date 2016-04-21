@@ -19,7 +19,7 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 
 public class StandardRoundDataSource extends IdProviderDataSource<StandardRound> {
-    public static final String TABLE = "STANDARD_ROUND_TEMPLATE";
+    private static final String TABLE = "STANDARD_ROUND_TEMPLATE";
     private static final String NAME = "name";
     private static final String INSTITUTION = "club";
     private static final String INDOOR = "indoor";
