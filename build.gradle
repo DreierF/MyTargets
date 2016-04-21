@@ -16,7 +16,6 @@ plugins {
     id "com.mendhak.gradlecrowdin" version "0.0.8"
 }
 
-if(new File("gradle.properties").exists()) {
 ext {
     supportLibVersion = '23.3.0'
     playServiceVersion = '8.4.0'
@@ -24,6 +23,7 @@ ext {
     versionCode = 36
 }
 
+if(new File("gradle.properties").exists()) {
     crowdinDownload {
         apiKey = CROWDIN_API_KEY
         projectId = CROWDIN_PROJECT_ID
