@@ -210,24 +210,6 @@
     <item quantity="one">Ronde %d</item>
     <item quantity="other">Ronde %d</item>
   </plurals>
-  <string name="bft_0">0 Bft: windstil</string>
-  <string name="bft_1">1 Bft: bladeren bewegen niet</string>
-  <string name="bft_2">2 Bft: bladeren beginnen te bewegen</string>
-  <string name="bft_3">3 Bft: vlaggen beginnen te bewegen</string>
-  <string name="bft_4">4 Bft: kleine takken beginnen te bewegen</string>
-  <string name="bft_5">5 Bft: kleine bomen bewegen</string>
-  <string name="bft_6">6 Bft: grote takken bewegen</string>
-  <string name="bft_7">7 Bft: Complete bomen bewegen</string>
-  <string name="bft_8">8 Bft: kleine takken breken</string>
-  <string name="bft_9">9 Bft: Storm schade</string>
-  <string name="front">van voren</string>
-  <string name="back">van achteren</string>
-  <string name="left">van links</string>
-  <string name="right">van rechts</string>
-  <string name="left_front">van linksvoor</string>
-  <string name="right_front">van rechtsvoor</string>
-  <string name="left_back">van linksachter</string>
-  <string name="right_back">van rechtsachter</string>
   <string name="date">Datum</string>
   <string name="edit_round">Ronde wijzigen</string>
   <string name="draw_weight">Trekgewicht</string>
@@ -245,4 +227,5 @@
   <string name="show_points_colored">Show points colored</string>
   <string name="stabilizer">Stabilizer</string>
   <string name="clicker">Clicker</string>
+  <string name="arrow_number_x">Arrow number %d</string>
 </resources>

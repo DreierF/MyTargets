@@ -222,24 +222,6 @@
     <item quantity="few">Runda %d</item>
     <item quantity="other">Runda %d</item>
   </plurals>
-  <string name="bft_0">0 Bft: Bezwietrznie</string>
-  <string name="bft_1">1 Bft: Liście się nie ruszają</string>
-  <string name="bft_2">2 Bft: Liście zaczynają się poruszać</string>
-  <string name="bft_3">3 Bft: Lekkie flagi zaczynają się ruszać</string>
-  <string name="bft_4">4 Bft: małe gałęzie zaczynają się poruszać</string>
-  <string name="bft_5">5 Bft: Małe drzewa się poruszają</string>
-  <string name="bft_6">6 Bft: Duże gałęzie się ruszają</string>
-  <string name="bft_7">7 Bft: Drzewa się poruszają</string>
-  <string name="bft_8">8 Bft: Łamię się małe gałęzie</string>
-  <string name="bft_9">9 Bft: Sztorm</string>
-  <string name="front">z przodu</string>
-  <string name="back">z tyłu</string>
-  <string name="left">z lewej</string>
-  <string name="right">z prawej</string>
-  <string name="left_front">z lewego przodu</string>
-  <string name="right_front">z prawego przodu</string>
-  <string name="left_back">z lewego tyłu</string>
-  <string name="right_back">z prawego tyłu</string>
   <string name="date">Data</string>
   <string name="edit_round">Edytuj Rundę</string>
   <string name="draw_weight">Siła naciągu</string>
@@ -257,4 +239,5 @@
   <string name="show_points_colored">Pokaż kolorowe punkty</string>
   <string name="stabilizer">Stabilizator</string>
   <string name="clicker">Klickier</string>
+  <string name="arrow_number_x">Arrow number %d</string>
 </resources>

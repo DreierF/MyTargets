@@ -23,14 +23,6 @@ ext {
     versionCode = 36
 }
 
-if(new File("gradle.properties").exists()) {
-    crowdinDownload {
-        apiKey = CROWDIN_API_KEY
-        projectId = CROWDIN_PROJECT_ID
-        destination = "$projectDir"
-    }
-}
-
 allprojects {
     repositories {
         jcenter()
@@ -38,4 +30,22 @@ allprojects {
             url "https://jitpack.io"
         }
     }
+}
+
+if (new File('gradle.properties').exists()) {
+    crowdinDownload {
+        apiKey = CROWDIN_API_KEY
+        projectId = CROWDIN_PROJECT_ID
+        destination = "$projectDir"
+    }
+
+    task crowdinUploadAll(group: "crowdin", dependsOn: ':app:crowdinAppUpload') {}
+
+    task crowdinUploadAndDownload(group: "crowdin", dependsOn: 'crowdinUploadAll') {
+        crowdinDownload.execute()
+    }
+
+    /*afterEvaluate {
+        project(':app').tasks.assembleRelease.dependsOn crowdinUploadAndDownload
+    }*/
 }

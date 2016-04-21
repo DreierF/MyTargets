@@ -24,7 +24,7 @@ public class WindDirection implements IIdProvider {
     public final String name;
 
     @ParcelConstructor
-    private WindDirection(long id, String name) {
+    WindDirection(long id, String name) {
         this.id = id;
         this.name = name;
     }

@@ -10,6 +10,7 @@ package de.dreier.mytargets.fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -48,8 +49,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import butterknife.Bind;
-import butterknife.BindColor;
-import butterknife.BindDimen;
 import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.utils.BitmapUtils;
@@ -86,23 +85,14 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
 
     private final int layoutRes;
 
-    @BindColor(R.color.colorPrimary)
-    int mToolbarColor;
-    
-    @BindDimen(R.dimen.flexible_space_image_height)
-    int mFlexibleSpaceImageHeight;
-    
-    @BindDimen(R.dimen.flexible_space_show_fab_offset)
-    int mFlexibleSpaceShowFabOffset;
     
     private boolean fabIsShown;
     
     private final int defaultDrawable;
-
-    @BindDimen(R.dimen.left_space_title_toolbar)
+    int mToolbarColor;
+    int mFlexibleSpaceImageHeight;
+    int mFlexibleSpaceShowFabOffset;
     int mLeftSpace;
-    
-    @BindDimen(R.dimen.margin_standard)
     int fabMargin;
     private int mActionBarSize;
 
@@ -115,6 +105,14 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit_image, container, false);
         setUpToolbar(rootView);
+
+
+        Resources res = getResources();
+        mToolbarColor = res.getColor(R.color.colorPrimary);
+        mFlexibleSpaceImageHeight = res.getDimensionPixelSize(R.dimen.flexible_space_image_height);
+        mFlexibleSpaceShowFabOffset = res.getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
+        mLeftSpace = res.getDimensionPixelSize(R.dimen.left_space_title_toolbar);
+        fabMargin = res.getDimensionPixelSize(R.dimen.margin_standard);
 
         // Load values used for image animation
         mActionBarSize = ToolbarUtils.getActionBarSize(getContext());

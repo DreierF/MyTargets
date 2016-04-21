@@ -24,7 +24,7 @@ public class WindSpeed implements IIdProvider {
     public final String name;
 
     @ParcelConstructor
-    private WindSpeed(long id, String name) {
+    WindSpeed(long id, String name) {
         this.id = id;
         this.name = name;
     }
