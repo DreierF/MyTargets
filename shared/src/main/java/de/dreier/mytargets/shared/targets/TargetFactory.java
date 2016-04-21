@@ -17,10 +17,10 @@ public class TargetFactory {
 
     static {
         list = new ArrayList<>();
-        list.add(new WAFullTarget());
-        list.add(new WA6RingTarget());
-        list.add(new WA5RingTarget());
-        list.add(new WA3RingTarget());
+        list.add(new WAFull());
+        list.add(new WA6Ring());
+        list.add(new WA5Ring());
+        list.add(new WA3Ring());
         list.add(new Vegas3Spot());
         list.add(new Vertical3Spot());
         list.add(new WA3Ring3Spot());
@@ -41,7 +41,7 @@ public class TargetFactory {
         list.add(new NFAAAnimal());
         list.add(new NFASField());
         list.add(new Beursault());
-        list.add(new SCAPeriodTarget());
+        list.add(new SCAPeriod());
     }
 
     public static List<TargetModelBase> getList() {

@@ -14,15 +14,15 @@ import static de.dreier.mytargets.shared.utils.Color.DARK_GRAY;
 import static de.dreier.mytargets.shared.utils.Color.FLAMINGO_RED;
 import static de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW;
 
-public class WA3RingTarget extends TargetModelBase {
+public class WA3Ring extends TargetModelBase {
 
     public static final int ID = 3;
 
-    public WA3RingTarget() {
+    public WA3Ring() {
         this(ID, R.string.wa_3_ring);
     }
 
-    protected WA3RingTarget(int id, int nameRes) {
+    protected WA3Ring(int id, int nameRes) {
         super(id, nameRes);
         zones = new Zone[] {
                 new Zone(83, LEMON_YELLOW, DARK_GRAY, 4),

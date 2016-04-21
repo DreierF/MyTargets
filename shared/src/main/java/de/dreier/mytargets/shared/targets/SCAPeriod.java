@@ -9,10 +9,10 @@ import static de.dreier.mytargets.shared.utils.Color.GREEN;
 import static de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW;
 import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
-public class SCAPeriodTarget extends TargetModelBase {
+public class SCAPeriod extends TargetModelBase {
     public static final int ID = 24;
 
-    public SCAPeriodTarget() {
+    public SCAPeriod() {
         super(ID, R.string.sca_period);
         zones = new Zone[]{
                 new Zone(50, LEMON_YELLOW, DARK_GRAY, 2),

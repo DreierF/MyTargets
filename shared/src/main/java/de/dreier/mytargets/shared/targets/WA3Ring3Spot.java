@@ -11,7 +11,7 @@ import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
 
-public class WA3Ring3Spot extends WA3RingTarget {
+public class WA3Ring3Spot extends WA3Ring {
     public static final int ID = 6;
 
     public WA3Ring3Spot() {

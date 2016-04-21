@@ -17,11 +17,11 @@ import static de.dreier.mytargets.shared.utils.Color.FLAMINGO_RED;
 import static de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW;
 import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
-public class WAFullTarget extends TargetModelBase {
+public class WAFull extends TargetModelBase {
 
     public static final int ID = 0;
 
-    public WAFullTarget() {
+    public WAFull() {
         super(ID, R.string.wa_full);
         zones = new Zone[] {
                 new Zone(25, LEMON_YELLOW, DARK_GRAY, 2),

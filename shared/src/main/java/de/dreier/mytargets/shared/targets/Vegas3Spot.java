@@ -12,7 +12,7 @@ import de.dreier.mytargets.shared.models.Diameter;
 
 import static de.dreier.mytargets.shared.models.Dimension.CENTIMETER;
 
-public class Vegas3Spot extends WA5RingTarget {
+public class Vegas3Spot extends WA5Ring {
     public static final int ID = 4;
 
     public Vegas3Spot() {
