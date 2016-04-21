@@ -210,24 +210,6 @@
     <item quantity="one">%d Serie</item>
     <item quantity="other">%d Series</item>
   </plurals>
-  <string name="bft_0">Bft 0: sin viento</string>
-  <string name="bft_1">1 Bft: hojas no se mueven</string>
-  <string name="bft_2">2 Bft: hojas empiezan a moverse</string>
-  <string name="bft_3">3 Bft: los banderines empiezan a moverse</string>
-  <string name="bft_4">4 Bft: lasramas pequeñas empiezan a moverse</string>
-  <string name="bft_5">5 Bft: los árboles pequeños se mueven</string>
-  <string name="bft_6">6 Bft: Las grandes ramas se mueven</string>
-  <string name="bft_7">7 Bft: Se mueven los árboles</string>
-  <string name="bft_8">8 Bft: rotura de pequeñas ramas</string>
-  <string name="bft_9">9 Bft: Tormenta con daños</string>
-  <string name="front">de frente</string>
-  <string name="back">de espalda</string>
-  <string name="left">desde la izquierda</string>
-  <string name="right">de la derecha</string>
-  <string name="left_front">de delantero izquierdo</string>
-  <string name="right_front">de delantero derecho</string>
-  <string name="left_back">de la parte posterior izquierda</string>
-  <string name="right_back">de derecha trasera</string>
   <string name="date">Fecha</string>
   <string name="edit_round">Editar Tanda</string>
   <string name="draw_weight">Draw</string>

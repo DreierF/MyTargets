@@ -222,24 +222,6 @@
     <item quantity="few">Раунд %d</item>
     <item quantity="other">Раунд %d</item>
   </plurals>
-  <string name="bft_0">0 Bft: безветренно</string>
-  <string name="bft_1">1 Bft: листья не двигаются</string>
-  <string name="bft_2">2 Bft: листья начинают двигаться</string>
-  <string name="bft_3">3 Bft: легкие флаги начинают двигаться</string>
-  <string name="bft_4">4 Bft: мелкие ветви начинают двигаться</string>
-  <string name="bft_5">5 Bft: небольшие деревья качаются</string>
-  <string name="bft_6">6 Bft: большие ветки раскачиваются</string>
-  <string name="bft_7">7 Bft: деревья раскачиваются целиком</string>
-  <string name="bft_8">8 Bft: мелкие кусты ломаются</string>
-  <string name="bft_9">9 Bft: штормовые повреждения</string>
-  <string name="front">с фронта</string>
-  <string name="back">сзади</string>
-  <string name="left">слева</string>
-  <string name="right">справа</string>
-  <string name="left_front">с фронта слева</string>
-  <string name="right_front">с фронта справа</string>
-  <string name="left_back">сзади слева</string>
-  <string name="right_back">сзади справа</string>
   <string name="date">Дата</string>
   <string name="edit_round">Редактировать раунд</string>
   <string name="draw_weight">Сила натяжения</string>

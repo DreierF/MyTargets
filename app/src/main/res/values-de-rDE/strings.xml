@@ -210,24 +210,6 @@
     <item quantity="one">Runde %d</item>
     <item quantity="other">Runde %d</item>
   </plurals>
-  <string name="bft_0">0 Bft: Windstill</string>
-  <string name="bft_1">1 Bft: Blätter bewegen sich nicht</string>
-  <string name="bft_2">2 Bft: Blätter bewegen sich</string>
-  <string name="bft_3">3 Bft: Leichte Flaggen bewegen sich</string>
-  <string name="bft_4">4 Bft: Kleine Äste bewegen sich</string>
-  <string name="bft_5">5 Bft: Kleine Bäume bewegen sich</string>
-  <string name="bft_6">6 Bft: Große Äste bewegen sich</string>
-  <string name="bft_7">7 Bft: Ganze Bäume bewegen sich</string>
-  <string name="bft_8">8 Bft: Kleine Äste brechen</string>
-  <string name="bft_9">9 Bft: Sturmschäden</string>
-  <string name="front">von vorne</string>
-  <string name="back">von hinten</string>
-  <string name="left">von links</string>
-  <string name="right">von rechts</string>
-  <string name="left_front">von vorne links</string>
-  <string name="right_front">von vorne rechts</string>
-  <string name="left_back">von hinten links</string>
-  <string name="right_back">von hinten rechts</string>
   <string name="date">Datum</string>
   <string name="edit_round">Runde bearbeiten</string>
   <string name="draw_weight">Zugkraft</string>
@@ -245,7 +227,7 @@
   <string name="show_points_colored">Ringe farbig anzeigen</string>
   <string name="stabilizer">Stabilisator</string>
   <string name="clicker">Klicker</string>
-  <string name="arrow_number_x">Arrow number %d</string>
+  <string name="arrow_number_x">Pfeil Nr. %d</string>
   <string name="training_with_standard_round">Training with Standard Round</string>
   <string name="free_training">Free Training</string>
   <string name="competition">Competition</string>

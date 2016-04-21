@@ -222,24 +222,6 @@
     <item quantity="few">Kolo %d</item>
     <item quantity="other">Kolo %d</item>
   </plurals>
-  <string name="bft_0">0 Bft: Bezvetrie</string>
-  <string name="bft_1">1 Bft: Listy sa nehýbu</string>
-  <string name="bft_2">2 Bft: Listy sa začínajú pohybovať</string>
-  <string name="bft_3">3 Bft: Ľahké vlajky sa začínajú pohybovať</string>
-  <string name="bft_4">4 Bft: Malé vetvy sa začínajú knísať</string>
-  <string name="bft_5">5 Bft: Malé stromy sa kníšu</string>
-  <string name="bft_6">6 Bft: Veľké konáre sa hýbu</string>
-  <string name="bft_7">7 Bft: Celé stromy sa kníšu</string>
-  <string name="bft_8">8 Bft: Malé konáre sa lámu</string>
-  <string name="bft_9">9 Bft: Ničivá búrka</string>
-  <string name="front">spredu</string>
-  <string name="back">zozadu</string>
-  <string name="left">zľava</string>
-  <string name="right">sprava</string>
-  <string name="left_front">spredu z ľava</string>
-  <string name="right_front">spredu z prava</string>
-  <string name="left_back">zozadu z ľava</string>
-  <string name="right_back">zozadu z prava</string>
   <string name="date">Dátum</string>
   <string name="edit_round">Upraviť kolo</string>
   <string name="draw_weight">Sila náťahu</string>

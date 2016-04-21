@@ -198,24 +198,6 @@
   <plurals name="rounds">
     <item quantity="other">回合 %d</item>
   </plurals>
-  <string name="bft_0">0 级: 无风</string>
-  <string name="bft_1">1 级: 树叶不动</string>
-  <string name="bft_2">2 级: 树叶轻微摇动</string>
-  <string name="bft_3">3 级: 旗帜开始轻微飘扬</string>
-  <string name="bft_4">4 级: 小树枝开始摇动</string>
-  <string name="bft_5">5 级: 小树摇摆</string>
-  <string name="bft_6">6 级: 大树枝摇摆</string>
-  <string name="bft_7">7 级: 大树摇动</string>
-  <string name="bft_8">8 级: 小树枝断裂</string>
-  <string name="bft_9">9 级: 破坏型风暴</string>
-  <string name="front">从前方</string>
-  <string name="back">从后方</string>
-  <string name="left">从左方</string>
-  <string name="right">从右方</string>
-  <string name="left_front">从左前方</string>
-  <string name="right_front">从右前方</string>
-  <string name="left_back">从左后方</string>
-  <string name="right_back">从右后方</string>
   <string name="date">日期</string>
   <string name="edit_round">编辑回合</string>
   <string name="draw_weight">弓拉力</string>
