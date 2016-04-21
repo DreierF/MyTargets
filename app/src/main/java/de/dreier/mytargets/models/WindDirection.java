@@ -8,20 +8,24 @@ package de.dreier.mytargets.models;
 
 import android.content.Context;
 
+import org.parceler.Parcel;
+import org.parceler.ParcelConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.IIdProvider;
 
+@Parcel
 public class WindDirection implements IIdProvider {
-    static final long serialVersionUID = 62L;
 
+    public final long id;
     public final String name;
-    protected long id;
 
+    @ParcelConstructor
     private WindDirection(long id, String name) {
-        this.setId(id);
+        this.id = id;
         this.name = name;
     }
 
@@ -36,10 +40,6 @@ public class WindDirection implements IIdProvider {
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     @Override

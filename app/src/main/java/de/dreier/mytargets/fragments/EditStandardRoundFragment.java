@@ -52,7 +52,7 @@ public class EditStandardRoundFragment extends EditFragmentBase
 
         StandardRound standardRound = null;
         if (getArguments() != null) {
-            standardRound = (StandardRound) getArguments().getSerializable(ITEM);
+            standardRound = getArguments().getParcelable(ITEM);
         }
 
         // Indoor / outdoor

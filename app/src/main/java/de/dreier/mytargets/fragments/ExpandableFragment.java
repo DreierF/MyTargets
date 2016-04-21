@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.HashSet;
 import java.util.List;
 
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
@@ -22,6 +21,7 @@ import de.dreier.mytargets.interfaces.PartitionDelegate;
 import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.utils.Utils;
 
 /**
  * Shows all rounds of one settings_only day
@@ -58,7 +58,7 @@ public abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSet
             mAdapter = adapter;
             mAdapter.setList(headers, children, parentDelegate, opened);
             if (savedInstanceState != null) {
-                mAdapter.setExpandedIds((HashSet<Long>) savedInstanceState.getSerializable("expanded"));
+                mAdapter.setExpandedIds(Utils.toList(savedInstanceState.getLongArray("expanded")));
             } else if (!opened && mAdapter.getItemCount() > 0) {
                 mAdapter.expandOrCollapse(0);
             }
@@ -90,7 +90,7 @@ public abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSet
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("expanded", mAdapter.getExpandedIds());
+        outState.putLongArray("expanded", Utils.toArray(mAdapter.getExpandedIds()));
     }
 
     @Override

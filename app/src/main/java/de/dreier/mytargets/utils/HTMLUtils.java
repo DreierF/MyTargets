@@ -275,7 +275,7 @@ public class HTMLUtils {
             }
             if (equals[1]) {
                 infoText += "<br>" + context.getString(R.string.target_face) + ": <b>" +
-                        target + "</b>";
+                        target.getModel().getName(context) + "</b>";
             }
         }
         return infoText;

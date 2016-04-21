@@ -10,9 +10,11 @@ package de.dreier.mytargets.views.selector;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -121,6 +123,12 @@ public abstract class SelectorBase<T extends IIdProvider> extends LinearLayout {
         final int requestId = (int) (Math.random() * Short.MAX_VALUE);
         final FragmentManager fm = ((FragmentActivity) getContext()).getSupportFragmentManager();
         Fragment auxiliary = new Fragment() {
+            @Override
+            public void onCreate(@Nullable Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                setRetainInstance(true);
+            }
+
             @Override
             public void onActivityResult(int requestCode, int resultCode, Intent data) {
                 super.onActivityResult(requestCode, resultCode, data);

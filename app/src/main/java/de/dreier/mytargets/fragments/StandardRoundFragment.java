@@ -62,7 +62,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
         super.onActivityCreated(savedInstanceState);
         mDrawerLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
         mSelector.setSelectable(true);
-        currentSelection = (StandardRound) getArguments().getSerializable(ITEM);
+        currentSelection = Parcels.unwrap(getArguments().getParcelable(ITEM));
         list = new StandardRoundDataSource(getContext()).getAll();
         if (!list.contains(currentSelection)) {
             list.add(currentSelection);

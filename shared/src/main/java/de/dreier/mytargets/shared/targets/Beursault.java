@@ -32,6 +32,6 @@ public class Beursault extends TargetModelBase {
         showAsX = new boolean[]{false};
         diameters = new Diameter[]{new Diameter(48, Dimension.CENTIMETER)};
         decoration = TargetDecoration.BEURSAULT;
-        centerMark = new CenterMark(DARK_GRAY, 500f, 6, true);
+        centerMark = new CenterMark(DARK_GRAY, 500f, 6, false);
     }
 }

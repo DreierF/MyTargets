@@ -76,7 +76,7 @@ public class TargetModelBase implements IIdProvider {
 
     public ArrayList<String> getScoringStyles() {
         ArrayList<String> styles = new ArrayList<>(getZoneCount());
-        for (int scoring = 0; scoring < getZoneCount(); scoring++) {
+        for (int scoring = 0; scoring < zonePoints.length; scoring++) {
             String style = "";
             for (int i = 0; i < getZoneCount(); i++) {
                 if (!style.isEmpty()) {

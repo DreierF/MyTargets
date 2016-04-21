@@ -250,10 +250,10 @@ public class PasseDrawer {
     }
 
     public void restoreState(Bundle b) {
-        mPasse = (Passe) b.getSerializable("pd_passe");
+        mPasse = b.getParcelable("pd_passe");
         mPressed = b.getInt("pd_pressed");
         mSelected = b.getInt("pd_selected");
-        mSelectedPosition = (Coordinate) b.getParcelable("pd_selected_pos");
+        mSelectedPosition = b.getParcelable("pd_selected_pos");
         mSelectedRadius = b.getInt("pd_selected_radius");
     }
 }

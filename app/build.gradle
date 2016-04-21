@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileOptions {
@@ -76,6 +77,9 @@ dependencies {
 
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava:1.1.0'
+
+    compile 'org.parceler:parceler-api:1.1.1'
+    apt 'org.parceler:parceler:1.1.1'
 
     compile project(':shared')
     wearApp project(':wearable')

@@ -69,7 +69,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
     FrameLayout imgContainer;
     @Bind(R.id.overlay)
     View overlay;
-    @Bind(R.id.content)
+
     LinearLayout content;
     @Bind(R.id.scrollView)
     ObservableScrollView scrollView;
@@ -114,7 +114,6 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit_image, container, false);
-        ButterKnife.bind(this, rootView);
         setUpToolbar(rootView);
 
         // Load values used for image animation
@@ -124,10 +123,12 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
         // Ensure scrollview is at least as big to fill the screen
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        content = (LinearLayout) rootView.findViewById(R.id.content);
         content.setMinimumHeight(metrics.heightPixels - mActionBarSize - statusBarSize);
 
         // Inflate whole layout
         inflater.inflate(layoutRes, content);
+        ButterKnife.bind(this, rootView);
 
         // Set scrollview callbacks
         scrollView.setScrollViewCallbacks(this);

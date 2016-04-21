@@ -38,6 +38,7 @@ public class TargetFactory {
         list.add(new NFAS3D());
         list.add(new DAIR3D());
         list.add(new IFAAAnimal());
+        list.add(new NFAAAnimal());
         list.add(new NFASField());
         list.add(new Beursault());
         list.add(new SCAPeriodTarget());
@@ -58,7 +59,7 @@ public class TargetFactory {
             out.add(list.get(10));
             out.add(list.get(11));
         } else {
-            out.add(list.get((int) target.id));
+            out.add(list.get(target.id));
         }
         return out;
     }

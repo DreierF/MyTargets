@@ -50,9 +50,9 @@ public class Target implements IIdProvider {
 
     @Override
     public boolean equals(Object another) {
-        return another instanceof StandardRound &&
+        return another instanceof Target &&
                 getClass().equals(another.getClass()) &&
-                id == ((StandardRound) another).id;
+                id == ((Target) another).id;
     }
 
     public int getMaxPoints() {

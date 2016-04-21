@@ -9,10 +9,9 @@ package de.dreier.mytargets.shared.models;
 import android.os.Parcelable;
 
 import org.parceler.Parcel;
+import org.parceler.Parcels;
 
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
-
-import static org.parceler.Parcels.wrap;
 
 @Parcel
 public class NotificationInfo implements Parcelable {
@@ -37,6 +36,6 @@ public class NotificationInfo implements Parcelable {
 
     @Override
     public void writeToParcel(android.os.Parcel parcel, int flags) {
-        parcel.writeParcelable(wrap(this), flags);
+        parcel.writeParcelable(Parcels.wrap(this), flags);
     }
 }

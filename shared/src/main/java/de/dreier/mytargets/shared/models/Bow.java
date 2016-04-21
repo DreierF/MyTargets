@@ -34,7 +34,7 @@ public class Bow implements IIdSettable {
     private transient Bitmap image;
 
     public Bitmap getImage(Context context) {
-        Bitmap img = getImage(context);
+        Bitmap img = BitmapUtils.getBitmap(context, imageFile);
         if (img == null) {
             context.getResources().getDrawable(R.drawable.recurve_bow);
         }

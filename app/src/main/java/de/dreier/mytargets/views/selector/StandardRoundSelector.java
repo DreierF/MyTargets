@@ -36,7 +36,7 @@ public class StandardRoundSelector extends SelectorBase<StandardRound> {
         mView.findViewById(R.id.content).setOnClickListener(v -> {
             Intent i = new Intent(getContext(), StandardRoundActivity.class);
             i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(item));
-            startIntent(i, data -> setItem((StandardRound) data.getSerializableExtra(ItemSelectActivity.ITEM)));
+            startIntent(i, data -> setItem(Parcels.unwrap(data.getParcelableExtra(ItemSelectActivity.ITEM))));
         });
         mView.findViewById(R.id.image).setOnClickListener(v -> {
             Target target = item.getRounds().get(0).targetTemplate;
@@ -45,7 +45,7 @@ public class StandardRoundSelector extends SelectorBase<StandardRound> {
                 i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(target));
                 i.putExtra(TargetFragment.TYPE_FIXED, true);
                 startIntent(i, data -> {
-                    Target st = (Target) data.getSerializableExtra(ItemSelectActivity.ITEM);
+                    Target st = Parcels.unwrap(data.getParcelableExtra(ItemSelectActivity.ITEM));
                     for (RoundTemplate template : item.getRounds()) {
                         Diameter size = template.target.size;
                         template.target = new Target(st.id, st.scoringStyle, size);
@@ -55,7 +55,7 @@ public class StandardRoundSelector extends SelectorBase<StandardRound> {
             } else {
                 Intent i = new Intent(getContext(), StandardRoundActivity.class);
                 i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(item));
-                startIntent(i, data -> setItem((StandardRound) data.getSerializableExtra(ItemSelectActivity.ITEM)));
+                startIntent(i, data -> setItem(Parcels.unwrap(data.getParcelableExtra(ItemSelectActivity.ITEM))));
             }
         });
     }

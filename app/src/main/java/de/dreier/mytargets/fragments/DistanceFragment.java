@@ -20,7 +20,10 @@ import android.view.ViewGroup;
 
 import junit.framework.Assert;
 
+import org.parceler.Parcels;
+
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.DistanceTabsFragmentPagerAdapter;
@@ -40,9 +43,10 @@ public class DistanceFragment extends Fragment implements TextInputDialog.OnClic
     private Distance distance;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        distance = (Distance) getArguments().getSerializable(ITEM);
+        distance = Parcels.unwrap(getArguments().getParcelable(ITEM));
 
         View rootView = inflater.inflate(R.layout.fragment_distance, container, false);
+        ButterKnife.bind(this, rootView);
 
         DistanceTabsFragmentPagerAdapter adapter =
                 new DistanceTabsFragmentPagerAdapter(getActivity(), distance);
@@ -53,6 +57,12 @@ public class DistanceFragment extends Fragment implements TextInputDialog.OnClic
         tabLayout.setTabTextColors(0xCCFFFFFF, Color.WHITE);
         tabLayout.setupWithViewPager(viewPager);
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override

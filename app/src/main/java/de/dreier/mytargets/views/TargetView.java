@@ -33,6 +33,9 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
+import org.parceler.ParcelConstructor;
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -44,6 +47,7 @@ import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.utils.TextInputDialog;
@@ -272,9 +276,7 @@ public class TargetView extends TargetViewBase {
     @Override
     public Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
-        SavedState ss = new SavedState(superState);
-        ss.oldPasses = this.oldPasses;
-        return ss;
+        return new SavedState(superState, oldPasses);
     }
 
     @Override
@@ -285,7 +287,7 @@ public class TargetView extends TargetViewBase {
         }
 
         SavedState ss = (SavedState) state;
-        super.onRestoreInstanceState(ss.getSuperState());
+        super.onRestoreInstanceState(ss.superState);
         this.oldPasses = ss.oldPasses;
     }
 
@@ -670,6 +672,39 @@ public class TargetView extends TargetViewBase {
         return mZoneSelectionMode;
     }
 
+    private void cancelPendingAnimations() {
+        if (animator != null) {
+            ValueAnimator tmp = animator;
+            animator = null;
+            tmp.cancel();
+        }
+    }
+
+    @org.parceler.Parcel
+    public static class SavedState implements Parcelable {
+        public static final Creator<SavedState> CREATOR
+                = new ParcelableUtil.Creator<>(SavedState.class);
+        public final Parcelable superState;
+        public final ArrayList<Passe> oldPasses;
+
+        @ParcelConstructor
+        public SavedState(Parcelable superState, ArrayList<Passe> oldPasses) {
+            this.superState = superState;
+            this.oldPasses = oldPasses;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int flags) {
+            parcel.writeParcelable(Parcels.wrap(this), flags);
+        }
+
+    }
+
     private class Zone {
         final int zone;
         final String text;
@@ -689,43 +724,5 @@ public class TargetView extends TargetViewBase {
         float count = 0;
         float sumX = 0;
         float sumY = 0;
-    }
-
-    private void cancelPendingAnimations() {
-        if(animator != null) {
-            ValueAnimator tmp = animator;
-            animator = null;
-            tmp.cancel();
-        }
-    }
-
-    static class SavedState extends BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR =
-                new Parcelable.Creator<SavedState>() {
-                    public SavedState createFromParcel(Parcel in) {
-                        return new SavedState(in);
-                    }
-
-                    public SavedState[] newArray(int size) {
-                        return new SavedState[size];
-                    }
-                };
-
-        public ArrayList<Passe> oldPasses;
-
-        SavedState(Parcelable superState) {
-            super(superState);
-        }
-
-        private SavedState(Parcel in) {
-            super(in);
-            this.oldPasses = (ArrayList<Passe>) in.readSerializable();
-        }
-
-        @Override
-        public void writeToParcel(Parcel out, int flags) {
-            super.writeToParcel(out, flags);
-            out.writeSerializable(this.oldPasses);
-        }
     }
 }

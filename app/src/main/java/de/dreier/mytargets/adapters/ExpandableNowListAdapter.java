@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import de.dreier.mytargets.interfaces.PartitionDelegate;
@@ -30,7 +29,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IIdProvider, CHILD
     private final HashMap<Long, List<CHILD>> childMap = new HashMap<>();
     private final ArrayList<Boolean> isOpen = new ArrayList<>();
     private final List<DataHolder> dataList = new ArrayList<>();
-    private List<HEADER> mListHeaders = new ArrayList<>();
+    private List<HEADER> listHeaders = new ArrayList<>();
     private PartitionDelegate<CHILD> partitionDelegate;
 
     @Override
@@ -110,7 +109,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IIdProvider, CHILD
 
     public void expandOrCollapse(int position) {
         int headerPosition = getHeaderCountUpToPosition(position);
-        HEADER headerGroup = mListHeaders.get(headerPosition);
+        HEADER headerGroup = listHeaders.get(headerPosition);
         List<CHILD> children = childMap.get(headerGroup.getId());
         int childLength = children.size();
         if (!isOpen.get(headerPosition)) {
@@ -151,19 +150,19 @@ public abstract class ExpandableNowListAdapter<HEADER extends IIdProvider, CHILD
 
     public void setList(List<HEADER> headers, List<CHILD> children, PartitionDelegate<CHILD> partitionDelegate) {
         this.partitionDelegate = partitionDelegate;
-        HashSet<Long> oldExpanded = getExpandedIds();
-        mListHeaders = headers;
+        List<Long> oldExpanded = getExpandedIds();
+        listHeaders = headers;
         dataList.clear();
         childMap.clear();
         isOpen.clear();
-        for (HEADER header : mListHeaders) {
+        for (HEADER header : listHeaders) {
             childMap.put(header.getId(), new ArrayList<>());
         }
         for (CHILD child : children) {
             long parent = partitionDelegate.getParentId(child);
             childMap.get(parent).add(child);
         }
-        for (HEADER header : mListHeaders) {
+        for (HEADER header : listHeaders) {
             isOpen.add(false);
             dataList.add(new DataHolder(header, ItemType.HEADER));
         }
@@ -172,18 +171,18 @@ public abstract class ExpandableNowListAdapter<HEADER extends IIdProvider, CHILD
 
     public void setList(List<HEADER> headers, List<CHILD> children, PartitionDelegate<CHILD> partitionDelegate, boolean opened) {
         this.partitionDelegate = partitionDelegate;
-        mListHeaders = headers;
+        listHeaders = headers;
         dataList.clear();
         childMap.clear();
         isOpen.clear();
-        for (HEADER header : mListHeaders) {
+        for (HEADER header : listHeaders) {
             childMap.put(header.getId(), new ArrayList<>());
         }
         for (CHILD child : children) {
             long parent = partitionDelegate.getParentId(child);
             childMap.get(parent).add(child);
         }
-        for (HEADER header : mListHeaders) {
+        for (HEADER header : listHeaders) {
             isOpen.add(opened);
             dataList.add(new DataHolder(header, ItemType.HEADER));
             if (opened) {
@@ -198,19 +197,19 @@ public abstract class ExpandableNowListAdapter<HEADER extends IIdProvider, CHILD
         return 1;
     }
 
-    public HashSet<Long> getExpandedIds() {
-        HashSet<Long> ids = new HashSet<>();
+    public List<Long> getExpandedIds() {
+        List<Long> ids = new ArrayList<>();
         for (int i = 0; i < isOpen.size(); i++) {
             if (isOpen.get(i)) {
-                ids.add(mListHeaders.get(i).getId());
+                ids.add(listHeaders.get(i).getId());
             }
         }
         return ids;
     }
 
-    public void setExpandedIds(HashSet<Long> expanded) {
-        for (int i = 0; i < mListHeaders.size(); i++) {
-            long headerId = mListHeaders.get(i).getId();
+    public void setExpandedIds(List<Long> expanded) {
+        for (int i = 0; i < listHeaders.size(); i++) {
+            long headerId = listHeaders.get(i).getId();
             boolean expand = expanded.contains(headerId);
             if (isOpen.get(i) != expand) {
                 expandOrCollapse(getItemCountUpToHeader(headerId) - 1);

@@ -14,7 +14,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.TextView;
 
-import java.io.Serializable;
+import org.parceler.Parcels;
 
 import butterknife.Bind;
 import de.dreier.mytargets.R;
@@ -73,7 +73,7 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
     @Override
     public void onItemSelected(IIdProvider item) {
         Intent data = new Intent();
-        data.putExtra(ITEM, (Serializable) item);
+        data.putExtra(ITEM, Parcels.wrap(item));
         setResult(RESULT_OK, data);
         onBackPressed();
     }
