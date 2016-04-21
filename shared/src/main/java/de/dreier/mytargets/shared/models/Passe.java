@@ -1,14 +1,27 @@
 package de.dreier.mytargets.shared.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import org.parceler.Parcels;
+
 import java.util.Arrays;
 
-public class Passe extends IdProvider {
-    static final long serialVersionUID = 55L;
+import de.dreier.mytargets.shared.utils.ParcelableUtil;
 
-    public Shot[] shot;
-    public long roundId;
+@org.parceler.Parcel
+public class Passe implements IIdSettable, Parcelable {
+    public static final ParcelableUtil.Creator<Passe> CREATOR
+            = new ParcelableUtil.Creator<>(Passe.class);
+
+    protected long id;
     public int index;
+    public long roundId;
+    public Shot[] shot;
     public boolean exact;
+
+    public Passe() {
+    }
 
     public Passe(int ppp) {
         shot = new Shot[ppp];
@@ -18,21 +31,18 @@ public class Passe extends IdProvider {
     }
 
     public Passe(Passe p) {
-        super.setId(p.getId());
+        this.id = p.getId();
         shot = p.shot.clone();
     }
 
     @Override
-    public void setId(long id) {
-        super.setId(id);
-        for (Shot s : shot) {
-            s.passe = id;
-        }
+    public int describeContents() {
+        return 0;
     }
 
     @Override
-    public long getParentId() {
-        return roundId;
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeParcelable(Parcels.wrap(this), flags);
     }
 
     public void sort() {
@@ -40,5 +50,23 @@ public class Passe extends IdProvider {
         for (int i = 0; i < shot.length; i++) {
             shot[i].index = i;
         }
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+        for (Shot s : shot) {
+            s.passe = id;
+        }
+    }
+
+    @Override
+    public boolean equals(Object another) {
+        return another instanceof Passe &&
+                getClass().equals(another.getClass()) &&
+                id == ((Passe) another).id;
     }
 }

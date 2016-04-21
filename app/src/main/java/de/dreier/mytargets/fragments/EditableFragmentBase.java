@@ -27,12 +27,12 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.dao.IdProviderDataSource;
-import de.dreier.mytargets.shared.models.IdProvider;
+import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.utils.OnCardClickListener;
 import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
-public abstract class EditableFragmentBase<T extends IdProvider> extends FragmentBase<T>
+public abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<T>
         implements OnCardClickListener<T>, LoaderManager.LoaderCallbacks<List<T>> {
 
 

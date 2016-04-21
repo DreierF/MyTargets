@@ -17,7 +17,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
-import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.models.Target;
 
 public class TargetSelector extends SelectorBase<Target> {
 
@@ -44,8 +44,8 @@ public class TargetSelector extends SelectorBase<Target> {
     @Override
     protected void bindView() {
         details.setVisibility(View.VISIBLE);
-        img.setImageDrawable(item);
-        name.setText(String.format("%s (%s)", item.name, item.size.toString(getContext())));
-        details.setText(item.getScoringStyles().get(item.scoringStyle));
+        img.setImageDrawable(item.getDrawable());
+        name.setText(String.format("%s (%s)", item.getModel().getName(getContext()), item.size.toString(getContext())));
+        details.setText(item.getModel().getScoringStyles().get(item.scoringStyle));
     }
 }

@@ -13,9 +13,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +28,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +41,7 @@ import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.targets.TargetModelBase;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
@@ -60,7 +62,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
         super.onActivityCreated(savedInstanceState);
         mDrawerLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
         mSelector.setSelectable(true);
-        currentSelection = (StandardRound) getArguments().getSerializable(ITEM);
+        currentSelection = Parcels.unwrap(getArguments().getParcelable(ITEM));
         list = new StandardRoundDataSource(getContext()).getAll();
         if (!list.contains(currentSelection)) {
             list.add(currentSelection);
@@ -113,9 +115,9 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
         RadioButton target = (RadioButton) rootView.findViewById(R.id.target);
         RadioButton field = (RadioButton) rootView.findViewById(R.id.field);
         RadioButton threeD = (RadioButton) rootView.findViewById(R.id.three_d);
-        if (firstRound.target.isFieldTarget()) {
+        if (firstRound.target.getModel().isFieldTarget()) {
             field.setChecked(true);
-        } else if (firstRound.target.is3DTarget()) {
+        } else if (firstRound.target.getModel().is3DTarget()) {
             threeD.setChecked(true);
         } else {
             target.setChecked(true);
@@ -174,7 +176,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
                     rounds.get(0).distance.unit.equals(unitDistance) &&
                     r.indoor == indoor) {
                 int checked = typ.getCheckedRadioButtonId();
-                Target target = rounds.get(0).target;
+                TargetModelBase target = rounds.get(0).target.getModel();
                 if ((checked != R.id.field || target.isFieldTarget()) &&
                         (checked != R.id.three_d || target.is3DTarget())) {
                     displayList.add(r);
@@ -217,7 +219,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
         if (item.club == StandardRound.CUSTOM) {
             Intent i = new Intent(getActivity(),
                     SimpleFragmentActivity.EditStandardRoundActivity.class);
-            i.putExtra(ITEM, item);
+            i.putExtra(ITEM, Parcels.wrap(item));
             startActivityForResult(i, NEW_STANDARD_ROUND);
             getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
         } else {
@@ -227,7 +229,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
                     .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                         Intent i = new Intent(getActivity(),
                                 SimpleFragmentActivity.EditStandardRoundActivity.class);
-                        i.putExtra(ITEM, item);
+                        i.putExtra(ITEM, Parcels.wrap(item));
                         startActivityForResult(i, NEW_STANDARD_ROUND);
                         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
                     })
@@ -245,10 +247,10 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item != null && item.getItemId() == R.id.action_filter) {
-            if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-                mDrawerLayout.closeDrawer(Gravity.RIGHT);
+            if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+                mDrawerLayout.closeDrawer(GravityCompat.END);
             } else {
-                mDrawerLayout.openDrawer(Gravity.RIGHT);
+                mDrawerLayout.openDrawer(GravityCompat.END);
             }
             return true;
         }
@@ -306,7 +308,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
                 mImage.setVisibility(View.VISIBLE);
                 mDetails.setVisibility(View.VISIBLE);
                 mDetails.setText(mItem.getDescription(getActivity()));
-                mImage.setImageDrawable(mItem.getTargetDrawable(getActivity()));
+                mImage.setImageDrawable(mItem.getTargetDrawable());
             } else {
                 mImage.setVisibility(View.GONE);
                 mDetails.setVisibility(View.GONE);

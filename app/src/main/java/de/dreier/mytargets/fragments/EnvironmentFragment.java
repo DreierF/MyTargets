@@ -20,6 +20,10 @@ import android.widget.ImageButton;
 
 import junit.framework.Assert;
 
+import org.parceler.Parcels;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
@@ -30,39 +34,51 @@ import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 public class EnvironmentFragment extends Fragment {
 
-    private WindSpeedSelector windSpeed;
-    private WindDirectionSelector windDirection;
+    @Bind(R.id.sunny)
+    ImageButton sunny;
+
+    @Bind(R.id.partlyCloudy)
+    ImageButton partlyCloudy;
+
+    @Bind(R.id.cloudy)
+    ImageButton cloudy;
+
+    @Bind(R.id.lightRain)
+    ImageButton lightRain;
+
+    @Bind(R.id.rain)
+    ImageButton rain;
+
+    @Bind(R.id.location)
+    EditText location;
+
+    @Bind(R.id.windSpeed)
+    WindSpeedSelector windSpeed;
+
+    @Bind(R.id.windDirection)
+    WindDirectionSelector windDirection;
+
     private SelectItemFragment.OnItemSelectedListener listener;
     private Environment mEnvironment;
     private EWeather weather;
-    private ImageButton sunny, partlyCloudy, cloudy, lightRain, rain;
-    private EditText location;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_environment, container, false);
+        ButterKnife.bind(this, rootView);
 
         Bundle i = getArguments();
         if (i != null) {
-            mEnvironment = (Environment) i.getSerializable(ITEM);
+            mEnvironment = Parcels.unwrap(i.getParcelable(ITEM));
         }
 
         // Weather
-        sunny = (ImageButton) rootView.findViewById(R.id.sunny);
-        partlyCloudy = (ImageButton) rootView.findViewById(R.id.partly_cloudy);
-        cloudy = (ImageButton) rootView.findViewById(R.id.clouds);
-        lightRain = (ImageButton) rootView.findViewById(R.id.light_rain);
-        rain = (ImageButton) rootView.findViewById(R.id.rain);
         setOnClickWeather(sunny, EWeather.SUNNY);
         setOnClickWeather(partlyCloudy, EWeather.PARTLY_CLOUDY);
         setOnClickWeather(cloudy, EWeather.CLOUDY);
         setOnClickWeather(lightRain, EWeather.LIGHT_RAIN);
         setOnClickWeather(rain, EWeather.RAIN);
-
-        windSpeed = (WindSpeedSelector) rootView.findViewById(R.id.wind_speed);
-        windDirection = (WindDirectionSelector) rootView.findViewById(R.id.wind_direction);
-        location = (EditText) rootView.findViewById(R.id.location);
 
         setWeather(mEnvironment.weather);
         windSpeed.setItemId(mEnvironment.windSpeed);
@@ -70,6 +86,12 @@ public class EnvironmentFragment extends Fragment {
         location.setText(mEnvironment.location);
         setHasOptionsMenu(true);
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     private void setOnClickWeather(ImageButton b, final EWeather w) {

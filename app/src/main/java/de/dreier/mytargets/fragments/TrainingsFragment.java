@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import de.dreier.mytargets.R;
@@ -33,6 +34,7 @@ import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.HeaderBindingHolder;
 import de.dreier.mytargets.utils.SelectableViewHolder;
+import de.dreier.mytargets.utils.Utils;
 
 /**
  * Shows an overview over all trying days
@@ -74,14 +76,14 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
         Set<Long> monthMap = new HashSet<>();
         List<Month> months = new ArrayList<>();
         for (Training t : data) {
-            long parentId = t.getParentId();
+            long parentId = Utils.getMonthId(t.date);
             if (!monthMap.contains(parentId)) {
                 monthMap.add(parentId);
                 months.add(new Month(parentId));
             }
         }
         Collections.sort(months, Collections.reverseOrder());
-        setList(trainingDataSource, months, data, false, new TrainingAdapter());
+        setList(trainingDataSource, months, data, child -> Utils.getMonthId(child.date), false, new TrainingAdapter());
     }
 
     private class TrainingAdapter extends ExpandableNowListAdapter<Month, Training> {
@@ -125,7 +127,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
                 maxPoints += r.info.getMaxPoints();
                 reachedPoints += r.reachedPoints;
             }
-            mGes.setText(reachedPoints + "/" + maxPoints);
+            mGes.setText(String.format(Locale.ENGLISH, "%d/%d", reachedPoints, maxPoints));
         }
     }
 

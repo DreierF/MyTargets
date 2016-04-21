@@ -11,9 +11,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.shared.models.IdProvider;
+import de.dreier.mytargets.shared.models.IIdSettable;
 
-public abstract class IdProviderDataSource<T extends IdProvider> extends DataSourceBase {
+public abstract class IdProviderDataSource<T extends IIdSettable> extends DataSourceBase {
     public static final String ID = "_id";
 
     // Database fields

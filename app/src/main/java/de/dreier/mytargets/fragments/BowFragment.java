@@ -72,12 +72,6 @@ public class BowFragment extends EditableFragment<Bow> implements View.OnClickLi
                     .inflate(R.layout.card_image_details, parent, false);
             return new ViewHolder(itemView);
         }
-
-        @Override
-        public void onViewRecycled(SelectableViewHolder<Bow> holder) {
-            super.onViewRecycled(holder);
-            ButterKnife.unbind(holder);
-        }
     }
 
     class ViewHolder extends SelectableViewHolder<Bow> {

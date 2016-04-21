@@ -246,7 +246,8 @@
   <string name="show_points_colored">Boyanmış noktaları göster</string>
   <string name="stabilizer">Stabilizatör</string>
   <string name="clicker">Kliker</string>
-  <string name="training_with_standard_round">Training with Standard Round</string>
-  <string name="free_training">Free Training</string>
-  <string name="competition">Competition</string>
+  <string name="arrow_number_x">Arrow number %d</string>
+  <string name="training_with_standard_round">Standart hedefle antrenman</string>
+  <string name="free_training">Serbest antrenman</string>
+  <string name="competition">Yarışma</string>
 </resources>

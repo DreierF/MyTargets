@@ -28,7 +28,7 @@ import de.dreier.mytargets.managers.dao.PasseDataSource;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.targets.TargetDrawable;
 
 public class TargetImage {
 
@@ -51,7 +51,7 @@ public class TargetImage {
 
         for (int i = 0; i < rounds.size(); i++) {
             ArrayList<Passe> oldOnes = new PasseDataSource(context).getAllByRound(rounds.get(i).getId());
-            Target target = rounds.get(i).info.target;
+            TargetDrawable target = rounds.get(i).info.target.getDrawable();
             target.setBounds(bounds.get(i));
             target.draw(canvas);
             target.drawArrows(canvas, oldOnes);
@@ -79,7 +79,7 @@ public class TargetImage {
         boolean lastNarrow = false;
         boolean narrow;
         for (int i = 0; i < rounds.size(); i++) {
-            Target target = rounds.get(i).info.target;
+            TargetDrawable target = rounds.get(i).info.target.getDrawable();
             int width = target.getWidth();
             int height = target.getHeight();
             narrow = width / height < 0.5;

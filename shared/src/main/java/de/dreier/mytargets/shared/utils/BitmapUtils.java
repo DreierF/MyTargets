@@ -14,8 +14,11 @@ import android.graphics.Canvas;
 import android.graphics.Picture;
 import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -96,5 +99,21 @@ public class BitmapUtils {
         final int rg = (int) (fg + dg * percent);
         final int rb = (int) (fb + db * percent);
         return (ra << 24) | (rr << 16) | (rg << 8) | rb;
+    }
+
+    public static Bitmap getBitmap(Context context, String imageFile) {
+        try {
+            if (imageFile != null) {
+                if (imageFile.contains("/")) {
+                    imageFile = imageFile.substring(imageFile.lastIndexOf("/") + 1);
+                }
+                Log.d("getImage", imageFile);
+                FileInputStream in = context.openFileInput(imageFile);
+                return BitmapFactory.decodeStream(in);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

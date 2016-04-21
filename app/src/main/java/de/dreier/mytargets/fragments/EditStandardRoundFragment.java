@@ -18,6 +18,8 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
@@ -25,7 +27,7 @@ import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.models.target.TargetFactory;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.views.DynamicItemLayout;
 import de.dreier.mytargets.views.NumberPicker;
 import de.dreier.mytargets.views.selector.DistanceSelector;
@@ -50,7 +52,7 @@ public class EditStandardRoundFragment extends EditFragmentBase
 
         StandardRound standardRound = null;
         if (getArguments() != null) {
-            standardRound = (StandardRound) getArguments().getSerializable(ITEM);
+            standardRound = getArguments().getParcelable(ITEM);
         }
 
         // Indoor / outdoor
@@ -79,8 +81,8 @@ public class EditStandardRoundFragment extends EditFragmentBase
             round.passes = prefs.getInt("rounds", 10);
             int tid = prefs.getInt("target", 0);
             int scoring = prefs.getInt("scoring", 0);
-            round.target = TargetFactory.createTarget(getActivity(), tid, scoring);
-            round.target.size = round.target.getDiameters()[0];
+            round.target = new Target(tid, scoring);
+            round.target.size = round.target.getModel().getDiameters()[0];
             round.targetTemplate = round.target;
             long distId = prefs.getLong("distanceId", new Distance(18, "m").getId());
             round.distance = Distance.fromId(distId);
@@ -95,7 +97,7 @@ public class EditStandardRoundFragment extends EditFragmentBase
                 name.setText(standardRound.name);
                 standardRoundId = standardRound.getId();
             } else {
-                name.setText(getActivity().getString(R.string.custom) + " " + standardRound.name);
+                name.setText(String.format("%s %s", getString(R.string.custom), standardRound.name));
                 for(RoundTemplate round : rounds) {
                     round.setId(-1);
                 }
@@ -128,7 +130,7 @@ public class EditStandardRoundFragment extends EditFragmentBase
         editor.apply();
 
         Intent data = new Intent();
-        data.putExtra(ITEM, standardRound);
+        data.putExtra(ITEM, Parcels.wrap(standardRound));
         getActivity().setResult(Activity.RESULT_OK, data);
         getActivity().finish();
         getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);

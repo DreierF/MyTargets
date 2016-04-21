@@ -9,11 +9,9 @@ package de.dreier.mytargets.managers.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.view.View;
 
 import java.util.ArrayList;
 
-import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
@@ -60,7 +58,7 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
         if (round.comment == null) {
             round.comment = "";
         }
-        round.info = RoundTemplateDataSource.cursorToRoundTemplate(cursor, getContext(), 3);
+        round.info = RoundTemplateDataSource.cursorToRoundTemplate(cursor, 3);
         return round;
     }
 

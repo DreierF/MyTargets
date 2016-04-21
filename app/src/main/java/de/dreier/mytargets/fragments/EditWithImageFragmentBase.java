@@ -72,6 +72,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
 
     @Bind(R.id.overlay)
     View overlay;
+
     
     @Bind(R.id.scrollView)
     ObservableScrollView scrollView;

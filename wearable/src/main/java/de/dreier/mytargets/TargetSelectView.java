@@ -68,9 +68,9 @@ public class TargetSelectView extends TargetViewBase {
         canvas.drawRect(0, 0, contentWidth, contentHeight, drawColorP);
 
         // Draw all possible points in a circular
-        for (int i = -1; i < mZoneCount; i++) {
-            Coordinate coord = getCircularCoords(i);
-            mCircle.draw(canvas, coord.x, coord.y, i, i == curZone ? 23 : 17, false, currentArrow,
+        for (int i = -1; i < zoneCount; i++) {
+            Coordinate coordinate = getCircularCoords(i);
+            mCircle.draw(canvas, coordinate.x, coordinate.y, i, i == curZone ? 23 : 17, false, currentArrow,
                     -1);
         }
 
@@ -79,7 +79,7 @@ public class TargetSelectView extends TargetViewBase {
     }
 
     private Coordinate getCircularCoords(int zone) {
-        double degree = Math.toRadians(zone * 360.0 / (double) (mZoneCount + 1));
+        double degree = Math.toRadians(zone * 360.0 / (double) (zoneCount + 1));
         Coordinate coord = new Coordinate();
         coord.x = (float) (radius + (Math.cos(degree) * circRadius));
         coord.y = (float) (radius + (Math.sin(degree) * circRadius));
@@ -109,7 +109,7 @@ public class TargetSelectView extends TargetViewBase {
 
     @Override
     protected Shot getShotFromPos(float x, float y) {
-        int rings = round.target.getZones();
+        int rings = target.getModel().getZoneCount();
         Shot s = new Shot(currentArrow);
 
         double xDiff = x - radius;
@@ -132,7 +132,7 @@ public class TargetSelectView extends TargetViewBase {
             // Correct points_zone
             s.zone = Shot.MISS;
         }
-        s.x = round.target.getXFromZone(s.zone);
+        s.x = targetDrawable.getXFromZone(s.zone);
         s.y = 0f;
         return s;
     }

@@ -11,6 +11,8 @@ import android.util.Log;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 
+import org.parceler.Parcels;
+
 import java.io.IOException;
 
 import de.dreier.mytargets.shared.models.NotificationInfo;
@@ -53,7 +55,7 @@ public class WearableListener extends WearableListenerService {
 
         // Build the intent to display our custom notification
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        notificationIntent.putExtra(MainActivity.EXTRA_ROUND, info.round);
+        notificationIntent.putExtra(MainActivity.EXTRA_ROUND, Parcels.wrap(info.round));
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 

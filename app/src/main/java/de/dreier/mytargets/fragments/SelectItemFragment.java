@@ -25,7 +25,8 @@ import android.view.ViewGroup;
 
 import junit.framework.Assert;
 
-import java.io.Serializable;
+import org.parceler.Parcels;
+
 import java.util.List;
 
 import de.dreier.mytargets.R;
@@ -163,7 +164,7 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
      */
     protected void onSaveItem() {
         Intent data = new Intent();
-        data.putExtra(ITEM, (Serializable) onSave());
+        data.putExtra(ITEM, Parcels.wrap(onSave()));
         getActivity().setResult(Activity.RESULT_OK, data);
         getActivity().finish();
         getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);

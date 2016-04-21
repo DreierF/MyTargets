@@ -233,6 +233,7 @@
   <string name="show_points_colored">Show points colored</string>
   <string name="stabilizer">Stabilizer</string>
   <string name="clicker">Clicker</string>
+  <string name="arrow_number_x">Arrow number %d</string>
   <string name="training_with_standard_round">Training with Standard Round</string>
   <string name="free_training">Free Training</string>
   <string name="competition">Competition</string>

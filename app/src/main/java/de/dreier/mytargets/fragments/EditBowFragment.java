@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 
+import org.parceler.Parcels;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -119,7 +121,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
             }
         } else {
             // Restore values from before orientation change
-            Bow bow = (Bow) savedInstanceState.getSerializable("bow");
+            Bow bow = Parcels.unwrap(savedInstanceState.getParcelable("bow"));
             setBowValues(bow);
 
         }
@@ -239,6 +241,6 @@ public class EditBowFragment extends EditWithImageFragmentBase
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("bow", buildBow());
+        outState.putParcelable("bow", Parcels.wrap(buildBow()));
     }
 }

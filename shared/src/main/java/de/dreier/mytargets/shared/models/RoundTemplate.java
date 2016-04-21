@@ -1,10 +1,9 @@
 package de.dreier.mytargets.shared.models;
 
-import de.dreier.mytargets.shared.models.target.Target;
+import org.parceler.Parcel;
 
-public class RoundTemplate extends IdProvider {
-    static final long serialVersionUID = 56L;
-
+@Parcel
+public class RoundTemplate implements IIdSettable {
     public long standardRound;
     public int index;
     public int arrowsPerPasse;
@@ -12,8 +11,24 @@ public class RoundTemplate extends IdProvider {
     public Distance distance;
     public int passes;
     public Target targetTemplate;
+    protected long id;
 
     public int getMaxPoints() {
         return target.getMaxPoints() * passes * arrowsPerPasse;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object another) {
+        return another instanceof RoundTemplate &&
+                getClass().equals(another.getClass()) &&
+                id == ((RoundTemplate) another).id;
     }
 }

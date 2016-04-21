@@ -2,13 +2,15 @@ package de.dreier.mytargets.models;
 
 import android.support.annotation.NonNull;
 
-import java.io.Serializable;
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.models.Target;
 
-public class ArrowStatistic implements Comparable<ArrowStatistic>, Serializable {
+@Parcel
+public class ArrowStatistic implements Comparable<ArrowStatistic> {
 
     public String arrowName;
     public int arrowNumber;

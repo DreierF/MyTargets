@@ -29,8 +29,8 @@ import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
-import de.dreier.mytargets.shared.models.target.Target;
 
 public class HTMLUtils {
 
@@ -87,18 +87,19 @@ public class HTMLUtils {
                     for (int i = 0; i < passe.shot.length; i++) {
                         Shot shot = passe.shot[i];
                         html += "<td>";
+                        final Target target = round.info.target;
                         if (configuration.showPointsColored) {
-                            int fillColor = round.info.target.getFillColor(shot.zone);
-                            int color = round.info.target.getTextColor(shot.zone);
+                            int fillColor = target.getModel().getFillColor(shot.zone);
+                            int color = target.getModel().getTextColor(shot.zone);
                             html += String.format("<div class=\"circle\" style='background: #%06X; color: #%06X'>",
                                     fillColor & 0xFFFFFF, color & 0xFFFFFF);
                         }
-                        html += round.info.target.zoneToString(shot.zone, i);
+                        html += target.zoneToString(shot.zone, i);
                         if (configuration.showPointsColored) {
                             html += "</div>";
                         }
                         html += "</td>";
-                        int points = round.info.target.getPointsByZone(shot.zone, i);
+                        int points = target.getPointsByZone(shot.zone, i);
                         sum += points;
                         carry += points;
                     }
@@ -188,7 +189,7 @@ public class HTMLUtils {
         }
         if (!equals[1]) {
             infoText += "<br>" + context.getString(R.string.target_face) + ": <b>" +
-                    round.info.target + "</b>";
+                    round.info.target.getModel().getName(context) + "</b>";
         }
         if (!round.comment.isEmpty()) {
             infoText += "<br>" + context.getString(R.string.comment) +
@@ -218,7 +219,7 @@ public class HTMLUtils {
         for (Pair<String, Integer> score : scoreCount) {
             infoText += getKeyValueLine(score.getFirst(), score.getSecond());
         }
-        ;
+
         infoText += getKeyValueLine(context.getString(R.string.average),
                 passeDataSource.getAverageScore(training));
         return infoText;
@@ -274,7 +275,7 @@ public class HTMLUtils {
             }
             if (equals[1]) {
                 infoText += "<br>" + context.getString(R.string.target_face) + ": <b>" +
-                        target + "</b>";
+                        target.getModel().getName(context) + "</b>";
             }
         }
         return infoText;

@@ -21,14 +21,20 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.shared.models.Diameter;
-import de.dreier.mytargets.shared.models.target.Target;
-import de.dreier.mytargets.shared.models.target.TargetFactory;
+import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.targets.TargetFactory;
+import de.dreier.mytargets.shared.targets.TargetModelBase;
 import de.dreier.mytargets.utils.MyBackupAgent;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
@@ -48,26 +54,29 @@ public class TargetFragment extends SelectItemFragment<Target>
         super.onActivityCreated(savedInstanceState);
 
         // Process passed arguments
-        Target t = (Target) getArguments().getSerializable(ITEM);
+        Target t = Parcels.unwrap(getArguments().getParcelable(ITEM));
         typeFixed = getArguments().getBoolean(TYPE_FIXED);
-        List<Target> list;
+        List<TargetModelBase> list;
         if (typeFixed) {
-            list = TargetFactory.getList(getActivity(), t);
+            list = TargetFactory.getList(t);
         } else {
-            list = TargetFactory.getList(getActivity());
+            list = TargetFactory.getList();
         }
-        setList(list, new TargetAdapter());
+        List<Target> targets = Stream.of(list)
+                .map(value -> new Target((int) value.getId(), 0))
+                .collect(Collectors.toList());
+        setList(targets, new TargetAdapter());
 
         scoringStyle = (Spinner) rootView.findViewById(R.id.scoring_style);
         seekBar = (SeekBar) rootView.findViewById(R.id.target_size_seekbar);
         label = (TextView) rootView.findViewById(R.id.target_size_label);
-        int position = list.indexOf(t);
+        int position = targets.indexOf(t);
         mSelector.setSelected(position, t.getId(), true);
         mRecyclerView.scrollToPosition(position);
         updateSettings();
 
         // Set initial target size
-        Diameter[] diameters = t.getDiameters();
+        Diameter[] diameters = t.getModel().getDiameters();
         for (int i = 0; i < diameters.length; i++) {
             if (diameters[i].equals(t.size)) {
                 seekBar.setProgress(i);
@@ -90,7 +99,7 @@ public class TargetFragment extends SelectItemFragment<Target>
 
     private void updateSettings() {
         Target target = mAdapter.getItem(mSelector.getSelectedPosition());
-        Diameter[] diameters = target.getDiameters();
+        Diameter[] diameters = target.getModel().getDiameters();
         if (seekBar.getProgress() > diameters.length - 1) {
             seekBar.setProgress(diameters.length - 1);
         }
@@ -107,7 +116,7 @@ public class TargetFragment extends SelectItemFragment<Target>
 
         // Init scoring styles
         int style = scoringStyle.getSelectedItemPosition();
-        ArrayList<String> styles = target.getScoringStyles();
+        ArrayList<String> styles = target.getModel().getScoringStyles();
         //noinspection ConstantConditions
         Context themedContext = ((AppCompatActivity) getActivity()).getSupportActionBar()
                 .getThemedContext();
@@ -136,9 +145,8 @@ public class TargetFragment extends SelectItemFragment<Target>
     @Override
     protected Target onSave() {
         Target target = super.onSave();
-        int scoring = scoringStyle.getSelectedItemPosition();
-        target = TargetFactory.createTarget(getActivity(), target.id, scoring);
-        Diameter[] diameters = target.getDiameters();
+        target.scoringStyle = scoringStyle.getSelectedItemPosition();
+        Diameter[] diameters = target.getModel().getDiameters();
         target.size = diameters[seekBar.getProgress()];
 
         SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);
@@ -186,8 +194,8 @@ public class TargetFragment extends SelectItemFragment<Target>
 
         @Override
         public void bindCursor() {
-            mName.setText(mItem.name);
-            mImg.setImageDrawable(mItem);
+            mName.setText(mItem.getModel().getName(getContext()));
+            mImg.setImageDrawable(mItem.getDrawable());
         }
     }
 }

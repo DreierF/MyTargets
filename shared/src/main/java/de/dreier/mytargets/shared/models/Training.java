@@ -1,11 +1,12 @@
 package de.dreier.mytargets.shared.models;
 
-import java.util.Calendar;
+import org.parceler.Parcel;
+
 import java.util.Date;
 
-public class Training extends IdProvider {
-    static final long serialVersionUID = 58L;
-
+@Parcel
+public class Training implements IIdSettable {
+    protected long id;
     public String title = "";
     public Date date = new Date();
     public Environment environment;
@@ -15,11 +16,18 @@ public class Training extends IdProvider {
     public boolean arrowNumbering;
     public int timePerPasse;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     @Override
-    public long getParentId() {
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(0);
-        c.set(date.getYear() + 1900, date.getMonth(), 1);
-        return c.getTimeInMillis();
+    public boolean equals(Object another) {
+        return another instanceof Training &&
+                getClass().equals(another.getClass()) &&
+                id == ((Training) another).id;
     }
 }

@@ -44,9 +44,8 @@ import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
-import de.dreier.mytargets.shared.models.target.Target;
-import de.dreier.mytargets.shared.models.target.TargetFactory;
 import de.dreier.mytargets.views.selector.ArrowSelector;
 import de.dreier.mytargets.views.selector.BowSelector;
 import de.dreier.mytargets.views.selector.DistanceSelector;
@@ -165,11 +164,10 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             indoor.setChecked(prefs.getBoolean("indoor", false));
             outdoor.setChecked(!prefs.getBoolean("indoor", false));
             arrows.setProgress(prefs.getInt("ppp", 3));
-            Target target = TargetFactory.createTarget(activity, prefs.getInt("target", 0),
-                    prefs.getInt("scoring_style", 0));
-            target.size = new Diameter(prefs.getInt("size_target", 60),
-                    prefs.getString("unit_target", Diameter.CENTIMETER));
-            targetSpinner.setItem(target);
+            targetSpinner.setItem(new Target(prefs.getInt("target", 0),
+                    prefs.getInt("scoring_style", 0),
+                    new Diameter(prefs.getInt("size_target", 60),
+                            prefs.getString("unit_target", Diameter.CENTIMETER))));
             environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
         } else {
             setTitle(R.string.edit_training);

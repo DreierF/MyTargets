@@ -15,11 +15,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.models.Target;
 
-/**
- * Created by Florian on 20.03.2015.
- */
 public class PasseDrawer {
     public static final int NO_SELECTION = -1;
     private static final int MIN_PADDING = 2;
@@ -245,18 +242,18 @@ public class PasseDrawer {
     }
 
     public void saveState(Bundle b) {
-        b.putSerializable("pd_passe", mPasse);
+        b.putParcelable("pd_passe", mPasse);
         b.putInt("pd_pressed", mPressed);
         b.putInt("pd_selected", mSelected);
-        b.putSerializable("pd_selected_pos", mSelectedPosition);
+        b.putParcelable("pd_selected_pos", mSelectedPosition);
         b.putInt("pd_selected_radius", mSelectedRadius);
     }
 
     public void restoreState(Bundle b) {
-        mPasse = (Passe) b.getSerializable("pd_passe");
+        mPasse = b.getParcelable("pd_passe");
         mPressed = b.getInt("pd_pressed");
         mSelected = b.getInt("pd_selected");
-        mSelectedPosition = (Coordinate) b.getSerializable("pd_selected_pos");
+        mSelectedPosition = b.getParcelable("pd_selected_pos");
         mSelectedRadius = b.getInt("pd_selected_radius");
     }
 }

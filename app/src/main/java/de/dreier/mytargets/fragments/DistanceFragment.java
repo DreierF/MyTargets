@@ -19,6 +19,8 @@ import android.view.ViewGroup;
 
 import junit.framework.Assert;
 
+import org.parceler.Parcels;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -45,7 +47,7 @@ public class DistanceFragment extends Fragment implements TextInputDialog.OnClic
         View rootView = inflater.inflate(R.layout.fragment_distance, container, false);
         ButterKnife.bind(this, rootView);
 
-        distance = (Distance) getArguments().getSerializable(ITEM);
+        distance = Parcels.unwrap(getArguments().getParcelable(ITEM));
 
         DistanceTabsFragmentPagerAdapter adapter =
                 new DistanceTabsFragmentPagerAdapter(getActivity(), distance);

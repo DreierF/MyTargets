@@ -16,8 +16,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
 
-import de.dreier.mytargets.shared.models.target.Target;
-import de.dreier.mytargets.shared.models.target.TargetFactory;
+import de.dreier.mytargets.shared.models.Target;
 
 public class StatisticsDataSource extends DataSourceBase {
 
@@ -53,7 +52,7 @@ public class StatisticsDataSource extends DataSourceBase {
                 actCounter = 0;
                 maxCounter = 0;
             }
-            Target target = TargetFactory.createTarget(context, res.getInt(1), res.getInt(3));
+            Target target = new Target(res.getInt(1), res.getInt(3));
             actCounter += target.getPointsByZone(zone, res.getInt(4));
             maxCounter += target.getMaxPoints();
             oldPasse = passe;

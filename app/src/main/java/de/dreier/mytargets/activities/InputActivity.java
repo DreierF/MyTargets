@@ -232,7 +232,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         }
 
         // Only sort shots when all arrows are on one target face
-        if (template.target.getFaceCount() == 1) {
+        if (template.target.getModel().getFaceCount() == 1) {
             passe.sort();
         }
 

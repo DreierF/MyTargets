@@ -15,7 +15,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.target.Target;
+import de.dreier.mytargets.shared.models.Target;
 
 public class TargetPasseView extends View {
 
@@ -50,7 +50,7 @@ public class TargetPasseView extends View {
     public void setPasse(Passe p, Target tar) {
         passe = p;
         target = tar;
-        mZoneCount = tar.getZones();
+        mZoneCount = tar.getModel().getZoneCount();
         invalidate();
     }
 
@@ -60,8 +60,8 @@ public class TargetPasseView extends View {
         // Initialize variables
         init();
 
-        target.setBounds(0, 0, 2 * radius, 2 * radius);
-        target.draw(canvas);
+        target.getDrawable().setBounds(0, 0, 2 * radius, 2 * radius);
+        target.getDrawable().draw(canvas);
 
         // Draw exact arrow position
         drawArrows(canvas);
@@ -73,7 +73,7 @@ public class TargetPasseView extends View {
         float sumY = 0;
         for (int i = 0; i < passe.shot.length; i++) {
             // For yellow and white background use black font color
-            int color = i == mZoneCount || passe.shot[i].zone < 0 ? 0xFF000000 : target.getFillColor(
+            int color = i == mZoneCount || passe.shot[i].zone < 0 ? 0xFF000000 : target.getModel().getFillColor(
                     passe.shot[i].zone);
             drawColorP.setColor(color);
             float selX = passe.shot[i].x;
