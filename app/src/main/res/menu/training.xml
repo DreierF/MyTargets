@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_statistics"
-        android:icon="@drawable/ic_trending_up_white_24dp"
+        android:icon="@drawable/ic_show_chart_white_24dp"
         android:title="@string/statistic"
         app:showAsAction="ifRoom" />
     <item

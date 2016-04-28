@@ -28,15 +28,19 @@ import de.dreier.mytargets.managers.WearMessageManager;
 import de.dreier.mytargets.managers.dao.ArrowNumberDataSource;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
+import de.dreier.mytargets.managers.dao.RoundTemplateDataSource;
 import de.dreier.mytargets.managers.dao.SightSettingDataSource;
+import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
+import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.views.TargetView;
 
 public class InputActivity extends AppCompatActivity implements OnTargetSetListener {
@@ -56,7 +60,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
     private int curPasse = 0;
     private int savedPasses = 0;
-    private Round mRound;
+    private Round round;
     private boolean mShowAllMode = false;
     private WearMessageManager manager;
     private Training training;
@@ -64,6 +68,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     private boolean mExitOnFinish;
     private ArrayList<Round> rounds;
     private PasseDataSource passeDataSource;
+    private StandardRound standardRound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +87,13 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
         long roundId = intent.getLongExtra(ROUND_ID, -1);
         curPasse = intent.getIntExtra(PASSE_IND, -1);
-        mRound = roundDataSource.get(roundId);
-        template = mRound.info;
-        training = new TrainingDataSource(this).get(mRound.training);
-        rounds = roundDataSource.getAll(mRound.training);
+        round = roundDataSource.get(roundId);
+        template = round.info;
+        training = new TrainingDataSource(this).get(round.training);
+        standardRound = new StandardRoundDataSource(this).get(training.standardRoundId);
+        rounds = roundDataSource.getAll(round.training);
         savedPasses = passeDataSource.getAllByRound(roundId).size();
-        mExitOnFinish = savedPasses <= curPasse;
+        mExitOnFinish = savedPasses <= curPasse && standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE;
 
         target.setRoundTemplate(template);
         if (training.arrowNumbering) {
@@ -121,7 +127,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
-        manager.close();
+        if (manager != null) {
+            manager.close();
+        }
     }
 
     @Override
@@ -144,22 +152,22 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     private void setPasse(int passe) {
         if (passe >= template.passes) {
             if (rounds.size() > template.index + 1) {
-                mRound = rounds.get(template.index + 1);
-                template = mRound.info;
+                round = rounds.get(template.index + 1);
+                template = round.info;
                 passe = 0;
-                savedPasses = passeDataSource.getAllByRound(mRound.getId()).size();
+                savedPasses = passeDataSource.getAllByRound(round.getId()).size();
             } else if (mExitOnFinish) {
                 finish();
                 overridePendingTransition(R.anim.left_in, R.anim.right_out);
             }
         } else if (passe == -1 && template.index > 0) {
-            mRound = rounds.get(template.index - 1);
-            template = mRound.info;
+            round = rounds.get(template.index - 1);
+            template = round.info;
             passe = template.passes - 1;
             savedPasses = template.passes;
         }
         if (passe < savedPasses) {
-            Passe p = passeDataSource.get(mRound.getId(), passe);
+            Passe p = passeDataSource.get(round.getId(), passe);
             if (p != null) {
                 target.setPasse(p);
             } else {
@@ -182,12 +190,12 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     private void updatePasse() {
         prev.setEnabled(curPasse > 0 || template.index > 0);
         next.setEnabled(curPasse < savedPasses && curPasse + 1 < template.passes ||
-                rounds.size() > template.index + 1);
+                rounds.size() > template.index + 1 || standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE);
 
         assert getSupportActionBar() != null;
         getSupportActionBar().setTitle(getString(R.string.passe) + " " + (curPasse + 1));
         getSupportActionBar()
-                .setSubtitle(getString(R.string.round) + " " + (mRound.info.index + 1));
+                .setSubtitle(getString(R.string.round) + " " + (round.info.index + 1));
     }
 
     @Override
@@ -236,7 +244,14 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
             passe.sort();
         }
 
-        passe.roundId = mRound.getId();
+        // Change round template if passe is out of range defined in template
+        if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE) {
+            if (template.passes <= curPasse) {
+                new RoundTemplateDataSource(this).addPasse(template);
+            }
+        }
+
+        passe.roundId = round.getId();
         passeDataSource.update(passe);
 
         if (curPasse >= savedPasses || remote) {
@@ -263,7 +278,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         String text = "";
 
         // Initialize message text
-        Passe lastPasse = passeDataSource.get(mRound.getId(), savedPasses);
+        Passe lastPasse = passeDataSource.get(round.getId(), savedPasses);
         if (lastPasse != null) {
             for (Shot shot : lastPasse.shot) {
                 text += template.target.zoneToString(shot.zone, 0) + " ";
@@ -279,6 +294,6 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                     new SightSettingDataSource(getApplicationContext()).get(training.bow,
                             template.distance);
         }
-        return new NotificationInfo(mRound, title, text);
+        return new NotificationInfo(round, title, text);
     }
 }

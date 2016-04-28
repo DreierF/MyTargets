@@ -13,7 +13,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -25,8 +24,6 @@ import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import org.parceler.Parcels;
@@ -37,7 +34,6 @@ import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivity.EditArrowActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity.EditBowActivity;
@@ -47,9 +43,8 @@ import de.dreier.mytargets.fragments.FragmentBase;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.IIdProvider;
+import de.dreier.mytargets.utils.FABMenu;
 
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
 import static de.dreier.mytargets.fragments.EditArrowFragment.ARROW_ID;
 import static de.dreier.mytargets.fragments.EditBowFragment.BOW_ID;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
@@ -61,41 +56,21 @@ import static de.dreier.mytargets.fragments.FragmentBase.ITEM_ID;
  * Shows an overview over all trying days
  */
 public class MainActivity extends AppCompatActivity
-        implements FragmentBase.OnItemSelectedListener, FragmentBase.ContentListener, ViewPager.OnPageChangeListener {
+        implements FragmentBase.OnItemSelectedListener, FragmentBase.ContentListener, ViewPager.OnPageChangeListener, FABMenu.Listener {
 
     private static boolean shownThisTime = false;
     private final boolean[] empty = new boolean[3];
     private final int[] stringRes = new int[3];
-    @Bind(R.id.new_layout)
-    View mNewLayout;
-    @Bind(R.id.new_text)
-    TextView mNewText;
     @Bind(R.id.viewPager)
     ViewPager viewPager;
     @Bind(R.id.slidingTabs)
     TabLayout tabLayout;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
-    @Bind(R.id.fab)
-    FloatingActionButton fab;
-    @Bind(R.id.fab1)
-    FloatingActionButton fab1;
-    @Bind(R.id.fab2)
-    FloatingActionButton fab2;
-    @Bind(R.id.fab1Label)
-    TextView fab1Label;
-    @Bind(R.id.fab2Label)
-    TextView fab2Label;
-    @Bind(R.id.overlayView)
-    View overlayView;
+    @Bind(android.R.id.content)
+    View rootView;
 
-    private boolean isFabOpen = false;
-    private Animation fabOpen;
-    private Animation fabClose;
-    private Animation rotateForward;
-    private Animation rotateBackward;
-    private Animation fabShowAnimation;
-    private Animation fabHideAnimation;
+    FABMenu fm;
 
     {
         stringRes[0] = R.string.new_training;
@@ -108,60 +83,23 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
 
-        if (savedInstanceState != null) {
-            isFabOpen = savedInstanceState.getBoolean("fab_open");
-        }
+        fm = new FABMenu(this, rootView);
+        fm.setListener(this);
+        fm.setFABItem(1, R.drawable.ic_trending_up_white_24dp, R.string.free_training);
+        fm.setFABItem(2, R.drawable.ic_album_24dp, R.string.training_with_standard_round);
 
         MainTabsFragmentPagerAdapter adapter = new MainTabsFragmentPagerAdapter(this);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(this);
         tabLayout.setupWithViewPager(viewPager);
 
+        if (savedInstanceState != null) {
+            fm.onRestoreInstanceState(savedInstanceState);
+        }
+
         askForHelpTranslating();
-        fabOpen = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
-        fabClose = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
-        rotateForward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_forward);
-        rotateBackward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_backward);
-        fabShowAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_label_show);
-        fabHideAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_label_hide);
-
-        fabOpen.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                applyFabState(true);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        fabClose.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                applyFabState(false);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        setSupportActionBar(toolbar);
-        applyFabState(isFabOpen);
     }
 
     @Override
@@ -183,24 +121,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if(!isFabOpen) {
-            fab.setAnimation(null);
-            fab1.setAnimation(null);
-            fab2.setAnimation(null);
-            fab1Label.setAnimation(null);
-            fab2Label.setAnimation(null);
-        }
-        applyFabState(isFabOpen);
+        fm.reset();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        fm.unbind();
         ButterKnife.unbind(this);
     }
 
     private void askForHelpTranslating() {
         ArrayList<String> supportedLanguages = new ArrayList<>();
+        //TODO update
         Collections.addAll(supportedLanguages, "de", "en", "fr", "es", "ru", "nl", "it", "sl", "ca",
                 "zh", "tr", "hu", "sl");
         final SharedPreferences prefs = PreferenceManager
@@ -233,28 +166,27 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @OnClick({R.id.fab, R.id.fab1, R.id.fab2, R.id.fab1Label, R.id.fab2Label})
-    public void onClick(View v) {
-        int currentTab = viewPager.getCurrentItem();
-        switch (v.getId()) {
-            case R.id.fab:
-                if (currentTab == 0) {
-                    animateFAB();
-                } else if (currentTab == 1) {
+    @Override
+    public boolean isFABExpandable() {
+        return viewPager.getCurrentItem() == 0;
+    }
+
+    @Override
+    public void onFabClicked(int index) {
+        switch (index) {
+            case 0:
+                int currentTab = viewPager.getCurrentItem();
+                if (currentTab == 1) {
                     startActivityAnimated(EditBowActivity.class);
                 } else if (currentTab == 2) {
                     startActivityAnimated(EditArrowActivity.class);
                 }
                 break;
-            case R.id.fab1Label:
-            case R.id.fab1:
+            case 1:
                 startActivityAnimated(EditTrainingActivity.class, TRAINING_TYPE, FREE_TRAINING);
-                isFabOpen = false;
                 break;
-            case R.id.fab2Label:
-            case R.id.fab2:
+            case 2:
                 startActivityAnimated(EditTrainingActivity.class, TRAINING_TYPE, TRAINING_WITH_STANDARD_ROUND);
-                isFabOpen = false;
                 break;
         }
     }
@@ -279,54 +211,13 @@ public class MainActivity extends AppCompatActivity
         overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
-    private void animateFAB() {
-        if (isFabOpen) {
-            fab.startAnimation(rotateBackward);
-            fab1.startAnimation(fabClose);
-            fab2.startAnimation(fabClose);
-            fab1Label.startAnimation(fabHideAnimation);
-            fab2Label.startAnimation(fabHideAnimation);
-            overlayView.setAlpha(1);
-            overlayView.animate().alpha(0).start();
-        } else {
-            fab.startAnimation(rotateForward);
-            fab1.startAnimation(fabOpen);
-            fab2.startAnimation(fabOpen);
-            fab1Label.startAnimation(fabShowAnimation);
-            fab2Label.startAnimation(fabShowAnimation);
-            overlayView.setAlpha(0);
-            overlayView.setVisibility(VISIBLE);
-            overlayView.animate().alpha(1).start();
-        }
-    }
-
-    private void applyFabState(boolean state) {
-        isFabOpen = state;
-        final int visibility = isFabOpen ? VISIBLE : INVISIBLE;
-        //fab.setRotation(isFabOpen ? 135 : 0);
-        //fab1.setVisibility(visibility);
-        //fab2.setVisibility(visibility);
-        fab1Label.setVisibility(visibility);
-        fab2Label.setVisibility(visibility);
-        fab1.setClickable(isFabOpen);
-        fab2.setClickable(isFabOpen);
-        fab1Label.setClickable(isFabOpen);
-        fab2Label.setClickable(isFabOpen);
-        overlayView.setVisibility(visibility);
-    }
-
-    @OnClick(R.id.overlayView)
-    public void dismissFabMenu() {
-        animateFAB();
-    }
-
     @Override
     public void onItemSelected(Parcelable passedItem) {
         IIdProvider item = Parcels.unwrap(passedItem);
         if (item instanceof Arrow) {
-            startActivityAnimated(EditArrowActivity.class, ARROW_ID, ((Arrow) item).getId());
+            startActivityAnimated(EditArrowActivity.class, ARROW_ID, item.getId());
         } else if (item instanceof Bow) {
-            startActivityAnimated(EditBowActivity.class, BOW_ID, ((Bow) item).getId());
+            startActivityAnimated(EditBowActivity.class, BOW_ID, item.getId());
         } else {
             startActivityAnimated(EditTrainingActivity.class, ITEM_ID, item.getId());
         }
@@ -339,9 +230,7 @@ public class MainActivity extends AppCompatActivity
                 this.empty[i] = empty;
             }
         }
-        if (isFabOpen) {
-            animateFAB();
-        }
+        fm.notifyContentChanged();
         onPageSelected(viewPager.getCurrentItem());
     }
 
@@ -352,8 +241,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onPageSelected(int position) {
-        mNewLayout.setVisibility(empty[position] ? VISIBLE : View.GONE);
-        mNewText.setText(stringRes[position]);
+        fm.setFABHelperTitle(empty[position] ? stringRes[position] : 0);
     }
 
     @Override
@@ -364,6 +252,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean("fab_open", isFabOpen);
+        fm.onSaveInstanceState(outState);
     }
 }

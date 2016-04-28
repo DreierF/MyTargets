@@ -19,6 +19,8 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Target;
 
 public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate> {
+    public static final String TARGET = "target";
+    public static final String SCORING_STYLE = "scoring_style";
     private static final String TABLE = "ROUND_TEMPLATE";
     private static final String STANDARD_ID = "sid";
     private static final String INDEX = "r_index";
@@ -26,10 +28,8 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
     private static final String UNIT = "unit";
     private static final String PASSES = "passes";
     private static final String ARROWS_PER_PASSE = "arrows";
-    public static final String TARGET = "target";
     private static final String TARGET_SIZE = "size";
     private static final String TARGET_SIZE_UNIT = "target_unit";
-    public static final String SCORING_STYLE = "scoring_style";
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -53,6 +53,24 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
         super(context, TABLE, dbHelper, database);
     }
 
+    static RoundTemplate cursorToRoundTemplate(Cursor cursor, int startColumnIndex) {
+        RoundTemplate roundTemplate = new RoundTemplate();
+        roundTemplate.setId(cursor.getLong(startColumnIndex));
+        roundTemplate.index = cursor.getInt(startColumnIndex + 1);
+        roundTemplate.arrowsPerPasse = cursor.getInt(startColumnIndex + 2);
+        final Diameter diameter = new Diameter(
+                cursor.getInt(startColumnIndex + 9), cursor.getString(startColumnIndex + 10));
+        roundTemplate.targetTemplate = new Target(cursor.getInt(startColumnIndex + 3),
+                cursor.getInt(startColumnIndex + 4), diameter);
+        roundTemplate.target = new Target(cursor.getInt(startColumnIndex + 5),
+                cursor.getInt(startColumnIndex + 6), diameter);
+        roundTemplate.distance = new Distance(cursor.getInt(startColumnIndex + 7),
+                cursor.getString(startColumnIndex + 8));
+        roundTemplate.passes = cursor.getInt(startColumnIndex + 11);
+        roundTemplate.standardRound = cursor.getLong(startColumnIndex + 12);
+        return roundTemplate;
+    }
+
     @Override
     public ContentValues getContentValues(RoundTemplate roundTemplate) {
         ContentValues values = new ContentValues();
@@ -69,24 +87,6 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
         return values;
     }
 
-    static RoundTemplate cursorToRoundTemplate(Cursor cursor, int startColumnIndex) {
-        RoundTemplate roundTemplate = new RoundTemplate();
-        roundTemplate.setId(cursor.getLong(startColumnIndex));
-        roundTemplate.index = cursor.getInt(startColumnIndex + 1);
-        roundTemplate.arrowsPerPasse = cursor.getInt(startColumnIndex + 2);
-        final Diameter diameter = new Diameter(
-                cursor.getInt(startColumnIndex + 9), cursor.getString(startColumnIndex + 10));
-        roundTemplate.targetTemplate = new Target(cursor.getInt(startColumnIndex + 3),
-                        cursor.getInt(startColumnIndex + 4), diameter);
-        roundTemplate.target = new Target(cursor.getInt(startColumnIndex + 5),
-                        cursor.getInt(startColumnIndex + 6), diameter);
-        roundTemplate.distance = new Distance(cursor.getInt(startColumnIndex + 7),
-                cursor.getString(startColumnIndex + 8));
-        roundTemplate.passes = cursor.getInt(startColumnIndex + 11);
-        roundTemplate.standardRound = cursor.getLong(startColumnIndex + 12);
-        return roundTemplate;
-    }
-
     public RoundTemplate get(long sid, int index) {
         Cursor cursor = database.rawQuery("SELECT _id, r_index, arrows, target, scoring_style, " +
                         "target, scoring_style, distance, unit, size, target_unit, passes, sid " +
@@ -100,5 +100,19 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
         }
         cursor.close();
         return r;
+    }
+
+    public void addPasse(RoundTemplate roundTemplate) {
+        roundTemplate.passes++;
+        ContentValues values = new ContentValues();
+        values.put(PASSES, roundTemplate.passes);
+        database.update(TABLE, values, "_id=?", new String[]{String.valueOf(roundTemplate.getId())});
+    }
+
+    public void deletePasse(RoundTemplate roundTemplate) {
+        roundTemplate.passes--;
+        ContentValues values = new ContentValues();
+        values.put(PASSES, roundTemplate.passes);
+        database.update(TABLE, values, "_id=?", new String[]{String.valueOf(roundTemplate.getId())});
     }
 }

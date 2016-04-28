@@ -126,6 +126,7 @@ public abstract class EditableFragmentBase<T extends IIdSettable> extends Fragme
                             public void onDismissed(Snackbar snackbar, int event) {
                                 for (Pair<Integer, T> item : deleted) {
                                     dataSource.delete(item.getSecond());
+                                    getLoaderManager().restartLoader(0, null, EditableFragmentBase.this);
                                 }
                             }
 

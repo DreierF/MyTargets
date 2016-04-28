@@ -64,6 +64,15 @@
             <android.support.v7.widget.RecyclerView
                 style="@style/card_list"/>
 
+
+            <View
+                android:id="@+id/overlayView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/dim_overlay"
+                android:clickable="true"
+                android:focusable="true" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_drop_shadow_height"

@@ -52,7 +52,7 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
     }
 
     public void onPermissionResult(Activity activity, int[] grantResult) {
-        if (grantResult[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResult.length > 0 && grantResult[0] == PackageManager.PERMISSION_GRANTED) {
             //noinspection MissingPermission
             queryWeatherInfo(activity);
         } else {

@@ -59,6 +59,11 @@ public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
         }
     }
 
+    @Override
+    protected boolean isImageSelectable() {
+        return true;
+    }
+
     public void setItemId(long standardRound) {
         setItem(new StandardRoundDataSource(getContext()).get(standardRound));
     }

@@ -11,8 +11,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,7 +27,6 @@ import org.parceler.Parcels;
 import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
-import de.dreier.mytargets.shared.models.IIdProvider;
 
 
 public abstract class SelectorBase<T> extends LinearLayout {
@@ -50,7 +47,7 @@ public abstract class SelectorBase<T> extends LinearLayout {
         super(context, attrs);
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mProgress = inflater.inflate(R.layout.item_process, this, false);
+        mProgress = inflater.inflate(R.layout.selector_item_process, this, false);
         mView = inflater.inflate(layout, this, false);
         ButterKnife.bind(this, mView);
         addView(mProgress);
@@ -145,5 +142,6 @@ public abstract class SelectorBase<T> extends LinearLayout {
         fm.beginTransaction().add(auxiliary, "FRAGMENT_TAG").commit();
         fm.executePendingTransactions();
         auxiliary.startActivityForResult(i, requestId);
+        ((FragmentActivity) getContext()).overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 }

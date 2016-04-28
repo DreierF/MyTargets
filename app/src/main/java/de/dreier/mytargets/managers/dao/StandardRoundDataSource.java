@@ -43,6 +43,7 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
         super.update(item);
         RoundTemplateDataSource rtds = new RoundTemplateDataSource(getContext(), dbHelper, database);
         for (RoundTemplate template : item.getRounds()) {
+            template.standardRound = item.getId();
             rtds.update(template);
         }
     }

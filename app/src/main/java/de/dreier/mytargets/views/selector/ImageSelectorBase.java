@@ -49,6 +49,13 @@ public abstract class ImageSelectorBase<T extends IImageProvider> extends Select
             details.setText(((IDetailProvider) item).getDetails(getContext()));
         }
         image.setImageDrawable(item.getDrawable(getContext()));
+        if(!isImageSelectable()) {
+            image.setBackgroundDrawable(null);
+        }
+    }
+
+    protected boolean isImageSelectable() {
+        return false;
     }
 
     void setTitle(@StringRes int title) {
