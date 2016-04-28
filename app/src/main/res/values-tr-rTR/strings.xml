@@ -45,7 +45,7 @@
   <string name="d_times_s">%1$d kere %2$s\n</string>
   <string name="text">Metin</string>
   <string name="dispersion_pattern">Dağılım şekli</string>
-  <string name="sharing_failed">Paylaşım başarısız oldu!</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
   <string name="send_exported">Aktarılan verileri gönder</string>
   <string name="exporting_failed">Dışa aktarma başarısız oldu!</string>
@@ -160,11 +160,9 @@
   <string name="restore_backup">Bir yedeğini geri yükle</string>
   <string name="weather">Hava durumu</string>
   <string name="environment">Ortam</string>
-  <string name="wind">Rüzgar</string>
   <string name="wind_speed">Rüzgar hızı</string>
   <string name="wind_direction">Rüzgar yönü</string>
-  <string name="location">Yer</string>
-  <string name="sight_setting_removed">Nişangah ayarı silindi!</string>
+  <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Metrik</string>
   <string name="imperial">Imperial</string>
   <string name="undo">Geri Al</string>
@@ -172,7 +170,7 @@
   <string name="expand_collapse">Genişlet/Daralt</string>
   <string name="new_round_template">Yeni şablon</string>
   <string name="arrow_numbers">Ok numaraları</string>
-  <string name="round_removed">Tur silindi!</string>
+  <string name="round_removed">Round deleted!</string>
   <string name="custom_round">Özel Tur</string>
   <string name="filter">Filtrele</string>
   <string name="club">Kulüp</string>
@@ -185,11 +183,8 @@
   <string name="not_matches_sheme">Yapılan giriş istenilen formatla eşleşmiyor. 1,3,6 gibi</string>
   <string name="arrow_numbers_desc">Atış için kullandığın tüm ok numaralarını gir ör. 1.2.5.6.7</string>
   <string name="practice">İdman</string>
-  <string name="use_timer">Zamanlayıcı kullan</string>
   <string name="edit_training">Antrenmanı Düzenle</string>
   <string name="edit_standard_round">Standart turu düzenle</string>
-  <string name="edit_bow">Yayı düzenle</string>
-  <string name="edit_arrow">Oku düzenle</string>
   <plurals name="arrow_deleted">
     <item quantity="one">Bir Ok Silindi</item>
     <item quantity="other">%d Ok Silindi</item>
@@ -228,4 +223,7 @@
   <string name="stabilizer">Stabilizatör</string>
   <string name="clicker">Kliker</string>
   <string name="arrow_number_x">Arrow number %d</string>
+  <string name="training_with_standard_round">Training with Standard Round</string>
+  <string name="free_training">Free Training</string>
+  <string name="competition">Competition</string>
 </resources>

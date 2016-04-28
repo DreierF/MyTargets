@@ -1,5 +1,8 @@
 package de.dreier.mytargets.shared.models;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+
 import org.parceler.Parcel;
 
 import de.dreier.mytargets.shared.targets.TargetDrawable;
@@ -7,7 +10,7 @@ import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
 
 @Parcel
-public class Target implements IIdProvider {
+public class Target implements IIdProvider, IImageProvider, IDetailProvider {
     public int id;
     public int scoringStyle;
     public Diameter size;
@@ -60,10 +63,6 @@ public class Target implements IIdProvider {
         return Math.max(getModel().getZonePoints(scoringStyle, 0), getModel().getZonePoints(scoringStyle, 1));
     }
 
-    public int getZonePoints(int zone) {
-        return getModel().getZonePoints(scoringStyle, zone);
-    }
-
     public TargetModelBase getModel() {
         if (model == null) {
             model = TargetFactory.getTarget(id);
@@ -74,5 +73,20 @@ public class Target implements IIdProvider {
 
     public int getPointsByZone(int zone, int arrow) {
         return model.getPointsByZone(zone, scoringStyle, arrow);
+    }
+
+    @Override
+    public Drawable getDrawable(Context context) {
+        return getDrawable();
+    }
+
+    @Override
+    public String getName(Context context) {
+        return String.format("%s (%s)", getModel().getName(context), size.toString(context));
+    }
+
+    @Override
+    public String getDetails(Context context) {
+        return getModel().getScoringStyles().get(scoringStyle);
     }
 }

@@ -17,17 +17,17 @@ import de.dreier.mytargets.shared.models.Arrow;
 
 public class ArrowDataSource extends IdProviderDataSource<Arrow> {
     public static final String TABLE = "ARROW";
-    public static final String NAME = "name";
-    public static final String THUMBNAIL = "thumbnail";
-    public static final String LENGTH = "length";
-    public static final String MATERIAL = "material";
-    public static final String SPINE = "spine";
-    public static final String WEIGHT = "weight";
-    public static final String TIP_WEIGHT = "tip_weight";
-    public static final String VANES = "vanes";
-    public static final String NOCK = "nock";
-    public static final String COMMENT = "comment";
-    public static final String IMAGE = "image";
+    private static final String NAME = "name";
+    private static final String THUMBNAIL = "thumbnail";
+    private static final String LENGTH = "length";
+    private static final String MATERIAL = "material";
+    private static final String SPINE = "spine";
+    private static final String WEIGHT = "weight";
+    private static final String TIP_WEIGHT = "tip_weight";
+    private static final String VANES = "vanes";
+    private static final String NOCK = "nock";
+    private static final String COMMENT = "comment";
+    private static final String IMAGE = "image";
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +

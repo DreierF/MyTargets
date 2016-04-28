@@ -42,6 +42,7 @@ import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
+import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
@@ -172,7 +173,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
         for (StandardRound r : list) {
             ArrayList<RoundTemplate> rounds = r.getRounds();
             if (rounds.size() > 0 && ((r.club & filter) != 0 ||
-                    r.name.startsWith("NFAA/IFAA") && (filter & StandardRound.IFAA) != 0) &&
+                    r.name.startsWith("NFAA/IFAA") && (filter & StandardRoundFactory.IFAA) != 0) &&
                     rounds.get(0).distance.unit.equals(unitDistance) &&
                     r.indoor == indoor) {
                 int checked = typ.getCheckedRadioButtonId();
@@ -216,7 +217,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
     @Override
     public void onLongClick(SelectableViewHolder holder) {
         StandardRound item = (StandardRound) holder.getItem();
-        if (item.club == StandardRound.CUSTOM) {
+        if (item.club == StandardRoundFactory.CUSTOM) {
             Intent i = new Intent(getActivity(),
                     SimpleFragmentActivity.EditStandardRoundActivity.class);
             i.putExtra(ITEM, Parcels.wrap(item));

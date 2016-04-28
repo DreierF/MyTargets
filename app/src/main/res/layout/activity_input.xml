@@ -1,6 +1,4 @@
-<RelativeLayout
-    android:id="@+id/login_form"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="false"
@@ -21,7 +19,6 @@
             android:layout_height="wrap_content"/>
 
         <View
-            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_gravity="bottom"

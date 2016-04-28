@@ -21,14 +21,12 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/round_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
             <FrameLayout
-                android:id="@+id/round_container_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -66,8 +64,16 @@
             <android.support.v7.widget.RecyclerView
                 style="@style/card_list"/>
 
+
             <View
-                android:id="@+id/shadow"
+                android:id="@+id/overlayView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/dim_overlay"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_drop_shadow_height"
                 android:background="@drawable/toolbar_drop_shadow"

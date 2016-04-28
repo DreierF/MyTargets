@@ -113,7 +113,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         getActivity().finish();
     }
 
-    protected Arrow buildArrow() {
+    private Arrow buildArrow() {
         ArrayList<ArrowNumber> numbers = getArrowNumbers();
         if (numbers == null) {
             return null;

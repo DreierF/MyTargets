@@ -15,7 +15,6 @@
         <android.support.v7.widget.RecyclerView style="@style/card_list"/>
 
         <View
-            android:id="@+id/shadow"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_drop_shadow_height"
             android:background="@drawable/toolbar_drop_shadow"/>
@@ -24,7 +23,6 @@
 
     <!-- The navigation drawer -->
     <android.support.v4.widget.NestedScrollView
-        android:id="@+id/right_drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"

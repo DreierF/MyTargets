@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 
 import junit.framework.Assert;
 
+import org.parceler.Parcels;
+
 import java.util.List;
 
 import de.dreier.mytargets.adapters.NowListAdapter;
@@ -27,7 +29,7 @@ import de.dreier.mytargets.shared.models.IIdSettable;
  */
 public abstract class EditableFragment<T extends IIdSettable> extends EditableFragmentBase<T> {
 
-    NowListAdapter<T> mAdapter;
+    private NowListAdapter<T> mAdapter;
     private OnItemSelectedListener listener;
 
     @Override
@@ -75,7 +77,7 @@ public abstract class EditableFragment<T extends IIdSettable> extends EditableFr
     }
 
     protected final void onSelected(T item) {
-        listener.onItemSelected(item);
+        listener.onItemSelected(Parcels.wrap(item));
     }
 
 }

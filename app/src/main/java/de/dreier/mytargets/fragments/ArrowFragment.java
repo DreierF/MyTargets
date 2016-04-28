@@ -26,7 +26,6 @@ import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.utils.DataLoader;
-import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
 public class ArrowFragment extends EditableFragment<Arrow> implements View.OnClickListener {
@@ -87,7 +86,7 @@ public class ArrowFragment extends EditableFragment<Arrow> implements View.OnCli
         @Override
         public void bindCursor() {
             mName.setText(mItem.name);
-            mImg.setImageDrawable(new RoundedAvatarDrawable(mItem.getThumbnail()));
+            mImg.setImageDrawable(mItem.getDrawable());
         }
     }
 }

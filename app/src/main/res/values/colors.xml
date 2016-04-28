@@ -6,7 +6,6 @@
     <color name="colorAccent">#ff9100</color>
 
     <color name="white">#FFFFFFFF</color>
-    <color name="accent_lighter_transparent">#7Fbbbbbb</color>
     <color name="new_text_color">#FF666666</color>
 
     <!-- Timer -->
@@ -15,5 +14,6 @@
     <color name="timer_red">#ffe53935</color>
     <color name="dividerColor">#1F000000</color>
     <color name="transparent">#00ffffff</color>
+    <color name="dim_overlay">#55000000</color>
 
 </resources>

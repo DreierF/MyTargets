@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
 import static de.dreier.mytargets.managers.dao.RoundTemplateDataSource.SCORING_STYLE;
 import static de.dreier.mytargets.managers.dao.RoundTemplateDataSource.TARGET;
@@ -118,7 +119,7 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
         StandardRound standardRound = standardRoundDataSource.get(standardRoundId);
         ArrayList<RoundTemplate> roundTemplates = standardRound.getRounds();
 
-        if (standardRound.club != StandardRound.CUSTOM_PRACTICE) {
+        if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
             throw new IllegalStateException("Only practice rounds may be deleted!");
         }
         if (standardRound.getRounds().size() < 1) {

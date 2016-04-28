@@ -49,7 +49,7 @@
   <string name="d_times_s">%1$d razy %2$s\n</string>
   <string name="text">Tekst</string>
   <string name="dispersion_pattern">Wzorzec dyspersji</string>
-  <string name="sharing_failed">Udostępnienie nie powiodło się!</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
   <string name="send_exported">Wyślij eksportowane dane</string>
   <string name="exporting_failed">Eksport nie powiódł się!</string>
@@ -167,11 +167,9 @@
   <string name="restore_backup">Przywróć kopię zapasową</string>
   <string name="weather">Pogoda</string>
   <string name="environment">Środowisko</string>
-  <string name="wind">Wiatr</string>
   <string name="wind_speed">Prędkość wiatru</string>
   <string name="wind_direction">Kierunek wiatru</string>
-  <string name="location">Lokalizacja</string>
-  <string name="sight_setting_removed">Ustawienie celownika usunięte!</string>
+  <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Metryczne</string>
   <string name="imperial">Imperialne</string>
   <string name="undo">Cofnij</string>
@@ -179,7 +177,7 @@
   <string name="expand_collapse">Rozwiń/Zwiń</string>
   <string name="new_round_template">Nowy Szablon</string>
   <string name="arrow_numbers">Numery strzał</string>
-  <string name="round_removed">Rundy usunięte!</string>
+  <string name="round_removed">Round deleted!</string>
   <string name="custom_round">Własna runda</string>
   <string name="filter">Filtr</string>
   <string name="club">Klub</string>
@@ -192,11 +190,8 @@
   <string name="not_matches_sheme">Wpis nie pasuje do spodziewanego formatu 1,3,5</string>
   <string name="arrow_numbers_desc">Wprowadź wszystkie numery strzał jakie zostały użyte np.: 1,2,5,6,7</string>
   <string name="practice">Ćwiczenia</string>
-  <string name="use_timer">Użyj czasomierza</string>
   <string name="edit_training">Edytuj trening</string>
   <string name="edit_standard_round">Edytuj rundę standardową</string>
-  <string name="edit_bow">Edytuj łuk</string>
-  <string name="edit_arrow">Edytuj strzałę</string>
   <plurals name="arrow_deleted">
     <item quantity="one">skasowanych strzał</item>
     <item quantity="few">%d skasowanych strzał</item>
@@ -240,4 +235,7 @@
   <string name="stabilizer">Stabilizator</string>
   <string name="clicker">Klickier</string>
   <string name="arrow_number_x">Arrow number %d</string>
+  <string name="training_with_standard_round">Training with Standard Round</string>
+  <string name="free_training">Free Training</string>
+  <string name="competition">Competition</string>
 </resources>

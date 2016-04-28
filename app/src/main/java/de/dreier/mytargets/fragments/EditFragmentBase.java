@@ -25,7 +25,7 @@ public abstract class EditFragmentBase extends Fragment {
     AppCompatActivity activity;
     SharedPreferences prefs;
 
-    protected AppCompatActivity setUpToolbar(View rootView) {
+    void setUpToolbar(View rootView) {
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
@@ -35,10 +35,9 @@ public abstract class EditFragmentBase extends Fragment {
         setHasOptionsMenu(true);
 
         prefs = activity.getSharedPreferences(MyBackupAgent.PREFS, 0);
-        return activity;
     }
 
-    public void setTitle(@StringRes int title) {
+    void setTitle(@StringRes int title) {
         assert activity.getSupportActionBar() != null;
         activity.getSupportActionBar().setTitle(title);
     }

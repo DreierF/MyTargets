@@ -14,14 +14,14 @@ import android.database.Cursor;
 import de.dreier.mytargets.shared.models.Shot;
 
 public class ShotDataSource extends IdProviderDataSource<Shot> {
-    public static final String TABLE = "SHOOT";
-    public static final String PASSE = "passe";
-    public static final String ZONE = "points";
-    public static final String X = "x";
-    public static final String Y = "y";
-    public static final String COMMENT = "comment";
-    public static final String ARROW = "arrow";
-    public static final String INDEX = "arrow_index";
+    private static final String TABLE = "SHOOT";
+    private static final String PASSE = "passe";
+    private static final String ZONE = "points";
+    private static final String X = "x";
+    private static final String Y = "y";
+    private static final String COMMENT = "comment";
+    private static final String ARROW = "arrow";
+    private static final String INDEX = "arrow_index";
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +

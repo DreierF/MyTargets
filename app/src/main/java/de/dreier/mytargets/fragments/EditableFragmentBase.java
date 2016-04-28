@@ -37,10 +37,10 @@ public abstract class EditableFragmentBase<T extends IIdSettable> extends Fragme
 
 
     @PluralsRes
-    protected int itemTypeDelRes;
+    int itemTypeDelRes;
 
-    protected IdProviderDataSource<T> dataSource;
-    final protected MultiSelector mSelector = new MultiSelector();
+    IdProviderDataSource<T> dataSource;
+    final MultiSelector mSelector = new MultiSelector();
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -126,6 +126,7 @@ public abstract class EditableFragmentBase<T extends IIdSettable> extends Fragme
                             public void onDismissed(Snackbar snackbar, int event) {
                                 for (Pair<Integer, T> item : deleted) {
                                     dataSource.delete(item.getSecond());
+                                    getLoaderManager().restartLoader(0, null, EditableFragmentBase.this);
                                 }
                             }
 

@@ -7,18 +7,18 @@
              tools:context="de.dreier.mytargets.fragments.EditWithImageFragmentBase">
 
     <FrameLayout
-        android:id="@+id/img_container"
+        android:id="@+id/imgContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/flexible_space_image_height">
 
         <ImageView
-            android:id="@+id/img_view"
+            android:id="@+id/imgView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"/>
 
         <ProgressBar
-            android:id="@+id/img_progress"
+            android:id="@+id/imgProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

@@ -174,11 +174,11 @@ public class NumberPicker extends LinearLayout {
         mTextPattern = textPattern;
     }
 
-    void increment() {
+    private void increment() {
         setValue(value + 1);
     }
 
-    void decrement() {
+    private void decrement() {
         setValue(value - 1);
     }
 

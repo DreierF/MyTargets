@@ -16,21 +16,21 @@ import java.util.ArrayList;
 import de.dreier.mytargets.shared.models.Bow;
 
 public class BowDataSource extends IdProviderDataSource<Bow> {
-    public static final String TABLE = "BOW";
-    public static final String NAME = "name";
-    public static final String THUMBNAIL = "thumbnail";
-    public static final String BRAND = "brand";
-    public static final String TYPE = "type";
-    public static final String SIZE = "size";
-    public static final String HEIGHT = "height";
-    public static final String TILLER = "tiller";
-    public static final String DESCRIPTION = "description";
-    public static final String IMAGE = "image";
-    public static final String LIMBS = "limbs";
-    public static final String SIGHT = "sight";
-    public static final String WEIGHT = "draw_weight";
-    public static final String STABILIZER = "stabilizer";
-    public static final String CLICKER = "clicker";
+    private static final String TABLE = "BOW";
+    private static final String NAME = "name";
+    private static final String THUMBNAIL = "thumbnail";
+    private static final String BRAND = "brand";
+    private static final String TYPE = "type";
+    private static final String SIZE = "size";
+    private static final String HEIGHT = "height";
+    private static final String TILLER = "tiller";
+    private static final String DESCRIPTION = "description";
+    private static final String IMAGE = "image";
+    private static final String LIMBS = "limbs";
+    private static final String SIGHT = "sight";
+    private static final String WEIGHT = "draw_weight";
+    private static final String STABILIZER = "stabilizer";
+    private static final String CLICKER = "clicker";
     public static final String CREATE_TABLE_BOW =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " ( " +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +

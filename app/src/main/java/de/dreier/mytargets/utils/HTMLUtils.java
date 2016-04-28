@@ -31,6 +31,7 @@ import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
 public class HTMLUtils {
 
@@ -231,13 +232,14 @@ public class HTMLUtils {
     }
 
     public static String getTrainingInfoHTML(Context context, Training training, ArrayList<Round> rounds, boolean[] equals) {
-        StandardRound standardRound = new StandardRoundDataSource(context).get(
-                training.standardRoundId);
+        StandardRound standardRound = new StandardRoundDataSource(context).get(training.standardRoundId);
         boolean indoor = standardRound.indoor;
 
         String infoText = "";
-        infoText += context.getString(R.string.standard_round) + ": <b>" + TextUtils
-                .htmlEncode(standardRound.name) + "</b>";
+        if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
+            infoText += context.getString(R.string.standard_round) + ": <b>" + TextUtils
+                    .htmlEncode(standardRound.name) + "</b>";
+        }
 
         // Set round info
         Bow bow = new BowDataSource(context).get(training.bow);

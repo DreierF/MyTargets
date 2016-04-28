@@ -19,7 +19,7 @@ android {
         versionName versionName
     }
 
-    if(new File("gradle.properties").exists()) {
+    if (new File("gradle.properties").exists()) {
         signingConfigs {
             release {
                 try {
@@ -80,6 +80,7 @@ dependencies {
     compile 'de.psdev.licensesdialog:licensesdialog:1.7.0'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     compile 'com.nineoldandroids:library:2.4.0'
+    compile 'org.adw.library:discrete-seekbar:1.0.1'
 
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'

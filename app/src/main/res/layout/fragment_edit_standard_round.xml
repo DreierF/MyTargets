@@ -37,7 +37,6 @@
                 android:background="@color/dividerColor"/>
 
             <RadioGroup
-                android:id="@+id/in_out_group"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"

@@ -15,11 +15,7 @@ import android.location.Location;
 import android.support.annotation.RequiresPermission;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
@@ -33,38 +29,17 @@ import rx.schedulers.Schedulers;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class EnvironmentSelector extends SelectorBase<Environment> {
+public class EnvironmentSelector extends ImageSelectorBase<Environment> {
 
     public EnvironmentSelector(Context context) {
         this(context, null);
     }
 
     public EnvironmentSelector(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.item_image);
+        super(context, attrs);
+        setTitle(R.string.environment);
         setOnClickActivity(ItemSelectActivity.EnvironmentActivity.class);
     }
-
-    @Override
-    protected void bindView() {
-        ImageView img = (ImageView) mView.findViewById(R.id.image);
-        TextView desc = (TextView) mView.findViewById(R.id.name);
-        TextView details = (TextView) mView.findViewById(R.id.details);
-
-        img.setImageResource(item.weather.getDrawable());
-        desc.setText(item.weather.getName());
-        String direction = getContext().getResources()
-                .getStringArray(R.array.wind_directions)[item.windDirection];
-        String description =
-                getContext().getString(R.string.wind) + ": " + item.windSpeed + " Btf " +
-                        direction;
-        if (!TextUtils.isEmpty(item.location)) {
-            description +=
-                    "\n" + getContext().getString(R.string.location) + ": " + item.location;
-        }
-        details.setText(description);
-        details.setVisibility(View.VISIBLE);
-    }
-
 
     public void queryWeather(Fragment fragment, int request_code) {
         if (ContextCompat.checkSelfPermission(fragment.getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -77,7 +52,7 @@ public class EnvironmentSelector extends SelectorBase<Environment> {
     }
 
     public void onPermissionResult(Activity activity, int[] grantResult) {
-        if (grantResult[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResult.length > 0 && grantResult[0] == PackageManager.PERMISSION_GRANTED) {
             //noinspection MissingPermission
             queryWeatherInfo(activity);
         } else {
@@ -88,7 +63,7 @@ public class EnvironmentSelector extends SelectorBase<Environment> {
     // Start getting weather for current location
     @SuppressWarnings("MissingPermission")
     @RequiresPermission(anyOf = {ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION})
-    protected void queryWeatherInfo(Context context) {
+    private void queryWeatherInfo(Context context) {
         new Locator(context).getLocation(Locator.Method.NETWORK_THEN_GPS, new Locator.Listener() {
             @Override
             public void onLocationFound(Location location) {
@@ -110,7 +85,7 @@ public class EnvironmentSelector extends SelectorBase<Environment> {
         });
     }
 
-    public void setDefaultWeather() {
+    private void setDefaultWeather() {
         setItem(new Environment(EWeather.SUNNY, 0, 0));
     }
 

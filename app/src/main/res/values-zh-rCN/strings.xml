@@ -41,7 +41,7 @@
   <string name="d_times_s">%1$d 次 %2$s\n</string>
   <string name="text">文本</string>
   <string name="dispersion_pattern">散步模式</string>
-  <string name="sharing_failed">分享失败！</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
   <string name="send_exported">发送导出的数据</string>
   <string name="exporting_failed">导出失败！</string>
@@ -153,11 +153,9 @@
   <string name="restore_backup">还原备份</string>
   <string name="weather">天气</string>
   <string name="environment">环境</string>
-  <string name="wind">风</string>
   <string name="wind_speed">风速</string>
   <string name="wind_direction">风向</string>
-  <string name="location">地点</string>
-  <string name="sight_setting_removed">瞄具设置已删除！</string>
+  <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">公制</string>
   <string name="imperial">英制</string>
   <string name="undo">撤销</string>
@@ -165,7 +163,7 @@
   <string name="expand_collapse">展开/折叠</string>
   <string name="new_round_template">新的模板</string>
   <string name="arrow_numbers">箭支数</string>
-  <string name="round_removed">回合已删除！</string>
+  <string name="round_removed">Round deleted!</string>
   <string name="custom_round">自定义回合</string>
   <string name="filter">过滤器</string>
   <string name="club">俱乐部</string>
@@ -178,11 +176,8 @@
   <string name="not_matches_sheme">输入的格式不匹配，格式应该类似 1,3,5</string>
   <string name="arrow_numbers_desc">输入所有你用来射击的箭支数，格式1,2,5,6,7</string>
   <string name="practice">练习</string>
-  <string name="use_timer">使用计时器</string>
   <string name="edit_training">编辑训练</string>
   <string name="edit_standard_round">编辑标准回合</string>
-  <string name="edit_bow">编辑弓</string>
-  <string name="edit_arrow">编辑箭支</string>
   <plurals name="arrow_deleted">
     <item quantity="other">%d 箭支删除</item>
   </plurals>
@@ -216,4 +211,7 @@
   <string name="stabilizer">Stabilizer</string>
   <string name="clicker">Clicker</string>
   <string name="arrow_number_x">Arrow number %d</string>
+  <string name="training_with_standard_round">Training with Standard Round</string>
+  <string name="free_training">Free Training</string>
+  <string name="competition">Competition</string>
 </resources>

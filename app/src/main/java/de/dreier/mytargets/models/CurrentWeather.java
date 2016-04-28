@@ -13,11 +13,11 @@ public class CurrentWeather {
     @SerializedName("cod")
     public Integer httpCode;
     @SerializedName("name")
-    public String cityName;
+    private String cityName;
     @SerializedName("weather")
-    public List<Weather> weather = new ArrayList<>();
+    private final List<Weather> weather = new ArrayList<>();
     @SerializedName("wind")
-    public Wind wind;
+    private Wind wind;
     @SerializedName("clouds")
     public Clouds clouds;
 

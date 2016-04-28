@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import android.os.Build;
 import java.util.List;
 
 public class Utils {
@@ -25,6 +26,14 @@ public class Utils {
             return null;
         }
         return pInfo;
+    }
+
+    public static boolean hasJellyBean() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
+    }
+
+    public static boolean hasLollipop() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
     public static long getMonthId(Date date) {

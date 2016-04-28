@@ -111,7 +111,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
         public ViewHolder(View itemView) {
             super(itemView, mSelector, TrainingsFragment.this);
             mTitle = (TextView) itemView.findViewById(R.id.training);
-            mSubtitle = (TextView) itemView.findViewById(R.id.training_date);
+            mSubtitle = (TextView) itemView.findViewById(R.id.trainingDate);
             mGes = (TextView) itemView.findViewById(R.id.gesTraining);
         }
 

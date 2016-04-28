@@ -8,7 +8,6 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -37,24 +36,24 @@ public class DistanceFragment extends Fragment implements TextInputDialog.OnClic
 
     @Bind(R.id.viewPager)
     ViewPager viewPager;
+
     @Bind(R.id.slidingTabs)
     TabLayout tabLayout;
+
     private SelectItemFragment.OnItemSelectedListener listener;
     private Distance distance;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        distance = Parcels.unwrap(getArguments().getParcelable(ITEM));
-
         View rootView = inflater.inflate(R.layout.fragment_distance, container, false);
         ButterKnife.bind(this, rootView);
+
+        distance = Parcels.unwrap(getArguments().getParcelable(ITEM));
 
         DistanceTabsFragmentPagerAdapter adapter =
                 new DistanceTabsFragmentPagerAdapter(getActivity(), distance);
         viewPager.setAdapter(adapter);
         int item = distance.unit.equals(Distance.METER) ? 0 : 1;
         viewPager.setCurrentItem(item, false);
-
-        tabLayout.setTabTextColors(0xCCFFFFFF, Color.WHITE);
         tabLayout.setupWithViewPager(viewPager);
         return rootView;
     }
@@ -104,7 +103,7 @@ public class DistanceFragment extends Fragment implements TextInputDialog.OnClic
         } catch (NumberFormatException e) {
             // leave distance as it is
         }
-        listener.onItemSelected(distance);
+        listener.onItemSelected(Parcels.wrap(distance));
     }
 
 }

@@ -9,6 +9,7 @@ package de.dreier.mytargets.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.CallSuper;
 import android.support.annotation.PluralsRes;
 import android.support.annotation.StringRes;
@@ -60,25 +61,25 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
          * Called when a item has been selected.
          * @param item Item that has been selected
          */
-        void onItemSelected(IIdProvider item);
+        void onItemSelected(Parcelable item);
     }
 
     /** Resource used to set title when items are selected */
     @PluralsRes
-    protected int itemTypeSelRes;
+    int itemTypeSelRes;
 
     /** Resource describing FAB action */
     @StringRes
-    protected int newStringRes;
+    int newStringRes;
 
     /** Action mode manager */
-    protected ActionMode actionMode = null;
+    ActionMode actionMode = null;
 
     /** Main {@link RecyclerView} of the fragment */
-    protected RecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;
 
     /** Root view of the fragment */
-    protected View rootView;
+    View rootView;
 
     /** Holds the ContentListener called when the fragment's content changes */
     private ContentListener listener;
@@ -97,7 +98,7 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
      * Gets the fragments main layout, which is inflated in {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}
      * @return Layout resource id
      */
-    protected int getLayoutResource() {
+    int getLayoutResource() {
         return R.layout.fragment_list;
     }
 
@@ -115,7 +116,7 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
      * Tells the parent to update its FAB button
      * @param list The list of items that is currently displayed in the fragment
      */
-    protected void updateFabButton(List list) {
+    void updateFabButton(List list) {
         listener.onContentChanged(list.isEmpty(), newStringRes);
     }
 
@@ -123,7 +124,7 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
      * Starts the given activity with the standard animation
      * @param activity Activity to start
      */
-    protected void startActivity(Class<?> activity) {
+    void startActivity(Class<?> activity) {
         Intent i = new Intent(getContext(), activity);
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);

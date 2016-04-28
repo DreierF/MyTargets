@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
@@ -35,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.InputActivity;
 import de.dreier.mytargets.activities.ScoreboardActivity;
@@ -49,7 +50,9 @@ import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DataLoader;
+import de.dreier.mytargets.utils.FABMenu;
 import de.dreier.mytargets.utils.HTMLUtils;
 import de.dreier.mytargets.utils.HeaderBindingHolder;
 import de.dreier.mytargets.utils.Pair;
@@ -63,18 +66,24 @@ import de.dreier.mytargets.views.TargetPasseView;
  * Shows all passes of one training
  */
 public class TrainingFragment extends ExpandableFragment<Round, Passe>
-        implements View.OnClickListener {
+        implements View.OnClickListener, FABMenu.Listener {
 
     private final boolean mTargetViewMode = false;
     private final boolean[] equals = new boolean[2];
     private long mTraining;
-    private ArrayList<Round> mRounds;
-    private FloatingActionButton mFab;
-    private View mNewLayout;
-    private TextView mNewText;
+    private ArrayList<Round> rounds;
+
+    private FABMenu fabMenu;
+
     private Training training;
     private RoundDataSource roundDataSource;
     private PasseDataSource passeDataSource;
+    private StandardRoundDataSource standardRoundDataSource;
+    private StandardRound standardRound;
+    private TrainingDataSource trainingDataSource;
+
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     public TrainingFragment() {
         itemTypeSelRes = R.plurals.passe_selected;
@@ -90,10 +99,12 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        mFab.setOnClickListener(this);
-        mNewLayout = rootView.findViewById(R.id.new_layout);
-        mNewText = (TextView) rootView.findViewById(R.id.new_text);
+        ButterKnife.bind(this, getView());
+
+        fabMenu = new FABMenu(getContext(), rootView);
+        fabMenu.setFABItem(1, R.drawable.ic_adjust_white_24dp, R.string.passe);
+        fabMenu.setFABItem(2, R.drawable.ic_refresh_white_24dp, R.string.round);
+        fabMenu.setListener(this);
 
         // Get training
         if (getArguments() != null) {
@@ -102,11 +113,8 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         if (savedInstanceState != null) {
             mTraining = savedInstanceState.getLong(ITEM_ID, -1);
         }
-        TrainingDataSource trainingDataSource = new TrainingDataSource(getContext());
-        training = trainingDataSource.get(mTraining);
 
         // Set up toolbar
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         ActionBar actionBar = activity.getSupportActionBar();
@@ -114,39 +122,52 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         actionBar.setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);
 
-        actionBar.setTitle(training.title);
-        actionBar.setSubtitle(DateFormat.getDateInstance().format(training.date));
-
+        trainingDataSource = new TrainingDataSource(getContext());
         roundDataSource = new RoundDataSource(getContext());
         passeDataSource = new PasseDataSource(getContext());
+        standardRoundDataSource = new StandardRoundDataSource(getContext());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fabMenu.reset();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        fabMenu.unbind();
     }
 
     @Override
     public Loader<List<Passe>> onCreateLoader(int id, Bundle args) {
         return new DataLoader<>(getContext(), new PasseDataSource(getContext()),
-                () -> passeDataSource.getAllByTraining(mTraining));
+                () -> {
+                    rounds = roundDataSource.getAll(mTraining);
+                    training = trainingDataSource.get(mTraining);
+                    standardRound = standardRoundDataSource.get(training.standardRoundId);
+                    return passeDataSource.getAllByTraining(mTraining);
+                });
     }
 
     @Override
     public void onLoadFinished(Loader<List<Passe>> loader, List<Passe> data) {
         // Set round info
-        mRounds = roundDataSource.getAll(mTraining);
         setRoundInfo();
-
-        setList(passeDataSource, mRounds, data, child -> child.roundId, true, new PasseAdapter());
-        mAdapter.notifyDataSetChanged();
+        setList(passeDataSource, rounds, data, child -> child.roundId, true, new PasseAdapter());
         getActivity().supportInvalidateOptionsMenu();
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        ActionBar actionBar = activity.getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setTitle(training.title);
+        actionBar.setSubtitle(DateFormat.getDateInstance().format(training.date));
     }
 
     @Override
     protected void updateFabButton(List list) {
-        if (newStringRes != 0) {
-            mNewLayout.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
-            mNewText.setText(newStringRes);
-            mFab.setVisibility(View.VISIBLE);
-        } else {
-            mFab.setVisibility(View.GONE);
-        }
+        fabMenu.setFABHelperTitle(list.isEmpty() ? newStringRes : 0);
     }
 
     private void setRoundInfo() {
@@ -156,7 +177,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         tvScore.setText(Html.fromHtml(HTMLUtils.getTrainingTopScoreDistribution(getContext(), mTraining)));
 
         // Set training info
-        info.setText(Html.fromHtml(HTMLUtils.getTrainingInfoHTML(getActivity(), training, mRounds, equals)));
+        info.setText(Html.fromHtml(HTMLUtils.getTrainingInfoHTML(getActivity(), training, rounds, equals)));
     }
 
     @Override
@@ -191,7 +212,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
                 return true;
             /*case R.id.action_view_mode:
                 mTargetViewMode = !mTargetViewMode;
-                setList(mRounds, db.getPasses(mTraining), true,
+                setList(rounds, db.getPasses(mTraining), true,
                         new PasseAdapter());
                 return true;*/
             default:
@@ -202,9 +223,9 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
     private void showShareDialog() {
         BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(getContext());
         View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_share_sheet, null);
-        view.findViewById(R.id.text).setOnClickListener(v->shareText());
-        view.findViewById(R.id.scoreboard).setOnClickListener(v->shareImage(1));
-        view.findViewById(R.id.dispersion_pattern).setOnClickListener(v->shareImage(2));
+        view.findViewById(R.id.text).setOnClickListener(v -> shareText());
+        view.findViewById(R.id.scoreboard).setOnClickListener(v -> shareImage(1));
+        view.findViewById(R.id.dispersion_pattern).setOnClickListener(v -> shareImage(2));
         mBottomSheetDialog.setContentView(view);
         mBottomSheetDialog.show();
     }
@@ -235,7 +256,6 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
     }
 
     private void shareText() {
-        mRounds = roundDataSource.getAll(mTraining);
         ArrayList<Pair<String, Integer>> scoreCount = passeDataSource
                 .getTopScoreDistribution(mTraining);
         String scoreText = "";
@@ -244,7 +264,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         }
         int maxPoints = 0;
         int reachedPoints = 0;
-        for (Round r : mRounds) {
+        for (Round r : rounds) {
             maxPoints += r.info.getMaxPoints();
             reachedPoints += r.reachedPoints;
         }
@@ -277,30 +297,52 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
 
     @Override
     public void onClick(View v) {
-        ArrayList<Round> rounds = roundDataSource.getAll(mTraining);
-        for (int roundIndex = 0; roundIndex < rounds.size(); roundIndex++) {
-            Round mRound = rounds.get(roundIndex);
-            ArrayList<Passe> passes = passeDataSource.getAllByRound(mRound.getId());
-            if (passes.size() < mRound.info.passes) {
-                // Open InputActivity to add new passes
-                Intent i = new Intent(getContext(), InputActivity.class);
-                i.putExtra(InputActivity.ROUND_ID, mRound.getId());
-                i.putExtra(InputActivity.PASSE_IND, passes.size());
-                startActivity(i);
-                return;
-            }
 
-            // Open dialog to create new round
-            StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(getContext());
-            StandardRound standardRound = standardRoundDataSource.get(training.standardRoundId);
-            if (roundIndex + 1 == rounds.size() &&
-                    standardRound.club == StandardRound.CUSTOM_PRACTICE) {
+    }
+
+    @Override
+    public boolean isFABExpandable() {
+        return standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
+    }
+
+    @Override
+    public void onFabClicked(int index) {
+        switch (index) {
+            case 0:
+                // Add new passe to training (standard round)
+                for (int roundIndex = 0; roundIndex < rounds.size(); roundIndex++) {
+                    Round round = rounds.get(roundIndex);
+                    ArrayList<Passe> passes = passeDataSource.getAllByRound(round.getId());
+                    if (passes.size() < round.info.passes) {
+                        // Open InputActivity to add new passes
+                        openPasse(round.getId(), passes.size());
+                        return;
+                    }
+                }
+                break;
+            case 1:
+                // New passe to free training
+                if (rounds.size() > 0) {
+                    Round round = rounds.get(rounds.size() - 1);
+                    ArrayList<Passe> passes = passeDataSource.getAllByRound(round.getId());
+                    openPasse(round.getId(), passes.size());
+                    return;
+                }
+                // Intended fall trough
+            case 2:
+                // New round to free training
                 Intent i = new Intent(getContext(), SimpleFragmentActivity.EditRoundActivity.class);
                 i.putExtra(EditRoundFragment.TRAINING_ID, mTraining);
                 startActivity(i);
-                return;
-            }
+                break;
         }
+    }
+
+    private void openPasse(long roundId, int passeIndex) {
+        Intent i = new Intent(getContext(), InputActivity.class);
+        i.putExtra(InputActivity.ROUND_ID, roundId);
+        i.putExtra(InputActivity.PASSE_IND, passeIndex);
+        startActivity(i);
     }
 
     public class PasseAdapter extends ExpandableNowListAdapter<Round, Passe> {
@@ -308,7 +350,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         @Override
         protected HeaderViewHolder getTopLevelViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_round, parent, false);
+                    .inflate(R.layout.item_header_round, parent, false);
             return new HeaderViewHolder(itemView);
         }
 
@@ -393,7 +435,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         @Override
         public void bindCursor() {
             Context context = mTitle.getContext();
-            mTitle.setText(String.format(Locale.ENGLISH, "%s %d", context.getString(R.string.round), mRounds.indexOf(mItem) + 1));
+            mTitle.setText(String.format(Locale.ENGLISH, "%s %d", context.getString(R.string.round), rounds.indexOf(mItem) + 1));
 
             String infoText = HTMLUtils.getRoundInfo(context, mItem, equals);
             mSubtitle.setText(Html.fromHtml(infoText));

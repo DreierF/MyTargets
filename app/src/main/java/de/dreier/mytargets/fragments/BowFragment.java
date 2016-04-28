@@ -28,7 +28,6 @@ import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.utils.DataLoader;
-import de.dreier.mytargets.utils.RoundedAvatarDrawable;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
 public class BowFragment extends EditableFragment<Bow> implements View.OnClickListener {
@@ -92,7 +91,7 @@ public class BowFragment extends EditableFragment<Bow> implements View.OnClickLi
         @Override
         public void bindCursor() {
             mName.setText(mItem.name);
-            mImg.setImageDrawable(new RoundedAvatarDrawable(mItem.getThumbnail()));
+            mImg.setImageDrawable(mItem.getDrawable());
 
             String html = getString(R.string.bow_type) + ": <b>" +
                     getResources().getStringArray(R.array.bow_types)[mItem.type] + "</b>";

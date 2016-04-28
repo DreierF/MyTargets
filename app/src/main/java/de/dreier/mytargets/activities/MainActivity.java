@@ -10,8 +10,8 @@ package de.dreier.mytargets.activities;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -26,69 +26,80 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.SimpleFragmentActivity.EditArrowActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivity.EditBowActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivity.EditTrainingActivity;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
-import de.dreier.mytargets.fragments.EditArrowFragment;
-import de.dreier.mytargets.fragments.EditBowFragment;
 import de.dreier.mytargets.fragments.FragmentBase;
-import de.dreier.mytargets.fragments.TrainingsFragment;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.IIdProvider;
+import de.dreier.mytargets.utils.FABMenu;
+
+import static de.dreier.mytargets.fragments.EditArrowFragment.ARROW_ID;
+import static de.dreier.mytargets.fragments.EditBowFragment.BOW_ID;
+import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
+import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_TYPE;
+import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND;
+import static de.dreier.mytargets.fragments.FragmentBase.ITEM_ID;
 
 /**
  * Shows an overview over all trying days
  */
 public class MainActivity extends AppCompatActivity
-        implements FragmentBase.OnItemSelectedListener, FragmentBase.ContentListener,
-        View.OnClickListener, ViewPager.OnPageChangeListener {
+        implements FragmentBase.OnItemSelectedListener, FragmentBase.ContentListener, ViewPager.OnPageChangeListener, FABMenu.Listener {
 
     private static boolean shownThisTime = false;
-
-    @Bind(R.id.new_layout)
-    View mNewLayout;
-
-    @Bind(R.id.new_text)
-    TextView mNewText;
-
+    private final boolean[] empty = new boolean[3];
+    private final int[] stringRes = new int[3];
     @Bind(R.id.viewPager)
     ViewPager viewPager;
-
     @Bind(R.id.slidingTabs)
     TabLayout tabLayout;
-
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+    @Bind(android.R.id.content)
+    View rootView;
+
+    FABMenu fm;
+
+    {
+        stringRes[0] = R.string.new_training;
+        stringRes[1] = R.string.new_bow;
+        stringRes[2] = R.string.new_arrow;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+
+        fm = new FABMenu(this, rootView);
+        fm.setListener(this);
+        fm.setFABItem(1, R.drawable.ic_trending_up_white_24dp, R.string.free_training);
+        fm.setFABItem(2, R.drawable.ic_album_24dp, R.string.training_with_standard_round);
 
         MainTabsFragmentPagerAdapter adapter = new MainTabsFragmentPagerAdapter(this);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(this);
-
-        tabLayout.setTabTextColors(0xCCFFFFFF, Color.WHITE);
         tabLayout.setupWithViewPager(viewPager);
 
+        if (savedInstanceState != null) {
+            fm.onRestoreInstanceState(savedInstanceState);
+        }
+
         askForHelpTranslating();
-
-        setSupportActionBar(toolbar);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        ButterKnife.unbind(this);
     }
 
     @Override
@@ -107,8 +118,22 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fm.reset();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        fm.unbind();
+        ButterKnife.unbind(this);
+    }
+
     private void askForHelpTranslating() {
         ArrayList<String> supportedLanguages = new ArrayList<>();
+        //TODO update
         Collections.addAll(supportedLanguages, "de", "en", "fr", "es", "ru", "nl", "it", "sl", "ca",
                 "zh", "tr", "hu", "sl");
         final SharedPreferences prefs = PreferenceManager
@@ -123,7 +148,7 @@ public class MainActivity extends AppCompatActivity
                     longLang +
                     " visit <a href=\"https://crowdin.com/project/mytargets\">crowdin</a>!<br /><br />" +
                     "Thanks in advance :)"));
-            Linkify.addLinks(s, Linkify.EMAIL_ADDRESSES);
+            Linkify.addLinks(s, Linkify.WEB_URLS);
             AlertDialog d = new AlertDialog.Builder(this)
                     .setTitle("App translation")
                     .setMessage(s)
@@ -141,44 +166,61 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @OnClick(R.id.fab)
-    public void onClick(View v) {
-        Intent i = new Intent();
-        if (viewPager.getCurrentItem() == 0) {
-            i.setClass(this, SimpleFragmentActivity.EditTrainingActivity.class);
-        } else if (viewPager.getCurrentItem() == 1) {
-            i.setClass(this, SimpleFragmentActivity.EditBowActivity.class);
-        } else if (viewPager.getCurrentItem() == 2) {
-            i.setClass(this, SimpleFragmentActivity.EditArrowActivity.class);
+    @Override
+    public boolean isFABExpandable() {
+        return viewPager.getCurrentItem() == 0;
+    }
+
+    @Override
+    public void onFabClicked(int index) {
+        switch (index) {
+            case 0:
+                int currentTab = viewPager.getCurrentItem();
+                if (currentTab == 1) {
+                    startActivityAnimated(EditBowActivity.class);
+                } else if (currentTab == 2) {
+                    startActivityAnimated(EditArrowActivity.class);
+                }
+                break;
+            case 1:
+                startActivityAnimated(EditTrainingActivity.class, TRAINING_TYPE, FREE_TRAINING);
+                break;
+            case 2:
+                startActivityAnimated(EditTrainingActivity.class, TRAINING_TYPE, TRAINING_WITH_STANDARD_ROUND);
+                break;
         }
+    }
+
+    private void startActivityAnimated(Class<?> aClass) {
+        Intent i = new Intent(this, aClass);
+        startActivity(i);
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    private void startActivityAnimated(Class<?> aClass, String key, long value) {
+        Intent i = new Intent(this, aClass);
+        i.putExtra(key, value);
+        startActivity(i);
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    private void startActivityAnimated(Class<?> aClass, String key, int value) {
+        Intent i = new Intent(this, aClass);
+        i.putExtra(key, value);
         startActivity(i);
         overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     @Override
-    public void onItemSelected(IIdProvider item) {
-        Intent i;
+    public void onItemSelected(Parcelable passedItem) {
+        IIdProvider item = Parcels.unwrap(passedItem);
         if (item instanceof Arrow) {
-            i = new Intent(this, SimpleFragmentActivity.EditArrowActivity.class);
-            i.putExtra(EditArrowFragment.ARROW_ID, item.getId());
+            startActivityAnimated(EditArrowActivity.class, ARROW_ID, item.getId());
         } else if (item instanceof Bow) {
-            i = new Intent(this, SimpleFragmentActivity.EditBowActivity.class);
-            i.putExtra(EditBowFragment.BOW_ID, item.getId());
+            startActivityAnimated(EditBowActivity.class, BOW_ID, item.getId());
         } else {
-            i = new Intent(this, SimpleFragmentActivity.EditTrainingActivity.class);
-            i.putExtra(TrainingsFragment.ITEM_ID, item.getId());
+            startActivityAnimated(EditTrainingActivity.class, ITEM_ID, item.getId());
         }
-        startActivity(i);
-        overridePendingTransition(R.anim.right_in, R.anim.left_out);
-    }
-
-    private final boolean[] empty = new boolean[3];
-    private final int[] stringRes = new int[3];
-
-    {
-        stringRes[0] = R.string.new_training;
-        stringRes[1] = R.string.new_bow;
-        stringRes[2] = R.string.new_arrow;
     }
 
     @Override
@@ -188,6 +230,7 @@ public class MainActivity extends AppCompatActivity
                 this.empty[i] = empty;
             }
         }
+        fm.notifyContentChanged();
         onPageSelected(viewPager.getCurrentItem());
     }
 
@@ -198,12 +241,17 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onPageSelected(int position) {
-        mNewLayout.setVisibility(empty[position] ? View.VISIBLE : View.GONE);
-        mNewText.setText(stringRes[position]);
+        fm.setFABHelperTitle(empty[position] ? stringRes[position] : 0);
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        fm.onSaveInstanceState(outState);
     }
 }

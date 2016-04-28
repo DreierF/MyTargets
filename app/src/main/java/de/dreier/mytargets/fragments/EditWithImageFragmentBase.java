@@ -60,22 +60,28 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int SELECT_PICTURE = 2;
     
-    @Bind(R.id.img_view)
+    @Bind(R.id.imgView)
     ImageView imageView;
-    @Bind(R.id.img_progress)
+
+    @Bind(R.id.imgProgress)
     ProgressBar imgProgress;
-    @Bind(R.id.img_container)
+
+    @Bind(R.id.imgContainer)
     FrameLayout imgContainer;
+
     @Bind(R.id.overlay)
     View overlay;
 
-    LinearLayout content;
+    
     @Bind(R.id.scrollView)
     ObservableScrollView scrollView;
+
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
     @Bind(R.id.title)
     EditText titleView;
+
     @Bind(R.id.fab)
     FloatingActionButton fab;
 
@@ -89,14 +95,14 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
     private boolean fabIsShown;
     
     private final int defaultDrawable;
-    int mToolbarColor;
-    int mFlexibleSpaceImageHeight;
-    int mFlexibleSpaceShowFabOffset;
-    int mLeftSpace;
-    int fabMargin;
+    private int mToolbarColor;
+    private int mFlexibleSpaceImageHeight;
+    private int mFlexibleSpaceShowFabOffset;
+    private int mLeftSpace;
+    private int fabMargin;
     private int mActionBarSize;
 
-    public EditWithImageFragmentBase(int layoutRes, int defaultDrawable) {
+    EditWithImageFragmentBase(int layoutRes, int defaultDrawable) {
         this.layoutRes = layoutRes;
         this.defaultDrawable = defaultDrawable;
     }
@@ -121,7 +127,8 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
         // Ensure scrollview is at least as big to fill the screen
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        content = (LinearLayout) rootView.findViewById(R.id.content);
+
+        LinearLayout content = (LinearLayout) rootView.findViewById(R.id.content);
         content.setMinimumHeight(metrics.heightPixels - mActionBarSize - statusBarSize);
 
         // Inflate whole layout
@@ -165,11 +172,11 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
         return rootView;
     }
 
-    public String getName() {
+    String getName() {
         return titleView.getText().toString();
     }
 
-    public void setTitle(String title) {
+    void setTitle(String title) {
         titleView.setText(title);
     }
 

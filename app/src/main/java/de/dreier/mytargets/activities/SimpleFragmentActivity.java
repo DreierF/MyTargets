@@ -29,7 +29,7 @@ import de.dreier.mytargets.fragments.TrainingFragment;
 public abstract class SimpleFragmentActivity extends AppCompatActivity {
 
     private static final String FRAGMENT_TAG = "fragment";
-    protected Fragment childFragment;
+    Fragment childFragment;
 
     protected abstract Fragment instantiateFragment();
 
@@ -61,7 +61,7 @@ public abstract class SimpleFragmentActivity extends AppCompatActivity {
         ButterKnife.unbind(this);
     }
 
-    protected int getLayoutResource() {
+    int getLayoutResource() {
         return R.layout.layout_frame;
     }
 

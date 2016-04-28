@@ -3,6 +3,7 @@ package de.dreier.mytargets.shared.models;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 
 import org.parceler.Parcel;
@@ -11,9 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.utils.BitmapUtils;
+import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
 
 @Parcel
-public class Arrow implements IIdSettable {
+public class Arrow implements IImageProvider, IIdSettable {
     public long id;
     public String name;
     public String length;
@@ -31,11 +33,29 @@ public class Arrow implements IIdSettable {
     private transient Bitmap thumbnail;
     private transient Bitmap image;
 
-    public Bitmap getThumbnail() {
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Drawable getDrawable() {
         if (thumbnail == null) {
             thumbnail = BitmapFactory.decodeByteArray(thumb, 0, thumb.length);
         }
-        return thumbnail;
+        return new RoundedAvatarDrawable(thumbnail);
+    }
+
+    @Override
+    public Drawable getDrawable(Context context) {
+        return getDrawable();
+    }
+
+    @Override
+    public String getName(Context context) {
+        return name;
     }
 
     public Bitmap getImage(Context context) {
@@ -50,14 +70,6 @@ public class Arrow implements IIdSettable {
         image = imageBitmap;
         thumbnail = ThumbnailUtils.extractThumbnail(image, 100, 100);
         thumb = BitmapUtils.getBitmapAsByteArray(thumbnail);
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     @Override

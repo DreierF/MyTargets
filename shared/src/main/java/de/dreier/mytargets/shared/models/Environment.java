@@ -6,18 +6,22 @@
  */
 package de.dreier.mytargets.shared.models;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
+
 import org.parceler.Parcel;
 
+import de.dreier.mytargets.shared.R;
+
 @Parcel
-public class Environment implements IIdSettable {
+public class Environment implements IImageProvider, IDetailProvider {
     public EWeather weather;
     public int windSpeed;
     public int windDirection;
     public String location;
-    protected long id;
 
     public Environment() {
-
     }
 
     public Environment(EWeather weather, int windSpeed, int windDirection) {
@@ -26,18 +30,24 @@ public class Environment implements IIdSettable {
         this.windDirection = windDirection;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    @Override
+    public String getName(Context context) {
+        return context.getString(weather.getName());
     }
 
     @Override
-    public boolean equals(Object another) {
-        return another instanceof Environment &&
-                getClass().equals(another.getClass()) &&
-                id == ((Environment) another).id;
+    public String getDetails(Context context) {
+        String description = context.getString(R.string.wind) + ": " + windSpeed + " Btf " +
+                context.getResources().getStringArray(R.array.wind_directions)[windDirection];
+        if (!TextUtils.isEmpty(location)) {
+            description +=
+                    "\n" + context.getString(R.string.location) + ": " + location;
+        }
+        return description;
+    }
+
+    @Override
+    public Drawable getDrawable(Context context) {
+        return context.getResources().getDrawable(weather.getDrawable());
     }
 }

@@ -16,13 +16,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.dreier.mytargets.shared.models.Passe;
+import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.utils.Pair;
 
 public class PasseDataSource extends IdProviderDataSource<Passe> {
-    public static final String TABLE = "PASSE";
-    public static final String ROUND = "round";
+    private static final String TABLE = "PASSE";
+    private static final String ROUND = "round";
     private static final String IMAGE = "image";
     private static final String EXACT = "exact";
     public static final String CREATE_TABLE =
@@ -43,6 +44,13 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         for (Shot shot : item.shot) {
             sds.update(shot);
         }
+    }
+
+    @Override
+    public void delete(Passe item) {
+        super.delete(item);
+        Round r = new RoundDataSource(context).get(item.roundId);
+        new RoundTemplateDataSource(context).deletePasse(r.info);
     }
 
     @Override

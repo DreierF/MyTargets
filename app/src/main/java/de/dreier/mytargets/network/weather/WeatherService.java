@@ -55,7 +55,7 @@ public class WeatherService {
      * The web service always returns a HTTP header code of 200 and communicates errors
      * through a 'cod' field in the JSON payload of the response body.
      */
-    public static Observable<CurrentWeather> filterWebServiceErrors(CurrentWeather weather) {
+    private static Observable<CurrentWeather> filterWebServiceErrors(CurrentWeather weather) {
         if (weather.httpCode == 200) {
             return Observable.just(weather);
         } else {

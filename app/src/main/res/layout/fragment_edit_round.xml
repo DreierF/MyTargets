@@ -1,9 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="de.dreier.mytargets.activities.SimpleFragmentActivity.EditTrainingActivity">
+    tools:context="de.dreier.mytargets.activities.SimpleFragmentActivity$EditTrainingActivity">
 
     <include layout="@layout/common_toolbar" />
 
@@ -27,63 +28,31 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <LinearLayout
+                    <de.dreier.mytargets.views.selector.DistanceSelector
+                        android:id="@+id/distanceSpinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical" />
 
-                        <TextView
-                            style="@style/Label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="16dp"
-                            android:text="@string/distance" />
-
-                        <de.dreier.mytargets.views.selector.DistanceSelector
-                            android:id="@+id/distanceSpinner"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical" />
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/dividerColor" />
+                    <include layout="@layout/divider_full" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/not_editable"
+                    android:id="@+id/notEditable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:animateLayoutChanges="true"
                     android:orientation="vertical">
 
-                    <LinearLayout
+
+                    <de.dreier.mytargets.views.selector.TargetSelector
+                        android:id="@+id/targetSpinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:orientation="vertical" />
 
-                        <TextView
-                            style="@style/Label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/target_face" />
-
-                        <de.dreier.mytargets.views.selector.TargetSelector
-                            android:id="@+id/targetSpinner"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/dividerColor" />
+                    <include layout="@layout/divider_full" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -92,38 +61,21 @@
                         android:padding="16dp">
 
                         <TextView
+                            android:id="@+id/arrowsLabel"
                             style="@style/Label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/format" />
+                            android:text="@string/arrows" />
 
-                        <LinearLayout
+                        <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                            android:id="@+id/arrows"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
+                            app:dsb_indicatorColor="@color/colorPrimary"
+                            app:dsb_max="12"
+                            app:dsb_min="1"
+                            app:dsb_progressColor="@color/colorPrimary" />
 
-                            <de.dreier.mytargets.views.NumberPicker
-                                android:id="@+id/passes"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-
-                            <TextView
-                                android:id="@+id/label_with"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="top"
-                                android:paddingLeft="4dp"
-                                android:paddingRight="4dp"
-                                android:text="@string/with"
-                                android:textSize="16sp" />
-
-                            <de.dreier.mytargets.views.NumberPicker
-                                android:id="@+id/arrows"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-
-                        </LinearLayout>
                     </LinearLayout>
 
                     <View
@@ -153,12 +105,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_gravity="bottom"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:orientation="vertical">
 
             <View
-                android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_gravity="bottom"
@@ -167,7 +118,7 @@
             <Button
                 android:id="@+id/remove_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:minHeight="48dp"

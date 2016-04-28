@@ -28,6 +28,7 @@ import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.views.DynamicItemLayout;
 import de.dreier.mytargets.views.NumberPicker;
 import de.dreier.mytargets.views.selector.DistanceSelector;
@@ -93,7 +94,7 @@ public class EditStandardRoundFragment extends EditFragmentBase
             indoor.setChecked(standardRound.indoor);
             outdoor.setChecked(!standardRound.indoor);
             ArrayList<RoundTemplate> rounds = standardRound.getRounds();
-            if (standardRound.club == StandardRound.CUSTOM) {
+            if (standardRound.club == StandardRoundFactory.CUSTOM) {
                 name.setText(standardRound.name);
                 standardRoundId = standardRound.getId();
             } else {
@@ -111,7 +112,7 @@ public class EditStandardRoundFragment extends EditFragmentBase
     protected void onSave() {
         StandardRound standardRound = new StandardRound();
         standardRound.setId(standardRoundId);
-        standardRound.club = StandardRound.CUSTOM;
+        standardRound.club = StandardRoundFactory.CUSTOM;
         standardRound.name = name.getText().toString();
         standardRound.indoor = indoor.isChecked();
         standardRound.setRounds(rounds.getList());
