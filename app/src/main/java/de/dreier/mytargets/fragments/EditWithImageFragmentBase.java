@@ -10,18 +10,16 @@ package de.dreier.mytargets.fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -29,18 +27,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
-import com.github.ksoichiro.android.observablescrollview.ScrollState;
-import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
-import com.nineoldandroids.view.ViewHelper;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -52,10 +41,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.utils.BitmapUtils;
-import de.dreier.mytargets.utils.ToolbarUtils;
 
-public abstract class EditWithImageFragmentBase extends EditFragmentBase
-        implements ObservableScrollViewCallbacks {
+public abstract class EditWithImageFragmentBase extends EditFragmentBase {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int SELECT_PICTURE = 2;
@@ -69,18 +56,8 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
     @Bind(R.id.imgContainer)
     FrameLayout imgContainer;
 
-    @Bind(R.id.overlay)
-    View overlay;
-
-    
-    @Bind(R.id.scrollView)
-    ObservableScrollView scrollView;
-
     @Bind(R.id.toolbar)
     Toolbar toolbar;
-
-    @Bind(R.id.title)
-    EditText titleView;
 
     @Bind(R.id.fab)
     FloatingActionButton fab;
@@ -90,17 +67,8 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
     Bitmap imageBitmap = null;
 
     private final int layoutRes;
-
-    
-    private boolean fabIsShown;
     
     private final int defaultDrawable;
-    private int mToolbarColor;
-    private int mFlexibleSpaceImageHeight;
-    private int mFlexibleSpaceShowFabOffset;
-    private int mLeftSpace;
-    private int fabMargin;
-    private int mActionBarSize;
 
     EditWithImageFragmentBase(int layoutRes, int defaultDrawable) {
         this.layoutRes = layoutRes;
@@ -112,43 +80,17 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
         View rootView = inflater.inflate(R.layout.fragment_edit_image, container, false);
         setUpToolbar(rootView);
 
-
-        Resources res = getResources();
-        mToolbarColor = res.getColor(R.color.colorPrimary);
-        mFlexibleSpaceImageHeight = res.getDimensionPixelSize(R.dimen.flexible_space_image_height);
-        mFlexibleSpaceShowFabOffset = res.getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
-        mLeftSpace = res.getDimensionPixelSize(R.dimen.left_space_title_toolbar);
-        fabMargin = res.getDimensionPixelSize(R.dimen.margin_standard);
-
-        // Load values used for image animation
-        mActionBarSize = ToolbarUtils.getActionBarSize(getContext());
-        int statusBarSize = ToolbarUtils.getStatusBarSize(getContext());
-
-        // Ensure scrollview is at least as big to fill the screen
-        DisplayMetrics metrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        LinearLayout content = (LinearLayout) rootView.findViewById(R.id.content);
-        content.setMinimumHeight(metrics.heightPixels - mActionBarSize - statusBarSize);
+        NestedScrollView content = (NestedScrollView) rootView.findViewById(R.id.content);
 
         // Inflate whole layout
         inflater.inflate(layoutRes, content);
         ButterKnife.bind(this, rootView);
 
-        // Set scrollview callbacks
-        scrollView.setScrollViewCallbacks(this);
-
         // Prepare custom title view
-        activity.getSupportActionBar().setTitle(null);
+        setTitle(R.string.new_bow);
 
-        // Initialize FAB button
         registerForContextMenu(fab);
-        ViewHelper.setScaleX(fab, 0);
-        ViewHelper.setScaleY(fab, 0);
         fab.setOnClickListener(v -> fab.showContextMenu());
-
-        // Initialize layout
-        ScrollUtils.addOnGlobalLayoutListener(scrollView, () -> onScrollChanged(0, false, false));
 
         // Handle saved instance state
         if (savedInstanceState != null) {
@@ -170,105 +112,6 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase
             }
         }
         return rootView;
-    }
-
-    String getName() {
-        return titleView.getText().toString();
-    }
-
-    void setTitle(String title) {
-        titleView.setText(title);
-    }
-
-    @Override
-    public void setTitle(int title) {
-        titleView.setText(getString(title));
-    }
-
-    @Override
-    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-        // Translate overlay and image
-        float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
-        int minOverlayTransitionY = mActionBarSize - overlay.getHeight();
-        ViewHelper.setTranslationY(overlay,
-                ScrollUtils.getFloat(-scrollY, minOverlayTransitionY, 0));
-        ViewHelper.setTranslationY(imgContainer,
-                ScrollUtils.getFloat(-scrollY / 2, minOverlayTransitionY, 0));
-
-        // Change alpha of overlay
-        ViewHelper.setAlpha(overlay,
-                ScrollUtils.getFloat((float) scrollY / flexibleRange, 0, 1));
-
-        // Scale title text
-        float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0, 0.3f);
-        titleView.setTextSize(scale * 19);
-
-        // Translate title text
-        int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight -
-                titleView.getHeight() * scale);
-        int titleTranslationY = maxTitleTranslationY - scrollY;
-        titleTranslationY = Math.max(0, titleTranslationY);
-        float scale2 = ScrollUtils
-                .getFloat((scrollY - flexibleRange + mActionBarSize) / (mActionBarSize), 0, 1);
-        ViewHelper.setTranslationX(titleView, (scale2 * mLeftSpace));
-        ViewHelper.setTranslationY(titleView, titleTranslationY);
-
-        // Translate FAB
-        int maxFabTranslationY = mFlexibleSpaceImageHeight - fab.getHeight() / 2;
-        float fabTranslationY = ScrollUtils.getFloat(
-                -scrollY + mFlexibleSpaceImageHeight - fab.getHeight() / 2,
-                mActionBarSize - fab.getHeight() / 2,
-                maxFabTranslationY);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            // On pre-honeycomb, ViewHelper.setTranslationX/Y does not set margin,
-            // which causes FAB's OnClickListener not working.
-            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) fab.getLayoutParams();
-            lp.leftMargin = overlay.getWidth() - fabMargin - fab.getWidth();
-            lp.topMargin = (int) fabTranslationY;
-            fab.requestLayout();
-        } else {
-            ViewHelper
-                    .setTranslationX(fab, overlay.getWidth() - fabMargin - fab.getWidth());
-            ViewHelper.setTranslationY(fab, fabTranslationY);
-        }
-
-        // Show/hide FAB
-        if (fabTranslationY < mFlexibleSpaceShowFabOffset) {
-            hideFab();
-        } else {
-            showFab();
-        }
-
-        // Change alpha of toolbar background
-        if (-scrollY + mFlexibleSpaceImageHeight <= mActionBarSize) {
-            toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(1, mToolbarColor));
-        } else {
-            toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(0, mToolbarColor));
-        }
-    }
-
-    @Override
-    public void onDownMotionEvent() {
-    }
-
-    @Override
-    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-    }
-
-    private void showFab() {
-        if (!fabIsShown) {
-            ViewPropertyAnimator.animate(fab).cancel();
-            ViewPropertyAnimator.animate(fab).scaleX(1).scaleY(1).setDuration(200).start();
-            fabIsShown = true;
-        }
-    }
-
-    private void hideFab() {
-        if (fabIsShown) {
-            ViewPropertyAnimator.animate(fab).cancel();
-            ViewPropertyAnimator.animate(fab).scaleX(0).scaleY(0).setDuration(200).start();
-            fabIsShown = false;
-        }
     }
 
     @Override

@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -12,12 +12,44 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:src="@drawable/ic_arrow_length_grey600_24dp"/>
+            android:src="@drawable/ic_title_grey600_24dp" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="56dp">
+            android:layout_marginLeft="56dp"
+            android:layout_marginStart="56dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:hint="@string/name"
+                android:inputType="textNoSuggestions" />
+
+        </android.support.design.widget.TextInputLayout>
+
+    </FrameLayout>
+
+    <include layout="@layout/divider_inset" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:src="@drawable/ic_arrow_length_grey600_24dp" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="56dp"
+            android:layout_marginStart="56dp">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/arrow_length"
@@ -25,13 +57,13 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:hint="@string/length"
-                android:inputType="textNoSuggestions"/>
+                android:inputType="textNoSuggestions" />
 
         </android.support.design.widget.TextInputLayout>
 
     </FrameLayout>
 
-    <include layout="@layout/divider_inset"/>
+    <include layout="@layout/divider_inset" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -42,12 +74,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:src="@drawable/ic_arrow_material_grey600_24dp"/>
+            android:src="@drawable/ic_arrow_material_grey600_24dp" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="56dp">
+            android:layout_marginLeft="56dp"
+            android:layout_marginStart="56dp">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/arrow_material"
@@ -55,13 +88,13 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:hint="@string/material"
-                android:inputType="textNoSuggestions"/>
+                android:inputType="textNoSuggestions" />
 
         </android.support.design.widget.TextInputLayout>
 
     </FrameLayout>
 
-    <include layout="@layout/divider_inset"/>
+    <include layout="@layout/divider_inset" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -72,12 +105,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:src="@drawable/ic_arrow_spine_grey600_24dp"/>
+            android:src="@drawable/ic_arrow_spine_grey600_24dp" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="56dp">
+            android:layout_marginLeft="56dp"
+            android:layout_marginStart="56dp">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/arrow_spine"
@@ -85,13 +119,13 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:hint="@string/spine"
-                android:inputType="textNoSuggestions"/>
+                android:inputType="textNoSuggestions" />
 
         </android.support.design.widget.TextInputLayout>
 
     </FrameLayout>
 
-    <include layout="@layout/divider_inset"/>
+    <include layout="@layout/divider_inset" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -102,12 +136,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:src="@drawable/ic_arrow_weight_grey600_24dp"/>
+            android:src="@drawable/ic_arrow_weight_grey600_24dp" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="56dp">
+            android:layout_marginLeft="56dp"
+            android:layout_marginStart="56dp">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/arrow_weight"
@@ -115,13 +150,13 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:hint="@string/weight"
-                android:inputType="textNoSuggestions"/>
+                android:inputType="textNoSuggestions" />
 
         </android.support.design.widget.TextInputLayout>
 
     </FrameLayout>
 
-    <include layout="@layout/divider_inset"/>
+    <include layout="@layout/divider_inset" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -132,12 +167,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:src="@drawable/ic_arrow_tip_weight_grey600_24dp"/>
+            android:src="@drawable/ic_arrow_tip_weight_grey600_24dp" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="56dp">
+            android:layout_marginLeft="56dp"
+            android:layout_marginStart="56dp">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/arrow_tip_weight"
@@ -145,13 +181,13 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:hint="@string/tip_weight"
-                android:inputType="textNoSuggestions"/>
+                android:inputType="textNoSuggestions" />
 
         </android.support.design.widget.TextInputLayout>
 
     </FrameLayout>
 
-    <include layout="@layout/divider_inset"/>
+    <include layout="@layout/divider_inset" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -162,12 +198,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:src="@drawable/ic_arrow_vanes_grey600_24dp"/>
+            android:src="@drawable/ic_arrow_vanes_grey600_24dp" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="56dp">
+            android:layout_marginLeft="56dp"
+            android:layout_marginStart="56dp">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/arrow_vanes"
@@ -175,13 +212,13 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:hint="@string/vanes"
-                android:inputType="textNoSuggestions"/>
+                android:inputType="textNoSuggestions" />
 
         </android.support.design.widget.TextInputLayout>
 
     </FrameLayout>
 
-    <include layout="@layout/divider_inset"/>
+    <include layout="@layout/divider_inset" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -192,12 +229,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:src="@drawable/ic_arrow_nock_grey600_24dp"/>
+            android:src="@drawable/ic_arrow_nock_grey600_24dp" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="56dp">
+            android:layout_marginLeft="56dp"
+            android:layout_marginStart="56dp">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/arrow_nock"
@@ -205,13 +243,13 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:hint="@string/nock"
-                android:inputType="textNoSuggestions"/>
+                android:inputType="textNoSuggestions" />
 
         </android.support.design.widget.TextInputLayout>
 
     </FrameLayout>
 
-    <include layout="@layout/divider_inset"/>
+    <include layout="@layout/divider_inset" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -222,12 +260,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:src="@drawable/ic_arrow_number_grey600_24dp"/>
+            android:src="@drawable/ic_arrow_number_grey600_24dp" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="56dp">
+            android:layout_marginLeft="56dp"
+            android:layout_marginStart="56dp">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/arrow_numbers"
@@ -236,7 +275,7 @@
                 android:background="@color/transparent"
                 android:digits="0123456789,"
                 android:hint="@string/arrow_numbers"
-                android:inputType="number"/>
+                android:inputType="number" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -246,12 +285,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="16dp"
+        android:paddingEnd="16dp"
         android:paddingLeft="72dp"
         android:paddingRight="16dp"
+        android:paddingStart="72dp"
         android:paddingTop="16dp"
-        android:text="@string/arrow_numbers_desc"/>
+        android:text="@string/arrow_numbers_desc" />
 
-    <include layout="@layout/divider_inset"/>
+    <include layout="@layout/divider_inset" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -262,12 +303,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:src="@drawable/ic_comment_grey600_24dp"/>
+            android:src="@drawable/ic_comment_grey600_24dp" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="56dp">
+            android:layout_marginLeft="56dp"
+            android:layout_marginStart="56dp">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/arrow_comment"
@@ -275,7 +317,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:hint="@string/comment"
-                android:inputType="textMultiLine"/>
+                android:inputType="textMultiLine" />
 
         </android.support.design.widget.TextInputLayout>
 

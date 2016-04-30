@@ -86,7 +86,7 @@ public class DistanceFragment extends Fragment implements DistanceInputDialog.On
         try {
             int distanceVal = Integer.parseInt(input.replaceAll("[^0-9]", ""));
             String unit;
-            if (input.endsWith(Dimension.METER)) {
+            if (viewPager.getCurrentItem() == 0) {
                 unit = Dimension.METER;
             } else {
                 unit = Dimension.YARDS;

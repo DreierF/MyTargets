@@ -58,6 +58,8 @@ public class EditBowFragment extends EditWithImageFragmentBase
     @Bind(R.id.yumi)
     RadioButton yumiBow;
 
+    @Bind(R.id.name)
+    EditText name;
     @Bind(R.id.brand)
     EditText brand;
     @Bind(R.id.size)
@@ -130,6 +132,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
 
     private void setBowValues(Bow bow) {
         setTitle(bow.name);
+        name.setText(bow.name);
         brand.setText(bow.brand);
         size.setText(bow.size);
         braceHeight.setText(bow.height);
@@ -187,7 +190,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
     private Bow buildBow() {
         Bow bow = new Bow();
         bow.setId(mBowId);
-        bow.name = getName();
+        bow.name = name.getText().toString();
         bow.brand = brand.getText().toString();
         bow.size = size.getText().toString();
         bow.height = braceHeight.getText().toString();

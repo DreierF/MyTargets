@@ -28,6 +28,9 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     public static final String ARROW_ID = "arrow_id";
     private long mArrowId = -1;
 
+    @Bind(R.id.name)
+    EditText name;
+
     @Bind(R.id.arrow_length)
     EditText length;
 
@@ -120,7 +123,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         }
         Arrow arrow = new Arrow();
         arrow.setId(mArrowId);
-        arrow.name = getName();
+        arrow.name = name.getText().toString();
         arrow.length = length.getText().toString();
         arrow.material = material.getText().toString();
         arrow.spine = spine.getText().toString();

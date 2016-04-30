@@ -75,7 +75,6 @@ dependencies {
 
     compile "com.google.android.gms:play-services-wearable:$playServiceVersion"
 
-    compile 'com.github.ksoichiro:android-observablescrollview:1.5.2'
     compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'
     compile 'de.psdev.licensesdialog:licensesdialog:1.7.0'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'

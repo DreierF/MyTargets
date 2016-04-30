@@ -42,6 +42,11 @@ public abstract class EditFragmentBase extends Fragment {
         activity.getSupportActionBar().setTitle(title);
     }
 
+    void setTitle(String title) {
+        assert activity.getSupportActionBar() != null;
+        activity.getSupportActionBar().setTitle(title);
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.save, menu);
