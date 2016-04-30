@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <de.dreier.mytargets.views.selector.DistanceSelector
+    <de.dreier.mytargets.views.selector.SimpleDistanceSelector
         android:id="@+id/distanceSpinner"
         android:layout_width="70dp"
         android:layout_height="wrap_content"

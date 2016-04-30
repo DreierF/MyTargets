@@ -24,6 +24,7 @@ import android.os.Parcelable;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.text.InputType;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -32,6 +33,8 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.parceler.ParcelConstructor;
 import org.parceler.Parcels;
@@ -50,7 +53,6 @@ import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
-import de.dreier.mytargets.utils.TextInputDialog;
 
 public class TargetView extends TargetViewBase {
 
@@ -620,6 +622,7 @@ public class TargetView extends TargetViewBase {
     }
 
     private void onLongPressArrow() {
+        longPressTimer = null;
         final int pressed = passeDrawer.getPressed();
         if (pressed == -1) {
             return;
@@ -629,27 +632,22 @@ public class TargetView extends TargetViewBase {
         v.vibrate(500);
         onArrowChanged(round.arrowsPerPasse);
 
-        new TextInputDialog.Builder(getContext())
-                .setTitle(R.string.comment)
-                .setDefaultText(passe.shot[pressed].comment)
-                .setOnClickListener(new TextInputDialog.OnClickListener() {
-
-                    @Override
-                    public void onCancelClickListener() {
-                        passeDrawer.setPressed(-1);
-                        invalidate();
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.comment)
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input("", passe.shot[pressed].comment, (dialog, input) -> {
+                    passe.shot[pressed].comment = input.toString();
+                    if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
+                        setListener.onTargetSet(new Passe(passe), false);
                     }
-
-                    @Override
-                    public void onOkClickListener(String input) {
-                        passe.shot[pressed].comment = input;
-                        if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
-                            setListener.onTargetSet(new Passe(passe), false);
-                        }
-                        passeDrawer.setPressed(-1);
-                        invalidate();
-                    }
-                }).show();
+                    passeDrawer.setPressed(-1);
+                    invalidate();
+                    //dialog.dismiss();
+                }).negativeText(android.R.string.cancel).cancelListener(dialog1 -> {
+            passeDrawer.setPressed(-1);
+            invalidate();
+            //dialog1.dismiss();
+        }).show();
     }
 
     private ArrayList<Zone> getZoneList() {

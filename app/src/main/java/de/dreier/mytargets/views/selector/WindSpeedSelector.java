@@ -26,7 +26,7 @@ public class WindSpeedSelector extends SelectorBase<WindSpeed> {
     }
 
     public WindSpeedSelector(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.item_simple_text);
+        super(context, attrs, R.layout.selector_item_simple_text);
         setOnClickActivity(ItemSelectActivity.WindSpeedActivity.class);
     }
 

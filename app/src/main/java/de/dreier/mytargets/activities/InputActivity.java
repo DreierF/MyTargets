@@ -140,8 +140,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_show_all).setIcon(
-                mShowAllMode ? R.drawable.ic_visibility_white_24dp :
+        final MenuItem eye = menu.findItem(R.id.action_show_all);
+        eye.setVisible(!target.getInputMode());
+        eye.setIcon(mShowAllMode ? R.drawable.ic_visibility_white_24dp :
                         R.drawable.ic_visibility_off_white_24dp);
         menu.findItem(R.id.action_show_sidebar).setIcon(
                 target.getInputMode() ? R.drawable.ic_album_24dp :

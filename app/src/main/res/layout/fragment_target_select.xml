@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
@@ -21,68 +21,53 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginLeft="45dp"
             android:layout_marginRight="16dp"
-            android:animateLayoutChanges="true">
+            android:layout_marginStart="45dp"
+            android:animateLayoutChanges="true"
+            android:orientation="horizontal"
+            android:weightSum="3">
 
-            <LinearLayout
-                android:id="@+id/left_layout"
+            <Spinner
+                android:id="@+id/scoring_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/target_size_label"
-                android:layout_toStartOf="@+id/target_size_label"
-                android:animateLayoutChanges="true"
-                android:orientation="vertical">
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                tools:listitem="@android:layout/simple_spinner_item" />
 
-                <Spinner
-                    android:id="@+id/scoring_style"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"/>
-
-                <SeekBar
-                    android:id="@+id/target_size_seekbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:thumbTint="@color/white"/>
-            </LinearLayout>
-
-
-            <TextView
-                android:id="@+id/target_size_label"
-                android:layout_width="wrap_content"
+            <Spinner
+                android:id="@+id/target_size"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/left_layout"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:layout_gravity="end|bottom"
+                android:layout_weight="2"
                 android:gravity="end|bottom"
-                android:minWidth="70dp"
                 android:paddingBottom="5dp"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                tools:text="60cm"/>
+                tools:listitem="@android:layout/simple_spinner_item" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView style="@style/card_list"/>
+        <android.support.v7.widget.RecyclerView style="@style/card_list" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_drop_shadow_height"
-            android:background="@drawable/toolbar_drop_shadow"/>
+            android:background="@drawable/toolbar_drop_shadow" />
 
     </FrameLayout>
 

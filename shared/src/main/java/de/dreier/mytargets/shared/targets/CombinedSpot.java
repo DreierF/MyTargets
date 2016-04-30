@@ -26,8 +26,8 @@ public class CombinedSpot extends Drawable {
     @Override
     public void draw(Canvas canvas) {
         Rect rect = getBounds();
-        int faceRadius = (int) Math.max(rect.width() - 0.124 * rect.width() * faces.size(), rect.width() / 2);
-        int x = (rect.width() - faceRadius) / Math.max(faces.size() - 1, 1);
+        int faceRadius = (int) Math.min(rect.width() * 1.2 / faces.size(), rect.width() / 2);
+        int x = (rect.width() - faceRadius*2) / Math.max(faces.size() - 1, 1);
         for (int i = 0; i < faces.size(); i++) {
             faceRect.left = x * i;
             faceRect.top = x * i;

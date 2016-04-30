@@ -53,7 +53,7 @@ public class EditStandardRoundFragment extends EditFragmentBase
 
         StandardRound standardRound = null;
         if (getArguments() != null) {
-            standardRound = getArguments().getParcelable(ITEM);
+            standardRound = Parcels.unwrap(getArguments().getParcelable(ITEM));
         }
 
         // Indoor / outdoor

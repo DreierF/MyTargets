@@ -29,6 +29,7 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.shared.models.Diameter;
@@ -42,12 +43,14 @@ import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 public class TargetFragment extends SelectItemFragment<Target>
         implements SeekBar.OnSeekBarChangeListener {
-
     public static final String TYPE_FIXED = "type_fixed";
-    private Spinner scoringStyle;
-    private SeekBar seekBar;
-    private TextView label;
+
     private boolean typeFixed = false;
+
+    @Bind(R.id.scoring_style)
+    Spinner scoringStyleSpinner;
+    @Bind(R.id.target_size)
+    Spinner targetSizeSpinner;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -67,25 +70,22 @@ public class TargetFragment extends SelectItemFragment<Target>
                 .collect(Collectors.toList());
         setList(targets, new TargetAdapter());
 
-        scoringStyle = (Spinner) rootView.findViewById(R.id.scoring_style);
-        seekBar = (SeekBar) rootView.findViewById(R.id.target_size_seekbar);
-        label = (TextView) rootView.findViewById(R.id.target_size_label);
         int position = targets.indexOf(t);
         mSelector.setSelected(position, t.getId(), true);
         mRecyclerView.scrollToPosition(position);
         updateSettings();
 
         // Set initial target size
+        int diameterIndex = -1;
         Diameter[] diameters = t.getModel().getDiameters();
         for (int i = 0; i < diameters.length; i++) {
             if (diameters[i].equals(t.size)) {
-                seekBar.setProgress(i);
-                label.setText(t.size.toString(getActivity()));
+                diameterIndex = i;
                 break;
             }
         }
-        scoringStyle.setSelection(t.scoringStyle);
-        seekBar.setOnSeekBarChangeListener(this);
+        scoringStyleSpinner.setSelection(t.scoringStyle);
+        targetSizeSpinner.setSelection(diameterIndex);
     }
 
     @Override
@@ -99,37 +99,47 @@ public class TargetFragment extends SelectItemFragment<Target>
 
     private void updateSettings() {
         Target target = mAdapter.getItem(mSelector.getSelectedPosition());
-        Diameter[] diameters = target.getModel().getDiameters();
-        if (seekBar.getProgress() > diameters.length - 1) {
-            seekBar.setProgress(diameters.length - 1);
-        }
-        seekBar.setMax(diameters.length - 1);
-        if (!typeFixed && diameters.length > 1) {
-            seekBar.setVisibility(View.VISIBLE);
-        } else {
-            seekBar.setVisibility(View.GONE);
-        }
 
-        // Init target size
-        Diameter targetSize = diameters[seekBar.getProgress()];
-        label.setText(targetSize.toString(getActivity()));
-
-        // Init scoring styles
-        int style = scoringStyle.getSelectedItemPosition();
-        ArrayList<String> styles = target.getModel().getScoringStyles();
         //noinspection ConstantConditions
         Context themedContext = ((AppCompatActivity) getActivity()).getSupportActionBar()
                 .getThemedContext();
+
+        // Init scoring styles
+        int style = scoringStyleSpinner.getSelectedItemPosition();
+        ArrayList<String> styles = target.getModel().getScoringStyles();
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(themedContext,
                 android.R.layout.simple_spinner_item, styles);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        scoringStyle.setAdapter(spinnerAdapter);
+        scoringStyleSpinner.setAdapter(spinnerAdapter);
         if (styles.size() > 1) {
-            scoringStyle.setVisibility(View.VISIBLE);
+            scoringStyleSpinner.setVisibility(View.VISIBLE);
         } else {
-            scoringStyle.setVisibility(View.GONE);
+            scoringStyleSpinner.setVisibility(View.GONE);
         }
-        scoringStyle.setSelection(style < styles.size() ? style : 0, false);
+        scoringStyleSpinner.setSelection(style < styles.size() ? style : 0, false);
+
+
+        // Init target size spinner
+        int diameter = targetSizeSpinner.getSelectedItemPosition();
+        ArrayList<String> diameters = diameterToList(target.getModel().getDiameters());
+        ArrayAdapter<String> diameterSpinnerAdapter = new ArrayAdapter<>(themedContext,
+                android.R.layout.simple_spinner_item, diameters);
+        diameterSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        targetSizeSpinner.setAdapter(diameterSpinnerAdapter);
+        if (!typeFixed && diameters.size() > 1) {
+            targetSizeSpinner.setVisibility(View.VISIBLE);
+        } else {
+            targetSizeSpinner.setVisibility(View.GONE);
+        }
+        targetSizeSpinner.setSelection(diameter < diameters.size() ? diameter : diameters.size() - 1, false);
+    }
+
+    private ArrayList<String> diameterToList(Diameter[] diameters) {
+        ArrayList<String> list = new ArrayList<>();
+        for (Diameter diameter : diameters) {
+            list.add(diameter.toString(getContext()));
+        }
+        return list;
     }
 
     @Override
@@ -145,9 +155,9 @@ public class TargetFragment extends SelectItemFragment<Target>
     @Override
     protected Target onSave() {
         Target target = super.onSave();
-        target.scoringStyle = scoringStyle.getSelectedItemPosition();
+        target.scoringStyle = scoringStyleSpinner.getSelectedItemPosition();
         Diameter[] diameters = target.getModel().getDiameters();
-        target.size = diameters[seekBar.getProgress()];
+        target.size = diameters[targetSizeSpinner.getSelectedItemPosition()];
 
         SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);
         SharedPreferences.Editor editor = prefs.edit();

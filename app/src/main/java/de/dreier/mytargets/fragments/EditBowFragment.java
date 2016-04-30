@@ -30,7 +30,7 @@ import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.views.DynamicItemLayout;
-import de.dreier.mytargets.views.selector.DistanceSelector;
+import de.dreier.mytargets.views.selector.SimpleDistanceSelector;
 
 public class EditBowFragment extends EditWithImageFragmentBase
         implements DynamicItemLayout.OnBindListener<SightSetting> {
@@ -151,7 +151,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
 
     @Override
     public void onBind(View view, final SightSetting sightSetting, int index) {
-        final DistanceSelector distanceSpinner = (DistanceSelector) view
+        final SimpleDistanceSelector distanceSpinner = (SimpleDistanceSelector) view
                 .findViewById(R.id.distanceSpinner);
         distanceSpinner.setOnUpdateListener(item -> sightSetting.distance = item);
         EditText setting = (EditText) view.findViewById(R.id.sight_setting);

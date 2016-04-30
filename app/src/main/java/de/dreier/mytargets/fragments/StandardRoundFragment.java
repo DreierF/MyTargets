@@ -33,6 +33,7 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
@@ -51,17 +52,19 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
 
     private static final int NEW_STANDARD_ROUND = 1;
     private final CheckBox[] clubs = new CheckBox[9];
-    private DrawerLayout mDrawerLayout;
     private ArrayList<StandardRound> list;
     private RadioGroup location;
     private RadioGroup unit;
     private RadioGroup typ;
     private StandardRound currentSelection;
 
+    @Bind(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mDrawerLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
+
         mSelector.setSelectable(true);
         currentSelection = Parcels.unwrap(getArguments().getParcelable(ITEM));
         list = new StandardRoundDataSource(getContext()).getAll();
@@ -284,7 +287,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.card_standard_round, parent, false);
+                    .inflate(R.layout.item_standard_round, parent, false);
             return new ViewHolder(itemView);
         }
     }

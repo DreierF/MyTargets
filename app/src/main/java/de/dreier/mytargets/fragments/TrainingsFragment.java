@@ -91,14 +91,14 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
         @Override
         protected HeaderViewHolder getTopLevelViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_month, parent, false);
+                    .inflate(R.layout.item_header_month, parent, false);
             return new HeaderViewHolder(itemView);
         }
 
         @Override
         protected ViewHolder getSecondLevelViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.card_training, parent, false);
+                    .inflate(R.layout.item_training, parent, false);
             return new ViewHolder(itemView);
         }
     }

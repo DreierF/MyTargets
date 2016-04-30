@@ -71,6 +71,7 @@ public abstract class EditableFragmentBase<T extends IIdSettable> extends Fragme
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            super.onCreateActionMode(mode, menu);
             actionMode = mode;
             MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.context_menu_edit_delete, menu);
@@ -98,6 +99,7 @@ public abstract class EditableFragmentBase<T extends IIdSettable> extends Fragme
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             super.onDestroyActionMode(mode);
+            getMultiSelector().clearSelections();
             actionMode = null;
         }
     };
@@ -133,8 +135,7 @@ public abstract class EditableFragmentBase<T extends IIdSettable> extends Fragme
                             @Override
                             public void onShown(Snackbar snackbar) {
                             }
-                        })
-                .show();
+                        }).show();
     }
 
     protected abstract void addItem(int pos, T item);

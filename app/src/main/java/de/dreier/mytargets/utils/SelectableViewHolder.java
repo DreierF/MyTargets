@@ -1,24 +1,10 @@
 package de.dreier.mytargets.utils;
 
-import android.animation.AnimatorInflater;
-import android.animation.StateListAnimator;
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.StateListDrawable;
-import android.os.Build;
-import android.support.annotation.IdRes;
-import android.util.StateSet;
-import android.util.TypedValue;
+import android.util.Log;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.bignerdranch.android.multiselector.MultiSelector;
-import com.bignerdranch.android.multiselector.MultiSelectorBindingHolder;
 import com.bignerdranch.android.multiselector.SelectableHolder;
-
-import de.dreier.mytargets.R;
 
 /**
  * A holder extended to support having a selectable mode with a different
@@ -48,11 +34,6 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
     private OnCardClickListener<T> mListener;
     private boolean mIsSelectable = false;
 
-    private Drawable mSelectionModeBackgroundDrawable;
-    private Drawable mDefaultModeBackgroundDrawable;
-    private StateListAnimator mSelectionModeStateListAnimator;
-    private StateListAnimator mDefaultModeStateListAnimator;
-
     /**
      * Construct a new SelectableHolder hooked up to be controlled by a MultiSelector.
      * <p/>
@@ -74,15 +55,6 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
             itemView.setLongClickable(true);
             itemView.setOnLongClickListener(this);
             mListener = listener;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                //setSelectionModeStateListAnimator(getRaiseStateListAnimator(itemView.getContext()));
-                setDefaultModeStateListAnimator(itemView.getStateListAnimator());
-            }
-            // Default selection mode background drawable is this
-            setSelectionModeBackgroundDrawable(
-                    getAccentStateDrawable(itemView.getContext()));
-            setDefaultModeBackgroundDrawable(
-                    itemView.getBackground());
         }
     }
 
@@ -107,11 +79,13 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
      * @param isSelectable True if selectable.
      */
     public void setSelectable(boolean isSelectable) {
-        boolean changed = isSelectable != mIsSelectable;
         mIsSelectable = isSelectable;
 
-        if (changed) {
-            refreshChrome();
+        if (!mIsSelectable) {
+            Log.d("SVH", "setSelectable: ");
+            itemView.setActivated(false);
+            itemView.setPressed(false);
+            itemView.setSelected(false);
         }
     }
 
@@ -144,39 +118,6 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
     public abstract void bindCursor();
 
     /**
-     * Set the background drawable to be used in selection mode.
-     * @param selectionModeBackgroundDrawable A background drawable
-     */
-    private void setSelectionModeBackgroundDrawable(Drawable selectionModeBackgroundDrawable) {
-        mSelectionModeBackgroundDrawable = selectionModeBackgroundDrawable;
-
-        if (mIsSelectable) {
-            itemView.setBackgroundDrawable(selectionModeBackgroundDrawable);
-        }
-    }
-
-    /**
-     * Set the background drawable to use when not in selection mode.
-     * @param defaultModeBackgroundDrawable A background drawable
-     */
-    private void setDefaultModeBackgroundDrawable(Drawable defaultModeBackgroundDrawable) {
-        mDefaultModeBackgroundDrawable = defaultModeBackgroundDrawable;
-
-        if (!mIsSelectable) {
-            itemView.setBackgroundDrawable(mDefaultModeBackgroundDrawable);
-        }
-    }
-
-    /**
-     * Set the state list animator to use when not in selection mode.
-     *
-     * @param defaultModeStateListAnimator A state list animator
-     */
-    private void setDefaultModeStateListAnimator(StateListAnimator defaultModeStateListAnimator) {
-        mDefaultModeStateListAnimator = defaultModeStateListAnimator;
-    }
-
-    /**
      * Calls through to {@link #itemView#setActivated}.
      *
      * @param isActivated True to activate the view.
@@ -191,39 +132,5 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
      */
     public boolean isActivated() {
         return itemView.isActivated();
-    }
-
-
-    private void refreshChrome() {
-        Drawable backgroundDrawable = mIsSelectable ? mSelectionModeBackgroundDrawable
-                : mDefaultModeBackgroundDrawable;
-        itemView.setBackgroundDrawable(backgroundDrawable);
-        if (backgroundDrawable != null) {
-            backgroundDrawable.jumpToCurrentState();
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            StateListAnimator animator = mIsSelectable ? mSelectionModeStateListAnimator
-                    : mDefaultModeStateListAnimator;
-
-            itemView.setStateListAnimator(animator);
-            if (animator != null) {
-                animator.jumpToCurrentState();
-            }
-        }
-    }
-
-    private static Drawable getAccentStateDrawable(Context context) {
-        TypedValue typedValue = new TypedValue();
-        Resources.Theme theme = context.getTheme();
-        theme.resolveAttribute(R.attr.colorAccent, typedValue, true);
-
-        Drawable colorDrawable = new ColorDrawable(typedValue.data);
-
-        StateListDrawable stateListDrawable = new StateListDrawable();
-        stateListDrawable.addState(new int[]{android.R.attr.state_activated}, colorDrawable);
-        stateListDrawable.addState(StateSet.WILD_CARD, null);
-
-        return stateListDrawable;
     }
 }

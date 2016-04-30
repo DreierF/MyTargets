@@ -110,9 +110,6 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         if (getArguments() != null) {
             mTraining = getArguments().getLong(ITEM_ID, -1);
         }
-        if (savedInstanceState != null) {
-            mTraining = savedInstanceState.getLong(ITEM_ID, -1);
-        }
 
         // Set up toolbar
         AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -143,16 +140,15 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
     @Override
     public Loader<List<Passe>> onCreateLoader(int id, Bundle args) {
         return new DataLoader<>(getContext(), new PasseDataSource(getContext()),
-                () -> {
-                    rounds = roundDataSource.getAll(mTraining);
-                    training = trainingDataSource.get(mTraining);
-                    standardRound = standardRoundDataSource.get(training.standardRoundId);
-                    return passeDataSource.getAllByTraining(mTraining);
-                });
+                () -> passeDataSource.getAllByTraining(mTraining));
     }
 
     @Override
     public void onLoadFinished(Loader<List<Passe>> loader, List<Passe> data) {
+        rounds = roundDataSource.getAll(mTraining);
+        training = trainingDataSource.get(mTraining);
+        standardRound = standardRoundDataSource.get(training.standardRoundId);
+
         // Set round info
         setRoundInfo();
         setList(passeDataSource, rounds, data, child -> child.roundId, true, new PasseAdapter());
@@ -290,12 +286,6 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putLong(ITEM_ID, mTraining);
-    }
-
-    @Override
     public void onClick(View v) {
 
     }
@@ -358,11 +348,11 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         protected SelectableViewHolder<Passe> getSecondLevelViewHolder(ViewGroup parent) {
             if (mTargetViewMode) {
                 View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.card_target_end, parent, false);
+                        .inflate(R.layout.item_target_end, parent, false);
                 return new TargetViewHolder(itemView);
             } else {
                 View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.card_end, parent, false);
+                        .inflate(R.layout.item_end, parent, false);
                 return new PasseViewHolder(itemView);
             }
         }

@@ -8,6 +8,8 @@
         <item name="actionModeStyle">@style/LStyled.ActionMode</item>
         <item name="actionModeBackground">@color/colorAccent</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+
+        <item name="selectableItemBackground">@drawable/selector_item_light</item>
     </style>
 
     <style name="AppTheme.BottomSheetDialog" parent="Theme.Design.BottomSheetDialog">

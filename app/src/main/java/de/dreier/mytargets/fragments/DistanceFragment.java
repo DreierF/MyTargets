@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,11 +27,11 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.DistanceTabsFragmentPagerAdapter;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Distance;
-import de.dreier.mytargets.utils.TextInputDialog;
+import de.dreier.mytargets.utils.DistanceInputDialog;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class DistanceFragment extends Fragment implements TextInputDialog.OnClickListener {
+public class DistanceFragment extends Fragment implements DistanceInputDialog.OnClickListener {
 
     @Bind(R.id.viewPager)
     ViewPager viewPager;
@@ -75,17 +74,10 @@ public class DistanceFragment extends Fragment implements TextInputDialog.OnClic
 
     @OnClick(R.id.fab)
     public void onClick() {
-        new TextInputDialog.Builder(getActivity())
-                .setTitle(R.string.distance)
-                .setInputType(InputType.TYPE_CLASS_NUMBER)
-                .setSpinnerItems(new String[]{Dimension.METER, Dimension.YARDS})
+        new DistanceInputDialog.Builder(getContext())
+                .setUnit(new String[]{Dimension.METER, Dimension.YARDS}[viewPager.getCurrentItem()])
                 .setOnClickListener(this)
                 .show();
-    }
-
-    @Override
-    public void onCancelClickListener() {
-
     }
 
     @Override

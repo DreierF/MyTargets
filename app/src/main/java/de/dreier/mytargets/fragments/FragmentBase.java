@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.utils.OnCardClickListener;
@@ -76,6 +78,7 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
     ActionMode actionMode = null;
 
     /** Main {@link RecyclerView} of the fragment */
+    @Bind(android.R.id.list)
     RecyclerView mRecyclerView;
 
     /** Root view of the fragment */
@@ -89,9 +92,15 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
     @CallSuper
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(getLayoutResource(), container, false);
-        mRecyclerView = (RecyclerView) rootView.findViewById(android.R.id.list);
+        ButterKnife.bind(this, rootView);
         mRecyclerView.setHasFixedSize(true);
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     /**
