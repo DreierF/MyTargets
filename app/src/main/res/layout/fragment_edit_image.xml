@@ -24,28 +24,13 @@
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <FrameLayout
-                android:id="@+id/imgContainer"
+            <ImageView
+                android:id="@+id/imgView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/flexible_space_image_height"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-                app:layout_collapseMode="parallax">
-
-                <ImageView
-                    android:id="@+id/imgView"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/flexible_space_image_height"
-                    android:scaleType="centerCrop" />
-
-                <ProgressBar
-                    android:id="@+id/imgProgress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:visibility="gone" />
-
-            </FrameLayout>
+                app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

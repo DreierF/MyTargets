@@ -17,12 +17,28 @@ import android.net.Uri;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class BitmapUtils {
+    public static Bitmap decodeSampledBitmapFromFile(Context context, File file, int reqWidth, int reqHeight)
+            throws IOException {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        InputStream stream = new FileInputStream(file);
+        BitmapFactory.decodeStream(stream, null, options);
+        stream.close();
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inJustDecodeBounds = false;
+        stream = new FileInputStream(file);
+        Bitmap bmp = BitmapFactory.decodeStream(stream, null, options);
+        stream.close();
+        return bmp;
+    }
+
     public static Bitmap decodeSampledBitmapFromStream(Context context, Uri uri, int reqWidth, int reqHeight)
             throws IOException {
         final BitmapFactory.Options options = new BitmapFactory.Options();

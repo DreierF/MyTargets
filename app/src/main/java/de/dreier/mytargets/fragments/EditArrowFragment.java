@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +78,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
                 ArrowDataSource db = new ArrowDataSource(getContext());
                 Arrow arrow = db.get(mArrowId);
                 setTitle(arrow.name);
+                name.setText(arrow.name);
                 length.setText(arrow.length);
                 material.setText(arrow.material);
                 spine.setText(arrow.spine);
@@ -87,11 +87,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
                 vanes.setText(arrow.vanes);
                 nock.setText(arrow.nock);
                 comment.setText(arrow.comment);
-                imageBitmap = arrow.getImage(getContext());
-                if (imageBitmap != null) {
-                    imageView.setImageBitmap(imageBitmap);
-                }
-                imageFile = arrow.imageFile;
+                loadImage(arrow.imageFile);
                 arrowNumbersList = arrow.numbers;
             }
             String text = "";
@@ -108,6 +104,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
 
     @Override
     public void onSave() {
+        super.onSave();
         Arrow arrow = buildArrow();
         if (arrow == null) {
             return;
@@ -132,14 +129,8 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         arrow.vanes = vanes.getText().toString();
         arrow.nock = nock.getText().toString();
         arrow.comment = comment.getText().toString();
-
-        // Delete old file
-        if (oldImageFile != null) {
-            File f = new File(getContext().getFilesDir(), oldImageFile);
-            //noinspection ResultOfMethodCallIgnored
-            f.delete();
-        }
-        arrow.setImage(imageFile, imageBitmap);
+        arrow.imageFile = getImageFile();
+        arrow.thumb = getThumbnail();
         arrow.numbers = numbers;
         return arrow;
     }

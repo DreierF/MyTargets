@@ -9,6 +9,7 @@ package de.dreier.mytargets.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -20,7 +21,6 @@ import android.widget.RadioButton;
 
 import org.parceler.Parcels;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -42,9 +42,6 @@ public class EditBowFragment extends EditWithImageFragmentBase
     private static final int BARE_BOW = 3;
     private static final int HORSE_BOW = 4;
     private static final int YUMI = 5;
-
-    private long mBowId = -1;
-
     @Bind(R.id.recurve)
     RadioButton recurveBow;
     @Bind(R.id.compound)
@@ -57,7 +54,6 @@ public class EditBowFragment extends EditWithImageFragmentBase
     RadioButton horseBow;
     @Bind(R.id.yumi)
     RadioButton yumiBow;
-
     @Bind(R.id.name)
     EditText name;
     @Bind(R.id.brand)
@@ -80,9 +76,9 @@ public class EditBowFragment extends EditWithImageFragmentBase
     EditText clicker;
     @Bind(R.id.desc)
     EditText desc;
-
     @Bind(R.id.sightSettings)
     DynamicItemLayout<SightSetting> sightSettings;
+    private long mBowId = -1;
 
     public EditBowFragment() {
         super(R.layout.fragment_edit_bow, R.drawable.recurve_bow);
@@ -125,7 +121,6 @@ public class EditBowFragment extends EditWithImageFragmentBase
             // Restore values from before orientation change
             Bow bow = Parcels.unwrap(savedInstanceState.getParcelable("bow"));
             setBowValues(bow);
-
         }
         return rootView;
     }
@@ -143,11 +138,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
         stabilizer.setText(bow.stabilizer);
         clicker.setText(bow.clicker);
         desc.setText(bow.description);
-        imageBitmap = bow.getImage(getContext());
-        if (imageBitmap != null) {
-            imageView.setImageBitmap(imageBitmap);
-        }
-        imageFile = bow.imageFile;
+        loadImage(bow.imageFile);
         setBowType(bow.type);
         sightSettings.setList(bow.sightSettings);
     }
@@ -182,6 +173,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
 
     @Override
     public void onSave() {
+        super.onSave();
         new BowDataSource(getContext())
                 .update(buildBow());
         getActivity().finish();
@@ -202,14 +194,8 @@ public class EditBowFragment extends EditWithImageFragmentBase
         bow.clicker = clicker.getText().toString();
         bow.description = desc.getText().toString();
         bow.type = getType();
-
-        // Delete old file
-        if (oldImageFile != null) {
-            File f = new File(getContext().getFilesDir(), oldImageFile);
-            //noinspection ResultOfMethodCallIgnored
-            f.delete();
-        }
-        bow.setImage(imageFile, imageBitmap);
+        bow.imageFile = getImageFile();
+        bow.thumb = getThumbnail();
         bow.sightSettings = sightSettings.getList();
         return bow;
     }

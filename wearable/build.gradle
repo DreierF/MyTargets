@@ -8,14 +8,14 @@ android {
     }
 
     compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    buildToolsVersion '23.0.3'
 
     defaultConfig {
         applicationId 'de.dreier.mytargets'
         minSdkVersion 20
         targetSdkVersion 23
-        versionCode versionCode
-        versionName versionName
+        versionCode appVersionCode
+        versionName appVersionName
     }
 
     if(new File("gradle.properties").exists()) {
@@ -40,7 +40,7 @@ android {
             release {
                 signingConfig signingConfigs.release
                 shrinkResources true
-                //minifyEnabled true
+                minifyEnabled true
                 //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             }
         }

@@ -1,6 +1,5 @@
 package de.dreier.mytargets.utils;
 
-import android.util.Log;
 import android.view.View;
 
 import com.bignerdranch.android.multiselector.MultiSelector;
@@ -80,13 +79,6 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
      */
     public void setSelectable(boolean isSelectable) {
         mIsSelectable = isSelectable;
-
-        if (!mIsSelectable) {
-            Log.d("SVH", "setSelectable: ");
-            itemView.setActivated(false);
-            itemView.setPressed(false);
-            itemView.setSelected(false);
-        }
     }
 
     public T getItem() {

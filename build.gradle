@@ -19,8 +19,8 @@ plugins {
 ext {
     supportLibVersion = '23.3.0'
     playServiceVersion = '8.4.0'
-    versionName = '2.2.0beta6'
-    versionCode = 36
+    appVersionName = '2.2.0-RC1'
+    appVersionCode = 37
 }
 
 allprojects {
