@@ -12,7 +12,11 @@ public class Shot implements IIdSettable, Comparable<Shot> {
     public long passe;
     public float x, y;
     public String comment = "";
+
+    // Is the actual number of the arrow not its index, arrow id or something else
     public int arrow = -1;
+
+    // The index of the shot in the containing passe
     public int index;
     protected long id;
 

@@ -9,7 +9,6 @@ package de.dreier.mytargets.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -114,6 +113,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
                 // Set to default values
                 recurveBow.setChecked(true);
                 setTitle(R.string.my_bow);
+                loadImage((String) null);
                 sightSettingsList.add(new SightSetting());
                 sightSettings.setList(sightSettingsList);
             }

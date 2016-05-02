@@ -6,46 +6,54 @@ import android.animation.ValueAnimator;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+
+import org.parceler.Parcel;
 
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
 
+@Parcel
 public class PasseDrawer {
     public static final int NO_SELECTION = -1;
     private static final int MIN_PADDING = 2;
-    public static int MAX_CIRCLE_SIZE = 17;
+    public static final int MAX_CIRCLE_SIZE = 17;
 
-    private final Circle mCircle;
-    private final View mParent;
-    private RectF mRect;
-    private Passe mPasse;
-    private int mPressed = NO_SELECTION;
-    private int mRadius;
-    private Paint grayBackground;
-    private float mDensity;
-    private int mPPP;
-    private int mShotsPerRow;
+    Passe mPasse;
+    int mPressed = NO_SELECTION;
+    int mSelected = NO_SELECTION;
+    Coordinate mSelectedPosition;
+    int mSelectedRadius;
 
-    private int mSelected = NO_SELECTION;
-    private Coordinate mSelectedPosition;
-    private float mRowHeight;
-    private float mColumnWidth;
+    private transient Circle mCircle;
+    private transient View mParent;
+    private transient RectF mRect;
+    private transient int mRadius;
+    private transient Paint grayBackground;
+    private transient float mDensity;
+    private transient int mPPP;
+    private transient int mShotsPerRow;
+
+    private transient float mRowHeight;
+    private transient float mColumnWidth;
 
     // Animation
-    private Coordinate[] mOldCoordinate;
-    private float mCurAnimationProgress = -1;
-    private ValueAnimator selectionAnimator;
-    private int oldRadius, oldSelected, oldSelectedRadius;
-    private int mSelectedRadius;
+    private transient Coordinate[] mOldCoordinate;
+    private transient float mCurAnimationProgress = -1;
+    private transient ValueAnimator selectionAnimator;
+    private transient int oldRadius;
+    private transient int oldSelected;
+    private transient int oldSelectedRadius;
 
-    public PasseDrawer(View parent, float density, Target target) {
+    public PasseDrawer() {
+    }
+
+    public void init(View parent, float density, Target target) {
         mParent = parent;
         mDensity = density;
         mCircle = new Circle(density, target);
@@ -72,11 +80,6 @@ public class PasseDrawer {
         mShotsPerRow = (int) Math.ceil(mPPP / numRows);
         mRowHeight = rect.height() / numRows;
         mColumnWidth = rect.width() / mShotsPerRow;
-    }
-
-    public void setPressed(int pressed) {
-        mPressed = pressed;
-        mParent.invalidate();
     }
 
     public void setPasse(Passe p) {
@@ -241,19 +244,9 @@ public class PasseDrawer {
         return mPressed;
     }
 
-    public void saveState(Bundle b) {
-        b.putParcelable("pd_passe", mPasse);
-        b.putInt("pd_pressed", mPressed);
-        b.putInt("pd_selected", mSelected);
-        b.putParcelable("pd_selected_pos", mSelectedPosition);
-        b.putInt("pd_selected_radius", mSelectedRadius);
-    }
-
-    public void restoreState(Bundle b) {
-        mPasse = b.getParcelable("pd_passe");
-        mPressed = b.getInt("pd_pressed");
-        mSelected = b.getInt("pd_selected");
-        mSelectedPosition = b.getParcelable("pd_selected_pos");
-        mSelectedRadius = b.getInt("pd_selected_radius");
+    public void setPressed(int pressed) {
+        mPressed = pressed;
+        mParent.invalidate();
     }
 }
+

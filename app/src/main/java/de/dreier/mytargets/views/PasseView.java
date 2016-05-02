@@ -21,7 +21,7 @@ public class PasseView extends View {
 
     private Passe passe = new Passe(3);
     private float density;
-    private PasseDrawer mPasseDrawer;
+    private PasseDrawer mPasseDrawer = new PasseDrawer();
     private final RectF rect = new RectF();
 
     public PasseView(Context context) {
@@ -39,7 +39,7 @@ public class PasseView extends View {
     public void setPoints(Passe p, Target target) {
         passe = p;
         density = getResources().getDisplayMetrics().density;
-        mPasseDrawer = new PasseDrawer(this, density, target);
+        mPasseDrawer.init(this, density, target);
         if (rect.width() > 0) {
             mPasseDrawer.animateToRect(rect);
         }

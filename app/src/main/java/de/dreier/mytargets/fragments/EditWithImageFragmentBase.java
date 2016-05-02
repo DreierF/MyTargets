@@ -15,12 +15,15 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -33,6 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.utils.BitmapUtils;
+import de.dreier.mytargets.utils.AndroidBug5497Workaround;
 import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.ThumbnailUtils;
 import permissions.dispatcher.NeedsPermission;
@@ -45,10 +49,16 @@ import static de.dreier.mytargets.fragments.EditWithImageFragmentBasePermissions
 import static de.dreier.mytargets.fragments.EditWithImageFragmentBasePermissionsDispatcher.onTakePictureWithCheck;
 
 @RuntimePermissions
-public abstract class EditWithImageFragmentBase extends EditFragmentBase {
+public abstract class EditWithImageFragmentBase extends EditFragmentBase implements View.OnFocusChangeListener {
 
     private final int layoutRes;
     private final int defaultDrawable;
+
+    @Bind(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
+
+    @Bind(R.id.appBarLayout)
+    AppBarLayout appBarLayout;
 
     @Bind(R.id.imgView)
     ImageView imageView;
@@ -76,6 +86,38 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase {
         ButterKnife.bind(this, rootView);
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        // Workaround for bug #5497
+        AndroidBug5497Workaround.assistActivity(getActivity());
+        setFocusListenerForAllEditText(getView());
+
+    }
+
+    private void setFocusListenerForAllEditText(View view) {
+        if (view instanceof ViewGroup) {
+            ViewGroup viewGroup = (ViewGroup) view;
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                setFocusListenerForAllEditText(viewGroup.getChildAt(i));
+            }
+        } else if (view instanceof EditText) {
+            view.setOnFocusChangeListener(this);
+        }
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (hasFocus) {
+            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+            AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
+            if (behavior != null) {
+                behavior.onNestedFling(coordinatorLayout, appBarLayout, null, 0, v.getBottom(), true);
+            }
+        }
     }
 
     @OnClick(R.id.fab)
@@ -179,12 +221,14 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase {
             //noinspection ResultOfMethodCallIgnored
             f.delete();
         }
-        try {
-            oldImageFile = imageFile;
-            imageFile = File.createTempFile("img", oldImageFile.getName(), getContext().getFilesDir());
-            BackupUtils.copy(oldImageFile, imageFile);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (imageFile != null) {
+            try {
+                oldImageFile = imageFile;
+                imageFile = File.createTempFile("img", oldImageFile.getName(), getContext().getFilesDir());
+                BackupUtils.copy(oldImageFile, imageFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

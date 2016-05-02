@@ -19,7 +19,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Handler;
-import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -35,9 +34,8 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-
-import org.parceler.ParcelConstructor;
-import org.parceler.Parcels;
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +48,10 @@ import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
+import icepick.Icepick;
+import icepick.State;
 
 public class TargetView extends TargetViewBase {
 
@@ -64,7 +63,8 @@ public class TargetView extends TargetViewBase {
     private float radius, midX, midY;
     private Paint fillPaint;
     private boolean showAll = false;
-    private ArrayList<Passe> oldPasses;
+    @State
+    ArrayList<Passe> oldPasses;
     private Timer longPressTimer;
     private float oldRadius;
     private RectF[] spotRects;
@@ -276,31 +276,13 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    public Parcelable onSaveInstanceState() {
-        Parcelable superState = super.onSaveInstanceState();
-        return new SavedState(superState, oldPasses);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        if (!(state instanceof SavedState)) {
-            super.onRestoreInstanceState(state);
-            return;
-        }
-
-        SavedState ss = (SavedState) state;
-        super.onRestoreInstanceState(ss.superState);
-        this.oldPasses = ss.oldPasses;
-    }
-
-    @Override
     protected void calcSizes() {
         int availableWidth = mZoneSelectionMode ? (int) (contentWidth - 60 * density) : contentWidth;
         float radH = (contentHeight - 10 * density) / 2.45f;
         float radW = (availableWidth - (mZoneSelectionMode ? 70 : 20) * density) * 0.5f;
         orgRadius = (int) (Math.min(radW, radH));
         orgMidX = availableWidth / 2;
-        orgMidY = orgRadius + (int) (10 * density);
+        orgMidY = contentHeight - orgRadius - 10 * density;
         orgRect = new RectF(
                 orgMidX - orgRadius,
                 orgMidY - orgRadius,
@@ -309,8 +291,8 @@ public class TargetView extends TargetViewBase {
         RectF rect = new RectF();
         rect.left = 30 * density;
         rect.right = availableWidth - 30 * density;
-        rect.top = orgMidY + orgRadius;
-        rect.bottom = contentHeight;
+        rect.top = 10 * density;
+        rect.bottom = orgMidY - orgRadius - 10 * density;
         passeDrawer.animateToRect(rect);
         animateToZoomSpot();
     }
@@ -550,7 +532,7 @@ public class TargetView extends TargetViewBase {
                 currentArrow < round.arrowsPerPasse && passe.shot[currentArrow].arrow != -1) {
             super.onArrowChanged(i);
         } else {
-            List<ArrowNumber> numbersLeft = new ArrayList<>(arrowNumbers);
+            List<Integer> numbersLeft = Stream.of(arrowNumbers).map(an -> an.number).collect(Collectors.toList());
             for (Shot s : passe.shot) {
                 numbersLeft.remove((Integer) s.arrow);
             }
@@ -558,7 +540,7 @@ public class TargetView extends TargetViewBase {
                 super.onArrowChanged(i);
                 return;
             } else if (numbersLeft.size() == 1) {
-                passe.shot[currentArrow].arrow = numbersLeft.get(0).number;
+                passe.shot[currentArrow].arrow = numbersLeft.get(0);
                 super.onArrowChanged(i);
                 return;
             }
@@ -579,7 +561,7 @@ public class TargetView extends TargetViewBase {
             gridView.setOnItemClickListener((parent, view, position, id) ->
             {
                 if (currentArrow < passe.shot.length) {
-                    passe.shot[currentArrow].arrow = numbersLeft.get(position).number;
+                    passe.shot[currentArrow].arrow = numbersLeft.get(position);
                 }
                 dialog.dismiss();
                 super.onArrowChanged(i);
@@ -640,14 +622,13 @@ public class TargetView extends TargetViewBase {
                     if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
                         setListener.onTargetSet(new Passe(passe), false);
                     }
+                })
+                .negativeText(android.R.string.cancel)
+                .dismissListener(dialog -> {
                     passeDrawer.setPressed(-1);
                     invalidate();
-                    //dialog.dismiss();
-                }).negativeText(android.R.string.cancel).cancelListener(dialog1 -> {
-            passeDrawer.setPressed(-1);
-            invalidate();
-            //dialog1.dismiss();
-        }).show();
+                })
+                .show();
     }
 
     private ArrayList<Zone> getZoneList() {
@@ -678,29 +659,12 @@ public class TargetView extends TargetViewBase {
         }
     }
 
-    @org.parceler.Parcel
-    public static class SavedState implements Parcelable {
-        public static final Creator<SavedState> CREATOR
-                = new ParcelableUtil.Creator<>(SavedState.class);
-        public final Parcelable superState;
-        public final ArrayList<Passe> oldPasses;
+    @Override public Parcelable onSaveInstanceState() {
+        return Icepick.saveInstanceState(this, super.onSaveInstanceState());
+    }
 
-        @ParcelConstructor
-        public SavedState(Parcelable superState, ArrayList<Passe> oldPasses) {
-            this.superState = superState;
-            this.oldPasses = oldPasses;
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel parcel, int flags) {
-            parcel.writeParcelable(Parcels.wrap(this), flags);
-        }
-
+    @Override public void onRestoreInstanceState(Parcelable state) {
+        super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
     }
 
     private class Zone {

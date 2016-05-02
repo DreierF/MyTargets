@@ -8,13 +8,15 @@
 package de.dreier.mytargets.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import de.dreier.mytargets.R;
@@ -25,37 +27,27 @@ import de.dreier.mytargets.shared.models.ArrowNumber;
 public class EditArrowFragment extends EditWithImageFragmentBase {
 
     public static final String ARROW_ID = "arrow_id";
-    private long mArrowId = -1;
-
     @Bind(R.id.name)
     EditText name;
-
     @Bind(R.id.arrow_length)
     EditText length;
-
     @Bind(R.id.arrow_material)
     EditText material;
-
     @Bind(R.id.arrow_spine)
     EditText spine;
-
     @Bind(R.id.arrow_weight)
     EditText weight;
-
     @Bind(R.id.arrow_tip_weight)
     EditText tipWeight;
-
     @Bind(R.id.arrow_vanes)
     EditText vanes;
-
     @Bind(R.id.arrow_nock)
     EditText nock;
-
     @Bind(R.id.arrow_comment)
     EditText comment;
-
     @Bind(R.id.arrow_numbers)
     EditText arrowNumbers;
+    private long mArrowId = -1;
 
     public EditArrowFragment() {
         super(R.layout.fragment_edit_arrow, R.drawable.arrows);
@@ -70,36 +62,46 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
             mArrowId = bundle.getLong(ARROW_ID, -1);
         }
 
-        setTitle(R.string.my_arrow);
-        List<ArrowNumber> arrowNumbersList = new ArrayList<>();
         if (savedInstanceState == null) {
             if (mArrowId != -1) {
                 // Load data from database
-                ArrowDataSource db = new ArrowDataSource(getContext());
-                Arrow arrow = db.get(mArrowId);
-                setTitle(arrow.name);
-                name.setText(arrow.name);
-                length.setText(arrow.length);
-                material.setText(arrow.material);
-                spine.setText(arrow.spine);
-                weight.setText(arrow.weight);
-                tipWeight.setText(arrow.tipWeight);
-                vanes.setText(arrow.vanes);
-                nock.setText(arrow.nock);
-                comment.setText(arrow.comment);
-                loadImage(arrow.imageFile);
-                arrowNumbersList = arrow.numbers;
+                Arrow arrow = new ArrowDataSource(getContext()).get(mArrowId);
+                setArrowValues(arrow);
+            } else {
+                // Set to default values
+                loadImage((String) null);
+                setTitle(R.string.my_arrow);
+                name.setText(R.string.my_arrow);
             }
-            String text = "";
-            for (ArrowNumber arrowNumber : arrowNumbersList) {
-                if (!text.isEmpty()) {
-                    text += ",";
-                }
-                text += arrowNumber.number;
-            }
-            arrowNumbers.setText(text);
+        } else {
+            // Restore values from before orientation change
+            Arrow bow = Parcels.unwrap(savedInstanceState.getParcelable("arrow"));
+            setArrowValues(bow);
         }
+
         return rootView;
+    }
+
+    private void setArrowValues(Arrow arrow) {
+        setTitle(arrow.name);
+        name.setText(arrow.name);
+        length.setText(arrow.length);
+        material.setText(arrow.material);
+        spine.setText(arrow.spine);
+        weight.setText(arrow.weight);
+        tipWeight.setText(arrow.tipWeight);
+        vanes.setText(arrow.vanes);
+        nock.setText(arrow.nock);
+        comment.setText(arrow.comment);
+        loadImage(arrow.imageFile);
+        String text = "";
+        for (ArrowNumber arrowNumber : arrow.numbers) {
+            if (!text.isEmpty()) {
+                text += ",";
+            }
+            text += arrowNumber.number;
+        }
+        arrowNumbers.setText(text);
     }
 
     @Override
@@ -151,5 +153,11 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
             }
         }
         return list;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("arrow", Parcels.wrap(buildArrow()));
     }
 }
