@@ -12,11 +12,12 @@ android {
     buildToolsVersion '23.0.3'
 
     defaultConfig {
-        applicationId "de.dreier.mytargets"
+        applicationId 'de.dreier.mytargets'
         minSdkVersion 14
         targetSdkVersion 23
         versionCode appVersionCode
         versionName appVersionName
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
 
     if (new File("gradle.properties").exists()) {
@@ -28,7 +29,7 @@ android {
                     keyAlias KEY_ALIAS
                     keyPassword KEY_PASSWORD
                 } catch (ignored) {
-                    throw new InvalidUserDataException("You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.")
+                    throw new InvalidUserDataException('You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.')
                 }
             }
         }
@@ -46,10 +47,16 @@ android {
             }
         }
     }
+
+    configurations.all {
+        resolutionStrategy {
+            force "com.android.support:support-annotations:$supportLibVersion"
+        }
+    }
 }
 
-if (new File("gradle.properties").exists()) {
-    task crowdinAppUpload(group: "crowdin", type: UploadSourceFileTask) {
+if (new File('gradle.properties').exists()) {
+    task crowdinAppUpload(group: 'crowdin', type: UploadSourceFileTask) {
         apiKey = CROWDIN_API_KEY
         projectId = CROWDIN_PROJECT_ID
         alias = 'strings.xml'
@@ -107,6 +114,11 @@ dependencies {
 
     compile project(':shared')
     wearApp project(':wearable')
+
+    androidTestCompile 'com.google.code.findbugs:jsr305:3.0.0'
+    androidTestCompile "com.android.support:support-annotations:$supportLibVersion"
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile 'com.android.support.test:runner:0.5'
 }
 
 
