@@ -40,7 +40,7 @@ public class HelloWorldEspressoTest {
 
     @Test
     public void appDoesStartUp() {
-        onView(withText(R.string.app_name)).check(matches(isDisplayed()));
+        onView(withText(R.string.my_targets)).check(matches(isDisplayed()));
     }
 
     @Test

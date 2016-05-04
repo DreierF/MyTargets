@@ -2,7 +2,7 @@
 <resources>
 
     <!-- APP NAME - NOT TRANSLATABLE -->
-    <string name="app_name" translatable="false">MyTargets</string>
+    <string name="my_targets" translatable="false">MyTargets</string>
 
     <!-- General -->
     <string name="preferences">Options</string>
@@ -250,5 +250,7 @@
     <string name="free_training">Free Training</string>
     <string name="competition">Competition</string>
     <string name="unit_lbs">lbs</string>
+    <string name="about">About</string>
+    <string name="general">General</string>
 
 </resources>

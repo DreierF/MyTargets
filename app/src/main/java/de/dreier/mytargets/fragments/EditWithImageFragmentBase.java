@@ -95,7 +95,6 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
         // Workaround for bug #5497
         AndroidBug5497Workaround.assistActivity(getActivity());
         setFocusListenerForAllEditText(getView());
-
     }
 
     private void setFocusListenerForAllEditText(View view) {

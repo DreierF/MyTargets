@@ -1,0 +1,139 @@
+{
+  "licenses": [
+    {
+      "name": "Google Gson",
+      "version": "2.6.2",
+      "year": "2008",
+      "owner": "Google Inc.",
+      "description": "A Java serialization/deserialization library that can convert Java Objects into JSON and back.",
+      "url": "https://github.com/google/gson",
+      "license": "apache2"
+    },
+    {
+      "name": "OkHttp",
+      "version": "3.2.0",
+      "year": "2016",
+      "owner": "Square, Inc.",
+      "description": "An HTTP & HTTP/2 client for Android and Java applications.",
+      "url": "http://square.github.io/okhttp/",
+      "license": "apache2"
+    },
+    {
+      "name": "Retrofit",
+      "version": "2.0.2",
+      "year": "2013",
+      "owner": "Square, Inc.",
+      "description": "Type-safe HTTP client for Android and Java by Square, Inc.",
+      "url": "http://square.github.io/retrofit/",
+      "license": "apache2"
+    },
+    {
+      "name": "Picasso",
+      "version": "2.5.2",
+      "year": "2013",
+      "owner": "Square, Inc.",
+      "description": "A powerful image downloading and caching library for Android",
+      "url": "http://square.github.io/picasso/",
+      "license": "apache2"
+    },
+    {
+      "name": "RxAndroid",
+      "version": "1.1.0",
+      "year": "2015",
+      "owner": "The RxAndroid authors",
+      "description": "Android specific bindings for RxJava.",
+      "url": "https://github.com/ReactiveX/RxAndroid",
+      "license": "apache2"
+    },
+    {
+      "name": "Butter Knife",
+      "version": "7.0.1",
+      "year": "2013",
+      "owner": "Jake Wharton",
+      "description": "Bind Android views and callbacks to fields and methods.",
+      "url": "http://jakewharton.github.io/butterknife/",
+      "license": "apache2"
+    },
+    {
+      "name": "Icepick",
+      "version": "3.2.0",
+      "year": "2016",
+      "owner": "frankiesardo",
+      "description": "Icepick is an Android library that eliminates the boilerplate of saving and restoring instance state.",
+      "url": "https://github.com/frankiesardo/icepick",
+      "license": "epl"
+    },
+    {
+      "name": "PermissionsDispatcher",
+      "version": "2.1.2",
+      "year": "2016",
+      "owner": "Shintaro Katafuchi, Marcel Schnelle, Yoshinori Isogai",
+      "description": "Provides simple annotation-based API to handle runtime permissions.",
+      "url": "http://hotchemi.github.io/PermissionsDispatcher/",
+      "license": "apache2"
+    },
+    {
+      "name": "RecyclerView MultiSelect",
+      "version": "0.2",
+      "year": "2014",
+      "owner": "Big Nerd Ranch",
+      "description": "RecyclerView MultiSelect is a tool to help implement single or multichoice selection on RecyclerView items.",
+      "url": "http://bignerdranch.github.io/recyclerview-multiselect/",
+      "license": "mit"
+    },
+    {
+      "name": "MPAndroidChart",
+      "version": "2.2.4",
+      "year": "2016",
+      "owner": "Philipp Jahoda",
+      "description": "A powerful Android chart view / graph view library, supporting line- bar- pie- radar- bubble- and candlestick charts as well as scaling, dragging and animations.",
+      "url": "https://github.com/PhilJay/MPAndroidChart",
+      "license": "apache2"
+    },
+    {
+      "name": "DiscreteSeekBar",
+      "version": "1.0.1",
+      "year": "2014",
+      "owner": "Gustavo Claramunt (Ander Webbs)",
+      "description": "DiscreteSeekbar is an android implementation of the Discrete Slider component from the Google Material Design Guidelines.",
+      "url": "https://github.com/AnderWeb/discreteSeekBar",
+      "license": "apache2"
+    },
+    {
+      "name": "EasyImage",
+      "version": "1.2.1",
+      "year": "2015",
+      "owner": "Jacek Kwiecień",
+      "description": "Library for picking pictures from gallery or camera.",
+      "url": "https://github.com/jkwiecien/EasyImage",
+      "license": "apache2"
+    },
+    {
+      "name": "Material Dialogs",
+      "version": "0.8.5.8",
+      "year": "2014-2016",
+      "owner": "Aidan Michael Follestad",
+      "description": "A beautiful, easy-to-use, and customizable dialogs API, enabling you to use Material designed dialogs down to API 8.",
+      "url": "https://github.com/afollestad/material-dialogs",
+      "license": "mit"
+    },
+    {
+      "name": "Android About Page",
+      "version": "1.0.6",
+      "year": "2016",
+      "owner": "Mehdi Sakout",
+      "description": "Create an awesome About Page for your Android App in 2 minutes.",
+      "url": "https://github.com/medyo/android-about-page",
+      "license": "mit"
+    },
+    {
+      "name": "Homage",
+      "version": "0.1.0",
+      "year": "2016",
+      "owner": "O'Riley ME",
+      "description": "Homage is a simple library, designed to make it more enjoyable (or less obnoxious, depending on your viewpoint) to include open source licenses for all your used libraries.",
+      "url": "https://github.com/oriley-me/homage",
+      "license": "apache2"
+    }
+  ]
+}

@@ -227,4 +227,6 @@
   <string name="free_training">Free Training</string>
   <string name="competition">Competition</string>
   <string name="unit_lbs">lbs</string>
+  <string name="about">About</string>
+  <string name="general">General</string>
 </resources>

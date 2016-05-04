@@ -286,7 +286,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
             }
             text += "\n";
         } else {
-            title = getString(R.string.app_name);
+            title = getString(R.string.my_targets);
         }
 
         // Load bow settings

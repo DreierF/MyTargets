@@ -16,12 +16,14 @@ import android.support.v7.preference.PreferenceScreen;
 import android.view.MenuItem;
 
 import butterknife.ButterKnife;
+import de.dreier.mytargets.fragments.AboutFragment;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.EditArrowFragment;
 import de.dreier.mytargets.fragments.EditBowFragment;
 import de.dreier.mytargets.fragments.EditRoundFragment;
 import de.dreier.mytargets.fragments.EditStandardRoundFragment;
 import de.dreier.mytargets.fragments.EditTrainingFragment;
+import de.dreier.mytargets.fragments.LicencesFragment;
 import de.dreier.mytargets.fragments.SettingsFragment;
 import de.dreier.mytargets.fragments.TimerFragment;
 import de.dreier.mytargets.fragments.TrainingFragment;
@@ -194,5 +196,23 @@ public abstract class SimpleFragmentActivity extends AppCompatActivity {
             finish();
             overridePendingTransition(R.anim.left_in, R.anim.right_out);
         }
+    }
+
+    public static class AboutActivity extends SimpleFragmentActivity {
+
+        @Override
+        protected Fragment instantiateFragment() {
+            return new AboutFragment();
+        }
+
+    }
+
+    public static class LicencesActivity extends SimpleFragmentActivity {
+
+        @Override
+        protected Fragment instantiateFragment() {
+            return new LicencesFragment();
+        }
+
     }
 }

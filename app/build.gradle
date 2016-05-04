@@ -77,39 +77,46 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$supportLibVersion"
     compile "com.android.support:preference-v14:$supportLibVersion"
 
-    compile 'com.jakewharton:butterknife:7.0.1'
-
     compile "com.google.android.gms:play-services-wearable:$playServiceVersion"
 
-    compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'
-    compile 'de.psdev.licensesdialog:licensesdialog:1.7.0'
-    compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
-    compile 'com.nineoldandroids:library:2.4.0'
-    compile 'org.adw.library:discrete-seekbar:1.0.1'
-    compile 'com.github.jkwiecien:EasyImage:1.2.1'
-
     compile 'com.google.code.gson:gson:2.6.2'
+
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.2.0'
 
-    compile 'com.squareup.retrofit2:retrofit:2.0.1'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.1'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.1'
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
+
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava:1.1.0'
+
+    compile 'com.jakewharton:butterknife:7.0.1'
+
+    compile 'frankiesardo:icepick:3.2.0'
+    provided 'frankiesardo:icepick-processor:3.2.0'
+
+    compile 'com.github.hotchemi:permissionsdispatcher:2.1.2'
+    apt 'com.github.hotchemi:permissionsdispatcher-processor:2.1.2'
+
+    compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'
+
+    compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
+
+    compile 'org.adw.library:discrete-seekbar:1.0.1'
+
+    compile 'com.github.jkwiecien:EasyImage:1.2.1'
 
     compile('com.github.afollestad.material-dialogs:core:0.8.5.8@aar') {
         transitive = true
     }
 
-    compile 'com.github.hotchemi:permissionsdispatcher:2.1.2'
-    apt 'com.github.hotchemi:permissionsdispatcher-processor:2.1.2'
+    compile 'com.github.medyo:android-about-page:1.0.6'
 
-    compile 'com.squareup.picasso:picasso:2.5.2'
-
-    compile 'frankiesardo:icepick:3.2.0'
-    provided 'frankiesardo:icepick-processor:3.2.0'
+    compile 'me.oriley.homage:homage-core:0.1.0'
+    compile 'me.oriley.homage:homage-recyclerview:0.1.0'
 
     compile project(':shared')
     wearApp project(':wearable')
