@@ -132,7 +132,7 @@ public class TargetSelectView extends TargetViewBase {
             // Correct points_zone
             s.zone = Shot.MISS;
         }
-        s.x = targetDrawable.model.getXFromZone(s.zone, targetDrawable);
+        s.x = targetDrawable.model.getXFromZone(s.zone);
         s.y = 0f;
         return s;
     }
