@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import org.parceler.Parcels;
 
 import java.util.Arrays;
+import java.util.List;
 
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 
@@ -33,6 +34,10 @@ public class Passe implements IIdSettable, Parcelable {
     public Passe(Passe p) {
         this.id = p.getId();
         shot = p.shot.clone();
+    }
+
+    public List<Shot> shotList() {
+        return Arrays.asList(shot);
     }
 
     @Override

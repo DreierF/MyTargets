@@ -43,8 +43,8 @@ public class PasseDrawer {
     private transient float mColumnWidth;
 
     // Animation
-    private transient Coordinate[] mOldCoordinate;
-    private transient float mCurAnimationProgress = -1;
+    Coordinate[] mOldCoordinate;
+    float mCurAnimationProgress = -1;
     private transient ValueAnimator selectionAnimator;
     private transient int oldRadius;
     private transient int oldSelected;
@@ -139,8 +139,8 @@ public class PasseDrawer {
 
     public Coordinate getAnimatedPosition(int i) {
         Coordinate coordinate = getPosition(i);
-        if (mCurAnimationProgress != -1) {
-            float oldX = mOldCoordinate[i].x; ///TODO fix NPE
+        if (mCurAnimationProgress != -1 && mOldCoordinate[i]!=null) {
+            float oldX = mOldCoordinate[i].x;
             float oldY = mOldCoordinate[i].y;
             coordinate.x = oldX + (coordinate.x - oldX) * mCurAnimationProgress;
             coordinate.y = oldY + (coordinate.y - oldY) * mCurAnimationProgress;
@@ -249,4 +249,3 @@ public class PasseDrawer {
         mParent.invalidate();
     }
 }
-

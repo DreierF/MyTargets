@@ -27,6 +27,7 @@ import android.text.InputType;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -54,17 +55,15 @@ import icepick.Icepick;
 import icepick.State;
 
 public class TargetView extends TargetViewBase {
-
-    private static final float ZOOM_FACTOR = 2;
-    private static final int SPOT_ZOOM_IN = -3;
-    private static final int MODE_CHANGE = -2;
-    private static final int NONE = -1;
+    private static final int ZOOM_FACTOR = 2;
     private final Handler h = new Handler();
+    @State
+    ArrayList<Passe> oldPasses;
+    private boolean inputModeTransitioning = false;
+    private boolean zoomTransitioning = false;
     private float radius, midX, midY;
     private Paint fillPaint;
     private boolean showAll = false;
-    @State
-    ArrayList<Passe> oldPasses;
     private Timer longPressTimer;
     private float oldRadius;
     private RectF[] spotRects;
@@ -76,6 +75,8 @@ public class TargetView extends TargetViewBase {
     private List<Zone> selectableZones = new ArrayList<>();
     private Paint borderPaint;
     private ValueAnimator animator;
+    private float inputModeProgress = 0;
+    private ValueAnimator inputAnimator;
 
     public TargetView(Context context) {
         super(context);
@@ -100,6 +101,13 @@ public class TargetView extends TargetViewBase {
         passeDrawer.setPasse(passe);
         animateFromZoomSpot();
         invalidate();
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        inputModeTransitioning = false;
+        zoomTransitioning = false;
     }
 
     public void setArrowNumbers(@NonNull List<ArrowNumber> arrowNumbers) {
@@ -173,7 +181,7 @@ public class TargetView extends TargetViewBase {
         }
 
         // Draw target
-        if (mCurSelecting < -1) {
+        if (zoomTransitioning) {
             drawTarget(canvas, outFromX + (midX - outFromX) * curAnimationProgress,
                     outFromY + (midY - outFromY) * curAnimationProgress,
                     oldRadius + (radius - oldRadius) * curAnimationProgress);
@@ -219,11 +227,6 @@ public class TargetView extends TargetViewBase {
     }
 
     private void drawArrows(Canvas canvas) {
-        int spots = targetModel.getFaceCount();
-        Midpoint[] m = new Midpoint[spots];
-        for (int i = 0; i < spots; i++) {
-            m[i] = new Midpoint();
-        }
         for (int i = 0; i < passe.shot.length && i <= lastSetArrow + 1; i++) {
             Shot shot = passe.shot[i];
             if (shot.zone == Shot.NOTHING_SELECTED) {
@@ -234,30 +237,47 @@ public class TargetView extends TargetViewBase {
                 continue;
             }
             targetDrawable.drawArrow(canvas, shot);
-            m[i % spots].sumX += shot.x;
-            m[i % spots].sumY += shot.y;
-            m[i % spots].count++;
         }
 
         if (showAll) {
             for (Passe p : oldPasses) {
                 if (p.getId() != passe.getId()) {
                     targetDrawable.drawArrows(canvas, p);
-                    for (int i = 0; i < p.shot.length; i++) {
-                        m[i % spots].sumX += p.shot[i].x;
-                        m[i % spots].sumY += p.shot[i].y;
-                        m[i % spots].count++;
-                    }
                 }
             }
         }
 
+        int spots = targetModel.getFaceCount();
         for (int i = 0; i < spots; i++) {
-            if (m[i].count >= 2) {
-                targetDrawable.drawArrowAvg(canvas, m[i].sumX / m[i].count,
-                        m[i].sumY / m[i].count, i);
+            Midpoint m = getMidpoint(i);
+            if (m.count >= 2) {
+                targetDrawable.drawArrowAvg(canvas, m.sumX / m.count,
+                        m.sumY / m.count, i);
             }
         }
+    }
+
+    private Midpoint getMidpoint(int spot) {
+        Midpoint m = new Midpoint();
+        int spots = targetModel.getFaceCount();
+        for (int i = spot; i < passe.shot.length && i <= lastSetArrow + 1; i += spots) {
+            Shot shot = passe.shot[i];
+            if (shot.zone != Shot.NOTHING_SELECTED && i != currentArrow) {
+                m.add(shot);
+            }
+        }
+
+        if (!showAll) {
+            return m;
+        }
+
+        return Stream.of(oldPasses)
+                .filter(p -> p.getId() != passe.getId())
+                .map(Passe::shotList)
+                .flatMap(Stream::of)
+                .filter(s -> s.index % spots == spot)
+                .reduce(m, Midpoint::add);
+
     }
 
     @Override
@@ -327,9 +347,9 @@ public class TargetView extends TargetViewBase {
         // Create Shot object
         Shot s = new Shot(currentArrow);
         if (mZoneSelectionMode) {
-            if (x > midX + radius + 30 * density) {
+            if (x > contentWidth - 60 * density) {
                 int i = (int) (y * selectableZones.size() / (float) contentHeight);
-                s.x = targetDrawable.getXFromZone(s.zone);
+                s.x = targetDrawable.model.getXFromZone(s.zone);
                 s.y = 0;
                 s.zone = selectableZones.get(i).zone;
             } else {
@@ -384,17 +404,18 @@ public class TargetView extends TargetViewBase {
     }
 
     private void animateMode() {
-        cancelPendingAnimations();
-        animator = ValueAnimator.ofFloat(0, 1);
-        animator.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator.addUpdateListener(valueAnimator -> {
-            curAnimationProgress = (Float) valueAnimator.getAnimatedValue();
+        cancelPendingInputAnimations();
+        inputAnimator = ValueAnimator.ofFloat(0, 1);
+        inputAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        inputAnimator.addUpdateListener(valueAnimator -> {
+            inputModeProgress = (Float) valueAnimator.getAnimatedValue();
             invalidate();
         });
-        animator.addListener(new AnimatorListenerAdapter() {
+        inputAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
-                mCurSelecting = MODE_CHANGE;
+                inputModeTransitioning = true;
+                inputModeProgress = 0;
                 initAnimation();
                 calcSizes();
             }
@@ -406,12 +427,12 @@ public class TargetView extends TargetViewBase {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                mCurSelecting = NONE;
+                inputModeTransitioning = false;
                 invalidate();
             }
         });
-        animator.setDuration(300);
-        animator.start();
+        inputAnimator.setDuration(300);
+        inputAnimator.start();
     }
 
     private void initAnimation() {
@@ -428,7 +449,7 @@ public class TargetView extends TargetViewBase {
         }
         if (targetModel.getFaceCount() > 1) {
             if (!spotFocused) {
-                mCurSelecting = -1;
+                zoomTransitioning = false;
                 animateToZoomSpot();
             } else {
                 cancelPendingAnimations();
@@ -443,7 +464,7 @@ public class TargetView extends TargetViewBase {
                 animator.addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationStart(Animator animation) {
-                        mCurSelecting = SPOT_ZOOM_IN;
+                        zoomTransitioning = true;
                         initAnimation();
                         radius = orgRadius;
                         midX = orgMidX;
@@ -458,7 +479,7 @@ public class TargetView extends TargetViewBase {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         spotFocused = false;
-                        mCurSelecting = -1;
+                        zoomTransitioning = false;
                         animateToZoomSpot();
                         invalidate();
                     }
@@ -471,13 +492,13 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void animateToZoomSpot() {
-        if (!spotFocused && mCurSelecting != SPOT_ZOOM_IN) {
+        if (!spotFocused && !zoomTransitioning) {
             radius = orgRadius;
             midX = orgMidX;
             midY = orgMidY;
         }
         if (targetModel.getFaceCount() > 1 && currentArrow < round.arrowsPerPasse && radius > 0 &&
-                !spotFocused && !mZoneSelectionMode && mCurSelecting != SPOT_ZOOM_IN) {
+                !spotFocused && !mZoneSelectionMode && !zoomTransitioning) {
             cancelPendingAnimations();
             animator = ValueAnimator.ofFloat(0, 1);
             animator.setInterpolator(
@@ -490,7 +511,7 @@ public class TargetView extends TargetViewBase {
             animator.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationStart(Animator animation) {
-                    mCurSelecting = SPOT_ZOOM_IN;
+                    zoomTransitioning = true;
                     initAnimation();
 
                     RectF spotRect = new RectF(spotRects[currentArrow % spotRects.length]);
@@ -513,14 +534,14 @@ public class TargetView extends TargetViewBase {
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mCurSelecting = NONE;
+                    zoomTransitioning = false;
                     spotFocused = true;
                     invalidate();
                 }
             });
-            if (currentArrow == 0) {
+            /*if (currentArrow == 0) {
                 animator.setStartDelay(500);
-            }
+            }*/
             animator.setDuration(200);
             animator.start();
         }
@@ -576,14 +597,14 @@ public class TargetView extends TargetViewBase {
      * @param canvas Canvas to draw on
      */
     private void drawRightSelectorBar(Canvas canvas) {
-        if (mZoneSelectionMode || mCurSelecting == MODE_CHANGE) {
+        if (mZoneSelectionMode || inputModeTransitioning) {
             int selectableZonesCount = selectableZones.size();
             for (int i = 0; i < selectableZonesCount; i++) {
                 Zone zone = selectableZones.get(i);
 
                 float percent = 1;
-                if (mCurSelecting == MODE_CHANGE) {
-                    percent = mZoneSelectionMode ? curAnimationProgress : 1 - curAnimationProgress;
+                if (inputModeTransitioning) {
+                    percent = mZoneSelectionMode ? inputModeProgress : 1 - inputModeProgress;
                 }
                 int X1 = (int) (contentWidth - 60 * percent * density);
                 int X2 = (int) (X1 + 40 * density);
@@ -631,6 +652,16 @@ public class TargetView extends TargetViewBase {
                 .show();
     }
 
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        // Cancel animation
+        if (inputModeTransitioning || zoomTransitioning) {
+            passeDrawer.cancel();
+        }
+
+        return super.onTouch(view, motionEvent);
+    }
+
     private ArrayList<Zone> getZoneList() {
         ArrayList<Zone> list = new ArrayList<>();
         String last = "";
@@ -658,12 +689,21 @@ public class TargetView extends TargetViewBase {
             tmp.cancel();
         }
     }
+    private void cancelPendingInputAnimations() {
+        if (inputAnimator != null) {
+            ValueAnimator tmp = inputAnimator;
+            inputAnimator = null;
+            tmp.cancel();
+        }
+    }
 
-    @Override public Parcelable onSaveInstanceState() {
+    @Override
+    public Parcelable onSaveInstanceState() {
         return Icepick.saveInstanceState(this, super.onSaveInstanceState());
     }
 
-    @Override public void onRestoreInstanceState(Parcelable state) {
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
         super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
     }
 
@@ -686,5 +726,12 @@ public class TargetView extends TargetViewBase {
         float count = 0;
         float sumX = 0;
         float sumY = 0;
+
+        public Midpoint add(Shot s) {
+            sumX += s.x;
+            sumY += s.y;
+            count++;
+            return this;
+        }
     }
 }

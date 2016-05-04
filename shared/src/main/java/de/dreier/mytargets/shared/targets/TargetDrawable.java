@@ -24,9 +24,9 @@ public class TargetDrawable extends Drawable {
 
     protected static final float ARROW_RADIUS = 8;
     private static final Path heart = new Path();
-    private static final Region heartRegion;
+    public static final Region HEART_REGION;
     private static final Path ellipse = new Path();
-    private static final Region ellipseRegion;
+    public static final Region ELLIPSE_REGION;
 
     static {
         heart.moveTo(296.724f, 162.855f);
@@ -55,8 +55,8 @@ public class TargetDrawable extends Drawable {
         heart.close();
         RectF rectF = new RectF();
         heart.computeBounds(rectF, true);
-        heartRegion = new Region();
-        heartRegion.setPath(heart, new Region((int) rectF.left, (int) rectF.top, (int) rectF.right,
+        HEART_REGION = new Region();
+        HEART_REGION.setPath(heart, new Region((int) rectF.left, (int) rectF.top, (int) rectF.right,
                 (int) rectF.bottom));
     }
 
@@ -68,13 +68,13 @@ public class TargetDrawable extends Drawable {
         ellipse.close();
         RectF rectF = new RectF();
         ellipse.computeBounds(rectF, true);
-        ellipseRegion = new Region();
-        ellipseRegion.setPath(ellipse, new Region((int) rectF.left, (int) rectF.top, (int) rectF.right,
+        ELLIPSE_REGION = new Region();
+        ELLIPSE_REGION.setPath(ellipse, new Region((int) rectF.left, (int) rectF.top, (int) rectF.right,
                 (int) rectF.bottom));
     }
 
     private Target target;
-    private TargetModelBase model;
+    public TargetModelBase model;
     private Paint paintFill;
     private Paint paintStroke;
     private TextPaint paintText;
@@ -253,55 +253,13 @@ public class TargetDrawable extends Drawable {
         canvas.drawCircle(sx, sy, rad, paintStroke);
     }
 
-    public float getXFromZone(int zone) {
-        int zones = getZones();
-        if (zone < 0) {
-            return (zones * 2 + 1) / (float) (zones * 2);
-        } else {
-            float adjacentZone = zone == zones - 1 ? model.getRadius(zone - 1) : model.getRadius(zone + 1);
-            float diff = Math
-                    .abs(adjacentZone - model.getRadius(zone));
-            return (model.getRadius(zone) + (diff / 2.0f)) / 1000.0f;
-            //TODO test for non circular targets
-        }
-    }
-
     protected float reCalc(Rect rect, float size) {
         return size * rect.width() / 1000.0f;
     }
 
 
     public int getZoneFromPoint(float x, float y) {
-        float ax = x * 500;
-        float ay = y * 500;
-        for (int i = 0; i < getZones(); i++) {
-            if (isInZone(500.0f + ax, 500.0f + ay, model.getZone(i))) {
-                return i;
-            }
-        }
-        return Shot.MISS;
-    }
-
-    /**
-     * @param ax        x-Coordinate scaled to a 0 ... 1000 coordinate system
-     * @param ay        y-Coordinate scaled to a 0 ... 1000 coordinate system
-     * @param zone      0-based zone index where 0 is the smallest zone in the middle of the target
-     * @return
-     */
-    protected boolean isInZone(float ax, float ay, Zone zone) {
-        switch (zone.type) {
-            case CIRCLE:
-                Coordinate midpoint = zone.midpoint;
-                float distance = (ax - midpoint.x) * (ax - midpoint.x) + (ay - midpoint.y) * (ay - midpoint.y);
-                float adaptedRadius = zone.radius +
-                        (zone.scoresAsOutsideIn ? ARROW_RADIUS + zone.strokeWidth / 2.0f : -ARROW_RADIUS);
-                return adaptedRadius * adaptedRadius > distance;
-            case HEART:
-                return heartRegion.contains((int) ax, (int) ay);
-            case ELLIPSE:
-                return ellipseRegion.contains((int) ax, (int) ay);
-        }
-        return false;
+        return model.getZoneFromPoint(500.0f + x * 500, 500.0f + y * 500);
     }
 
     protected void onPostDraw(Canvas canvas, Rect rect) {

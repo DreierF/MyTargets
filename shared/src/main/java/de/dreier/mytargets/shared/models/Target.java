@@ -59,8 +59,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
     }
 
     public int getMaxPoints() {
-        //FIXME
-        return Math.max(getModel().getZonePoints(scoringStyle, 0), getModel().getZonePoints(scoringStyle, 1));
+        return getModel().getMaxPoints(scoringStyle);
     }
 
     public TargetModelBase getModel() {

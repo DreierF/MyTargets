@@ -28,4 +28,24 @@ public class Zone {
         this.strokeColor = strokeColor;
         this.strokeWidth = strokeWidth;
     }
+
+    /**
+     * @param ax        x-Coordinate scaled to a 0 ... 1000 coordinate system
+     * @param ay        y-Coordinate scaled to a 0 ... 1000 coordinate system
+     * @return
+     */
+    protected boolean isInZone(float ax, float ay) {
+        switch (type) {
+            case CIRCLE:
+                float distance = (ax - midpoint.x) * (ax - midpoint.x) + (ay - midpoint.y) * (ay - midpoint.y);
+                float adaptedRadius = radius +
+                        (scoresAsOutsideIn ? TargetDrawable.ARROW_RADIUS + strokeWidth / 2.0f : -TargetDrawable.ARROW_RADIUS);
+                return adaptedRadius * adaptedRadius > distance;
+            case HEART:
+                return TargetDrawable.HEART_REGION.contains((int) ax, (int) ay);
+            case ELLIPSE:
+                return TargetDrawable.ELLIPSE_REGION.contains((int) ax, (int) ay);
+        }
+        return false;
+    }
 }

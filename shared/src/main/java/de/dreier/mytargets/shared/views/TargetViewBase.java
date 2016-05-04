@@ -30,7 +30,6 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected Passe passe;
     @State(ParcelsBundler.class)
     protected RoundTemplate round;
-    protected int mCurSelecting = -1;
     protected int contentWidth;
     protected int contentHeight;
     protected OnTargetSetListener setListener = null;
@@ -62,7 +61,6 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     public void reset() {
         currentArrow = 0;
         lastSetArrow = -1;
-        mCurSelecting = -1;
         passe = new Passe(round.arrowsPerPasse);
         passeDrawer.setPasse(passe);
         animateToZoomSpot();
@@ -95,11 +93,6 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        // Cancel animation
-        if (mCurSelecting != -1) {
-            passeDrawer.cancel();
-        }
-
         float x = motionEvent.getX();
         float y = motionEvent.getY();
 

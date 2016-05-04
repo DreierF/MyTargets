@@ -10,18 +10,23 @@ package de.dreier.mytargets.views;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
 
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
+import icepick.Icepick;
+import icepick.State;
 
 public class PasseView extends View {
 
     private Passe passe = new Passe(3);
     private float density;
-    private PasseDrawer mPasseDrawer = new PasseDrawer();
+    @State(ParcelsBundler.class)
+    PasseDrawer mPasseDrawer = new PasseDrawer();
     private final RectF rect = new RectF();
 
     public PasseView(Context context) {
@@ -95,5 +100,15 @@ public class PasseView extends View {
         }
 
         setMeasuredDimension(width, height);
+    }
+
+    @Override
+    public Parcelable onSaveInstanceState() {
+        return Icepick.saveInstanceState(this, super.onSaveInstanceState());
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
     }
 }

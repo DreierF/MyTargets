@@ -47,12 +47,11 @@ android {
             }
         }
     }
-
-    configurations.all {
+/*configurations.all {
         resolutionStrategy {
             force "com.android.support:support-annotations:$supportLibVersion"
         }
-    }
+    }*/
 }
 
 if (new File('gradle.properties').exists()) {

@@ -32,4 +32,22 @@ public class Coordinate implements Parcelable {
     public void writeToParcel(android.os.Parcel parcel, int flags) {
         parcel.writeParcelable(Parcels.wrap(this), flags);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Coordinate that = (Coordinate) o;
+
+        return Float.compare(that.x, x) == 0 && Float.compare(that.y, y) == 0;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (x != +0.0f ? Float.floatToIntBits(x) : 0);
+        result = 31 * result + (y != +0.0f ? Float.floatToIntBits(y) : 0);
+        return result;
+    }
 }
