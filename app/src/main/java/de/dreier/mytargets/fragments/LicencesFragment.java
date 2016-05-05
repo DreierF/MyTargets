@@ -49,7 +49,8 @@ public final class LicencesFragment extends Fragment {
         Homage homage = new Homage(getActivity(), R.raw.licences);
 
         // Adds a custom license definition to enable matching in your JSON list
-       // homage.addLicense("oriley", R.string.license_oriley_name, R.string.license_oriley_url, R.string.license_oriley_description);
+        homage.addLicense("epl", R.string.license_epl_name, R.string.license_epl_url, R.string.license_epl_description);
+
         homage.refreshLibraries();
 
         return new HomageAdapter(homage, HomageView.ExtraInfoMode.EXPANDABLE, false);
