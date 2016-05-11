@@ -45,7 +45,7 @@
   <string name="d_times_s">%1$d times %2$s\n</string>
   <string name="text">Testo</string>
   <string name="dispersion_pattern">modello di dispersione</string>
-  <string name="sharing_failed">Sharing failed!</string>
+  <string name="sharing_failed">Condivisione fallita!</string>
   <!-- Export -->
   <string name="send_exported">Invia dati esportati</string>
   <string name="exporting_failed">Esportazione fallita!</string>
@@ -80,8 +80,8 @@
   <string name="material">Materiale</string>
   <!-- New round -->
   <string name="title">Titolo</string>
-  <string name="outdoor">Outdoor</string>
-  <string name="indoor">Indoor</string>
+  <string name="outdoor">All\'aperto</string>
+  <string name="indoor">Al chiuso</string>
   <string name="distance">Distanza</string>
   <string name="format">Formato</string>
   <!-- x ends of y arrows -->
@@ -108,7 +108,7 @@
   <!-- Statistics -->
   <string name="all_trainings">Tutti gli allenamenti</string>
   <string name="entire_training">Allenamento intero</string>
-  <string name="current_round">Round corrente</string>
+  <string name="current_round">Round attuale</string>
   <!-- Import/Backup -->
   <string name="select_a_file">Seleziona un file</string>
   <string name="dir_not_created">La directory non può essere creata!</string>
@@ -126,7 +126,7 @@
   <string name="donate_infinite">Supporto mensile</string>
   <string name="donation_thank">Grazie per il tuo supporto!</string>
   <string name="monthly">mensile %s</string>
-  <string name="donate_text">I prezzi sono inclusi di VAT e del 30% a Google. Alternativamente puoi donare sul mio account PayPal dreier.florian@gmail.com.</string>
+  <string name="donate_text">Gli importi sono comprensivi di IVA e 30% di commissioni Google. In alternativa si può donare sul conto PayPal dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Timer</string>
   <string name="stop">STOP</string>
@@ -154,14 +154,14 @@
     <item quantity="one">%d secondo</item>
     <item quantity="other">%d secondi</item>
   </plurals>
-  <string name="info">Information</string>
-  <string name="data">Data</string>
+  <string name="info">Informazioni</string>
+  <string name="data">Dati</string>
   <string name="create_backup_on_sd">Creates a backup on sd card</string>
   <string name="restore_backup">Restores a backup</string>
   <string name="weather">Weather</string>
-  <string name="environment">Environment</string>
-  <string name="wind_speed">Wind speed</string>
-  <string name="wind_direction">Wind direction</string>
+  <string name="environment">Ambiente</string>
+  <string name="wind_speed">Velocità del vento</string>
+  <string name="wind_direction">Direzione del vento</string>
   <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Metric</string>
   <string name="imperial">Imperial</string>

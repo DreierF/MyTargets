@@ -14,29 +14,29 @@
   <string name="round">Kolo</string>
   <string name="points">Body</string>
   <string name="passe">Koniec</string>
-  <string name="passe_n">Sada %d</string>
+  <string name="passe_n">Koniec %d</string>
   <!-- Overview -->
   <string name="new_training">Nový tréning</string>
   <string name="new_bow">Nový luk</string>
   <string name="new_arrow">Nové šípy</string>
   <string name="new_round">Nové kolo</string>
   <plurals name="training_selected">
-    <item quantity="one">Vybraných tréningov: %d</item>
-    <item quantity="few">Vybraných tréningov: %d</item>
+    <item quantity="one">Vybraný tréning: %d</item>
+    <item quantity="few">Vybrané tréningy: %d</item>
     <item quantity="other">Vybraných tréningov: %d</item>
   </plurals>
   <plurals name="bow_selected">
-    <item quantity="one">Vybraných lukov: %d</item>
-    <item quantity="few">Vybraných lukov: %d</item>
+    <item quantity="one">Vybraný luk: %d</item>
+    <item quantity="few">Vybrané luky: %d</item>
     <item quantity="other">Vybraných lukov: %d</item>
   </plurals>
   <plurals name="arrow_selected">
-    <item quantity="one">Vybraných šípov: %d</item>
-    <item quantity="few">Vybraných šípov: %d</item>
+    <item quantity="one">Vybraný šíp: %d</item>
+    <item quantity="few">Vybrané šípy: %d</item>
     <item quantity="other">Vybraných šípov: %d</item>
   </plurals>
   <plurals name="passe_selected">
-    <item quantity="one">Vybraných sád: %d</item>
+    <item quantity="one">Vybraná sada: %d</item>
     <item quantity="few">Vybrané sady: %d</item>
     <item quantity="other">Vybraných sád: %d</item>
   </plurals>
@@ -49,7 +49,7 @@
   <string name="d_times_s">%1$d krát %2$s\n</string>
   <string name="text">Text</string>
   <string name="dispersion_pattern">Rozptyl</string>
-  <string name="sharing_failed">Sharing failed!</string>
+  <string name="sharing_failed">Zdieľanie zlyhalo!</string>
   <!-- Export -->
   <string name="send_exported">Poslať exportované údaje</string>
   <string name="exporting_failed">Exportovanie zlyhalo!</string>
@@ -102,7 +102,7 @@
   </plurals>
   <string name="target_face">Typ terča</string>
   <!-- Scoreboard -->
-  <string name="scoreboard">Výsledková tabuľa</string>
+  <string name="scoreboard">Tabuľka výsledkov</string>
   <string name="arrows">Šípy</string>
   <string name="sum">Súčet</string>
   <string name="carry">Kumulatív</string>
@@ -124,7 +124,7 @@
   <string name="file_not_found">Súbor sa nenašiel!</string>
   <string name="failed_reading_file">Zlyhalo čítanie súboru!</string>
   <!-- Donate -->
-  <string name="donate_action">Podporte</string>
+  <string name="donate_action">Prispieť</string>
   <string name="donate_2">Darujte mi hamburger</string>
   <string name="donate_5">Darujte mi kebab</string>
   <string name="donate_10">Darujte mi veľkú pizzu</string>
@@ -169,7 +169,7 @@
   <string name="environment">Prostredie</string>
   <string name="wind_speed">Rýchlosť vetra</string>
   <string name="wind_direction">Smer vetra</string>
-  <string name="sight_setting_removed">Sight setting deleted!</string>
+  <string name="sight_setting_removed">Nastavenie zameriavača vymazané!</string>
   <string name="metric">Metrické</string>
   <string name="imperial">Imperiálne</string>
   <string name="undo">Späť</string>
@@ -177,7 +177,7 @@
   <string name="expand_collapse">Rozbaliť alebo zbaliť</string>
   <string name="new_round_template">Nová šablóna</string>
   <string name="arrow_numbers">Čísla šípov</string>
-  <string name="round_removed">Round deleted!</string>
+  <string name="round_removed">Kolo vymazané!</string>
   <string name="custom_round">Vlastné kolo</string>
   <string name="filter">Filter</string>
   <string name="club">Klub</string>
@@ -203,9 +203,9 @@
     <item quantity="other">%d odstránených lukov</item>
   </plurals>
   <plurals name="training_deleted">
-    <item quantity="one">Odstranené tréningy: %d</item>
-    <item quantity="few">Odstranené tréningy: %d</item>
-    <item quantity="other">Odstranené tréningy: %d</item>
+    <item quantity="one">Odstránený tréning: %d</item>
+    <item quantity="few">Odstránené tréningy: %d</item>
+    <item quantity="other">Odstránených tréningov: %d</item>
   </plurals>
   <plurals name="passe_deleted">
     <item quantity="one">Odstránená sada: %d</item>
@@ -234,25 +234,25 @@
   <string name="show_points_colored">Zobraziť body farebne</string>
   <string name="stabilizer">Stabilizátor</string>
   <string name="clicker">Klapačka</string>
-  <string name="arrow_number_x">Arrow number %d</string>
-  <string name="training_with_standard_round">Training with Standard Round</string>
-  <string name="free_training">Free Training</string>
-  <string name="competition">Competition</string>
-  <string name="unit_lbs">lbs</string>
-  <string name="about">About</string>
-  <string name="general">General</string>
-  <string name="license_epl_name">Eclipse Public License - v 1.0</string>
+  <string name="arrow_number_x">Šíp číslo %d</string>
+  <string name="training_with_standard_round">Tréning so štandardným terčom</string>
+  <string name="free_training">Voľný tréning</string>
+  <string name="competition">Súťaž</string>
+  <string name="unit_lbs">libier</string>
+  <string name="about">O aplikácii</string>
+  <string name="general">Všeobecné</string>
+  <string name="license_epl_name">Eclipse Verejná Licencia - v 1.0</string>
   <string name="license_epl_url">https://www.eclipse.org/org/documents/epl-v10.php</string>
-  <string name="contribute">Contribute</string>
-  <string name="connect">Connect</string>
-  <string name="special_thanks_to">Special thanks to</string>
-  <string name="all_translators">All guys, who helped translating the app!</string>
-  <string name="all_beta_testers">Everyone who joined the beta testers group and therefore helps to continuously improve the app.</string>
-  <string name="test_beta">Test the latest beta version</string>
-  <string name="join_on_google_plus">Join us on Google+</string>
-  <string name="share_with_friends">Share with your friends</string>
-  <string name="donate">Donate</string>
-  <string name="donate_via_paypal">Donate via PayPal</string>
-  <string name="translate_crowdin">Translate on Crowdin</string>
-  <string name="network_linkedin">Network on LinkedIn</string>
+  <string name="contribute">Prispieť</string>
+  <string name="connect">Pripojiť</string>
+  <string name="special_thanks_to">Špeciálne poďakovanie</string>
+  <string name="all_translators">Všetci čo pomohli s prekladom aplikácie!</string>
+  <string name="all_beta_testers">Každý kto sa pridal do skupiny beta testovania a tým prispieva ku priebežnému zlepšovaniu aplikácie.</string>
+  <string name="test_beta">Otestovať najnovšiu beta verziu</string>
+  <string name="join_on_google_plus">Pridaj sa k nám na Google+</string>
+  <string name="share_with_friends">Zdieľaj so svojimi kamarátmi</string>
+  <string name="donate">Prispieť</string>
+  <string name="donate_via_paypal">Prispieť cez PayPal</string>
+  <string name="translate_crowdin">Preložiť v Crowdin-e</string>
+  <string name="network_linkedin">Sieť v LinkedIn</string>
 </resources>
