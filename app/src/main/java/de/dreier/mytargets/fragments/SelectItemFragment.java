@@ -7,9 +7,7 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -34,8 +32,6 @@ import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.SingleSelector;
-
-import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 /**
  * Base class for handling single item selection
@@ -163,11 +159,7 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
      * Returns the selected item to the calling activity
      */
     void onSaveItem() {
-        Intent data = new Intent();
-        data.putExtra(ITEM, Parcels.wrap(onSave()));
-        getActivity().setResult(Activity.RESULT_OK, data);
-        getActivity().finish();
-        getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        listener.onItemSelected(Parcels.wrap(onSave()));
     }
 
     /**

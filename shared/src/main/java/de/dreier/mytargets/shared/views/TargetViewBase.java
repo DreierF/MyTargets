@@ -46,16 +46,28 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     public TargetViewBase(Context context) {
         super(context);
         setOnTouchListener(this);
+        initForDesigner();
     }
 
     protected TargetViewBase(Context context, AttributeSet attrs) {
         super(context, attrs);
         setOnTouchListener(this);
+        initForDesigner();
     }
 
     protected TargetViewBase(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setOnTouchListener(this);
+        initForDesigner();
+    }
+
+    private void initForDesigner() {
+        if (isInEditMode()) {
+            round = new RoundTemplate();
+            round.arrowsPerPasse = 3;
+            passe = new Passe(3);
+            passeDrawer.setPasse(passe);
+        }
     }
 
     public void reset() {

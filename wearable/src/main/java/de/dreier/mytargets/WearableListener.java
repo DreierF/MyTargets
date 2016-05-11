@@ -21,6 +21,7 @@ import de.dreier.mytargets.shared.utils.WearableUtils;
 public class WearableListener extends WearableListenerService {
 
     private static final int NOTIFICATION_ID = 1;
+    public static final String TRAINING_STARTED = "training_started";
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
@@ -35,6 +36,9 @@ public class WearableListener extends WearableListenerService {
                 try {
                     NotificationInfo info = WearableUtils.deserializeToInfo(data);
                     showNotification(info);
+                    Intent intent = new Intent(TRAINING_STARTED);
+                    intent.putExtra(MainActivity.EXTRA_ROUND, Parcels.wrap(info.round));
+                    sendBroadcast(intent);
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }

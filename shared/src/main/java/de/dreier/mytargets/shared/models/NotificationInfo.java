@@ -11,12 +11,24 @@ import android.os.Parcelable;
 import org.parceler.Parcel;
 import org.parceler.Parcels;
 
-import de.dreier.mytargets.shared.utils.ParcelableUtil;
+import java.lang.reflect.Array;
 
 @Parcel
 public class NotificationInfo implements Parcelable {
     public static final Creator<NotificationInfo> CREATOR
-            = new ParcelableUtil.Creator<>(NotificationInfo.class);
+            = new Parcelable.Creator<NotificationInfo>() {
+
+    public NotificationInfo createFromParcel(android.os.Parcel parcel) {
+        String title = parcel.readString();
+        String text = parcel.readString();
+        Round round = parcel.readParcelable(Round$$Parcelable.class.getClassLoader());
+        return new NotificationInfo(round, title, text);
+    }
+
+    @Override public NotificationInfo[] newArray(int i) {
+        return (NotificationInfo[]) Array.newInstance(NotificationInfo.class, i);
+    }
+};
     public String title;
     public String text;
     public Round round;
@@ -36,6 +48,8 @@ public class NotificationInfo implements Parcelable {
 
     @Override
     public void writeToParcel(android.os.Parcel parcel, int flags) {
-        parcel.writeParcelable(Parcels.wrap(this), flags);
+        parcel.writeString(title);
+        parcel.writeString(text);
+        parcel.writeParcelable(Parcels.wrap(round), flags);
     }
 }

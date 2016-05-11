@@ -10,12 +10,9 @@ package de.dreier.mytargets.views.selector;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,16 +28,13 @@ import de.dreier.mytargets.activities.ItemSelectActivity;
 
 public abstract class SelectorBase<T> extends LinearLayout {
 
-    public interface OnUpdateListener<T> {
-        void onUpdate(T item);
-    }
-
+    protected int requestCode;
     private final View mView;
     private final View mProgress;
+    protected Class<?> defaultActivity;
+    protected Class<?> addActivity;
     T item = null;
-
-    private Button mAddButton;
-    private OnClickListener onAddClickListener;
+    protected Button mAddButton;
     private OnUpdateListener<T> updateListener;
 
     public SelectorBase(Context context, AttributeSet attrs, @LayoutRes int layout) {
@@ -58,9 +52,6 @@ public abstract class SelectorBase<T> extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         mAddButton = (Button) getChildAt(2);
-        if (mAddButton != null) {
-            mAddButton.setOnClickListener(onAddClickListener);
-        }
         updateView();
     }
 
@@ -74,29 +65,21 @@ public abstract class SelectorBase<T> extends LinearLayout {
         mProgress.setVisibility(progress ? VISIBLE : GONE);
         mView.setVisibility(item != null ? VISIBLE : GONE);
         if (item != null) {
-            bindView();
+            post(this::bindView);
         }
     }
 
-    void setOnClickActivity(Class<?> aClass) {
-        setOnClickListener(v -> {
-            Intent i = new Intent(getContext(), aClass);
-            i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(item));
-            startIntent(i, data -> {
-                //noinspection unchecked
-                setItem(Parcels.unwrap(data.getParcelableExtra(ItemSelectActivity.ITEM)));
-            });
-        });
+    public Intent getDefaultIntent() {
+        Intent i = new Intent(getContext(), defaultActivity);
+        i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(item));
+        return i;
+    }
+
+    public Intent getAddIntent() {
+        return new Intent(getContext(), addActivity);
     }
 
     protected abstract void bindView();
-
-    void setAddButtonIntent(Class<?> addActivity, OnResultListener resultListener) {
-        this.onAddClickListener = v -> startIntent(new Intent(getContext(), addActivity), resultListener);
-        if (mAddButton != null) {
-            mAddButton.setOnClickListener(onAddClickListener);
-        }
-    }
 
     public T getSelectedItem() {
         return item;
@@ -114,34 +97,21 @@ public abstract class SelectorBase<T> extends LinearLayout {
         this.updateListener = updateListener;
     }
 
-    public interface OnResultListener {
-        void onResult(Intent data);
+    public void setOnActivityResultContext(Fragment fragment) {
+        setOnClickListener(v -> {
+            fragment.startActivityForResult(getDefaultIntent(), requestCode);
+            fragment.getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        });
     }
 
-    void startIntent(Intent i, OnResultListener resultListener) {
-        final int requestId = (int) (Math.random() * Short.MAX_VALUE);
-        final FragmentManager fm = ((FragmentActivity) getContext()).getSupportFragmentManager();
-        Fragment auxiliary = new Fragment() {
-            @Override
-            public void onCreate(@Nullable Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
-                setRetainInstance(true);
-            }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && requestCode == this.requestCode) {
+            final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
+            setItem(Parcels.unwrap(parcelable));
+        }
+    }
 
-            @Override
-            public void onActivityResult(int requestCode, int resultCode, Intent data) {
-                super.onActivityResult(requestCode, resultCode, data);
-                fm.beginTransaction().remove(this).commit();
-                if (resultCode == Activity.RESULT_OK) {
-                    if (requestCode == requestId) {
-                        resultListener.onResult(data);
-                    }
-                }
-            }
-        };
-        fm.beginTransaction().add(auxiliary, "FRAGMENT_TAG").commit();
-        fm.executePendingTransactions();
-        auxiliary.startActivityForResult(i, requestId);
-        ((FragmentActivity) getContext()).overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    public interface OnUpdateListener<T> {
+        void onUpdate(T item);
     }
 }

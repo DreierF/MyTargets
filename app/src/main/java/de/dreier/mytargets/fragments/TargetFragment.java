@@ -49,6 +49,7 @@ public class TargetFragment extends SelectItemFragment<Target>
 
     @Bind(R.id.scoring_style)
     Spinner scoringStyleSpinner;
+
     @Bind(R.id.target_size)
     Spinner targetSizeSpinner;
 

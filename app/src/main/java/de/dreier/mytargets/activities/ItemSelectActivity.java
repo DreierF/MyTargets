@@ -12,6 +12,7 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
         implements FragmentBase.OnItemSelectedListener,
         FragmentBase.ContentListener {
     public static final String ITEM = "item";
+    public static final String INTENT = "intent";
 
     @Bind(R.id.fab)
     FloatingActionButton mFab;
@@ -68,10 +70,13 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivity
         }
     }
 
+    private static final String TAG = "ItemSelectActivity";
     @Override
     public void onItemSelected(Parcelable item) {
         Intent data = new Intent();
         data.putExtra(ITEM, item);
+        Log.i(TAG, "onItemSelected: "+getIntent());
+        data.putExtra(INTENT, getIntent() != null ? getIntent().getExtras() : null);
         setResult(RESULT_OK, data);
         onBackPressed();
     }

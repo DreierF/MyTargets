@@ -7,6 +7,7 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
@@ -147,7 +148,10 @@ public class EditBowFragment extends EditWithImageFragmentBase
     public void onBind(View view, final SightSetting sightSetting, int index) {
         final SimpleDistanceSelector distanceSpinner = (SimpleDistanceSelector) view
                 .findViewById(R.id.distanceSpinner);
+        distanceSpinner.setOnActivityResultContext(this);
+        distanceSpinner.setItemIndex(index);
         distanceSpinner.setOnUpdateListener(item -> sightSetting.distance = item);
+
         EditText setting = (EditText) view.findViewById(R.id.sight_setting);
         setting.addTextChangedListener(new TextWatcher() {
             @Override
@@ -169,6 +173,16 @@ public class EditBowFragment extends EditWithImageFragmentBase
         remove.setOnClickListener(view1 -> sightSettings.remove(sightSetting, R.string.sight_setting_removed));
         distanceSpinner.setItem(sightSetting.distance);
         setting.setText(sightSetting.value);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        for (int i = 0; i < sightSettings.getChildCount() - 1; i++) {
+            final SimpleDistanceSelector distanceSpinner = (SimpleDistanceSelector) sightSettings.getChildAt(i)
+                    .findViewById(R.id.distanceSpinner);
+            distanceSpinner.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override

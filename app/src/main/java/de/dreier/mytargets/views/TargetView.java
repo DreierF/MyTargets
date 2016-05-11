@@ -162,13 +162,6 @@ public class TargetView extends TargetViewBase {
         borderPaint.setColor(0xFF1C1C1B);
         borderPaint.setAntiAlias(true);
         borderPaint.setStyle(Paint.Style.STROKE);
-
-        if (isInEditMode()) {
-            round = new RoundTemplate();
-            round.arrowsPerPasse = 3;
-            passe = new Passe(3);
-            passeDrawer.setPasse(passe);
-        }
     }
 
     @Override

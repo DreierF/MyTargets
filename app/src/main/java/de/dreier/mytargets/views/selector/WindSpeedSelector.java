@@ -18,6 +18,8 @@ import de.dreier.mytargets.models.WindSpeed;
 
 public class WindSpeedSelector extends SelectorBase<WindSpeed> {
 
+    private static final int WIND_SPEED_REQUEST_CODE = 4;
+
     @Bind(android.R.id.text1)
     TextView name;
 
@@ -27,7 +29,8 @@ public class WindSpeedSelector extends SelectorBase<WindSpeed> {
 
     public WindSpeedSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.selector_item_simple_text);
-        setOnClickActivity(ItemSelectActivity.WindSpeedActivity.class);
+        defaultActivity = ItemSelectActivity.WindSpeedActivity.class;
+        requestCode = WIND_SPEED_REQUEST_CODE;
     }
 
     @Override

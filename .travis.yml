@@ -1,6 +1,8 @@
 language: android
+
 jdk:
   - oraclejdk8
+
 android:
   components:
     - platform-tools
@@ -15,6 +17,11 @@ android:
 
 sudo: required
 
+env:
+  global:
+   # install timeout in minutes (2 minutes by default)
+    - ADB_INSTALL_TIMEOUT=8
+
 before_script:
   - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
   - emulator -avd test -no-skin -no-audio -no-window &
@@ -28,5 +35,7 @@ before_install:
   - export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
   - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
   - export JAVA_HOME=$JAVA7_HOME
+
 script:
   - ./gradlew clean assemble || ./gradlew clean assemble
+  - ./gradlew connectedAndroidTest

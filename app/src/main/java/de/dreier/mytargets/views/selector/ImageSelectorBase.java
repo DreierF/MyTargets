@@ -10,6 +10,7 @@ package de.dreier.mytargets.views.selector;
 import android.content.Context;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,9 +42,12 @@ public abstract class ImageSelectorBase<T extends IImageProvider> extends Select
         super(context, attrs, R.layout.selector_item_image_details);
     }
 
+    private static final String TAG = "ImageSelectorBase";
     @Override
     protected void bindView() {
+        Log.i(TAG, "bindView: "+item.getName(getContext()));
         name.setText(item.getName(getContext()));
+        Log.i(TAG, "bindView : "+name.getText().toString());
         if (item instanceof IDetailProvider) {
             details.setVisibility(VISIBLE);
             details.setText(((IDetailProvider) item).getDetails(getContext()));
@@ -52,6 +56,7 @@ public abstract class ImageSelectorBase<T extends IImageProvider> extends Select
         if(!isImageSelectable()) {
             image.setBackgroundDrawable(null);
         }
+        invalidate();
     }
 
     protected boolean isImageSelectable() {

@@ -31,6 +31,8 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class EnvironmentSelector extends ImageSelectorBase<Environment> {
 
+    private static final int ENVIRONMENT_REQUEST_CODE = 9;
+
     public EnvironmentSelector(Context context) {
         this(context, null);
     }
@@ -38,7 +40,8 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
     public EnvironmentSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
         setTitle(R.string.environment);
-        setOnClickActivity(ItemSelectActivity.EnvironmentActivity.class);
+        defaultActivity = ItemSelectActivity.EnvironmentActivity.class;
+        requestCode = ENVIRONMENT_REQUEST_CODE;
     }
 
     public void queryWeather(Fragment fragment, int request_code) {

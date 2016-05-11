@@ -7,6 +7,7 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -85,6 +86,9 @@ public class EnvironmentFragment extends Fragment {
         windDirection.setItemId(mEnvironment.windDirection);
         location.setText(mEnvironment.location);
         setHasOptionsMenu(true);
+
+        windDirection.setOnActivityResultContext(this);
+        windSpeed.setOnActivityResultContext(this);
         return rootView;
     }
 
@@ -147,5 +151,12 @@ public class EnvironmentFragment extends Fragment {
         e.windDirection = (int) windDirection.getSelectedItem().getId();
         e.location = location.getText().toString();
         listener.onItemSelected(Parcels.wrap(e));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        windSpeed.onActivityResult(requestCode, resultCode, data);
+        windDirection.onActivityResult(requestCode, resultCode, data);
     }
 }

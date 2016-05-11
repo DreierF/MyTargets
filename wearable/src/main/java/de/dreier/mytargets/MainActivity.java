@@ -1,8 +1,10 @@
 package de.dreier.mytargets;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.wearable.activity.ConfirmationActivity;
@@ -10,6 +12,7 @@ import android.support.wearable.view.DelayedConfirmationView;
 import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Node;
@@ -28,13 +31,23 @@ import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.WearableUtils;
 
 public class MainActivity extends Activity implements OnTargetSetListener,
-        GoogleApiClient.ConnectionCallbacks {
+        GoogleApiClient.ConnectionCallbacks, WatchViewStub.OnLayoutInflatedListener {
 
     public static final String EXTRA_ROUND = "round";
     private TargetSelectView mTarget;
     private DelayedConfirmationView confirm;
     private Round round;
     private GoogleApiClient mGoogleApiClient;
+    private WatchViewStub stub;
+    private TextView startTrainingHint;
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            round = Parcels.unwrap(intent.getExtras().getParcelable(EXTRA_ROUND));
+            stub.setOnLayoutInflatedListener(MainActivity.this);
+            setUpTargetView();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,26 +65,47 @@ public class MainActivity extends Activity implements OnTargetSetListener,
                 .build();
         mGoogleApiClient.connect();
 
-        final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
-        stub.setOnLayoutInflatedListener(stub1 -> {
-            mTarget = (TargetSelectView) stub1.findViewById(R.id.target);
-            confirm = (DelayedConfirmationView) stub1.findViewById(R.id.delayed_confirm);
+        startTrainingHint = (TextView) findViewById(R.id.start_training_hint);
+        stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
+        stub.setOnLayoutInflatedListener(this);
 
-            // Workaround to avoid crash happening when setting invisible via xml layout
-            confirm.setVisibility(View.INVISIBLE);
+        final IntentFilter intentFilter = new IntentFilter(WearableListener.TRAINING_STARTED);
+        registerReceiver(receiver, intentFilter);
+    }
 
-            // Set up target view
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
+    }
+
+    @Override
+    public void onLayoutInflated(WatchViewStub stub1) {
+        mTarget = (TargetSelectView) stub1.findViewById(R.id.target);
+        confirm = (DelayedConfirmationView) stub1.findViewById(R.id.delayed_confirm);
+
+        // Workaround to avoid crash happening when setting invisible via xml layout
+        confirm.setVisibility(View.INVISIBLE);
+
+        // Set up target view
+        setUpTargetView();
+
+        // Ensure Moto 360 is not cut off at the bottom
+        stub1.setOnApplyWindowInsetsListener((v, insets) -> {
+            int chinHeight = insets.getSystemWindowInsetBottom();
+            mTarget.setChinHeight(chinHeight);
+            return insets;
+        });
+    }
+
+    private void setUpTargetView() {
+        if (round != null && mTarget != null) {
             mTarget.setRoundTemplate(round.info);
             mTarget.reset();
             mTarget.setOnTargetSetListener(MainActivity.this);
-
-            // Ensure Moto 360 is not cut off at the bottom
-            stub1.setOnApplyWindowInsetsListener((v, insets) -> {
-                int chinHeight = insets.getSystemWindowInsetBottom();
-                mTarget.setChinHeight(chinHeight);
-                return insets;
-            });
-        });
+            stub.setVisibility(View.VISIBLE);
+            startTrainingHint.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -91,7 +125,7 @@ public class MainActivity extends Activity implements OnTargetSetListener,
             public void onTimerFinished(View view) {
                 Intent intent = new Intent(MainActivity.this, ConfirmationActivity.class);
                 intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
-                                ConfirmationActivity.SUCCESS_ANIMATION);
+                        ConfirmationActivity.SUCCESS_ANIMATION);
                 intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, getString(R.string.saved));
                 startActivity(intent);
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);

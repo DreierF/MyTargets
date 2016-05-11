@@ -7,6 +7,7 @@
 package de.dreier.mytargets.fragments;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -47,11 +48,13 @@ import static de.dreier.mytargets.fragments.DatePickerFragment.ARG_CURRENT_DATE;
 
 public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implements DatePickerDialog.OnDateSetListener {
     public static final String TRAINING_TYPE = "training_type";
+
     public static final int FREE_TRAINING = 0;
     public static final int TRAINING_WITH_STANDARD_ROUND = 1;
     private static final int COMPETITION = 2;
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private static final int REQ_SELECTED_DATE = 2;
+
     @Bind(R.id.practiceLayout)
     View practice;
     @Bind(R.id.indoor)
@@ -119,6 +122,10 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
             setTrainingDate();
             notEditable.setVisibility(View.GONE);
         }
+        standardRoundSpinner.setOnActivityResultContext(this);
+        arrow.setOnActivityResultContext(this);
+        bow.setOnActivityResultContext(this);
+        environment.setOnActivityResultContext(this);
         applyTrainingType();
         updateArrowsLabel();
         updateArrowNumbers(arrow.getSelectedItem());
@@ -258,7 +265,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
 
     @NonNull
     private StandardRound getCustomRound() {
-        StandardRound standardRound;// Generate and save standard round template for practice
+        StandardRound standardRound; // Generate and save standard round template for practice
         standardRound = new StandardRound();
         standardRound.club = StandardRoundFactory.CUSTOM_PRACTICE;
         standardRound.name = getString(R.string.practice);
@@ -269,5 +276,14 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
 
         prefs.edit().putBoolean("indoor", standardRound.indoor).apply();
         return standardRound;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        standardRoundSpinner.onActivityResult(requestCode, resultCode, data);
+        arrow.onActivityResult(requestCode, resultCode, data);
+        bow.onActivityResult(requestCode, resultCode, data);
+        environment.onActivityResult(requestCode, resultCode, data);
     }
 }

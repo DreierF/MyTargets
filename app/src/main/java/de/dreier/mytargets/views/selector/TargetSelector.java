@@ -16,6 +16,8 @@ import de.dreier.mytargets.shared.models.Target;
 
 public class TargetSelector extends ImageSelectorBase<Target> {
 
+    private static final int TARGET_REQUEST_CODE = 12;
+
     public TargetSelector(Context context) {
         this(context, null);
     }
@@ -23,7 +25,8 @@ public class TargetSelector extends ImageSelectorBase<Target> {
     public TargetSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
         setTitle(R.string.target_face);
-        setOnClickActivity(ItemSelectActivity.TargetActivity.class);
+        defaultActivity = ItemSelectActivity.TargetActivity.class;
+        requestCode = TARGET_REQUEST_CODE;
     }
 
 }

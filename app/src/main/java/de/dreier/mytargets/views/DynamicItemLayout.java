@@ -102,9 +102,13 @@ public class DynamicItemLayout<T> extends LinearLayout implements View.OnClickLi
     private void rebindViews(int index) {
         if (rebind) {
             for (; index < list.size(); index++) {
-                listener.onBind(getChildAt(index), list.get(index), index);
+                updateViewAt(index);
             }
         }
+    }
+
+    public void updateViewAt(int index) {
+        listener.onBind(getChildAt(index), list.get(index), index);
     }
 
     @Override

@@ -7,14 +7,15 @@
 
 package de.dreier.mytargets.views.selector;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
+import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 
 import org.parceler.Parcels;
 
-import butterknife.OnClick;
-import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.StandardRoundActivity;
 import de.dreier.mytargets.fragments.TargetFragment;
@@ -26,6 +27,9 @@ import de.dreier.mytargets.shared.models.Target;
 
 public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
 
+    private static final int STANDARD_ROUND_REQUEST_CODE = 10;
+    private static final int SR_TARGET_REQUEST_CODE = 11;
+
     public StandardRoundSelector(Context context) {
         this(context, null);
     }
@@ -34,28 +38,39 @@ public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
         super(context, attrs);
         image.setFocusable(true);
         image.setClickable(true);
-        setOnClickActivity(StandardRoundActivity.class);
+        defaultActivity = StandardRoundActivity.class;
+        requestCode = STANDARD_ROUND_REQUEST_CODE;
     }
 
-    @OnClick(R.id.image)
-    public void onSelectAlternativeTarget() {
-        Target target = item.getRounds().get(0).targetTemplate;
-        if (target.id < 7 || target.id == 10 || target.id == 11) {
-            Intent i = new Intent(getContext(), ItemSelectActivity.TargetActivity.class);
-            i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(target));
-            i.putExtra(TargetFragment.TYPE_FIXED, true);
-            startIntent(i, data -> {
-                Target st = Parcels.unwrap(data.getParcelableExtra(ItemSelectActivity.ITEM));
-                for (RoundTemplate template : item.getRounds()) {
-                    Diameter size = template.target.size;
-                    template.target = new Target(st.id, st.scoringStyle, size);
-                }
-                setItem(item);
-            });
-        } else {
-            Intent i = new Intent(getContext(), StandardRoundActivity.class);
-            i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(item));
-            startIntent(i, data -> setItem(Parcels.unwrap(data.getParcelableExtra(ItemSelectActivity.ITEM))));
+    @Override
+    public void setOnActivityResultContext(Fragment fragment) {
+        super.setOnActivityResultContext(fragment);
+        image.setOnClickListener(v -> {
+            final StandardRound item = getSelectedItem();
+            Target target = item.getRounds().get(0).targetTemplate;
+            if (target.id < 7 || target.id == 10 || target.id == 11) {
+                Intent i = new Intent(getContext(), ItemSelectActivity.TargetActivity.class);
+                i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(target));
+                i.putExtra(TargetFragment.TYPE_FIXED, true);
+                fragment.startActivityForResult(i, SR_TARGET_REQUEST_CODE);
+            } else {
+                fragment.startActivityForResult(getDefaultIntent(), requestCode);
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && requestCode == SR_TARGET_REQUEST_CODE) {
+            final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
+            final Target st = Parcels.unwrap(parcelable);
+            StandardRound item = getSelectedItem();
+            for (RoundTemplate template : item.getRounds()) {
+                Diameter size = template.target.size;
+                template.target = new Target(st.id, st.scoringStyle, size);
+            }
+            setItem(item);
         }
     }
 

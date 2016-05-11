@@ -20,11 +20,11 @@ import de.dreier.mytargets.shared.models.IIdProvider;
 @Parcel
 public class WindSpeed implements IIdProvider {
 
-    private final long id;
+    public final long id;
     public final String name;
 
     @ParcelConstructor
-    private WindSpeed(long id, String name) {
+    WindSpeed(long id, String name) {
         this.id = id;
         this.name = name;
     }

@@ -74,6 +74,8 @@ public abstract class EditRoundPropertiesFragmentBase extends EditFragmentBase {
             public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
             }
         });
+        targetSpinner.setOnActivityResultContext(this);
+        distanceSpinner.setOnActivityResultContext(this);
         return rootView;
     }
 
@@ -128,5 +130,12 @@ public abstract class EditRoundPropertiesFragmentBase extends EditFragmentBase {
         i.putExtra(InputActivity.PASSE_IND, 0);
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        targetSpinner.onActivityResult(requestCode, resultCode, data);
+        distanceSpinner.onActivityResult(requestCode, resultCode, data);
     }
 }

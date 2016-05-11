@@ -18,6 +18,8 @@ import de.dreier.mytargets.shared.models.Distance;
 
 public class DistanceSelector extends SelectorBase<Distance> {
 
+    private static final int DISTANCE_REQUEST_CODE = 1;
+
     @Bind(android.R.id.text1)
     TextView distance;
 
@@ -27,7 +29,8 @@ public class DistanceSelector extends SelectorBase<Distance> {
 
     public DistanceSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.selector_item_distance);
-        setOnClickActivity(ItemSelectActivity.DistanceActivity.class);
+        defaultActivity = ItemSelectActivity.DistanceActivity.class;
+        requestCode = DISTANCE_REQUEST_CODE;
     }
 
     @Override

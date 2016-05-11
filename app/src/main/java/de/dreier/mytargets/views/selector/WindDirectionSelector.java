@@ -18,6 +18,8 @@ import de.dreier.mytargets.models.WindDirection;
 
 public class WindDirectionSelector extends SelectorBase<WindDirection> {
 
+    private static final int WIND_DIRECTION_REQUEST_CODE = 3;
+
     @Bind(android.R.id.text1)
     TextView name;
 
@@ -27,7 +29,8 @@ public class WindDirectionSelector extends SelectorBase<WindDirection> {
 
     public WindDirectionSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.selector_item_simple_text);
-        setOnClickActivity(ItemSelectActivity.WindDirectionActivity.class);
+        defaultActivity = ItemSelectActivity.WindDirectionActivity.class;
+        requestCode = WIND_DIRECTION_REQUEST_CODE;
     }
 
     @Override
