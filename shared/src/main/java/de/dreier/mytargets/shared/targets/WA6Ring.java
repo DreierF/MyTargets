@@ -30,17 +30,20 @@ public class WA6Ring extends TargetModelBase {
                 new Zone(417, CERULEAN_BLUE, DARK_GRAY, 3),
                 new Zone(500, CERULEAN_BLUE, DARK_GRAY, 3)
         };
-        zonePoints = new int[][]{{10, 10, 9, 8, 7, 6, 5},
-                {10, 9, 9, 8, 7, 6, 5},
-                {11, 10, 9, 8, 7, 6, 5},
-                {5, 5, 5, 4, 4, 3, 3},
-                {9, 9, 9, 7, 7, 5, 5}};
-        showAsX = new boolean[]{true, false, false, true, false};
-        diameters = new Diameter[]{new Diameter(40, Dimension.CENTIMETER),
+        scoringStyles = new ScoringStyle[]{
+                new ScoringStyle(true, 10, 10, 9, 8, 7, 6, 5),
+                new ScoringStyle(false, 10, 9, 9, 8, 7, 6, 5),
+                new ScoringStyle(false, 11, 10, 9, 8, 7, 6, 5),
+                new ScoringStyle(true, 5, 5, 5, 4, 4, 3, 3),
+                new ScoringStyle(false, 9, 9, 9, 7, 7, 5, 5)
+        };
+        diameters = new Diameter[]{
+                new Diameter(40, Dimension.CENTIMETER),
                 new Diameter(60, Dimension.CENTIMETER),
                 new Diameter(80, Dimension.CENTIMETER),
                 new Diameter(92, Dimension.CENTIMETER),
-                new Diameter(122, Dimension.CENTIMETER)};
+                new Diameter(122, Dimension.CENTIMETER)
+        };
         centerMark = new CenterMark(DARK_GRAY, 8.333f, 4, false);
     }
 }

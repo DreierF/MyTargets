@@ -107,7 +107,7 @@ public class TargetFragment extends SelectItemFragment<Target>
 
         // Init scoring styles
         int style = scoringStyleSpinner.getSelectedItemPosition();
-        ArrayList<String> styles = target.getModel().getScoringStyles();
+        List<String> styles = target.getModel().getScoringStyles();
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(themedContext,
                 android.R.layout.simple_spinner_item, styles);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

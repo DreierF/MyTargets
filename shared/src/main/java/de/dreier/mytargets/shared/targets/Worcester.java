@@ -25,9 +25,12 @@ public class Worcester extends TargetModelBase {
                 new Zone(400, DARK_GRAY, WHITE, 4),
                 new Zone(500, DARK_GRAY, WHITE, 0)
         };
-        zonePoints = new int[][]{{5, 4, 3, 2, 1}};
-        showAsX = new boolean[]{false};
-        diameters = new Diameter[]{new Diameter(16, INCH)};
+        scoringStyles = new ScoringStyle[]{
+                new ScoringStyle(false, 5, 4, 3, 2, 1)
+        };
+        diameters = new Diameter[]{
+                new Diameter(16, INCH)
+        };
         centerMark = new CenterMark(DARK_GRAY, 10.5f, 4, false);
     }
 }

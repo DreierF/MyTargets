@@ -3,6 +3,8 @@ package de.dreier.mytargets.shared.models;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
+import java.util.List;
+
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
@@ -45,7 +47,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
     }
 
     public String zoneToString(int zone, int arrow) {
-        return getModel().zoneToString(zone, scoringStyle, arrow);
+        return getModel().getScoringStyle(scoringStyle).zoneToString(zone, arrow);
     }
 
     @Override
@@ -56,7 +58,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
     }
 
     public int getMaxPoints() {
-        return getModel().getMaxPoints(scoringStyle);
+        return getModel().getScoringStyle(scoringStyle).getMaxPoints();
     }
 
     public TargetModelBase getModel() {
@@ -68,7 +70,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
 
 
     public int getPointsByZone(int zone, int arrow) {
-        return model.getPointsByZone(zone, scoringStyle, arrow);
+        return model.getScoringStyle(scoringStyle).getPointsByZone(zone, arrow);
     }
 
     @Override
@@ -84,5 +86,9 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
     @Override
     public String getDetails(Context context) {
         return getModel().getScoringStyles().get(scoringStyle);
+    }
+
+    public List<TargetModelBase.SelectableZone> getSelectableZoneList(int arrow) {
+        return getModel().getSelectableZoneList(scoringStyle, arrow);
     }
 }

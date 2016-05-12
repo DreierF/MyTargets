@@ -23,7 +23,7 @@ public class WAFull extends TargetModelBase {
 
     public WAFull() {
         super(ID, R.string.wa_full);
-        zones = new Zone[] {
+        zones = new Zone[]{
                 new Zone(25, LEMON_YELLOW, DARK_GRAY, 2),
                 new Zone(50, LEMON_YELLOW, DARK_GRAY, 2),
                 new Zone(100, LEMON_YELLOW, DARK_GRAY, 2),
@@ -36,17 +36,20 @@ public class WAFull extends TargetModelBase {
                 new Zone(450, WHITE, DARK_GRAY, 2),
                 new Zone(500, WHITE, DARK_GRAY, 2)
         };
-        zonePoints = new int[][]{{10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1},
-                {10, 9, 9, 8, 7, 6, 5, 4, 3, 2, 1},
-                {11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1},
-                {5, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1},
-                {9, 9, 9, 7, 7, 5, 5, 3, 3, 1, 1}};
-        showAsX = new boolean[]{true, false, false, true, false};
-        diameters = new Diameter[]{new Diameter(40, Dimension.CENTIMETER),
+        scoringStyles = new ScoringStyle[]{
+                new ScoringStyle(true, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1),
+                new ScoringStyle(false, 10, 9, 9, 8, 7, 6, 5, 4, 3, 2, 1),
+                new ScoringStyle(false, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1),
+                new ScoringStyle(true, 5, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1),
+                new ScoringStyle(false, 9, 9, 9, 7, 7, 5, 5, 3, 3, 1, 1)
+        };
+        diameters = new Diameter[]{
+                new Diameter(40, Dimension.CENTIMETER),
                 new Diameter(60, Dimension.CENTIMETER),
                 new Diameter(80, Dimension.CENTIMETER),
                 new Diameter(92, Dimension.CENTIMETER),
-                new Diameter(122, Dimension.CENTIMETER)};
+                new Diameter(122, Dimension.CENTIMETER)
+        };
         centerMark = new CenterMark(DARK_GRAY, 5f, 4, false);
     }
 }

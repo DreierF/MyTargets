@@ -32,8 +32,8 @@ public class ASA3D14 extends Target3DBase {
                 new Zone(HEART, 500, 500, 500, LIGHT_GRAY, BLACK, 3),
                 new Zone(CIRCLE, 500, 500, 500, BROWN, GRAY, 5)
         };
-        zonePoints = new int[][]{{14, 14, 12, 12, 12, 12, 10, 8, 5}};
-        showPoints = new boolean[]{false, true, false, false, false, true, true, true, true};
-        showAsX = new boolean[]{false};
+        scoringStyles = new ScoringStyle[]{
+                new ScoringStyle(false, 14, 14, 12, 12, 12, 12, 10, 8, 5)
+        };
     }
 }

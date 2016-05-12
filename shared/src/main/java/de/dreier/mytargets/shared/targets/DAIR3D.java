@@ -37,11 +37,11 @@ public class DAIR3D extends Target3DBase {
                 new Zone(HEART, 500, 500, 500, LIGHT_GRAY, Color.BLACK, 3),
                 new Zone(CIRCLE, 500, 500, 500, BROWN, GRAY, 5)
         };
-        zonePoints = new int[][]{
-                {8, 8, 12, 12, 12, 12, 11, 11, 10, 8, 0},
-                {14, 14, 12, 12, 12, 12, 11, 11, 10, 8, 0},
-                {8, 8, 12, 12, 12, 12, 10, 10, 10, 8, 0},
-                {14, 14, 12, 12, 12, 12, 10, 10, 10, 8, 0}};
-        showAsX = new boolean[]{false, false, false, false};
+        scoringStyles = new ScoringStyle[]{
+                new ScoringStyle(false, 8, 8, 12, 12, 12, 12, 11, 11, 10, 8, 0),
+                new ScoringStyle(false, 14, 14, 12, 12, 12, 12, 11, 11, 10, 8, 0),
+                new ScoringStyle(false, 8, 8, 12, 12, 12, 12, 10, 10, 10, 8, 0),
+                new ScoringStyle(false, 14, 14, 12, 12, 12, 12, 10, 10, 10, 8, 0)
+        };
     }
 }

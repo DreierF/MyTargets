@@ -4,9 +4,11 @@ import android.content.Context;
 import android.support.annotation.ColorInt;
 import android.support.annotation.StringRes;
 
+import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Diameter;
@@ -18,21 +20,20 @@ import static de.dreier.mytargets.shared.utils.Color.BLACK;
 import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
 public class TargetModelBase implements IIdProvider {
-    public boolean isFieldTarget;
     protected long id;
     protected int nameRes;
     protected Zone[] zones;
     protected Diameter[] diameters;
-    protected TargetDecoration decoration;
-    protected boolean[] showAsX;
-    protected int[][] zonePoints;
-    protected boolean[] showPoints;
+    protected ScoringStyle[] scoringStyles;
 
     protected int faceRadius;
     protected Coordinate[] facePositions;
 
     protected boolean is3DTarget;
+    public boolean isFieldTarget;
+
     protected CenterMark centerMark;
+    protected TargetDecoration decoration;
 
     protected TargetModelBase(long id, @StringRes int nameRes) {
         this.id = id;
@@ -62,51 +63,18 @@ public class TargetModelBase implements IIdProvider {
         return diameters;
     }
 
-    public int getZonePoints(int scoringStyle, int i) {
-        return zonePoints[scoringStyle][i];
-    }
-
     public int getZoneCount() {
         return zones.length;
     }
 
-    public int getPointsByZone(int zone, int scoringStyle, int arrow) {
-        if (isOutOfRange(zone)) {
-            return 0;
-        }
-        return getZonePoints(scoringStyle, zone);
+    public List<String> getScoringStyles() {
+        return Stream.of(scoringStyles)
+                .map(ScoringStyle::toString)
+                .collect(Collectors.toList());
     }
 
-    public ArrayList<String> getScoringStyles() {
-        ArrayList<String> styles = new ArrayList<>(getZoneCount());
-        for (int scoring = 0; scoring < zonePoints.length; scoring++) {
-            String style = "";
-            for (int i = 0; i < getZoneCount(); i++) {
-                if (!style.isEmpty()) {
-                    style += ", ";
-                }
-                if (i == 0 && zonePoints[scoring][0] < zonePoints[scoring][1]) {
-                    continue;
-                }
-                style += zoneToString(i, scoring, 0);
-            }
-            styles.add(style);
-        }
-        return styles;
-    }
-
-    public String zoneToString(int zone, int scoringStyle, int arrow) {
-        if (zone <= -1 || zone >= getZoneCount()) {
-            return "M";
-        } else if (zone == 0 && showAsX[scoringStyle]) {
-            return "X";
-        } else {
-            int value = getPointsByZone(zone, scoringStyle, arrow);
-            if (value == 0) {
-                return "M";
-            }
-            return String.valueOf(value);
-        }
+    public ScoringStyle getScoringStyle(int scoringStyle) {
+        return scoringStyles[scoringStyle];
     }
 
     public boolean dependsOnArrowIndex() {
@@ -201,12 +169,6 @@ public class TargetModelBase implements IIdProvider {
         return new Coordinate(getXFromZone(zone), 500);
     }
 
-    public int getMaxPoints(int scoringStyle) {
-        return Stream.range(0, zonePoints[scoringStyle].length)
-                .map(i -> getZonePoints(scoringStyle, i))
-                .max(Integer::compareTo).orElse(0);
-    }
-
     public int getZoneFromPoint(float ax, float ay) {
         for (int i = 0; i < zones.length; i++) {
             if (getZone(i).isInZone(ax, ay)) {
@@ -214,5 +176,36 @@ public class TargetModelBase implements IIdProvider {
             }
         }
         return Shot.MISS;
+    }
+
+    public ArrayList<SelectableZone> getSelectableZoneList(int scoringStyle, int arrow) {
+        ArrayList<SelectableZone> list = new ArrayList<>();
+        String last = "";
+        for (int i = 0; i < getZoneCount(); i++) {
+            String zone = getScoringStyle(scoringStyle).zoneToString(i, arrow);
+            if (!last.equals(zone)) {
+                list.add(new SelectableZone(i, zone));
+            }
+            last = zone;
+        }
+        if (!last.equals("M")) {
+            list.add(new SelectableZone(-1, "M"));
+        }
+        return list;
+    }
+
+    public static class SelectableZone {
+        public final int zone;
+        public final String text;
+
+        public SelectableZone(int zone, String text) {
+            this.zone = zone;
+            this.text = text;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof SelectableZone && zone == ((SelectableZone) o).zone;
+        }
     }
 }

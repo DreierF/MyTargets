@@ -28,11 +28,15 @@ public class NFAAIndoor extends TargetModelBase {
                 new Zone(400, SAPPHIRE_BLUE, WHITE, 4),
                 new Zone(500, SAPPHIRE_BLUE, WHITE, 4)
         };
-        zonePoints = new int[][]{{5, 5, 4, 3, 2, 1},
-                {6, 5, 4, 3, 2, 1},
-                {7, 5, 4, 3, 2, 1}}; //TODO 6 if inner ring is hit but only 7 if arrow is inside
-        showAsX = new boolean[]{true, false, false};
-        diameters = new Diameter[]{new Diameter(40, CENTIMETER)};
+        scoringStyles = new ScoringStyle[]{
+                new ScoringStyle(true, 5, 5, 4, 3, 2, 1),
+                new ScoringStyle(false, 6, 5, 4, 3, 2, 1),
+                new ScoringStyle(false, 7, 5, 4, 3, 2, 1)
+        };
+        //TODO 6 if inner ring is hit but only 7 if arrow is inside
+        diameters = new Diameter[]{
+                new Diameter(40, CENTIMETER)
+        };
         centerMark = new CenterMark(DARK_GRAY, 23.783f, 8, true);
     }
 

@@ -30,17 +30,20 @@ public class WA3Ring extends TargetModelBase {
                 new Zone(333, LEMON_YELLOW, DARK_GRAY, 4),
                 new Zone(500, FLAMINGO_RED, DARK_GRAY, 4)
         };
-        zonePoints = new int[][]{{10, 10, 9, 8},
-                {10, 9, 9, 8},
-                {11, 10, 9, 8},
-                {5, 5, 5, 4},
-                {9, 9, 9, 7}};
-        showAsX = new boolean[]{true, false, false, true, false};
-        diameters = new Diameter[]{new Diameter(40, Dimension.CENTIMETER),
+        scoringStyles = new ScoringStyle[]{
+                new ScoringStyle(true, 10, 10, 9, 8),
+                new ScoringStyle(false, 10, 9, 9, 8),
+                new ScoringStyle(false, 11, 10, 9, 8),
+                new ScoringStyle(true, 5, 5, 5, 4),
+                new ScoringStyle(false, 9, 9, 9, 7)
+        };
+        diameters = new Diameter[]{
+                new Diameter(40, Dimension.CENTIMETER),
                 new Diameter(60, Dimension.CENTIMETER),
                 new Diameter(80, Dimension.CENTIMETER),
                 new Diameter(92, Dimension.CENTIMETER),
-                new Diameter(122, Dimension.CENTIMETER)};
+                new Diameter(122, Dimension.CENTIMETER)
+        };
         centerMark = new CenterMark(DARK_GRAY, 16.667f, 4, false);
     }
 

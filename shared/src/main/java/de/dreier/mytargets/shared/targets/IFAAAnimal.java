@@ -23,7 +23,12 @@ public class IFAAAnimal extends TargetOvalBase {
                 new Zone(ELLIPSE, 500, 500, 500, ORANGE, BLACK, 4),
                 new Zone(500, LIGHTER_GRAY, GRAY, 3)
         };
-        zonePoints = new int[][]{{20, 18}, {16, 14}, {12, 10}};
-        showAsX = new boolean[]{false};
+        scoringStyles = new ScoringStyle[]{
+                new ArrowAwareScoringStyle(false, new int[][]{
+                        {20, 18},
+                        {16, 14},
+                        {12, 10}
+                })
+        };
     }
 }

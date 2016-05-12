@@ -22,9 +22,13 @@ public class HitOrMiss extends TargetModelBase {
                 new Zone(125, YELLOW, DARK_GRAY, 3),
                 new Zone(500, RED_MISS, DARK_GRAY, 3)
         };
-        zonePoints = new int[][]{{1, 0}};
-        showAsX = new boolean[]{false};
-        diameters = new Diameter[]{new Diameter(30, CENTIMETER), new Diameter(96, CENTIMETER)};
+        scoringStyles = new ScoringStyle[]{
+                new ScoringStyle(false, 1, 0)
+        };
+        diameters = new Diameter[]{
+                new Diameter(30, CENTIMETER),
+                new Diameter(96, CENTIMETER)
+        };
         centerMark = new CenterMark(DARK_GRAY, 4.188f, 4, false);
     }
 }

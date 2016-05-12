@@ -25,7 +25,12 @@ public class NFAAAnimal extends TargetOvalBase {
                 new Zone(ELLIPSE, 500, 500, 500, ORANGE, BLACK, 4),
                 new Zone(500, LIGHTER_GRAY, GRAY, 3)
         };
-        zonePoints = new int[][]{{21, 20, 18}, {17, 16, 14}, {13, 12, 10}};
-        showAsX = new boolean[]{false};
+        scoringStyles = new ScoringStyle[]{
+                new ArrowAwareScoringStyle(false, new int[][]{
+                        {21, 20, 18},
+                        {17, 16, 14},
+                        {13, 12, 10}
+                })
+        };
     }
 }

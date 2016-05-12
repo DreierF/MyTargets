@@ -27,11 +27,16 @@ public class WAField extends TargetModelBase {
                 new Zone(400, DARK_GRAY, WHITE, 4),
                 new Zone(500, DARK_GRAY, WHITE, 4)
         };
-        zonePoints = new int[][]{{5, 5, 4, 3, 2, 1},
-                {6, 5, 4, 3, 2, 1}};
-        showAsX = new boolean[]{true, false};
-        diameters = new Diameter[]{new Diameter(20, CENTIMETER), new Diameter(40, CENTIMETER),
-                new Diameter(60, CENTIMETER), new Diameter(80, CENTIMETER)};
+        scoringStyles = new ScoringStyle[]{
+                new ScoringStyle(true, 5, 5, 4, 3, 2, 1),
+                new ScoringStyle(false, 6, 5, 4, 3, 2, 1)
+        };
+        diameters = new Diameter[]{
+                new Diameter(20, CENTIMETER),
+                new Diameter(40, CENTIMETER),
+                new Diameter(60, CENTIMETER),
+                new Diameter(80, CENTIMETER)
+        };
         centerMark = new CenterMark(DARK_GRAY, 10.5f, 4, false);
         isFieldTarget = true;
     }

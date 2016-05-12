@@ -27,10 +27,13 @@ public class Beursault extends TargetModelBase {
                 new Zone(410.339f, WHITE, DARK_GRAY, 6),
                 new Zone(500, WHITE, DARK_GRAY, 27)
         };
-        zonePoints = new int[][]{{4, 4, 3, 3, 2, 2, 1, 1}};
+        scoringStyles = new ScoringStyle[]{
+                new ScoringStyle(false, 4, 4, 3, 3, 2, 2, 1, 1)
+        };
         //TODO inside out, see http://scores-sca.org/public/scores_rules.php?R=25&Shoot=108
-        showAsX = new boolean[]{false};
-        diameters = new Diameter[]{new Diameter(48, Dimension.CENTIMETER)};
+        diameters = new Diameter[]{
+                new Diameter(48, Dimension.CENTIMETER)
+        };
         decoration = TargetDecoration.BEURSAULT;
         centerMark = new CenterMark(DARK_GRAY, 500f, 6, false);
     }

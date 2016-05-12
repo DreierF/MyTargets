@@ -19,9 +19,12 @@ public class SCAPeriod extends TargetModelBase {
                 new Zone(200, GREEN, DARK_GRAY, 2),
                 new Zone(500, WHITE, DARK_GRAY, 2)
         };
-        zonePoints = new int[][]{{8, 4, 2}};
-        showAsX = new boolean[]{false};
-        diameters = new Diameter[]{new Diameter(60, Dimension.CENTIMETER)};
+        scoringStyles = new ScoringStyle[]{
+                new ScoringStyle(false, 8, 4, 2)
+        };
+        diameters = new Diameter[]{
+                new Diameter(60, Dimension.CENTIMETER)
+        };
         centerMark = new CenterMark(DARK_GRAY, 5, 4, false);
     }
 }

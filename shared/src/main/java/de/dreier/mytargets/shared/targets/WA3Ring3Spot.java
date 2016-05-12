@@ -22,7 +22,9 @@ public class WA3Ring3Spot extends WA3Ring {
                 new Coordinate(500, 250),
                 new Coordinate(760, 750)
         };
-        diameters = new Diameter[]{new Diameter(40, Dimension.CENTIMETER),
-                new Diameter(60, Dimension.CENTIMETER)};
+        diameters = new Diameter[]{
+                new Diameter(40, Dimension.CENTIMETER),
+                new Diameter(60, Dimension.CENTIMETER)
+        };
     }
 }

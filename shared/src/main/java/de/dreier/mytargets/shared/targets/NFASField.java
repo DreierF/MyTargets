@@ -25,8 +25,13 @@ public class NFASField extends TargetOvalBase {
                 new Zone(ELLIPSE, 500, 500, 500, ORANGE, BLACK, 4),
                 new Zone(500, LIGHTER_GRAY, GRAY, 3)
         };
-        zonePoints = new int[][]{{24, 20, 16}, {14, 14, 10}, {8, 8, 4}};
-        showAsX = new boolean[]{false};
+        scoringStyles = new ScoringStyle[]{
+                new ArrowAwareScoringStyle(false, new int[][]{
+                        {24, 20, 16},
+                        {14, 14, 10},
+                        {8, 8, 4}
+                })
+        };
         isFieldTarget = true;
     }
 }

@@ -49,6 +49,7 @@ import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.targets.TargetModelBase;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import icepick.Icepick;
@@ -72,7 +73,7 @@ public class TargetView extends TargetViewBase {
     private RectF orgRect;
     private List<ArrowNumber> arrowNumbers = new ArrayList<>();
     private TextPaint textPaint;
-    private List<Zone> selectableZones = new ArrayList<>();
+    private List<TargetModelBase.SelectableZone> selectableZones = new ArrayList<>();
     private Paint borderPaint;
     private ValueAnimator animator;
     private float inputModeProgress = 0;
@@ -129,7 +130,7 @@ public class TargetView extends TargetViewBase {
         super.setRoundTemplate(r);
         initKeyboard();
         initSpotBounds();
-        selectableZones = getZoneList();
+        selectableZones = target.getSelectableZoneList(currentArrow);
     }
 
     private void initSpotBounds() {
@@ -270,7 +271,6 @@ public class TargetView extends TargetViewBase {
                 .flatMap(Stream::of)
                 .filter(s -> s.index % spots == spot)
                 .reduce(m, Midpoint::add);
-
     }
 
     @Override
@@ -278,7 +278,7 @@ public class TargetView extends TargetViewBase {
         Coordinate coordinate = new Coordinate();
         if (mZoneSelectionMode) {
             coordinate.x = contentWidth - 100 * density;
-            int index = selectableZones.indexOf(new Zone(passe.shot[i].zone, ""));
+            int index = selectableZones.indexOf(new TargetModelBase.SelectableZone(passe.shot[i].zone, ""));
             int indicatorHeight = contentHeight / selectableZones.size();
             coordinate.y = indicatorHeight * index + indicatorHeight / 2.0f;
         } else {
@@ -342,8 +342,9 @@ public class TargetView extends TargetViewBase {
         if (mZoneSelectionMode) {
             if (x > contentWidth - 60 * density) {
                 int i = (int) (y * selectableZones.size() / (float) contentHeight);
-                s.x = targetDrawable.model.getXFromZone(s.zone);
-                s.y = 0;
+                final Coordinate coordinate = targetDrawable.model.getCoordinateFromZone(s.zone);
+                s.x = coordinate.x;
+                s.y = coordinate.y;
                 s.zone = selectableZones.get(i).zone;
             } else {
                 return null;
@@ -438,7 +439,7 @@ public class TargetView extends TargetViewBase {
     @Override
     protected void animateFromZoomSpot() {
         if (targetModel.dependsOnArrowIndex()) {
-            selectableZones = getZoneList();
+            selectableZones = target.getSelectableZoneList(currentArrow);
         }
         if (targetModel.getFaceCount() > 1) {
             if (!spotFocused) {
@@ -593,7 +594,7 @@ public class TargetView extends TargetViewBase {
         if (mZoneSelectionMode || inputModeTransitioning) {
             int selectableZonesCount = selectableZones.size();
             for (int i = 0; i < selectableZonesCount; i++) {
-                Zone zone = selectableZones.get(i);
+                TargetModelBase.SelectableZone zone = selectableZones.get(i);
 
                 float percent = 1;
                 if (inputModeTransitioning) {
@@ -655,22 +656,6 @@ public class TargetView extends TargetViewBase {
         return super.onTouch(view, motionEvent);
     }
 
-    private ArrayList<Zone> getZoneList() {
-        ArrayList<Zone> list = new ArrayList<>();
-        String last = "";
-        for (int i = 0; i < zoneCount; i++) {
-            String zone = target.zoneToString(i, currentArrow);
-            if (!last.equals(zone)) {
-                list.add(new Zone(i, zone));
-            }
-            last = zone;
-        }
-        if (!last.equals("M")) {
-            list.add(new Zone(-1, "M"));
-        }
-        return list;
-    }
-
     public boolean getInputMode() {
         return mZoneSelectionMode;
     }
@@ -698,21 +683,6 @@ public class TargetView extends TargetViewBase {
     @Override
     public void onRestoreInstanceState(Parcelable state) {
         super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
-    }
-
-    private class Zone {
-        final int zone;
-        final String text;
-
-        public Zone(int zone, String text) {
-            this.zone = zone;
-            this.text = text;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            return o instanceof Zone && zone == ((Zone) o).zone;
-        }
     }
 
     class Midpoint {
