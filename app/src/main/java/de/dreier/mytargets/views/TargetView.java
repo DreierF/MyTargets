@@ -73,7 +73,6 @@ public class TargetView extends TargetViewBase {
     private RectF orgRect;
     private List<ArrowNumber> arrowNumbers = new ArrayList<>();
     private TextPaint textPaint;
-    private List<TargetModelBase.SelectableZone> selectableZones = new ArrayList<>();
     private Paint borderPaint;
     private ValueAnimator animator;
     private float inputModeProgress = 0;
@@ -130,7 +129,6 @@ public class TargetView extends TargetViewBase {
         super.setRoundTemplate(r);
         initKeyboard();
         initSpotBounds();
-        selectableZones = target.getSelectableZoneList(currentArrow);
     }
 
     private void initSpotBounds() {
@@ -318,6 +316,7 @@ public class TargetView extends TargetViewBase {
 
     public void switchMode(boolean mode, boolean animate) {
         if (mode != mZoneSelectionMode) {
+            // TODO make sure selected arrow indicator transforms as well
             mZoneSelectionMode = mode;
             if (animate) {
                 animateMode();
@@ -438,9 +437,6 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void animateFromZoomSpot() {
-        if (targetModel.dependsOnArrowIndex()) {
-            selectableZones = target.getSelectableZoneList(currentArrow);
-        }
         if (targetModel.getFaceCount() > 1) {
             if (!spotFocused) {
                 zoomTransitioning = false;

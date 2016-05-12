@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.targets.TargetModelBase.SelectableZone;
 import de.dreier.mytargets.shared.utils.Circle;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
@@ -17,10 +18,10 @@ import de.dreier.mytargets.shared.views.TargetViewBase;
 public class TargetSelectView extends TargetViewBase {
 
     private int radius;
-    private Paint drawColorP;
+    private Paint drawColorPaint;
     private int chinHeight;
-    private double circRadius;
-    private Circle mCircle;
+    private double circleRadius;
+    private Circle circle;
 
     public TargetSelectView(Context context) {
         super(context);
@@ -43,15 +44,15 @@ public class TargetSelectView extends TargetViewBase {
 
     private void init() {
         density = getResources().getDisplayMetrics().density;
-        drawColorP = new Paint();
-        drawColorP.setAntiAlias(true);
+        drawColorPaint = new Paint();
+        drawColorPaint.setAntiAlias(true);
         setOnTouchListener(this);
     }
 
     @Override
     public void setRoundTemplate(RoundTemplate r) {
         super.setRoundTemplate(r);
-        mCircle = new Circle(density, r.target);
+        circle = new Circle(density, r.target);
     }
 
     @Override
@@ -64,41 +65,41 @@ public class TargetSelectView extends TargetViewBase {
         }
 
         // Erase background
-        drawColorP.setColor(0xffffffff);
-        canvas.drawRect(0, 0, contentWidth, contentHeight, drawColorP);
+        drawColorPaint.setColor(0xffffffff);
+        canvas.drawRect(0, 0, contentWidth, contentHeight, drawColorPaint);
 
         // Draw all possible points in a circular
-        for (int i = -1; i < zoneCount; i++) {
-            Coordinate coordinate = getCircularCoords(i);
-            mCircle.draw(canvas, coordinate.x, coordinate.y, i, i == curZone ? 23 : 17, false, currentArrow,
-                    -1);
+        for (int i = 0; i < selectableZones.size(); i++) {
+            Coordinate coordinate = getCircularCoordinates(i);
+            circle.draw(canvas, coordinate.x, coordinate.y, selectableZones.get(i).zone, i == curZone ? 23 : 17, false, currentArrow, -1);
         }
 
         // Draw all points of this passe in the center
         passeDrawer.draw(canvas);
     }
 
-    private Coordinate getCircularCoords(int zone) {
-        double degree = Math.toRadians(zone * 360.0 / (double) (zoneCount + 1));
-        Coordinate coord = new Coordinate();
-        coord.x = (float) (radius + (Math.cos(degree) * circRadius));
-        coord.y = (float) (radius + (Math.sin(degree) * circRadius));
+    private Coordinate getCircularCoordinates(int zone) {
+        double degree = Math.toRadians(zone * 360.0 / (double) selectableZones.size());
+        Coordinate coordinate = new Coordinate();
+        coordinate.x = (float) (radius + (Math.cos(degree) * circleRadius));
+        coordinate.y = (float) (radius + (Math.sin(degree) * circleRadius));
         float bound = contentHeight - (chinHeight + 15) * density;
-        if (coord.y > bound) {
-            coord.y = bound;
+        if (coordinate.y > bound) {
+            coordinate.y = bound;
         }
-        return coord;
+        return coordinate;
     }
 
     @Override
     protected Coordinate initAnimationPositions(int i) {
-        return getCircularCoords(passe.shot[currentArrow].zone);
+        final SelectableZone dummyZone = new SelectableZone(passe.shot[currentArrow].zone, "");
+        return getCircularCoordinates(selectableZones.indexOf(dummyZone));
     }
 
     @Override
     protected void calcSizes() {
         radius = (int) (contentWidth / 2.0);
-        circRadius = radius - 25 * density;
+        circleRadius = radius - 25 * density;
         RectF rect = new RectF();
         rect.left = radius - 35 * density;
         rect.right = radius + 35 * density;
@@ -109,7 +110,7 @@ public class TargetSelectView extends TargetViewBase {
 
     @Override
     protected Shot getShotFromPos(float x, float y) {
-        int rings = target.getModel().getZoneCount();
+        int zones = selectableZones.size();
         Shot s = new Shot(currentArrow);
 
         double xDiff = x - radius;
@@ -118,22 +119,21 @@ public class TargetSelectView extends TargetViewBase {
         float perception_rad = radius - 50 * density;
         // Select current arrow
         if (xDiff * xDiff + yDiff * yDiff > perception_rad * perception_rad) {
-            double degree1 = Math.toDegrees(Math.atan2(-yDiff, xDiff)) - (180.0 / (double) rings);
-            if (degree1 < 0) {
-                degree1 += 360.0;
+            double degree = Math.toDegrees(Math.atan2(-yDiff, xDiff)) - (180.0 / (double) zones);
+            if (degree < 0) {
+                degree += 360.0;
             }
-            s.zone = (int) ((rings + 1) * ((360.0 - degree1) / 360.0));
+            int index = (int) (zones * ((360.0 - degree) / 360.0));
+            s.zone = selectableZones.get(index).zone;
         }
 
         if (s.zone == Shot.NOTHING_SELECTED) {
             // When nothing is selected do nothing
             return null;
-        } else if (s.zone >= rings) {
-            // Correct points_zone
-            s.zone = Shot.MISS;
         }
-        s.x = targetDrawable.model.getXFromZone(s.zone);
-        s.y = 0f;
+        final Coordinate coordinate = targetModel.getCoordinateFromZone(s.zone);
+        s.x = coordinate.x;
+        s.y = coordinate.y;
         return s;
     }
 

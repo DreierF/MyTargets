@@ -33,7 +33,7 @@
 
         <activity android:name="android.support.wearable.activity.ConfirmationActivity" />
 
-        <service android:name=".WearableListener" android:exported="false">
+        <service android:name=".WearableListener">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
                 <data

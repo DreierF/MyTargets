@@ -6,6 +6,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.List;
+
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.RoundTemplate;
@@ -13,6 +15,7 @@ import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
+import de.dreier.mytargets.shared.targets.TargetModelBase.SelectableZone;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
@@ -36,12 +39,12 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected float curAnimationProgress;
     protected boolean mZoneSelectionMode = true;
     protected float density;
-    protected int zoneCount;
     protected float outFromX;
     protected float outFromY;
     protected TargetDrawable targetDrawable;
     protected Target target;
     protected TargetModelBase targetModel;
+    protected List<SelectableZone> selectableZones;
 
     public TargetViewBase(Context context) {
         super(context);
@@ -75,6 +78,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         lastSetArrow = -1;
         passe = new Passe(round.arrowsPerPasse);
         passeDrawer.setPasse(passe);
+        selectableZones = target.getSelectableZoneList(currentArrow);
         animateToZoomSpot();
         invalidate();
     }
@@ -84,8 +88,8 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         target = r.target;
         targetModel = r.target.getModel();
         targetDrawable = r.target.getDrawable();
-        zoneCount = targetModel.getZoneCount();
         passeDrawer.init(this, density, r.target);
+        selectableZones = target.getSelectableZoneList(currentArrow);
         reset();
     }
 
@@ -144,6 +148,11 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     protected void onArrowChanged(final int i) {
         animateCircle(i);
+
+        if (targetModel.dependsOnArrowIndex()) {
+            selectableZones = target.getSelectableZoneList(currentArrow);
+        }
+
         animateFromZoomSpot();
 
         if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {

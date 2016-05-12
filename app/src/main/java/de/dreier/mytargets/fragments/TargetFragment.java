@@ -112,11 +112,6 @@ public class TargetFragment extends SelectItemFragment<Target>
                 android.R.layout.simple_spinner_item, styles);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         scoringStyleSpinner.setAdapter(spinnerAdapter);
-        if (styles.size() > 1) {
-            scoringStyleSpinner.setVisibility(View.VISIBLE);
-        } else {
-            scoringStyleSpinner.setVisibility(View.GONE);
-        }
         scoringStyleSpinner.setSelection(style < styles.size() ? style : 0, false);
 
 

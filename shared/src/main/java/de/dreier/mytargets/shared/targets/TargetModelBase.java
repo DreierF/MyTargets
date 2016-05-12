@@ -147,7 +147,7 @@ public class TargetModelBase implements IIdProvider {
      * @param zone Zone to get coordinate for
      * @return an x coordinate between 0 and 1 relative to the middle of the target face.
      */
-    public float getXFromZone(int zone) {
+    private float getXFromZone(int zone) {
         int zones = this.zones.length;
         if (zone < 0) {
             return (zones * 2 + 1) / (float) (zones * 2);
