@@ -4,14 +4,11 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 
-import org.parceler.Parcel;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
 
-@Parcel
 public class Arrow implements IImageProvider, IIdSettable {
     public long id;
     public String name;

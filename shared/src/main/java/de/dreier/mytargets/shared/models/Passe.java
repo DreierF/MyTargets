@@ -1,19 +1,9 @@
 package de.dreier.mytargets.shared.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import org.parceler.Parcels;
-
 import java.util.Arrays;
 import java.util.List;
 
-import de.dreier.mytargets.shared.utils.ParcelableUtil;
-
-@org.parceler.Parcel
-public class Passe implements IIdSettable, Parcelable {
-    public static final ParcelableUtil.Creator<Passe> CREATOR
-            = new ParcelableUtil.Creator<>(Passe.class);
+public class Passe implements IIdSettable {
 
     protected long id;
     public int index;
@@ -38,16 +28,6 @@ public class Passe implements IIdSettable, Parcelable {
 
     public List<Shot> shotList() {
         return Arrays.asList(shot);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeParcelable(Parcels.wrap(this), flags);
     }
 
     public void sort() {

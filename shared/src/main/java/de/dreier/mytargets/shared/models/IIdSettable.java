@@ -1,5 +1,7 @@
 package de.dreier.mytargets.shared.models;
 
-public interface IIdSettable extends IIdProvider {
+import java.io.Serializable;
+
+public interface IIdSettable extends IIdProvider, Serializable {
     void setId(long id);
 }

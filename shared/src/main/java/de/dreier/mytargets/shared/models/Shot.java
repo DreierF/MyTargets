@@ -2,9 +2,6 @@ package de.dreier.mytargets.shared.models;
 
 import android.support.annotation.NonNull;
 
-import org.parceler.Parcel;
-
-@Parcel
 public class Shot implements IIdSettable, Comparable<Shot> {
     public static final int NOTHING_SELECTED = -2;
     public int zone = NOTHING_SELECTED;

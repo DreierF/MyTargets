@@ -5,13 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 
-import org.parceler.Parcel;
-
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
 
-@Parcel
 public class Bow implements IImageProvider, IIdSettable {
     public long id;
     public String name;

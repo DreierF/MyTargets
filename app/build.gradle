@@ -94,7 +94,8 @@ dependencies {
     compile 'com.github.hotchemi:permissionsdispatcher:2.1.2'
     apt 'com.github.hotchemi:permissionsdispatcher-processor:2.1.2'
 
-    apt 'org.parceler:parceler:1.1.1'
+    compile 'org.parceler:parceler-api:1.1.2'
+    apt 'org.parceler:parceler:1.1.2'
 
     compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'
 

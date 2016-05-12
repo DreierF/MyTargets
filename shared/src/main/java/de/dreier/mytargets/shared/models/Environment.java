@@ -10,11 +10,8 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
-import org.parceler.Parcel;
-
 import de.dreier.mytargets.shared.R;
 
-@Parcel
 public class Environment implements IImageProvider, IDetailProvider {
     public EWeather weather;
     public int windSpeed;

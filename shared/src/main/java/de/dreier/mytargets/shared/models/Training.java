@@ -1,10 +1,7 @@
 package de.dreier.mytargets.shared.models;
 
-import org.parceler.Parcel;
-
 import java.util.Date;
 
-@Parcel
 public class Training implements IIdSettable {
     protected long id;
     public String title = "";

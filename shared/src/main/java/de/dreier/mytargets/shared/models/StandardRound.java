@@ -9,8 +9,6 @@ package de.dreier.mytargets.shared.models;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
-import org.parceler.Parcel;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +16,6 @@ import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.targets.CombinedSpot;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 
-@Parcel
 public class StandardRound implements IIdSettable, IImageProvider, IDetailProvider {
 
     public long id;

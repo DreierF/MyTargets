@@ -9,11 +9,8 @@ package de.dreier.mytargets.shared.models;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.parceler.Parcel;
-
 import de.dreier.mytargets.shared.R;
 
-@Parcel
 public class Dimension implements IIdSettable, Comparable<Distance> {
     public static final String METER = "m";
     public static final String CENTIMETER = "cm";

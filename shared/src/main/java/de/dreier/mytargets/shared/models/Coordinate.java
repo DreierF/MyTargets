@@ -1,16 +1,8 @@
 package de.dreier.mytargets.shared.models;
 
-import android.os.Parcelable;
+import java.io.Serializable;
 
-import org.parceler.Parcel;
-import org.parceler.Parcels;
-
-import de.dreier.mytargets.shared.utils.ParcelableUtil;
-
-@Parcel
-public class Coordinate implements Parcelable {
-    public static final Parcelable.Creator<Coordinate> CREATOR
-            = new ParcelableUtil.Creator<>(Coordinate.class);
+public class Coordinate implements Serializable {
 
     public float x;
     public float y;
@@ -24,16 +16,6 @@ public class Coordinate implements Parcelable {
     }
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(android.os.Parcel parcel, int flags) {
-        parcel.writeParcelable(Parcels.wrap(this), flags);
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -41,7 +23,6 @@ public class Coordinate implements Parcelable {
         Coordinate that = (Coordinate) o;
 
         return Float.compare(that.x, x) == 0 && Float.compare(that.y, y) == 0;
-
     }
 
     @Override

@@ -6,9 +6,6 @@
  */
 package de.dreier.mytargets.shared.models;
 
-import org.parceler.Parcel;
-
-@Parcel
 public class SightSetting implements IIdSettable {
     public long bowId;
     public Distance distance = new Distance(18, Dimension.METER);

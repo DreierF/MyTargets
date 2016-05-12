@@ -3,13 +3,10 @@ package de.dreier.mytargets.shared.models;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
-import org.parceler.Parcel;
-
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
 
-@Parcel
 public class Target implements IIdProvider, IImageProvider, IDetailProvider {
     public int id;
     public int scoringStyle;

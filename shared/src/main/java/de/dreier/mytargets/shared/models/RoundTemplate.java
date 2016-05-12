@@ -1,8 +1,5 @@
 package de.dreier.mytargets.shared.models;
 
-import org.parceler.Parcel;
-
-@Parcel
 public class RoundTemplate implements IIdSettable {
     public long standardRound;
     public int index;

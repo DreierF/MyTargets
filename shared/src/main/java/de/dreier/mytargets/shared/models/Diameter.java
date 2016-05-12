@@ -8,11 +8,8 @@ package de.dreier.mytargets.shared.models;
 
 import android.content.Context;
 
-import org.parceler.Parcel;
-
 import de.dreier.mytargets.shared.R;
 
-@Parcel
 public class Diameter extends Dimension {
     public static final Diameter MINI = new Diameter(-6, "");
     public static final Diameter SMALL = new Diameter(-5, "");
