@@ -202,7 +202,7 @@ public class TargetModelBase implements IIdProvider {
     }
 
     public int getMaxPoints(int scoringStyle) {
-        return Stream.range(0, zonePoints.length)
+        return Stream.range(0, zonePoints[scoringStyle].length)
                 .map(i -> getZonePoints(scoringStyle, i))
                 .max(Integer::compareTo).orElse(0);
     }

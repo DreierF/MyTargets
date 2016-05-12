@@ -6,22 +6,61 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 
+import org.parceler.ParcelClass;
+import org.parceler.ParcelClasses;
 import org.parceler.Parcels;
 
-import java.io.IOException;
-
+import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.shared.models.ArrowNumber;
+import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.Coordinate;
+import de.dreier.mytargets.shared.models.Diameter;
+import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.NotificationInfo;
+import de.dreier.mytargets.shared.models.Passe;
+import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.RoundTemplate;
+import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.SightSetting;
+import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.WearableUtils;
+import de.dreier.mytargets.shared.models.NotificationInfo$$Parcelable;
 
+@ParcelClasses({
+        @ParcelClass(Arrow.class),
+        @ParcelClass(ArrowNumber.class),
+        @ParcelClass(Bow.class),
+        @ParcelClass(Coordinate.class),
+        @ParcelClass(Diameter.class),
+        @ParcelClass(Dimension.class),
+        @ParcelClass(Distance.class),
+        @ParcelClass(Environment.class),
+        @ParcelClass(Passe.class),
+        @ParcelClass(Round.class),
+        @ParcelClass(RoundTemplate.class),
+        @ParcelClass(Shot.class),
+        @ParcelClass(SightSetting.class),
+        @ParcelClass(StandardRound.class),
+        @ParcelClass(NotificationInfo.class),
+        @ParcelClass(Target.class),
+        @ParcelClass(Training.class)
+})
 public class WearableListener extends WearableListenerService {
 
-    private static final int NOTIFICATION_ID = 1;
     public static final String TRAINING_STARTED = "training_started";
+    private static final int NOTIFICATION_ID = 1;
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
@@ -33,26 +72,25 @@ public class WearableListener extends WearableListenerService {
         Log.d("listener", messageEvent.getPath());
         if (messageEvent.getPath().equals(WearableUtils.STARTED_ROUND)) {
             if (data.length != 0) {
-                try {
-                    NotificationInfo info = WearableUtils.deserializeToInfo(data);
-                    showNotification(info);
+                NotificationInfo info = getNotificationInfo(data);
+                showNotification(info);
+                if (info != null) {
                     Intent intent = new Intent(TRAINING_STARTED);
                     intent.putExtra(MainActivity.EXTRA_ROUND, Parcels.wrap(info.round));
-                    sendBroadcast(intent);
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
                 }
             }
         } else if (messageEvent.getPath().equals(WearableUtils.UPDATE_ROUND)) {
-            try {
-                NotificationInfo info = WearableUtils.deserializeToInfo(data);
-                showNotification(info);
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            NotificationInfo info = getNotificationInfo(data);
+            showNotification(info);
         } else if (messageEvent.getPath().equals(WearableUtils.STOPPED_ROUND)) {
             cancelNotification();
         }
+    }
+
+    @Nullable
+    private NotificationInfo getNotificationInfo(byte[] data) {
+        return Parcels.unwrap(ParcelableUtil.unmarshall(data, NotificationInfo$$Parcelable.CREATOR));
     }
 
     void showNotification(NotificationInfo info) {
@@ -67,8 +105,8 @@ public class WearableListener extends WearableListenerService {
         Notification page = new Notification.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .extend(new Notification.WearableExtender()
-                                .setCustomSizePreset(Notification.WearableExtender.SIZE_FULL_SCREEN)
-                                .setDisplayIntent(pendingIntent))
+                        .setCustomSizePreset(Notification.WearableExtender.SIZE_FULL_SCREEN)
+                        .setDisplayIntent(pendingIntent))
                 .build();
 
         // Create the ongoing notification

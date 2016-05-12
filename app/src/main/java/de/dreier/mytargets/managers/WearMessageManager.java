@@ -9,6 +9,7 @@ package de.dreier.mytargets.managers;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -19,13 +20,16 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
-import java.io.IOException;
+import org.parceler.Parcels;
+
 import java.util.Collection;
 import java.util.HashSet;
 
 import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.Passe;
+import de.dreier.mytargets.shared.models.Passe$$Parcelable;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
+import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.WearableUtils;
 
 public class WearMessageManager
@@ -60,7 +64,8 @@ public class WearMessageManager
             Log.d(TAG, "Connected to Google Api Service");
         }
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
-        sendMessageStart(info);
+        sendMessage(info, WearableUtils.STARTED_ROUND);
+
     }
 
     private Collection<String> getNodes() {
@@ -73,28 +78,16 @@ public class WearMessageManager
         return results;
     }
 
-    private void sendMessageStart(NotificationInfo info) {
+    private void sendMessage(NotificationInfo info, String path) {
         // Serialize bundle to byte array
-        try {
-            final byte[] data = WearableUtils.serialize(info);
-            new Thread(() -> {
-                sendMessage(WearableUtils.STARTED_ROUND, data);
-            }).start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(info));
+        new Thread(() -> {
+            sendMessage(path, data);
+        }).start();
     }
 
     public void sendMessageUpdate(NotificationInfo info) {
-        // Serialize info to byte array
-        try {
-            final byte[] data = WearableUtils.serialize(info);
-            new Thread(() -> {
-                sendMessage(WearableUtils.UPDATE_ROUND, data);
-            }).start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        sendMessage(info, WearableUtils.UPDATE_ROUND);
     }
 
     private void sendMessage(String path, byte[] data) {
@@ -117,12 +110,7 @@ public class WearMessageManager
     public void onMessageReceived(MessageEvent messageEvent) {
         // Transform byte[] to Bundle
         byte[] data = messageEvent.getData();
-        Passe p = null;
-        try {
-            p = WearableUtils.deserializeToPasse(data);
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        Passe p = Parcels.unwrap(ParcelableUtil.unmarshall(data, Passe$$Parcelable.CREATOR));
 
         if (messageEvent.getPath().equals(WearableUtils.FINISHED_INPUT)) {
             mListener.onTargetSet(p, true);
@@ -130,7 +118,7 @@ public class WearMessageManager
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 

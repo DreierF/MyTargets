@@ -1,3 +1,6 @@
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
+
 # Ignore duplicate classes in legacy android's http stuff
 -dontnote org.apache.http.**
 -dontnote android.net.http.**

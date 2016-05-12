@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.activity.ConfirmationActivity;
 import android.support.wearable.view.DelayedConfirmationView;
 import android.support.wearable.view.WatchViewStub;
@@ -21,13 +22,13 @@ import com.google.android.gms.wearable.Wearable;
 
 import org.parceler.Parcels;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
+import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.WearableUtils;
 
 public class MainActivity extends Activity implements OnTargetSetListener,
@@ -70,13 +71,13 @@ public class MainActivity extends Activity implements OnTargetSetListener,
         stub.setOnLayoutInflatedListener(this);
 
         final IntentFilter intentFilter = new IntentFilter(WearableListener.TRAINING_STARTED);
-        registerReceiver(receiver, intentFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     @Override
@@ -148,16 +149,9 @@ public class MainActivity extends Activity implements OnTargetSetListener,
     }
 
     void sendMessage(Passe p) {
-        // Serialize bundle to byte array
-        byte[] data = new byte[0];
-        try {
-            data = WearableUtils.serialize(p);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        final byte[] finalData = data;
+        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(p));
         new Thread(() -> {
-            sendMessage(WearableUtils.FINISHED_INPUT, finalData);
+            sendMessage(WearableUtils.FINISHED_INPUT, data);
         }).start();
     }
 
