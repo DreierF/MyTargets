@@ -70,6 +70,7 @@ public class Locator implements LocationListener {
         }
     }
 
+    @SuppressWarnings("MissingPermission")
     private void requestUpdates(String provider) {
         if (this.locationManager.isProviderEnabled(provider)) {
             if (provider.contentEquals(LocationManager.NETWORK_PROVIDER)
@@ -89,11 +90,13 @@ public class Locator implements LocationListener {
         }
     }
 
+    @SuppressWarnings("MissingPermission")
     public void cancel() {
         Log.d(LOG_TAG, "Locating canceled.");
         locationManager.removeUpdates(this);
     }
 
+    @SuppressWarnings("MissingPermission")
     @Override
     public void onLocationChanged(Location location) {
         Log.d(LOG_TAG, "Location found : " + location.getLatitude() + ", " + location.getLongitude() + (location.hasAccuracy() ? " : +- " + location.getAccuracy() + " meters" : ""));
@@ -101,6 +104,7 @@ public class Locator implements LocationListener {
         callback.onLocationFound(location);
     }
 
+    @SuppressWarnings("MissingPermission")
     @Override
     public void onProviderDisabled(String provider) {
         Log.d(LOG_TAG, "Provider disabled : " + provider);

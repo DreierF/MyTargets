@@ -74,10 +74,4 @@ public class RoundedTextDrawable extends Drawable {
         mPaint.setFilterBitmap(filter);
         invalidateSelf();
     }
-
-    @Override
-    public void setDither(boolean dither) {
-        mPaint.setDither(dither);
-        invalidateSelf();
-    }
 }

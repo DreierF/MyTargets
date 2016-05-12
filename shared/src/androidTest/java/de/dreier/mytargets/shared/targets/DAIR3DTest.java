@@ -32,7 +32,7 @@ public class DAIR3DTest {
         Coordinate coordinate = target.getCoordinateFromZone(zone);
         final float x = 500f + coordinate.x * 500f;
         final float y = 500f + coordinate.y * 500f;
-        Assert.assertEquals("Calculated x (" + x + ", " + y + ") for zone " + zone + " is not in zone " + zone, zone, target.getZoneFromPoint(x, y));
+        Assert.assertEquals("Calculated position (" + x + ", " + y + ") is not in zone " + zone, zone, target.getZoneFromPoint(x, y));
     }
 
     @Test
