@@ -20,6 +20,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -77,6 +78,12 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
     CheckBox numberArrows;
     @Bind(R.id.timer)
     CheckBox timer;
+
+    @Bind(R.id.scoresOnly)
+    CheckBox scoresOnly;
+    @Bind(R.id.scoresOnlyDescription)
+    TextView scoresOnlyDescription;
+
     private int trainingType = 0;
     private Date date = new Date();
 
@@ -108,6 +115,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
             timer.setChecked(prefs.getBoolean("timer", false));
             indoor.setChecked(prefs.getBoolean("indoor", false));
             outdoor.setChecked(!prefs.getBoolean("indoor", false));
+            scoresOnly.setChecked(prefs.getBoolean("scores_only", false));
             environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
             loadRoundDefaultValues();
         } else {
@@ -121,6 +129,9 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
             environment.setItem(train.environment);
             setTrainingDate();
             notEditable.setVisibility(View.GONE);
+            scoresOnly.setVisibility(View.GONE);
+            scoresOnlyDescription.setVisibility(View.GONE);
+
         }
         standardRoundSpinner.setOnActivityResultContext(this);
         arrow.setOnActivityResultContext(this);
@@ -202,6 +213,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
             }
             new StandardRoundDataSource(getContext()).update(standardRound);
             training.standardRoundId = standardRound.getId();
+            training.exact = !scoresOnly.isChecked();
 
             trainingDataSource.update(training);
             long roundId = createRoundsFromTemplate(standardRound, training).get(0).getId();

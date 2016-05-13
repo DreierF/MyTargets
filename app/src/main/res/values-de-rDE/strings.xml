@@ -229,13 +229,11 @@
   <string name="unit_lbs">lbs</string>
   <string name="about">Über</string>
   <string name="general">Allgemein</string>
-  <string name="license_epl_name">Eclipse Public License - v 1.0</string>
-  <string name="license_epl_url">https://www.eclipse.org/org/documents/epl-v10.php</string>
   <string name="contribute">Beitragen</string>
   <string name="connect">Verbinden</string>
   <string name="special_thanks_to">Besonderen Dank an</string>
-  <string name="all_translators">Alle diejenigen Leute, die halfen, die App zu übersetzen!</string>
-  <string name="all_beta_testers">Alle, die sich Mitglieder der Beta Tester Gruppe, die damit dazu beitragen die App kontinuierlich zu verbessern.</string>
+  <string name="all_translators">Alle Leute, die dabei geholfen haben, die App zu übersetzen!</string>
+  <string name="all_beta_testers">Alle, die als Mitglieder der Beta Tester Gruppe dazu beitragen die App kontinuierlich zu verbessern.</string>
   <string name="test_beta">Die neueste Betaversion testen</string>
   <string name="join_on_google_plus">Google+-Seite besuchen</string>
   <string name="share_with_friends">Mit Ihren Freunden teilen</string>
@@ -243,4 +241,6 @@
   <string name="donate_via_paypal">Spenden via PayPal</string>
   <string name="translate_crowdin">Auf Crowdin übersetzen</string>
   <string name="network_linkedin">Auf LinkedIn vernetzen</string>
+  <string name="enter_scores_only_description">Lässt dich nur die erzielten Ringe erfassen und nicht die exakte Pfeil Position. Diese Option sollte verwendet werden wenn die Ergebnisse über die Smartwatch eingeben werden sollen oder historische Daten eingegeben werden.</string>
+  <string name="enter_scores_only">Nur Ringe erfassen</string>
 </resources>

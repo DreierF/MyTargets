@@ -3,23 +3,23 @@
 <resources>
   <!-- APP NAME - NOT TRANSLATABLE -->
   <!-- General -->
-  <string name="preferences">Options</string>
-  <string name="prev">Previous</string>
-  <string name="next">Next</string>
-  <string name="save">Save</string>
-  <string name="custom">Custom</string>
-  <string name="training">Training</string>
-  <string name="bow">Bow</string>
-  <string name="arrow">Arrow</string>
-  <string name="round">Round</string>
-  <string name="points">Points</string>
-  <string name="passe">End</string>
+  <string name="preferences">Inställningar</string>
+  <string name="prev">Tillbaka</string>
+  <string name="next">Nästa</string>
+  <string name="save">Spara</string>
+  <string name="custom">Anpassad</string>
+  <string name="training">Träning</string>
+  <string name="bow">Pilbåge</string>
+  <string name="arrow">Pil</string>
+  <string name="round">Runda</string>
+  <string name="points">Poäng</string>
+  <string name="passe">Avsluta</string>
   <string name="passe_n">End %d</string>
   <!-- Overview -->
   <string name="new_training">New training</string>
-  <string name="new_bow">New bow</string>
-  <string name="new_arrow">New arrow</string>
-  <string name="new_round">New round</string>
+  <string name="new_bow">Ny pilbåge</string>
+  <string name="new_arrow">Ny pil</string>
+  <string name="new_round">Ny runda</string>
   <plurals name="training_selected">
     <item quantity="one">%d training selected</item>
     <item quantity="other">%d trainings selected</item>
@@ -36,83 +36,83 @@
     <item quantity="one">%d end selected</item>
     <item quantity="other">%d ends selected</item>
   </plurals>
-  <string name="edit">Edit</string>
-  <string name="delete">Delete</string>
-  <string name="statistic">Statistic</string>
+  <string name="edit">Redigera</string>
+  <string name="delete">Radera</string>
+  <string name="statistic">Statistik</string>
   <!-- Share -->
-  <string name="share">Share</string>
+  <string name="share">Dela</string>
   <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$sThis makes a total of %2$d out of %3$d rings.</string>
   <string name="d_times_s">%1$d times %2$s\n</string>
   <string name="text">Text</string>
-  <string name="dispersion_pattern">Dispersion pattern</string>
-  <string name="sharing_failed">Sharing failed!</string>
+  <string name="dispersion_pattern">Spridning mönster</string>
+  <string name="sharing_failed">Delning misslykats!</string>
   <!-- Export -->
-  <string name="send_exported">Send exported data</string>
-  <string name="exporting_failed">Exporting failed!</string>
+  <string name="send_exported">Skicka exporterade data</string>
+  <string name="exporting_failed">Exportering misslyckad!</string>
   <!-- New bow -->
   <string name="add_bow">Add bow</string>
-  <string name="name">Name</string>
-  <string name="bow_type">Bow type</string>
-  <string name="recurve_bow">Recurve bow</string>
-  <string name="compound_bow">Compound bow</string>
-  <string name="bare_bow">Bare bow</string>
-  <string name="long_bow">Long bow</string>
-  <string name="horse_bow">Horse bow</string>
+  <string name="name">Namn</string>
+  <string name="bow_type">Pilbågs typ</string>
+  <string name="recurve_bow">Recurve pilbåge</string>
+  <string name="compound_bow">Compound pilbåge</string>
+  <string name="bare_bow">Barebow</string>
+  <string name="long_bow">Långbåge</string>
+  <string name="horse_bow">Ryttarbåge</string>
   <string name="yumi">Yumi</string>
-  <string name="properties">Properties</string>
-  <string name="brand">Brand</string>
-  <string name="size">Size</string>
-  <string name="description">Description</string>
+  <string name="properties">Egenskaper</string>
+  <string name="brand">Märke</string>
+  <string name="size">Storlek</string>
+  <string name="description">Beskrivning</string>
   <string name="height">Brace height</string>
   <string name="tiller">Tiller</string>
-  <string name="sight_settings">Sight settings</string>
-  <string name="add">Add</string>
-  <string name="select_picture">Select a picture</string>
-  <string name="take_picture">Take a picture</string>
-  <string name="pick_from_gallery">Select a picture from gallery</string>
+  <string name="sight_settings">Inställningar sikte</string>
+  <string name="add">Lägg tilll</string>
+  <string name="select_picture">Välj en bild</string>
+  <string name="take_picture">Ta en bild</string>
+  <string name="pick_from_gallery">Välj en bild från galleriet</string>
   <!-- New arrow -->
   <string name="add_arrow">Add arrow</string>
-  <string name="length">Length</string>
+  <string name="length">Längd</string>
   <string name="spine">Spine</string>
-  <string name="weight">Weight</string>
+  <string name="weight">Vikt</string>
   <string name="vanes">Vanes</string>
   <string name="nock">Nock</string>
   <string name="material">Material</string>
   <!-- New round -->
-  <string name="title">Title</string>
-  <string name="outdoor">Outdoor</string>
-  <string name="indoor">Indoor</string>
-  <string name="distance">Distance</string>
+  <string name="title">Titel</string>
+  <string name="outdoor">Utomhus</string>
+  <string name="indoor">Inomhus</string>
+  <string name="distance">Avstånd</string>
   <string name="format">Format</string>
   <!-- x ends of y arrows -->
   <plurals name="passe">
-    <item quantity="one">%d end</item>
-    <item quantity="other">%d ends</item>
+    <item quantity="one">%d slut</item>
+    <item quantity="other">%d slut</item>
   </plurals>
   <string name="with">of</string>
   <plurals name="arrow">
-    <item quantity="one">%d arrow</item>
-    <item quantity="other">%d arrows</item>
+    <item quantity="one">%d pil</item>
+    <item quantity="other">%d pilar</item>
   </plurals>
-  <string name="target_face">Target face</string>
+  <string name="target_face">Måltavla</string>
   <!-- Scoreboard -->
-  <string name="scoreboard">Scoreboard</string>
-  <string name="arrows">Arrows</string>
+  <string name="scoreboard">Resultattavla</string>
+  <string name="arrows">Pilar</string>
   <string name="sum">Sum</string>
   <string name="carry">Carry</string>
-  <string name="action_print">Print</string>
-  <string name="average">Average</string>
+  <string name="action_print">Skriv ut</string>
+  <string name="average">Medelvärde</string>
   <!-- Input mode -->
-  <string name="show_all">Show all impacts</string>
-  <string name="comment">Comment</string>
+  <string name="show_all">Visa alla träffpunkter</string>
+  <string name="comment">Kommentar</string>
   <!-- Statistics -->
-  <string name="all_trainings">All trainings</string>
-  <string name="entire_training">Entire training</string>
-  <string name="current_round">Current round</string>
+  <string name="all_trainings">Alla träningar</string>
+  <string name="entire_training">Hela träningen</string>
+  <string name="current_round">Nuvarande runda</string>
   <!-- Import/Backup -->
-  <string name="select_a_file">Select a file</string>
+  <string name="select_a_file">Välj fil</string>
   <string name="dir_not_created">Directory could not be created!</string>
-  <string name="backup_failed">Backup failed!</string>
+  <string name="backup_failed">Säkerhetskopieringen misslyckades!</string>
   <string name="import_successful">Import successful!</string>
   <string name="import_failed">Import failed!</string>
   <string name="file_not_found">File not found!</string>
@@ -151,51 +151,51 @@
   <string name="licences_summary">Legal notes to licences</string>
   <string name="version">Version %s</string>
   <plurals name="second">
-    <item quantity="one">%d second</item>
-    <item quantity="other">%d seconds</item>
+    <item quantity="one">%d sekund</item>
+    <item quantity="other">%d sekunder</item>
   </plurals>
   <string name="info">Information</string>
   <string name="data">Data</string>
-  <string name="create_backup_on_sd">Creates a backup on sd card</string>
+  <string name="create_backup_on_sd">Skapar en säkerhetskopia på sd-kort</string>
   <string name="restore_backup">Restores a backup</string>
-  <string name="weather">Weather</string>
+  <string name="weather">Väder</string>
   <string name="environment">Environment</string>
-  <string name="wind_speed">Wind speed</string>
-  <string name="wind_direction">Wind direction</string>
+  <string name="wind_speed">Vindhastighet</string>
+  <string name="wind_direction">Vindriktning</string>
   <string name="sight_setting_removed">Sight setting deleted!</string>
-  <string name="metric">Metric</string>
+  <string name="metric">Metrisk</string>
   <string name="imperial">Imperial</string>
-  <string name="undo">Undo</string>
-  <string name="standard_rounds">Standard rounds</string>
+  <string name="undo">Ångra</string>
+  <string name="standard_rounds">Standard rundor</string>
   <string name="expand_collapse">Expand/Collapse</string>
-  <string name="new_round_template">New template</string>
-  <string name="arrow_numbers">Arrow numbers</string>
-  <string name="round_removed">Round deleted!</string>
+  <string name="new_round_template">Ny mall</string>
+  <string name="arrow_numbers">Pil nummer</string>
+  <string name="round_removed">Runda raderad!</string>
   <string name="custom_round">Custom round</string>
   <string name="filter">Filter</string>
-  <string name="club">Club</string>
-  <string name="target">Target</string>
-  <string name="field">Field</string>
+  <string name="club">Klubb</string>
+  <string name="target">Mål</string>
+  <string name="field">Fältet</string>
   <string name="three_d">3D</string>
-  <string name="standard_round">Standard round</string>
-  <string name="use_as_template">Use as template?</string>
+  <string name="standard_round">Standard runda</string>
+  <string name="use_as_template">Använd en mall?</string>
   <string name="create_copy">This is a standard round!\nDo you want to create a copy in order to edit it?</string>
   <string name="not_matches_sheme">Input does not match the expected format like 1,3,5</string>
   <string name="arrow_numbers_desc">Enter all arrow number that you use for shooting e.g. 1,2,5,6,7</string>
   <string name="practice">Practice</string>
-  <string name="edit_training">Edit Training</string>
-  <string name="edit_standard_round">Edit Standard Round</string>
+  <string name="edit_training">Redigera träning</string>
+  <string name="edit_standard_round">Redigera Standard Runda</string>
   <plurals name="arrow_deleted">
-    <item quantity="one">%d arrow deleted</item>
-    <item quantity="other">%d arrows deleted</item>
+    <item quantity="one">%d pil raderad</item>
+    <item quantity="other">%d pilar raderade</item>
   </plurals>
   <plurals name="bow_deleted">
-    <item quantity="one">%d bow deleted</item>
-    <item quantity="other">%d bows deleted</item>
+    <item quantity="one">%d pilbåge raderad</item>
+    <item quantity="other">%d pilbågar raderade</item>
   </plurals>
   <plurals name="training_deleted">
-    <item quantity="one">%d training deleted</item>
-    <item quantity="other">%d trainings deleted</item>
+    <item quantity="one">%d träning raderad</item>
+    <item quantity="other">%d träningar raderade</item>
   </plurals>
   <plurals name="passe_deleted">
     <item quantity="one">%d end deleted</item>
@@ -205,8 +205,8 @@
     <item quantity="one">Round %d</item>
     <item quantity="other">Round %d</item>
   </plurals>
-  <string name="date">Date</string>
-  <string name="edit_round">Edit round</string>
+  <string name="date">Datum</string>
+  <string name="edit_round">Redigera runda</string>
   <string name="draw_weight">Draw weight</string>
   <string name="sight">Sight</string>
   <string name="limbs">Limbs</string>
@@ -229,8 +229,6 @@
   <string name="unit_lbs">lbs</string>
   <string name="about">About</string>
   <string name="general">General</string>
-  <string name="license_epl_name">Eclipse Public License - v 1.0</string>
-  <string name="license_epl_url">https://www.eclipse.org/org/documents/epl-v10.php</string>
   <string name="contribute">Contribute</string>
   <string name="connect">Connect</string>
   <string name="special_thanks_to">Special thanks to</string>
@@ -243,4 +241,6 @@
   <string name="donate_via_paypal">Donate via PayPal</string>
   <string name="translate_crowdin">Translate on Crowdin</string>
   <string name="network_linkedin">Network on LinkedIn</string>
+  <string name="enter_scores_only_description">Lets you only enter the scores not the exact arrow position. Use this option to enter data with your smartwatch or to enter historical data.</string>
+  <string name="enter_scores_only">Enter scores only</string>
 </resources>

@@ -31,6 +31,7 @@ public class TrainingDataSource extends IdProviderDataSource<Training> {
     private static final String WIND_SPEED = "wind_speed";
     private static final String WIND_DIRECTION = "wind_direction";
     private static final String LOCATION = "location";
+    private static final String EXACT = "exact";
 
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " ( " +
@@ -45,7 +46,8 @@ public class TrainingDataSource extends IdProviderDataSource<Training> {
                     BOW + " INTEGER," +
                     ARROW + " INTEGER," +
                     ARROW_NUMBERING + " INTEGER," +
-                    TIME_PER_PASSE + " INTEGER);";
+                    TIME_PER_PASSE + " INTEGER," +
+                    EXACT + " INTEGER);";
 
     public TrainingDataSource(Context context) {
         super(context, TABLE);
@@ -65,6 +67,7 @@ public class TrainingDataSource extends IdProviderDataSource<Training> {
         values.put(WIND_SPEED, training.environment.windSpeed);
         values.put(WIND_DIRECTION, training.environment.windDirection);
         values.put(LOCATION, training.environment.location);
+        values.put(EXACT, training.exact ? 1 : 0);
         return values;
     }
 
@@ -83,6 +86,7 @@ public class TrainingDataSource extends IdProviderDataSource<Training> {
         training.environment.windSpeed = cursor.getInt(startColumnIndex + 9);
         training.environment.windDirection = cursor.getInt(startColumnIndex + 10);
         training.environment.location = cursor.getString(startColumnIndex + 11);
+        training.exact = cursor.getInt(startColumnIndex + 12) == 1;
         return training;
     }
 
@@ -90,7 +94,7 @@ public class TrainingDataSource extends IdProviderDataSource<Training> {
         Cursor cursor = database.rawQuery(
                 "SELECT t._id, t.title, t.datum, t.bow, t.arrow, t.standard_round, " +
                         "t.arrow_numbering, t.time, " +
-                        "t.weather, t.wind_speed, t.wind_direction, t.location " +
+                        "t.weather, t.wind_speed, t.wind_direction, t.location, t.exact " +
                         "FROM TRAINING t " +
                         "LEFT JOIN ROUND r ON t._id = r.training " +
                         "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
@@ -110,7 +114,7 @@ public class TrainingDataSource extends IdProviderDataSource<Training> {
         Cursor cursor = database.rawQuery(
                 "SELECT t._id, t.title, t.datum, t.bow, t.arrow, t.standard_round, " +
                         "t.arrow_numbering, t.time, " +
-                        "t.weather, t.wind_speed, t.wind_direction, t.location " +
+                        "t.weather, t.wind_speed, t.wind_direction, t.location, t.exact " +
                         "FROM TRAINING t " +
                         "LEFT JOIN ROUND r ON t._id = r.training " +
                         "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +

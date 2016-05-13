@@ -229,8 +229,6 @@
   <string name="unit_lbs">lbs</string>
   <string name="about">Om</string>
   <string name="general">Generelt</string>
-  <string name="license_epl_name">Eclipse Public License - v 1.0</string>
-  <string name="license_epl_url">https://www.eclipse.org/org/documents/epl-v10.php</string>
   <string name="contribute">Bidra</string>
   <string name="connect">Logg på</string>
   <string name="special_thanks_to">Spesiell takk til</string>
@@ -243,4 +241,6 @@
   <string name="donate_via_paypal">Doner via PayPal</string>
   <string name="translate_crowdin">Oversett på Crowdin</string>
   <string name="network_linkedin">Nettverk på LinkedIn</string>
+  <string name="enter_scores_only_description">Lets you only enter the scores not the exact arrow position. Use this option to enter data with your smartwatch or to enter historical data.</string>
+  <string name="enter_scores_only">Enter scores only</string>
 </resources>

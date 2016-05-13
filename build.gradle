@@ -33,18 +33,60 @@ allprojects {
     }
 }
 
+task crowdinStringsUpload(group: 'crowdin', type: UploadSourceFileTask) {
+    apiKey = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
+    projectId = project.hasProperty('CROWDIN_PROJECT_ID') ? CROWDIN_PROJECT_ID : System.getenv('CROWDIN_PROJECT_ID')
+    sourceFiles = [
+            ['strings.xml', './app/src/main/res/values/strings.xml'],
+            ['strings-shared.xml', './shared/src/main/res/values/strings.xml'],
+            ['rounds.xml', './shared/src/main/res/values/rounds.xml'],
+            ['target_faces.xml', './shared/src/main/res/values/target_faces.xml'],
+            ['strings-wearable.xml', './wearable/src/main/res/values/strings.xml']]
+}
+
 crowdinDownload {
     apiKey = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
     projectId = project.hasProperty('CROWDIN_PROJECT_ID') ? CROWDIN_PROJECT_ID : System.getenv('CROWDIN_PROJECT_ID')
     destination = "$projectDir"
+}.dependsOn crowdinStringsUpload
+
+import groovyx.net.http.ContentType
+import groovyx.net.http.HTTPBuilder
+import groovyx.net.http.Method
+import org.apache.http.entity.mime.MultipartEntity
+import org.apache.http.entity.mime.content.FileBody
+
+class UploadSourceFileTask extends DefaultTask {
+    def apiKey
+    def projectId
+    def sourceFiles
+
+    @SuppressWarnings(["unchecked", "GrUnresolvedAccess"])
+    @TaskAction
+    def uploadSourceFile() {
+        def updateFilePath = sprintf('http://api.crowdin.net/api/project/%s/update-file?key=%s', [projectId, apiKey])
+
+        def http = new HTTPBuilder(updateFilePath)
+
+        http.handler.failure = { resp, reader ->
+            println "Could not upload file: ${resp.statusLine}"
+            println reader
+            throw new GradleException("Could not upload file: ${resp.statusLine} \r\n " + reader)
+        }
+
+        http.request(Method.POST, ContentType.ANY) { req ->
+            //uri.path = updateFilePath
+            //requestContentType = 'multipart/form-data'
+            MultipartEntity entity = new MultipartEntity()
+            sourceFiles.each { pair ->
+                def file = new File(pair[1])
+                entity.addPart("files[" + pair[0] + "]", new FileBody(file))
+            }
+            req.entity = entity
+
+            response.success = { resp, json ->
+                println "Uploaded ${sourceFiles.size()} files to crowdin"
+            }
+        }
+    }
 }
-
-task crowdinUploadAll(group: "crowdin", dependsOn: ':app:crowdinAppUpload') {}
-
-task crowdinUploadAndDownload(group: "crowdin", dependsOn: 'crowdinUploadAll') {
-    crowdinDownload.execute()
-}
-
-/*afterEvaluate {
-    project(':app').tasks.assembleRelease.dependsOn crowdinUploadAndDownload
-}*/

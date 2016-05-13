@@ -28,7 +28,7 @@
   <string name="front">from front</string>
   <string name="back">from back</string>
   <string name="left">from left</string>
-  <string name="right">from right</string>
+  <string name="right">from left</string>
   <string name="left_front">from front left</string>
   <string name="right_front">from front right</string>
   <string name="left_back">from back left</string>

@@ -13,8 +13,8 @@ public class WAFullTest extends TargetTest<WAFull> {
 
     @Test
     public void testScoringStyle() {
-        Assert.assertEquals(target.getZonePoints(0, 0), 10);
-        Assert.assertEquals(target.getZonePoints(0, 1), 10);
-        Assert.assertEquals(target.getZonePoints(1, 1), 9);
+        Assert.assertEquals(target.getScoringStyle(0).getPoints(0, 0), 10);
+        Assert.assertEquals(target.getScoringStyle(0).getPoints(1, 0), 10);
+        Assert.assertEquals(target.getScoringStyle(1).getPoints(1, 0), 9);
     }
 }

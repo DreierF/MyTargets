@@ -37,7 +37,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected int contentHeight;
     protected OnTargetSetListener setListener = null;
     protected float curAnimationProgress;
-    protected boolean mZoneSelectionMode = true;
+    protected boolean zoneSelectionMode = true;
     protected float density;
     protected float outFromX;
     protected float outFromY;
@@ -124,12 +124,12 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
         // If a valid selection was made save it in the passe
         if (currentArrow < round.arrowsPerPasse &&
-                (passe.shot[currentArrow].zone != shot.zone || !mZoneSelectionMode)) {
+                (passe.shot[currentArrow].zone != shot.zone || !zoneSelectionMode)) {
             passe.shot[currentArrow].zone = shot.zone;
             passe.shot[currentArrow].x = shot.x;
             passe.shot[currentArrow].y = shot.y;
             passeDrawer.setSelection(currentArrow, initAnimationPositions(currentArrow),
-                    mZoneSelectionMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
+                    zoneSelectionMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
             invalidate();
         }
 
@@ -168,7 +168,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         } else {
             nextSel = PasseDrawer.NO_SELECTION;
         }
-        int initialSize = mZoneSelectionMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0;
+        int initialSize = zoneSelectionMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0;
         passeDrawer.animateToSelection(nextSel, pos, initialSize);
         currentArrow = i;
     }

@@ -48,6 +48,10 @@ android {
     }
 }
 
+project.afterEvaluate {
+    assembleRelease.dependsOn(':crowdinDownload')
+}
+
 dependencies {
     compile 'com.google.android.support:wearable:1.1.0'
     compile "com.google.android.gms:play-services-wearable:$playServiceVersion"
@@ -56,56 +60,4 @@ dependencies {
     apt 'org.parceler:parceler:1.1.2'
 
     compile project(':shared')
-}
-
-task crowdinAppUpload(group: 'crowdin', type: UploadSourceFileTask) {
-    apiKey = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
-    projectId = project.hasProperty('CROWDIN_PROJECT_ID') ? CROWDIN_PROJECT_ID : System.getenv('CROWDIN_PROJECT_ID')
-    alias = 'strings-wearable.xml'
-    sourceFile = './wearable/src/main/res/values/strings.xml'
-}
-
-afterEvaluate {
-    preReleaseBuild.dependsOn crowdinAppUpload
-}
-
-import groovyx.net.http.ContentType
-import groovyx.net.http.HTTPBuilder
-import groovyx.net.http.Method
-import org.apache.http.entity.mime.MultipartEntity
-import org.apache.http.entity.mime.content.FileBody
-
-class UploadSourceFileTask extends DefaultTask {
-    def apiKey
-    def projectId
-    def alias
-    def sourceFile
-
-    @SuppressWarnings(["unchecked", "GrUnresolvedAccess"])
-    @TaskAction
-    def uploadSourceFile() {
-
-        def updateFilePath = sprintf('http://api.crowdin.net/api/project/%s/update-file?key=%s', [projectId, apiKey])
-
-        def http = new HTTPBuilder(updateFilePath)
-
-        http.handler.failure = { resp, reader ->
-            println "Could not upload file: ${resp.statusLine}"
-            println reader
-            throw new GradleException("Could not upload file: ${resp.statusLine} \r\n " + reader)
-        }
-
-        http.request(Method.POST, ContentType.ANY) { req ->
-            //uri.path = updateFilePath
-            //requestContentType = 'multipart/form-data'
-            MultipartEntity entity = new MultipartEntity()
-            def file = new File(sourceFile)
-            entity.addPart("files[" + alias + "]", new FileBody(file))
-            req.entity = entity
-
-            response.success = { resp, json ->
-                println file.getName() + " uploaded to crowdin"
-            }
-        }
-    }
 }

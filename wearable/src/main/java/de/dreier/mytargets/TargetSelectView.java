@@ -131,9 +131,6 @@ public class TargetSelectView extends TargetViewBase {
             // When nothing is selected do nothing
             return null;
         }
-        final Coordinate coordinate = targetModel.getCoordinateFromZone(s.zone);
-        s.x = coordinate.x;
-        s.y = coordinate.y;
         return s;
     }
 

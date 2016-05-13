@@ -49,13 +49,13 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     public static final String PASSE_IND = "passe_ind";
     private static final String SHOW_ALL_MODE = "show_all";
 
-    @Bind(R.id.target_view)
-    TargetView target;
+    @Bind(R.id.targetView)
+    TargetView targetView;
 
-    @Bind(R.id.next_button)
+    @Bind(R.id.next)
     Button next;
 
-    @Bind(R.id.prev_button)
+    @Bind(R.id.prev)
     Button prev;
 
     private int curPasse = 0;
@@ -76,7 +76,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         setContentView(R.layout.activity_input);
         ButterKnife.bind(this);
 
-        target.setOnTargetSetListener(this);
+        targetView.setOnTargetSetListener(this);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         RoundDataSource roundDataSource = new RoundDataSource(getApplicationContext());
@@ -95,15 +95,19 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         savedPasses = passeDataSource.getAllByRound(roundId).size();
         mExitOnFinish = savedPasses <= curPasse && standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE;
 
-        target.setRoundTemplate(template);
+        targetView.setRoundTemplate(template);
         if (training.arrowNumbering) {
-            target.setArrowNumbers(new ArrowNumberDataSource(getApplicationContext()).getAll(training.arrow));
+            targetView.setArrowNumbers(new ArrowNumberDataSource(getApplicationContext()).getAll(training.arrow));
         }
         mShowAllMode = prefs.getBoolean(SHOW_ALL_MODE, false);
-        target.showAll(mShowAllMode);
+
+        targetView.showAll(mShowAllMode);
+        targetView.setZoneSelectionMode(!training.exact);
 
         // Send message to wearable app, that we are starting a passe
-        new Thread(this::startWearNotification).start();
+        if (!training.exact) {
+            new Thread(this::startWearNotification).start();
+        }
 
         if (savedInstanceState != null) {
             curPasse = savedInstanceState.getInt("curPasse");
@@ -141,12 +145,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         final MenuItem eye = menu.findItem(R.id.action_show_all);
-        eye.setVisible(!target.getInputMode());
+        eye.setVisible(!targetView.getInputMode());
         eye.setIcon(mShowAllMode ? R.drawable.ic_visibility_white_24dp :
-                        R.drawable.ic_visibility_off_white_24dp);
-        menu.findItem(R.id.action_show_sidebar).setIcon(
-                target.getInputMode() ? R.drawable.ic_album_24dp :
-                        R.drawable.ic_grain_24dp);
+                R.drawable.ic_visibility_off_white_24dp);
         return true;
     }
 
@@ -170,20 +171,20 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         if (passe < savedPasses) {
             Passe p = passeDataSource.get(round.getId(), passe);
             if (p != null) {
-                target.setPasse(p);
+                targetView.setPasse(p);
             } else {
-                target.reset();
+                targetView.reset();
             }
         } else {
             if (passe != curPasse) {
-                target.reset();
+                targetView.reset();
             }
             if (training.timePerPasse > 0) {
                 openTimer();
             }
         }
         ArrayList<Passe> oldOnes = passeDataSource.getAllByTraining(training.getId());
-        target.setOldShoots(oldOnes);
+        targetView.setOldShoots(oldOnes);
         curPasse = passe;
         updatePasse();
     }
@@ -204,13 +205,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         switch (item.getItemId()) {
             case R.id.action_show_all:
                 mShowAllMode = !mShowAllMode;
-                target.showAll(mShowAllMode);
+                targetView.showAll(mShowAllMode);
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 prefs.edit().putBoolean(SHOW_ALL_MODE, mShowAllMode).apply();
-                supportInvalidateOptionsMenu();
-                return true;
-            case R.id.action_show_sidebar:
-                target.switchMode(!target.getInputMode(), true);
                 supportInvalidateOptionsMenu();
                 return true;
             case android.R.id.home:
@@ -257,11 +254,13 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
         if (curPasse >= savedPasses || remote) {
             savedPasses++;
-            manager.sendMessageUpdate(buildInfo());
+            if (manager != null) {
+                manager.sendMessageUpdate(buildInfo());
+            }
             if (remote) {
                 curPasse = savedPasses;
             }
-        } else if (curPasse + 1 == savedPasses) {
+        } else if (curPasse + 1 == savedPasses && manager != null) {
             manager.sendMessageUpdate(buildInfo());
         }
         runOnUiThread(this::updatePasse);

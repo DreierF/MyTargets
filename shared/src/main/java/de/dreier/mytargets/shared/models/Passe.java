@@ -9,7 +9,6 @@ public class Passe implements IIdSettable {
     public int index;
     public long roundId;
     public Shot[] shot;
-    public boolean exact;
 
     public Passe() {
     }

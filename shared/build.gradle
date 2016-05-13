@@ -18,6 +18,10 @@ android {
     }
 }
 
+project.afterEvaluate {
+    assembleRelease.dependsOn(':crowdinDownload')
+}
+
 dependencies {
     compile "com.android.support:support-annotations:$supportLibVersion"
     compile 'com.annimon:stream:1.0.9'

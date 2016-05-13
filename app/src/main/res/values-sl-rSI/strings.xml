@@ -253,8 +253,6 @@
   <string name="unit_lbs">lbs</string>
   <string name="about">About</string>
   <string name="general">General</string>
-  <string name="license_epl_name">Eclipse Public License - v 1.0</string>
-  <string name="license_epl_url">https://www.eclipse.org/org/documents/epl-v10.php</string>
   <string name="contribute">Contribute</string>
   <string name="connect">Connect</string>
   <string name="special_thanks_to">Special thanks to</string>
@@ -267,4 +265,6 @@
   <string name="donate_via_paypal">Donate via PayPal</string>
   <string name="translate_crowdin">Translate on Crowdin</string>
   <string name="network_linkedin">Network on LinkedIn</string>
+  <string name="enter_scores_only_description">Lets you only enter the scores not the exact arrow position. Use this option to enter data with your smartwatch or to enter historical data.</string>
+  <string name="enter_scores_only">Enter scores only</string>
 </resources>

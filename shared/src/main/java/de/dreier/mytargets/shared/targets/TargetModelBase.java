@@ -20,18 +20,15 @@ import static de.dreier.mytargets.shared.utils.Color.BLACK;
 import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
 public class TargetModelBase implements IIdProvider {
+    public boolean isFieldTarget;
     protected long id;
     protected int nameRes;
     protected Zone[] zones;
     protected Diameter[] diameters;
     protected ScoringStyle[] scoringStyles;
-
     protected int faceRadius;
     protected Coordinate[] facePositions;
-
     protected boolean is3DTarget;
-    public boolean isFieldTarget;
-
     protected CenterMark centerMark;
     protected TargetDecoration decoration;
 
@@ -129,6 +126,7 @@ public class TargetModelBase implements IIdProvider {
         return Color.getContrast(getZone(zone).fillColor);
     }
 
+    // TODO Make a dummy miss zone to outsource color stuff
     public int getTextColor(int zone) {
         // Handle Miss-shots
         if (isOutOfRange(zone)) {
@@ -141,34 +139,6 @@ public class TargetModelBase implements IIdProvider {
         return zone < 0 || zone >= getZoneCount();
     }
 
-    /**
-     * Returns an x coordinate that lays inside the given zone
-     *
-     * @param zone Zone to get coordinate for
-     * @return an x coordinate between 0 and 1 relative to the middle of the target face.
-     */
-    private float getXFromZone(int zone) {
-        int zones = this.zones.length;
-        if (zone < 0) {
-            return (zones * 2 + 1) / (float) (zones * 2);
-        } else if (zone == 0) {
-            return (getZone(zone).midpoint.x - 500f) / 500f;
-        } else {
-            float adjacentZone = getRadius(zone - 1);
-            float diff = Math.abs(getRadius(zone) - adjacentZone);
-            return (getRadius(zone - 1) + diff / 2.0f) / 500.0f;
-            //TODO test for non circular targets
-        }
-    }
-
-    public Coordinate getCoordinateFromZone(int zone) {
-        if (!isOutOfRange(zone) && getZone(zone).midpoint.y != 500) {
-            final Coordinate midpoint = getZone(zone).midpoint;
-            return new Coordinate((midpoint.x - 500f) / 500f, (midpoint.y - 500f) / 500f);
-        }
-        return new Coordinate(getXFromZone(zone), 500);
-    }
-
     public int getZoneFromPoint(float ax, float ay) {
         for (int i = 0; i < zones.length; i++) {
             if (getZone(i).isInZone(ax, ay)) {
@@ -178,8 +148,8 @@ public class TargetModelBase implements IIdProvider {
         return Shot.MISS;
     }
 
-    public ArrayList<SelectableZone> getSelectableZoneList(int scoringStyle, int arrow) {
-        ArrayList<SelectableZone> list = new ArrayList<>();
+    public List<SelectableZone> getSelectableZoneList(int scoringStyle, int arrow) {
+        List<SelectableZone> list = new ArrayList<>();
         String last = "";
         for (int i = 0; i < getZoneCount(); i++) {
             String zone = getScoringStyle(scoringStyle).zoneToString(i, arrow);

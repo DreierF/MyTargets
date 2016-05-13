@@ -33,6 +33,7 @@ public class ArrowStatisticDataSource extends DataSourceBase {
                         "AND s.arrow>0 " +
                         "AND a._id=r.template " +
                         "AND t.arrow=n._id " +
+                        "AND t.exact=1 " +
                         "ORDER BY t.arrow, s.arrow", null);
         if (res.moveToFirst()) {
             long lastArrowId = 0, lastArrowNumber = 0;

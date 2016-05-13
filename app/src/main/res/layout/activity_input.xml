@@ -12,9 +12,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true">
 
-        <view
-            android:id="@+id/target_view"
-            class="de.dreier.mytargets.views.TargetView"
+        <de.dreier.mytargets.views.TargetView
+            android:id="@+id/targetView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -37,7 +36,7 @@
         android:showDividers="none">
 
         <Button
-            android:id="@+id/prev_button"
+            android:id="@+id/prev"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -46,7 +45,7 @@
             android:text="@string/prev"/>
 
         <Button
-            android:id="@+id/next_button"
+            android:id="@+id/next"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

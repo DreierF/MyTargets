@@ -25,13 +25,12 @@ import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
 
 public class AboutFragment extends Fragment implements DonateDialogFragment.DonationListener {
-    private static final String DONATE = "donate";
     public static final String URL_GOOGLE_PLUS = "https://plus.google.com/u/0/communities/102686119334423317437";
     public static final String URL_PLAY_STORE = "http://play.google.com/store/apps/details?id=de.dreier.mytargets";
     public static final String URL_PAYPAL = "https://www.paypal.me/floriandreier";
     public static final String URL_CROWDIN = "https://crowdin.com/project/mytargets";
     public static final String URL_LINKEDIN = "https://de.linkedin.com/in/florian-dreier-b056a1113";
-
+    private static final String DONATE = "donate";
     private IABHelperWrapper mIABWrapper;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -101,8 +100,9 @@ public class AboutFragment extends Fragment implements DonateDialogFragment.Dona
                 .addGitHub("DreierF")
                 .addItem(getLinkedInItem())
                 .addGroup(getString(R.string.special_thanks_to))
-                .addItem(new Element("translators", getString(R.string.all_translators), null))
                 .addItem(new Element("testers", getString(R.string.all_beta_testers), null))
+                .addItem(new Element("translators", getString(R.string.all_translators)
+                        + "\n" + getString(R.string.translators), null))
                 .create();
     }
 
