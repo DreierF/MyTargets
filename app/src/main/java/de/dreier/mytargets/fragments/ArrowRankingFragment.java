@@ -100,7 +100,7 @@ public class ArrowRankingFragment extends Fragment implements LoaderManager.Load
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.card_image_simple, parent, false);
+                    .inflate(R.layout.item_image_simple, parent, false);
             return new ViewHolder(itemView);
         }
 

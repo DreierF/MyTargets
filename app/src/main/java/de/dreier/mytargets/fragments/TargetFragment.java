@@ -183,7 +183,7 @@ public class TargetFragment extends SelectItemFragment<Target>
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.card_image_simple, parent, false);
+                    .inflate(R.layout.item_image_simple, parent, false);
             return new ViewHolder(itemView);
         }
     }

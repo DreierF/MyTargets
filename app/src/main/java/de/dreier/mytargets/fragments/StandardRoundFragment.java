@@ -65,6 +65,8 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        useDoubleClickSelection = true;
+
         mSelector.setSelectable(true);
         currentSelection = Parcels.unwrap(getArguments().getParcelable(ITEM));
         list = new StandardRoundDataSource(getContext()).getAll();
@@ -205,16 +207,11 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
 
     @Override
     public void onClick(SelectableViewHolder holder, StandardRound mItem) {
-        if (currentSelection.equals(mItem)) {
-            onSaveItem();
+        super.onClick(holder, mItem);
+        if (mItem == null) {
             return;
         }
-        int oldSelectedPosition = mSelector.getSelectedPosition();
         currentSelection = mItem;
-        int position = holder.getAdapterPosition();
-        mSelector.setSelected(position, currentSelection.getId(), true);
-        mAdapter.notifyItemChanged(oldSelectedPosition);
-        mAdapter.notifyItemChanged(position);
     }
 
     @Override

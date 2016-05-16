@@ -54,7 +54,7 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
      * Listener which gets called when item gets selected
      */
     private OnItemSelectedListener listener;
-    private boolean useDoubleClickSelection;
+    protected boolean useDoubleClickSelection;
 
     /**
      * {@inheritDoc}
@@ -148,10 +148,14 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
         if (mItem == null) {
             return;
         }
-        boolean alreadySelected = mSelector.getSelectedPosition() == holder.getAdapterPosition();
+        int oldSelectedPosition = mSelector.getSelectedPosition();
+        boolean alreadySelected = oldSelectedPosition == holder.getAdapterPosition();
         mSelector.setSelected(holder, true);
         if (alreadySelected || !useDoubleClickSelection) {
             onSaveItem();
+        } else {
+            mAdapter.notifyItemChanged(oldSelectedPosition);
+            mAdapter.notifyItemChanged(holder.getAdapterPosition());
         }
     }
 

@@ -34,7 +34,7 @@ public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.card_text, parent, false);
+                    .inflate(R.layout.item_text, parent, false);
             return new ViewHolder(itemView);
         }
     }

@@ -68,7 +68,7 @@ public class BowFragment extends EditableFragment<Bow> implements View.OnClickLi
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.card_image_details, parent, false);
+                    .inflate(R.layout.item_image_details, parent, false);
             return new ViewHolder(itemView);
         }
     }

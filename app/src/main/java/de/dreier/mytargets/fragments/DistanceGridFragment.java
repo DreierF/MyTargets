@@ -75,7 +75,7 @@ public class DistanceGridFragment extends SelectItemFragment<Distance> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.card_distance, parent, false);
+                    .inflate(R.layout.item_distance, parent, false);
             return new ViewHolder(itemView);
         }
     }
