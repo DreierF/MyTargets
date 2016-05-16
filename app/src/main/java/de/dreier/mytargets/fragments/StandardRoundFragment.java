@@ -142,7 +142,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound> imp
     private void getClubs() {
         clubs[0] = (CheckBox) rootView.findViewById(R.id.asa);
         clubs[1] = (CheckBox) rootView.findViewById(R.id.aussie);
-        clubs[2] = (CheckBox) rootView.findViewById(R.id.gnas);
+        clubs[2] = (CheckBox) rootView.findViewById(R.id.archerygb);
         clubs[3] = (CheckBox) rootView.findViewById(R.id.ifaa);
         clubs[4] = (CheckBox) rootView.findViewById(R.id.nasp);
         clubs[5] = (CheckBox) rootView.findViewById(R.id.nfaa);

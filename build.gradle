@@ -41,7 +41,8 @@ task crowdinStringsUpload(group: 'crowdin', type: UploadSourceFileTask) {
             ['strings-shared.xml', './shared/src/main/res/values/strings.xml'],
             ['rounds.xml', './shared/src/main/res/values/rounds.xml'],
             ['target_faces.xml', './shared/src/main/res/values/target_faces.xml'],
-            ['strings-wearable.xml', './wearable/src/main/res/values/strings.xml']]
+            ['strings-wearable.xml', './wearable/src/main/res/values/strings.xml']
+    ]
 }
 
 crowdinDownload {

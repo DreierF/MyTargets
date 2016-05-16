@@ -155,10 +155,10 @@
                             tools:ignore="HardcodedText"/>
 
                         <CheckBox
-                            android:id="@+id/gnas"
+                            android:id="@+id/archerygb"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
-                            android:text="GNAS"
+                            android:text="ArcheryGB"
                             tools:ignore="HardcodedText"/>
 
                         <CheckBox

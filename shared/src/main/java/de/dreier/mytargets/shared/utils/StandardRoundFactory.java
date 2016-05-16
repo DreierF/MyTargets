@@ -32,7 +32,7 @@ public class StandardRoundFactory {
     public static final int CUSTOM_PRACTICE = 512;
     private static final int ASA = 1;
     private static final int AUSTRALIAN = 2;
-    private static final int GNAS = 4;
+    private static final int ARCHERY_GB = 4;
     private static final int NASP = 16;
     private static final int NFAA = 32;
     private static final int NFAS = 64;
@@ -79,22 +79,22 @@ public class StandardRoundFactory {
         rounds.add(build(context, WA, R.string.match_round, CAT_INDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 Vertical3Spot.ID, 0, 3, 18, 40, 4));
-        rounds.add(build(context, GNAS, R.string.stafford, CAT_INDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.stafford, CAT_INDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 3, 30, 80, 24));
-        rounds.add(build(context, GNAS, R.string.bray_i, CAT_INDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.bray_i, CAT_INDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 20, 40, 5));
-        rounds.add(build(context, GNAS, R.string.bray_ii, CAT_INDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.bray_ii, CAT_INDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 25, 60, 5));
-        rounds.add(build(context, GNAS, R.string.portsmouth, CAT_INDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.portsmouth, CAT_INDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 0, 3, 20, 60, 20));
-        rounds.add(build(context, GNAS, R.string.worcester, CAT_INDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.worcester, CAT_INDOOR,
                 Dimension.YARDS, Dimension.INCH,
                 Worcester.ID, 0, 5, 20, 16, 12));
-        rounds.add(build(context, GNAS, R.string.vegas_300, CAT_INDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.vegas_300, CAT_INDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WA5Ring.ID, 0, 3, 20, 40, 20));
         rounds.add(build(context, IFAA, R.string.ifaa_150_indoor, CAT_INDOOR,
@@ -276,188 +276,188 @@ public class StandardRoundFactory {
                 Dimension.METER, Dimension.CENTIMETER,
                 WA6Ring.ID, 0, 3, 70, 122, 5));
 
-        // GNAS Imperial
-        rounds.add(build(context, GNAS, R.string.albion, CAT_OUTDOOR,
+        // ARCHERY_GB Imperial
+        rounds.add(build(context, ARCHERY_GB, R.string.albion, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 80, 122, 6, 60, 122, 6, 50, 122, 6));
-        rounds.add(build(context, GNAS, R.string.american, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.american, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 60, 122, 5, 50, 122, 5, 40, 122, 5));
 
-        rounds.add(build(context, GNAS, R.string.bristol_i, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.bristol_i, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 80, 122, 12, 60, 122, 8, 50, 122, 4));
-        rounds.add(build(context, GNAS, R.string.bristol_ii, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.bristol_ii, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 60, 122, 12, 50, 122, 8, 40, 122, 4));
-        rounds.add(build(context, GNAS, R.string.bristol_iii, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.bristol_iii, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 50, 122, 12, 40, 122, 8, 30, 122, 4));
-        rounds.add(build(context, GNAS, R.string.bristol_iv, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.bristol_iv, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 40, 122, 12, 30, 122, 8, 20, 122, 4));
-        rounds.add(build(context, GNAS, R.string.bristol_v, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.bristol_v, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 30, 122, 12, 20, 122, 8, 10, 122, 4));
 
-        rounds.add(build(context, GNAS, R.string.hereford, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.hereford, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 80, 122, 12, 60, 122, 8, 50, 122, 4));
 
-        rounds.add(build(context, GNAS, R.string.short_junior_national, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.short_junior_national, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 30, 122, 8, 20, 122, 4));
-        rounds.add(build(context, GNAS, R.string.short_junior_warwick, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.short_junior_warwick, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 30, 122, 4, 20, 122, 4));
-        rounds.add(build(context, GNAS, R.string.short_junior_western, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.short_junior_western, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 30, 122, 8, 20, 122, 8));
-        rounds.add(build(context, GNAS, R.string.short_junior_windsor, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.short_junior_windsor, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 30, 122, 6, 20,
                 122, 6, 10, 122, 6));
 
-        rounds.add(build(context, GNAS, R.string.junior_national, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.junior_national, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 40, 122, 8, 30, 122, 4));
-        rounds.add(build(context, GNAS, R.string.junior_warwick, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.junior_warwick, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 40, 122, 4, 30, 122, 4));
-        rounds.add(build(context, GNAS, R.string.junior_western, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.junior_western, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 40, 122, 8, 30, 122, 8));
-        rounds.add(build(context, GNAS, R.string.junior_windsor, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.junior_windsor, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 40, 122, 6, 30, 122, 6, 20, 122, 6));
 
-        rounds.add(build(context, GNAS, R.string.short_national, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.short_national, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 50, 122, 8, 40, 122, 4));
-        rounds.add(build(context, GNAS, R.string.short_warwick, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.short_warwick, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 50, 122, 4, 40, 122, 4));
-        rounds.add(build(context, GNAS, R.string.short_western, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.short_western, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 50, 122, 8, 40, 122, 8));
-        rounds.add(build(context, GNAS, R.string.short_windsor, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.short_windsor, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 50, 122, 6, 40, 122, 6, 30, 122, 6));
 
-        rounds.add(build(context, GNAS, R.string.national, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.national, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 60, 122, 8, 50, 122, 4));
-        rounds.add(build(context, GNAS, R.string.st_george, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.st_george, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 100, 122, 6, 80, 122, 6, 60, 122, 6));
-        rounds.add(build(context, GNAS, R.string.st_nicholas, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.st_nicholas, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 40, 122, 8, 30, 122, 6));
-        rounds.add(build(context, GNAS, R.string.warwick, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.warwick, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 60, 122, 4, 50, 122, 4));
-        rounds.add(build(context, GNAS, R.string.western, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.western, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 60, 122, 8, 50, 122, 8));
-        rounds.add(build(context, GNAS, R.string.windsor, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.windsor, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 60, 122, 6, 50, 122, 6, 40, 122, 6));
-        rounds.add(build(context, GNAS, R.string.york, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.york, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 100, 122, 12, 80, 122, 8, 60, 122, 4));
 
-        rounds.add(build(context, GNAS, R.string.long_national, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.long_national, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 80, 122, 8, 60, 122, 4));
-        rounds.add(build(context, GNAS, R.string.long_warwick, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.long_warwick, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 80, 122, 4, 60, 122, 4));
-        rounds.add(build(context, GNAS, R.string.long_western, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.long_western, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 80, 122, 8, 60, 122, 8));
 
-        rounds.add(build(context, GNAS, R.string.new_national, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.new_national, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 100, 122, 8, 80, 122, 4));
-        rounds.add(build(context, GNAS, R.string.new_warwick, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.new_warwick, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 100, 122, 4, 80, 122, 4));
-        rounds.add(build(context, GNAS, R.string.new_western, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.new_western, CAT_OUTDOOR,
                 Dimension.YARDS, Dimension.CENTIMETER,
                 WAFull.ID, 4, 6, 100, 122, 8, 80, 122, 8));
 
-        // GNAS Metric
-        rounds.add(build(context, GNAS, R.string.frostbite, CAT_OUTDOOR,
+        // ARCHERY_GB Metric
+        rounds.add(build(context, ARCHERY_GB, R.string.frostbite, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 3, 30, 80, 12));
-        rounds.add(build(context, GNAS, R.string.half_metric_i, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.half_metric_i, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 70, 122, 3, 60,
                 122, 3, 50, 80, 3, 30, 80, 3));
-        rounds.add(build(context, GNAS, R.string.half_metric_ii, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.half_metric_ii, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 60, 122, 3, 50, 122, 3, 40, 80, 3, 30, 80, 3));
-        rounds.add(build(context, GNAS, R.string.half_metric_iii, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.half_metric_iii, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 50, 122, 3, 40, 122, 3, 30, 80, 3, 20, 80, 3));
-        rounds.add(build(context, GNAS, R.string.half_metric_iv, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.half_metric_iv, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 40, 122, 3, 30, 122, 3, 20, 80, 3, 10, 80, 3));
-        rounds.add(build(context, GNAS, R.string.half_metric_v, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.half_metric_v, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 30, 122, 3, 20, 122, 3, 15, 80, 3, 10, 80, 3));
 
-        rounds.add(build(context, GNAS, R.string.short_metric_i, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.short_metric_i, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 50, 80, 6, 30, 80, 6));
-        rounds.add(build(context, GNAS, R.string.short_metric_ii, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.short_metric_ii, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 40, 80, 6, 30, 80, 6));
-        rounds.add(build(context, GNAS, R.string.short_metric_iii, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.short_metric_iii, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 30, 80, 6, 20, 80, 6));
-        rounds.add(build(context, GNAS, R.string.short_metric_iv, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.short_metric_iv, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 20, 80, 6, 10, 80, 6));
-        rounds.add(build(context, GNAS, R.string.short_metric_v, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.short_metric_v, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 15, 80, 6, 10, 80, 6));
 
-        rounds.add(build(context, GNAS, R.string.metric_i, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.metric_i, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 70, 122, 6, 60, 122, 6, 50, 80, 6, 30, 80, 6));
-        rounds.add(build(context, GNAS, R.string.metric_ii, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.metric_ii, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 60, 122, 6, 50, 122, 6, 40, 80, 6, 30, 80, 6));
-        rounds.add(build(context, GNAS, R.string.metric_iii, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.metric_iii, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 50, 122, 6, 40, 122, 6, 30, 80, 6, 20, 80, 6));
-        rounds.add(build(context, GNAS, R.string.metric_iv, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.metric_iv, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 40, 122, 6, 30, 122, 6, 20, 80, 6, 10, 80, 6));
-        rounds.add(build(context, GNAS, R.string.metric_v, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.metric_v, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 30, 122, 6, 20, 122, 6, 15, 80, 6, 10, 80, 6));
 
-        rounds.add(build(context, GNAS, R.string.long_metric_i, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.long_metric_i, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 70, 122, 6, 60, 122, 6));
-        rounds.add(build(context, GNAS, R.string.long_metric_ii, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.long_metric_ii, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 60, 122, 6, 50, 122, 6));
-        rounds.add(build(context, GNAS, R.string.long_metric_iii, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.long_metric_iii, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 50, 122, 6, 40, 122, 6));
-        rounds.add(build(context, GNAS, R.string.long_metric_iv, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.long_metric_iv, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 40, 122, 6, 30, 122, 6));
-        rounds.add(build(context, GNAS, R.string.long_metric_v, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.long_metric_v, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 30, 122, 6, 20, 122, 6));
-        rounds.add(build(context, GNAS, R.string.long_metric_gents, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.long_metric_gents, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 90, 122, 6, 70, 122, 6));
-        rounds.add(build(context, GNAS, R.string.long_metric_ladies, CAT_OUTDOOR,
+        rounds.add(build(context, ARCHERY_GB, R.string.long_metric_ladies, CAT_OUTDOOR,
                 Dimension.METER, Dimension.CENTIMETER,
                 WAFull.ID, 0, 6, 70, 122, 6, 60, 122, 6));
 
@@ -695,7 +695,7 @@ public class StandardRoundFactory {
     /**
      * Builds a new standard round instance
      *
-     * @param institution    Institution that specified the round (GNAS or FITA)
+     * @param institution    Institution that specified the round (ARCHERY_GB or FITA)
      * @param name           Name of the round
      * @param indoor         CAT_INDOOR or CAT_OUTDOOR
      * @param distanceUnit   Unit of the distance specified in round Details

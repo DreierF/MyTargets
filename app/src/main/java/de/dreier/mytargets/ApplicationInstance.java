@@ -25,6 +25,7 @@ import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.utils.PasseDrawer;
 
 /**
  * Application singleton. Gets instantiated exactly once and is used
@@ -41,6 +42,7 @@ import de.dreier.mytargets.shared.models.Training;
         @ParcelClass(Distance.class),
         @ParcelClass(Environment.class),
         @ParcelClass(Passe.class),
+        @ParcelClass(PasseDrawer.class),
         @ParcelClass(Round.class),
         @ParcelClass(RoundTemplate.class),
         @ParcelClass(Shot.class),
