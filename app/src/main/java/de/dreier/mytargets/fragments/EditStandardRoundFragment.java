@@ -158,12 +158,16 @@ public class EditStandardRoundFragment extends EditFragmentBase
         // Distance
         final DistanceSelector distanceSpinner = (DistanceSelector) view
                 .findViewById(R.id.distanceSpinner);
+        distanceSpinner.setOnActivityResultContext(this);
+        distanceSpinner.setItemIndex(index);
         distanceSpinner.setItem(round.distance);
         distanceSpinner.setOnUpdateListener(item -> round.distance = item);
 
         // Target round
         final TargetSelector targetSpinner = (TargetSelector) view
                 .findViewById(R.id.targetSpinner);
+        targetSpinner.setOnActivityResultContext(this);
+        targetSpinner.setItemIndex(index);
         targetSpinner.setOnUpdateListener(item -> {
             round.target = item;
             round.targetTemplate = item;
@@ -189,6 +193,20 @@ public class EditStandardRoundFragment extends EditFragmentBase
             remove.setVisibility(View.GONE);
         } else {
             remove.setOnClickListener(view1 -> rounds.remove(round, R.string.round_removed));
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        for (int i = 0; i < rounds.getChildCount() - 1; i++) {
+            final View round = rounds.getChildAt(i);
+            final DistanceSelector distanceSpinner = (DistanceSelector) round
+                    .findViewById(R.id.distanceSpinner);
+            distanceSpinner.onActivityResult(requestCode, resultCode, data);
+            final TargetSelector targetSpinner = (TargetSelector) round
+                    .findViewById(R.id.targetSpinner);
+            targetSpinner.onActivityResult(requestCode, resultCode, data);
         }
     }
 }

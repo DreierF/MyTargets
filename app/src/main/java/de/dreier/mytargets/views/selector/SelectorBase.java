@@ -10,6 +10,7 @@ package de.dreier.mytargets.views.selector;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
@@ -28,14 +29,16 @@ import de.dreier.mytargets.activities.ItemSelectActivity;
 
 public abstract class SelectorBase<T> extends LinearLayout {
 
-    protected int requestCode;
+    public static final String INDEX = "index";
     private final View mView;
     private final View mProgress;
+    protected int requestCode;
     protected Class<?> defaultActivity;
     protected Class<?> addActivity;
-    T item = null;
     protected Button mAddButton;
+    T item = null;
     private OnUpdateListener<T> updateListener;
+    private int index = -1;
 
     public SelectorBase(Context context, AttributeSet attrs, @LayoutRes int layout) {
         super(context, attrs);
@@ -69,9 +72,16 @@ public abstract class SelectorBase<T> extends LinearLayout {
         }
     }
 
+    public void setItemIndex(int index) {
+        this.index = index;
+    }
+
     public Intent getDefaultIntent() {
         Intent i = new Intent(getContext(), defaultActivity);
         i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(item));
+        if (index != -1) {
+            i.putExtra(INDEX, index);
+        }
         return i;
     }
 
@@ -106,8 +116,11 @@ public abstract class SelectorBase<T> extends LinearLayout {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode == this.requestCode) {
-            final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
-            setItem(Parcels.unwrap(parcelable));
+            Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
+            if (index == -1 || (intentData != null && intentData.getInt(INDEX) == index)) {
+                final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
+                setItem(Parcels.unwrap(parcelable));
+            }
         }
     }
 

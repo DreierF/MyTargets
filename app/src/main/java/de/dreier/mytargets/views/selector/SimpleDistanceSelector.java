@@ -7,16 +7,9 @@
 
 package de.dreier.mytargets.views.selector;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.TextView;
-
-import org.parceler.Parcels;
 
 import butterknife.Bind;
 import de.dreier.mytargets.R;
@@ -29,8 +22,6 @@ public class SimpleDistanceSelector extends SelectorBase<Distance> {
 
     @Bind(android.R.id.text1)
     TextView distance;
-
-    private int index;
 
     public SimpleDistanceSelector(Context context) {
         this(context, null);
@@ -45,30 +36,5 @@ public class SimpleDistanceSelector extends SelectorBase<Distance> {
     @Override
     protected void bindView() {
         distance.setText(item.toString(getContext()));
-    }
-
-    public void setItemIndex(int index) {
-        this.index = index;
-    }
-
-    @Override
-    public Intent getDefaultIntent() {
-        Intent i = super.getDefaultIntent();
-        i.putExtra("index", index);
-        return i;
-    }
-
-    private static final String TAG = "SimpleDistanceSelector";
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && requestCode == this.requestCode) {
-            Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
-            Log.i(TAG, "onActivityResult:intentData "+intentData);
-            if (intentData != null && intentData.getInt("index") == index) {
-                Log.i(TAG, "onActivityResult:index "+index);
-                final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
-                setItem(Parcels.unwrap(parcelable));
-            }
-        }
     }
 }
