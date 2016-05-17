@@ -1,75 +1,28 @@
 package de.dreier.mytargets.fragments;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.utils.IABHelperWrapper;
+import de.dreier.mytargets.activities.AboutActivity;
 import de.dreier.mytargets.utils.Utils;
 import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
 
-public class AboutFragment extends Fragment implements DonateDialogFragment.DonationListener {
+public class AboutFragment extends Fragment {
     public static final String URL_GOOGLE_PLUS = "https://plus.google.com/u/0/communities/102686119334423317437";
     public static final String URL_PLAY_STORE = "http://play.google.com/store/apps/details?id=de.dreier.mytargets";
     public static final String URL_PAYPAL = "https://www.paypal.me/floriandreier";
     public static final String URL_CROWDIN = "https://crowdin.com/project/mytargets";
     public static final String URL_LINKEDIN = "https://de.linkedin.com/in/florian-dreier-b056a1113";
-    private static final String DONATE = "donate";
-    private IABHelperWrapper mIABWrapper;
-
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            mIABWrapper.showDialog(AboutFragment.this);
-        }
-    };
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(DONATE);
-        getContext().registerReceiver(receiver, filter);
-    }
-
-    @Override
-    public void onDestroy() {
-        getContext().unregisterReceiver(receiver);
-        mIABWrapper.onDestroy();
-        super.onDestroy();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (mIABWrapper.handleActivityResult(requestCode, resultCode, data)) {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    @Override
-    public void onDonate(int position) {
-        mIABWrapper.startDonationForItem(position);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mIABWrapper = new IABHelperWrapper((AppCompatActivity) getActivity());
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -128,7 +81,7 @@ public class AboutFragment extends Fragment implements DonateDialogFragment.Dona
 
     private Element getDonateElement() {
         Element donateElement = new Element(null, getString(R.string.donate), R.drawable.about_icon_donate);
-        donateElement.setIntent(new Intent(DONATE));
+        donateElement.setIntent(new Intent(AboutActivity.DONATE));
         return donateElement;
     }
 

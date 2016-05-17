@@ -19,13 +19,11 @@ import de.dreier.mytargets.fragments.DonateDialogFragment;
 
 public class DonationAdapter extends BaseAdapter {
 
-    private final boolean mSupported;
     private final LayoutInflater mInflater;
     private final Context mContext;
 
-    public DonationAdapter(Context context, boolean supported) {
+    public DonationAdapter(Context context) {
         mContext = context;
-        mSupported = supported;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -41,7 +39,7 @@ public class DonationAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mSupported ? 6 : 5;
+        return 5;
     }
 
     @Override
@@ -62,11 +60,7 @@ public class DonationAdapter extends BaseAdapter {
 
         TextView desc = (TextView) convertView.findViewById(R.id.desc);
         TextView price = (TextView) convertView.findViewById(R.id.price);
-        if (position == 4) {
-            price.setText(mContext.getString(R.string.monthly,
-                    DonateDialogFragment.prices
-                            .get(DonateDialogFragment.DONATION_INFINITE)));
-        } else if (position < 4) {
+        if (position < 4) {
             String sku = DonateDialogFragment.donations.get(position);
             price.setText(DonateDialogFragment.prices.get(sku));
         } else {
@@ -89,9 +83,6 @@ public class DonationAdapter extends BaseAdapter {
                 desc.setText(R.string.donate_20);
                 break;
             case 4:
-                desc.setText(R.string.donate_infinite);
-                break;
-            case 5:
                 desc.setText(R.string.donate_text);
                 desc.setTextSize(density * 4);
                 break;

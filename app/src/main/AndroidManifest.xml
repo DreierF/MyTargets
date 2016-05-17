@@ -224,7 +224,7 @@
                 android:value=".activities.MainActivity" />
         </activity>
         <activity
-            android:name=".activities.SimpleFragmentActivity$AboutActivity"
+            android:name=".activities.AboutActivity"
             android:label="@string/about"
             android:parentActivityName=".activities.SimpleFragmentActivity$SettingsActivity">
             <meta-data

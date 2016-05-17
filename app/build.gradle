@@ -90,6 +90,8 @@ dependencies {
     compile 'org.parceler:parceler-api:1.1.2'
     apt 'org.parceler:parceler:1.1.2'
 
+    compile 'com.anjlab.android.iab.v3:library:1.0.31'
+
     compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'
 
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
