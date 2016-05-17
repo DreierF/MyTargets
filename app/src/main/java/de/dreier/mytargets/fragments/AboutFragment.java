@@ -17,8 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.MainActivity;
-import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.IABHelperWrapper;
 import de.dreier.mytargets.utils.Utils;
 import mehdi.sakout.aboutpage.AboutPage;
@@ -58,14 +56,6 @@ public class AboutFragment extends Fragment implements DonateDialogFragment.Dona
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (mIABWrapper.handleActivityResult(requestCode, resultCode, data)) {
-            if (requestCode == 1 && resultCode == AppCompatActivity.RESULT_OK) {
-                final Uri uri = data.getData();
-                if (BackupUtils.Import(getActivity(), uri)) {
-                    Intent intent = new Intent(getContext(), MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
-            }
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
