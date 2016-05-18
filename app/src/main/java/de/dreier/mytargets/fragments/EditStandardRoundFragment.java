@@ -8,7 +8,6 @@ package de.dreier.mytargets.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,11 +22,10 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
-import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.views.DynamicItemLayout;
 import de.dreier.mytargets.views.NumberPicker;
@@ -74,19 +72,15 @@ public class EditStandardRoundFragment extends EditFragmentBase
             setTitle(R.string.new_round_template);
             name.setText(R.string.custom_round);
             // Initialise with default values
-            indoor.setChecked(prefs.getBoolean("indoor", false));
-            outdoor.setChecked(!prefs.getBoolean("indoor", false));
+            indoor.setChecked(SettingsManager.getIndoor());
+            outdoor.setChecked(!SettingsManager.getIndoor());
 
             RoundTemplate round = new RoundTemplate();
-            round.arrowsPerPasse = prefs.getInt("ppp", 3);
-            round.passes = prefs.getInt("rounds", 10);
-            int tid = prefs.getInt("target", 0);
-            int scoring = prefs.getInt("scoring", 0);
-            round.target = new Target(tid, scoring);
-            round.target.size = round.target.getModel().getDiameters()[0];
+            round.arrowsPerPasse = SettingsManager.getArrowsPerPasse();
+            round.passes = SettingsManager.getPasses();
+            round.target = SettingsManager.getTarget();
             round.targetTemplate = round.target;
-            long distId = prefs.getLong("distanceId", new Distance(18, "m").getId());
-            round.distance = Distance.fromId(distId);
+            round.distance = SettingsManager.getDistance();
             rounds.addItem(round);
         } else {
             setTitle(R.string.edit_standard_round);
@@ -118,17 +112,13 @@ public class EditStandardRoundFragment extends EditFragmentBase
         standardRound.setRounds(rounds.getList());
         new StandardRoundDataSource(getContext()).update(standardRound);
 
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("indoor", standardRound.indoor);
+        SettingsManager.setIndoor(standardRound.indoor);
 
         RoundTemplate round = rounds.getList().get(0);
-        editor.putInt("ppp", round.arrowsPerPasse);
-        editor.putInt("rounds", round.passes);
-        editor.putInt("target", (int) round.target.getId());
-        editor.putInt("scoring", round.target.scoringStyle);
-        editor.putLong("distanceId", round.distance.getId());
-
-        editor.apply();
+        SettingsManager.setArrowsPerPasse(round.arrowsPerPasse);
+        SettingsManager.setPasses(round.passes);
+        SettingsManager.setTarget(round.target);
+        SettingsManager.setDistance(round.distance);
 
         Intent data = new Intent();
         data.putExtra(ITEM, Parcels.wrap(standardRound));

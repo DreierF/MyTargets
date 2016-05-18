@@ -7,7 +7,6 @@
 package de.dreier.mytargets.fragments;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -19,11 +18,9 @@ import android.view.View;
 
 import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.utils.MyBackupAgent;
 
 public abstract class EditFragmentBase extends Fragment {
     AppCompatActivity activity;
-    SharedPreferences prefs;
 
     void setUpToolbar(View rootView) {
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
@@ -33,8 +30,6 @@ public abstract class EditFragmentBase extends Fragment {
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
         setHasOptionsMenu(true);
-
-        prefs = activity.getSharedPreferences(MyBackupAgent.PREFS, 0);
     }
 
     void setTitle(@StringRes int title) {

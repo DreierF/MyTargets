@@ -26,6 +26,7 @@ import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
+import de.dreier.mytargets.utils.MyBackupAgent;
 
 /**
  * Application singleton. Gets instantiated exactly once and is used
@@ -62,6 +63,10 @@ public class ApplicationInstance extends Application {
 
     public static SharedPreferences getSharedPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(mContext);
+    }
+
+    public static SharedPreferences getLastSharedPreferences() {
+        return mContext.getSharedPreferences(MyBackupAgent.PREFS, 0);
     }
 
     @Override

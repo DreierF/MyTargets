@@ -30,6 +30,7 @@ import java.util.GregorianCalendar;
 import butterknife.Bind;
 import butterknife.OnClick;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
@@ -108,14 +109,14 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
             setTitle(R.string.new_training);
             trainingTitle.setText(getString(trainingType == COMPETITION ? R.string.competition : R.string.training));
             setTrainingDate();
-            bow.setItemId(prefs.getInt("bow", -1));
-            arrow.setItemId(prefs.getInt("arrow", -1));
-            standardRoundSpinner.setItemId(prefs.getInt("standard_round", 32));
-            numberArrows.setChecked(prefs.getBoolean("numbering", numberArrows.isChecked()));
-            timer.setChecked(prefs.getBoolean("timer", false));
-            indoor.setChecked(prefs.getBoolean("indoor", false));
-            outdoor.setChecked(!prefs.getBoolean("indoor", false));
-            scoresOnly.setChecked(prefs.getBoolean("scores_only", false));
+            bow.setItemId(SettingsManager.getBow());
+            arrow.setItemId(SettingsManager.getArrow());
+            standardRoundSpinner.setItemId(SettingsManager.getStandardRound());
+            numberArrows.setChecked(SettingsManager.getArrowNumbersEnabled());
+            timer.setChecked(SettingsManager.getTimerEnabled());
+            indoor.setChecked(SettingsManager.getIndoor());
+            outdoor.setChecked(!SettingsManager.getIndoor());
+            scoresOnly.setChecked(SettingsManager.getScoresOnly());
             environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
             loadRoundDefaultValues();
         } else {
@@ -209,7 +210,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
                 standardRound = getCustomRound();
             } else {
                 standardRound = standardRoundSpinner.getSelectedItem();
-                prefs.edit().putInt("standard_round", (int) standardRound.getId()).apply();
+                SettingsManager.setStandardRound(standardRound.getId());
             }
             new StandardRoundDataSource(getContext()).update(standardRound);
             training.standardRoundId = standardRound.getId();
@@ -239,24 +240,15 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
         training.environment = environment.getSelectedItem();
         training.bow = bow.getSelectedItem() == null ? 0 : bow.getSelectedItem().getId();
         training.arrow = arrow.getSelectedItem() == null ? 0 : arrow.getSelectedItem().getId();
-        int time = 120;
-        try {
-            SharedPreferences prefs = PreferenceManager
-                    .getDefaultSharedPreferences(getActivity());
-            time = Integer.parseInt(prefs.getString("timer_shoot_time", "120"));
-        } catch (NumberFormatException ignored) {
-        }
-        training.timePerPasse = timer.isChecked() ? time : -1;
+        training.timePerPasse = timer.isChecked() ? SettingsManager.getShootTime() : -1;
         Arrow selectedItem = arrow.getSelectedItem();
         training.arrowNumbering = !(selectedItem == null || selectedItem.numbers.isEmpty()) &&
                 numberArrows.isChecked();
 
-        prefs.edit().putInt("bow", (int) training.bow)
-                .putInt("arrow", (int) training.arrow)
-                .putBoolean("timer", timer.isChecked())
-                .putBoolean("numbering", training.arrowNumbering)
-                .apply();
-
+        SettingsManager.setBow(training.bow);
+        SettingsManager.setArrow(training.arrow);
+        SettingsManager.setTimerEnabled(timer.isChecked());
+        SettingsManager.setArrowNumbersEnabled(training.arrowNumbering);
         return training;
     }
 
@@ -286,7 +278,8 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
         rounds.add(getRoundTemplate());
         standardRound.setRounds(rounds);
 
-        prefs.edit().putBoolean("indoor", standardRound.indoor).apply();
+
+        SettingsManager.setIndoor(standardRound.indoor);
         return standardRound;
     }
 

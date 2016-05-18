@@ -1,7 +1,6 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,10 +16,8 @@ import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.InputActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
-import de.dreier.mytargets.shared.models.Diameter;
-import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.RoundTemplate;
-import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.views.selector.DistanceSelector;
 import de.dreier.mytargets.views.selector.TargetSelector;
 
@@ -84,14 +81,9 @@ public abstract class EditRoundPropertiesFragmentBase extends EditFragmentBase {
     }
 
     protected void loadRoundDefaultValues() {
-        int distance = prefs.getInt("distance", 10);
-        String unit = prefs.getString("unit", "m");
-        distanceSpinner.setItem(new Distance(distance, unit));
-        arrows.setProgress(prefs.getInt("ppp", 3));
-        targetSpinner.setItem(new Target(prefs.getInt("target", 0),
-                prefs.getInt("scoring_style", 0),
-                new Diameter(prefs.getInt("size_target", 60),
-                        prefs.getString("unit_target", Diameter.CENTIMETER))));
+        distanceSpinner.setItem(SettingsManager.getDistance());
+        arrows.setProgress(SettingsManager.getArrowsPerPasse());
+        targetSpinner.setItem(SettingsManager.getTarget());
     }
 
     @NonNull
@@ -103,17 +95,9 @@ public abstract class EditRoundPropertiesFragmentBase extends EditFragmentBase {
         roundTemplate.passes = 1;
         roundTemplate.distance = distanceSpinner.getSelectedItem();
 
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("ppp", roundTemplate.arrowsPerPasse);
-        editor.putInt("rounds", roundTemplate.passes);
-        editor.putInt("distance", roundTemplate.distance.value);
-        editor.putString("unit", roundTemplate.distance.unit);
-        editor.putInt("target", (int) roundTemplate.target.getId());
-        editor.putInt("scoring_style", roundTemplate.target.scoringStyle);
-        editor.putInt("size_target", roundTemplate.target.size.value);
-        editor.putString("unit_target", roundTemplate.target.size.unit);
-        editor.apply();
-
+        SettingsManager.setTarget(roundTemplate.target);
+        SettingsManager.setDistance(roundTemplate.distance);
+        SettingsManager.setArrowsPerPasse(roundTemplate.arrowsPerPasse);
         return roundTemplate;
     }
 
