@@ -16,8 +16,8 @@ import android.support.v7.preference.PreferenceScreen;
 import android.view.MenuItem;
 
 import butterknife.ButterKnife;
-import de.dreier.mytargets.fragments.AboutFragment;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.fragments.AboutFragment;
 import de.dreier.mytargets.fragments.EditArrowFragment;
 import de.dreier.mytargets.fragments.EditBowFragment;
 import de.dreier.mytargets.fragments.EditRoundFragment;
@@ -198,20 +198,20 @@ public abstract class SimpleFragmentActivity extends AppCompatActivity {
         }
     }
 
-    public static class AboutActivity extends SimpleFragmentActivity {
-
-        @Override
-        protected Fragment instantiateFragment() {
-            return new AboutFragment();
-        }
-
-    }
-
     public static class LicencesActivity extends SimpleFragmentActivity {
 
         @Override
         protected Fragment instantiateFragment() {
             return new LicencesFragment();
+        }
+
+    }
+
+    public static class AboutActivity extends SimpleFragmentActivity {
+
+        @Override
+        protected Fragment instantiateFragment() {
+            return new AboutFragment();
         }
 
     }

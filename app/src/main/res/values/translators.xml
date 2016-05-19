@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="translators" translatable="false">Catalan - Miguel Perez Arroyo
-Chinese - Bronya Po
-Chinese Simplified - Zhulin
-Czech / Slovak - Gizmo Sk
-Danish - Claus Pedersen
-Danish - magnus_bager
-Dutch - Robbin Haasnoot
-French - Frédéric Mazoyer, Adrien Garandel
-Hebrew - gbyx
-Hungarian - Ladover István
-Italian - Jaco Lamborghin, Pehilj
-Japanese - Dominic Schmidt
-Norwegian - Joakim Klingsheim
-Polish - Krzysztof Szymanski, Roxy Kot
-Portuguese - André Morais, Brum Jose Alves Neto, Fabio Passeto, Pétala Loli, Telmo Thadeu Fonseca
-Russian - Dmitry Berezovsky, Лиля Костенко
-Slovak - Erik Summer
-Slovenian - Jakob Krapez
-Spanish - Zonio de Mena
-Swedish - Bojan Motoh, Tobias Nilsson
+    <string name="translators" translatable="false"><![CDATA[
+Catalan - Miguel Perez Arroyo\n
+Chinese - Bronya Po\n
+Chinese Simplified - Zhulin\n
+Czech / Slovak - Gizmo Sk\n
+Danish - Claus Pedersen\n
+Danish - magnus_bager\n
+Dutch - Robbin Haasnoot\n
+French - Frédéric Mazoyer, Adrien Garandel\n
+Hebrew - gbyx\n
+Hungarian - Ladover István\n
+Italian - Jaco Lamborghin, Pehilj\n
+Japanese - Dominic Schmidt\n
+Norwegian - Joakim Klingsheim\n
+Polish - Krzysztof Szymanski, Roxy Kot\n
+Portuguese - André Morais, Brum Jose Alves Neto, Fabio Passeto, Pétala Loli, Telmo Thadeu Fonseca\n
+Russian - Dmitry Berezovsky, Лиля Костенко\n
+Slovak - Erik Summer\n
+Slovenian - Jakob Krapez\n
+Spanish - Zonio de Mena\n
+Swedish - Bojan Motoh, Tobias Nilsson\n
 Turkish - ahmetozgen, Cengiz kılıç, Mesut Albayrak, Ömer Faruk, sebenli
+]]>
 </string>
 </resources>

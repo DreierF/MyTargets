@@ -30,7 +30,7 @@
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/transparent"
+                android:background="@android:color/transparent"
                 android:hint="@string/name"
                 android:inputType="textNoSuggestions" />
 
@@ -61,7 +61,7 @@
                 android:id="@+id/arrow_length"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/transparent"
+                android:background="@android:color/transparent"
                 android:hint="@string/length"
                 android:inputType="textNoSuggestions" />
 
@@ -92,7 +92,7 @@
                 android:id="@+id/arrow_material"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/transparent"
+                android:background="@android:color/transparent"
                 android:hint="@string/material"
                 android:inputType="textNoSuggestions" />
 
@@ -123,7 +123,7 @@
                 android:id="@+id/arrow_spine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/transparent"
+                android:background="@android:color/transparent"
                 android:hint="@string/spine"
                 android:inputType="textNoSuggestions" />
 
@@ -154,7 +154,7 @@
                 android:id="@+id/arrow_weight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/transparent"
+                android:background="@android:color/transparent"
                 android:hint="@string/weight"
                 android:inputType="textNoSuggestions" />
 
@@ -185,7 +185,7 @@
                 android:id="@+id/arrow_tip_weight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/transparent"
+                android:background="@android:color/transparent"
                 android:hint="@string/tip_weight"
                 android:inputType="textNoSuggestions" />
 
@@ -216,7 +216,7 @@
                 android:id="@+id/arrow_vanes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/transparent"
+                android:background="@android:color/transparent"
                 android:hint="@string/vanes"
                 android:inputType="textNoSuggestions" />
 
@@ -247,7 +247,7 @@
                 android:id="@+id/arrow_nock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/transparent"
+                android:background="@android:color/transparent"
                 android:hint="@string/nock"
                 android:inputType="textNoSuggestions" />
 
@@ -278,7 +278,7 @@
                 android:id="@+id/arrow_numbers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/transparent"
+                android:background="@android:color/transparent"
                 android:digits="0123456789,"
                 android:hint="@string/arrow_numbers"
                 android:inputType="number" />
@@ -321,7 +321,7 @@
                 android:id="@+id/arrow_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/transparent"
+                android:background="@android:color/transparent"
                 android:hint="@string/comment"
                 android:inputType="textMultiLine" />
 
