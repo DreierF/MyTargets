@@ -19,7 +19,6 @@ import android.widget.Toast;
 import java.io.IOException;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.AboutActivity;
 import de.dreier.mytargets.activities.MainActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.utils.BackupUtils;
@@ -85,7 +84,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 doExportWithCheck(this);
                 return true;
             case "pref_about":
-                getActivity().startActivity(new Intent(getContext(), AboutActivity.class));
+                getActivity().startActivity(new Intent(getContext(), SimpleFragmentActivity.AboutActivity.class));
                 return true;
             case "pref_licence":
                 getActivity().startActivity(new Intent(getContext(), SimpleFragmentActivity.LicencesActivity.class));

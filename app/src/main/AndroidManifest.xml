@@ -224,7 +224,7 @@
                 android:value=".activities.MainActivity" />
         </activity>
         <activity
-            android:name=".activities.AboutActivity"
+            android:name=".activities.SimpleFragmentActivity$AboutActivity"
             android:label="@string/about"
             android:parentActivityName=".activities.SimpleFragmentActivity$SettingsActivity">
             <meta-data
@@ -238,6 +238,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.SimpleFragmentActivity$SettingsActivity" />
+        </activity>
+        <activity
+            android:name=".activities.DonateActivity"
+            android:parentActivityName=".activities.SimpleFragmentActivity$AboutActivity"
+            android:theme="@style/Theme.AppCompat.Translucent">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.SimpleFragmentActivity$AboutActivity" />
         </activity>
         <activity android:name=".activities.ArrowRankingDetailsActivity" />
     </application>

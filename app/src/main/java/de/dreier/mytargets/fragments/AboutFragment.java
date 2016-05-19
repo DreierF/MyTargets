@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.AboutActivity;
+import de.dreier.mytargets.activities.DonateActivity;
 import de.dreier.mytargets.utils.Utils;
 import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
@@ -81,7 +81,7 @@ public class AboutFragment extends Fragment {
 
     private Element getDonateElement() {
         Element donateElement = new Element(null, getString(R.string.donate), R.drawable.about_icon_donate);
-        donateElement.setIntent(new Intent(AboutActivity.DONATE));
+        donateElement.setIntent(new Intent(getContext(), DonateActivity.class));
         return donateElement;
     }
 

@@ -15,15 +15,13 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.fragments.DonateDialogFragment;
+import de.dreier.mytargets.activities.DonateActivity;
 
 public class DonationAdapter extends BaseAdapter {
 
     private final LayoutInflater mInflater;
-    private final Context mContext;
 
     public DonationAdapter(Context context) {
-        mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -61,14 +59,12 @@ public class DonationAdapter extends BaseAdapter {
         TextView desc = (TextView) convertView.findViewById(R.id.desc);
         TextView price = (TextView) convertView.findViewById(R.id.price);
         if (position < 4) {
-            String sku = DonateDialogFragment.donations.get(position);
-            price.setText(DonateDialogFragment.prices.get(sku));
+            String sku = DonateActivity.donations.get(position);
+            price.setText(DonateActivity.prices.get(sku));
         } else {
             price.setText("");
         }
 
-        float density = mContext.getResources().getDisplayMetrics().scaledDensity;
-        desc.setTextSize(density * 5);
         switch (position) {
             case 0:
                 desc.setText(R.string.donate_2);
@@ -84,7 +80,6 @@ public class DonationAdapter extends BaseAdapter {
                 break;
             case 4:
                 desc.setText(R.string.donate_text);
-                desc.setTextSize(density * 4);
                 break;
         }
         return convertView;
