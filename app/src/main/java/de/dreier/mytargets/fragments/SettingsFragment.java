@@ -212,17 +212,4 @@ public class SettingsFragment extends PreferenceFragmentCompat
         }
         pref.setSummary(getResources().getQuantityString(R.plurals.second, sec, sec));
     }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1 && resultCode == AppCompatActivity.RESULT_OK) {
-            final Uri uri = data.getData();
-            if (BackupUtils.Import(getActivity(), uri)) {
-                Intent intent = new Intent(getContext(), MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 }
