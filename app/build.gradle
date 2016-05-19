@@ -18,6 +18,7 @@ android {
         versionCode appVersionCode
         versionName appVersionName
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        vectorDrawables.useSupportLibrary = true
     }
 
     if (new File("gradle.properties").exists()) {
