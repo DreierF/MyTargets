@@ -35,7 +35,7 @@ allprojects {
 
 task crowdinStringsUpload(group: 'crowdin', type: UploadSourceFileTask) {
     apiKey = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
-    projectId = project.hasProperty('CROWDIN_PROJECT_ID') ? CROWDIN_PROJECT_ID : System.getenv('CROWDIN_PROJECT_ID')
+    projectId = 'mytargets'
     sourceFiles = [
             ['strings.xml', './app/src/main/res/values/strings.xml'],
             ['strings-shared.xml', './shared/src/main/res/values/strings.xml'],
@@ -47,13 +47,15 @@ task crowdinStringsUpload(group: 'crowdin', type: UploadSourceFileTask) {
 
 crowdinDownload {
     apiKey = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
-    projectId = project.hasProperty('CROWDIN_PROJECT_ID') ? CROWDIN_PROJECT_ID : System.getenv('CROWDIN_PROJECT_ID')
+    projectId = 'mytargets'
     destination = "$projectDir"
 }.dependsOn crowdinStringsUpload
 
 subprojects.each { project ->
-    project.afterEvaluate {
-        project.assembleRelease.dependsOn crowdinDownload
+    project.tasks.whenTaskAdded { task ->
+        if(task.name == 'preReleaseBuild') {
+            task.dependsOn crowdinDownload
+        }
     }
 }
 

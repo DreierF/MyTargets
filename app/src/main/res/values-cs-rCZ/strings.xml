@@ -220,7 +220,7 @@
   <string name="date">Date</string>
   <string name="edit_round">Edit round</string>
   <string name="draw_weight">Sila nátahu</string>
-  <string name="sight">Sight</string>
+  <string name="sight">Zaměřovač</string>
   <string name="limbs">Ramena</string>
   <string name="my_bow">Můj luk</string>
   <string name="my_arrow">Moje šípy</string>
@@ -233,8 +233,8 @@
   <string name="comments">Komentáře</string>
   <string name="show_points_colored">Show points colored</string>
   <string name="stabilizer">Stabilizátor</string>
-  <string name="clicker">Clicker</string>
-  <string name="arrow_number_x">Arrow number %d</string>
+  <string name="clicker">Klapačka</string>
+  <string name="arrow_number_x">Šíp číslo %d</string>
   <string name="training_with_standard_round">Training with Standard Round</string>
   <string name="free_training">Volný trénink</string>
   <string name="competition">Soutěž</string>

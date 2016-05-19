@@ -253,6 +253,6 @@
   <string name="donate_via_paypal">Prispieť cez PayPal</string>
   <string name="translate_crowdin">Preložiť v Crowdin-e</string>
   <string name="network_linkedin">Sieť v LinkedIn</string>
-  <string name="enter_scores_only_description">Lets you only enter the scores not the exact arrow position. Use this option to enter data with your smartwatch or to enter historical data.</string>
-  <string name="enter_scores_only">Enter scores only</string>
+  <string name="enter_scores_only_description">Umožňuje zadať iba skóre nie presnú pozíciu šípu. Použite túto možnosť pre zadávanie údajov cez vaše smart hodinky alebo pre zadanie historických údajov.</string>
+  <string name="enter_scores_only">Zadať iba skóre</string>
 </resources>

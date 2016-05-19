@@ -5,8 +5,8 @@
   <string name="wa_6_ring">WA 6 kruh</string>
   <string name="wa_5_ring">WA 5 kruh</string>
   <string name="wa_3_ring">WA 3 kruh</string>
-  <string name="vegas_3_spot">Vegas 3 Spot</string>
-  <string name="vertical_3_spot">Vertical 3 Spot</string>
+  <string name="vegas_3_spot">Vegas 3 bodové</string>
+  <string name="vertical_3_spot">Vertikálne 3 kruh</string>
   <string name="wa_3_ring_3_spot">WA 3 Ring 3 Spot</string>
   <string name="nfaa_field">NFAA Field</string>
   <string name="nfaa_expert_field">NFAA Expert Field</string>
@@ -20,9 +20,9 @@
   <string name="asa_3d_14">3D ASA 14</string>
   <string name="ibo_3d">3D IBO</string>
   <string name="nfas_3d">3D NFAS</string>
-  <string name="dair_3d">3D DAIR</string>
-  <string name="ifaa_animal">IFAA Animal</string>
-  <string name="nfaa_animal">NFAA Animal</string>
+  <string name="dair_3d">3D Dair</string>
+  <string name="ifaa_animal">IFAA zvieratá</string>
+  <string name="nfaa_animal">NFAA zvieratá</string>
   <string name="nfas_field">NFAS Field</string>
   <string name="beursault">Beursault</string>
   <string name="sca_period">SCA Period</string>
