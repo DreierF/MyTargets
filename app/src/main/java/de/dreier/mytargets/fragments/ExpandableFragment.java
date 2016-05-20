@@ -8,6 +8,7 @@
 package de.dreier.mytargets.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ public abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSet
 
     ExpandableNowListAdapter<H, C> mAdapter;
     private GridLayoutManager manager;
+    @Nullable
     private Bundle savedInstanceState;
 
     @Override
@@ -52,7 +54,7 @@ public abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSet
         return rootView;
     }
 
-    void setList(IdProviderDataSource<C> dataSource, List<H> headers, List<C> children, PartitionDelegate<C> parentDelegate, boolean opened, ExpandableNowListAdapter<H, C> adapter) {
+    void setList(IdProviderDataSource<C> dataSource, List<H> headers, List<C> children, PartitionDelegate<C> parentDelegate, boolean opened, @NonNull ExpandableNowListAdapter<H, C> adapter) {
         this.dataSource = dataSource;
         if (mRecyclerView.getAdapter() == null) {
             mAdapter = adapter;
@@ -72,6 +74,7 @@ public abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSet
         manager.setSpanCount(adapter.getMaxSpan());
     }
 
+    @NonNull
     @Override
     protected C getItem(int id) {
         return (C) mAdapter.getItem(id);
@@ -88,9 +91,11 @@ public abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSet
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLongArray("expanded", Utils.toArray(mAdapter.getExpandedIds()));
+        if (mAdapter != null) {
+            outState.putLongArray("expanded", Utils.toArray(mAdapter.getExpandedIds()));
+        }
     }
 
     @Override
