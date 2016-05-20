@@ -20,9 +20,11 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
+import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.utils.DividerItemDecoration;
 
 /**
  * Shows all rounds of one settings_only day
@@ -36,6 +38,7 @@ public abstract class EditableFragment<T extends IIdSettable> extends EditableFr
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), R.drawable.inset_divider));
         return rootView;
     }
 
