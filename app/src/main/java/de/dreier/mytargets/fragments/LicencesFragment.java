@@ -56,11 +56,6 @@ public final class LicencesFragment extends Fragment {
         return new HomageAdapter(homage, HomageView.ExtraInfoMode.EXPANDABLE, false);
     }
 
-    @NonNull
-    public RecyclerView.LayoutManager getLayoutManager() {
-        return new LinearLayoutManager(getActivity());
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -80,7 +75,7 @@ public final class LicencesFragment extends Fragment {
         mRecyclerView = recyclerView;
         mRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = getLayoutManager();
+        mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         if (savedInstanceState != null) {
             Parcelable layoutState = savedInstanceState.getParcelable(KEY_LAYOUT_MANAGER_STATE);
