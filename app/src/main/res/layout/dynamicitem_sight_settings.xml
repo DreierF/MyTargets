@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <de.dreier.mytargets.views.selector.SimpleDistanceSelector
         android:id="@+id/distanceSpinner"
@@ -21,7 +21,7 @@
         android:layout_toLeftOf="@+id/remove_sight_setting"
         android:layout_toStartOf="@+id/remove_sight_setting"
         android:ems="10"
-        android:inputType="text" />
+        android:inputType="text"/>
 
     <ImageButton
         android:id="@+id/remove_sight_setting"
@@ -32,5 +32,5 @@
         android:layout_centerVertical="true"
         android:background="?android:attr/selectableItemBackground"
         android:contentDescription="@string/delete"
-        android:src="@drawable/ic_cancel_grey600_24dp" />
+        app:srcCompat="@drawable/ic_cancel_grey600_24dp"/>
 </RelativeLayout>

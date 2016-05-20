@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/header_container"
-    android:paddingBottom="16dp"
-    android:paddingTop="16dp">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                style="@style/header_container"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp">
 
     <TextView
         android:id="@+id/round"
@@ -28,6 +29,6 @@
         android:layout_centerVertical="true"
         android:clickable="false"
         android:contentDescription="@string/expand_collapse"
-        android:src="@drawable/ic_expand_more_grey600_24dp" />
+        app:srcCompat="@drawable/ic_expand_more_grey600_24dp" />
 
 </RelativeLayout>

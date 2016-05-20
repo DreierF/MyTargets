@@ -2,7 +2,8 @@
 <RelativeLayout
     style="@style/header_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@android:id/text1"
@@ -24,6 +25,6 @@
         android:layout_centerVertical="true"
         android:clickable="false"
         android:contentDescription="@string/expand_collapse"
-        android:src="@drawable/ic_expand_more_grey600_24dp"/>
+        app:srcCompat="@drawable/ic_expand_more_grey600_24dp"/>
 
 </RelativeLayout>

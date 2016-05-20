@@ -16,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.SpannableString;
@@ -57,6 +58,10 @@ import static de.dreier.mytargets.fragments.FragmentBase.ITEM_ID;
  */
 public class MainActivity extends AppCompatActivity
         implements FragmentBase.OnItemSelectedListener, FragmentBase.ContentListener, ViewPager.OnPageChangeListener, FABMenu.Listener {
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     private static boolean shownThisTime = false;
     private final boolean[] empty = new boolean[3];

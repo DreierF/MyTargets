@@ -30,6 +30,7 @@ import de.dreier.mytargets.fragments.WindSpeedFragment;
 public abstract class ItemSelectActivity extends SimpleFragmentActivity
         implements FragmentBase.OnItemSelectedListener,
         FragmentBase.ContentListener {
+
     public static final String ITEM = "item";
     public static final String INTENT = "intent";
 

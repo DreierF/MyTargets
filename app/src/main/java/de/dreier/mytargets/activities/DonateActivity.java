@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -20,6 +21,10 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.DonationAdapter;
 
 public class DonateActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     public static final ArrayList<String> donations;
     public static final HashMap<String, String> prices;
