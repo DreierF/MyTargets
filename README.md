@@ -1,5 +1,5 @@
 
-![Version](https://img.shields.io/badge/version-2.2.0-orange.svg)
+![Version](https://img.shields.io/badge/version-2.2.1-orange.svg)
 ![Licence](https://img.shields.io/badge/licence-GNU%20GPLv2-blue.svg)
 ![API](https://img.shields.io/badge/API-14+-green.svg)
 [![Build Status](https://travis-ci.org/DreierF/MyTargets.svg?branch=develop)](https://travis-ci.org/DreierF/MyTargets)
