@@ -49,6 +49,10 @@ crowdinDownload {
     apiKey = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
     projectId = 'mytargets'
     destination = "$projectDir"
+    renameMapping  = [
+            from:  '^(.*)/values-((?!(pt|zh))(.*)-r(.*)|((pt|zh).*))/(.*)$',
+            to:  /\1\/values-\4\6\/\8/
+    ]
 }.dependsOn crowdinUpload
 
 subprojects.each { project ->
