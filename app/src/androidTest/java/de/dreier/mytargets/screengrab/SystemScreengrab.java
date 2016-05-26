@@ -45,7 +45,10 @@ public class SystemScreengrab {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public static void screenshot(String filename) throws IOException {
         Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
-
+        if (bitmap == null) {
+            return;
+        }
+        
         File file = screenshotFile(filename);
         OutputStream fos = null;
         try {
@@ -53,9 +56,7 @@ public class SystemScreengrab {
             bitmap.compress(Bitmap.CompressFormat.PNG, FULL_QUALITY, fos);
             Chmod.chmodPlusR(file);
         } finally {
-            if (bitmap != null) {
-                bitmap.recycle();
-            }
+            bitmap.recycle();
             if (fos != null) {
                 fos.close();
             }
