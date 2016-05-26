@@ -7,6 +7,6 @@ public class ArrowAwareScoringStyle extends ScoringStyle {
     }
 
     protected int getPoints(int zone, int arrow) {
-        return points[arrow][zone];
+        return points[arrow < points.length ? arrow : points.length - 1][zone];
     }
 }
