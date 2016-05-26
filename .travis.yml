@@ -38,4 +38,4 @@ before_install:
 
 script:
   - ./gradlew clean assemble || ./gradlew clean assemble
-  - ./gradlew connectedAndroidTest
+  - ./gradlew connectedScreengrabDebugAndroidTest
