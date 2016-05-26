@@ -6,11 +6,17 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.hamcrest.CoreMatchers;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.activities.MainActivity;
+import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.shared.models.Diameter;
+import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.targets.WAFull;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -29,6 +35,16 @@ public class HelloWorldEspressoTest extends UITestBase {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+    @Before
+    public void setUp() {
+        SettingsManager.setTarget(new Target(WAFull.ID, 0, new Diameter(122, Diameter.CENTIMETER)));
+        SettingsManager.setDistance(new Distance(50, Distance.METER));
+        SettingsManager.setIndoor(false);
+        SettingsManager.setScoresOnly(false);
+        SettingsManager.setTimerEnabled(false);
+        SettingsManager.setArrowsPerPasse(3);
+    }
 
     @Test
     public void appDoesStartUp() {
