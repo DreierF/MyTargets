@@ -53,7 +53,9 @@ public class SystemScreengrab {
             bitmap.compress(Bitmap.CompressFormat.PNG, FULL_QUALITY, fos);
             Chmod.chmodPlusR(file);
         } finally {
-            bitmap.recycle();
+            if (bitmap != null) {
+                bitmap.recycle();
+            }
             if (fos != null) {
                 fos.close();
             }
@@ -94,8 +96,7 @@ public class SystemScreengrab {
             if (dir.isDirectory() && dir.canWrite()) {
                 return dir;
             }
-        } catch (IOException var2) {
-            ;
+        } catch (IOException ignored) {
         }
 
         return null;
