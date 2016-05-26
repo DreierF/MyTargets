@@ -48,7 +48,7 @@ public class SystemScreengrab {
         if (bitmap == null) {
             return;
         }
-        
+
         File file = screenshotFile(filename);
         OutputStream fos = null;
         try {

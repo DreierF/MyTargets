@@ -51,10 +51,10 @@ public class ScreenshotTest extends UITestBase {
         onView(allOf(withText(R.string.training), withParent(withParent(withParent(withId(R.id.slidingTabs)))))).perform(click());
         onView(withText("631/720")).perform(click());
         SystemScreengrab.screenshot("4_training_overview");
-        onView(withId(R.id.action_scoreboard)).perform(click());
+        clickActionBarItem(R.id.action_scoreboard, R.string.scoreboard);
         SystemScreengrab.screenshot("5_scoreboard");
         navigateUp();
-        onView(withId(R.id.action_statistics)).perform(click());
+        clickActionBarItem(R.id.action_statistics, R.string.statistic);
         SystemClock.sleep(1000);
         SystemScreengrab.screenshot("6_statistics");
         navigateUp();
@@ -76,4 +76,5 @@ public class ScreenshotTest extends UITestBase {
         SystemClock.sleep(1000);
         onView(withId(R.id.targetView)).perform(releaseTapTarget(0.5f, 0.4f));
     }
+
 }

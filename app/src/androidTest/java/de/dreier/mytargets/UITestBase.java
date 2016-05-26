@@ -1,7 +1,9 @@
 package de.dreier.mytargets;
 
 import android.os.Build;
-import android.support.test.InstrumentationRegistry;
+import android.support.annotation.IdRes;
+import android.support.annotation.StringRes;
+import android.support.test.espresso.FailureHandler;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.action.GeneralClickAction;
@@ -18,10 +20,14 @@ import android.widget.ImageButton;
 
 import org.hamcrest.Matcher;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.is;
 
@@ -56,7 +62,7 @@ public class UITestBase {
     }
 
     protected static UiDevice getUiDevice() {
-        return UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        return UiDevice.getInstance(getInstrumentation());
     }
 
     public static ViewAction clickTarget(final float x, final float y) {
@@ -77,5 +83,15 @@ public class UITestBase {
 
     public static ViewAction releaseTapTarget(final float x, final float y) {
         return LowLevelActions.release(new float[]{x, y});
+    }
+
+    protected void clickActionBarItem(@IdRes int menuItem, @StringRes int title) {
+        onView(withId(menuItem)).withFailureHandler(new FailureHandler() {
+            @Override
+            public void handle(Throwable error, Matcher<View> viewMatcher) {
+                openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+                onView(withText(title)).perform(click());
+            }
+        }).perform(click());
     }
 }
