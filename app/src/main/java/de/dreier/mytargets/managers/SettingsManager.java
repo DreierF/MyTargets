@@ -24,6 +24,8 @@ public class SettingsManager {
     public static final String KEY_SCORES_ONLY = "scores_only";
     public static final String KEY_INDOOR = "indoor";
     public static final String KEY_PASSES = "rounds";
+    public static final String KEY_TRANSLATION_DIALOG_SHOWN = "translation_dialog_shown";
+
     private static SharedPreferences preferences = ApplicationInstance.getLastSharedPreferences();
 
     public static int getStandardRound() {
@@ -153,6 +155,18 @@ public class SettingsManager {
     public static void setPasses(int passes) {
         preferences.edit()
                 .putInt(KEY_PASSES, passes)
+                .apply();
+    }
+
+    public static boolean getTranslationDialogWasShown() {
+        SharedPreferences prefs = ApplicationInstance.getSharedPreferences();
+        return prefs.getBoolean(KEY_TRANSLATION_DIALOG_SHOWN, false);
+    }
+
+    public static void setTranslationDialogWasShown(boolean shown) {
+        ApplicationInstance.getSharedPreferences()
+                .edit()
+                .putBoolean(KEY_TRANSLATION_DIALOG_SHOWN, shown)
                 .apply();
     }
 }

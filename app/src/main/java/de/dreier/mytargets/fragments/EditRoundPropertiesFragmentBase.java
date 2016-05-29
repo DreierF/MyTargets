@@ -22,7 +22,6 @@ import de.dreier.mytargets.views.selector.DistanceSelector;
 import de.dreier.mytargets.views.selector.TargetSelector;
 
 public abstract class EditRoundPropertiesFragmentBase extends EditFragmentBase {
-    public static final String TRAINING_ID = "training_id";
 
     protected long trainingId = -1;
 
@@ -51,7 +50,7 @@ public abstract class EditRoundPropertiesFragmentBase extends EditFragmentBase {
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            trainingId = arguments.getLong(TRAINING_ID, -1);
+            trainingId = arguments.getLong(FragmentBase.ITEM_ID, -1);
         }
 
         setUpToolbar(rootView);

@@ -8,9 +8,7 @@ package de.dreier.mytargets.fragments;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +44,6 @@ import de.dreier.mytargets.views.selector.EnvironmentSelector;
 import de.dreier.mytargets.views.selector.StandardRoundSelector;
 
 import static de.dreier.mytargets.fragments.DatePickerFragment.ARG_CURRENT_DATE;
-
 
 public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implements DatePickerDialog.OnDateSetListener {
     public static final String TRAINING_TYPE = "training_type";
@@ -99,7 +96,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            trainingId = arguments.getLong(TRAINING_ID, -1);
+            trainingId = arguments.getLong(FragmentBase.ITEM_ID, -1);
             trainingType = arguments.getInt(TRAINING_TYPE, FREE_TRAINING);
         }
 

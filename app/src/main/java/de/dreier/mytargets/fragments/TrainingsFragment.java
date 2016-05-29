@@ -7,7 +7,6 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -37,7 +36,7 @@ import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.Utils;
 
 /**
- * Shows an overview over all trying days
+ * Shows an overview over all training days
  */
 public class TrainingsFragment extends ExpandableFragment<Month, Training> {
 
@@ -51,18 +50,12 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
 
     @Override
     public void onSelected(Training item) {
-        Intent i = new Intent(getActivity(), SimpleFragmentActivity.TrainingActivity.class);
-        i.putExtra(ITEM_ID, item.getId());
-        startActivity(i);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        startActivityAnimated(SimpleFragmentActivity.TrainingActivity.class, ITEM_ID, item.getId());
     }
 
     @Override
     protected void onEdit(final Training item) {
-        Intent i = new Intent(getActivity(), SimpleFragmentActivity.EditTrainingActivity.class);
-        i.putExtra(EditTrainingFragment.TRAINING_ID, item.getId());
-        startActivity(i);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        startActivityAnimated(SimpleFragmentActivity.EditTrainingActivity.class, ITEM_ID, item.getId());
     }
 
     @Override

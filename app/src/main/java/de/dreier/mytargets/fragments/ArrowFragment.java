@@ -7,7 +7,6 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -27,6 +26,8 @@ import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.SelectableViewHolder;
+
+import static de.dreier.mytargets.fragments.EditArrowFragment.ARROW_ID;
 
 public class ArrowFragment extends EditableFragment<Arrow> implements View.OnClickListener {
 
@@ -51,15 +52,17 @@ public class ArrowFragment extends EditableFragment<Arrow> implements View.OnCli
 
     @Override
     protected void onEdit(Arrow item) {
-        Intent i = new Intent(getActivity(), SimpleFragmentActivity.EditArrowActivity.class);
-        i.putExtra(EditArrowFragment.ARROW_ID, item.getId());
-        startActivity(i);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        startActivityAnimated(SimpleFragmentActivity.EditArrowActivity.class, ARROW_ID, item.getId());
+    }
+
+    @Override
+    protected void onSelected(Arrow item) {
+        startActivityAnimated(SimpleFragmentActivity.EditArrowActivity.class, ARROW_ID, item.getId());
     }
 
     @Override
     public void onClick(View v) {
-        startActivity(SimpleFragmentActivity.EditArrowActivity.class);
+        startActivityAnimated(SimpleFragmentActivity.EditArrowActivity.class);
     }
 
     private class ArrowAdapter extends NowListAdapter<Arrow> {

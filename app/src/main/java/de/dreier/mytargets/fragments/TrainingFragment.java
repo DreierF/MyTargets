@@ -322,7 +322,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
             case 2:
                 // New round to free training
                 Intent i = new Intent(getContext(), SimpleFragmentActivity.EditRoundActivity.class);
-                i.putExtra(EditRoundFragment.TRAINING_ID, mTraining);
+                i.putExtra(ITEM_ID, mTraining);
                 startActivity(i);
                 break;
         }
@@ -434,7 +434,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         @Override
         public boolean onLongClick(View v) {
             Intent i = new Intent(getContext(), SimpleFragmentActivity.EditRoundActivity.class);
-            i.putExtra(EditRoundFragment.TRAINING_ID, mTraining);
+            i.putExtra(ITEM_ID, mTraining);
             i.putExtra(EditRoundFragment.ROUND_ID, mItem.getId());
             startActivity(i);
             return true;

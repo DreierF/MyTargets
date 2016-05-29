@@ -9,8 +9,8 @@ package de.dreier.mytargets.adapters;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v7.app.AppCompatActivity;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.ArrowFragment;
@@ -27,8 +27,8 @@ public class MainTabsFragmentPagerAdapter extends FragmentPagerAdapter {
         fragments[2] = new ArrowFragment();
     }
 
-    public MainTabsFragmentPagerAdapter(AppCompatActivity context) {
-        super(context.getSupportFragmentManager());
+    public MainTabsFragmentPagerAdapter(Context context, FragmentManager fragmentManager) {
+        super(fragmentManager);
         this.context = context;
     }
 

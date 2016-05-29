@@ -7,16 +7,11 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import junit.framework.Assert;
-
-import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -32,7 +27,6 @@ import de.dreier.mytargets.utils.DividerItemDecoration;
 public abstract class EditableFragment<T extends IIdSettable> extends EditableFragmentBase<T> {
 
     private NowListAdapter<T> mAdapter;
-    private OnItemSelectedListener listener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,15 +34,6 @@ public abstract class EditableFragment<T extends IIdSettable> extends EditableFr
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), R.drawable.inset_divider));
         return rootView;
-    }
-
-    @Override
-    public void onAttach(Context activity) {
-        super.onAttach(activity);
-        if (activity instanceof OnItemSelectedListener) {
-            this.listener = (OnItemSelectedListener) activity;
-        }
-        Assert.assertNotNull(listener);
     }
 
     void setList(IdProviderDataSource<T> dataSource, List<T> list, NowListAdapter<T> adapter) {
@@ -77,10 +62,6 @@ public abstract class EditableFragment<T extends IIdSettable> extends EditableFr
     @Override
     protected void removeItem(int pos) {
         mAdapter.remove(pos);
-    }
-
-    protected final void onSelected(T item) {
-        listener.onItemSelected(Parcels.wrap(item));
     }
 
 }

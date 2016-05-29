@@ -119,6 +119,10 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
         if (activity instanceof ContentListener) {
             listener = (ContentListener) activity;
         }
+        Fragment fragment = getParentFragment();
+        if (listener == null && fragment instanceof ContentListener) {
+            listener = (ContentListener) fragment;
+        }
     }
 
     /**
@@ -133,8 +137,15 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
      * Starts the given activity with the standard animation
      * @param activity Activity to start
      */
-    void startActivity(Class<?> activity) {
+    void startActivityAnimated(Class<?> activity) {
         Intent i = new Intent(getContext(), activity);
+        startActivity(i);
+        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    void startActivityAnimated(Class<?> activity, String key, long value) {
+        Intent i = new Intent(getContext(), activity);
+        i.putExtra(key, value);
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
