@@ -13,7 +13,7 @@
   <string name="arrow">Pil</string>
   <string name="round">Runda</string>
   <string name="points">Poäng</string>
-  <string name="passe">Avsluta</string>
+  <string name="passe">Omgång</string>
   <string name="passe_n">End %d</string>
   <!-- Overview -->
   <string name="new_training">Ny träning</string>
@@ -53,8 +53,8 @@
   <string name="add_bow">Ny pilbåge</string>
   <string name="name">Namn</string>
   <string name="bow_type">Pilbågs typ</string>
-  <string name="recurve_bow">Recurve pilbåge</string>
-  <string name="compound_bow">Compound pilbåge</string>
+  <string name="recurve_bow">Recurvebåge</string>
+  <string name="compound_bow">Compoundbåge</string>
   <string name="bare_bow">Barebow</string>
   <string name="long_bow">Långbåge</string>
   <string name="horse_bow">Ryttarbåge</string>

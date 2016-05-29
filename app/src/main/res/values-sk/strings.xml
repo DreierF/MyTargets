@@ -14,7 +14,7 @@
   <string name="round">Kolo</string>
   <string name="points">Body</string>
   <string name="passe">Koniec</string>
-  <string name="passe_n">Koniec %d</string>
+  <string name="passe_n">Sada %d</string>
   <!-- Overview -->
   <string name="new_training">Nový tréning</string>
   <string name="new_bow">Nový luk</string>
@@ -57,7 +57,7 @@
   <string name="add_bow">Pridať luk</string>
   <string name="name">Meno</string>
   <string name="bow_type">Luk typu</string>
-  <string name="recurve_bow">Zvratný/olympijský luk</string>
+  <string name="recurve_bow">Zvratný luk</string>
   <string name="compound_bow">Kladkový luk</string>
   <string name="bare_bow">Holý luk</string>
   <string name="long_bow">Dlhý luk</string>
@@ -186,7 +186,7 @@
   <string name="three_d">3D</string>
   <string name="standard_round">Štandardné kolo</string>
   <string name="use_as_template">Použiť ako šablónu?</string>
-  <string name="create_copy">Jedná sa o štandardné kolo! \nChcete vytvoriť kópiu, aby ste ju mohli upraviť?</string>
+  <string name="create_copy">Jedná sa o štandardné kolo! \nChcete vytvoriť kópiu, aby ste ho mohli upraviť?</string>
   <string name="not_matches_sheme">Vstup nezodpovedá očakávanému formátu ako 1,3,5</string>
   <string name="arrow_numbers_desc">Zadajte všetky čísla šípov, ktoré používate pre streľbu napr 1,2,5,6,7</string>
   <string name="practice">Tréning</string>
@@ -235,7 +235,7 @@
   <string name="stabilizer">Stabilizátor</string>
   <string name="clicker">Klapačka</string>
   <string name="arrow_number_x">Šíp číslo %d</string>
-  <string name="training_with_standard_round">Tréning so štandardným terčom</string>
+  <string name="training_with_standard_round">Tréning so štandardným kolom</string>
   <string name="free_training">Voľný tréning</string>
   <string name="competition">Súťaž</string>
   <string name="unit_lbs">libier</string>

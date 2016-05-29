@@ -47,4 +47,8 @@
     <style name="AppTheme.Overlay" parent="AppBaseTheme.Overlay"/>
 
     <style name="AppTheme.CustomToolbar" parent="AppBaseTheme.CustomToolbar"/>
+
+    <style name="AppTheme.CustomToolbar.Launcher">
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+    </style>
 </resources>

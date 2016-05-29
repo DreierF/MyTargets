@@ -44,7 +44,7 @@
             android:name=".activities.MainActivity"
             android:label="@string/my_targets"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.CustomToolbar">
+            android:theme="@style/AppTheme.CustomToolbar.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
