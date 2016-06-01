@@ -7,6 +7,7 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -50,7 +51,10 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
 
     @Override
     public void onSelected(Training item) {
-        startActivityAnimated(SimpleFragmentActivity.TrainingActivity.class, ITEM_ID, item.getId());
+        Intent i = new Intent(getContext(), SimpleFragmentActivity.TrainingActivity.class);
+        i.putExtra(ITEM_ID, item.getId());
+        startActivity(i);
+        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     @Override

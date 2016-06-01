@@ -42,11 +42,11 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
-    <style name="AppTheme" parent="AppBaseTheme"/>
+    <style name="AppTheme" parent="AppBaseTheme" />
 
-    <style name="AppTheme.Overlay" parent="AppBaseTheme.Overlay"/>
+    <style name="AppTheme.Overlay" parent="AppBaseTheme.Overlay" />
 
-    <style name="AppTheme.CustomToolbar" parent="AppBaseTheme.CustomToolbar"/>
+    <style name="AppTheme.CustomToolbar" parent="AppBaseTheme.CustomToolbar" />
 
     <style name="AppTheme.CustomToolbar.Launcher">
         <item name="android:windowBackground">@drawable/launch_screen</item>

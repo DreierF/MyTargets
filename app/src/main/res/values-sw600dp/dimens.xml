@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="timer_text_size">150sp</dimen>
+    <dimen name="touch_raise">9dp</dimen>
 </resources>

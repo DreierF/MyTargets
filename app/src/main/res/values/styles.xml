@@ -31,4 +31,8 @@
         <item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif-medium</item>
     </style>
 
+    <style name="MaterialItem">
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
 </resources>
