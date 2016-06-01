@@ -24,6 +24,7 @@ public class SettingsManager {
     public static final String KEY_SCORES_ONLY = "scores_only";
     public static final String KEY_INDOOR = "indoor";
     public static final String KEY_PASSES = "rounds";
+    public static final String KEY_FILTER_CLUB = "filter_club";
     private static SharedPreferences preferences = ApplicationInstance.getLastSharedPreferences();
 
     public static int getStandardRound() {
@@ -153,6 +154,17 @@ public class SettingsManager {
     public static void setPasses(int passes) {
         preferences.edit()
                 .putInt(KEY_PASSES, passes)
+                .apply();
+    }
+
+    public static int getClubFilter() {
+        return ApplicationInstance.getSharedPreferences().getInt(KEY_FILTER_CLUB, 0x1FF);
+    }
+
+    public static void setClubFilter(int filter) {
+        ApplicationInstance.getSharedPreferences()
+                .edit()
+                .putInt(KEY_FILTER_CLUB, filter)
                 .apply();
     }
 }

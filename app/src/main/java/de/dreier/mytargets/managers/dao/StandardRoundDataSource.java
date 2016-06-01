@@ -11,12 +11,18 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.targets.TargetModelBase;
+import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
 public class StandardRoundDataSource extends IdProviderDataSource<StandardRound> {
     private static final String TABLE = "STANDARD_ROUND_TEMPLATE";
@@ -92,6 +98,40 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
 
     public ArrayList<StandardRound> getAll() {
         Cursor cursor = database.rawQuery("SELECT s._id FROM STANDARD_ROUND_TEMPLATE s", null);
+        ArrayList<StandardRound> list = new ArrayList<>(cursor.getCount());
+        if (cursor.moveToFirst()) {
+            do {
+                list.add(get(cursor.getLong(0)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
+    @NonNull
+    public List<StandardRound> getAllFiltered(int clubs, boolean indoor, boolean isMetric, int checked) {
+        List<StandardRound> list = getAll();
+        ArrayList<StandardRound> displayList = new ArrayList<>();
+        String unitDistance = isMetric ? Distance.METER : Distance.YARDS;
+        for (StandardRound r : list) {
+            ArrayList<RoundTemplate> rounds = r.getRounds();
+            if (rounds.size() > 0 && ((r.club & clubs) != 0 ||
+                    r.name.startsWith("NFAA/IFAA") && (clubs & StandardRoundFactory.IFAA) != 0) &&
+                    rounds.get(0).distance.unit.equals(unitDistance) &&
+                    r.indoor == indoor) {
+                TargetModelBase target = rounds.get(0).target.getModel();
+                if ((checked != R.id.field || target.isFieldTarget()) &&
+                        (checked != R.id.three_d || target.is3DTarget())) {
+                    displayList.add(r);
+                }
+            }
+        }
+        return displayList;
+    }
+
+    public List<StandardRound> getAllSearch(String query) {
+        query = query.replace(' ', '%');
+        Cursor cursor = database.rawQuery("SELECT s._id FROM STANDARD_ROUND_TEMPLATE s WHERE s.name LIKE '%' || ? || '%' AND s.club!=512", new String[]{query});
         ArrayList<StandardRound> list = new ArrayList<>(cursor.getCount());
         if (cursor.moveToFirst()) {
             do {

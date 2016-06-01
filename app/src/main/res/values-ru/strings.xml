@@ -255,4 +255,5 @@
   <string name="network_linkedin">Страница на LinkedIn</string>
   <string name="enter_scores_only_description">Позволяет вам только вводить значение в баллах, а не точную позицию стрелы. Этот параметр используется для ввода данных с ваших \"умных часов\" или ввести историю попаданий.</string>
   <string name="enter_scores_only">Вводите только результаты</string>
+  <string name="search">Search</string>
 </resources>
