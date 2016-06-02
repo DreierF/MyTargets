@@ -243,4 +243,5 @@
   <string name="network_linkedin">Nätverk på LinkedIn</string>
   <string name="enter_scores_only_description">Du kan endast ange poängen inte den exakta träffpunkten för pilen. Använd det här alternativet för att ange data med din smartwatch eller ange historiska data.</string>
   <string name="enter_scores_only">Ange bara resultat</string>
+  <string name="search">Search</string>
 </resources>

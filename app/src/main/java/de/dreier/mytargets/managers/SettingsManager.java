@@ -25,6 +25,7 @@ public class SettingsManager {
     public static final String KEY_INDOOR = "indoor";
     public static final String KEY_PASSES = "rounds";
     public static final String KEY_TRANSLATION_DIALOG_SHOWN = "translation_dialog_shown";
+    public static final String KEY_FILTER_CLUB = "filter_club";
 
     private static SharedPreferences preferences = ApplicationInstance.getLastSharedPreferences();
 
@@ -167,6 +168,18 @@ public class SettingsManager {
         ApplicationInstance.getSharedPreferences()
                 .edit()
                 .putBoolean(KEY_TRANSLATION_DIALOG_SHOWN, shown)
+                .apply();
+    }
+
+    public static int getClubFilter() {
+        return ApplicationInstance.getSharedPreferences().getInt(KEY_FILTER_CLUB, 0x1FF);
+        return prefs.getBoolean(KEY_TRANSLATION_DIALOG_SHOWN, false);
+    }
+
+    public static void setClubFilter(int filter) {
+        ApplicationInstance.getSharedPreferences()
+                .edit()
+                .putInt(KEY_FILTER_CLUB, filter)
                 .apply();
     }
 }

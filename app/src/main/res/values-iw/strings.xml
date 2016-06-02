@@ -22,18 +22,26 @@
   <string name="new_round">סבב חדש</string>
   <plurals name="training_selected">
     <item quantity="one">נבחר אימון אחד</item>
+    <item quantity="two">נבחרו %d אימונים</item>
+    <item quantity="many">נבחרו %d אימונים</item>
     <item quantity="other">נבחרו %d אימונים</item>
   </plurals>
   <plurals name="bow_selected">
     <item quantity="one">נבחרה קשת אחת</item>
+    <item quantity="two">נבחרו %d קשתות</item>
+    <item quantity="many">נבחרו %d קשתות</item>
     <item quantity="other">נבחרו %d קשתות</item>
   </plurals>
   <plurals name="arrow_selected">
     <item quantity="one">נבחר חץ אחד</item>
+    <item quantity="two">נבחרו %d חצים</item>
+    <item quantity="many">נבחרו %d חצים</item>
     <item quantity="other">נבחרו %d חצים</item>
   </plurals>
   <plurals name="passe_selected">
     <item quantity="one">%d end selected</item>
+    <item quantity="two">%d ends selected</item>
+    <item quantity="many">%d ends selected</item>
     <item quantity="other">%d ends selected</item>
   </plurals>
   <string name="edit">ערוך</string>
@@ -87,11 +95,15 @@
   <!-- x ends of y arrows -->
   <plurals name="passe">
     <item quantity="one">%d end</item>
+    <item quantity="two">%d ends</item>
+    <item quantity="many">%d ends</item>
     <item quantity="other">%d ends</item>
   </plurals>
   <string name="with">of</string>
   <plurals name="arrow">
     <item quantity="one">%d arrow</item>
+    <item quantity="two">%d arrows</item>
+    <item quantity="many">%d arrows</item>
     <item quantity="other">%d arrows</item>
   </plurals>
   <string name="target_face">Target face</string>
@@ -152,6 +164,8 @@
   <string name="version">גירסה %s</string>
   <plurals name="second">
     <item quantity="one">%d שנייה</item>
+    <item quantity="two">%d שניות</item>
+    <item quantity="many">%d שניות</item>
     <item quantity="other">%d שניות</item>
   </plurals>
   <string name="info">מידע</string>
@@ -187,22 +201,32 @@
   <string name="edit_standard_round">Edit Standard Round</string>
   <plurals name="arrow_deleted">
     <item quantity="one">%d arrow deleted</item>
+    <item quantity="two">%d arrows deleted</item>
+    <item quantity="many">%d arrows deleted</item>
     <item quantity="other">%d arrows deleted</item>
   </plurals>
   <plurals name="bow_deleted">
     <item quantity="one">%d bow deleted</item>
+    <item quantity="two">%d bows deleted</item>
+    <item quantity="many">%d bows deleted</item>
     <item quantity="other">%d bows deleted</item>
   </plurals>
   <plurals name="training_deleted">
     <item quantity="one">%d training deleted</item>
+    <item quantity="two">%d trainings deleted</item>
+    <item quantity="many">%d trainings deleted</item>
     <item quantity="other">%d trainings deleted</item>
   </plurals>
   <plurals name="passe_deleted">
     <item quantity="one">%d end deleted</item>
+    <item quantity="two">%d ends deleted</item>
+    <item quantity="many">%d ends deleted</item>
     <item quantity="other">%d ends deleted</item>
   </plurals>
   <plurals name="rounds">
     <item quantity="one">Round %d</item>
+    <item quantity="two">Round %d</item>
+    <item quantity="many">Round %d</item>
     <item quantity="other">Round %d</item>
   </plurals>
   <string name="date">Date</string>
@@ -243,4 +267,5 @@
   <string name="network_linkedin">Network on LinkedIn</string>
   <string name="enter_scores_only_description">Lets you only enter the scores not the exact arrow position. Use this option to enter data with your smartwatch or to enter historical data.</string>
   <string name="enter_scores_only">Enter scores only</string>
+  <string name="search">Search</string>
 </resources>
