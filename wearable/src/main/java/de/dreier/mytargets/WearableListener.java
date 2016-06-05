@@ -42,8 +42,6 @@ import de.dreier.mytargets.shared.models.NotificationInfo$$Parcelable;
         @ParcelClass(Bow.class),
         @ParcelClass(Coordinate.class),
         @ParcelClass(Dimension.class),
-        @ParcelClass(Dimension.class),
-        @ParcelClass(Dimension.class),
         @ParcelClass(Environment.class),
         @ParcelClass(Passe.class),
         @ParcelClass(Round.class),
