@@ -243,5 +243,5 @@
   <string name="network_linkedin">Connecter avec LinkedIn</string>
   <string name="enter_scores_only_description">Vous permet de ne saisir que le score, sans la position de la flèche. Utilisez cette option avec votre smartwatch ou pour entrer d\'anciennes données.</string>
   <string name="enter_scores_only">Saisir seulement les scores</string>
-  <string name="search">Search</string>
+  <string name="search">Rechercher</string>
 </resources>

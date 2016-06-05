@@ -43,7 +43,7 @@ import de.dreier.mytargets.utils.BackupUtils;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 14;
     private static DatabaseManager sInstance;
     private final Context mContext;
 
@@ -343,6 +343,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     "FROM TRAINING t, ROUND r, PASSE p " +
                     "WHERE t._id=r.training AND r._id=p.round " +
                     "AND p.exact=1)");
+        }
+        if (oldVersion < 14) {
+            db.execSQL("UPDATE PASSE SET exact=1 WHERE _id IN (SELECT DISTINCT p._id " +
+                    "FROM PASSE p, ROUND r, TRAINING t " +
+                    "WHERE p.round=r._id " +
+                    "AND r.training=t._id " +
+                    "AND t.exact=1)");
         }
         onCreate(db);
     }

@@ -12,7 +12,6 @@ public class Training implements IIdSettable {
     public long arrow;
     public boolean arrowNumbering;
     public int timePerPasse;
-    public boolean exact;
 
     public long getId() {
         return id;

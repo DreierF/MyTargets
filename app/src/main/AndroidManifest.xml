@@ -233,7 +233,7 @@
         </activity>
         <activity
             android:name=".activities.SimpleFragmentActivity$LicencesActivity"
-            android:label="@string/about"
+            android:label="@string/licences"
             android:parentActivityName=".activities.SimpleFragmentActivity$SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

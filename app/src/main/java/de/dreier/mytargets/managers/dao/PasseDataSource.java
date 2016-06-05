@@ -79,16 +79,18 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
 
     private Passe get(long passeId) {
         Cursor res = database.rawQuery(
-                "SELECT _id, passe, points, x, y, comment, arrow, arrow_index " +
-                        "FROM SHOOT s " +
-                        "WHERE s.passe = " + passeId + " " +
-                        "ORDER BY _id ASC", null);
+                "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, p.exact " +
+                        "FROM SHOOT s, PASSE p " +
+                        "WHERE s.passe=p._id " +
+                        "AND p._id=" + passeId + " " +
+                        "ORDER BY s._id ASC", null);
         int count = res.getCount();
 
+        res.moveToFirst();
         Passe p = new Passe(count);
         p.setId(passeId);
         p.index = -1;
-        res.moveToFirst();
+        p.exact = res.getInt(8) == 1;
         for (int i = 0; i < count; i++) {
             p.shot[i] = ShotDataSource.cursorToShot(res, i);
             res.moveToNext();
@@ -100,7 +102,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     public ArrayList<Passe> getAllByRound(long round) {
         Cursor res = database.rawQuery(
                 "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, " +
-                        "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id) " +
+                        "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id), p.exact " +
                         "FROM PASSE p  " +
                         "LEFT JOIN SHOOT s ON p._id = s.passe " +
                         "WHERE p.round = " + round + " " +
@@ -118,6 +120,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                 Passe passe = new Passe(ppp);
                 passe.setId(res.getLong(1));
                 passe.roundId = round;
+                passe.exact = res.getInt(9) == 1;
                 if (oldRoundId != passe.roundId) {
                     pIndex = 0;
                     oldRoundId = passe.roundId;
@@ -137,7 +140,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     public ArrayList<Passe> getAllByTraining(long training) {
         Cursor res = database.rawQuery(
                 "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, r._id, " +
-                        "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id) " +
+                        "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id), p.exact " +
                         "FROM ROUND r " +
                         "LEFT JOIN PASSE p ON r._id = p.round " +
                         "LEFT JOIN SHOOT s ON p._id = s.passe " +

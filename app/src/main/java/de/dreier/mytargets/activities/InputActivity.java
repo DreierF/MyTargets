@@ -46,13 +46,13 @@ import de.dreier.mytargets.views.TargetView;
 
 public class InputActivity extends AppCompatActivity implements OnTargetSetListener {
 
-    static {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-    }
-
     public static final String ROUND_ID = "round_id";
     public static final String PASSE_IND = "passe_ind";
     private static final String SHOW_ALL_MODE = "show_all";
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     @Bind(R.id.targetView)
     TargetView targetView;
@@ -107,12 +107,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         mShowAllMode = prefs.getBoolean(SHOW_ALL_MODE, false);
 
         targetView.showAll(mShowAllMode);
-        targetView.setZoneSelectionMode(!training.exact);
 
         // Send message to wearable app, that we are starting a passe
-        if (!training.exact) {
-            new Thread(this::startWearNotification).start();
-        }
+        new Thread(this::startWearNotification).start();
 
         if (savedInstanceState != null) {
             curPasse = savedInstanceState.getInt("curPasse");
@@ -153,6 +150,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         eye.setVisible(!targetView.getInputMode());
         eye.setIcon(mShowAllMode ? R.drawable.ic_visibility_white_24dp :
                 R.drawable.ic_visibility_off_white_24dp);
+        menu.findItem(R.id.action_show_sidebar).setIcon(
+                targetView.getInputMode() ? R.drawable.ic_album_24dp :
+                        R.drawable.ic_grain_24dp);
         return true;
     }
 
@@ -213,6 +213,10 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                 targetView.showAll(mShowAllMode);
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 prefs.edit().putBoolean(SHOW_ALL_MODE, mShowAllMode).apply();
+                supportInvalidateOptionsMenu();
+                return true;
+            case R.id.action_show_sidebar:
+                targetView.switchMode(!targetView.getInputMode(), true);
                 supportInvalidateOptionsMenu();
                 return true;
             case android.R.id.home:

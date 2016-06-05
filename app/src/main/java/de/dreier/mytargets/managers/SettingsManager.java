@@ -8,24 +8,25 @@ import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.Target;
 
 public class SettingsManager {
-    public static final String KEY_STANDARD_ROUND = "standard_round";
-    public static final String KEY_ARROW = "arrow";
-    public static final String KEY_BOW = "bow";
-    public static final String KEY_DISTANCE_VALUE = "distance";
-    public static final String KEY_DISTANCE_UNIT = "unit";
-    public static final String KEY_ARROWS_PER_PASSE = "ppp";
-    public static final String KEY_TARGET = "target";
-    public static final String KEY_SCORING_STYLE = "scoring_style";
-    public static final String KEY_TARGET_DIAMETER_VALUE = "size_target";
-    public static final String KEY_TARGET_DIAMETER_UNIT = "unit_target";
-    public static final String KEY_TIMER = "timer";
-    public static final String KEY_NUMBERING_ENABLED = "numbering";
-    public static final String KEY_TIMER_SHOOT_TIME = "timer_shoot_time";
-    public static final String KEY_SCORES_ONLY = "scores_only";
-    public static final String KEY_INDOOR = "indoor";
-    public static final String KEY_PASSES = "rounds";
-    public static final String KEY_TRANSLATION_DIALOG_SHOWN = "translation_dialog_shown";
-    public static final String KEY_FILTER_CLUB = "filter_club";
+    private static final String KEY_STANDARD_ROUND = "standard_round";
+    private static final String KEY_ARROW = "arrow";
+    private static final String KEY_BOW = "bow";
+    private static final String KEY_DISTANCE_VALUE = "distance";
+    private static final String KEY_DISTANCE_UNIT = "unit";
+    private static final String KEY_ARROWS_PER_PASSE = "ppp";
+    private static final String KEY_TARGET = "target";
+    private static final String KEY_SCORING_STYLE = "scoring_style";
+    private static final String KEY_TARGET_DIAMETER_VALUE = "size_target";
+    private static final String KEY_TARGET_DIAMETER_UNIT = "unit_target";
+    private static final String KEY_TIMER = "timer";
+    private static final String KEY_NUMBERING_ENABLED = "numbering";
+    private static final String KEY_TIMER_SHOOT_TIME = "timer_shoot_time";
+    private static final String KEY_SCORES_ONLY = "scores_only";
+    private static final String KEY_INDOOR = "indoor";
+    private static final String KEY_PASSES = "rounds";
+    private static final String KEY_TRANSLATION_DIALOG_SHOWN = "translation_dialog_shown";
+    private static final String KEY_FILTER_CLUB = "filter_club";
+    private static final String KEY_INPUT_MODE = "target_mode";
 
     private static SharedPreferences preferences = ApplicationInstance.getLastSharedPreferences();
 
@@ -179,6 +180,18 @@ public class SettingsManager {
         ApplicationInstance.getSharedPreferences()
                 .edit()
                 .putInt(KEY_FILTER_CLUB, filter)
+                .apply();
+    }
+
+    public static boolean getInputMode() {
+        return ApplicationInstance.getSharedPreferences()
+                .getBoolean(KEY_INPUT_MODE, false);
+    }
+
+    public static void setInputMode(boolean inputMode) {
+        ApplicationInstance.getSharedPreferences()
+                .edit()
+                .putBoolean(KEY_INPUT_MODE, inputMode)
                 .apply();
     }
 }
