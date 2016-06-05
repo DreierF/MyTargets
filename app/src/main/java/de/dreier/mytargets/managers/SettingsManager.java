@@ -3,11 +3,17 @@ package de.dreier.mytargets.managers;
 import android.content.SharedPreferences;
 
 import de.dreier.mytargets.ApplicationInstance;
-import de.dreier.mytargets.shared.models.Diameter;
-import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 
+import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
+
 public class SettingsManager {
+    public static final String KEY_DONATED = "donated";
+    public static final String KEY_TIMER_VIBRATE = "timer_vibrate";
+    public static final String KEY_TIMER_SOUND = "timer_sound";
+    public static final String KEY_TIMER_WARN_TIME = "timer_warn_time";
+    public static final String KEY_TIMER_WAIT_TIME = "timer_wait_time";
     private static final String KEY_STANDARD_ROUND = "standard_round";
     private static final String KEY_ARROW = "arrow";
     private static final String KEY_BOW = "bow";
@@ -21,13 +27,12 @@ public class SettingsManager {
     private static final String KEY_TIMER = "timer";
     private static final String KEY_NUMBERING_ENABLED = "numbering";
     private static final String KEY_TIMER_SHOOT_TIME = "timer_shoot_time";
-    private static final String KEY_SCORES_ONLY = "scores_only";
     private static final String KEY_INDOOR = "indoor";
     private static final String KEY_PASSES = "rounds";
     private static final String KEY_TRANSLATION_DIALOG_SHOWN = "translation_dialog_shown";
     private static final String KEY_FILTER_CLUB = "filter_club";
     private static final String KEY_INPUT_MODE = "target_mode";
-
+    private static final String KEY_SHOW_ALL_MODE = "show_all";
     private static SharedPreferences preferences = ApplicationInstance.getLastSharedPreferences();
 
     public static int getStandardRound() {
@@ -60,16 +65,16 @@ public class SettingsManager {
                 .apply();
     }
 
-    public static Distance getDistance() {
+    public static Dimension getDistance() {
         int distance = preferences.getInt(KEY_DISTANCE_VALUE, 10);
         String unit = preferences.getString(KEY_DISTANCE_UNIT, "m");
-        return new Distance(distance, unit);
+        return new Dimension(distance, unit);
     }
 
-    public static void setDistance(Distance distance) {
+    public static void setDistance(Dimension distance) {
         preferences.edit()
                 .putInt(KEY_DISTANCE_VALUE, distance.value)
-                .putString(KEY_DISTANCE_UNIT, distance.unit)
+                .putString(KEY_DISTANCE_UNIT, distance.unit.toString())
                 .apply();
     }
 
@@ -87,8 +92,8 @@ public class SettingsManager {
         final int targetId = preferences.getInt(KEY_TARGET, 0);
         final int scoringStyle = preferences.getInt(KEY_SCORING_STYLE, 0);
         final int diameterValue = preferences.getInt(KEY_TARGET_DIAMETER_VALUE, 60);
-        final String diameterUnit = preferences.getString(KEY_TARGET_DIAMETER_UNIT, Diameter.CENTIMETER);
-        final Diameter diameter = new Diameter(diameterValue, diameterUnit);
+        final String diameterUnit = preferences.getString(KEY_TARGET_DIAMETER_UNIT, CENTIMETER.toString());
+        final Dimension diameter = new Dimension(diameterValue, diameterUnit);
         return new Target(targetId, scoringStyle, diameter);
     }
 
@@ -97,7 +102,7 @@ public class SettingsManager {
                 .putInt(KEY_TARGET, (int) target.getId())
                 .putInt(KEY_SCORING_STYLE, target.scoringStyle)
                 .putInt(KEY_TARGET_DIAMETER_VALUE, target.size.value)
-                .putString(KEY_TARGET_DIAMETER_UNIT, target.size.unit)
+                .putString(KEY_TARGET_DIAMETER_UNIT, target.size.unit.toString())
                 .apply();
     }
 
@@ -129,25 +134,6 @@ public class SettingsManager {
         preferences.edit()
                 .putBoolean(KEY_INDOOR, indoor)
                 .apply();
-    }
-
-    public static boolean getScoresOnly() {
-        return preferences.getBoolean(KEY_SCORES_ONLY, false);
-    }
-
-    public static void setScoresOnly(boolean scoresOnly) {
-        preferences.edit()
-                .putBoolean(KEY_SCORES_ONLY, scoresOnly)
-                .apply();
-    }
-
-    public static int getShootTime() {
-        try {
-            SharedPreferences prefs = ApplicationInstance.getSharedPreferences();
-            return Integer.parseInt(prefs.getString(KEY_TIMER_SHOOT_TIME, "120"));
-        } catch (NumberFormatException ignored) {
-        }
-        return 120;
     }
 
     public static int getPasses() {
@@ -193,5 +179,55 @@ public class SettingsManager {
                 .edit()
                 .putBoolean(KEY_INPUT_MODE, inputMode)
                 .apply();
+    }
+
+    public static void setDonated(boolean donated) {
+        ApplicationInstance.getSharedPreferences()
+                .edit()
+                .putBoolean(KEY_DONATED, donated)
+                .apply();
+    }
+
+    public static boolean getShowAllMode() {
+        return ApplicationInstance.getSharedPreferences()
+                .getBoolean(KEY_SHOW_ALL_MODE, false);
+    }
+
+    public static void setShowAllMode(boolean showAllMode) {
+        ApplicationInstance.getSharedPreferences()
+                .edit()
+                .putBoolean(KEY_SHOW_ALL_MODE, showAllMode)
+                .apply();
+    }
+
+    public static boolean getTimerVibrate() {
+        return ApplicationInstance.getSharedPreferences()
+                .getBoolean(KEY_TIMER_VIBRATE, false);
+    }
+
+    public static boolean getTimerSoundEnabled() {
+        return ApplicationInstance.getSharedPreferences()
+                .getBoolean(KEY_TIMER_SOUND, true);
+    }
+
+    public static int getTimerWaitTime() {
+        return getPrefTime(KEY_TIMER_WAIT_TIME, 10);
+    }
+
+    public static int getTimerShootTime() {
+        return getPrefTime(KEY_TIMER_SHOOT_TIME, 120);
+    }
+
+    public static int getTimerWarnTime() {
+        return getPrefTime(KEY_TIMER_WARN_TIME, 30);
+    }
+
+    private static int getPrefTime(String key, int def) {
+        SharedPreferences prefs = ApplicationInstance.getSharedPreferences();
+        try {
+            return Integer.parseInt(prefs.getString(key, String.valueOf(def)));
+        } catch (NumberFormatException e) {
+            return def;
+        }
     }
 }

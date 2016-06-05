@@ -8,18 +8,18 @@ package de.dreier.mytargets.shared.targets;
 
 import android.support.annotation.StringRes;
 
-import de.dreier.mytargets.shared.models.Diameter;
+import de.dreier.mytargets.shared.models.Dimension;
 
-import static de.dreier.mytargets.shared.models.Diameter.LARGE;
-import static de.dreier.mytargets.shared.models.Diameter.MEDIUM;
-import static de.dreier.mytargets.shared.models.Diameter.SMALL;
-import static de.dreier.mytargets.shared.models.Diameter.XLARGE;
+import static de.dreier.mytargets.shared.models.Dimension.LARGE;
+import static de.dreier.mytargets.shared.models.Dimension.MEDIUM;
+import static de.dreier.mytargets.shared.models.Dimension.SMALL;
+import static de.dreier.mytargets.shared.models.Dimension.XLARGE;
 
 public class TargetOvalBase extends TargetModelBase {
 
     public TargetOvalBase(long id, @StringRes int name) {
         super(id, name);
-        diameters = new Diameter[]{SMALL, MEDIUM, LARGE, XLARGE};
+        diameters = new Dimension[]{SMALL, MEDIUM, LARGE, XLARGE};
     }
 
     @Override

@@ -8,7 +8,6 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -32,11 +31,10 @@ import java.util.List;
 import butterknife.Bind;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
-import de.dreier.mytargets.shared.models.Diameter;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
-import de.dreier.mytargets.utils.MyBackupAgent;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
@@ -78,7 +76,7 @@ public class TargetFragment extends SelectItemFragment<Target>
 
         // Set initial target size
         int diameterIndex = -1;
-        Diameter[] diameters = t.getModel().getDiameters();
+        Dimension[] diameters = t.getModel().getDiameters();
         for (int i = 0; i < diameters.length; i++) {
             if (diameters[i].equals(t.size)) {
                 diameterIndex = i;
@@ -130,9 +128,9 @@ public class TargetFragment extends SelectItemFragment<Target>
         targetSizeSpinner.setSelection(diameter < diameters.size() ? diameter : diameters.size() - 1, false);
     }
 
-    private ArrayList<String> diameterToList(Diameter[] diameters) {
+    private ArrayList<String> diameterToList(Dimension[] diameters) {
         ArrayList<String> list = new ArrayList<>();
-        for (Diameter diameter : diameters) {
+        for (Dimension diameter : diameters) {
             list.add(diameter.toString(getContext()));
         }
         return list;
@@ -152,15 +150,8 @@ public class TargetFragment extends SelectItemFragment<Target>
     protected Target onSave() {
         Target target = super.onSave();
         target.scoringStyle = scoringStyleSpinner.getSelectedItemPosition();
-        Diameter[] diameters = target.getModel().getDiameters();
+        Dimension[] diameters = target.getModel().getDiameters();
         target.size = diameters[targetSizeSpinner.getSelectedItemPosition()];
-
-        SharedPreferences prefs = getActivity().getSharedPreferences(MyBackupAgent.PREFS, 0);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("target", (int) target.getId());
-        editor.putInt("scoring", target.scoringStyle);
-        editor.putLong("size", target.size.getId());
-        editor.apply();
         return target;
     }
 

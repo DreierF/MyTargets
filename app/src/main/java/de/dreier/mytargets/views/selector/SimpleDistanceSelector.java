@@ -14,9 +14,9 @@ import android.widget.TextView;
 import butterknife.Bind;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
-import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.shared.models.Dimension;
 
-public class SimpleDistanceSelector extends SelectorBase<Distance> {
+public class SimpleDistanceSelector extends SelectorBase<Dimension> {
 
     private static final int SIMPLE_DISTANCE_REQUEST_CODE = 2;
 

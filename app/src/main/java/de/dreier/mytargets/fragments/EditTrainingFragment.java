@@ -225,7 +225,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
         training.environment = environment.getSelectedItem();
         training.bow = bow.getSelectedItem() == null ? 0 : bow.getSelectedItem().getId();
         training.arrow = arrow.getSelectedItem() == null ? 0 : arrow.getSelectedItem().getId();
-        training.timePerPasse = timer.isChecked() ? SettingsManager.getShootTime() : -1;
+        training.timePerPasse = timer.isChecked() ? SettingsManager.getTimerShootTime() : -1;
         Arrow selectedItem = arrow.getSelectedItem();
         training.arrowNumbering = !(selectedItem == null || selectedItem.numbers.isEmpty()) &&
                 numberArrows.isChecked();

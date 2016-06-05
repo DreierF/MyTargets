@@ -6,9 +6,11 @@
  */
 package de.dreier.mytargets.shared.models;
 
+import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
+
 public class SightSetting implements IIdSettable {
     public long bowId;
-    public Distance distance = new Distance(18, Dimension.METER);
+    public Dimension distance = new Dimension(18, METER);
     public String value = "";
     protected long id;
 

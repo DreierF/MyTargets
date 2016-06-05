@@ -8,9 +8,9 @@ package de.dreier.mytargets.shared.targets;
 
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.models.Diameter;
+import de.dreier.mytargets.shared.models.Dimension;
 
-import static de.dreier.mytargets.shared.models.Dimension.CENTIMETER;
+import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 import static de.dreier.mytargets.shared.utils.Color.DARK_GRAY;
 import static de.dreier.mytargets.shared.utils.Color.SAPPHIRE_BLUE;
 import static de.dreier.mytargets.shared.utils.Color.WHITE;
@@ -30,8 +30,8 @@ public class NFAAIndoor5Spot extends TargetModelBase {
                 new ScoringStyle(false, 7, 6, 5, 4)
         };
         //TODO 6 if inner ring is hit but only 7 if arrow is inside
-        diameters = new Diameter[]{
-                new Diameter(40, CENTIMETER)
+        diameters = new Dimension[]{
+                new Dimension(40, CENTIMETER)
         };
         centerMark = new CenterMark(DARK_GRAY, 25f, 9, true);
         facePositions = new Coordinate[]{

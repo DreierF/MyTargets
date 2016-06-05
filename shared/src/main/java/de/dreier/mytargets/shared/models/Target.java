@@ -12,7 +12,7 @@ import de.dreier.mytargets.shared.targets.TargetModelBase;
 public class Target implements IIdProvider, IImageProvider, IDetailProvider {
     public int id;
     public int scoringStyle;
-    public Diameter size;
+    public Dimension size;
     private transient TargetModelBase model;
     private transient TargetDrawable drawable;
 
@@ -24,7 +24,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
         this.size = getModel().getDiameters()[0];
     }
 
-    public Target(int target, int scoringStyle, Diameter diameter) {
+    public Target(int target, int scoringStyle, Dimension diameter) {
         this.id = target;
         this.model = TargetFactory.getTarget(target);
         this.scoringStyle = scoringStyle;

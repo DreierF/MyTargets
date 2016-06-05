@@ -145,7 +145,6 @@ public class EditStandardRoundFragment extends EditFragmentBase
         title.setText(getResources().getQuantityString(R.plurals.rounds, index + 1, index + 1));
         round.index = index;
 
-        // Distance
         final DistanceSelector distanceSpinner = (DistanceSelector) view
                 .findViewById(R.id.distanceSpinner);
         distanceSpinner.setOnActivityResultContext(this);

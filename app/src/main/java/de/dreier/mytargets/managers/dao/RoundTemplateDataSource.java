@@ -13,8 +13,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.shared.models.Diameter;
-import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Target;
 
@@ -58,13 +57,13 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
         roundTemplate.setId(cursor.getLong(startColumnIndex));
         roundTemplate.index = cursor.getInt(startColumnIndex + 1);
         roundTemplate.arrowsPerPasse = cursor.getInt(startColumnIndex + 2);
-        final Diameter diameter = new Diameter(
+        final Dimension diameter = new Dimension(
                 cursor.getInt(startColumnIndex + 9), cursor.getString(startColumnIndex + 10));
         roundTemplate.targetTemplate = new Target(cursor.getInt(startColumnIndex + 3),
                 cursor.getInt(startColumnIndex + 4), diameter);
         roundTemplate.target = new Target(cursor.getInt(startColumnIndex + 5),
                 cursor.getInt(startColumnIndex + 6), diameter);
-        roundTemplate.distance = new Distance(cursor.getInt(startColumnIndex + 7),
+        roundTemplate.distance = new Dimension(cursor.getInt(startColumnIndex + 7),
                 cursor.getString(startColumnIndex + 8));
         roundTemplate.passes = cursor.getInt(startColumnIndex + 11);
         roundTemplate.standardRound = cursor.getLong(startColumnIndex + 12);
@@ -77,12 +76,12 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
         values.put(STANDARD_ID, roundTemplate.standardRound);
         values.put(INDEX, roundTemplate.index);
         values.put(DISTANCE, roundTemplate.distance.value);
-        values.put(UNIT, roundTemplate.distance.unit);
+        values.put(UNIT, roundTemplate.distance.unit.toString());
         values.put(PASSES, roundTemplate.passes);
         values.put(ARROWS_PER_PASSE, roundTemplate.arrowsPerPasse);
         values.put(TARGET, roundTemplate.targetTemplate.id);
         values.put(TARGET_SIZE, roundTemplate.targetTemplate.size.value);
-        values.put(TARGET_SIZE_UNIT, roundTemplate.targetTemplate.size.unit);
+        values.put(TARGET_SIZE_UNIT, roundTemplate.targetTemplate.size.unit.toString());
         values.put(SCORING_STYLE, roundTemplate.targetTemplate.scoringStyle);
         return values;
     }

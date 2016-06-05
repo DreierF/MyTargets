@@ -5,7 +5,7 @@ public class RoundTemplate implements IIdSettable {
     public int index;
     public int arrowsPerPasse;
     public Target target;
-    public Distance distance;
+    public Dimension distance;
     public int passes;
     public Target targetTemplate;
     protected long id;

@@ -21,6 +21,7 @@ import java.io.IOException;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.MainActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
+import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.utils.BackupUtils;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -38,19 +39,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
         setPreferencesFromResource(R.xml.preferences, rootKey);
 
         if (rootKey == null) {
-            initRoot();
+            updateTimerSummaries();
             getActivity().setTitle(R.string.preferences);
         } else if (rootKey.equals("timer")) {
             getActivity().setTitle(R.string.timer);
         } else if (rootKey.equals("scoreboard")) {
             getActivity().setTitle(R.string.scoreboard);
         }
-    }
-
-    private void initRoot() {
-        setSecondsSummary("timer_wait_time", "10");
-        setSecondsSummary("timer_shoot_time", "120");
-        setSecondsSummary("timer_warn_time", "30");
     }
 
     @SuppressLint("PrivateResource")
@@ -175,7 +170,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
         startActivityForResult(intent, 1);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onResume() {
         super.onResume();
@@ -183,7 +177,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 .registerOnSharedPreferenceChangeListener(this);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onPause() {
         super.onPause();
@@ -194,22 +187,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.startsWith("timer_")) {
-            setSecondsSummary("timer_wait_time", "10");
-            setSecondsSummary("timer_shoot_time", "120");
-            setSecondsSummary("timer_warn_time", "30");
+            updateTimerSummaries();
         }
     }
 
-    private void setSecondsSummary(String key, String def) {
+    private void updateTimerSummaries() {
+        setSecondsSummary("timer_wait_time", SettingsManager.getTimerWaitTime());
+        setSecondsSummary("timer_shoot_time", SettingsManager.getTimerShootTime());
+        setSecondsSummary("timer_warn_time", SettingsManager.getTimerWarnTime());
+    }
+
+    private void setSecondsSummary(String key, int value) {
         Preference pref = findPreference(key);
-        int sec;
-        try {
-            sec = Integer.parseInt(
-                    getPreferenceManager().getSharedPreferences().getString(key, def));
-        } catch (NumberFormatException e) {
-            sec = Integer.parseInt(def);
-            getPreferenceManager().getSharedPreferences().edit().putString(key, def).apply();
-        }
-        pref.setSummary(getResources().getQuantityString(R.plurals.second, sec, sec));
+        pref.setSummary(getResources().getQuantityString(R.plurals.second, value, value));
     }
 }

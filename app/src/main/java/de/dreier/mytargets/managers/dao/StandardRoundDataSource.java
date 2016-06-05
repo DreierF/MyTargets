@@ -18,11 +18,14 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
+
+import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
+import static de.dreier.mytargets.shared.models.Dimension.Unit.YARDS;
 
 public class StandardRoundDataSource extends IdProviderDataSource<StandardRound> {
     private static final String TABLE = "STANDARD_ROUND_TEMPLATE";
@@ -112,7 +115,7 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
     public List<StandardRound> getAllFiltered(int clubs, boolean indoor, boolean isMetric, int checked) {
         List<StandardRound> list = getAll();
         ArrayList<StandardRound> displayList = new ArrayList<>();
-        String unitDistance = isMetric ? Distance.METER : Distance.YARDS;
+        Dimension.Unit unitDistance = isMetric ? METER : YARDS;
         for (StandardRound r : list) {
             ArrayList<RoundTemplate> rounds = r.getRounds();
             if (rounds.size() > 0 && ((r.club & clubs) != 0 ||

@@ -7,9 +7,9 @@
 package de.dreier.mytargets.shared.targets;
 
 import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.Diameter;
+import de.dreier.mytargets.shared.models.Dimension;
 
-import static de.dreier.mytargets.shared.models.Dimension.INCH;
+import static de.dreier.mytargets.shared.models.Dimension.Unit.INCH;
 import static de.dreier.mytargets.shared.utils.Color.DARK_GRAY;
 import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
@@ -28,8 +28,8 @@ public class Worcester extends TargetModelBase {
         scoringStyles = new ScoringStyle[]{
                 new ScoringStyle(false, 5, 4, 3, 2, 1)
         };
-        diameters = new Diameter[]{
-                new Diameter(16, INCH)
+        diameters = new Dimension[]{
+                new Dimension(16, INCH)
         };
         centerMark = new CenterMark(DARK_GRAY, 10.5f, 4, false);
     }

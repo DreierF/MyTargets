@@ -8,13 +8,11 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.PowerManager;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -25,16 +23,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.managers.SettingsManager;
 
 /**
  * Shows all passes of one round
  */
 public class TimerFragment extends Fragment implements View.OnClickListener {
+
+    public static final String SHOOTING_TIME = "shooting_time";
     private static final int WAIT_FOR_START = 0;
     private static final int PREPARATION = 1;
     private static final int SHOOTING = 2;
     private static final int FINISHED = 3;
-    public static final String SHOOTING_TIME = "shooting_time";
 
     private int mWaitingTime;
     private int mShootingTime;
@@ -59,7 +59,6 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        loadPreferenceValues();
 
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -69,35 +68,25 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
     }
 
     private void loadPreferenceValues() {
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(getActivity());
-        mWaitingTime = getPrefTime(prefs, "timer_wait_time", "20");
-        mShootingTime = getPrefTime(prefs, "timer_shoot_time", "120");
-        mWarnTime = getPrefTime(prefs, "timer_warn_time", "30");
-        mSound = prefs.getBoolean("timer_sound", true);
-        mVibrate = prefs.getBoolean("timer_vibrate", false);
-    }
-
-    private int getPrefTime(SharedPreferences prefs, String key, String def) {
-        try {
-            return Integer.parseInt(prefs.getString(key, def));
-        } catch (NumberFormatException e) {
-            return Integer.parseInt(def);
-        }
+        mWaitingTime = SettingsManager.getTimerWaitTime();
+        mShootingTime = SettingsManager.getTimerShootTime();
+        mWarnTime = SettingsManager.getTimerWarnTime();
+        mSound = SettingsManager.getTimerSoundEnabled();
+        mVibrate = SettingsManager.getTimerVibrate();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
+        //noinspection deprecation
         wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK |
                 PowerManager.ACQUIRE_CAUSES_WAKEUP |
                 PowerManager.ON_AFTER_RELEASE, "WakeLock");
         wakeLock.acquire();
         horn = MediaPlayer.create(getActivity(), R.raw.horn);
-        if (getActivity() != null) {
-            loadPreferenceValues();
-        }
+
+        loadPreferenceValues();
         changeStatus(mCurStatus);
     }
 
@@ -138,7 +127,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                 mStatusField.setText(R.string.preparation);
                 countdown = new CountDownTimer(mWaitingTime * 1000, 100) {
                     public void onTick(long millisUntilFinished) {
-                        mTimeField.setText("" + millisUntilFinished / 1000);
+                        mTimeField.setText(String.valueOf(millisUntilFinished / 1000));
                     }
 
                     public void onFinish() {
@@ -152,7 +141,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                 mStatusField.setText(R.string.shooting);
                 countdown = new CountDownTimer(mShootingTime * 1000, 100) {
                     public void onTick(long millisUntilFinished) {
-                        mTimeField.setText("" + millisUntilFinished / 1000);
+                        mTimeField.setText(String.valueOf(millisUntilFinished / 1000));
                         if (millisUntilFinished <= mWarnTime * 1000) {
                             root.setBackgroundResource(R.color.timer_orange);
                         }
@@ -169,7 +158,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                 mTimeField.setText(R.string.stop);
                 countdown = new CountDownTimer(6000, 100) {
                     public void onTick(long millisUntilFinished) {
-                        mStatusField.setText("" + millisUntilFinished / 1000);
+                        mStatusField.setText(String.valueOf(millisUntilFinished / 1000));
                     }
 
                     public void onFinish() {

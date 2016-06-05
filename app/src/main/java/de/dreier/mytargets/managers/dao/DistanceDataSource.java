@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.shared.models.Dimension;
 
 public class DistanceDataSource extends DataSourceBase {
 
@@ -26,13 +26,13 @@ public class DistanceDataSource extends DataSourceBase {
     /**
      * Returns a list of all distances that are either default values or used somewhere in the app
      *
-     * @param distance Distance id to add to the list, because it is the current value.
+     * @param distance Distance to add to the list (current selected value)
      * @param unit     Distances are only returned which match the specified unit
-     *                 (Distance.METER or Distance.YARDS)
+     *                 (Dimension.METER, Dimension.YARDS, Dimension.FEET)
      * @return List of distances
      */
-    public List<Distance> getAll(Distance distance, String unit) {
-        ArrayList<Distance> distances = new ArrayList<>();
+    public List<Dimension> getAll(Dimension distance, Dimension.Unit unit) {
+        List<Dimension> distances = new ArrayList<>();
         HashSet<Long> set = new HashSet<>();
 
         // Add currently selected distance to list
@@ -44,10 +44,10 @@ public class DistanceDataSource extends DataSourceBase {
         // Get all distances used in ROUND or VISIER table
         Cursor cur = database.rawQuery(
                 "SELECT * FROM (SELECT DISTINCT distance, unit FROM ROUND_TEMPLATE UNION SELECT DISTINCT distance, unit FROM VISIER) WHERE unit=?",
-                new String[]{unit});
+                new String[]{unit.toString()});
         if (cur.moveToFirst()) {
             do {
-                Distance d = new Distance(cur.getInt(0), cur.getString(1));
+                Dimension d = new Dimension(cur.getInt(0), cur.getString(1));
                 if (!set.contains(d.getId())) {
                     distances.add(d);
                     set.add(d.getId());

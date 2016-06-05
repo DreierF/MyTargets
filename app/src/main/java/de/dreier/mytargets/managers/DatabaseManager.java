@@ -33,8 +33,7 @@ import de.dreier.mytargets.managers.dao.ShotDataSource;
 import de.dreier.mytargets.managers.dao.SightSettingDataSource;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
-import de.dreier.mytargets.shared.models.Diameter;
-import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
@@ -374,7 +373,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 template.arrowsPerPasse = res.getInt(0);
                 int target = res.getInt(1);
                 template.target = new Target(target == 4 ? 5 : target, target == 5 ? 1 : 0);
-                template.distance = new Distance(res.getInt(2), res.getString(3));
+                template.distance = new Dimension(res.getInt(2), res.getString(3));
                 template.passes = res.getInt(4);
                 template.targetTemplate = template.target;
                 sr.insert(template);
@@ -495,7 +494,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 }
 
                 // Distance
-                writer.append(new Distance(
+                writer.append(new Dimension(
                         cur.getInt(distanceInd),
                         cur.getString(distanceUnitInd))
                         .toString(mContext));
@@ -503,7 +502,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
                 // Target
                 Target target = new Target(cur.getInt(targetInd), cur.getInt(styleInd),
-                        new Diameter(cur.getInt(targetSizeInd), cur.getString(targetUnitInd)));
+                        new Dimension(cur.getInt(targetSizeInd), cur.getString(targetUnitInd)));
                 writer.append(target.getModel().getName(mContext))
                         .append(" (")
                         .append(target.size.toString(mContext))

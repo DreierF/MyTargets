@@ -232,4 +232,5 @@
   <string name="enter_scores_only_description">Lets you only enter the scores not the exact arrow position. Use this option to enter data with your smartwatch or to enter historical data.</string>
   <string name="enter_scores_only">Enter scores only</string>
   <string name="search">Search</string>
+  <string name="us">US</string>
 </resources>

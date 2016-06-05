@@ -41,7 +41,6 @@ import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
-import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
@@ -50,6 +49,7 @@ import de.dreier.mytargets.utils.DataLoaderBase.BackgroundAction;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
+import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
 
 public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         implements View.OnClickListener, SearchView.OnQueryTextListener,
@@ -148,7 +148,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
     private void setMeasurementType(RoundTemplate firstRound) {
         RadioButton metric = (RadioButton) rootView.findViewById(R.id.metric);
         RadioButton imperial = (RadioButton) rootView.findViewById(R.id.imperial);
-        if (firstRound.distance.unit.equals(Dimension.METER)) {
+        if (firstRound.distance.unit.equals(METER)) {
             metric.setChecked(true);
         } else {
             imperial.setChecked(true);

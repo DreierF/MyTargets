@@ -26,7 +26,6 @@ import butterknife.OnClick;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.DistanceTabsFragmentPagerAdapter;
 import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.utils.DistanceInputDialog;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
@@ -40,7 +39,7 @@ public class DistanceFragment extends Fragment implements DistanceInputDialog.On
     TabLayout tabLayout;
 
     private SelectItemFragment.OnItemSelectedListener listener;
-    private Distance distance;
+    private Dimension distance;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_distance, container, false);
@@ -48,11 +47,8 @@ public class DistanceFragment extends Fragment implements DistanceInputDialog.On
 
         distance = Parcels.unwrap(getArguments().getParcelable(ITEM));
 
-        DistanceTabsFragmentPagerAdapter adapter =
-                new DistanceTabsFragmentPagerAdapter(getActivity(), distance);
-        viewPager.setAdapter(adapter);
-        int item = distance.unit.equals(Distance.METER) ? 0 : 1;
-        viewPager.setCurrentItem(item, false);
+        viewPager.setAdapter(new DistanceTabsFragmentPagerAdapter(getActivity(), distance));
+        selectUnit(distance.unit);
         tabLayout.setupWithViewPager(viewPager);
         return rootView;
     }
@@ -75,23 +71,27 @@ public class DistanceFragment extends Fragment implements DistanceInputDialog.On
     @OnClick(R.id.fab)
     public void onClick() {
         new DistanceInputDialog.Builder(getContext())
-                .setUnit(new String[]{Dimension.METER, Dimension.YARDS}[viewPager.getCurrentItem()])
+                .setUnit(getSelectedUnit().toString())
                 .setOnClickListener(this)
                 .show();
     }
 
+    private Dimension.Unit getSelectedUnit() {
+        int pos = viewPager.getCurrentItem();
+        return DistanceTabsFragmentPagerAdapter.UNITS.get(pos);
+    }
+
+    private void selectUnit(Dimension.Unit unit) {
+        int item = DistanceTabsFragmentPagerAdapter.UNITS.indexOf(unit);
+        viewPager.setCurrentItem(item, false);
+    }
+
     @Override
     public void onOkClickListener(String input) {
-        Distance distance = this.distance;
+        Dimension distance = this.distance;
         try {
             int distanceVal = Integer.parseInt(input.replaceAll("[^0-9]", ""));
-            String unit;
-            if (viewPager.getCurrentItem() == 0) {
-                unit = Dimension.METER;
-            } else {
-                unit = Dimension.YARDS;
-            }
-            distance = new Distance(distanceVal, unit);
+            distance = new Dimension(distanceVal, getSelectedUnit());
         } catch (NumberFormatException e) {
             // leave distance as it is
         }

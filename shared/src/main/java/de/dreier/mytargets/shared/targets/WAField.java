@@ -7,10 +7,10 @@
 package de.dreier.mytargets.shared.targets;
 
 import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.Diameter;
+import de.dreier.mytargets.shared.models.Dimension;
 
 import static android.graphics.Color.WHITE;
-import static de.dreier.mytargets.shared.models.Dimension.CENTIMETER;
+import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 import static de.dreier.mytargets.shared.utils.Color.DARK_GRAY;
 import static de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW;
 
@@ -31,11 +31,11 @@ public class WAField extends TargetModelBase {
                 new ScoringStyle(true, 5, 5, 4, 3, 2, 1),
                 new ScoringStyle(false, 6, 5, 4, 3, 2, 1)
         };
-        diameters = new Diameter[]{
-                new Diameter(20, CENTIMETER),
-                new Diameter(40, CENTIMETER),
-                new Diameter(60, CENTIMETER),
-                new Diameter(80, CENTIMETER)
+        diameters = new Dimension[]{
+                new Dimension(20, CENTIMETER),
+                new Dimension(40, CENTIMETER),
+                new Dimension(60, CENTIMETER),
+                new Dimension(80, CENTIMETER)
         };
         centerMark = new CenterMark(DARK_GRAY, 10.5f, 4, false);
         isFieldTarget = true;

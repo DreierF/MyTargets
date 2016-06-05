@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.models.Diameter;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.utils.Color;
@@ -24,7 +24,7 @@ public class TargetModelBase implements IIdProvider {
     protected long id;
     protected int nameRes;
     protected Zone[] zones;
-    protected Diameter[] diameters;
+    protected Dimension[] diameters;
     protected ScoringStyle[] scoringStyles;
     protected int faceRadius;
     protected Coordinate[] facePositions;
@@ -56,7 +56,7 @@ public class TargetModelBase implements IIdProvider {
         return getZone(zone).radius;
     }
 
-    public Diameter[] getDiameters() {
+    public Dimension[] getDiameters() {
         return diameters;
     }
 

@@ -7,10 +7,10 @@
 package de.dreier.mytargets.shared.targets;
 
 import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
 
 import static android.graphics.Color.WHITE;
+import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 import static de.dreier.mytargets.shared.utils.Color.DARK_GRAY;
 
 public class Beursault extends TargetModelBase {
@@ -31,8 +31,8 @@ public class Beursault extends TargetModelBase {
                 new ScoringStyle(false, 4, 4, 3, 3, 2, 2, 1, 1)
         };
         //TODO inside out, see http://scores-sca.org/public/scores_rules.php?R=25&Shoot=108
-        diameters = new Diameter[]{
-                new Diameter(48, Dimension.CENTIMETER)
+        diameters = new Dimension[]{
+                new Dimension(48, CENTIMETER)
         };
         decoration = TargetDecoration.BEURSAULT;
         centerMark = new CenterMark(DARK_GRAY, 500f, 6, false);

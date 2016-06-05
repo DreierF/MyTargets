@@ -243,5 +243,6 @@
   <string name="network_linkedin">Auf LinkedIn vernetzen</string>
   <string name="enter_scores_only_description">Lässt dich nur die erzielten Ringe erfassen und nicht die exakte Pfeil Position. Diese Option sollte verwendet werden wenn die Ergebnisse über die Smartwatch eingeben werden sollen oder historische Daten eingegeben werden.</string>
   <string name="enter_scores_only">Nur Ringe erfassen</string>
-  <string name="search">Search</string>
+  <string name="search">Suche</string>
+  <string name="us">US</string>
 </resources>
