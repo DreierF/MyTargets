@@ -173,7 +173,6 @@ public class SettingsManager {
 
     public static int getClubFilter() {
         return ApplicationInstance.getSharedPreferences().getInt(KEY_FILTER_CLUB, 0x1FF);
-        return prefs.getBoolean(KEY_TRANSLATION_DIALOG_SHOWN, false);
     }
 
     public static void setClubFilter(int filter) {

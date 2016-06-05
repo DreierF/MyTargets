@@ -32,6 +32,7 @@
     </style>
 
     <style name="MaterialItem">
+        <item name="android:foreground">?selectableItemBackground</item>
         <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 

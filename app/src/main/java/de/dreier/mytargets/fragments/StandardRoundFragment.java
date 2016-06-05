@@ -33,7 +33,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -67,7 +66,6 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
 
-    private ArrayList<StandardRound> list;
     private RadioGroup location;
     private RadioGroup unit;
     private RadioGroup typ;
@@ -79,10 +77,6 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         super.onActivityCreated(savedInstanceState);
         useDoubleClickSelection = true;
         currentSelection = Parcels.unwrap(getArguments().getParcelable(ITEM));
-        list = new StandardRoundDataSource(getContext()).getAll();
-        if (!list.contains(currentSelection)) {
-            list.add(currentSelection);
-        }
         setHasOptionsMenu(true);
         initFilter();
     }
