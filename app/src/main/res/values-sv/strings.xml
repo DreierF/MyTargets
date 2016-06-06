@@ -245,4 +245,7 @@
   <string name="enter_scores_only">Ange bara resultat</string>
   <string name="search">Search</string>
   <string name="us">US</string>
+  <string name="show_shots_training">Whole training</string>
+  <string name="show_shots_round">Current round</string>
+  <string name="show_shots_end">Current end</string>
 </resources>

@@ -55,23 +55,20 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
     @Bind(R.id.targetView)
     TargetView targetView;
-
     @Bind(R.id.next)
     Button next;
-
     @Bind(R.id.prev)
     Button prev;
-
+    /**
+     * Zero-based index of the currently displayed passe.
+     */
     @State
     int curPasse = 0;
-
     private int savedPasses = 0;
     private Round round;
-    private boolean mShowAllMode = false;
     private WearMessageManager manager;
     private Training training;
     private RoundTemplate template;
-    private boolean mExitOnFinish;
     private ArrayList<Round> rounds;
     private PasseDataSource passeDataSource;
     private StandardRound standardRound;
@@ -98,15 +95,11 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         standardRound = new StandardRoundDataSource(this).get(training.standardRoundId);
         rounds = roundDataSource.getAll(round.trainingId);
         savedPasses = passeDataSource.getAllByRound(roundId).size();
-        mExitOnFinish = savedPasses <= curPasse && standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE;
 
         targetView.setRoundTemplate(template);
         if (training.arrowNumbering) {
             targetView.setArrowNumbers(new ArrowNumberDataSource(getApplicationContext()).getAll(training.arrow));
         }
-        mShowAllMode = SettingsManager.getShowAllMode();
-
-        targetView.showAll(mShowAllMode);
 
         // Send message to wearable app, that we are starting a passe
         new Thread(this::startWearNotification).start();
@@ -148,24 +141,35 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     public boolean onPrepareOptionsMenu(Menu menu) {
         final MenuItem eye = menu.findItem(R.id.action_show_all);
         eye.setVisible(!targetView.getInputMode());
-        eye.setIcon(mShowAllMode ? R.drawable.ic_visibility_white_24dp :
-                R.drawable.ic_visibility_off_white_24dp);
         menu.findItem(R.id.action_show_sidebar).setIcon(
                 targetView.getInputMode() ? R.drawable.ic_album_24dp :
                         R.drawable.ic_grain_24dp);
+        switch (SettingsManager.getShowMode()) {
+            case END:
+                menu.findItem(R.id.action_show_end).setChecked(true);
+                break;
+            case ROUND:
+                menu.findItem(R.id.action_show_round).setChecked(true);
+                break;
+            case TRAINING:
+                menu.findItem(R.id.action_show_training).setChecked(true);
+                break;
+        }
         return true;
     }
 
     private void setPasse(int passe) {
         if (passe >= template.passes) {
             if (rounds.size() > template.index + 1) {
+                // Go to next round if current round is finished
                 round = rounds.get(template.index + 1);
                 template = round.info;
                 passe = 0;
                 savedPasses = passeDataSource.getAllByRound(round.getId()).size();
-            } else if (mExitOnFinish) {
+            } else if (savedPasses <= curPasse && standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
                 finish();
                 overridePendingTransition(R.anim.left_in, R.anim.right_out);
+                return;
             }
         } else if (passe == -1 && template.index > 0) {
             round = rounds.get(template.index - 1);
@@ -179,10 +183,12 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                 targetView.setPasse(p);
             } else {
                 targetView.reset();
+                targetView.setRoundId(round.getId());
             }
         } else {
             if (passe != curPasse) {
                 targetView.reset();
+                targetView.setRoundId(round.getId());
             }
             if (training.timePerPasse > 0) {
                 openTimer();
@@ -196,8 +202,10 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
     private void updatePasse() {
         prev.setEnabled(curPasse > 0 || template.index > 0);
-        next.setEnabled(curPasse < savedPasses && curPasse + 1 < template.passes ||
-                rounds.size() > template.index + 1 || standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE);
+        next.setEnabled(curPasse < savedPasses &&
+                (curPasse + 1 < template.passes || // The current round is not finished
+                        rounds.size() > template.index + 1 || // We still have another round
+                        standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE)); // or we don't have an exit condition
 
         assert getSupportActionBar() != null;
         getSupportActionBar().setTitle(getString(R.string.passe) + " " + (curPasse + 1));
@@ -208,11 +216,17 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_show_all:
-                mShowAllMode = !mShowAllMode;
-                targetView.showAll(mShowAllMode);
-                SettingsManager.setShowAllMode(mShowAllMode);
-                supportInvalidateOptionsMenu();
+            case R.id.action_show_end:
+                item.setChecked(true);
+                targetView.setShowMode(EShowMode.END);
+                return true;
+            case R.id.action_show_round:
+                item.setChecked(true);
+                targetView.setShowMode(EShowMode.ROUND);
+                return true;
+            case R.id.action_show_training:
+                item.setChecked(true);
+                targetView.setShowMode(EShowMode.TRAINING);
                 return true;
             case R.id.action_show_sidebar:
                 targetView.switchMode(!targetView.getInputMode(), true);
@@ -241,10 +255,6 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
     @Override
     public long onTargetSet(Passe passe, boolean remote) {
-        if (passe.getId() == -1) {
-            mExitOnFinish = true;
-        }
-
         // Only sort shots when all arrows are on one target face
         if (template.target.getModel().getFaceCount() == 1) {
             passe.sort();

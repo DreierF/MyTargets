@@ -132,28 +132,32 @@ public class TargetDrawable extends Drawable {
         }
     }
 
-    public void drawArrows(Canvas canvas, ArrayList<Passe> passes) {
+    public void drawArrows(Canvas canvas, ArrayList<Passe> passes, boolean transparent) {
         for (Passe p : passes) {
-            drawArrows(canvas, p);
+            drawArrows(canvas, p, transparent);
         }
     }
 
-    public void drawArrows(Canvas canvas, Passe passe) {
-        drawArrows(canvas, passe, getBounds());
+    public void drawArrows(Canvas canvas, Passe passe, boolean transparent) {
+        drawArrows(canvas, passe, getBounds(), transparent);
     }
 
-    protected void drawArrows(Canvas canvas, Passe passe, Rect rect) {
+    protected void drawArrows(Canvas canvas, Passe passe, Rect rect, boolean transparent) {
         for (int arrow = 0; arrow < passe.shot.length; arrow++) {
-            drawArrow(canvas, passe.shot[arrow], rect);
+            drawArrow(canvas, passe.shot[arrow], rect, transparent);
         }
     }
 
-    public void drawArrow(Canvas canvas, Shot shot) {
-        drawArrow(canvas, shot, getBounds());
+    public void drawArrow(Canvas canvas, Shot shot, boolean transparent) {
+        drawArrow(canvas, shot, getBounds(), transparent);
     }
 
-    protected void drawArrow(Canvas canvas, Shot shot, Rect rect) {
-        paintFill.setColor(model.getContrastColor(shot.zone));
+    protected void drawArrow(Canvas canvas, Shot shot, Rect rect, boolean transparent) {
+        int color = model.getContrastColor(shot.zone);
+        if(transparent) {
+            color = 0x55000000 | color & 0xFFFFFF;
+        }
+        paintFill.setColor(color);
         Rect targetRect = getTargetBounds(rect, shot.index);
         float[] pos = new float[2];
         pos[0] = targetRect.left + (1 + shot.x) * targetRect.width() * 0.5f;
@@ -208,7 +212,7 @@ public class TargetDrawable extends Drawable {
         int zone = getZoneFromPoint(x, y);
         int color = model.getContrastColor(zone);
         paintStroke.setColor(color);
-        paintStroke.setStrokeWidth(reCalc(rect, 2));
+        paintStroke.setStrokeWidth(reCalc(rect, 1.5f));
         Rect targetRect = getTargetBounds(rect, arrow);
         float[] pos = new float[2];
         pos[0] = targetRect.left + (1 + x) * targetRect.width() * 0.5f;

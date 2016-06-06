@@ -245,4 +245,7 @@
   <string name="enter_scores_only">Nur Ringe erfassen</string>
   <string name="search">Suche</string>
   <string name="us">US</string>
+  <string name="show_shots_training">Ganzes Training</string>
+  <string name="show_shots_round">Aktuelle Runde</string>
+  <string name="show_shots_end">Aktuelle Passe</string>
 </resources>

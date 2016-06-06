@@ -83,6 +83,10 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         invalidate();
     }
 
+    public void setRoundId(long roundId) {
+        passe.roundId = roundId;
+    }
+
     public void setRoundTemplate(RoundTemplate r) {
         round = r;
         target = r.target;

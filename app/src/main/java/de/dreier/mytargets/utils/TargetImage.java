@@ -54,7 +54,7 @@ public class TargetImage {
             TargetDrawable target = rounds.get(i).info.target.getDrawable();
             target.setBounds(bounds.get(i));
             target.draw(canvas);
-            target.drawArrows(canvas, oldOnes);
+            target.drawArrows(canvas, oldOnes, false);
             String roundTitle = context.getResources().getQuantityString(R.plurals.rounds, i + 1, i + 1);
             Rect textBounds = new Rect();
             textPaint.getTextBounds(roundTitle, 0, roundTitle.length(), textBounds);

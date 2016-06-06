@@ -122,7 +122,7 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         Midpoint m = new Midpoint();
 
         for (Shot shot : shots) {
-            target.drawArrow(canvas, shot);
+            target.drawArrow(canvas, shot, false);
             m.sumX += shot.x;
             m.sumY += shot.y;
             m.count++;

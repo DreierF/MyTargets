@@ -42,6 +42,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.EShowMode;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.ArrowNumber;
 import de.dreier.mytargets.shared.models.Coordinate;
@@ -63,7 +64,7 @@ public class TargetView extends TargetViewBase {
     private boolean zoomTransitioning = false;
     private float radius, midX, midY;
     private Paint fillPaint;
-    private boolean showAll = false;
+    private EShowMode showMode = EShowMode.END;
     private Timer longPressTimer;
     private float oldRadius;
     private RectF[] spotRects;
@@ -113,8 +114,9 @@ public class TargetView extends TargetViewBase {
         this.arrowNumbers = arrowNumbers;
     }
 
-    public void showAll(boolean showAll) {
-        this.showAll = showAll;
+    public void setShowMode(EShowMode showMode) {
+        this.showMode = showMode;
+        SettingsManager.setShowMode(showMode);
         invalidate();
     }
 
@@ -160,6 +162,8 @@ public class TargetView extends TargetViewBase {
         borderPaint.setColor(0xFF1C1C1B);
         borderPaint.setAntiAlias(true);
         borderPaint.setStyle(Paint.Style.STROKE);
+
+        showMode = SettingsManager.getShowMode();
     }
 
     @Override
@@ -227,13 +231,13 @@ public class TargetView extends TargetViewBase {
                 targetDrawable.drawFocusedArrow(canvas, shot);
                 continue;
             }
-            targetDrawable.drawArrow(canvas, shot);
+            targetDrawable.drawArrow(canvas, shot, false);
         }
 
-        if (showAll) {
+        if (showMode != EShowMode.END) {
             for (Passe p : oldPasses) {
-                if (p.getId() != passe.getId()) {
-                    targetDrawable.drawArrows(canvas, p);
+                if (shouldShowPasse(p)) {
+                    targetDrawable.drawArrows(canvas, p, true);
                 }
             }
         }
@@ -248,6 +252,10 @@ public class TargetView extends TargetViewBase {
         }
     }
 
+    private boolean shouldShowPasse(Passe p) {
+        return p.getId() != passe.getId() && (showMode == EShowMode.TRAINING || p.roundId == passe.roundId);
+    }
+
     private Midpoint getMidpoint(int spot) {
         Midpoint m = new Midpoint();
         int spots = targetModel.getFaceCount();
@@ -258,12 +266,12 @@ public class TargetView extends TargetViewBase {
             }
         }
 
-        if (!showAll) {
+        if (showMode == EShowMode.END) {
             return m;
         }
 
         return Stream.of(oldPasses)
-                .filter(p -> p.getId() != passe.getId())
+                .filter(this::shouldShowPasse)
                 .map(Passe::shotList)
                 .flatMap(Stream::of)
                 .filter(s -> s.index % spots == spot)
@@ -652,6 +660,7 @@ public class TargetView extends TargetViewBase {
             tmp.cancel();
         }
     }
+
     private void cancelPendingInputAnimations() {
         if (inputAnimator != null) {
             ValueAnimator tmp = inputAnimator;

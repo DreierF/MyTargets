@@ -3,6 +3,7 @@ package de.dreier.mytargets.managers;
 import android.content.SharedPreferences;
 
 import de.dreier.mytargets.ApplicationInstance;
+import de.dreier.mytargets.activities.EShowMode;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 
@@ -32,7 +33,7 @@ public class SettingsManager {
     private static final String KEY_TRANSLATION_DIALOG_SHOWN = "translation_dialog_shown";
     private static final String KEY_FILTER_CLUB = "filter_club";
     private static final String KEY_INPUT_MODE = "target_mode";
-    private static final String KEY_SHOW_ALL_MODE = "show_all";
+    private static final String KEY_SHOW_MODE = "show_mode";
     private static SharedPreferences preferences = ApplicationInstance.getLastSharedPreferences();
 
     public static int getStandardRound() {
@@ -188,15 +189,15 @@ public class SettingsManager {
                 .apply();
     }
 
-    public static boolean getShowAllMode() {
-        return ApplicationInstance.getSharedPreferences()
-                .getBoolean(KEY_SHOW_ALL_MODE, false);
+    public static EShowMode getShowMode() {
+        return EShowMode.valueOf(ApplicationInstance.getSharedPreferences()
+                .getString(KEY_SHOW_MODE, EShowMode.END.toString()));
     }
 
-    public static void setShowAllMode(boolean showAllMode) {
+    public static void setShowMode(EShowMode showMode) {
         ApplicationInstance.getSharedPreferences()
                 .edit()
-                .putBoolean(KEY_SHOW_ALL_MODE, showAllMode)
+                .putString(KEY_SHOW_MODE, showMode.toString())
                 .apply();
     }
 
