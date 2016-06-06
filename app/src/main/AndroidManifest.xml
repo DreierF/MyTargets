@@ -3,10 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="de.dreier.mytargets">
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="true" />
-
     <uses-sdk tools:overrideLibrary="me.oriley.homage, me.oriley.homage.recyclerview" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
