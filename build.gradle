@@ -9,6 +9,7 @@ buildscript {
         classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
         classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.0.9'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
+        classpath 'com.github.triplet.gradle:play-publisher:1.1.4'
     }
 
     configurations.classpath.exclude group: 'com.android.tools.external.lombok'
@@ -37,11 +38,11 @@ crowdinUpload {
     apiKey = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
     projectId = 'mytargets'
     sourceFiles = [
-            ['strings.xml', './app/src/main/res/values/strings.xml'],
-            ['strings-shared.xml', './shared/src/main/res/values/strings.xml'],
-            ['rounds.xml', './shared/src/main/res/values/rounds.xml'],
-            ['target_faces.xml', './shared/src/main/res/values/target_faces.xml'],
-            ['strings-wearable.xml', './wearable/src/main/res/values/strings.xml']
+            ['strings.xml', 'app/src/main/res/values/strings.xml'],
+            ['strings-shared.xml', 'shared/src/main/res/values/strings.xml'],
+            ['rounds.xml', 'shared/src/main/res/values/rounds.xml'],
+            ['target_faces.xml', 'shared/src/main/res/values/target_faces.xml'],
+            ['strings-wearable.xml', 'wearable/src/main/res/values/strings.xml']
     ]
 }
 
@@ -54,6 +55,21 @@ crowdinDownload {
             to:  /\1\/values-\4\6\/\8/
     ]
 }.dependsOn crowdinUpload
+
+crowdinDownload.doLast {
+    new File('app/src/main/play/af-ZA').deleteDir()
+    new File('app/src/main/play/ar-SA').deleteDir()
+    new File('app/src/main/play/da-DK').deleteDir()
+    new File('app/src/main/play/el-GR').deleteDir()
+    new File('app/src/main/play/fi-FI').deleteDir()
+    new File('app/src/main/play/he-IL').deleteDir()
+    new File('app/src/main/play/id-ID').deleteDir()
+    new File('app/src/main/play/ko-KR').deleteDir()
+    new File('app/src/main/play/ro-RO').deleteDir()
+    new File('app/src/main/play/sr-SP').deleteDir()
+    new File('app/src/main/play/uk-UA').deleteDir()
+    new File('app/src/main/play/vi-VN').deleteDir()
+}
 
 subprojects.each { project ->
     project.tasks.whenTaskAdded { task ->

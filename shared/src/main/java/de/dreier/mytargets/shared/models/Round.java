@@ -1,7 +1,7 @@
 package de.dreier.mytargets.shared.models;
 
 public class Round implements IIdSettable {
-    public long training;
+    public long trainingId;
     public RoundTemplate info;
     public String comment;
     public int reachedPoints;

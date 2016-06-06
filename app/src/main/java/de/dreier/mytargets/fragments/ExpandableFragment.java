@@ -30,6 +30,7 @@ import de.dreier.mytargets.utils.Utils;
 public abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSettable>
         extends EditableFragmentBase<C> {
 
+    public static final String KEY_EXPANDED = "expanded";
     ExpandableNowListAdapter<H, C> mAdapter;
     private GridLayoutManager manager;
     @Nullable
@@ -59,8 +60,8 @@ public abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSet
         if (mRecyclerView.getAdapter() == null) {
             mAdapter = adapter;
             mAdapter.setList(headers, children, parentDelegate, opened);
-            if (savedInstanceState != null) {
-                mAdapter.setExpandedIds(Utils.toList(savedInstanceState.getLongArray("expanded")));
+            if (savedInstanceState != null && savedInstanceState.containsKey(KEY_EXPANDED)) {
+                mAdapter.setExpandedIds(Utils.toList(savedInstanceState.getLongArray(KEY_EXPANDED)));
             } else if (!opened && mAdapter.getItemCount() > 0) {
                 mAdapter.expandOrCollapse(0);
             }
@@ -94,7 +95,7 @@ public abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSet
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mAdapter != null) {
-            outState.putLongArray("expanded", Utils.toArray(mAdapter.getExpandedIds()));
+            outState.putLongArray(KEY_EXPANDED, Utils.toArray(mAdapter.getExpandedIds()));
         }
     }
 

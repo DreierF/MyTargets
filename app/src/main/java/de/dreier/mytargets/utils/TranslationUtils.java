@@ -14,17 +14,13 @@ import java.util.Locale;
 
 import de.dreier.mytargets.managers.SettingsManager;
 
-/**
- * Created by florian on 29.05.16.
- */
 public class TranslationUtils {
     private static boolean shownThisTime = false;
 
     public static void askForHelpTranslating(Context context) {
         ArrayList<String> supportedLanguages = new ArrayList<>();
-        //TODO update
-        Collections.addAll(supportedLanguages, "de", "en", "fr", "es", "ru", "nl", "it", "sl", "ca",
-                "zh", "tr", "hu", "sl");
+        Collections.addAll(supportedLanguages, "ca", "cs", "de", "en", "es", "fr", "hu", "it", "iw",
+                "ja", "nl", "no", "pl", "pt", "ru", "sk", "sl", "sv", "tr", "zh");
         boolean shown = SettingsManager.getTranslationDialogWasShown();
         String longLang = Locale.getDefault().getDisplayLanguage();
         String shortLocale = Locale.getDefault().getLanguage();

@@ -243,7 +243,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
         RoundDataSource roundDataSource = new RoundDataSource(getContext());
         for (RoundTemplate template : standardRound.getRounds()) {
             Round round = new Round();
-            round.training = training.getId();
+            round.trainingId = training.getId();
             round.info = template;
             round.comment = "";
             roundDataSource.update(round);

@@ -18,6 +18,7 @@ public class Passe implements IIdSettable {
         shot = new Shot[ppp];
         for (int i = 0; i < ppp; i++) {
             shot[i] = new Shot(i);
+            shot[i].index = i;
         }
     }
 

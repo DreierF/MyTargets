@@ -44,7 +44,7 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
     public ContentValues getContentValues(Round round) {
         ContentValues values = new ContentValues();
         values.put(COMMENT, round.comment);
-        values.put(TRAINING, round.training);
+        values.put(TRAINING, round.trainingId);
         values.put(TEMPLATE, round.info.getId());
         values.put(TARGET, round.info.target.getId());
         values.put(SCORING_STYLE, round.info.target.scoringStyle);
@@ -54,7 +54,7 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
     private Round cursorToRound(Cursor cursor, int startColumnIndex) {
         Round round = new Round();
         round.setId(cursor.getLong(startColumnIndex));
-        round.training = cursor.getLong(startColumnIndex + 1);
+        round.trainingId = cursor.getLong(startColumnIndex + 1);
         round.comment = cursor.getString(startColumnIndex + 2);
         if (round.comment == null) {
             round.comment = "";
