@@ -10,4 +10,5 @@
     <dimen name="margin_standard">16dp</dimen>
     <dimen name="flexible_space_show_fab_offset">120dp</dimen>
     <dimen name="left_space_title_toolbar">40dp</dimen>
+    <dimen name="touch_raise">6dp</dimen>
 </resources>

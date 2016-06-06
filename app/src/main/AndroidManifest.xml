@@ -3,10 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="de.dreier.mytargets">
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="true" />
-
     <uses-sdk tools:overrideLibrary="me.oriley.homage, me.oriley.homage.recyclerview" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -44,7 +40,7 @@
             android:name=".activities.MainActivity"
             android:label="@string/my_targets"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.CustomToolbar">
+            android:theme="@style/AppTheme.CustomToolbar.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -233,7 +229,7 @@
         </activity>
         <activity
             android:name=".activities.SimpleFragmentActivity$LicencesActivity"
-            android:label="@string/about"
+            android:label="@string/licences"
             android:parentActivityName=".activities.SimpleFragmentActivity$SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -21,9 +21,7 @@ import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.ArrowNumber;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.Distance;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.Passe;
@@ -43,9 +41,7 @@ import de.dreier.mytargets.shared.models.NotificationInfo$$Parcelable;
         @ParcelClass(ArrowNumber.class),
         @ParcelClass(Bow.class),
         @ParcelClass(Coordinate.class),
-        @ParcelClass(Diameter.class),
         @ParcelClass(Dimension.class),
-        @ParcelClass(Distance.class),
         @ParcelClass(Environment.class),
         @ParcelClass(Passe.class),
         @ParcelClass(Round.class),

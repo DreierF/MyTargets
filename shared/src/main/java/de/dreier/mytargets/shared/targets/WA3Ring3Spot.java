@@ -8,8 +8,9 @@ package de.dreier.mytargets.shared.targets;
 
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
+
+import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 
 public class WA3Ring3Spot extends WA3Ring {
     public static final int ID = 6;
@@ -22,9 +23,9 @@ public class WA3Ring3Spot extends WA3Ring {
                 new Coordinate(500, 250),
                 new Coordinate(760, 750)
         };
-        diameters = new Diameter[]{
-                new Diameter(40, Dimension.CENTIMETER),
-                new Diameter(60, Dimension.CENTIMETER)
+        diameters = new Dimension[]{
+                new Dimension(40, CENTIMETER),
+                new Dimension(60, CENTIMETER)
         };
     }
 }

@@ -14,11 +14,14 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.PluralsRes;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -119,6 +122,10 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
         if (activity instanceof ContentListener) {
             listener = (ContentListener) activity;
         }
+        Fragment fragment = getParentFragment();
+        if (listener == null && fragment instanceof ContentListener) {
+            listener = (ContentListener) fragment;
+        }
     }
 
     /**
@@ -133,9 +140,28 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
      * Starts the given activity with the standard animation
      * @param activity Activity to start
      */
-    void startActivity(Class<?> activity) {
+    void startActivityAnimated(Class<?> activity) {
         Intent i = new Intent(getContext(), activity);
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    void startActivityAnimated(Class<?> activity, String key, long value) {
+        Intent i = new Intent(getContext(), activity);
+        i.putExtra(key, value);
+        startActivity(i);
+        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    public static void setToolbarTransitionName(Toolbar toolbar){
+        TextView textViewTitle = null;
+        for(int i = 0; i<toolbar.getChildCount(); i++) {
+            View view = toolbar.getChildAt(i);
+            if(view instanceof TextView) {
+                textViewTitle = (TextView) view;
+                break;
+            }
+        }
+        ViewCompat.setTransitionName(textViewTitle, "title");
     }
 }

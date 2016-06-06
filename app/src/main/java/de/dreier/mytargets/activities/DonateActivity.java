@@ -1,12 +1,10 @@
 package de.dreier.mytargets.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.preference.PreferenceManager;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.anjlab.android.iab.v3.BillingProcessor;
@@ -19,6 +17,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.DonationAdapter;
+import de.dreier.mytargets.managers.SettingsManager;
 
 public class DonateActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
 
@@ -104,10 +103,7 @@ public class DonateActivity extends AppCompatActivity implements BillingProcesso
     public void onProductPurchased(String productId, TransactionDetails details) {
         bp.consumePurchase(productId);
 
-        // TODO migrate to SettingsManager
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        prefs.edit().putBoolean("donated", true).apply();
+        SettingsManager.setDonated(true);
 
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.donation_thank))

@@ -7,9 +7,9 @@
 package de.dreier.mytargets.shared.targets;
 
 import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.Diameter;
+import de.dreier.mytargets.shared.models.Dimension;
 
-import static de.dreier.mytargets.shared.models.Dimension.CENTIMETER;
+import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 import static de.dreier.mytargets.shared.utils.Color.DARK_GRAY;
 import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
@@ -30,11 +30,11 @@ public class NFAAExpertField extends TargetModelBase {
         scoringStyles = new ScoringStyle[]{
                 new ScoringStyle(true, 6, 5, 4, 3, 2, 1)
         };
-        diameters = new Diameter[]{
-                new Diameter(20, CENTIMETER),
-                new Diameter(35, CENTIMETER),
-                new Diameter(50, CENTIMETER),
-                new Diameter(65, CENTIMETER)
+        diameters = new Dimension[]{
+                new Dimension(20, CENTIMETER),
+                new Dimension(35, CENTIMETER),
+                new Dimension(50, CENTIMETER),
+                new Dimension(65, CENTIMETER)
         };
         centerMark = new CenterMark(WHITE, 7.307f, 4, true);
         isFieldTarget = true;

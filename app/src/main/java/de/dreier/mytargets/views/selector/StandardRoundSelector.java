@@ -20,7 +20,7 @@ import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.StandardRoundActivity;
 import de.dreier.mytargets.fragments.TargetFragment;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
-import de.dreier.mytargets.shared.models.Diameter;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
@@ -67,7 +67,7 @@ public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
             final Target st = Parcels.unwrap(parcelable);
             StandardRound item = getSelectedItem();
             for (RoundTemplate template : item.getRounds()) {
-                Diameter size = template.target.size;
+                Dimension size = template.target.size;
                 template.target = new Target(st.id, st.scoringStyle, size);
             }
             setItem(item);

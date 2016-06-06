@@ -156,6 +156,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         animateFromZoomSpot();
 
         if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
+            passe.exact = !zoneSelectionMode;
             passe.setId(setListener.onTargetSet(new Passe(passe), false));
         }
     }

@@ -7,9 +7,9 @@
 package de.dreier.mytargets.shared.targets;
 
 import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.Diameter;
+import de.dreier.mytargets.shared.models.Dimension;
 
-import static de.dreier.mytargets.shared.models.Dimension.CENTIMETER;
+import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 import static de.dreier.mytargets.shared.utils.Color.DARK_GRAY;
 import static de.dreier.mytargets.shared.utils.Color.RED_MISS;
 import static de.dreier.mytargets.shared.utils.Color.YELLOW;
@@ -25,9 +25,9 @@ public class HitOrMiss extends TargetModelBase {
         scoringStyles = new ScoringStyle[]{
                 new ScoringStyle(false, 1, 0)
         };
-        diameters = new Diameter[]{
-                new Diameter(30, CENTIMETER),
-                new Diameter(96, CENTIMETER)
+        diameters = new Dimension[]{
+                new Dimension(30, CENTIMETER),
+                new Dimension(96, CENTIMETER)
         };
         centerMark = new CenterMark(DARK_GRAY, 4.188f, 4, false);
     }

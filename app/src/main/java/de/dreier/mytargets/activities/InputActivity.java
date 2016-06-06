@@ -8,10 +8,7 @@
 package de.dreier.mytargets.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
@@ -25,6 +22,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.TimerFragment;
+import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.WearMessageManager;
 import de.dreier.mytargets.managers.dao.ArrowNumberDataSource;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
@@ -43,16 +41,17 @@ import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.views.TargetView;
+import icepick.Icepick;
+import icepick.State;
 
 public class InputActivity extends AppCompatActivity implements OnTargetSetListener {
+
+    public static final String ROUND_ID = "round_id";
+    public static final String PASSE_IND = "passe_ind";
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
-
-    public static final String ROUND_ID = "round_id";
-    public static final String PASSE_IND = "passe_ind";
-    private static final String SHOW_ALL_MODE = "show_all";
 
     @Bind(R.id.targetView)
     TargetView targetView;
@@ -63,7 +62,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     @Bind(R.id.prev)
     Button prev;
 
-    private int curPasse = 0;
+    @State
+    int curPasse = 0;
+
     private int savedPasses = 0;
     private Round round;
     private boolean mShowAllMode = false;
@@ -83,7 +84,6 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
         targetView.setOnTargetSetListener(this);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         RoundDataSource roundDataSource = new RoundDataSource(getApplicationContext());
         passeDataSource = new PasseDataSource(getApplicationContext());
 
@@ -104,18 +104,15 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         if (training.arrowNumbering) {
             targetView.setArrowNumbers(new ArrowNumberDataSource(getApplicationContext()).getAll(training.arrow));
         }
-        mShowAllMode = prefs.getBoolean(SHOW_ALL_MODE, false);
+        mShowAllMode = SettingsManager.getShowAllMode();
 
         targetView.showAll(mShowAllMode);
-        targetView.setZoneSelectionMode(!training.exact);
 
         // Send message to wearable app, that we are starting a passe
-        if (!training.exact) {
-            new Thread(this::startWearNotification).start();
-        }
+        new Thread(this::startWearNotification).start();
 
+        Icepick.restoreInstanceState(this, savedInstanceState);
         if (savedInstanceState != null) {
-            curPasse = savedInstanceState.getInt("curPasse");
             updatePasse();
         } else {
             setPasse(curPasse);
@@ -153,6 +150,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         eye.setVisible(!targetView.getInputMode());
         eye.setIcon(mShowAllMode ? R.drawable.ic_visibility_white_24dp :
                 R.drawable.ic_visibility_off_white_24dp);
+        menu.findItem(R.id.action_show_sidebar).setIcon(
+                targetView.getInputMode() ? R.drawable.ic_album_24dp :
+                        R.drawable.ic_grain_24dp);
         return true;
     }
 
@@ -211,8 +211,11 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
             case R.id.action_show_all:
                 mShowAllMode = !mShowAllMode;
                 targetView.showAll(mShowAllMode);
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                prefs.edit().putBoolean(SHOW_ALL_MODE, mShowAllMode).apply();
+                SettingsManager.setShowAllMode(mShowAllMode);
+                supportInvalidateOptionsMenu();
+                return true;
+            case R.id.action_show_sidebar:
+                targetView.switchMode(!targetView.getInputMode(), true);
                 supportInvalidateOptionsMenu();
                 return true;
             case android.R.id.home:
@@ -231,9 +234,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("curPasse", curPasse);
+        Icepick.saveInstanceState(this, outState);
     }
 
     @Override

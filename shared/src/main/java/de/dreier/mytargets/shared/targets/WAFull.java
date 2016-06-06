@@ -7,9 +7,9 @@
 package de.dreier.mytargets.shared.targets;
 
 import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
 
+import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 import static de.dreier.mytargets.shared.utils.Color.BLACK;
 import static de.dreier.mytargets.shared.utils.Color.CERULEAN_BLUE;
 import static de.dreier.mytargets.shared.utils.Color.DARK_GRAY;
@@ -43,12 +43,12 @@ public class WAFull extends TargetModelBase {
                 new ScoringStyle(true, 5, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1),
                 new ScoringStyle(false, 9, 9, 9, 7, 7, 5, 5, 3, 3, 1, 1)
         };
-        diameters = new Diameter[]{
-                new Diameter(40, Dimension.CENTIMETER),
-                new Diameter(60, Dimension.CENTIMETER),
-                new Diameter(80, Dimension.CENTIMETER),
-                new Diameter(92, Dimension.CENTIMETER),
-                new Diameter(122, Dimension.CENTIMETER)
+        diameters = new Dimension[]{
+                new Dimension(40, CENTIMETER),
+                new Dimension(60, CENTIMETER),
+                new Dimension(80, CENTIMETER),
+                new Dimension(92, CENTIMETER),
+                new Dimension(122, CENTIMETER)
         };
         centerMark = new CenterMark(DARK_GRAY, 5f, 4, false);
     }

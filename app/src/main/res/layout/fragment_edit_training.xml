@@ -227,28 +227,6 @@
                     android:padding="16dp"
                     android:text="@string/timer" />
 
-                <include layout="@layout/divider_full" />
-
-                <CheckBox
-                    android:id="@+id/scoresOnly"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
-                    android:padding="16dp"
-                    android:text="@string/enter_scores_only" />
-
-                <TextView
-                    android:id="@+id/scoresOnlyDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="48dp"
-                    android:layout_marginStart="48dp"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:text="@string/enter_scores_only_description" />
-
             </LinearLayout>
 
         </ScrollView>

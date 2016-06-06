@@ -60,7 +60,6 @@ import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.TargetImage;
 import de.dreier.mytargets.views.PasseView;
-import de.dreier.mytargets.views.TargetPasseView;
 
 /**
  * Shows all passes of one training
@@ -68,7 +67,6 @@ import de.dreier.mytargets.views.TargetPasseView;
 public class TrainingFragment extends ExpandableFragment<Round, Passe>
         implements View.OnClickListener, FABMenu.Listener {
 
-    private final boolean mTargetViewMode = false;
     private final boolean[] equals = new boolean[2];
     private long mTraining;
     private ArrayList<Round> rounds;
@@ -114,6 +112,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         // Set up toolbar
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
+        setToolbarTransitionName(toolbar);
         ActionBar actionBar = activity.getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -322,7 +321,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
             case 2:
                 // New round to free training
                 Intent i = new Intent(getContext(), SimpleFragmentActivity.EditRoundActivity.class);
-                i.putExtra(EditRoundFragment.TRAINING_ID, mTraining);
+                i.putExtra(ITEM_ID, mTraining);
                 startActivity(i);
                 break;
         }
@@ -346,48 +345,14 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
 
         @Override
         protected SelectableViewHolder<Passe> getSecondLevelViewHolder(ViewGroup parent) {
-            if (mTargetViewMode) {
-                View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_target_end, parent, false);
-                return new TargetViewHolder(itemView);
-            } else {
-                View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_end, parent, false);
-                return new PasseViewHolder(itemView);
-            }
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_end, parent, false);
+            return new PasseViewHolder(itemView);
         }
 
         @Override
         public int getMaxSpan() {
-            return mTargetViewMode ? 2 : 1;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            int type = super.getItemViewType(position);
-            if (type == ITEM_TYPE && mTargetViewMode) {
-                type = ITEM_TYPE_2;
-            }
-            return type;
-        }
-    }
-
-    public class TargetViewHolder extends SelectableViewHolder<Passe> {
-        public final TargetPasseView mShots;
-        public final TextView mSubtitle;
-
-        public TargetViewHolder(View itemView) {
-            super(itemView, mSelector, TrainingFragment.this);
-            mShots = (TargetPasseView) itemView.findViewById(R.id.shoots);
-            mSubtitle = (TextView) itemView.findViewById(R.id.passe);
-        }
-
-        @Override
-        public void bindCursor() {
-            Context context = mSubtitle.getContext();
-            Round r = roundDataSource.get(mItem.roundId);
-            mShots.setPasse(mItem, r.info.target);
-            mSubtitle.setText(context.getString(R.string.passe_n, (mItem.index + 1)));
+            return 1;
         }
     }
 
@@ -434,7 +399,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         @Override
         public boolean onLongClick(View v) {
             Intent i = new Intent(getContext(), SimpleFragmentActivity.EditRoundActivity.class);
-            i.putExtra(EditRoundFragment.TRAINING_ID, mTraining);
+            i.putExtra(ITEM_ID, mTraining);
             i.putExtra(EditRoundFragment.ROUND_ID, mItem.getId());
             startActivity(i);
             return true;

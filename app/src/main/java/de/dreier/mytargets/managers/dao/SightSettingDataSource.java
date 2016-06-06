@@ -14,7 +14,7 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.SightSetting;
 
 public class SightSettingDataSource extends IdProviderDataSource<SightSetting> {
@@ -40,7 +40,7 @@ public class SightSettingDataSource extends IdProviderDataSource<SightSetting> {
         ContentValues values = new ContentValues();
         values.put(BOW, sightSetting.bowId);
         values.put(DISTANCE, sightSetting.distance.value);
-        values.put(UNIT, sightSetting.distance.unit);
+        values.put(UNIT, sightSetting.distance.unit.toString());
         values.put(SETTING, sightSetting.value);
         return values;
     }
@@ -51,7 +51,7 @@ public class SightSettingDataSource extends IdProviderDataSource<SightSetting> {
             ContentValues values = new ContentValues();
             values.put(BOW, bowId);
             values.put(DISTANCE, set.distance.value);
-            values.put(UNIT, set.distance.unit);
+            values.put(UNIT, set.distance.unit.toString());
             values.put(SETTING, set.value);
             database.insert(TABLE, null, values);
         }
@@ -59,13 +59,13 @@ public class SightSettingDataSource extends IdProviderDataSource<SightSetting> {
 
     private SightSetting cursorToSightSetting(Cursor cursor) {
         SightSetting sightSetting = new SightSetting();
-        sightSetting.distance = new Distance(cursor.getInt(0), cursor.getString(1));
+        sightSetting.distance = new Dimension(cursor.getInt(0), cursor.getString(1));
         sightSetting.value = cursor.getString(2);
         sightSetting.bowId = cursor.getLong(3);
         return sightSetting;
     }
 
-    public SightSetting get(long bowId, Distance distance) {
+    public SightSetting get(long bowId, Dimension distance) {
         Cursor cursor = database.rawQuery(
                 "SELECT distance, unit, setting, bow " +
                         "FROM VISIER " +

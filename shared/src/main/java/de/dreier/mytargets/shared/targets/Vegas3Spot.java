@@ -8,9 +8,9 @@ package de.dreier.mytargets.shared.targets;
 
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.models.Diameter;
+import de.dreier.mytargets.shared.models.Dimension;
 
-import static de.dreier.mytargets.shared.models.Dimension.CENTIMETER;
+import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 
 public class Vegas3Spot extends WA5Ring {
     public static final int ID = 4;
@@ -23,8 +23,8 @@ public class Vegas3Spot extends WA5Ring {
                 new Coordinate(500, 250),
                 new Coordinate(760, 750)
         };
-        diameters = new Diameter[]{new Diameter(40, CENTIMETER),
-                new Diameter(60, CENTIMETER)};
+        diameters = new Dimension[]{new Dimension(40, CENTIMETER),
+                new Dimension(60, CENTIMETER)};
     }
 
     @Override

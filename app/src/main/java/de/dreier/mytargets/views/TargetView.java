@@ -42,6 +42,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.ArrowNumber;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
@@ -58,6 +59,7 @@ public class TargetView extends TargetViewBase {
     private final Handler h = new Handler();
     @State
     ArrayList<Passe> oldPasses;
+    private boolean inputModeTransitioning = false;
     private boolean zoomTransitioning = false;
     private float radius, midX, midY;
     private Paint fillPaint;
@@ -72,6 +74,8 @@ public class TargetView extends TargetViewBase {
     private TextPaint textPaint;
     private Paint borderPaint;
     private ValueAnimator animator;
+    private float inputModeProgress = 0;
+    private ValueAnimator inputAnimator;
 
     public TargetView(Context context) {
         super(context);
@@ -101,6 +105,7 @@ public class TargetView extends TargetViewBase {
     @Override
     public void reset() {
         super.reset();
+        inputModeTransitioning = false;
         zoomTransitioning = false;
     }
 
@@ -121,6 +126,7 @@ public class TargetView extends TargetViewBase {
     @Override
     public void setRoundTemplate(RoundTemplate r) {
         super.setRoundTemplate(r);
+        switchMode(SettingsManager.getInputMode(), false);
         initSpotBounds();
     }
 
@@ -301,10 +307,19 @@ public class TargetView extends TargetViewBase {
         animateToZoomSpot();
     }
 
-    public void setZoneSelectionMode(boolean mode) {
-        zoneSelectionMode = mode;
-        if (!zoneSelectionMode) {
-            animateToZoomSpot();
+    public void switchMode(boolean mode, boolean animate) {
+        if (mode != zoneSelectionMode) {
+            // TODO make sure selected arrow indicator transforms as well
+            zoneSelectionMode = mode;
+            if (animate) {
+                animateMode();
+            }
+            if (zoneSelectionMode) {
+                animateFromZoomSpot();
+            } else {
+                animateToZoomSpot();
+            }
+            SettingsManager.setInputMode(zoneSelectionMode);
         }
     }
 
@@ -368,6 +383,38 @@ public class TargetView extends TargetViewBase {
             passeDrawer.setPressed(-1);
         }
         return false;
+    }
+
+    private void animateMode() {
+        cancelPendingInputAnimations();
+        inputAnimator = ValueAnimator.ofFloat(0, 1);
+        inputAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        inputAnimator.addUpdateListener(valueAnimator -> {
+            inputModeProgress = (Float) valueAnimator.getAnimatedValue();
+            invalidate();
+        });
+        inputAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                inputModeTransitioning = true;
+                inputModeProgress = 0;
+                initAnimation();
+                calcSizes();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                onAnimationEnd(animation);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                inputModeTransitioning = false;
+                invalidate();
+            }
+        });
+        inputAnimator.setDuration(300);
+        inputAnimator.start();
     }
 
     private void initAnimation() {
@@ -529,12 +576,16 @@ public class TargetView extends TargetViewBase {
      * @param canvas Canvas to draw on
      */
     private void drawRightSelectorBar(Canvas canvas) {
-        if (zoneSelectionMode) {
+        if (zoneSelectionMode || inputModeTransitioning) {
             int selectableZonesCount = selectableZones.size();
             for (int i = 0; i < selectableZonesCount; i++) {
                 TargetModelBase.SelectableZone zone = selectableZones.get(i);
 
-                int X1 = (int) (contentWidth - 60 * density);
+                float percent = 1;
+                if (inputModeTransitioning) {
+                    percent = zoneSelectionMode ? inputModeProgress : 1 - inputModeProgress;
+                }
+                int X1 = (int) (contentWidth - 60 * percent * density);
                 int X2 = (int) (X1 + 40 * density);
                 int Y1 = contentHeight * i / selectableZonesCount;
                 int Y2 = contentHeight * (i + 1) / selectableZonesCount;
@@ -583,7 +634,7 @@ public class TargetView extends TargetViewBase {
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         // Cancel animation
-        if (zoomTransitioning) {
+        if (inputModeTransitioning || zoomTransitioning) {
             passeDrawer.cancel();
         }
 
@@ -598,6 +649,13 @@ public class TargetView extends TargetViewBase {
         if (animator != null) {
             ValueAnimator tmp = animator;
             animator = null;
+            tmp.cancel();
+        }
+    }
+    private void cancelPendingInputAnimations() {
+        if (inputAnimator != null) {
+            ValueAnimator tmp = inputAnimator;
+            inputAnimator = null;
             tmp.cancel();
         }
     }

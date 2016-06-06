@@ -1,7 +1,6 @@
 package de.dreier.mytargets.shared.targets;
 
 import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
 
 import static de.dreier.mytargets.shared.utils.Color.DARK_GRAY;
@@ -22,8 +21,8 @@ public class SCAPeriod extends TargetModelBase {
         scoringStyles = new ScoringStyle[]{
                 new ScoringStyle(false, 8, 4, 2)
         };
-        diameters = new Diameter[]{
-                new Diameter(60, Dimension.CENTIMETER)
+        diameters = new Dimension[]{
+                new Dimension(60, Dimension.Unit.CENTIMETER)
         };
         centerMark = new CenterMark(DARK_GRAY, 5, 4, false);
     }

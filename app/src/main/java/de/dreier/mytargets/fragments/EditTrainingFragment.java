@@ -18,7 +18,6 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,7 +43,6 @@ import de.dreier.mytargets.views.selector.EnvironmentSelector;
 import de.dreier.mytargets.views.selector.StandardRoundSelector;
 
 import static de.dreier.mytargets.fragments.DatePickerFragment.ARG_CURRENT_DATE;
-
 
 public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implements DatePickerDialog.OnDateSetListener {
     public static final String TRAINING_TYPE = "training_type";
@@ -77,12 +75,6 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
     CheckBox numberArrows;
     @Bind(R.id.timer)
     CheckBox timer;
-
-    @Bind(R.id.scoresOnly)
-    CheckBox scoresOnly;
-    @Bind(R.id.scoresOnlyDescription)
-    TextView scoresOnlyDescription;
-
     private int trainingType = 0;
     private Date date = new Date();
 
@@ -97,7 +89,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            trainingId = arguments.getLong(TRAINING_ID, -1);
+            trainingId = arguments.getLong(FragmentBase.ITEM_ID, -1);
             trainingType = arguments.getInt(TRAINING_TYPE, FREE_TRAINING);
         }
 
@@ -114,7 +106,6 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
             timer.setChecked(SettingsManager.getTimerEnabled());
             indoor.setChecked(SettingsManager.getIndoor());
             outdoor.setChecked(!SettingsManager.getIndoor());
-            scoresOnly.setChecked(SettingsManager.getScoresOnly());
             environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
             loadRoundDefaultValues();
         } else {
@@ -128,9 +119,6 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
             environment.setItem(train.environment);
             setTrainingDate();
             notEditable.setVisibility(View.GONE);
-            scoresOnly.setVisibility(View.GONE);
-            scoresOnlyDescription.setVisibility(View.GONE);
-
         }
         standardRoundSpinner.setOnActivityResultContext(this);
         arrow.setOnActivityResultContext(this);
@@ -212,7 +200,6 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
             }
             new StandardRoundDataSource(getContext()).update(standardRound);
             training.standardRoundId = standardRound.getId();
-            training.exact = !scoresOnly.isChecked();
 
             trainingDataSource.update(training);
             long roundId = createRoundsFromTemplate(standardRound, training).get(0).getId();
@@ -238,7 +225,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
         training.environment = environment.getSelectedItem();
         training.bow = bow.getSelectedItem() == null ? 0 : bow.getSelectedItem().getId();
         training.arrow = arrow.getSelectedItem() == null ? 0 : arrow.getSelectedItem().getId();
-        training.timePerPasse = timer.isChecked() ? SettingsManager.getShootTime() : -1;
+        training.timePerPasse = timer.isChecked() ? SettingsManager.getTimerShootTime() : -1;
         Arrow selectedItem = arrow.getSelectedItem();
         training.arrowNumbering = !(selectedItem == null || selectedItem.numbers.isEmpty()) &&
                 numberArrows.isChecked();

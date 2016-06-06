@@ -24,23 +24,24 @@ import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.managers.dao.DistanceDataSource;
-import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.Dimension.Unit;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.views.CardItemDecorator;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class DistanceGridFragment extends SelectItemFragment<Distance> {
+public class DistanceGridFragment extends SelectItemFragment<Dimension> {
 
     private static final String DISTANCE_UNIT = "distance_unit";
-    private Distance distance;
-    private String unit;
+    private Dimension distance;
+    private Unit unit;
 
-    public static DistanceGridFragment newInstance(Distance distance, String unit) {
+    public static DistanceGridFragment newInstance(Dimension distance, Unit unit) {
         DistanceGridFragment fragment = new DistanceGridFragment();
         Bundle args = new Bundle();
         args.putParcelable(ITEM, Parcels.wrap(distance));
-        args.putString(DISTANCE_UNIT, unit);
+        args.putString(DISTANCE_UNIT, unit.toString());
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,7 +51,7 @@ public class DistanceGridFragment extends SelectItemFragment<Distance> {
         super.onActivityCreated(savedInstanceState);
         Bundle bundle = getArguments();
         distance = Parcels.unwrap(bundle.getParcelable(ITEM));
-        unit = bundle.getString(DISTANCE_UNIT);
+        unit = Unit.from(bundle.getString(DISTANCE_UNIT));
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mRecyclerView.addItemDecoration(new CardItemDecorator(getActivity(), 3));
     }
@@ -68,10 +69,10 @@ public class DistanceGridFragment extends SelectItemFragment<Distance> {
 
     @Override
     public void onLongClick(SelectableViewHolder holder) {
-        onClick(holder, (Distance) holder.getItem());
+        onClick(holder, (Dimension) holder.getItem());
     }
 
-    protected class DistanceAdapter extends NowListAdapter<Distance> {
+    protected class DistanceAdapter extends NowListAdapter<Dimension> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
@@ -80,7 +81,7 @@ public class DistanceGridFragment extends SelectItemFragment<Distance> {
         }
     }
 
-    class ViewHolder extends SelectableViewHolder<Distance> {
+    class ViewHolder extends SelectableViewHolder<Dimension> {
         @Bind(android.R.id.text1)
         TextView mName;
 

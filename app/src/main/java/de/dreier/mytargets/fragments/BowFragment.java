@@ -7,7 +7,6 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.text.Html;
@@ -29,6 +28,8 @@ import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.SelectableViewHolder;
+
+import static de.dreier.mytargets.fragments.EditBowFragment.BOW_ID;
 
 public class BowFragment extends EditableFragment<Bow> implements View.OnClickListener {
 
@@ -53,15 +54,17 @@ public class BowFragment extends EditableFragment<Bow> implements View.OnClickLi
 
     @Override
     protected void onEdit(Bow item) {
-        Intent i = new Intent(getActivity(), SimpleFragmentActivity.EditBowActivity.class);
-        i.putExtra(EditBowFragment.BOW_ID, item.getId());
-        startActivity(i);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        startActivityAnimated(SimpleFragmentActivity.EditBowActivity.class, BOW_ID, item.getId());
+    }
+
+    @Override
+    protected void onSelected(Bow item) {
+        startActivityAnimated(SimpleFragmentActivity.EditBowActivity.class, BOW_ID, item.getId());
     }
 
     @Override
     public void onClick(View v) {
-        startActivity(SimpleFragmentActivity.EditBowActivity.class);
+        startActivityAnimated(SimpleFragmentActivity.EditBowActivity.class);
     }
 
     private class BowAdapter extends NowListAdapter<Bow> {

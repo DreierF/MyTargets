@@ -35,7 +35,6 @@ import de.dreier.mytargets.utils.SelectableViewHolder;
 public abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<T>
         implements OnCardClickListener<T>, LoaderManager.LoaderCallbacks<List<T>> {
 
-
     @PluralsRes
     int itemTypeDelRes;
 

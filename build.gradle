@@ -21,9 +21,9 @@ plugins {
 
 ext {
     supportLibVersion = '23.4.0'
-    playServiceVersion = '9.0.0'
-    appVersionName = '2.2.0'
-    appVersionCode = 38
+    playServiceVersion = '9.0.2'
+    appVersionName = '2.2.1'
+    appVersionCode = 39
 }
 
 allprojects {
@@ -50,6 +50,10 @@ crowdinDownload {
     apiKey = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
     projectId = 'mytargets'
     destination = "$projectDir"
+    renameMapping  = [
+            from:  '^(.*)/values-((?!(pt|zh))(.*)-r(.*)|((pt|zh).*))/(.*)$',
+            to:  /\1\/values-\4\6\/\8/
+    ]
 }.dependsOn crowdinUpload
 
 crowdinDownload.doLast {
