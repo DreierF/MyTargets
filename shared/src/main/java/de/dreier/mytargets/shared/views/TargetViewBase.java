@@ -15,7 +15,7 @@ import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
-import de.dreier.mytargets.shared.targets.TargetModelBase.SelectableZone;
+import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.PasseDrawer;

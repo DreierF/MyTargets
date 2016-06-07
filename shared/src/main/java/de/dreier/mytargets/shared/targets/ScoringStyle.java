@@ -1,7 +1,18 @@
 package de.dreier.mytargets.shared.targets;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import de.dreier.mytargets.shared.models.Passe;
+import de.dreier.mytargets.shared.models.Shot;
+
 public class ScoringStyle {
 
+    public static final String MISS_SYMBOL = "M";
+    public static final String X_SYMBOL = "X";
     public final boolean showAsX;
     public final int[][] points;
 
@@ -35,13 +46,13 @@ public class ScoringStyle {
 
     public String zoneToString(int zone, int arrow) {
         if (isOutOfRange(zone)) {
-            return "M";
+            return MISS_SYMBOL;
         } else if (zone == 0 && showAsX) {
-            return "X";
+            return X_SYMBOL;
         } else {
             int value = getPointsByZone(zone, arrow);
             if (value == 0) {
-                return "M";
+                return MISS_SYMBOL;
             }
             return String.valueOf(value);
         }
@@ -71,5 +82,31 @@ public class ScoringStyle {
             }
         }
         return max;
+    }
+
+    public int getEndMaxPoints(int arrowsPerPasse) {
+        return getMaxPoints() * arrowsPerPasse;
+    }
+
+    public List<SelectableZone> getSelectableZoneList(int arrow) {
+        List<SelectableZone> list = new ArrayList<>();
+        String last = "";
+        for (int i = 0; i < points.length; i++) {
+            String zone = zoneToString(i, arrow);
+            if (!last.equals(zone)) {
+                list.add(new SelectableZone(i, zone));
+            }
+            last = zone;
+        }
+        if (!last.equals(MISS_SYMBOL)) {
+            list.add(new SelectableZone(Shot.MISS, MISS_SYMBOL));
+        }
+        return list;
+    }
+
+    public int getReachedPoints(Passe passe) {
+        return Stream.of(passe.shotList())
+                .map(s -> getPoints(s.zone, s.arrow))
+                .collect(Collectors.reducing(0, (a, b) -> a + b));
     }
 }

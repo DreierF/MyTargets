@@ -55,4 +55,8 @@ public class Passe implements IIdSettable {
                 getClass().equals(another.getClass()) &&
                 id == ((Passe) another).id;
     }
+
+    public int getReachedPoints(Target target) {
+        return target.getReachedPoints(this);
+    }
 }

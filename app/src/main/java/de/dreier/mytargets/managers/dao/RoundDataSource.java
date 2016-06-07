@@ -10,6 +10,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.models.Round;
@@ -63,7 +66,7 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
         return round;
     }
 
-    public Round get(long round) {
+    public Round get(long roundId) {
         Cursor cursor = database.rawQuery(
                 "SELECT r._id, r.training, r.comment, " +
                         "a._id, a.r_index, a.arrows, a.target, a.scoring_style, " +
@@ -73,7 +76,7 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
                         "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
                         "LEFT JOIN PASSE p ON r._id = p.round " +
                         "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                        "WHERE r._id=" + round, null);
+                        "WHERE r._id=" + roundId, null);
 
         if (!cursor.moveToFirst()) {
             return null;
@@ -81,17 +84,9 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
         Round r = cursorToRound(cursor, 0);
         cursor.close();
 
-        // Calculate reached points
-        Cursor cur = database.rawQuery("SELECT s.points, s.arrow_index " +
-                "FROM PASSE p, SHOOT s " +
-                "WHERE p.round=" + round + " " +
-                "AND s.passe=p._id", null);
-        if (cur.moveToFirst()) {
-            do {
-                r.reachedPoints += r.info.target.getPointsByZone(cur.getInt(0), cur.getInt(1));
-            } while (cur.moveToNext());
-        }
-        cur.close();
+        r.reachedPoints = Stream.of(new PasseDataSource(context).getAllByRound(roundId))
+                .map(p -> p.getReachedPoints(r.info.target))
+                .collect(Collectors.reducing(0, (a, b) -> a + b));
         return r;
     }
 

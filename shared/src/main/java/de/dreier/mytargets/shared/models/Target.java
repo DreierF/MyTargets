@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 
 import java.util.List;
 
+import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
@@ -57,17 +58,12 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
                 id == ((Target) another).id;
     }
 
-    public int getMaxPoints() {
-        return getModel().getScoringStyle(scoringStyle).getMaxPoints();
-    }
-
     public TargetModelBase getModel() {
         if (model == null) {
             model = TargetFactory.getTarget(id);
         }
         return model;
     }
-
 
     public int getPointsByZone(int zone, int arrow) {
         return model.getScoringStyle(scoringStyle).getPointsByZone(zone, arrow);
@@ -88,7 +84,19 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
         return getModel().getScoringStyles().get(scoringStyle);
     }
 
-    public List<TargetModelBase.SelectableZone> getSelectableZoneList(int arrow) {
-        return getModel().getSelectableZoneList(scoringStyle, arrow);
+    public List<SelectableZone> getSelectableZoneList(int arrow) {
+        return getModel().getScoringStyle(scoringStyle).getSelectableZoneList(arrow);
+    }
+
+    public int getMaxPoints() {
+        return getModel().getScoringStyle(scoringStyle).getMaxPoints();
+    }
+
+    public int getEndMaxPoints(int arrowsPerPasse) {
+        return getModel().getScoringStyle(scoringStyle).getEndMaxPoints(arrowsPerPasse);
+    }
+
+    public int getReachedPoints(Passe passe) {
+        return getModel().getScoringStyle(scoringStyle).getReachedPoints(passe);
     }
 }

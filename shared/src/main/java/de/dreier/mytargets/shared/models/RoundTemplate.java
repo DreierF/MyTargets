@@ -11,7 +11,7 @@ public class RoundTemplate implements IIdSettable {
     protected long id;
 
     public int getMaxPoints() {
-        return target.getMaxPoints() * passes * arrowsPerPasse;
+        return target.getEndMaxPoints(arrowsPerPasse) * passes;
     }
 
     public long getId() {

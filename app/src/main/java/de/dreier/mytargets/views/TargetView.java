@@ -49,7 +49,7 @@ import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.targets.TargetModelBase;
+import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import icepick.Icepick;
@@ -283,7 +283,7 @@ public class TargetView extends TargetViewBase {
         Coordinate coordinate = new Coordinate();
         if (zoneSelectionMode) {
             coordinate.x = contentWidth - 100 * density;
-            int index = selectableZones.indexOf(new TargetModelBase.SelectableZone(passe.shot[i].zone, ""));
+            int index = selectableZones.indexOf(new SelectableZone(passe.shot[i].zone, ""));
             int indicatorHeight = contentHeight / selectableZones.size();
             coordinate.y = indicatorHeight * index + indicatorHeight / 2.0f;
         } else {
@@ -587,7 +587,7 @@ public class TargetView extends TargetViewBase {
         if (zoneSelectionMode || inputModeTransitioning) {
             int selectableZonesCount = selectableZones.size();
             for (int i = 0; i < selectableZonesCount; i++) {
-                TargetModelBase.SelectableZone zone = selectableZones.get(i);
+                SelectableZone zone = selectableZones.get(i);
 
                 float percent = 1;
                 if (inputModeTransitioning) {

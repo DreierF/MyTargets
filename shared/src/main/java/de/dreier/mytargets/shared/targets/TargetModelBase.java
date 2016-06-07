@@ -7,7 +7,6 @@ import android.support.annotation.StringRes;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.Coordinate;
@@ -148,34 +147,4 @@ public class TargetModelBase implements IIdProvider {
         return Shot.MISS;
     }
 
-    public List<SelectableZone> getSelectableZoneList(int scoringStyle, int arrow) {
-        List<SelectableZone> list = new ArrayList<>();
-        String last = "";
-        for (int i = 0; i < getZoneCount(); i++) {
-            String zone = getScoringStyle(scoringStyle).zoneToString(i, arrow);
-            if (!last.equals(zone)) {
-                list.add(new SelectableZone(i, zone));
-            }
-            last = zone;
-        }
-        if (!last.equals("M")) {
-            list.add(new SelectableZone(-1, "M"));
-        }
-        return list;
-    }
-
-    public static class SelectableZone {
-        public final int zone;
-        public final String text;
-
-        public SelectableZone(int zone, String text) {
-            this.zone = zone;
-            this.text = text;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            return o instanceof SelectableZone && zone == ((SelectableZone) o).zone;
-        }
-    }
 }

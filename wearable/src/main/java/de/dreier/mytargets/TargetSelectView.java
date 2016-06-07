@@ -10,7 +10,7 @@ import android.view.MotionEvent;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.targets.TargetModelBase.SelectableZone;
+import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.utils.Circle;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
