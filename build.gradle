@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath 'com.android.tools.build:gradle:2.1.2'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
         classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.0.9'
@@ -22,6 +22,7 @@ plugins {
 ext {
     supportLibVersion = '23.4.0'
     playServiceVersion = '9.0.2'
+    parcelerVersion = '1.1.5'
     appVersionName = '2.2.1'
     appVersionCode = 39
 }
