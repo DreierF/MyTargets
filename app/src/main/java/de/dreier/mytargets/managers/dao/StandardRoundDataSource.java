@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.R;
@@ -75,18 +76,21 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
         return standardRound;
     }
 
-
     public StandardRound get(long standardRoundId) {
         Cursor cursor = database.rawQuery("SELECT s._id, s.name, s.club, s.indoor, " +
                 "a._id, a.r_index, a.arrows, a.target, a.scoring_style, a.target, a.scoring_style, a.distance, a.unit, " +
-                "a.size, a.target_unit, a.passes, a.sid " +
+                "a.size, a.target_unit, a.passes, a.sid, b.usages " +
                 "FROM STANDARD_ROUND_TEMPLATE s " +
                 "LEFT JOIN ROUND_TEMPLATE a ON s._id=a.sid " +
+                "LEFT JOIN (SELECT t.standard_round, COUNT(*) AS usages " +
+                "FROM TRAINING t " +
+                "GROUP BY t.standard_round) b ON b.standard_round=s._id " +
                 "WHERE s._id = " + standardRoundId, null);
 
         StandardRound sr = null;
         if (cursor.moveToFirst()) {
             sr = cursorToStandardRound(cursor);
+            sr.usages = cursor.getInt(17);
             do {
                 if (cursor.getLong(13) == 0) {
                     break;
@@ -100,7 +104,7 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
     }
 
     public ArrayList<StandardRound> getAll() {
-        Cursor cursor = database.rawQuery("SELECT s._id FROM STANDARD_ROUND_TEMPLATE s", null);
+        Cursor cursor = database.rawQuery("SELECT s._id FROM STANDARD_ROUND_TEMPLATE s WHERE s.club != 512", null);
         ArrayList<StandardRound> list = new ArrayList<>(cursor.getCount());
         if (cursor.moveToFirst()) {
             do {
@@ -108,6 +112,7 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
             } while (cursor.moveToNext());
         }
         cursor.close();
+        Collections.sort(list, (lhs, rhs) -> rhs.usages - lhs.usages);
         return list;
     }
 
@@ -134,7 +139,10 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
 
     public List<StandardRound> getAllSearch(String query) {
         query = query.replace(' ', '%');
-        Cursor cursor = database.rawQuery("SELECT s._id FROM STANDARD_ROUND_TEMPLATE s WHERE s.name LIKE '%' || ? || '%' AND s.club!=512", new String[]{query});
+        Cursor cursor = database.rawQuery("SELECT s._id " +
+                "FROM STANDARD_ROUND_TEMPLATE s " +
+                "WHERE s.name LIKE '%' || ? || '%' " +
+                "AND s.club != 512", new String[]{query});
         ArrayList<StandardRound> list = new ArrayList<>(cursor.getCount());
         if (cursor.moveToFirst()) {
             do {

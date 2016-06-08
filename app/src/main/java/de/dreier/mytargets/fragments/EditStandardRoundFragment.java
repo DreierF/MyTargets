@@ -117,7 +117,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         return rootView;
     }
 
-    @OnClick(R.id.add_button)
+    @OnClick(R.id.addButton)
     public void onAddSightSetting() {
         RoundTemplate r = roundTemplateList.get(roundTemplateList.size() - 1);
         RoundTemplate roundTemplate = new RoundTemplate();
@@ -129,6 +129,13 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         roundTemplate.targetTemplate = r.targetTemplate;
         roundTemplateList.add(roundTemplate);
         adapter.notifyItemInserted(roundTemplateList.size() - 1);
+    }
+
+    @OnClick(R.id.deleteStandardRound)
+    public void onDeleteStandardRound() {
+        new StandardRoundDataSource().delete(standardRoundId);
+        getActivity().finish();
+        getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
     @Override

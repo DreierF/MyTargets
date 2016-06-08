@@ -142,7 +142,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         return rootView;
     }
 
-    @OnClick(R.id.add_button)
+    @OnClick(R.id.addButton)
     public void onAddSightSetting() {
         sightSettingsList.add(new SightSetting());
         adapter.notifyItemInserted(sightSettingsList.size() - 1);

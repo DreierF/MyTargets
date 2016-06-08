@@ -43,7 +43,11 @@ public abstract class IdProviderDataSource<T extends IIdSettable> extends DataSo
     }
 
     public void delete(T item) {
-        database.delete(table, ID + "=" + item.getId(), null);
+        delete(item.getId());
+    }
+
+    public void delete(long itemId) {
+        database.delete(table, ID + "=" + itemId, null);
         DatabaseManager.cleanup(database);
     }
 
