@@ -45,7 +45,7 @@
   <string name="d_times_s">%1$d times %2$s\n</string>
   <string name="text">Texte</string>
   <string name="dispersion_pattern">Agrupació de fletxes</string>
-  <string name="sharing_failed">Sharing failed!</string>
+  <string name="sharing_failed">Error al compartir!</string>
   <!-- Export -->
   <string name="send_exported">Enviar dades</string>
   <string name="exporting_failed">Error al exportar!</string>
