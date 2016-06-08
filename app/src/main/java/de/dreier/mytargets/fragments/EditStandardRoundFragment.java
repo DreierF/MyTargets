@@ -110,7 +110,7 @@ public class EditStandardRoundFragment extends EditFragmentBase
         standardRound.name = name.getText().toString();
         standardRound.indoor = indoor.isChecked();
         standardRound.setRounds(rounds.getList());
-        new StandardRoundDataSource(getContext()).update(standardRound);
+        new StandardRoundDataSource().update(standardRound);
 
         SettingsManager.setIndoor(standardRound.indoor);
 

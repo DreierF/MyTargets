@@ -65,7 +65,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         if (savedInstanceState == null) {
             if (mArrowId != -1) {
                 // Load data from database
-                Arrow arrow = new ArrowDataSource(getContext()).get(mArrowId);
+                Arrow arrow = new ArrowDataSource().get(mArrowId);
                 setArrowValues(arrow);
             } else {
                 // Set to default values
@@ -111,7 +111,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         if (arrow == null) {
             return;
         }
-        new ArrowDataSource(getContext()).update(arrow);
+        new ArrowDataSource().update(arrow);
         getActivity().finish();
     }
 

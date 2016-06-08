@@ -1,6 +1,5 @@
 package de.dreier.mytargets.shared.targets;
 
-import android.content.Context;
 import android.support.annotation.ColorInt;
 import android.support.annotation.StringRes;
 
@@ -9,6 +8,7 @@ import com.annimon.stream.Stream;
 
 import java.util.List;
 
+import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.IIdProvider;
@@ -43,8 +43,9 @@ public class TargetModelBase implements IIdProvider {
         return id;
     }
 
-    public String getName(Context context) {
-        return context.getString(nameRes);
+    @Override
+    public String toString() {
+        return SharedApplicationInstance.getContext().getString(nameRes);
     }
 
     public Zone getZone(int zone) {

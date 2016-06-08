@@ -11,26 +11,27 @@ public class ScoreboardConfiguration {
     boolean showComments;
     boolean showDispersionPattern;
     boolean showPointsColored;
+    boolean showSignature;
 
     private ScoreboardConfiguration() {
     }
 
     public static ScoreboardConfiguration fromDisplaySettings(Context context) {
-        return getFromSettingsForPrefix(context, "scoreboard_print_", true, true, true, true, true);
+        return getFromSettingsForPrefix(context, "scoreboard_display_", true, true, true, true, true, false);
     }
 
     public static ScoreboardConfiguration fromPrintSettings(Context context) {
-        return getFromSettingsForPrefix(context, "scoreboard_print_", true, true, true, true, false);
+        return getFromSettingsForPrefix(context, "scoreboard_print_", true, true, true, true, false, true);
     }
 
     public static ScoreboardConfiguration fromShareSettings(Context context) {
-        return getFromSettingsForPrefix(context, "scoreboard_share_", false, false, true, false, false);
+        return getFromSettingsForPrefix(context, "scoreboard_share_", false, false, true, false, false, false);
     }
 
     private static ScoreboardConfiguration getFromSettingsForPrefix(Context context, String prefix,
                                                                     boolean title, boolean properties,
                                                                     boolean table, boolean comments,
-                                                                    boolean dispersionPattern) {
+                                                                    boolean dispersionPattern, boolean signature) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         ScoreboardConfiguration config = new ScoreboardConfiguration();
         config.showTitle = prefs.getBoolean(prefix + "title", title);
@@ -39,6 +40,7 @@ public class ScoreboardConfiguration {
         config.showComments = prefs.getBoolean(prefix + "comments", comments);
         config.showDispersionPattern = prefs.getBoolean(prefix + "dispersion_pattern", dispersionPattern);
         config.showPointsColored = prefs.getBoolean(prefix + "points_colored", dispersionPattern);
+        config.showSignature = prefs.getBoolean(prefix + "signature", signature);
         return config;
     }
 }

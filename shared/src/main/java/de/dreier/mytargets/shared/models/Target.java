@@ -75,8 +75,8 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
     }
 
     @Override
-    public String getName(Context context) {
-        return String.format("%s (%s)", getModel().getName(context), size.toString(context));
+    public String getName() {
+        return String.format("%s (%s)", toString(), size.toString());
     }
 
     @Override
@@ -98,5 +98,10 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
 
     public int getReachedPoints(Passe passe) {
         return getModel().getScoringStyle(scoringStyle).getReachedPoints(passe);
+    }
+
+    @Override
+    public String toString() {
+        return getModel().toString();
     }
 }

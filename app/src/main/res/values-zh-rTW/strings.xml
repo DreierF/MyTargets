@@ -49,12 +49,6 @@
   <string name="add_bow">加入新弓</string>
   <string name="name">型號</string>
   <string name="bow_type">弓種</string>
-  <string name="recurve_bow">反曲弓</string>
-  <string name="compound_bow">複合弓</string>
-  <string name="bare_bow">裸弓</string>
-  <string name="long_bow">長弓</string>
-  <string name="horse_bow">傳統弓</string>
-  <string name="yumi">和弓</string>
   <string name="properties">器材資料</string>
   <string name="brand">牌子</string>
   <string name="size">長度</string>
@@ -236,4 +230,12 @@
   <string name="show_shots_training">Whole training</string>
   <string name="show_shots_round">Current round</string>
   <string name="show_shots_end">Current end</string>
+  <string name="profile">Profile</string>
+  <string name="birthday">Birthday</string>
+  <string name="first_name">First name</string>
+  <string name="last_name">Last name</string>
+  <string name="age">Age</string>
+  <string name="show_signature">Signature</string>
+  <string name="witness">Witness</string>
+  <string name="archer">Archer</string>
 </resources>

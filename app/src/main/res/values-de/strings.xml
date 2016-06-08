@@ -53,12 +53,6 @@
   <string name="add_bow">Bogen hinzufügen</string>
   <string name="name">Name</string>
   <string name="bow_type">Bogenart</string>
-  <string name="recurve_bow">Recurvebogen</string>
-  <string name="compound_bow">Compoundbogen</string>
-  <string name="bare_bow">Blankbogen</string>
-  <string name="long_bow">Langbogen</string>
-  <string name="horse_bow">Reiterbogen</string>
-  <string name="yumi">Yumi</string>
   <string name="properties">Eigenschaften</string>
   <string name="brand">Marke</string>
   <string name="size">Größe</string>
@@ -248,4 +242,12 @@
   <string name="show_shots_training">Ganzes Training</string>
   <string name="show_shots_round">Aktuelle Runde</string>
   <string name="show_shots_end">Aktuelle Passe</string>
+  <string name="profile">Profil</string>
+  <string name="birthday">Geburtsdatum</string>
+  <string name="first_name">Vorname</string>
+  <string name="last_name">Nachname</string>
+  <string name="age">Alter</string>
+  <string name="show_signature">Unterschrift</string>
+  <string name="witness">Zeuge</string>
+  <string name="archer">Bogenschütze</string>
 </resources>

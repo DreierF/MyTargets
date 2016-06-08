@@ -143,6 +143,9 @@ public class TargetDrawable extends Drawable {
     }
 
     protected void drawArrows(Canvas canvas, Passe passe, Rect rect, boolean transparent) {
+        if(!passe.exact) {
+            return;
+        }
         for (int arrow = 0; arrow < passe.shot.length; arrow++) {
             drawArrow(canvas, passe.shot[arrow], rect, transparent);
         }

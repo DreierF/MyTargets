@@ -8,7 +8,6 @@ package de.dreier.mytargets.managers.dao;
 
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 
 import java.util.ArrayList;
@@ -31,8 +30,8 @@ public class SightSettingDataSource extends IdProviderDataSource<SightSetting> {
                     SETTING + " TEXT, " +
                     UNIT + " TEXT);";
 
-    public SightSettingDataSource(Context context) {
-        super(context, TABLE);
+    public SightSettingDataSource() {
+        super(TABLE);
     }
 
     @Override

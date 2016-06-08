@@ -57,12 +57,6 @@
   <string name="add_bow">Add bow</string>
   <string name="name">Name</string>
   <string name="bow_type">Bow type</string>
-  <string name="recurve_bow">Recurve bow</string>
-  <string name="compound_bow">Compound bow</string>
-  <string name="bare_bow">Bare bow</string>
-  <string name="long_bow">Long bow</string>
-  <string name="horse_bow">Horse bow</string>
-  <string name="yumi">Yumi</string>
   <string name="properties">Properties</string>
   <string name="brand">Brand</string>
   <string name="size">Size</string>
@@ -260,4 +254,12 @@
   <string name="show_shots_training">Whole training</string>
   <string name="show_shots_round">Current round</string>
   <string name="show_shots_end">Current end</string>
+  <string name="profile">Profile</string>
+  <string name="birthday">Birthday</string>
+  <string name="first_name">First name</string>
+  <string name="last_name">Last name</string>
+  <string name="age">Age</string>
+  <string name="show_signature">Signature</string>
+  <string name="witness">Witness</string>
+  <string name="archer">Archer</string>
 </resources>

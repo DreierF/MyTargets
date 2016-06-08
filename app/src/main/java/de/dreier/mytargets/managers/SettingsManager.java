@@ -2,6 +2,10 @@ package de.dreier.mytargets.managers;
 
 import android.content.SharedPreferences;
 
+import org.joda.time.LocalDate;
+import org.joda.time.Years;
+import org.joda.time.format.DateTimeFormat;
+
 import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.activities.EShowMode;
 import de.dreier.mytargets.shared.models.Dimension;
@@ -15,6 +19,11 @@ public class SettingsManager {
     public static final String KEY_TIMER_SOUND = "timer_sound";
     public static final String KEY_TIMER_WARN_TIME = "timer_warn_time";
     public static final String KEY_TIMER_WAIT_TIME = "timer_wait_time";
+    public static final String KEY_TIMER_SHOOT_TIME = "timer_shoot_time";
+    public static final String KEY_PROFILE_FIRST_NAME = "profile_first_name";
+    public static final String KEY_PROFILE_LAST_NAME = "profile_last_name";
+    public static final String KEY_PROFILE_BIRTHDAY = "profile_birthday";
+    public static final String KEY_PROFILE_CLUB = "profile_club";
     private static final String KEY_STANDARD_ROUND = "standard_round";
     private static final String KEY_ARROW = "arrow";
     private static final String KEY_BOW = "bow";
@@ -27,7 +36,6 @@ public class SettingsManager {
     private static final String KEY_TARGET_DIAMETER_UNIT = "unit_target";
     private static final String KEY_TIMER = "timer";
     private static final String KEY_NUMBERING_ENABLED = "numbering";
-    private static final String KEY_TIMER_SHOOT_TIME = "timer_shoot_time";
     private static final String KEY_INDOOR = "indoor";
     private static final String KEY_PASSES = "rounds";
     private static final String KEY_TRANSLATION_DIALOG_SHOWN = "translation_dialog_shown";
@@ -230,5 +238,55 @@ public class SettingsManager {
         } catch (NumberFormatException e) {
             return def;
         }
+    }
+
+    public static String getProfileFirstName() {
+        return ApplicationInstance.getSharedPreferences()
+                .getString(KEY_PROFILE_FIRST_NAME, "");
+    }
+
+    public static String getProfileLastName() {
+        return ApplicationInstance.getSharedPreferences()
+                .getString(KEY_PROFILE_LAST_NAME, "");
+    }
+
+    public static String getProfileFullName() {
+        return String.format("%s %s", getProfileFirstName(), getProfileLastName());
+    }
+
+    public static String getProfileClub() {
+        return ApplicationInstance.getSharedPreferences()
+                .getString(KEY_PROFILE_CLUB, "");
+    }
+
+    public static LocalDate getProfileBirthDay() {
+        String date = ApplicationInstance.getSharedPreferences()
+                .getString(KEY_PROFILE_BIRTHDAY, "");
+        if (date.isEmpty()) {
+            return null;
+        }
+        return LocalDate.parse(date);
+    }
+
+    public static void setProfileBirthDay(LocalDate birthDay) {
+        ApplicationInstance.getSharedPreferences()
+                .edit()
+                .putString(KEY_PROFILE_BIRTHDAY, birthDay.toString())
+                .apply();
+    }
+
+    public static String getProfileBirthDayFormatted() {
+        final LocalDate birthDay = getProfileBirthDay();
+        if (birthDay == null)
+            return null;
+        return DateTimeFormat.mediumDate().print(birthDay);
+    }
+
+    public static int getProfileAge() {
+        final LocalDate birthDay = getProfileBirthDay();
+        if (birthDay == null) {
+            return -1;
+        }
+        return Years.yearsBetween(birthDay, LocalDate.now()).getYears();
     }
 }

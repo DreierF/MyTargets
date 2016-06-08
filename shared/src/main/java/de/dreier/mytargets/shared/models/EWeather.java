@@ -7,6 +7,7 @@
 package de.dreier.mytargets.shared.models;
 
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.SharedApplicationInstance;
 
 public enum EWeather {
     SUNNY(0, R.string.sunny, R.drawable.ic_sun_48dp),
@@ -29,8 +30,8 @@ public enum EWeather {
         return value;
     }
 
-    public int getName() {
-        return name;
+    public String getName() {
+        return SharedApplicationInstance.getContext().getString(name);
     }
 
     public int getDrawable() {

@@ -57,12 +57,6 @@
   <string name="add_bow">Dodaj łuk</string>
   <string name="name">Imię</string>
   <string name="bow_type">Typ łuku</string>
-  <string name="recurve_bow">Łuk refleksyjny</string>
-  <string name="compound_bow">Łuk bloczkowy</string>
-  <string name="bare_bow">Łuk klasyczny</string>
-  <string name="long_bow">Łuk długi (angielski)</string>
-  <string name="horse_bow">Łuk krótki</string>
-  <string name="yumi">Yumi</string>
   <string name="properties">Ustawienia</string>
   <string name="brand">Marka</string>
   <string name="size">Rozmiar</string>
@@ -260,4 +254,12 @@
   <string name="show_shots_training">Whole training</string>
   <string name="show_shots_round">Current round</string>
   <string name="show_shots_end">Current end</string>
+  <string name="profile">Profile</string>
+  <string name="birthday">Birthday</string>
+  <string name="first_name">First name</string>
+  <string name="last_name">Last name</string>
+  <string name="age">Age</string>
+  <string name="show_signature">Signature</string>
+  <string name="witness">Witness</string>
+  <string name="archer">Archer</string>
 </resources>

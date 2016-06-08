@@ -8,12 +8,12 @@ package de.dreier.mytargets.managers.dao;
 
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.EBowType;
 
 public class BowDataSource extends IdProviderDataSource<Bow> {
     private static final String TABLE = "BOW";
@@ -49,21 +49,21 @@ public class BowDataSource extends IdProviderDataSource<Bow> {
                     THUMBNAIL + " BLOB," +
                     IMAGE + " TEXT);";
 
-    public BowDataSource(Context context) {
-        super(context, TABLE);
+    public BowDataSource() {
+        super(TABLE);
     }
 
     @Override
     public void update(Bow item) {
         super.update(item);
-        new SightSettingDataSource(getContext()).update(item.getId(), item.sightSettings);
+        new SightSettingDataSource().update(item.getId(), item.sightSettings);
     }
 
     @Override
     public ContentValues getContentValues(Bow bow) {
         ContentValues values = new ContentValues();
         values.put(NAME, bow.name);
-        values.put(TYPE, bow.type);
+        values.put(TYPE, bow.type.getId());
         values.put(BRAND, bow.brand);
         values.put(SIZE, bow.size);
         values.put(HEIGHT, bow.height);
@@ -83,7 +83,7 @@ public class BowDataSource extends IdProviderDataSource<Bow> {
         Bow bow = new Bow();
         bow.setId(cursor.getLong(startColumnIndex));
         bow.name = cursor.getString(startColumnIndex + 1);
-        bow.type = cursor.getInt(startColumnIndex + 2);
+        bow.type = EBowType.fromId(cursor.getInt(startColumnIndex + 2));
         bow.brand = cursor.getString(startColumnIndex + 3);
         bow.size = cursor.getString(startColumnIndex + 4);
         bow.height = cursor.getString(startColumnIndex + 5);
@@ -106,7 +106,7 @@ public class BowDataSource extends IdProviderDataSource<Bow> {
         Bow b = null;
         if (cursor.moveToFirst()) {
             b = cursorToBow(cursor, 0);
-            b.sightSettings = new SightSettingDataSource(getContext()).getAll(bow);
+            b.sightSettings = new SightSettingDataSource().getAll(bow);
         }
         cursor.close();
         return b;
@@ -121,7 +121,7 @@ public class BowDataSource extends IdProviderDataSource<Bow> {
         if (res.moveToFirst()) {
             do {
                 Bow bow = cursorToBow(res, 0);
-                bow.sightSettings = new SightSettingDataSource(getContext()).getAll(bow.getId());
+                bow.sightSettings = new SightSettingDataSource().getAll(bow.getId());
                 list.add(bow);
             } while (res.moveToNext());
         }

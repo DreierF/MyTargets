@@ -56,13 +56,13 @@ public class ArrowRankingFragment extends Fragment implements LoaderManager.Load
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
         ButterKnife.bind(this, rootView);
         recyclerView.setHasFixedSize(true);
-        arrowStatisticDataSource = new ArrowStatisticDataSource(getContext());
+        arrowStatisticDataSource = new ArrowStatisticDataSource();
         return rootView;
     }
 
     @Override
     public Loader<List<ArrowStatistic>> onCreateLoader(int id, Bundle args) {
-        arrowStatisticDataSource = new ArrowStatisticDataSource(getContext());
+        arrowStatisticDataSource = new ArrowStatisticDataSource();
         return new DataLoaderBase<ArrowStatistic, DataSourceBase>(getContext(), arrowStatisticDataSource, arrowStatisticDataSource::getAll);
     }
 

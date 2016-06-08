@@ -131,7 +131,7 @@ public class TargetFragment extends SelectItemFragment<Target>
     private ArrayList<String> diameterToList(Dimension[] diameters) {
         ArrayList<String> list = new ArrayList<>();
         for (Dimension diameter : diameters) {
-            list.add(diameter.toString(getContext()));
+            list.add(diameter.toString());
         }
         return list;
     }
@@ -191,7 +191,7 @@ public class TargetFragment extends SelectItemFragment<Target>
 
         @Override
         public void bindCursor() {
-            mName.setText(mItem.getModel().getName(getContext()));
+            mName.setText(mItem.getModel().toString());
             mImg.setImageDrawable(mItem.getDrawable());
         }
     }

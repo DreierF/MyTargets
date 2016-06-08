@@ -83,7 +83,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
 
     @Override
     public Loader<List<StandardRound>> onCreateLoader(int id, Bundle args) {
-        standardRoundDataSource = new StandardRoundDataSource(getContext());
+        standardRoundDataSource = new StandardRoundDataSource();
         final BackgroundAction<StandardRound> action;
         if (args.containsKey(KEY_QUERY)) {
             String query = args.getString(KEY_QUERY);

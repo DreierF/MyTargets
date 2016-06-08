@@ -8,7 +8,6 @@ package de.dreier.mytargets.managers.dao;
 
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 
 import java.util.ArrayList;
@@ -47,8 +46,8 @@ public class TrainingDataSource extends IdProviderDataSource<Training> {
                     ARROW_NUMBERING + " INTEGER," +
                     TIME_PER_PASSE + " INTEGER);";
 
-    public TrainingDataSource(Context context) {
-        super(context, TABLE);
+    public TrainingDataSource() {
+        super(TABLE);
     }
 
     @Override

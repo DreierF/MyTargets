@@ -57,12 +57,6 @@
   <string name="add_bow">Добавить лук</string>
   <string name="name">Название</string>
   <string name="bow_type">Тип лука</string>
-  <string name="recurve_bow">Спортивный классический лук</string>
-  <string name="compound_bow">Блочный лук</string>
-  <string name="bare_bow">Классический лук без обвесов</string>
-  <string name="long_bow">Длинный английский лук</string>
-  <string name="horse_bow">Короткий традиционный лук</string>
-  <string name="yumi">Азиатский традиционный лук</string>
   <string name="properties">Параметры</string>
   <string name="brand">Производитель</string>
   <string name="size">Размер</string>
@@ -260,4 +254,12 @@
   <string name="show_shots_training">Whole training</string>
   <string name="show_shots_round">Current round</string>
   <string name="show_shots_end">Current end</string>
+  <string name="profile">Profile</string>
+  <string name="birthday">Birthday</string>
+  <string name="first_name">First name</string>
+  <string name="last_name">Last name</string>
+  <string name="age">Age</string>
+  <string name="show_signature">Signature</string>
+  <string name="witness">Witness</string>
+  <string name="archer">Archer</string>
 </resources>

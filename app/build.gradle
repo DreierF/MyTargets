@@ -100,6 +100,8 @@ dependencies {
 
     compile 'com.google.code.gson:gson:2.6.2'
 
+    compile 'joda-time:joda-time:2.9.4'
+
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.2.0'
 

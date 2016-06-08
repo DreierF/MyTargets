@@ -12,7 +12,7 @@ import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
 public class Bow implements IImageProvider, IIdSettable {
     public long id;
     public String name;
-    public int type;
+    public EBowType type;
     public String brand;
     public String size;
     public String height;
@@ -49,7 +49,7 @@ public class Bow implements IImageProvider, IIdSettable {
     }
 
     @Override
-    public String getName(Context context) {
+    public String getName() {
         return name;
     }
 

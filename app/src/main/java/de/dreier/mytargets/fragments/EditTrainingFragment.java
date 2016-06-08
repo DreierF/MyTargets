@@ -110,7 +110,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
             loadRoundDefaultValues();
         } else {
             setTitle(R.string.edit_training);
-            Training train = new TrainingDataSource(getContext()).get(trainingId);
+            Training train = new TrainingDataSource().get(trainingId);
             trainingTitle.setText(train.title);
             date = train.date;
             bow.setItemId(train.bow);
@@ -189,7 +189,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
 
         getActivity().finish();
 
-        TrainingDataSource trainingDataSource = new TrainingDataSource(getContext());
+        TrainingDataSource trainingDataSource = new TrainingDataSource();
         if (trainingId == -1) {
             StandardRound standardRound;
             if (trainingType == 0) {
@@ -198,7 +198,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
                 standardRound = standardRoundSpinner.getSelectedItem();
                 SettingsManager.setStandardRound(standardRound.getId());
             }
-            new StandardRoundDataSource(getContext()).update(standardRound);
+            new StandardRoundDataSource().update(standardRound);
             training.standardRoundId = standardRound.getId();
 
             trainingDataSource.update(training);
@@ -218,7 +218,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
         if (trainingId == -1) {
             training = new Training();
         } else {
-            training = new TrainingDataSource(getContext()).get(trainingId);
+            training = new TrainingDataSource().get(trainingId);
         }
         training.title = trainingTitle.getText().toString();
         training.date = date;
@@ -240,7 +240,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
     @NonNull
     private ArrayList<Round> createRoundsFromTemplate(StandardRound standardRound, Training training) {
         ArrayList<Round> rounds = new ArrayList<>();
-        RoundDataSource roundDataSource = new RoundDataSource(getContext());
+        RoundDataSource roundDataSource = new RoundDataSource();
         for (RoundTemplate template : standardRound.getRounds()) {
             Round round = new Round();
             round.trainingId = training.getId();

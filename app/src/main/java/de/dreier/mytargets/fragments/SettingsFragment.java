@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -23,12 +24,21 @@ import de.dreier.mytargets.activities.MainActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.utils.BackupUtils;
+import de.dreier.mytargets.views.DatePreference;
+import de.dreier.mytargets.views.DatePreferenceDialogFragmentCompat;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
 import static de.dreier.mytargets.fragments.SettingsFragmentPermissionsDispatcher.doBackupWithCheck;
 import static de.dreier.mytargets.fragments.SettingsFragmentPermissionsDispatcher.doExportWithCheck;
 import static de.dreier.mytargets.fragments.SettingsFragmentPermissionsDispatcher.doImportWithCheck;
+import static de.dreier.mytargets.managers.SettingsManager.KEY_PROFILE_BIRTHDAY;
+import static de.dreier.mytargets.managers.SettingsManager.KEY_PROFILE_CLUB;
+import static de.dreier.mytargets.managers.SettingsManager.KEY_PROFILE_FIRST_NAME;
+import static de.dreier.mytargets.managers.SettingsManager.KEY_PROFILE_LAST_NAME;
+import static de.dreier.mytargets.managers.SettingsManager.KEY_TIMER_SHOOT_TIME;
+import static de.dreier.mytargets.managers.SettingsManager.KEY_TIMER_WAIT_TIME;
+import static de.dreier.mytargets.managers.SettingsManager.KEY_TIMER_WARN_TIME;
 
 @RuntimePermissions
 public class SettingsFragment extends PreferenceFragmentCompat
@@ -39,13 +49,28 @@ public class SettingsFragment extends PreferenceFragmentCompat
         setPreferencesFromResource(R.xml.preferences, rootKey);
 
         if (rootKey == null) {
-            updateTimerSummaries();
             getActivity().setTitle(R.string.preferences);
+            updateTimerSummaries();
         } else if (rootKey.equals("timer")) {
             getActivity().setTitle(R.string.timer);
         } else if (rootKey.equals("scoreboard")) {
             getActivity().setTitle(R.string.scoreboard);
+            updateProfileSummaries();
         }
+    }
+
+    @Override
+    public void onDisplayPreferenceDialog(Preference preference) {
+        if (!(preference instanceof DatePreference)) {
+            super.onDisplayPreferenceDialog(preference);
+            return;
+        }
+        DialogFragment dialogFragment = new DatePreferenceDialogFragmentCompat();
+        Bundle bundle = new Bundle(1);
+        bundle.putString("key", preference.getKey());
+        dialogFragment.setArguments(bundle);
+        dialogFragment.setTargetFragment(this, 0);
+        dialogFragment.show(this.getFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG");
     }
 
     @SuppressLint("PrivateResource")
@@ -188,17 +213,29 @@ public class SettingsFragment extends PreferenceFragmentCompat
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.startsWith("timer_")) {
             updateTimerSummaries();
+        } else if (key.startsWith("profile_")) {
+            updateProfileSummaries();
         }
     }
 
+    private void updateProfileSummaries() {
+        setSummary(KEY_PROFILE_FIRST_NAME, SettingsManager.getProfileFirstName());
+        setSummary(KEY_PROFILE_LAST_NAME, SettingsManager.getProfileLastName());
+        setSummary(KEY_PROFILE_BIRTHDAY, SettingsManager.getProfileBirthDayFormatted());
+        setSummary(KEY_PROFILE_CLUB, SettingsManager.getProfileClub());
+    }
+
     private void updateTimerSummaries() {
-        setSecondsSummary("timer_wait_time", SettingsManager.getTimerWaitTime());
-        setSecondsSummary("timer_shoot_time", SettingsManager.getTimerShootTime());
-        setSecondsSummary("timer_warn_time", SettingsManager.getTimerWarnTime());
+        setSecondsSummary(KEY_TIMER_WAIT_TIME, SettingsManager.getTimerWaitTime());
+        setSecondsSummary(KEY_TIMER_SHOOT_TIME, SettingsManager.getTimerShootTime());
+        setSecondsSummary(KEY_TIMER_WARN_TIME, SettingsManager.getTimerWarnTime());
     }
 
     private void setSecondsSummary(String key, int value) {
-        Preference pref = findPreference(key);
-        pref.setSummary(getResources().getQuantityString(R.plurals.second, value, value));
+        setSummary(key, getResources().getQuantityString(R.plurals.second, value, value));
+    }
+
+    private void setSummary(String key, String value) {
+        findPreference(key).setSummary(value);
     }
 }

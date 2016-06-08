@@ -53,12 +53,6 @@
   <string name="add_bow">Ajouter un arc</string>
   <string name="name">Nom</string>
   <string name="bow_type">Type d\'arc</string>
-  <string name="recurve_bow">Arc classique</string>
-  <string name="compound_bow">Arc à poulies</string>
-  <string name="bare_bow">Arc nu (Barebow)</string>
-  <string name="long_bow">Arc long (Longbow)</string>
-  <string name="horse_bow">Arc à cheval</string>
-  <string name="yumi">Yumi</string>
   <string name="properties">Propriétés</string>
   <string name="brand">Marque</string>
   <string name="size">Taille</string>
@@ -248,4 +242,12 @@
   <string name="show_shots_training">Whole training</string>
   <string name="show_shots_round">Current round</string>
   <string name="show_shots_end">Current end</string>
+  <string name="profile">Profile</string>
+  <string name="birthday">Birthday</string>
+  <string name="first_name">First name</string>
+  <string name="last_name">Last name</string>
+  <string name="age">Age</string>
+  <string name="show_signature">Signature</string>
+  <string name="witness">Witness</string>
+  <string name="archer">Archer</string>
 </resources>

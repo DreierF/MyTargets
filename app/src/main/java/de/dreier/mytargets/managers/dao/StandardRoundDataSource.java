@@ -43,8 +43,8 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
         super(context, TABLE, dbHelper, db);
     }
 
-    public StandardRoundDataSource(Context context) {
-        super(context, TABLE);
+    public StandardRoundDataSource() {
+        super(TABLE);
     }
 
     @Override

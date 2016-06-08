@@ -53,12 +53,6 @@
   <string name="add_bow">Añade un Arco</string>
   <string name="name">Nombre</string>
   <string name="bow_type">Tipo de Arco</string>
-  <string name="recurve_bow">Arco Recurvo</string>
-  <string name="compound_bow">Arco Compuesto</string>
-  <string name="bare_bow">Arco Desnudo</string>
-  <string name="long_bow">Longbow</string>
-  <string name="horse_bow">Arco Horse</string>
-  <string name="yumi">Arco Yumi</string>
   <string name="properties">Propiedades</string>
   <string name="brand">Marca</string>
   <string name="size">Talla</string>
@@ -248,4 +242,12 @@
   <string name="show_shots_training">Whole training</string>
   <string name="show_shots_round">Current round</string>
   <string name="show_shots_end">Current end</string>
+  <string name="profile">Profile</string>
+  <string name="birthday">Birthday</string>
+  <string name="first_name">First name</string>
+  <string name="last_name">Last name</string>
+  <string name="age">Age</string>
+  <string name="show_signature">Signature</string>
+  <string name="witness">Witness</string>
+  <string name="archer">Archer</string>
 </resources>

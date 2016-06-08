@@ -20,8 +20,7 @@ public abstract class IdProviderDataSource<T extends IIdSettable> extends DataSo
     // Database fields
     private final String table;
 
-    IdProviderDataSource(Context context, String table) {
-        super(context);
+    IdProviderDataSource(String table) {
         this.table = table;
     }
 

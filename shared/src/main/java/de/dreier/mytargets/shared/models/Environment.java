@@ -28,8 +28,8 @@ public class Environment implements IImageProvider, IDetailProvider {
     }
 
     @Override
-    public String getName(Context context) {
-        return context.getString(weather.getName());
+    public String getName() {
+        return weather.getName();
     }
 
     @Override

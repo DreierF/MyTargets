@@ -7,7 +7,6 @@
 
 package de.dreier.mytargets.utils;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -23,6 +22,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
@@ -32,8 +32,8 @@ import de.dreier.mytargets.shared.targets.TargetDrawable;
 
 public class TargetImage {
 
-    public void generateTrainingBitmap(Context context, int size, long trainingId, OutputStream fOut) {
-        List<Round> rounds = new RoundDataSource(context).getAll(trainingId);
+    public void generateTrainingBitmap(int size, long trainingId, OutputStream fOut) {
+        List<Round> rounds = new RoundDataSource().getAll(trainingId);
         if (rounds.size() == 0) {
             return;
         }
@@ -50,12 +50,12 @@ public class TargetImage {
         textPaint.setTextSize(size / 20);
 
         for (int i = 0; i < rounds.size(); i++) {
-            ArrayList<Passe> oldOnes = new PasseDataSource(context).getAllByRound(rounds.get(i).getId());
+            ArrayList<Passe> oldOnes = new PasseDataSource().getAllByRound(rounds.get(i).getId());
             TargetDrawable target = rounds.get(i).info.target.getDrawable();
             target.setBounds(bounds.get(i));
             target.draw(canvas);
             target.drawArrows(canvas, oldOnes, false);
-            String roundTitle = context.getResources().getQuantityString(R.plurals.rounds, i + 1, i + 1);
+            String roundTitle = ApplicationInstance.getContext().getResources().getQuantityString(R.plurals.rounds, i + 1, i + 1);
             Rect textBounds = new Rect();
             textPaint.getTextBounds(roundTitle, 0, roundTitle.length(), textBounds);
             int textX = bounds.get(i).centerX() - textBounds.width() / 2;
@@ -99,9 +99,9 @@ public class TargetImage {
         return list;
     }
 
-    public void generateTrainingBitmap(Context context, int size, long trainingId, File f)
+    public void generateTrainingBitmap(int size, long trainingId, File f)
             throws FileNotFoundException {
         final FileOutputStream fOut = new FileOutputStream(f);
-        generateTrainingBitmap(context, size, trainingId, fOut);
+        generateTrainingBitmap(size, trainingId, fOut);
     }
 }

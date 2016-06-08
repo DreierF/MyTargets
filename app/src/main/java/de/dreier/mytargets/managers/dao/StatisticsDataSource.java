@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.managers.dao;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
@@ -20,8 +19,8 @@ import de.dreier.mytargets.shared.models.Target;
 
 public class StatisticsDataSource extends DataSourceBase {
 
-    public StatisticsDataSource(Context context) {
-        super(context);
+    public StatisticsDataSource() {
+        super();
     }
 
     public LineData getAllTrainings() {

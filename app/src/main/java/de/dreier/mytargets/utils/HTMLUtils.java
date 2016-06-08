@@ -16,7 +16,9 @@ import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
 
+import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
@@ -25,6 +27,7 @@ import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Shot;
@@ -46,8 +49,8 @@ public class HTMLUtils {
 
     public static String getScoreboard(Context context, long trainingId, ScoreboardConfiguration configuration) {
         // Query information from database
-        RoundDataSource roundDataSource = new RoundDataSource(context);
-        Training training = new TrainingDataSource(context).get(trainingId);
+        RoundDataSource roundDataSource = new RoundDataSource();
+        Training training = new TrainingDataSource().get(trainingId);
         ArrayList<Round> rounds = roundDataSource.getAll(trainingId);
 
         // Initialize html Strings
@@ -61,8 +64,8 @@ public class HTMLUtils {
         boolean[] equals = new boolean[2];
         if (configuration.showProperties) {
             html += "<table width=\"100%\" style=\"border:0px;\"><tr>" +
-                    "<td width=\"50%\">" + getTrainingInfoHTML(context, training, rounds, equals) + "</td>" +
-                    "<td width=\"50%\">" + getTrainingTopScoreDistribution(context, trainingId) + "</td>" +
+                    "<td width=\"50%\">" + getTrainingInfoHTML(training, rounds, equals, true) + "</td>" +
+                    "<td width=\"50%\">" + getTrainingTopScoreDistribution(trainingId) + "</td>" +
                     "</tr></table>";
         }
 
@@ -78,10 +81,10 @@ public class HTMLUtils {
                 html += "<b>" + context.getString(R.string.round) + " " + (round.info.index + 1) +
                         "</b>";
                 if (configuration.showProperties) {
-                    html += "<br />" + getRoundInfo(context, round, equals);
+                    html += "<br />" + getRoundInfo(round, equals);
                 }
                 html += "</td></tr>";
-                ArrayList<Passe> passes = new PasseDataSource(context).getAllByRound(round.getId());
+                ArrayList<Passe> passes = new PasseDataSource().getAllByRound(round.getId());
                 for (Passe passe : passes) {
                     html += "<tr class=\"align_center\">";
                     int sum = 0;
@@ -117,10 +120,28 @@ public class HTMLUtils {
         }
 
         if (configuration.showDispersionPattern) {
-            html += getTarget(context, trainingId);
+            html += getTarget(trainingId);
+        }
+
+        if (configuration.showSignature) {
+            html += getSignature();
         }
 
         html += "</html>";
+        return html;
+    }
+
+    private static String getTableHeader(Context context, int ppp) {
+        String html = "<tr class=\"align_center\">" +
+                "<th colspan=\"" + ppp + "\">" + context.getString(R.string.arrows) +
+                "</th>" +
+                "<th rowspan=\"2\">" + context.getString(R.string.sum) + "</th>" +
+                "<th rowspan=\"2\">" + context.getString(R.string.carry) + "</th>" +
+                "</tr><tr class=\"align_center\">";
+        for (int i = 1; i <= ppp; i++) {
+            html += "<th>" + i + "</th>";
+        }
+        html += "</tr>";
         return html;
     }
 
@@ -136,7 +157,7 @@ public class HTMLUtils {
         int j = 0;
         for (Round round : rounds) {
             int i = 1;
-            ArrayList<Passe> passes = new PasseDataSource(context).getAllByRound(round.getId());
+            ArrayList<Passe> passes = new PasseDataSource().getAllByRound(round.getId());
             for (Passe passe : passes) {
                 for (int s = 0; s < passe.shot.length; s++) {
                     Shot shot = passe.shot[s];
@@ -165,9 +186,9 @@ public class HTMLUtils {
     }
 
     @NonNull
-    private static String getTarget(Context context, long trainingId) {
+    private static String getTarget(long trainingId) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        new TargetImage().generateTrainingBitmap(context, 800, trainingId, byteArrayOutputStream);
+        new TargetImage().generateTrainingBitmap(800, trainingId, byteArrayOutputStream);
 
         // Convert bitmap to Base64 encoded image for web
         byte[] byteArray = byteArrayOutputStream.toByteArray();
@@ -177,34 +198,30 @@ public class HTMLUtils {
                 "' width='98%' /></div>";
     }
 
-    public static String getRoundInfo(Context context, Round round, boolean[] equals) {
+    public static String getRoundInfo(Round round, boolean[] equals) {
         int maxPoints = round.info.getMaxPoints();
         int reachedPoints = round.reachedPoints;
 
         String percent = maxPoints == 0 ? "" : " (" + (reachedPoints * 100 / maxPoints) + "%)";
-        String infoText = context.getString(R.string.points) + ": <b>" +
-                reachedPoints + "/" + maxPoints + percent + "</b>";
+        HTMLInfoBuilder info = new HTMLInfoBuilder();
+        info.addLine(R.string.points, reachedPoints + "/" + maxPoints + percent);
         if (!equals[0]) {
-            infoText += "<br>" + context.getString(R.string.distance) + ": <b>" +
-                    round.info.distance.toString(context) + "</b>";
+            info.addLine(R.string.distance, round.info.distance);
         }
         if (!equals[1]) {
-            infoText += "<br>" + context.getString(R.string.target_face) + ": <b>" +
-                    round.info.target.getModel().getName(context) + "</b>";
+            info.addLine(R.string.target_face, round.info.target);
         }
         if (!round.comment.isEmpty()) {
-            infoText += "<br>" + context.getString(R.string.comment) +
-                    ": <b>" + TextUtils.htmlEncode(round.comment) + "</b>";
+            info.addLine(R.string.comment, round.comment);
         }
-        return infoText;
+        return info.toString();
     }
 
     @NonNull
-    public static String getTrainingTopScoreDistribution(Context context, long training) {
-        String infoText = "";
+    public static String getTrainingTopScoreDistribution(long training) {
         int maxPoints = 0;
         int reachedPoints = 0;
-        ArrayList<Round> rounds = new RoundDataSource(context).getAll(training);
+        ArrayList<Round> rounds = new RoundDataSource().getAll(training);
         for (Round r : rounds) {
             maxPoints += r.info.getMaxPoints();
             reachedPoints += r.reachedPoints;
@@ -212,88 +229,87 @@ public class HTMLUtils {
         String percent = maxPoints == 0 ? "" :
                 " (" + (reachedPoints * 100 / maxPoints) + "%)";
         String value = reachedPoints + "/" + maxPoints + percent;
-        infoText += getKeyValueLine(context.getString(R.string.points), value);
 
-        PasseDataSource passeDataSource = new PasseDataSource(context);
+        HTMLInfoBuilder info = new HTMLInfoBuilder();
+        info.addLine(R.string.points, value);
+
+        PasseDataSource passeDataSource = new PasseDataSource();
 
         ArrayList<Pair<String, Integer>> scoreCount = passeDataSource.getTopScoreDistribution(training);
         for (Pair<String, Integer> score : scoreCount) {
-            infoText += getKeyValueLine(score.getFirst(), score.getSecond());
+            info.addLine(score.getFirst(), score.getSecond());
         }
 
-        infoText += getKeyValueLine(context.getString(R.string.average),
-                passeDataSource.getAverageScore(training));
-        return infoText;
+        info.addLine(R.string.average, passeDataSource.getAverageScore(training));
+        return info.toString();
     }
 
-    @NonNull
-    private static String getKeyValueLine(String key, Object value) {
-        return key + ": <b>" + value + "</b><br>";
-    }
-
-    public static String getTrainingInfoHTML(Context context, Training training, ArrayList<Round> rounds, boolean[] equals) {
-        StandardRound standardRound = new StandardRoundDataSource(context).get(training.standardRoundId);
-        boolean indoor = standardRound.indoor;
-
-        String infoText = "";
-        if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
-            infoText += context.getString(R.string.standard_round) + ": <b>" + TextUtils
-                    .htmlEncode(standardRound.name) + "</b>";
+    public static String getTrainingInfoHTML(Training training, ArrayList<Round> rounds, boolean[] equals, boolean scoreboard) {
+        HTMLInfoBuilder info = new HTMLInfoBuilder();
+        if (scoreboard) {
+            final String fullName = SettingsManager.getProfileFullName();
+            if (!fullName.isEmpty()) {
+                info.addLine(R.string.name, fullName);
+            }
+            final int age = SettingsManager.getProfileAge();
+            if (age > 0 && age < 18) {
+                info.addLine(R.string.age, age);
+            }
+            final String club = SettingsManager.getProfileClub();
+            if (!club.isEmpty()) {
+                info.addLine(R.string.club, club);
+            }
         }
 
-        // Set round info
-        Bow bow = new BowDataSource(context).get(training.bow);
+        Bow bow = new BowDataSource().get(training.bow);
         if (bow != null) {
-            infoText += "<br>" + context.getString(R.string.bow) +
-                    ": <b>" + TextUtils.htmlEncode(bow.name) + "</b>";
+            info.addLine(R.string.bow, bow.name);
+            if (scoreboard) {
+                info.addLine(R.string.bow_type, bow.type);
+            }
         }
 
-        Arrow arrow = new ArrowDataSource(context).get(training.arrow);
+        Arrow arrow = new ArrowDataSource().get(training.arrow);
         if (arrow != null) {
-            infoText += "<br>" + context.getString(R.string.arrow) +
-                    ": <b>" + TextUtils.htmlEncode(arrow.name) + "</b>";
+            info.addLine(R.string.arrow, arrow.name);
+        }
+
+        StandardRound standardRound = new StandardRoundDataSource().get(training.standardRoundId);
+        if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
+            info.addLine(R.string.standard_round, standardRound.name);
         }
 
         if (rounds.size() > 0) {
             // Aggregate round information
             Round round = rounds.get(0);
-            String distance = round.info.distance.toString(context);
+            Dimension distance = round.info.distance;
             Target target = round.info.target;
             equals[0] = true;
             equals[1] = true;
             for (Round r : rounds) {
-                equals[0] =
-                        r.info.distance.toString(context).equals(distance) &&
-                                equals[0];
+                equals[0] = r.info.distance.equals(distance) && equals[0];
                 equals[1] = r.info.target.equals(target) && equals[1];
             }
 
-
             if (equals[0]) {
-                infoText += "<br>" + context.getString(R.string.distance) + ": <b>" +
-                        distance + " - " +
-                        context.getString(indoor ? R.string.indoor : R.string.outdoor) +
-                        "</b>";
+                final int envStringResId = standardRound.indoor ? R.string.indoor : R.string.outdoor;
+                final String distanceValue = String.format("%s - %s", distance,
+                        ApplicationInstance.getContext().getString(envStringResId));
+                info.addLine(R.string.distance, distanceValue);
             }
             if (equals[1]) {
-                infoText += "<br>" + context.getString(R.string.target_face) + ": <b>" +
-                        target.getModel().getName(context) + "</b>";
+                info.addLine(R.string.target_face, target);
             }
         }
-        return infoText;
+        return info.toString();
     }
 
-    private static String getTableHeader(Context context, int ppp) {
-        String html = "<tr class=\"align_center\">" +
-                "<th colspan=\"" + ppp + "\">" + context.getString(R.string.arrows) +
-                "</th>" +
-                "<th rowspan=\"2\">" + context.getString(R.string.sum) + "</th>" +
-                "<th rowspan=\"2\">" + context.getString(R.string.carry) + "</th>" +
-                "</tr><tr class=\"align_center\">";
-        for (int i = 1; i <= ppp; i++) {
-            html += "<th>" + i + "</th>";
-        }
-        html += "</tr>";
-        return html;
+    private static String getSignature() {
+        return "<div style=\"border-top: 2px solid black; width: 30%;margin-right: 5%;margin-top: 100px;float:left;\">" +
+                ApplicationInstance.getContext().getString(R.string.witness)
+                + "</div>" +
+                "<div style=\"border-top: 2px solid black; width: 30%;float:left; margin-top: 100px;\">" +
+                ApplicationInstance.getContext().getString(R.string.archer)
+                + "</div>";
     }
 }

@@ -35,6 +35,6 @@ public class SimpleDistanceSelector extends SelectorBase<Dimension> {
 
     @Override
     protected void bindView() {
-        distance.setText(item.toString(getContext()));
+        distance.setText(item.toString());
     }
 }

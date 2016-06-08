@@ -42,7 +42,7 @@ public class Arrow implements IImageProvider, IIdSettable {
     }
 
     @Override
-    public String getName(Context context) {
+    public String getName() {
         return name;
     }
 

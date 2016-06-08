@@ -9,6 +9,7 @@ package de.dreier.mytargets.managers.dao;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.managers.DatabaseManager;
 
 public abstract class DataSourceBase {
@@ -18,9 +19,9 @@ public abstract class DataSourceBase {
     final SQLiteDatabase database;
     final DatabaseManager dbHelper;
 
-    DataSourceBase(Context context) {
+    DataSourceBase() {
+        this.context = ApplicationInstance.getContext();
         this.dbHelper = DatabaseManager.getInstance(context);
-        this.context = context;
         this.database = dbHelper.getWritableDatabase();
     }
 

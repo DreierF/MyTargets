@@ -59,7 +59,7 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> {
     @Override
     public void onResume() {
         super.onResume();
-        DistanceDataSource dataSource = new DistanceDataSource(getContext());
+        DistanceDataSource dataSource = new DistanceDataSource();
         setList(dataSource.getAll(distance, unit), new DistanceAdapter());
     }
 
@@ -92,7 +92,7 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> {
 
         @Override
         public void bindCursor() {
-            mName.setText(mItem.toString(getActivity()));
+            mName.setText(mItem.toString());
         }
     }
 

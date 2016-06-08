@@ -61,12 +61,6 @@
   <string name="add_bow">Dodaj lok</string>
   <string name="name">Ime</string>
   <string name="bow_type">Vrsta loka</string>
-  <string name="recurve_bow">Ukrivljeni lok</string>
-  <string name="compound_bow">Sestavljeni lok</string>
-  <string name="bare_bow">Goli lok</string>
-  <string name="long_bow">Dolgi lok</string>
-  <string name="horse_bow">Mongolski lok</string>
-  <string name="yumi">yumi (kyudo)</string>
   <string name="properties">Lastnosti</string>
   <string name="brand">Proizvajalec</string>
   <string name="size">Velikost</string>
@@ -272,4 +266,12 @@
   <string name="show_shots_training">Whole training</string>
   <string name="show_shots_round">Current round</string>
   <string name="show_shots_end">Current end</string>
+  <string name="profile">Profile</string>
+  <string name="birthday">Birthday</string>
+  <string name="first_name">First name</string>
+  <string name="last_name">Last name</string>
+  <string name="age">Age</string>
+  <string name="show_signature">Signature</string>
+  <string name="witness">Witness</string>
+  <string name="archer">Archer</string>
 </resources>

@@ -38,11 +38,11 @@ public class StatisticsFragment extends Fragment {
 
         switch (pos) {
             case 0:
-                data = new StatisticsDataSource(getContext()).getAllTrainings();
+                data = new StatisticsDataSource().getAllTrainings();
                 chartView.setDescription("Percentage of reached points (for all passes)");
                 break;
             default:
-                data = new StatisticsDataSource(getContext()).getAllRounds(training);
+                data = new StatisticsDataSource().getAllRounds(training);
                 chartView.setDescription("Percentage of reached points (for all passes of the current round)");
                 break;
         }

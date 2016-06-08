@@ -41,12 +41,12 @@ public class SimpleDbTestRule implements TestRule {
 
     public SimpleDbTestRule() {
         context = InstrumentationRegistry.getTargetContext();
-        trainingDataSource = new TrainingDataSource(context);
-        roundDataSource = new RoundDataSource(context);
-        bowDataSource = new BowDataSource(context);
-        arrowDataSource = new ArrowDataSource(context);
-        standardRoundDataSource = new StandardRoundDataSource(context);
-        passeDataSource = new PasseDataSource(context);
+        trainingDataSource = new TrainingDataSource();
+        roundDataSource = new RoundDataSource();
+        bowDataSource = new BowDataSource();
+        arrowDataSource = new ArrowDataSource();
+        standardRoundDataSource = new StandardRoundDataSource();
+        passeDataSource = new PasseDataSource();
     }
 
     @Override

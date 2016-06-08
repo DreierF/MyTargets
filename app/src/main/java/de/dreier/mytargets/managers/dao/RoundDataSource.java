@@ -7,7 +7,6 @@
 package de.dreier.mytargets.managers.dao;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 
 import com.annimon.stream.Collectors;
@@ -39,8 +38,8 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
                     TARGET + " INTEGER," +
                     SCORING_STYLE + " INTEGER);";
 
-    public RoundDataSource(Context context) {
-        super(context, TABLE);
+    public RoundDataSource() {
+        super(TABLE);
     }
 
     @Override
@@ -84,7 +83,7 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
         Round r = cursorToRound(cursor, 0);
         cursor.close();
 
-        r.reachedPoints = Stream.of(new PasseDataSource(context).getAllByRound(roundId))
+        r.reachedPoints = Stream.of(new PasseDataSource().getAllByRound(roundId))
                 .map(p -> p.getReachedPoints(r.info.target))
                 .collect(Collectors.reducing(0, (a, b) -> a + b));
         return r;
@@ -110,7 +109,7 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
     public void delete(Round item) {
         // Get list of RoundTemplates for the current standard round
         long standardRoundId = item.info.standardRound;
-        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(context);
+        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource();
         StandardRound standardRound = standardRoundDataSource.get(standardRoundId);
         ArrayList<RoundTemplate> roundTemplates = standardRound.getRounds();
 
@@ -126,7 +125,7 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
 
         // Remove current round template
         RoundTemplate removedTemplate = roundTemplates.get(item.info.index);
-        RoundTemplateDataSource roundTemplateDataSource = new RoundTemplateDataSource(getContext());
+        RoundTemplateDataSource roundTemplateDataSource = new RoundTemplateDataSource();
         roundTemplateDataSource.delete(removedTemplate);
         roundTemplates.remove(removedTemplate);
 

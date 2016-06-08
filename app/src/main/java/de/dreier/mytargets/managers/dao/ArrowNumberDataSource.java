@@ -8,7 +8,6 @@ package de.dreier.mytargets.managers.dao;
 
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 
 import java.util.ArrayList;
@@ -26,8 +25,8 @@ public class ArrowNumberDataSource extends IdProviderDataSource<ArrowNumber> {
                     NUMBER_ARROW + " INTEGER," +
                     NUMBER_VALUE + " INTEGER);";
 
-    public ArrowNumberDataSource(Context context) {
-        super(context, TABLE);
+    public ArrowNumberDataSource() {
+        super(TABLE);
     }
 
     @Override

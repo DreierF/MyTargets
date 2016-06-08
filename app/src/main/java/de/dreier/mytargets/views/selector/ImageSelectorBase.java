@@ -43,7 +43,7 @@ public abstract class ImageSelectorBase<T extends IImageProvider> extends Select
 
     @Override
     protected void bindView() {
-        name.setText(item.getName(getContext()));
+        name.setText(item.getName());
         if (item instanceof IDetailProvider) {
             details.setVisibility(VISIBLE);
             details.setText(((IDetailProvider) item).getDetails(getContext()));

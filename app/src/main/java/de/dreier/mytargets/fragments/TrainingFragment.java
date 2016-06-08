@@ -118,10 +118,10 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         actionBar.setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);
 
-        trainingDataSource = new TrainingDataSource(getContext());
-        roundDataSource = new RoundDataSource(getContext());
-        passeDataSource = new PasseDataSource(getContext());
-        standardRoundDataSource = new StandardRoundDataSource(getContext());
+        trainingDataSource = new TrainingDataSource();
+        roundDataSource = new RoundDataSource();
+        passeDataSource = new PasseDataSource();
+        standardRoundDataSource = new StandardRoundDataSource();
     }
 
     @Override
@@ -138,7 +138,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
 
     @Override
     public Loader<List<Passe>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader<>(getContext(), new PasseDataSource(getContext()),
+        return new DataLoader<>(getContext(), new PasseDataSource(),
                 () -> passeDataSource.getAllByTraining(mTraining));
     }
 
@@ -169,10 +169,10 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         TextView info = (TextView) rootView.findViewById(R.id.detail_round_info);
         TextView tvScore = (TextView) rootView.findViewById(R.id.detail_score);
 
-        tvScore.setText(Html.fromHtml(HTMLUtils.getTrainingTopScoreDistribution(getContext(), mTraining)));
+        tvScore.setText(Html.fromHtml(HTMLUtils.getTrainingTopScoreDistribution(mTraining)));
 
         // Set training info
-        info.setText(Html.fromHtml(HTMLUtils.getTrainingInfoHTML(getActivity(), training, rounds, equals)));
+        info.setText(Html.fromHtml(HTMLUtils.getTrainingInfoHTML(training, rounds, equals, false)));
     }
 
     @Override
@@ -186,7 +186,6 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         menu.findItem(R.id.action_scoreboard).setVisible(hasPasses);
         menu.findItem(R.id.action_share).setVisible(hasPasses);
         menu.findItem(R.id.action_statistics).setVisible(hasPasses);
-        //menu.findItem(R.id.action_view_mode).setVisible(hasPasses);
     }
 
     @Override
@@ -233,7 +232,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
                 File dir = getContext().getExternalCacheDir();
                 final File f = File.createTempFile("target", ".png", dir);
                 if (typ == 2) {
-                    new TargetImage().generateTrainingBitmap(getContext(), 800, mTraining, f);
+                    new TargetImage().generateTrainingBitmap(800, mTraining, f);
                 } else {
                     new ScoreboardImage().generateBitmap(getActivity(), mTraining, f);
                 }
@@ -392,7 +391,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
             Context context = mTitle.getContext();
             mTitle.setText(String.format(Locale.ENGLISH, "%s %d", context.getString(R.string.round), rounds.indexOf(mItem) + 1));
 
-            String infoText = HTMLUtils.getRoundInfo(context, mItem, equals);
+            String infoText = HTMLUtils.getRoundInfo(mItem, equals);
             mSubtitle.setText(Html.fromHtml(infoText));
         }
 

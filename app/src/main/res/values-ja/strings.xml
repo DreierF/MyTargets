@@ -49,12 +49,6 @@
   <string name="add_bow">Add bow</string>
   <string name="name">Name</string>
   <string name="bow_type">ボウのタイプ</string>
-  <string name="recurve_bow">リカーブボウ</string>
-  <string name="compound_bow">コンパウンドボウ</string>
-  <string name="bare_bow">ベアボウ</string>
-  <string name="long_bow">ロング ボウ</string>
-  <string name="horse_bow">ホースボウ</string>
-  <string name="yumi">和弓</string>
   <string name="properties">プロパティ</string>
   <string name="brand">メーカー:</string>
   <string name="size">サイズ</string>
@@ -236,4 +230,12 @@
   <string name="show_shots_training">Whole training</string>
   <string name="show_shots_round">Current round</string>
   <string name="show_shots_end">Current end</string>
+  <string name="profile">Profile</string>
+  <string name="birthday">Birthday</string>
+  <string name="first_name">First name</string>
+  <string name="last_name">Last name</string>
+  <string name="age">Age</string>
+  <string name="show_signature">Signature</string>
+  <string name="witness">Witness</string>
+  <string name="archer">Archer</string>
 </resources>

@@ -1,8 +1,5 @@
 package de.dreier.mytargets;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import org.parceler.ParcelClass;
 import org.parceler.ParcelClasses;
 
@@ -23,7 +20,6 @@ import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
-import de.dreier.mytargets.utils.MyBackupAgent;
 
 /**
  * Application singleton. Gets instantiated exactly once and is used
@@ -50,16 +46,4 @@ import de.dreier.mytargets.utils.MyBackupAgent;
 })
 public class ApplicationInstance extends SharedApplicationInstance {
 
-    public static SharedPreferences getSharedPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(mContext);
-    }
-
-    public static SharedPreferences getLastSharedPreferences() {
-        return mContext.getSharedPreferences(MyBackupAgent.PREFS, 0);
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
 }

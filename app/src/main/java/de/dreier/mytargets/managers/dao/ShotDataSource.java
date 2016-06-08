@@ -8,7 +8,6 @@ package de.dreier.mytargets.managers.dao;
 
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 
 import de.dreier.mytargets.shared.models.Shot;
@@ -33,8 +32,8 @@ public class ShotDataSource extends IdProviderDataSource<Shot> {
                     ARROW + " INTEGER," +
                     INDEX + " INTEGER);";
 
-    public ShotDataSource(Context context) {
-        super(context, TABLE);
+    public ShotDataSource() {
+        super(TABLE);
     }
 
     @Override

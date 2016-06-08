@@ -64,7 +64,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
 
     @Override
     public Loader<List<Training>> onCreateLoader(int id, Bundle args) {
-        trainingDataSource = new TrainingDataSource(getContext());
+        trainingDataSource = new TrainingDataSource();
         return new DataLoader<>(getContext(), trainingDataSource, trainingDataSource::getAll);
     }
 
@@ -118,7 +118,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
             mSubtitle.setText(DateFormat.getDateInstance().format(mItem.date));
             int maxPoints = 0;
             int reachedPoints = 0;
-            RoundDataSource roundDataSource = new RoundDataSource(getContext());
+            RoundDataSource roundDataSource = new RoundDataSource();
             ArrayList<Round> rounds = roundDataSource.getAll(mItem.getId());
             for(Round r:rounds) {
                 maxPoints += r.info.getMaxPoints();

@@ -80,6 +80,6 @@ public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
     }
 
     public void setItemId(long standardRound) {
-        setItem(new StandardRoundDataSource(getContext()).get(standardRound));
+        setItem(new StandardRoundDataSource().get(standardRound));
     }
 }

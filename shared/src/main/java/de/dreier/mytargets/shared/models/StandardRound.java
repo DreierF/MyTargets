@@ -45,6 +45,7 @@ public class StandardRound implements IIdSettable, IImageProvider, IDetailProvid
         }
     }
 
+    @Override
     public String getName() {
         if (name != null) {
             return name;
@@ -58,8 +59,8 @@ public class StandardRound implements IIdSettable, IImageProvider, IDetailProvid
             if (!desc.isEmpty()) {
                 desc += "\n";
             }
-            desc += context.getString(R.string.round_desc, r.distance.toString(context), r.passes,
-                    r.arrowsPerPasse, r.target.size.toString(context));
+            desc += context.getString(R.string.round_desc, r.distance, r.passes,
+                    r.arrowsPerPasse, r.target.size);
         }
         return desc;
     }
@@ -71,11 +72,6 @@ public class StandardRound implements IIdSettable, IImageProvider, IDetailProvid
     @Override
     public Drawable getDrawable(Context context) {
         return getTargetDrawable();
-    }
-
-    @Override
-    public String getName(Context context) {
-        return getName();
     }
 
     public Drawable getTargetDrawable() {

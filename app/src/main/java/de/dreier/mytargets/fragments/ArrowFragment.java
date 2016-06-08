@@ -41,7 +41,7 @@ public class ArrowFragment extends EditableFragment<Arrow> implements View.OnCli
 
     @Override
     public Loader<List<Arrow>> onCreateLoader(int id, Bundle args) {
-        arrowDataSource = new ArrowDataSource(getContext());
+        arrowDataSource = new ArrowDataSource();
         return new DataLoader<>(getContext(), arrowDataSource, arrowDataSource::getAll);
     }
 

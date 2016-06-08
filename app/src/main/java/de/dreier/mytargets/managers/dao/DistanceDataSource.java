@@ -7,7 +7,6 @@
 package de.dreier.mytargets.managers.dao;
 
 
-import android.content.Context;
 import android.database.Cursor;
 
 import java.util.ArrayList;
@@ -18,10 +17,6 @@ import java.util.List;
 import de.dreier.mytargets.shared.models.Dimension;
 
 public class DistanceDataSource extends DataSourceBase {
-
-    public DistanceDataSource(Context context) {
-        super(context);
-    }
 
     /**
      * Returns a list of all distances that are either default values or used somewhere in the app

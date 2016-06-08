@@ -53,7 +53,7 @@ public class ArrowSelector extends ImageSelectorBase<Arrow> {
 
     public void setItemId(long arrow) {
         Arrow item = null;
-        ArrowDataSource arrowDataSource = new ArrowDataSource(getContext());
+        ArrowDataSource arrowDataSource = new ArrowDataSource();
         if (arrow > 0) {
             item = arrowDataSource.get(arrow);
         }

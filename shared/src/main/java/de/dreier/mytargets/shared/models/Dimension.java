@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import org.parceler.ParcelConstructor;
 
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.SharedApplicationInstance;
 
 public class Dimension implements IIdProvider, Comparable<Dimension> {
     private static final int MINI_VALUE = -6;
@@ -47,21 +48,23 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
         return unit.compareTo(another.unit);
     }
 
-    public String toString(Context context) {
+    @Override
+    public String toString() {
+        final Context context = SharedApplicationInstance.getContext();
         if (value == -1) {
-            return context.getString(R.string.unknown);
+            return ((Context) context).getString(R.string.unknown);
         } else if (unit == null) {
             switch (value) {
                 case MINI_VALUE:
-                    return context.getString(R.string.mini);
+                    return ((Context) context).getString(R.string.mini);
                 case SMALL_VALUE:
-                    return context.getString(R.string.small);
+                    return ((Context) context).getString(R.string.small);
                 case MEDIUM_VALUE:
-                    return context.getString(R.string.medium);
+                    return ((Context) context).getString(R.string.medium);
                 case LARGE_VALUE:
-                    return context.getString(R.string.large);
+                    return ((Context) context).getString(R.string.large);
                 case XLARGE_VALUE:
-                    return context.getString(R.string.xlarge);
+                    return ((Context) context).getString(R.string.xlarge);
                 default:
                     return "";
             }

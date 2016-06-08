@@ -44,8 +44,8 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
                     SCORING_STYLE + " INTEGER," +
                     "UNIQUE(sid, r_index) ON CONFLICT REPLACE);";
 
-    public RoundTemplateDataSource(Context context) {
-        super(context, TABLE);
+    public RoundTemplateDataSource() {
+        super(TABLE);
     }
 
     public RoundTemplateDataSource(Context context, DatabaseManager dbHelper, SQLiteDatabase database) {

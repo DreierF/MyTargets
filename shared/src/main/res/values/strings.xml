@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="recurve_bow">Recurve bow</string>
+    <string name="compound_bow">Compound bow</string>
+    <string name="bare_bow">Bare bow</string>
+    <string name="long_bow">Long bow</string>
+    <string name="horse_bow">Horse bow</string>
+    <string name="yumi">Yumi</string>
+
     <string name="sunny">Sunny</string>
     <string name="partly_cloudy">Partly cloudy</string>
     <string name="cloudy">Cloudy</string>

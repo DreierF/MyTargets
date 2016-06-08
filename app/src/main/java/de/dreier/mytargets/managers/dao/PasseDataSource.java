@@ -7,7 +7,6 @@
 package de.dreier.mytargets.managers.dao;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 
 import java.util.ArrayList;
@@ -33,14 +32,14 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                     IMAGE + " TEXT," +
                     EXACT + " INTEGER);";
 
-    public PasseDataSource(Context context) {
-        super(context, TABLE);
+    public PasseDataSource() {
+        super(TABLE);
     }
 
     @Override
     public void update(Passe item) {
         super.update(item);
-        ShotDataSource sds = new ShotDataSource(getContext());
+        ShotDataSource sds = new ShotDataSource();
         for (Shot shot : item.shot) {
             sds.update(shot);
         }
@@ -49,8 +48,8 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     @Override
     public void delete(Passe item) {
         super.delete(item);
-        Round r = new RoundDataSource(context).get(item.roundId);
-        new RoundTemplateDataSource(context).deletePasse(r.info);
+        Round r = new RoundDataSource().get(item.roundId);
+        new RoundTemplateDataSource().deletePasse(r.info);
     }
 
     @Override

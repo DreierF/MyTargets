@@ -81,8 +81,8 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
         targetView.setOnTargetSetListener(this);
 
-        RoundDataSource roundDataSource = new RoundDataSource(getApplicationContext());
-        passeDataSource = new PasseDataSource(getApplicationContext());
+        RoundDataSource roundDataSource = new RoundDataSource();
+        passeDataSource = new PasseDataSource();
 
         Intent intent = getIntent();
         assert intent != null;
@@ -91,14 +91,14 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         curPasse = intent.getIntExtra(PASSE_IND, -1);
         round = roundDataSource.get(roundId);
         template = round.info;
-        training = new TrainingDataSource(this).get(round.trainingId);
-        standardRound = new StandardRoundDataSource(this).get(training.standardRoundId);
+        training = new TrainingDataSource().get(round.trainingId);
+        standardRound = new StandardRoundDataSource().get(training.standardRoundId);
         rounds = roundDataSource.getAll(round.trainingId);
         savedPasses = passeDataSource.getAllByRound(roundId).size();
 
         targetView.setRoundTemplate(template);
         if (training.arrowNumbering) {
-            targetView.setArrowNumbers(new ArrowNumberDataSource(getApplicationContext()).getAll(training.arrow));
+            targetView.setArrowNumbers(new ArrowNumberDataSource().getAll(training.arrow));
         }
 
         // Send message to wearable app, that we are starting a passe
@@ -263,7 +263,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         // Change round template if passe is out of range defined in template
         if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE) {
             if (template.passes <= curPasse) {
-                new RoundTemplateDataSource(this).addPasse(template);
+                new RoundTemplateDataSource().addPasse(template);
             }
         }
 
@@ -308,8 +308,8 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
         // Load bow settings
         if (training.bow > 0) {
-            text += template.distance.toString(this) + ": " +
-                    new SightSettingDataSource(getApplicationContext()).get(training.bow,
+            text += template.distance + ": " +
+                    new SightSettingDataSource().get(training.bow,
                             template.distance);
         }
         return new NotificationInfo(round, title, text);

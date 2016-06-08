@@ -28,20 +28,18 @@ import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.views.DynamicItemLayout;
 import de.dreier.mytargets.views.selector.SimpleDistanceSelector;
+
+import static de.dreier.mytargets.shared.models.EBowType.*;
 
 public class EditBowFragment extends EditWithImageFragmentBase
         implements DynamicItemLayout.OnBindListener<SightSetting> {
 
     public static final String BOW_ID = "bow_id";
-    private static final int RECURVE_BOW = 0;
-    private static final int COMPOUND_BOW = 1;
-    private static final int LONG_BOW = 2;
-    private static final int BARE_BOW = 3;
-    private static final int HORSE_BOW = 4;
-    private static final int YUMI = 5;
+
     @Bind(R.id.recurve)
     RadioButton recurveBow;
     @Bind(R.id.compound)
@@ -54,6 +52,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
     RadioButton horseBow;
     @Bind(R.id.yumi)
     RadioButton yumiBow;
+
     @Bind(R.id.name)
     EditText name;
     @Bind(R.id.brand)
@@ -97,6 +96,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
         sightSettings.setLayoutResource(R.layout.dynamicitem_sight_settings, SightSetting.class);
         sightSettings.setOnBindListener(this);
 
+        // TODO make this a selector
         recurveBow.setOnClickListener(v -> setBowType(RECURVE_BOW));
         compoundBow.setOnClickListener(v -> setBowType(COMPOUND_BOW));
         longBow.setOnClickListener(v -> setBowType(LONG_BOW));
@@ -108,7 +108,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
         if (savedInstanceState == null) {
             if (mBowId != -1) {
                 // Load data from database
-                Bow bow = new BowDataSource(getContext()).get(mBowId);
+                Bow bow = new BowDataSource().get(mBowId);
                 setBowValues(bow);
             } else {
                 // Set to default values
@@ -121,6 +121,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
             }
         } else {
             // Restore values from before orientation change
+            //TODO use icepick to save this
             Bow bow = Parcels.unwrap(savedInstanceState.getParcelable("bow"));
             setBowValues(bow);
         }
@@ -189,7 +190,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
     @Override
     public void onSave() {
         super.onSave();
-        new BowDataSource(getContext())
+        new BowDataSource()
                 .update(buildBow());
         getActivity().finish();
     }
@@ -215,7 +216,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
         return bow;
     }
 
-    private void setBowType(int type) {
+    private void setBowType(EBowType type) {
         recurveBow.setChecked(type == RECURVE_BOW);
         compoundBow.setChecked(type == COMPOUND_BOW);
         longBow.setChecked(type == LONG_BOW);
@@ -224,7 +225,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
         yumiBow.setChecked(type == YUMI);
     }
 
-    private int getType() {
+    private EBowType getType() {
         if (recurveBow.isChecked()) {
             return RECURVE_BOW;
         } else if (compoundBow.isChecked()) {

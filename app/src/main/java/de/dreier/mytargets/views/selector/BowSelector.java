@@ -53,7 +53,7 @@ public class BowSelector extends ImageSelectorBase<Bow> {
 
     public void setItemId(long bow) {
         Bow item = null;
-        BowDataSource bowDataSource = new BowDataSource(getContext());
+        BowDataSource bowDataSource = new BowDataSource();
         if (bow > 0) {
             item = bowDataSource.get(bow);
         }

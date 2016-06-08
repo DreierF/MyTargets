@@ -65,12 +65,12 @@ public class EditRoundFragment extends EditRoundPropertiesFragmentBase {
             remove.setVisibility(View.GONE);
         } else {
             setTitle(R.string.edit_round);
-            RoundDataSource roundDataSource = new RoundDataSource(getContext());
+            RoundDataSource roundDataSource = new RoundDataSource();
             Round round = roundDataSource.get(roundId);
             distanceSpinner.setItem(round.info.distance);
             comment.setText(round.comment);
             notEditable.setVisibility(View.GONE);
-            StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(getContext());
+            StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource();
             StandardRound standardRound = standardRoundDataSource.get(round.info.standardRound);
             if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
                 distanceLayout.setVisibility(View.GONE);
@@ -105,9 +105,9 @@ public class EditRoundFragment extends EditRoundPropertiesFragmentBase {
     }
 
     private Round onSaveRound() {
-        RoundDataSource roundDataSource = new RoundDataSource(getContext());
-        Training training = new TrainingDataSource(getContext()).get(trainingId);
-        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(getContext());
+        RoundDataSource roundDataSource = new RoundDataSource();
+        Training training = new TrainingDataSource().get(trainingId);
+        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource();
         StandardRound standardRound = standardRoundDataSource.get(training.standardRoundId);
 
         Round round;
@@ -125,7 +125,7 @@ public class EditRoundFragment extends EditRoundPropertiesFragmentBase {
         if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE) {
             round.info.distance = distanceSpinner.getSelectedItem();
             round.info.index = standardRound.getRounds().size();
-            new RoundTemplateDataSource(getContext()).update(round.info);
+            new RoundTemplateDataSource().update(round.info);
         }
         roundDataSource.update(round);
 

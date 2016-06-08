@@ -497,15 +497,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 writer.append(new Dimension(
                         cur.getInt(distanceInd),
                         cur.getString(distanceUnitInd))
-                        .toString(mContext));
+                        .toString());
                 writer.append("\";\"");
 
                 // Target
                 Target target = new Target(cur.getInt(targetInd), cur.getInt(styleInd),
                         new Dimension(cur.getInt(targetSizeInd), cur.getString(targetUnitInd)));
-                writer.append(target.getModel().getName(mContext))
+                writer.append(target.getModel().toString())
                         .append(" (")
-                        .append(target.size.toString(mContext))
+                        .append(target.size.toString())
                         .append(")\";\"");
 
                 // Score

@@ -57,12 +57,6 @@
   <string name="add_bow">Přidat luk</string>
   <string name="name">Jméno</string>
   <string name="bow_type">Typ luku</string>
-  <string name="recurve_bow">Reflexní luk</string>
-  <string name="compound_bow">Kladkový luk</string>
-  <string name="bare_bow">Holý luk</string>
-  <string name="long_bow">Dlouhý luk</string>
-  <string name="horse_bow">Horse bow</string>
-  <string name="yumi">Yumi</string>
   <string name="properties">Vlastnosti</string>
   <string name="brand">Značka</string>
   <string name="size">Velikost</string>
@@ -260,4 +254,12 @@
   <string name="show_shots_training">Whole training</string>
   <string name="show_shots_round">Current round</string>
   <string name="show_shots_end">Current end</string>
+  <string name="profile">Profile</string>
+  <string name="birthday">Birthday</string>
+  <string name="first_name">First name</string>
+  <string name="last_name">Last name</string>
+  <string name="age">Age</string>
+  <string name="show_signature">Signature</string>
+  <string name="witness">Witness</string>
+  <string name="archer">Archer</string>
 </resources>

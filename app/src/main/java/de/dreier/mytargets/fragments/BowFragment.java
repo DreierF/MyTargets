@@ -27,6 +27,7 @@ import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.utils.DataLoader;
+import de.dreier.mytargets.utils.HTMLInfoBuilder;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
 import static de.dreier.mytargets.fragments.EditBowFragment.BOW_ID;
@@ -43,7 +44,7 @@ public class BowFragment extends EditableFragment<Bow> implements View.OnClickLi
 
     @Override
     public Loader<List<Bow>> onCreateLoader(int id, Bundle args) {
-        bowDataSource = new BowDataSource(getContext());
+        bowDataSource = new BowDataSource();
         return new DataLoader<>(getContext(), bowDataSource, bowDataSource::getAll);
     }
 
@@ -96,18 +97,18 @@ public class BowFragment extends EditableFragment<Bow> implements View.OnClickLi
             mName.setText(mItem.name);
             mImg.setImageDrawable(mItem.getDrawable());
 
-            String html = getString(R.string.bow_type) + ": <b>" +
-                    getResources().getStringArray(R.array.bow_types)[mItem.type] + "</b>";
+            HTMLInfoBuilder info = new HTMLInfoBuilder();
+            info.addLine(R.string.bow_type, mItem.type);
             if (!mItem.brand.trim().isEmpty()) {
-                html += "<br>" + getString(R.string.brand) + ": <b>" + mItem.brand + "</b>";
+                info.addLine(R.string.brand, mItem.brand);
             }
             if (!mItem.size.trim().isEmpty()) {
-                html += "<br>" + getString(R.string.size) + ": <b>" + mItem.size + "</b>";
+                info.addLine(R.string.size, mItem.size);
             }
             for (SightSetting s : mItem.sightSettings) {
-                html += "<br>" + s.distance.toString(getActivity()) + ": <b>" + s.value + "</b>";
+                info.addLine(s.distance.toString() , s.value);
             }
-            mDetails.setText(Html.fromHtml(html));
+            mDetails.setText(Html.fromHtml(info.toString()));
         }
     }
 }

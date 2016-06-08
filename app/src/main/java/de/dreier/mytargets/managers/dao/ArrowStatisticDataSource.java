@@ -6,7 +6,6 @@
  */
 package de.dreier.mytargets.managers.dao;
 
-import android.content.Context;
 import android.database.Cursor;
 
 import java.util.ArrayList;
@@ -18,8 +17,8 @@ import de.dreier.mytargets.shared.models.Target;
 
 public class ArrowStatisticDataSource extends DataSourceBase {
 
-    public ArrowStatisticDataSource(Context context) {
-        super(context);
+    public ArrowStatisticDataSource() {
+        super();
     }
 
     public List<ArrowStatistic> getAll() {

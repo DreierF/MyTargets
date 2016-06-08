@@ -8,7 +8,6 @@ package de.dreier.mytargets.managers.dao;
 
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 
 import java.util.ArrayList;
@@ -43,14 +42,14 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
                     THUMBNAIL + " BLOB," +
                     IMAGE + " TEXT);";
 
-    public ArrowDataSource(Context context) {
-        super(context, TABLE);
+    public ArrowDataSource() {
+        super(TABLE);
     }
 
     @Override
     public void update(Arrow item) {
         super.update(item);
-        new ArrowNumberDataSource(getContext()).update(item.getId(), item.numbers);
+        new ArrowNumberDataSource().update(item.getId(), item.numbers);
     }
 
     @Override
@@ -94,7 +93,7 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
         Arrow a = null;
         if (cursor.moveToFirst()) {
             a = cursorToArrow(cursor, 0);
-            a.numbers = new ArrowNumberDataSource(getContext()).getAll(a.getId());
+            a.numbers = new ArrowNumberDataSource().getAll(a.getId());
         }
         cursor.close();
         return a;
@@ -107,7 +106,7 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
                         "FROM ARROW ORDER BY _id ASC", null);
         ArrayList<Arrow> list = new ArrayList<>(res.getCount());
         if (res.moveToFirst()) {
-            ArrowNumberDataSource arrowNumberDataSource = new ArrowNumberDataSource(getContext());
+            ArrowNumberDataSource arrowNumberDataSource = new ArrowNumberDataSource();
             do {
                 Arrow arrow = cursorToArrow(res, 0);
                 arrow.numbers = arrowNumberDataSource.getAll(arrow.getId());

@@ -36,23 +36,6 @@ import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.WearableUtils;
 import de.dreier.mytargets.shared.models.NotificationInfo$$Parcelable;
 
-@ParcelClasses({
-        @ParcelClass(Arrow.class),
-        @ParcelClass(ArrowNumber.class),
-        @ParcelClass(Bow.class),
-        @ParcelClass(Coordinate.class),
-        @ParcelClass(Dimension.class),
-        @ParcelClass(Environment.class),
-        @ParcelClass(Passe.class),
-        @ParcelClass(Round.class),
-        @ParcelClass(RoundTemplate.class),
-        @ParcelClass(Shot.class),
-        @ParcelClass(SightSetting.class),
-        @ParcelClass(StandardRound.class),
-        @ParcelClass(NotificationInfo.class),
-        @ParcelClass(Target.class),
-        @ParcelClass(Training.class)
-})
 public class WearableListener extends WearableListenerService {
 
     public static final String TRAINING_STARTED = "training_started";
