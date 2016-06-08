@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -18,7 +17,7 @@
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:layout_collapseMode="none"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
@@ -26,34 +25,35 @@
             android:background="@color/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginLeft="60dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginStart="60dp"
-                android:layout_marginEnd="10dp"
                 android:baselineAligned="false"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <TextView
                     android:id="@+id/detail_round_info"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start"
+                    android:layout_weight="1"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white" />
 
                 <TextView
                     android:id="@+id/detail_score"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|end"
+                    android:layout_weight="1"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white" />
 
-            </FrameLayout>
+            </LinearLayout>
 
         </android.support.v7.widget.Toolbar>
 
@@ -61,8 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v7.widget.RecyclerView
-                style="@style/card_list"/>
+            <android.support.v7.widget.RecyclerView style="@style/card_list" />
 
 
             <View
@@ -77,9 +76,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_drop_shadow_height"
                 android:background="@drawable/toolbar_drop_shadow"
-                app:layout_anchor="@id/appbar"/>
+                app:layout_anchor="@id/appbar" />
 
-            <include layout="@layout/layout_fab_description"/>
+            <include layout="@layout/layout_fab_description" />
         </FrameLayout>
     </LinearLayout>
 
