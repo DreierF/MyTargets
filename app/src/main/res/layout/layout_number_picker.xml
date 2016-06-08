@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/number_value"
+        style="@style/primary_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="#00000000"
-        android:textSize="16sp"/>
+        android:layout_gravity="center_horizontal" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -25,7 +24,7 @@
             android:layout_height="48dp"
             android:layout_gravity="left"
             android:text="-"
-            tools:ignore="HardcodedText"/>
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/number_increment"
@@ -34,7 +33,7 @@
             android:layout_height="48dp"
             android:layout_gravity="right"
             android:text="+"
-            tools:ignore="HardcodedText"/>
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 

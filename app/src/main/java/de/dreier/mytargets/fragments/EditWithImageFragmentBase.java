@@ -39,6 +39,8 @@ import de.dreier.mytargets.shared.utils.BitmapUtils;
 import de.dreier.mytargets.utils.AndroidBug5497Workaround;
 import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.ThumbnailUtils;
+import icepick.Icepick;
+import icepick.State;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
@@ -66,8 +68,10 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
-    private File imageFile = null;
-    private File oldImageFile = null;
+    @State
+    File imageFile = null;
+    @State
+    File oldImageFile = null;
 
     EditWithImageFragmentBase(int layoutRes, int defaultDrawable) {
         this.layoutRes = layoutRes;
@@ -78,6 +82,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit_image, container, false);
         setUpToolbar(rootView);
+        Icepick.restoreInstanceState(this, savedInstanceState);
 
         NestedScrollView content = (NestedScrollView) rootView.findViewById(R.id.content);
 
@@ -161,6 +166,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
 
             @Override
             public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
+                EditWithImageFragmentBase.this.oldImageFile = EditWithImageFragmentBase.this.imageFile;
                 loadImage(imageFile);
             }
 
@@ -176,7 +182,6 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
     }
 
     protected void loadImage(final File imageFile) {
-        this.oldImageFile = this.imageFile;
         this.imageFile = imageFile;
         if (imageFile == null) {
             imageView.setImageResource(defaultDrawable);
@@ -189,7 +194,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
         }
     }
 
-    protected void loadImage(String path) {
+    protected void setImageFile(String path) {
         if (path == null) {
             imageFile = null;
             imageView.setImageResource(defaultDrawable);
@@ -200,14 +205,8 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
                 if (!imageFile.exists()) {
                     imageFile = null;
                     imageView.setImageResource(defaultDrawable);
-                    return;
                 }
             }
-            Picasso.with(getContext())
-                    .load(imageFile)
-                    .fit()
-                    .centerCrop()
-                    .into(imageView);
         }
     }
 
@@ -255,5 +254,11 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
             thumbnail = ThumbnailUtils.createImageThumbnail(imageFile.getPath(), MICRO_KIND);
         }
         return BitmapUtils.getBitmapAsByteArray(thumbnail);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
     }
 }

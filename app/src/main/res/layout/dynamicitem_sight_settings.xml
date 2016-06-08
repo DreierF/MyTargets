@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
     <de.dreier.mytargets.views.selector.SimpleDistanceSelector
         android:id="@+id/distanceSpinner"
@@ -11,20 +11,20 @@
         android:orientation="vertical"/>
 
     <EditText
-        android:id="@+id/sight_setting"
+        android:id="@+id/sightSetting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="80dp"
         android:layout_marginStart="80dp"
-        android:layout_toLeftOf="@+id/remove_sight_setting"
-        android:layout_toStartOf="@+id/remove_sight_setting"
+        android:layout_toLeftOf="@+id/removeSightSetting"
+        android:layout_toStartOf="@+id/removeSightSetting"
         android:ems="10"
         android:inputType="text"/>
 
     <ImageButton
-        android:id="@+id/remove_sight_setting"
+        android:id="@+id/removeSightSetting"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignParentEnd="true"

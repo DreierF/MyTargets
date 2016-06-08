@@ -8,13 +8,10 @@
 package de.dreier.mytargets.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -27,6 +24,7 @@ import de.dreier.mytargets.shared.models.ArrowNumber;
 public class EditArrowFragment extends EditWithImageFragmentBase {
 
     public static final String ARROW_ID = "arrow_id";
+
     @Bind(R.id.name)
     EditText name;
     @Bind(R.id.arrow_length)
@@ -47,7 +45,8 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     EditText comment;
     @Bind(R.id.arrow_numbers)
     EditText arrowNumbers;
-    private long mArrowId = -1;
+
+    private long arrowId = -1;
 
     public EditArrowFragment() {
         super(R.layout.fragment_edit_arrow, R.drawable.arrows);
@@ -59,24 +58,20 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
 
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey(ARROW_ID)) {
-            mArrowId = bundle.getLong(ARROW_ID, -1);
+            arrowId = bundle.getLong(ARROW_ID, -1);
         }
 
         if (savedInstanceState == null) {
-            if (mArrowId != -1) {
+            if (arrowId != -1) {
                 // Load data from database
-                Arrow arrow = new ArrowDataSource().get(mArrowId);
+                Arrow arrow = new ArrowDataSource().get(arrowId);
                 setArrowValues(arrow);
             } else {
                 // Set to default values
-                loadImage((String) null);
+                setImageFile(null);
                 setTitle(R.string.my_arrow);
                 name.setText(R.string.my_arrow);
             }
-        } else {
-            // Restore values from before orientation change
-            Arrow bow = Parcels.unwrap(savedInstanceState.getParcelable("arrow"));
-            setArrowValues(bow);
         }
 
         return rootView;
@@ -93,7 +88,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         vanes.setText(arrow.vanes);
         nock.setText(arrow.nock);
         comment.setText(arrow.comment);
-        loadImage(arrow.imageFile);
+        setImageFile(arrow.imageFile);
         String text = "";
         for (ArrowNumber arrowNumber : arrow.numbers) {
             if (!text.isEmpty()) {
@@ -121,7 +116,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
             return null;
         }
         Arrow arrow = new Arrow();
-        arrow.setId(mArrowId);
+        arrow.setId(arrowId);
         arrow.name = name.getText().toString();
         arrow.length = length.getText().toString();
         arrow.material = material.getText().toString();
@@ -153,11 +148,5 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
             }
         }
         return list;
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable("arrow", Parcels.wrap(buildArrow()));
     }
 }

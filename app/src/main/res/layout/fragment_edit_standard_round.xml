@@ -1,11 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context="de.dreier.mytargets.fragments.EditRoundFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="de.dreier.mytargets.fragments.EditRoundFragment">
 
-    <include layout="@layout/common_toolbar"/>
+    <include layout="@layout/common_toolbar" />
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scrollView"
@@ -28,13 +29,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/name"
-                    android:inputType="textNoSuggestions"/>
+                    android:inputType="textNoSuggestions" />
             </android.support.design.widget.TextInputLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/dividerColor"/>
+                android:background="@color/dividerColor" />
 
             <RadioGroup
                 android:layout_width="match_parent"
@@ -48,28 +49,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
-                    android:text="@string/outdoor"/>
+                    android:text="@string/outdoor" />
 
                 <RadioButton
                     android:id="@+id/indoor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
-                    android:text="@string/indoor"/>
+                    android:text="@string/indoor" />
 
             </RadioGroup>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/dividerColor"/>
+                android:background="@color/dividerColor" />
 
-            <de.dreier.mytargets.views.DynamicItemLayout
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/rounds"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
-                android:orientation="vertical"/>
+                android:orientation="vertical"
+                app:layoutManager="LinearLayoutManager" />
+
+            <include layout="@layout/layout_add_button" />
 
         </LinearLayout>
 

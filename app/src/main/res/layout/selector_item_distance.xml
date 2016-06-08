@@ -17,8 +17,8 @@
 
     <TextView
         android:id="@android:id/text1"
+        style="@style/primary_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:textSize="14sp" />
+        android:gravity="center_vertical" />
 </LinearLayout>

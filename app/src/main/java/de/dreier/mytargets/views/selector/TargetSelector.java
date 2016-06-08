@@ -16,7 +16,7 @@ import de.dreier.mytargets.shared.models.Target;
 
 public class TargetSelector extends ImageSelectorBase<Target> {
 
-    private static final int TARGET_REQUEST_CODE = 12;
+    public static final int TARGET_REQUEST_CODE = 12;
 
     public TargetSelector(Context context) {
         this(context, null);

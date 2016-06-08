@@ -30,6 +30,7 @@ import de.dreier.mytargets.activities.ItemSelectActivity;
 public abstract class SelectorBase<T> extends LinearLayout {
 
     public static final String INDEX = "index";
+
     private final View mView;
     private final View mProgress;
     protected int requestCode;

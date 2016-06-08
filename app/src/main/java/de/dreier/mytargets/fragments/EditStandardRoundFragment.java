@@ -9,6 +9,9 @@ package de.dreier.mytargets.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,32 +23,53 @@ import android.widget.TextView;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.adapters.DynamicItemHolder;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.views.DynamicItemLayout;
 import de.dreier.mytargets.views.NumberPicker;
 import de.dreier.mytargets.views.selector.DistanceSelector;
+import de.dreier.mytargets.views.selector.SelectorBase;
 import de.dreier.mytargets.views.selector.TargetSelector;
+import icepick.Icepick;
+import icepick.State;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class EditStandardRoundFragment extends EditFragmentBase
-        implements DynamicItemLayout.OnBindListener<RoundTemplate> {
+public class EditStandardRoundFragment extends EditFragmentBase {
 
-    private RadioButton indoor;
-    private DynamicItemLayout<RoundTemplate> rounds;
-    private EditText name;
+    @Bind(R.id.indoor)
+    RadioButton indoor;
+    @Bind(R.id.outdoor)
+    RadioButton outdoor;
+
+    @Bind(R.id.rounds)
+    RecyclerView rounds;
+
+    @Bind(R.id.name)
+    EditText name;
+    @State(ParcelsBundler.class)
+    ArrayList<RoundTemplate> roundTemplateList = new ArrayList<>();
     private long standardRoundId = -1;
+    private RoundTemplateAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_edit_standard_round, container, false);
+
+        ButterKnife.bind(this, rootView);
+        Icepick.restoreInstanceState(this, savedInstanceState);
 
         setUpToolbar(rootView);
 
@@ -54,52 +78,57 @@ public class EditStandardRoundFragment extends EditFragmentBase
             standardRound = Parcels.unwrap(getArguments().getParcelable(ITEM));
         }
 
-        // Indoor / outdoor
-        RadioButton outdoor = (RadioButton) rootView.findViewById(R.id.outdoor);
-        indoor = (RadioButton) rootView.findViewById(R.id.indoor);
+        if (savedInstanceState == null) {
+            if (standardRound == null) {
+                setTitle(R.string.new_round_template);
+                name.setText(R.string.custom_round);
+                // Initialise with default values
+                indoor.setChecked(SettingsManager.getIndoor());
+                outdoor.setChecked(!SettingsManager.getIndoor());
 
-        // Name
-        name = (EditText) rootView.findViewById(R.id.name);
-
-        // Rounds
-        //noinspection unchecked
-        rounds = (DynamicItemLayout<RoundTemplate>) rootView.findViewById(R.id.rounds);
-        rounds.setLayoutResource(R.layout.dynamicitem_round, RoundTemplate.class);
-        rounds.setOnBindListener(this);
-        rounds.rebindOnIndexChanged(true);
-
-        if (standardRound == null) {
-            setTitle(R.string.new_round_template);
-            name.setText(R.string.custom_round);
-            // Initialise with default values
-            indoor.setChecked(SettingsManager.getIndoor());
-            outdoor.setChecked(!SettingsManager.getIndoor());
-
-            RoundTemplate round = new RoundTemplate();
-            round.arrowsPerPasse = SettingsManager.getArrowsPerPasse();
-            round.passes = SettingsManager.getPasses();
-            round.target = SettingsManager.getTarget();
-            round.targetTemplate = round.target;
-            round.distance = SettingsManager.getDistance();
-            rounds.addItem(round);
-        } else {
-            setTitle(R.string.edit_standard_round);
-            // Load saved values
-            indoor.setChecked(standardRound.indoor);
-            outdoor.setChecked(!standardRound.indoor);
-            ArrayList<RoundTemplate> rounds = standardRound.getRounds();
-            if (standardRound.club == StandardRoundFactory.CUSTOM) {
-                name.setText(standardRound.name);
-                standardRoundId = standardRound.getId();
+                RoundTemplate round = new RoundTemplate();
+                round.arrowsPerPasse = SettingsManager.getArrowsPerPasse();
+                round.passes = SettingsManager.getPasses();
+                round.target = SettingsManager.getTarget();
+                round.targetTemplate = round.target;
+                round.distance = SettingsManager.getDistance();
+                roundTemplateList.add(round);
             } else {
-                name.setText(String.format("%s %s", getString(R.string.custom), standardRound.name));
-                for(RoundTemplate round : rounds) {
-                    round.setId(-1);
+                setTitle(R.string.edit_standard_round);
+                // Load saved values
+                indoor.setChecked(standardRound.indoor);
+                outdoor.setChecked(!standardRound.indoor);
+                roundTemplateList = standardRound.getRounds();
+                if (standardRound.club == StandardRoundFactory.CUSTOM) {
+                    name.setText(standardRound.name);
+                    standardRoundId = standardRound.getId();
+                } else {
+                    name.setText(String.format("%s %s", getString(R.string.custom), standardRound.name));
+                    for (RoundTemplate round : roundTemplateList) {
+                        round.setId(-1);
+                    }
                 }
             }
-            this.rounds.setList(rounds);
         }
+
+        adapter = new RoundTemplateAdapter(this, roundTemplateList);
+        rounds.setAdapter(adapter);
+
         return rootView;
+    }
+
+    @OnClick(R.id.add_button)
+    public void onAddSightSetting() {
+        RoundTemplate r = roundTemplateList.get(roundTemplateList.size() - 1);
+        RoundTemplate roundTemplate = new RoundTemplate();
+        roundTemplate.passes = r.passes;
+        roundTemplate.arrowsPerPasse = r.arrowsPerPasse;
+        roundTemplate.distance = r.distance;
+        roundTemplate.target = r.target;
+        roundTemplate.target.size = r.target.size;
+        roundTemplate.targetTemplate = r.targetTemplate;
+        roundTemplateList.add(roundTemplate);
+        adapter.notifyItemInserted(roundTemplateList.size() - 1);
     }
 
     @Override
@@ -109,12 +138,12 @@ public class EditStandardRoundFragment extends EditFragmentBase
         standardRound.club = StandardRoundFactory.CUSTOM;
         standardRound.name = name.getText().toString();
         standardRound.indoor = indoor.isChecked();
-        standardRound.setRounds(rounds.getList());
+        standardRound.setRounds(roundTemplateList);
         new StandardRoundDataSource().update(standardRound);
 
         SettingsManager.setIndoor(standardRound.indoor);
 
-        RoundTemplate round = rounds.getList().get(0);
+        RoundTemplate round = roundTemplateList.get(0);
         SettingsManager.setArrowsPerPasse(round.arrowsPerPasse);
         SettingsManager.setPasses(round.passes);
         SettingsManager.setTarget(round.target);
@@ -128,74 +157,99 @@ public class EditStandardRoundFragment extends EditFragmentBase
     }
 
     @Override
-    public void onBind(View view, final RoundTemplate round, int index) {
-        // Initialize empty round with default values
-        if (round.distance == null) {
-            RoundTemplate r = rounds.getList().get(index - 1);
-            round.passes = r.passes;
-            round.arrowsPerPasse = r.arrowsPerPasse;
-            round.distance = r.distance;
-            round.target = r.target;
-            round.target.size = r.target.size;
-            round.targetTemplate = r.targetTemplate;
-        }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        // Set title of round
-        TextView title = ((TextView) view.findViewById(R.id.round_number));
-        title.setText(getResources().getQuantityString(R.plurals.rounds, index + 1, index + 1));
-        round.index = index;
-
-        final DistanceSelector distanceSpinner = (DistanceSelector) view
-                .findViewById(R.id.distanceSpinner);
-        distanceSpinner.setOnActivityResultContext(this);
-        distanceSpinner.setItemIndex(index);
-        distanceSpinner.setItem(round.distance);
-        distanceSpinner.setOnUpdateListener(item -> round.distance = item);
-
-        // Target round
-        final TargetSelector targetSpinner = (TargetSelector) view
-                .findViewById(R.id.targetSpinner);
-        targetSpinner.setOnActivityResultContext(this);
-        targetSpinner.setItemIndex(index);
-        targetSpinner.setOnUpdateListener(item -> {
-            round.target = item;
-            round.targetTemplate = item;
-        });
-        targetSpinner.setItem(round.target);
-
-        // Passes
-        NumberPicker passes = (NumberPicker) view.findViewById(R.id.passes);
-        passes.setTextPattern(R.plurals.passe);
-        passes.setOnValueChangedListener(val -> round.passes = val);
-        passes.setValue(round.passes);
-
-        // Arrows per passe
-        NumberPicker arrows = (NumberPicker) view.findViewById(R.id.arrows);
-        arrows.setTextPattern(R.plurals.arrow);
-        arrows.setMinimum(1);
-        arrows.setMaximum(12);
-        arrows.setOnValueChangedListener(val -> round.arrowsPerPasse = val);
-        arrows.setValue(round.arrowsPerPasse);
-
-        ImageButton remove = (ImageButton) view.findViewById(R.id.remove);
-        if (index == 0) {
-            remove.setVisibility(View.GONE);
-        } else {
-            remove.setOnClickListener(view1 -> rounds.remove(round, R.string.round_removed));
+        if (resultCode == Activity.RESULT_OK) {
+            Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
+            final int index = intentData.getInt(SelectorBase.INDEX);
+            final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
+            switch (requestCode) {
+                case DistanceSelector.DISTANCE_REQUEST_CODE:
+                    roundTemplateList.get(index).distance = Parcels.unwrap(parcelable);
+                    adapter.notifyItemChanged(index);
+                    break;
+                case TargetSelector.TARGET_REQUEST_CODE:
+                    roundTemplateList.get(index).target = Parcels.unwrap(parcelable);
+                    roundTemplateList.get(index).targetTemplate = Parcels.unwrap(parcelable);
+                    adapter.notifyItemChanged(index);
+                    break;
+            }
         }
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        for (int i = 0; i < rounds.getChildCount() - 1; i++) {
-            final View round = rounds.getChildAt(i);
-            final DistanceSelector distanceSpinner = (DistanceSelector) round
-                    .findViewById(R.id.distanceSpinner);
-            distanceSpinner.onActivityResult(requestCode, resultCode, data);
-            final TargetSelector targetSpinner = (TargetSelector) round
-                    .findViewById(R.id.targetSpinner);
-            targetSpinner.onActivityResult(requestCode, resultCode, data);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
+    }
+
+    public static class RoundTemplateHolder extends DynamicItemHolder<RoundTemplate> {
+        @Bind(R.id.arrows)
+        NumberPicker arrows;
+        @Bind(R.id.passes)
+        NumberPicker passes;
+        @Bind(R.id.targetSpinner)
+        TargetSelector targetSpinner;
+        @Bind(R.id.round_number)
+        TextView title;
+        @Bind(R.id.distanceSpinner)
+        DistanceSelector distanceSpinner;
+        @Bind(R.id.remove)
+        ImageButton remove;
+
+        public RoundTemplateHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
+
+        @Override
+        public void onBind(RoundTemplate roundTemplate, int position, Fragment fragment, View.OnClickListener removeListener) {
+            item = roundTemplate;
+
+            // Set title of round
+            title.setText(fragment.getContext().getResources().getQuantityString(R.plurals.rounds, position + 1, position + 1));
+            item.index = position;
+
+            distanceSpinner.setOnActivityResultContext(fragment);
+            distanceSpinner.setItemIndex(position);
+            distanceSpinner.setItem(item.distance);
+
+            // Target round
+            targetSpinner.setOnActivityResultContext(fragment);
+            targetSpinner.setItemIndex(position);
+            targetSpinner.setItem(item.target);
+
+            // Passes
+            passes.setTextPattern(R.plurals.passe);
+            passes.setOnValueChangedListener(val -> item.passes = val);
+            passes.setValue(item.passes);
+
+            // Arrows per passe
+            arrows.setTextPattern(R.plurals.arrow);
+            arrows.setMinimum(1);
+            arrows.setMaximum(12);
+            arrows.setOnValueChangedListener(val -> item.arrowsPerPasse = val);
+            arrows.setValue(item.arrowsPerPasse);
+
+            if (position == 0) {
+                remove.setVisibility(View.GONE);
+            } else {
+                remove.setVisibility(View.VISIBLE);
+                remove.setOnClickListener(removeListener);
+            }
+        }
+    }
+
+    private class RoundTemplateAdapter extends DynamicItemAdapter<RoundTemplate> {
+        public RoundTemplateAdapter(Fragment fragment, List<RoundTemplate> list) {
+            super(fragment, list, R.string.round_removed);
+        }
+
+        @Override
+        public DynamicItemHolder<RoundTemplate> onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = inflater.inflate(R.layout.dynamicitem_round_template, parent, false);
+            return new RoundTemplateHolder(v);
         }
     }
 }

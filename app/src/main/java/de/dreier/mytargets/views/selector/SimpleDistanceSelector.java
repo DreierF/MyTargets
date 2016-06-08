@@ -18,7 +18,7 @@ import de.dreier.mytargets.shared.models.Dimension;
 
 public class SimpleDistanceSelector extends SelectorBase<Dimension> {
 
-    private static final int SIMPLE_DISTANCE_REQUEST_CODE = 2;
+    public static final int SIMPLE_DISTANCE_REQUEST_CODE = 2;
 
     @Bind(android.R.id.text1)
     TextView distance;

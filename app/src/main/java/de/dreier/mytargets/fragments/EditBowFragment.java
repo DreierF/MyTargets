@@ -7,11 +7,12 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,21 +23,33 @@ import android.widget.RadioButton;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.adapters.DynamicItemHolder;
 import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.SightSetting;
-import de.dreier.mytargets.views.DynamicItemLayout;
+import de.dreier.mytargets.shared.utils.ParcelsBundler;
+import de.dreier.mytargets.views.selector.SelectorBase;
 import de.dreier.mytargets.views.selector.SimpleDistanceSelector;
+import icepick.Icepick;
+import icepick.State;
 
-import static de.dreier.mytargets.shared.models.EBowType.*;
+import static de.dreier.mytargets.shared.models.EBowType.BARE_BOW;
+import static de.dreier.mytargets.shared.models.EBowType.COMPOUND_BOW;
+import static de.dreier.mytargets.shared.models.EBowType.HORSE_BOW;
+import static de.dreier.mytargets.shared.models.EBowType.LONG_BOW;
+import static de.dreier.mytargets.shared.models.EBowType.RECURVE_BOW;
+import static de.dreier.mytargets.shared.models.EBowType.YUMI;
 
-public class EditBowFragment extends EditWithImageFragmentBase
-        implements DynamicItemLayout.OnBindListener<SightSetting> {
+public class EditBowFragment extends EditWithImageFragmentBase {
 
     public static final String BOW_ID = "bow_id";
 
@@ -76,8 +89,14 @@ public class EditBowFragment extends EditWithImageFragmentBase
     @Bind(R.id.desc)
     EditText desc;
     @Bind(R.id.sightSettings)
-    DynamicItemLayout<SightSetting> sightSettings;
-    private long mBowId = -1;
+    RecyclerView sightSettings;
+
+    private long bowId = -1;
+
+    @State(ParcelsBundler.class)
+    ArrayList<SightSetting> sightSettingsList = new ArrayList<>();
+
+    private SightSettingsAdapter adapter;
 
     public EditBowFragment() {
         super(R.layout.fragment_edit_bow, R.drawable.recurve_bow);
@@ -87,14 +106,12 @@ public class EditBowFragment extends EditWithImageFragmentBase
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         ButterKnife.bind(this, rootView);
+        Icepick.restoreInstanceState(this, savedInstanceState);
 
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey(BOW_ID)) {
-            mBowId = bundle.getLong(BOW_ID, -1);
+            bowId = bundle.getLong(BOW_ID, -1);
         }
-
-        sightSettings.setLayoutResource(R.layout.dynamicitem_sight_settings, SightSetting.class);
-        sightSettings.setOnBindListener(this);
 
         // TODO make this a selector
         recurveBow.setOnClickListener(v -> setBowType(RECURVE_BOW));
@@ -104,28 +121,31 @@ public class EditBowFragment extends EditWithImageFragmentBase
         horseBow.setOnClickListener(v -> setBowType(HORSE_BOW));
         yumiBow.setOnClickListener(v -> setBowType(YUMI));
 
-        ArrayList<SightSetting> sightSettingsList = new ArrayList<>();
         if (savedInstanceState == null) {
-            if (mBowId != -1) {
+            if (bowId != -1) {
                 // Load data from database
-                Bow bow = new BowDataSource().get(mBowId);
+                Bow bow = new BowDataSource().get(bowId);
                 setBowValues(bow);
             } else {
                 // Set to default values
-                loadImage((String) null);
+                imageFile = null;
                 setTitle(R.string.my_bow);
                 name.setText(R.string.my_bow);
                 recurveBow.setChecked(true);
                 sightSettingsList.add(new SightSetting());
-                sightSettings.setList(sightSettingsList);
             }
-        } else {
-            // Restore values from before orientation change
-            //TODO use icepick to save this
-            Bow bow = Parcels.unwrap(savedInstanceState.getParcelable("bow"));
-            setBowValues(bow);
         }
+
+        loadImage(imageFile);
+        adapter = new SightSettingsAdapter(this, sightSettingsList);
+        sightSettings.setAdapter(adapter);
         return rootView;
+    }
+
+    @OnClick(R.id.add_button)
+    public void onAddSightSetting() {
+        sightSettingsList.add(new SightSetting());
+        adapter.notifyItemInserted(sightSettingsList.size() - 1);
     }
 
     private void setBowValues(Bow bow) {
@@ -141,49 +161,21 @@ public class EditBowFragment extends EditWithImageFragmentBase
         stabilizer.setText(bow.stabilizer);
         clicker.setText(bow.clicker);
         desc.setText(bow.description);
-        loadImage(bow.imageFile);
+        setImageFile(bow.imageFile);
         setBowType(bow.type);
-        sightSettings.setList(bow.sightSettings);
-    }
-
-    @Override
-    public void onBind(View view, final SightSetting sightSetting, int index) {
-        final SimpleDistanceSelector distanceSpinner = (SimpleDistanceSelector) view
-                .findViewById(R.id.distanceSpinner);
-        distanceSpinner.setOnActivityResultContext(this);
-        distanceSpinner.setItemIndex(index);
-        distanceSpinner.setOnUpdateListener(item -> sightSetting.distance = item);
-
-        EditText setting = (EditText) view.findViewById(R.id.sight_setting);
-        setting.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                sightSetting.value = s.toString();
-            }
-        });
-        ImageButton remove = (ImageButton) view.findViewById(R.id.remove_sight_setting);
-        remove.setOnClickListener(view1 -> sightSettings.remove(sightSetting, R.string.sight_setting_removed));
-        distanceSpinner.setItem(sightSetting.distance);
-        setting.setText(sightSetting.value);
+        sightSettingsList = bow.sightSettings;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        for (int i = 0; i < sightSettings.getChildCount() - 1; i++) {
-            final SimpleDistanceSelector distanceSpinner = (SimpleDistanceSelector) sightSettings.getChildAt(i)
-                    .findViewById(R.id.distanceSpinner);
-            distanceSpinner.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK && requestCode == SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE) {
+            Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
+            final int index = intentData.getInt(SelectorBase.INDEX);
+            final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
+            sightSettingsList.get(index).distance = Parcels.unwrap(parcelable);
+            adapter.notifyItemChanged(index);
         }
     }
 
@@ -197,7 +189,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
 
     private Bow buildBow() {
         Bow bow = new Bow();
-        bow.setId(mBowId);
+        bow.setId(bowId);
         bow.name = name.getText().toString();
         bow.brand = brand.getText().toString();
         bow.size = size.getText().toString();
@@ -212,7 +204,7 @@ public class EditBowFragment extends EditWithImageFragmentBase
         bow.type = getType();
         bow.imageFile = getImageFile();
         bow.thumb = getThumbnail();
-        bow.sightSettings = sightSettings.getList();
+        bow.sightSettings = sightSettingsList;
         return bow;
     }
 
@@ -243,9 +235,44 @@ public class EditBowFragment extends EditWithImageFragmentBase
         }
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable("bow", Parcels.wrap(buildBow()));
+    public static class SightSettingHolder extends DynamicItemHolder<SightSetting> {
+        @Bind(R.id.distanceSpinner)
+        SimpleDistanceSelector distanceSpinner;
+        @Bind(R.id.sightSetting)
+        EditText setting;
+        @Bind(R.id.removeSightSetting)
+        ImageButton remove;
+
+        public SightSettingHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
+
+        @OnTextChanged(R.id.sightSetting)
+        public void onTextChanged(CharSequence s) {
+            item.value = s.toString();
+        }
+
+        @Override
+        public void onBind(SightSetting sightSetting, int position, Fragment fragment, View.OnClickListener removeListener) {
+            item = sightSetting;
+            distanceSpinner.setOnActivityResultContext(fragment);
+            distanceSpinner.setItemIndex(position);
+            distanceSpinner.setItem(sightSetting.distance);
+            setting.setText(sightSetting.value);
+            remove.setOnClickListener(removeListener);
+        }
+    }
+
+    private class SightSettingsAdapter extends DynamicItemAdapter<SightSetting> {
+        public SightSettingsAdapter(Fragment fragment, List<SightSetting> list) {
+            super(fragment, list, R.string.sight_setting_removed);
+        }
+
+        @Override
+        public DynamicItemHolder<SightSetting> onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = inflater.inflate(R.layout.dynamicitem_sight_settings, parent, false);
+            return new SightSettingHolder(v);
+        }
     }
 }
