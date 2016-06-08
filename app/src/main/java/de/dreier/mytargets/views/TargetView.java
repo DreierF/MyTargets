@@ -341,6 +341,7 @@ public class TargetView extends TargetViewBase {
         if (zoneSelectionMode) {
             if (x > contentWidth - 60 * density) {
                 int i = (int) (y * selectableZones.size() / (float) contentHeight);
+                i = Math.min(Math.max(0, i), selectableZones.size() - 1);
                 s.zone = selectableZones.get(i).zone;
             } else {
                 return null;
