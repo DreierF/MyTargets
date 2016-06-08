@@ -250,10 +250,10 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
     }
 
     private void shareText() {
-        ArrayList<Pair<String, Integer>> scoreCount = passeDataSource
+        List<Pair<String, Integer>> scoreCount = passeDataSource
                 .getTopScoreDistribution(mTraining);
         String scoreText = "";
-        for (Pair<String, Integer> score : scoreCount) {
+        for (Pair<String, Integer> score : scoreCount.subList(0,3)) {
             scoreText += getString(R.string.d_times_s, score.getSecond(), score.getFirst());
         }
         int maxPoints = 0;

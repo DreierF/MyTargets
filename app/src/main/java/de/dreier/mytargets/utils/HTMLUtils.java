@@ -15,6 +15,7 @@ import android.util.Base64;
 import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
@@ -34,6 +35,7 @@ import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.targets.ScoringStyle;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
 public class HTMLUtils {
@@ -235,8 +237,19 @@ public class HTMLUtils {
 
         PasseDataSource passeDataSource = new PasseDataSource();
 
-        ArrayList<Pair<String, Integer>> scoreCount = passeDataSource.getTopScoreDistribution(training);
+        List<Pair<String, Integer>> scoreCount = passeDataSource.getTopScoreDistribution(training);
+        int misses = 0;
+        int hits = 0;
         for (Pair<String, Integer> score : scoreCount) {
+            if (score.getFirst().equals(ScoringStyle.MISS_SYMBOL)) {
+                misses += score.getSecond();
+            } else {
+                hits += score.getSecond();
+            }
+        }
+        info.addLine(R.string.hits, hits);
+        info.addLine(R.string.misses, misses);
+        for (Pair<String, Integer> score : scoreCount.subList(0, 3)) {
             info.addLine(score.getFirst(), score.getSecond());
         }
 

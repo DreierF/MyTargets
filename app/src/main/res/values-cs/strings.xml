@@ -262,4 +262,6 @@
   <string name="show_signature">Signature</string>
   <string name="witness">Witness</string>
   <string name="archer">Archer</string>
+  <string name="hits">Hits</string>
+  <string name="misses">Misses</string>
 </resources>

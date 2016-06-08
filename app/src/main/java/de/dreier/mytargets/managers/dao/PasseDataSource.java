@@ -9,9 +9,12 @@ package de.dreier.mytargets.managers.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.dreier.mytargets.shared.models.Passe;
@@ -240,34 +243,32 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         return scoreCount;
     }
 
-    public ArrayList<Pair<String, Integer>> getTopScoreDistribution(long training) {
+    public List<Pair<String, Integer>> getTopScoreDistribution(long training) {
         Map<Pair<Integer, String>, Integer> scoreCount = getScoreDistribution(training);
-        ArrayList<Pair<Integer, String>> list = new ArrayList<>(scoreCount.keySet());
-        Collections.sort(list, (lhs, rhs) -> {
-            if (lhs.getFirst().equals(rhs.getFirst())) {
-                return -lhs.getSecond().compareTo(rhs.getSecond());
+        List<Map.Entry<Pair<Integer, String>, Integer>> sortedScore = Stream.of(scoreCount)
+                .sorted((lhs, rhs) -> {
+                    if (lhs.getKey().getFirst().equals(rhs.getKey().getFirst())) {
+                        return -lhs.getKey().getSecond().compareTo(rhs.getKey().getSecond());
+                    }
+                    return rhs.getKey().getFirst() - lhs.getKey().getFirst();
+                })
+                .collect(Collectors.toList());
+
+        // Collapse first two entries if they yield the same score points,
+        // e.g. 10 and X => {X, 10+X, 9, ...}
+        if (sortedScore.size() > 1) {
+            Map.Entry<Pair<Integer, String>, Integer> first = sortedScore.get(0);
+            Map.Entry<Pair<Integer, String>, Integer> second = sortedScore.get(1);
+            if (first.getKey().getFirst().equals(second.getKey().getFirst())) {
+                final String newTitle = second.getKey().getSecond() + "+" + first.getKey().getSecond();
+                final int newValue = second.getValue() + first.getValue();
+                sortedScore.get(1).getKey().setSecond(newTitle);
+                sortedScore.get(1).setValue(newValue);
+                second.setValue(newValue);
             }
-            if (lhs.getFirst() > rhs.getFirst()) {
-                return -1;
-            }
-            return 1;
-        });
-        ArrayList<Pair<String, Integer>> topScore = new ArrayList<>();
-        topScore.add(new Pair<>(list.get(0).getSecond(), scoreCount.get(list.get(0))));
-        boolean collapseFirst = list.get(0).getFirst().equals(list.get(1).getFirst());
-        if (list.size() == 1) {
-            return topScore;
         }
-        if (collapseFirst) {
-            topScore.add(new Pair<>(list.get(1).getSecond() + "+" + list.get(0).getSecond(),
-                    scoreCount.get(list.get(1)) + scoreCount.get(list.get(0))));
-        } else {
-            topScore.add(new Pair<>(list.get(1).getSecond(), scoreCount.get(list.get(1))));
-        }
-        if (list.size() == 2) {
-            return topScore;
-        }
-        topScore.add(new Pair<>(list.get(2).getSecond(), scoreCount.get(list.get(2))));
-        return topScore;
+        return Stream.of(sortedScore)
+                .map(value -> new Pair<>(value.getKey().getSecond(), value.getValue()))
+                .collect(Collectors.toList());
     }
 }

@@ -250,4 +250,6 @@
   <string name="show_signature">Unterschrift</string>
   <string name="witness">Zeuge</string>
   <string name="archer">Bogenschütze</string>
+  <string name="hits">Hits</string>
+  <string name="misses">Misses</string>
 </resources>
