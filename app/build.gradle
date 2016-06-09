@@ -23,9 +23,9 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
-    if (new File("gradle.properties").exists()) {
-        signingConfigs {
-            release {
+    signingConfigs {
+        release {
+            if (new File("gradle.properties").exists()) {
                 try {
                     storeFile file(KEYSTORE)
                     storePassword KEYSTORE_PASSWORD
