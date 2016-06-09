@@ -10,6 +10,15 @@
       "license": "apache2"
     },
     {
+      "name": "Joda-Time",
+      "version": "2.9.4",
+      "year": "2016",
+      "owner": "Stephen Colebourne",
+      "description": "Joda-Time is the widely used replacement for the Java date and time classes prior to Java SE 8.",
+      "url": "http://www.joda.org/joda-time/",
+      "license": "apache2"
+    },
+    {
       "name": "OkHttp",
       "version": "3.2.0",
       "year": "2016",
@@ -128,7 +137,7 @@
     },
     {
       "name": "Homage",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "year": "2016",
       "owner": "O'Riley ME",
       "description": "Homage is a simple library, designed to make it more enjoyable (or less obnoxious, depending on your viewpoint) to include open source licenses for all your used libraries.",

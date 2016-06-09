@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.utils.DividerItemDecoration;
 import me.oriley.homage.Homage;
 import me.oriley.homage.recyclerview.HomageAdapter;
 import me.oriley.homage.recyclerview.HomageView;
@@ -49,10 +50,12 @@ public final class LicencesFragment extends Fragment {
         Homage homage = new Homage(getActivity(), R.raw.licences);
 
         // Adds a custom license definition to enable matching in your JSON list
-        homage.addLicense("epl", R.string.license_epl_name, R.string.license_epl_url, R.string.license_epl_description);
+        homage.addLicense("epl", R.string.license_epl_name, R.string.license_epl_url,
+                R.string.license_epl_description);
 
         homage.refreshLibraries();
 
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), R.drawable.full_divider));
         return new HomageAdapter(homage, HomageView.ExtraInfoMode.EXPANDABLE, false);
     }
 
