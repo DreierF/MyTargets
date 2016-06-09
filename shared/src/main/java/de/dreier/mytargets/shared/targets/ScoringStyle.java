@@ -91,7 +91,7 @@ public class ScoringStyle {
     public List<SelectableZone> getSelectableZoneList(int arrow) {
         List<SelectableZone> list = new ArrayList<>();
         String last = "";
-        for (int i = 0; i < points.length; i++) {
+        for (int i = 0; i < points[0].length; i++) {
             String zone = zoneToString(i, arrow);
             if (!last.equals(zone)) {
                 list.add(new SelectableZone(i, zone));
