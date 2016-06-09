@@ -62,9 +62,10 @@ public class Circle {
             circleColorP.setColor(0xFF333333);
             can.drawCircle(x + rad * 0.8f * density, y + rad * 0.8f * density, 8 * density,
                     circleColorP);
-            mTextPaint.setTextSize(font_size * density*0.5f);
+            mTextPaint.setTextSize(font_size * density * 0.5f);
             mTextPaint.setColor(0xFFFFFFFF);
-            can.drawText(String.valueOf(number), x + rad * 0.8f * density, y + rad * 1.05f * density,
+            can.drawText(String.valueOf(number), x + rad * 0.8f * density,
+                    y + rad * 1.05f * density,
                     mTextPaint);
         }
     }

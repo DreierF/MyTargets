@@ -3,7 +3,9 @@ package de.dreier.mytargets;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
@@ -13,6 +15,8 @@ import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.utils.Circle;
 import de.dreier.mytargets.shared.views.TargetViewBase;
+
+import static android.graphics.Color.WHITE;
 
 
 public class TargetSelectView extends TargetViewBase {
@@ -38,7 +42,7 @@ public class TargetSelectView extends TargetViewBase {
         init();
     }
 
-    public void setChinHeight(int chinHeight) {
+    void setChinHeight(int chinHeight) {
         this.chinHeight = chinHeight;
     }
 
@@ -57,25 +61,28 @@ public class TargetSelectView extends TargetViewBase {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        int curZone;
-        if (currentArrow < round.arrowsPerPasse) {
-            curZone = passe.shot[currentArrow].zone;
-        } else {
-            curZone = -2;
-        }
-
         // Erase background
-        drawColorPaint.setColor(0xffffffff);
+        drawColorPaint.setColor(WHITE);
         canvas.drawRect(0, 0, contentWidth, contentHeight, drawColorPaint);
 
         // Draw all possible points in a circular
+        int curZone = getCurrentlySelectedZone();
         for (int i = 0; i < selectableZones.size(); i++) {
             Coordinate coordinate = getCircularCoordinates(i);
-            circle.draw(canvas, coordinate.x, coordinate.y, selectableZones.get(i).zone, i == curZone ? 23 : 17, false, currentArrow, -1);
+            circle.draw(canvas, coordinate.x, coordinate.y, selectableZones.get(i).zone,
+                    i == curZone ? 23 : 17, false, currentArrow, -1);
         }
 
         // Draw all points of this passe in the center
         passeDrawer.draw(canvas);
+    }
+
+    private int getCurrentlySelectedZone() {
+        if (passe != null && currentArrow < round.arrowsPerPasse) {
+            return passe.shot[currentArrow].zone;
+        } else {
+            return Shot.NOTHING_SELECTED;
+        }
     }
 
     private Coordinate getCircularCoordinates(int zone) {
@@ -92,7 +99,7 @@ public class TargetSelectView extends TargetViewBase {
 
     @Override
     protected Coordinate initAnimationPositions(int i) {
-        final SelectableZone dummyZone = new SelectableZone(passe.shot[currentArrow].zone, "");
+        final SelectableZone dummyZone = new SelectableZone(passe.shot[i].zone, "");
         return getCircularCoordinates(selectableZones.indexOf(dummyZone));
     }
 
@@ -106,6 +113,19 @@ public class TargetSelectView extends TargetViewBase {
         rect.top = radius / 2;
         rect.bottom = radius;
         passeDrawer.animateToRect(rect);
+    }
+
+    @NonNull
+    @Override
+    protected Rect getSelectableZonePosition(int i) {
+        Coordinate coordinate = getCircularCoordinates(i);
+        final int rad = i == getCurrentlySelectedZone() ? 23 : 17;
+        final Rect rect = new Rect();
+        rect.left = (int) (coordinate.x - rad);
+        rect.top = (int) (coordinate.y - rad);
+        rect.right = (int) (coordinate.x + rad);
+        rect.bottom = (int) (coordinate.y + rad);
+        return rect;
     }
 
     @Override

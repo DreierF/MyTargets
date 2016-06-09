@@ -237,6 +237,7 @@ public class TargetView extends TargetViewBase {
         }
 
         if (showMode != EShowMode.END) {
+            //noinspection Convert2streamapi
             for (Passe p : oldPasses) {
                 if (shouldShowPasse(p)) {
                     targetDrawable.drawArrows(canvas, p, true);
@@ -255,7 +256,8 @@ public class TargetView extends TargetViewBase {
     }
 
     private boolean shouldShowPasse(Passe p) {
-        return p.getId() != passe.getId() && (showMode == EShowMode.TRAINING || p.roundId == passe.roundId);
+        return p.getId() != passe
+                .getId() && (showMode == EShowMode.TRAINING || p.roundId == passe.roundId);
     }
 
     private Midpoint getMidpoint(int spot) {
@@ -513,8 +515,10 @@ public class TargetView extends TargetViewBase {
 
                     float zoomFactor = orgRadius * 2.0f / spotRect.width();
                     radius = (int) (orgRadius * zoomFactor);
-                    midX = (int) (radius + orgMidX + (orgRect.left - spotRect.centerX()) * zoomFactor);
-                    midY = (int) (radius + orgMidY + (orgRect.top - spotRect.centerY()) * zoomFactor);
+                    midX = (int) (radius + orgMidX + (orgRect.left - spotRect
+                            .centerX()) * zoomFactor);
+                    midY = (int) (radius + orgMidY + (orgRect.top - spotRect
+                            .centerY()) * zoomFactor);
                 }
 
                 @Override
@@ -543,7 +547,8 @@ public class TargetView extends TargetViewBase {
                 currentArrow < round.arrowsPerPasse && passe.shot[currentArrow].arrow != -1) {
             super.onArrowChanged(i);
         } else {
-            List<Integer> numbersLeft = Stream.of(arrowNumbers).map(an -> an.number).collect(Collectors.toList());
+            List<Integer> numbersLeft = Stream.of(arrowNumbers).map(an -> an.number)
+                    .collect(Collectors.toList());
             for (Shot s : passe.shot) {
                 numbersLeft.remove((Integer) s.arrow);
             }
@@ -588,30 +593,38 @@ public class TargetView extends TargetViewBase {
      */
     private void drawRightSelectorBar(Canvas canvas) {
         if (zoneSelectionMode || inputModeTransitioning) {
-            int selectableZonesCount = selectableZones.size();
-            for (int i = 0; i < selectableZonesCount; i++) {
+            for (int i = 0; i < selectableZones.size(); i++) {
                 SelectableZone zone = selectableZones.get(i);
 
-                float percent = 1;
-                if (inputModeTransitioning) {
-                    percent = zoneSelectionMode ? inputModeProgress : 1 - inputModeProgress;
-                }
-                int X1 = (int) (contentWidth - 60 * percent * density);
-                int X2 = (int) (X1 + 40 * density);
-                int Y1 = contentHeight * i / selectableZonesCount;
-                int Y2 = contentHeight * (i + 1) / selectableZonesCount;
+                Rect rect = getSelectableZonePosition(i);
 
                 fillPaint.setColor(targetModel.getFillColor(zone.zone));
-                canvas.drawRect(X1, Y1 + density, X2, Y2 - density, fillPaint);
+                canvas.drawRect(rect, fillPaint);
 
                 borderPaint.setColor(targetModel.getStrokeColor(zone.zone));
-                canvas.drawRect(X1, Y1 + density, X2, Y2 - density, borderPaint);
+                canvas.drawRect(rect, borderPaint);
 
                 // For yellow and white background use black font color
                 textPaint.setColor(targetModel.getTextColor(zone.zone));
-                canvas.drawText(zone.text, X1 + (X2 - X1) / 2, Y1 + (Y2 - Y1) / 2 + 10 * density, textPaint);
+                canvas.drawText(zone.text, rect.centerX(), rect.centerY() + 10 * density,
+                        textPaint);
             }
         }
+    }
+
+    @Override
+    @NonNull
+    protected Rect getSelectableZonePosition(int i) {
+        float percent = zoneSelectionMode ? 1 : 0;
+        if (inputModeTransitioning) {
+            percent = zoneSelectionMode ? inputModeProgress : 1 - inputModeProgress;
+        }
+        final Rect rect = new Rect();
+        rect.left = (int) (contentWidth - 60 * percent * density);
+        rect.right = (int) (rect.left + 40 * density);
+        rect.top = (int) (contentHeight * i / selectableZones.size() + density);
+        rect.bottom = (int) (contentHeight * (i + 1) / selectableZones.size() - density);
+        return rect;
     }
 
     private void onLongPressArrow() {
@@ -682,7 +695,7 @@ public class TargetView extends TargetViewBase {
         super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
     }
 
-    class Midpoint {
+    private class Midpoint {
         float count = 0;
         float sumX = 0;
         float sumY = 0;

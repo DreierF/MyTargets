@@ -12,8 +12,8 @@ import de.dreier.mytargets.shared.models.Shot;
 public class ScoringStyle {
 
     public static final String MISS_SYMBOL = "M";
-    public static final String X_SYMBOL = "X";
-    public final boolean showAsX;
+    private static final String X_SYMBOL = "X";
+    private final boolean showAsX;
     public final int[][] points;
 
     protected ScoringStyle(boolean showAsX, int[][] points) {

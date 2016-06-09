@@ -1,11 +1,19 @@
 package de.dreier.mytargets.shared.views;
 
 import android.content.Context;
+import android.graphics.Rect;
+import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import android.support.v4.widget.ExploreByTouchHelper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.accessibility.AccessibilityEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.Coordinate;
@@ -13,9 +21,9 @@ import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
-import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.targets.WAFull;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
@@ -24,6 +32,8 @@ import icepick.Icepick;
 import icepick.State;
 
 public abstract class TargetViewBase extends View implements View.OnTouchListener {
+    private final TargetAccessibilityTouchHelper touchHelper = new TargetAccessibilityTouchHelper(
+            this);
     @State
     protected int currentArrow = 0;
     @State
@@ -46,6 +56,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected Target target;
     protected TargetModelBase targetModel;
     protected List<SelectableZone> selectableZones;
+    private List<VirtualView> virtualViews = new ArrayList<>();
 
     public TargetViewBase(Context context) {
         super(context);
@@ -66,6 +77,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     private void initForDesigner() {
+        ViewCompat.setAccessibilityDelegate(this, touchHelper);
         if (isInEditMode()) {
             round = new RoundTemplate();
             round.arrowsPerPasse = 3;
@@ -79,7 +91,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             passeDrawer.init(this, density, target);
             passeDrawer.setPasse(passe);
             currentArrow = 1;
-            selectableZones = target.getSelectableZoneList(currentArrow);
+            updateSelectableZones();
         }
     }
 
@@ -88,7 +100,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         lastSetArrow = -1;
         passe = new Passe(round.arrowsPerPasse);
         passeDrawer.setPasse(passe);
-        selectableZones = target.getSelectableZoneList(currentArrow);
+        updateSelectableZones();
         animateToZoomSpot();
         invalidate();
     }
@@ -103,8 +115,31 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         targetModel = r.target.getModel();
         targetDrawable = r.target.getDrawable();
         passeDrawer.init(this, density, r.target);
-        selectableZones = target.getSelectableZoneList(currentArrow);
+        updateSelectableZones();
         reset();
+    }
+
+    private void updateSelectableZones() {
+        selectableZones = target.getSelectableZoneList(currentArrow);
+        updateVirtualViews();
+    }
+
+    private void updateVirtualViews() {
+        virtualViews.clear();
+        if(zoneSelectionMode) {
+            for (int i = 0; i < selectableZones.size(); i++) {
+                VirtualView vv = new VirtualView();
+                vv.id = i;
+                vv.shot = false;
+                vv.description = selectableZones.get(i).text;
+                vv.rect = getSelectableZonePosition(i);
+                virtualViews.add(vv);
+            }
+        }
+    }
+
+    public boolean dispatchHoverEvent(MotionEvent event) {
+        return touchHelper.dispatchHoverEvent(event) || super.dispatchHoverEvent(event);
     }
 
     protected abstract Coordinate initAnimationPositions(int i);
@@ -114,6 +149,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         contentWidth = getWidth();
         contentHeight = getHeight();
         calcSizes();
+        updateVirtualViews();
     }
 
     protected abstract void calcSizes();
@@ -121,6 +157,9 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     public void setOnTargetSetListener(OnTargetSetListener listener) {
         setListener = listener;
     }
+
+    @NonNull
+    protected abstract Rect getSelectableZonePosition(int i);
 
     public boolean onTouch(View view, MotionEvent motionEvent) {
         float x = motionEvent.getX();
@@ -164,7 +203,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         animateCircle(i);
 
         if (targetModel.dependsOnArrowIndex()) {
-            selectableZones = target.getSelectableZoneList(currentArrow);
+            updateSelectableZones();
         }
 
         animateFromZoomSpot();
@@ -205,12 +244,92 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     protected abstract boolean selectPreviousShots(MotionEvent motionEvent, float x, float y);
 
-    @Override public Parcelable onSaveInstanceState() {
+    @Override
+    public Parcelable onSaveInstanceState() {
         return Icepick.saveInstanceState(this, super.onSaveInstanceState());
     }
 
-    @Override public void onRestoreInstanceState(Parcelable state) {
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
         super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
         passeDrawer.init(this, density, target);
+    }
+
+    private static class TargetAccessibilityTouchHelper extends ExploreByTouchHelper {
+
+        private final TargetViewBase targetView;
+
+        TargetAccessibilityTouchHelper(TargetViewBase targetView) {
+            super(targetView);
+            this.targetView = targetView;
+        }
+
+        @Override
+        protected int getVirtualViewAt(float x, float y) {
+            final VirtualView vw = findVirtualViewByPosition(x, y);
+            if (vw == null) {
+                return ExploreByTouchHelper.INVALID_ID;
+            }
+            return vw.id;
+        }
+
+        private VirtualView findVirtualViewByPosition(float x, float y) {
+            for (VirtualView virtualView : targetView.virtualViews) {
+                if (virtualView.rect.contains((int) x, (int) y)) {
+                    return virtualView;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void getVisibleVirtualViews(List<Integer> virtualViewIds) {
+            for (int i = 0; i < targetView.virtualViews.size(); i++) {
+                virtualViewIds.add(targetView.virtualViews.get(i).id);
+            }
+        }
+
+        @Override
+        protected void onPopulateEventForVirtualView(int virtualViewId, AccessibilityEvent event) {
+            final VirtualView vw = findVirtualViewById(virtualViewId);
+            if (vw == null) {
+                return;
+            }
+            event.getText().add(vw.description);
+        }
+
+        private VirtualView findVirtualViewById(int virtualViewId) {
+            for (VirtualView virtualView : targetView.virtualViews) {
+                if (virtualView.id == virtualViewId) {
+                    return virtualView;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPopulateNodeForVirtualView(int virtualViewId, AccessibilityNodeInfoCompat node) {
+            final VirtualView vw = findVirtualViewById(virtualViewId);
+            if (vw == null) {
+                return;
+            }
+
+            node.setText(vw.description);
+            node.setContentDescription(vw.description);
+            node.setClassName(targetView.getClass().getName());
+            node.setBoundsInParent(vw.rect);
+        }
+
+        @Override
+        protected boolean onPerformActionForVirtualView(int virtualViewId, int action, Bundle arguments) {
+            return false;
+        }
+    }
+
+    private class VirtualView {
+        public int id;
+        public boolean shot;
+        public Rect rect;
+        public String description;
     }
 }
