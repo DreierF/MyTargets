@@ -17,8 +17,8 @@ import java.util.Random;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.Bow;
-import de.dreier.mytargets.shared.models.Diameter;
-import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.Passe;
@@ -58,10 +58,10 @@ public class SimpleDbTestRule implements TestRule {
                 roundDataSource.deleteAll();
                 bowDataSource.deleteAll();
                 passeDataSource.deleteAll();
-                SettingsManager.setTarget(new Target(WAFull.ID, 0, new Diameter(122, Diameter.CENTIMETER)));
-                SettingsManager.setDistance(new Distance(50, Distance.METER));
+                SettingsManager.setTarget(new Target(WAFull.ID, 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
+                SettingsManager.setDistance(new Dimension(50, Dimension.Unit.METER));
                 SettingsManager.setIndoor(false);
-                SettingsManager.setScoresOnly(false);
+                SettingsManager.setInputMode(false);
                 SettingsManager.setTimerEnabled(true);
                 SettingsManager.setArrowsPerPasse(6);
                 Bow bow = addBow();
@@ -94,7 +94,6 @@ public class SimpleDbTestRule implements TestRule {
         training.arrow = 0;
         training.arrowNumbering = false;
         training.timePerPasse = 0;
-        training.exact = false;
         trainingDataSource.update(training);
 
         Round round1 = new Round();
@@ -133,7 +132,7 @@ public class SimpleDbTestRule implements TestRule {
         bow.brand = "PSE";
         bow.size = "64\"";
         bow.height = "6 3/8\"";
-        bow.type = 1;
+        bow.type = EBowType.COMPOUND_BOW;
         bow.imageFile = null;
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.recurve_bow);
         Bitmap thumbnail = ThumbnailUtils.extractThumbnail(bitmap,
@@ -161,7 +160,6 @@ public class SimpleDbTestRule implements TestRule {
         training.arrow = 0;
         training.arrowNumbering = false;
         training.timePerPasse = 0;
-        training.exact = false;
         trainingDataSource.update(training);
 
         Round round1 = new Round();

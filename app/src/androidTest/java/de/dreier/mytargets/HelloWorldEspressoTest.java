@@ -13,8 +13,7 @@ import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.activities.MainActivity;
 import de.dreier.mytargets.managers.SettingsManager;
-import de.dreier.mytargets.shared.models.Diameter;
-import de.dreier.mytargets.shared.models.Distance;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.WAFull;
 
@@ -38,10 +37,10 @@ public class HelloWorldEspressoTest extends UITestBase {
 
     @Before
     public void setUp() {
-        SettingsManager.setTarget(new Target(WAFull.ID, 0, new Diameter(122, Diameter.CENTIMETER)));
-        SettingsManager.setDistance(new Distance(50, Distance.METER));
+        SettingsManager.setTarget(new Target(WAFull.ID, 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
+        SettingsManager.setDistance(new Dimension(50, Dimension.Unit.METER));
         SettingsManager.setIndoor(false);
-        SettingsManager.setScoresOnly(false);
+        SettingsManager.setInputMode(false);
         SettingsManager.setTimerEnabled(false);
         SettingsManager.setArrowsPerPasse(3);
     }
