@@ -39,3 +39,14 @@ before_install:
 script:
   - ./gradlew clean assemble || ./gradlew clean assemble
 #  - ./gradlew connectedScreengrabDebugAndroidTest
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: b92hv3aPDGvKOO2s5Q9oAQhxvXvJAg8i+OPA8HwMBSxs/WI7KVC0dfoKXVtQRHpZHxRpiIzXb2BEWNMHTGKB+PFLtUDUPTtdGkrjvW34Y3Ejk+52aQRLsBD+NlgtIpAhYrLLpXxioGQaZwgujTKTEf6wckOk+A1u5+9hxlxtplkL0784tiTMWTQ0ri1fmbZPcuXjwBG0FFKl0tyIZcTxXuUKEG7qYI1iuIBxjjYSMchhS00Gcoi430Jym3TkeZLSgYns2a+d0RIADMhd5zCBI0rhQ3n6iuRDPll170rJKITgt4RpnEOo2kcw/DkLGPWZn9nGoyqpzvZkzbQueXL96qSGsMJcJKzVgTfez8nFa4yK5Zj5JqynVt85QbkpCBc+n//rbG7t9Dm9K5FtgDQvyAISISS4Zps9wlQc3GAQpuS24RXVjiXZPS3eEtA9hYCNrFffMuMALSh6xdX1PvRYepWsiJbk37yMbA8/4jgdJR6sYz8jIa+vDiwC3eOEx+0W9hjHCrzPrwbHoMfZa4V8lJ84NKWvdURqGi3zduiAMVGBHxn5M5GIO5E1MVhBHHF5HmPhiWFUk/rWH6z8tgEPRVlBUp59uzBw7zMLjQhkPus4sRPbUmxwU/A7wsUXuHDdyTvGyhWuoQtK0OoBtZCjaM2KHwRlpG3YMrcIkzRIKLA=
+  file: 'app/build/outputs/apk/app-regular-release.apk'
+  on:
+    tags: true
+    repo: DreierF/MyTargets
+    branch: develop
