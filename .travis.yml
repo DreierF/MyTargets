@@ -1,22 +1,18 @@
 language: android
-
 jdk:
-  - oraclejdk8
-
+- oraclejdk8
 android:
   components:
-    - platform-tools
-    - tools
-    - build-tools-23.0.3
-    - android-23
-    - extra-android-support
-    - extra-android-m2repository
-    - extra-google-m2repository
+  - platform-tools
+  - tools
+  - build-tools-23.0.3
+  - android-23
+  - extra-android-support
+  - extra-android-m2repository
+  - extra-google-m2repository
   licenses:
-    - '.+'
-
+  - .+
 sudo: required
-
 env:
   global:
    # install timeout in minutes (2 minutes by default)
@@ -32,13 +28,12 @@ before_script:
 #  - adb shell input keyevent 82 &
 
 before_install:
-  - export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
-  - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
-  - export JAVA_HOME=$JAVA8_HOME
-
+- export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
+- export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
+- export JAVA_HOME=$JAVA8_HOME
 script:
-  - ./gradlew clean assemble || ./gradlew clean assemble
-#  - ./gradlew connectedScreengrabDebugAndroidTest
+  - ./gradlew clean assembleRegularRelease #|| ./gradlew clean assembleRegularRelease
+#  - ./gradlew connectedAndroidTest
 
 deploy:
   provider: releases

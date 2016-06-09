@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.triplet.play'
+apply from: '../jacoco.gradle'
 
 android {
     compileOptions {
@@ -35,20 +36,22 @@ android {
                 }
             }
         }
+    }
 
-        buildTypes {
-            debug {
-                signingConfig signingConfigs.release
-                minifyEnabled false
-            }
-            release {
-                signingConfig signingConfigs.release
-                shrinkResources true
-                minifyEnabled true
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
-            }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            testCoverageEnabled = true
+        }
+        release {
+            signingConfig signingConfigs.release
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
         }
     }
+
     productFlavors {
         regular {}
         screengrab {}
@@ -80,6 +83,7 @@ if (new File("gradle.properties").exists()) {
         generateLocalizedScreenshots.dependsOn assembleScreengrabDebugAndroidTest
         generateLocalizedScreenshots.dependsOn assembleScreengrabDebug
     }
+
     play {
         jsonFile = file(PLAY_STORE_JSON)
         uploadImages = true

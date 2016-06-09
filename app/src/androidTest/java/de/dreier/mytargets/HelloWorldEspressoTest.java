@@ -17,6 +17,7 @@ import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.WAFull;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -27,6 +28,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVi
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.OrientationChangeAction.orientationLandscape;
+import static de.dreier.mytargets.PermissionGranter.allowPermissionsIfNeeded;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -56,6 +58,7 @@ public class HelloWorldEspressoTest extends UITestBase {
         onView(withId(R.id.fab)).perform(click()).check(matches(isDisplayed()));
         SystemClock.sleep(500);
         onView(withId(R.id.fab1Label)).perform(click());
+        allowPermissionsIfNeeded(mActivityRule.getActivity(), ACCESS_FINE_LOCATION);
         onView(withId(R.id.action_save)).perform(click());
         onView(isRoot()).perform(orientationLandscape(mActivityRule));
         navigateUp();

@@ -79,7 +79,12 @@ public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
         return true;
     }
 
-    public void setItemId(long standardRound) {
-        setItem(new StandardRoundDataSource().get(standardRound));
+    public void setItemId(long standardRoundId) {
+        StandardRound standardRound = new StandardRoundDataSource().get(standardRoundId);
+        // If the round has been removed, choose default one
+        if (standardRound == null) {
+            standardRound = new StandardRoundDataSource().get(32);
+        }
+        setItem(standardRound);
     }
 }
