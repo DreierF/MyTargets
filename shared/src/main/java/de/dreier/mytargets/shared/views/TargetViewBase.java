@@ -16,6 +16,7 @@ import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
 import de.dreier.mytargets.shared.targets.SelectableZone;
+import de.dreier.mytargets.shared.targets.WAFull;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
@@ -69,7 +70,16 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             round = new RoundTemplate();
             round.arrowsPerPasse = 3;
             passe = new Passe(3);
+            passe.shot[0].zone = 0;
+            passe.shot[0].x = 0.01f;
+            passe.shot[0].y = 0.05f;
+            target = new Target(WAFull.ID, 0);
+            targetModel = target.getModel();
+            targetDrawable = target.getDrawable();
+            passeDrawer.init(this, density, target);
             passeDrawer.setPasse(passe);
+            currentArrow = 1;
+            selectableZones = target.getSelectableZoneList(currentArrow);
         }
     }
 

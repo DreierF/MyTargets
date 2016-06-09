@@ -76,7 +76,7 @@ public class PasseDrawer {
             mRadius--;
         } while (neededRows > maxRows);
         mRadius -= MIN_PADDING;
-        int numRows = neededRows;
+        int numRows = Math.max(neededRows, 1);
         mShotsPerRow = (int) Math.ceil(mPPP / numRows);
         mRowHeight = rect.height() / numRows;
         mColumnWidth = rect.width() / mShotsPerRow;

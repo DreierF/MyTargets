@@ -163,7 +163,9 @@ public class TargetView extends TargetViewBase {
         borderPaint.setAntiAlias(true);
         borderPaint.setStyle(Paint.Style.STROKE);
 
-        showMode = SettingsManager.getShowMode();
+        if (!isInEditMode()) {
+            showMode = SettingsManager.getShowMode();
+        }
     }
 
     @Override
