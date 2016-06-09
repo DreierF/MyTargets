@@ -49,7 +49,7 @@ android {
 }
 
 dependencies {
-    compile 'com.google.android.support:wearable:1.1.0'
+    compile 'com.google.android.support:wearable:1.4.0'
     compile "com.google.android.gms:play-services-wearable:$playServiceVersion"
 
     compile "org.parceler:parceler-api:$parcelerVersion"
