@@ -33,6 +33,10 @@ before_install:
 - export JAVA_HOME=$JAVA8_HOME
 script:
   - ./gradlew clean assembleRegularRelease connectedRegularDebugAndroidTest
+after_success:
+  - curl https://www.jpm4j.org/install/script | sh
+  - jpm install com.codacy:codacy-coverage-reporter:assembly
+  - codacy-coverage-reporter -l Java -r app/build/reports/coverage/regular/debug/report.xml 
 
 deploy:
   provider: releases
