@@ -35,7 +35,8 @@ public class StatisticsDataSource extends DataSourceBase {
         res.moveToFirst();
 
         int oldPasse = -1;
-        int actCounter = 0, maxCounter = 0;
+        int actCounter = 0;
+        int maxCounter = 0;
         int passeIndex = 0;
         ArrayList<Entry> history = new ArrayList<>();
         for (int i = 0; i < res.getCount(); i++) {

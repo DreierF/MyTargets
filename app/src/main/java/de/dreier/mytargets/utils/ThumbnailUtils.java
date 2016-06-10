@@ -52,19 +52,13 @@ public class ThumbnailUtils {
 
     /**
      * Constant used to indicate the dimension of mini thumbnail.
-     *
-     * @hide Only used by media framework and media provider internally.
      */
     private static final int TARGET_SIZE_MINI_THUMBNAIL = 320;
 
     /**
      * Constant used to indicate the dimension of micro thumbnail.
-     *
-     * @hide Only used by media framework and media provider internally.
      */
     public static final int TARGET_SIZE_MICRO_THUMBNAIL = 96;
-
-    public static final int FILE_TYPE_PNG = 33;
 
     /**
      * This method first examines if the thumbnail embedded in EXIF is bigger than our target
@@ -77,7 +71,6 @@ public class ThumbnailUtils {
      * @param filePath the path of image file
      * @param kind     could be MINI_KIND or MICRO_KIND
      * @return Bitmap, or null on failures
-     * @hide This method is only used by media framework and media provider internally.
      */
     public static Bitmap createImageThumbnail(String filePath, int kind) {
         boolean wantMini = (kind == Images.Thumbnails.MINI_KIND);
@@ -319,10 +312,8 @@ public class ThumbnailUtils {
                 targetWidth,
                 targetHeight);
 
-        if (b2 != b1) {
-            if (recycle || b1 != source) {
-                b1.recycle();
-            }
+        if (b2 != b1 && (recycle || b1 != source)) {
+            b1.recycle();
         }
 
         return b2;
@@ -337,10 +328,10 @@ public class ThumbnailUtils {
      * The width/height of the sized bitmap may be different from mThumbnailWidth/mThumbnailHeight.
      */
     private static class SizedThumbnailBitmap {
-        public byte[] mThumbnailData;
-        public Bitmap mBitmap;
-        public int mThumbnailWidth;
-        public int mThumbnailHeight;
+        byte[] mThumbnailData;
+        Bitmap mBitmap;
+        int mThumbnailWidth;
+        int mThumbnailHeight;
     }
 
     /**
@@ -364,7 +355,7 @@ public class ThumbnailUtils {
         BitmapFactory.Options fullOptions = new BitmapFactory.Options();
         BitmapFactory.Options exifOptions = new BitmapFactory.Options();
         int exifThumbWidth = 0;
-        int fullThumbWidth = 0;
+        int fullThumbWidth;
 
         // Compute exifThumbWidth.
         if (thumbData != null) {

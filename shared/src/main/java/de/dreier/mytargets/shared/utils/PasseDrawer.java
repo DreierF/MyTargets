@@ -65,7 +65,8 @@ public class PasseDrawer {
             return;
         }
         mRadius = MAX_CIRCLE_SIZE + MIN_PADDING;
-        int neededRows, maxRows;
+        int neededRows;
+        int maxRows;
         do {
             neededRows = (int) Math
                     .ceil((mRadius * 2 * mDensity * mPPP) / rect.width());

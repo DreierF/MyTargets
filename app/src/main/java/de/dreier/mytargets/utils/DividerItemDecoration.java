@@ -92,7 +92,11 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         }
 
         // Initialization needed to avoid compiler warning
-        int left = 0, right = 0, top = 0, bottom = 0, size;
+        int left = 0;
+        int right = 0;
+        int top = 0;
+        int bottom = 0;
+        int size;
         int orientation = mOrientation != -1 ? mOrientation : getOrientation(parent);
         int childCount = parent.getChildCount();
 

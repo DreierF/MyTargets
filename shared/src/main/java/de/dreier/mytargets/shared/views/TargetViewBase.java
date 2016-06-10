@@ -34,6 +34,7 @@ import icepick.State;
 public abstract class TargetViewBase extends View implements View.OnTouchListener {
     private final TargetAccessibilityTouchHelper touchHelper = new TargetAccessibilityTouchHelper(
             this);
+    private final List<VirtualView> virtualViews = new ArrayList<>();
     @State
     protected int currentArrow = 0;
     @State
@@ -53,10 +54,9 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected float outFromX;
     protected float outFromY;
     protected TargetDrawable targetDrawable;
-    private Target target;
     protected TargetModelBase targetModel;
     protected List<SelectableZone> selectableZones;
-    private final List<VirtualView> virtualViews = new ArrayList<>();
+    private Target target;
 
     public TargetViewBase(Context context) {
         super(context);
@@ -126,7 +126,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     private void updateVirtualViews() {
         virtualViews.clear();
-        if(zoneSelectionMode) {
+        if (zoneSelectionMode) {
             for (int i = 0; i < selectableZones.size(); i++) {
                 VirtualView vv = new VirtualView();
                 vv.id = i;
@@ -228,9 +228,11 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     protected void animateFromZoomSpot() {
+        // Extension point for sub-classes making use of spots
     }
 
     protected void animateToZoomSpot() {
+        // Extension point for sub-classes making use of spots
     }
 
     /**

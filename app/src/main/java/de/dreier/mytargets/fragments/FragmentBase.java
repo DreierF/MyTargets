@@ -47,34 +47,6 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
     static final String ITEM_ID = "id";
 
     /**
-     * Used for communication with FragmentBase's parent activity
-     */
-    public interface ContentListener {
-
-        /**
-         * Called whenever the fragment's content changes.
-         * This callback should be used to show a label for the
-         * main floating action button if the content is empty.
-         *
-         * @param empty     Indicates if the fragment is currently empty
-         * @param stringRes String resource id which describes the FAB action
-         */
-        void onContentChanged(boolean empty, int stringRes);
-    }
-
-    /**
-     * Used for communicating item selection
-     */
-    public interface OnItemSelectedListener {
-        /**
-         * Called when a item has been selected.
-         *
-         * @param item Item that has been selected
-         */
-        void onItemSelected(Parcelable item);
-    }
-
-    /**
      * Resource used to set title when items are selected
      */
     @PluralsRes
@@ -187,5 +159,33 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
             }
         }
         ViewCompat.setTransitionName(textViewTitle, "title");
+    }
+
+    /**
+     * Used for communication with FragmentBase's parent activity
+     */
+    public interface ContentListener {
+
+        /**
+         * Called whenever the fragment's content changes.
+         * This callback should be used to show a label for the
+         * main floating action button if the content is empty.
+         *
+         * @param empty     Indicates if the fragment is currently empty
+         * @param stringRes String resource id which describes the FAB action
+         */
+        void onContentChanged(boolean empty, int stringRes);
+    }
+
+    /**
+     * Used for communicating item selection
+     */
+    public interface OnItemSelectedListener {
+        /**
+         * Called when a item has been selected.
+         *
+         * @param item Item that has been selected
+         */
+        void onItemSelected(Parcelable item);
     }
 }

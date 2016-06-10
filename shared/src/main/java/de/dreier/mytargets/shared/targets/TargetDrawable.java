@@ -335,7 +335,8 @@ public class TargetDrawable extends Drawable {
     }
 
     private int getDiff(int coordinate) {
-        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
         for (Coordinate facePosition : model.facePositions) {
             final float v = coordinate == 0 ? facePosition.x : facePosition.y;
             if (v < min) {

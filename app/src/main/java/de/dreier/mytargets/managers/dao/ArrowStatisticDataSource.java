@@ -32,7 +32,8 @@ public class ArrowStatisticDataSource extends DataSourceBase {
                                 "AND p.exact=1 " +
                                 "ORDER BY t.arrow, s.arrow", null);
         if (res.moveToFirst()) {
-            long lastArrowId = 0, lastArrowNumber = 0;
+            long lastArrowId = 0;
+            long lastArrowNumber = 0;
             ArrowStatistic statistic = null;
             do {
                 long arrowId = res.getLong(0);
@@ -64,5 +65,4 @@ public class ArrowStatisticDataSource extends DataSourceBase {
         res.close();
         return list;
     }
-
 }

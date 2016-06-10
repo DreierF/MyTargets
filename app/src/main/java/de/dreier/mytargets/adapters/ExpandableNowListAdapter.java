@@ -24,7 +24,6 @@ public abstract class ExpandableNowListAdapter<HEADER extends IIdProvider, CHILD
         extends RecyclerView.Adapter<ItemBindingHolder<IIdProvider>> {
 
     private static final int ITEM_TYPE = 2;
-    public static final int ITEM_TYPE_2 = 3;
     private static final int HEADER_TYPE = 1;
     private final LongSparseArray<List<CHILD>> childMap = new LongSparseArray<>();
     private final ArrayList<Boolean> isOpen = new ArrayList<>();
@@ -103,7 +102,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IIdProvider, CHILD
         return items;
     }
 
-    public boolean isHeader(int position) {
+    private boolean isHeader(int position) {
         return position == -1 || dataList.get(position).getType() == ItemType.HEADER;
     }
 
