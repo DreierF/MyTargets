@@ -39,7 +39,7 @@ after_success:
   - jpm install com.codacy:codacy-coverage-reporter:assembly
   - codacy-coverage-reporter -l Java -r app/build/reports/coverage/regular/debug/report.xml 
 after_failure:
-  - '[ -f ~/.dropbox_uploader ] && ./dropbox_uploader.sh upload /home/travis/build/DreierF/MyTargets/app/build/reports/androidTests/connected/flavors/REGULAR/ /$TRAVIS_JOB_NUMBER/Reports'
+  - '[ -f ~/.dropbox_uploader ] && ./dropbox_uploader.sh upload app/build/reports/androidTests/connected/flavors/REGULAR/ /$TRAVIS_JOB_NUMBER/Reports'
 deploy:
   provider: releases
   skip_cleanup: true
