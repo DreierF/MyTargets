@@ -19,10 +19,6 @@ import de.dreier.mytargets.shared.models.Target;
 
 public class StatisticsDataSource extends DataSourceBase {
 
-    public StatisticsDataSource() {
-        super();
-    }
-
     public LineData getAllTrainings() {
         Cursor res = database
                 .rawQuery("SELECT s.points, r.target, s.passe, r.scoring_style, s.arrow_index  " +

@@ -70,9 +70,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
     private final boolean[] equals = new boolean[2];
     private long mTraining;
     private ArrayList<Round> rounds;
-
     private FABMenu fabMenu;
-
     private Training training;
     private RoundDataSource roundDataSource;
     private PasseDataSource passeDataSource;
@@ -204,11 +202,6 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
             case R.id.action_share:
                 showShareDialog();
                 return true;
-            /*case R.id.action_view_mode:
-                mTargetViewMode = !mTargetViewMode;
-                setList(rounds, db.getPasses(mTraining), true,
-                        new PasseAdapter());
-                return true;*/
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -253,7 +246,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         List<Pair<String, Integer>> scoreCount = passeDataSource
                 .getTopScoreDistribution(mTraining);
         String scoreText = "";
-        for (Pair<String, Integer> score : scoreCount.subList(0,3)) {
+        for (Pair<String, Integer> score : scoreCount.subList(0, 3)) {
             scoreText += getString(R.string.d_times_s, score.getSecond(), score.getFirst());
         }
         int maxPoints = 0;
@@ -272,15 +265,20 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
 
     @Override
     public void onSelected(Passe item) {
+        openInputActivityForPasse(item);
+    }
+
+    @Override
+    protected void onEdit(Passe item) {
+        openInputActivityForPasse(item);
+    }
+
+    private void openInputActivityForPasse(Passe item) {
         Intent i = new Intent(getContext(), InputActivity.class);
         i.putExtra(InputActivity.ROUND_ID, item.roundId);
         i.putExtra(InputActivity.PASSE_IND, item.index);
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
-    }
-
-    @Override
-    protected void onEdit(Passe item) {
     }
 
     @Override
@@ -333,7 +331,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         startActivity(i);
     }
 
-    public class PasseAdapter extends ExpandableNowListAdapter<Round, Passe> {
+    private class PasseAdapter extends ExpandableNowListAdapter<Round, Passe> {
 
         @Override
         protected HeaderViewHolder getTopLevelViewHolder(ViewGroup parent) {
@@ -348,18 +346,13 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
                     .inflate(R.layout.item_end, parent, false);
             return new PasseViewHolder(itemView);
         }
-
-        @Override
-        public int getMaxSpan() {
-            return 1;
-        }
     }
 
     private class PasseViewHolder extends SelectableViewHolder<Passe> {
         private final PasseView mShots;
         private final TextView mSubtitle;
 
-        public PasseViewHolder(View itemView) {
+        PasseViewHolder(View itemView) {
             super(itemView, mSelector, TrainingFragment.this);
             mShots = (PasseView) itemView.findViewById(R.id.shoots);
             mSubtitle = (TextView) itemView.findViewById(R.id.passe);
@@ -378,7 +371,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         private final TextView mTitle;
         private final TextView mSubtitle;
 
-        public HeaderViewHolder(View itemView) {
+        HeaderViewHolder(View itemView) {
             super(itemView, R.id.expand_collapse);
             itemView.setLongClickable(true);
             itemView.setOnLongClickListener(this);
@@ -389,7 +382,8 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         @Override
         public void bindCursor() {
             Context context = mTitle.getContext();
-            mTitle.setText(String.format(Locale.ENGLISH, "%s %d", context.getString(R.string.round), rounds.indexOf(mItem) + 1));
+            mTitle.setText(String.format(Locale.ENGLISH, "%s %d", context.getString(R.string.round),
+                    rounds.indexOf(mItem) + 1));
 
             String infoText = HTMLUtils.getRoundInfo(mItem, equals);
             mSubtitle.setText(Html.fromHtml(infoText));

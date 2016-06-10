@@ -17,15 +17,18 @@ public class ScoreboardConfiguration {
     }
 
     public static ScoreboardConfiguration fromDisplaySettings(Context context) {
-        return getFromSettingsForPrefix(context, "scoreboard_display_", true, true, true, true, true, false);
+        return getFromSettingsForPrefix(context, "scoreboard_display_", true, true, true, true,
+                true, false);
     }
 
     public static ScoreboardConfiguration fromPrintSettings(Context context) {
-        return getFromSettingsForPrefix(context, "scoreboard_print_", true, true, true, true, false, true);
+        return getFromSettingsForPrefix(context, "scoreboard_print_", true, true, true, true, false,
+                true);
     }
 
     public static ScoreboardConfiguration fromShareSettings(Context context) {
-        return getFromSettingsForPrefix(context, "scoreboard_share_", false, false, true, false, false, false);
+        return getFromSettingsForPrefix(context, "scoreboard_share_", false, false, true, false,
+                false, false);
     }
 
     private static ScoreboardConfiguration getFromSettingsForPrefix(Context context, String prefix,
@@ -38,7 +41,8 @@ public class ScoreboardConfiguration {
         config.showProperties = prefs.getBoolean(prefix + "properties", properties);
         config.showTable = prefs.getBoolean(prefix + "table", table);
         config.showComments = prefs.getBoolean(prefix + "comments", comments);
-        config.showDispersionPattern = prefs.getBoolean(prefix + "dispersion_pattern", dispersionPattern);
+        config.showDispersionPattern = prefs
+                .getBoolean(prefix + "dispersion_pattern", dispersionPattern);
         config.showPointsColored = prefs.getBoolean(prefix + "points_colored", dispersionPattern);
         config.showSignature = prefs.getBoolean(prefix + "signature", signature);
         return config;

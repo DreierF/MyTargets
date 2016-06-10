@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="@layout/fragment_main">
+       xmlns:app="http://schemas.android.com/apk/res-auto"
+       xmlns:tools="http://schemas.android.com/tools"
+       tools:showIn="@layout/fragment_main">
 
     <RelativeLayout
         android:id="@+id/new_layout"
@@ -21,7 +21,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            app:srcCompat="@drawable/arrow" />
+            app:srcCompat="@drawable/arrow"/>
 
         <TextView
             android:id="@+id/new_text"
@@ -31,7 +31,7 @@
             android:layout_centerInParent="true"
             android:paddingBottom="16dp"
             android:textColor="@color/new_text_color"
-            android:textSize="25sp" />
+            android:textSize="25sp"/>
 
     </RelativeLayout>
 
@@ -51,7 +51,7 @@
             android:background="@drawable/fab_label_background"
             android:text="@string/training_with_standard_round"
             android:textColor="@color/white"
-            android:visibility="invisible" />
+            android:visibility="invisible"/>
 
     </FrameLayout>
 
@@ -67,7 +67,7 @@
         android:visibility="invisible"
         app:backgroundTint="#2196F3"
         app:elevation="6dp"
-        app:pressedTranslationZ="12dp" />
+        app:pressedTranslationZ="12dp"/>
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
             android:background="@drawable/fab_label_background"
             android:text="@string/free_training"
             android:textColor="@color/white"
-            android:visibility="invisible" />
+            android:visibility="invisible"/>
 
     </FrameLayout>
 
@@ -101,7 +101,7 @@
         android:visibility="invisible"
         app:backgroundTint="#4CAF50"
         app:elevation="6dp"
-        app:pressedTranslationZ="12dp" />
+        app:pressedTranslationZ="12dp"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -110,5 +110,5 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         app:srcCompat="@drawable/ic_add_white_24dp"
-        app:borderWidth="0dp" />
+        app:borderWidth="0dp"/>
 </merge>

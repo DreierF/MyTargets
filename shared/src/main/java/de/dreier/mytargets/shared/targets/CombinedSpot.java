@@ -16,7 +16,7 @@ import java.util.List;
 public class CombinedSpot extends Drawable {
 
     private final List<TargetDrawable> faces;
-    private Rect faceRect;
+    private final Rect faceRect;
 
     public CombinedSpot(List<TargetDrawable> faces) {
         this.faces = faces;

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="de.dreier.mytargets">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="de.dreier.mytargets">
 
-    <uses-sdk android:targetSdkVersion="22" android:minSdkVersion="10"
+    <uses-sdk
+        android:targetSdkVersion="22"
+        android:minSdkVersion="10"
         tools:overrideLibrary="android.support.test.uiautomator.v18"/>
 
 </manifest>

@@ -113,7 +113,8 @@ public class BackupUtils {
         String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");
-        String fileName = baseDir + "/" + FOLDER_NAME + "/backup_" + format.format(new Date()) + ".zip";
+        String fileName = baseDir + "/" + FOLDER_NAME + "/backup_" + format
+                .format(new Date()) + ".zip";
         File f = new File(baseDir + "/" + FOLDER_NAME);
         f.mkdir();
         if (!f.exists() || !f.isDirectory()) {

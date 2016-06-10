@@ -1,5 +1,6 @@
-<manifest package="de.dreier.mytargets.shared">
+<manifest
+    package="de.dreier.mytargets.shared">
 
-    <application />
+    <application/>
 
 </manifest>

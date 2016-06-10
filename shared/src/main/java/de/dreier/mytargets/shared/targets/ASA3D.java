@@ -17,7 +17,7 @@ import static de.dreier.mytargets.shared.utils.Color.GRAY;
 import static de.dreier.mytargets.shared.utils.Color.LIGHT_GRAY;
 import static de.dreier.mytargets.shared.utils.Color.TURBO_YELLOW;
 
-public class ASA3D extends Target3DBase {
+class ASA3D extends Target3DBase {
 
     public ASA3D() {
         super(15, R.string.asa_3d);

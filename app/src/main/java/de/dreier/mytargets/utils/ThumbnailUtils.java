@@ -52,30 +52,31 @@ public class ThumbnailUtils {
 
     /**
      * Constant used to indicate the dimension of mini thumbnail.
+     *
      * @hide Only used by media framework and media provider internally.
      */
-    public static final int TARGET_SIZE_MINI_THUMBNAIL = 320;
+    private static final int TARGET_SIZE_MINI_THUMBNAIL = 320;
 
     /**
      * Constant used to indicate the dimension of micro thumbnail.
+     *
      * @hide Only used by media framework and media provider internally.
      */
     public static final int TARGET_SIZE_MICRO_THUMBNAIL = 96;
 
-    public static final int FILE_TYPE_PNG     = 33;
+    public static final int FILE_TYPE_PNG = 33;
 
     /**
      * This method first examines if the thumbnail embedded in EXIF is bigger than our target
      * size. If not, then it'll create a thumbnail from original image. Due to efficiency
      * consideration, we want to let MediaThumbRequest avoid calling this method twice for
      * both kinds, so it only requests for MICRO_KIND and set saveImage to true.
-     *
+     * <p>
      * This method always returns a "square thumbnail" for MICRO_KIND thumbnail.
      *
      * @param filePath the path of image file
-     * @param kind could be MINI_KIND or MICRO_KIND
+     * @param kind     could be MINI_KIND or MICRO_KIND
      * @return Bitmap, or null on failures
-     *
      * @hide This method is only used by media framework and media provider internally.
      */
     public static Bitmap createImageThumbnail(String filePath, int kind) {
@@ -142,9 +143,9 @@ public class ThumbnailUtils {
     /**
      * Creates a centered bitmap of the desired size.
      *
-     * @param source original bitmap source
-     * @param width targeted width
-     * @param height targeted height
+     * @param source  original bitmap source
+     * @param width   targeted width
+     * @param height  targeted height
      * @param options options used during thumbnail extraction
      */
     public static Bitmap extractThumbnail(
@@ -185,12 +186,12 @@ public class ThumbnailUtils {
      * request is 3. So we round up the sample size to avoid OOM.
      */
     private static int computeSampleSize(BitmapFactory.Options options,
-            int minSideLength, int maxNumOfPixels) {
+                                         int minSideLength, int maxNumOfPixels) {
         int initialSize = computeInitialSampleSize(options, minSideLength,
                 maxNumOfPixels);
 
         int roundedSize;
-        if (initialSize <= 8 ) {
+        if (initialSize <= 8) {
             roundedSize = 1;
             while (roundedSize < initialSize) {
                 roundedSize <<= 1;
@@ -203,7 +204,7 @@ public class ThumbnailUtils {
     }
 
     private static int computeInitialSampleSize(BitmapFactory.Options options,
-            int minSideLength, int maxNumOfPixels) {
+                                                int minSideLength, int maxNumOfPixels) {
         double w = options.outWidth;
         double h = options.outHeight;
 
@@ -211,7 +212,7 @@ public class ThumbnailUtils {
                 (int) Math.ceil(Math.sqrt(w * h / maxNumOfPixels));
         int upperBound = (minSideLength == UNCONSTRAINED) ? 128 :
                 (int) Math.min(Math.floor(w / minSideLength),
-                Math.floor(h / minSideLength));
+                        Math.floor(h / minSideLength));
 
         if (upperBound < lowerBound) {
             // return the larger one when there is no overlapping zone.
@@ -232,10 +233,10 @@ public class ThumbnailUtils {
      * Transform source Bitmap to targeted width and height.
      */
     private static Bitmap transform(Matrix scaler,
-            Bitmap source,
-            int targetWidth,
-            int targetHeight,
-            int options) {
+                                    Bitmap source,
+                                    int targetWidth,
+                                    int targetHeight,
+                                    int options) {
         boolean scaleUp = (options & OPTIONS_SCALE_UP) != 0;
         boolean recycle = (options & OPTIONS_RECYCLE_INPUT) != 0;
 
@@ -249,17 +250,17 @@ public class ThumbnailUtils {
             * left/right (or both) black.
             */
             Bitmap b2 = Bitmap.createBitmap(targetWidth, targetHeight,
-            Bitmap.Config.ARGB_8888);
+                    Bitmap.Config.ARGB_8888);
             Canvas c = new Canvas(b2);
 
             int deltaXHalf = Math.max(0, deltaX / 2);
             int deltaYHalf = Math.max(0, deltaY / 2);
             Rect src = new Rect(
-            deltaXHalf,
-            deltaYHalf,
-            deltaXHalf + Math.min(targetWidth, source.getWidth()),
-            deltaYHalf + Math.min(targetHeight, source.getHeight()));
-            int dstX = (targetWidth  - src.width())  / 2;
+                    deltaXHalf,
+                    deltaYHalf,
+                    deltaXHalf + Math.min(targetWidth, source.getWidth()),
+                    deltaYHalf + Math.min(targetHeight, source.getHeight()));
+            int dstX = (targetWidth - src.width()) / 2;
             int dstY = (targetHeight - src.height()) / 2;
             Rect dst = new Rect(
                     dstX,
@@ -277,7 +278,7 @@ public class ThumbnailUtils {
         float bitmapHeightF = source.getHeight();
 
         float bitmapAspect = bitmapWidthF / bitmapHeightF;
-        float viewAspect   = (float) targetWidth / targetHeight;
+        float viewAspect = (float) targetWidth / targetHeight;
 
         if (bitmapAspect > viewAspect) {
             float scale = targetHeight / bitmapHeightF;
@@ -299,7 +300,7 @@ public class ThumbnailUtils {
         if (scaler != null) {
             // this is used for minithumb and crop, so we want to filter here.
             b1 = Bitmap.createBitmap(source, 0, 0,
-            source.getWidth(), source.getHeight(), scaler, true);
+                    source.getWidth(), source.getHeight(), scaler, true);
         } else {
             b1 = source;
         }
@@ -332,7 +333,7 @@ public class ThumbnailUtils {
      * the thumbnail in exif or the full image.
      * mThumbnailData, mThumbnailWidth and mThumbnailHeight are set together only if mThumbnail
      * is not null.
-     *
+     * <p>
      * The width/height of the sized bitmap may be different from mThumbnailWidth/mThumbnailHeight.
      */
     private static class SizedThumbnailBitmap {
@@ -348,11 +349,11 @@ public class ThumbnailUtils {
      * which contains a downsampled bitmap and the thumbnail data in EXIF if exists.
      */
     private static void createThumbnailFromEXIF(String filePath, int targetSize,
-            int maxPixels, SizedThumbnailBitmap sizedThumbBitmap) {
+                                                int maxPixels, SizedThumbnailBitmap sizedThumbBitmap) {
         if (filePath == null) return;
 
         ExifInterface exif;
-        byte [] thumbData = null;
+        byte[] thumbData = null;
         try {
             exif = new ExifInterface(filePath);
             thumbData = exif.getThumbnail();

@@ -7,11 +7,11 @@
 
 package de.dreier.mytargets.adapters;
 
+import android.support.v4.util.LongSparseArray;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import de.dreier.mytargets.interfaces.PartitionDelegate;
@@ -23,10 +23,10 @@ import de.dreier.mytargets.utils.SelectableViewHolder;
 public abstract class ExpandableNowListAdapter<HEADER extends IIdProvider, CHILD extends IIdProvider>
         extends RecyclerView.Adapter<ItemBindingHolder<IIdProvider>> {
 
-    public static final int ITEM_TYPE = 2;
+    private static final int ITEM_TYPE = 2;
     public static final int ITEM_TYPE_2 = 3;
     private static final int HEADER_TYPE = 1;
-    private final HashMap<Long, List<CHILD>> childMap = new HashMap<>();
+    private final LongSparseArray<List<CHILD>> childMap = new LongSparseArray<>();
     private final ArrayList<Boolean> isOpen = new ArrayList<>();
     private final List<DataHolder> dataList = new ArrayList<>();
     private List<HEADER> listHeaders = new ArrayList<>();
@@ -193,10 +193,6 @@ public abstract class ExpandableNowListAdapter<HEADER extends IIdProvider, CHILD
         }
     }
 
-    public int getMaxSpan() {
-        return 1;
-    }
-
     public List<Long> getExpandedIds() {
         List<Long> ids = new ArrayList<>();
         for (int i = 0; i < isOpen.size(); i++) {
@@ -217,7 +213,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IIdProvider, CHILD
         }
     }
 
-    protected enum ItemType {
+    private enum ItemType {
         HEADER, ITEM
     }
 
@@ -225,7 +221,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IIdProvider, CHILD
         private final IIdProvider data;
         private final ItemType type;
 
-        public DataHolder(IIdProvider item, ItemType type) {
+        DataHolder(IIdProvider item, ItemType type) {
             this.data = item;
             this.type = type;
         }

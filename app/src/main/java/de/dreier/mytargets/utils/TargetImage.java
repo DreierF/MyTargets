@@ -55,7 +55,8 @@ public class TargetImage {
             target.setBounds(bounds.get(i));
             target.draw(canvas);
             target.drawArrows(canvas, oldOnes, false);
-            String roundTitle = ApplicationInstance.getContext().getResources().getQuantityString(R.plurals.rounds, i + 1, i + 1);
+            String roundTitle = ApplicationInstance.getContext().getResources()
+                    .getQuantityString(R.plurals.rounds, i + 1, i + 1);
             Rect textBounds = new Rect();
             textPaint.getTextBounds(roundTitle, 0, roundTitle.length(), textBounds);
             int textX = bounds.get(i).centerX() - textBounds.width() / 2;

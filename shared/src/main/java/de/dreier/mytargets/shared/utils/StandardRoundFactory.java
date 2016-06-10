@@ -708,7 +708,7 @@ public class StandardRoundFactory {
      * @param roundDetails   Per round distance, targetSize and number of passes are expected
      * @return The standard round with the specified properties
      */
-    public static StandardRound build(Context context, int institution, int name, boolean indoor, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, int target, int scoringStyle, int arrowsPerPasse, int... roundDetails) {
+    private static StandardRound build(Context context, int institution, int name, boolean indoor, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, int target, int scoringStyle, int arrowsPerPasse, int... roundDetails) {
         StandardRound standardRound = new StandardRound();
         standardRound.name = context.getString(name);
         standardRound.indoor = indoor;
@@ -724,7 +724,7 @@ public class StandardRoundFactory {
         return standardRound;
     }
 
-    public static StandardRound build(Context context, int institution, int name, boolean indoor, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, int target, int scoringStyle, Target target2, int arrowsPerPasse, int... roundDetails) {
+    private static StandardRound build(Context context, int institution, int name, boolean indoor, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, int target, int scoringStyle, Target target2, int arrowsPerPasse, int... roundDetails) {
         StandardRound standardRound = build(context, institution, name, indoor, distanceUnit,
                 targetUnit, target, scoringStyle, arrowsPerPasse, roundDetails);
         RoundTemplate round2 = standardRound.getRounds().get(1);

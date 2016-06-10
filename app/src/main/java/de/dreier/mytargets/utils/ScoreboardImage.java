@@ -22,7 +22,6 @@ import java.util.concurrent.CountDownLatch;
 import de.dreier.mytargets.shared.utils.BitmapUtils;
 
 public class ScoreboardImage {
-    private Bitmap b;
 
     public void generateBitmap(final Activity context, final long mRound, final File f) {
 
@@ -49,7 +48,7 @@ public class ScoreboardImage {
             webView.setPictureListener((view, picture) -> {
                 picture = webView.capturePicture();
 
-                b = BitmapUtils.pictureDrawable2Bitmap(picture);
+                Bitmap b = BitmapUtils.pictureDrawable2Bitmap(picture);
 
                 // Write bitmap to stream
                 try {

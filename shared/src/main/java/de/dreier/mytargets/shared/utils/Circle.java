@@ -10,7 +10,7 @@ public class Circle {
     private final float density;
     private final Target target;
     private final Paint circleColorP;
-    private Paint mTextPaint;
+    private final Paint mTextPaint;
 
     public Circle(float density, Target target) {
         this.density = density;

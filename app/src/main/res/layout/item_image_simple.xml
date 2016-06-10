@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/content"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
-    android:minHeight="56dp">
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:minHeight="56dp">
 
     <ImageView
         android:id="@+id/image"
@@ -14,7 +14,7 @@
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_margin="16dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/name"
@@ -28,7 +28,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginLeft="72dp"
         android:layout_marginStart="72dp"
-        android:layout_marginRight="16dp" />
+        android:layout_marginRight="16dp"/>
 
 </RelativeLayout>
 

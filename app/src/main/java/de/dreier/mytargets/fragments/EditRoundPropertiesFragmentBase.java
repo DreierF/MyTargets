@@ -23,7 +23,7 @@ import de.dreier.mytargets.views.selector.TargetSelector;
 
 public abstract class EditRoundPropertiesFragmentBase extends EditFragmentBase {
 
-    protected long trainingId = -1;
+    long trainingId = -1;
 
     @Bind(R.id.distanceSpinner)
     DistanceSelector distanceSpinner;
@@ -75,18 +75,19 @@ public abstract class EditRoundPropertiesFragmentBase extends EditFragmentBase {
         return rootView;
     }
 
-    protected void updateArrowsLabel() {
-        arrowsLabel.setText(getResources().getQuantityString(R.plurals.arrow, arrows.getProgress(), arrows.getProgress()));
+    void updateArrowsLabel() {
+        arrowsLabel.setText(getResources()
+                .getQuantityString(R.plurals.arrow, arrows.getProgress(), arrows.getProgress()));
     }
 
-    protected void loadRoundDefaultValues() {
+    void loadRoundDefaultValues() {
         distanceSpinner.setItem(SettingsManager.getDistance());
         arrows.setProgress(SettingsManager.getArrowsPerPasse());
         targetSpinner.setItem(SettingsManager.getTarget());
     }
 
     @NonNull
-    protected RoundTemplate getRoundTemplate() {
+    RoundTemplate getRoundTemplate() {
         RoundTemplate roundTemplate = new RoundTemplate();
         roundTemplate.target = targetSpinner.getSelectedItem();
         roundTemplate.targetTemplate = roundTemplate.target;
@@ -100,7 +101,7 @@ public abstract class EditRoundPropertiesFragmentBase extends EditFragmentBase {
         return roundTemplate;
     }
 
-    protected void openPasseForNewRound(long trainingId, long roundId) {
+    void openPasseForNewRound(long trainingId, long roundId) {
         if (trainingId != -1) {
             Intent i = new Intent(getActivity(), SimpleFragmentActivity.TrainingActivity.class);
             i.putExtra(TrainingFragment.ITEM_ID, trainingId);

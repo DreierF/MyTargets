@@ -1,10 +1,18 @@
 package de.dreier.mytargets.shared.targets;
 
+import android.support.test.filters.SmallTest;
+import android.support.test.runner.AndroidJUnit4;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-public class WAFullTest extends TargetTest<WAFull> {
+@SmallTest
+@RunWith(AndroidJUnit4.class)
+public class WAFullTest {
+
+    private WAFull target;
 
     @Before
     public void setUp() throws Exception {
@@ -13,8 +21,8 @@ public class WAFullTest extends TargetTest<WAFull> {
 
     @Test
     public void testScoringStyle() {
-        Assert.assertEquals(target.getScoringStyle(0).getPoints(0, 0), 10);
-        Assert.assertEquals(target.getScoringStyle(0).getPoints(1, 0), 10);
-        Assert.assertEquals(target.getScoringStyle(1).getPoints(1, 0), 9);
+        Assert.assertEquals(10, target.getScoringStyle(0).getPointsByZone(0, 0));
+        Assert.assertEquals(10, target.getScoringStyle(0).getPointsByZone(1, 0));
+        Assert.assertEquals(9, target.getScoringStyle(1).getPointsByZone(1, 0));
     }
 }

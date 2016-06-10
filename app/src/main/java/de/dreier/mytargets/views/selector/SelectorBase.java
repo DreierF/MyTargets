@@ -33,10 +33,10 @@ public abstract class SelectorBase<T> extends LinearLayout {
 
     private final View mView;
     private final View mProgress;
-    protected int requestCode;
-    protected Class<?> defaultActivity;
-    protected Class<?> addActivity;
-    protected Button mAddButton;
+    int requestCode;
+    Class<?> defaultActivity;
+    Class<?> addActivity;
+    Button mAddButton;
     T item = null;
     private OnUpdateListener<T> updateListener;
     private int index = -1;
@@ -77,7 +77,7 @@ public abstract class SelectorBase<T> extends LinearLayout {
         this.index = index;
     }
 
-    public Intent getDefaultIntent() {
+    Intent getDefaultIntent() {
         Intent i = new Intent(getContext(), defaultActivity);
         i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(item));
         if (index != -1) {
@@ -86,7 +86,7 @@ public abstract class SelectorBase<T> extends LinearLayout {
         return i;
     }
 
-    public Intent getAddIntent() {
+    Intent getAddIntent() {
         return new Intent(getContext(), addActivity);
     }
 

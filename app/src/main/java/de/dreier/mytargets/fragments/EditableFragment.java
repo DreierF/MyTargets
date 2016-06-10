@@ -31,17 +31,18 @@ public abstract class EditableFragment<T extends IIdSettable> extends EditableFr
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), R.drawable.inset_divider));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.addItemDecoration(
+                new DividerItemDecoration(getContext(), R.drawable.inset_divider));
         return rootView;
     }
 
     void setList(IdProviderDataSource<T> dataSource, List<T> list, NowListAdapter<T> adapter) {
         this.dataSource = dataSource;
-        if (mRecyclerView.getAdapter() == null) {
+        if (recyclerView.getAdapter() == null) {
             mAdapter = adapter;
             mAdapter.setList(list);
-            mRecyclerView.setAdapter(mAdapter);
+            recyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.setList(list);
             mAdapter.notifyDataSetChanged();

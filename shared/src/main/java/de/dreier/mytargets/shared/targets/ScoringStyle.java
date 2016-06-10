@@ -14,9 +14,9 @@ public class ScoringStyle {
     public static final String MISS_SYMBOL = "M";
     private static final String X_SYMBOL = "X";
     private final boolean showAsX;
-    public final int[][] points;
+    final int[][] points;
 
-    protected ScoringStyle(boolean showAsX, int[][] points) {
+    ScoringStyle(boolean showAsX, int[][] points) {
         this.showAsX = showAsX;
         this.points = points;
     }
@@ -65,7 +65,7 @@ public class ScoringStyle {
         return getPoints(zone, arrow);
     }
 
-    protected int getPoints(int zone, int arrow) {
+    int getPoints(int zone, int arrow) {
         return points[0][zone];
     }
 

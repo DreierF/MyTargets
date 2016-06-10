@@ -15,7 +15,7 @@ public class Shot implements IIdSettable, Comparable<Shot> {
 
     // The index of the shot in the containing passe
     public int index;
-    protected long id;
+    private long id;
 
     public Shot() {}
 

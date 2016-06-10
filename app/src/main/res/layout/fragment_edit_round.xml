@@ -1,12 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="de.dreier.mytargets.activities.SimpleFragmentActivity$EditTrainingActivity">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="de.dreier.mytargets.activities.SimpleFragmentActivity$EditTrainingActivity">
 
-    <include layout="@layout/common_toolbar" />
+    <include layout="@layout/common_toolbar"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -32,9 +32,9 @@
                         android:id="@+id/distanceSpinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical" />
+                        android:orientation="vertical"/>
 
-                    <include layout="@layout/divider_full" />
+                    <include layout="@layout/divider_full"/>
 
                 </LinearLayout>
 
@@ -50,9 +50,9 @@
                         android:id="@+id/targetSpinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical" />
+                        android:orientation="vertical"/>
 
-                    <include layout="@layout/divider_full" />
+                    <include layout="@layout/divider_full"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -65,7 +65,7 @@
                             style="@style/Label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/arrows" />
+                            android:text="@string/arrows"/>
 
                         <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
                             android:id="@+id/arrows"
@@ -74,14 +74,14 @@
                             app:dsb_indicatorColor="@color/colorPrimary"
                             app:dsb_max="12"
                             app:dsb_min="1"
-                            app:dsb_progressColor="@color/colorPrimary" />
+                            app:dsb_progressColor="@color/colorPrimary"/>
 
                     </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/dividerColor" />
+                        android:background="@color/dividerColor"/>
                 </LinearLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -95,7 +95,7 @@
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
                         android:hint="@string/comment"
-                        android:inputType="textMultiLine" />
+                        android:inputType="textMultiLine"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -113,7 +113,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_gravity="bottom"
-                android:background="?android:attr/listDivider" />
+                android:background="?android:attr/listDivider"/>
 
             <Button
                 android:id="@+id/remove_button"
@@ -122,14 +122,14 @@
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:minHeight="48dp"
-                android:text="@string/delete" />
+                android:text="@string/delete"/>
 
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_drop_shadow_height"
-            android:background="@drawable/toolbar_drop_shadow" />
+            android:background="@drawable/toolbar_drop_shadow"/>
     </FrameLayout>
 
 </LinearLayout>

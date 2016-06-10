@@ -14,7 +14,7 @@ import android.util.TypedValue;
 import de.dreier.mytargets.R;
 
 
-public class ToolbarUtils {
+class ToolbarUtils {
     public static int getActionBarSize(Context context) {
         TypedValue typedValue = new TypedValue();
         int[] textSizeAttr = new int[]{R.attr.actionBarSize};

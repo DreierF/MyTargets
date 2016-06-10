@@ -48,9 +48,12 @@ public class Locator implements LocationListener {
         switch (this.method) {
             case NETWORK:
             case NETWORK_THEN_GPS:
-                Location networkLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                Location networkLocation = locationManager
+                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                 if (networkLocation != null) {
-                    Log.d(LOG_TAG, "Last known location found for network provider : " + networkLocation.toString());
+                    Log.d(LOG_TAG,
+                            "Last known location found for network provider : " + networkLocation
+                                    .toString());
                     this.callback.onLocationFound(networkLocation);
                 } else {
                     Log.d(LOG_TAG, "Request updates from network provider.");
@@ -58,9 +61,11 @@ public class Locator implements LocationListener {
                 }
                 break;
             case GPS:
-                Location gpsLocation = this.locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                Location gpsLocation = this.locationManager
+                        .getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 if (gpsLocation != null) {
-                    Log.d(LOG_TAG, "Last known location found for GPS provider : " + gpsLocation.toString());
+                    Log.d(LOG_TAG, "Last known location found for GPS provider : " + gpsLocation
+                            .toString());
                     this.callback.onLocationFound(gpsLocation);
                 } else {
                     Log.d(LOG_TAG, "Request updates from GPS provider.");
@@ -76,11 +81,13 @@ public class Locator implements LocationListener {
             if (provider.contentEquals(LocationManager.NETWORK_PROVIDER)
                     && Connectivity.isConnected(this.context)) {
                 Log.d(LOG_TAG, "Network connected, start listening : " + provider);
-                this.locationManager.requestLocationUpdates(provider, TIME_INTERVAL, DISTANCE_INTERVAL, this);
+                this.locationManager
+                        .requestLocationUpdates(provider, TIME_INTERVAL, DISTANCE_INTERVAL, this);
             } else if (provider.contentEquals(LocationManager.GPS_PROVIDER)
                     && Connectivity.isConnectedMobile(this.context)) {
                 Log.d(LOG_TAG, "Mobile network connected, start listening : " + provider);
-                this.locationManager.requestLocationUpdates(provider, TIME_INTERVAL, DISTANCE_INTERVAL, this);
+                this.locationManager
+                        .requestLocationUpdates(provider, TIME_INTERVAL, DISTANCE_INTERVAL, this);
             } else {
                 Log.d(LOG_TAG, "Proper network not connected for provider : " + provider);
                 this.onProviderDisabled(provider);
@@ -99,7 +106,9 @@ public class Locator implements LocationListener {
     @SuppressWarnings("MissingPermission")
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(LOG_TAG, "Location found : " + location.getLatitude() + ", " + location.getLongitude() + (location.hasAccuracy() ? " : +- " + location.getAccuracy() + " meters" : ""));
+        Log.d(LOG_TAG, "Location found : " + location.getLatitude() + ", " + location
+                .getLongitude() + (location.hasAccuracy() ? " : +- " + location
+                .getAccuracy() + " meters" : ""));
         locationManager.removeUpdates(this);
         callback.onLocationFound(location);
     }

@@ -1,16 +1,16 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="8dp" />
+        android:layout_margin="8dp"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_drop_shadow_height"
-        android:background="@drawable/toolbar_drop_shadow" />
+        android:background="@drawable/toolbar_drop_shadow"/>
 
 </FrameLayout>

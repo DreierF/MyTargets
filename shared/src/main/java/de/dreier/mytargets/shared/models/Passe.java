@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Passe implements IIdSettable {
 
-    protected long id;
+    private long id;
     public int index;
     public long roundId;
     public Shot[] shot;

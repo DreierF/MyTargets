@@ -19,19 +19,19 @@ import static de.dreier.mytargets.shared.utils.Color.BLACK;
 import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
 public class TargetModelBase implements IIdProvider {
-    public boolean isFieldTarget;
-    protected long id;
-    protected int nameRes;
-    protected Zone[] zones;
-    protected Dimension[] diameters;
-    protected ScoringStyle[] scoringStyles;
-    protected int faceRadius;
-    protected Coordinate[] facePositions;
-    protected boolean is3DTarget;
-    protected CenterMark centerMark;
-    protected TargetDecoration decoration;
+    boolean isFieldTarget;
+    private final long id;
+    private final int nameRes;
+    Zone[] zones;
+    Dimension[] diameters;
+    ScoringStyle[] scoringStyles;
+    int faceRadius;
+    Coordinate[] facePositions;
+    boolean is3DTarget;
+    CenterMark centerMark;
+    TargetDecoration decoration;
 
-    protected TargetModelBase(long id, @StringRes int nameRes) {
+    TargetModelBase(long id, @StringRes int nameRes) {
         this.id = id;
         this.nameRes = nameRes;
         this.faceRadius = 500;

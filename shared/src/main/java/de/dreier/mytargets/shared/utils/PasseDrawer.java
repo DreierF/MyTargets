@@ -24,11 +24,11 @@ public class PasseDrawer {
     private static final int MIN_PADDING = 2;
     public static final int MAX_CIRCLE_SIZE = 17;
 
-    Passe mPasse;
-    int mPressed = NO_SELECTION;
-    int mSelected = NO_SELECTION;
-    Coordinate mSelectedPosition;
-    int mSelectedRadius;
+    private Passe mPasse;
+    private int mPressed = NO_SELECTION;
+    private int mSelected = NO_SELECTION;
+    private Coordinate mSelectedPosition;
+    private int mSelectedRadius;
 
     private transient Circle mCircle;
     private transient View mParent;
@@ -43,15 +43,12 @@ public class PasseDrawer {
     private transient float mColumnWidth;
 
     // Animation
-    Coordinate[] mOldCoordinate;
-    float mCurAnimationProgress = -1;
+    private Coordinate[] mOldCoordinate;
+    private float mCurAnimationProgress = -1;
     private transient ValueAnimator selectionAnimator;
     private transient int oldRadius;
     private transient int oldSelected;
     private transient int oldSelectedRadius;
-
-    public PasseDrawer() {
-    }
 
     public void init(View parent, float density, Target target) {
         mParent = parent;
@@ -124,7 +121,7 @@ public class PasseDrawer {
     }
 
     @NonNull
-    public Coordinate getPosition(int i) {
+    private Coordinate getPosition(int i) {
         if (mSelected == i) {
             return new Coordinate(mSelectedPosition.x, mSelectedPosition.y);
         } else {
@@ -137,7 +134,7 @@ public class PasseDrawer {
         }
     }
 
-    public Coordinate getAnimatedPosition(int i) {
+    private Coordinate getAnimatedPosition(int i) {
         Coordinate coordinate = getPosition(i);
         if (mCurAnimationProgress != -1 && mOldCoordinate[i]!=null) {
             float oldX = mOldCoordinate[i].x;
@@ -148,7 +145,7 @@ public class PasseDrawer {
         return coordinate;
     }
 
-    public int getRadius(int i) {
+    private int getRadius(int i) {
         int rad = mRadius;
         int oRad = oldRadius;
         if (mSelected == i) {
@@ -219,7 +216,7 @@ public class PasseDrawer {
         }
     }
 
-    public void saveCoordinates() {
+    private void saveCoordinates() {
         oldSelectedRadius = mSelectedRadius;
         oldRadius = mRadius;
         oldSelected = mSelected;

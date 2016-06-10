@@ -22,7 +22,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
     private static final int[] BG_COLORS = {0xFFF44336, 0xFFFF5722, 0xFFFF9800, 0xFFFFC107, 0xFFFFEB3B, 0xFFCDDC39, 0xFF8BC34A, 0xFF4CAF50};
     private static final int[] TEXT_COLORS = {0xFFFFFFFF, 0xFFFFFFFF, 0xFF000002, 0xFF000002, 0xFF000002, 0xFF000002, 0xFF000002, 0xFF000002};
     public Target target;
-    public ArrayList<Shot> shots = new ArrayList<>();
+    public final ArrayList<Shot> shots = new ArrayList<>();
 
     public float avgX() {
         return xSum / count;
@@ -37,11 +37,13 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
     }
 
     public int getAppropriateBgColor() {
-        return BG_COLORS[((int) Math.ceil(reachedPointsSum * (BG_COLORS.length-1) / maxPointsSum))];
+        return BG_COLORS[((int) Math
+                .ceil(reachedPointsSum * (BG_COLORS.length - 1) / maxPointsSum))];
     }
 
     public int getAppropriateTextColor() {
-        return TEXT_COLORS[((int) Math.ceil(reachedPointsSum * (TEXT_COLORS.length-1) / maxPointsSum))];
+        return TEXT_COLORS[((int) Math
+                .ceil(reachedPointsSum * (TEXT_COLORS.length - 1) / maxPointsSum))];
     }
 
     @Override

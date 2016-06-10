@@ -52,8 +52,8 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> {
         Bundle bundle = getArguments();
         distance = Parcels.unwrap(bundle.getParcelable(ITEM));
         unit = Unit.from(bundle.getString(DISTANCE_UNIT));
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        mRecyclerView.addItemDecoration(new CardItemDecorator(getActivity(), 3));
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        recyclerView.addItemDecoration(new CardItemDecorator(getActivity(), 3));
     }
 
     @Override

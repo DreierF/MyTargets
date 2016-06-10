@@ -17,7 +17,7 @@ import static de.dreier.mytargets.shared.utils.Color.GRAY;
 import static de.dreier.mytargets.shared.utils.Color.LIGHT_GRAY;
 import static de.dreier.mytargets.shared.utils.Color.RED;
 
-public class NFAS3D extends Target3DBase {
+class NFAS3D extends Target3DBase {
     public NFAS3D() {
         super(18, R.string.nfas_3d);
         zones = new Zone[]{

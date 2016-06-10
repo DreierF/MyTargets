@@ -70,7 +70,7 @@ public class SightSettingDataSource extends IdProviderDataSource<SightSetting> {
                         "FROM VISIER " +
                         "WHERE bow = " + bowId + " " +
                         "AND distance = " + distance.value + " " +
-                        "AND unit = \"" + distance.unit+"\"", null);
+                        "AND unit = \"" + distance.unit + "\"", null);
         SightSetting s = null;
         if (cursor.moveToFirst()) {
             s = cursorToSightSetting(cursor);

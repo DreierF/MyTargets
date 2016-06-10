@@ -54,7 +54,7 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
      * Listener which gets called when item gets selected
      */
     private OnItemSelectedListener listener;
-    protected boolean useDoubleClickSelection;
+    boolean useDoubleClickSelection;
 
     /**
      * {@inheritDoc}
@@ -62,7 +62,7 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return rootView;
     }
 
@@ -75,7 +75,7 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
         // Set up toolbar
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         useDoubleClickSelection = toolbar != null;
-        if(useDoubleClickSelection) {
+        if (useDoubleClickSelection) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
             assert supportActionBar != null;
@@ -109,10 +109,10 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
      * @param adapter New instance of an adapter which is able to show the given list
      */
     void setList(List<T> list, NowListAdapter<T> adapter) {
-        if (mRecyclerView.getAdapter() == null) {
+        if (recyclerView.getAdapter() == null) {
             mAdapter = adapter;
             mAdapter.setList(list);
-            mRecyclerView.setAdapter(mAdapter);
+            recyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.setList(list);
             mAdapter.notifyDataSetChanged();
@@ -162,7 +162,7 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
     /**
      * Returns the selected item to the calling activity
      */
-    void onSaveItem() {
+    private void onSaveItem() {
         listener.onItemSelected(Parcels.wrap(onSave()));
     }
 

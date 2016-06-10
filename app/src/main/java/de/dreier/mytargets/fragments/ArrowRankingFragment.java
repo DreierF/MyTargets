@@ -45,9 +45,6 @@ public class ArrowRankingFragment extends Fragment implements LoaderManager.Load
     private List<ArrowStatistic> data;
     private ArrowStatisticAdapter adapter;
 
-    public ArrowRankingFragment() {
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -63,7 +60,8 @@ public class ArrowRankingFragment extends Fragment implements LoaderManager.Load
     @Override
     public Loader<List<ArrowStatistic>> onCreateLoader(int id, Bundle args) {
         arrowStatisticDataSource = new ArrowStatisticDataSource();
-        return new DataLoaderBase<ArrowStatistic, DataSourceBase>(getContext(), arrowStatisticDataSource, arrowStatisticDataSource::getAll);
+        return new DataLoaderBase<ArrowStatistic, DataSourceBase>(getContext(),
+                arrowStatisticDataSource, arrowStatisticDataSource::getAll);
     }
 
     @Override
@@ -139,7 +137,8 @@ public class ArrowRankingFragment extends Fragment implements LoaderManager.Load
 
         public void bindItem(ArrowStatistic item) {
             mItem = item;
-            mName.setText(getString(R.string.arrow_x_of_set_of_arrows, item.arrowNumber, item.arrowName));
+            mName.setText(
+                    getString(R.string.arrow_x_of_set_of_arrows, item.arrowNumber, item.arrowName));
             mImg.setImageDrawable(new RoundedTextDrawable(item));
         }
     }

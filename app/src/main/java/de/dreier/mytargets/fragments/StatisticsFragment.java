@@ -43,7 +43,8 @@ public class StatisticsFragment extends Fragment {
                 break;
             default:
                 data = new StatisticsDataSource().getAllRounds(training);
-                chartView.setDescription("Percentage of reached points (for all passes of the current round)");
+                chartView.setDescription(
+                        "Percentage of reached points (for all passes of the current round)");
                 break;
         }
 

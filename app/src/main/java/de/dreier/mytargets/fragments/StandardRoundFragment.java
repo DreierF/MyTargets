@@ -72,7 +72,6 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
     private RadioGroup unit;
     private RadioGroup typ;
     private StandardRound currentSelection;
-    private StandardRoundDataSource standardRoundDataSource;
     private SearchView searchView;
 
     @Override
@@ -86,10 +85,10 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
 
     @Override
     public Loader<List<StandardRound>> onCreateLoader(int id, Bundle args) {
-        standardRoundDataSource = new StandardRoundDataSource();
+        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource();
         final BackgroundAction<StandardRound> action;
         if (args == null) {
-            action = () -> standardRoundDataSource.getAll();
+            action = standardRoundDataSource::getAll;
         } else if (args.containsKey(KEY_QUERY)) {
             String query = args.getString(KEY_QUERY);
             action = () -> standardRoundDataSource.getAllSearch(query);
@@ -98,7 +97,8 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
             boolean indoor = args.getBoolean(KEY_INDOOR);
             boolean isMetric = args.getBoolean(KEY_METRIC);
             int checked = args.getInt(KEY_CHECKED);
-            action = () -> standardRoundDataSource.getAllFiltered(clubsFilter, indoor, isMetric, checked);
+            action = () -> standardRoundDataSource
+                    .getAllFiltered(clubsFilter, indoor, isMetric, checked);
         }
         return new DataLoader<>(getContext(), standardRoundDataSource, action);
     }
@@ -121,19 +121,20 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         int position = data.indexOf(currentSelection);
         // Test if our currentSelection has been deleted
         if (position == -1 && new StandardRoundDataSource().get(currentSelection.getId()) == null) {
-            currentSelection = data.size() > 0 ? data.get(0) : new StandardRoundDataSource().get(32);
+            currentSelection = data.size() > 0 ? data.get(0) : new StandardRoundDataSource()
+                    .get(32);
             Intent dataIntent = new Intent();
             dataIntent.putExtra(ITEM, Parcels.wrap(currentSelection));
             getActivity().setResult(Activity.RESULT_OK, dataIntent);
         }
         if (position > -1) {
-            mRecyclerView.post(() -> {
+            recyclerView.post(() -> {
                 mSelector.setSelected(position, currentSelection.getId(), true);
-                LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+                LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 int first = manager.findFirstCompletelyVisibleItemPosition();
                 int last = manager.findLastCompletelyVisibleItemPosition();
                 if (first > position || last < position) {
-                    mRecyclerView.scrollToPosition(position);
+                    recyclerView.scrollToPosition(position);
                 }
             });
         } else {
@@ -342,7 +343,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         return false;
     }
 
-    protected class StandardRoundAdapter extends NowListAdapter<StandardRound> {
+    private class StandardRoundAdapter extends NowListAdapter<StandardRound> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())

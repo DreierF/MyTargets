@@ -42,7 +42,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 /**
  * An Espresso ViewAction that changes the orientation of the screen
  */
-public class OrientationChangeAction implements ViewAction {
+class OrientationChangeAction implements ViewAction {
     private final int orientation;
     private final Activity activity;
 
@@ -67,7 +67,8 @@ public class OrientationChangeAction implements ViewAction {
         //final Activity activity = getActivity(view.getContext());
         activity.setRequestedOrientation(orientation);
 
-        Collection<Activity> resumedActivities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
+        Collection<Activity> resumedActivities = ActivityLifecycleMonitorRegistry.getInstance()
+                .getActivitiesInStage(Stage.RESUMED);
         if (resumedActivities.isEmpty()) {
             throw new RuntimeException("Could not change orientation");
         }

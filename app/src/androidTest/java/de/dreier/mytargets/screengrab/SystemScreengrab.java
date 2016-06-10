@@ -38,13 +38,14 @@ import tools.fastlane.screengrab.file.Chmod;
  * screenshots using UiDevice (so full system screenshots, including status bar, notifications,
  * dialogs etc.) See https://github.com/fastlane/fastlane/issues/2080
  */
-public class SystemScreengrab {
+class SystemScreengrab {
     private static final String EXTENSION = ".png";
     private static final int FULL_QUALITY = 100;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public static void screenshot(String filename) throws IOException {
-        Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
+        Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation()
+                .takeScreenshot();
         if (bitmap == null) {
             return;
         }
@@ -65,7 +66,8 @@ public class SystemScreengrab {
     }
 
     private static File screenshotFile(String screenshotName) throws IOException {
-        File screenshotDirectory = getFilesDirectory(InstrumentationRegistry.getTargetContext(), Locale.getDefault());
+        File screenshotDirectory = getFilesDirectory(InstrumentationRegistry.getTargetContext(),
+                Locale.getDefault());
         String screenshotFileName = screenshotName + EXTENSION;
         return new File(screenshotDirectory, screenshotFileName);
     }
@@ -74,7 +76,8 @@ public class SystemScreengrab {
         File directory = null;
         File internalDir;
         if (Build.VERSION.SDK_INT >= 21) {
-            internalDir = new File(Environment.getExternalStorageDirectory(), getDirectoryName(context, locale));
+            internalDir = new File(Environment.getExternalStorageDirectory(),
+                    getDirectoryName(context, locale));
             directory = initializeDirectory(internalDir);
         }
 
@@ -86,7 +89,8 @@ public class SystemScreengrab {
         if (directory == null) {
             throw new IOException("Unable to get a screenshot storage directory");
         } else {
-            Log.d("Screengrab", "Using screenshot storage directory: " + directory.getAbsolutePath());
+            Log.d("Screengrab",
+                    "Using screenshot storage directory: " + directory.getAbsolutePath());
             return directory;
         }
     }

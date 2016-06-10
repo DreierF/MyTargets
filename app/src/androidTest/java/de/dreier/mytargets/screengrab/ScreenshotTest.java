@@ -48,7 +48,8 @@ public class ScreenshotTest extends UITestBase {
         onView(withText("PSE Fever")).perform(click());
         SystemScreengrab.screenshot("7_bow");
         navigateUp();
-        onView(allOf(withText(R.string.training), withParent(withParent(withParent(withId(R.id.slidingTabs)))))).perform(click());
+        onView(allOf(withText(R.string.training),
+                withParent(withParent(withParent(withId(R.id.slidingTabs)))))).perform(click());
         onView(withText("631/720")).perform(click());
         SystemScreengrab.screenshot("4_training_overview");
         clickActionBarItem(R.id.action_scoreboard, R.string.scoreboard);

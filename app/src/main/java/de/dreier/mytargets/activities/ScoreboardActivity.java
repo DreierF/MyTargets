@@ -143,7 +143,8 @@ public class ScoreboardActivity extends AppCompatActivity {
             @SuppressWarnings("deprecation")
             @Override
             protected void onPostExecute(String s) {
-                webViewPrint.loadDataWithBaseURL("file:///android_asset/", s, "text/html", "UTF-8", "");
+                webViewPrint
+                        .loadDataWithBaseURL("file:///android_asset/", s, "text/html", "UTF-8", "");
                 PrintDocumentAdapter printAdapter = webViewPrint.createPrintDocumentAdapter();
 
                 // Create a print job with name and adapter instance

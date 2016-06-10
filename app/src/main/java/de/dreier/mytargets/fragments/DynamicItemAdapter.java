@@ -12,9 +12,9 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
 
 abstract class DynamicItemAdapter<T> extends RecyclerView.Adapter<DynamicItemHolder<T>> {
-    protected final Fragment fragment;
-    protected final List<T> list;
-    protected final LayoutInflater inflater;
+    private final Fragment fragment;
+    private final List<T> list;
+    final LayoutInflater inflater;
     private final int undoString;
 
     public DynamicItemAdapter(Fragment fragment, List<T> list, @StringRes int undoString) {

@@ -3,13 +3,16 @@ package de.dreier.mytargets.shared.targets;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@RunWith(AndroidJUnit4.class)
 @SmallTest
-public class DAIR3DTest extends TargetTest<DAIR3D> {
+@RunWith(AndroidJUnit4.class)
+public class DAIR3DTest {
+
+    private DAIR3D target;
 
     @Before
     public void setUp() throws Exception {
@@ -18,8 +21,8 @@ public class DAIR3DTest extends TargetTest<DAIR3D> {
 
     @Test
     public void testScoringStyle() {
-        /*Assert.assertEquals(target.getZonePoints(0, 0), 10);
-        Assert.assertEquals(target.getZonePoints(0, 1), 10);
-        Assert.assertEquals(target.getZonePoints(1, 1), 9);*/
+        Assert.assertEquals(8, target.getScoringStyle(0).getPointsByZone(0, 0));
+        Assert.assertEquals(12, target.getScoringStyle(0).getPointsByZone(2, 0));
+        Assert.assertEquals(14, target.getScoringStyle(1).getPointsByZone(1, 0));
     }
 }

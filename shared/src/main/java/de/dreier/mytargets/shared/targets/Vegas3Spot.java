@@ -13,7 +13,7 @@ import de.dreier.mytargets.shared.models.Dimension;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 
 public class Vegas3Spot extends WA5Ring {
-    public static final int ID = 4;
+    private static final int ID = 4;
 
     public Vegas3Spot() {
         super(ID, R.string.vegas_3_spot);

@@ -75,7 +75,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            if(position==2) {
+            if (position == 2) {
                 return new ArrowRankingFragment();
             } else {
                 StatisticsFragment fragment = new StatisticsFragment();

@@ -85,7 +85,7 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
         return mItem;
     }
 
-    public void setItem(T mItem) {
+    void setItem(T mItem) {
         this.mItem = mItem;
     }
 
@@ -120,6 +120,7 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
 
     /**
      * Calls through to {@link #itemView#isActivated}.
+     *
      * @return True if the view is activated.
      */
     public boolean isActivated() {

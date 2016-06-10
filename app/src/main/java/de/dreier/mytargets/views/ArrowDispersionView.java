@@ -33,6 +33,7 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
     public ArrowDispersionView(Context context) {
         this(context, null);
     }
+
     public ArrowDispersionView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }

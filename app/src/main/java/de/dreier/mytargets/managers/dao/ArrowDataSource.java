@@ -35,7 +35,7 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
                     MATERIAL + " TEXT," +
                     SPINE + " TEXT," +
                     WEIGHT + " TEXT," +
-                    TIP_WEIGHT + " TEXT,"+
+                    TIP_WEIGHT + " TEXT," +
                     VANES + " TEXT," +
                     NOCK + " TEXT," +
                     COMMENT + " TEXT," +

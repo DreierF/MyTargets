@@ -1,10 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:descendantFocusability="beforeDescendants"
+              android:focusableInTouchMode="true"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:paddingBottom="8dp"
-            android:text="@string/bow_type" />
+            android:text="@string/bow_type"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,14 +29,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/recurve_bow" />
+                android:text="@string/recurve_bow"/>
 
             <RadioButton
                 android:id="@+id/compound"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/compound_bow" />
+                android:text="@string/compound_bow"/>
         </LinearLayout>
 
         <LinearLayout
@@ -48,14 +48,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/bare_bow" />
+                android:text="@string/bare_bow"/>
 
             <RadioButton
                 android:id="@+id/longbow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/long_bow" />
+                android:text="@string/long_bow"/>
         </LinearLayout>
 
         <LinearLayout
@@ -67,19 +67,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/horse_bow" />
+                android:text="@string/horse_bow"/>
 
             <RadioButton
                 android:id="@+id/yumi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/yumi" />
+                android:text="@string/yumi"/>
         </LinearLayout>
 
     </LinearLayout>
 
-    <include layout="@layout/divider_full" />
+    <include layout="@layout/divider_full"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -92,7 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="8dp"
-            android:text="@string/properties" />
+            android:text="@string/properties"/>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -103,7 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/name"
-                android:inputType="textNoSuggestions" />
+                android:inputType="textNoSuggestions"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -115,7 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/brand"
-                android:inputType="textNoSuggestions" />
+                android:inputType="textNoSuggestions"/>
         </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
@@ -134,7 +134,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/size"
-                    android:inputType="textNoSuggestions" />
+                    android:inputType="textNoSuggestions"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -156,7 +156,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:hint="@string/draw_weight"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -166,7 +166,7 @@
                     android:gravity="bottom"
                     android:paddingBottom="12dp"
                     android:text="@string/unit_lbs"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -188,7 +188,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/height"
-                    android:inputType="textNoSuggestions" />
+                    android:inputType="textNoSuggestions"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -202,7 +202,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/tiller"
-                    android:inputType="textNoSuggestions" />
+                    android:inputType="textNoSuggestions"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -225,7 +225,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/limbs"
-                    android:inputType="textNoSuggestions" />
+                    android:inputType="textNoSuggestions"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -239,7 +239,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/sight"
-                    android:inputType="textNoSuggestions" />
+                    android:inputType="textNoSuggestions"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -262,7 +262,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/stabilizer"
-                    android:inputType="textNoSuggestions" />
+                    android:inputType="textNoSuggestions"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -276,7 +276,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/clicker"
-                    android:inputType="textNoSuggestions" />
+                    android:inputType="textNoSuggestions"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -291,13 +291,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/description"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"/>
 
         </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>
 
-    <include layout="@layout/divider_full" />
+    <include layout="@layout/divider_full"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -309,16 +309,16 @@
             style="@style/Label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/sight_settings" />
+            android:text="@string/sight_settings"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/sightSettings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layoutManager="LinearLayoutManager" />
+            app:layoutManager="LinearLayoutManager"/>
 
-        <include layout="@layout/layout_add_button" />
+        <include layout="@layout/layout_add_button"/>
 
     </LinearLayout>
 

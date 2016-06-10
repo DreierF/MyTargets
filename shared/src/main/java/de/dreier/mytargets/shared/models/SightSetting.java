@@ -12,7 +12,7 @@ public class SightSetting implements IIdSettable {
     public long bowId;
     public Dimension distance = new Dimension(18, METER);
     public String value = "";
-    protected long id;
+    private long id;
 
     public long getId() {
         return id;

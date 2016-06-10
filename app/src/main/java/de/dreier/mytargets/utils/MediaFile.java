@@ -5,27 +5,27 @@ import java.util.Locale;
 
 public class MediaFile {
     // Image file types
-    public static final int FILE_TYPE_JPEG    = 31;
-    public static final int FILE_TYPE_GIF     = 32;
-    public static final int FILE_TYPE_PNG     = 33;
-    public static final int FILE_TYPE_BMP     = 34;
-    public static final int FILE_TYPE_WBMP    = 35;
-    public static final int FILE_TYPE_WEBP    = 36;
+    public static final int FILE_TYPE_JPEG = 31;
+    private static final int FILE_TYPE_GIF = 32;
+    private static final int FILE_TYPE_PNG = 33;
+    private static final int FILE_TYPE_BMP = 34;
+    private static final int FILE_TYPE_WBMP = 35;
+    private static final int FILE_TYPE_WEBP = 36;
 
-    
+
     public static class MediaFileType {
         public final int fileType;
         public final String mimeType;
-        
+
         MediaFileType(int fileType, String mimeType) {
             this.fileType = fileType;
             this.mimeType = mimeType;
         }
     }
-    
+
     private static final HashMap<String, MediaFileType> sFileTypeMap = new HashMap<>();
 
-    static void addFileType(String extension, int fileType, String mimeType) {
+    private static void addFileType(String extension, int fileType, String mimeType) {
         sFileTypeMap.put(extension, new MediaFileType(fileType, mimeType));
     }
 

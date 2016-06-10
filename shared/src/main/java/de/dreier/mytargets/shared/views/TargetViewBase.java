@@ -53,10 +53,10 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected float outFromX;
     protected float outFromY;
     protected TargetDrawable targetDrawable;
-    protected Target target;
+    private Target target;
     protected TargetModelBase targetModel;
     protected List<SelectableZone> selectableZones;
-    private List<VirtualView> virtualViews = new ArrayList<>();
+    private final List<VirtualView> virtualViews = new ArrayList<>();
 
     public TargetViewBase(Context context) {
         super(context);
@@ -109,7 +109,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         passe.roundId = roundId;
     }
 
-    public void setRoundTemplate(RoundTemplate r) {
+    protected void setRoundTemplate(RoundTemplate r) {
         round = r;
         target = r.target;
         targetModel = r.target.getModel();

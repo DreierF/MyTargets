@@ -51,7 +51,8 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
     @Override
     public void update(StandardRound item) {
         super.update(item);
-        RoundTemplateDataSource rtds = new RoundTemplateDataSource(getContext(), dbHelper, database);
+        RoundTemplateDataSource rtds = new RoundTemplateDataSource(getContext(), dbHelper,
+                database);
         for (RoundTemplate template : item.getRounds()) {
             template.standardRound = item.getId();
             rtds.update(template);
@@ -104,7 +105,8 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
     }
 
     public ArrayList<StandardRound> getAll() {
-        Cursor cursor = database.rawQuery("SELECT s._id FROM STANDARD_ROUND_TEMPLATE s WHERE s.club != 512", null);
+        Cursor cursor = database
+                .rawQuery("SELECT s._id FROM STANDARD_ROUND_TEMPLATE s WHERE s.club != 512", null);
         ArrayList<StandardRound> list = new ArrayList<>(cursor.getCount());
         if (cursor.moveToFirst()) {
             do {

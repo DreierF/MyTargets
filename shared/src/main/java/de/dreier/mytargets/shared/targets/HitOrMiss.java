@@ -14,7 +14,7 @@ import static de.dreier.mytargets.shared.utils.Color.DARK_GRAY;
 import static de.dreier.mytargets.shared.utils.Color.RED_MISS;
 import static de.dreier.mytargets.shared.utils.Color.YELLOW;
 
-public class HitOrMiss extends TargetModelBase {
+class HitOrMiss extends TargetModelBase {
 
     public HitOrMiss() {
         super(14, R.string.hit_or_miss);

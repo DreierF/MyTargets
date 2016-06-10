@@ -18,11 +18,11 @@ import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
 
 public class AboutFragment extends Fragment {
-    public static final String URL_GOOGLE_PLUS = "https://plus.google.com/u/0/communities/102686119334423317437";
-    public static final String URL_PLAY_STORE = "http://play.google.com/store/apps/details?id=de.dreier.mytargets";
-    public static final String URL_PAYPAL = "https://www.paypal.me/floriandreier";
-    public static final String URL_CROWDIN = "https://crowdin.com/project/mytargets";
-    public static final String URL_LINKEDIN = "https://de.linkedin.com/in/florian-dreier-b056a1113";
+    private static final String URL_GOOGLE_PLUS = "https://plus.google.com/u/0/communities/102686119334423317437";
+    private static final String URL_PLAY_STORE = "http://play.google.com/store/apps/details?id=de.dreier.mytargets";
+    private static final String URL_PAYPAL = "https://www.paypal.me/floriandreier";
+    private static final String URL_CROWDIN = "https://crowdin.com/project/mytargets";
+    private static final String URL_LINKEDIN = "https://de.linkedin.com/in/florian-dreier-b056a1113";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,7 +50,8 @@ public class AboutFragment extends Fragment {
     }
 
     private Element getCrowdinElement() {
-        return new WebElement(R.string.translate_crowdin, R.drawable.about_icon_crowdin, URL_CROWDIN);
+        return new WebElement(R.string.translate_crowdin, R.drawable.about_icon_crowdin,
+                URL_CROWDIN);
     }
 
     private Element getBetaTesterElement() {
@@ -58,7 +59,8 @@ public class AboutFragment extends Fragment {
     }
 
     private Element getGooglePlusElement() {
-        return new WebElement(R.string.join_on_google_plus, R.drawable.about_icon_google_plus, URL_GOOGLE_PLUS);
+        return new WebElement(R.string.join_on_google_plus, R.drawable.about_icon_google_plus,
+                URL_GOOGLE_PLUS);
     }
 
     private Element getPayPalDonateElement() {
@@ -66,11 +68,13 @@ public class AboutFragment extends Fragment {
     }
 
     private Element getLinkedInItem() {
-        return new WebElement(R.string.network_linkedin, R.drawable.about_icon_linkedin, URL_LINKEDIN);
+        return new WebElement(R.string.network_linkedin, R.drawable.about_icon_linkedin,
+                URL_LINKEDIN);
     }
 
     private Element getShareElement() {
-        Element shareElement = new Element(null, getString(R.string.share_with_friends), R.drawable.about_icon_share);
+        Element shareElement = new Element(null, getString(R.string.share_with_friends),
+                R.drawable.about_icon_share);
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, URL_PLAY_STORE);
@@ -80,7 +84,8 @@ public class AboutFragment extends Fragment {
     }
 
     private Element getDonateElement() {
-        Element donateElement = new Element(null, getString(R.string.donate), R.drawable.about_icon_donate);
+        Element donateElement = new Element(null, getString(R.string.donate),
+                R.drawable.about_icon_donate);
         donateElement.setIntent(new Intent(getContext(), DonateActivity.class));
         return donateElement;
     }

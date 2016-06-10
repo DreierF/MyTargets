@@ -66,7 +66,8 @@ public class HTMLUtils {
         boolean[] equals = new boolean[2];
         if (configuration.showProperties) {
             html += "<table width=\"100%\" style=\"border:0px;\"><tr>" +
-                    "<td width=\"50%\">" + getTrainingInfoHTML(training, rounds, equals, true) + "</td>" +
+                    "<td width=\"50%\">" + getTrainingInfoHTML(training, rounds, equals,
+                    true) + "</td>" +
                     "<td width=\"50%\">" + getTrainingTopScoreDistribution(trainingId) + "</td>" +
                     "</tr></table>";
         }
@@ -97,8 +98,9 @@ public class HTMLUtils {
                         if (configuration.showPointsColored) {
                             int fillColor = target.getModel().getFillColor(shot.zone);
                             int color = target.getModel().getTextColor(shot.zone);
-                            html += String.format("<div class=\"circle\" style='background: #%06X; color: #%06X'>",
-                                    fillColor & 0xFFFFFF, color & 0xFFFFFF);
+                            html += String
+                                    .format("<div class=\"circle\" style='background: #%06X; color: #%06X'>",
+                                            fillColor & 0xFFFFFF, color & 0xFFFFFF);
                         }
                         html += target.zoneToString(shot.zone, i);
                         if (configuration.showPointsColored) {

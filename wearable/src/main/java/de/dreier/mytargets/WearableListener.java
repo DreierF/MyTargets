@@ -13,28 +13,12 @@ import android.util.Log;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 
-import org.parceler.ParcelClass;
-import org.parceler.ParcelClasses;
 import org.parceler.Parcels;
 
-import de.dreier.mytargets.shared.models.Arrow;
-import de.dreier.mytargets.shared.models.ArrowNumber;
-import de.dreier.mytargets.shared.models.Bow;
-import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.NotificationInfo;
-import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.RoundTemplate;
-import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.models.SightSetting;
-import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.models.NotificationInfo$$Parcelable;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.WearableUtils;
-import de.dreier.mytargets.shared.models.NotificationInfo$$Parcelable;
 
 public class WearableListener extends WearableListenerService {
 
@@ -69,10 +53,11 @@ public class WearableListener extends WearableListenerService {
 
     @Nullable
     private NotificationInfo getNotificationInfo(byte[] data) {
-        return Parcels.unwrap(ParcelableUtil.unmarshall(data, NotificationInfo$$Parcelable.CREATOR));
+        return Parcels
+                .unwrap(ParcelableUtil.unmarshall(data, NotificationInfo$$Parcelable.CREATOR));
     }
 
-    void showNotification(NotificationInfo info) {
+    private void showNotification(NotificationInfo info) {
 
         // Build the intent to display our custom notification
         Intent notificationIntent = new Intent(this, MainActivity.class);

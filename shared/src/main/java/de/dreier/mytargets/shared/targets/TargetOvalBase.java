@@ -17,7 +17,7 @@ import static de.dreier.mytargets.shared.models.Dimension.XLARGE;
 
 public class TargetOvalBase extends TargetModelBase {
 
-    public TargetOvalBase(long id, @StringRes int name) {
+    TargetOvalBase(long id, @StringRes int name) {
         super(id, name);
         diameters = new Dimension[]{SMALL, MEDIUM, LARGE, XLARGE};
     }

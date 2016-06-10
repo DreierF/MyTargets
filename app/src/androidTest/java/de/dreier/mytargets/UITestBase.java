@@ -35,7 +35,7 @@ public class UITestBase {
 
     private static final String TAG = "UITestBase";
 
-    public static Matcher<View> androidHomeMatcher() {
+    private static Matcher<View> androidHomeMatcher() {
         return allOf(
                 withParent(withClassName(is(Toolbar.class.getName()))),
                 withClassName(is(ImageButton.class.getName()))
@@ -65,7 +65,7 @@ public class UITestBase {
         return UiDevice.getInstance(getInstrumentation());
     }
 
-    public static ViewAction clickTarget(final float x, final float y) {
+    protected static ViewAction clickTarget(final float x, final float y) {
         return new GeneralClickAction(
                 Tap.SINGLE,
                 new CoordinatesProvider() {
@@ -77,11 +77,11 @@ public class UITestBase {
                 Press.FINGER);
     }
 
-    public static ViewAction holdTapTarget(final float x, final float y) {
+    protected static ViewAction holdTapTarget(final float x, final float y) {
         return LowLevelActions.pressAndHold(new float[]{x, y});
     }
 
-    public static ViewAction releaseTapTarget(final float x, final float y) {
+    protected static ViewAction releaseTapTarget(final float x, final float y) {
         return LowLevelActions.release(new float[]{x, y});
     }
 

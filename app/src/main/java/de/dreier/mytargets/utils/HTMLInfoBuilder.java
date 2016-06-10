@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import de.dreier.mytargets.ApplicationInstance;
 
 public class HTMLInfoBuilder {
-    StringBuilder info = new StringBuilder();
+    private final StringBuilder info = new StringBuilder();
 
     public void addLine(int key, Object value) {
         if (info.length() != 0) {
@@ -24,12 +24,12 @@ public class HTMLInfoBuilder {
     }
 
     @NonNull
-    public String getKeyValueLine(String key, Object value) {
+    private String getKeyValueLine(String key, Object value) {
         return String.format("%s: <b>%s</b>", key, TextUtils.htmlEncode(value.toString()));
     }
 
     @NonNull
-    public String getKeyValueLine(@StringRes int key, Object value) {
+    private String getKeyValueLine(@StringRes int key, Object value) {
         return getKeyValueLine(ApplicationInstance.getContext().getString(key), value);
     }
 

@@ -26,8 +26,8 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
     private static final int XLARGE_VALUE = -2;
     public static final Dimension XLARGE = new Dimension(XLARGE_VALUE, (Unit)null);
 
-    public int value;
-    public Unit unit;
+    public final int value;
+    public final Unit unit;
 
     @ParcelConstructor
     public Dimension(int value, Unit unit) {

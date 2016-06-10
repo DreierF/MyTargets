@@ -55,7 +55,8 @@ public final class LicencesFragment extends Fragment {
 
         homage.refreshLibraries();
 
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), R.drawable.full_divider));
+        mRecyclerView.addItemDecoration(
+                new DividerItemDecoration(getContext(), R.drawable.full_divider));
         return new HomageAdapter(homage, HomageView.ExtraInfoMode.EXPANDABLE, false);
     }
 

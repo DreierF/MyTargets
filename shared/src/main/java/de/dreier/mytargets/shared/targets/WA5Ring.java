@@ -22,7 +22,7 @@ public class WA5Ring extends TargetModelBase {
         this(ID, R.string.wa_5_ring);
     }
 
-    protected WA5Ring(int id, int nameRes) {
+    WA5Ring(int id, int nameRes) {
         super(id, nameRes);
         zones = new Zone[] {
                 new Zone(50, LEMON_YELLOW, DARK_GRAY, 4),
