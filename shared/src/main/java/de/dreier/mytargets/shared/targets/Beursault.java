@@ -13,7 +13,7 @@ import static android.graphics.Color.WHITE;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 import static de.dreier.mytargets.shared.utils.Color.DARK_GRAY;
 
-public class Beursault extends TargetModelBase {
+class Beursault extends TargetModelBase {
 
     public Beursault() {
         super(23, R.string.beursault);

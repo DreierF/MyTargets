@@ -14,7 +14,7 @@ import org.hamcrest.Matcher;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 
 public class LowLevelActions {
-    static MotionEvent sMotionEventDownHeldView = null;
+    private static MotionEvent sMotionEventDownHeldView = null;
 
     public static PressAndHoldAction pressAndHold(float[] coordinates) {
         return new PressAndHoldAction(coordinates);
@@ -35,7 +35,8 @@ public class LowLevelActions {
         float contentWidth = v.getWidth();
         float contentHeight = v.getHeight();
 
-        float density = InstrumentationRegistry.getTargetContext().getResources().getDisplayMetrics().density;
+        float density = InstrumentationRegistry.getTargetContext().getResources()
+                .getDisplayMetrics().density;
 
         float radH = (contentHeight - 10 * density) / 2.45f;
         float radW = ((int) contentWidth - 20 * density) * 0.5f;
@@ -76,7 +77,9 @@ public class LowLevelActions {
             }
 
             float[] precision = Press.FINGER.describePrecision();
-            sMotionEventDownHeldView = MotionEvents.sendDown(uiController, getTargetCoordinates(view, coordinates), precision).down;
+            sMotionEventDownHeldView = MotionEvents
+                    .sendDown(uiController, getTargetCoordinates(view, coordinates),
+                            precision).down;
             // TODO: save view information and make sure release() is on same view
 
         }
@@ -102,10 +105,12 @@ public class LowLevelActions {
         @Override
         public void perform(final UiController uiController, final View view) {
             if (sMotionEventDownHeldView == null) {
-                throw new AssertionError("Before calling release(), you must call pressAndHold() on a view");
+                throw new AssertionError(
+                        "Before calling release(), you must call pressAndHold() on a view");
             }
 
-            MotionEvents.sendUp(uiController, sMotionEventDownHeldView, getTargetCoordinates(view, coordinates));
+            MotionEvents.sendUp(uiController, sMotionEventDownHeldView,
+                    getTargetCoordinates(view, coordinates));
         }
     }
 }

@@ -8,8 +8,8 @@ import static de.dreier.mytargets.shared.utils.Color.GREEN;
 import static de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW;
 import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
-public class SCAPeriod extends TargetModelBase {
-    public static final int ID = 24;
+class SCAPeriod extends TargetModelBase {
+    private static final int ID = 24;
 
     public SCAPeriod() {
         super(ID, R.string.sca_period);

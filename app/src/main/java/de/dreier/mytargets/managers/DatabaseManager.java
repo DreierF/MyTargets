@@ -118,7 +118,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(StandardRoundDataSource.CREATE_TABLE);
         db.execSQL(RoundTemplateDataSource.CREATE_TABLE);
         ArrayList<StandardRound> rounds = StandardRoundFactory.initTable(mContext);
-        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(mContext, this, db);
+        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(mContext,
+                this, db);
         for (StandardRound round : rounds) {
             standardRoundDataSource.update(round);
         }
@@ -265,7 +266,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
             fillStandardRound(db);
 
             db.execSQL(RoundDataSource.CREATE_TABLE);
-            RoundTemplateDataSource roundTemplateDataSource = new RoundTemplateDataSource(mContext, this, db);
+            RoundTemplateDataSource roundTemplateDataSource = new RoundTemplateDataSource(mContext,
+                    this, db);
 
             Cursor trainings = db.rawQuery("SELECT _id FROM TRAINING", null);
             if (trainings.moveToFirst()) {

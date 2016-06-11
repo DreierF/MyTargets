@@ -11,9 +11,9 @@ import org.parceler.ParcelConstructor;
 import java.io.Serializable;
 
 public class NotificationInfo implements Serializable {
-    public String title;
-    public String text;
-    public Round round;
+    public final String title;
+    public final String text;
+    public final Round round;
 
     @ParcelConstructor
     public NotificationInfo(Round round, String title, String text) {

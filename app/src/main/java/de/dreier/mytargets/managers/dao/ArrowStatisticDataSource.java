@@ -17,25 +17,23 @@ import de.dreier.mytargets.shared.models.Target;
 
 public class ArrowStatisticDataSource extends DataSourceBase {
 
-    public ArrowStatisticDataSource() {
-        super();
-    }
-
     public List<ArrowStatistic> getAll() {
         List<ArrowStatistic> list = new ArrayList<>();
         Cursor res = database
-                .rawQuery("SELECT t.arrow,s.arrow AS number, s.x, s.y, s.points, r.target, r.scoring_style, s.arrow_index, n.name, p._id " +
-                        "FROM TRAINING t, ROUND r, PASSE p, SHOOT s, ROUND_TEMPLATE a, ARROW n " +
-                        "WHERE p._id=s.passe " +
-                        "AND r._id=p.round " +
-                        "AND t._id=r.training " +
-                        "AND s.arrow>0 " +
-                        "AND a._id=r.template " +
-                        "AND t.arrow=n._id " +
-                        "AND p.exact=1 " +
-                        "ORDER BY t.arrow, s.arrow", null);
+                .rawQuery(
+                        "SELECT t.arrow,s.arrow AS number, s.x, s.y, s.points, r.target, r.scoring_style, s.arrow_index, n.name, p._id " +
+                                "FROM TRAINING t, ROUND r, PASSE p, SHOOT s, ROUND_TEMPLATE a, ARROW n " +
+                                "WHERE p._id=s.passe " +
+                                "AND r._id=p.round " +
+                                "AND t._id=r.training " +
+                                "AND s.arrow>0 " +
+                                "AND a._id=r.template " +
+                                "AND t.arrow=n._id " +
+                                "AND p.exact=1 " +
+                                "ORDER BY t.arrow, s.arrow", null);
         if (res.moveToFirst()) {
-            long lastArrowId = 0, lastArrowNumber = 0;
+            long lastArrowId = 0;
+            long lastArrowNumber = 0;
             ArrowStatistic statistic = null;
             do {
                 long arrowId = res.getLong(0);
@@ -67,5 +65,4 @@ public class ArrowStatisticDataSource extends DataSourceBase {
         res.close();
         return list;
     }
-
 }

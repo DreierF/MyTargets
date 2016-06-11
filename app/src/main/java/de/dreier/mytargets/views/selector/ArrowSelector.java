@@ -39,7 +39,8 @@ public class ArrowSelector extends ImageSelectorBase<Arrow> {
     @Override
     public void setOnActivityResultContext(Fragment fragment) {
         super.setOnActivityResultContext(fragment);
-        OnClickListener listener = v -> fragment.startActivityForResult(getAddIntent(), ARROW_ADD_REQUEST_CODE);
+        OnClickListener listener = v -> fragment
+                .startActivityForResult(getAddIntent(), ARROW_ADD_REQUEST_CODE);
         mAddButton.setOnClickListener(listener);
     }
 

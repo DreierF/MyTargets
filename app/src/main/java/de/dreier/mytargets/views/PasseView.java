@@ -81,7 +81,8 @@ public class PasseView extends View {
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
-        int width, height;
+        int width;
+        int height;
 
         if (widthMode == MeasureSpec.EXACTLY) {
             width = widthSize;

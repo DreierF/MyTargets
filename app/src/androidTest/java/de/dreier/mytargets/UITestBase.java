@@ -43,7 +43,7 @@ public class UITestBase {
         return UiDevice.getInstance(getInstrumentation());
     }
 
-    public static ViewAction clickTarget(final float x, final float y) {
+    protected static ViewAction clickTarget(final float x, final float y) {
         return new GeneralClickAction(
                 Tap.SINGLE,
                 new CoordinatesProvider() {
@@ -55,11 +55,11 @@ public class UITestBase {
                 Press.FINGER);
     }
 
-    public static ViewAction holdTapTarget(final float x, final float y) {
+    protected static ViewAction holdTapTarget(final float x, final float y) {
         return LowLevelActions.pressAndHold(new float[]{x, y});
     }
 
-    public static ViewAction releaseTapTarget(final float x, final float y) {
+    protected static ViewAction releaseTapTarget(final float x, final float y) {
         return LowLevelActions.release(new float[]{x, y});
     }
 

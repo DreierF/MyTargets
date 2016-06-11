@@ -20,11 +20,6 @@ import static android.view.View.VISIBLE;
 
 public class FABMenu {
 
-    public interface Listener {
-        boolean isFABExpandable();
-        void onFabClicked(int index);
-    }
-
     @Bind(R.id.fab)
     FloatingActionButton fab;
     @Bind(R.id.fab1)
@@ -42,13 +37,19 @@ public class FABMenu {
     @Bind(R.id.new_text)
     TextView mNewText;
     private boolean isFabOpen = false;
-    private Animation fabOpen;
-    private Animation fabClose;
-    private Animation rotateForward;
-    private Animation rotateBackward;
-    private Animation fabShowAnimation;
-    private Animation fabHideAnimation;
+    private final Animation fabOpen;
+    private final Animation fabClose;
+    private final Animation rotateForward;
+    private final Animation rotateBackward;
+    private final Animation fabShowAnimation;
+    private final Animation fabHideAnimation;
     private Listener listener;
+
+    public interface Listener {
+        boolean isFABExpandable();
+
+        void onFabClicked(int index);
+    }
 
     public FABMenu(Context context, View root) {
         ButterKnife.bind(this, root);
@@ -140,7 +141,7 @@ public class FABMenu {
     }
 
     @OnClick(R.id.overlayView)
-    public void dismissFabMenu() {
+    void dismissFabMenu() {
         animateFAB();
     }
 

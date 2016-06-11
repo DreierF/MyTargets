@@ -21,15 +21,13 @@ import de.dreier.mytargets.fragments.TrainingsFragment;
 public class MainTabsFragmentPagerAdapter extends FragmentPagerAdapter {
     private final Context context;
     private final FragmentBase[] fragments = new FragmentBase[3];
-    {
-        fragments[0] = new TrainingsFragment();
-        fragments[1] = new BowFragment();
-        fragments[2] = new ArrowFragment();
-    }
 
     public MainTabsFragmentPagerAdapter(Context context, FragmentManager fragmentManager) {
         super(fragmentManager);
         this.context = context;
+        fragments[0] = new TrainingsFragment();
+        fragments[1] = new BowFragment();
+        fragments[2] = new ArrowFragment();
     }
 
     @Override
@@ -51,9 +49,5 @@ public class MainTabsFragmentPagerAdapter extends FragmentPagerAdapter {
         } else {
             return context.getString(R.string.arrow);
         }
-    }
-
-    public FragmentBase getFragment(int i) {
-        return fragments[i];
     }
 }

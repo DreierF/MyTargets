@@ -61,12 +61,8 @@ public class NumberPicker extends LinearLayout {
 
     private static final long REPEAT_DELAY = 50;
 
-    public interface OnValueChangedListener {
-        void onValueChanged(int val);
-    }
-
-    private int mMinimum = 1;
-    private int mMaximum = 30;
+    private int minimum = 1;
+    private int maximum = 30;
 
     private Integer value;
 
@@ -79,7 +75,11 @@ public class NumberPicker extends LinearLayout {
     private OnValueChangedListener changeListener;
 
     @PluralsRes
-    private int mTextPattern;
+    private int textPattern;
+
+    public interface OnValueChangedListener {
+        void onValueChanged(int val);
+    }
 
     public void setOnValueChangedListener(OnValueChangedListener listener) {
         changeListener = listener;
@@ -143,7 +143,7 @@ public class NumberPicker extends LinearLayout {
 
     private void initValueEditText() {
         valueText = (TextView) findViewById(R.id.number_value);
-        setValue(mMinimum);
+        setValue(minimum);
     }
 
     private void initDecrementButton() {
@@ -171,7 +171,7 @@ public class NumberPicker extends LinearLayout {
     }
 
     public void setTextPattern(@PluralsRes int textPattern) {
-        mTextPattern = textPattern;
+        this.textPattern = textPattern;
     }
 
     private void increment() {
@@ -183,11 +183,11 @@ public class NumberPicker extends LinearLayout {
     }
 
     public void setMinimum(int minimum) {
-        mMinimum = minimum;
+        this.minimum = minimum;
     }
 
     public void setMaximum(int maximum) {
-        mMaximum = maximum;
+        this.maximum = maximum;
     }
 
     public int getValue() {
@@ -195,19 +195,19 @@ public class NumberPicker extends LinearLayout {
     }
 
     public void setValue(int val) {
-        if (val > mMaximum) {
-            val = mMaximum;
+        if (val > maximum) {
+            val = maximum;
             autoIncrement = false;
         }
-        if (val < mMinimum) {
-            val = mMinimum;
+        if (val < minimum) {
+            val = minimum;
             autoDecrement = false;
         }
         value = val;
-        if (mTextPattern == 0) {
+        if (textPattern == 0) {
             valueText.setText(value.toString());
         } else {
-            valueText.setText(getResources().getQuantityString(mTextPattern, value, value));
+            valueText.setText(getResources().getQuantityString(textPattern, value, value));
         }
         if (changeListener != null) {
             changeListener.onValueChanged(val);

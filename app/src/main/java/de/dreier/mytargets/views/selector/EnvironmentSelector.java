@@ -7,7 +7,6 @@
 
 package de.dreier.mytargets.views.selector;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -45,10 +44,10 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
     }
 
     public void queryWeather(Fragment fragment, int request_code) {
-        if (ContextCompat.checkSelfPermission(fragment.getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(fragment.getContext(), ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             setDefaultWeather();
-            fragment.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+            fragment.requestPermissions(new String[]{ACCESS_FINE_LOCATION},
                     request_code);
         } else {
             queryWeatherInfo(fragment.getContext());

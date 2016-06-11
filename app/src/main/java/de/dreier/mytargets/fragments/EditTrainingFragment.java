@@ -97,7 +97,8 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
 
         if (trainingId == -1) {
             setTitle(R.string.new_training);
-            trainingTitle.setText(getString(trainingType == COMPETITION ? R.string.competition : R.string.training));
+            trainingTitle.setText(getString(
+                    trainingType == COMPETITION ? R.string.competition : R.string.training));
             setTrainingDate();
             bow.setItemId(SettingsManager.getBow());
             arrow.setItemId(SettingsManager.getArrow());
@@ -131,7 +132,8 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
     }
 
     private void applyTrainingType() {
-        View in, out;
+        View in;
+        View out;
         if (trainingType == 0) {
             in = practice;
             out = standardRoundSpinner;

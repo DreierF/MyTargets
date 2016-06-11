@@ -33,8 +33,8 @@ public abstract class SelectorBase<T> extends LinearLayout {
 
     private final View mView;
     private final View mProgress;
-    protected int requestCode;
-    protected Class<?> defaultActivity;
+    int requestCode;
+    Class<?> defaultActivity;
     Class<?> addActivity;
     Button mAddButton;
     T item = null;

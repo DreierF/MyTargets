@@ -71,7 +71,7 @@ public class TargetFragment extends SelectItemFragment<Target>
 
         int position = targets.indexOf(t);
         mSelector.setSelected(position, t.getId(), true);
-        mRecyclerView.scrollToPosition(position);
+        recyclerView.scrollToPosition(position);
         updateSettings();
 
         // Set initial target size
@@ -118,14 +118,16 @@ public class TargetFragment extends SelectItemFragment<Target>
         ArrayList<String> diameters = diameterToList(target.getModel().getDiameters());
         ArrayAdapter<String> diameterSpinnerAdapter = new ArrayAdapter<>(themedContext,
                 android.R.layout.simple_spinner_item, diameters);
-        diameterSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        diameterSpinnerAdapter
+                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         targetSizeSpinner.setAdapter(diameterSpinnerAdapter);
         if (!typeFixed && diameters.size() > 1) {
             targetSizeSpinner.setVisibility(View.VISIBLE);
         } else {
             targetSizeSpinner.setVisibility(View.GONE);
         }
-        targetSizeSpinner.setSelection(diameter < diameters.size() ? diameter : diameters.size() - 1, false);
+        targetSizeSpinner
+                .setSelection(diameter < diameters.size() ? diameter : diameters.size() - 1, false);
     }
 
     private ArrayList<String> diameterToList(Dimension[] diameters) {

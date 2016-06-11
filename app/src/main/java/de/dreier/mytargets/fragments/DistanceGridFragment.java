@@ -52,8 +52,8 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> {
         Bundle bundle = getArguments();
         distance = Parcels.unwrap(bundle.getParcelable(ITEM));
         unit = Unit.from(bundle.getString(DISTANCE_UNIT));
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        mRecyclerView.addItemDecoration(new CardItemDecorator(getActivity(), 3));
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        recyclerView.addItemDecoration(new CardItemDecorator(getActivity(), 3));
     }
 
     @Override
@@ -65,6 +65,8 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> {
 
     @Override
     protected void updateFabButton(List list) {
+        // We don't need an arrow pointing at the distance fab button,
+        // because in most cases we already have a lot of entries
     }
 
     @Override
@@ -72,7 +74,7 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> {
         onClick(holder, (Dimension) holder.getItem());
     }
 
-    protected class DistanceAdapter extends NowListAdapter<Dimension> {
+    private class DistanceAdapter extends NowListAdapter<Dimension> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())

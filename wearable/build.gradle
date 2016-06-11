@@ -19,7 +19,7 @@ android {
         versionName appVersionName
     }
 
-    if(new File("gradle.properties").exists()) {
+    if (new File("gradle.properties").exists()) {
         signingConfigs {
             release {
                 try {

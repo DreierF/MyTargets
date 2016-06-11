@@ -57,9 +57,4 @@ public class ApplicationInstance extends SharedApplicationInstance {
     public static SharedPreferences getLastSharedPreferences() {
         return mContext.getSharedPreferences(MyBackupAgent.PREFS, 0);
     }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
 }

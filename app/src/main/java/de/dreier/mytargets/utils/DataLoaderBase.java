@@ -7,12 +7,12 @@ import java.util.List;
 
 import de.dreier.mytargets.managers.dao.DataSourceBase;
 
-public class DataLoaderBase<T, DS extends DataSourceBase> extends AsyncTaskLoader<List<T>> {
-    final DS mDataSource;
+public class DataLoaderBase<T, D extends DataSourceBase> extends AsyncTaskLoader<List<T>> {
+    final D mDataSource;
     private final BackgroundAction<T> backgroundAction;
     private List<T> mLastDataList = null;
 
-    public DataLoaderBase(Context context, DS dataSource, BackgroundAction<T> a) {
+    public DataLoaderBase(Context context, D dataSource, BackgroundAction<T> a) {
         super(context);
         backgroundAction = a;
         mDataSource = dataSource;

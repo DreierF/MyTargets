@@ -106,7 +106,7 @@ public class BowFragment extends EditableFragment<Bow> implements View.OnClickLi
                 info.addLine(R.string.size, mItem.size);
             }
             for (SightSetting s : mItem.sightSettings) {
-                info.addLine(s.distance.toString() , s.value);
+                info.addLine(s.distance.toString(), s.value);
             }
             mDetails.setText(Html.fromHtml(info.toString()));
         }

@@ -10,6 +10,8 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 
+import java.util.Locale;
+
 import de.dreier.mytargets.models.ArrowStatistic;
 
 public class RoundedTextDrawable extends Drawable {
@@ -33,13 +35,15 @@ public class RoundedTextDrawable extends Drawable {
     }
 
     public RoundedTextDrawable(ArrowStatistic item) {
-        this(String.format("%.1f", item.avgPoints()), item.getAppropriateBgColor(), item.getAppropriateTextColor());
+        this(String.format(Locale.ENGLISH, "%.1f", item.avgPoints()), item.getAppropriateBgColor(),
+                item.getAppropriateTextColor());
     }
 
     @Override
     public void draw(Canvas canvas) {
         canvas.drawOval(mRectF, mPaint);
-        canvas.drawText(mText, mRectF.centerX() - mTextBounds.width() / 2, mRectF.centerY() + mTextBounds.height() / 2, mTextPaint);
+        canvas.drawText(mText, mRectF.centerX() - mTextBounds.width() / 2,
+                mRectF.centerY() + mTextBounds.height() / 2, mTextPaint);
     }
 
     @Override

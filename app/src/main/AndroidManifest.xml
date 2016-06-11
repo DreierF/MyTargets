@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="de.dreier.mytargets">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="de.dreier.mytargets">
 
-    <uses-sdk tools:overrideLibrary="me.oriley.homage, me.oriley.homage.recyclerview" />
+    <uses-sdk tools:overrideLibrary="me.oriley.homage, me.oriley.homage.recyclerview"/>
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="com.android.vending.BILLING" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="com.android.vending.BILLING"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:name=".ApplicationInstance"
@@ -30,11 +30,11 @@
 
         <meta-data
             android:name="com.google.android.backup.api_key"
-            android:value="AEdPqrEAAAAIy_jZMyyGuh5M-ICvUll4H1WyF1R9M8cUcN5wVw" />
+            android:value="AEdPqrEAAAAIy_jZMyyGuh5M-ICvUll4H1WyF1R9M8cUcN5wVw"/>
 
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
 
         <activity
             android:name=".activities.MainActivity"
@@ -42,9 +42,9 @@
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.CustomToolbar.Launcher">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
@@ -54,7 +54,7 @@
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value=".activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.SimpleFragmentActivity$TimerActivity"
@@ -65,7 +65,7 @@
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.InputActivity" />
+                android:value=".activities.InputActivity"/>
         </activity>
         <activity
             android:name=".activities.InputActivity"
@@ -73,7 +73,7 @@
             android:parentActivityName=".activities.SimpleFragmentActivity$TrainingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$TrainingActivity" />
+                android:value=".activities.SimpleFragmentActivity$TrainingActivity"/>
         </activity>
         <activity
             android:name=".activities.SimpleFragmentActivity$EditTrainingActivity"
@@ -83,7 +83,7 @@
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$TrainingActivity" />
+                android:value=".activities.SimpleFragmentActivity$TrainingActivity"/>
         </activity>
         <activity
             android:name=".activities.SimpleFragmentActivity$EditRoundActivity"
@@ -93,7 +93,7 @@
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$TrainingActivity" />
+                android:value=".activities.SimpleFragmentActivity$TrainingActivity"/>
         </activity>
         <activity
             android:name=".activities.SimpleFragmentActivity$EditStandardRoundActivity"
@@ -103,7 +103,7 @@
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.StandardRoundActivity" />
+                android:value=".activities.StandardRoundActivity"/>
         </activity>
         <activity
             android:name=".activities.SimpleFragmentActivity$EditBowActivity"
@@ -112,7 +112,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value=".activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.SimpleFragmentActivity$EditArrowActivity"
@@ -121,7 +121,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value=".activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.ScoreboardActivity"
@@ -129,11 +129,11 @@
             android:parentActivityName=".activities.SimpleFragmentActivity$TrainingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$TrainingActivity" />
+                android:value=".activities.SimpleFragmentActivity$TrainingActivity"/>
         </activity>
         <activity
             android:name=".activities.StatisticsActivity"
-            android:label="@string/statistic" />
+            android:label="@string/statistic"/>
         <activity
             android:name=".activities.ItemSelectActivity$ArrowActivity"
             android:label="@string/arrow"
@@ -141,7 +141,7 @@
             android:parentActivityName=".activities.SimpleFragmentActivity$EditStandardRoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$EditStandardRoundActivity" />
+                android:value=".activities.SimpleFragmentActivity$EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".activities.ItemSelectActivity$BowActivity"
@@ -150,7 +150,7 @@
             android:parentActivityName=".activities.SimpleFragmentActivity$EditStandardRoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$EditStandardRoundActivity" />
+                android:value=".activities.SimpleFragmentActivity$EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".activities.ItemSelectActivity$EnvironmentActivity"
@@ -159,7 +159,7 @@
             android:parentActivityName=".activities.SimpleFragmentActivity$EditStandardRoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$EditStandardRoundActivity" />
+                android:value=".activities.SimpleFragmentActivity$EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".activities.ItemSelectActivity$TargetActivity"
@@ -169,7 +169,7 @@
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$EditStandardRoundActivity" />
+                android:value=".activities.SimpleFragmentActivity$EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".activities.ItemSelectActivity$DistanceActivity"
@@ -179,7 +179,7 @@
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$EditStandardRoundActivity" />
+                android:value=".activities.SimpleFragmentActivity$EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".activities.ItemSelectActivity$WindSpeedActivity"
@@ -188,7 +188,7 @@
             android:parentActivityName=".activities.ItemSelectActivity$EnvironmentActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ItemSelectActivity$EnvironmentActivity" />
+                android:value=".activities.ItemSelectActivity$EnvironmentActivity"/>
         </activity>
         <activity
             android:name=".activities.ItemSelectActivity$WindDirectionActivity"
@@ -197,7 +197,7 @@
             android:parentActivityName=".activities.ItemSelectActivity$EnvironmentActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ItemSelectActivity$EnvironmentActivity" />
+                android:value=".activities.ItemSelectActivity$EnvironmentActivity"/>
         </activity>
         <activity
             android:name=".activities.StandardRoundActivity"
@@ -206,7 +206,7 @@
             android:parentActivityName=".activities.SimpleFragmentActivity$EditTrainingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$EditTrainingActivity" />
+                android:value=".activities.SimpleFragmentActivity$EditTrainingActivity"/>
         </activity>
 
         <!-- Preferences activity -->
@@ -217,7 +217,7 @@
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value=".activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.SimpleFragmentActivity$AboutActivity"
@@ -225,7 +225,7 @@
             android:parentActivityName=".activities.SimpleFragmentActivity$SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$SettingsActivity" />
+                android:value=".activities.SimpleFragmentActivity$SettingsActivity"/>
         </activity>
         <activity
             android:name=".activities.SimpleFragmentActivity$LicencesActivity"
@@ -233,7 +233,7 @@
             android:parentActivityName=".activities.SimpleFragmentActivity$SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$SettingsActivity" />
+                android:value=".activities.SimpleFragmentActivity$SettingsActivity"/>
         </activity>
         <activity
             android:name=".activities.DonateActivity"
@@ -241,9 +241,9 @@
             android:theme="@style/Theme.AppCompat.Translucent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivity$AboutActivity" />
+                android:value=".activities.SimpleFragmentActivity$AboutActivity"/>
         </activity>
-        <activity android:name=".activities.ArrowRankingDetailsActivity" />
+        <activity android:name=".activities.ArrowRankingDetailsActivity"/>
     </application>
 
 </manifest>

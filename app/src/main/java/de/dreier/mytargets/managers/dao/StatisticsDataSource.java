@@ -19,10 +19,6 @@ import de.dreier.mytargets.shared.models.Target;
 
 public class StatisticsDataSource extends DataSourceBase {
 
-    public StatisticsDataSource() {
-        super();
-    }
-
     public LineData getAllTrainings() {
         Cursor res = database
                 .rawQuery("SELECT s.points, r.target, s.passe, r.scoring_style, s.arrow_index  " +
@@ -39,7 +35,8 @@ public class StatisticsDataSource extends DataSourceBase {
         res.moveToFirst();
 
         int oldPasse = -1;
-        int actCounter = 0, maxCounter = 0;
+        int actCounter = 0;
+        int maxCounter = 0;
         int passeIndex = 0;
         ArrayList<Entry> history = new ArrayList<>();
         for (int i = 0; i < res.getCount(); i++) {

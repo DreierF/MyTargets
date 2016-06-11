@@ -51,9 +51,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
         if (rootKey == null) {
             getActivity().setTitle(R.string.preferences);
             updateTimerSummaries();
-        } else if (rootKey.equals("timer")) {
+        } else if ("timer".equals(rootKey)) {
             getActivity().setTitle(R.string.timer);
-        } else if (rootKey.equals("scoreboard")) {
+        } else if ("scoreboard".equals(rootKey)) {
             getActivity().setTitle(R.string.scoreboard);
             updateProfileSummaries();
         }
@@ -70,7 +70,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         bundle.putString("key", preference.getKey());
         dialogFragment.setArguments(bundle);
         dialogFragment.setTargetFragment(this, 0);
-        dialogFragment.show(this.getFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG");
+        dialogFragment.show(this.getFragmentManager(),
+                "android.support.v7.preference.PreferenceFragment.DIALOG");
     }
 
     @SuppressLint("PrivateResource")
@@ -79,7 +80,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         super.onViewCreated(view, savedInstanceState);
 
         // Set the default white background in the view so as to avoid transparency
-        view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.background_material_light));
+        view.setBackgroundColor(
+                ContextCompat.getColor(getContext(), R.color.background_material_light));
     }
 
     @Override
@@ -104,10 +106,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 doExportWithCheck(this);
                 return true;
             case "pref_about":
-                getActivity().startActivity(new Intent(getContext(), SimpleFragmentActivity.AboutActivity.class));
+                getActivity().startActivity(
+                        new Intent(getContext(), SimpleFragmentActivity.AboutActivity.class));
                 return true;
             case "pref_licence":
-                getActivity().startActivity(new Intent(getContext(), SimpleFragmentActivity.LicencesActivity.class));
+                getActivity().startActivity(
+                        new Intent(getContext(), SimpleFragmentActivity.LicencesActivity.class));
                 return true;
             default:
                 return super.onPreferenceTreeClick(preference);
@@ -117,7 +121,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        SettingsFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+        SettingsFragmentPermissionsDispatcher
+                .onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
     @Override

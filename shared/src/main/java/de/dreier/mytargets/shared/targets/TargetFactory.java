@@ -13,7 +13,7 @@ import de.dreier.mytargets.shared.models.Target;
 
 public class TargetFactory {
 
-    private static List<TargetModelBase> list;
+    private static final List<TargetModelBase> list;
 
     static {
         list = new ArrayList<>();

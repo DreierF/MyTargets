@@ -9,7 +9,7 @@ public class Zone {
     final int fillColor;
     final int strokeColor;
     final int strokeWidth;
-    final boolean scoresAsOutsideIn = true;
+    private final boolean scoresAsOutsideIn = true;
 
     public Zone(float radius, int fillColor, int strokeColor, int strokeWidth) {
         this.type = ZoneType.CIRCLE;
@@ -34,7 +34,7 @@ public class Zone {
      * @param ay        y-Coordinate scaled to a 0 ... 1000 coordinate system
      * @return
      */
-    protected boolean isInZone(float ax, float ay) {
+    boolean isInZone(float ax, float ay) {
         switch (type) {
             case CIRCLE:
                 float distance = (ax - midpoint.x) * (ax - midpoint.x) + (ay - midpoint.y) * (ay - midpoint.y);

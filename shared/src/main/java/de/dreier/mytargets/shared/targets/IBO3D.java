@@ -17,7 +17,7 @@ import static de.dreier.mytargets.shared.utils.Color.GRAY;
 import static de.dreier.mytargets.shared.utils.Color.LIGHT_GRAY;
 import static de.dreier.mytargets.shared.utils.Color.RED;
 
-public class IBO3D extends Target3DBase {
+class IBO3D extends Target3DBase {
     public IBO3D() {
         super(17, R.string.ibo_3d);
         zones = new Zone[]{

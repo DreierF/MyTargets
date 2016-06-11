@@ -22,7 +22,7 @@ import de.dreier.mytargets.shared.utils.Color;
 
 public class TargetDrawable extends Drawable {
 
-    protected static final float ARROW_RADIUS = 8;
+    static final float ARROW_RADIUS = 8;
     private static final Path heart = new Path();
     public static final Region HEART_REGION;
     private static final Path ellipse = new Path();
@@ -73,8 +73,8 @@ public class TargetDrawable extends Drawable {
                 (int) rectF.bottom));
     }
 
-    private Target target;
-    public TargetModelBase model;
+    private final Target target;
+    private final TargetModelBase model;
     private Paint paintFill;
     private Paint paintStroke;
     private TextPaint paintText;
@@ -93,7 +93,7 @@ public class TargetDrawable extends Drawable {
         return model;
     }
 
-    public void initPaint() {
+    private void initPaint() {
         paintFill = new Paint();
         paintFill.setAntiAlias(true);
         paintStroke = new Paint();
@@ -113,7 +113,7 @@ public class TargetDrawable extends Drawable {
         draw(canvas, getBounds());
     }
 
-    protected void draw(Canvas canvas, Rect rect) {
+    void draw(Canvas canvas, Rect rect) {
         if (paintFill == null) {
             initPaint();
         }
@@ -142,7 +142,7 @@ public class TargetDrawable extends Drawable {
         drawArrows(canvas, passe, getBounds(), transparent);
     }
 
-    protected void drawArrows(Canvas canvas, Passe passe, Rect rect, boolean transparent) {
+    private void drawArrows(Canvas canvas, Passe passe, Rect rect, boolean transparent) {
         if(!passe.exact) {
             return;
         }
@@ -155,7 +155,7 @@ public class TargetDrawable extends Drawable {
         drawArrow(canvas, shot, getBounds(), transparent);
     }
 
-    protected void drawArrow(Canvas canvas, Shot shot, Rect rect, boolean transparent) {
+    private void drawArrow(Canvas canvas, Shot shot, Rect rect, boolean transparent) {
         int color = model.getContrastColor(shot.zone);
         if(transparent) {
             color = 0x55000000 | color & 0xFFFFFF;
@@ -196,11 +196,11 @@ public class TargetDrawable extends Drawable {
         canvas.drawText(zoneString, pos[0] - width, pos[1] + height, paintText);
     }
 
-    protected float getArrowSize(Rect rect, int arrow) {
+    private float getArrowSize(Rect rect, int arrow) {
         return reCalc(getTargetBounds(rect, arrow), ARROW_RADIUS);
     }
 
-    public Rect getTargetBounds(Rect rect, int index) {
+    private Rect getTargetBounds(Rect rect, int index) {
         Coordinate pos = model.facePositions[index % model.facePositions.length];
         Rect bounds = new Rect();
         bounds.left = (int) (rect.left + reCalc(rect, pos.x - model.faceRadius));
@@ -226,7 +226,7 @@ public class TargetDrawable extends Drawable {
         canvas.drawLine(pos[0] - radius, pos[1], pos[0] + radius, pos[1], paintStroke);
     }
 
-    public void drawZone(Canvas canvas, Rect rect, Zone zone) {
+    private void drawZone(Canvas canvas, Rect rect, Zone zone) {
         switch (zone.type) {
             case CIRCLE:
                 final Coordinate midpoint = zone.midpoint;
@@ -241,7 +241,7 @@ public class TargetDrawable extends Drawable {
         }
     }
 
-    protected void drawStrokePath(Canvas canvas, Rect rect, Path path) {
+    private void drawStrokePath(Canvas canvas, Rect rect, Path path) {
         Matrix scaleMatrix = new Matrix();
         float scale = rect.width() / 1000.0f;
         scaleMatrix.setScale(scale, scale);
@@ -252,7 +252,7 @@ public class TargetDrawable extends Drawable {
         canvas.drawPath(tmp, paintStroke);
     }
 
-    protected void drawStrokeCircle(Canvas canvas, Rect rect, float x, float y, float radius) {
+    private void drawStrokeCircle(Canvas canvas, Rect rect, float x, float y, float radius) {
         final float rad = reCalc(rect, radius);
         final float sx = reCalc(rect, x) + rect.left;
         final float sy = reCalc(rect, y) + rect.top;
@@ -260,7 +260,7 @@ public class TargetDrawable extends Drawable {
         canvas.drawCircle(sx, sy, rad, paintStroke);
     }
 
-    protected float reCalc(Rect rect, float size) {
+    private float reCalc(Rect rect, float size) {
         return size * rect.width() / 1000.0f;
     }
 
@@ -269,7 +269,7 @@ public class TargetDrawable extends Drawable {
         return model.getZoneFromPoint(500.0f + x * 500, 500.0f + y * 500);
     }
 
-    protected void onPostDraw(Canvas canvas, Rect rect) {
+    private void onPostDraw(Canvas canvas, Rect rect) {
         final CenterMark centerMark = model.getCenterMark();
         if (centerMark != null) {
             drawCenterMark(canvas, rect, centerMark);
@@ -335,7 +335,8 @@ public class TargetDrawable extends Drawable {
     }
 
     private int getDiff(int coordinate) {
-        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
         for (Coordinate facePosition : model.facePositions) {
             final float v = coordinate == 0 ? facePosition.x : facePosition.y;
             if (v < min) {

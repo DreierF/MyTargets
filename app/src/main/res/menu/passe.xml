@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".SetTargetsActivity">
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".SetTargetsActivity">
 
     <item
         android:id="@+id/action_show_all"
@@ -14,15 +14,15 @@
                     android:id="@+id/action_show_end"
                     android:checked="true"
                     android:title="@string/show_shots_end"
-                    app:showAsAction="never" />
+                    app:showAsAction="never"/>
                 <item
                     android:id="@+id/action_show_round"
                     android:title="@string/show_shots_round"
-                    app:showAsAction="never" />
+                    app:showAsAction="never"/>
                 <item
                     android:id="@+id/action_show_training"
                     android:title="@string/show_shots_training"
-                    app:showAsAction="never" />
+                    app:showAsAction="never"/>
             </group>
         </menu>
     </item>
@@ -30,5 +30,5 @@
         android:id="@+id/action_show_sidebar"
         android:icon="@drawable/ic_grain_24dp"
         android:title="@string/timer"
-        app:showAsAction="ifRoom|withText" />
+        app:showAsAction="ifRoom|withText"/>
 </menu>

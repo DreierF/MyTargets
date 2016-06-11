@@ -32,32 +32,13 @@ import de.dreier.mytargets.utils.OnCardClickListener;
 import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
-public abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<T>
+abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<T>
         implements OnCardClickListener<T>, LoaderManager.LoaderCallbacks<List<T>> {
 
+    final MultiSelector mSelector = new MultiSelector();
     @PluralsRes
     int itemTypeDelRes;
-
     IdProviderDataSource<T> dataSource;
-    final MultiSelector mSelector = new MultiSelector();
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getLoaderManager().restartLoader(0, null, this);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<T>> loader) {
-
-    }
-
     private final ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(
             mSelector) {
 
@@ -103,6 +84,25 @@ public abstract class EditableFragmentBase<T extends IIdSettable> extends Fragme
         }
     };
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getLoaderManager().restartLoader(0, null, this);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<T>> loader) {
+        // Called when the loader is restarted, but we
+        // don't want to remove all elements from the
+        // screen on resume just in case something changed
+    }
+
     private void remove(List<Integer> positions) {
         Collections.sort(positions);
         Collections.reverse(positions);
@@ -128,8 +128,9 @@ public abstract class EditableFragmentBase<T extends IIdSettable> extends Fragme
                                 for (Pair<Integer, T> item : deleted) {
                                     dataSource.delete(item.getSecond());
                                 }
-                                if(isAdded()) {
-                                    getLoaderManager().restartLoader(0, null, EditableFragmentBase.this);
+                                if (isAdded()) {
+                                    getLoaderManager()
+                                            .restartLoader(0, null, EditableFragmentBase.this);
                                 }
                             }
 
@@ -182,7 +183,7 @@ public abstract class EditableFragmentBase<T extends IIdSettable> extends Fragme
     protected abstract void onEdit(T item);
 
     /**
-     * @param item
+     * @param item Item that has been selected
      */
     protected abstract void onSelected(T item);
 

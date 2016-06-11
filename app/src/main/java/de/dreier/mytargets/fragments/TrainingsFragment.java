@@ -59,7 +59,8 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
 
     @Override
     protected void onEdit(final Training item) {
-        startActivityAnimated(SimpleFragmentActivity.EditTrainingActivity.class, ITEM_ID, item.getId());
+        startActivityAnimated(SimpleFragmentActivity.EditTrainingActivity.class, ITEM_ID,
+                item.getId());
     }
 
     @Override
@@ -80,7 +81,8 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
             }
         }
         Collections.sort(months, Collections.reverseOrder());
-        setList(trainingDataSource, months, data, child -> Utils.getMonthId(child.date), false, new TrainingAdapter());
+        setList(trainingDataSource, months, data, child -> Utils.getMonthId(child.date), false,
+                new TrainingAdapter());
     }
 
     private class TrainingAdapter extends ExpandableNowListAdapter<Month, Training> {
@@ -120,7 +122,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
             int reachedPoints = 0;
             RoundDataSource roundDataSource = new RoundDataSource();
             ArrayList<Round> rounds = roundDataSource.getAll(mItem.getId());
-            for(Round r:rounds) {
+            for (Round r : rounds) {
                 maxPoints += r.info.getMaxPoints();
                 reachedPoints += r.reachedPoints;
             }

@@ -35,7 +35,7 @@ import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_S
 public class MainFragment extends Fragment implements FragmentBase.ContentListener, ViewPager.OnPageChangeListener, FABMenu.Listener {
 
     private final boolean[] empty = new boolean[3];
-    private final int[] stringRes = new int[3];
+    private final static int[] stringRes = new int[3];
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -46,9 +46,9 @@ public class MainFragment extends Fragment implements FragmentBase.ContentListen
     @Bind(R.id.slidingTabs)
     TabLayout tabLayout;
 
-    FABMenu fm;
+    private FABMenu fm;
 
-    {
+    static {
         stringRes[0] = R.string.new_training;
         stringRes[1] = R.string.new_bow;
         stringRes[2] = R.string.new_arrow;
@@ -125,21 +125,23 @@ public class MainFragment extends Fragment implements FragmentBase.ContentListen
                 }
                 break;
             case 1:
-                startActivityAnimated(SimpleFragmentActivity.EditTrainingActivity.class, TRAINING_TYPE, FREE_TRAINING);
+                startActivityAnimated(SimpleFragmentActivity.EditTrainingActivity.class,
+                        TRAINING_TYPE, FREE_TRAINING);
                 break;
             case 2:
-                startActivityAnimated(SimpleFragmentActivity.EditTrainingActivity.class, TRAINING_TYPE, TRAINING_WITH_STANDARD_ROUND);
+                startActivityAnimated(SimpleFragmentActivity.EditTrainingActivity.class,
+                        TRAINING_TYPE, TRAINING_WITH_STANDARD_ROUND);
                 break;
         }
     }
 
-    void startActivityAnimated(Class<?> activity) {
+    private void startActivityAnimated(Class<?> activity) {
         Intent i = new Intent(getContext(), activity);
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
-    void startActivityAnimated(Class<?> activity, String key, int value) {
+    private void startActivityAnimated(Class<?> activity, String key, int value) {
         Intent i = new Intent(getContext(), activity);
         i.putExtra(key, value);
         startActivity(i);
@@ -148,8 +150,8 @@ public class MainFragment extends Fragment implements FragmentBase.ContentListen
 
     @Override
     public void onContentChanged(boolean empty, int stringRes) {
-        for (int i = 0; i < this.stringRes.length; i++) {
-            if (stringRes == this.stringRes[i]) {
+        for (int i = 0; i < MainFragment.stringRes.length; i++) {
+            if (stringRes == MainFragment.stringRes[i]) {
                 this.empty[i] = empty;
             }
         }

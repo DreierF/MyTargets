@@ -103,7 +103,8 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                     name.setText(standardRound.name);
                     standardRoundId = standardRound.getId();
                 } else {
-                    name.setText(String.format("%s %s", getString(R.string.custom), standardRound.name));
+                    name.setText(
+                            String.format("%s %s", getString(R.string.custom), standardRound.name));
                     for (RoundTemplate round : roundTemplateList) {
                         round.setId(-1);
                     }
@@ -215,7 +216,8 @@ public class EditStandardRoundFragment extends EditFragmentBase {
             item = roundTemplate;
 
             // Set title of round
-            title.setText(fragment.getContext().getResources().getQuantityString(R.plurals.rounds, position + 1, position + 1));
+            title.setText(fragment.getContext().getResources()
+                    .getQuantityString(R.plurals.rounds, position + 1, position + 1));
             item.index = position;
 
             distanceSpinner.setOnActivityResultContext(fragment);

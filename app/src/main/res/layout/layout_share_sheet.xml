@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
@@ -11,7 +11,7 @@
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:text="@string/share" />
+        android:text="@string/share"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center"
-                app:srcCompat="@drawable/ic_text_grey600_48dp" />
+                app:srcCompat="@drawable/ic_text_grey600_48dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -45,7 +45,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@string/text"
-                android:textColor="#8A000000" />
+                android:textColor="#8A000000"/>
 
         </LinearLayout>
 
@@ -63,7 +63,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center"
-                app:srcCompat="@drawable/ic_grid_grey600_48dp" />
+                app:srcCompat="@drawable/ic_grid_grey600_48dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@string/scoreboard"
-                android:textColor="#8A000000" />
+                android:textColor="#8A000000"/>
 
         </LinearLayout>
 
@@ -91,7 +91,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center"
-                app:srcCompat="@drawable/ic_dispersion_pattern_grey600_48dp" />
+                app:srcCompat="@drawable/ic_dispersion_pattern_grey600_48dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -101,7 +101,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@string/dispersion_pattern"
-                android:textColor="#8A000000" />
+                android:textColor="#8A000000"/>
 
         </LinearLayout>
 

@@ -105,13 +105,15 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
         roundTemplate.passes++;
         ContentValues values = new ContentValues();
         values.put(PASSES, roundTemplate.passes);
-        database.update(TABLE, values, "_id=?", new String[]{String.valueOf(roundTemplate.getId())});
+        database.update(TABLE, values, "_id=?",
+                new String[]{String.valueOf(roundTemplate.getId())});
     }
 
     public void deletePasse(RoundTemplate roundTemplate) {
         roundTemplate.passes--;
         ContentValues values = new ContentValues();
         values.put(PASSES, roundTemplate.passes);
-        database.update(TABLE, values, "_id=?", new String[]{String.valueOf(roundTemplate.getId())});
+        database.update(TABLE, values, "_id=?",
+                new String[]{String.valueOf(roundTemplate.getId())});
     }
 }

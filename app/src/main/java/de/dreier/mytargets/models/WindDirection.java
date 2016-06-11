@@ -20,11 +20,11 @@ import de.dreier.mytargets.shared.models.IIdProvider;
 @Parcel
 public class WindDirection implements IIdProvider {
 
-    public final long id;
+    private final long id;
     public final String name;
 
     @ParcelConstructor
-    WindDirection(long id, String name) {
+    private WindDirection(long id, String name) {
         this.id = id;
         this.name = name;
     }

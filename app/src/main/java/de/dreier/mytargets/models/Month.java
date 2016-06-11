@@ -16,7 +16,8 @@ import de.dreier.mytargets.shared.models.IIdProvider;
 
 public class Month implements IIdProvider, Comparable<Month> {
     public static final String ID = "_id";
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM yyyy",
+            Locale.getDefault());
     private long id;
 
     public Month(long id) {

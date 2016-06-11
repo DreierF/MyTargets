@@ -13,7 +13,7 @@ import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.managers.DatabaseManager;
 
 public abstract class DataSourceBase {
-    final Context context;
+    private final Context context;
 
     // Database fields
     final SQLiteDatabase database;

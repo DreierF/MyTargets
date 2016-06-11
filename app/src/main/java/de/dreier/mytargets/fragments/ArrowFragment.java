@@ -52,12 +52,14 @@ public class ArrowFragment extends EditableFragment<Arrow> implements View.OnCli
 
     @Override
     protected void onEdit(Arrow item) {
-        startActivityAnimated(SimpleFragmentActivity.EditArrowActivity.class, ARROW_ID, item.getId());
+        startActivityAnimated(SimpleFragmentActivity.EditArrowActivity.class, ARROW_ID,
+                item.getId());
     }
 
     @Override
     protected void onSelected(Arrow item) {
-        startActivityAnimated(SimpleFragmentActivity.EditArrowActivity.class, ARROW_ID, item.getId());
+        startActivityAnimated(SimpleFragmentActivity.EditArrowActivity.class, ARROW_ID,
+                item.getId());
     }
 
     @Override

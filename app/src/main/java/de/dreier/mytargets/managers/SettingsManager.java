@@ -14,9 +14,9 @@ import de.dreier.mytargets.shared.models.Target;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 
 public class SettingsManager {
-    public static final String KEY_DONATED = "donated";
-    public static final String KEY_TIMER_VIBRATE = "timer_vibrate";
-    public static final String KEY_TIMER_SOUND = "timer_sound";
+    private static final String KEY_DONATED = "donated";
+    private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
+    private static final String KEY_TIMER_SOUND = "timer_sound";
     public static final String KEY_TIMER_WARN_TIME = "timer_warn_time";
     public static final String KEY_TIMER_WAIT_TIME = "timer_wait_time";
     public static final String KEY_TIMER_SHOOT_TIME = "timer_shoot_time";
@@ -42,7 +42,8 @@ public class SettingsManager {
     private static final String KEY_FILTER_CLUB = "filter_club";
     private static final String KEY_INPUT_MODE = "target_mode";
     private static final String KEY_SHOW_MODE = "show_mode";
-    private static SharedPreferences preferences = ApplicationInstance.getLastSharedPreferences();
+    private static final SharedPreferences preferences = ApplicationInstance
+            .getLastSharedPreferences();
 
     public static int getStandardRound() {
         return preferences.getInt(KEY_STANDARD_ROUND, 32);
@@ -101,7 +102,8 @@ public class SettingsManager {
         final int targetId = preferences.getInt(KEY_TARGET, 0);
         final int scoringStyle = preferences.getInt(KEY_SCORING_STYLE, 0);
         final int diameterValue = preferences.getInt(KEY_TARGET_DIAMETER_VALUE, 60);
-        final String diameterUnit = preferences.getString(KEY_TARGET_DIAMETER_UNIT, CENTIMETER.toString());
+        final String diameterUnit = preferences
+                .getString(KEY_TARGET_DIAMETER_UNIT, CENTIMETER.toString());
         final Dimension diameter = new Dimension(diameterValue, diameterUnit);
         return new Target(targetId, scoringStyle, diameter);
     }
@@ -259,7 +261,7 @@ public class SettingsManager {
                 .getString(KEY_PROFILE_CLUB, "");
     }
 
-    public static LocalDate getProfileBirthDay() {
+    private static LocalDate getProfileBirthDay() {
         String date = ApplicationInstance.getSharedPreferences()
                 .getString(KEY_PROFILE_BIRTHDAY, "");
         if (date.isEmpty()) {

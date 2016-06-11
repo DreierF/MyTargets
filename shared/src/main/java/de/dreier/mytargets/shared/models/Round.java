@@ -5,7 +5,7 @@ public class Round implements IIdSettable {
     public RoundTemplate info;
     public String comment;
     public int reachedPoints;
-    protected long id;
+    private long id;
 
     public long getId() {
         return id;

@@ -116,10 +116,12 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         if (hasFocus) {
-            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout
+                    .getLayoutParams();
             AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
             if (behavior != null) {
-                behavior.onNestedFling(coordinatorLayout, appBarLayout, null, 0, v.getBottom(), true);
+                behavior.onNestedFling(coordinatorLayout, appBarLayout, null, 0, v.getBottom(),
+                        true);
             }
         }
     }
@@ -156,32 +158,34 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EditWithImageFragmentBasePermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+        EditWithImageFragmentBasePermissionsDispatcher
+                .onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        EasyImage.handleActivityResult(requestCode, resultCode, data, getActivity(), new DefaultCallback() {
+        EasyImage.handleActivityResult(requestCode, resultCode, data, getActivity(),
+                new DefaultCallback() {
 
-            @Override
-            public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
-                EditWithImageFragmentBase.this.oldImageFile = EditWithImageFragmentBase.this.imageFile;
-                loadImage(imageFile);
-            }
+                    @Override
+                    public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
+                        EditWithImageFragmentBase.this.oldImageFile = EditWithImageFragmentBase.this.imageFile;
+                        loadImage(imageFile);
+                    }
 
-            @Override
-            public void onCanceled(EasyImage.ImageSource source, int type) {
-                //Cancel handling, you might wanna remove taken photo if it was canceled
-                if (source == EasyImage.ImageSource.CAMERA) {
-                    File photoFile = EasyImage.lastlyTakenButCanceledPhoto(getContext());
-                    if (photoFile != null) photoFile.delete();
-                }
-            }
-        });
+                    @Override
+                    public void onCanceled(EasyImage.ImageSource source, int type) {
+                        //Cancel handling, you might wanna remove taken photo if it was canceled
+                        if (source == EasyImage.ImageSource.CAMERA) {
+                            File photoFile = EasyImage.lastlyTakenButCanceledPhoto(getContext());
+                            if (photoFile != null) photoFile.delete();
+                        }
+                    }
+                });
     }
 
-    protected void loadImage(final File imageFile) {
+    void loadImage(final File imageFile) {
         this.imageFile = imageFile;
         if (imageFile == null) {
             imageView.setImageResource(defaultDrawable);
@@ -194,7 +198,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
         }
     }
 
-    protected void setImageFile(String path) {
+    void setImageFile(String path) {
         if (path == null) {
             imageFile = null;
             imageView.setImageResource(defaultDrawable);
@@ -222,7 +226,8 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
         if (imageFile != null) {
             try {
                 oldImageFile = imageFile;
-                imageFile = File.createTempFile("img", oldImageFile.getName(), getContext().getFilesDir());
+                imageFile = File
+                        .createTempFile("img", oldImageFile.getName(), getContext().getFilesDir());
                 BackupUtils.copy(oldImageFile, imageFile);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -231,7 +236,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
     }
 
     @Nullable
-    protected String getImageFile() {
+    String getImageFile() {
         if (imageFile == null) {
             return null;
         } else {
@@ -243,13 +248,14 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
         }
     }
 
-    protected byte[] getThumbnail() {
+    byte[] getThumbnail() {
         Bitmap thumbnail;
         if (imageFile == null) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), defaultDrawable);
             thumbnail = ThumbnailUtils.extractThumbnail(bitmap,
                     ThumbnailUtils.TARGET_SIZE_MICRO_THUMBNAIL,
-                    ThumbnailUtils.TARGET_SIZE_MICRO_THUMBNAIL, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+                    ThumbnailUtils.TARGET_SIZE_MICRO_THUMBNAIL,
+                    ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
         } else {
             thumbnail = ThumbnailUtils.createImageThumbnail(imageFile.getPath(), MICRO_KIND);
         }

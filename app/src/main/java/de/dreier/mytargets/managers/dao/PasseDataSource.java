@@ -191,7 +191,8 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         if (res.moveToFirst()) {
             do {
                 count++;
-                sum += new Target(res.getInt(1), res.getInt(2)).getPointsByZone(res.getInt(0), res.getInt(3));
+                sum += new Target(res.getInt(1), res.getInt(2))
+                        .getPointsByZone(res.getInt(0), res.getInt(3));
             } while (res.moveToNext());
         }
         res.close();
@@ -260,7 +261,8 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
             Map.Entry<Pair<Integer, String>, Integer> first = sortedScore.get(0);
             Map.Entry<Pair<Integer, String>, Integer> second = sortedScore.get(1);
             if (first.getKey().getFirst().equals(second.getKey().getFirst())) {
-                final String newTitle = second.getKey().getSecond() + "+" + first.getKey().getSecond();
+                final String newTitle = second.getKey().getSecond() + "+" + first.getKey()
+                        .getSecond();
                 final int newValue = second.getValue() + first.getValue();
                 sortedScore.get(1).getKey().setSecond(newTitle);
                 sortedScore.get(1).setValue(newValue);

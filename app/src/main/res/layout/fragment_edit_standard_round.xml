@@ -1,12 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="de.dreier.mytargets.fragments.EditRoundFragment">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="de.dreier.mytargets.fragments.EditRoundFragment">
 
-    <include layout="@layout/common_toolbar" />
+    <include layout="@layout/common_toolbar"/>
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scrollView"
@@ -23,43 +23,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="16dp"
-                android:layout_toLeftOf="@+id/deleteStandardRound"
-                android:layout_toStartOf="@+id/deleteStandardRound">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/name"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/name"
-                    android:inputType="textNoSuggestions" />
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_toLeftOf="@+id/deleteStandardRound"
+                    android:layout_toStartOf="@+id/deleteStandardRound">
 
-            </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/name"
+                        android:inputType="textNoSuggestions"/>
 
-            <ImageButton
-                android:id="@+id/deleteStandardRound"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:gravity="start"
-                android:padding="16dp"
-                app:srcCompat="@drawable/ic_delete_black_24dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/deleteStandardRound"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:gravity="start"
+                    android:padding="16dp"
+                    app:srcCompat="@drawable/ic_delete_black_24dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"/>
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/dividerColor" />
+                android:background="@color/dividerColor"/>
 
             <RadioGroup
                 android:layout_width="match_parent"
@@ -73,30 +73,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
-                    android:text="@string/outdoor" />
+                    android:text="@string/outdoor"/>
 
                 <RadioButton
                     android:id="@+id/indoor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
-                    android:text="@string/indoor" />
+                    android:text="@string/indoor"/>
 
             </RadioGroup>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/dividerColor" />
+                android:background="@color/dividerColor"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rounds"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layoutManager="LinearLayoutManager" />
+                app:layoutManager="LinearLayoutManager"/>
 
-            <include layout="@layout/layout_add_button" />
+            <include layout="@layout/layout_add_button"/>
 
         </LinearLayout>
 

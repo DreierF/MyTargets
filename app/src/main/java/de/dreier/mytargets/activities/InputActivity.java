@@ -261,10 +261,8 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         }
 
         // Change round template if passe is out of range defined in template
-        if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE) {
-            if (template.passes <= curPasse) {
-                new RoundTemplateDataSource().addPasse(template);
-            }
+        if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE && template.passes <= curPasse) {
+            new RoundTemplateDataSource().addPasse(template);
         }
 
         passe.roundId = round.getId();

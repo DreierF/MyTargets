@@ -41,7 +41,7 @@ public class MainActivity extends Activity implements OnTargetSetListener,
     private GoogleApiClient mGoogleApiClient;
     private WatchViewStub stub;
     private TextView startTrainingHint;
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             round = Parcels.unwrap(intent.getExtras().getParcelable(EXTRA_ROUND));
@@ -138,7 +138,7 @@ public class MainActivity extends Activity implements OnTargetSetListener,
         return 0;
     }
 
-    Collection<String> getNodes() {
+    private Collection<String> getNodes() {
         HashSet<String> results = new HashSet<>();
         NodeApi.GetConnectedNodesResult nodes =
                 Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
@@ -148,7 +148,7 @@ public class MainActivity extends Activity implements OnTargetSetListener,
         return results;
     }
 
-    void sendMessage(Passe p) {
+    private void sendMessage(Passe p) {
         final byte[] data = ParcelableUtil.marshall(Parcels.wrap(p));
         new Thread(() -> {
             sendMessage(WearableUtils.FINISHED_INPUT, data);

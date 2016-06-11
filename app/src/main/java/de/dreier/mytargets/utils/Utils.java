@@ -9,11 +9,11 @@ package de.dreier.mytargets.utils;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import android.os.Build;
 import java.util.List;
 
 public class Utils {

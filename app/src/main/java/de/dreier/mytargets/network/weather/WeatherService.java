@@ -59,7 +59,8 @@ public class WeatherService {
         if (weather.httpCode == 200) {
             return Observable.just(weather);
         } else {
-            return Observable.error(new Exception("There was a problem fetching the weather data."));
+            return Observable
+                    .error(new Exception("There was a problem fetching the weather data."));
         }
     }
 }

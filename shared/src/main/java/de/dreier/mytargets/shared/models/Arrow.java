@@ -10,7 +10,7 @@ import java.util.List;
 import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
 
 public class Arrow implements IImageProvider, IIdSettable {
-    public long id;
+    private long id;
     public String name;
     public String length;
     public String material;

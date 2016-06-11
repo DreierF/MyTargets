@@ -35,16 +35,14 @@ public class SimpleDbTestRule implements TestRule {
     private final TrainingDataSource trainingDataSource;
     private final RoundDataSource roundDataSource;
     private final BowDataSource bowDataSource;
-    private final ArrowDataSource arrowDataSource;
     private final StandardRoundDataSource standardRoundDataSource;
-    private PasseDataSource passeDataSource;
+    private final PasseDataSource passeDataSource;
 
     public SimpleDbTestRule() {
         context = InstrumentationRegistry.getTargetContext();
         trainingDataSource = new TrainingDataSource();
         roundDataSource = new RoundDataSource();
         bowDataSource = new BowDataSource();
-        arrowDataSource = new ArrowDataSource();
         standardRoundDataSource = new StandardRoundDataSource();
         passeDataSource = new PasseDataSource();
     }
@@ -58,7 +56,8 @@ public class SimpleDbTestRule implements TestRule {
                 roundDataSource.deleteAll();
                 bowDataSource.deleteAll();
                 passeDataSource.deleteAll();
-                SettingsManager.setTarget(new Target(WAFull.ID, 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
+                SettingsManager.setTarget(
+                        new Target(WAFull.ID, 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
                 SettingsManager.setDistance(new Dimension(50, Dimension.Unit.METER));
                 SettingsManager.setIndoor(false);
                 SettingsManager.setInputMode(false);
@@ -134,7 +133,8 @@ public class SimpleDbTestRule implements TestRule {
         bow.height = "6 3/8\"";
         bow.type = EBowType.COMPOUND_BOW;
         bow.imageFile = null;
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.recurve_bow);
+        Bitmap bitmap = BitmapFactory
+                .decodeResource(context.getResources(), R.drawable.recurve_bow);
         Bitmap thumbnail = ThumbnailUtils.extractThumbnail(bitmap,
                 ThumbnailUtils.TARGET_SIZE_MICRO_THUMBNAIL,
                 ThumbnailUtils.TARGET_SIZE_MICRO_THUMBNAIL, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);

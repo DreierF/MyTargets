@@ -35,11 +35,13 @@ import static de.dreier.mytargets.PermissionGranter.allowPermissionsIfNeeded;
 public class HelloWorldEspressoTest extends UITestBase {
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
+    public final ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
+            MainActivity.class);
 
     @Before
     public void setUp() {
-        SettingsManager.setTarget(new Target(WAFull.ID, 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
+        SettingsManager
+                .setTarget(new Target(WAFull.ID, 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
         SettingsManager.setDistance(new Dimension(50, Dimension.Unit.METER));
         SettingsManager.setIndoor(false);
         SettingsManager.setInputMode(false);
@@ -62,6 +64,7 @@ public class HelloWorldEspressoTest extends UITestBase {
         onView(withId(R.id.action_save)).perform(click());
         onView(isRoot()).perform(orientationLandscape(mActivityRule));
         navigateUp();
-        onView(withId(R.id.detail_score)).check(matches(withText(CoreMatchers.containsString("0/30")))); //FIXME 0/0 vs 0/30?
+        onView(withId(R.id.detail_score))
+                .check(matches(withText(CoreMatchers.containsString("0/30")))); //FIXME 0/0 vs 0/30?
     }
 }

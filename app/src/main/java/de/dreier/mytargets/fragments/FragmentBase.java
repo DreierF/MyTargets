@@ -44,59 +44,50 @@ import de.dreier.mytargets.utils.OnCardClickListener;
 public abstract class FragmentBase<T extends IIdProvider> extends Fragment
         implements OnCardClickListener<T> {
 
-    public static final String ITEM_ID = "id";
+    static final String ITEM_ID = "id";
 
-    /** Used for communication with FragmentBase's parent activity */
-    public interface ContentListener {
-
-        /**
-         * Called whenever the fragment's content changes.
-         * This callback should be used to show a label for the
-         * main floating action button if the content is empty.
-         *
-         * @param empty Indicates if the fragment is currently empty
-         * @param stringRes String resource id which describes the FAB action
-         */
-        void onContentChanged(boolean empty, int stringRes);
-    }
-
-    /** Used for communicating item selection */
-    public interface OnItemSelectedListener {
-        /**
-         * Called when a item has been selected.
-         * @param item Item that has been selected
-         */
-        void onItemSelected(Parcelable item);
-    }
-
-    /** Resource used to set title when items are selected */
+    /**
+     * Resource used to set title when items are selected
+     */
     @PluralsRes
     int itemTypeSelRes;
 
-    /** Resource describing FAB action */
+    /**
+     * Resource describing FAB action
+     */
     @StringRes
     int newStringRes;
 
-    /** Action mode manager */
+    /**
+     * Action mode manager
+     */
     ActionMode actionMode = null;
 
-    /** Main {@link RecyclerView} of the fragment */
+    /**
+     * Main {@link RecyclerView} of the fragment
+     */
     @Bind(android.R.id.list)
-    RecyclerView mRecyclerView;
+    RecyclerView recyclerView;
 
-    /** Root view of the fragment */
+    /**
+     * Root view of the fragment
+     */
     View rootView;
 
-    /** Holds the ContentListener called when the fragment's content changes */
+    /**
+     * Holds the ContentListener called when the fragment's content changes
+     */
     private ContentListener listener;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @CallSuper
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(getLayoutResource(), container, false);
         ButterKnife.bind(this, rootView);
-        mRecyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(true);
         return rootView;
     }
 
@@ -108,13 +99,16 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
 
     /**
      * Gets the fragments main layout, which is inflated in {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}
+     *
      * @return Layout resource id
      */
     int getLayoutResource() {
         return R.layout.fragment_list;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @CallSuper
     public void onAttach(Context activity) {
@@ -130,6 +124,7 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
 
     /**
      * Tells the parent to update its FAB button
+     *
      * @param list The list of items that is currently displayed in the fragment
      */
     void updateFabButton(List list) {
@@ -138,6 +133,7 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
 
     /**
      * Starts the given activity with the standard animation
+     *
      * @param activity Activity to start
      */
     void startActivityAnimated(Class<?> activity) {
@@ -153,15 +149,43 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
-    public static void setToolbarTransitionName(Toolbar toolbar){
+    static void setToolbarTransitionName(Toolbar toolbar) {
         TextView textViewTitle = null;
-        for(int i = 0; i<toolbar.getChildCount(); i++) {
+        for (int i = 0; i < toolbar.getChildCount(); i++) {
             View view = toolbar.getChildAt(i);
-            if(view instanceof TextView) {
+            if (view instanceof TextView) {
                 textViewTitle = (TextView) view;
                 break;
             }
         }
         ViewCompat.setTransitionName(textViewTitle, "title");
+    }
+
+    /**
+     * Used for communication with FragmentBase's parent activity
+     */
+    public interface ContentListener {
+
+        /**
+         * Called whenever the fragment's content changes.
+         * This callback should be used to show a label for the
+         * main floating action button if the content is empty.
+         *
+         * @param empty     Indicates if the fragment is currently empty
+         * @param stringRes String resource id which describes the FAB action
+         */
+        void onContentChanged(boolean empty, int stringRes);
+    }
+
+    /**
+     * Used for communicating item selection
+     */
+    public interface OnItemSelectedListener {
+        /**
+         * Called when a item has been selected.
+         *
+         * @param item Item that has been selected
+         */
+        void onItemSelected(Parcelable item);
     }
 }

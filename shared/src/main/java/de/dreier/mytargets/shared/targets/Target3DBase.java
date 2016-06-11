@@ -16,9 +16,9 @@ import static de.dreier.mytargets.shared.models.Dimension.MINI;
 import static de.dreier.mytargets.shared.models.Dimension.SMALL;
 import static de.dreier.mytargets.shared.models.Dimension.XLARGE;
 
-public abstract class Target3DBase extends TargetModelBase {
+abstract class Target3DBase extends TargetModelBase {
 
-    public Target3DBase(long id, @StringRes int name) {
+    Target3DBase(long id, @StringRes int name) {
         super(id, name);
         diameters = new Dimension[]{MINI, SMALL, MEDIUM, LARGE, XLARGE};
         this.is3DTarget = true;

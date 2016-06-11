@@ -3,7 +3,7 @@ package de.dreier.mytargets.shared.models;
 import java.util.Date;
 
 public class Training implements IIdSettable {
-    protected long id;
+    private long id;
     public String title = "";
     public Date date = new Date();
     public Environment environment;
