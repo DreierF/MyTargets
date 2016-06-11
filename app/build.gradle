@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.triplet.play'
+apply from: '../jacoco.gradle'
 
 android {
     compileOptions {
@@ -22,33 +23,33 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
-    if (new File("gradle.properties").exists()) {
-        signingConfigs {
-            release {
-                try {
-                    storeFile file(KEYSTORE)
-                    storePassword KEYSTORE_PASSWORD
-                    keyAlias KEY_ALIAS
-                    keyPassword KEY_PASSWORD
-                } catch (ignored) {
-                    throw new InvalidUserDataException('You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.')
-                }
-            }
-        }
-
-        buildTypes {
-            debug {
-                signingConfig signingConfigs.release
-                minifyEnabled false
-            }
-            release {
-                signingConfig signingConfigs.release
-                shrinkResources true
-                minifyEnabled true
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
+    signingConfigs {
+        release {
+            try {
+                storeFile file('../keystore.jks')
+                storePassword project.hasProperty('KEYSTORE_PASSWORD') ? KEYSTORE_PASSWORD : System.getenv('KEYSTORE_PASSWORD')
+                keyAlias 'mytargets'
+                keyPassword project.hasProperty('KEY_PASSWORD') ? KEY_PASSWORD : System.getenv('KEY_PASSWORD')
+            } catch (ignored) {
+                throw new InvalidUserDataException('You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.')
             }
         }
     }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            testCoverageEnabled = true
+        }
+        release {
+            signingConfig signingConfigs.release
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
+        }
+    }
+
     productFlavors {
         regular {}
         screengrab {}
@@ -80,6 +81,7 @@ if (new File("gradle.properties").exists()) {
         generateLocalizedScreenshots.dependsOn assembleScreengrabDebugAndroidTest
         generateLocalizedScreenshots.dependsOn assembleScreengrabDebug
     }
+
     play {
         jsonFile = file(PLAY_STORE_JSON)
         uploadImages = true
@@ -153,10 +155,11 @@ dependencies {
     androidTestCompile "com.android.support:design:$supportLibVersion"
     androidTestCompile "com.android.support:support-annotations:$supportLibVersion"
     androidTestCompile "com.android.support:recyclerview-v7:$supportLibVersion"
-    androidTestCompile 'tools.fastlane:screengrab:0.3.2'
-    androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile 'com.android.support.test:rules:0.5'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile "com.android.support.test:runner:$testSupportLibVersion"
+    androidTestCompile "com.android.support.test:rules:$testSupportLibVersion"
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
-    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2'
+    androidTestCompile "com.android.support.test.espresso:espresso-core:$espressoVersion"
+    androidTestCompile "com.android.support.test.espresso:espresso-contrib:$espressoVersion"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:$espressoVersion"
+    androidTestScreengrabCompile 'tools.fastlane:screengrab:0.3.2'
 }

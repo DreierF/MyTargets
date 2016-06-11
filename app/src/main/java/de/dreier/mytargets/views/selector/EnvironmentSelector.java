@@ -46,6 +46,7 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
     public void queryWeather(Fragment fragment, int request_code) {
         if (ContextCompat.checkSelfPermission(fragment.getContext(), ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
+            setDefaultWeather();
             fragment.requestPermissions(new String[]{ACCESS_FINE_LOCATION},
                     request_code);
         } else {
@@ -66,6 +67,7 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
     @SuppressWarnings("MissingPermission")
     @RequiresPermission(anyOf = {ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION})
     private void queryWeatherInfo(Context context) {
+        setItem(null);
         new Locator(context).getLocation(Locator.Method.NETWORK_THEN_GPS, new Locator.Listener() {
             @Override
             public void onLocationFound(Location location) {

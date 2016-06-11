@@ -4,12 +4,13 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.android.tools.build:gradle:2.2.0-alpha3'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
         classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.0.9'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.4'
+        classpath 'com.trickyandroid:jacoco-everywhere:0.2.1'
     }
 
     configurations.classpath.exclude group: 'com.android.tools.external.lombok'
@@ -21,7 +22,9 @@ plugins {
 
 ext {
     supportLibVersion = '23.4.0'
+    testSupportLibVersion = '0.5'
     playServiceVersion = '9.0.2'
+    espressoVersion = '2.2.2'
     parcelerVersion = '1.1.5'
     appVersionName = '2.2.2-RC1'
     appVersionCode = 40

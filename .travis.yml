@@ -1,41 +1,52 @@
 language: android
-
 jdk:
-  - oraclejdk8
-
+- oraclejdk8
 android:
   components:
-    - platform-tools
-    - tools
-    - build-tools-23.0.3
-    - android-23
-    - extra-android-support
-    - extra-android-m2repository
-    - extra-google-m2repository
+  - platform-tools
+  - tools
+  - build-tools-23.0.3
+  - android-23
+  - extra-android-support
+  - extra-android-m2repository
+  - extra-google-m2repository
   licenses:
-    - '.+'
-
+  - .+
 sudo: required
-
 env:
   global:
    # install timeout in minutes (2 minutes by default)
     - ADB_INSTALL_TIMEOUT=8
 
 before_script:
-#  - echo no | android create avd -f -n test -t android-19 -b armeabi-v7a -d "Nexus 5"
-#  - emulator -avd test -no-skin -no-audio -no-window &
-#  - android-wait-for-emulator
-#  - adb shell settings put global window_animation_scale 0
-#  - adb shell settings put global transition_animation_scale 0
-#  - adb shell settings put global animator_duration_scale 0
-#  - adb shell input keyevent 82 &
+  - echo no | android create avd -f -n test -t android-19 -b armeabi-v7a
+  - emulator -avd test -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell settings put global window_animation_scale 0
+  - adb shell settings put global transition_animation_scale 0
+  - adb shell settings put global animator_duration_scale 0
+  - adb shell input keyevent 82 &
 
 before_install:
-  - export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
-  - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
-  - export JAVA_HOME=$JAVA8_HOME
-
+- export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
+- export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
+- export JAVA_HOME=$JAVA8_HOME
+- openssl aes-256-cbc -K $encrypted_143bf53fc355_key -iv $encrypted_143bf53fc355_iv -in dropbox_uploader.sh.enc -out dropbox_uploader.sh -d
 script:
-  - ./gradlew clean assemble || ./gradlew clean assemble
-#  - ./gradlew connectedScreengrabDebugAndroidTest
+  - ./gradlew clean assembleRegularRelease connectedRegularDebugAndroidTest
+after_success:
+  - curl https://www.jpm4j.org/install/script | sh
+  - jpm install com.codacy:codacy-coverage-reporter:assembly
+  - codacy-coverage-reporter -l Java -r app/build/reports/coverage/regular/debug/report.xml 
+after_failure:
+  - '[ -f ~/.dropbox_uploader ] && ./dropbox_uploader.sh upload app/build/reports/androidTests/connected/flavors/REGULAR/ /$TRAVIS_JOB_NUMBER/Reports'
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: b92hv3aPDGvKOO2s5Q9oAQhxvXvJAg8i+OPA8HwMBSxs/WI7KVC0dfoKXVtQRHpZHxRpiIzXb2BEWNMHTGKB+PFLtUDUPTtdGkrjvW34Y3Ejk+52aQRLsBD+NlgtIpAhYrLLpXxioGQaZwgujTKTEf6wckOk+A1u5+9hxlxtplkL0784tiTMWTQ0ri1fmbZPcuXjwBG0FFKl0tyIZcTxXuUKEG7qYI1iuIBxjjYSMchhS00Gcoi430Jym3TkeZLSgYns2a+d0RIADMhd5zCBI0rhQ3n6iuRDPll170rJKITgt4RpnEOo2kcw/DkLGPWZn9nGoyqpzvZkzbQueXL96qSGsMJcJKzVgTfez8nFa4yK5Zj5JqynVt85QbkpCBc+n//rbG7t9Dm9K5FtgDQvyAISISS4Zps9wlQc3GAQpuS24RXVjiXZPS3eEtA9hYCNrFffMuMALSh6xdX1PvRYepWsiJbk37yMbA8/4jgdJR6sYz8jIa+vDiwC3eOEx+0W9hjHCrzPrwbHoMfZa4V8lJ84NKWvdURqGi3zduiAMVGBHxn5M5GIO5E1MVhBHHF5HmPhiWFUk/rWH6z8tgEPRVlBUp59uzBw7zMLjQhkPus4sRPbUmxwU/A7wsUXuHDdyTvGyhWuoQtK0OoBtZCjaM2KHwRlpG3YMrcIkzRIKLA=
+  file: 'app/build/outputs/apk/app-regular-release.apk'
+  on:
+    tags: true
+    repo: DreierF/MyTargets
+    branch: develop

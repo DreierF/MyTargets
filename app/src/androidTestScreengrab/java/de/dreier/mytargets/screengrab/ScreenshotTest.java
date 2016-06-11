@@ -19,6 +19,7 @@ import de.dreier.mytargets.activities.MainActivity;
 import de.dreier.mytargets.managers.dao.SimpleDbTestRule;
 import tools.fastlane.screengrab.locale.LocaleTestRule;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
@@ -26,6 +27,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withContentDesc
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static de.dreier.mytargets.PermissionGranter.allowPermissionsIfNeeded;
 import static org.hamcrest.core.AllOf.allOf;
 
 @SdkSuppress(minSdkVersion = 18)
@@ -35,9 +37,11 @@ public class ScreenshotTest extends UITestBase {
     @ClassRule
     public static final TestRule classRule = new LocaleTestRule();
 
+    private ActivityTestRule mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+
     @Rule
     public final RuleChain rule = RuleChain.outerRule(new SimpleDbTestRule())
-            .around(new ActivityTestRule<>(MainActivity.class));
+            .around(mActivityTestRule);
 
     @Test
     public void takeScreenshots() throws Exception {
@@ -62,6 +66,7 @@ public class ScreenshotTest extends UITestBase {
         navigateUp();
         onView(withId(R.id.fab)).perform(click());
         onView(withId(R.id.fab1Label)).perform(click());
+        allowPermissionsIfNeeded(mActivityTestRule.getActivity(), ACCESS_FINE_LOCATION);
         SystemScreengrab.screenshot("2_enter_training");
         onView(withContentDescription(R.string.save)).perform(click());
         onView(isRoot()).perform(click());
