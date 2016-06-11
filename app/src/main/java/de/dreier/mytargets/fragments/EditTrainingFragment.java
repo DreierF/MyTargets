@@ -169,9 +169,8 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_LOCATION_PERMISSION:
-                environment.onPermissionResult(activity, grantResults);
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
+            environment.onPermissionResult(activity, grantResults);
         }
     }
 
