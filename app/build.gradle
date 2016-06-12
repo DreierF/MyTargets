@@ -23,6 +23,10 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
+    dataBinding {
+        enabled = true
+    }
+
     signingConfigs {
         release {
             try {

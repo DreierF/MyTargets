@@ -17,24 +17,20 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.databinding.FragmentEditImageBinding;
 import de.dreier.mytargets.shared.utils.BitmapUtils;
 import de.dreier.mytargets.utils.AndroidBug5497Workaround;
 import de.dreier.mytargets.utils.BackupUtils;
@@ -53,44 +49,25 @@ import static de.dreier.mytargets.fragments.EditWithImageFragmentBasePermissions
 @RuntimePermissions
 public abstract class EditWithImageFragmentBase extends EditFragmentBase implements View.OnFocusChangeListener {
 
-    private final int layoutRes;
     private final int defaultDrawable;
 
-    @Bind(R.id.coordinatorLayout)
-    CoordinatorLayout coordinatorLayout;
-
-    @Bind(R.id.appBarLayout)
-    AppBarLayout appBarLayout;
-
-    @Bind(R.id.imgView)
-    ImageView imageView;
-
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    FragmentEditImageBinding binding;
 
     @State
     File imageFile = null;
     @State
     File oldImageFile = null;
 
-    EditWithImageFragmentBase(int layoutRes, int defaultDrawable) {
-        this.layoutRes = layoutRes;
+    EditWithImageFragmentBase(int defaultDrawable) {
         this.defaultDrawable = defaultDrawable;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_edit_image, container, false);
-        setUpToolbar(rootView);
+        binding = FragmentEditImageBinding.inflate(inflater, container, false);
+        setUpToolbar(binding.toolbar);
         Icepick.restoreInstanceState(this, savedInstanceState);
-
-        NestedScrollView content = (NestedScrollView) rootView.findViewById(R.id.content);
-
-        // Inflate whole layout
-        inflater.inflate(layoutRes, content);
-        ButterKnife.bind(this, rootView);
-
-        return rootView;
+        return binding.getRoot();
     }
 
     @Override
@@ -116,12 +93,12 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         if (hasFocus) {
-            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout
+            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) binding.appBarLayout
                     .getLayoutParams();
             AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
             if (behavior != null) {
-                behavior.onNestedFling(coordinatorLayout, appBarLayout, null, 0, v.getBottom(),
-                        true);
+                behavior.onNestedFling(binding.coordinatorLayout, binding.appBarLayout, null, 0,
+                        v.getBottom(), true);
             }
         }
     }
@@ -188,29 +165,13 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
     void loadImage(final File imageFile) {
         this.imageFile = imageFile;
         if (imageFile == null) {
-            imageView.setImageResource(defaultDrawable);
+            binding.imageView.setImageResource(defaultDrawable);
         } else {
             Picasso.with(getContext())
                     .load(imageFile)
                     .fit()
                     .centerCrop()
-                    .into(imageView);
-        }
-    }
-
-    void setImageFile(String path) {
-        if (path == null) {
-            imageFile = null;
-            imageView.setImageResource(defaultDrawable);
-        } else {
-            imageFile = new File(getContext().getFilesDir(), path);
-            if (!imageFile.exists()) {
-                imageFile = new File(path);
-                if (!imageFile.exists()) {
-                    imageFile = null;
-                    imageView.setImageResource(defaultDrawable);
-                }
-            }
+                    .into(binding.imageView);
         }
     }
 
@@ -244,6 +205,22 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
                 return imageFile.getName();
             } else {
                 return imageFile.getPath();
+            }
+        }
+    }
+
+    void setImageFile(String path) {
+        if (path == null) {
+            imageFile = null;
+            binding.imageView.setImageResource(defaultDrawable);
+        } else {
+            imageFile = new File(getContext().getFilesDir(), path);
+            if (!imageFile.exists()) {
+                imageFile = new File(path);
+                if (!imageFile.exists()) {
+                    imageFile = null;
+                    binding.imageView.setImageResource(defaultDrawable);
+                }
             }
         }
     }

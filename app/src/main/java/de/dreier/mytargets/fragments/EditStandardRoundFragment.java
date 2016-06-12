@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,9 +70,8 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         View rootView = inflater.inflate(R.layout.fragment_edit_standard_round, container, false);
 
         ButterKnife.bind(this, rootView);
+        setUpToolbar((Toolbar) rootView.findViewById(R.id.toolbar));
         Icepick.restoreInstanceState(this, savedInstanceState);
-
-        setUpToolbar(rootView);
 
         StandardRound standardRound = null;
         if (getArguments() != null) {
@@ -92,6 +92,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                 round.target = SettingsManager.getTarget();
                 round.targetTemplate = round.target;
                 round.distance = SettingsManager.getDistance();
+                name.setText(standardRound.name);
                 roundTemplateList.add(round);
             } else {
                 setTitle(R.string.edit_standard_round);

@@ -14,16 +14,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
-import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 
 public abstract class EditFragmentBase extends Fragment {
     AppCompatActivity activity;
 
-    void setUpToolbar(View rootView) {
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+    void setUpToolbar(Toolbar toolbar) {
         activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         assert activity.getSupportActionBar() != null;
@@ -45,12 +42,6 @@ public abstract class EditFragmentBase extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.save, menu);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
     }
 
     @Override
