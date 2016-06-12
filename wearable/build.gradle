@@ -19,31 +19,30 @@ android {
         versionName appVersionName
     }
 
-    if (new File("gradle.properties").exists()) {
-        signingConfigs {
-            release {
-                try {
-                    storeFile file(KEYSTORE)
-                    storePassword KEYSTORE_PASSWORD
-                    keyAlias KEY_ALIAS
-                    keyPassword KEY_PASSWORD
-                } catch (ignored) {
-                    throw new InvalidUserDataException("You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.")
-                }
+    signingConfigs {
+        release {
+            try {
+                storeFile file('../keystore.jks')
+                storePassword project.hasProperty('KEYSTORE_PASSWORD') ? KEYSTORE_PASSWORD : System.getenv('KEYSTORE_PASSWORD')
+                keyAlias 'mytargets'
+                keyPassword project.hasProperty('KEY_PASSWORD') ? KEY_PASSWORD : System.getenv('KEY_PASSWORD')
+            } catch (ignored) {
+                throw new InvalidUserDataException('You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.')
             }
         }
+    }
 
-        buildTypes {
-            debug {
-                signingConfig signingConfigs.release
-                minifyEnabled false
-            }
-            release {
-                signingConfig signingConfigs.release
-                shrinkResources true
-                minifyEnabled true
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
-            }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            testCoverageEnabled = true
+        }
+        release {
+            signingConfig signingConfigs.release
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
         }
     }
 }

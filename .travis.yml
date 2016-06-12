@@ -33,7 +33,8 @@ script:
 - ./gradlew clean assembleRegularRelease connectedRegularDebugAndroidTest
 after_success:
 - |
-  if [ "$TRAVIS_TAG" ]; then
+  if [[ "$TRAVIS_TAG" ]]; then
+    ./gradlew publishApkRegularRelease
     ./dropbox_uploader.sh upload app/build/outputs/apk/app-regular-release.apk /$TRAVIS_TAG/MyTargets.apk
     ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /$TRAVIS_TAG/mapping.txt
   fi
