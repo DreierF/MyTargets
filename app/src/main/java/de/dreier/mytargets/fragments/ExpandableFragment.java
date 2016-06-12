@@ -51,6 +51,7 @@ abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSettable>
         updateFabButton(headers);
     }
 
+    @SuppressWarnings("unchecked")
     @NonNull
     @Override
     protected C getItem(int id) {

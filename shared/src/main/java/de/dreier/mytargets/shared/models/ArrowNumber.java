@@ -11,7 +11,7 @@ import org.parceler.Parcel;
 @Parcel
 public class ArrowNumber implements IIdSettable {
     public int number;
-    private long id;
+    long id;
 
     @Override
     public String toString() {

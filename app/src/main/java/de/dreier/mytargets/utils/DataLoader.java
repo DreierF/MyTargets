@@ -18,10 +18,12 @@ public class DataLoader<T extends IIdSettable> extends DataLoaderBase<T, IdProvi
         super(context, dataSource, a);
     }
 
+    @SuppressWarnings("unchecked")
     public void update(T entity) {
         new UpdateTask(this).execute(entity);
     }
 
+    @SuppressWarnings("unchecked")
     public void delete(T entity) {
         new DeleteTask(this).execute(entity);
     }
@@ -31,8 +33,9 @@ public class DataLoader<T extends IIdSettable> extends DataLoaderBase<T, IdProvi
             super(loader);
         }
 
+        @SafeVarargs
         @Override
-        protected Void doInBackground(T... params) {
+        protected final Void doInBackground(T... params) {
             mDataSource.update(params[0]);
             return null;
         }
@@ -43,8 +46,9 @@ public class DataLoader<T extends IIdSettable> extends DataLoaderBase<T, IdProvi
             super(loader);
         }
 
+        @SafeVarargs
         @Override
-        protected Void doInBackground(T... params) {
+        protected final Void doInBackground(T... params) {
             mDataSource.delete(params[0]);
             return null;
         }

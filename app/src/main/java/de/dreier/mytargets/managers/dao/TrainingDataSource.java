@@ -10,8 +10,9 @@ package de.dreier.mytargets.managers.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import org.joda.time.LocalDate;
+
 import java.util.ArrayList;
-import java.util.Date;
 
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
@@ -54,7 +55,7 @@ public class TrainingDataSource extends IdProviderDataSource<Training> {
     public ContentValues getContentValues(Training training) {
         ContentValues values = new ContentValues();
         values.put(TITLE, training.title);
-        values.put(DATE, training.date.getTime());
+        values.put(DATE, training.date.toDate().getTime());
         values.put(STANDARD_ROUND, training.standardRoundId);
         values.put(BOW, training.bow);
         values.put(ARROW, training.arrow);
@@ -72,7 +73,7 @@ public class TrainingDataSource extends IdProviderDataSource<Training> {
         training.environment = new Environment();
         training.setId(cursor.getLong(startColumnIndex));
         training.title = cursor.getString(startColumnIndex + 1);
-        training.date = new Date(cursor.getLong(startColumnIndex + 2));
+        training.date = new LocalDate(cursor.getLong(startColumnIndex + 2));
         training.bow = cursor.getInt(startColumnIndex + 3);
         training.arrow = cursor.getInt(startColumnIndex + 4);
         training.standardRoundId = cursor.getLong(startColumnIndex + 5);

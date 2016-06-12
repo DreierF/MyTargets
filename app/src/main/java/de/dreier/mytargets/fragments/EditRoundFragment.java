@@ -74,7 +74,7 @@ public class EditRoundFragment extends EditRoundPropertiesFragmentBase {
             StandardRound standardRound = standardRoundDataSource.get(round.info.standardRound);
             if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
                 distanceLayout.setVisibility(View.GONE);
-            } else if (standardRound.getRounds().size() > 1) {
+            } else if (standardRound.rounds.size() > 1) {
                 remove.setOnClickListener(v -> {
                     roundDataSource.delete(round);
                     getActivity().finish();
@@ -124,7 +124,7 @@ public class EditRoundFragment extends EditRoundPropertiesFragmentBase {
 
         if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE) {
             round.info.distance = distanceSpinner.getSelectedItem();
-            round.info.index = standardRound.getRounds().size();
+            round.info.index = standardRound.rounds.size();
             new RoundTemplateDataSource().update(round.info);
         }
         roundDataSource.update(round);

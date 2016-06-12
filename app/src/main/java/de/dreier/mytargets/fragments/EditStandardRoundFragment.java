@@ -98,7 +98,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                 // Load saved values
                 indoor.setChecked(standardRound.indoor);
                 outdoor.setChecked(!standardRound.indoor);
-                roundTemplateList = standardRound.getRounds();
+                roundTemplateList = standardRound.rounds;
                 if (standardRound.club == StandardRoundFactory.CUSTOM) {
                     name.setText(standardRound.name);
                     standardRoundId = standardRound.getId();
@@ -146,7 +146,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         standardRound.club = StandardRoundFactory.CUSTOM;
         standardRound.name = name.getText().toString();
         standardRound.indoor = indoor.isChecked();
-        standardRound.setRounds(roundTemplateList);
+        standardRound.rounds = roundTemplateList;
         new StandardRoundDataSource().update(standardRound);
 
         SettingsManager.setIndoor(standardRound.indoor);

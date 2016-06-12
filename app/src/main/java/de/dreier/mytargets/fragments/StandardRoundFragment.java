@@ -154,7 +154,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         getClubs();
 
         // Set default values
-        RoundTemplate firstRound = currentSelection.getRounds().get(0);
+        RoundTemplate firstRound = currentSelection.rounds.get(0);
         setLocation();
         setMeasurementType(firstRound);
         setRoundType(firstRound);

@@ -8,6 +8,7 @@
 package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 import android.widget.ImageView;
@@ -50,7 +51,12 @@ public abstract class ImageSelectorBase<T extends IImageProvider> extends Select
         }
         image.setImageDrawable(item.getDrawable(getContext()));
         if (!isImageSelectable()) {
-            image.setBackgroundDrawable(null);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                image.setBackground(null);
+            } else {
+                //noinspection deprecation
+                image.setBackgroundDrawable(null);
+            }
         }
         invalidate();
     }

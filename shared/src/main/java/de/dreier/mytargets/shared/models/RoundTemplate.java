@@ -8,7 +8,7 @@ public class RoundTemplate implements IIdSettable {
     public Dimension distance;
     public int passes;
     public Target targetTemplate;
-    private long id;
+    long id;
 
     public int getMaxPoints() {
         return target.getEndMaxPoints(arrowsPerPasse) * passes;

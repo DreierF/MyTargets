@@ -19,10 +19,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
+import org.joda.time.LocalDate;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -76,7 +76,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
     @Bind(R.id.timer)
     CheckBox timer;
     private int trainingType = 0;
-    private Date date = new Date();
+    private LocalDate date = new LocalDate();
 
     @Override
     protected int getLayoutResource() {
@@ -176,7 +176,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        date = new Date(new GregorianCalendar(year, monthOfYear, dayOfMonth).getTimeInMillis());
+        date = new LocalDate(year, monthOfYear + 1, dayOfMonth);
         setTrainingDate();
     }
 
@@ -242,7 +242,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
     private ArrayList<Round> createRoundsFromTemplate(StandardRound standardRound, Training training) {
         ArrayList<Round> rounds = new ArrayList<>();
         RoundDataSource roundDataSource = new RoundDataSource();
-        for (RoundTemplate template : standardRound.getRounds()) {
+        for (RoundTemplate template : standardRound.rounds) {
             Round round = new Round();
             round.trainingId = training.getId();
             round.info = template;
@@ -262,7 +262,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
         standardRound.indoor = indoor.isChecked();
         ArrayList<RoundTemplate> rounds = new ArrayList<>();
         rounds.add(getRoundTemplate());
-        standardRound.setRounds(rounds);
+        standardRound.rounds = rounds;
 
 
         SettingsManager.setIndoor(standardRound.indoor);

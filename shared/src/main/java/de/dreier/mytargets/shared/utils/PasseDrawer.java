@@ -21,15 +21,18 @@ import de.dreier.mytargets.shared.models.Target;
 @Parcel
 public class PasseDrawer {
     public static final int NO_SELECTION = -1;
-    private static final int MIN_PADDING = 2;
     public static final int MAX_CIRCLE_SIZE = 17;
+    private static final int MIN_PADDING = 2;
 
-    private Passe mPasse;
-    private int mPressed = NO_SELECTION;
-    private int mSelected = NO_SELECTION;
-    private Coordinate mSelectedPosition;
-    private int mSelectedRadius;
+    Passe mPasse;
+    int mPressed = NO_SELECTION;
+    int mSelected = NO_SELECTION;
+    Coordinate mSelectedPosition;
+    int mSelectedRadius;
 
+    // Animation
+    Coordinate[] mOldCoordinate;
+    float mCurAnimationProgress = -1;
     private transient Circle mCircle;
     private transient View mParent;
     private transient RectF mRect;
@@ -38,13 +41,8 @@ public class PasseDrawer {
     private transient float mDensity;
     private transient int mPPP;
     private transient int mShotsPerRow;
-
     private transient float mRowHeight;
     private transient float mColumnWidth;
-
-    // Animation
-    private Coordinate[] mOldCoordinate;
-    private float mCurAnimationProgress = -1;
     private transient ValueAnimator selectionAnimator;
     private transient int oldRadius;
     private transient int oldSelected;
@@ -137,7 +135,7 @@ public class PasseDrawer {
 
     private Coordinate getAnimatedPosition(int i) {
         Coordinate coordinate = getPosition(i);
-        if (mCurAnimationProgress != -1 && mOldCoordinate[i]!=null) {
+        if (mCurAnimationProgress != -1 && mOldCoordinate[i] != null) {
             float oldX = mOldCoordinate[i].x;
             float oldY = mOldCoordinate[i].y;
             coordinate.x = oldX + (coordinate.x - oldX) * mCurAnimationProgress;

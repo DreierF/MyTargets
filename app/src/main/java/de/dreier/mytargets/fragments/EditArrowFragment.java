@@ -23,7 +23,7 @@ import de.dreier.mytargets.shared.models.ArrowNumber;
 
 public class EditArrowFragment extends EditWithImageFragmentBase {
 
-    public static final String ARROW_ID = "arrow_id";
+    static final String ARROW_ID = "arrow_id";
 
     @Bind(R.id.name)
     EditText name;

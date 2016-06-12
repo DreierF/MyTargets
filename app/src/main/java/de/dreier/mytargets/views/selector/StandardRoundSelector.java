@@ -47,7 +47,7 @@ public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
         super.setOnActivityResultContext(fragment);
         image.setOnClickListener(v -> {
             final StandardRound item = getSelectedItem();
-            Target target = item.getRounds().get(0).targetTemplate;
+            Target target = item.rounds.get(0).targetTemplate;
             if (target.id < 7 || target.id == 10 || target.id == 11) {
                 Intent i = new Intent(getContext(), ItemSelectActivity.TargetActivity.class);
                 i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(target));
@@ -66,7 +66,7 @@ public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
             final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
             final Target st = Parcels.unwrap(parcelable);
             StandardRound item = getSelectedItem();
-            for (RoundTemplate template : item.getRounds()) {
+            for (RoundTemplate template : item.rounds) {
                 Dimension size = template.target.size;
                 template.target = new Target(st.id, st.scoringStyle, size);
             }

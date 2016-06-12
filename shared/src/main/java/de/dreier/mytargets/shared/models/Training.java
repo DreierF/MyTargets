@@ -1,11 +1,11 @@
 package de.dreier.mytargets.shared.models;
 
-import java.util.Date;
+import org.joda.time.LocalDate;
 
 public class Training implements IIdSettable {
-    private long id;
+    long id;
     public String title = "";
-    public Date date = new Date();
+    public LocalDate date = new LocalDate();
     public Environment environment;
     public long standardRoundId;
     public long bow;

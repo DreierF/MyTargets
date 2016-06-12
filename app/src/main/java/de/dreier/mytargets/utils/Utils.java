@@ -9,11 +9,10 @@ package de.dreier.mytargets.utils;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
+
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class Utils {
@@ -28,19 +27,8 @@ public class Utils {
         return pInfo;
     }
 
-    public static boolean hasJellyBean() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
-    }
-
-    public static boolean hasLollipop() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
-    }
-
-    public static long getMonthId(Date date) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(0);
-        c.set(date.getYear() + 1900, date.getMonth(), 1);
-        return c.getTimeInMillis();
+    public static long getMonthId(LocalDate date) {
+        return new LocalDate(date).withDayOfMonth(1).toDate().getTime();
     }
 
     public static long[] toArray(List<Long> values) {

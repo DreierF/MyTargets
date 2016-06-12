@@ -111,12 +111,12 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
         long standardRoundId = item.info.standardRound;
         StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource();
         StandardRound standardRound = standardRoundDataSource.get(standardRoundId);
-        ArrayList<RoundTemplate> roundTemplates = standardRound.getRounds();
+        ArrayList<RoundTemplate> roundTemplates = standardRound.rounds;
 
         if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
             throw new IllegalStateException("Only practice rounds may be deleted!");
         }
-        if (standardRound.getRounds().size() < 1) {
+        if (standardRound.rounds.size() < 1) {
             throw new IllegalStateException("There must be at least one round!");
         }
 
@@ -135,7 +135,7 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
                 roundTemplate.index--;
             }
         }
-        standardRound.setRounds(roundTemplates);
+        standardRound.rounds = roundTemplates;
         standardRoundDataSource.update(standardRound);
     }
 }

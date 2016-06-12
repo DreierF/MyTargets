@@ -20,7 +20,7 @@ import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
 public class TargetModelBase implements IIdProvider {
     boolean isFieldTarget;
-    private final long id;
+    long id;
     private final int nameRes;
     Zone[] zones;
     Dimension[] diameters;

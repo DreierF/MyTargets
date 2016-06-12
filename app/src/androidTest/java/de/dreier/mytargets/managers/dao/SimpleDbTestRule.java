@@ -97,14 +97,14 @@ public class SimpleDbTestRule implements TestRule {
 
         Round round1 = new Round();
         round1.trainingId = training.getId();
-        round1.info = standardRound.getRounds().get(0);
+        round1.info = standardRound.rounds.get(0);
         round1.info.target = round1.info.targetTemplate;
         round1.comment = "";
         roundDataSource.update(round1);
 
         Round round2 = new Round();
         round2.trainingId = training.getId();
-        round2.info = standardRound.getRounds().get(1);
+        round2.info = standardRound.rounds.get(1);
         round2.info.target = round2.info.targetTemplate;
         round2.comment = "";
         roundDataSource.update(round2);
@@ -164,14 +164,14 @@ public class SimpleDbTestRule implements TestRule {
 
         Round round1 = new Round();
         round1.trainingId = training.getId();
-        round1.info = standardRound.getRounds().get(0);
+        round1.info = standardRound.rounds.get(0);
         round1.info.target = round1.info.targetTemplate;
         round1.comment = "";
         roundDataSource.update(round1);
 
         Round round2 = new Round();
         round2.trainingId = training.getId();
-        round2.info = standardRound.getRounds().get(1);
+        round2.info = standardRound.rounds.get(1);
         round2.info.target = round2.info.targetTemplate;
         round2.comment = "";
         roundDataSource.update(round2);

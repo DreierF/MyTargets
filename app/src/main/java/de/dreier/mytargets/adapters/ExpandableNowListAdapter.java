@@ -52,6 +52,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IIdProvider, CHILD
         return HEADER_TYPE;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public ItemBindingHolder<IIdProvider> onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HEADER_TYPE) {
@@ -139,6 +140,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IIdProvider, CHILD
         notifyItemInserted(pos);
     }
 
+    @SuppressWarnings("unchecked")
     public void remove(int pos) {
         DataHolder removed = dataList.remove(pos);
         CHILD data = (CHILD) removed.getData();

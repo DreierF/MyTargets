@@ -413,7 +413,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             return sid.toArray(new Long[sid.size()])[0];
         }
 
-        if (sr.getRounds().isEmpty()) {
+        if (sr.rounds.isEmpty()) {
             return 0L;
         }
         new StandardRoundDataSource(mContext, this, db).update(sr);

@@ -22,12 +22,8 @@ public class StandardRound implements IIdSettable, IImageProvider, IDetailProvid
     public int club;
     public String name;
     public boolean indoor;
-    private ArrayList<RoundTemplate> rounds = new ArrayList<>();
+    public ArrayList<RoundTemplate> rounds = new ArrayList<>();
     public int usages;
-
-    public ArrayList<RoundTemplate> getRounds() {
-        return rounds;
-    }
 
     public void insert(RoundTemplate template) {
         template.index = rounds.size();
@@ -64,10 +60,6 @@ public class StandardRound implements IIdSettable, IImageProvider, IDetailProvid
                     r.arrowsPerPasse, r.target.size);
         }
         return desc;
-    }
-
-    public void setRounds(ArrayList<RoundTemplate> rounds) {
-        this.rounds = rounds;
     }
 
     @Override
