@@ -84,7 +84,6 @@ if (new File("gradle.properties").exists()) {
 
     play {
         jsonFile = file(PLAY_STORE_JSON)
-        uploadImages = true
     }
 }
 

@@ -2,6 +2,8 @@ package de.dreier.mytargets.shared.models;
 
 import org.joda.time.LocalDate;
 
+import java.text.DateFormat;
+
 public class Training implements IIdSettable {
     long id;
     public String title = "";
@@ -26,5 +28,9 @@ public class Training implements IIdSettable {
         return another instanceof Training &&
                 getClass().equals(another.getClass()) &&
                 id == ((Training) another).id;
+    }
+
+    public String getFormattedDate() {
+        return DateFormat.getDateInstance().format(date.toDate());
     }
 }

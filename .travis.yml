@@ -31,12 +31,12 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_143bf53fc355_key -iv $encrypted_143bf53fc355_iv -in dropbox_uploader.sh.enc -out dropbox_uploader.sh -d
 script:
 - ./gradlew clean assembleRegularRelease connectedRegularDebugAndroidTest
+after_success:
 - |
   if [ "$TRAVIS_TAG" ]; then
-    ./gradlew publishApkRelease
-    ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /$TRAVIS_TAG_mapping.txt
+    ./dropbox_uploader.sh upload app/build/outputs/apk/app-regular-release.apk /$TRAVIS_TAG/MyTargets.apk
+    ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /$TRAVIS_TAG/mapping.txt
   fi
-after_success:
 - curl https://www.jpm4j.org/install/script | sudo sh
 - sudo jpm install com.codacy:codacy-coverage-reporter:assembly
 - codacy-coverage-reporter -l Java -r app/build/reports/coverage/regular/debug/report.xml

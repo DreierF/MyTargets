@@ -6,12 +6,12 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 
+import org.joda.time.LocalDate;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Random;
 
 import de.dreier.mytargets.R;
@@ -82,7 +82,7 @@ public class SimpleDbTestRule implements TestRule {
 
         Training training = new Training();
         training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training);
-        training.date = new Date(116, 4 + generator.nextInt(5), generator.nextInt(29));
+        training.date = new LocalDate(2016, 4 + generator.nextInt(5), generator.nextInt(29));
         training.environment = new Environment();
         training.environment.location = "";
         training.environment.weather = EWeather.SUNNY;
@@ -149,7 +149,7 @@ public class SimpleDbTestRule implements TestRule {
 
         Training training = new Training();
         training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training);
-        training.date = new Date(116, 7, 15);
+        training.date = new LocalDate(2016, 7, 15);
         training.environment = new Environment();
         training.environment.location = "";
         training.environment.weather = EWeather.SUNNY;

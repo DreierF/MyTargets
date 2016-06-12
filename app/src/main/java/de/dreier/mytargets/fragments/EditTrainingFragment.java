@@ -181,7 +181,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
     }
 
     private void setTrainingDate() {
-        trainingDate.setText(SimpleDateFormat.getDateInstance().format(date));
+        trainingDate.setText(SimpleDateFormat.getDateInstance().format(date.toDate()));
     }
 
     @Override

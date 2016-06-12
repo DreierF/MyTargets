@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -117,7 +116,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
         @Override
         public void bindCursor() {
             mTitle.setText(mItem.title);
-            mSubtitle.setText(DateFormat.getDateInstance().format(mItem.date));
+            mSubtitle.setText(mItem.getFormattedDate());
             int maxPoints = 0;
             int reachedPoints = 0;
             RoundDataSource roundDataSource = new RoundDataSource();

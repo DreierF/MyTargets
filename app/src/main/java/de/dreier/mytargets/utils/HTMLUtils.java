@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,8 +58,7 @@ public class HTMLUtils {
         String html = "<html>" + CSS;
 
         if (configuration.showTitle) {
-            String formattedDate = DateFormat.getDateInstance().format(training.date);
-            html += "<h3>" + training.title + " (" + formattedDate + ")</h3>";
+            html += "<h3>" + training.title + " (" + training.getFormattedDate() + ")</h3>";
         }
 
         boolean[] equals = new boolean[2];

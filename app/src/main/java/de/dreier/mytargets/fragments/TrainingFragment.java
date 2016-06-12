@@ -29,7 +29,6 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -155,7 +154,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         ActionBar actionBar = activity.getSupportActionBar();
         assert actionBar != null;
         actionBar.setTitle(training.title);
-        actionBar.setSubtitle(DateFormat.getDateInstance().format(training.date));
+        actionBar.setSubtitle(training.getFormattedDate());
     }
 
     @Override
