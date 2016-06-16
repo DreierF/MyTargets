@@ -544,13 +544,13 @@ public class TargetView extends TargetViewBase {
     @Override
     protected void onArrowChanged(int i) {
         if (arrowNumbers.isEmpty() ||
-                currentArrow < round.arrowsPerPasse && passe.shot[currentArrow].arrow != -1) {
+                currentArrow < round.arrowsPerPasse && passe.shot[currentArrow].arrow != null) {
             super.onArrowChanged(i);
         } else {
-            List<Integer> numbersLeft = Stream.of(arrowNumbers).map(an -> an.number)
+            List<String> numbersLeft = Stream.of(arrowNumbers).map(an -> an.number)
                     .collect(Collectors.toList());
             for (Shot s : passe.shot) {
-                numbersLeft.remove((Integer) s.arrow);
+                numbersLeft.remove(s.arrow);
             }
             if (numbersLeft.size() == 0 || currentArrow >= round.arrowsPerPasse) {
                 super.onArrowChanged(i);

@@ -8,18 +8,31 @@
 package de.dreier.mytargets.fragments;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
+
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.adapters.DynamicItemHolder;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.ArrowNumber;
+import de.dreier.mytargets.shared.utils.ParcelsBundler;
+import icepick.State;
 
 public class EditArrowFragment extends EditWithImageFragmentBase {
 
@@ -43,8 +56,13 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     EditText nock;
     @Bind(R.id.arrow_comment)
     EditText comment;
-    @Bind(R.id.arrow_numbers)
-    EditText arrowNumbers;
+    @Bind(R.id.arrowNumbers)
+    RecyclerView arrowNumbers;
+
+    @State(ParcelsBundler.class)
+    List<ArrowNumber> arrowNumbersList = new ArrayList<>();
+
+    private ArrowNumbersAdapter adapter;
 
     private long arrowId = -1;
 
@@ -74,7 +92,16 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
             }
         }
 
+        loadImage(imageFile);
+        adapter = new ArrowNumbersAdapter(this, arrowNumbersList);
+        arrowNumbers.setAdapter(adapter);
         return rootView;
+    }
+
+    @OnClick(R.id.addButton)
+    public void onAddSightSetting() {
+        arrowNumbersList.add(new ArrowNumber());
+        adapter.notifyItemInserted(arrowNumbersList.size() - 1);
     }
 
     private void setArrowValues(Arrow arrow) {
@@ -89,14 +116,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         nock.setText(arrow.nock);
         comment.setText(arrow.comment);
         setImageFile(arrow.imageFile);
-        String text = "";
-        for (ArrowNumber arrowNumber : arrow.numbers) {
-            if (!text.isEmpty()) {
-                text += ",";
-            }
-            text += arrowNumber.number;
-        }
-        arrowNumbers.setText(text);
+        arrowNumbersList = arrow.numbers;
     }
 
     @Override
@@ -111,10 +131,6 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     }
 
     private Arrow buildArrow() {
-        ArrayList<ArrowNumber> numbers = getArrowNumbers();
-        if (numbers == null) {
-            return null;
-        }
         Arrow arrow = new Arrow();
         arrow.setId(arrowId);
         arrow.name = name.getText().toString();
@@ -128,25 +144,49 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         arrow.comment = comment.getText().toString();
         arrow.imageFile = getImageFile();
         arrow.thumb = getThumbnail();
-        arrow.numbers = numbers;
+        arrow.numbers = Stream.of(arrowNumbersList)
+                .filter(value -> value != null)
+                .collect(Collectors.toList());
         return arrow;
     }
 
-    private ArrayList<ArrowNumber> getArrowNumbers() {
-        String text = arrowNumbers.getText().toString().replace(" ", "");
-        if (!text.matches("([0-9]*(,[0-9]*)*)?")) {
-            arrowNumbers.setError(getString(R.string.not_matches_sheme));
-            return null;
+    static class ArrowNumberHolder extends DynamicItemHolder<ArrowNumber> {
+        @Bind(R.id.arrowNumber)
+        EditText arrowNumber;
+        @Bind(R.id.removeArrowNumber)
+        ImageButton remove;
+
+        ArrowNumberHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
         }
-        String[] stringNumber = text.split(",");
-        ArrayList<ArrowNumber> list = new ArrayList<>();
-        for (String num : stringNumber) {
-            if (!num.isEmpty()) {
-                ArrowNumber an = new ArrowNumber();
-                an.number = Integer.parseInt(num);
-                list.add(an);
+
+        @OnTextChanged(R.id.arrowNumber)
+        public void onTextChanged(CharSequence s) {
+            if (s.toString().matches("[0-9]+")) {
+                item.number = s.toString();
+            } else {
+                item.number = null;
             }
         }
-        return list;
+
+        @Override
+        public void onBind(ArrowNumber number, int position, Fragment fragment, View.OnClickListener removeListener) {
+            item = number;
+            arrowNumber.setText(number.number);
+            remove.setOnClickListener(removeListener);
+        }
+    }
+
+    private class ArrowNumbersAdapter extends DynamicItemAdapter<ArrowNumber> {
+        ArrowNumbersAdapter(Fragment fragment, List<ArrowNumber> list) {
+            super(fragment, list, R.string.arrow_number_removed);
+        }
+
+        @Override
+        public DynamicItemHolder<ArrowNumber> onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = inflater.inflate(R.layout.dynamicitem_arrow_numbers, parent, false);
+            return new ArrowNumberHolder(v);
+        }
     }
 }

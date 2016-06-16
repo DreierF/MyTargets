@@ -10,7 +10,7 @@ import org.parceler.Parcel;
 
 @Parcel
 public class ArrowNumber implements IIdSettable {
-    public int number;
+    public String number;
     long id;
 
     @Override

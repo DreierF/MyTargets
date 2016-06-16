@@ -54,7 +54,7 @@ public class ArrowNumberDataSource extends IdProviderDataSource<ArrowNumber> {
         if (res.moveToFirst()) {
             do {
                 ArrowNumber an = new ArrowNumber();
-                an.number = res.getInt(0);
+                an.number = res.getString(0);
                 list.add(an);
             } while (res.moveToNext());
         }

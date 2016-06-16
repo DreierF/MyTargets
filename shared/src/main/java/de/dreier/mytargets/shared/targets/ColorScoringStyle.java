@@ -24,7 +24,7 @@ public class ColorScoringStyle extends ScoringStyle {
     @Override
     public int getReachedPoints(Passe passe) {
         return Stream.of(passe.shotList())
-                .map(s -> getPoints(s.zone, s.arrow))
+                .map(s -> getPoints(s.zone, s.index))
                 .distinct()
                 .collect(Collectors.reducing(0, (a, b) -> a + b));
     }

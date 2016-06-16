@@ -267,49 +267,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            app:srcCompat="@drawable/ic_arrow_number_grey600_24dp"/>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="56dp"
-            android:layout_marginStart="56dp">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/arrow_numbers"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:digits="0123456789,"
-                android:hint="@string/arrow_numbers"
-                android:inputType="number"/>
-
-        </android.support.design.widget.TextInputLayout>
-
-    </FrameLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="16dp"
-        android:paddingEnd="16dp"
-        android:paddingLeft="72dp"
-        android:paddingRight="16dp"
-        android:paddingStart="72dp"
-        android:paddingTop="16dp"
-        android:text="@string/arrow_numbers_desc"/>
-
-    <include layout="@layout/divider_inset"/>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
             app:srcCompat="@drawable/ic_comment_grey600_24dp"/>
 
         <android.support.design.widget.TextInputLayout
@@ -329,5 +286,42 @@
         </android.support.design.widget.TextInputLayout>
 
     </FrameLayout>
+
+    <include layout="@layout/divider_inset"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="16dp"
+        android:paddingEnd="16dp"
+        android:paddingLeft="72dp"
+        android:paddingRight="16dp"
+        android:paddingStart="72dp"
+        android:paddingTop="16dp">
+
+        <TextView
+            style="@style/Label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:text="@string/arrow_numbers"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:text="@string/arrow_numbers_desc"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/arrowNumbers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layoutManager="LinearLayoutManager"/>
+
+        <include layout="@layout/layout_add_button"/>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -26,7 +26,7 @@ public class Circle {
         mTextPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    public void draw(Canvas can, float x, float y, int zone, int rad, boolean comment, int arrow, int number) {
+    public void draw(Canvas can, float x, float y, int zone, int rad, boolean comment, int arrow, String number) {
         // Get color index and font size
         int font_size = (int) (1.2323f * rad + 0.7953f);
 
@@ -57,14 +57,14 @@ public class Circle {
             mTextPaint.setColor(0xFFFFFFFF);
             can.drawText("+", x + rad * 0.8f * density, y - rad * 0.4f * density, mTextPaint);
         }
-        if (number > -1) {
+        if (number != null) {
             circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
             circleColorP.setColor(0xFF333333);
             can.drawCircle(x + rad * 0.8f * density, y + rad * 0.8f * density, 8 * density,
                     circleColorP);
             mTextPaint.setTextSize(font_size * density * 0.5f);
             mTextPaint.setColor(0xFFFFFFFF);
-            can.drawText(String.valueOf(number), x + rad * 0.8f * density,
+            can.drawText(number, x + rad * 0.8f * density,
                     y + rad * 1.05f * density,
                     mTextPaint);
         }

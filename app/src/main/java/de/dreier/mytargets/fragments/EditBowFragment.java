@@ -128,7 +128,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
                 setBowValues(bow);
             } else {
                 // Set to default values
-                imageFile = null;
+                setImageFile(null);
                 setTitle(R.string.my_bow);
                 name.setText(R.string.my_bow);
                 recurveBow.setChecked(true);

@@ -42,7 +42,7 @@ import de.dreier.mytargets.utils.BackupUtils;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 15;
     private static DatabaseManager sInstance;
     private final Context mContext;
 
@@ -351,6 +351,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     "WHERE p.round=r._id " +
                     "AND r.training=t._id " +
                     "AND t.exact=1)");
+        }
+        if (oldVersion < 15) {
+            db.execSQL("UPDATE SHOOT SET arrow=NULL WHERE arrow='-1'");
         }
         onCreate(db);
     }

@@ -114,7 +114,7 @@ public class PasseDrawer {
             int radius = getRadius(i);
             if (radius > 0) {
                 mCircle.draw(canvas, coordinate.x, coordinate.y, shot.zone, radius,
-                        !TextUtils.isEmpty(shot.comment) && i != mSelected, i, shot.arrow);
+                        !TextUtils.isEmpty(shot.comment) && i != mSelected, shot.index, shot.arrow);
             }
         }
     }

@@ -278,4 +278,5 @@
     <string name="hits">Hits</string>
     <string name="misses">Misses</string>
     <string name="percentage_reached_points">Percentage of reached points</string>
+    <string name="arrow_number_removed">Arrow number removed!</string>
 </resources>

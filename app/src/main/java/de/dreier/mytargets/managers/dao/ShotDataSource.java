@@ -57,7 +57,7 @@ public class ShotDataSource extends IdProviderDataSource<Shot> {
         shot.x = cursor.getFloat(3);
         shot.y = cursor.getFloat(4);
         shot.comment = cursor.getString(5);
-        shot.arrow = cursor.getInt(6);
+        shot.arrow = cursor.getString(6);
         shot.index = cursor.getInt(7);
         return shot;
     }

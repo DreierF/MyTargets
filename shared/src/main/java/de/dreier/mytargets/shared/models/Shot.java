@@ -11,7 +11,7 @@ public class Shot implements IIdSettable, Comparable<Shot> {
     public String comment = "";
 
     // Is the actual number of the arrow not its index, arrow id or something else
-    public int arrow = -1;
+    public String arrow = null;
 
     // The index of the shot in the containing passe
     public int index;
