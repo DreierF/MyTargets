@@ -13,7 +13,7 @@
   <string name="arrow">Šíp</string>
   <string name="round">Kolo</string>
   <string name="points">Body</string>
-  <string name="passe">Koniec</string>
+  <string name="passe">Sada</string>
   <string name="passe_n">Sada %d</string>
   <!-- Overview -->
   <string name="new_training">Nový tréning</string>
@@ -249,19 +249,19 @@
   <string name="network_linkedin">Sieť v LinkedIn</string>
   <string name="enter_scores_only_description">Umožňuje zadať iba skóre nie presnú pozíciu šípu. Použite túto možnosť pre zadávanie údajov cez vaše smart hodinky alebo pre zadanie historických údajov.</string>
   <string name="enter_scores_only">Zadať iba skóre</string>
-  <string name="search">Search</string>
+  <string name="search">Hľadať</string>
   <string name="us">US</string>
-  <string name="show_shots_training">Whole training</string>
-  <string name="show_shots_round">Current round</string>
-  <string name="show_shots_end">Current end</string>
-  <string name="profile">Profile</string>
-  <string name="birthday">Birthday</string>
-  <string name="first_name">First name</string>
-  <string name="last_name">Last name</string>
-  <string name="age">Age</string>
-  <string name="show_signature">Signature</string>
-  <string name="witness">Witness</string>
-  <string name="archer">Archer</string>
-  <string name="hits">Hits</string>
-  <string name="misses">Misses</string>
+  <string name="show_shots_training">Celý tréning</string>
+  <string name="show_shots_round">Aktuálne kolo</string>
+  <string name="show_shots_end">Aktuálna sada</string>
+  <string name="profile">Profil</string>
+  <string name="birthday">Narodeniny</string>
+  <string name="first_name">Meno</string>
+  <string name="last_name">Priezvisko</string>
+  <string name="age">Vek</string>
+  <string name="show_signature">Podpis</string>
+  <string name="witness">Svedok</string>
+  <string name="archer">Lukostrelec</string>
+  <string name="hits">Zásahov</string>
+  <string name="misses">Minutí</string>
 </resources>
