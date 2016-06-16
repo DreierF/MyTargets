@@ -232,7 +232,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
                 // Build and fire intent to ask for share provider
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
-                shareIntent.setType("image/png");
+                shareIntent.setType("*/*");
                 startActivity(shareIntent);
             } catch (IOException e) {
                 e.printStackTrace();
