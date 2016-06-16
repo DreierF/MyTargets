@@ -25,7 +25,7 @@ class NFAAIndoor5Spot extends TargetModelBase {
                 new Zone(500, SAPPHIRE_BLUE, WHITE, 0)
         };
         scoringStyles = new ScoringStyle[]{
-                new ScoringStyle(true, 5, 5, 5, 4),
+                new ScoringStyle(true, 5, 5, 4, 4),
                 new ScoringStyle(false, 6, 6, 5, 4),
                 new ScoringStyle(false, 7, 6, 5, 4)
         };
