@@ -264,4 +264,5 @@
   <string name="archer">Lukostrelec</string>
   <string name="hits">Zásahov</string>
   <string name="misses">Minutí</string>
+  <string name="percentage_reached_points">Percentage of reached points</string>
 </resources>

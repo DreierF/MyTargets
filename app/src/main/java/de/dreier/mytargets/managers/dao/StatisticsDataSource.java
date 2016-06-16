@@ -58,8 +58,7 @@ public class StatisticsDataSource extends DataSourceBase {
         history.add(new Entry(percent, passeIndex));
         res.close();
 
-
-        LineDataSet series = new LineDataSet(history, "All trainings");
+        LineDataSet series = new LineDataSet(history, "");
         series.setColors(new int[]{0xFF33B5E5});
         series.setLineWidth(2);
 

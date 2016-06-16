@@ -14,7 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+
+import java.util.Arrays;
+import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.dao.StatisticsDataSource;
@@ -39,14 +45,18 @@ public class StatisticsFragment extends Fragment {
         switch (pos) {
             case 0:
                 data = new StatisticsDataSource().getAllTrainings();
-                chartView.setDescription("Percentage of reached points (for all passes)");
+                chartView.setDescription(getString(R.string.percentage_reached_points));
                 break;
             default:
                 data = new StatisticsDataSource().getAllRounds(training);
-                chartView.setDescription(
-                        "Percentage of reached points (for all passes of the current round)");
+                chartView.setDescription(getString(R.string.percentage_reached_points));
                 break;
         }
+
+        List<String> xs = data.getXVals();
+        ILineDataSet ys = data.getDataSets().get(0);
+        ILineDataSet regressionLine = generateLinearRegressionLine(xs, ys);
+        data.addDataSet(regressionLine);
 
         chartView.getXAxis().setEnabled(false);
         chartView.getAxisRight().setEnabled(false);
@@ -55,5 +65,49 @@ public class StatisticsFragment extends Fragment {
         chartView.animateXY(2000, 2000);
 
         return rootView;
+    }
+
+    //TODO refactor to get rid of the Integer.parseInt() calls
+    private ILineDataSet generateLinearRegressionLine(List<String> xs, ILineDataSet dataSet) {
+        final int dataSetSize = dataSet.getEntryCount();
+        int[] x = new int[dataSetSize];
+        float[] y = new float[dataSetSize];
+        // first pass: read in data, compute x bar and y bar
+        int n = 0;
+        float sum_x = 0.0f, sum_y = 0.0f;
+        for (int i = 0; i < dataSetSize; i++) {
+            final Entry entry = dataSet.getEntryForIndex(i);
+            final String xVal = xs.get(entry.getXIndex());
+            x[n] = Integer.parseInt(xVal);
+            y[n] = entry.getVal();
+            sum_x += x[n];
+            sum_y += y[n];
+            n++;
+        }
+        if (n < 1) {
+            return null;
+        }
+        float x_bar = sum_x / n;
+        float y_bar = sum_y / n;
+
+        // second pass: compute summary statistics
+        float xx_bar = 0.0f, xy_bar = 0.0f;
+        for (int i = 0; i < n; i++) {
+            xx_bar += (x[i] - x_bar) * (x[i] - x_bar);
+            xy_bar += (x[i] - x_bar) * (y[i] - y_bar);
+        }
+        float beta1 = xy_bar / xx_bar;
+        float beta0 = y_bar - beta1 * x_bar;
+        float y0 = beta1 * Integer.parseInt(xs.get(0)) + beta0;
+        float y1 = beta1 * Integer.parseInt(xs.get(dataSetSize - 1)) + beta0;
+        Entry first = new Entry(y0, 0);
+        Entry last = new Entry(y1, dataSetSize - 1);
+        List<Entry> yValues = Arrays.asList(first, last);
+        LineDataSet lineDataSet = new LineDataSet(yValues, "");
+        lineDataSet.setColors(new int[]{0xFF888888});
+        lineDataSet.setCircleRadius(0);
+        lineDataSet.setValueTextSize(0);
+        lineDataSet.setLineWidth(2);
+        return lineDataSet;
     }
 }
