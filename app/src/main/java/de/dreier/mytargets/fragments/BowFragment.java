@@ -59,11 +59,6 @@ public class BowFragment extends EditableFragment<Bow> implements View.OnClickLi
     }
 
     @Override
-    protected void onSelected(Bow item) {
-        startActivityAnimated(SimpleFragmentActivity.EditBowActivity.class, BOW_ID, item.getId());
-    }
-
-    @Override
     public void onClick(View v) {
         startActivityAnimated(SimpleFragmentActivity.EditBowActivity.class);
     }

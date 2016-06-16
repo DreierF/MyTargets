@@ -9,6 +9,7 @@ package de.dreier.mytargets.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -21,38 +22,43 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.parceler.Parcels;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivity;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
+import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.utils.FABMenu;
 
+import static de.dreier.mytargets.fragments.EditArrowFragment.ARROW_ID;
+import static de.dreier.mytargets.fragments.EditBowFragment.BOW_ID;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_TYPE;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND;
+import static de.dreier.mytargets.fragments.FragmentBase.ITEM_ID;
 
-public class MainFragment extends Fragment implements FragmentBase.ContentListener, ViewPager.OnPageChangeListener, FABMenu.Listener {
+public class MainFragment extends Fragment implements FragmentBase.ContentListener, ViewPager.OnPageChangeListener, FABMenu.Listener, FragmentBase.OnItemSelectedListener {
 
-    private final boolean[] empty = new boolean[3];
     private final static int[] stringRes = new int[3];
-
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
-
-    @Bind(R.id.viewPager)
-    ViewPager viewPager;
-
-    @Bind(R.id.slidingTabs)
-    TabLayout tabLayout;
-
-    private FABMenu fm;
 
     static {
         stringRes[0] = R.string.new_training;
         stringRes[1] = R.string.new_bow;
         stringRes[2] = R.string.new_arrow;
     }
+
+    private final boolean[] empty = new boolean[3];
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.viewPager)
+    ViewPager viewPager;
+    @Bind(R.id.slidingTabs)
+    TabLayout tabLayout;
+    private FABMenu fm;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
@@ -148,6 +154,13 @@ public class MainFragment extends Fragment implements FragmentBase.ContentListen
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
+    private void startActivityAnimated(Class<?> activity, String key, long value) {
+        Intent i = new Intent(getContext(), activity);
+        i.putExtra(key, value);
+        startActivity(i);
+        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
     @Override
     public void onContentChanged(boolean empty, int stringRes) {
         for (int i = 0; i < MainFragment.stringRes.length; i++) {
@@ -157,6 +170,21 @@ public class MainFragment extends Fragment implements FragmentBase.ContentListen
         }
         fm.notifyContentChanged();
         onPageSelected(viewPager.getCurrentItem());
+    }
+
+    @Override
+    public void onItemSelected(Parcelable passedItem) {
+        IIdProvider item = Parcels.unwrap(passedItem);
+        if (item instanceof Arrow) {
+            startActivityAnimated(SimpleFragmentActivity.EditArrowActivity.class, ARROW_ID,
+                    item.getId());
+        } else if (item instanceof Bow) {
+            startActivityAnimated(SimpleFragmentActivity.EditBowActivity.class, BOW_ID,
+                    item.getId());
+        } else {
+            startActivityAnimated(SimpleFragmentActivity.EditTrainingActivity.class, ITEM_ID,
+                    item.getId());
+        }
     }
 
     @Override

@@ -57,12 +57,6 @@ public class ArrowFragment extends EditableFragment<Arrow> implements View.OnCli
     }
 
     @Override
-    protected void onSelected(Arrow item) {
-        startActivityAnimated(SimpleFragmentActivity.EditArrowActivity.class, ARROW_ID,
-                item.getId());
-    }
-
-    @Override
     public void onClick(View v) {
         startActivityAnimated(SimpleFragmentActivity.EditArrowActivity.class);
     }
