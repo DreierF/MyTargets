@@ -1,6 +1,7 @@
 package de.dreier.mytargets.shared.targets;
 
 import de.dreier.mytargets.shared.models.Coordinate;
+import de.dreier.mytargets.shared.utils.Color;
 
 public class Zone {
     final ZoneType type;
@@ -47,5 +48,21 @@ public class Zone {
                 return TargetDrawable.ELLIPSE_REGION.contains((int) ax, (int) ay);
         }
         return false;
+    }
+
+    public int getFillColor() {
+        return fillColor;
+    }
+
+    public int getStrokeColor() {
+        return strokeColor;
+    }
+
+    public int getStrokeWidth() {
+        return strokeWidth;
+    }
+
+    public int getTextColor() {
+        return Color.getContrast(fillColor);
     }
 }

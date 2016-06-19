@@ -199,6 +199,14 @@
     <item quantity="one">Runde %d</item>
     <item quantity="other">Runde %d</item>
   </plurals>
+  <plurals name="round_selected">
+    <item quantity="one">%d Runde ausgewählt</item>
+    <item quantity="other">%d Runden ausgewählt</item>
+  </plurals>
+  <plurals name="round_deleted">
+    <item quantity="one">%d Runde gelöscht</item>
+    <item quantity="other">%d Runden gelöscht</item>
+  </plurals>
   <string name="date">Datum</string>
   <string name="edit_round">Runde bearbeiten</string>
   <string name="draw_weight">Zugkraft</string>
@@ -254,4 +262,5 @@
   <string name="misses">Nicht-Treffer</string>
   <string name="percentage_reached_points">Geschossene Ringe (in %%)</string>
   <string name="arrow_number_removed">Pfeilnummer gelöscht!</string>
+  <string name="new_end">Neue Passe</string>
 </resources>

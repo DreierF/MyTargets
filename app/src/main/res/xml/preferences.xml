@@ -43,12 +43,12 @@
                     android:title="@string/comments"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="scoreboard_display_dispersion_pattern"
-                    android:title="@string/dispersion_pattern"/>
-                <CheckBoxPreference
-                    android:defaultValue="true"
                     android:key="scoreboard_display_points_colored"
                     android:title="@string/show_points_colored"/>
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="scoreboard_display_signature"
+                    android:title="@string/show_signature"/>
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/print">
                 <CheckBoxPreference
@@ -69,10 +69,6 @@
                     android:title="@string/comments"/>
                 <CheckBoxPreference
                     android:defaultValue="false"
-                    android:key="scoreboard_print_dispersion_pattern"
-                    android:title="@string/dispersion_pattern"/>
-                <CheckBoxPreference
-                    android:defaultValue="false"
                     android:key="scoreboard_print_points_colored"
                     android:title="@string/show_points_colored"/>
                 <CheckBoxPreference
@@ -82,11 +78,11 @@
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/share">
                 <CheckBoxPreference
-                    android:defaultValue="false"
+                    android:defaultValue="true"
                     android:key="scoreboard_share_title"
                     android:title="@string/title"/>
                 <CheckBoxPreference
-                    android:defaultValue="false"
+                    android:defaultValue="true"
                     android:key="scoreboard_share_properties"
                     android:title="@string/properties"/>
                 <CheckBoxPreference
@@ -94,17 +90,17 @@
                     android:key="scoreboard_share_table"
                     android:title="@string/table"/>
                 <CheckBoxPreference
-                    android:defaultValue="false"
+                    android:defaultValue="true"
                     android:key="scoreboard_share_comments"
                     android:title="@string/comments"/>
-                <CheckBoxPreference
-                    android:defaultValue="false"
-                    android:key="scoreboard_share_dispersion_pattern"
-                    android:title="@string/dispersion_pattern"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_share_points_colored"
                     android:title="@string/show_points_colored"/>
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="scoreboard_share_signature"
+                    android:title="@string/show_signature"/>
             </PreferenceCategory>
         </PreferenceScreen>
         <PreferenceScreen

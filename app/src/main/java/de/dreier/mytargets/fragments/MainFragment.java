@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
 import de.dreier.mytargets.databinding.FragmentMainBinding;
 
@@ -43,17 +44,20 @@ public class MainFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.settings, menu);
+        inflater.inflate(R.menu.statistics_settings, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_preferences) {
-            startActivity(
-                    new Intent(getContext(), SimpleFragmentActivityBase.SettingsActivity.class));
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_statistics:
+                startActivity(new Intent(getContext(), StatisticsActivity.class));
+                return true;
+            case R.id.action_preferences:
+                startActivity(new Intent(getContext(), SimpleFragmentActivityBase.SettingsActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

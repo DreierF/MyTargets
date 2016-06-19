@@ -139,7 +139,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
             int maxPoints = 0;
             int reachedPoints = 0;
             RoundDataSource roundDataSource = new RoundDataSource();
-            ArrayList<Round> rounds = roundDataSource.getAll(mItem.getId());
+            List<Round> rounds = roundDataSource.getAll(mItem.getId());
             for (Round r : rounds) {
                 maxPoints += r.info.getMaxPoints();
                 reachedPoints += r.reachedPoints;

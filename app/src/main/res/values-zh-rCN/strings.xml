@@ -187,6 +187,12 @@
   <plurals name="rounds">
     <item quantity="other">回合 %d</item>
   </plurals>
+  <plurals name="round_selected">
+    <item quantity="other">%d rounds selected</item>
+  </plurals>
+  <plurals name="round_deleted">
+    <item quantity="other">%d rounds deleted</item>
+  </plurals>
   <string name="date">日期</string>
   <string name="edit_round">编辑回合</string>
   <string name="draw_weight">弓拉力</string>
@@ -242,4 +248,5 @@
   <string name="misses">Misses</string>
   <string name="percentage_reached_points">Percentage of reached points</string>
   <string name="arrow_number_removed">Arrow number removed!</string>
+  <string name="new_end">New end</string>
 </resources>

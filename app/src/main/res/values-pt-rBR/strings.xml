@@ -199,6 +199,14 @@
     <item quantity="one">Partida %d</item>
     <item quantity="other">Partida %d</item>
   </plurals>
+  <plurals name="round_selected">
+    <item quantity="one">%d round selected</item>
+    <item quantity="other">%d rounds selected</item>
+  </plurals>
+  <plurals name="round_deleted">
+    <item quantity="one">%d round deleted</item>
+    <item quantity="other">%d rounds deleted</item>
+  </plurals>
   <string name="date">Data</string>
   <string name="edit_round">Editar round</string>
   <string name="draw_weight">Potência na puxada</string>
@@ -254,4 +262,5 @@
   <string name="misses">Misses</string>
   <string name="percentage_reached_points">Percentage of reached points</string>
   <string name="arrow_number_removed">Arrow number removed!</string>
+  <string name="new_end">New end</string>
 </resources>

@@ -50,7 +50,7 @@ public class TargetImage {
         textPaint.setTextSize(size / 20);
 
         for (int i = 0; i < rounds.size(); i++) {
-            ArrayList<Passe> oldOnes = new PasseDataSource().getAllByRound(rounds.get(i).getId());
+            List<Passe> oldOnes = new PasseDataSource().getAllByRound(rounds.get(i).getId());
             TargetDrawable target = rounds.get(i).info.target.getDrawable();
             target.setBounds(bounds.get(i));
             target.draw(canvas);

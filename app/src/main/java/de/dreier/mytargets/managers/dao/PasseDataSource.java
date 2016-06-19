@@ -8,6 +8,8 @@ package de.dreier.mytargets.managers.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -21,6 +23,7 @@ import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.utils.Pair;
 
 public class PasseDataSource extends IdProviderDataSource<Passe> {
@@ -102,7 +105,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         return p;
     }
 
-    public ArrayList<Passe> getAllByRound(long round) {
+    public List<Passe> getAllByRound(long round) {
         Cursor res = database.rawQuery(
                 "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, " +
                         "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id), p.exact " +
@@ -110,7 +113,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                         "LEFT JOIN SHOOT s ON p._id = s.passe " +
                         "WHERE p.round = " + round + " " +
                         "ORDER BY p._id ASC, s._id ASC", null);
-        ArrayList<Passe> list = new ArrayList<>();
+        List<Passe> list = new ArrayList<>();
         if (res.moveToFirst()) {
             long oldRoundId = -1;
             int pIndex = 0;
@@ -205,78 +208,86 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         return average;
     }
 
-    public Map<Pair<Integer, String>, Integer> getScoreDistribution(long training) {
-        Cursor cursor = database
-                .rawQuery("SELECT a.target, a.scoring_style, s.points, s.arrow_index, COUNT(*) " +
-                        "FROM ROUND r " +
-                        "LEFT JOIN ROUND_TEMPLATE a ON r.template=a._id " +
-                        "LEFT JOIN PASSE p ON r._id = p.round " +
-                        "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                        "WHERE r.training=" + training + " " +
-                        "GROUP BY a.target, a.scoring_style, s.points, s.arrow_index", null);
+    public List<Pair<Target, List<Round>>> groupByTarget(List<Round> rounds) {
+        return Stream.of(rounds)
+                .groupBy(value -> new Pair<>(value.info.target.getId(), value.info.target.scoringStyle))
+                .map(value1 -> new Pair<>(value1.getValue().get(0).info.target, value1.getValue()))
+                .collect(Collectors.toList());
+    }
 
-        if (!cursor.moveToFirst()) {
-            cursor.close();
-            throw new IllegalStateException("There must be at least one round!");
+    private List<Pair<Target, Map<SelectableZone, Integer>>> getScoreDistribution(long training) {
+        return Stream.of(groupByTarget(new RoundDataSource().getAll(training)))
+                .map(value1 -> new Pair<>(value1.getFirst(), getRoundScores(value1.getSecond())))
+                .collect(Collectors.toList());
+    }
+
+    @NonNull
+    private Map<SelectableZone, Integer> getRoundScores(List<Round> rounds) {
+        final Target t = rounds.get(0).info.target;
+        Map<SelectableZone, Integer> scoreCount = getAllPossibleZones(t);
+        for (Round round : rounds) {
+            List<Passe> passes = new PasseDataSource().getAllByRound(round.getId());
+            for (Passe p : passes) {
+                for (Shot s : p.shot) {
+                    SelectableZone tuple = new SelectableZone(s.zone, t.getModel().getZone(s.zone),
+                            t.zoneToString(s.zone, s.index), t.getPointsByZone(s.zone, s.index));
+                    final Integer integer = scoreCount.get(tuple);
+                    if(integer!=null) {
+                    int count = integer + 1;
+                    scoreCount.put(tuple, count);
+                    } else {
+                        Log.d("", "");
+                    }
+                }
+            }
         }
-        Target t = new Target(cursor.getInt(0), cursor.getInt(1));
-        Map<Pair<Integer, String>, Integer> scoreCount = new HashMap<>();
+        return scoreCount;
+    }
+
+    @NonNull
+    private Map<SelectableZone, Integer> getAllPossibleZones(Target t) {
+        Map<SelectableZone, Integer> scoreCount = new HashMap<>();
         for (int arrow = 0; arrow < 3; arrow++) {
-            for (int zone = -1; zone < t.getModel().getZoneCount(); zone++) {
-                scoreCount.put(new Pair<>(t.getPointsByZone(zone, arrow),
-                        t.zoneToString(zone, arrow)), 0);
+            final List<SelectableZone> zoneList = t.getSelectableZoneList(arrow);
+            for (SelectableZone selectableZone : zoneList) {
+                scoreCount.put(selectableZone, 0);
             }
             if (!t.getModel().dependsOnArrowIndex()) {
                 break;
             }
         }
-        do {
-            if (cursor.isNull(2)) {
-                continue;
-            }
-            int zone = cursor.getInt(2);
-            int arrow = cursor.getInt(3);
-            int count = cursor.getInt(4);
-            Pair<Integer, String> tuple = new Pair<>(t.getPointsByZone(zone, arrow),
-                    t.zoneToString(zone, arrow));
-            count += scoreCount.get(tuple);
-            scoreCount.put(tuple, count);
-        } while (cursor.moveToNext());
-        cursor.close();
         return scoreCount;
     }
 
-    public List<Pair<String, Integer>> getTopScoreDistribution(long training) {
-        Map<Pair<Integer, String>, Integer> scoreCount = getScoreDistribution(training);
-        return getTopScoreDistribution(scoreCount);
-    }
+    public List<Pair<String, Integer>> getTopScoreDistribution(List<Round> rounds) {
+        List<Map.Entry<SelectableZone, Integer>> sortedScore = getSortedScoreDistribution(rounds);
 
-    public List<Pair<String, Integer>> getTopScoreDistribution(Map<Pair<Integer, String>, Integer> scoreCount) {
-        List<Map.Entry<Pair<Integer, String>, Integer>> sortedScore = Stream.of(scoreCount)
-                .sorted((lhs, rhs) -> {
-                    if (lhs.getKey().getFirst().equals(rhs.getKey().getFirst())) {
-                        return -lhs.getKey().getSecond().compareTo(rhs.getKey().getSecond());
-                    }
-                    return rhs.getKey().getFirst() - lhs.getKey().getFirst();
-                })
+        final List<Pair<String, Integer>> result = Stream.of(sortedScore)
+                .map(value -> new Pair<>(value.getKey().text, value.getValue()))
                 .collect(Collectors.toList());
 
         // Collapse first two entries if they yield the same score points,
         // e.g. 10 and X => {X, 10+X, 9, ...}
         if (sortedScore.size() > 1) {
-            Map.Entry<Pair<Integer, String>, Integer> first = sortedScore.get(0);
-            Map.Entry<Pair<Integer, String>, Integer> second = sortedScore.get(1);
-            if (first.getKey().getFirst().equals(second.getKey().getFirst())) {
-                final String newTitle = second.getKey().getSecond() + "+" + first.getKey()
-                        .getSecond();
-                final int newValue = second.getValue() + first.getValue();
-                sortedScore.get(1).getKey().setSecond(newTitle);
-                sortedScore.get(1).setValue(newValue);
-                second.setValue(newValue);
+            Map.Entry<SelectableZone, Integer> first = sortedScore.get(0);
+            Map.Entry<SelectableZone, Integer> second = sortedScore.get(1);
+            if (first.getKey().points == second.getKey().points) {
+                final String newTitle = second.getKey().text + "+" + first.getKey().text;
+                result.set(1, new Pair<>(newTitle, second.getValue() + first.getValue()));
             }
         }
-        return Stream.of(sortedScore)
-                .map(value -> new Pair<>(value.getKey().getSecond(), value.getValue()))
+        return result;
+    }
+
+    public List<Map.Entry<SelectableZone, Integer>> getSortedScoreDistribution(List<Round> rounds) {
+        Map<SelectableZone, Integer> scoreCount = getRoundScores(rounds);
+        return Stream.of(scoreCount)
+                .sorted((lhs, rhs) -> {
+                    if (lhs.getKey().index == rhs.getKey().index) {
+                        return -lhs.getKey().text.compareTo(rhs.getKey().text);
+                    }
+                    return rhs.getKey().index - lhs.getKey().index;
+                })
                 .collect(Collectors.toList());
     }
 }

@@ -85,7 +85,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
     }
 
     public List<SelectableZone> getSelectableZoneList(int arrow) {
-        return getModel().getScoringStyle(scoringStyle).getSelectableZoneList(arrow);
+        return getModel().getSelectableZoneList(scoringStyle, arrow);
     }
 
     public int getMaxPoints() {

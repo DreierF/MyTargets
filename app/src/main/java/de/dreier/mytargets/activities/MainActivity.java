@@ -9,8 +9,8 @@ package de.dreier.mytargets.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
 import de.dreier.mytargets.R;
+
 import de.dreier.mytargets.fragments.MainFragment;
 import de.dreier.mytargets.utils.TranslationUtils;
 

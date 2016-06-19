@@ -7,19 +7,14 @@
 
 package de.dreier.mytargets.utils;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.util.Base64;
 
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
@@ -39,6 +34,7 @@ import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
+import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 import static de.dreier.mytargets.shared.targets.ScoringStyle.MISS_SYMBOL;
 
 public class HtmlUtils {
@@ -48,15 +44,20 @@ public class HtmlUtils {
             ".myTable { border-collapse:collapse; width:100%; }\n" +
             ".myTable td, .myTable th { padding:5px; border:1px solid #000; }\n" +
             ".align_left td {text-align: left; }\n" +
-            ".align_center td {text-align: center; }" +
-            ".circle {border-radius: 50%; width: 20px; height: 20px; padding: 5px; text-align: center; margin: auto;}" +
+            ".align_center td {text-align: center; }\n" +
+            ".circle {border-radius: 50%; width: 20px; height: 20px; padding: 5px; text-align: center; margin: auto;}\n" +
             "</style>";
 
-    public static String getScoreboard(Context context, long trainingId, ScoreboardConfiguration configuration) {
+    public static String getScoreboard(long trainingId, long roundId, ScoreboardConfiguration configuration) {
         // Query information from database
         RoundDataSource roundDataSource = new RoundDataSource();
         Training training = new TrainingDataSource().get(trainingId);
-        ArrayList<Round> rounds = roundDataSource.getAll(trainingId);
+        List<Round> rounds;
+        if (roundId == -1) {
+            rounds = roundDataSource.getAll(trainingId);
+        } else {
+            rounds = Collections.singletonList(roundDataSource.get(roundId));
+        }
 
         // Initialize html Strings
         String html = "<html>" + CSS;
@@ -75,58 +76,18 @@ public class HtmlUtils {
         }
 
         if (configuration.showTable) {
-            html += "<table class=\"myTable\">";
-            html += getTableHeader(context, rounds.get(0).info.arrowsPerPasse);
-            int carry = 0;
             for (int r = 0; r < rounds.size(); r++) {
                 Round round = rounds.get(r);
-                html += "<tr class=\"align_left\"><td colspan=\"" +
-                        (round.info.arrowsPerPasse + 2) +
-                        "\">";
-                html += "<b>" + context.getString(R.string.round) + " " + (round.info.index + 1) +
-                        "</b>";
+                html += "<b>" + get(R.string.round) + " " + (round.info.index + 1) + "</b>";
                 if (configuration.showProperties) {
-                    html += "<br />" + getRoundInfo(round, equals);
+                    html += "<br>" + getRoundInfo(round, equals);
                 }
-                html += "</td></tr>";
-                ArrayList<Passe> passes = new PasseDataSource().getAllByRound(round.getId());
-                for (Passe passe : passes) {
-                    html += "<tr class=\"align_center\">";
-                    int sum = 0;
-                    for (int i = 0; i < passe.shot.length; i++) {
-                        Shot shot = passe.shot[i];
-                        html += "<td>";
-                        final Target target = round.info.target;
-                        if (configuration.showPointsColored) {
-                            int fillColor = target.getModel().getFillColor(shot.zone);
-                            int color = target.getModel().getTextColor(shot.zone);
-                            html += String
-                                    .format("<div class=\"circle\" style='background: #%06X; color: #%06X'>",
-                                            fillColor & 0xFFFFFF, color & 0xFFFFFF);
-                        }
-                        html += target.zoneToString(shot.zone, i);
-                        if (configuration.showPointsColored) {
-                            html += "</div>";
-                        }
-                        html += "</td>";
-                        int points = target.getPointsByZone(shot.zone, i);
-                        sum += points;
-                        carry += points;
-                    }
-                    html += "<td>" + sum + "</td>";
-                    html += "<td>" + carry + "</td>";
-                    html += "</tr>";
-                }
+                html += getRoundTable(configuration, round);
             }
-            html += "</table>";
         }
 
         if (configuration.showComments) {
-            html += getComments(context, rounds);
-        }
-
-        if (configuration.showDispersionPattern) {
-            html += getTarget(trainingId);
+            html += getComments(rounds);
         }
 
         if (configuration.showSignature) {
@@ -137,12 +98,52 @@ public class HtmlUtils {
         return html;
     }
 
-    private static String getTableHeader(Context context, int ppp) {
+    private static String getRoundTable(ScoreboardConfiguration configuration, Round round) {
+        String html = "<table class=\"myTable\">";
+        html += getTableHeader(round.info.arrowsPerPasse);
+        int carry = 0;
+        List<Passe> passes = new PasseDataSource().getAllByRound(round.getId());
+        for (Passe passe : passes) {
+            html += "<tr class=\"align_center\">";
+            html += "<td>" + (passe.index + 1) + "</td>";
+            int sum = 0;
+            for (Shot shot : passe.shot) {
+                html += "<td>";
+                html += getPoints(configuration, shot, round.info.target);
+                html += "</td>";
+                int points = round.info.target.getPointsByZone(shot.zone, shot.index);
+                sum += points;
+                carry += points;
+            }
+            html += "<td>" + sum + "</td>";
+            html += "<td>" + carry + "</td>";
+            html += "</tr>";
+        }
+        html += "</table>";
+        return html;
+    }
+
+    @NonNull
+    private static String getPoints(ScoreboardConfiguration configuration, Shot shot, Target target) {
+        final String points = target.zoneToString(shot.zone, shot.index);
+        if (configuration.showPointsColored) {
+            int fillColor = target.getModel().getZone(shot.zone).getFillColor();
+            int color = target.getModel().getTextColor(shot.zone);
+            return String
+                    .format("<div class=\"circle\" style='background: #%06X; color: #%06X'>%s</div>",
+                            fillColor & 0xFFFFFF, color & 0xFFFFFF, points);
+        } else {
+            return points;
+        }
+    }
+
+    private static String getTableHeader(int ppp) {
         String html = "<tr class=\"align_center\">" +
-                "<th colspan=\"" + ppp + "\">" + context.getString(R.string.arrows) +
-                "</th>" +
-                "<th rowspan=\"2\">" + context.getString(R.string.sum) + "</th>" +
-                "<th rowspan=\"2\">" + context.getString(R.string.carry) + "</th>" +
+                "<th rowspan=\"2\"><b>" + get(R.string.passe) + "</b></th>" +
+                "<th colspan=\"" + ppp + "\"><b>" + get(R.string.arrows) +
+                "</b></th>" +
+                "<th rowspan=\"2\">" + get(R.string.sum) + "</th>" +
+                "<th rowspan=\"2\">" + get(R.string.carry) + "</th>" +
                 "</tr><tr class=\"align_center\">";
         for (int i = 1; i <= ppp; i++) {
             html += "<th>" + i + "</th>";
@@ -151,19 +152,19 @@ public class HtmlUtils {
         return html;
     }
 
-    private static String getComments(Context context, ArrayList<Round> rounds) {
+    private static String getComments(List<Round> rounds) {
         String comments =
                 "<table class=\"myTable\" style=\"margin-top:5px;\"><tr class=\"align_center\">" +
-                        "<th>" + context.getString(R.string.round) + "</th>" +
-                        "<th>" + context.getString(R.string.passe) + "</th>" +
-                        "<th>" + context.getString(R.string.points) + "</th>" +
-                        "<th>" + context.getString(R.string.comment) + "</th></tr>";
+                        "<th>" + get(R.string.round) + "</th>" +
+                        "<th>" + get(R.string.passe) + "</th>" +
+                        "<th>" + get(R.string.points) + "</th>" +
+                        "<th>" + get(R.string.comment) + "</th></tr>";
         int commentsCount = 0;
 
         int j = 0;
         for (Round round : rounds) {
             int i = 1;
-            ArrayList<Passe> passes = new PasseDataSource().getAllByRound(round.getId());
+            List<Passe> passes = new PasseDataSource().getAllByRound(round.getId());
             for (Passe passe : passes) {
                 for (int s = 0; s < passe.shot.length; s++) {
                     Shot shot = passe.shot[s];
@@ -191,26 +192,8 @@ public class HtmlUtils {
         return html;
     }
 
-    @NonNull
-    private static String getTarget(long trainingId) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        new TargetImage().generateTrainingBitmap(800, trainingId, byteArrayOutputStream);
-
-        // Convert bitmap to Base64 encoded image for web
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
-        String imageBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
-        String image = "data:image/png;base64," + imageBase64;
-        return "<div align='center' style=\"padding: 15px;\"><img src='" + image +
-                "' width='98%' /></div>";
-    }
-
     public static String getRoundInfo(Round round, boolean[] equals) {
-        int maxPoints = round.info.getMaxPoints();
-        int reachedPoints = round.reachedPoints;
-
-        String percent = maxPoints == 0 ? "" : " (" + (reachedPoints * 100 / maxPoints) + "%)";
         HTMLInfoBuilder info = new HTMLInfoBuilder();
-        info.addLine(R.string.points, reachedPoints + "/" + maxPoints + percent);
         if (!equals[0]) {
             info.addLine(R.string.distance, round.info.distance);
         }
@@ -225,39 +208,23 @@ public class HtmlUtils {
 
     @NonNull
     public static String getTrainingTopScoreDistribution(long training) {
-        int maxPoints = 0;
-        int reachedPoints = 0;
-        ArrayList<Round> rounds = new RoundDataSource().getAll(training);
-        for (Round r : rounds) {
-            maxPoints += r.info.getMaxPoints();
-            reachedPoints += r.reachedPoints;
-        }
-        String percent = maxPoints == 0 ? "" :
-                " (" + (reachedPoints * 100 / maxPoints) + "%)";
-        String value = reachedPoints + "/" + maxPoints + percent;
-
         HTMLInfoBuilder info = new HTMLInfoBuilder();
-        info.addLine(R.string.points, value);
-
         PasseDataSource passeDataSource = new PasseDataSource();
 
-        Map<Pair<Integer, String>, Integer> scoreDistribution = passeDataSource
-                .getScoreDistribution(training);
+        List<Pair<String, Integer>> scoreDistribution = passeDataSource.getTopScoreDistribution(new RoundDataSource().getAll(training));
         int misses = 0;
         int hits = 0;
-        for (Map.Entry<Pair<Integer, String>, Integer> score : scoreDistribution.entrySet()) {
-            if (score.getKey().getSecond().equals(MISS_SYMBOL)) {
-                misses += score.getValue();
+        for (Pair<String, Integer> score : scoreDistribution) {
+            if (score.getFirst().equals(MISS_SYMBOL)) {
+                misses += score.getSecond();
             } else {
-                hits += score.getValue();
+                hits += score.getSecond();
             }
         }
         info.addLine(R.string.hits, hits);
         info.addLine(R.string.misses, misses);
-        List<Pair<String, Integer>> scoreCount = passeDataSource
-                .getTopScoreDistribution(scoreDistribution);
-        for (Pair<String, Integer> score : scoreCount
-                .subList(0, Math.min(scoreCount.size(), 3))) {
+
+        for (Pair<String, Integer> score : scoreDistribution.subList(0, Math.min(scoreDistribution.size(), 3))) {
             info.addLine(score.getFirst(), score.getSecond());
         }
 
@@ -265,11 +232,25 @@ public class HtmlUtils {
         return info.toString();
     }
 
-    public static String getTrainingInfoHTML(Training training, ArrayList<Round> rounds, boolean[] equals, boolean scoreboard) {
+    @NonNull
+    private static String getReachedPointsFormatted(long training) {
+        int maxPoints = 0;
+        int reachedPoints = 0;
+        List<Round> rounds = new RoundDataSource().getAll(training);
+        for (Round r : rounds) {
+            maxPoints += r.info.getMaxPoints();
+            reachedPoints += r.reachedPoints;
+        }
+        String percent = maxPoints == 0 ? "" :
+                " (" + (reachedPoints * 100 / maxPoints) + "%)";
+        return reachedPoints + "/" + maxPoints + percent;
+    }
+
+    public static String getTrainingInfoHTML(Training training, List<Round> rounds, boolean[] equals, boolean scoreboard) {
         HTMLInfoBuilder info = new HTMLInfoBuilder();
         if (scoreboard) {
             final String fullName = SettingsManager.getProfileFullName();
-            if (!fullName.isEmpty()) {
+            if (!fullName.trim().isEmpty()) {
                 info.addLine(R.string.name, fullName);
             }
             final int age = SettingsManager.getProfileAge();
@@ -279,6 +260,10 @@ public class HtmlUtils {
             final String club = SettingsManager.getProfileClub();
             if (!club.isEmpty()) {
                 info.addLine(R.string.club, club);
+            }
+            if (rounds.size() > 1) {
+                String value = getReachedPointsFormatted(training.getId());
+                info.addLine(R.string.points, value);
             }
         }
 
@@ -315,7 +300,7 @@ public class HtmlUtils {
             if (equals[0]) {
                 final int envStringResId = standardRound.indoor ? R.string.indoor : R.string.outdoor;
                 final String distanceValue = String.format("%s - %s", distance,
-                        ApplicationInstance.getContext().getString(envStringResId));
+                        get(envStringResId));
                 info.addLine(R.string.distance, distanceValue);
             }
             if (equals[1]) {
@@ -327,10 +312,10 @@ public class HtmlUtils {
 
     private static String getSignature() {
         return "<div style=\"border-top: 2px solid black; width: 30%;margin-right: 5%;margin-top: 100px;float:left;\">" +
-                ApplicationInstance.getContext().getString(R.string.witness)
+                get(R.string.witness)
                 + "</div>" +
                 "<div style=\"border-top: 2px solid black; width: 30%;float:left; margin-top: 100px;\">" +
-                ApplicationInstance.getContext().getString(R.string.archer)
+                get(R.string.archer)
                 + "</div>";
     }
 

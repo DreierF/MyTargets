@@ -42,8 +42,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.models.EShowMode;
+import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.ArrowNumber;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
@@ -101,8 +101,6 @@ public class TargetView extends TargetViewBase {
         passeDrawer.setPasse(passe);
         if (passe.getId() != -1) {
             switchMode(!passe.exact, true);
-        } else {
-
         }
         animateFromZoomSpot();
         invalidate();
@@ -292,7 +290,7 @@ public class TargetView extends TargetViewBase {
         Coordinate coordinate = new Coordinate();
         if (zoneSelectionMode) {
             coordinate.x = contentWidth - 100 * density;
-            int index = selectableZones.indexOf(new SelectableZone(passe.shot[i].zone, ""));
+            int index = selectableZones.indexOf(new SelectableZone(passe.shot[i].zone, null, "", 0));
             int indicatorHeight = contentHeight / selectableZones.size();
             coordinate.y = indicatorHeight * index + indicatorHeight / 2.0f;
         } else {
@@ -351,7 +349,7 @@ public class TargetView extends TargetViewBase {
             if (x > contentWidth - 60 * density) {
                 int i = (int) (y * selectableZones.size() / (float) contentHeight);
                 i = Math.min(Math.max(0, i), selectableZones.size() - 1);
-                s.zone = selectableZones.get(i).zone;
+                s.zone = selectableZones.get(i).index;
             } else {
                 return null;
             }
@@ -603,14 +601,14 @@ public class TargetView extends TargetViewBase {
 
                 Rect rect = getSelectableZonePosition(i);
 
-                fillPaint.setColor(targetModel.getFillColor(zone.zone));
+                fillPaint.setColor(zone.zone.getFillColor());
                 canvas.drawRect(rect, fillPaint);
 
-                borderPaint.setColor(targetModel.getStrokeColor(zone.zone));
+                borderPaint.setColor(zone.zone.getStrokeColor());
                 canvas.drawRect(rect, borderPaint);
 
                 // For yellow and white background use black font color
-                textPaint.setColor(targetModel.getTextColor(zone.zone));
+                textPaint.setColor(zone.zone.getTextColor());
                 canvas.drawText(zone.text, rect.centerX(), rect.centerY() + 10 * density,
                         textPaint);
             }

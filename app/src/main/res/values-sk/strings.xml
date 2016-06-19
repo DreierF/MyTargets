@@ -211,6 +211,16 @@
     <item quantity="few">Kolo %d</item>
     <item quantity="other">Kolo %d</item>
   </plurals>
+  <plurals name="round_selected">
+    <item quantity="one">Vybraté %d kolo</item>
+    <item quantity="few">Vybraté %d kolá</item>
+    <item quantity="other">Vybratých %d kôl</item>
+  </plurals>
+  <plurals name="round_deleted">
+    <item quantity="one">Zmazané %d kolo</item>
+    <item quantity="few">Zmazané %d kolá</item>
+    <item quantity="other">Zmazaných %d kôl</item>
+  </plurals>
   <string name="date">Dátum</string>
   <string name="edit_round">Upraviť kolo</string>
   <string name="draw_weight">Sila náťahu</string>
@@ -266,4 +276,5 @@
   <string name="misses">Minutí</string>
   <string name="percentage_reached_points">Percento dosiahnutých bodov</string>
   <string name="arrow_number_removed">Čísla šípov odstránené!</string>
+  <string name="new_end">Nová sada</string>
 </resources>
