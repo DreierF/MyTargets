@@ -62,6 +62,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         }
         ContentValues values = new ContentValues();
         values.put(ROUND, passe.roundId);
+        values.put(EXACT, passe.exact);
         return values;
     }
 
@@ -161,6 +162,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                 Passe passe = new Passe(ppp);
                 passe.setId(res.getLong(1));
                 passe.roundId = res.getLong(8);
+                passe.exact = res.getInt(10) == 1;
                 if (oldRoundId != passe.roundId) {
                     pIndex = 0;
                     oldRoundId = passe.roundId;

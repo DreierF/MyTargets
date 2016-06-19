@@ -70,7 +70,7 @@ public class TargetSelectView extends TargetViewBase {
         for (int i = 0; i < selectableZones.size(); i++) {
             Coordinate coordinate = getCircularCoordinates(i);
             circle.draw(canvas, coordinate.x, coordinate.y, selectableZones.get(i).zone,
-                    i == curZone ? 23 : 17, false, currentArrow, -1);
+                    i == curZone ? 23 : 17, false, currentArrow, null);
         }
 
         // Draw all points of this passe in the center

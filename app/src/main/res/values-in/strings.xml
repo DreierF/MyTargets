@@ -3,10 +3,10 @@
 <resources>
   <!-- APP NAME - NOT TRANSLATABLE -->
   <!-- General -->
-  <string name="preferences">Options</string>
-  <string name="prev">Previous</string>
-  <string name="next">Next</string>
-  <string name="save">Save</string>
+  <string name="preferences">Opsi</string>
+  <string name="prev">Sebelum</string>
+  <string name="next">Lanjut</string>
+  <string name="save">Simpan</string>
   <string name="custom">Custom</string>
   <string name="training">Training</string>
   <string name="bow">Bow</string>

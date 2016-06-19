@@ -354,6 +354,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
         if (oldVersion < 15) {
             db.execSQL("UPDATE SHOOT SET arrow=NULL WHERE arrow='-1'");
+            db.execSQL("UPDATE PASSE SET exact=1 WHERE _id IN (SELECT DISTINCT p._id " +
+                    "FROM PASSE p, SHOOT s " +
+                    "WHERE p._id=s.passe " +
+                    "AND s.x!=0)");
         }
         onCreate(db);
     }

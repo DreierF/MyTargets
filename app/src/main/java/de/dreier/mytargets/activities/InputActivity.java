@@ -308,7 +308,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         if (training.bow > 0) {
             text += template.distance + ": " +
                     new SightSettingDataSource().get(training.bow,
-                            template.distance);
+                            template.distance).value;
         }
         return new NotificationInfo(round, title, text);
     }
