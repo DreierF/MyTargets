@@ -62,7 +62,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         }
         ContentValues values = new ContentValues();
         values.put(ROUND, passe.roundId);
-        values.put(EXACT, passe.exact);
+        values.put(EXACT, passe.exact ? 1 : 0);
         return values;
     }
 

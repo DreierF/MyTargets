@@ -99,6 +99,11 @@ public class TargetView extends TargetViewBase {
         this.passe = passe;
         passeDrawer.setSelection(currentArrow, null, PasseDrawer.MAX_CIRCLE_SIZE);
         passeDrawer.setPasse(passe);
+        if (passe.getId() != -1) {
+            switchMode(!passe.exact, true);
+        } else {
+
+        }
         animateFromZoomSpot();
         invalidate();
     }

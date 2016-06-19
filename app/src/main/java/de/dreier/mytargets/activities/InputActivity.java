@@ -141,9 +141,10 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     public boolean onPrepareOptionsMenu(Menu menu) {
         final MenuItem eye = menu.findItem(R.id.action_show_all);
         eye.setVisible(!targetView.getInputMode());
-        menu.findItem(R.id.action_show_sidebar).setIcon(
-                targetView.getInputMode() ? R.drawable.ic_album_24dp :
-                        R.drawable.ic_grain_24dp);
+        final MenuItem showSidebar = menu.findItem(R.id.action_show_sidebar);
+        showSidebar.setIcon(targetView.getInputMode() ? R.drawable.ic_album_24dp :
+                R.drawable.ic_grain_24dp);
+        showSidebar.setVisible(curPasse >= savedPasses);
         switch (SettingsManager.getShowMode()) {
             case END:
                 menu.findItem(R.id.action_show_end).setChecked(true);
@@ -167,17 +168,21 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                 passe = 0;
                 savedPasses = passeDataSource.getAllByRound(round.getId()).size();
             } else if (savedPasses <= curPasse && standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
+                // If standard round is over exit the input activity
                 finish();
                 overridePendingTransition(R.anim.left_in, R.anim.right_out);
                 return;
             }
         } else if (passe == -1 && template.index > 0) {
+            // If we navigate backwards and go past the beginning of lets say round 2
+            // -> go to the last passe of round 1
             round = rounds.get(template.index - 1);
             template = round.info;
             passe = template.passes - 1;
             savedPasses = template.passes;
         }
         if (passe < savedPasses) {
+            // If the passe is already saved load it from the database
             Passe p = passeDataSource.get(round.getId(), passe);
             if (p != null) {
                 targetView.setPasse(p);
@@ -186,6 +191,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
                 targetView.setRoundId(round.getId());
             }
         } else {
+            // otherwise create a new one
             if (passe != curPasse) {
                 targetView.reset();
                 targetView.setRoundId(round.getId());
@@ -198,6 +204,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         targetView.setOldShoots(oldOnes);
         curPasse = passe;
         updatePasse();
+        supportInvalidateOptionsMenu();
     }
 
     private void updatePasse() {

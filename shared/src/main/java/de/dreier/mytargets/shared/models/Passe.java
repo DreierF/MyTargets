@@ -23,7 +23,10 @@ public class Passe implements IIdSettable {
     }
 
     public Passe(Passe p) {
-        this.id = p.getId();
+        id = p.id;
+        roundId = p.roundId;
+        index = p.index;
+        exact = p.exact;
         shot = p.shot.clone();
     }
 
