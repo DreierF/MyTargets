@@ -36,6 +36,7 @@ import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
@@ -313,9 +314,11 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
 
         // Load bow settings
         if (training.bow > 0) {
-            text += template.distance + ": " +
-                    new SightSettingDataSource().get(training.bow,
-                            template.distance).value;
+            final SightSetting sightSetting = new SightSettingDataSource().get(training.bow,
+                    template.distance);
+            if (sightSetting != null) {
+                text += String.format("%s: %s", template.distance, sightSetting.value);
+            }
         }
         return new NotificationInfo(round, title, text);
     }

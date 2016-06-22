@@ -252,6 +252,6 @@
   <string name="archer">Bogenschütze</string>
   <string name="hits">Treffer</string>
   <string name="misses">Nicht-Treffer</string>
-  <string name="percentage_reached_points">Percentage of reached points</string>
-  <string name="arrow_number_removed">Arrow number removed!</string>
+  <string name="percentage_reached_points">Geschossene Ringe (in %%)</string>
+  <string name="arrow_number_removed">Pfeilnummer gelöscht!</string>
 </resources>

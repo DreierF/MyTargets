@@ -108,6 +108,8 @@ abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<
         Collections.reverse(positions);
         final ArrayList<Pair<Integer, T>> deleted = new ArrayList<>();
         for (int pos : positions) {
+            //FIXME causes a crash if month gets collapsed during action mode,
+            //because then the selected item ids change
             deleted.add(new Pair<>(pos, getItem(pos)));
             removeItem(pos);
         }
