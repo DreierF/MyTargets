@@ -17,7 +17,7 @@ Android app, which helps archers keep track of their training progress.
 </a>
 
 ## Build ##
-The project can be built using Android Studio 1.4 or newer.
+The project can be built using Android Studio 2.1 or newer.
 
 In order to correctly compile it you have to install JDK 7 AND JDK 8 and set the environment variables accordingly. More information this can be found [here](https://github.com/evant/gradle-retrolambda/blob/master/README.md).
 
