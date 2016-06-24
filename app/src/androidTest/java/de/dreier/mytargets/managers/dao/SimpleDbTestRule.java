@@ -130,7 +130,7 @@ public class SimpleDbTestRule implements TestRule {
         bow.name = "PSE Fever";
         bow.brand = "PSE";
         bow.size = "64\"";
-        bow.height = "6 3/8\"";
+        bow.braceHeight = "6 3/8\"";
         bow.type = EBowType.COMPOUND_BOW;
         bow.imageFile = null;
         Bitmap bitmap = BitmapFactory
