@@ -26,8 +26,8 @@ ext {
     playServiceVersion = '9.0.2'
     espressoVersion = '2.2.2'
     parcelerVersion = '1.1.5'
-    appVersionName = '2.2.2-RC4'
-    appVersionCode = 43
+    appVersionName = '2.2.2'
+    appVersionCode = 44
 }
 
 allprojects {
