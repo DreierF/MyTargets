@@ -8,8 +8,9 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.annotation.CallSuper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.utils.DividerItemDecoration;
@@ -31,24 +33,26 @@ import de.dreier.mytargets.utils.DividerItemDecoration;
  */
 public abstract class EditableFragment<T extends IIdSettable> extends EditableFragmentBase<T> {
 
+    protected FragmentListBinding binding;
     private NowListAdapter<T> mAdapter;
     private OnItemSelectedListener listener;
 
     @Override
+    @CallSuper
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.addItemDecoration(
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
+        binding.recyclerView.setHasFixedSize(true);
+        binding.recyclerView.addItemDecoration(
                 new DividerItemDecoration(getContext(), R.drawable.inset_divider));
-        return rootView;
+        return binding.getRoot();
     }
 
     void setList(IdProviderDataSource<T> dataSource, List<T> list, NowListAdapter<T> adapter) {
         this.dataSource = dataSource;
-        if (recyclerView.getAdapter() == null) {
+        if (binding.recyclerView.getAdapter() == null) {
             mAdapter = adapter;
             mAdapter.setList(list);
-            recyclerView.setAdapter(mAdapter);
+            binding.recyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.setList(list);
             mAdapter.notifyDataSetChanged();

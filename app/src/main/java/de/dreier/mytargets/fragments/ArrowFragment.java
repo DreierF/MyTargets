@@ -7,23 +7,22 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.SimpleFragmentActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.utils.ActivityUtils;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
@@ -52,13 +51,14 @@ public class ArrowFragment extends EditableFragment<Arrow> implements View.OnCli
 
     @Override
     protected void onEdit(Arrow item) {
-        startActivityAnimated(SimpleFragmentActivity.EditArrowActivity.class, ARROW_ID,
-                item.getId());
+        ActivityUtils.startActivityAnimated(getActivity(),
+                SimpleFragmentActivityBase.EditArrowActivity.class, ARROW_ID, item.getId());
     }
 
     @Override
     public void onClick(View v) {
-        startActivityAnimated(SimpleFragmentActivity.EditArrowActivity.class);
+        ActivityUtils.startActivityAnimated(getActivity(),
+                SimpleFragmentActivityBase.EditArrowActivity.class);
     }
 
     private class ArrowAdapter extends NowListAdapter<Arrow> {
@@ -71,21 +71,17 @@ public class ArrowFragment extends EditableFragment<Arrow> implements View.OnCli
     }
 
     class ViewHolder extends SelectableViewHolder<Arrow> {
-        @Bind(R.id.name)
-        TextView mName;
-
-        @Bind(R.id.image)
-        ImageView mImg;
+        private final ItemImageDetailsBinding binding;
 
         public ViewHolder(View itemView) {
             super(itemView, mSelector, ArrowFragment.this);
-            ButterKnife.bind(this, itemView);
+            binding = DataBindingUtil.bind(itemView);
         }
 
         @Override
         public void bindCursor() {
-            mName.setText(mItem.name);
-            mImg.setImageDrawable(mItem.getDrawable());
+            binding.name.setText(mItem.name);
+            binding.image.setImageDrawable(mItem.getDrawable());
         }
     }
 }

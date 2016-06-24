@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <EditText
-        android:id="@+id/arrowNumber"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/removeArrowNumber"
-        android:layout_toStartOf="@+id/removeArrowNumber"
-        android:ems="10"
-        android:inputType="number"/>
+        android:layout_height="wrap_content">
 
-    <ImageButton
-        android:id="@+id/removeArrowNumber"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="?android:attr/selectableItemBackground"
-        android:contentDescription="@string/delete"
-        app:srcCompat="@drawable/ic_cancel_grey600_24dp"/>
-</RelativeLayout>
+        <EditText
+            android:id="@+id/arrowNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/removeArrowNumber"
+            android:layout_toStartOf="@+id/removeArrowNumber"
+            android:ems="10"
+            android:inputType="number"/>
+
+        <ImageButton
+            android:id="@+id/removeArrowNumber"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@string/delete"
+            app:srcCompat="@drawable/ic_cancel_grey600_24dp"/>
+    </RelativeLayout>
+
+</layout>

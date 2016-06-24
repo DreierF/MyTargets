@@ -8,6 +8,7 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -15,15 +16,14 @@ import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.databinding.FragmentTimerBinding;
 import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.utils.ToolbarUtils;
 
 /**
  * Shows all passes of one round
@@ -39,32 +39,25 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
     private int mWaitingTime;
     private int mShootingTime;
     private int mWarnTime;
-    private View root;
-    private TextView mStatusField, mTimeField;
     private int mCurStatus = WAIT_FOR_START;
     private CountDownTimer countdown;
     private MediaPlayer horn;
     private boolean mSound, mVibrate;
     private PowerManager.WakeLock wakeLock;
+    private FragmentTimerBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.fragment_timer, container, false);
-        root.setOnClickListener(this);
-        mStatusField = (TextView) root.findViewById(R.id.timer_status);
-        mTimeField = (TextView) root.findViewById(R.id.timer_time);
-        return root;
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_timer, container, false);
+        binding.getRoot().setOnClickListener(this);
+        return binding.getRoot();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(toolbar);
-        //noinspection ConstantConditions
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ToolbarUtils.setSupportActionBar(this, binding.toolbar);
+        ToolbarUtils.showHomeAsUp(this);
     }
 
     private void loadPreferenceValues() {
@@ -118,16 +111,16 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
         mCurStatus = status;
         switch (status) {
             case WAIT_FOR_START:
-                root.setBackgroundResource(R.color.timer_red);
-                mStatusField.setText(R.string.touch_to_start);
-                mTimeField.setText("");
+                binding.getRoot().setBackgroundResource(R.color.timer_red);
+                binding.timerStatus.setText(R.string.touch_to_start);
+                binding.timerTime.setText("");
                 break;
             case PREPARATION:
                 playSignal(2);
-                mStatusField.setText(R.string.preparation);
+                binding.timerStatus.setText(R.string.preparation);
                 countdown = new CountDownTimer(mWaitingTime * 1000, 100) {
                     public void onTick(long millisUntilFinished) {
-                        mTimeField.setText(String.valueOf(millisUntilFinished / 1000));
+                        binding.timerTime.setText(String.valueOf(millisUntilFinished / 1000));
                     }
 
                     public void onFinish() {
@@ -137,13 +130,13 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                 break;
             case SHOOTING:
                 playSignal(1);
-                root.setBackgroundResource(R.color.timer_green);
-                mStatusField.setText(R.string.shooting);
+                binding.getRoot().setBackgroundResource(R.color.timer_green);
+                binding.timerStatus.setText(R.string.shooting);
                 countdown = new CountDownTimer(mShootingTime * 1000, 100) {
                     public void onTick(long millisUntilFinished) {
-                        mTimeField.setText(String.valueOf(millisUntilFinished / 1000));
+                        binding.timerTime.setText(String.valueOf(millisUntilFinished / 1000));
                         if (millisUntilFinished <= mWarnTime * 1000) {
-                            root.setBackgroundResource(R.color.timer_orange);
+                            binding.getRoot().setBackgroundResource(R.color.timer_orange);
                         }
                     }
 
@@ -154,11 +147,11 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                 break;
             case FINISHED:
                 playSignal(3);
-                root.setBackgroundResource(R.color.timer_red);
-                mTimeField.setText(R.string.stop);
+                binding.getRoot().setBackgroundResource(R.color.timer_red);
+                binding.timerTime.setText(R.string.stop);
                 countdown = new CountDownTimer(6000, 100) {
                     public void onTick(long millisUntilFinished) {
-                        mStatusField.setText(String.valueOf(millisUntilFinished / 1000));
+                        binding.timerStatus.setText(String.valueOf(millisUntilFinished / 1000));
                     }
 
                     public void onFinish() {

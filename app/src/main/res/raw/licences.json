@@ -55,15 +55,6 @@
       "license": "apache2"
     },
     {
-      "name": "Butter Knife",
-      "version": "7.0.1",
-      "year": "2013",
-      "owner": "Jake Wharton",
-      "description": "Bind Android views and callbacks to fields and methods.",
-      "url": "http://jakewharton.github.io/butterknife/",
-      "license": "apache2"
-    },
-    {
       "name": "Icepick",
       "version": "3.2.0",
       "year": "2016",

@@ -1,135 +1,145 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context="de.dreier.mytargets.activities.SimpleFragmentActivity$EditTrainingActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context="de.dreier.mytargets.fragments.EditRoundFragment">
 
-    <include layout="@layout/common_toolbar"/>
-
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <ScrollView
-            android:id="@+id/scrollView"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/distanceLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <de.dreier.mytargets.views.selector.DistanceSelector
+                            android:id="@+id/distanceSpinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"/>
+
+                        <include layout="@layout/divider_full"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/notEditable"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        android:orientation="vertical">
+
+
+                        <de.dreier.mytargets.views.selector.TargetSelector
+                            android:id="@+id/targetSpinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"/>
+
+                        <include layout="@layout/divider_full"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:id="@+id/arrowsLabel"
+                                style="@style/Label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/arrows"/>
+
+                            <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                                android:id="@+id/arrows"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:dsb_indicatorColor="@color/colorPrimary"
+                                app:dsb_max="12"
+                                app:dsb_min="1"
+                                app:dsb_progressColor="@color/colorPrimary"/>
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/dividerColor"/>
+                    </LinearLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/comment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:hint="@string/comment"
+                            android:inputType="textMultiLine"/>
+
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+            </ScrollView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/distanceLayout"
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="1dp"
+                    android:layout_gravity="bottom"
+                    android:background="?android:attr/listDivider"/>
 
-                    <de.dreier.mytargets.views.selector.DistanceSelector
-                        android:id="@+id/distanceSpinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
-
-                    <include layout="@layout/divider_full"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/notEditable"
+                <Button
+                    android:id="@+id/remove_button"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true"
-                    android:orientation="vertical">
-
-
-                    <de.dreier.mytargets.views.selector.TargetSelector
-                        android:id="@+id/targetSpinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
-
-                    <include layout="@layout/divider_full"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <TextView
-                            android:id="@+id/arrowsLabel"
-                            style="@style/Label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/arrows"/>
-
-                        <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-                            android:id="@+id/arrows"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:dsb_indicatorColor="@color/colorPrimary"
-                            app:dsb_max="12"
-                            app:dsb_min="1"
-                            app:dsb_progressColor="@color/colorPrimary"/>
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/dividerColor"/>
-                </LinearLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/comment"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:hint="@string/comment"
-                        android:inputType="textMultiLine"/>
-
-                </android.support.design.widget.TextInputLayout>
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:minHeight="48dp"
+                    android:text="@string/delete"/>
 
             </LinearLayout>
 
-        </ScrollView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:orientation="vertical">
-
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_gravity="bottom"
-                android:background="?android:attr/listDivider"/>
+                android:layout_height="@dimen/toolbar_drop_shadow_height"
+                android:background="@drawable/toolbar_drop_shadow"/>
+        </FrameLayout>
 
-            <Button
-                android:id="@+id/remove_button"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:minHeight="48dp"
-                android:text="@string/delete"/>
+    </LinearLayout>
 
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar_drop_shadow_height"
-            android:background="@drawable/toolbar_drop_shadow"/>
-    </FrameLayout>
-
-</LinearLayout>
+</layout>

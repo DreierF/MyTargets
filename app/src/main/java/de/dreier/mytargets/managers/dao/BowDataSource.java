@@ -66,7 +66,7 @@ public class BowDataSource extends IdProviderDataSource<Bow> {
         values.put(TYPE, bow.type.getId());
         values.put(BRAND, bow.brand);
         values.put(SIZE, bow.size);
-        values.put(HEIGHT, bow.height);
+        values.put(HEIGHT, bow.braceHeight);
         values.put(TILLER, bow.tiller);
         values.put(LIMBS, bow.limbs);
         values.put(SIGHT, bow.sight);
@@ -86,7 +86,7 @@ public class BowDataSource extends IdProviderDataSource<Bow> {
         bow.type = EBowType.fromId(cursor.getInt(startColumnIndex + 2));
         bow.brand = cursor.getString(startColumnIndex + 3);
         bow.size = cursor.getString(startColumnIndex + 4);
-        bow.height = cursor.getString(startColumnIndex + 5);
+        bow.braceHeight = cursor.getString(startColumnIndex + 5);
         bow.tiller = cursor.getString(startColumnIndex + 6);
         bow.limbs = cursor.getString(startColumnIndex + 7);
         bow.sight = cursor.getString(startColumnIndex + 8);

@@ -8,13 +8,11 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,11 +22,10 @@ import android.view.ViewGroup;
 
 import org.parceler.Parcels;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.SimpleFragmentActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
+import de.dreier.mytargets.databinding.FragmentMainBinding;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.IIdProvider;
@@ -40,6 +37,8 @@ import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_TYPE;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND;
 import static de.dreier.mytargets.fragments.FragmentBase.ITEM_ID;
+import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
+import static de.dreier.mytargets.utils.ToolbarUtils.setSupportActionBar;
 
 public class MainFragment extends Fragment implements FragmentBase.ContentListener, ViewPager.OnPageChangeListener, FABMenu.Listener, FragmentBase.OnItemSelectedListener {
 
@@ -52,38 +51,32 @@ public class MainFragment extends Fragment implements FragmentBase.ContentListen
     }
 
     private final boolean[] empty = new boolean[3];
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
-    @Bind(R.id.viewPager)
-    ViewPager viewPager;
-    @Bind(R.id.slidingTabs)
-    TabLayout tabLayout;
+
     private FABMenu fm;
+    private FragmentMainBinding binding;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        ButterKnife.bind(this, rootView);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
 
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(toolbar);
+        setSupportActionBar(this, binding.toolbar);
         setHasOptionsMenu(true);
 
-        fm = new FABMenu(getContext(), rootView);
+        fm = new FABMenu(getContext(), binding.fabLayout, binding.overlayView);
         fm.setListener(this);
         fm.setFABItem(1, R.drawable.ic_trending_up_white_24dp, R.string.free_training);
         fm.setFABItem(2, R.drawable.ic_album_24dp, R.string.training_with_standard_round);
 
         MainTabsFragmentPagerAdapter adapter =
                 new MainTabsFragmentPagerAdapter(getContext(), getChildFragmentManager());
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(this);
-        tabLayout.setupWithViewPager(viewPager);
+        binding.viewPager.setAdapter(adapter);
+        binding.viewPager.addOnPageChangeListener(this);
+        binding.slidingTabs.setupWithViewPager(binding.viewPager);
 
         if (savedInstanceState != null) {
             fm.onRestoreInstanceState(savedInstanceState);
         }
 
-        return rootView;
+        return binding.getRoot();
     }
 
     @Override
@@ -94,7 +87,8 @@ public class MainFragment extends Fragment implements FragmentBase.ContentListen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_preferences) {
-            startActivity(new Intent(getContext(), SimpleFragmentActivity.SettingsActivity.class));
+            startActivity(
+                    new Intent(getContext(), SimpleFragmentActivityBase.SettingsActivity.class));
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -108,57 +102,34 @@ public class MainFragment extends Fragment implements FragmentBase.ContentListen
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        fm.unbind();
-        ButterKnife.unbind(this);
-    }
-
-    @Override
     public boolean isFABExpandable() {
-        return viewPager.getCurrentItem() == 0;
+        return binding.viewPager.getCurrentItem() == 0;
     }
 
     @Override
     public void onFabClicked(int index) {
         switch (index) {
             case 0:
-                int currentTab = viewPager.getCurrentItem();
+                int currentTab = binding.viewPager.getCurrentItem();
                 if (currentTab == 1) {
-                    startActivityAnimated(SimpleFragmentActivity.EditBowActivity.class);
+                    startActivityAnimated(getActivity(),
+                            SimpleFragmentActivityBase.EditBowActivity.class);
                 } else if (currentTab == 2) {
-                    startActivityAnimated(SimpleFragmentActivity.EditArrowActivity.class);
+                    startActivityAnimated(getActivity(),
+                            SimpleFragmentActivityBase.EditArrowActivity.class);
                 }
                 break;
             case 1:
-                startActivityAnimated(SimpleFragmentActivity.EditTrainingActivity.class,
+                startActivityAnimated(getActivity(),
+                        SimpleFragmentActivityBase.EditTrainingActivity.class,
                         TRAINING_TYPE, FREE_TRAINING);
                 break;
             case 2:
-                startActivityAnimated(SimpleFragmentActivity.EditTrainingActivity.class,
+                startActivityAnimated(getActivity(),
+                        SimpleFragmentActivityBase.EditTrainingActivity.class,
                         TRAINING_TYPE, TRAINING_WITH_STANDARD_ROUND);
                 break;
         }
-    }
-
-    private void startActivityAnimated(Class<?> activity) {
-        Intent i = new Intent(getContext(), activity);
-        startActivity(i);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
-    }
-
-    private void startActivityAnimated(Class<?> activity, String key, int value) {
-        Intent i = new Intent(getContext(), activity);
-        i.putExtra(key, value);
-        startActivity(i);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
-    }
-
-    private void startActivityAnimated(Class<?> activity, String key, long value) {
-        Intent i = new Intent(getContext(), activity);
-        i.putExtra(key, value);
-        startActivity(i);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     @Override
@@ -169,20 +140,23 @@ public class MainFragment extends Fragment implements FragmentBase.ContentListen
             }
         }
         fm.notifyContentChanged();
-        onPageSelected(viewPager.getCurrentItem());
+        onPageSelected(binding.viewPager.getCurrentItem());
     }
 
     @Override
     public void onItemSelected(Parcelable passedItem) {
         IIdProvider item = Parcels.unwrap(passedItem);
         if (item instanceof Arrow) {
-            startActivityAnimated(SimpleFragmentActivity.EditArrowActivity.class, ARROW_ID,
+            startActivityAnimated(getActivity(), SimpleFragmentActivityBase.EditArrowActivity.class,
+                    ARROW_ID,
                     item.getId());
         } else if (item instanceof Bow) {
-            startActivityAnimated(SimpleFragmentActivity.EditBowActivity.class, BOW_ID,
+            startActivityAnimated(getActivity(), SimpleFragmentActivityBase.EditBowActivity.class,
+                    BOW_ID,
                     item.getId());
         } else {
-            startActivityAnimated(SimpleFragmentActivity.EditTrainingActivity.class, ITEM_ID,
+            startActivityAnimated(getActivity(),
+                    SimpleFragmentActivityBase.EditTrainingActivity.class, ITEM_ID,
                     item.getId());
         }
     }

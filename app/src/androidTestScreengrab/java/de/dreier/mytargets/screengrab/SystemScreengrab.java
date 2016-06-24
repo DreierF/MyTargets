@@ -82,7 +82,7 @@ class SystemScreengrab {
         }
 
         if (directory == null) {
-            internalDir = new File(context.getDir("screengrab", 1), localeToDirName(locale));
+            internalDir = new File(context.getDir("screengrab", Context.MODE_PRIVATE), localeToDirName(locale));
             directory = initializeDirectory(internalDir);
         }
 

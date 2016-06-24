@@ -7,7 +7,7 @@ import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
 
 import de.dreier.mytargets.ApplicationInstance;
-import de.dreier.mytargets.activities.EShowMode;
+import de.dreier.mytargets.models.EShowMode;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 

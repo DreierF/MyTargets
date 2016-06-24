@@ -9,6 +9,7 @@ package de.dreier.mytargets.activities;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,45 +24,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.FrameLayout;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.utils.HTMLUtils;
+import de.dreier.mytargets.databinding.ActivityScoreboardBinding;
+import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.ScoreboardConfiguration;
+import de.dreier.mytargets.utils.ToolbarUtils;
 
 import static android.support.v7.preference.PreferenceFragmentCompat.ARG_PREFERENCE_ROOT;
 
 public class ScoreboardActivity extends AppCompatActivity {
 
+    public static final String TRAINING_ID = "training_id";
+
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
-    public static final String TRAINING_ID = "training_id";
-
     private long mTraining;
     private boolean pageLoaded = true;
-
-    @Bind(R.id.webView)
-    WebView webView;
-
-    @Bind(android.R.id.content)
-    FrameLayout container;
+    private ActivityScoreboardBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scoreboard);
-        ButterKnife.bind(this);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_scoreboard);
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(TRAINING_ID)) {
             mTraining = intent.getLongExtra(TRAINING_ID, -1);
         }
 
-        webView.setWebViewClient(new WebViewClient() {
+        binding.webView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 return false;
             }
@@ -73,8 +67,7 @@ public class ScoreboardActivity extends AppCompatActivity {
             }
         });
 
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ToolbarUtils.showHomeAsUp(this);
     }
 
     @Override
@@ -84,13 +77,14 @@ public class ScoreboardActivity extends AppCompatActivity {
 
             @Override
             protected String doInBackground(Void... params) {
-                return HTMLUtils.getScoreboard(ScoreboardActivity.this, mTraining,
+                return HtmlUtils.getScoreboard(ScoreboardActivity.this, mTraining,
                         ScoreboardConfiguration.fromDisplaySettings(getApplicationContext()));
             }
 
             @Override
             protected void onPostExecute(String s) {
-                webView.loadDataWithBaseURL("file:///android_asset/", s, "text/html", "UTF-8", "");
+                binding.webView
+                        .loadDataWithBaseURL("file:///android_asset/", s, "text/html", "UTF-8", "");
             }
         }.execute();
     }
@@ -112,7 +106,7 @@ public class ScoreboardActivity extends AppCompatActivity {
                 print();
                 return true;
             case R.id.action_settings:
-                Intent i = new Intent(this, SimpleFragmentActivity.SettingsActivity.class);
+                Intent i = new Intent(this, SimpleFragmentActivityBase.SettingsActivity.class);
                 i.putExtra(ARG_PREFERENCE_ROOT, "scoreboard");
                 startActivity(i);
                 return true;
@@ -130,13 +124,13 @@ public class ScoreboardActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         webViewPrint.setLayoutParams(p);
-        container.addView(webViewPrint);
+        ((ViewGroup) binding.getRoot()).addView(webViewPrint);
 
         new AsyncTask<Void, Void, String>() {
 
             @Override
             protected String doInBackground(Void... params) {
-                return HTMLUtils.getScoreboard(ScoreboardActivity.this, mTraining,
+                return HtmlUtils.getScoreboard(ScoreboardActivity.this, mTraining,
                         ScoreboardConfiguration.fromPrintSettings(getApplicationContext()));
             }
 

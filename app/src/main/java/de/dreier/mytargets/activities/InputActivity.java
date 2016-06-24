@@ -8,19 +8,15 @@
 package de.dreier.mytargets.activities;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.databinding.ActivityInputBinding;
 import de.dreier.mytargets.fragments.TimerFragment;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.WearMessageManager;
@@ -31,6 +27,7 @@ import de.dreier.mytargets.managers.dao.RoundTemplateDataSource;
 import de.dreier.mytargets.managers.dao.SightSettingDataSource;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
+import de.dreier.mytargets.models.EShowMode;
 import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
@@ -41,30 +38,21 @@ import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.views.TargetView;
+import de.dreier.mytargets.utils.ToolbarUtils;
 import icepick.Icepick;
 import icepick.State;
 
-public class InputActivity extends AppCompatActivity implements OnTargetSetListener {
+public class InputActivity extends ChildActivityBase implements OnTargetSetListener {
 
     public static final String ROUND_ID = "round_id";
     public static final String PASSE_IND = "passe_ind";
 
-    static {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-    }
-
-    @Bind(R.id.targetView)
-    TargetView targetView;
-    @Bind(R.id.next)
-    Button next;
-    @Bind(R.id.prev)
-    Button prev;
     /**
      * Zero-based index of the currently displayed passe.
      */
     @State
     int curPasse = 0;
+
     private int savedPasses = 0;
     private Round round;
     private WearMessageManager manager;
@@ -74,13 +62,14 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     private PasseDataSource passeDataSource;
     private StandardRound standardRound;
 
+    private ActivityInputBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_input);
-        ButterKnife.bind(this);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_input);
 
-        targetView.setOnTargetSetListener(this);
+        binding.targetView.setOnTargetSetListener(this);
 
         RoundDataSource roundDataSource = new RoundDataSource();
         passeDataSource = new PasseDataSource();
@@ -97,9 +86,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         rounds = roundDataSource.getAll(round.trainingId);
         savedPasses = passeDataSource.getAllByRound(roundId).size();
 
-        targetView.setRoundTemplate(template);
+        binding.targetView.setRoundTemplate(template);
         if (training.arrowNumbering) {
-            targetView.setArrowNumbers(new ArrowNumberDataSource().getAll(training.arrow));
+            binding.targetView.setArrowNumbers(new ArrowNumberDataSource().getAll(training.arrow));
         }
 
         // Send message to wearable app, that we are starting a passe
@@ -112,10 +101,10 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
             setPasse(curPasse);
         }
 
-        next.setOnClickListener(view -> setPasse(curPasse + 1));
-        prev.setOnClickListener(view -> setPasse(curPasse - 1));
-        //noinspection ConstantConditions
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        binding.next.setOnClickListener(view -> setPasse(curPasse + 1));
+        binding.prev.setOnClickListener(view -> setPasse(curPasse - 1));
+
+        ToolbarUtils.showHomeAsUp(this);
     }
 
     private void startWearNotification() {
@@ -126,7 +115,6 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
         if (manager != null) {
             manager.close();
         }
@@ -141,9 +129,9 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         final MenuItem eye = menu.findItem(R.id.action_show_all);
-        eye.setVisible(!targetView.getInputMode());
+        eye.setVisible(!binding.targetView.getInputMode());
         final MenuItem showSidebar = menu.findItem(R.id.action_show_sidebar);
-        showSidebar.setIcon(targetView.getInputMode() ? R.drawable.ic_album_24dp :
+        showSidebar.setIcon(binding.targetView.getInputMode() ? R.drawable.ic_album_24dp :
                 R.drawable.ic_grain_24dp);
         showSidebar.setVisible(curPasse >= savedPasses);
         switch (SettingsManager.getShowMode()) {
@@ -186,39 +174,37 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
             // If the passe is already saved load it from the database
             Passe p = passeDataSource.get(round.getId(), passe);
             if (p != null) {
-                targetView.setPasse(p);
+                binding.targetView.setPasse(p);
             } else {
-                targetView.reset();
-                targetView.setRoundId(round.getId());
+                binding.targetView.reset();
+                binding.targetView.setRoundId(round.getId());
             }
         } else {
             // otherwise create a new one
             if (passe != curPasse) {
-                targetView.reset();
-                targetView.setRoundId(round.getId());
+                binding.targetView.reset();
+                binding.targetView.setRoundId(round.getId());
             }
             if (training.timePerPasse > 0) {
                 openTimer();
             }
         }
         ArrayList<Passe> oldOnes = passeDataSource.getAllByTraining(training.getId());
-        targetView.setOldShoots(oldOnes);
+        binding.targetView.setOldShoots(oldOnes);
         curPasse = passe;
         updatePasse();
         supportInvalidateOptionsMenu();
     }
 
     private void updatePasse() {
-        prev.setEnabled(curPasse > 0 || template.index > 0);
-        next.setEnabled(curPasse < savedPasses &&
+        binding.prev.setEnabled(curPasse > 0 || template.index > 0);
+        binding.next.setEnabled(curPasse < savedPasses &&
                 (curPasse + 1 < template.passes || // The current round is not finished
                         rounds.size() > template.index + 1 || // We still have another round
                         standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE)); // or we don't have an exit condition
 
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setTitle(getString(R.string.passe) + " " + (curPasse + 1));
-        getSupportActionBar()
-                .setSubtitle(getString(R.string.round) + " " + (round.info.index + 1));
+        ToolbarUtils.setTitle(this, getString(R.string.passe) + " " + (curPasse + 1));
+        ToolbarUtils.setSubtitle(this, getString(R.string.round) + " " + (round.info.index + 1));
     }
 
     @Override
@@ -226,23 +212,19 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         switch (item.getItemId()) {
             case R.id.action_show_end:
                 item.setChecked(true);
-                targetView.setShowMode(EShowMode.END);
+                binding.targetView.setShowMode(EShowMode.END);
                 return true;
             case R.id.action_show_round:
                 item.setChecked(true);
-                targetView.setShowMode(EShowMode.ROUND);
+                binding.targetView.setShowMode(EShowMode.ROUND);
                 return true;
             case R.id.action_show_training:
                 item.setChecked(true);
-                targetView.setShowMode(EShowMode.TRAINING);
+                binding.targetView.setShowMode(EShowMode.TRAINING);
                 return true;
             case R.id.action_show_sidebar:
-                targetView.switchMode(!targetView.getInputMode(), true);
+                binding.targetView.switchMode(!binding.targetView.getInputMode(), true);
                 supportInvalidateOptionsMenu();
-                return true;
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                overridePendingTransition(R.anim.left_in, R.anim.right_out);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -250,7 +232,7 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
     }
 
     private void openTimer() {
-        Intent intent = new Intent(this, SimpleFragmentActivity.TimerActivity.class);
+        Intent intent = new Intent(this, SimpleFragmentActivityBase.TimerActivity.class);
         intent.putExtra(TimerFragment.SHOOTING_TIME, training.timePerPasse);
         startActivity(intent);
     }
@@ -289,12 +271,6 @@ public class InputActivity extends AppCompatActivity implements OnTargetSetListe
         }
         runOnUiThread(this::updatePasse);
         return passe.getId();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
     private NotificationInfo buildInfo() {

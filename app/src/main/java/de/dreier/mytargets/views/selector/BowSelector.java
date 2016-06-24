@@ -16,7 +16,7 @@ import android.util.AttributeSet;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.activities.ItemSelectActivity;
-import de.dreier.mytargets.activities.SimpleFragmentActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.Bow;
 
@@ -32,7 +32,7 @@ public class BowSelector extends ImageSelectorBase<Bow> {
     public BowSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
         defaultActivity = ItemSelectActivity.BowActivity.class;
-        addActivity = SimpleFragmentActivity.EditBowActivity.class;
+        addActivity = SimpleFragmentActivityBase.EditBowActivity.class;
         requestCode = BOW_REQUEST_CODE;
     }
 

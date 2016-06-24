@@ -7,69 +7,43 @@
 
 package de.dreier.mytargets.activities;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
-import android.view.MenuItem;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.databinding.ActivityStatisticsBinding;
 import de.dreier.mytargets.fragments.ArrowRankingFragment;
 import de.dreier.mytargets.fragments.StatisticsFragment;
+import de.dreier.mytargets.utils.ToolbarUtils;
 
-public class StatisticsActivity extends AppCompatActivity {
+public class StatisticsActivity extends ChildActivityBase {
 
-    static {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-    }
-
-    private static final String ROUND_ID = "round_id";
     public static final String TRAINING_ID = "training_id";
+    private static final String ROUND_ID = "round_id";
+
     private long mTraining;
     private long mRound;
-
-    @Bind(R.id.pager)
-    ViewPager pager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_statistics);
-        ButterKnife.bind(this);
+        ActivityStatisticsBinding binding = DataBindingUtil
+                .setContentView(this, R.layout.activity_statistics);
 
         mTraining = getIntent().getLongExtra(TRAINING_ID, -1);
         mRound = getIntent().getLongExtra(ROUND_ID, -1);
 
-        //noinspection ConstantConditions
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        binding.pager.setAdapter(new StatisticsPagerAdapter(getSupportFragmentManager()));
+        binding.pager.setCurrentItem(mRound == -1 ? 1 : 2, false);
 
-        pager.setAdapter(new StatisticsPagerAdapter(getSupportFragmentManager()));
-        pager.setCurrentItem(mRound == -1 ? 1 : 2, false);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        ButterKnife.unbind(this);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+        ToolbarUtils.showHomeAsUp(this);
     }
 
     private class StatisticsPagerAdapter extends FragmentStatePagerAdapter {
-        public StatisticsPagerAdapter(FragmentManager fm) {
+        StatisticsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

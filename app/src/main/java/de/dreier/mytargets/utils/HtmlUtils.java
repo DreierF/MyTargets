@@ -9,6 +9,8 @@ package de.dreier.mytargets.utils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.Html;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -37,7 +39,7 @@ import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.targets.ScoringStyle;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
-public class HTMLUtils {
+public class HtmlUtils {
 
     private static final String CSS = "<style type=\"text/css\">\n" +
             "body{font-family: Roboto, Sans-serif;}\n" +
@@ -324,5 +326,14 @@ public class HTMLUtils {
                 "<div style=\"border-top: 2px solid black; width: 30%;float:left; margin-top: 100px;\">" +
                 ApplicationInstance.getContext().getString(R.string.archer)
                 + "</div>";
+    }
+
+    @SuppressWarnings("deprecation")
+    public static Spanned fromHtml(String html) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            return Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            return Html.fromHtml(html);
+        }
     }
 }

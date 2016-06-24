@@ -8,25 +8,23 @@ package de.dreier.mytargets.fragments;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.RadioButton;
 
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import org.joda.time.LocalDate;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import butterknife.Bind;
-import butterknife.OnClick;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.databinding.FragmentEditTrainingBinding;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
@@ -37,14 +35,12 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.views.selector.ArrowSelector;
-import de.dreier.mytargets.views.selector.BowSelector;
-import de.dreier.mytargets.views.selector.EnvironmentSelector;
-import de.dreier.mytargets.views.selector.StandardRoundSelector;
+import de.dreier.mytargets.utils.ActivityUtils;
+import de.dreier.mytargets.utils.ToolbarUtils;
 
 import static de.dreier.mytargets.fragments.DatePickerFragment.ARG_CURRENT_DATE;
 
-public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implements DatePickerDialog.OnDateSetListener {
+public class EditTrainingFragment extends EditFragmentBase implements DatePickerDialog.OnDateSetListener {
     public static final String TRAINING_TYPE = "training_type";
 
     public static final int FREE_TRAINING = 0;
@@ -53,39 +49,16 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private static final int REQ_SELECTED_DATE = 2;
 
-    @Bind(R.id.practiceLayout)
-    View practice;
-    @Bind(R.id.indoor)
-    RadioButton indoor;
-    @Bind(R.id.outdoor)
-    RadioButton outdoor;
-    @Bind(R.id.bow)
-    BowSelector bow;
-    @Bind(R.id.arrow)
-    ArrowSelector arrow;
-    @Bind(R.id.training)
-    EditText trainingTitle;
-    @Bind(R.id.trainingDate)
-    Button trainingDate;
-    @Bind(R.id.environmentSpinner)
-    EnvironmentSelector environment;
-    @Bind(R.id.standardRound)
-    StandardRoundSelector standardRoundSpinner;
-    @Bind(R.id.numberArrows)
-    CheckBox numberArrows;
-    @Bind(R.id.timer)
-    CheckBox timer;
+    private long trainingId = -1;
     private int trainingType = 0;
     private LocalDate date = new LocalDate();
+    private FragmentEditTrainingBinding binding;
 
+    @Nullable
     @Override
-    protected int getLayoutResource() {
-        return R.layout.fragment_edit_training;
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = DataBindingUtil
+                .inflate(inflater, R.layout.fragment_edit_training, container, false);
 
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -93,60 +66,83 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
             trainingType = arguments.getInt(TRAINING_TYPE, FREE_TRAINING);
         }
 
-        arrow.setOnUpdateListener(this::updateArrowNumbers);
+        ToolbarUtils.setSupportActionBar(this, binding.toolbar);
+        ToolbarUtils.showUpAsX(this);
+        setHasOptionsMenu(true);
+
+        binding.arrows.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+            @Override
+            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+                updateArrowsLabel();
+            }
+
+            @Override
+            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+            }
+        });
+        binding.targetSpinner.setOnActivityResultContext(this);
+        binding.distanceSpinner.setOnActivityResultContext(this);
+
+        binding.arrow.setOnUpdateListener(this::updateArrowNumbers);
 
         if (trainingId == -1) {
-            setTitle(R.string.new_training);
-            trainingTitle.setText(getString(
+            ToolbarUtils.setTitle(this, R.string.new_training);
+            binding.training.setText(getString(
                     trainingType == COMPETITION ? R.string.competition : R.string.training));
             setTrainingDate();
-            bow.setItemId(SettingsManager.getBow());
-            arrow.setItemId(SettingsManager.getArrow());
-            standardRoundSpinner.setItemId(SettingsManager.getStandardRound());
-            numberArrows.setChecked(SettingsManager.getArrowNumbersEnabled());
-            timer.setChecked(SettingsManager.getTimerEnabled());
-            indoor.setChecked(SettingsManager.getIndoor());
-            outdoor.setChecked(!SettingsManager.getIndoor());
-            environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
+            binding.bow.setItemId(SettingsManager.getBow());
+            binding.arrow.setItemId(SettingsManager.getArrow());
+            binding.standardRound.setItemId(SettingsManager.getStandardRound());
+            binding.numberArrows.setChecked(SettingsManager.getArrowNumbersEnabled());
+            binding.timer.setChecked(SettingsManager.getTimerEnabled());
+            binding.indoor.setChecked(SettingsManager.getIndoor());
+            binding.outdoor.setChecked(!SettingsManager.getIndoor());
+            binding.environmentSpinner.queryWeather(this, REQUEST_LOCATION_PERMISSION);
             loadRoundDefaultValues();
         } else {
-            setTitle(R.string.edit_training);
+            ToolbarUtils.setTitle(this, R.string.edit_training);
             Training train = new TrainingDataSource().get(trainingId);
-            trainingTitle.setText(train.title);
+            binding.training.setText(train.title);
             date = train.date;
-            bow.setItemId(train.bow);
-            arrow.setItemId(train.arrow);
-            standardRoundSpinner.setItemId(train.standardRoundId);
-            environment.setItem(train.environment);
+            binding.bow.setItemId(train.bow);
+            binding.arrow.setItemId(train.arrow);
+            binding.standardRound.setItemId(train.standardRoundId);
+            binding.environmentSpinner.setItem(train.environment);
             setTrainingDate();
-            notEditable.setVisibility(View.GONE);
+            binding.notEditable.setVisibility(View.GONE);
         }
-        standardRoundSpinner.setOnActivityResultContext(this);
-        arrow.setOnActivityResultContext(this);
-        bow.setOnActivityResultContext(this);
-        environment.setOnActivityResultContext(this);
+        binding.standardRound.setOnActivityResultContext(this);
+        binding.arrow.setOnActivityResultContext(this);
+        binding.bow.setOnActivityResultContext(this);
+        binding.environmentSpinner.setOnActivityResultContext(this);
+        binding.trainingDate.setOnClickListener((view) -> onDateClick());
         applyTrainingType();
         updateArrowsLabel();
-        updateArrowNumbers(arrow.getSelectedItem());
-        return rootView;
+        updateArrowNumbers(binding.arrow.getSelectedItem());
+
+        return binding.getRoot();
     }
 
     private void applyTrainingType() {
         View in;
         View out;
         if (trainingType == 0) {
-            in = practice;
-            out = standardRoundSpinner;
+            in = binding.practiceLayout;
+            out = binding.standardRound;
         } else {
-            out = practice;
-            in = standardRoundSpinner;
+            out = binding.practiceLayout;
+            in = binding.standardRound;
         }
         in.setVisibility(View.VISIBLE);
         out.setVisibility(View.GONE);
     }
 
-    @OnClick(R.id.trainingDate)
-    void onDateClick() {
+    private void onDateClick() {
         // Package bundle with fragment arguments
         Bundle bundle = new Bundle();
         bundle.putSerializable(ARG_CURRENT_DATE, date);
@@ -155,22 +151,22 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
         DatePickerFragment datePickerDialog = new DatePickerFragment();
         datePickerDialog.setTargetFragment(EditTrainingFragment.this, REQ_SELECTED_DATE);
         datePickerDialog.setArguments(bundle);
-        datePickerDialog.show(activity.getSupportFragmentManager(), "date_picker");
+        datePickerDialog.show(getActivity().getSupportFragmentManager(), "date_picker");
     }
 
     private void updateArrowNumbers(Arrow item) {
         if (item == null || item.numbers.isEmpty()) {
-            numberArrows.setVisibility(View.GONE);
+            binding.numberArrows.setVisibility(View.GONE);
         } else {
-            numberArrows.setVisibility(View.VISIBLE);
-            numberArrows.setChecked(true);
+            binding.numberArrows.setVisibility(View.VISIBLE);
+            binding.numberArrows.setChecked(true);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
-            environment.onPermissionResult(activity, grantResults);
+            binding.environmentSpinner.onPermissionResult(getActivity(), grantResults);
         }
     }
 
@@ -181,7 +177,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
     }
 
     private void setTrainingDate() {
-        trainingDate.setText(SimpleDateFormat.getDateInstance().format(date.toDate()));
+        binding.trainingDate.setText(SimpleDateFormat.getDateInstance().format(date.toDate()));
     }
 
     @Override
@@ -196,7 +192,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
             if (trainingType == 0) {
                 standardRound = getCustomRound();
             } else {
-                standardRound = standardRoundSpinner.getSelectedItem();
+                standardRound = binding.standardRound.getSelectedItem();
                 SettingsManager.setStandardRound(standardRound.getId());
             }
             new StandardRoundDataSource().update(standardRound);
@@ -205,7 +201,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
             trainingDataSource.update(training);
             long roundId = createRoundsFromTemplate(standardRound, training).get(0).getId();
 
-            openPasseForNewRound(training.getId(), roundId);
+            ActivityUtils.openPasseForNewRound(getActivity(), training.getId(), roundId);
         } else {
             // Edit training
             trainingDataSource.update(training);
@@ -221,19 +217,22 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
         } else {
             training = new TrainingDataSource().get(trainingId);
         }
-        training.title = trainingTitle.getText().toString();
+        training.title = binding.training.getText().toString();
         training.date = date;
-        training.environment = environment.getSelectedItem();
-        training.bow = bow.getSelectedItem() == null ? 0 : bow.getSelectedItem().getId();
-        training.arrow = arrow.getSelectedItem() == null ? 0 : arrow.getSelectedItem().getId();
-        training.timePerPasse = timer.isChecked() ? SettingsManager.getTimerShootTime() : -1;
-        Arrow selectedItem = arrow.getSelectedItem();
+        training.environment = binding.environmentSpinner.getSelectedItem();
+        training.bow = binding.bow.getSelectedItem() == null ? 0 : binding.bow.getSelectedItem()
+                .getId();
+        training.arrow = binding.arrow.getSelectedItem() == null ? 0 : binding.arrow
+                .getSelectedItem().getId();
+        training.timePerPasse = binding.timer.isChecked() ? SettingsManager
+                .getTimerShootTime() : -1;
+        Arrow selectedItem = binding.arrow.getSelectedItem();
         training.arrowNumbering = !(selectedItem == null || selectedItem.numbers.isEmpty()) &&
-                numberArrows.isChecked();
+                binding.numberArrows.isChecked();
 
         SettingsManager.setBow(training.bow);
         SettingsManager.setArrow(training.arrow);
-        SettingsManager.setTimerEnabled(timer.isChecked());
+        SettingsManager.setTimerEnabled(binding.timer.isChecked());
         SettingsManager.setArrowNumbersEnabled(training.arrowNumbering);
         return training;
     }
@@ -259,7 +258,7 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
         standardRound = new StandardRound();
         standardRound.club = StandardRoundFactory.CUSTOM_PRACTICE;
         standardRound.name = getString(R.string.practice);
-        standardRound.indoor = indoor.isChecked();
+        standardRound.indoor = binding.indoor.isChecked();
         ArrayList<RoundTemplate> rounds = new ArrayList<>();
         rounds.add(getRoundTemplate());
         standardRound.rounds = rounds;
@@ -272,9 +271,38 @@ public class EditTrainingFragment extends EditRoundPropertiesFragmentBase implem
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        standardRoundSpinner.onActivityResult(requestCode, resultCode, data);
-        arrow.onActivityResult(requestCode, resultCode, data);
-        bow.onActivityResult(requestCode, resultCode, data);
-        environment.onActivityResult(requestCode, resultCode, data);
+        binding.targetSpinner.onActivityResult(requestCode, resultCode, data);
+        binding.distanceSpinner.onActivityResult(requestCode, resultCode, data);
+        binding.standardRound.onActivityResult(requestCode, resultCode, data);
+        binding.arrow.onActivityResult(requestCode, resultCode, data);
+        binding.bow.onActivityResult(requestCode, resultCode, data);
+        binding.environmentSpinner.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void updateArrowsLabel() {
+        binding.arrowsLabel.setText(getResources()
+                .getQuantityString(R.plurals.arrow, binding.arrows.getProgress(),
+                        binding.arrows.getProgress()));
+    }
+
+    private void loadRoundDefaultValues() {
+        binding.distanceSpinner.setItem(SettingsManager.getDistance());
+        binding.arrows.setProgress(SettingsManager.getArrowsPerPasse());
+        binding.targetSpinner.setItem(SettingsManager.getTarget());
+    }
+
+    @NonNull
+    private RoundTemplate getRoundTemplate() {
+        RoundTemplate roundTemplate = new RoundTemplate();
+        roundTemplate.target = binding.targetSpinner.getSelectedItem();
+        roundTemplate.targetTemplate = roundTemplate.target;
+        roundTemplate.arrowsPerPasse = binding.arrows.getProgress();
+        roundTemplate.passes = 1;
+        roundTemplate.distance = binding.distanceSpinner.getSelectedItem();
+
+        SettingsManager.setTarget(roundTemplate.target);
+        SettingsManager.setDistance(roundTemplate.distance);
+        SettingsManager.setArrowsPerPasse(roundTemplate.arrowsPerPasse);
+        return roundTemplate;
     }
 }

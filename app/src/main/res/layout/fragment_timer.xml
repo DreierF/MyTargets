@@ -1,43 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:background="@color/timer_red">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:background="@android:color/transparent"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:layout_height="match_parent"
+        android:background="@color/timer_red">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@android:color/transparent"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <TextView
+                android:id="@+id/timer_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:shadowColor="#666"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+
+        </android.support.v7.widget.Toolbar>
 
         <TextView
-            android:id="@+id/timer_status"
+            android:id="@+id/timer_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:shadowColor="#666"
             android:shadowDx="0"
             android:shadowDy="0"
+            android:shadowRadius="20"
             android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:textSize="@dimen/timer_text_size"
+            android:textStyle="bold"
+            tools:text="STOP"/>
 
-    </android.support.v7.widget.Toolbar>
+    </FrameLayout>
 
-    <TextView
-        android:id="@+id/timer_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:shadowColor="#666"
-        android:shadowDx="0"
-        android:shadowDy="0"
-        android:shadowRadius="20"
-        android:textColor="@color/white"
-        android:textSize="@dimen/timer_text_size"
-        android:textStyle="bold"
-        tools:text="STOP"/>
-
-</FrameLayout>
+</layout>

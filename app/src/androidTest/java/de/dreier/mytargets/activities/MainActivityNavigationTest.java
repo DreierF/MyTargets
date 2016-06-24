@@ -40,14 +40,14 @@ public class MainActivityNavigationTest extends UITestBase {
     public void mainActivityNavigationTest() {
         // Do settings work
         onView(allOf(withId(R.id.action_preferences), isDisplayed())).perform(click());
-        intended(hasComponent(SimpleFragmentActivity.SettingsActivity.class.getName()));
+        intended(hasComponent(SimpleFragmentActivityBase.SettingsActivity.class.getName()));
         pressBack();
 
         // Does new free training work
         onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
         onView(allOf(withId(R.id.fab1Label), isDisplayed()))
                 .perform(click()); // TODO fix fabmenu fab1 not visible
-        intended(allOf(hasComponent(SimpleFragmentActivity.EditTrainingActivity.class.getName()),
+        intended(allOf(hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
                 hasExtra(TRAINING_TYPE, FREE_TRAINING)));
         allowPermissionsIfNeeded(mActivityTestRule.getActivity(), ACCESS_FINE_LOCATION);
         pressBack();
@@ -56,7 +56,7 @@ public class MainActivityNavigationTest extends UITestBase {
         onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
         onView(allOf(withId(R.id.fab2Label), isDisplayed())).perform(click());
         intended(allOf(
-                hasComponent(SimpleFragmentActivity.EditTrainingActivity.class.getName()),
+                hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
                 hasExtra(TRAINING_TYPE, TRAINING_WITH_STANDARD_ROUND)));
         pressBack();
 
@@ -65,13 +65,13 @@ public class MainActivityNavigationTest extends UITestBase {
         // Does new bow work
         onView(allOf(withText(R.string.bow), isDisplayed())).perform(click());
         onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
-        intended(hasComponent(SimpleFragmentActivity.EditBowActivity.class.getName()));
+        intended(hasComponent(SimpleFragmentActivityBase.EditBowActivity.class.getName()));
         pressBack();
 
         // Does new arrow work
         onView(allOf(withText(R.string.arrow), isDisplayed())).perform(click());
         onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
-        intended(hasComponent(SimpleFragmentActivity.EditArrowActivity.class.getName()));
+        intended(hasComponent(SimpleFragmentActivityBase.EditArrowActivity.class.getName()));
         pressBack();
     }
 }

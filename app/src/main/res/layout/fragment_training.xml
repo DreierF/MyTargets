@@ -1,87 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:id="@+id/appbar"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <LinearLayout
+            android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:layout_collapseMode="none"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:layout_collapseMode="none"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-            <LinearLayout
+            <android.support.v7.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginLeft="60dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginStart="60dp"
-                android:baselineAligned="false"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:background="@color/colorPrimary"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-                <TextView
-                    android:id="@+id/detail_round_info"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/white"/>
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginStart="60dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
 
-                <TextView
-                    android:id="@+id/detail_score"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/white"/>
+                    <TextView
+                        android:id="@+id/detail_round_info"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/white"/>
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/detail_score"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/white"/>
 
-        </android.support.v7.widget.Toolbar>
+                </LinearLayout>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            </android.support.v7.widget.Toolbar>
 
-            <android.support.v7.widget.RecyclerView
-                style="@style/card_list"
-                app:layoutManager="LinearLayoutManager"/>
-
-
-            <View
-                android:id="@+id/overlayView"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/dim_overlay"
-                android:clickable="true"
-                android:focusable="true"/>
+                android:layout_height="match_parent">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_drop_shadow_height"
-                android:background="@drawable/toolbar_drop_shadow"
-                app:layout_anchor="@id/appbar"/>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    style="@style/card_list"
+                    app:layoutManager="LinearLayoutManager"/>
 
-            <include layout="@layout/layout_fab_description"/>
-        </FrameLayout>
-    </LinearLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+                <View
+                    android:id="@+id/overlayView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/dim_overlay"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toolbar_drop_shadow_height"
+                    android:background="@drawable/toolbar_drop_shadow"
+                    app:layout_anchor="@id/appbar"/>
+
+                <include
+                    android:id="@+id/fabLayout"
+                    layout="@layout/layout_fab_description"/>
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</layout>

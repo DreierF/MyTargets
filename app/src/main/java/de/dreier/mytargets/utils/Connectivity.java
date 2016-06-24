@@ -99,7 +99,7 @@ class Connectivity {
                 case TelephonyManager.NETWORK_TYPE_UMTS:
                     return true; // ~ 400-7000 kbps
             /*
-			 * Above API level 7, make sure to set android:targetSdkVersion 
+             * Above API level 7, make sure to set android:targetSdkVersion
 			 * to appropriate level to use these
 			 */
                 case TelephonyManager.NETWORK_TYPE_EHRPD: // API level 11

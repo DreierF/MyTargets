@@ -1,4 +1,4 @@
-package de.dreier.mytargets.activities;
+package de.dreier.mytargets.models;
 
 public enum EShowMode {
     END, ROUND, TRAINING

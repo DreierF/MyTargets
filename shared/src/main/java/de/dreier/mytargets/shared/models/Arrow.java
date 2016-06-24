@@ -10,16 +10,16 @@ import java.util.List;
 import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
 
 public class Arrow implements IImageProvider, IIdSettable {
-    long id;
-    public String name;
-    public String length;
-    public String material;
-    public String spine;
-    public String weight;
-    public String tipWeight;
-    public String vanes;
-    public String nock;
-    public String comment;
+    public long id = -1;
+    public String name = "";
+    public String length = "";
+    public String material = "";
+    public String spine = "";
+    public String weight = "";
+    public String tipWeight = "";
+    public String vanes = "";
+    public String nock = "";
+    public String comment = "";
     public List<ArrowNumber> numbers = new ArrayList<>();
     public byte[] thumb;
     public String imageFile;

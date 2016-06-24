@@ -10,16 +10,10 @@ package de.dreier.mytargets.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import junit.framework.Assert;
 
@@ -60,30 +54,8 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
      * {@inheritDoc}
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        return rootView;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // Set up toolbar
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        useDoubleClickSelection = toolbar != null;
-        if (useDoubleClickSelection) {
-            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-            ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            assert supportActionBar != null;
-            supportActionBar.setDisplayHomeAsUpEnabled(true);
-            supportActionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
-            setHasOptionsMenu(true);
-        }
-
         mSelector.setSelectable(true);
     }
 
@@ -108,7 +80,7 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
      * @param list    Content to show
      * @param adapter New instance of an adapter which is able to show the given list
      */
-    void setList(List<T> list, NowListAdapter<T> adapter) {
+    void setList(RecyclerView recyclerView, List<T> list, NowListAdapter<T> adapter) {
         if (recyclerView.getAdapter() == null) {
             mAdapter = adapter;
             mAdapter.setList(list);

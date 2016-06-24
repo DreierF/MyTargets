@@ -8,13 +8,13 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    compileSdkVersion 24
+    buildToolsVersion '24.0.0'
 
     defaultConfig {
         applicationId 'de.dreier.mytargets'
         minSdkVersion 20
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode appVersionCode
         versionName appVersionName
     }

@@ -4,38 +4,21 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
-import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.databinding.LayoutFabDescriptionBinding;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+//TODO Make this a view or better: Use a library
 public class FABMenu {
 
-    @Bind(R.id.fab)
-    FloatingActionButton fab;
-    @Bind(R.id.fab1)
-    FloatingActionButton fab1;
-    @Bind(R.id.fab2)
-    FloatingActionButton fab2;
-    @Bind(R.id.fab1Label)
-    TextView fab1Label;
-    @Bind(R.id.fab2Label)
-    TextView fab2Label;
-    @Bind(R.id.overlayView)
-    View overlayView;
-    @Bind(R.id.new_layout)
-    View mNewLayout;
-    @Bind(R.id.new_text)
-    TextView mNewText;
+    private final LayoutFabDescriptionBinding binding;
+    private final View overlayView;
     private boolean isFabOpen = false;
     private final Animation fabOpen;
     private final Animation fabClose;
@@ -51,15 +34,21 @@ public class FABMenu {
         void onFabClicked(int index);
     }
 
-    public FABMenu(Context context, View root) {
-        ButterKnife.bind(this, root);
-
+    public FABMenu(Context context, LayoutFabDescriptionBinding binding, View overlay) {
+        this.binding = binding;
+        this.overlayView = overlay;
         fabOpen = AnimationUtils.loadAnimation(context, R.anim.fab_open);
         fabClose = AnimationUtils.loadAnimation(context, R.anim.fab_close);
         rotateForward = AnimationUtils.loadAnimation(context, R.anim.rotate_forward);
         rotateBackward = AnimationUtils.loadAnimation(context, R.anim.rotate_backward);
         fabShowAnimation = AnimationUtils.loadAnimation(context, R.anim.fab_label_show);
         fabHideAnimation = AnimationUtils.loadAnimation(context, R.anim.fab_label_hide);
+        binding.fab.setOnClickListener(this::onClick);
+        binding.fab1.setOnClickListener(this::onClick);
+        binding.fab2.setOnClickListener(this::onClick);
+        binding.fab1Label.setOnClickListener(this::onClick);
+        binding.fab2Label.setOnClickListener(this::onClick);
+        overlayView.setOnClickListener((view) -> dismissFabMenu());
 
         fabOpen.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -102,20 +91,15 @@ public class FABMenu {
 
     public void reset() {
         if (!isFabOpen) {
-            fab.setAnimation(null);
-            fab1.setAnimation(null);
-            fab2.setAnimation(null);
-            fab1Label.setAnimation(null);
-            fab2Label.setAnimation(null);
+            binding.fab.setAnimation(null);
+            binding.fab1.setAnimation(null);
+            binding.fab2.setAnimation(null);
+            binding.fab1Label.setAnimation(null);
+            binding.fab2Label.setAnimation(null);
         }
         applyFabState(isFabOpen);
     }
 
-    public void unbind() {
-        ButterKnife.unbind(this);
-    }
-
-    @OnClick({R.id.fab, R.id.fab1, R.id.fab2, R.id.fab1Label, R.id.fab2Label})
     public void onClick(View v) {
         if (listener == null)
             return;
@@ -140,26 +124,25 @@ public class FABMenu {
         }
     }
 
-    @OnClick(R.id.overlayView)
-    void dismissFabMenu() {
+    private void dismissFabMenu() {
         animateFAB();
     }
 
     private void animateFAB() {
         if (isFabOpen) {
-            fab.startAnimation(rotateBackward);
-            fab1.startAnimation(fabClose);
-            fab2.startAnimation(fabClose);
-            fab1Label.startAnimation(fabHideAnimation);
-            fab2Label.startAnimation(fabHideAnimation);
+            binding.fab.startAnimation(rotateBackward);
+            binding.fab1.startAnimation(fabClose);
+            binding.fab2.startAnimation(fabClose);
+            binding.fab1Label.startAnimation(fabHideAnimation);
+            binding.fab2Label.startAnimation(fabHideAnimation);
             overlayView.setAlpha(1);
             overlayView.animate().alpha(0).start();
         } else {
-            fab.startAnimation(rotateForward);
-            fab1.startAnimation(fabOpen);
-            fab2.startAnimation(fabOpen);
-            fab1Label.startAnimation(fabShowAnimation);
-            fab2Label.startAnimation(fabShowAnimation);
+            binding.fab.startAnimation(rotateForward);
+            binding.fab1.startAnimation(fabOpen);
+            binding.fab2.startAnimation(fabOpen);
+            binding.fab1Label.startAnimation(fabShowAnimation);
+            binding.fab2Label.startAnimation(fabShowAnimation);
             overlayView.setAlpha(0);
             overlayView.setVisibility(VISIBLE);
             overlayView.animate().alpha(1).start();
@@ -169,12 +152,12 @@ public class FABMenu {
     private void applyFabState(boolean state) {
         isFabOpen = state;
         final int visibility = isFabOpen ? VISIBLE : INVISIBLE;
-        fab1Label.setVisibility(visibility);
-        fab2Label.setVisibility(visibility);
-        fab1.setClickable(isFabOpen);
-        fab2.setClickable(isFabOpen);
-        fab1Label.setClickable(isFabOpen);
-        fab2Label.setClickable(isFabOpen);
+        binding.fab1Label.setVisibility(visibility);
+        binding.fab2Label.setVisibility(visibility);
+        binding.fab1.setClickable(isFabOpen);
+        binding.fab2.setClickable(isFabOpen);
+        binding.fab1Label.setClickable(isFabOpen);
+        binding.fab2Label.setClickable(isFabOpen);
         overlayView.setVisibility(visibility);
     }
 
@@ -194,22 +177,22 @@ public class FABMenu {
 
     public void setFABHelperTitle(int stringRes) {
         if (stringRes == 0) {
-            mNewLayout.setVisibility(View.GONE);
+            binding.newLayout.setVisibility(View.GONE);
         } else {
-            mNewLayout.setVisibility(VISIBLE);
-            mNewText.setText(stringRes);
+            binding.newLayout.setVisibility(VISIBLE);
+            binding.newText.setText(stringRes);
         }
     }
 
     public void setFABItem(int index, @DrawableRes int icon, @StringRes int text) {
         switch (index) {
             case 1:
-                fab1.setImageResource(icon);
-                fab1Label.setText(text);
+                binding.fab1.setImageResource(icon);
+                binding.fab1Label.setText(text);
                 break;
             case 2:
-                fab2.setImageResource(icon);
-                fab2Label.setText(text);
+                binding.fab2.setImageResource(icon);
+                binding.fab2Label.setText(text);
                 break;
         }
     }
