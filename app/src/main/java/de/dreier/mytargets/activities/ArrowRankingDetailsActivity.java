@@ -2,13 +2,13 @@ package de.dreier.mytargets.activities;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 
 import org.parceler.Parcels;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityArrowRankingDetailsBinding;
 import de.dreier.mytargets.models.ArrowStatistic;
+import de.dreier.mytargets.utils.ToolbarUtils;
 
 public class ArrowRankingDetailsActivity extends ChildActivityBase {
 
@@ -24,9 +24,9 @@ public class ArrowRankingDetailsActivity extends ChildActivityBase {
         binding.dispersionView.setShoots(item.shots);
         binding.dispersionView.setTarget(item.target.getDrawable());
 
-        ActionBar actionBar = setupHomeAsUpActionBar();
-        actionBar.setTitle(getString(R.string.arrow_number_x, item.arrowNumber));
-        actionBar.setSubtitle(item.arrowName);
+        ToolbarUtils.showHomeAsUp(this);
+        setTitle(getString(R.string.arrow_number_x, item.arrowNumber));
+        ToolbarUtils.setSubtitle(this, item.arrowName);
     }
 
 }

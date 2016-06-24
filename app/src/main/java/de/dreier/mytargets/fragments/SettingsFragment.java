@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -24,6 +23,7 @@ import de.dreier.mytargets.activities.MainActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.utils.BackupUtils;
+import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.views.DatePreference;
 import de.dreier.mytargets.views.DatePreferenceDialogFragmentCompat;
 import permissions.dispatcher.NeedsPermission;
@@ -87,10 +87,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        assert ab != null;
-        ab.setHomeButtonEnabled(true);
-        ab.setDisplayHomeAsUpEnabled(true);
+        ToolbarUtils.showHomeAsUp(this);
     }
 
     @Override
@@ -111,7 +108,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 return true;
             case "pref_licence":
                 getActivity().startActivity(
-                        new Intent(getContext(), SimpleFragmentActivityBase.LicencesActivity.class));
+                        new Intent(getContext(),
+                                SimpleFragmentActivityBase.LicencesActivity.class));
                 return true;
             default:
                 return super.onPreferenceTreeClick(preference);

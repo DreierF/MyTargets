@@ -75,7 +75,8 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_standard_round_selection, container, false);
+        binding = DataBindingUtil
+                .inflate(inflater, R.layout.fragment_standard_round_selection, container, false);
         binding.recyclerView.setHasFixedSize(true);
         useDoubleClickSelection = true;
         ToolbarUtils.showUpAsX(this);
@@ -137,7 +138,8 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         if (position > -1) {
             binding.recyclerView.post(() -> {
                 mSelector.setSelected(position, currentSelection.getId(), true);
-                LinearLayoutManager manager = (LinearLayoutManager) binding.recyclerView.getLayoutManager();
+                LinearLayoutManager manager = (LinearLayoutManager) binding.recyclerView
+                        .getLayoutManager();
                 int first = manager.findFirstCompletelyVisibleItemPosition();
                 int last = manager.findLastCompletelyVisibleItemPosition();
                 if (first > position || last < position) {
@@ -313,7 +315,8 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
     @Override
     public void onClick(View v) {
         startActivityForResult(
-                new Intent(getActivity(), SimpleFragmentActivityBase.EditStandardRoundActivity.class),
+                new Intent(getActivity(),
+                        SimpleFragmentActivityBase.EditStandardRoundActivity.class),
                 NEW_STANDARD_ROUND);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }

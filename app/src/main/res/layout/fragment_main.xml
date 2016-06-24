@@ -48,7 +48,9 @@
             android:layout_height="@dimen/toolbar_drop_shadow_height"
             android:background="@drawable/toolbar_drop_shadow"/>
 
-        <include android:id="@+id/fabLayout" layout="@layout/layout_fab_description"/>
+        <include
+            android:id="@+id/fabLayout"
+            layout="@layout/layout_fab_description"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

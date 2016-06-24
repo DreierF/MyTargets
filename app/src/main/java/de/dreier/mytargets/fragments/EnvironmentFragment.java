@@ -41,7 +41,8 @@ public class EnvironmentFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_environment, container, false);
+        binding = DataBindingUtil
+                .inflate(inflater, R.layout.fragment_environment, container, false);
 
         Bundle i = getArguments();
         if (i != null) {

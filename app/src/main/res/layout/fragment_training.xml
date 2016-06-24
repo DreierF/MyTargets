@@ -83,7 +83,9 @@
                     android:background="@drawable/toolbar_drop_shadow"
                     app:layout_anchor="@id/appbar"/>
 
-                <include android:id="@+id/fabLayout" layout="@layout/layout_fab_description"/>
+                <include
+                    android:id="@+id/fabLayout"
+                    layout="@layout/layout_fab_description"/>
 
             </FrameLayout>
 

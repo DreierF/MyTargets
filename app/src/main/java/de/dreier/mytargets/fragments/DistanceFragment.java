@@ -34,7 +34,7 @@ public class DistanceFragment extends Fragment implements DistanceInputDialog.On
     private FragmentDistanceBinding binding;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_distance,  container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_distance, container, false);
 
         distance = Parcels.unwrap(getArguments().getParcelable(ITEM));
 

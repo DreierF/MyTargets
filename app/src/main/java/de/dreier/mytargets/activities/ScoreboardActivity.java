@@ -27,8 +27,9 @@ import android.webkit.WebViewClient;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityScoreboardBinding;
-import de.dreier.mytargets.utils.HTMLUtils;
+import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.ScoreboardConfiguration;
+import de.dreier.mytargets.utils.ToolbarUtils;
 
 import static android.support.v7.preference.PreferenceFragmentCompat.ARG_PREFERENCE_ROOT;
 
@@ -66,8 +67,7 @@ public class ScoreboardActivity extends AppCompatActivity {
             }
         });
 
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ToolbarUtils.showHomeAsUp(this);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class ScoreboardActivity extends AppCompatActivity {
 
             @Override
             protected String doInBackground(Void... params) {
-                return HTMLUtils.getScoreboard(ScoreboardActivity.this, mTraining,
+                return HtmlUtils.getScoreboard(ScoreboardActivity.this, mTraining,
                         ScoreboardConfiguration.fromDisplaySettings(getApplicationContext()));
             }
 
@@ -130,7 +130,7 @@ public class ScoreboardActivity extends AppCompatActivity {
 
             @Override
             protected String doInBackground(Void... params) {
-                return HTMLUtils.getScoreboard(ScoreboardActivity.this, mTraining,
+                return HtmlUtils.getScoreboard(ScoreboardActivity.this, mTraining,
                         ScoreboardConfiguration.fromPrintSettings(getApplicationContext()));
             }
 

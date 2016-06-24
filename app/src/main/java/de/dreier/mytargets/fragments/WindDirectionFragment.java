@@ -37,7 +37,8 @@ public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
     @Override
     public void onResume() {
         super.onResume();
-        setList(binding.recyclerView, WindDirection.getList(getActivity()), new WindDirectionAdapter());
+        setList(binding.recyclerView, WindDirection.getList(getActivity()),
+                new WindDirectionAdapter());
     }
 
     @Override

@@ -143,7 +143,8 @@ public class EditRoundFragment extends EditFragmentBase {
 
     private void updateArrowsLabel() {
         binding.arrowsLabel.setText(getResources()
-                .getQuantityString(R.plurals.arrow, binding.arrows.getProgress(), binding.arrows.getProgress()));
+                .getQuantityString(R.plurals.arrow, binding.arrows.getProgress(),
+                        binding.arrows.getProgress()));
     }
 
     private void loadRoundDefaultValues() {

@@ -7,15 +7,12 @@
 
 package de.dreier.mytargets.utils;
 
-import android.content.Context;
-import android.content.res.TypedArray;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,36 +20,23 @@ import de.dreier.mytargets.R;
 
 
 public class ToolbarUtils {
-    public static int getActionBarSize(Context context) {
-        TypedValue typedValue = new TypedValue();
-        int[] textSizeAttr = new int[]{R.attr.actionBarSize};
-        int indexOfAttrTextSize = 0;
-        TypedArray a = context.obtainStyledAttributes(typedValue.data, textSizeAttr);
-        int actionBarSize = a.getDimensionPixelSize(indexOfAttrTextSize, -1);
-        a.recycle();
-        return actionBarSize;
-    }
-
-    public static int getStatusBarSize(Context context) {
-        int result = 0;
-        int resourceId = context.getResources()
-                .getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = context.getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
 
     public static void showUpAsX(Fragment fragment) {
-        AppCompatActivity activity = (AppCompatActivity) fragment.getActivity();
+        showUpAsX((AppCompatActivity) fragment.getActivity());
+    }
+
+    public static void showUpAsX(AppCompatActivity activity) {
         ActionBar supportActionBar = activity.getSupportActionBar();
         assert supportActionBar != null;
         supportActionBar.setDisplayHomeAsUpEnabled(true);
         supportActionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
     }
 
-    public static void showUpArrow(Fragment fragment) {
-        AppCompatActivity activity = (AppCompatActivity) fragment.getActivity();
+    public static void showHomeAsUp(Fragment fragment) {
+        showHomeAsUp((AppCompatActivity) fragment.getActivity());
+    }
+
+    public static void showHomeAsUp(AppCompatActivity activity) {
         ActionBar supportActionBar = activity.getSupportActionBar();
         assert supportActionBar != null;
         supportActionBar.setDisplayHomeAsUpEnabled(true);
@@ -76,14 +60,30 @@ public class ToolbarUtils {
     }
 
     public static void setTitle(Fragment fragment, @StringRes int title) {
-        AppCompatActivity activity = (AppCompatActivity) fragment.getActivity();
+        setTitle((AppCompatActivity) fragment.getActivity(), title);
+    }
+
+    public static void setTitle(Fragment fragment, String title) {
+        setTitle((AppCompatActivity) fragment.getActivity(), title);
+    }
+
+    public static void setTitle(AppCompatActivity activity, @StringRes int title) {
         assert activity.getSupportActionBar() != null;
         activity.getSupportActionBar().setTitle(title);
     }
 
-    public static void setTitle(Fragment fragment, String title) {
-        AppCompatActivity activity = (AppCompatActivity) fragment.getActivity();
+    public static void setTitle(AppCompatActivity activity, String title) {
         assert activity.getSupportActionBar() != null;
         activity.getSupportActionBar().setTitle(title);
+    }
+
+    public static void setSubtitle(Fragment fragment, String subtitle) {
+        AppCompatActivity activity = (AppCompatActivity) fragment.getActivity();
+        setSubtitle(activity, subtitle);
+    }
+
+    public static void setSubtitle(AppCompatActivity activity, String subtitle) {
+        assert activity.getSupportActionBar() != null;
+        activity.getSupportActionBar().setSubtitle(subtitle);
     }
 }

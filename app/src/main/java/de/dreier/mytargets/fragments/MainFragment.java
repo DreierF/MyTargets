@@ -87,7 +87,8 @@ public class MainFragment extends Fragment implements FragmentBase.ContentListen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_preferences) {
-            startActivity(new Intent(getContext(), SimpleFragmentActivityBase.SettingsActivity.class));
+            startActivity(
+                    new Intent(getContext(), SimpleFragmentActivityBase.SettingsActivity.class));
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -111,17 +112,21 @@ public class MainFragment extends Fragment implements FragmentBase.ContentListen
             case 0:
                 int currentTab = binding.viewPager.getCurrentItem();
                 if (currentTab == 1) {
-                    startActivityAnimated(getActivity(), SimpleFragmentActivityBase.EditBowActivity.class);
+                    startActivityAnimated(getActivity(),
+                            SimpleFragmentActivityBase.EditBowActivity.class);
                 } else if (currentTab == 2) {
-                    startActivityAnimated(getActivity(), SimpleFragmentActivityBase.EditArrowActivity.class);
+                    startActivityAnimated(getActivity(),
+                            SimpleFragmentActivityBase.EditArrowActivity.class);
                 }
                 break;
             case 1:
-                startActivityAnimated(getActivity(), SimpleFragmentActivityBase.EditTrainingActivity.class,
+                startActivityAnimated(getActivity(),
+                        SimpleFragmentActivityBase.EditTrainingActivity.class,
                         TRAINING_TYPE, FREE_TRAINING);
                 break;
             case 2:
-                startActivityAnimated(getActivity(), SimpleFragmentActivityBase.EditTrainingActivity.class,
+                startActivityAnimated(getActivity(),
+                        SimpleFragmentActivityBase.EditTrainingActivity.class,
                         TRAINING_TYPE, TRAINING_WITH_STANDARD_ROUND);
                 break;
         }
@@ -142,13 +147,16 @@ public class MainFragment extends Fragment implements FragmentBase.ContentListen
     public void onItemSelected(Parcelable passedItem) {
         IIdProvider item = Parcels.unwrap(passedItem);
         if (item instanceof Arrow) {
-            startActivityAnimated(getActivity(), SimpleFragmentActivityBase.EditArrowActivity.class, ARROW_ID,
+            startActivityAnimated(getActivity(), SimpleFragmentActivityBase.EditArrowActivity.class,
+                    ARROW_ID,
                     item.getId());
         } else if (item instanceof Bow) {
-            startActivityAnimated(getActivity(), SimpleFragmentActivityBase.EditBowActivity.class, BOW_ID,
+            startActivityAnimated(getActivity(), SimpleFragmentActivityBase.EditBowActivity.class,
+                    BOW_ID,
                     item.getId());
         } else {
-            startActivityAnimated(getActivity(), SimpleFragmentActivityBase.EditTrainingActivity.class, ITEM_ID,
+            startActivityAnimated(getActivity(),
+                    SimpleFragmentActivityBase.EditTrainingActivity.class, ITEM_ID,
                     item.getId());
         }
     }

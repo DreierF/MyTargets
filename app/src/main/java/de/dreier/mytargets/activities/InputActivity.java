@@ -38,6 +38,7 @@ import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
+import de.dreier.mytargets.utils.ToolbarUtils;
 import icepick.Icepick;
 import icepick.State;
 
@@ -103,7 +104,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         binding.next.setOnClickListener(view -> setPasse(curPasse + 1));
         binding.prev.setOnClickListener(view -> setPasse(curPasse - 1));
 
-        setupHomeAsUpActionBar();
+        ToolbarUtils.showHomeAsUp(this);
     }
 
     private void startWearNotification() {
@@ -202,10 +203,8 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
                         rounds.size() > template.index + 1 || // We still have another round
                         standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE)); // or we don't have an exit condition
 
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setTitle(getString(R.string.passe) + " " + (curPasse + 1));
-        getSupportActionBar()
-                .setSubtitle(getString(R.string.round) + " " + (round.info.index + 1));
+        ToolbarUtils.setTitle(this, getString(R.string.passe) + " " + (curPasse + 1));
+        ToolbarUtils.setSubtitle(this, getString(R.string.round) + " " + (round.info.index + 1));
     }
 
     @Override

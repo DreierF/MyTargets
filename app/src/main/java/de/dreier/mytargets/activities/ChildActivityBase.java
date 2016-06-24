@@ -1,7 +1,5 @@
 package de.dreier.mytargets.activities;
 
-import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuItem;
@@ -12,14 +10,6 @@ public class ChildActivityBase extends AppCompatActivity {
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-    }
-
-    @NonNull
-    ActionBar setupHomeAsUpActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        return actionBar;
     }
 
     @Override

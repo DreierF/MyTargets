@@ -17,6 +17,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityStatisticsBinding;
 import de.dreier.mytargets.fragments.ArrowRankingFragment;
 import de.dreier.mytargets.fragments.StatisticsFragment;
+import de.dreier.mytargets.utils.ToolbarUtils;
 
 public class StatisticsActivity extends ChildActivityBase {
 
@@ -29,16 +30,16 @@ public class StatisticsActivity extends ChildActivityBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityStatisticsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_statistics);
+        ActivityStatisticsBinding binding = DataBindingUtil
+                .setContentView(this, R.layout.activity_statistics);
 
         mTraining = getIntent().getLongExtra(TRAINING_ID, -1);
         mRound = getIntent().getLongExtra(ROUND_ID, -1);
 
-        //noinspection ConstantConditions
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         binding.pager.setAdapter(new StatisticsPagerAdapter(getSupportFragmentManager()));
         binding.pager.setCurrentItem(mRound == -1 ? 1 : 2, false);
+
+        ToolbarUtils.showHomeAsUp(this);
     }
 
     private class StatisticsPagerAdapter extends FragmentStatePagerAdapter {

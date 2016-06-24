@@ -15,9 +15,6 @@ import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,8 +47,8 @@ import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.FABMenu;
-import de.dreier.mytargets.utils.HTMLUtils;
 import de.dreier.mytargets.utils.HeaderBindingHolder;
+import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.SelectableViewHolder;
@@ -101,7 +98,7 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         // Set up toolbar
 //        setToolbarTransitionName(binding.toolbar);
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
-        ToolbarUtils.showUpArrow(this);
+        ToolbarUtils.showHomeAsUp(this);
         setHasOptionsMenu(true);
 
         trainingDataSource = new TrainingDataSource();
@@ -131,14 +128,12 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
 
         // Set round info
         setRoundInfo();
-        setList(binding.recyclerView, passeDataSource, rounds, data, child -> child.roundId, true, new PasseAdapter());
+        setList(binding.recyclerView, passeDataSource, rounds, data, child -> child.roundId, true,
+                new PasseAdapter());
         getActivity().supportInvalidateOptionsMenu();
 
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        ActionBar actionBar = activity.getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setTitle(training.title);
-        actionBar.setSubtitle(training.getFormattedDate());
+        ToolbarUtils.setTitle(this, training.title);
+        ToolbarUtils.setSubtitle(this, training.getFormattedDate());
     }
 
     @Override
@@ -150,10 +145,10 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         TextView info = (TextView) binding.getRoot().findViewById(R.id.detail_round_info);
         TextView tvScore = (TextView) binding.getRoot().findViewById(R.id.detail_score);
 
-        tvScore.setText(Html.fromHtml(HTMLUtils.getTrainingTopScoreDistribution(mTraining)));
+        tvScore.setText(HtmlUtils.fromHtml(HtmlUtils.getTrainingTopScoreDistribution(mTraining)));
 
         // Set training info
-        info.setText(Html.fromHtml(HTMLUtils.getTrainingInfoHTML(training, rounds, equals, false)));
+        info.setText(HtmlUtils.fromHtml(HtmlUtils.getTrainingInfoHTML(training, rounds, equals, false)));
     }
 
     @Override
@@ -220,7 +215,8 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
                 startActivity(shareIntent);
             } catch (IOException e) {
                 e.printStackTrace();
-                Snackbar.make(binding.getRoot(), R.string.sharing_failed, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(binding.getRoot(), R.string.sharing_failed, Snackbar.LENGTH_SHORT)
+                        .show();
             }
         }).start();
     }
@@ -300,7 +296,8 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
                 // Intended fall trough
             case 2:
                 // New round to free training
-                Intent i = new Intent(getContext(), SimpleFragmentActivityBase.EditRoundActivity.class);
+                Intent i = new Intent(getContext(),
+                        SimpleFragmentActivityBase.EditRoundActivity.class);
                 i.putExtra(ITEM_ID, mTraining);
                 startActivity(i);
                 break;
@@ -368,8 +365,8 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
             mTitle.setText(String.format(Locale.ENGLISH, "%s %d", context.getString(R.string.round),
                     rounds.indexOf(mItem) + 1));
 
-            String infoText = HTMLUtils.getRoundInfo(mItem, equals);
-            mSubtitle.setText(Html.fromHtml(infoText));
+            String infoText = HtmlUtils.getRoundInfo(mItem, equals);
+            mSubtitle.setText(HtmlUtils.fromHtml(infoText));
         }
 
         @Override

@@ -2,7 +2,6 @@ package de.dreier.mytargets.utils;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.InputActivity;

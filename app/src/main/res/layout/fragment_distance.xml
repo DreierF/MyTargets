@@ -25,7 +25,9 @@
 
         </LinearLayout>
 
-        <include android:id="@+id/fabLayout" layout="@layout/layout_fab_description"/>
+        <include
+            android:id="@+id/fabLayout"
+            layout="@layout/layout_fab_description"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

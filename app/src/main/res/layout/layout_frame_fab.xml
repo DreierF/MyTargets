@@ -13,7 +13,9 @@
                      android:layout_height="match_parent"
                      app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-        <include android:id="@+id/fabLayout" layout="@layout/layout_fab_description"/>
+        <include
+            android:id="@+id/fabLayout"
+            layout="@layout/layout_fab_description"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

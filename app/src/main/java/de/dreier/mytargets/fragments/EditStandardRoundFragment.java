@@ -52,7 +52,8 @@ public class EditStandardRoundFragment extends EditFragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_standard_round, container, false);
+        binding = DataBindingUtil
+                .inflate(inflater, R.layout.fragment_edit_standard_round, container, false);
 
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
         ToolbarUtils.showUpAsX(this);

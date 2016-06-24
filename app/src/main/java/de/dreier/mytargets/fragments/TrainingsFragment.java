@@ -91,7 +91,8 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
             }
         }
         Collections.sort(months, Collections.reverseOrder());
-        setList(binding.recyclerView, trainingDataSource, months, data, child -> Utils.getMonthId(child.date), false,
+        setList(binding.recyclerView, trainingDataSource, months, data,
+                child -> Utils.getMonthId(child.date), false,
                 new TrainingAdapter());
     }
 
