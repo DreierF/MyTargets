@@ -1,6 +1,10 @@
-<WebView xmlns:android="http://schemas.android.com/apk/res/android"
-         xmlns:tools="http://schemas.android.com/tools"
-         android:id="@+id/webView"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         tools:context="de.dreier.mytargets.activities.ScoreboardActivity"/>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context="de.dreier.mytargets.activities.ScoreboardActivity">
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</layout>

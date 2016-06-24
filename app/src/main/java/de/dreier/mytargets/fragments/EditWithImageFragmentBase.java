@@ -28,13 +28,13 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
 
-import butterknife.OnClick;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentEditImageBinding;
 import de.dreier.mytargets.shared.utils.BitmapUtils;
 import de.dreier.mytargets.utils.AndroidBug5497Workaround;
 import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.ThumbnailUtils;
+import de.dreier.mytargets.utils.ToolbarUtils;
 import icepick.Icepick;
 import icepick.State;
 import permissions.dispatcher.NeedsPermission;
@@ -65,8 +65,11 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentEditImageBinding.inflate(inflater, container, false);
-        setUpToolbar(binding.toolbar);
+        ToolbarUtils.setSupportActionBar(this, binding.toolbar);
+        ToolbarUtils.showUpAsX(this);
+        setHasOptionsMenu(true);
         Icepick.restoreInstanceState(this, savedInstanceState);
+        binding.fab.setOnClickListener(this::onFabClicked);
         return binding.getRoot();
     }
 
@@ -103,8 +106,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
         }
     }
 
-    @OnClick(R.id.fab)
-    public void onFabClicked(View v) {
+    private void onFabClicked(View v) {
         PopupMenu popup = new PopupMenu(v.getContext(), v);
         popup.inflate(R.menu.context_menu_image);
         popup.setOnMenuItemClickListener(item -> {

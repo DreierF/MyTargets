@@ -8,31 +8,20 @@
 package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import butterknife.Bind;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding;
 import de.dreier.mytargets.shared.models.IDetailProvider;
 import de.dreier.mytargets.shared.models.IImageProvider;
 
 
 public abstract class ImageSelectorBase<T extends IImageProvider> extends SelectorBase<T> {
 
-    @Bind(R.id.title)
-    TextView title;
-
-    @Bind(R.id.image)
-    ImageView image;
-
-    @Bind(R.id.name)
-    TextView name;
-
-    @Bind(R.id.details)
-    TextView details;
+    protected SelectorItemImageDetailsBinding binding;
 
     public ImageSelectorBase(Context context) {
         this(context, null);
@@ -40,22 +29,23 @@ public abstract class ImageSelectorBase<T extends IImageProvider> extends Select
 
     public ImageSelectorBase(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.selector_item_image_details);
+        binding = DataBindingUtil.bind(mView);
     }
 
     @Override
     protected void bindView() {
-        name.setText(item.getName());
+        binding.name.setText(item.getName());
         if (item instanceof IDetailProvider) {
-            details.setVisibility(VISIBLE);
-            details.setText(((IDetailProvider) item).getDetails(getContext()));
+            binding.details.setVisibility(VISIBLE);
+            binding.details.setText(((IDetailProvider) item).getDetails(getContext()));
         }
-        image.setImageDrawable(item.getDrawable(getContext()));
+        binding.image.setImageDrawable(item.getDrawable(getContext()));
         if (!isImageSelectable()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                image.setBackground(null);
+                binding.image.setBackground(null);
             } else {
                 //noinspection deprecation
-                image.setBackgroundDrawable(null);
+                binding.image.setBackgroundDrawable(null);
             }
         }
         invalidate();
@@ -66,7 +56,7 @@ public abstract class ImageSelectorBase<T extends IImageProvider> extends Select
     }
 
     void setTitle(@StringRes int title) {
-        this.title.setVisibility(VISIBLE);
-        this.title.setText(title);
+        binding.title.setVisibility(VISIBLE);
+        binding.title.setText(title);
     }
 }

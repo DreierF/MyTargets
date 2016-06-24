@@ -36,8 +36,8 @@ public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
 
     public StandardRoundSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
-        image.setFocusable(true);
-        image.setClickable(true);
+        binding.image.setFocusable(true);
+        binding.image.setClickable(true);
         defaultActivity = StandardRoundActivity.class;
         requestCode = STANDARD_ROUND_REQUEST_CODE;
     }
@@ -45,7 +45,7 @@ public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
     @Override
     public void setOnActivityResultContext(Fragment fragment) {
         super.setOnActivityResultContext(fragment);
-        image.setOnClickListener(v -> {
+        binding.image.setOnClickListener(v -> {
             final StandardRound item = getSelectedItem();
             Target target = item.rounds.get(0).targetTemplate;
             if (target.id < 7 || target.id == 10 || target.id == 11) {

@@ -17,7 +17,7 @@ import de.dreier.mytargets.utils.TranslationUtils;
 /**
  * Shows an overview over all training days
  */
-public class MainActivity extends SimpleFragmentActivity {
+public class MainActivity extends SimpleFragmentActivityBase {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

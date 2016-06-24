@@ -10,6 +10,7 @@ package de.dreier.mytargets.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSettable>
     @Nullable
     private Bundle savedInstanceState;
 
-    void setList(IdProviderDataSource<C> dataSource, List<H> headers, List<C> children, PartitionDelegate<C> parentDelegate, boolean opened, @NonNull ExpandableNowListAdapter<H, C> adapter) {
+    void setList(RecyclerView recyclerView, IdProviderDataSource<C> dataSource, List<H> headers, List<C> children, PartitionDelegate<C> parentDelegate, boolean opened, @NonNull ExpandableNowListAdapter<H, C> adapter) {
         this.dataSource = dataSource;
         if (recyclerView.getAdapter() == null) {
             mAdapter = adapter;
@@ -81,4 +82,5 @@ abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSettable>
         super.onActivityCreated(savedInstanceState);
         this.savedInstanceState = savedInstanceState;
     }
+
 }

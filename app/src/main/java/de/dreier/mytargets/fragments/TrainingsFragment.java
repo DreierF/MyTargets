@@ -8,6 +8,7 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -23,13 +24,15 @@ import java.util.Locale;
 import java.util.Set;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.SimpleFragmentActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
+import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.models.Month;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.utils.ActivityUtils;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.HeaderBindingHolder;
 import de.dreier.mytargets.utils.SelectableViewHolder;
@@ -40,6 +43,7 @@ import de.dreier.mytargets.utils.Utils;
  */
 public class TrainingsFragment extends ExpandableFragment<Month, Training> {
 
+    protected FragmentListBinding binding;
     private TrainingDataSource trainingDataSource;
 
     public TrainingsFragment() {
@@ -49,8 +53,15 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
+        binding.recyclerView.setHasFixedSize(true);
+        return binding.getRoot();
+    }
+
+    @Override
     public void onSelected(Training item) {
-        Intent i = new Intent(getContext(), SimpleFragmentActivity.TrainingActivity.class);
+        Intent i = new Intent(getContext(), SimpleFragmentActivityBase.TrainingActivity.class);
         i.putExtra(ITEM_ID, item.getId());
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
@@ -58,8 +69,8 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
 
     @Override
     protected void onEdit(final Training item) {
-        startActivityAnimated(SimpleFragmentActivity.EditTrainingActivity.class, ITEM_ID,
-                item.getId());
+        ActivityUtils.startActivityAnimated(getActivity(),
+                SimpleFragmentActivityBase.EditTrainingActivity.class, ITEM_ID, item.getId());
     }
 
     @Override
@@ -80,7 +91,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
             }
         }
         Collections.sort(months, Collections.reverseOrder());
-        setList(trainingDataSource, months, data, child -> Utils.getMonthId(child.date), false,
+        setList(binding.recyclerView, trainingDataSource, months, data, child -> Utils.getMonthId(child.date), false,
                 new TrainingAdapter());
     }
 
@@ -132,7 +143,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
     private class HeaderViewHolder extends HeaderBindingHolder<Month> {
         private final TextView mTitle;
 
-        public HeaderViewHolder(View itemView) {
+        HeaderViewHolder(View itemView) {
             super(itemView, R.id.expand_collapse);
             mTitle = (TextView) itemView.findViewById(android.R.id.text1);
         }

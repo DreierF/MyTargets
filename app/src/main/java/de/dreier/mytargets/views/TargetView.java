@@ -42,7 +42,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.EShowMode;
+import de.dreier.mytargets.models.EShowMode;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.ArrowNumber;
 import de.dreier.mytargets.shared.models.Coordinate;

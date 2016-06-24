@@ -9,33 +9,32 @@ package de.dreier.mytargets.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageButton;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnTextChanged;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
+import de.dreier.mytargets.databinding.DynamicitemSightSettingsBinding;
 import de.dreier.mytargets.databinding.EditBowFragmentBinding;
 import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
+import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.views.selector.SelectorBase;
 import de.dreier.mytargets.views.selector.SimpleDistanceSelector;
 import icepick.State;
@@ -65,6 +64,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
         contentBinding = EditBowFragmentBinding.inflate(inflater, binding.content, true);
+        contentBinding.addButton.setOnClickListener((view) -> onAddSightSetting());
 
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey(BOW_ID)) {
@@ -94,7 +94,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
                 setImageFile(null);
             }
 
-            setTitle(bow.name);
+            ToolbarUtils.setTitle(this, bow.name);
             contentBinding.setBow(bow);
             setBowType(bow.type);
         }
@@ -105,8 +105,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         return rootView;
     }
 
-    @OnClick(R.id.addButton)
-    void onAddSightSetting() {
+    private void onAddSightSetting() {
         sightSettingsList.add(new SightSetting());
         adapter.notifyItemInserted(sightSettingsList.size() - 1);
     }
@@ -179,32 +178,39 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         }
     }
 
-    static class SightSettingHolder extends DynamicItemHolder<SightSetting> {
-        @Bind(R.id.distanceSpinner)
-        SimpleDistanceSelector distanceSpinner;
-        @Bind(R.id.sightSetting)
-        EditText setting;
-        @Bind(R.id.removeSightSetting)
-        ImageButton remove;
+    private static class SightSettingHolder extends DynamicItemHolder<SightSetting> {
+
+        private final DynamicitemSightSettingsBinding binding;
 
         SightSettingHolder(View view) {
             super(view);
-            ButterKnife.bind(this, view);
-        }
+            binding = DataBindingUtil.bind(view);
+            binding.sightSetting.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-        @OnTextChanged(R.id.sightSetting)
-        void onTextChanged(CharSequence s) {
-            item.value = s.toString();
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+                    item.value = s.toString();
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
         }
 
         @Override
         public void onBind(SightSetting sightSetting, int position, Fragment fragment, View.OnClickListener removeListener) {
             item = sightSetting;
-            distanceSpinner.setOnActivityResultContext(fragment);
-            distanceSpinner.setItemIndex(position);
-            distanceSpinner.setItem(sightSetting.distance);
-            setting.setText(sightSetting.value);
-            remove.setOnClickListener(removeListener);
+            binding.distanceSpinner.setOnActivityResultContext(fragment);
+            binding.distanceSpinner.setItemIndex(position);
+            binding.distanceSpinner.setItem(sightSetting.distance);
+            binding.sightSetting.setText(sightSetting.value);
+            binding.removeSightSetting.setOnClickListener(removeListener);
         }
     }
 

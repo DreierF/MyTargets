@@ -8,20 +8,17 @@
 package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
-import butterknife.Bind;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.databinding.SelectorItemSimpleTextBinding;
 import de.dreier.mytargets.shared.models.Dimension;
 
 public class SimpleDistanceSelector extends SelectorBase<Dimension> {
 
     public static final int SIMPLE_DISTANCE_REQUEST_CODE = 2;
-
-    @Bind(android.R.id.text1)
-    TextView distance;
 
     public SimpleDistanceSelector(Context context) {
         this(context, null);
@@ -35,6 +32,7 @@ public class SimpleDistanceSelector extends SelectorBase<Dimension> {
 
     @Override
     protected void bindView() {
-        distance.setText(item.toString());
+        SelectorItemSimpleTextBinding binding = DataBindingUtil.bind(mView);
+        binding.text.setText(item.toString());
     }
 }

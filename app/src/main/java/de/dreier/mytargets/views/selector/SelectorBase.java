@@ -22,7 +22,6 @@ import android.widget.LinearLayout;
 
 import org.parceler.Parcels;
 
-import butterknife.ButterKnife;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 
@@ -31,7 +30,7 @@ public abstract class SelectorBase<T> extends LinearLayout {
 
     public static final String INDEX = "index";
 
-    private final View mView;
+    protected final View mView;
     private final View mProgress;
     int requestCode;
     Class<?> defaultActivity;
@@ -47,7 +46,6 @@ public abstract class SelectorBase<T> extends LinearLayout {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mProgress = inflater.inflate(R.layout.selector_item_process, this, false);
         mView = inflater.inflate(layout, this, false);
-        ButterKnife.bind(this, mView);
         addView(mProgress);
         addView(mView);
     }

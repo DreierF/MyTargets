@@ -7,13 +7,14 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageButton;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -21,17 +22,15 @@ import com.annimon.stream.Stream;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnTextChanged;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
+import de.dreier.mytargets.databinding.DynamicitemArrowNumbersBinding;
 import de.dreier.mytargets.databinding.EditArrowFragmentBinding;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.ArrowNumber;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
+import de.dreier.mytargets.utils.ToolbarUtils;
 import icepick.State;
 
 public class EditArrowFragment extends EditWithImageFragmentBase {
@@ -54,6 +53,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         contentBinding = EditArrowFragmentBinding.inflate(inflater, binding.content, true);
+        contentBinding.addButton.setOnClickListener((view) -> onAddArrow());
 
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey(ARROW_ID)) {
@@ -71,7 +71,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
                 setImageFile(null);
             }
 
-            setTitle(arrow.name);
+            ToolbarUtils.setTitle(this, arrow.name);
             contentBinding.setArrow(arrow);
         }
 
@@ -81,8 +81,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         return rootView;
     }
 
-    @OnClick(R.id.addButton)
-    public void onAddSightSetting() {
+    private void onAddArrow() {
         arrowNumbersList.add(new ArrowNumber());
         adapter.notifyItemInserted(arrowNumbersList.size() - 1);
     }
@@ -114,34 +113,6 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         return arrow;
     }
 
-    static class ArrowNumberHolder extends DynamicItemHolder<ArrowNumber> {
-        @Bind(R.id.arrowNumber)
-        EditText arrowNumber;
-        @Bind(R.id.removeArrowNumber)
-        ImageButton remove;
-
-        ArrowNumberHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
-        }
-
-        @OnTextChanged(R.id.arrowNumber)
-        public void onTextChanged(CharSequence s) {
-            if (s.toString().matches("[0-9]+")) {
-                item.number = s.toString();
-            } else {
-                item.number = null;
-            }
-        }
-
-        @Override
-        public void onBind(ArrowNumber number, int position, Fragment fragment, View.OnClickListener removeListener) {
-            item = number;
-            arrowNumber.setText(number.number);
-            remove.setOnClickListener(removeListener);
-        }
-    }
-
     private class ArrowNumbersAdapter extends DynamicItemAdapter<ArrowNumber> {
         ArrowNumbersAdapter(Fragment fragment, List<ArrowNumber> list) {
             super(fragment, list, R.string.arrow_number_removed);
@@ -151,6 +122,42 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         public DynamicItemHolder<ArrowNumber> onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = inflater.inflate(R.layout.dynamicitem_arrow_numbers, parent, false);
             return new ArrowNumberHolder(v);
+        }
+    }
+
+    static class ArrowNumberHolder extends DynamicItemHolder<ArrowNumber> {
+        private final DynamicitemArrowNumbersBinding binding;
+
+        ArrowNumberHolder(View view) {
+            super(view);
+            binding = DataBindingUtil.bind(view);
+            binding.arrowNumber.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+                    if (s.toString().matches("[0-9]+")) {
+                        item.number = s.toString();
+                    } else {
+                        item.number = null;
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
+        }
+
+        @Override
+        public void onBind(ArrowNumber number, int position, Fragment fragment, View.OnClickListener removeListener) {
+            item = number;
+            binding.arrowNumber.setText(number.number);
+            binding.removeArrowNumber.setOnClickListener(removeListener);
         }
     }
 }

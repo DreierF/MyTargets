@@ -101,8 +101,8 @@ public class AboutFragment extends Fragment {
         }
     }
 
-    public class WebElement extends Element {
-        public WebElement(@StringRes int title, Integer icon, String url) {
+    private class WebElement extends Element {
+        WebElement(@StringRes int title, Integer icon, String url) {
             super(null, getString(title), icon);
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_VIEW);

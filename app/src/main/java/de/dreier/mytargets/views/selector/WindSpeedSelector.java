@@ -8,20 +8,17 @@
 package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
-import butterknife.Bind;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.databinding.SelectorItemSimpleTextBinding;
 import de.dreier.mytargets.models.WindSpeed;
 
 public class WindSpeedSelector extends SelectorBase<WindSpeed> {
 
     private static final int WIND_SPEED_REQUEST_CODE = 4;
-
-    @Bind(android.R.id.text1)
-    TextView name;
 
     public WindSpeedSelector(Context context) {
         this(context, null);
@@ -35,7 +32,8 @@ public class WindSpeedSelector extends SelectorBase<WindSpeed> {
 
     @Override
     protected void bindView() {
-        name.setText(item.name);
+        SelectorItemSimpleTextBinding binding = DataBindingUtil.bind(mView);
+        binding.text.setText(item.name);
     }
 
     public void setItemId(long speed) {

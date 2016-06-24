@@ -84,6 +84,7 @@ abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<
         }
     };
 
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -116,7 +117,7 @@ abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<
         Collections.reverse(deleted);
         String message = getResources().getQuantityString(itemTypeDelRes, deleted.size(),
                 deleted.size());
-        Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
+        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, v -> {
                     for (Pair<Integer, T> item : deleted) {
                         addItem(item.getFirst(), item.getSecond());

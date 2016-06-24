@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.MainActivity;
-import de.dreier.mytargets.activities.SimpleFragmentActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.views.DatePreference;
@@ -107,11 +107,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 return true;
             case "pref_about":
                 getActivity().startActivity(
-                        new Intent(getContext(), SimpleFragmentActivity.AboutActivity.class));
+                        new Intent(getContext(), SimpleFragmentActivityBase.AboutActivity.class));
                 return true;
             case "pref_licence":
                 getActivity().startActivity(
-                        new Intent(getContext(), SimpleFragmentActivity.LicencesActivity.class));
+                        new Intent(getContext(), SimpleFragmentActivityBase.LicencesActivity.class));
                 return true;
             default:
                 return super.onPreferenceTreeClick(preference);

@@ -8,10 +8,9 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,43 +19,30 @@ import junit.framework.Assert;
 
 import org.parceler.Parcels;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.DistanceTabsFragmentPagerAdapter;
+import de.dreier.mytargets.databinding.FragmentDistanceBinding;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.utils.DistanceInputDialog;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class DistanceFragment extends Fragment implements DistanceInputDialog.OnClickListener {
-
-    @Bind(R.id.viewPager)
-    ViewPager viewPager;
-
-    @Bind(R.id.slidingTabs)
-    TabLayout tabLayout;
+public class DistanceFragment extends Fragment implements DistanceInputDialog.OnClickListener, View.OnClickListener {
 
     private SelectItemFragment.OnItemSelectedListener listener;
     private Dimension distance;
+    private FragmentDistanceBinding binding;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_distance, container, false);
-        ButterKnife.bind(this, rootView);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_distance,  container, false);
 
         distance = Parcels.unwrap(getArguments().getParcelable(ITEM));
 
-        viewPager.setAdapter(new DistanceTabsFragmentPagerAdapter(getActivity(), distance));
+        binding.viewPager.setAdapter(new DistanceTabsFragmentPagerAdapter(getActivity(), distance));
         selectUnit(distance.unit);
-        tabLayout.setupWithViewPager(viewPager);
-        return rootView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
+        binding.slidingTabs.setupWithViewPager(binding.viewPager);
+        binding.fabLayout.fab.setOnClickListener(this);
+        return binding.getRoot();
     }
 
     @Override
@@ -68,8 +54,8 @@ public class DistanceFragment extends Fragment implements DistanceInputDialog.On
         Assert.assertNotNull(listener);
     }
 
-    @OnClick(R.id.fab)
-    public void onClick() {
+    @Override
+    public void onClick(View view) {
         new DistanceInputDialog.Builder(getContext())
                 .setUnit(getSelectedUnit().toString())
                 .setOnClickListener(this)
@@ -77,13 +63,13 @@ public class DistanceFragment extends Fragment implements DistanceInputDialog.On
     }
 
     private Dimension.Unit getSelectedUnit() {
-        int pos = viewPager.getCurrentItem();
+        int pos = binding.viewPager.getCurrentItem();
         return DistanceTabsFragmentPagerAdapter.UNITS.get(pos);
     }
 
     private void selectUnit(Dimension.Unit unit) {
         int item = DistanceTabsFragmentPagerAdapter.UNITS.indexOf(unit);
-        viewPager.setCurrentItem(item, false);
+        binding.viewPager.setCurrentItem(item, false);
     }
 
     @Override
@@ -97,5 +83,4 @@ public class DistanceFragment extends Fragment implements DistanceInputDialog.On
         }
         listener.onItemSelected(Parcels.wrap(distance));
     }
-
 }

@@ -57,7 +57,7 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
         }
     }
 
-
+    @Override
     protected void onRebind() {
         this.mMultiSelector.bindHolder(this, this.getAdapterPosition(), this.getItemId());
     }

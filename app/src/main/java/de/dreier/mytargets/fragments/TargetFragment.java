@@ -8,17 +8,17 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -28,28 +28,37 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.databinding.FragmentTargetSelectBinding;
+import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
 import de.dreier.mytargets.utils.SelectableViewHolder;
+import de.dreier.mytargets.utils.ToolbarUtils;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 public class TargetFragment extends SelectItemFragment<Target>
         implements SeekBar.OnSeekBarChangeListener {
     public static final String TYPE_FIXED = "type_fixed";
-
+    protected FragmentTargetSelectBinding binding;
     private boolean typeFixed = false;
 
-    @Bind(R.id.scoring_style)
-    Spinner scoringStyleSpinner;
-
-    @Bind(R.id.target_size)
-    Spinner targetSizeSpinner;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = DataBindingUtil
+                .inflate(inflater, R.layout.fragment_target_select, container, false);
+        binding.recyclerView.setHasFixedSize(true);
+        useDoubleClickSelection = true;
+        ToolbarUtils.setSupportActionBar(this, binding.toolbar);
+        ToolbarUtils.showUpArrow((Fragment) this);
+        ToolbarUtils.showUpAsX(this);
+        setHasOptionsMenu(true);
+        return binding.getRoot();
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -67,11 +76,11 @@ public class TargetFragment extends SelectItemFragment<Target>
         List<Target> targets = Stream.of(list)
                 .map(value -> new Target((int) value.getId(), 0))
                 .collect(Collectors.toList());
-        setList(targets, new TargetAdapter());
+        setList(binding.recyclerView, targets, new TargetAdapter());
 
         int position = targets.indexOf(t);
         mSelector.setSelected(position, t.getId(), true);
-        recyclerView.scrollToPosition(position);
+        binding.recyclerView.scrollToPosition(position);
         updateSettings();
 
         // Set initial target size
@@ -83,8 +92,8 @@ public class TargetFragment extends SelectItemFragment<Target>
                 break;
             }
         }
-        scoringStyleSpinner.setSelection(t.scoringStyle);
-        targetSizeSpinner.setSelection(diameterIndex);
+        binding.scoringStyle.setSelection(t.scoringStyle);
+        binding.targetSize.setSelection(diameterIndex);
     }
 
     @Override
@@ -97,37 +106,31 @@ public class TargetFragment extends SelectItemFragment<Target>
     }
 
     private void updateSettings() {
-        Target target = mAdapter.getItem(mSelector.getSelectedPosition());
-
-        //noinspection ConstantConditions
-        Context themedContext = ((AppCompatActivity) getActivity()).getSupportActionBar()
-                .getThemedContext();
-
         // Init scoring styles
-        int style = scoringStyleSpinner.getSelectedItemPosition();
+        Target target = mAdapter.getItem(mSelector.getSelectedPosition());
         List<String> styles = target.getModel().getScoringStyles();
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(themedContext,
-                android.R.layout.simple_spinner_item, styles);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        scoringStyleSpinner.setAdapter(spinnerAdapter);
-        scoringStyleSpinner.setSelection(style < styles.size() ? style : 0, false);
-
+        setThemedAdapter(binding.scoringStyle, styles);
 
         // Init target size spinner
-        int diameter = targetSizeSpinner.getSelectedItemPosition();
         ArrayList<String> diameters = diameterToList(target.getModel().getDiameters());
-        ArrayAdapter<String> diameterSpinnerAdapter = new ArrayAdapter<>(themedContext,
-                android.R.layout.simple_spinner_item, diameters);
-        diameterSpinnerAdapter
-                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        targetSizeSpinner.setAdapter(diameterSpinnerAdapter);
+        setThemedAdapter(binding.targetSize, diameters);
         if (!typeFixed && diameters.size() > 1) {
-            targetSizeSpinner.setVisibility(View.VISIBLE);
+            binding.targetSize.setVisibility(View.VISIBLE);
         } else {
-            targetSizeSpinner.setVisibility(View.GONE);
+            binding.targetSize.setVisibility(View.GONE);
         }
-        targetSizeSpinner
-                .setSelection(diameter < diameters.size() ? diameter : diameters.size() - 1, false);
+    }
+
+    private void setThemedAdapter(Spinner spinner, List<String> strings) {
+        final AppCompatActivity activity = (AppCompatActivity) getActivity();
+        Context themedContext = activity.getSupportActionBar().getThemedContext();
+        int lastSelection = spinner.getSelectedItemPosition();
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(themedContext,
+                android.R.layout.simple_spinner_item, strings);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setSelection(lastSelection < strings.size() ? lastSelection : strings.size() - 1,
+                false);
     }
 
     private ArrayList<String> diameterToList(Dimension[] diameters) {
@@ -139,11 +142,6 @@ public class TargetFragment extends SelectItemFragment<Target>
     }
 
     @Override
-    protected int getLayoutResource() {
-        return R.layout.fragment_target_select;
-    }
-
-    @Override
     public void onLongClick(SelectableViewHolder holder) {
         onClick(holder, (Target) holder.getItem());
     }
@@ -151,9 +149,9 @@ public class TargetFragment extends SelectItemFragment<Target>
     @Override
     protected Target onSave() {
         Target target = super.onSave();
-        target.scoringStyle = scoringStyleSpinner.getSelectedItemPosition();
+        target.scoringStyle = binding.scoringStyle.getSelectedItemPosition();
         Dimension[] diameters = target.getModel().getDiameters();
-        target.size = diameters[targetSizeSpinner.getSelectedItemPosition()];
+        target.size = diameters[binding.targetSize.getSelectedItemPosition()];
         return target;
     }
 
@@ -182,19 +180,17 @@ public class TargetFragment extends SelectItemFragment<Target>
     }
 
     private class ViewHolder extends SelectableViewHolder<Target> {
-        private final TextView mName;
-        private final ImageView mImg;
+        private ItemImageSimpleBinding binding;
 
         public ViewHolder(View itemView) {
             super(itemView, mSelector, TargetFragment.this);
-            mName = (TextView) itemView.findViewById(R.id.name);
-            mImg = (ImageView) itemView.findViewById(R.id.image);
+            binding = ItemImageSimpleBinding.bind(itemView);
         }
 
         @Override
         public void bindCursor() {
-            mName.setText(mItem.getModel().toString());
-            mImg.setImageDrawable(mItem.getDrawable());
+            binding.name.setText(mItem.getModel().toString());
+            binding.image.setImageDrawable(mItem.getDrawable());
         }
     }
 }

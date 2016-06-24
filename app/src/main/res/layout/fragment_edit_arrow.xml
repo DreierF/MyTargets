@@ -339,7 +339,12 @@
                 android:orientation="vertical"
                 app:layoutManager="LinearLayoutManager"/>
 
-            <include layout="@layout/layout_add_button"/>
+            <Button
+                android:id="@+id/addButton"
+                style="@style/addButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add"/>
 
         </LinearLayout>
 
