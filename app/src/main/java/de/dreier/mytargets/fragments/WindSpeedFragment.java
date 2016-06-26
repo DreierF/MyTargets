@@ -7,16 +7,17 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.databinding.FragmentListBinding;
+import de.dreier.mytargets.databinding.ItemTextBinding;
 import de.dreier.mytargets.models.WindSpeed;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -37,7 +38,7 @@ public class WindSpeedFragment extends SelectItemFragment<WindSpeed> {
     @Override
     public void onResume() {
         super.onResume();
-        setList(binding.recyclerView, WindSpeed.getList(getActivity()), new WindSpeedAdapter());
+        setList(binding.recyclerView, WindSpeed.getList(getContext()), new WindSpeedAdapter(getContext()));
     }
 
     @Override
@@ -46,6 +47,10 @@ public class WindSpeedFragment extends SelectItemFragment<WindSpeed> {
     }
 
     private class WindSpeedAdapter extends NowListAdapter<WindSpeed> {
+        WindSpeedAdapter(Context context) {
+            super(context);
+        }
+
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
@@ -55,16 +60,17 @@ public class WindSpeedFragment extends SelectItemFragment<WindSpeed> {
     }
 
     private class ViewHolder extends SelectableViewHolder<WindSpeed> {
-        private final TextView mName;
+
+        ItemTextBinding binding;
 
         public ViewHolder(View itemView) {
             super(itemView, mSelector, WindSpeedFragment.this);
-            mName = (TextView) itemView.findViewById(R.id.name);
+            binding = DataBindingUtil.bind(itemView);
         }
 
         @Override
         public void bindCursor() {
-            mName.setText(mItem.name);
+            binding.name.setText(mItem.name);
         }
     }
 }

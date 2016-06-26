@@ -7,7 +7,9 @@
 
 package de.dreier.mytargets.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -21,6 +23,11 @@ public abstract class NowListAdapter<T extends IIdProvider>
         extends RecyclerView.Adapter<SelectableViewHolder<T>> {
 
     private List<T> mList = new ArrayList<>();
+    protected final LayoutInflater inflater;
+
+    public NowListAdapter(Context context) {
+        inflater = LayoutInflater.from(context);
+    }
 
     @Override
     public long getItemId(int position) {

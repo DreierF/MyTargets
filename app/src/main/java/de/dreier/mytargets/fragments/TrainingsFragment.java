@@ -14,7 +14,6 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,6 +26,8 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
 import de.dreier.mytargets.databinding.FragmentListBinding;
+import de.dreier.mytargets.databinding.ItemHeaderMonthBinding;
+import de.dreier.mytargets.databinding.ItemTrainingBinding;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.models.Month;
@@ -114,21 +115,17 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
     }
 
     private class ViewHolder extends SelectableViewHolder<Training> {
-        private final TextView mTitle;
-        private final TextView mSubtitle;
-        private final TextView mGes;
+        ItemTrainingBinding binding;
 
         public ViewHolder(View itemView) {
             super(itemView, mSelector, TrainingsFragment.this);
-            mTitle = (TextView) itemView.findViewById(R.id.training);
-            mSubtitle = (TextView) itemView.findViewById(R.id.trainingDate);
-            mGes = (TextView) itemView.findViewById(R.id.gesTraining);
+            binding = DataBindingUtil.bind(itemView);
         }
 
         @Override
         public void bindCursor() {
-            mTitle.setText(mItem.title);
-            mSubtitle.setText(mItem.getFormattedDate());
+            binding.training.setText(mItem.title);
+            binding.trainingDate.setText(mItem.getFormattedDate());
             int maxPoints = 0;
             int reachedPoints = 0;
             RoundDataSource roundDataSource = new RoundDataSource();
@@ -137,21 +134,22 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
                 maxPoints += r.info.getMaxPoints();
                 reachedPoints += r.reachedPoints;
             }
-            mGes.setText(String.format(Locale.ENGLISH, "%d/%d", reachedPoints, maxPoints));
+            binding.gesTraining
+                    .setText(String.format(Locale.ENGLISH, "%d/%d", reachedPoints, maxPoints));
         }
     }
 
     private class HeaderViewHolder extends HeaderBindingHolder<Month> {
-        private final TextView mTitle;
+        private final ItemHeaderMonthBinding binding;
 
         HeaderViewHolder(View itemView) {
             super(itemView, R.id.expand_collapse);
-            mTitle = (TextView) itemView.findViewById(android.R.id.text1);
+            binding = DataBindingUtil.bind(itemView);
         }
 
         @Override
         public void bindCursor() {
-            mTitle.setText(mItem.toString());
+            binding.month.setText(mItem.toString());
         }
     }
 }

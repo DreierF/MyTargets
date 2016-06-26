@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                style="@style/header_container"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/round"
-        style="@style/Label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"/>
+    <RelativeLayout
+        style="@style/header_container"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp">
 
-    <TextView
-        android:id="@+id/dist"
-        style="@style/secondary_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/round"
-        android:layout_gravity="center_vertical"/>
+        <TextView
+            android:id="@+id/title"
+            style="@style/Label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"/>
 
-    <ImageView
-        android:id="@+id/expand_collapse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:clickable="false"
-        android:contentDescription="@string/expand_collapse"
-        app:srcCompat="@drawable/ic_expand_more_grey600_24dp"/>
+        <TextView
+            android:id="@+id/subtitle"
+            style="@style/secondary_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_gravity="center_vertical"/>
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/expand_collapse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="false"
+            android:contentDescription="@string/expand_collapse"
+            app:srcCompat="@drawable/ic_expand_more_grey600_24dp"/>
+
+    </RelativeLayout>
+
+</layout>

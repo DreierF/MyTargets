@@ -8,6 +8,7 @@
 package de.dreier.mytargets.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -27,9 +28,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -41,6 +39,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.databinding.FragmentStandardRoundSelectionBinding;
+import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.shared.models.RoundTemplate;
@@ -67,9 +66,6 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
     private final CheckBox[] clubs = new CheckBox[9];
     protected FragmentStandardRoundSelectionBinding binding;
 
-    private RadioGroup location;
-    private RadioGroup unit;
-    private RadioGroup typ;
     private StandardRound currentSelection;
     private SearchView searchView;
 
@@ -125,7 +121,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
 
     @Override
     public void onLoadFinished(Loader<List<StandardRound>> loader, List<StandardRound> data) {
-        setList(binding.recyclerView, data, new StandardRoundAdapter());
+        setList(binding.recyclerView, data, new StandardRoundAdapter(getContext()));
         int position = data.indexOf(currentSelection);
         // Test if our currentSelection has been deleted
         if (position == -1 && new StandardRoundDataSource().get(currentSelection.getId()) == null) {
@@ -157,9 +153,6 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
     }
 
     private void initFilter() {
-        location = (RadioGroup) binding.getRoot().findViewById(R.id.location);
-        unit = (RadioGroup) binding.getRoot().findViewById(R.id.unit);
-        typ = (RadioGroup) binding.getRoot().findViewById(R.id.round_typ);
         getClubs();
 
         // Set default values
@@ -174,38 +167,31 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         for (CheckBox club : clubs) {
             club.setOnCheckedChangeListener((buttonView, isChecked) -> updateFilter());
         }
-        location.setOnCheckedChangeListener((group, checkedId) -> updateFilter());
-        unit.setOnCheckedChangeListener((group, checkedId) -> updateFilter());
-        typ.setOnCheckedChangeListener((group, checkedId) -> updateFilter());
+        binding.location.setOnCheckedChangeListener((group, checkedId) -> updateFilter());
+        binding.unit.setOnCheckedChangeListener((group, checkedId) -> updateFilter());
+        binding.roundTyp.setOnCheckedChangeListener((group, checkedId) -> updateFilter());
     }
 
     private void setLocation() {
-        RadioButton outdoor = (RadioButton) binding.getRoot().findViewById(R.id.outdoor);
-        RadioButton indoor = (RadioButton) binding.getRoot().findViewById(R.id.indoor);
-        indoor.setChecked(currentSelection.indoor);
-        outdoor.setChecked(!currentSelection.indoor);
+        binding.indoor.setChecked(currentSelection.indoor);
+        binding.outdoor.setChecked(!currentSelection.indoor);
     }
 
     private void setMeasurementType(RoundTemplate firstRound) {
-        RadioButton metric = (RadioButton) binding.getRoot().findViewById(R.id.metric);
-        RadioButton imperial = (RadioButton) binding.getRoot().findViewById(R.id.imperial);
         if (METER.equals(firstRound.distance.unit)) {
-            metric.setChecked(true);
+            binding.metric.setChecked(true);
         } else {
-            imperial.setChecked(true);
+            binding.imperial.setChecked(true);
         }
     }
 
     private void setRoundType(RoundTemplate firstRound) {
-        RadioButton target = (RadioButton) binding.getRoot().findViewById(R.id.target);
-        RadioButton field = (RadioButton) binding.getRoot().findViewById(R.id.field);
-        RadioButton threeD = (RadioButton) binding.getRoot().findViewById(R.id.three_d);
         if (firstRound.target.getModel().isFieldTarget()) {
-            field.setChecked(true);
+            binding.field.setChecked(true);
         } else if (firstRound.target.getModel().is3DTarget()) {
-            threeD.setChecked(true);
+            binding.threeD.setChecked(true);
         } else {
-            target.setChecked(true);
+            binding.target.setChecked(true);
         }
     }
 
@@ -218,15 +204,15 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
     }
 
     private void getClubs() {
-        clubs[0] = (CheckBox) binding.getRoot().findViewById(R.id.asa);
-        clubs[1] = (CheckBox) binding.getRoot().findViewById(R.id.aussie);
-        clubs[2] = (CheckBox) binding.getRoot().findViewById(R.id.archerygb);
-        clubs[3] = (CheckBox) binding.getRoot().findViewById(R.id.ifaa);
-        clubs[4] = (CheckBox) binding.getRoot().findViewById(R.id.nasp);
-        clubs[5] = (CheckBox) binding.getRoot().findViewById(R.id.nfaa);
-        clubs[6] = (CheckBox) binding.getRoot().findViewById(R.id.nfas);
-        clubs[7] = (CheckBox) binding.getRoot().findViewById(R.id.wa);
-        clubs[8] = (CheckBox) binding.getRoot().findViewById(R.id.custom);
+        clubs[0] = binding.asa;
+        clubs[1] = binding.aussie;
+        clubs[2] = binding.archerygb;
+        clubs[3] = binding.ifaa;
+        clubs[4] = binding.nasp;
+        clubs[5] = binding.nfaa;
+        clubs[6] = binding.nfas;
+        clubs[7] = binding.wa;
+        clubs[8] = binding.custom;
     }
 
     private void updateFilter() {
@@ -234,9 +220,9 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         SettingsManager.setClubFilter(filter);
 
         Bundle args = new Bundle();
-        args.putBoolean(KEY_INDOOR, location.getCheckedRadioButtonId() == R.id.indoor);
-        args.putBoolean(KEY_METRIC, unit.getCheckedRadioButtonId() == R.id.metric);
-        args.putInt(KEY_CHECKED, typ.getCheckedRadioButtonId());
+        args.putBoolean(KEY_INDOOR, binding.location.getCheckedRadioButtonId() == R.id.indoor);
+        args.putBoolean(KEY_METRIC, binding.unit.getCheckedRadioButtonId() == R.id.metric);
+        args.putInt(KEY_CHECKED, binding.roundTyp.getCheckedRadioButtonId());
         args.putInt(KEY_CLUB_FILTER, filter);
         getLoaderManager().restartLoader(0, args, this);
     }
@@ -349,38 +335,36 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
     }
 
     private class StandardRoundAdapter extends NowListAdapter<StandardRound> {
+        StandardRoundAdapter(Context context) {
+            super(context);
+        }
+
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
-            View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_standard_round, parent, false);
-            return new ViewHolder(itemView);
+            return new ViewHolder(DataBindingUtil.inflate(inflater, R.layout.item_standard_round, parent, false));
         }
     }
 
     public class ViewHolder extends SelectableViewHolder<StandardRound> {
-        private final TextView mName;
-        private final ImageView mImage;
-        private final TextView mDetails;
+        private final ItemStandardRoundBinding binding;
 
-        public ViewHolder(View itemView) {
-            super(itemView, mSelector, StandardRoundFragment.this);
-            mImage = (ImageView) itemView.findViewById(R.id.image);
-            mName = (TextView) itemView.findViewById(android.R.id.text1);
-            mDetails = (TextView) itemView.findViewById(android.R.id.text2);
+        public ViewHolder(ItemStandardRoundBinding binding) {
+            super(binding.getRoot(), mSelector, StandardRoundFragment.this);
+            this.binding = binding;
         }
 
         @Override
         public void bindCursor() {
-            mName.setText(mItem.name);
+            binding.name.setText(mItem.name);
 
             if (mItem.equals(currentSelection)) {
-                mImage.setVisibility(View.VISIBLE);
-                mDetails.setVisibility(View.VISIBLE);
-                mDetails.setText(mItem.getDescription(getActivity()));
-                mImage.setImageDrawable(mItem.getTargetDrawable());
+                binding.image.setVisibility(View.VISIBLE);
+                binding.details.setVisibility(View.VISIBLE);
+                binding.details.setText(mItem.getDescription(getActivity()));
+                binding.image.setImageDrawable(mItem.getTargetDrawable());
             } else {
-                mImage.setVisibility(View.GONE);
-                mDetails.setVisibility(View.GONE);
+                binding.image.setVisibility(View.GONE);
+                binding.details.setVisibility(View.GONE);
             }
         }
     }

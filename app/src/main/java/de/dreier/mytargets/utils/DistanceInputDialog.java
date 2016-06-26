@@ -9,15 +9,18 @@ package de.dreier.mytargets.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.text.InputType;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.databinding.DialogCommentBinding;
 
 public class DistanceInputDialog {
+
+    public interface OnClickListener {
+        void onOkClickListener(String input);
+    }
 
     public static class Builder {
         private final Context mContext;
@@ -29,26 +32,20 @@ public class DistanceInputDialog {
         }
 
         public void show() {
-            LayoutInflater inflater = (LayoutInflater) mContext
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.dialog_comment, null);
-            final EditText input = (EditText) view.findViewById(R.id.shot_comment);
-            input.setInputType(InputType.TYPE_CLASS_NUMBER);
-            final TextView unit = (TextView) view.findViewById(R.id.unit);
-            unit.setText(mUnit);
+            LayoutInflater inflater = LayoutInflater.from(mContext);
+            DialogCommentBinding binding = DataBindingUtil.inflate(inflater, R.layout.dialog_comment, null, false);
+            binding.shotComment.setInputType(InputType.TYPE_CLASS_NUMBER);
+            binding.unit.setText(mUnit);
 
             new AlertDialog.Builder(mContext)
                     .setTitle(R.string.distance)
-                    .setView(view)
+                    .setView(binding.getRoot())
                     .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                        String s = input.getText().toString();
+                        String s = binding.shotComment.getText().toString();
                         mClickListener.onOkClickListener(s);
                         dialog.dismiss();
                     })
-                    .setNegativeButton(android.R.string.cancel,
-                            (dialog, which) -> {
-                                dialog.dismiss();
-                            }).show();
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss()).show();
         }
 
         public Builder setOnClickListener(OnClickListener listener) {
@@ -60,9 +57,5 @@ public class DistanceInputDialog {
             mUnit = unit;
             return this;
         }
-    }
-
-    public interface OnClickListener {
-        void onOkClickListener(String input);
     }
 }

@@ -7,16 +7,17 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.databinding.FragmentListBinding;
+import de.dreier.mytargets.databinding.ItemTextBinding;
 import de.dreier.mytargets.models.WindDirection;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -37,8 +38,8 @@ public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
     @Override
     public void onResume() {
         super.onResume();
-        setList(binding.recyclerView, WindDirection.getList(getActivity()),
-                new WindDirectionAdapter());
+        setList(binding.recyclerView, WindDirection.getList(getContext()),
+                new WindDirectionAdapter(getContext()));
     }
 
     @Override
@@ -47,6 +48,10 @@ public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
     }
 
     private class WindDirectionAdapter extends NowListAdapter<WindDirection> {
+        WindDirectionAdapter(Context context) {
+            super(context);
+        }
+
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
@@ -56,16 +61,16 @@ public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
     }
 
     private class ViewHolder extends SelectableViewHolder<WindDirection> {
-        private final TextView mName;
+        ItemTextBinding binding;
 
         public ViewHolder(View itemView) {
             super(itemView, mSelector, WindDirectionFragment.this);
-            mName = (TextView) itemView.findViewById(R.id.name);
+            binding = DataBindingUtil.bind(itemView);
         }
 
         @Override
         public void bindCursor() {
-            mName.setText(mItem.name);
+            binding.name.setText(mItem.name);
         }
     }
 }

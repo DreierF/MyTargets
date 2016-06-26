@@ -1,41 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="72dp"
-    android:background="?attr/selectableItemBackground">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="false"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:layout_height="72dp"
+        android:background="?attr/selectableItemBackground">
 
-        <TextView
-            android:id="@+id/passe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="5dp"
-            android:clickable="false"
-            style="@style/primary_text"/>
-
-        <view
-            android:id="@+id/shoots"
-            class="de.dreier.mytargets.views.PasseView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:clickable="false"/>
+            android:layout_height="match_parent"
+            android:clickable="false"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/passe"
+                style="@style/primary_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="5dp"
+                android:clickable="false"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/dividerColor"/>
+            <view
+                android:id="@+id/shoots"
+                class="de.dreier.mytargets.views.PasseView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:clickable="false"/>
 
-</RelativeLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/dividerColor"/>
+
+    </RelativeLayout>
+
+</layout>

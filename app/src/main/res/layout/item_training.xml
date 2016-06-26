@@ -1,56 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                style="@style/MaterialItem"
-                android:clipToPadding="false"
-                android:layout_height="72dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
+    <RelativeLayout
+        style="@style/MaterialItem"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
-
-        <TextView
-            android:id="@+id/training"
-            style="@style/primary_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="false"
-            android:text="@string/training"/>
+        android:layout_height="72dp"
+        android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="false"
-            android:orientation="horizontal">
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
             <TextView
-                android:id="@+id/trainingDate"
-                style="@style/secondary_text"
+                android:id="@+id/training"
+                style="@style/primary_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:clickable="false"
-                android:text="@string/data"/>
+                android:text="@string/training"/>
 
-            <TextView
-                android:id="@+id/gesTraining"
-                style="@style/secondary_text"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="false"
-                android:gravity="end"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/trainingDate"
+                    style="@style/secondary_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:clickable="false"
+                    android:text="@string/data"/>
+
+                <TextView
+                    android:id="@+id/gesTraining"
+                    style="@style/secondary_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:gravity="end"/>
+            </LinearLayout>
+
         </LinearLayout>
 
-    </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/dividerColor"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/dividerColor"/>
+    </RelativeLayout>
 
-</RelativeLayout>
+</layout>

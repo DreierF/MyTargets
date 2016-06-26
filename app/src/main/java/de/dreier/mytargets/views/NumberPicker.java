@@ -39,16 +39,16 @@
 package de.dreier.mytargets.views;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Handler;
 import android.support.annotation.PluralsRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.databinding.LayoutNumberPickerBinding;
 
 /**
  * A simple layout group that provides a numeric text area with two buttons to
@@ -66,8 +66,6 @@ public class NumberPicker extends LinearLayout {
 
     private Integer value;
 
-    private TextView valueText;
-
     private final Handler repeatUpdateHandler = new Handler();
 
     private boolean autoIncrement = false;
@@ -76,6 +74,7 @@ public class NumberPicker extends LinearLayout {
 
     @PluralsRes
     private int textPattern;
+    private final LayoutNumberPickerBinding binding;
 
     public interface OnValueChangedListener {
         void onValueChanged(int val);
@@ -109,22 +108,20 @@ public class NumberPicker extends LinearLayout {
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.layout_number_picker, this, true);
+        binding = DataBindingUtil.inflate(inflater, R.layout.layout_number_picker, this, true);
 
         // init the individual elements
         initDecrementButton();
-        initValueEditText();
+        setValue(minimum);
         initIncrementButton();
     }
 
     private void initIncrementButton() {
-        Button increment = (Button) findViewById(R.id.number_increment);
-
         // Increment once for a click
-        increment.setOnClickListener(v -> increment());
+        binding.numberIncrement.setOnClickListener(v -> increment());
 
         // Auto increment for a long click
-        increment.setOnLongClickListener(
+        binding.numberIncrement.setOnLongClickListener(
                 arg0 -> {
                     autoIncrement = true;
                     repeatUpdateHandler.post(new RepetitiveUpdater());
@@ -133,7 +130,7 @@ public class NumberPicker extends LinearLayout {
         );
 
         // When the button is released, if we're auto incrementing, stop
-        increment.setOnTouchListener((v, event) -> {
+        binding.numberIncrement.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP && autoIncrement) {
                 autoIncrement = false;
             }
@@ -141,19 +138,12 @@ public class NumberPicker extends LinearLayout {
         });
     }
 
-    private void initValueEditText() {
-        valueText = (TextView) findViewById(R.id.number_value);
-        setValue(minimum);
-    }
-
     private void initDecrementButton() {
-        Button decrement = (Button) findViewById(R.id.number_decrement);
-
         // Decrement once for a click
-        decrement.setOnClickListener(v -> decrement());
+        binding.numberDecrement.setOnClickListener(v -> decrement());
 
         // Auto Decrement for a long click
-        decrement.setOnLongClickListener(
+        binding.numberDecrement.setOnLongClickListener(
                 arg0 -> {
                     autoDecrement = true;
                     repeatUpdateHandler.post(new RepetitiveUpdater());
@@ -162,7 +152,7 @@ public class NumberPicker extends LinearLayout {
         );
 
         // When the button is released, if we're auto decrementing, stop
-        decrement.setOnTouchListener((v, event) -> {
+        binding.numberDecrement.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP && autoDecrement) {
                 autoDecrement = false;
             }
@@ -205,9 +195,9 @@ public class NumberPicker extends LinearLayout {
         }
         value = val;
         if (textPattern == 0) {
-            valueText.setText(value.toString());
+            binding.numberValue.setText(value.toString());
         } else {
-            valueText.setText(getResources().getQuantityString(textPattern, value, value));
+            binding.numberValue.setText(getResources().getQuantityString(textPattern, value, value));
         }
         if (changeListener != null) {
             changeListener.onValueChanged(val);

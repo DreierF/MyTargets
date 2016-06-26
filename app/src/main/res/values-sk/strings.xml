@@ -143,7 +143,7 @@
   <string name="backup_action">Záloha</string>
   <string name="import_action">Importovať</string>
   <string name="export">Exportovať</string>
-  <string name="exports_as_csv">Export uložil dáta do *.csv</string>
+  <string name="exports_as_csv">Uloží exportované dáta do *.csv</string>
   <string name="app_rate">Hodnotenie aplikácie</string>
   <string name="app_share">Zdieľanie aplikácie</string>
   <string name="contact_developer">Kontaktovať vývojára</string>
@@ -157,8 +157,8 @@
   </plurals>
   <string name="info">Informácie</string>
   <string name="data">Dáta</string>
-  <string name="create_backup_on_sd">Vytvorí zálohu na SD karte</string>
-  <string name="restore_backup">Obnovenie zálohy</string>
+  <string name="create_backup_on_sd">Vytvorí zálohu na karte SD</string>
+  <string name="restore_backup">Obnoví dáta zo zálohy</string>
   <string name="weather">Počasie</string>
   <string name="environment">Prostredie</string>
   <string name="wind_speed">Rýchlosť vetra</string>
@@ -264,6 +264,6 @@
   <string name="archer">Lukostrelec</string>
   <string name="hits">Zásahov</string>
   <string name="misses">Minutí</string>
-  <string name="percentage_reached_points">Percentage of reached points</string>
-  <string name="arrow_number_removed">Arrow number removed!</string>
+  <string name="percentage_reached_points">Percento dosiahnutých bodov</string>
+  <string name="arrow_number_removed">Čísla šípov odstránené!</string>
 </resources>

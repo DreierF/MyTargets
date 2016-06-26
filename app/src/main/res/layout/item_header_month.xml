@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    style="@style/header_container">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@android:id/text1"
-        style="@style/Label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:clickable="false"
-        android:gravity="start"
-        tools:text="August 2015"/>
+    <RelativeLayout
+        style="@style/header_container">
 
-    <ImageView
-        android:id="@+id/expand_collapse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:clickable="false"
-        android:contentDescription="@string/expand_collapse"
-        app:srcCompat="@drawable/ic_expand_more_grey600_24dp"/>
+        <TextView
+            android:id="@+id/month"
+            style="@style/Label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:clickable="false"
+            android:gravity="start"
+            tools:text="August 2015"/>
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/expand_collapse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="false"
+            android:contentDescription="@string/expand_collapse"
+            app:srcCompat="@drawable/ic_expand_more_grey600_24dp"/>
+
+    </RelativeLayout>
+
+</layout>

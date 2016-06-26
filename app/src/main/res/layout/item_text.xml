@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
-    android:minHeight="48dp"
-    android:padding="16dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/name"
-        style="@style/primary_text"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"/>
+        android:background="?attr/selectableItemBackground"
+        android:minHeight="48dp"
+        android:padding="16dp">
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/name"
+            style="@style/primary_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+</layout>

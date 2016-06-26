@@ -1,16 +1,20 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart_view"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="8dp"/>
+        android:layout_height="match_parent">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_drop_shadow_height"
-        android:background="@drawable/toolbar_drop_shadow"/>
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"/>
 
-</FrameLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_drop_shadow_height"
+            android:background="@drawable/toolbar_drop_shadow"/>
+
+    </FrameLayout>
+
+</layout>

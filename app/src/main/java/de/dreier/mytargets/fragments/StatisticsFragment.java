@@ -7,13 +7,13 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.databinding.FragmentStatisticsBinding;
 import de.dreier.mytargets.managers.dao.StatisticsDataSource;
 
 public class StatisticsFragment extends Fragment {
@@ -32,24 +33,21 @@ public class StatisticsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater
-                .inflate(R.layout.fragment_statistics, container, false);
+        FragmentStatisticsBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_statistics, container, false);
 
         int pos = getArguments().getInt(ARG_POSITION, 0);
         long training = getArguments().getLong(ARG_TRAINING_ID, 0);
-
-        LineChart chartView = (LineChart) rootView.findViewById(R.id.chart_view);
 
         LineData data;
 
         switch (pos) {
             case 0:
                 data = new StatisticsDataSource().getAllTrainings();
-                chartView.setDescription(getString(R.string.percentage_reached_points));
+                binding.chartView.setDescription(getString(R.string.percentage_reached_points));
                 break;
             default:
                 data = new StatisticsDataSource().getAllRounds(training);
-                chartView.setDescription(getString(R.string.percentage_reached_points));
+                binding.chartView.setDescription(getString(R.string.percentage_reached_points));
                 break;
         }
 
@@ -58,13 +56,13 @@ public class StatisticsFragment extends Fragment {
         ILineDataSet regressionLine = generateLinearRegressionLine(xs, ys);
         data.addDataSet(regressionLine);
 
-        chartView.getXAxis().setEnabled(false);
-        chartView.getAxisRight().setEnabled(false);
-        chartView.setData(data);
-        chartView.getLegend().setEnabled(false);
-        chartView.animateXY(2000, 2000);
+        binding.chartView.getXAxis().setEnabled(false);
+        binding.chartView.getAxisRight().setEnabled(false);
+        binding.chartView.setData(data);
+        binding.chartView.getLegend().setEnabled(false);
+        binding.chartView.animateXY(2000, 2000);
 
-        return rootView;
+        return binding.getRoot();
     }
 
     //TODO refactor to get rid of the Integer.parseInt() calls

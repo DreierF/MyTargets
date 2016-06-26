@@ -7,7 +7,6 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
@@ -21,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.InputActivity;
 import de.dreier.mytargets.activities.ScoreboardActivity;
@@ -36,6 +35,8 @@ import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
 import de.dreier.mytargets.databinding.FragmentTrainingBinding;
+import de.dreier.mytargets.databinding.ItemEndBinding;
+import de.dreier.mytargets.databinding.ItemHeaderRoundBinding;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
@@ -54,7 +55,6 @@ import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.TargetImage;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.views.PasseView;
 
 /**
  * Shows all passes of one training
@@ -127,7 +127,8 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
         standardRound = standardRoundDataSource.get(training.standardRoundId);
 
         // Set round info
-        setRoundInfo();
+        binding.detailScore.setText(HtmlUtils.fromHtml(HtmlUtils.getTrainingTopScoreDistribution(mTraining)));
+        binding.detailRoundInfo.setText(HtmlUtils.fromHtml(HtmlUtils.getTrainingInfoHTML(training, rounds, equals, false)));
         setList(binding.recyclerView, passeDataSource, rounds, data, child -> child.roundId, true,
                 new PasseAdapter());
         getActivity().supportInvalidateOptionsMenu();
@@ -139,16 +140,6 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
     @Override
     protected void updateFabButton(List list) {
         fabMenu.setFABHelperTitle(list.isEmpty() ? newStringRes : 0);
-    }
-
-    private void setRoundInfo() {
-        TextView info = (TextView) binding.getRoot().findViewById(R.id.detail_round_info);
-        TextView tvScore = (TextView) binding.getRoot().findViewById(R.id.detail_score);
-
-        tvScore.setText(HtmlUtils.fromHtml(HtmlUtils.getTrainingTopScoreDistribution(mTraining)));
-
-        // Set training info
-        info.setText(HtmlUtils.fromHtml(HtmlUtils.getTrainingInfoHTML(training, rounds, equals, false)));
     }
 
     @Override
@@ -329,44 +320,36 @@ public class TrainingFragment extends ExpandableFragment<Round, Passe>
     }
 
     private class PasseViewHolder extends SelectableViewHolder<Passe> {
-        private final PasseView mShots;
-        private final TextView mSubtitle;
+        private final ItemEndBinding binding;
 
         PasseViewHolder(View itemView) {
             super(itemView, mSelector, TrainingFragment.this);
-            mShots = (PasseView) itemView.findViewById(R.id.shoots);
-            mSubtitle = (TextView) itemView.findViewById(R.id.passe);
+            binding =  DataBindingUtil.bind(itemView);
         }
 
         @Override
         public void bindCursor() {
-            Context context = mSubtitle.getContext();
             Round r = roundDataSource.get(mItem.roundId);
-            mShots.setPoints(mItem, r.info.target);
-            mSubtitle.setText(context.getString(R.string.passe_n, (mItem.index + 1)));
+            binding.shoots.setPoints(mItem, r.info.target);
+            binding.passe.setText(ApplicationInstance.getContext().getString(R.string.passe_n, (mItem.index + 1)));
         }
     }
 
     private class HeaderViewHolder extends HeaderBindingHolder<Round> {
-        private final TextView mTitle;
-        private final TextView mSubtitle;
+        private final ItemHeaderRoundBinding binding;
 
         HeaderViewHolder(View itemView) {
             super(itemView, R.id.expand_collapse);
+            binding = DataBindingUtil.bind(itemView);
             itemView.setLongClickable(true);
             itemView.setOnLongClickListener(this);
-            mTitle = (TextView) itemView.findViewById(R.id.round);
-            mSubtitle = (TextView) itemView.findViewById(R.id.dist);
         }
 
         @Override
         public void bindCursor() {
-            Context context = mTitle.getContext();
-            mTitle.setText(String.format(Locale.ENGLISH, "%s %d", context.getString(R.string.round),
+            binding.title.setText(String.format(Locale.ENGLISH, "%s %d", ApplicationInstance.getContext().getString(R.string.round),
                     rounds.indexOf(mItem) + 1));
-
-            String infoText = HtmlUtils.getRoundInfo(mItem, equals);
-            mSubtitle.setText(HtmlUtils.fromHtml(infoText));
+            binding.subtitle.setText(HtmlUtils.fromHtml(HtmlUtils.getRoundInfo(mItem, equals)));
         }
 
         @Override

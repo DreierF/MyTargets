@@ -18,9 +18,7 @@ public abstract class HeaderBindingHolder<T> extends ItemBindingHolder<T> {
      */
     public HeaderBindingHolder(View itemView, @IdRes int expand_collapse) {
         super(itemView);
-
         itemView.setOnClickListener(this);
-
         expandCollapseView = itemView.findViewById(expand_collapse);
     }
 
