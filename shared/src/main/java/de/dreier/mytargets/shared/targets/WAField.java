@@ -17,8 +17,13 @@ import static de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW;
 public class WAField extends TargetModelBase {
     public static final int ID = 13;
 
-    public WAField() {
-        super(ID, R.string.wa_field);
+
+    WAField() {
+        this(ID, R.string.wa_field);
+    }
+
+    WAField(int id, int nameRes) {
+        super(id, nameRes);
         zones = new Zone[] {
                 new Zone(50, LEMON_YELLOW, DARK_GRAY, 4),
                 new Zone(100, LEMON_YELLOW, DARK_GRAY, 4),

@@ -6,7 +6,7 @@
   <string name="wa_5_ring">WA 5 Anéis</string>
   <string name="wa_3_ring">WA 3 Anéis</string>
   <string name="vegas_3_spot">Vegas 3 Centros</string>
-  <string name="vertical_3_spot">Vertical 3 Centros</string>
+  <string name="vertical_3_spot">WA Vertical 3 Spot</string>
   <string name="wa_3_ring_3_spot">WA 3 Anéis 3 Centros</string>
   <string name="nfaa_field">NFAA Field</string>
   <string name="nfaa_expert_field">NFAA Field Expert</string>
@@ -26,4 +26,5 @@
   <string name="nfas_field">NFAS Field</string>
   <string name="beursault">Beursault</string>
   <string name="sca_period">SCA Period</string>
+  <string name="wa_field_3_spot">WA Field 3 Spot</string>
 </resources>

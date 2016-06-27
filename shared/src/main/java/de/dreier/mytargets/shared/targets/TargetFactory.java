@@ -42,6 +42,7 @@ public class TargetFactory {
         list.add(new NFASField());
         list.add(new Beursault());
         list.add(new SCAPeriod());
+        list.add(new WAField3Spot());
     }
 
     public static List<TargetModelBase> getList() {
