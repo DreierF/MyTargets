@@ -7,6 +7,7 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
@@ -46,7 +47,7 @@ public class ArrowFragment extends EditableFragment<Arrow> implements View.OnCli
 
     @Override
     public void onLoadFinished(Loader<List<Arrow>> loader, List<Arrow> data) {
-        setList(arrowDataSource, data, new ArrowAdapter());
+        setList(arrowDataSource, data, new ArrowAdapter(getContext()));
     }
 
     @Override
@@ -62,6 +63,10 @@ public class ArrowFragment extends EditableFragment<Arrow> implements View.OnCli
     }
 
     private class ArrowAdapter extends NowListAdapter<Arrow> {
+        ArrowAdapter(Context context) {
+            super(context);
+        }
+
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())

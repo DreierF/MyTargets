@@ -76,7 +76,7 @@ public class TargetFragment extends SelectItemFragment<Target>
         List<Target> targets = Stream.of(list)
                 .map(value -> new Target((int) value.getId(), 0))
                 .collect(Collectors.toList());
-        setList(binding.recyclerView, targets, new TargetAdapter());
+        setList(binding.recyclerView, targets, new TargetAdapter(getContext()));
 
         int position = targets.indexOf(t);
         mSelector.setSelected(position, t.getId(), true);
@@ -171,6 +171,10 @@ public class TargetFragment extends SelectItemFragment<Target>
     }
 
     private class TargetAdapter extends NowListAdapter<Target> {
+        TargetAdapter(Context context) {
+            super(context);
+        }
+
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())

@@ -7,6 +7,7 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -62,7 +63,7 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> {
     public void onResume() {
         super.onResume();
         DistanceDataSource dataSource = new DistanceDataSource();
-        setList(binding.recyclerView, dataSource.getAll(distance, unit), new DistanceAdapter());
+        setList(binding.recyclerView, dataSource.getAll(distance, unit), new DistanceAdapter(getContext()));
     }
 
     @Override
@@ -77,6 +78,10 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> {
     }
 
     private class DistanceAdapter extends NowListAdapter<Dimension> {
+        DistanceAdapter(Context context) {
+            super(context);
+        }
+
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())

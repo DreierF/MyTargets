@@ -7,9 +7,9 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +26,7 @@ import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.utils.ActivityUtils;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.HTMLInfoBuilder;
+import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
 import static de.dreier.mytargets.fragments.EditBowFragment.BOW_ID;
@@ -48,7 +49,7 @@ public class BowFragment extends EditableFragment<Bow> implements View.OnClickLi
 
     @Override
     public void onLoadFinished(Loader<List<Bow>> loader, List<Bow> data) {
-        setList(bowDataSource, data, new BowAdapter());
+        setList(bowDataSource, data, new BowAdapter(getContext()));
     }
 
     @Override
@@ -64,6 +65,10 @@ public class BowFragment extends EditableFragment<Bow> implements View.OnClickLi
     }
 
     private class BowAdapter extends NowListAdapter<Bow> {
+        public BowAdapter(Context context) {
+            super(context);
+        }
+
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
@@ -97,7 +102,7 @@ public class BowFragment extends EditableFragment<Bow> implements View.OnClickLi
             for (SightSetting s : mItem.sightSettings) {
                 info.addLine(s.distance.toString(), s.value);
             }
-            binding.details.setText(Html.fromHtml(info.toString()));
+            binding.details.setText(HtmlUtils.fromHtml(info.toString()));
         }
     }
 }
