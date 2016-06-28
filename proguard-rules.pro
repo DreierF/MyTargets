@@ -65,19 +65,6 @@
     @butterknife.* <methods>;
 }
 
-# RxAndroid
--dontwarn rx.internal.util.unsafe.**
--keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
-    long producerIndex;
-    long consumerIndex;
-}
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode producerNode;
-}
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode consumerNode;
-}
-
 # Okio
 -dontwarn okio.**
 
@@ -86,3 +73,6 @@
 -dontwarn org.joda.time.**
 -keep class org.joda.time.** { *; }
 -keep interface org.joda.time.** { *; }
+
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.android.gms.**
