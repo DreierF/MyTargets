@@ -18,12 +18,14 @@ import android.util.AttributeSet;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.models.CurrentWeather;
 import de.dreier.mytargets.network.weather.WeatherService;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.utils.Locator;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -71,15 +73,24 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
         new Locator(context).getLocation(Locator.Method.NETWORK_THEN_GPS, new Locator.Listener() {
             @Override
             public void onLocationFound(Location location) {
-                new WeatherService()
-                        .fetchCurrentWeather(location.getLongitude(), location.getLatitude())
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(currentWeather -> setItem(currentWeather),
-                                error -> {
-                                    error.printStackTrace();
-                                    setDefaultWeather();
-                                });
+                final WeatherService weatherService = new WeatherService();
+                final Call<CurrentWeather> weatherCall = weatherService
+                        .fetchCurrentWeather(location.getLongitude(), location.getLatitude());
+                weatherCall.enqueue(new Callback<CurrentWeather>() {
+                    @Override
+                    public void onResponse(Call<CurrentWeather> call, Response<CurrentWeather> response) {
+                        if (response.isSuccessful()) {
+                            setItem(response.body().toEnvironment());
+                        } else {
+                            setDefaultWeather();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CurrentWeather> call, Throwable t) {
+                        setDefaultWeather();
+                    }
+                });
             }
 
             @Override
