@@ -31,7 +31,6 @@ import java.io.IOException;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentEditImageBinding;
 import de.dreier.mytargets.shared.utils.BitmapUtils;
-import de.dreier.mytargets.utils.AndroidBug5497Workaround;
 import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.ThumbnailUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -76,9 +75,6 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        // Workaround for bug #5497
-        AndroidBug5497Workaround.assistActivity(getActivity());
         setFocusListenerForAllEditText(getView());
     }
 
