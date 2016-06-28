@@ -23,7 +23,7 @@ plugins {
 ext {
     supportLibVersion = '24.0.0'
     testSupportLibVersion = '0.5'
-    playServiceVersion = '9.0.2'
+    playServiceVersion = '9.2.0'
     espressoVersion = '2.2.2'
     parcelerVersion = '1.1.5'
     appVersionName = '2.2.2'

@@ -37,7 +37,11 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
 
     public Dimension(int value, String unit) {
         this.value = value;
-        this.unit = Unit.from(unit);
+        if (value < 0) {
+            this.unit = null;
+        } else {
+            this.unit = Unit.from(unit);
+        }
     }
 
     @Override
