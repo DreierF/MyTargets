@@ -49,4 +49,10 @@ public class WA5Ring extends TargetModelBase {
         centerMark = new CenterMark(DARK_GRAY, 10f, 4, false);
     }
 
+    @Override
+    public boolean shouldDrawZone(int zone, int scoringStyle) {
+        // Do not draw second ring if we have a compound face
+        return !(scoringStyle == 1 && zone == 1);
+    }
+
 }
