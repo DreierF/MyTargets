@@ -16,15 +16,15 @@ import de.dreier.mytargets.shared.SharedApplicationInstance;
 
 public class Dimension implements IIdProvider, Comparable<Dimension> {
     private static final int MINI_VALUE = -6;
-    public static final Dimension MINI = new Dimension(MINI_VALUE, (Unit)null);
+    public static final Dimension MINI = new Dimension(MINI_VALUE, (Unit) null);
     private static final int SMALL_VALUE = -5;
-    public static final Dimension SMALL = new Dimension(SMALL_VALUE, (Unit)null);
+    public static final Dimension SMALL = new Dimension(SMALL_VALUE, (Unit) null);
     private static final int MEDIUM_VALUE = -4;
-    public static final Dimension MEDIUM = new Dimension(MEDIUM_VALUE, (Unit)null);
+    public static final Dimension MEDIUM = new Dimension(MEDIUM_VALUE, (Unit) null);
     private static final int LARGE_VALUE = -3;
-    public static final Dimension LARGE = new Dimension(LARGE_VALUE, (Unit)null);
+    public static final Dimension LARGE = new Dimension(LARGE_VALUE, (Unit) null);
     private static final int XLARGE_VALUE = -2;
-    public static final Dimension XLARGE = new Dimension(XLARGE_VALUE, (Unit)null);
+    public static final Dimension XLARGE = new Dimension(XLARGE_VALUE, (Unit) null);
 
     public final int value;
     public final Unit unit;
@@ -52,19 +52,19 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
     public String toString() {
         final Context context = SharedApplicationInstance.getContext();
         if (value == -1) {
-            return ((Context) context).getString(R.string.unknown);
+            return context.getString(R.string.unknown);
         } else if (unit == null) {
             switch (value) {
                 case MINI_VALUE:
-                    return ((Context) context).getString(R.string.mini);
+                    return context.getString(R.string.mini);
                 case SMALL_VALUE:
-                    return ((Context) context).getString(R.string.small);
+                    return context.getString(R.string.small);
                 case MEDIUM_VALUE:
-                    return ((Context) context).getString(R.string.medium);
+                    return context.getString(R.string.medium);
                 case LARGE_VALUE:
-                    return ((Context) context).getString(R.string.large);
+                    return context.getString(R.string.large);
                 case XLARGE_VALUE:
-                    return ((Context) context).getString(R.string.xlarge);
+                    return context.getString(R.string.xlarge);
                 default:
                     return "";
             }
@@ -104,6 +104,9 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
         }
 
         public static Unit from(String unit) {
+            if (unit == null) {
+                return null;
+            }
             switch (unit) {
                 case "cm":
                     return CENTIMETER;
@@ -115,8 +118,16 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
                     return YARDS;
                 case "ft":
                     return FEET;
+                default:
+                    return null;
             }
-            return null;
+        }
+
+        public static String toStringHandleNull(Unit unit) {
+            if (unit == null) {
+                return null;
+            }
+            return unit.toString();
         }
 
         @Override

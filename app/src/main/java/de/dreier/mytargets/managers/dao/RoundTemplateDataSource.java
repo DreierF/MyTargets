@@ -81,7 +81,7 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
         values.put(ARROWS_PER_PASSE, roundTemplate.arrowsPerPasse);
         values.put(TARGET, roundTemplate.targetTemplate.id);
         values.put(TARGET_SIZE, roundTemplate.targetTemplate.size.value);
-        values.put(TARGET_SIZE_UNIT, roundTemplate.targetTemplate.size.unit.toString());
+        values.put(TARGET_SIZE_UNIT, Dimension.Unit.toStringHandleNull(roundTemplate.targetTemplate.size.unit));
         values.put(SCORING_STYLE, roundTemplate.targetTemplate.scoringStyle);
         return values;
     }
@@ -109,7 +109,7 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
                 new String[]{String.valueOf(roundTemplate.getId())});
     }
 
-    public void deletePasse(RoundTemplate roundTemplate) {
+    void deletePasse(RoundTemplate roundTemplate) {
         roundTemplate.passes--;
         ContentValues values = new ContentValues();
         values.put(PASSES, roundTemplate.passes);

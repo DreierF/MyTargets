@@ -113,7 +113,7 @@ public class SettingsManager {
                 .putInt(KEY_TARGET, (int) target.getId())
                 .putInt(KEY_SCORING_STYLE, target.scoringStyle)
                 .putInt(KEY_TARGET_DIAMETER_VALUE, target.size.value)
-                .putString(KEY_TARGET_DIAMETER_UNIT, target.size.unit.toString())
+                .putString(KEY_TARGET_DIAMETER_UNIT, Dimension.Unit.toStringHandleNull(target.size.unit))
                 .apply();
     }
 
