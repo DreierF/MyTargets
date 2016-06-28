@@ -28,7 +28,7 @@ public class AboutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return new AboutPage(getContext())
                 .isRTL(false)
-                .setImage(R.drawable.logo)
+                .setImage(R.drawable.product_logo_144dp)
                 .setDescription(getString(R.string.my_targets) + "\n" + getVersion())
                 .addGroup(getString(R.string.contribute))
                 .addItem(getShareElement())

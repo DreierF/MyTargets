@@ -10,9 +10,8 @@
             android:src="@drawable/product_logo_144dp"/>
     </item>
     <!-- Brand name - 48dp height -->
-    <item android:bottom="@dimen/launchscreen_brand_logo_bottom">
-        <bitmap
-            android:gravity="bottom|center"
-            android:src="@drawable/brand_name_48dp"/>
-    </item>
+    <item
+        android:bottom="@dimen/launchscreen_brand_logo_bottom"
+        android:drawable="@drawable/brand_name"
+        android:gravity="bottom|center"/>
 </layer-list>
