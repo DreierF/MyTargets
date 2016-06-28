@@ -30,6 +30,8 @@ android {
     }
 
     signingConfigs {
+        debug {
+        }
         release {
             try {
                 storeFile file('../keystore.jks')
@@ -44,9 +46,10 @@ android {
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.release
+            applicationIdSuffix '.debug'
+            signingConfig signingConfigs.debug
             minifyEnabled false
-            testCoverageEnabled = true
+            testCoverageEnabled true
         }
         release {
             signingConfig signingConfigs.release
@@ -75,25 +78,26 @@ android {
  * and delete the files right after it creates them.
  */
 tasks.withType(DataBindingExportBuildInfoTask) { task ->
-    if (task.name.endsWith("AndroidTest")) {
+    if (task.name.endsWith('AndroidTest')) {
         task.finalizedBy(tasks.create("${task.name}Workaround") << {
             task.output.deleteDir()
         })
     }
 }
 
-if (new File("gradle.properties").exists()) {
+if (new File('gradle.properties').exists()) {
     afterEvaluate {
+        assembleRelease.dependsOn(':crowdinDownload')
+
         task renameFolders {
             file('app/src/main/play/ca-ES').renameTo(file('app/src/main/play/ca'))
             file('app/src/main/play/sk-SK').renameTo(file('app/src/main/play/sk'))
             file('app/src/main/play/sl-SI').renameTo(file('app/src/main/play/sl'))
         }
 
-        def generateReleasePlayResources = project.tasks.getByName('generateRegularReleasePlayResources')
-        generateReleasePlayResources.dependsOn(':crowdinDownload')
-        generateReleasePlayResources.dependsOn renameFolders
-        generateReleasePlayResources.doLast {
+        generateRegularReleasePlayResources.dependsOn(':crowdinDownload')
+        generateRegularReleasePlayResources.dependsOn renameFolders
+        generateRegularReleasePlayResources.doLast {
             file('app/src/main/play/ca').renameTo(file('app/src/main/play/ca-ES'))
             file('app/src/main/play/sk').renameTo(file('app/src/main/play/sk-SK'))
             file('app/src/main/play/sl').renameTo(file('app/src/main/play/sl-SI'))
