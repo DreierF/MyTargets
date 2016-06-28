@@ -2,6 +2,6 @@
 <resources>
     <dimen name="timer_text_size">150sp</dimen>
     <dimen name="touch_raise">9dp</dimen>
-    <dimen name="product_logo_bottom">24dp</dimen>
-    <dimen name="brand_name_bottom">56dp</dimen>
+    <dimen name="launchscreen_product_logo_bottom">24dp</dimen>
+    <dimen name="launchscreen_brand_logo_bottom">56dp</dimen>
 </resources>

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="product_logo_bottom">24dp</dimen>
+    <dimen name="launchscreen_product_logo_bottom">24dp</dimen>
 </resources>
