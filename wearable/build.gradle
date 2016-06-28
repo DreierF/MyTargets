@@ -20,6 +20,8 @@ android {
     }
 
     signingConfigs {
+        debug {
+        }
         release {
             try {
                 storeFile file('../keystore.jks')
@@ -34,6 +36,7 @@ android {
 
     buildTypes {
         debug {
+            applicationIdSuffix '.debug'
             signingConfig signingConfigs.release
             minifyEnabled false
             testCoverageEnabled = true
@@ -45,6 +48,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
         }
     }
+}
+
+afterEvaluate {
+    assembleRelease.dependsOn(':crowdinDownload')
 }
 
 dependencies {

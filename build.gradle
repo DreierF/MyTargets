@@ -51,34 +51,25 @@ crowdinUpload {
 }
 
 crowdinDownload {
+    doLast {
+        new File('app/src/main/play/af-ZA').deleteDir()
+        new File('app/src/main/play/ar-SA').deleteDir()
+        new File('app/src/main/play/da-DK').deleteDir()
+        new File('app/src/main/play/el-GR').deleteDir()
+        new File('app/src/main/play/fi-FI').deleteDir()
+        new File('app/src/main/play/he-IL').deleteDir()
+        new File('app/src/main/play/id-ID').deleteDir()
+        new File('app/src/main/play/ko-KR').deleteDir()
+        new File('app/src/main/play/ro-RO').deleteDir()
+        new File('app/src/main/play/sr-SP').deleteDir()
+        new File('app/src/main/play/uk-UA').deleteDir()
+        new File('app/src/main/play/vi-VN').deleteDir()
+    }
     apiKey = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
     projectId = 'mytargets'
     destination = "$projectDir"
-    renameMapping  = [
-            from:  '^(.*)/values-((?!(pt|zh))(.*)-r(.*)|((pt|zh).*))/(.*)$',
-            to:  /\1\/values-\4\6\/\8/
+    renameMapping = [
+            from: '^(.*)/values-((?!(pt|zh))(.*)-r(.*)|((pt|zh).*))/(.*)$',
+            to  : /\1\/values-\4\6\/\8/
     ]
 }.dependsOn crowdinUpload
-
-crowdinDownload.doLast {
-    new File('app/src/main/play/af-ZA').deleteDir()
-    new File('app/src/main/play/ar-SA').deleteDir()
-    new File('app/src/main/play/da-DK').deleteDir()
-    new File('app/src/main/play/el-GR').deleteDir()
-    new File('app/src/main/play/fi-FI').deleteDir()
-    new File('app/src/main/play/he-IL').deleteDir()
-    new File('app/src/main/play/id-ID').deleteDir()
-    new File('app/src/main/play/ko-KR').deleteDir()
-    new File('app/src/main/play/ro-RO').deleteDir()
-    new File('app/src/main/play/sr-SP').deleteDir()
-    new File('app/src/main/play/uk-UA').deleteDir()
-    new File('app/src/main/play/vi-VN').deleteDir()
-}
-
-subprojects.each { project ->
-    project.tasks.whenTaskAdded { task ->
-        if(task.name == 'preReleaseBuild') {
-            task.dependsOn crowdinDownload
-        }
-    }
-}
