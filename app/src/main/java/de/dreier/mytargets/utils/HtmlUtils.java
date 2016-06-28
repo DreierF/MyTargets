@@ -251,7 +251,8 @@ public class HtmlUtils {
         }
         info.addLine(R.string.hits, hits);
         info.addLine(R.string.misses, misses);
-        for (Pair<String, Integer> score : scoreCount.subList(0, 3)) {
+        for (Pair<String, Integer> score : scoreCount
+                .subList(0, Math.min(scoreCount.size(), 3))) {
             info.addLine(score.getFirst(), score.getSecond());
         }
 
