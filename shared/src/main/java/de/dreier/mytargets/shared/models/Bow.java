@@ -1,32 +1,54 @@
 package de.dreier.mytargets.shared.models;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 import java.util.ArrayList;
+import java.util.List;
 
-import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
+import de.dreier.mytargets.shared.AppDatabase;
+import de.dreier.mytargets.shared.utils.ThumbnailConverter;
 
-public class Bow implements IImageProvider, IIdSettable {
-    public long id = -1;
+@Table(database = AppDatabase.class)
+public class Bow extends BaseModel implements IImageProvider, IIdSettable {
+    @PrimaryKey(autoincrement = true)
+    public Long id = -1L;
+    @Column
     public String name = "";
+    @Column
     public EBowType type = EBowType.RECURVE_BOW;
+    @Column
     public String brand = "";
+    @Column
     public String size = "";
+    @Column
     public String braceHeight = "";
+    @Column
     public String tiller = "";
+    @Column
     public String limbs = "";
+    @Column
     public String sight = "";
+    @Column
     public String drawWeight = "";
+    @Column
     public String stabilizer = "";
+    @Column
     public String clicker = "";
+    @Column
     public String description = "";
-    public ArrayList<SightSetting> sightSettings = new ArrayList<>();
-    public byte[] thumb;
+
+    @Column(typeConverter = ThumbnailConverter.class)
+    public Thumbnail thumbnail;
+    @Column
     public String imageFile;
-    private transient Bitmap thumbnail;
+
+    public List<SightSetting> sightSettings = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -37,10 +59,7 @@ public class Bow implements IImageProvider, IIdSettable {
     }
 
     public Drawable getDrawable() {
-        if (thumbnail == null) {
-            thumbnail = BitmapFactory.decodeByteArray(thumb, 0, thumb.length);
-        }
-        return new RoundedAvatarDrawable(thumbnail);
+        return thumbnail.getRoundDrawable();
     }
 
     @Override

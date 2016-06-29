@@ -18,6 +18,7 @@ import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
 
@@ -42,7 +43,8 @@ import de.dreier.mytargets.shared.utils.PasseDrawer;
         @ParcelClass(StandardRound.class),
         @ParcelClass(NotificationInfo.class),
         @ParcelClass(Target.class),
-        @ParcelClass(Training.class)
+        @ParcelClass(Training.class),
+        @ParcelClass(Thumbnail.class)
 })
 public class ApplicationInstance extends SharedApplicationInstance {
 
