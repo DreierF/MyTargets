@@ -295,7 +295,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private RoundTemplate getRoundTemplate() {
         RoundTemplate roundTemplate = new RoundTemplate();
         roundTemplate.target = binding.targetSpinner.getSelectedItem();
-        roundTemplate.setTargetTemplate(roundTemplate.target);
+        roundTemplate.targetTemplate = roundTemplate.target;
         roundTemplate.arrowsPerPasse = binding.arrows.getProgress();
         roundTemplate.passes = 1;
         roundTemplate.distance = binding.distanceSpinner.getSelectedItem();

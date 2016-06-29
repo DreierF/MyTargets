@@ -47,7 +47,7 @@ public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
         super.setOnActivityResultContext(fragment);
         binding.image.setOnClickListener(v -> {
             final StandardRound item = getSelectedItem();
-            Target target = item.rounds.get(0).getTargetTemplate();
+            Target target = item.rounds.get(0).targetTemplate;
             if (target.id < 7 || target.id == 10 || target.id == 11) {
                 Intent i = new Intent(getContext(), ItemSelectActivity.TargetActivity.class);
                 i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(target));

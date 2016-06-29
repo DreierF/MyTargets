@@ -1,36 +1,14 @@
 package de.dreier.mytargets.shared.models;
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.structure.BaseModel;
-
-import de.dreier.mytargets.shared.AppDatabase;
-import de.dreier.mytargets.shared.utils.DimensionConverter;
-
-@Table(database = AppDatabase.class)
-public class RoundTemplate extends BaseModel implements IIdSettable {
-
-    @PrimaryKey(autoincrement = true)
-    Long id;
-    @ForeignKey(tableClass = StandardRound.class)
-    public Long standardRound;
-    @Column
+public class RoundTemplate implements IIdSettable {
+    public long standardRound;
     public int index;
-    @Column
     public int arrowsPerPasse;
     public Target target;
-    @Column
-    public int passes;
-    @Column(typeConverter = DimensionConverter.class)
     public Dimension distance;
-    @Column
-    int targetTemplateId;
-    @Column
-    int targetTemplateScoringStyle;
-    @Column(typeConverter = DimensionConverter.class)
-    Dimension targetTemplateSize;
+    public int passes;
+    public Target targetTemplate;
+    long id;
 
     public int getMaxPoints() {
         return target.getEndMaxPoints(arrowsPerPasse) * passes;
@@ -49,15 +27,5 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
         return another instanceof RoundTemplate &&
                 getClass().equals(another.getClass()) &&
                 id == ((RoundTemplate) another).id;
-    }
-
-    public Target getTargetTemplate() {
-        return new Target(targetTemplateId, targetTemplateScoringStyle, targetTemplateSize);
-    }
-
-    public void setTargetTemplate(Target targetTemplate) {
-        targetTemplateId = targetTemplate.id;
-        targetTemplateScoringStyle = targetTemplate.scoringStyle;
-        targetTemplateSize = targetTemplate.size;
     }
 }

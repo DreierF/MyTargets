@@ -9,34 +9,20 @@ package de.dreier.mytargets.shared.models;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.structure.BaseModel;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.targets.CombinedSpot;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 
-@Table(database = AppDatabase.class)
-public class StandardRound extends BaseModel implements IIdSettable, IImageProvider, IDetailProvider {
+public class StandardRound implements IIdSettable, IImageProvider, IDetailProvider {
 
-    @PrimaryKey(autoincrement = true)
-    Long id;
-    @Column
+    public long id;
     public int club;
-    @Column
     public String name;
-    @Column
     public boolean indoor;
-
-    public List<RoundTemplate> rounds = new ArrayList<>();
-
-    @Column
+    public ArrayList<RoundTemplate> rounds = new ArrayList<>();
     public int usages;
 
     public void insert(RoundTemplate template) {

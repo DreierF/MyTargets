@@ -30,7 +30,7 @@ import java.io.IOException;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentEditImageBinding;
-import de.dreier.mytargets.shared.models.Thumbnail;
+import de.dreier.mytargets.shared.utils.BitmapUtils;
 import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.ThumbnailUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -223,7 +223,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
         }
     }
 
-    Thumbnail getThumbnail() {
+    byte[] getThumbnail() {
         Bitmap thumbnail;
         if (imageFile == null) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), defaultDrawable);
@@ -234,7 +234,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
         } else {
             thumbnail = ThumbnailUtils.createImageThumbnail(imageFile.getPath(), MICRO_KIND);
         }
-        return new Thumbnail(thumbnail);
+        return BitmapUtils.getBitmapAsByteArray(thumbnail);
     }
 
     @Override

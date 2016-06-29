@@ -76,6 +76,3 @@
 
 -keep class com.google.android.gms.** { *; }
 -dontwarn com.google.android.gms.**
-
-#DBFlow
--keep class * extends com.raizlabs.android.dbflow.config.DatabaseHolder { *; }

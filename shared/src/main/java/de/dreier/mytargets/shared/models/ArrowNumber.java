@@ -6,28 +6,12 @@
  */
 package de.dreier.mytargets.shared.models;
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.structure.BaseModel;
-
 import org.parceler.Parcel;
 
-import de.dreier.mytargets.shared.AppDatabase;
-
 @Parcel
-@Table(database = AppDatabase.class)
-public class ArrowNumber extends BaseModel implements IIdSettable {
-
-    @PrimaryKey(autoincrement = true)
-    Long id;
-
-    @ForeignKey(tableClass = Arrow.class)
-    public Long arrowId;
-
-    @Column
+public class ArrowNumber implements IIdSettable {
     public String number;
+    long id;
 
     @Override
     public String toString() {

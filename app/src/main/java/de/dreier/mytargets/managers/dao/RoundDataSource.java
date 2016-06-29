@@ -13,7 +13,6 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
@@ -112,7 +111,7 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
         long standardRoundId = item.info.standardRound;
         StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource();
         StandardRound standardRound = standardRoundDataSource.get(standardRoundId);
-        List<RoundTemplate> roundTemplates = standardRound.rounds;
+        ArrayList<RoundTemplate> roundTemplates = standardRound.rounds;
 
         if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
             throw new IllegalStateException("Only practice rounds may be deleted!");

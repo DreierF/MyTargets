@@ -74,7 +74,7 @@ public class BowDataSource extends IdProviderDataSource<Bow> {
         values.put(STABILIZER, bow.stabilizer);
         values.put(CLICKER, bow.clicker);
         values.put(DESCRIPTION, bow.description);
-        values.put(THUMBNAIL, bow.thumbnail);
+        values.put(THUMBNAIL, bow.thumb);
         values.put(IMAGE, bow.imageFile);
         return values;
     }
@@ -94,7 +94,7 @@ public class BowDataSource extends IdProviderDataSource<Bow> {
         bow.stabilizer = cursor.getString(startColumnIndex + 10);
         bow.clicker = cursor.getString(startColumnIndex + 11);
         bow.description = cursor.getString(startColumnIndex + 12);
-        bow.thumbnail = cursor.getBlob(startColumnIndex + 13);
+        bow.thumb = cursor.getBlob(startColumnIndex + 13);
         bow.imageFile = cursor.getString(startColumnIndex + 14);
         return bow;
     }

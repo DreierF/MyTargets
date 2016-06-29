@@ -384,7 +384,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 template.target = new Target(target == 4 ? 5 : target, target == 5 ? 1 : 0);
                 template.distance = new Dimension(res.getInt(2), res.getString(3));
                 template.passes = res.getInt(4);
-                template.setTargetTemplate(template.target);
+                template.targetTemplate = template.target;
                 sr.insert(template);
                 long tid = template.target.getId();
                 tid = tid < 7 ? 0 : tid;

@@ -44,7 +44,7 @@ import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 public class EditStandardRoundFragment extends EditFragmentBase {
 
     @State(ParcelsBundler.class)
-    List<RoundTemplate> roundTemplateList = new ArrayList<>();
+    ArrayList<RoundTemplate> roundTemplateList = new ArrayList<>();
     private long standardRoundId = -1;
     private RoundTemplateAdapter adapter;
     private FragmentEditStandardRoundBinding binding;
@@ -77,7 +77,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                 round.arrowsPerPasse = SettingsManager.getArrowsPerPasse();
                 round.passes = SettingsManager.getPasses();
                 round.target = SettingsManager.getTarget();
-                round.setTargetTemplate(round.target);
+                round.targetTemplate = round.target;
                 round.distance = SettingsManager.getDistance();
                 roundTemplateList.add(round);
             } else {
@@ -115,7 +115,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         roundTemplate.distance = r.distance;
         roundTemplate.target = r.target;
         roundTemplate.target.size = r.target.size;
-        roundTemplate.setTargetTemplate(r.getTargetTemplate());
+        roundTemplate.targetTemplate = r.targetTemplate;
         roundTemplateList.add(roundTemplate);
         adapter.notifyItemInserted(roundTemplateList.size() - 1);
     }
@@ -166,7 +166,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                     break;
                 case TargetSelector.TARGET_REQUEST_CODE:
                     roundTemplateList.get(index).target = Parcels.unwrap(parcelable);
-                    roundTemplateList.get(index).setTargetTemplate(Parcels.unwrap(parcelable));
+                    roundTemplateList.get(index).targetTemplate = Parcels.unwrap(parcelable);
                     adapter.notifyItemChanged(index);
                     break;
             }

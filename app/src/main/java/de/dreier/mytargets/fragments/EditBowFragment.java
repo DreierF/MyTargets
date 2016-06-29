@@ -146,7 +146,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         bow.description = contentBinding.description.getText().toString();
         bow.type = getType();
         bow.imageFile = getImageFile();
-        bow.thumbnail = getThumbnail();
+        bow.thumb = getThumbnail();
         bow.sightSettings = sightSettingsList;
         return bow;
     }
