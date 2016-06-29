@@ -13,6 +13,9 @@ public class Thumbnail {
     private transient Drawable image;
     byte[] data;
 
+    public Thumbnail() {
+    }
+
     public Thumbnail(Blob data) {
         this.data = data.getBlob();
     }

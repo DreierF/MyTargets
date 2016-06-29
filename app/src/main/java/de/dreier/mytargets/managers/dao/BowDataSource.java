@@ -10,10 +10,13 @@ package de.dreier.mytargets.managers.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.raizlabs.android.dbflow.data.Blob;
+
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.EBowType;
+import de.dreier.mytargets.shared.models.Thumbnail;
 
 public class BowDataSource extends IdProviderDataSource<Bow> {
     private static final String TABLE = "BOW";
@@ -74,7 +77,7 @@ public class BowDataSource extends IdProviderDataSource<Bow> {
         values.put(STABILIZER, bow.stabilizer);
         values.put(CLICKER, bow.clicker);
         values.put(DESCRIPTION, bow.description);
-        values.put(THUMBNAIL, bow.thumbnail);
+        values.put(THUMBNAIL, bow.thumbnail.getBlob().getBlob());
         values.put(IMAGE, bow.imageFile);
         return values;
     }
@@ -94,7 +97,7 @@ public class BowDataSource extends IdProviderDataSource<Bow> {
         bow.stabilizer = cursor.getString(startColumnIndex + 10);
         bow.clicker = cursor.getString(startColumnIndex + 11);
         bow.description = cursor.getString(startColumnIndex + 12);
-        bow.thumbnail = cursor.getBlob(startColumnIndex + 13);
+        bow.thumbnail = new Thumbnail(new Blob(cursor.getBlob(startColumnIndex + 13)));
         bow.imageFile = cursor.getString(startColumnIndex + 14);
         return bow;
     }
