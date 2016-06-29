@@ -91,7 +91,7 @@
   <string name="target_face">Blason</string>
   <!-- Scoreboard -->
   <string name="scoreboard">Feuille de marque</string>
-  <string name="arrows">Volée</string>
+  <string name="arrows">Flèches</string>
   <string name="sum">Somme</string>
   <string name="carry">Cumul</string>
   <string name="action_print">Imprimer</string>
