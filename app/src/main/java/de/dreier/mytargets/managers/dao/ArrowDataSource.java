@@ -10,9 +10,12 @@ package de.dreier.mytargets.managers.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.raizlabs.android.dbflow.data.Blob;
+
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.shared.models.Thumbnail;
 
 public class ArrowDataSource extends IdProviderDataSource<Arrow> {
     public static final String TABLE = "ARROW";
@@ -64,7 +67,7 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
         values.put(VANES, arrow.vanes);
         values.put(NOCK, arrow.nock);
         values.put(COMMENT, arrow.comment);
-        values.put(THUMBNAIL, arrow.thumb);
+        values.put(THUMBNAIL, arrow.thumbnail.getBlob().getBlob());
         values.put(IMAGE, arrow.imageFile);
         return values;
     }
@@ -81,7 +84,7 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
         arrow.vanes = cursor.getString(startColumnIndex + 7);
         arrow.nock = cursor.getString(startColumnIndex + 8);
         arrow.comment = cursor.getString(startColumnIndex + 9);
-        arrow.thumb = cursor.getBlob(startColumnIndex + 10);
+        arrow.thumbnail = new Thumbnail(new Blob(cursor.getBlob(startColumnIndex + 10)));
         arrow.imageFile = cursor.getString(startColumnIndex + 11);
         return arrow;
     }

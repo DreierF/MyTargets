@@ -59,8 +59,8 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
         roundTemplate.arrowsPerPasse = cursor.getInt(startColumnIndex + 2);
         final Dimension diameter = new Dimension(
                 cursor.getInt(startColumnIndex + 9), cursor.getString(startColumnIndex + 10));
-        roundTemplate.targetTemplate = new Target(cursor.getInt(startColumnIndex + 3),
-                cursor.getInt(startColumnIndex + 4), diameter);
+        roundTemplate.setTargetTemplate(new Target(cursor.getInt(startColumnIndex + 3),
+                cursor.getInt(startColumnIndex + 4), diameter));
         roundTemplate.target = new Target(cursor.getInt(startColumnIndex + 5),
                 cursor.getInt(startColumnIndex + 6), diameter);
         roundTemplate.distance = new Dimension(cursor.getInt(startColumnIndex + 7),
@@ -79,10 +79,11 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
         values.put(UNIT, roundTemplate.distance.unit.toString());
         values.put(PASSES, roundTemplate.passes);
         values.put(ARROWS_PER_PASSE, roundTemplate.arrowsPerPasse);
-        values.put(TARGET, roundTemplate.targetTemplate.id);
-        values.put(TARGET_SIZE, roundTemplate.targetTemplate.size.value);
-        values.put(TARGET_SIZE_UNIT, Dimension.Unit.toStringHandleNull(roundTemplate.targetTemplate.size.unit));
-        values.put(SCORING_STYLE, roundTemplate.targetTemplate.scoringStyle);
+        values.put(TARGET, roundTemplate.getTargetTemplate().id);
+        values.put(TARGET_SIZE, roundTemplate.getTargetTemplate().size.value);
+        values.put(TARGET_SIZE_UNIT, Dimension.Unit.toStringHandleNull(
+                roundTemplate.getTargetTemplate().size.unit));
+        values.put(SCORING_STYLE, roundTemplate.getTargetTemplate().scoringStyle);
         return values;
     }
 

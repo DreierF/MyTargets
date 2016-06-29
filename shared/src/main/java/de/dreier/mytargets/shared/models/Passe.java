@@ -1,17 +1,31 @@
 package de.dreier.mytargets.shared.models;
 
+import com.raizlabs.android.dbflow.annotation.Column;
 import org.joda.time.DateTime;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class Passe implements IIdSettable {
+import de.dreier.mytargets.shared.AppDatabase;
 
-    long id;
+@Table(database = AppDatabase.class)
+public class Passe extends BaseModel implements IIdSettable {
+
+    @PrimaryKey(autoincrement = true)
+    Long id;
+    @Column
     public int index;
-    public long roundId;
-    public Shot[] shot;
+    @ForeignKey(tableClass = Round.class)
+    public Long roundId;
+    @Column
     public boolean exact;
+
+    public Shot[] shot;
+    
     public DateTime saveDate = new DateTime();
 
     public Passe() {

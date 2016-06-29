@@ -717,7 +717,8 @@ public class StandardRoundFactory {
             RoundTemplate roundTemplate = new RoundTemplate();
             roundTemplate.arrowsPerPasse = arrowsPerPasse;
             roundTemplate.distance = new Dimension(roundDetails[i], distanceUnit);
-            roundTemplate.targetTemplate = new Target(target, scoringStyle, new Dimension(roundDetails[i + 1], targetUnit));
+            roundTemplate.setTargetTemplate(
+                    new Target(target, scoringStyle, new Dimension(roundDetails[i + 1], targetUnit)));
             roundTemplate.passes = roundDetails[i + 2];
             standardRound.insert(roundTemplate);
         }
@@ -728,8 +729,8 @@ public class StandardRoundFactory {
         StandardRound standardRound = build(context, institution, name, indoor, distanceUnit,
                 targetUnit, target, scoringStyle, arrowsPerPasse, roundDetails);
         RoundTemplate round2 = standardRound.rounds.get(1);
-        target2.size = round2.targetTemplate.size;
-        round2.targetTemplate = target2;
+        target2.size = round2.getTargetTemplate().size;
+        round2.setTargetTemplate(target2);
         return standardRound;
     }
 }

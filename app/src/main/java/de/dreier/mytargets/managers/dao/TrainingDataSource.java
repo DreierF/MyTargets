@@ -74,8 +74,8 @@ public class TrainingDataSource extends IdProviderDataSource<Training> {
         training.setId(cursor.getLong(startColumnIndex));
         training.title = cursor.getString(startColumnIndex + 1);
         training.date = new LocalDate(cursor.getLong(startColumnIndex + 2));
-        training.bow = cursor.getInt(startColumnIndex + 3);
-        training.arrow = cursor.getInt(startColumnIndex + 4);
+        training.bow = cursor.getLong(startColumnIndex + 3);
+        training.arrow = cursor.getLong(startColumnIndex + 4);
         training.standardRoundId = cursor.getLong(startColumnIndex + 5);
         training.arrowNumbering = cursor.getInt(startColumnIndex + 6) == 1;
         training.timePerPasse = cursor.getInt(startColumnIndex + 7);

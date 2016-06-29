@@ -107,7 +107,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         arrow.nock = contentBinding.nock.getText().toString();
         arrow.comment = contentBinding.comment.getText().toString();
         arrow.imageFile = getImageFile();
-        arrow.thumb = getThumbnail();
+        arrow.thumbnail = getThumbnail();
         arrow.numbers = Stream.of(arrowNumbersList)
                 .filter(value -> value != null)
                 .collect(Collectors.toList());

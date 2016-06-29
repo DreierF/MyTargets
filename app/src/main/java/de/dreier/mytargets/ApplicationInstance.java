@@ -3,6 +3,9 @@ package de.dreier.mytargets;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.raizlabs.android.dbflow.config.FlowConfig;
+import com.raizlabs.android.dbflow.config.FlowManager;
+
 import org.parceler.ParcelClass;
 import org.parceler.ParcelClasses;
 
@@ -21,6 +24,7 @@ import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
 import de.dreier.mytargets.utils.MyBackupAgent;
@@ -46,7 +50,8 @@ import de.dreier.mytargets.utils.MyBackupAgent;
         @ParcelClass(StandardRound.class),
         @ParcelClass(NotificationInfo.class),
         @ParcelClass(Target.class),
-        @ParcelClass(Training.class)
+        @ParcelClass(Training.class),
+        @ParcelClass(Thumbnail.class)
 })
 public class ApplicationInstance extends SharedApplicationInstance {
 
@@ -56,5 +61,11 @@ public class ApplicationInstance extends SharedApplicationInstance {
 
     public static SharedPreferences getLastSharedPreferences() {
         return mContext.getSharedPreferences(MyBackupAgent.PREFS, 0);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        FlowManager.init(new FlowConfig.Builder(this).build());
     }
 }

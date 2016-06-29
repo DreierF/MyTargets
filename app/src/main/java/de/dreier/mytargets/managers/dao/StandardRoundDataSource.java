@@ -124,7 +124,7 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
         ArrayList<StandardRound> displayList = new ArrayList<>();
         Dimension.Unit unitDistance = isMetric ? METER : YARDS;
         for (StandardRound r : list) {
-            ArrayList<RoundTemplate> rounds = r.rounds;
+            List<RoundTemplate> rounds = r.rounds;
             if (rounds.size() > 0 && ((r.club & clubs) != 0 ||
                     r.name.startsWith("NFAA/IFAA") && (clubs & StandardRoundFactory.IFAA) != 0) &&
                     rounds.get(0).distance.unit == unitDistance &&

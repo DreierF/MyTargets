@@ -112,7 +112,7 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
         long standardRoundId = item.info.standardRound;
         StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource();
         StandardRound standardRound = standardRoundDataSource.get(standardRoundId);
-        ArrayList<RoundTemplate> roundTemplates = standardRound.rounds;
+        List<RoundTemplate> roundTemplates = standardRound.rounds;
 
         if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
             throw new IllegalStateException("Only practice rounds may be deleted!");

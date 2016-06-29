@@ -27,6 +27,7 @@ ext {
     playServiceVersion = '9.2.0'
     espressoVersion = '2.2.2'
     parcelerVersion = '1.1.5'
+    dbFlowVersion = '3.0.1'
     appVersionName = '2.2.2'
     appVersionCode = 44
 }
