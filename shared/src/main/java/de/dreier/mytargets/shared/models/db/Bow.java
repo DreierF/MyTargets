@@ -1,54 +1,87 @@
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models.db;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.AppDatabase;
+import de.dreier.mytargets.shared.models.EBowType;
+import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.models.IImageProvider;
+import de.dreier.mytargets.shared.models.db.SightSetting_Table;
+import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.utils.ThumbnailConverter;
 
-@Table(database = AppDatabase.class)
+@Table(database = AppDatabase.class, name = "BOW")
 public class Bow extends BaseModel implements IImageProvider, IIdSettable {
+
+    @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     public Long id = -1L;
-    @Column
+
+    @Column(name = "name")
     public String name = "";
-    @Column
+
+    @Column(name = "type")
     public EBowType type = EBowType.RECURVE_BOW;
-    @Column
+
+    @Column(name = "brand")
     public String brand = "";
-    @Column
+
+    @Column(name = "size")
     public String size = "";
-    @Column
+
+    @Column(name = "height")
     public String braceHeight = "";
-    @Column
+
+    @Column(name = "tiller")
     public String tiller = "";
-    @Column
+
+    @Column(name = "limbs")
     public String limbs = "";
-    @Column
+
+    @Column(name = "sight")
     public String sight = "";
-    @Column
+
+    @Column(name = "draw_weight")
     public String drawWeight = "";
-    @Column
+
+    @Column(name = "stabilizer")
     public String stabilizer = "";
-    @Column
+
+    @Column(name = "clicker")
     public String clicker = "";
-    @Column
+
+    @Column(name = "description")
     public String description = "";
 
-    @Column(typeConverter = ThumbnailConverter.class)
+    @Column(typeConverter = ThumbnailConverter.class, name = "thumbnail")
     public Thumbnail thumbnail;
-    @Column
+
+    @Column(name = "image")
     public String imageFile;
 
     public List<SightSetting> sightSettings = new ArrayList<>();
+
+    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "sightSettings")
+    public List<SightSetting> getSightSettings() {
+        if (sightSettings == null || sightSettings.isEmpty()) {
+            sightSettings = SQLite.select()
+                    .from(SightSetting.class)
+                    .where(SightSetting_Table.bowId__id.eq(id))
+                    .queryList();
+        }
+        return sightSettings;
+    }
 
     public long getId() {
         return id;
@@ -76,6 +109,6 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable {
     public boolean equals(Object another) {
         return another instanceof Bow &&
                 getClass().equals(another.getClass()) &&
-                id == ((Bow) another).id;
+                id.equals(((Bow) another).id);
     }
 }

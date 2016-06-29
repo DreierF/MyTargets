@@ -12,7 +12,7 @@ import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.IIdProvider;
-import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.utils.Color;
 
 import static de.dreier.mytargets.shared.utils.Color.BLACK;

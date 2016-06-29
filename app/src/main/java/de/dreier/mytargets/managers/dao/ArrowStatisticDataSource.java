@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.models.ArrowStatistic;
-import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.Target;
 
 public class ArrowStatisticDataSource extends DataSourceBase {

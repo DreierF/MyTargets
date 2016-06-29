@@ -4,7 +4,7 @@
  * Copyright (C) 2015 Florian Dreier
  * All rights reserved
  */
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models.db;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
@@ -13,6 +13,8 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import de.dreier.mytargets.shared.AppDatabase;
+import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.utils.DimensionConverter;
 
 import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;

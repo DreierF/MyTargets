@@ -25,7 +25,8 @@ import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
-import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.shared.models.db.Arrow;
+import de.dreier.mytargets.utils.ActivityUtils;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.SelectableViewHolder;
@@ -33,7 +34,7 @@ import de.dreier.mytargets.utils.SelectableViewHolder;
 import static de.dreier.mytargets.fragments.EditArrowFragment.ARROW_ID;
 import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 
-public class ArrowFragment extends EditableFragment<Arrow> {
+public class ArrowFragment extends EditableFragment<Arrow> implements View.OnClickListener {
 
     protected FragmentListBinding binding;
     private ArrowDataSource arrowDataSource;

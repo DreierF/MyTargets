@@ -14,7 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.RoundTemplate;
+import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.Target;
 
 public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate> {

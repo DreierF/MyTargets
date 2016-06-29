@@ -15,8 +15,8 @@ import android.text.TextPaint;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.Color;
 

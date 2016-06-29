@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
-import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.models.db.Training;
 
 public class TrainingDataSource extends IdProviderDataSource<Training> {
     private static final String TABLE = "TRAINING";

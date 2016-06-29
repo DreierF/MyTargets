@@ -1,4 +1,4 @@
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models.db;
 
 import android.support.annotation.NonNull;
 
@@ -9,6 +9,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import de.dreier.mytargets.shared.AppDatabase;
+import de.dreier.mytargets.shared.models.IIdSettable;
 
 @Table(database = AppDatabase.class)
 public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {

@@ -1,4 +1,4 @@
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models.db;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
@@ -7,6 +7,9 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import de.dreier.mytargets.shared.AppDatabase;
+import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.DimensionConverter;
 
 @Table(database = AppDatabase.class)

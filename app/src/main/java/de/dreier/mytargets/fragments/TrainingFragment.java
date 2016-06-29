@@ -36,9 +36,10 @@ import de.dreier.mytargets.databinding.ItemRoundBinding;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
-import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.StandardRound;
+import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
@@ -69,7 +70,6 @@ public class TrainingFragment extends EditableFragment<Round> {
         newStringRes = R.string.new_round;
     }
 
-
     @Override
     @CallSuper
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,6 +85,7 @@ public class TrainingFragment extends EditableFragment<Round> {
         if (getArguments() != null) {
             mTraining = getArguments().getLong(ITEM_ID, -1);
         }
+
         binding.fab.setVisibility(View.GONE);
         binding.fab.setOnClickListener(view -> {
             // New round to free training

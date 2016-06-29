@@ -20,8 +20,8 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.RoundTemplate;
-import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.db.RoundTemplate;
+import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 

@@ -23,7 +23,11 @@ import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
 import de.dreier.mytargets.databinding.FragmentMainBinding;
+import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
+import de.dreier.mytargets.shared.models.db.Bow;
+import de.dreier.mytargets.shared.models.IIdProvider;
+import de.dreier.mytargets.utils.FABMenu;
 
 import static de.dreier.mytargets.utils.ToolbarUtils.setSupportActionBar;
 

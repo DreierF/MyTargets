@@ -1,4 +1,4 @@
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models.db;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
@@ -11,6 +11,8 @@ import org.joda.time.LocalDate;
 import java.text.DateFormat;
 
 import de.dreier.mytargets.shared.AppDatabase;
+import de.dreier.mytargets.shared.models.Environment;
+import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.utils.LocalDateConverter;
 import java.util.List;
 import java.util.Locale;

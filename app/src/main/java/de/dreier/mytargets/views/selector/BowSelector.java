@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.managers.dao.BowDataSource;
-import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.db.Bow;
 
 public class BowSelector extends ImageSelectorBase<Bow> {
 

@@ -1,4 +1,4 @@
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models.db;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import org.joda.time.DateTime;
@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.dreier.mytargets.shared.AppDatabase;
+import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.models.Target;
 
 @Table(database = AppDatabase.class)
 public class Passe extends BaseModel implements IIdSettable {

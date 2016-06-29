@@ -4,7 +4,7 @@
  * Copyright (C) 2015 Florian Dreier
  * All rights reserved
  */
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models.db;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
@@ -15,6 +15,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import org.parceler.Parcel;
 
 import de.dreier.mytargets.shared.AppDatabase;
+import de.dreier.mytargets.shared.models.IIdSettable;
 
 @Parcel
 @Table(database = AppDatabase.class)

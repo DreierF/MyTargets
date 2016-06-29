@@ -25,8 +25,8 @@ import org.parceler.Parcels;
 import java.util.Collection;
 import java.util.HashSet;
 
-import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.WearableUtils;

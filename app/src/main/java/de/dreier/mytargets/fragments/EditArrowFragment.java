@@ -27,8 +27,8 @@ import de.dreier.mytargets.adapters.DynamicItemHolder;
 import de.dreier.mytargets.databinding.DynamicitemArrowNumbersBinding;
 import de.dreier.mytargets.databinding.EditArrowFragmentBinding;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
-import de.dreier.mytargets.shared.models.Arrow;
-import de.dreier.mytargets.shared.models.ArrowNumber;
+import de.dreier.mytargets.shared.models.db.Arrow;
+import de.dreier.mytargets.shared.models.db.ArrowNumber;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import icepick.State;
@@ -73,7 +73,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
 
             ToolbarUtils.setTitle(this, arrow.name);
             contentBinding.setArrow(arrow);
-            arrowNumbersList = arrow.numbers;
+            arrowNumbersList = arrow.getArrowNumbers();
         }
 
         loadImage(imageFile);

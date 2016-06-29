@@ -29,11 +29,11 @@ import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
-import de.dreier.mytargets.shared.models.Arrow;
-import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.RoundTemplate;
-import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.models.db.Arrow;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.RoundTemplate;
+import de.dreier.mytargets.shared.models.db.StandardRound;
+import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.ActivityUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -155,7 +155,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     }
 
     private void updateArrowNumbers(Arrow item) {
-        if (item == null || item.numbers.isEmpty()) {
+        if (item == null || item.getArrowNumbers().isEmpty()) {
             binding.numberArrows.setVisibility(View.GONE);
         } else {
             binding.numberArrows.setVisibility(View.VISIBLE);
@@ -227,7 +227,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         training.timePerPasse = binding.timer.isChecked() ? SettingsManager
                 .getTimerShootTime() : -1;
         Arrow selectedItem = binding.arrow.getSelectedItem();
-        training.arrowNumbering = !(selectedItem == null || selectedItem.numbers.isEmpty()) &&
+        training.arrowNumbering = !(selectedItem == null || selectedItem.getArrowNumbers().isEmpty()) &&
                 binding.numberArrows.isChecked();
 
         SettingsManager.setBow(training.bow);

@@ -14,7 +14,7 @@ import com.raizlabs.android.dbflow.data.Blob;
 
 import java.util.ArrayList;
 
-import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.Thumbnail;
 
 public class ArrowDataSource extends IdProviderDataSource<Arrow> {
@@ -52,7 +52,7 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
     @Override
     public void update(Arrow item) {
         super.update(item);
-        new ArrowNumberDataSource().update(item.getId(), item.numbers);
+        new ArrowNumberDataSource().update(item.getId(), item.getArrowNumbers());
     }
 
     @Override

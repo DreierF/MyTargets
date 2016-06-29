@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.RoundTemplate;
-import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.db.RoundTemplate;
+import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.DAIR3D;
 import de.dreier.mytargets.shared.targets.IFAAAnimal;

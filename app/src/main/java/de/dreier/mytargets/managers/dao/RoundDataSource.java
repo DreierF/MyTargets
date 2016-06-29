@@ -15,9 +15,9 @@ import com.annimon.stream.Stream;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.RoundTemplate;
-import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.RoundTemplate;
+import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
 import static de.dreier.mytargets.managers.dao.RoundTemplateDataSource.SCORING_STYLE;

@@ -13,7 +13,7 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.dreier.mytargets.shared.models.ArrowNumber;
+import de.dreier.mytargets.shared.models.db.ArrowNumber;
 
 public class ArrowNumberDataSource extends IdProviderDataSource<ArrowNumber> {
     private static final String TABLE = "NUMBER";

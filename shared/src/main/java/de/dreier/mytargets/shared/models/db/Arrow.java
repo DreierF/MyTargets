@@ -1,10 +1,9 @@
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models.db;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.provider.MediaStore;
-import de.dreier.mytargets.shared.models.ArrowNumber_Table;
+
+import de.dreier.mytargets.shared.models.db.ArrowNumber_Table;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
@@ -19,60 +18,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.AppDatabase;
-import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
+import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.models.IImageProvider;
+import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.utils.ThumbnailConverter;
 
 @Parcel
-@Table(database = AppDatabase.class, name = Arrow.TABLE)
+@Table(database = AppDatabase.class, name = "ARROW")
 public class Arrow extends BaseModel implements IImageProvider, IIdSettable {
-    public static final String TABLE = "ARROW";
-    private static final String NAME = "name";
-    private static final String THUMBNAIL = "thumbnail";
-    private static final String LENGTH = "length";
-    private static final String MATERIAL = "material";
-    private static final String SPINE = "spine";
-    private static final String WEIGHT = "weight";
-    private static final String TIP_WEIGHT = "tip_weight";
-    private static final String VANES = "vanes";
-    private static final String NOCK = "nock";
-    private static final String COMMENT = "comment";
-    private static final String IMAGE = "image";
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     public Long id = -1L;
 
-    @Column(name = NAME)
+    @Column(name = "name")
     public String name = "";
 
-    @Column(name = LENGTH)
+    @Column(name = "length")
     public String length = "";
 
-    @Column(name = MATERIAL)
+    @Column(name = "material")
     public String material = "";
 
-    @Column(name = SPINE)
+    @Column(name = "spine")
     public String spine = "";
 
-    @Column(name = WEIGHT)
+    @Column(name = "weight")
     public String weight = "";
 
-    @Column(name = TIP_WEIGHT)
+    @Column(name = "tip_weight")
     public String tipWeight = "";
 
-    @Column(name = VANES)
+    @Column(name = "vanes")
     public String vanes = "";
 
-    @Column(name = NOCK)
+    @Column(name = "nock")
     public String nock = "";
 
-    @Column(name = COMMENT)
+    @Column(name = "comment")
     public String comment = "";
 
-    @Column(name = THUMBNAIL, typeConverter = ThumbnailConverter.class)
+    @Column(name = "thumbnail", typeConverter = ThumbnailConverter.class)
     public Thumbnail thumbnail;
 
-    @Column(name = IMAGE)
+    @Column(name = "image")
     public String imageFile;
 
     public List<ArrowNumber> numbers = new ArrayList<>();
@@ -114,6 +103,6 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable {
     public boolean equals(Object another) {
         return another instanceof Arrow &&
                 getClass().equals(another.getClass()) &&
-                id == ((Arrow) another).id;
+                id.equals(((Arrow) another).id);
     }
 }

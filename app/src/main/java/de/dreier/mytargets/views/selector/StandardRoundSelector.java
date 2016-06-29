@@ -21,8 +21,8 @@ import de.dreier.mytargets.activities.StandardRoundActivity;
 import de.dreier.mytargets.fragments.TargetFragment;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.RoundTemplate;
-import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.db.RoundTemplate;
+import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
 
 public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {

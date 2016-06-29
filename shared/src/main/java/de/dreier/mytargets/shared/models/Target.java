@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 
 import java.util.List;
 
+import de.dreier.mytargets.shared.models.db.Passe;
 import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 import de.dreier.mytargets.shared.targets.TargetFactory;

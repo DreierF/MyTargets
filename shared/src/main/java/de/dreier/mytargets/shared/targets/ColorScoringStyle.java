@@ -3,7 +3,7 @@ package de.dreier.mytargets.shared.targets;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
-import de.dreier.mytargets.shared.models.Passe;
+import de.dreier.mytargets.shared.models.db.Passe;
 
 public class ColorScoringStyle extends ScoringStyle {
 

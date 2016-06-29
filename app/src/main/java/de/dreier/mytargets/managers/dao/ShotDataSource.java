@@ -10,7 +10,7 @@ package de.dreier.mytargets.managers.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.db.Shot;
 
 public class ShotDataSource extends IdProviderDataSource<Shot> {
     private static final String TABLE = "SHOOT";

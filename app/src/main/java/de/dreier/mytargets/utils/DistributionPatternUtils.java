@@ -24,8 +24,10 @@ import java.util.List;
 import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
+import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 
 public class DistributionPatternUtils {

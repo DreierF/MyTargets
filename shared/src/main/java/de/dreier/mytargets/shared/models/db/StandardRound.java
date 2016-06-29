@@ -4,7 +4,7 @@
  * Copyright (C) 2015 Florian Dreier
  * All rights reserved
  */
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models.db;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -19,6 +19,9 @@ import java.util.List;
 
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.models.IDetailProvider;
+import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.models.IImageProvider;
 import de.dreier.mytargets.shared.targets.CombinedSpot;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 

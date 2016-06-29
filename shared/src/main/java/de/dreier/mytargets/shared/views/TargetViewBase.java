@@ -17,9 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.RoundTemplate;
-import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.RoundTemplate;
+import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.targets.TargetDrawable;

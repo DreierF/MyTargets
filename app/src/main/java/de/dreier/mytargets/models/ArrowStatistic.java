@@ -7,7 +7,7 @@ import org.parceler.Parcel;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.Target;
 
 @Parcel

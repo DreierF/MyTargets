@@ -19,9 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.utils.Pair;

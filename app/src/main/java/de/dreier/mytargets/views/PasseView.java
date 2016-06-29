@@ -14,7 +14,7 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import de.dreier.mytargets.shared.models.Passe;
+import de.dreier.mytargets.shared.models.db.Passe;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.PasseDrawer;

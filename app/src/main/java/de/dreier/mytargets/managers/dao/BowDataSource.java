@@ -14,7 +14,7 @@ import com.raizlabs.android.dbflow.data.Blob;
 
 import java.util.ArrayList;
 
-import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.Thumbnail;
 

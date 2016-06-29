@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.SightSetting;
+import de.dreier.mytargets.shared.models.db.SightSetting;
 
 public class SightSettingDataSource extends IdProviderDataSource<SightSetting> {
     private static final String TABLE = "VISIER";

@@ -42,13 +42,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.models.EShowMode;
 import de.dreier.mytargets.managers.SettingsManager;
-import de.dreier.mytargets.shared.models.ArrowNumber;
+import de.dreier.mytargets.models.EShowMode;
+import de.dreier.mytargets.shared.models.db.ArrowNumber;
 import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.RoundTemplate;
-import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.RoundTemplate;
+import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.utils.PasseDrawer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
