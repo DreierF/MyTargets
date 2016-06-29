@@ -73,6 +73,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
 
             ToolbarUtils.setTitle(this, arrow.name);
             contentBinding.setArrow(arrow);
+            arrowNumbersList = arrow.numbers;
         }
 
         loadImage(imageFile);
