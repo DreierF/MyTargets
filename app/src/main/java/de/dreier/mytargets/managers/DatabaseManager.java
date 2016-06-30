@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.managers.dao.ArrowNumberDataSource;
 import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
@@ -105,7 +104,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(BowDataSource.CREATE_TABLE_BOW);
         db.execSQL(SightSettingDataSource.CREATE_TABLE_VISIER);
         db.execSQL(ArrowNumberDataSource.CREATE_TABLE_NUMBER);
-        db.execSQL(ArrowDataSource.CREATE_TABLE);
+       // db.execSQL(ArrowDataSource.CREATE_TABLE);
         db.execSQL(TrainingDataSource.CREATE_TABLE);
         db.execSQL(RoundTemplateDataSource.CREATE_TABLE);
         db.execSQL(RoundDataSource.CREATE_TABLE);
@@ -163,9 +162,20 @@ public class DatabaseManager extends SQLiteOpenHelper {
             prefs.edit().putInt("distance", defaultDist).apply();
         }
         if (oldVersion < 5) {
-            db.execSQL(ArrowDataSource.CREATE_TABLE);
-            db.execSQL("ALTER TABLE ROUND ADD COLUMN arrow INTEGER REFERENCES " +
-                    ArrowDataSource.TABLE +
+            db.execSQL("CREATE TABLE IF NOT EXISTS ARROW (" +
+                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "name TEXT," +
+                    "length TEXT," +
+                    "material TEXT," +
+                    "spine TEXT," +
+                    "weight TEXT," +
+                    "tip_weight TEXT," +
+                    "vanes TEXT," +
+                    "nock TEXT," +
+                    "comment TEXT," +
+                    "thumbnail BLOB," +
+                    "image TEXT);");
+            db.execSQL("ALTER TABLE ROUND ADD COLUMN arrow INTEGER REFERENCES ARROW" +
                     " ON DELETE SET NULL");
             db.execSQL("ALTER TABLE ROUND ADD COLUMN comment TEXT DEFAULT ''");
             db.execSQL("ALTER TABLE SHOOT ADD COLUMN comment TEXT DEFAULT ''");

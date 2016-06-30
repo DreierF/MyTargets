@@ -195,8 +195,8 @@ public class SimpleDbTestRule implements TestRule {
         Passe p = new Passe(shots.length);
         p.roundId = round.getId();
         for (int i = 0; i < shots.length; i++) {
-            p.shot[i].index = i;
-            p.shot[i].zone = shots[i];
+            p.getShots().get(i).index = i;
+            p.getShots().get(i).zone = shots[i];
         }
         return p;
     }
@@ -205,8 +205,8 @@ public class SimpleDbTestRule implements TestRule {
         Passe p = new Passe(6);
         p.roundId = round.getId();
         for (int i = 0; i < 6; i++) {
-            p.shot[i].index = i;
-            p.shot[i].zone = gen.nextInt(5);
+            p.getShots().get(i).index = i;
+            p.getShots().get(i).zone = gen.nextInt(5);
         }
         p.sort();
         return p;

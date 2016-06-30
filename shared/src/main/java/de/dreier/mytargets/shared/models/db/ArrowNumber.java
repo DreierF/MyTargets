@@ -8,6 +8,7 @@ package de.dreier.mytargets.shared.models.db;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
@@ -25,8 +26,8 @@ public class ArrowNumber extends BaseModel implements IIdSettable {
     @PrimaryKey(autoincrement = true)
     Long id;
 
-    @Column(name = "arrow")
-    @ForeignKey(tableClass = Arrow.class)
+    @ForeignKey(tableClass = Arrow.class, references = {
+            @ForeignKeyReference(columnName = "arrow", columnType = Long.class, foreignKeyColumnName = "_id")})
     public Long arrowId;
 
     @Column(name = "value")

@@ -24,10 +24,9 @@ import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditArrowActivi
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
-import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.utils.ActivityUtils;
-import de.dreier.mytargets.utils.DataLoader;
+import de.dreier.mytargets.utils.FlowDataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
@@ -65,8 +64,7 @@ public class ArrowFragment extends EditableFragment<Arrow> implements View.OnCli
 
     @Override
     public Loader<List<Arrow>> onCreateLoader(int id, Bundle args) {
-        arrowDataSource = new ArrowDataSource();
-        return new DataLoader<>(getContext(), arrowDataSource, arrowDataSource::getAll);
+        return new FlowDataLoader<>(getContext(), Arrow::getAll);
     }
 
     @Override

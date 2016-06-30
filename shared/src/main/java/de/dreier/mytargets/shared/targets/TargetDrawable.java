@@ -146,8 +146,8 @@ public class TargetDrawable extends Drawable {
         if(!passe.exact) {
             return;
         }
-        for (int arrow = 0; arrow < passe.shot.length; arrow++) {
-            drawArrow(canvas, passe.shot[arrow], rect, transparent);
+        for (Shot s : passe.getShots()) {
+            drawArrow(canvas, s, rect, transparent);
         }
     }
 

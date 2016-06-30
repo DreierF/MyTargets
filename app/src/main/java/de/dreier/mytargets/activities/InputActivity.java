@@ -281,7 +281,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         // Initialize message text
         Passe lastPasse = passeDataSource.get(round.getId(), savedPasses);
         if (lastPasse != null) {
-            for (Shot shot : lastPasse.shot) {
+            for (Shot shot : lastPasse.getShots()) {
                 text += template.target.zoneToString(shot.zone, 0) + " ";
             }
             text += "\n";

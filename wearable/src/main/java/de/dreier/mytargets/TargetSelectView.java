@@ -80,7 +80,7 @@ public class TargetSelectView extends TargetViewBase {
 
     private int getCurrentlySelectedZone() {
         if (passe != null && currentArrow < round.arrowsPerPasse) {
-            return passe.shot[currentArrow].zone;
+            return passe.getShots().get(currentArrow).zone;
         } else {
             return Shot.NOTHING_SELECTED;
         }
@@ -100,6 +100,7 @@ public class TargetSelectView extends TargetViewBase {
 
     @Override
     protected Coordinate initAnimationPositions(int i) {
+        final SelectableZone dummyZone = new SelectableZone(passe.getShots().get(i).zone, "");
         return getCircularCoordinates(getSelectableZoneIndexFromShot(passe.shot[i]));
     }
 

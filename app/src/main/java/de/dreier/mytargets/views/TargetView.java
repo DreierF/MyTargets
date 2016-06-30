@@ -94,8 +94,8 @@ public class TargetView extends TargetViewBase {
     }
 
     public void setPasse(Passe passe) {
-        currentArrow = passe.shot.length;
-        lastSetArrow = passe.shot.length;
+        currentArrow = passe.getShots().size();
+        lastSetArrow = passe.getShots().size();
         this.passe = passe;
         passeDrawer.setSelection(currentArrow, null, PasseDrawer.MAX_CIRCLE_SIZE);
         passeDrawer.setPasse(passe);
@@ -175,7 +175,7 @@ public class TargetView extends TargetViewBase {
     protected void onDraw(Canvas canvas) {
         int curZone;
         if (currentArrow > -1 && currentArrow < round.arrowsPerPasse) {
-            curZone = passe.shot[currentArrow].zone;
+            curZone = passe.getShots().get(currentArrow).zone;
         } else {
             curZone = -2;
         }
@@ -201,8 +201,8 @@ public class TargetView extends TargetViewBase {
     }
 
     private void drawZoomedInTarget(Canvas canvas) {
-        float px = passe.shot[currentArrow].x;
-        float py = passe.shot[currentArrow].y;
+        float px = passe.getShots().get(currentArrow).x;
+        float py = passe.getShots().get(currentArrow).y;
         int radius2 = (int) (radius * ZOOM_FACTOR);
         int x = (int) ((midX - orgMidX) * ZOOM_FACTOR + orgMidX - px * (orgRadius + 30 * density));
         int y = (int) ((midY - orgMidY) * ZOOM_FACTOR + orgMidY - py * (orgRadius + 30 * density) -
@@ -227,8 +227,8 @@ public class TargetView extends TargetViewBase {
     }
 
     private void drawArrows(Canvas canvas) {
-        for (int i = 0; i < passe.shot.length && i <= lastSetArrow + 1; i++) {
-            Shot shot = passe.shot[i];
+        for (int i = 0; i < passe.getShots().size() && i <= lastSetArrow + 1; i++) {
+            Shot shot = passe.getShots().get(i);
             if (shot.zone == Shot.NOTHING_SELECTED) {
                 continue;
             }
@@ -266,8 +266,8 @@ public class TargetView extends TargetViewBase {
     private Midpoint getMidpoint(int spot) {
         Midpoint m = new Midpoint();
         int spots = targetModel.getFaceCount();
-        for (int i = spot; i < passe.shot.length && i <= lastSetArrow + 1; i += spots) {
-            Shot shot = passe.shot[i];
+        for (int i = spot; i < passe.getShots().size() && i <= lastSetArrow + 1; i += spots) {
+            Shot shot = passe.getShots().get(i);
             if (shot.zone != Shot.NOTHING_SELECTED && i != currentArrow) {
                 m.add(shot);
             }
@@ -279,7 +279,7 @@ public class TargetView extends TargetViewBase {
 
         return Stream.of(oldPasses)
                 .filter(this::shouldShowPasse)
-                .map(Passe::shotList)
+                .map(Passe::getShots)
                 .flatMap(Stream::of)
                 .filter(s -> s.index % spots == spot)
                 .reduce(m, Midpoint::add);
@@ -294,8 +294,8 @@ public class TargetView extends TargetViewBase {
             int index = getSelectableZoneIndexFromShot(passe.shot[i]);
             coordinate.y = indicatorHeight * index + indicatorHeight / 2.0f;
         } else {
-            coordinate.x = orgMidX + orgRadius * passe.shot[i].x;
-            coordinate.y = orgMidY + orgRadius * passe.shot[i].y;
+            coordinate.x = orgMidX + orgRadius * passe.getShots().get(i).x;
+            coordinate.y = orgMidY + orgRadius * passe.getShots().get(i).y;
         }
         return coordinate;
     }
@@ -547,19 +547,19 @@ public class TargetView extends TargetViewBase {
     @Override
     protected void onArrowChanged(int i) {
         if (arrowNumbers.isEmpty() ||
-                currentArrow < round.arrowsPerPasse && passe.shot[currentArrow].arrow != null) {
+                currentArrow < round.arrowsPerPasse && passe.getShots().get(currentArrow).arrow != null) {
             super.onArrowChanged(i);
         } else {
             List<String> numbersLeft = Stream.of(arrowNumbers).map(an -> an.number)
                     .collect(Collectors.toList());
-            for (Shot s : passe.shot) {
+            for (Shot s : passe.getShots()) {
                 numbersLeft.remove(s.arrow);
             }
             if (numbersLeft.size() == 0 || currentArrow >= round.arrowsPerPasse) {
                 super.onArrowChanged(i);
                 return;
             } else if (numbersLeft.size() == 1) {
-                passe.shot[currentArrow].arrow = numbersLeft.get(0);
+                passe.getShots().get(currentArrow).arrow = numbersLeft.get(0);
                 super.onArrowChanged(i);
                 return;
             }
@@ -579,8 +579,8 @@ public class TargetView extends TargetViewBase {
             gridView.setNumColumns(cols);
             gridView.setOnItemClickListener((parent, view, position, id) ->
             {
-                if (currentArrow < passe.shot.length) {
-                    passe.shot[currentArrow].arrow = numbersLeft.get(position);
+                if (currentArrow < passe.getShots().size()) {
+                    passe.getShots().get(currentArrow).arrow = numbersLeft.get(position);
                 }
                 dialog.dismiss();
                 super.onArrowChanged(i);
@@ -644,8 +644,8 @@ public class TargetView extends TargetViewBase {
         new MaterialDialog.Builder(getContext())
                 .title(R.string.comment)
                 .inputType(InputType.TYPE_CLASS_TEXT)
-                .input("", passe.shot[pressed].comment, (dialog, input) -> {
-                    passe.shot[pressed].comment = input.toString();
+                .input("", passe.getShots().get(pressed).comment, (dialog, input) -> {
+                    passe.getShots().get(pressed).comment = input.toString();
                     if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
                         setListener.onTargetSet(new Passe(passe), false);
                     }

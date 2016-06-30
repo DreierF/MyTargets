@@ -46,7 +46,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     public void update(Passe item) {
         super.update(item);
         ShotDataSource sds = new ShotDataSource();
-        for (Shot shot : item.shot) {
+        for (Shot shot : item.getShots()) {
             sds.update(shot);
         }
     }
@@ -60,7 +60,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
 
     @Override
     public ContentValues getContentValues(Passe passe) {
-        if (passe.shot.length == 0) {
+        if (passe.getShots().size() == 0) {
             return null;
         }
         ContentValues values = new ContentValues();
@@ -98,7 +98,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         p.index = -1;
         p.exact = res.getInt(8) == 1;
         for (int i = 0; i < count; i++) {
-            p.shot[i] = ShotDataSource.cursorToShot(res, i);
+            p.shots.set(i, ShotDataSource.cursorToShot(res, i));
             res.moveToNext();
         }
         res.close();
@@ -133,7 +133,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                 }
                 passe.index = pIndex++;
                 for (int i = 0; i < ppp; i++) {
-                    passe.shot[i] = ShotDataSource.cursorToShot(res, i);
+                    passe.getShots().set(i,  ShotDataSource.cursorToShot(res, i));
                     res.moveToNext();
                 }
                 list.add(passe);
@@ -172,7 +172,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                 }
                 passe.index = pIndex++;
                 for (int i = 0; i < ppp; i++) {
-                    passe.shot[i] = ShotDataSource.cursorToShot(res, i);
+                    passe.getShots().set(i, ShotDataSource.cursorToShot(res, i));
                     res.moveToNext();
                 }
                 list.add(passe);

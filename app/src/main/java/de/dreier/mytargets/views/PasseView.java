@@ -73,7 +73,7 @@ public class PasseView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int desiredWidth = (int) (60 * passe.shot.length * density);
+        int desiredWidth = (int) (60 * passe.getShots().size() * density);
         int desiredHeight = (int) (50 * density);
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);

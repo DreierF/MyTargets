@@ -17,7 +17,6 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.SettingsManager;
-import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
@@ -81,6 +80,35 @@ public class HtmlUtils {
                 html += "<b>" + get(R.string.round) + " " + (round.info.index + 1) + "</b>";
                 if (configuration.showProperties) {
                     html += "<br>" + getRoundInfo(round, equals);
+                }
+                html += "</td></tr>";
+                ArrayList<Passe> passes = new PasseDataSource().getAllByRound(round.getId());
+                for (Passe passe : passes) {
+                    html += "<tr class=\"align_center\">";
+                    int sum = 0;
+                    for (int i = 0; i < passe.getShots().size(); i++) {
+                        Shot shot = passe.getShots().get(i);
+                        html += "<td>";
+                        final Target target = round.info.target;
+                        if (configuration.showPointsColored) {
+                            int fillColor = target.getModel().getFillColor(shot.zone);
+                            int color = target.getModel().getTextColor(shot.zone);
+                            html += String
+                                    .format("<div class=\"circle\" style='background: #%06X; color: #%06X'>",
+                                            fillColor & 0xFFFFFF, color & 0xFFFFFF);
+                        }
+                        html += target.zoneToString(shot.zone, i);
+                        if (configuration.showPointsColored) {
+                            html += "</div>";
+                        }
+                        html += "</td>";
+                        int points = target.getPointsByZone(shot.zone, i);
+                        sum += points;
+                        carry += points;
+                    }
+                    html += "<td>" + sum + "</td>";
+                    html += "<td>" + carry + "</td>";
+                    html += "</tr>";
                 }
                 html += getRoundTable(configuration, round);
             }
@@ -166,8 +194,8 @@ public class HtmlUtils {
             int i = 1;
             List<Passe> passes = new PasseDataSource().getAllByRound(round.getId());
             for (Passe passe : passes) {
-                for (int s = 0; s < passe.shot.length; s++) {
-                    Shot shot = passe.shot[s];
+                for (int s = 0; s < passe.getShots().size(); s++) {
+                    Shot shot = passe.getShots().get(s);
                     if (!TextUtils.isEmpty(shot.comment)) {
                         comments += "<tr class=\"align_center\"><td>" + j + "</td>" +
                                 "<td>" + i + "</td>" +
@@ -268,7 +296,7 @@ public class HtmlUtils {
             }
         }
 
-        Arrow arrow = new ArrowDataSource().get(training.arrow);
+        Arrow arrow = Arrow.get(training.arrow);
         if (arrow != null) {
             info.addLine(R.string.arrow, arrow.name);
         }

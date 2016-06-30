@@ -82,9 +82,9 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             round = new RoundTemplate();
             round.arrowsPerPasse = 3;
             passe = new Passe(3);
-            passe.shot[0].zone = 0;
-            passe.shot[0].x = 0.01f;
-            passe.shot[0].y = 0.05f;
+            passe.getShots().get(0).zone = 0;
+            passe.getShots().get(0).x = 0.01f;
+            passe.getShots().get(0).y = 0.05f;
             target = new Target(WAFull.ID, 0);
             targetModel = target.getModel();
             targetDrawable = target.getDrawable();
@@ -169,7 +169,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         float x = motionEvent.getX();
         float y = motionEvent.getY();
 
-        boolean currentlySelecting = currentArrow < round.arrowsPerPasse && passe.shot[currentArrow].zone != Shot.NOTHING_SELECTED;
+        boolean currentlySelecting = currentArrow < round.arrowsPerPasse && passe.getShots().get(currentArrow).zone != Shot.NOTHING_SELECTED;
         if (selectPreviousShots(motionEvent, x, y) && !currentlySelecting) {
             return true;
         }
@@ -181,10 +181,10 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
         // If a valid selection was made save it in the passe
         if (currentArrow < round.arrowsPerPasse &&
-                (passe.shot[currentArrow].zone != shot.zone || !zoneSelectionMode)) {
-            passe.shot[currentArrow].zone = shot.zone;
-            passe.shot[currentArrow].x = shot.x;
-            passe.shot[currentArrow].y = shot.y;
+                (passe.getShots().get(currentArrow).zone != shot.zone || !zoneSelectionMode)) {
+            passe.getShots().get(currentArrow).zone = shot.zone;
+            passe.getShots().get(currentArrow).x = shot.x;
+            passe.getShots().get(currentArrow).y = shot.y;
             passeDrawer.setSelection(currentArrow, initAnimationPositions(currentArrow),
                     zoneSelectionMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
             invalidate();
@@ -221,7 +221,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     private void animateCircle(int i) {
         Coordinate pos = null;
         int nextSel = i;
-        if (i > -1 && i < round.arrowsPerPasse && passe.shot[i].zone > Shot.NOTHING_SELECTED) {
+        if (i > -1 && i < round.arrowsPerPasse && passe.getShots().get(i).zone > Shot.NOTHING_SELECTED) {
             pos = initAnimationPositions(i);
         } else {
             nextSel = PasseDrawer.NO_SELECTION;

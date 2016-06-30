@@ -25,11 +25,12 @@ public class Passe extends BaseModel implements IIdSettable {
     public int index;
     @Column(name = "image")
     public String image;
-    @ForeignKeyReference(columnName = "round")
-    @ForeignKey(tableClass = Round.class)
+    @ForeignKey(tableClass = Round.class, references = {
+            @ForeignKeyReference(columnName = "round", columnType = Long.class, foreignKeyColumnName = "_id")})
     public Long roundId;
     @Column(name = "exact")
     public boolean exact;
+
     public List<Shot> shots = new ArrayList<>();
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
@@ -59,11 +60,11 @@ public class Passe extends BaseModel implements IIdSettable {
     }
 
     @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "shots")
-    public List<Shot> getSightSettings() {
+    public List<Shot> getShots() {
         if (shots == null || shots.isEmpty()) {
             shots = SQLite.select()
                     .from(Shot.class)
-                    .where(Shot_Table.passeId__id.eq(id))
+                    //.where(Shot_Table.passeId__id.eq(id))
                     .queryList();
         }
         return shots;

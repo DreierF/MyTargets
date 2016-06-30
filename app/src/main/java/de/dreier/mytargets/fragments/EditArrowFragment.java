@@ -26,7 +26,6 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
 import de.dreier.mytargets.databinding.DynamicitemArrowNumbersBinding;
 import de.dreier.mytargets.databinding.EditArrowFragmentBinding;
-import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.ArrowNumber;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
@@ -62,7 +61,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         if (savedInstanceState == null) {
             Arrow arrow;
             if (arrowId != -1) {
-                arrow = new ArrowDataSource().get(arrowId);
+                arrow = Arrow.get(arrowId);
                 setImageFile(arrow.imageFile);
             } else {
                 // Set to default values
@@ -90,7 +89,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     @Override
     public void onSave() {
         super.onSave();
-        new ArrowDataSource().update(buildArrow());
+        buildArrow().save();
         getActivity().finish();
     }
 

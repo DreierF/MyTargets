@@ -81,7 +81,7 @@ public class PasseDrawer {
     public void setPasse(Passe p) {
         boolean calcLayout = mRect != null && mPasse == null;
         mPasse = p;
-        mPPP = p.shot.length;
+        mPPP = p.getShots().size();
         mOldCoordinate = new Coordinate[mPPP];
         if (calcLayout) {
             setRect(mRect);
@@ -105,7 +105,7 @@ public class PasseDrawer {
 
         // Draw all points of this passe into the given rect
         for (int i = 0; i < mPPP; i++) {
-            Shot shot = mPasse.shot[i];
+            Shot shot = mPasse.getShots().get(i);
             if (shot.zone == Shot.NOTHING_SELECTED) {
                 break;
             }
@@ -229,7 +229,7 @@ public class PasseDrawer {
             int col = (int) Math.floor((x - mRect.left) / mColumnWidth);
             int row = (int) Math.floor((y - mRect.top) / mRowHeight);
             final int arrow = row * mShotsPerRow + col;
-            if (arrow < mPPP && mPasse.shot[arrow].zone >= -1) {
+            if (arrow < mPPP && mPasse.getShots().get(arrow).zone >= -1) {
                 return arrow;
             }
         }

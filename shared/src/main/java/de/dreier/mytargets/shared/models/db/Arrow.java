@@ -3,8 +3,6 @@ package de.dreier.mytargets.shared.models.db;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
-import de.dreier.mytargets.shared.models.db.ArrowNumber_Table;
-
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -21,6 +19,8 @@ import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
 import de.dreier.mytargets.shared.models.Thumbnail;
+import de.dreier.mytargets.shared.models.db.ArrowNumber_Table;
+import de.dreier.mytargets.shared.models.db.Arrow_Table;
 import de.dreier.mytargets.shared.utils.ThumbnailConverter;
 
 @Parcel
@@ -66,12 +66,23 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable {
 
     public List<ArrowNumber> numbers = new ArrayList<>();
 
+    public static List<Arrow> getAll() {
+        return SQLite.select().from(Arrow.class).queryList();
+    }
+
+    public static Arrow get(Long id) {
+        return SQLite.select()
+                .from(Arrow.class)
+                //.where(Arrow_Table.id__id.eq(id))
+                .querySingle();
+    }
+
     @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "numbers")
     public List<ArrowNumber> getArrowNumbers() {
         if (numbers == null || numbers.isEmpty()) {
             numbers = SQLite.select()
                     .from(ArrowNumber.class)
-                    .where(ArrowNumber_Table.arrowId__id.eq(id))
+                    //.where(ArrowNumber_Table.arrowId__id.eq(id))
                     .queryList();
         }
         return numbers;

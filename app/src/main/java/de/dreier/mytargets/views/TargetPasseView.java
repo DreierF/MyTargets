@@ -71,12 +71,12 @@ public class TargetPasseView extends View {
         float count = 0;
         float sumX = 0;
         float sumY = 0;
-        for (int i = 0; i < passe.shot.length; i++) {
+        for (int i = 0; i < passe.getShots().size(); i++) {
             // For yellow and white background use black font color
-            int color = i == mZoneCount || passe.shot[i].zone < 0 ? 0xFF000000 : target.getModel().getZone(passe.shot[i].zone).getFillColor();
+            int color = i == mZoneCount || passe.getShots().get(i).zone < 0 ? 0xFF000000 : target.getModel().getZone(passe.shot[i].zone).getFillColor();
             drawColorP.setColor(color);
-            float selX = passe.shot[i].x;
-            float selY = passe.shot[i].y;
+            float selX = passe.getShots().get(i).x;
+            float selY = passe.getShots().get(i).y;
             sumX += selX;
             sumY += selY;
             count++;
