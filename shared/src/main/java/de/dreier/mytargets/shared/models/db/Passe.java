@@ -3,28 +3,37 @@ package de.dreier.mytargets.shared.models.db;
 import com.raizlabs.android.dbflow.annotation.Column;
 import org.joda.time.DateTime;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.Target;
 
-@Table(database = AppDatabase.class)
+@Table(database = AppDatabase.class, name = "PASSE")
 public class Passe extends BaseModel implements IIdSettable {
 
-    @PrimaryKey(autoincrement = true)
-    Long id;
-    @Column
+    //@Column(name = "index") TODO migration, does no yet exist in db
     public int index;
+    @Column(name = "image")
+    public String image;
+    @ForeignKeyReference(columnName = "round")
     @ForeignKey(tableClass = Round.class)
     public Long roundId;
-    @Column
+    @Column(name = "exact")
     public boolean exact;
+    public List<Shot> shots = new ArrayList<>();
+    @Column(name = "_id")
+    @PrimaryKey(autoincrement = true)
+    Long id;
 
     public Shot[] shot;
     
@@ -34,10 +43,9 @@ public class Passe extends BaseModel implements IIdSettable {
     }
 
     public Passe(int ppp) {
-        shot = new Shot[ppp];
         for (int i = 0; i < ppp; i++) {
-            shot[i] = new Shot(i);
-            shot[i].index = i;
+            shots.add(new Shot(i));
+            shots.get(i).index = i;
         }
     }
 
@@ -46,17 +54,25 @@ public class Passe extends BaseModel implements IIdSettable {
         roundId = p.roundId;
         index = p.index;
         exact = p.exact;
-        shot = p.shot.clone();
+        shots = p.shots;
+        //shots = p.shots.clone(); TODO clone
     }
 
-    public List<Shot> shotList() {
-        return Arrays.asList(shot);
+    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "shots")
+    public List<Shot> getSightSettings() {
+        if (shots == null || shots.isEmpty()) {
+            shots = SQLite.select()
+                    .from(Shot.class)
+                    .where(Shot_Table.passeId__id.eq(id))
+                    .queryList();
+        }
+        return shots;
     }
 
     public void sort() {
-        Arrays.sort(shot);
-        for (int i = 0; i < shot.length; i++) {
-            shot[i].index = i;
+        Collections.sort(shots);
+        for (int i = 0; i < shots.size(); i++) {
+            shots.get(i).index = i;
         }
     }
 
@@ -66,7 +82,7 @@ public class Passe extends BaseModel implements IIdSettable {
 
     public void setId(long id) {
         this.id = id;
-        for (Shot s : shot) {
+        for (Shot s : shots) {
             s.passe = id;
         }
     }
@@ -75,7 +91,7 @@ public class Passe extends BaseModel implements IIdSettable {
     public boolean equals(Object another) {
         return another instanceof Passe &&
                 getClass().equals(another.getClass()) &&
-                id == ((Passe) another).id;
+                id.equals(((Passe) another).id);
     }
 
     public int getReachedPoints(Target target) {

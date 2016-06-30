@@ -18,16 +18,18 @@ import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.IIdSettable;
 
 @Parcel
-@Table(database = AppDatabase.class)
+@Table(database = AppDatabase.class, name = "NUMBER")
 public class ArrowNumber extends BaseModel implements IIdSettable {
 
+    @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     Long id;
 
+    @Column(name = "arrow")
     @ForeignKey(tableClass = Arrow.class)
     public Long arrowId;
 
-    @Column
+    @Column(name = "value")
     public String number;
 
     @Override
@@ -47,6 +49,6 @@ public class ArrowNumber extends BaseModel implements IIdSettable {
     public boolean equals(Object another) {
         return another instanceof ArrowNumber &&
                 getClass().equals(another.getClass()) &&
-                id == ((ArrowNumber) another).id;
+                id.equals(((ArrowNumber) another).id);
     }
 }
