@@ -205,7 +205,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         return average;
     }
 
-    private Map<Pair<Integer, String>, Integer> getScoreDistribution(long training) {
+    public Map<Pair<Integer, String>, Integer> getScoreDistribution(long training) {
         Cursor cursor = database
                 .rawQuery("SELECT a.target, a.scoring_style, s.points, s.arrow_index, COUNT(*) " +
                         "FROM ROUND r " +
@@ -248,6 +248,10 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
 
     public List<Pair<String, Integer>> getTopScoreDistribution(long training) {
         Map<Pair<Integer, String>, Integer> scoreCount = getScoreDistribution(training);
+        return getTopScoreDistribution(scoreCount);
+    }
+
+    public List<Pair<String, Integer>> getTopScoreDistribution(Map<Pair<Integer, String>, Integer> scoreCount) {
         List<Map.Entry<Pair<Integer, String>, Integer>> sortedScore = Stream.of(scoreCount)
                 .sorted((lhs, rhs) -> {
                     if (lhs.getKey().getFirst().equals(rhs.getKey().getFirst())) {

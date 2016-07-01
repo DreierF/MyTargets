@@ -17,6 +17,7 @@ import android.util.Base64;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
@@ -36,8 +37,9 @@ import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
-import de.dreier.mytargets.shared.targets.ScoringStyle;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
+
+import static de.dreier.mytargets.shared.targets.ScoringStyle.MISS_SYMBOL;
 
 public class HtmlUtils {
 
@@ -239,18 +241,21 @@ public class HtmlUtils {
 
         PasseDataSource passeDataSource = new PasseDataSource();
 
-        List<Pair<String, Integer>> scoreCount = passeDataSource.getTopScoreDistribution(training);
+        Map<Pair<Integer, String>, Integer> scoreDistribution = passeDataSource
+                .getScoreDistribution(training);
         int misses = 0;
         int hits = 0;
-        for (Pair<String, Integer> score : scoreCount) {
-            if (score.getFirst().equals(ScoringStyle.MISS_SYMBOL)) {
-                misses += score.getSecond();
+        for (Map.Entry<Pair<Integer, String>, Integer> score : scoreDistribution.entrySet()) {
+            if (score.getKey().getSecond().equals(MISS_SYMBOL)) {
+                misses += score.getValue();
             } else {
-                hits += score.getSecond();
+                hits += score.getValue();
             }
         }
         info.addLine(R.string.hits, hits);
         info.addLine(R.string.misses, misses);
+        List<Pair<String, Integer>> scoreCount = passeDataSource
+                .getTopScoreDistribution(scoreDistribution);
         for (Pair<String, Integer> score : scoreCount
                 .subList(0, Math.min(scoreCount.size(), 3))) {
             info.addLine(score.getFirst(), score.getSecond());
