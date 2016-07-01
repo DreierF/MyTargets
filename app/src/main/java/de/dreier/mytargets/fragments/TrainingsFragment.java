@@ -27,14 +27,12 @@ import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
 import de.dreier.mytargets.databinding.FragmentTrainingsBinding;
 import de.dreier.mytargets.databinding.ItemHeaderMonthBinding;
 import de.dreier.mytargets.databinding.ItemTrainingBinding;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
-import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.models.Month;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.utils.ActivityUtils;
+import de.dreier.mytargets.utils.FlowDataLoader;
 import de.dreier.mytargets.shared.models.Training;
-import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.HeaderBindingHolder;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.Utils;
@@ -50,7 +48,6 @@ import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 public class TrainingsFragment extends ExpandableFragment<Month, Training> {
 
     protected FragmentTrainingsBinding binding;
-    private TrainingDataSource trainingDataSource;
 
     public TrainingsFragment() {
         itemTypeSelRes = R.plurals.training_selected;
@@ -89,8 +86,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
 
     @Override
     public Loader<List<Training>> onCreateLoader(int id, Bundle args) {
-        trainingDataSource = new TrainingDataSource();
-        return new DataLoader<>(getContext(), trainingDataSource, trainingDataSource::getAll);
+        return new FlowDataLoader<>(getContext(), Training::getAll);
     }
 
     @Override
@@ -105,7 +101,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
             }
         }
         Collections.sort(months, Collections.reverseOrder());
-        setList(trainingDataSource, months, data, child -> Utils.getMonthId(child.date), false);
+        setList(binding.recyclerView, months, data, child -> Utils.getMonthId(child.date), false);
     }
 
     private class TrainingAdapter extends ExpandableNowListAdapter<Month, Training> {
@@ -137,7 +133,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
         public void bindCursor() {
             binding.training.setText(mItem.title);
             binding.trainingDate.setText(mItem.getFormattedDate());
-            List<Round> rounds = new RoundDataSource().getAll(mItem.getId());
+            List<Round> rounds = mItem.getRounds();
             binding.gesTraining.setText(mItem.getReachedPoints(rounds));
         }
     }

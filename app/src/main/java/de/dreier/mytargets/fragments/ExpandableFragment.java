@@ -10,12 +10,14 @@ package de.dreier.mytargets.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
+
+import com.raizlabs.android.dbflow.structure.Model;
 
 import java.util.List;
 
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
 import de.dreier.mytargets.interfaces.PartitionDelegate;
-import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.utils.Utils;
@@ -23,7 +25,8 @@ import de.dreier.mytargets.utils.Utils;
 /**
  * Shows all rounds of one training day
  */
-abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSettable> extends EditableFragmentBase<C> {
+abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSettable & Model>
+        extends EditableFragmentBase<C> {
 
     private static final String KEY_EXPANDED = "expanded";
     ExpandableNowListAdapter<H, C> mAdapter;

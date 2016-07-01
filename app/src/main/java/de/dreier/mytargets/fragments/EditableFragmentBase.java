@@ -20,26 +20,27 @@ import android.view.MenuItem;
 
 import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
 import com.bignerdranch.android.multiselector.MultiSelector;
+import com.raizlabs.android.dbflow.structure.Model;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.utils.OnCardClickListener;
-import de.dreier.mytargets.utils.Pair;
+import de.dreier.mytargets.shared.utils.Pair;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
-abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<T>
+abstract class EditableFragmentBase<T extends IIdSettable & Model> extends FragmentBase<T>
         implements OnCardClickListener<T>, LoaderManager.LoaderCallbacks<List<T>> {
 
+    final MultiSelector mSelector = new MultiSelector();
     @PluralsRes
     int itemTypeDelRes;
-    final MultiSelector mSelector = new MultiSelector();
-    IdProviderDataSource<T> dataSource;
-    private final ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(mSelector) {
+
+    private final ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(
+            mSelector) {
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
@@ -127,7 +128,7 @@ abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<
                             @Override
                             public void onDismissed(Snackbar snackbar, int event) {
                                 for (Pair<Integer, T> item : deleted) {
-                                    dataSource.delete(item.getSecond());
+                                    item.getSecond().delete();
                                 }
                                 if (isAdded()) {
                                     getLoaderManager()

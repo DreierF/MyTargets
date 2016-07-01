@@ -20,10 +20,6 @@ import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentEditRoundBinding;
 import de.dreier.mytargets.managers.SettingsManager;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
-import de.dreier.mytargets.managers.dao.RoundTemplateDataSource;
-import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
-import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
@@ -80,18 +76,16 @@ public class EditRoundFragment extends EditFragmentBase {
             binding.removeButton.setVisibility(View.GONE);
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_round);
-            RoundDataSource roundDataSource = new RoundDataSource();
-            Round round = roundDataSource.get(roundId);
+            Round round = Round.get(roundId);
             binding.distanceSpinner.setItem(round.info.distance);
             binding.comment.setText(round.comment);
             binding.notEditable.setVisibility(View.GONE);
-            StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource();
-            StandardRound standardRound = standardRoundDataSource.get(round.info.standardRound);
+            StandardRound standardRound = StandardRound.get(round.info.standardRound);
             if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
                 binding.distanceLayout.setVisibility(View.GONE);
             } else if (standardRound.rounds.size() > 1) {
                 binding.removeButton.setOnClickListener(v -> {
-                    roundDataSource.delete(round);
+                    round.delete();
                     getActivity().finish();
                 });
             } else {
@@ -114,14 +108,12 @@ public class EditRoundFragment extends EditFragmentBase {
     }
 
     private Round onSaveRound() {
-        RoundDataSource roundDataSource = new RoundDataSource();
-        Training training = new TrainingDataSource().get(trainingId);
-        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource();
-        StandardRound standardRound = standardRoundDataSource.get(training.standardRoundId);
+        Training training = Training.get(trainingId);
+        StandardRound standardRound = StandardRound.get(training.standardRoundId);
 
         Round round;
         if (roundId != -1) {
-            round = roundDataSource.get(roundId);
+            round = Round.get(roundId);
         } else {
             round = new Round();
             round.trainingId = trainingId;
@@ -134,9 +126,9 @@ public class EditRoundFragment extends EditFragmentBase {
         if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE) {
             round.info.distance = binding.distanceSpinner.getSelectedItem();
             round.info.index = standardRound.rounds.size();
-            new RoundTemplateDataSource().update(round.info);
+            round.info.save();
         }
-        roundDataSource.update(round);
+        round.save();
 
         return round;
     }

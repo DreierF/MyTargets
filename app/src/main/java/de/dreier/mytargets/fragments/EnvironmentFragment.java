@@ -115,8 +115,8 @@ public class EnvironmentFragment extends Fragment {
     private void onSave() {
         Environment e = new Environment();
         e.weather = weather;
-        e.windSpeed = (int) binding.windSpeed.getSelectedItem().getId();
-        e.windDirection = (int) binding.windDirection.getSelectedItem().getId();
+        e.windSpeed = (int) (long) binding.windSpeed.getSelectedItem().getId();
+        e.windDirection = (int) (long) binding.windDirection.getSelectedItem().getId();
         e.location = binding.location.getText().toString();
         listener.onItemSelected(Parcels.wrap(e));
     }

@@ -29,6 +29,13 @@ public class ActivityUtils {
         context.overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
+    public static void startActivityAnimated(Activity context, Class<?> activity, String key, String value) {
+        Intent i = new Intent(context, activity);
+        i.putExtra(key, value);
+        context.startActivity(i);
+        context.overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
     public static void startActivityAnimated(Activity context, Class<?> activity, String key, int value) {
         Intent i = new Intent(context, activity);
         i.putExtra(key, value);

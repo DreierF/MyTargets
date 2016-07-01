@@ -1,4 +1,4 @@
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.shared.utils;
 
 import java.util.HashMap;
 import java.util.Locale;

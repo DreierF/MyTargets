@@ -4,40 +4,45 @@ import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.parceler.Parcel;
+
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.IIdSettable;
 
-@Table(database = AppDatabase.class)
+@Parcel
+@Table(database = AppDatabase.class, name = "SHOOT")
 public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
     public static final int NOTHING_SELECTED = -2;
     public static final int MISS = -1;
 
+    @ForeignKey(tableClass = Passe.class, references = {
+            @ForeignKeyReference(columnName = "passe", columnType = Long.class, foreignKeyColumnName = "_id")})
+    public Long passe;
+    @Column(name = "x")
+    public float x;
+    @Column(name = "y")
+    public float y;
+    @Column(name = "points")
+    public int zone = NOTHING_SELECTED;
+    @Column(name = "comment")
+    public String comment = "";
+    // Is the actual number of the arrow not its index, arrow id or something else
+    @Column(name = "arrow")
+    public String arrow = null;
+    // The index of the shot in the containing passe
+    @Column(name = "arrow_index")
+    public int index;
+    @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     Long id;
-    @ForeignKey(tableClass = Passe.class)
-    public Long passe;
-    @Column
-    public float x;
-    @Column
-    public float y;
-    @Column
-    public int zone = NOTHING_SELECTED;
-    @Column
-    public String comment = "";
 
-    // Is the actual number of the arrow not its index, arrow id or something else
-    @Column
-    public String arrow = null;
-
-    // The index of the shot in the containing passe
-    @Column
-    public int index;
-
-    public Shot() {}
+    public Shot() {
+    }
 
     public Shot(int i) {
         index = i;
@@ -51,7 +56,7 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
         return ((zone > another.zone && another.zone != MISS) || zone == MISS) ? 1 : -1;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -63,6 +68,6 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
     public boolean equals(Object another) {
         return another instanceof Shot &&
                 getClass().equals(another.getClass()) &&
-                id == ((Shot) another).id;
+                id.equals(((Shot) another).id);
     }
 }

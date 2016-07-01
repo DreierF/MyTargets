@@ -13,7 +13,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
 import java.util.List;
 
 import de.dreier.mytargets.R;
@@ -21,20 +23,13 @@ import de.dreier.mytargets.databinding.ActivityInputBinding;
 import de.dreier.mytargets.fragments.TimerFragment;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.WearMessageManager;
-import de.dreier.mytargets.managers.dao.ArrowNumberDataSource;
-import de.dreier.mytargets.managers.dao.PasseDataSource;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
-import de.dreier.mytargets.managers.dao.RoundTemplateDataSource;
-import de.dreier.mytargets.managers.dao.SightSettingDataSource;
-import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
-import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.models.EShowMode;
 import de.dreier.mytargets.shared.models.NotificationInfo;
+import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Passe;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.Shot;
-import de.dreier.mytargets.shared.models.db.SightSetting;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
@@ -60,7 +55,6 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     private Training training;
     private RoundTemplate template;
     private List<Round> rounds;
-    private PasseDataSource passeDataSource;
     private StandardRound standardRound;
 
     private ActivityInputBinding binding;
@@ -72,24 +66,21 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
 
         binding.targetView.setOnTargetSetListener(this);
 
-        RoundDataSource roundDataSource = new RoundDataSource();
-        passeDataSource = new PasseDataSource();
-
         Intent intent = getIntent();
         assert intent != null;
 
         long roundId = intent.getLongExtra(ROUND_ID, -1);
         curPasse = intent.getIntExtra(PASSE_IND, -1);
-        round = roundDataSource.get(roundId);
+        round = Round.get(roundId);
         template = round.info;
-        training = new TrainingDataSource().get(round.trainingId);
-        standardRound = new StandardRoundDataSource().get(training.standardRoundId);
-        rounds = roundDataSource.getAll(round.trainingId);
-        savedPasses = passeDataSource.getAllByRound(roundId).size();
+        training = Training.get(round.trainingId);
+        standardRound = StandardRound.get(training.standardRoundId);
+        rounds = training.getRounds();
+        savedPasses = round.getPasses().size();
 
         binding.targetView.setRoundTemplate(template);
         if (training.arrowNumbering) {
-            binding.targetView.setArrowNumbers(new ArrowNumberDataSource().getAll(training.arrow));
+            binding.targetView.setArrowNumbers(Arrow.get(training.arrow).getArrowNumbers());
         }
 
         // Send message to wearable app, that we are starting a passe
@@ -156,7 +147,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
                 round = rounds.get(template.index + 1);
                 template = round.info;
                 passe = 0;
-                savedPasses = passeDataSource.getAllByRound(round.getId()).size();
+                savedPasses = round.getPasses().size();
             } else if (savedPasses <= curPasse && standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
                 // If standard round is over exit the input activity
                 finish();
@@ -173,7 +164,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         }
         if (passe < savedPasses) {
             // If the passe is already saved load it from the database
-            Passe p = passeDataSource.get(round.getId(), passe);
+            Passe p = round.getPasses().get(passe);
             if (p != null) {
                 binding.targetView.setPasse(p);
             } else {
@@ -190,7 +181,9 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
                 openTimer();
             }
         }
-        ArrayList<Passe> oldOnes = passeDataSource.getAllByTraining(training.getId());
+        List<Passe> oldOnes = Stream.of(training.getRounds())
+                .flatMap(r -> Stream.of(r.getPasses()))
+                .collect(Collectors.toList());
         binding.targetView.setOldShoots(oldOnes);
         curPasse = passe;
         updatePasse();
@@ -253,11 +246,12 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
 
         // Change round template if passe is out of range defined in template
         if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE && template.passes <= curPasse) {
-            new RoundTemplateDataSource().addPasse(template);
+            template.passes++;
+            template.update();
         }
 
         passe.roundId = round.getId();
-        passeDataSource.update(passe);
+        passe.save();
 
         if (curPasse >= savedPasses || remote) {
             savedPasses++;
@@ -279,7 +273,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         String text = "";
 
         // Initialize message text
-        Passe lastPasse = passeDataSource.get(round.getId(), savedPasses);
+        Passe lastPasse = round.getPasses().get(savedPasses);
         if (lastPasse != null) {
             for (Shot shot : lastPasse.getShots()) {
                 text += template.target.zoneToString(shot.zone, 0) + " ";
@@ -291,11 +285,11 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
 
         // Load bow settings
         if (training.bow > 0) {
-            final SightSetting sightSetting = new SightSettingDataSource().get(training.bow,
-                    template.distance);
-            if (sightSetting != null) {
+            //TODO final SightSetting sightSetting = SightSetting.get(training.bow,
+            // template.distance);
+            /*if (sightSetting != null) {
                 text += String.format("%s: %s", template.distance, sightSetting.value);
-            }
+            }*/
         }
         return new NotificationInfo(round, title, text);
     }

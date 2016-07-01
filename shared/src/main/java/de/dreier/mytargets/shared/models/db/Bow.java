@@ -10,6 +10,8 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +19,10 @@ import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
-import de.dreier.mytargets.shared.models.db.SightSetting_Table;
 import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.utils.ThumbnailConverter;
 
+@Parcel
 @Table(database = AppDatabase.class, name = "BOW")
 public class Bow extends BaseModel implements IImageProvider, IIdSettable {
 
@@ -77,13 +79,24 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable {
         if (sightSettings == null || sightSettings.isEmpty()) {
             sightSettings = SQLite.select()
                     .from(SightSetting.class)
-                    .where(SightSetting_Table.bowId__id.eq(id))
+                    //.where(SightSetting_Table.bowId__id.eq(id))
                     .queryList();
         }
         return sightSettings;
     }
 
-    public long getId() {
+    public static List<Bow> getAll() {
+        return SQLite.select().from(Bow.class).queryList();
+    }
+
+    public static Bow get(Long id) {
+        return SQLite.select()
+                .from(Bow.class)
+                //.where(Bow_Table.id__id.eq(id))
+                .querySingle();
+    }
+
+    public Long getId() {
         return id;
     }
 

@@ -32,7 +32,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentEditImageBinding;
 import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.utils.BackupUtils;
-import de.dreier.mytargets.utils.ThumbnailUtils;
+import de.dreier.mytargets.shared.utils.ThumbnailUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import icepick.Icepick;
 import icepick.State;
@@ -227,14 +227,10 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
         Bitmap thumbnail;
         if (imageFile == null) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), defaultDrawable);
-            thumbnail = ThumbnailUtils.extractThumbnail(bitmap,
-                    ThumbnailUtils.TARGET_SIZE_MICRO_THUMBNAIL,
-                    ThumbnailUtils.TARGET_SIZE_MICRO_THUMBNAIL,
-                    ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+            return new Thumbnail(bitmap);
         } else {
-            thumbnail = ThumbnailUtils.createImageThumbnail(imageFile.getPath(), MICRO_KIND);
+            return new Thumbnail(imageFile);
         }
-        return new Thumbnail(thumbnail);
     }
 
     @Override

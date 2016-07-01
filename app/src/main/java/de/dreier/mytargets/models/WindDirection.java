@@ -38,7 +38,7 @@ public class WindDirection implements IIdProvider {
         return list;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

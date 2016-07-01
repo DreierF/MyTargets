@@ -9,14 +9,17 @@ package de.dreier.mytargets.managers.dao;
 
 import android.database.Cursor;
 
+import com.raizlabs.android.dbflow.config.FlowManager;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.Dimension;
 
-public class DistanceDataSource extends DataSourceBase {
+public class DistanceDataSource {
 
     /**
      * Returns a list of all distances that are either default values or used somewhere in the app
@@ -31,13 +34,13 @@ public class DistanceDataSource extends DataSourceBase {
         HashSet<Long> set = new HashSet<>();
 
         // Add currently selected distance to list
-        if (distance.unit.equals(unit)) {
+        if (distance.unit == unit) {
             distances.add(distance);
             set.add(distance.getId());
         }
 
         // Get all distances used in ROUND or VISIER table
-        Cursor cur = database.rawQuery(
+        Cursor cur = FlowManager.getWritableDatabase(AppDatabase.class).rawQuery(
                 "SELECT * FROM (SELECT DISTINCT distance, unit FROM ROUND_TEMPLATE UNION SELECT DISTINCT distance, unit FROM VISIER) WHERE unit=?",
                 new String[]{unit.toString()});
         if (cur.moveToFirst()) {

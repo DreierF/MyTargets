@@ -27,7 +27,6 @@ import de.dreier.mytargets.adapters.DynamicItemHolder;
 import de.dreier.mytargets.databinding.DynamicitemRoundTemplateBinding;
 import de.dreier.mytargets.databinding.FragmentEditStandardRoundBinding;
 import de.dreier.mytargets.managers.SettingsManager;
-import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
@@ -45,7 +44,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
     @State(ParcelsBundler.class)
     List<RoundTemplate> roundTemplateList = new ArrayList<>();
-    private long standardRoundId = -1;
+    private StandardRound standardRound;
     private RoundTemplateAdapter adapter;
     private FragmentEditStandardRoundBinding binding;
 
@@ -60,7 +59,6 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         setHasOptionsMenu(true);
         Icepick.restoreInstanceState(this, savedInstanceState);
 
-        StandardRound standardRound = null;
         if (getArguments() != null) {
             standardRound = Parcels.unwrap(getArguments().getParcelable(ITEM));
         }
@@ -88,7 +86,6 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                 roundTemplateList = standardRound.rounds;
                 if (standardRound.club == StandardRoundFactory.CUSTOM) {
                     binding.name.setText(standardRound.name);
-                    standardRoundId = standardRound.getId();
                 } else {
                     binding.name.setText(
                             String.format("%s %s", getString(R.string.custom), standardRound.name));
@@ -121,20 +118,18 @@ public class EditStandardRoundFragment extends EditFragmentBase {
     }
 
     private void onDeleteStandardRound() {
-        new StandardRoundDataSource().delete(standardRoundId);
+        standardRound.delete();
         getActivity().finish();
         getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
     @Override
     protected void onSave() {
-        StandardRound standardRound = new StandardRound();
-        standardRound.setId(standardRoundId);
         standardRound.club = StandardRoundFactory.CUSTOM;
         standardRound.name = binding.name.getText().toString();
         standardRound.indoor = binding.indoor.isChecked();
         standardRound.rounds = roundTemplateList;
-        new StandardRoundDataSource().update(standardRound);
+        standardRound.save();
 
         SettingsManager.setIndoor(standardRound.indoor);
 

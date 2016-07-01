@@ -13,11 +13,10 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
-import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.db.Bow;
 
 public class BowSelector extends ImageSelectorBase<Bow> {
@@ -54,12 +53,11 @@ public class BowSelector extends ImageSelectorBase<Bow> {
 
     public void setItemId(long bow) {
         Bow item = null;
-        BowDataSource bowDataSource = new BowDataSource();
         if (bow > 0) {
-            item = bowDataSource.get(bow);
+            item = Bow.get(bow);
         }
         if (item == null) {
-            ArrayList<Bow> all = bowDataSource.getAll();
+            List<Bow> all = Bow.getAll();
             if (all.size() > 0) {
                 item = all.get(0);
             }

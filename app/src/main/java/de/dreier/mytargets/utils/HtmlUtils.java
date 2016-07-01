@@ -17,20 +17,17 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.SettingsManager;
-import de.dreier.mytargets.managers.dao.BowDataSource;
-import de.dreier.mytargets.managers.dao.PasseDataSource;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
-import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
-import de.dreier.mytargets.managers.dao.TrainingDataSource;
+import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.db.Passe;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.StandardRound;
-import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.targets.ScoringStyle;
+import de.dreier.mytargets.shared.utils.Pair;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
@@ -49,9 +46,8 @@ public class HtmlUtils {
 
     public static String getScoreboard(long trainingId, long roundId, ScoreboardConfiguration configuration) {
         // Query information from database
-        RoundDataSource roundDataSource = new RoundDataSource();
-        Training training = new TrainingDataSource().get(trainingId);
-        List<Round> rounds;
+        Training training = Training.get(trainingId);
+        List<Round> rounds = training.getRounds();
         if (roundId == -1) {
             rounds = roundDataSource.getAll(trainingId);
         } else {
@@ -82,7 +78,7 @@ public class HtmlUtils {
                     html += "<br>" + getRoundInfo(round, equals);
                 }
                 html += "</td></tr>";
-                ArrayList<Passe> passes = new PasseDataSource().getAllByRound(round.getId());
+                List<Passe> passes = round.getPasses();
                 for (Passe passe : passes) {
                     html += "<tr class=\"align_center\">";
                     int sum = 0;
@@ -192,7 +188,7 @@ public class HtmlUtils {
         int j = 0;
         for (Round round : rounds) {
             int i = 1;
-            List<Passe> passes = new PasseDataSource().getAllByRound(round.getId());
+            List<Passe> passes = round.getPasses();
             for (Passe passe : passes) {
                 for (int s = 0; s < passe.getShots().size(); s++) {
                     Shot shot = passe.getShots().get(s);
@@ -237,9 +233,9 @@ public class HtmlUtils {
     @NonNull
     private static String getTrainingTopScoreDistribution(long training) {
         HTMLInfoBuilder info = new HTMLInfoBuilder();
-        PasseDataSource passeDataSource = new PasseDataSource();
+        
 
-        List<Pair<String, Integer>> scoreDistribution = passeDataSource.getTopScoreDistribution(new RoundDataSource().getAll(training));
+        List<Pair<String, Integer>> scoreCount = Passe.getTopScoreDistribution(training);
         int misses = 0;
         int hits = 0;
         for (Pair<String, Integer> score : scoreDistribution) {
@@ -256,7 +252,7 @@ public class HtmlUtils {
             info.addLine(score.getFirst(), score.getSecond());
         }
 
-        info.addLine(R.string.average, passeDataSource.getAverageScore(training));
+        info.addLine(R.string.average, Passe.getAverageScore(training));
         return info.toString();
     }
 
@@ -288,7 +284,7 @@ public class HtmlUtils {
             getScoreboardOnlyHeaderInfo(info, training, rounds);
         }
 
-        Bow bow = new BowDataSource().get(training.bow);
+        Bow bow = Bow.get(training.bow);
         if (bow != null) {
             info.addLine(R.string.bow, bow.name);
             if (scoreboard) {
@@ -301,7 +297,7 @@ public class HtmlUtils {
             info.addLine(R.string.arrow, arrow.name);
         }
 
-        StandardRound standardRound = new StandardRoundDataSource().get(training.standardRoundId);
+        StandardRound standardRound = StandardRound.get(training.standardRoundId);
         if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
             info.addLine(R.string.standard_round, standardRound.name);
         }

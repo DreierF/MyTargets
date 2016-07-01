@@ -3,6 +3,8 @@ package de.dreier.mytargets.shared.models;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
+import org.parceler.Parcel;
+
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.db.Passe;
@@ -11,6 +13,7 @@ import de.dreier.mytargets.shared.targets.TargetDrawable;
 import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
 
+@Parcel
 public class Target implements IIdProvider, IImageProvider, IDetailProvider {
     public int id;
     public int scoringStyle;
@@ -33,8 +36,8 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
         this.size = diameter;
     }
 
-    public long getId() {
-        return id;
+    public Long getId() {
+        return (long) id;
     }
 
     /*public void setId(long id) {

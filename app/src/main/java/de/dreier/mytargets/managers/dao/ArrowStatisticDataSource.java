@@ -8,18 +8,21 @@ package de.dreier.mytargets.managers.dao;
 
 import android.database.Cursor;
 
+import com.raizlabs.android.dbflow.config.FlowManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.models.ArrowStatistic;
+import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.Target;
 
-public class ArrowStatisticDataSource extends DataSourceBase {
+public class ArrowStatisticDataSource {
 
     public List<ArrowStatistic> getAll() {
         List<ArrowStatistic> list = new ArrayList<>();
-        Cursor res = database
+        Cursor res = FlowManager.getWritableDatabase(AppDatabase.class)
                 .rawQuery(
                         "SELECT t.arrow,s.arrow AS number, s.x, s.y, s.points, r.target, r.scoring_style, s.arrow_index, n.name, p._id " +
                                 "FROM TRAINING t, ROUND r, PASSE p, SHOOT s, ROUND_TEMPLATE a, ARROW n " +

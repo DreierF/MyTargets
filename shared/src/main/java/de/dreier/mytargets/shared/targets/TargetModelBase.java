@@ -38,7 +38,7 @@ public class TargetModelBase implements IIdProvider {
     }
 
     @Override
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

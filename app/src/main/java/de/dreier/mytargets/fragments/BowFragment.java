@@ -23,10 +23,10 @@ import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditBowActivity
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
-import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.SightSetting;
 import de.dreier.mytargets.utils.ActivityUtils;
+import de.dreier.mytargets.utils.FlowDataLoader;
 import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
@@ -63,8 +63,7 @@ public class BowFragment extends EditableFragment<Bow> {
 
     @Override
     public Loader<List<Bow>> onCreateLoader(int id, Bundle args) {
-        bowDataSource = new BowDataSource();
-        return new DataLoader<>(getContext(), bowDataSource, bowDataSource::getAll);
+        return new FlowDataLoader<>(getContext(), Bow::getAll);
     }
 
     @Override

@@ -21,10 +21,11 @@ public class Environment implements IImageProvider, IDetailProvider {
     public Environment() {
     }
 
-    public Environment(EWeather weather, int windSpeed, int windDirection) {
+    public Environment(EWeather weather, int windSpeed, int windDirection, String location) {
         this.weather = weather;
         this.windSpeed = windSpeed;
         this.windDirection = windDirection;
+        this.location = location;
     }
 
     @Override

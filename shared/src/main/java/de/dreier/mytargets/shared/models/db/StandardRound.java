@@ -12,7 +12,10 @@ import android.graphics.drawable.Drawable;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,22 +28,32 @@ import de.dreier.mytargets.shared.models.IImageProvider;
 import de.dreier.mytargets.shared.targets.CombinedSpot;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 
+@Parcel
 @Table(database = AppDatabase.class)
 public class StandardRound extends BaseModel implements IIdSettable, IImageProvider, IDetailProvider {
 
-    @PrimaryKey(autoincrement = true)
-    Long id;
     @Column
     public int club;
     @Column
     public String name;
     @Column
     public boolean indoor;
-
     public List<RoundTemplate> rounds = new ArrayList<>();
-
     @Column
     public int usages;
+    @PrimaryKey(autoincrement = true)
+    Long id;
+
+    public static StandardRound get(Long id) {
+        return SQLite.select()
+                .from(StandardRound.class)
+                //.where(StandardRound_Table._id.eq(id))
+                .querySingle();
+    }
+
+    public static List<StandardRound> getAll() {
+        return SQLite.select().from(StandardRound.class).queryList();
+    }
 
     public void insert(RoundTemplate template) {
         template.index = rounds.size();
@@ -48,7 +61,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
         rounds.add(template);
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -86,7 +99,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
 
     public Drawable getTargetDrawable() {
         List<TargetDrawable> targets = new ArrayList<>();
-        for(RoundTemplate r: rounds) {
+        for (RoundTemplate r : rounds) {
             targets.add(r.target.getDrawable());
         }
         return new CombinedSpot(targets);
@@ -96,11 +109,19 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
     public boolean equals(Object another) {
         return another instanceof StandardRound &&
                 getClass().equals(another.getClass()) &&
-                id == ((StandardRound) another).id;
+                id.equals(((StandardRound) another).id);
     }
 
     @Override
     public String getDetails(Context context) {
         return getDescription(context);
+    }
+
+    public static List<StandardRound> getAllSearch(String query) {
+        query = "%" + query.replace(' ', '%') + "%";
+        return SQLite.select()
+                .from(StandardRound.class)
+                //.where(StandardRound_Table.name.like(query)).and(StandardRound_Table.club.notEq(512))
+                .queryList();
     }
 }

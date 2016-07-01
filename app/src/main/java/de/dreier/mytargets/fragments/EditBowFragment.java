@@ -29,7 +29,6 @@ import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
 import de.dreier.mytargets.databinding.DynamicitemSightSettingsBinding;
 import de.dreier.mytargets.databinding.EditBowFragmentBinding;
-import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.db.SightSetting;
@@ -50,7 +49,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
 
     static final String BOW_ID = "bow_id";
     @State(ParcelsBundler.class)
-    ArrayList<SightSetting> sightSettingsList = new ArrayList<>();
+    List<SightSetting> sightSettingsList = new ArrayList<>();
     private EditBowFragmentBinding contentBinding;
     private long bowId = -1;
     private SightSettingsAdapter adapter;
@@ -83,7 +82,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
             Bow bow;
             if (bowId != -1) {
                 // Load data from database
-                bow = new BowDataSource().get(bowId);
+                bow = Bow.get(bowId);
                 setImageFile(bow.imageFile);
             } else {
                 // Set to default values
@@ -126,7 +125,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
     @Override
     public void onSave() {
         super.onSave();
-        new BowDataSource().update(buildBow());
+        buildBow().save();
         getActivity().finish();
     }
 

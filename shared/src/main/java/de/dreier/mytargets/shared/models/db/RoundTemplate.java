@@ -1,10 +1,12 @@
 package de.dreier.mytargets.shared.models.db;
 
 import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+
+import org.parceler.Parcel;
 
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.Dimension;
@@ -12,34 +14,37 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.DimensionConverter;
 
-@Table(database = AppDatabase.class)
+@Parcel
+@Table(database = AppDatabase.class, name = "ROUND_TEMPLATE")
 public class RoundTemplate extends BaseModel implements IIdSettable {
 
-    @PrimaryKey(autoincrement = true)
-    Long id;
-    @ForeignKey(tableClass = StandardRound.class)
+    //@ForeignKey(tableClass = StandardRound.class, references = {
+    //        @ForeignKeyReference(columnName = "sid", columnType = Long.class, foreignKeyColumnName = "_id")})
     public Long standardRound;
-    @Column
+    @Column(name = "r_index")
     public int index;
-    @Column
+    @Column(name = "arrows")
     public int arrowsPerPasse;
     public Target target;
-    @Column
+    @Column(name = "passes")
     public int passes;
-    @Column(typeConverter = DimensionConverter.class)
+    @Column(typeConverter = DimensionConverter.class, name = "distance")
     public Dimension distance;
-    @Column
+    @Column(name = "_id")
+    @PrimaryKey(autoincrement = true)
+    Long id;
+    @Column(name = "target")
     int targetTemplateId;
-    @Column
+    @Column(name = "scoring_style")
     int targetTemplateScoringStyle;
-    @Column(typeConverter = DimensionConverter.class)
+    @Column(typeConverter = DimensionConverter.class, name = "size")
     Dimension targetTemplateSize;
 
     public int getMaxPoints() {
         return target.getEndMaxPoints(arrowsPerPasse) * passes;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -51,7 +56,7 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
     public boolean equals(Object another) {
         return another instanceof RoundTemplate &&
                 getClass().equals(another.getClass()) &&
-                id == ((RoundTemplate) another).id;
+                id.equals(((RoundTemplate) another).id);
     }
 
     public Target getTargetTemplate() {
@@ -62,5 +67,18 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
         targetTemplateId = targetTemplate.id;
         targetTemplateScoringStyle = targetTemplate.scoringStyle;
         targetTemplateSize = targetTemplate.size;
+    }
+
+    public static RoundTemplate get(long sid, int index) {
+        return SQLite.select()
+                .from(RoundTemplate.class)
+                //.where(RoundTemplate_Table.sid.eq(sid))
+                //.and(RoundTemplate_Table.r_index.eq(index))
+                .querySingle();
+    }
+
+    void deletePasse() {
+        passes--;
+        update();
     }
 }

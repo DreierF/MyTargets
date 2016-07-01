@@ -41,12 +41,10 @@ import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.databinding.FragmentStandardRoundBinding;
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
 import de.dreier.mytargets.managers.SettingsManager;
-import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.utils.DataLoader;
-import de.dreier.mytargets.utils.DataLoaderBase.BackgroundAction;
+import de.dreier.mytargets.utils.FlowDataLoader;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
@@ -93,22 +91,14 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
 
     @Override
     public Loader<List<StandardRound>> onCreateLoader(int id, Bundle args) {
-        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource();
-        final BackgroundAction<StandardRound> action;
+        final FlowDataLoader.BackgroundAction<StandardRound> action;
         if (args == null) {
-            action = standardRoundDataSource::getAll;
-        } else if (args.containsKey(KEY_QUERY)) {
-            String query = args.getString(KEY_QUERY);
-            action = () -> standardRoundDataSource.getAllSearch(query);
+            action = StandardRound::getAll;
         } else {
-            int clubsFilter = args.getInt(KEY_CLUB_FILTER);
-            boolean indoor = args.getBoolean(KEY_INDOOR);
-            boolean isMetric = args.getBoolean(KEY_METRIC);
-            int checked = args.getInt(KEY_CHECKED);
-            action = () -> standardRoundDataSource
-                    .getAllFiltered(clubsFilter, indoor, isMetric, checked);
+            String query = args.getString(KEY_QUERY);
+            action = () -> StandardRound.getAllSearch(query);
         }
-        return new DataLoader<>(getContext(), standardRoundDataSource, action);
+        return new FlowDataLoader<>(getContext(), action);
     }
 
     @Override
@@ -128,9 +118,8 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         mAdapter.setList(data);
         int position = data.indexOf(currentSelection);
         // Test if our currentSelection has been deleted
-        if (position == -1 && new StandardRoundDataSource().get(currentSelection.getId()) == null) {
-            currentSelection = data.size() > 0 ? data.get(0) : new StandardRoundDataSource()
-                    .get(32);
+        if (position == -1 && StandardRound.get(currentSelection.getId()) == null) {
+            currentSelection = data.size() > 0 ? data.get(0) : StandardRound.get(32L);
             Intent dataIntent = new Intent();
             dataIntent.putExtra(ITEM, Parcels.wrap(currentSelection));
             getActivity().setResult(Activity.RESULT_OK, dataIntent);

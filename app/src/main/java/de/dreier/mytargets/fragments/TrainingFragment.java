@@ -21,6 +21,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,16 +40,17 @@ import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.databinding.FragmentTrainingBinding;
 import de.dreier.mytargets.databinding.ItemRoundBinding;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
-import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
-import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.db.Passe;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DataLoader;
+import de.dreier.mytargets.utils.FlowDataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.HtmlUtils;
+import de.dreier.mytargets.shared.utils.Pair;
+import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
@@ -59,10 +66,7 @@ public class TrainingFragment extends EditableFragment<Round> {
     protected FragmentTrainingBinding binding;
     private long mTraining;
     private Training training;
-    private RoundDataSource roundDataSource;
-    private StandardRoundDataSource standardRoundDataSource;
-    private TrainingDataSource trainingDataSource;
-
+    private StandardRound standardRound;
 
     public TrainingFragment() {
         itemTypeSelRes = R.plurals.round_selected;
@@ -92,11 +96,6 @@ public class TrainingFragment extends EditableFragment<Round> {
             startActivityAnimated(getActivity(), EditRoundActivity.class, ITEM_ID, mTraining);
         });
 
-        trainingDataSource = new TrainingDataSource();
-        roundDataSource = new RoundDataSource();
-        standardRoundDataSource = new StandardRoundDataSource();
-
-        training = trainingDataSource.get(mTraining);
         return binding.getRoot();
     }
 
@@ -110,11 +109,13 @@ public class TrainingFragment extends EditableFragment<Round> {
 
     @Override
     public Loader<List<Round>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader<>(getContext(), new RoundDataSource(), () -> roundDataSource.getAll(mTraining));
+        return new FlowDataLoader<>(getContext(), () -> training.getRounds());
     }
 
     public void onLoadFinished(Loader<List<Round>> loader, List<Round> data) {
-        training = trainingDataSource.get(mTraining);
+        rounds = training.getRounds();
+        training = Training.get(mTraining);
+        standardRound = StandardRound.get(training.standardRoundId);
 
         // Hide fab for standard rounds
         StandardRound standardRound = standardRoundDataSource.get(training.standardRoundId);
@@ -151,6 +152,76 @@ public class TrainingFragment extends EditableFragment<Round> {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /* Called after the user selected with items he wants to share */
+    private void shareImage(int typ) {
+        // Construct share intent
+        new Thread(() -> {
+            try {
+                File dir = getContext().getExternalCacheDir();
+                final File f = File.createTempFile("target", ".png", dir);
+                if (typ == 2) {
+                    new TargetImage().generateTrainingBitmap(800, mTraining, f);
+                } else {
+                    new ScoreboardImage().generateBitmap(getActivity(), mTraining, f);
+                }
+
+                // Build and fire intent to ask for share provider
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
+                shareIntent.setType("*/*");
+                startActivity(shareIntent);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Snackbar.make(binding.getRoot(), R.string.sharing_failed, Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        }).start();
+    }
+
+    private void shareText() {
+        List<Pair<String, Integer>> scoreCount = Passe
+                .getTopScoreDistribution(mTraining);
+        String scoreText = "";
+        for (Pair<String, Integer> score : scoreCount.subList(0, 3)) {
+            scoreText += getString(R.string.d_times_s, score.getSecond(), score.getFirst());
+        }
+        int maxPoints = 0;
+        int reachedPoints = 0;
+        for (Round r : rounds) {
+            maxPoints += r.info.getMaxPoints();
+            reachedPoints += r.reachedPoints;
+        }
+        final String text = getString(R.string.my_share_text,
+                scoreText, reachedPoints, maxPoints);
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+        shareIntent.setType("text/plain");
+        startActivity(shareIntent);
+    }
+
+    @Override
+    public void onSelected(Passe item) {
+        openInputActivityForPasse(item);
+    }
+
+    @Override
+    protected void onEdit(Passe item) {
+        openInputActivityForPasse(item);
+    }
+
+    private void openInputActivityForPasse(Passe item) {
+        Intent i = new Intent(getContext(), InputActivity.class);
+        i.putExtra(InputActivity.ROUND_ID, item.roundId);
+        i.putExtra(InputActivity.PASSE_IND, item.index);
+        startActivity(i);
+        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 
     @Override
@@ -190,7 +261,27 @@ public class TrainingFragment extends EditableFragment<Round> {
 
         @Override
         public void bindCursor() {
-            binding.title.setText(String.format(Locale.ENGLISH, "%s %d", ApplicationInstance.getContext().getString(R.string.round),
+            Round r = Round.get(mItem.roundId);
+            binding.shoots.setPoints(mItem, r.info.target);
+            binding.passe.setText(ApplicationInstance.getContext()
+                    .getString(R.string.passe_n, (mItem.index + 1)));
+        }
+    }
+
+    private class HeaderViewHolder extends HeaderBindingHolder<Round> {
+        private final ItemHeaderRoundBinding binding;
+
+        HeaderViewHolder(View itemView) {
+            super(itemView, R.id.expand_collapse);
+            binding = DataBindingUtil.bind(itemView);
+            itemView.setLongClickable(true);
+            itemView.setOnLongClickListener(this);
+        }
+
+        @Override
+        public void bindCursor() {
+            binding.title.setText(String.format(Locale.ENGLISH, "%s %d",
+                    ApplicationInstance.getContext().getString(R.string.round),
                     mItem.info.index + 1));
             binding.subtitle.setText(HtmlUtils.fromHtml(HtmlUtils.getRoundInfo(mItem, equals)));
             if (binding.subtitle.getText().toString().isEmpty()) {

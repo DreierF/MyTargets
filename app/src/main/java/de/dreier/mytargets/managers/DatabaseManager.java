@@ -13,7 +13,9 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.preference.PreferenceManager;
+
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -21,21 +23,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
+import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.managers.dao.ArrowNumberDataSource;
-import de.dreier.mytargets.managers.dao.BowDataSource;
-import de.dreier.mytargets.managers.dao.PasseDataSource;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
-import de.dreier.mytargets.managers.dao.RoundTemplateDataSource;
-import de.dreier.mytargets.managers.dao.ShotDataSource;
-import de.dreier.mytargets.managers.dao.SightSettingDataSource;
-import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
-import de.dreier.mytargets.managers.dao.TrainingDataSource;
+import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
-import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.BackupUtils;
 
@@ -43,18 +39,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
     private static final int DATABASE_VERSION = 15;
     private static DatabaseManager sInstance;
-    private final Context mContext;
 
-    private DatabaseManager(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        mContext = context;
-    }
-
-    public static DatabaseManager getInstance(Context context) {
-        if (sInstance == null) {
-            sInstance = new DatabaseManager(context.getApplicationContext());
-        }
-        return sInstance;
+    public DatabaseManager(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, name, factory, version);
     }
 
     public static boolean Import(Context context, InputStream in) {
@@ -101,26 +88,40 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(BowDataSource.CREATE_TABLE_BOW);
-        db.execSQL(SightSettingDataSource.CREATE_TABLE_VISIER);
-        db.execSQL(ArrowNumberDataSource.CREATE_TABLE_NUMBER);
+        //db.execSQL(BowDataSource.CREATE_TABLE_BOW);
+        //db.execSQL(SightSettingDataSource.CREATE_TABLE_VISIER);
+        //db.execSQL(ArrowNumberDataSource.CREATE_TABLE_NUMBER);
        // db.execSQL(ArrowDataSource.CREATE_TABLE);
-        db.execSQL(TrainingDataSource.CREATE_TABLE);
-        db.execSQL(RoundTemplateDataSource.CREATE_TABLE);
-        db.execSQL(RoundDataSource.CREATE_TABLE);
-        db.execSQL(PasseDataSource.CREATE_TABLE);
-        db.execSQL(ShotDataSource.CREATE_TABLE);
-        fillStandardRound(db);
+        //db.execSQL(TrainingDataSource.CREATE_TABLE);
+        //db.execSQL(RoundTemplateDataSource.CREATE_TABLE);
+        //db.execSQL(RoundDataSource.CREATE_TABLE);
+        //db.execSQL(PasseDataSource.CREATE_TABLE);
+        //db.execSQL(ShotDataSource.CREATE_TABLE);
+        //fillStandardRound(db);
     }
 
     private void fillStandardRound(SQLiteDatabase db) {
-        db.execSQL(StandardRoundDataSource.CREATE_TABLE);
-        db.execSQL(RoundTemplateDataSource.CREATE_TABLE);
-        ArrayList<StandardRound> rounds = StandardRoundFactory.initTable(mContext);
-        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(mContext,
-                this, db);
+        db.execSQL("CREATE TABLE IF NOT EXISTS STANDARD_ROUND_TEMPLATE (" +
+                "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "name TEXT," +
+                "club INTEGER," +
+                "indoor INTEGER);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS ROUND_TEMPLATE (" +
+                "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "sid INTEGER," +
+                "r_index INTEGER," +
+                "distance INTEGER," +
+                "unit TEXT," +
+                "passes INTEGER," +
+                "arrows INTEGER," +
+                "target INTEGER," +
+                "size INTEGER," +
+                "target_unit INTEGER," +
+                "scoring_style INTEGER," +
+                "UNIQUE(sid, r_index) ON CONFLICT REPLACE);");
+        List<StandardRound> rounds = StandardRoundFactory.initTable();
         for (StandardRound round : rounds) {
-            standardRoundDataSource.update(round);
+            round.update();
         }
     }
 
@@ -157,7 +158,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                             i);
                 }
             }
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+            SharedPreferences prefs = ApplicationInstance.getSharedPreferences();
             int defaultDist = valuesMetric[prefs.getInt("distance", 0)];
             prefs.edit().putInt("distance", defaultDist).apply();
         }
@@ -191,7 +192,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     "AND (r.bow=-2 OR b.type=1) AND s.points=1 AND r.target=3)");
         }
         if (oldVersion < 6) {
-            File filesDir = mContext.getFilesDir();
+            File filesDir = ApplicationInstance.getContext().getFilesDir();
 
             // Migrate all bow images
             Cursor cur = db.rawQuery("SELECT image FROM BOW WHERE image IS NOT NULL", null);
@@ -275,9 +276,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             fillStandardRound(db);
 
-            db.execSQL(RoundDataSource.CREATE_TABLE);
-            RoundTemplateDataSource roundTemplateDataSource = new RoundTemplateDataSource(mContext,
-                    this, db);
+            db.execSQL("CREATE TABLE IF NOT EXISTS ROUND (" +
+                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "training INTEGER," +
+                    "comment TEXT," +
+                    "template INTEGER," +
+                    "target INTEGER," +
+                    "scoring_style INTEGER);");
 
             Cursor trainings = db.rawQuery("SELECT _id FROM TRAINING", null);
             if (trainings.moveToFirst()) {
@@ -305,18 +310,18 @@ public class DatabaseManager extends SQLiteOpenHelper {
                         db.execSQL("UPDATE TRAINING SET bow=?, arrow=? WHERE _id=?",
                                 new String[]{"" + bow, "" + arrow, "" + training});
                         do {
-                            RoundTemplate info = roundTemplateDataSource.get(sid, index);
+                            RoundTemplate info = RoundTemplate.get(sid, index);
                             int target = res.getInt(2);
                             ContentValues contentValues = new ContentValues();
-                            contentValues.put(RoundDataSource.ID, res.getLong(0));
-                            contentValues.put(RoundDataSource.COMMENT, res.getString(1));
-                            contentValues.put(RoundDataSource.TRAINING, training);
-                            contentValues.put(RoundDataSource.TEMPLATE, info.getId());
+                            contentValues.put("_id", res.getLong(0));
+                            contentValues.put("comment", res.getString(1));
+                            contentValues.put("training", training);
+                            contentValues.put("template", info.getId());
                             contentValues
-                                    .put(RoundTemplateDataSource.TARGET, target == 4 ? 5 : target);
-                            contentValues.put(RoundTemplateDataSource.SCORING_STYLE,
+                                    .put("target", target == 4 ? 5 : target);
+                            contentValues.put("scoring_style",
                                     target == 5 ? 1 : 0);
-                            db.insert(RoundDataSource.TABLE, null, contentValues);
+                            db.insert("ROUND", null, contentValues);
                             index++;
                         } while (res.moveToNext());
                     }
@@ -383,7 +388,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         int index = 0;
         HashSet<Long> sid = new HashSet<>();
         StandardRound sr = new StandardRound();
-        sr.name = mContext.getString(R.string.practice);
+        sr.name = ApplicationInstance.getContext().getString(R.string.practice);
         sr.club = StandardRoundFactory.CUSTOM_PRACTICE;
         if (res.moveToFirst()) {
             sr.indoor = res.getInt(5) == 1;
@@ -433,7 +438,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (sr.rounds.isEmpty()) {
             return 0L;
         }
-        new StandardRoundDataSource(mContext, this, db).update(sr);
+        sr.save();
         return sr.getId();
     }
 
@@ -446,8 +451,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
 ////// BACKUP DATABASE //////
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void exportAll(File file) throws IOException {
-        SQLiteDatabase db = getWritableDatabase();
+    public static void exportAll(File file) throws IOException {
+        Context mContext = ApplicationInstance.getContext();
+        DatabaseWrapper db = FlowManager.getWritableDatabase(AppDatabase.class);
         Cursor cur = db.rawQuery(
                 "SELECT t.title,sr.name AS standard_round,datetime(t.datum/1000, 'unixepoch') AS date,sr.indoor,i.distance, i.unit," +
                         "r.target, r.scoring_style, i.size, i.target_unit, s.arrow_index, a.name, s.x, s.y, s.arrow, b.name AS bow, s.points AS score " +
@@ -560,9 +566,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
         cur.close();
     }
 
-    public String[] getImages() {
+    public static String[] getImages() {
         ArrayList<String> list = new ArrayList<>();
-        SQLiteDatabase db = getWritableDatabase();
+        DatabaseWrapper db = FlowManager.getWritableDatabase(AppDatabase.class);
         Cursor cur = db.rawQuery("SELECT image FROM BOW WHERE image IS NOT NULL", null);
         if (cur.moveToFirst()) {
             list.add(cur.getString(0));

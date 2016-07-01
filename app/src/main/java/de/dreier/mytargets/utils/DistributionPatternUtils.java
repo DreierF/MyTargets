@@ -23,11 +23,9 @@ import java.util.List;
 
 import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.managers.dao.PasseDataSource;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
-import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.db.Passe;
 import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 
 public class DistributionPatternUtils {
@@ -71,7 +69,7 @@ public class DistributionPatternUtils {
         textPaint.setTextSize(size / 20);
 
         for (int i = 0; i < rounds.size(); i++) {
-            List<Passe> oldOnes = new PasseDataSource().getAllByRound(rounds.get(i).getId());
+            List<Passe> oldOnes = rounds.get(i).getPasses();
             TargetDrawable target = rounds.get(i).info.target.getDrawable();
             target.setBounds(bounds.get(i));
             target.draw(canvas);

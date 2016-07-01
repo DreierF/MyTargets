@@ -75,7 +75,7 @@ public class TargetFragment extends SelectItemFragment<Target>
             list = TargetFactory.getList();
         }
         List<Target> targets = Stream.of(list)
-                .map(value -> new Target((int) value.getId(), 0))
+                .map(value -> new Target((int) (long) value.getId(), 0))
                 .collect(Collectors.toList());
         mAdapter.setList(targets);
 

@@ -8,16 +8,38 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.os.Bundle;
+import android.support.annotation.CallSuper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.raizlabs.android.dbflow.structure.Model;
+
+import junit.framework.Assert;
 
 import org.parceler.Parcels;
 
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.shared.models.IIdSettable;
 
-public abstract class EditableFragment<T extends IIdSettable> extends EditableFragmentBase<T> {
+public abstract class EditableFragment<T extends IIdSettable & Model> extends EditableFragmentBase<T> {
 
     protected NowListAdapter<T> mAdapter;
     private OnItemSelectedListener listener;
+
+    void setList(List<T> list, NowListAdapter<T> adapter) {
+        if (binding.recyclerView.getAdapter() == null) {
+            mAdapter = adapter;
+            mAdapter.setList(list);
+            binding.recyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.setList(list);
+            mAdapter.notifyDataSetChanged();
+        }
+        updateFabButton(list);
+    }
 
     @Override
     public void onAttach(Context activity) {

@@ -26,9 +26,7 @@ import java.util.ArrayList;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentEditTrainingBinding;
 import de.dreier.mytargets.managers.SettingsManager;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
-import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
-import de.dreier.mytargets.managers.dao.TrainingDataSource;
+import de.dreier.mytargets.models.ETrainingType;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
@@ -43,14 +41,11 @@ import static de.dreier.mytargets.fragments.DatePickerFragment.ARG_CURRENT_DATE;
 public class EditTrainingFragment extends EditFragmentBase implements DatePickerDialog.OnDateSetListener {
     public static final String TRAINING_TYPE = "training_type";
 
-    public static final int FREE_TRAINING = 0;
-    public static final int TRAINING_WITH_STANDARD_ROUND = 1;
-    private static final int COMPETITION = 2;
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private static final int REQ_SELECTED_DATE = 2;
 
-    private long trainingId = -1;
-    private int trainingType = 0;
+    private Long trainingId = null;
+    private ETrainingType trainingType = ETrainingType.FREE_TRAINING;
     private LocalDate date = new LocalDate();
     private FragmentEditTrainingBinding binding;
 
@@ -63,7 +58,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         Bundle arguments = getArguments();
         if (arguments != null) {
             trainingId = arguments.getLong(FragmentBase.ITEM_ID, -1);
-            trainingType = arguments.getInt(TRAINING_TYPE, FREE_TRAINING);
+            trainingType = ETrainingType.valueOf(arguments.getString(TRAINING_TYPE, ETrainingType.FREE_TRAINING.toString()));
         }
 
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
@@ -93,7 +88,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         if (trainingId == -1) {
             ToolbarUtils.setTitle(this, R.string.new_training);
             binding.training.setText(getString(
-                    trainingType == COMPETITION ? R.string.competition : R.string.training));
+                    trainingType == ETrainingType.COMPETITION ? R.string.competition : R.string.training));
             setTrainingDate();
             binding.bow.setItemId(SettingsManager.getBow());
             binding.arrow.setItemId(SettingsManager.getArrow());
@@ -106,13 +101,13 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             loadRoundDefaultValues();
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_training);
-            Training train = new TrainingDataSource().get(trainingId);
+            Training train = Training.get(trainingId);
             binding.training.setText(train.title);
             date = train.date;
             binding.bow.setItemId(train.bow);
             binding.arrow.setItemId(train.arrow);
             binding.standardRound.setItemId(train.standardRoundId);
-            binding.environmentSpinner.setItem(train.environment);
+            binding.environmentSpinner.setItem(train.getEnvironment());
             setTrainingDate();
             binding.notEditable.setVisibility(View.GONE);
         }
@@ -131,7 +126,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private void applyTrainingType() {
         View in;
         View out;
-        if (trainingType == 0) {
+        if (trainingType == ETrainingType.FREE_TRAINING) {
             in = binding.practiceLayout;
             out = binding.standardRound;
         } else {
@@ -186,25 +181,24 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
         getActivity().finish();
 
-        TrainingDataSource trainingDataSource = new TrainingDataSource();
         if (trainingId == -1) {
             StandardRound standardRound;
-            if (trainingType == 0) {
+            if (trainingType == ETrainingType.FREE_TRAINING) {
                 standardRound = getCustomRound();
             } else {
                 standardRound = binding.standardRound.getSelectedItem();
                 SettingsManager.setStandardRound(standardRound.getId());
             }
-            new StandardRoundDataSource().update(standardRound);
+            standardRound.save();
             training.standardRoundId = standardRound.getId();
 
-            trainingDataSource.update(training);
+            training.save();
             long roundId = createRoundsFromTemplate(standardRound, training).get(0).getId();
 
             ActivityUtils.openPasseForNewRound(getActivity(), training.getId(), roundId);
         } else {
             // Edit training
-            trainingDataSource.update(training);
+            training.update();
             getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
         }
     }
@@ -215,11 +209,11 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         if (trainingId == -1) {
             training = new Training();
         } else {
-            training = new TrainingDataSource().get(trainingId);
+            training = Training.get(trainingId);
         }
         training.title = binding.training.getText().toString();
         training.date = date;
-        training.environment = binding.environmentSpinner.getSelectedItem();
+        training.setEnvironment(binding.environmentSpinner.getSelectedItem());
         training.bow = binding.bow.getSelectedItem() == null ? 0 : binding.bow.getSelectedItem()
                 .getId();
         training.arrow = binding.arrow.getSelectedItem() == null ? 0 : binding.arrow
@@ -240,13 +234,12 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     @NonNull
     private ArrayList<Round> createRoundsFromTemplate(StandardRound standardRound, Training training) {
         ArrayList<Round> rounds = new ArrayList<>();
-        RoundDataSource roundDataSource = new RoundDataSource();
         for (RoundTemplate template : standardRound.rounds) {
             Round round = new Round();
             round.trainingId = training.getId();
             round.info = template;
             round.comment = "";
-            roundDataSource.update(round);
+            round.save();
             rounds.add(round);
         }
         return rounds;

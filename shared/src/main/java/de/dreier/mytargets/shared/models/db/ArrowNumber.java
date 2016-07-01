@@ -38,7 +38,7 @@ public class ArrowNumber extends BaseModel implements IIdSettable {
         return String.valueOf(number);
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

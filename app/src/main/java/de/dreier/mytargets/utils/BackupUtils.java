@@ -93,7 +93,6 @@ public class BackupUtils {
     }
 
     public static Uri export(Context context) throws IOException {
-        DatabaseManager db = DatabaseManager.getInstance(context);
         String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");
@@ -105,7 +104,7 @@ public class BackupUtils {
             throw new IOException(context.getString(R.string.dir_not_created));
         }
         File file = new File(baseDir + fileName);
-        db.exportAll(file);
+        DatabaseManager.exportAll(file);
         return Uri.fromFile(file);
     }
 
@@ -145,7 +144,7 @@ public class BackupUtils {
             }
             origin.close();
 
-            String[] files = DatabaseManager.getInstance(context).getImages();
+            String[] files = DatabaseManager.getImages();
             for (String file : files) {
                 fi = new FileInputStream(new File(context.getFilesDir(), file));
                 origin = new BufferedInputStream(fi, BUFFER);

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.shared.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

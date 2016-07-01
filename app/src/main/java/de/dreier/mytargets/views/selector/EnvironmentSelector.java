@@ -101,13 +101,13 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
     }
 
     private void setDefaultWeather() {
-        setItem(new Environment(EWeather.SUNNY, 0, 0));
+        setItem(new Environment(EWeather.SUNNY, 0, 0, ""));
     }
 
     @Override
     public Environment getSelectedItem() {
         if (item == null) {
-            return new Environment(EWeather.SUNNY, 0, 0);
+            return new Environment(EWeather.SUNNY, 0, 0, "");
         }
         return item;
     }

@@ -9,11 +9,13 @@ package de.dreier.mytargets.shared.models;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
 
+@Parcel
 public class Dimension implements IIdProvider, Comparable<Dimension> {
     private static final int MINI_VALUE = -6;
     public static final Dimension MINI = new Dimension(MINI_VALUE, (Unit) null);
@@ -81,8 +83,8 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
         return value + unit.toString();
     }
 
-    public long getId() {
-        return hashCode();
+    public Long getId() {
+        return (long) hashCode();
     }
 
     @Override
