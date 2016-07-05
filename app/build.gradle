@@ -156,6 +156,8 @@ dependencies {
 
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
 
+    compile 'com.github.clans:fab:1.6.4'
+
     compile 'org.adw.library:discrete-seekbar:1.0.1'
 
     compile 'com.github.jkwiecien:EasyImage:1.2.1'
