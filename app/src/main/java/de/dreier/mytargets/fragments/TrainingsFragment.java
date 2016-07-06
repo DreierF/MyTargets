@@ -7,7 +7,6 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
@@ -23,9 +22,10 @@ import java.util.Locale;
 import java.util.Set;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditTrainingActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase.TrainingActivity;
 import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
-import de.dreier.mytargets.databinding.FragmentListBinding;
+import de.dreier.mytargets.databinding.FragmentTrainingsBinding;
 import de.dreier.mytargets.databinding.ItemHeaderMonthBinding;
 import de.dreier.mytargets.databinding.ItemTrainingBinding;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
@@ -33,18 +33,22 @@ import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.models.Month;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Training;
-import de.dreier.mytargets.utils.ActivityUtils;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.HeaderBindingHolder;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.Utils;
+
+import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
+import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_TYPE;
+import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND;
+import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 
 /**
  * Shows an overview over all training days
  */
 public class TrainingsFragment extends ExpandableFragment<Month, Training> {
 
-    protected FragmentListBinding binding;
+    protected FragmentTrainingsBinding binding;
     private TrainingDataSource trainingDataSource;
 
     public TrainingsFragment() {
@@ -54,24 +58,32 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        binding.fab.close(false);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_trainings, container, false);
         binding.recyclerView.setHasFixedSize(true);
+        mAdapter = new TrainingAdapter();
+        binding.recyclerView.setAdapter(mAdapter);
+        binding.fab1.setOnClickListener(view -> startActivityAnimated(getActivity(),
+            EditTrainingActivity.class, TRAINING_TYPE, FREE_TRAINING));
+        binding.fab2.setOnClickListener(view -> startActivityAnimated(getActivity(),
+                EditTrainingActivity.class, TRAINING_TYPE, TRAINING_WITH_STANDARD_ROUND));
         return binding.getRoot();
     }
 
     @Override
     public void onSelected(Training item) {
-        Intent i = new Intent(getContext(), SimpleFragmentActivityBase.TrainingActivity.class);
-        i.putExtra(ITEM_ID, item.getId());
-        startActivity(i);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        startActivityAnimated(getActivity(), TrainingActivity.class, ITEM_ID, item.getId());
     }
 
     @Override
     protected void onEdit(final Training item) {
-        ActivityUtils.startActivityAnimated(getActivity(),
-                SimpleFragmentActivityBase.EditTrainingActivity.class, ITEM_ID, item.getId());
+        startActivityAnimated(getActivity(), EditTrainingActivity.class, ITEM_ID, item.getId());
     }
 
     @Override
@@ -92,9 +104,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
             }
         }
         Collections.sort(months, Collections.reverseOrder());
-        setList(binding.recyclerView, trainingDataSource, months, data,
-                child -> Utils.getMonthId(child.date), false,
-                new TrainingAdapter());
+        setList(trainingDataSource, months, data, child -> Utils.getMonthId(child.date), false);
     }
 
     private class TrainingAdapter extends ExpandableNowListAdapter<Month, Training> {

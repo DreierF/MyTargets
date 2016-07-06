@@ -12,7 +12,7 @@ public class ActivityUtils {
     /**
      * Starts the given activity with the standard animation
      *
-     * @param fragment
+     * @param context
      * @param activity Activity to start
      */
     public static void startActivityAnimated(Activity context, Class<?> activity) {

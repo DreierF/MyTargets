@@ -30,15 +30,11 @@ public class WindSpeedFragment extends SelectItemFragment<WindSpeed> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
+        mAdapter = new WindSpeedAdapter(getContext());
+        binding.recyclerView.setAdapter(mAdapter);
         useDoubleClickSelection = false;
         ToolbarUtils.showUpAsX(this);
         return binding.getRoot();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        setList(binding.recyclerView, WindSpeed.getList(getContext()), new WindSpeedAdapter(getContext()));
     }
 
     @Override
@@ -49,6 +45,7 @@ public class WindSpeedFragment extends SelectItemFragment<WindSpeed> {
     private class WindSpeedAdapter extends NowListAdapter<WindSpeed> {
         WindSpeedAdapter(Context context) {
             super(context);
+            setList(WindSpeed.getList(getContext()));
         }
 
         @Override

@@ -35,12 +35,11 @@ import de.dreier.mytargets.utils.SelectableViewHolder;
 abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<T>
         implements OnCardClickListener<T>, LoaderManager.LoaderCallbacks<List<T>> {
 
-    final MultiSelector mSelector = new MultiSelector();
     @PluralsRes
     int itemTypeDelRes;
+    final MultiSelector mSelector = new MultiSelector();
     IdProviderDataSource<T> dataSource;
-    private final ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(
-            mSelector) {
+    private final ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(mSelector) {
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
@@ -83,7 +82,6 @@ abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<
             actionMode = null;
         }
     };
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

@@ -10,7 +10,6 @@ package de.dreier.mytargets.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,8 +17,6 @@ import android.view.MenuItem;
 import junit.framework.Assert;
 
 import org.parceler.Parcels;
-
-import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
@@ -69,27 +66,6 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
             this.listener = (OnItemSelectedListener) activity;
         }
         Assert.assertNotNull(listener);
-    }
-
-    /**
-     * Sets the given list to the fragment's {@link android.support.v7.widget.RecyclerView}.
-     * If there is already an adapter attached the adapters content is updated, otherwise the
-     * given adapter is initialized with the list and set to the
-     * {@link android.support.v7.widget.RecyclerView}.
-     *
-     * @param list    Content to show
-     * @param adapter New instance of an adapter which is able to show the given list
-     */
-    void setList(RecyclerView recyclerView, List<T> list, NowListAdapter<T> adapter) {
-        if (recyclerView.getAdapter() == null) {
-            mAdapter = adapter;
-            mAdapter.setList(list);
-            recyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.setList(list);
-            mAdapter.notifyDataSetChanged();
-        }
-        updateFabButton(list);
     }
 
     /**

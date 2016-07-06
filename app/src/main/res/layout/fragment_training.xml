@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
                 android:background="?attr/colorPrimary"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:layout_collapseMode="none"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
             <android.support.v7.widget.Toolbar
                 android:layout_width="match_parent"
@@ -45,7 +45,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/white" />
 
                     <TextView
                         android:id="@+id/detail_score"
@@ -53,7 +53,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/white" />
 
                 </LinearLayout>
 
@@ -61,31 +61,52 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerView"
                     style="@style/card_list"
-                    app:layoutManager="LinearLayoutManager"/>
-
-
-                <View
-                    android:id="@+id/overlayView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/dim_overlay"
-                    android:clickable="true"
-                    android:focusable="true"/>
+                    app:layoutManager="LinearLayoutManager" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/toolbar_drop_shadow_height"
                     android:background="@drawable/toolbar_drop_shadow"
-                    app:layout_anchor="@id/appbar"/>
+                    app:layout_anchor="@id/appbar" />
 
-                <include
-                    android:id="@+id/fabLayout"
-                    layout="@layout/layout_fab_description"/>
+                <com.github.clans.fab.FloatingActionMenu
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="16dp"
+                    app:menu_animationDelayPerItem="50"
+                    app:menu_colorNormal="@color/colorAccent"
+                    app:menu_colorPressed="@color/colorAccent"
+                    app:menu_colorRipple="#99FFFFFF"
+                    app:menu_icon="@drawable/ic_add_white_24dp"
+                    app:menu_openDirection="up">
+
+                    <com.github.clans.fab.FloatingActionButton
+                        android:id="@+id/fab2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_refresh_white_24dp"
+                        app:fab_colorNormal="#2196F3"
+                        app:fab_label="@string/round"
+                        app:fab_size="mini"/>
+
+                    <com.github.clans.fab.FloatingActionButton
+                        android:id="@+id/fab1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_adjust_white_24dp"
+                        app:fab_colorNormal="#4CAF50"
+                        app:fab_label="@string/passe"
+                        app:fab_size="mini" />
+
+                </com.github.clans.fab.FloatingActionMenu>
 
             </FrameLayout>
 

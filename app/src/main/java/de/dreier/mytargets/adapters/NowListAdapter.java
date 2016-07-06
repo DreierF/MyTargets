@@ -72,6 +72,7 @@ public abstract class NowListAdapter<T extends IIdProvider>
 
     public void setList(List<T> list) {
         mList = list;
+        notifyDataSetChanged();
     }
 
 }

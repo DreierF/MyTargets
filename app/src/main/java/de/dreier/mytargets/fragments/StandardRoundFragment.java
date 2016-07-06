@@ -74,6 +74,8 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_standard_round_selection, container, false);
         binding.recyclerView.setHasFixedSize(true);
+        mAdapter = new StandardRoundAdapter(getContext());
+        binding.recyclerView.setAdapter(mAdapter);
         useDoubleClickSelection = true;
         ToolbarUtils.showUpAsX(this);
         setHasOptionsMenu(true);
@@ -121,7 +123,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
 
     @Override
     public void onLoadFinished(Loader<List<StandardRound>> loader, List<StandardRound> data) {
-        setList(binding.recyclerView, data, new StandardRoundAdapter(getContext()));
+        mAdapter.setList(data);
         int position = data.indexOf(currentSelection);
         // Test if our currentSelection has been deleted
         if (position == -1 && new StandardRoundDataSource().get(currentSelection.getId()) == null) {

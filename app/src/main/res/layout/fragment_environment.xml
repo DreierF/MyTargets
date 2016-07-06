@@ -46,7 +46,7 @@
                     android:layout_weight="1"
                     android:background="?android:attr/selectableItemBackground"
                     android:contentDescription="@string/partly_cloudy"
-                    app:srcCompat="@drawable/ic_partly_cloudy_48dp"/>
+                    app:srcCompat="@drawable/ic_partly_cloudy_outline_color_48dp"/>
 
                 <ImageButton
                     android:id="@+id/cloudy"

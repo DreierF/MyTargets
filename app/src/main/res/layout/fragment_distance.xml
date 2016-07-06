@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -25,9 +26,12 @@
 
         </LinearLayout>
 
-        <include
-            android:id="@+id/fabLayout"
-            layout="@layout/layout_fab_description"/>
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_white_24dp"
+            app:fab_colorNormal="@color/colorAccent" />
 
     </android.support.design.widget.CoordinatorLayout>
 

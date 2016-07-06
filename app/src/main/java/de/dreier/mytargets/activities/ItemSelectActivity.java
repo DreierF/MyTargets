@@ -7,13 +7,9 @@
 package de.dreier.mytargets.activities;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.view.View;
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.databinding.LayoutFrameFabBinding;
 import de.dreier.mytargets.fragments.ArrowFragment;
 import de.dreier.mytargets.fragments.BowFragment;
 import de.dreier.mytargets.fragments.DistanceFragment;
@@ -24,43 +20,10 @@ import de.dreier.mytargets.fragments.WindDirectionFragment;
 import de.dreier.mytargets.fragments.WindSpeedFragment;
 
 public abstract class ItemSelectActivity extends SimpleFragmentActivityBase
-        implements FragmentBase.OnItemSelectedListener, FragmentBase.ContentListener {
+        implements FragmentBase.OnItemSelectedListener {
 
     public static final String ITEM = "item";
     public static final String INTENT = "intent";
-    private LayoutFrameFabBinding fabBinding;
-
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.layout_frame_fab;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        //TODO Move the fab logic to EditableFragmentBase
-
-        fabBinding = (LayoutFrameFabBinding) binding;
-
-        if (childFragment instanceof View.OnClickListener) {
-            fabBinding.fabLayout.fab.setOnClickListener(((View.OnClickListener) childFragment));
-        }
-        onContentChanged(true, 0);
-    }
-
-    @Override
-    public void onContentChanged(boolean empty, int stringRes) {
-        if (stringRes != 0 && fabBinding.fabLayout.newText != null && fabBinding.fabLayout.newLayout != null) {
-            fabBinding.fabLayout.newText.setVisibility(empty ? View.VISIBLE : View.GONE);
-            fabBinding.fabLayout.newText.setText(stringRes);
-        }
-        if (this instanceof View.OnClickListener) {
-            fabBinding.fabLayout.fab.setVisibility(View.VISIBLE);
-        } else {
-            fabBinding.fabLayout.fab.setVisibility(View.GONE);
-        }
-    }
 
     @Override
     public void onItemSelected(Parcelable item) {

@@ -17,8 +17,6 @@ import android.view.ViewGroup;
 
 import org.parceler.Parcels;
 
-import java.util.List;
-
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.databinding.FragmentListBinding;
@@ -56,20 +54,15 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> {
         unit = Unit.from(bundle.getString(DISTANCE_UNIT));
         binding.recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         binding.recyclerView.addItemDecoration(new CardItemDecorator(getActivity(), 3));
+        mAdapter = new DistanceAdapter(getContext());
+        binding.recyclerView.setAdapter(mAdapter);
         return binding.getRoot();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        DistanceDataSource dataSource = new DistanceDataSource();
-        setList(binding.recyclerView, dataSource.getAll(distance, unit), new DistanceAdapter(getContext()));
-    }
-
-    @Override
-    protected void updateFabButton(List list) {
-        // We don't need an arrow pointing at the distance fab button,
-        // because in most cases we already have a lot of entries
+        mAdapter.setList(new DistanceDataSource().getAll(distance, unit));
     }
 
     @Override
