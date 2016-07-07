@@ -38,7 +38,7 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditStandardRoundActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
-import de.dreier.mytargets.databinding.FragmentStandardRoundSelectionBinding;
+import de.dreier.mytargets.databinding.FragmentStandardRoundBinding;
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
@@ -65,7 +65,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
     private static final String KEY_CHECKED = "checked";
     private static final String KEY_CLUB_FILTER = "club_filter";
     private final CheckBox[] clubs = new CheckBox[9];
-    protected FragmentStandardRoundSelectionBinding binding;
+    protected FragmentStandardRoundBinding binding;
 
     private StandardRound currentSelection;
     private SearchView searchView;
@@ -73,7 +73,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil
-                .inflate(inflater, R.layout.fragment_standard_round_selection, container, false);
+                .inflate(inflater, R.layout.fragment_standard_round, container, false);
         binding.recyclerView.setHasFixedSize(true);
         mAdapter = new StandardRoundAdapter(getContext());
         binding.recyclerView.setAdapter(mAdapter);

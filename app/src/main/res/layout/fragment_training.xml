@@ -87,7 +87,7 @@
                         android:id="@+id/fab2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_refresh_white_24dp"
+                        android:src="@drawable/fab_refresh_white_24dp"
                         app:fab_colorNormal="#2196F3"
                         app:fab_label="@string/round"
                         app:fab_size="mini" />
@@ -96,7 +96,7 @@
                         android:id="@+id/fab1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_adjust_white_24dp"
+                        android:src="@drawable/fab_adjust_white_24dp"
                         app:fab_colorNormal="#4CAF50"
                         app:fab_label="@string/passe"
                         app:fab_size="mini" />
