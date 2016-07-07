@@ -79,18 +79,11 @@ public class EnvironmentFragment extends Fragment {
 
     private void setWeather(EWeather weather) {
         this.weather = weather;
-        binding.sunny.setImageResource(weather == EWeather.SUNNY ? R.drawable.ic_sun_48dp :
-                R.drawable.ic_sun_outline_48dp);
-        binding.partlyCloudy.setImageResource(
-                weather == EWeather.PARTLY_CLOUDY ? R.drawable.ic_partly_cloudy_48dp :
-                        R.drawable.ic_partly_cloudy_outline_48dp);
-        binding.cloudy.setImageResource(weather == EWeather.CLOUDY ? R.drawable.ic_cloudy_48dp :
-                R.drawable.ic_cloudy_outline_48dp);
-        binding.lightRain.setImageResource(
-                weather == EWeather.LIGHT_RAIN ? R.drawable.ic_light_rain_48dp :
-                        R.drawable.ic_light_rain_outline_48dp);
-        binding.rain.setImageResource(weather == EWeather.RAIN ? R.drawable.ic_rain_48dp :
-                R.drawable.ic_rain_outline_48dp);
+        binding.sunny.setImageResource(EWeather.SUNNY.getDrawable(weather));
+        binding.partlyCloudy.setImageResource(EWeather.PARTLY_CLOUDY.getDrawable(weather));
+        binding.cloudy.setImageResource(EWeather.CLOUDY.getDrawable(weather));
+        binding.lightRain.setImageResource(EWeather.LIGHT_RAIN.getDrawable(weather));
+        binding.rain.setImageResource(EWeather.RAIN.getDrawable(weather));
     }
 
     @Override

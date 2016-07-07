@@ -49,7 +49,7 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
         if (unit == another.unit) {
             return (int) (getId() - another.getId());
         }
-        return unit.compareTo(another.unit);
+        return unit.abbreviation.compareTo(another.unit.abbreviation);
     }
 
     @Override

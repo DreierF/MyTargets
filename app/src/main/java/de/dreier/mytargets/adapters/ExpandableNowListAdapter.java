@@ -168,6 +168,7 @@ public abstract class ExpandableNowListAdapter<HEADER extends IIdProvider, CHILD
             dataList.add(new DataHolder(header, ItemType.HEADER));
         }
         setExpandedIds(oldExpanded);
+        notifyDataSetChanged();
     }
 
     public void setList(List<HEADER> headers, List<CHILD> children, PartitionDelegate<CHILD> partitionDelegate, boolean opened) {

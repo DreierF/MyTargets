@@ -10,6 +10,7 @@ package de.dreier.mytargets.fragments;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,20 +19,26 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditArrowActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
-import de.dreier.mytargets.utils.ActivityUtils;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
 import static de.dreier.mytargets.fragments.EditArrowFragment.ARROW_ID;
+import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 
-public class ArrowFragment extends EditableFragment<Arrow> implements View.OnClickListener {
+public class ArrowFragment extends EditableFragment<Arrow> {
 
     private ArrowDataSource arrowDataSource;
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        binding.fab.setOnClickListener(view1 -> startActivityAnimated(getActivity(), EditArrowActivity.class));
+    }
 
     public ArrowFragment() {
         itemTypeSelRes = R.plurals.arrow_selected;
@@ -47,19 +54,24 @@ public class ArrowFragment extends EditableFragment<Arrow> implements View.OnCli
 
     @Override
     public void onLoadFinished(Loader<List<Arrow>> loader, List<Arrow> data) {
-        setList(arrowDataSource, data, new ArrowAdapter(getContext()));
+        this.dataSource = arrowDataSource;
+        mAdapter.setList(data);
     }
 
     @Override
     protected void onEdit(Arrow item) {
-        ActivityUtils.startActivityAnimated(getActivity(),
-                SimpleFragmentActivityBase.EditArrowActivity.class, ARROW_ID, item.getId());
+        startActivityAnimated(getActivity(),
+                EditArrowActivity.class, ARROW_ID, item.getId());
     }
 
     @Override
-    public void onClick(View v) {
-        ActivityUtils.startActivityAnimated(getActivity(),
-                SimpleFragmentActivityBase.EditArrowActivity.class);
+    protected NowListAdapter<Arrow> getAdapter() {
+        return new ArrowAdapter(getContext());
+    }
+
+    @Override
+    protected void onItemSelected(Arrow item) {
+        startActivityAnimated(getActivity(), EditArrowActivity.class, ARROW_ID, item.getId());
     }
 
     private class ArrowAdapter extends NowListAdapter<Arrow> {

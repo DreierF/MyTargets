@@ -27,7 +27,7 @@ import de.dreier.mytargets.utils.DistanceInputDialog;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class DistanceFragment extends Fragment implements DistanceInputDialog.OnClickListener, View.OnClickListener {
+public class DistanceFragment extends Fragment implements DistanceInputDialog.OnClickListener {
 
     private SelectItemFragment.OnItemSelectedListener listener;
     private Dimension distance;
@@ -41,7 +41,10 @@ public class DistanceFragment extends Fragment implements DistanceInputDialog.On
         binding.viewPager.setAdapter(new DistanceTabsFragmentPagerAdapter(getActivity(), distance));
         selectUnit(distance.unit);
         binding.slidingTabs.setupWithViewPager(binding.viewPager);
-        binding.fabLayout.fab.setOnClickListener(this);
+        binding.fab.setOnClickListener(view -> new DistanceInputDialog.Builder(getContext())
+                .setUnit(getSelectedUnit().toString())
+                .setOnClickListener(DistanceFragment.this)
+                .show());
         return binding.getRoot();
     }
 
@@ -52,14 +55,6 @@ public class DistanceFragment extends Fragment implements DistanceInputDialog.On
             this.listener = (SelectItemFragment.OnItemSelectedListener) activity;
         }
         Assert.assertNotNull(listener);
-    }
-
-    @Override
-    public void onClick(View view) {
-        new DistanceInputDialog.Builder(getContext())
-                .setUnit(getSelectedUnit().toString())
-                .setOnClickListener(this)
-                .show();
     }
 
     private Dimension.Unit getSelectedUnit() {

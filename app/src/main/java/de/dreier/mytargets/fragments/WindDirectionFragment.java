@@ -30,16 +30,11 @@ public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
+        mAdapter = new WindDirectionAdapter(getContext());
+        binding.recyclerView.setAdapter(mAdapter);
         useDoubleClickSelection = false;
         ToolbarUtils.showUpAsX(this);
         return binding.getRoot();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        setList(binding.recyclerView, WindDirection.getList(getContext()),
-                new WindDirectionAdapter(getContext()));
     }
 
     @Override
@@ -50,6 +45,7 @@ public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
     private class WindDirectionAdapter extends NowListAdapter<WindDirection> {
         WindDirectionAdapter(Context context) {
             super(context);
+            setList(WindDirection.getList(getContext()));
         }
 
         @Override

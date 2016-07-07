@@ -15,16 +15,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import junit.framework.Assert;
-
 import org.parceler.Parcels;
-
-import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.databinding.FragmentListBinding;
-import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 
@@ -34,7 +29,7 @@ import de.dreier.mytargets.utils.DividerItemDecoration;
 public abstract class EditableFragment<T extends IIdSettable> extends EditableFragmentBase<T> {
 
     protected FragmentListBinding binding;
-    private NowListAdapter<T> mAdapter;
+    protected NowListAdapter<T> mAdapter;
     private OnItemSelectedListener listener;
 
     @Override
@@ -44,21 +39,11 @@ public abstract class EditableFragment<T extends IIdSettable> extends EditableFr
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.addItemDecoration(
                 new DividerItemDecoration(getContext(), R.drawable.inset_divider));
+        mAdapter = getAdapter();
+        binding.recyclerView.setAdapter(mAdapter);
         return binding.getRoot();
     }
 
-    void setList(IdProviderDataSource<T> dataSource, List<T> list, NowListAdapter<T> adapter) {
-        this.dataSource = dataSource;
-        if (binding.recyclerView.getAdapter() == null) {
-            mAdapter = adapter;
-            mAdapter.setList(list);
-            binding.recyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.setList(list);
-            mAdapter.notifyDataSetChanged();
-        }
-        updateFabButton(list);
-    }
 
     @Override
     public void onAttach(Context activity) {
@@ -69,12 +54,19 @@ public abstract class EditableFragment<T extends IIdSettable> extends EditableFr
         if (getParentFragment() instanceof OnItemSelectedListener) {
             this.listener = (OnItemSelectedListener) getParentFragment();
         }
-        Assert.assertNotNull(listener);
     }
 
+    protected abstract NowListAdapter<T> getAdapter();
+
     protected final void onSelected(T item) {
-        listener.onItemSelected(Parcels.wrap(item));
+        if (listener == null) {
+            onItemSelected(item);
+        } else {
+            listener.onItemSelected(Parcels.wrap(item));
+        }
     }
+
+    protected abstract void onItemSelected(T item);
 
     @Override
     protected T getItem(int id) {

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            style="@style/card_list"
+            app:layoutManager="LinearLayoutManager" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_drop_shadow_height"
+            android:background="@drawable/toolbar_drop_shadow" />
+
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/fab"
+            style="@style/fabMenu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|end"
+            android:padding="16dp">
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/fab_album_24dp"
+                app:fab_colorNormal="#2196F3"
+                app:fab_label="@string/training_with_standard_round"
+                app:fab_size="mini" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/fab_trending_up_white_24dp"
+                app:fab_colorNormal="#4CAF50"
+                app:fab_label="@string/free_training"
+                app:fab_size="mini" />
+
+        </com.github.clans.fab.FloatingActionMenu>
+
+    </FrameLayout>
+
+</layout>

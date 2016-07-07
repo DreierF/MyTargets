@@ -10,7 +10,6 @@ package de.dreier.mytargets.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
 
@@ -22,20 +21,18 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.utils.Utils;
 
 /**
- * Shows all rounds of one settings_only day
+ * Shows all rounds of one training day
  */
-abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSettable>
-        extends EditableFragmentBase<C> {
+abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSettable> extends EditableFragmentBase<C> {
 
     private static final String KEY_EXPANDED = "expanded";
     ExpandableNowListAdapter<H, C> mAdapter;
     @Nullable
     private Bundle savedInstanceState;
 
-    void setList(RecyclerView recyclerView, IdProviderDataSource<C> dataSource, List<H> headers, List<C> children, PartitionDelegate<C> parentDelegate, boolean opened, @NonNull ExpandableNowListAdapter<H, C> adapter) {
+    void setList(IdProviderDataSource<C> dataSource, List<H> headers, List<C> children, PartitionDelegate<C> parentDelegate, boolean opened) {
         this.dataSource = dataSource;
-        if (recyclerView.getAdapter() == null) {
-            mAdapter = adapter;
+        if (mAdapter.getItemCount() == 0) {
             mAdapter.setList(headers, children, parentDelegate, opened);
             if (savedInstanceState != null && savedInstanceState.containsKey(KEY_EXPANDED)) {
                 mAdapter.setExpandedIds(
@@ -43,13 +40,9 @@ abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSettable>
             } else if (!opened && mAdapter.getItemCount() > 0) {
                 mAdapter.expandOrCollapse(0);
             }
-            recyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.setList(headers, children, parentDelegate);
-            mAdapter.notifyDataSetChanged();
+            return;
         }
-
-        updateFabButton(headers);
+        mAdapter.setList(headers, children, parentDelegate);
     }
 
     @SuppressWarnings("unchecked")

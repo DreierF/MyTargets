@@ -11,7 +11,6 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,9 +51,11 @@ public class TargetFragment extends SelectItemFragment<Target>
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_target_select, container, false);
         binding.recyclerView.setHasFixedSize(true);
+        mAdapter = new TargetAdapter(getContext());
+        binding.recyclerView.setAdapter(mAdapter);
         useDoubleClickSelection = true;
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
-        ToolbarUtils.showHomeAsUp((Fragment) this);
+        ToolbarUtils.showHomeAsUp(this);
         ToolbarUtils.showUpAsX(this);
         setHasOptionsMenu(true);
         return binding.getRoot();
@@ -76,7 +77,7 @@ public class TargetFragment extends SelectItemFragment<Target>
         List<Target> targets = Stream.of(list)
                 .map(value -> new Target((int) value.getId(), 0))
                 .collect(Collectors.toList());
-        setList(binding.recyclerView, targets, new TargetAdapter(getContext()));
+        mAdapter.setList(targets);
 
         int position = targets.indexOf(t);
         mSelector.setSelected(position, t.getId(), true);

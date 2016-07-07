@@ -36,9 +36,9 @@ import org.parceler.Parcels;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditStandardRoundActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
-import de.dreier.mytargets.databinding.FragmentStandardRoundSelectionBinding;
+import de.dreier.mytargets.databinding.FragmentStandardRoundBinding;
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
@@ -52,6 +52,7 @@ import de.dreier.mytargets.utils.ToolbarUtils;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
+import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 
 public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         implements View.OnClickListener, SearchView.OnQueryTextListener,
@@ -64,7 +65,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
     private static final String KEY_CHECKED = "checked";
     private static final String KEY_CLUB_FILTER = "club_filter";
     private final CheckBox[] clubs = new CheckBox[9];
-    protected FragmentStandardRoundSelectionBinding binding;
+    protected FragmentStandardRoundBinding binding;
 
     private StandardRound currentSelection;
     private SearchView searchView;
@@ -72,8 +73,11 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil
-                .inflate(inflater, R.layout.fragment_standard_round_selection, container, false);
+                .inflate(inflater, R.layout.fragment_standard_round, container, false);
         binding.recyclerView.setHasFixedSize(true);
+        mAdapter = new StandardRoundAdapter(getContext());
+        binding.recyclerView.setAdapter(mAdapter);
+        binding.fab.setOnClickListener(this);
         useDoubleClickSelection = true;
         ToolbarUtils.showUpAsX(this);
         setHasOptionsMenu(true);
@@ -121,7 +125,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
 
     @Override
     public void onLoadFinished(Loader<List<StandardRound>> loader, List<StandardRound> data) {
-        setList(binding.recyclerView, data, new StandardRoundAdapter(getContext()));
+        mAdapter.setList(data);
         int position = data.indexOf(currentSelection);
         // Test if our currentSelection has been deleted
         if (position == -1 && new StandardRoundDataSource().get(currentSelection.getId()) == null) {
@@ -261,11 +265,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
     }
 
     private void startEditStandardRound(StandardRound item) {
-        Intent i = new Intent(getActivity(),
-                SimpleFragmentActivityBase.EditStandardRoundActivity.class);
-        i.putExtra(ITEM, Parcels.wrap(item));
-        startActivityForResult(i, NEW_STANDARD_ROUND);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        startActivityAnimated(getActivity(), EditStandardRoundActivity.class, NEW_STANDARD_ROUND, ITEM, Parcels.wrap(item));
     }
 
     @Override
@@ -300,11 +300,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
 
     @Override
     public void onClick(View v) {
-        startActivityForResult(
-                new Intent(getActivity(),
-                        SimpleFragmentActivityBase.EditStandardRoundActivity.class),
-                NEW_STANDARD_ROUND);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        startActivityAnimated(getActivity(), EditStandardRoundActivity.class, NEW_STANDARD_ROUND);
     }
 
     @Override

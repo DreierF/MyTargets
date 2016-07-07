@@ -1,10 +1,14 @@
 package de.dreier.mytargets.activities;
 
 
+import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
+import android.view.View;
 
+import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,13 +24,16 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.PermissionGranter.allowPermissionsIfNeeded;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_TYPE;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.endsWith;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -44,17 +51,16 @@ public class MainActivityNavigationTest extends UITestBase {
         pressBack();
 
         // Does new free training work
-        onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
-        onView(allOf(withId(R.id.fab1Label), isDisplayed()))
-                .perform(click()); // TODO fix fabmenu fab1 not visible
+        onView(matchFab()).perform(click());
+        onView(withId(R.id.fab1)).perform(click());
         intended(allOf(hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
                 hasExtra(TRAINING_TYPE, FREE_TRAINING)));
         allowPermissionsIfNeeded(mActivityTestRule.getActivity(), ACCESS_FINE_LOCATION);
         pressBack();
 
         // Does new training with standard round work
-        onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
-        onView(allOf(withId(R.id.fab2Label), isDisplayed())).perform(click());
+        onView(matchFab()).perform(click());
+        onView(allOf(withId(R.id.fab2), isDisplayed())).perform(click());
         intended(allOf(
                 hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
                 hasExtra(TRAINING_TYPE, TRAINING_WITH_STANDARD_ROUND)));
@@ -73,5 +79,10 @@ public class MainActivityNavigationTest extends UITestBase {
         onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
         intended(hasComponent(SimpleFragmentActivityBase.EditArrowActivity.class.getName()));
         pressBack();
+    }
+
+    @NonNull
+    private Matcher<View> matchFab() {
+        return allOf(withParent(withId(R.id.fab)), withClassName(endsWith("ImageView")), isDisplayed());
     }
 }

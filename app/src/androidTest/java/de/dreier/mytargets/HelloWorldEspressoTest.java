@@ -24,11 +24,15 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.Visibility.INVISIBLE;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
+import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.OrientationChangeAction.orientationLandscape;
 import static de.dreier.mytargets.PermissionGranter.allowPermissionsIfNeeded;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.endsWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -57,9 +61,9 @@ public class HelloWorldEspressoTest extends UITestBase {
     @Test
     public void addTraining() throws InterruptedException {
         onView(withId(R.id.fab1)).check(matches(withEffectiveVisibility(INVISIBLE)));
-        onView(withId(R.id.fab)).perform(click()).check(matches(isDisplayed()));
-        SystemClock.sleep(500);
-        onView(withId(R.id.fab1Label)).perform(click());
+        onView(allOf(withParent(withId(R.id.fab)), withClassName(endsWith("ImageView")), isDisplayed()))
+                .perform(click());
+        onView(withId(R.id.fab1)).perform(click());
         allowPermissionsIfNeeded(mActivityRule.getActivity(), ACCESS_FINE_LOCATION);
         onView(withId(R.id.action_save)).perform(click());
         onView(isRoot()).perform(orientationLandscape(mActivityRule));

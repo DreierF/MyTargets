@@ -127,7 +127,7 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
             ArrayList<RoundTemplate> rounds = r.rounds;
             if (rounds.size() > 0 && ((r.club & clubs) != 0 ||
                     r.name.startsWith("NFAA/IFAA") && (clubs & StandardRoundFactory.IFAA) != 0) &&
-                    rounds.get(0).distance.unit.equals(unitDistance) &&
+                    rounds.get(0).distance.unit == unitDistance &&
                     r.indoor == indoor) {
                 TargetModelBase target = rounds.get(0).target.getModel();
                 if ((checked != R.id.field || target.isFieldTarget()) &&
