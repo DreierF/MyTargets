@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import junit.framework.Assert;
+
 import org.parceler.Parcels;
 
 import de.dreier.mytargets.R;
@@ -24,17 +26,19 @@ import de.dreier.mytargets.databinding.ItemDistanceBinding;
 import de.dreier.mytargets.managers.dao.DistanceDataSource;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Dimension.Unit;
+import de.dreier.mytargets.utils.DistanceInputDialog;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.views.CardItemDecorator;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class DistanceGridFragment extends SelectItemFragment<Dimension> {
+public class DistanceGridFragment extends SelectItemFragment<Dimension> implements DistanceInputDialog.OnClickListener {
 
     private static final String DISTANCE_UNIT = "distance_unit";
     protected FragmentListBinding binding;
     private Dimension distance;
     private Unit unit;
+    private SelectItemFragment.OnItemSelectedListener listener;
 
     public static DistanceGridFragment newInstance(Dimension distance, Unit unit) {
         DistanceGridFragment fragment = new DistanceGridFragment();
@@ -56,7 +60,32 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> {
         binding.recyclerView.addItemDecoration(new CardItemDecorator(getActivity(), 3));
         mAdapter = new DistanceAdapter(getContext());
         binding.recyclerView.setAdapter(mAdapter);
+        binding.fab.setOnClickListener(view -> new DistanceInputDialog.Builder(getContext())
+                .setUnit(unit.toString())
+                .setOnClickListener(DistanceGridFragment.this)
+                .show());
         return binding.getRoot();
+    }
+
+    @Override
+    public void onOkClickListener(String input) {
+        Dimension distance = this.distance;
+        try {
+            int distanceVal = Integer.parseInt(input.replaceAll("[^0-9]", ""));
+            distance = new Dimension(distanceVal, unit);
+        } catch (NumberFormatException e) {
+            // leave distance as it is
+        }
+        listener.onItemSelected(Parcels.wrap(distance));
+    }
+
+    @Override
+    public void onAttach(Context activity) {
+        super.onAttach(activity);
+        if (activity instanceof SelectItemFragment.OnItemSelectedListener) {
+            this.listener = (SelectItemFragment.OnItemSelectedListener) activity;
+        }
+        Assert.assertNotNull(listener);
     }
 
     @Override

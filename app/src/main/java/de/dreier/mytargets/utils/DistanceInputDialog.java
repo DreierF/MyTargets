@@ -12,6 +12,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.widget.EditText;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.DialogCommentBinding;
@@ -36,12 +37,13 @@ public class DistanceInputDialog {
             DialogCommentBinding binding = DataBindingUtil.inflate(inflater, R.layout.dialog_comment, null, false);
             binding.shotComment.setInputType(InputType.TYPE_CLASS_NUMBER);
             binding.unit.setText(mUnit);
+            final EditText shotComment = binding.shotComment;
 
             new AlertDialog.Builder(mContext)
                     .setTitle(R.string.distance)
                     .setView(binding.getRoot())
                     .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                        String s = binding.shotComment.getText().toString();
+                        String s = shotComment.getText().toString();
                         mClickListener.onOkClickListener(s);
                         dialog.dismiss();
                     })

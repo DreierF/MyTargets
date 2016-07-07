@@ -48,8 +48,13 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
     public int compareTo(@NonNull Dimension another) {
         if (unit == another.unit) {
             return (int) (getId() - another.getId());
+        } else if (unit == null) {
+            return -1;
+        } else if (another.unit == null) {
+            return 1;
+        } else {
+            return unit.abbreviation.compareTo(another.unit.abbreviation);
         }
-        return unit.abbreviation.compareTo(another.unit.abbreviation);
     }
 
     @Override
