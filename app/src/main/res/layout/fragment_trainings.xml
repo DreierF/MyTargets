@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -9,25 +9,20 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             style="@style/card_list"
-            app:layoutManager="LinearLayoutManager"/>
+            app:layoutManager="LinearLayoutManager" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_drop_shadow_height"
-            android:background="@drawable/toolbar_drop_shadow"/>
+            android:background="@drawable/toolbar_drop_shadow" />
 
         <com.github.clans.fab.FloatingActionMenu
             android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/fabMenu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            app:menu_animationDelayPerItem="50"
-            app:menu_colorNormal="@color/colorAccent"
-            app:menu_colorPressed="@color/colorAccent"
-            app:menu_colorRipple="#99FFFFFF"
-            app:menu_icon="@drawable/ic_add_white_24dp"
-            app:menu_openDirection="up">
+            android:padding="16dp">
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fab2"
@@ -36,7 +31,7 @@
                 android:src="@drawable/ic_album_24dp"
                 app:fab_colorNormal="#2196F3"
                 app:fab_label="@string/training_with_standard_round"
-                app:fab_size="mini"/>
+                app:fab_size="mini" />
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fab1"

@@ -77,16 +77,11 @@
 
                 <com.github.clans.fab.FloatingActionMenu
                     android:id="@+id/fab"
+                    style="@style/fabMenu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
-                    android:layout_margin="16dp"
-                    app:menu_animationDelayPerItem="50"
-                    app:menu_colorNormal="@color/colorAccent"
-                    app:menu_colorPressed="@color/colorAccent"
-                    app:menu_colorRipple="#99FFFFFF"
-                    app:menu_icon="@drawable/ic_add_white_24dp"
-                    app:menu_openDirection="up">
+                    android:layout_margin="16dp">
 
                     <com.github.clans.fab.FloatingActionButton
                         android:id="@+id/fab2"
@@ -95,7 +90,7 @@
                         android:src="@drawable/ic_refresh_white_24dp"
                         app:fab_colorNormal="#2196F3"
                         app:fab_label="@string/round"
-                        app:fab_size="mini"/>
+                        app:fab_size="mini" />
 
                     <com.github.clans.fab.FloatingActionButton
                         android:id="@+id/fab1"
