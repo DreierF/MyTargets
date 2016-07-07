@@ -36,7 +36,7 @@ import org.parceler.Parcels;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditStandardRoundActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.databinding.FragmentStandardRoundSelectionBinding;
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
@@ -52,6 +52,7 @@ import de.dreier.mytargets.utils.ToolbarUtils;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
+import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 
 public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         implements View.OnClickListener, SearchView.OnQueryTextListener,
@@ -76,6 +77,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         binding.recyclerView.setHasFixedSize(true);
         mAdapter = new StandardRoundAdapter(getContext());
         binding.recyclerView.setAdapter(mAdapter);
+        binding.fab.setOnClickListener(this);
         useDoubleClickSelection = true;
         ToolbarUtils.showUpAsX(this);
         setHasOptionsMenu(true);
@@ -263,11 +265,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
     }
 
     private void startEditStandardRound(StandardRound item) {
-        Intent i = new Intent(getActivity(),
-                SimpleFragmentActivityBase.EditStandardRoundActivity.class);
-        i.putExtra(ITEM, Parcels.wrap(item));
-        startActivityForResult(i, NEW_STANDARD_ROUND);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        startActivityAnimated(getActivity(), EditStandardRoundActivity.class, NEW_STANDARD_ROUND, ITEM, Parcels.wrap(item));
     }
 
     @Override
@@ -302,11 +300,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
 
     @Override
     public void onClick(View v) {
-        startActivityForResult(
-                new Intent(getActivity(),
-                        SimpleFragmentActivityBase.EditStandardRoundActivity.class),
-                NEW_STANDARD_ROUND);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        startActivityAnimated(getActivity(), EditStandardRoundActivity.class, NEW_STANDARD_ROUND);
     }
 
     @Override

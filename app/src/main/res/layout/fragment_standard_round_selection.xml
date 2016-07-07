@@ -23,6 +23,15 @@
                 android:layout_height="@dimen/toolbar_drop_shadow_height"
                 android:background="@drawable/toolbar_drop_shadow"/>
 
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="16dp"
+                android:src="@drawable/ic_add_white_24dp"
+                app:fab_colorNormal="@color/colorAccent" />
+
         </FrameLayout>
 
         <!-- The navigation drawer -->
