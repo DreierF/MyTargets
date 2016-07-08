@@ -14,8 +14,6 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -58,9 +56,6 @@ public class TrainingFragment extends EditableFragment<Round> {
 
     private final boolean[] equals = new boolean[2];
     protected FragmentTrainingBinding binding;
-    // Set up toolbar
-    AppCompatActivity activity = (AppCompatActivity) getActivity();
-    ActionBar actionBar = activity.getSupportActionBar();
     private long mTraining;
     private Training training;
     private RoundDataSource roundDataSource;
@@ -95,11 +90,6 @@ public class TrainingFragment extends EditableFragment<Round> {
             // New round to free training
             startActivityAnimated(getActivity(), EditRoundActivity.class, ITEM_ID, mTraining);
         });
-
-
-        ToolbarUtils.setSupportActionBar(this, binding.toolbar);
-        ToolbarUtils.showHomeAsUp(this);
-        setHasOptionsMenu(true);
 
         trainingDataSource = new TrainingDataSource();
         roundDataSource = new RoundDataSource();
