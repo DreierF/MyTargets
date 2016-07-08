@@ -27,7 +27,6 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
@@ -88,8 +87,29 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         rounds = Stream.of(Utils.toList(roundIds))
                 .map(id -> new RoundDataSource().get(id))
                 .collect(Collectors.toList());
-        ToolbarUtils.showHomeAsUp(this);
 
+        showLineChart();
+        showPieChart();
+        showDispersionView();
+
+        arrowStatisticDataSource = new ArrowStatisticDataSource();
+        binding.arrows.setHasFixedSize(true);
+        getActivity().getSupportLoaderManager().initLoader(0, null, this);
+
+        ToolbarUtils.showHomeAsUp(this);
+        return binding.getRoot();
+    }
+
+    private void showDispersionView() {
+        binding.dispersionView.setShoots(Stream.of(rounds)
+                .flatMap(r -> Stream.of(new PasseDataSource().getAllByRound(r.getId())))
+                .flatMap(p -> Stream.of(p.shotList()))
+                .collect(Collectors.toList()));
+        binding.dispersionView.setTarget(target.getDrawable());
+        binding.dispersionView.setEnabled(false);
+    }
+
+    private void showLineChart() {
         LineData data = getLineChartDataSet();
         binding.chartView.getXAxis().setTextSize(20);
         binding.chartView.getXAxis().setTextColor(0xFF848484);
@@ -98,27 +118,26 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         binding.chartView.setData(data);
         binding.chartView.getLegend().setEnabled(false);
         binding.chartView.animateXY(2000, 2000);
-
-        binding.arrows.setHasFixedSize(true);
-
-        //binding.dispersionView;
+        binding.chartView.setDescription("");
         binding.chartOverlay.setOnClickListener(v -> onChartClick());
-        arrowStatisticDataSource = new ArrowStatisticDataSource();
-        getActivity().getSupportLoaderManager().initLoader(0, null, this);
+    }
 
-        // configure pie chart
-        binding.distributionChart.setUsePercentValues(true);
-
+    private void showPieChart() {
         // enable hole and configure
-        binding.distributionChart.setDrawHoleEnabled(true);
-        binding.distributionChart.setHoleRadius(7);
+        //binding.distributionChart.setDrawHoleEnabled(true);
+        //binding.distributionChart.setHoleRadius(7);
         binding.distributionChart.setTransparentCircleRadius(10);
+        binding.distributionChart.getLegend().setEnabled(false);
+        binding.distributionChart.setDescription("");
 
         // enable rotation of the chart by touch
         binding.distributionChart.setRotationAngle(0);
         binding.distributionChart.setRotationEnabled(true);
+
+        binding.distributionChart.setUsePercentValues(false);
+        binding.distributionChart.highlightValues(null);
+        binding.distributionChart.invalidate();
         addPieData();
-        return binding.getRoot();
     }
 
     private void addPieData() {
@@ -127,11 +146,15 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         ArrayList<String> xValues = new ArrayList<>();
         ArrayList<Entry> yValues = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<>();
+        ArrayList<Integer> textColors = new ArrayList<>();
 
         for (Map.Entry<SelectableZone, Integer> s : scores) {
-            xValues.add(s.getKey().text);
-            yValues.add(new Entry(s.getValue(), xValues.size() - 1));
-            colors.add(s.getKey().zone.getFillColor());
+            if (s.getValue() > 0) {
+                xValues.add(s.getKey().text);
+                yValues.add(new Entry(s.getValue(), xValues.size() - 1));
+                colors.add(s.getKey().zone.getFillColor());
+                textColors.add(s.getKey().zone.getTextColor());
+            }
         }
 
         // create pie data set
@@ -144,13 +167,12 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
         // instantiate pie data object now
         PieData data = new PieData(xValues, dataSet);
-        data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(11f);
+        data.setValueTextSize(13f);
         data.setValueTextColor(Color.GRAY);
+        data.setDrawValues(false);
+        data.setValueTextColors(textColors);
 
         binding.distributionChart.setData(data);
-        binding.distributionChart.highlightValues(null);
-        binding.distributionChart.invalidate();
     }
 
     private void onChartClick() {
@@ -191,7 +213,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     private LineData getLineChartDataSet() {
         List<Pair<Integer, Long>> values = Stream.of(Utils.toList(roundIds))
                 .flatMap(roundId -> Stream.of(new PasseDataSource().getAllByRound(roundId)))
-                .map(passe->getPairEndSummary(target, passe))
+                .map(passe -> getPairEndSummary(target, passe))
                 .collect(Collectors.toList());
 
         final DateFormat dateFormat = DateFormat.getDateInstance();
@@ -206,7 +228,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
     private Pair<Integer, Long> getPairEndSummary(Target target, Passe passe) {
         int actCounter = 0;
-        for(Shot s : passe.shot) {
+        for (Shot s : passe.shot) {
             actCounter += target.getPointsByZone(s.zone, s.index);
         }
         return new Pair<>(actCounter, passe.saveDate.getMillis());

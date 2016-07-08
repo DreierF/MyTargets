@@ -92,14 +92,7 @@ public class StatisticsActivity extends ChildActivityBase {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return getString(R.string.all_trainings);
-                case 1:
-                    return getString(R.string.entire_training);
-                default:
-                    return getString(R.string.arrow_ranking);
-            }
+            return targets.get(position).getFirst().getName();
         }
     }
 }

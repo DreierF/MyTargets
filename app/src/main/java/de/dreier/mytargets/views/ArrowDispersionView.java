@@ -14,7 +14,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
@@ -25,7 +25,7 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
     private int contentHeight;
     private final float density;
     private final Paint fillPaint;
-    private ArrayList<Shot> shots;
+    private List<Shot> shots;
     private float orgRadius, orgMidX, orgMidY;
     private TargetDrawable target;
     private float zoomInX = -1, zoomInY = -1;
@@ -76,7 +76,7 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         return true;
     }
 
-    public void setShoots(ArrayList<Shot> passes) {
+    public void setShoots(List<Shot> passes) {
         shots = passes;
         invalidate();
     }
@@ -106,8 +106,8 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
 
     private void drawTarget(Canvas canvas, float x, float y, float radius) {
         // Erase background
-        fillPaint.setColor(0xFFEEEEEE);
-        canvas.drawRect(0, 0, contentWidth, contentHeight, fillPaint);
+        //fillPaint.setColor(0xFFEEEEEE);
+        //canvas.drawRect(0, 0, contentWidth, contentHeight, fillPaint);
 
         // Draw actual target face
         target.setBounds((int) (x - radius), (int) (y - radius), (int) (x + radius),

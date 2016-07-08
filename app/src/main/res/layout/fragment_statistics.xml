@@ -18,13 +18,13 @@
                     android:id="@+id/chartView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="8dp" />
 
                 <View
                     android:id="@+id/chartOverlay"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:clickable="true"/>
+                    android:clickable="true" />
 
             </FrameLayout>
 
@@ -39,41 +39,24 @@
                     style="@style/Label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dispersion_pattern"/>
+                    android:text="@string/dispersion_pattern" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <TextView
-                        android:id="@+id/distribution"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
-
-                    <com.github.mikephil.charting.charts.PieChart
-                        android:id="@+id/distributionChart"
-                        android:layout_width="0dp"
-                        android:layout_height="150dp"
-                        android:layout_gravity="end"
-                        android:layout_weight="1"/>
-
-
-                </LinearLayout>
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/distributionChart"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp" />
 
                 <de.dreier.mytargets.views.ArrowDispersionView
                     android:id="@+id/dispersionView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_width="200dp"
+                    android:layout_height="200dp" />
 
                 <TextView
                     style="@style/Label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
-                    android:text="@string/arrow_ranking"/>
+                    android:text="@string/arrow_ranking" />
 
             </LinearLayout>
 
@@ -81,7 +64,7 @@
                 android:id="@+id/arrows"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layoutManager="LinearLayoutManager"/>
+                app:layoutManager="LinearLayoutManager" />
 
         </LinearLayout>
 
