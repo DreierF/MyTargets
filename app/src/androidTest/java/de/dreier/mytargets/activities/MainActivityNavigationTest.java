@@ -4,35 +4,65 @@ package de.dreier.mytargets.activities;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.hamcrest.CoreMatchers;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
+import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.targets.WAFull;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
+import static android.support.test.espresso.matcher.ViewMatchers.Visibility.INVISIBLE;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
+import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
+import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static de.dreier.mytargets.OrientationChangeAction.orientationLandscape;
+import static de.dreier.mytargets.OrientationChangeAction.orientationPortrait;
 import static de.dreier.mytargets.PermissionGranter.allowPermissionsIfNeeded;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_TYPE;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.endsWith;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityNavigationTest extends UITestBase {
 
     @Rule
     public IntentsTestRule<MainActivity> mActivityTestRule = new IntentsTestRule<>(MainActivity.class);
+
+    @Before
+    public void setUp() {
+        SettingsManager
+                .setTarget(new Target(WAFull.ID, 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
+        SettingsManager.setDistance(new Dimension(50, Dimension.Unit.METER));
+        SettingsManager.setIndoor(false);
+        SettingsManager.setInputMode(false);
+        SettingsManager.setTimerEnabled(false);
+        SettingsManager.setArrowsPerPasse(3);
+    }
+
+    @Test
+    public void appDoesStartUp() {
+        onView(withText(R.string.my_targets)).check(matches(isDisplayed()));
+    }
 
     @Test
     public void mainActivityNavigationTest() {
@@ -70,5 +100,20 @@ public class MainActivityNavigationTest extends UITestBase {
         onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
         intended(hasComponent(SimpleFragmentActivityBase.EditArrowActivity.class.getName()));
         pressBack();
+    }
+
+    @Test
+    public void addTraining() throws InterruptedException {
+        onView(withId(R.id.fab1)).check(matches(withEffectiveVisibility(INVISIBLE)));
+        onView(allOf(withParent(withId(R.id.fab)), withClassName(endsWith("ImageView")), isDisplayed()))
+                .perform(click());
+        onView(withId(R.id.fab1)).perform(click());
+        allowPermissionsIfNeeded(mActivityTestRule.getActivity(), ACCESS_FINE_LOCATION);
+        onView(withId(R.id.action_save)).perform(click());
+        onView(isRoot()).perform(orientationLandscape(mActivityTestRule));
+        navigateUp();
+        onView(withId(R.id.detail_score))
+                .check(matches(withText(CoreMatchers.containsString("0/30")))); //FIXME 0/0 vs 0/30?
+        onView(isRoot()).perform(orientationPortrait(mActivityTestRule));
     }
 }

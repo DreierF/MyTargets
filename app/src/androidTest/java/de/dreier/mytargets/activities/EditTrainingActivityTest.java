@@ -21,7 +21,6 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -67,13 +66,13 @@ public class EditTrainingActivityTest extends UITestBase {
         allowPermissionsIfNeeded(mActivityTestRule.getActivity(), ACCESS_FINE_LOCATION);
 
         // Select distance 20m
-        onView(withId(R.id.distanceSpinner)).perform(scrollTo(), click());
+        onView(withId(R.id.distanceSpinner)).perform(nestedScrollTo(), click());
         onView(allOf(withId(R.id.recyclerView), isDisplayed()))
                 .perform(actionOnItemAtPosition(4, click()));
         onView(withId(R.id.distance)).check(matches(withText("20m")));
 
         // Change distance to 23yd as custom distance
-        onView(withId(R.id.distanceSpinner)).perform(scrollTo(), click());
+        onView(withId(R.id.distanceSpinner)).perform(nestedScrollTo(), click());
         onView(withText(R.string.imperial)).perform(click());
         onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
         onView(withId(R.id.shot_comment)).perform(replaceText("23"));
@@ -81,7 +80,7 @@ public class EditTrainingActivityTest extends UITestBase {
         onView(withId(R.id.distance)).check(matches(withText("23yd")));
 
         // Change target to vertical 3 spot
-        onView(withId(R.id.targetSpinner)).perform(scrollTo(), click());
+        onView(withId(R.id.targetSpinner)).perform(nestedScrollTo(), click());
         onView(withId(R.id.recyclerView)).perform(actionOnItemAtPosition(5, click()));
         onView(withId(R.id.scoring_style)).perform(click());
         onView(withText("10, 9, 8, 7, 6")).perform(click());
@@ -98,13 +97,13 @@ public class EditTrainingActivityTest extends UITestBase {
                 .check(matches(withText("10, 9, 8, 7, 6")));
 
         // Change environment
-        onView(allOf(withId(R.id.environmentSpinner), isDisplayed())).perform(scrollTo(), click());
+        onView(withId(R.id.environmentSpinner)).perform(nestedScrollTo(), click());
         onView(withId(R.id.rain)).perform(click());
         onView(withId(R.id.windSpeed)).perform(click());
         onView(withId(R.id.recyclerView)).perform(actionOnItemAtPosition(9, click()));
         onView(withId(R.id.windDirection)).perform(click());
         onView(withId(R.id.recyclerView)).perform(actionOnItemAtPosition(7, click()));
-        onView(withId(R.id.location)).perform(replaceText("My location"));
+        onView(withId(R.id.location)).perform(nestedScrollTo(), replaceText("My location"));
         onView(withId(R.id.action_save)).perform(click());
         onView(allOf(withId(R.id.name),
                 withParent(withParent(withParent(withParent(withId(R.id.environmentSpinner)))))))
@@ -116,7 +115,7 @@ public class EditTrainingActivityTest extends UITestBase {
 
         onView(withId(R.id.trainingDate)).perform(click());
         //TODO change date
-        onView(withText(android.R.string.ok)).perform(scrollTo(), click());
+        onView(withText(android.R.string.ok)).perform(nestedScrollTo(), click());
 
         onView(withId(R.id.action_save)).perform(click());
     }

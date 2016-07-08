@@ -9,6 +9,7 @@ import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Tap;
+import android.support.test.espresso.action.ViewActions;
 import android.support.test.uiautomator.UiDevice;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -80,5 +81,9 @@ public class UITestBase {
     @NonNull
     protected static Matcher<View> matchFab() {
         return Matchers.allOf(withParent(withId(R.id.fab)), withClassName(endsWith("ImageView")), isDisplayed());
+    }
+
+    public static ViewAction nestedScrollTo() {
+        return ViewActions.actionWithAssertions(new NestedScrollToAction());
     }
 }
