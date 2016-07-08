@@ -77,11 +77,6 @@ public class BowFragment extends EditableFragment<Bow> {
     }
 
     @Override
-    protected NowListAdapter<Bow> getAdapter() {
-        return new BowAdapter(getContext());
-    }
-
-    @Override
     protected void onItemSelected(Bow item) {
         startActivityAnimated(getActivity(), EditBowActivity.class, BOW_ID, item.getId());
     }

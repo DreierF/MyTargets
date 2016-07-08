@@ -14,9 +14,6 @@ import org.parceler.Parcels;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.shared.models.IIdSettable;
 
-/**
- * Shows all rounds of one settings_only day
- */
 public abstract class EditableFragment<T extends IIdSettable> extends EditableFragmentBase<T> {
 
     protected NowListAdapter<T> mAdapter;
@@ -32,9 +29,6 @@ public abstract class EditableFragment<T extends IIdSettable> extends EditableFr
             this.listener = (OnItemSelectedListener) getParentFragment();
         }
     }
-
-    //TODO remove?
-    protected abstract NowListAdapter<T> getAdapter();
 
     protected final void onSelected(T item) {
         if (listener == null) {

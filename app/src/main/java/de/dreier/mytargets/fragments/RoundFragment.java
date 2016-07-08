@@ -137,11 +137,6 @@ public class RoundFragment extends EditableFragment<Passe> {
     }
 
     @Override
-    protected NowListAdapter<Passe> getAdapter() {
-        return new EndAdapter(getContext());
-    }
-
-    @Override
     protected void onItemSelected(Passe item) {
         openInputActivityForPasse(item);
     }

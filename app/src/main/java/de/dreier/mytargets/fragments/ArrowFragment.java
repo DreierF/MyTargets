@@ -57,6 +57,8 @@ public class ArrowFragment extends EditableFragment<Arrow> {
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.addItemDecoration(
                 new DividerItemDecoration(getContext(), R.drawable.inset_divider));
+        mAdapter = new ArrowAdapter(getContext());
+        binding.recyclerView.setAdapter(mAdapter);
         return binding.getRoot();
     }
 
@@ -76,11 +78,6 @@ public class ArrowFragment extends EditableFragment<Arrow> {
     protected void onEdit(Arrow item) {
         startActivityAnimated(getActivity(),
                 EditArrowActivity.class, ARROW_ID, item.getId());
-    }
-
-    @Override
-    protected NowListAdapter<Arrow> getAdapter() {
-        return new ArrowAdapter(getContext());
     }
 
     @Override

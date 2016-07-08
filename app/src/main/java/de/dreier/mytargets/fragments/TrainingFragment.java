@@ -163,11 +163,6 @@ public class TrainingFragment extends EditableFragment<Round> {
     }
 
     @Override
-    protected NowListAdapter<Round> getAdapter() {
-        return new RoundAdapter(getContext());
-    }
-
-    @Override
     protected void onItemSelected(Round item) {
         startActivityAnimated(getActivity(), RoundActivity.class, ROUND_ID, item.getId());
     }
