@@ -52,12 +52,7 @@ public class ArrowStatisticDataSource extends DataSourceBase {
                 shot.x = res.getFloat(2);
                 shot.y = res.getFloat(3);
                 shot.passe = res.getLong(9);
-                statistic.reachedPointsSum += target.getPointsByZone(shot.zone, shot.index);
-                statistic.maxPointsSum += target.getMaxPoints();
-                statistic.xSum += shot.x;
-                statistic.ySum += shot.y;
-                statistic.shots.add(shot);
-                statistic.count++;
+                statistic.addShot(shot);
                 lastArrowId = arrowId;
                 lastArrowNumber = arrowNumber;
             } while (res.moveToNext());

@@ -10,23 +10,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <FrameLayout
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chartView"
                 android:layout_width="match_parent"
-                android:layout_height="300dp">
-
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/chartView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="8dp" />
-
-                <View
-                    android:id="@+id/chartOverlay"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clickable="true" />
-
-            </FrameLayout>
+                android:layout_height="300dp"
+                android:layout_margin="8dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -46,12 +34,24 @@
                     android:layout_width="200dp"
                     android:layout_height="200dp" />
 
-                <de.dreier.mytargets.views.ArrowDispersionView
-                    android:id="@+id/dispersionView"
+                <FrameLayout
                     android:layout_width="200dp"
-                    android:layout_height="200dp" />
+                    android:layout_height="200dp">
+
+                    <View
+                        android:id="@+id/dispersionViewOverlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <de.dreier.mytargets.views.ArrowDispersionView
+                        android:id="@+id/dispersionView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </FrameLayout>
 
                 <TextView
+                    android:id="@+id/arrowRanking"
                     style="@style/Label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

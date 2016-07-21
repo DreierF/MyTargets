@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import de.dreier.mytargets.R;
@@ -136,16 +135,8 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
         public void bindCursor() {
             binding.training.setText(mItem.title);
             binding.trainingDate.setText(mItem.getFormattedDate());
-            int maxPoints = 0;
-            int reachedPoints = 0;
-            RoundDataSource roundDataSource = new RoundDataSource();
-            List<Round> rounds = roundDataSource.getAll(mItem.getId());
-            for (Round r : rounds) {
-                maxPoints += r.info.getMaxPoints();
-                reachedPoints += r.reachedPoints;
-            }
-            binding.gesTraining
-                    .setText(String.format(Locale.ENGLISH, "%d/%d", reachedPoints, maxPoints));
+            List<Round> rounds = new RoundDataSource().getAll(mItem.getId());
+            binding.gesTraining.setText(mItem.getReachedPoints(rounds));
         }
     }
 

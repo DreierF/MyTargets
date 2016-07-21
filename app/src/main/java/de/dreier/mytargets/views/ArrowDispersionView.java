@@ -138,11 +138,11 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
     }
 
     private void calcSizes() {
-        float radH = (contentHeight - 10 * density) / 2.45f;
+        float radH = (contentHeight - 20 * density) * 0.5f;
         float radW = (contentWidth - 20 * density) * 0.5f;
         orgRadius = (int) (Math.min(radW, radH));
         orgMidX = contentWidth / 2;
-        orgMidY = orgRadius + (int) (10 * density);
+        orgMidY = contentHeight / 2;
     }
 
     class Midpoint {

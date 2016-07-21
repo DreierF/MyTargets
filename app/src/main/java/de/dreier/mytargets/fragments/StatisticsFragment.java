@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.annimon.stream.Collectors;
+import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -31,6 +32,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
 import org.parceler.Parcels;
 
 import java.text.DateFormat;
@@ -101,25 +103,34 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     }
 
     private void showDispersionView() {
-        binding.dispersionView.setShoots(Stream.of(rounds)
+        final List<Shot> shots = Stream.of(rounds)
                 .flatMap(r -> Stream.of(new PasseDataSource().getAllByRound(r.getId())))
+                .filter(p -> p.exact)
                 .flatMap(p -> Stream.of(p.shotList()))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
         binding.dispersionView.setTarget(target.getDrawable());
+        binding.dispersionView.setShoots(shots);
         binding.dispersionView.setEnabled(false);
+        binding.dispersionViewOverlay.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), DispersionPatternActivity.class);
+            ArrowStatistic statistics = new ArrowStatistic();
+            statistics.target = target;
+            statistics.addShots(shots);
+            intent.putExtra(DispersionPatternActivity.ITEM, Parcels.wrap(statistics));
+            intent.putExtra(DispersionPatternActivity.ROUND_IDS, roundIds);
+            startActivity(intent);
+        });
     }
 
     private void showLineChart() {
         LineData data = getLineChartDataSet();
-        binding.chartView.getXAxis().setTextSize(20);
+        binding.chartView.getXAxis().setTextSize(10);
         binding.chartView.getXAxis().setTextColor(0xFF848484);
-        binding.chartView.getXAxis().setEnabled(false);
         binding.chartView.getAxisRight().setEnabled(false);
-        binding.chartView.setData(data);
         binding.chartView.getLegend().setEnabled(false);
+        binding.chartView.setData(data);
         binding.chartView.animateXY(2000, 2000);
         binding.chartView.setDescription("");
-        binding.chartOverlay.setOnClickListener(v -> onChartClick());
     }
 
     private void showPieChart() {
@@ -175,10 +186,6 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         binding.distributionChart.setData(data);
     }
 
-    private void onChartClick() {
-        //TODO animate chart to full size
-    }
-
     @Override
     public Loader<List<ArrowStatistic>> onCreateLoader(int id, Bundle args) {
         arrowStatisticDataSource = new ArrowStatisticDataSource();
@@ -189,6 +196,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onLoadFinished(Loader<List<ArrowStatistic>> loader, List<ArrowStatistic> data) {
         this.data = data;
+        binding.arrowRanking.setVisibility(data.isEmpty() ? View.GONE : View.VISIBLE);
         Collections.sort(data);
         if (binding.arrows.getAdapter() == null) {
             adapter = new ArrowStatisticAdapter();
@@ -211,14 +219,14 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
     @NonNull
     private LineData getLineChartDataSet() {
-        List<Pair<Integer, Long>> values = Stream.of(Utils.toList(roundIds))
+        List<Pair<Integer, DateTime>> values = Stream.of(Utils.toList(roundIds))
                 .flatMap(roundId -> Stream.of(new PasseDataSource().getAllByRound(roundId)))
                 .map(passe -> getPairEndSummary(target, passe))
                 .collect(Collectors.toList());
 
-        final DateFormat dateFormat = DateFormat.getDateInstance();
+        final DateFormat dateFormat = getDateFormat(values);
         List<String> xValues = Stream.of(values)
-                .map(v -> dateFormat.format(new DateTime(v.getSecond()).toDate()))
+                .map(v -> dateFormat.format(v.getSecond().toDate()))
                 .collect(Collectors.toList());
         LineData data = new LineData(xValues, generateLinearRegressionLine(values));
         data.setDrawValues(false);
@@ -226,19 +234,32 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         return data;
     }
 
-    private Pair<Integer, Long> getPairEndSummary(Target target, Passe passe) {
+    private DateFormat getDateFormat(List<Pair<Integer, DateTime>> values) {
+        Optional<DateTime> firstDate = Stream.of(values).map(Pair::getSecond)
+                .min(DateTimeComparator.getDateOnlyInstance());
+        Optional<DateTime> lastDate = Stream.of(values).map(Pair::getSecond)
+                .max(DateTimeComparator.getDateOnlyInstance());
+
+        if (firstDate.equals(lastDate)) {
+            return DateFormat.getTimeInstance(DateFormat.SHORT);
+        } else {
+            return DateFormat.getDateInstance();
+        }
+    }
+
+    private Pair<Integer, DateTime> getPairEndSummary(Target target, Passe passe) {
         int actCounter = 0;
         for (Shot s : passe.shot) {
             actCounter += target.getPointsByZone(s.zone, s.index);
         }
-        return new Pair<>(actCounter, passe.saveDate.getMillis());
+        return new Pair<>(actCounter, passe.saveDate);
     }
 
     @NonNull
-    private LineDataSet convertToLineData(List<Pair<Integer, Long>> values) {
+    private LineDataSet convertToLineData(List<Pair<Integer, DateTime>> values) {
         List<Entry> seriesEntries = new ArrayList<>();
         for (int i = 0; i < values.size(); i++) {
-            seriesEntries.add(new Entry(values.get(i).getSecond(), i));
+            seriesEntries.add(new Entry(values.get(i).getFirst(), i));
         }
 
         LineDataSet series = new LineDataSet(seriesEntries, "");
@@ -249,37 +270,38 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         series.setCircleColor(color);
         series.setCircleRadius(5);
         series.setCircleColorHole(color);
+        series.setDrawValues(false);
         return series;
     }
 
-    private ILineDataSet generateLinearRegressionLine(List<Pair<Integer, Long>> values) {
+    private ILineDataSet generateLinearRegressionLine(List<Pair<Integer, DateTime>> values) {
         int dataSetSize = values.size();
-        int[] x = new int[dataSetSize];
+        float[] x = new float[dataSetSize];
         float[] y = new float[dataSetSize];
         // first pass: read in data, compute x bar and y bar
         int n = 0;
-        float sum_x = 0.0f, sum_y = 0.0f;
+        float sumX = 0.0f, sumY = 0.0f;
         for (int i = 0; i < dataSetSize; i++) {
-            x[n] = values.get(i).getFirst();
-            y[n] = values.get(i).getSecond();
-            sum_x += x[n];
-            sum_y += y[n];
+            x[n] = values.get(i).getSecond().getMillis();
+            y[n] = values.get(i).getFirst();
+            sumX += x[n];
+            sumY += y[n];
             n++;
         }
         if (n < 1) {
             return null;
         }
-        float x_bar = sum_x / n;
-        float y_bar = sum_y / n;
+        float xBar = sumX / n;
+        float yBar = sumY / n;
 
         // second pass: compute summary statistics
-        float xx_bar = 0.0f, xy_bar = 0.0f;
+        float xxBar = 0.0f, xyBar = 0.0f;
         for (int i = 0; i < n; i++) {
-            xx_bar += (x[i] - x_bar) * (x[i] - x_bar);
-            xy_bar += (x[i] - x_bar) * (y[i] - y_bar);
+            xxBar += (x[i] - xBar) * (x[i] - xBar);
+            xyBar += (x[i] - xBar) * (y[i] - yBar);
         }
-        float beta1 = xy_bar / xx_bar;
-        float beta0 = y_bar - beta1 * x_bar;
+        float beta1 = xyBar / xxBar;
+        float beta0 = yBar - beta1 * xBar;
         float y0 = beta1 * values.get(0).getFirst() + beta0;
         float y1 = beta1 * values.get(dataSetSize - 1).getFirst() + beta0;
         Entry first = new Entry(y0, 0);

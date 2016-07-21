@@ -3,9 +3,10 @@ package de.dreier.mytargets.shared.models;
 import org.joda.time.LocalDate;
 
 import java.text.DateFormat;
+import java.util.List;
+import java.util.Locale;
 
 public class Training implements IIdSettable {
-    long id;
     public String title = "";
     public LocalDate date = new LocalDate();
     public Environment environment;
@@ -14,6 +15,7 @@ public class Training implements IIdSettable {
     public long arrow;
     public boolean arrowNumbering;
     public int timePerPasse;
+    long id;
 
     public long getId() {
         return id;
@@ -32,5 +34,15 @@ public class Training implements IIdSettable {
 
     public String getFormattedDate() {
         return DateFormat.getDateInstance().format(date.toDate());
+    }
+
+    public String getReachedPoints(List<Round> rounds) {
+        int maxPoints = 0;
+        int reachedPoints = 0;
+        for (Round r : rounds) {
+            maxPoints += r.info.getMaxPoints();
+            reachedPoints += r.reachedPoints;
+        }
+        return String.format(Locale.ENGLISH, "%d/%d", reachedPoints, maxPoints);
     }
 }

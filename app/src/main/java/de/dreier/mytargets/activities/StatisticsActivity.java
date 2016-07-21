@@ -36,17 +36,14 @@ public class StatisticsActivity extends ChildActivityBase {
     public static final String TRAINING_ID = "training_id";
     public static final String ROUND_ID = "round_id";
 
-    private long trainingId;
-    private long roundId;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityStatisticsBinding binding = DataBindingUtil
                 .setContentView(this, R.layout.activity_statistics);
 
-        trainingId = getIntent().getLongExtra(TRAINING_ID, -1);
-        roundId = getIntent().getLongExtra(ROUND_ID, -1);
+        long trainingId = getIntent().getLongExtra(TRAINING_ID, -1);
+        long roundId = getIntent().getLongExtra(ROUND_ID, -1);
 
         List<Round> rounds;
         if (roundId == -1) {

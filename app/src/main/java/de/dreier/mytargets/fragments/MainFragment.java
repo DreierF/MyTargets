@@ -23,10 +23,13 @@ import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
 import de.dreier.mytargets.databinding.FragmentMainBinding;
+import de.dreier.mytargets.managers.dao.TrainingDataSource;
 
 import static de.dreier.mytargets.utils.ToolbarUtils.setSupportActionBar;
 
 public class MainFragment extends Fragment {
+
+    private boolean showStatistics = false;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentMainBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
@@ -45,6 +48,19 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.statistics_settings, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_statistics).setVisible(showStatistics);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        showStatistics = !new TrainingDataSource().getAll().isEmpty();
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
