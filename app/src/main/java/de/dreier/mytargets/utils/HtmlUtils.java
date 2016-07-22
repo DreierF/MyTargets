@@ -247,8 +247,16 @@ public class HtmlUtils {
 
     public static String getTrainingInfoHTML(Training training, List<Round> rounds, boolean[] equals, boolean scoreboard) {
         HTMLInfoBuilder info = new HTMLInfoBuilder();
+        StandardRound standardRound = addStaticTrainingHeaderInfo(info, training, rounds,
+                scoreboard);
+        addDynamicTrainingHeaderInfo(rounds, equals, info, standardRound);
+        return info.toString();
+    }
+
+    @NonNull
+    private static StandardRound addStaticTrainingHeaderInfo(HTMLInfoBuilder info, Training training, List<Round> rounds, boolean scoreboard) {
         if (scoreboard) {
-            getScoreboardHeaderInfo(info, training, rounds);
+            getScoreboardOnlyHeaderInfo(info, training, rounds);
         }
 
         Bow bow = new BowDataSource().get(training.bow);
@@ -268,7 +276,10 @@ public class HtmlUtils {
         if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
             info.addLine(R.string.standard_round, standardRound.name);
         }
+        return standardRound;
+    }
 
+    private static void addDynamicTrainingHeaderInfo(List<Round> rounds, boolean[] equals, HTMLInfoBuilder info, StandardRound standardRound) {
         if (rounds.size() > 0) {
             getEqualValues(rounds, equals);
             Round round = rounds.get(0);
@@ -280,7 +291,6 @@ public class HtmlUtils {
                 info.addLine(R.string.target_face, round.info.target);
             }
         }
-        return info.toString();
     }
 
     private static void getEqualValues(List<Round> rounds, boolean[] equals) {
@@ -294,7 +304,7 @@ public class HtmlUtils {
         }
     }
 
-    private static void getScoreboardHeaderInfo(HTMLInfoBuilder info, Training training, List<Round> rounds) {
+    private static void getScoreboardOnlyHeaderInfo(HTMLInfoBuilder info, Training training, List<Round> rounds) {
         final String fullName = SettingsManager.getProfileFullName();
         if (!fullName.trim().isEmpty()) {
             info.addLine(R.string.name, fullName);
