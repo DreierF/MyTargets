@@ -25,7 +25,6 @@ import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Bow;
-import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Shot;
@@ -207,7 +206,7 @@ public class HtmlUtils {
     }
 
     @NonNull
-    public static String getTrainingTopScoreDistribution(long training) {
+    private static String getTrainingTopScoreDistribution(long training) {
         HTMLInfoBuilder info = new HTMLInfoBuilder();
         PasseDataSource passeDataSource = new PasseDataSource();
 
@@ -249,22 +248,7 @@ public class HtmlUtils {
     public static String getTrainingInfoHTML(Training training, List<Round> rounds, boolean[] equals, boolean scoreboard) {
         HTMLInfoBuilder info = new HTMLInfoBuilder();
         if (scoreboard) {
-            final String fullName = SettingsManager.getProfileFullName();
-            if (!fullName.trim().isEmpty()) {
-                info.addLine(R.string.name, fullName);
-            }
-            final int age = SettingsManager.getProfileAge();
-            if (age > 0 && age < 18) {
-                info.addLine(R.string.age, age);
-            }
-            final String club = SettingsManager.getProfileClub();
-            if (!club.isEmpty()) {
-                info.addLine(R.string.club, club);
-            }
-            if (rounds.size() > 1) {
-                String value = getReachedPointsFormatted(training.getId());
-                info.addLine(R.string.points, value);
-            }
+            getScoreboardHeaderInfo(info, training, rounds);
         }
 
         Bow bow = new BowDataSource().get(training.bow);
@@ -286,28 +270,47 @@ public class HtmlUtils {
         }
 
         if (rounds.size() > 0) {
-            // Aggregate round information
+            getEqualValues(rounds, equals);
             Round round = rounds.get(0);
-            Dimension distance = round.info.distance;
-            Target target = round.info.target;
-            equals[0] = true;
-            equals[1] = true;
-            for (Round r : rounds) {
-                equals[0] = r.info.distance.equals(distance) && equals[0];
-                equals[1] = r.info.target.equals(target) && equals[1];
-            }
-
             if (equals[0]) {
                 final int envStringResId = standardRound.indoor ? R.string.indoor : R.string.outdoor;
-                final String distanceValue = String.format("%s - %s", distance,
-                        get(envStringResId));
-                info.addLine(R.string.distance, distanceValue);
+                info.addLine(R.string.distance, String.format("%s - %s", round.info.distance, get(envStringResId)));
             }
             if (equals[1]) {
-                info.addLine(R.string.target_face, target);
+                info.addLine(R.string.target_face, round.info.target);
             }
         }
         return info.toString();
+    }
+
+    private static void getEqualValues(List<Round> rounds, boolean[] equals) {
+        // Aggregate round information
+        equals[0] = true;
+        equals[1] = true;
+        Round round = rounds.get(0);
+        for (Round r : rounds) {
+            equals[0] = r.info.distance.equals(round.info.distance) && equals[0];
+            equals[1] = r.info.target.equals(round.info.target) && equals[1];
+        }
+    }
+
+    private static void getScoreboardHeaderInfo(HTMLInfoBuilder info, Training training, List<Round> rounds) {
+        final String fullName = SettingsManager.getProfileFullName();
+        if (!fullName.trim().isEmpty()) {
+            info.addLine(R.string.name, fullName);
+        }
+        final int age = SettingsManager.getProfileAge();
+        if (age > 0 && age < 18) {
+            info.addLine(R.string.age, age);
+        }
+        final String club = SettingsManager.getProfileClub();
+        if (!club.isEmpty()) {
+            info.addLine(R.string.club, club);
+        }
+        if (rounds.size() > 1) {
+            String value = getReachedPointsFormatted(training.getId());
+            info.addLine(R.string.points, value);
+        }
     }
 
     private static String getSignature() {

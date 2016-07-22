@@ -290,8 +290,8 @@ public class TargetView extends TargetViewBase {
         Coordinate coordinate = new Coordinate();
         if (zoneSelectionMode) {
             coordinate.x = contentWidth - 100 * density;
-            int index = selectableZones.indexOf(new SelectableZone(passe.shot[i].zone, null, "", 0));
             int indicatorHeight = contentHeight / selectableZones.size();
+            int index = getSelectableZoneIndexFromShot(passe.shot[i]);
             coordinate.y = indicatorHeight * index + indicatorHeight / 2.0f;
         } else {
             coordinate.x = orgMidX + orgRadius * passe.shot[i].x;

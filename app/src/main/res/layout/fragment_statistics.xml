@@ -1,5 +1,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -14,7 +15,7 @@
                 android:id="@+id/chartView"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:layout_margin="8dp" />
+                android:layout_margin="8dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -27,36 +28,99 @@
                     style="@style/Label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dispersion_pattern" />
+                    android:paddingTop="16dp"
+                    android:text="@string/distribution"/>
 
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/distributionChart"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
 
-                <FrameLayout
-                    android:layout_width="200dp"
-                    android:layout_height="200dp">
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/distributionChart"
+                        android:layout_width="0dp"
+                        android:layout_height="200dp"
+                        android:layout_weight="1"/>
 
-                    <View
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/hits"/>
+
+                        <TextView
+                            android:id="@+id/hits"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="18sp"
+                            tools:text="10"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"
+                            android:text="@string/misses"/>
+
+                        <TextView
+                            android:id="@+id/misses"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="18sp"
+                            tools:text="2"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/dispersionPatternLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="16dp"
+                        android:text="@string/dispersion_pattern"/>
+
+                    <FrameLayout
                         android:id="@+id/dispersionViewOverlay"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_height="wrap_content">
 
-                    <de.dreier.mytargets.views.ArrowDispersionView
-                        android:id="@+id/dispersionView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        <de.dreier.mytargets.views.ArrowDispersionView
+                            android:id="@+id/dispersionView"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_gravity="center_horizontal"/>
 
-                </FrameLayout>
+                    </FrameLayout>
+
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/arrowRanking"
+                    android:id="@+id/arrowRankingLabel"
                     style="@style/Label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="16dp"
-                    android:text="@string/arrow_ranking" />
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/arrow_ranking"/>
 
             </LinearLayout>
 
@@ -64,7 +128,7 @@
                 android:id="@+id/arrows"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layoutManager="LinearLayoutManager" />
+                app:layoutManager="LinearLayoutManager"/>
 
         </LinearLayout>
 

@@ -93,6 +93,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         showLineChart();
         showPieChart();
         showDispersionView();
+        showHitsAndMisses();
 
         arrowStatisticDataSource = new ArrowStatisticDataSource();
         binding.arrows.setHasFixedSize(true);
@@ -103,23 +104,37 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     }
 
     private void showDispersionView() {
-        final List<Shot> shots = Stream.of(rounds)
+        final List<Shot> exactShots = Stream.of(rounds)
                 .flatMap(r -> Stream.of(new PasseDataSource().getAllByRound(r.getId())))
                 .filter(p -> p.exact)
                 .flatMap(p -> Stream.of(p.shotList()))
                 .collect(Collectors.toList());
+        if(exactShots.isEmpty()) {
+            binding.dispersionPatternLayout.setVisibility(View.GONE);
+            return;
+        }
         binding.dispersionView.setTarget(target.getDrawable());
-        binding.dispersionView.setShoots(shots);
+        binding.dispersionView.setShoots(exactShots);
         binding.dispersionView.setEnabled(false);
         binding.dispersionViewOverlay.setOnClickListener(view -> {
             Intent intent = new Intent(getContext(), DispersionPatternActivity.class);
             ArrowStatistic statistics = new ArrowStatistic();
             statistics.target = target;
-            statistics.addShots(shots);
+            statistics.addShots(exactShots);
             intent.putExtra(DispersionPatternActivity.ITEM, Parcels.wrap(statistics));
             intent.putExtra(DispersionPatternActivity.ROUND_IDS, roundIds);
             startActivity(intent);
         });
+    }
+
+    private void showHitsAndMisses() {
+        final List<Shot> shots = Stream.of(rounds)
+                .flatMap(r -> Stream.of(new PasseDataSource().getAllByRound(r.getId())))
+                .flatMap(p -> Stream.of(p.shotList()))
+                .collect(Collectors.toList());
+        long missCount = Stream.of(shots).filter(s -> s.zone == Shot.MISS).count();
+        binding.hits.setText(String.valueOf(shots.size() - missCount));
+        binding.misses.setText(String.valueOf(missCount));
     }
 
     private void showLineChart() {
@@ -152,7 +167,8 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     }
 
     private void addPieData() {
-        List<Map.Entry<SelectableZone, Integer>> scores = new PasseDataSource().getSortedScoreDistribution(rounds);
+        List<Map.Entry<SelectableZone, Integer>> scores = new PasseDataSource()
+                .getSortedScoreDistribution(rounds);
 
         ArrayList<String> xValues = new ArrayList<>();
         ArrayList<Entry> yValues = new ArrayList<>();
@@ -196,7 +212,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onLoadFinished(Loader<List<ArrowStatistic>> loader, List<ArrowStatistic> data) {
         this.data = data;
-        binding.arrowRanking.setVisibility(data.isEmpty() ? View.GONE : View.VISIBLE);
+        binding.arrowRankingLabel.setVisibility(data.isEmpty() ? View.GONE : View.VISIBLE);
         Collections.sort(data);
         if (binding.arrows.getAdapter() == null) {
             adapter = new ArrowStatisticAdapter();
@@ -280,7 +296,8 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         float[] y = new float[dataSetSize];
         // first pass: read in data, compute x bar and y bar
         int n = 0;
-        float sumX = 0.0f, sumY = 0.0f;
+        float sumX = 0.0f;
+        float sumY = 0.0f;
         for (int i = 0; i < dataSetSize; i++) {
             x[n] = values.get(i).getSecond().getMillis();
             y[n] = values.get(i).getFirst();
@@ -295,7 +312,8 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         float yBar = sumY / n;
 
         // second pass: compute summary statistics
-        float xxBar = 0.0f, xyBar = 0.0f;
+        float xxBar = 0.0f;
+        float xyBar = 0.0f;
         for (int i = 0; i < n; i++) {
             xxBar += (x[i] - xBar) * (x[i] - xBar);
             xyBar += (x[i] - xBar) * (y[i] - yBar);

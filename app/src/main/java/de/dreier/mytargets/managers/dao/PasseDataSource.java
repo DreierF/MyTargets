@@ -215,12 +215,6 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                 .collect(Collectors.toList());
     }
 
-    private List<Pair<Target, Map<SelectableZone, Integer>>> getScoreDistribution(long training) {
-        return Stream.of(groupByTarget(new RoundDataSource().getAll(training)))
-                .map(value1 -> new Pair<>(value1.getFirst(), getRoundScores(value1.getSecond())))
-                .collect(Collectors.toList());
-    }
-
     @NonNull
     private Map<SelectableZone, Integer> getRoundScores(List<Round> rounds) {
         final Target t = rounds.get(0).info.target;
