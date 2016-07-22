@@ -1,5 +1,5 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/weather" />
+                    android:text="@string/weather"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                         android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackground"
                         android:contentDescription="@string/sunny"
-                        app:srcCompat="@drawable/ic_sun_outline_48dp" />
+                        app:srcCompat="@drawable/ic_sun_outline_48dp"/>
 
                     <ImageButton
                         android:id="@+id/partlyCloudy"
@@ -48,7 +48,7 @@
                         android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackground"
                         android:contentDescription="@string/partly_cloudy"
-                        app:srcCompat="@drawable/ic_partly_cloudy_outline_color_48dp" />
+                        app:srcCompat="@drawable/ic_partly_cloudy_outline_color_48dp"/>
 
                     <ImageButton
                         android:id="@+id/cloudy"
@@ -57,7 +57,7 @@
                         android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackground"
                         android:contentDescription="@string/cloudy"
-                        app:srcCompat="@drawable/ic_cloudy_outline_48dp" />
+                        app:srcCompat="@drawable/ic_cloudy_outline_48dp"/>
 
                     <ImageButton
                         android:id="@+id/lightRain"
@@ -66,7 +66,7 @@
                         android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackground"
                         android:contentDescription="@string/light_rain"
-                        app:srcCompat="@drawable/ic_light_rain_outline_48dp" />
+                        app:srcCompat="@drawable/ic_light_rain_outline_48dp"/>
 
                     <ImageButton
                         android:id="@+id/rain"
@@ -75,7 +75,7 @@
                         android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackground"
                         android:contentDescription="@string/rain"
-                        app:srcCompat="@drawable/ic_rain_outline_48dp" />
+                        app:srcCompat="@drawable/ic_rain_outline_48dp"/>
 
                 </LinearLayout>
 
@@ -84,31 +84,31 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/wind_speed" />
+                    android:text="@string/wind_speed"/>
 
                 <de.dreier.mytargets.views.selector.WindSpeedSelector
                     android:id="@+id/windSpeed"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
                 <TextView
                     style="@style/Label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/wind_direction" />
+                    android:text="@string/wind_direction"/>
 
                 <de.dreier.mytargets.views.selector.WindDirectionSelector
                     android:id="@+id/windDirection"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
                 <TextView
                     style="@style/Label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/location" />
+                    android:text="@string/location"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -118,7 +118,7 @@
                         android:id="@+id/location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text" />
+                        android:inputType="text"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -129,7 +129,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_drop_shadow_height"
-            android:background="@drawable/toolbar_drop_shadow" />
+            android:background="@drawable/toolbar_drop_shadow"/>
 
     </FrameLayout>
 
