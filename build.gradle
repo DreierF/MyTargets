@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.android.tools.build:gradle:2.2.0-alpha6'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
         classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.0.9'
@@ -21,7 +21,7 @@ plugins {
 }
 
 ext {
-    supportLibVersion = '24.0.0'
+    supportLibVersion = '24.1.1'
     testSupportLibVersion = '0.5'
     playServiceVersion = '9.2.0'
     espressoVersion = '2.2.2'
