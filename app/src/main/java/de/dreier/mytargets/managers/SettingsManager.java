@@ -92,7 +92,7 @@ public class SettingsManager {
         return preferences.getInt(KEY_ARROWS_PER_PASSE, 3);
     }
 
-    public static void setArrowsPerPasse(int arrowsPerPasse) {
+    public static void setArrowsPerEnd(int arrowsPerPasse) {
         preferences.edit()
                 .putInt(KEY_ARROWS_PER_PASSE, arrowsPerPasse)
                 .apply();

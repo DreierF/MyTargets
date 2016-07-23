@@ -139,7 +139,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         SettingsManager.setIndoor(standardRound.indoor);
 
         RoundTemplate round = roundTemplateList.get(0);
-        SettingsManager.setArrowsPerPasse(round.arrowsPerPasse);
+        SettingsManager.setArrowsPerEnd(round.arrowsPerPasse);
         SettingsManager.setPasses(round.passes);
         SettingsManager.setTarget(round.target);
         SettingsManager.setDistance(round.distance);

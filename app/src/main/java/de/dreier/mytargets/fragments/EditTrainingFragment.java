@@ -302,7 +302,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
         SettingsManager.setTarget(roundTemplate.target);
         SettingsManager.setDistance(roundTemplate.distance);
-        SettingsManager.setArrowsPerPasse(roundTemplate.arrowsPerPasse);
+        SettingsManager.setArrowsPerEnd(roundTemplate.arrowsPerPasse);
         return roundTemplate;
     }
 }
