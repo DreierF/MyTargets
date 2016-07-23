@@ -13,8 +13,8 @@
   <string name="arrow">Pil</string>
   <string name="round">Runda</string>
   <string name="points">Poäng</string>
-  <string name="passe">Omgång</string>
-  <string name="passe_n">End %d</string>
+  <string name="passe">Serie</string>
+  <string name="passe_n">Serie %d</string>
   <!-- Overview -->
   <string name="new_training">Ny träning</string>
   <string name="new_bow">Ny pilbåge</string>
@@ -41,7 +41,7 @@
   <string name="statistic">Statistik</string>
   <!-- Share -->
   <string name="share">Dela</string>
-  <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$sThis makes a total of %2$d out of %3$d rings.</string>
+  <string name="my_share_text">Titta på mitt bågskytte resultat. Jag fick: \n%1$s det är totalt av %2$d av %3$d poäng.</string>
   <string name="d_times_s">%1$d gånger %2$s\n</string>
   <string name="text">Text</string>
   <string name="dispersion_pattern">Spridning mönster</string>
@@ -57,7 +57,7 @@
   <string name="brand">Märke</string>
   <string name="size">Storlek</string>
   <string name="description">Beskrivning</string>
-  <string name="height">Brace height</string>
+  <string name="height">Stränghöjden</string>
   <string name="tiller">Tiller</string>
   <string name="sight_settings">Inställningar sikte</string>
   <string name="add">Lägg tilll</string>
@@ -67,9 +67,9 @@
   <!-- New arrow -->
   <string name="add_arrow">Ny pil</string>
   <string name="length">Längd</string>
-  <string name="spine">Spine</string>
+  <string name="spine">Styvhet</string>
   <string name="weight">Vikt</string>
-  <string name="vanes">Plastfenor</string>
+  <string name="vanes">Fenor</string>
   <string name="nock">Nock</string>
   <string name="material">Material</string>
   <!-- New round -->
@@ -83,7 +83,7 @@
     <item quantity="one">%d slut</item>
     <item quantity="other">%d slut</item>
   </plurals>
-  <string name="with">of</string>
+  <string name="with">av</string>
   <plurals name="arrow">
     <item quantity="one">%d pil</item>
     <item quantity="other">%d pilar</item>
@@ -105,7 +105,7 @@
   <string name="current_round">Nuvarande runda</string>
   <!-- Import/Backup -->
   <string name="select_a_file">Välj fil</string>
-  <string name="dir_not_created">Directory could not be created!</string>
+  <string name="dir_not_created">Det gick inte att skapa katalogen!</string>
   <string name="backup_failed">Säkerhetskopieringen misslyckades!</string>
   <string name="import_successful">Importering lyckades!</string>
   <string name="import_failed">Importering misslyckades!</string>
@@ -128,21 +128,21 @@
   <string name="preparation">Gör dig redo</string>
   <string name="shooting">Skjuter</string>
   <!-- Timer settings -->
-  <string name="timer_shooting_time">Skjut tid</string>
-  <string name="timer_waiting_time">Vänte tid</string>
-  <string name="timer_warning_time">Varnings tid</string>
+  <string name="timer_shooting_time">Skjuttid</string>
+  <string name="timer_waiting_time">Väntetid</string>
+  <string name="timer_warning_time">Varningstid</string>
   <string name="timer_sound">Ljud</string>
   <string name="timer_vibrate">Vibrera</string>
   <!-- Settings -->
   <string name="backup_action">Säkerhetskopiera</string>
-  <string name="import_action">Importera</string>
+  <string name="import_action">Återskapa säkerhetskopia</string>
   <string name="export">Exportera</string>
-  <string name="exports_as_csv">Exporten sparade data som *.csv</string>
+  <string name="exports_as_csv">Exportera sparad data som *.csv</string>
   <string name="app_rate">Betygsätt app</string>
   <string name="app_share">Dela appen</string>
   <string name="contact_developer">Kontakta utvecklaren</string>
   <string name="licences">Öppen källkod-licenser</string>
-  <string name="licences_summary">Legal notes to licences</string>
+  <string name="licences_summary">Rättsliga anmärkningar på licenser</string>
   <string name="version">Version %s</string>
   <plurals name="second">
     <item quantity="one">%d sekund</item>
@@ -153,7 +153,7 @@
   <string name="create_backup_on_sd">Skapar en säkerhetskopia på sd-kort</string>
   <string name="restore_backup">Återställer en säkerhetskopia</string>
   <string name="weather">Väder</string>
-  <string name="environment">Environment</string>
+  <string name="environment">Miljö</string>
   <string name="wind_speed">Vindhastighet</string>
   <string name="wind_direction">Vindriktning</string>
   <string name="sight_setting_removed">Siktes inställningar raderade!</string>
@@ -192,12 +192,20 @@
     <item quantity="other">%d träningar raderade</item>
   </plurals>
   <plurals name="passe_deleted">
-    <item quantity="one">%d end deleted</item>
-    <item quantity="other">%d ends deleted</item>
+    <item quantity="one">%d Serie</item>
+    <item quantity="other">%d Serier</item>
   </plurals>
   <plurals name="rounds">
     <item quantity="one">Runda %d</item>
     <item quantity="other">Rundor %d</item>
+  </plurals>
+  <plurals name="round_selected">
+    <item quantity="one">%d round selected</item>
+    <item quantity="other">%d rounds selected</item>
+  </plurals>
+  <plurals name="round_deleted">
+    <item quantity="one">%d round deleted</item>
+    <item quantity="other">%d rounds deleted</item>
   </plurals>
   <string name="date">Datum</string>
   <string name="edit_round">Redigera runda</string>
@@ -214,7 +222,7 @@
   <string name="table">Tabell</string>
   <string name="comments">Kommentarer</string>
   <string name="show_points_colored">Visa färgade punkter</string>
-  <string name="stabilizer">Stabilizer</string>
+  <string name="stabilizer">Stablilisator</string>
   <string name="clicker">Klicker</string>
   <string name="arrow_number_x">Pil nummer %d</string>
   <string name="training_with_standard_round">Träning med standard runda</string>
@@ -237,21 +245,24 @@
   <string name="network_linkedin">Nätverk på LinkedIn</string>
   <string name="enter_scores_only_description">Du kan endast ange poängen inte den exakta träffpunkten för pilen. Använd det här alternativet för att ange data med din smartwatch eller ange historiska data.</string>
   <string name="enter_scores_only">Ange bara resultat</string>
-  <string name="search">Search</string>
+  <string name="search">Sök</string>
   <string name="us">US</string>
-  <string name="show_shots_training">Whole training</string>
-  <string name="show_shots_round">Current round</string>
-  <string name="show_shots_end">Current end</string>
-  <string name="profile">Profile</string>
-  <string name="birthday">Birthday</string>
-  <string name="first_name">First name</string>
-  <string name="last_name">Last name</string>
-  <string name="age">Age</string>
-  <string name="show_signature">Signature</string>
-  <string name="witness">Witness</string>
-  <string name="archer">Archer</string>
-  <string name="hits">Hits</string>
-  <string name="misses">Misses</string>
-  <string name="percentage_reached_points">Percentage of reached points</string>
-  <string name="arrow_number_removed">Arrow number removed!</string>
+  <string name="show_shots_training">Hela träningen</string>
+  <string name="show_shots_round">Nuvarande runda</string>
+  <string name="show_shots_end">Nuvarande omgång</string>
+  <string name="profile">Profil</string>
+  <string name="birthday">Födelsedag</string>
+  <string name="first_name">Förnamn</string>
+  <string name="last_name">Efternamn</string>
+  <string name="age">Ålder</string>
+  <string name="show_signature">Signatur</string>
+  <string name="witness">Vittne</string>
+  <string name="archer">Bågskytt</string>
+  <string name="hits">Träffar</string>
+  <string name="misses">Missar</string>
+  <string name="percentage_reached_points">Procentandel av nåda poäng</string>
+  <string name="arrow_number_removed">Pilnummer bortagen!</string>
+  <string name="new_end">New end</string>
+  <string name="distribution">Distribution</string>
+  <string name="count">Count</string>
 </resources>

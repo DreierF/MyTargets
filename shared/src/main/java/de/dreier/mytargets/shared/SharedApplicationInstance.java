@@ -2,6 +2,7 @@ package de.dreier.mytargets.shared;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.annotation.StringRes;
 
 public class SharedApplicationInstance extends Application {
 
@@ -9,6 +10,10 @@ public class SharedApplicationInstance extends Application {
 
     public static Context getContext() {
         return mContext;
+    }
+
+    public static String get(@StringRes int string) {
+        return mContext.getString(string);
     }
 
     @Override

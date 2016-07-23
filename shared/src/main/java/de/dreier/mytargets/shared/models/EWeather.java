@@ -35,7 +35,7 @@ public enum EWeather {
     }
 
     public String getName() {
-        return SharedApplicationInstance.getContext().getString(name);
+        return SharedApplicationInstance.get(name);
     }
 
     public int getDrawable() {

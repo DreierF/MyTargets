@@ -57,6 +57,14 @@
                 android:value=".activities.MainActivity"/>
         </activity>
         <activity
+            android:name=".activities.SimpleFragmentActivityBase$RoundActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.SimpleFragmentActivityBase$TrainingActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.SimpleFragmentActivityBase$TrainingActivity"/>
+        </activity>
+        <activity
             android:name=".activities.SimpleFragmentActivityBase$TimerActivity"
             android:configChanges="orientation|screenSize"
             android:label=""
@@ -70,10 +78,10 @@
         <activity
             android:name=".activities.InputActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$TrainingActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivityBase$RoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivityBase$TrainingActivity"/>
+                android:value=".activities.SimpleFragmentActivityBase$RoundActivity"/>
         </activity>
         <activity
             android:name=".activities.SimpleFragmentActivityBase$EditTrainingActivity"
@@ -133,6 +141,9 @@
         </activity>
         <activity
             android:name=".activities.StatisticsActivity"
+            android:label="@string/statistic"/>
+        <activity
+            android:name=".activities.SimpleFragmentActivityBase$ChartActivity"
             android:label="@string/statistic"/>
         <activity
             android:name=".activities.ItemSelectActivity$ArrowActivity"
@@ -243,7 +254,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.SimpleFragmentActivityBase$AboutActivity"/>
         </activity>
-        <activity android:name=".activities.ArrowRankingDetailsActivity"/>
+        <activity android:name=".activities.DispersionPatternActivity"/>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="de.dreier.mytargets"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

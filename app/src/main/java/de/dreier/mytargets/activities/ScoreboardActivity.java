@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.Menu;
@@ -25,23 +26,30 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.io.File;
+import java.io.IOException;
+
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityScoreboardBinding;
 import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.ScoreboardConfiguration;
+import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
+import static android.support.v4.content.FileProvider.getUriForFile;
 import static android.support.v7.preference.PreferenceFragmentCompat.ARG_PREFERENCE_ROOT;
 
 public class ScoreboardActivity extends AppCompatActivity {
 
     public static final String TRAINING_ID = "training_id";
+    public static final String ROUND_ID = "round_id";
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
     private long mTraining;
+    private long mRound;
     private boolean pageLoaded = true;
     private ActivityScoreboardBinding binding;
 
@@ -51,9 +59,8 @@ public class ScoreboardActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_scoreboard);
 
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra(TRAINING_ID)) {
-            mTraining = intent.getLongExtra(TRAINING_ID, -1);
-        }
+        mTraining = intent.getLongExtra(TRAINING_ID, -1);
+        mRound = intent.getLongExtra(ROUND_ID, -1);
 
         binding.webView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -77,8 +84,8 @@ public class ScoreboardActivity extends AppCompatActivity {
 
             @Override
             protected String doInBackground(Void... params) {
-                return HtmlUtils.getScoreboard(ScoreboardActivity.this, mTraining,
-                        ScoreboardConfiguration.fromDisplaySettings(getApplicationContext()));
+                return HtmlUtils.getScoreboard(mTraining, mRound,
+                        ScoreboardConfiguration.fromDisplaySettings());
             }
 
             @Override
@@ -102,6 +109,9 @@ public class ScoreboardActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_share:
+                shareImage();
+                return true;
             case R.id.action_print:
                 print();
                 return true;
@@ -113,6 +123,29 @@ public class ScoreboardActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /* Called after the user selected with items he wants to share */
+    private void shareImage() {
+        // Construct share intent
+        new Thread(() -> {
+            try {
+                File dir = getCacheDir();
+                final File f = File.createTempFile("scoreboard", ".png", dir);
+                new ScoreboardImage().generateBitmap(this, mTraining, mRound, f);
+
+                // Build and fire intent to ask for share provider
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM,
+                        getUriForFile(ScoreboardActivity.this, "de.dreier.mytargets", f));
+                shareIntent.setType("*/*");
+                startActivity(shareIntent);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Snackbar.make(binding.getRoot(), R.string.sharing_failed, Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        }).start();
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -130,8 +163,8 @@ public class ScoreboardActivity extends AppCompatActivity {
 
             @Override
             protected String doInBackground(Void... params) {
-                return HtmlUtils.getScoreboard(ScoreboardActivity.this, mTraining,
-                        ScoreboardConfiguration.fromPrintSettings(getApplicationContext()));
+                return HtmlUtils.getScoreboard(mTraining, mRound,
+                        ScoreboardConfiguration.fromPrintSettings());
             }
 
             @SuppressWarnings("deprecation")

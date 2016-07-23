@@ -21,4 +21,10 @@ public class Round implements IIdSettable {
                 getClass().equals(another.getClass()) &&
                 id == ((Round) another).id;
     }
+
+    public String getReachedPointsFormatted() {
+        final int maxPoints = info.getMaxPoints();
+        String percent = maxPoints == 0 ? "" : " (" + (reachedPoints * 100 / maxPoints) + "%)";
+        return reachedPoints + "/" + maxPoints + percent;
+    }
 }

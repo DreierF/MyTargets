@@ -1,11 +1,11 @@
 package de.dreier.mytargets.shared.targets;
 
-import android.support.annotation.ColorInt;
 import android.support.annotation.StringRes;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.SharedApplicationInstance;
@@ -16,12 +16,11 @@ import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.utils.Color;
 
 import static de.dreier.mytargets.shared.utils.Color.BLACK;
-import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
 public class TargetModelBase implements IIdProvider {
+    private final int nameRes;
     boolean isFieldTarget;
     long id;
-    private final int nameRes;
     Zone[] zones;
     Dimension[] diameters;
     ScoringStyle[] scoringStyles;
@@ -45,15 +44,14 @@ public class TargetModelBase implements IIdProvider {
 
     @Override
     public String toString() {
-        return SharedApplicationInstance.getContext().getString(nameRes);
+        return SharedApplicationInstance.get(nameRes);
     }
 
     public Zone getZone(int zone) {
+        if (isOutOfRange(zone)) {
+            return new Zone(0, BLACK, BLACK, 0);
+        }
         return zones[zone];
-    }
-
-    public float getRadius(int zone) {
-        return getZone(zone).radius;
     }
 
     public Dimension[] getDiameters() {
@@ -102,22 +100,6 @@ public class TargetModelBase implements IIdProvider {
         return centerMark;
     }
 
-    @ColorInt
-    public int getFillColor(int zone) {
-        if (isOutOfRange(zone)) {
-            return BLACK;
-        }
-        return getZone(zone).fillColor;
-    }
-
-    public int getStrokeColor(int zone) {
-        // Handle Miss-shots
-        if (isOutOfRange(zone)) {
-            return BLACK;
-        }
-        return de.dreier.mytargets.shared.utils.Color.getStrokeColor(getZone(zone).fillColor);
-    }
-
     public int getContrastColor(int zone) {
         // Handle Miss-shots
         if (isOutOfRange(zone)) {
@@ -126,12 +108,7 @@ public class TargetModelBase implements IIdProvider {
         return Color.getContrast(getZone(zone).fillColor);
     }
 
-    // TODO Make a dummy miss zone to outsource color stuff
     public int getTextColor(int zone) {
-        // Handle Miss-shots
-        if (isOutOfRange(zone)) {
-            return WHITE;
-        }
         return Color.getContrast(getZone(zone).fillColor);
     }
 
@@ -146,6 +123,20 @@ public class TargetModelBase implements IIdProvider {
             }
         }
         return Shot.MISS;
+    }
+
+    public List<SelectableZone> getSelectableZoneList(int scoringStyleIndex, int arrow) {
+        ScoringStyle scoringStyle = getScoringStyle(scoringStyleIndex);
+        List<SelectableZone> list = new ArrayList<>();
+        String last = "";
+        for (int i = 0; i <= zones.length; i++) {
+            String zone = scoringStyle.zoneToString(i, arrow);
+            if (!last.equals(zone)) {
+                list.add(new SelectableZone(i == zones.length ? -1 : i, getZone(i), zone, scoringStyle.getPointsByZone(i, arrow)));
+            }
+            last = zone;
+        }
+        return list;
     }
 
 }

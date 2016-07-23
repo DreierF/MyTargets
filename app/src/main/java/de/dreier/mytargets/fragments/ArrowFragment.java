@@ -10,6 +10,7 @@ package de.dreier.mytargets.fragments;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -21,10 +22,12 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditArrowActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.utils.DataLoader;
+import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
 import static de.dreier.mytargets.fragments.EditArrowFragment.ARROW_ID;
@@ -32,6 +35,7 @@ import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 
 public class ArrowFragment extends EditableFragment<Arrow> {
 
+    protected FragmentListBinding binding;
     private ArrowDataSource arrowDataSource;
 
     @Override
@@ -44,6 +48,18 @@ public class ArrowFragment extends EditableFragment<Arrow> {
         itemTypeSelRes = R.plurals.arrow_selected;
         itemTypeDelRes = R.plurals.arrow_deleted;
         newStringRes = R.string.new_arrow;
+    }
+
+    @Override
+    @CallSuper
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
+        binding.recyclerView.setHasFixedSize(true);
+        binding.recyclerView.addItemDecoration(
+                new DividerItemDecoration(getContext(), R.drawable.inset_divider));
+        mAdapter = new ArrowAdapter(getContext());
+        binding.recyclerView.setAdapter(mAdapter);
+        return binding.getRoot();
     }
 
     @Override
@@ -62,11 +78,6 @@ public class ArrowFragment extends EditableFragment<Arrow> {
     protected void onEdit(Arrow item) {
         startActivityAnimated(getActivity(),
                 EditArrowActivity.class, ARROW_ID, item.getId());
-    }
-
-    @Override
-    protected NowListAdapter<Arrow> getAdapter() {
-        return new ArrowAdapter(getContext());
     }
 
     @Override

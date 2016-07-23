@@ -4,8 +4,8 @@
   <!-- APP NAME - NOT TRANSLATABLE -->
   <!-- General -->
   <string name="preferences">Možnosti</string>
-  <string name="prev">Predchádzajúce</string>
-  <string name="next">Nasledujúce</string>
+  <string name="prev">Predchádzajúca</string>
+  <string name="next">Nasledujúca</string>
   <string name="save">Uložiť</string>
   <string name="custom">Voliteľné</string>
   <string name="training">Tréning</string>
@@ -211,6 +211,16 @@
     <item quantity="few">Kolo %d</item>
     <item quantity="other">Kolo %d</item>
   </plurals>
+  <plurals name="round_selected">
+    <item quantity="one">%d round selected</item>
+    <item quantity="few">%d rounds selected</item>
+    <item quantity="other">%d rounds selected</item>
+  </plurals>
+  <plurals name="round_deleted">
+    <item quantity="one">%d round deleted</item>
+    <item quantity="few">%d rounds deleted</item>
+    <item quantity="other">%d rounds deleted</item>
+  </plurals>
   <string name="date">Dátum</string>
   <string name="edit_round">Upraviť kolo</string>
   <string name="draw_weight">Sila náťahu</string>
@@ -266,4 +276,7 @@
   <string name="misses">Minutí</string>
   <string name="percentage_reached_points">Percento dosiahnutých bodov</string>
   <string name="arrow_number_removed">Čísla šípov odstránené!</string>
+  <string name="new_end">New end</string>
+  <string name="distribution">Distribution</string>
+  <string name="count">Count</string>
 </resources>

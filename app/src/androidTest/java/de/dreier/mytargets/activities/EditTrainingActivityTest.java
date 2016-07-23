@@ -19,6 +19,7 @@ import de.dreier.mytargets.shared.targets.WAFull;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -115,8 +116,10 @@ public class EditTrainingActivityTest extends UITestBase {
 
         onView(withId(R.id.trainingDate)).perform(click());
         //TODO change date
-        onView(withText(android.R.string.ok)).perform(nestedScrollTo(), click());
+        pressBack();
 
         onView(withId(R.id.action_save)).perform(click());
+        pressBack();
+        pressBack();
     }
 }

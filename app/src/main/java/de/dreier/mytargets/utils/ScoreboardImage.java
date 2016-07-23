@@ -23,11 +23,11 @@ import de.dreier.mytargets.shared.utils.BitmapUtils;
 
 public class ScoreboardImage {
 
-    public void generateBitmap(final Activity context, final long mRound, final File f) {
+    public void generateBitmap(final Activity context, final long mTraining, final long mRound, final File f) {
 
         // Generate html content
         final String content = HtmlUtils
-                .getScoreboard(context, mRound, ScoreboardConfiguration.fromShareSettings(context));
+                .getScoreboard(mTraining, mRound, ScoreboardConfiguration.fromShareSettings());
 
         final CountDownLatch signal = new CountDownLatch(1);
         context.runOnUiThread(() -> {
@@ -43,8 +43,7 @@ public class ScoreboardImage {
             container.addView(webView);
 
             // Render html to bitmap
-            webView.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8",
-                    "");
+            webView.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8", "");
             webView.setPictureListener((view, picture) -> {
                 picture = webView.capturePicture();
 

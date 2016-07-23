@@ -18,26 +18,45 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 
-public class TargetImage {
+public class DistributionPatternUtils {
 
-    public void generateTrainingBitmap(int size, long trainingId, OutputStream fOut) {
-        List<Round> rounds = new RoundDataSource().getAll(trainingId);
-        if (rounds.size() == 0) {
+    public static void createDistributionPatternImageFile(int size, List<Round> rounds, File f) throws FileNotFoundException {
+        Bitmap b = getDistributionPatternBitmap(size, rounds);
+        if (b == null) {
             return;
         }
-        List<Rect> bounds = getBoundsForTargets(rounds, size);
+
+        final FileOutputStream fOut = new FileOutputStream(f);
+        try {
+            b.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            fOut.flush();
+            fOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fOut.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static Bitmap getDistributionPatternBitmap(int size, List<Round> rounds) {
+        if (rounds.size() == 0) {
+            return null;
+        }
+        List<Rect> bounds = getBoundsForTargetFaces(rounds, size);
 
         // Create bitmap to draw on
         int height = bounds.get(bounds.size() - 1).bottom;
@@ -50,7 +69,7 @@ public class TargetImage {
         textPaint.setTextSize(size / 20);
 
         for (int i = 0; i < rounds.size(); i++) {
-            ArrayList<Passe> oldOnes = new PasseDataSource().getAllByRound(rounds.get(i).getId());
+            List<Passe> oldOnes = new PasseDataSource().getAllByRound(rounds.get(i).getId());
             TargetDrawable target = rounds.get(i).info.target.getDrawable();
             target.setBounds(bounds.get(i));
             target.draw(canvas);
@@ -63,17 +82,11 @@ public class TargetImage {
             int textY = bounds.get(i).top - size / 30;
             canvas.drawText(roundTitle, textX, textY, textPaint);
         }
-
-        try {
-            b.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-            fOut.flush();
-            fOut.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return b;
     }
 
-    private List<Rect> getBoundsForTargets(List<Round> rounds, int size) {
+    private static List<Rect> getBoundsForTargetFaces(List<Round> rounds, int size) {
+        int padding = (int) (size * 0.05f);
         int headerHeight = size / 10;
         List<Rect> list = new ArrayList<>();
         int j = 0;
@@ -92,17 +105,11 @@ public class TargetImage {
                 list.add(new Rect(size / 4, top, size * 5 / 4, top + size));
             } else {
                 int top = headerHeight + j * (size + headerHeight);
-                list.add(new Rect(0, top, size, top + size));
+                list.add(new Rect(padding, top, size - padding, top + size - 2 * padding));
             }
             j++;
             lastNarrow = narrow;
         }
         return list;
-    }
-
-    public void generateTrainingBitmap(int size, long trainingId, File f)
-            throws FileNotFoundException {
-        final FileOutputStream fOut = new FileOutputStream(f);
-        generateTrainingBitmap(size, trainingId, fOut);
     }
 }

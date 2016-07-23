@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
@@ -12,6 +13,8 @@ import de.dreier.mytargets.shared.models.Target;
 @Parcel
 public class ArrowStatistic implements Comparable<ArrowStatistic> {
 
+    private static final int[] BG_COLORS = {0xFFF44336, 0xFFFF5722, 0xFFFF9800, 0xFFFFC107, 0xFFFFEB3B, 0xFFCDDC39, 0xFF8BC34A, 0xFF4CAF50};
+    private static final int[] TEXT_COLORS = {0xFFFFFFFF, 0xFFFFFFFF, 0xFF000002, 0xFF000002, 0xFF000002, 0xFF000002, 0xFF000002, 0xFF000002};
     public String arrowName;
     public int arrowNumber;
     public int count = 0;
@@ -19,8 +22,6 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
     public float ySum = 0;
     public float reachedPointsSum = 0;
     public float maxPointsSum = 0;
-    private static final int[] BG_COLORS = {0xFFF44336, 0xFFFF5722, 0xFFFF9800, 0xFFFFC107, 0xFFFFEB3B, 0xFFCDDC39, 0xFF8BC34A, 0xFF4CAF50};
-    private static final int[] TEXT_COLORS = {0xFFFFFFFF, 0xFFFFFFFF, 0xFF000002, 0xFF000002, 0xFF000002, 0xFF000002, 0xFF000002, 0xFF000002};
     public Target target;
     public ArrayList<Shot> shots = new ArrayList<>();
 
@@ -49,5 +50,20 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
     @Override
     public int compareTo(@NonNull ArrowStatistic another) {
         return Float.compare(another.avgPoints(), avgPoints());
+    }
+
+    public void addShot(Shot shot) {
+        reachedPointsSum += target.getPointsByZone(shot.zone, shot.index);
+        maxPointsSum += target.getMaxPoints();
+        xSum += shot.x;
+        ySum += shot.y;
+        shots.add(shot);
+        count++;
+    }
+
+    public void addShots(List<Shot> shots) {
+        for (Shot shot : shots) {
+            addShot(shot);
+        }
     }
 }

@@ -23,6 +23,7 @@ import de.dreier.mytargets.fragments.EditRoundFragment;
 import de.dreier.mytargets.fragments.EditStandardRoundFragment;
 import de.dreier.mytargets.fragments.EditTrainingFragment;
 import de.dreier.mytargets.fragments.LicencesFragment;
+import de.dreier.mytargets.fragments.RoundFragment;
 import de.dreier.mytargets.fragments.SettingsFragment;
 import de.dreier.mytargets.fragments.TimerFragment;
 import de.dreier.mytargets.fragments.TrainingFragment;
@@ -73,6 +74,15 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
         @Override
         public Fragment instantiateFragment() {
             return new TrainingFragment();
+        }
+
+    }
+
+    public static class RoundActivity extends SimpleFragmentActivityBase {
+
+        @Override
+        public Fragment instantiateFragment() {
+            return new RoundFragment();
         }
 
     }

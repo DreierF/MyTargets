@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityInputBinding;
@@ -58,7 +59,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     private WearMessageManager manager;
     private Training training;
     private RoundTemplate template;
-    private ArrayList<Round> rounds;
+    private List<Round> rounds;
     private PasseDataSource passeDataSource;
     private StandardRound standardRound;
 

@@ -3,6 +3,11 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="de.dreier.mytargets.activities.ScoreboardActivity">
     <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share_white_24dp"
+        android:title="@string/share"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/action_print"
         android:icon="@drawable/ic_print_white_24dp"
         android:title="@string/action_print"

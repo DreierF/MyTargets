@@ -49,7 +49,7 @@
   <string name="d_times_s">%1$d раз %2$s\n</string>
   <string name="text">Текст</string>
   <string name="dispersion_pattern">Pазброс</string>
-  <string name="sharing_failed">Поделиться не удалось</string>
+  <string name="sharing_failed">Поделиться не удалось!</string>
   <!-- Export -->
   <string name="send_exported">Данные отправлены</string>
   <string name="exporting_failed">Передача не удалась!</string>
@@ -211,6 +211,16 @@
     <item quantity="few">Раунд %d</item>
     <item quantity="other">Раунд %d</item>
   </plurals>
+  <plurals name="round_selected">
+    <item quantity="one">%d round selected</item>
+    <item quantity="few">%d rounds selected</item>
+    <item quantity="other">%d rounds selected</item>
+  </plurals>
+  <plurals name="round_deleted">
+    <item quantity="one">%d round deleted</item>
+    <item quantity="few">%d rounds deleted</item>
+    <item quantity="other">%d rounds deleted</item>
+  </plurals>
   <string name="date">Дата</string>
   <string name="edit_round">Редактировать раунд</string>
   <string name="draw_weight">Сила натяжения</string>
@@ -249,21 +259,24 @@
   <string name="network_linkedin">Страница на LinkedIn</string>
   <string name="enter_scores_only_description">Позволяет вам только вводить значение в баллах, а не точную позицию стрелы. Этот параметр используется для ввода данных с ваших \"умных часов\" или ввести историю попаданий.</string>
   <string name="enter_scores_only">Вводите только результаты</string>
-  <string name="search">Search</string>
-  <string name="us">US</string>
-  <string name="show_shots_training">Whole training</string>
-  <string name="show_shots_round">Current round</string>
-  <string name="show_shots_end">Current end</string>
-  <string name="profile">Profile</string>
-  <string name="birthday">Birthday</string>
-  <string name="first_name">First name</string>
-  <string name="last_name">Last name</string>
-  <string name="age">Age</string>
-  <string name="show_signature">Signature</string>
-  <string name="witness">Witness</string>
-  <string name="archer">Archer</string>
-  <string name="hits">Hits</string>
-  <string name="misses">Misses</string>
-  <string name="percentage_reached_points">Percentage of reached points</string>
-  <string name="arrow_number_removed">Arrow number removed!</string>
+  <string name="search">Поиск</string>
+  <string name="us">США</string>
+  <string name="show_shots_training">Вся тренировка</string>
+  <string name="show_shots_round">Текущий раунд</string>
+  <string name="show_shots_end">Текущая серия</string>
+  <string name="profile">Профиль</string>
+  <string name="birthday">Дата рождения</string>
+  <string name="first_name">Имя</string>
+  <string name="last_name">Фамилия</string>
+  <string name="age">Возраст</string>
+  <string name="show_signature">Подпись</string>
+  <string name="witness">Свидетель</string>
+  <string name="archer">Стрелок</string>
+  <string name="hits">Попадания</string>
+  <string name="misses">Промахи</string>
+  <string name="percentage_reached_points">Процент от достигнутых результатов</string>
+  <string name="arrow_number_removed">Номер стрелы удален!</string>
+  <string name="new_end">New end</string>
+  <string name="distribution">Distribution</string>
+  <string name="count">Count</string>
 </resources>

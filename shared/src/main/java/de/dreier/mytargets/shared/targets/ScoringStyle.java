@@ -3,11 +3,7 @@ package de.dreier.mytargets.shared.targets;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.Shot;
 
 public class ScoringStyle {
 
@@ -42,7 +38,6 @@ public class ScoringStyle {
         }
         return style;
     }
-
 
     public String zoneToString(int zone, int arrow) {
         if (isOutOfRange(zone)) {
@@ -86,22 +81,6 @@ public class ScoringStyle {
 
     public int getEndMaxPoints(int arrowsPerPasse) {
         return getMaxPoints() * arrowsPerPasse;
-    }
-
-    public List<SelectableZone> getSelectableZoneList(int arrow) {
-        List<SelectableZone> list = new ArrayList<>();
-        String last = "";
-        for (int i = 0; i < points[0].length; i++) {
-            String zone = zoneToString(i, arrow);
-            if (!last.equals(zone)) {
-                list.add(new SelectableZone(i, zone));
-            }
-            last = zone;
-        }
-        if (!last.equals(MISS_SYMBOL)) {
-            list.add(new SelectableZone(Shot.MISS, MISS_SYMBOL));
-        }
-        return list;
     }
 
     public int getReachedPoints(Passe passe) {

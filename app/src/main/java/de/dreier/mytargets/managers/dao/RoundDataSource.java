@@ -13,6 +13,7 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
@@ -89,7 +90,7 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
         return r;
     }
 
-    public ArrayList<Round> getAll(long training) {
+    public List<Round> getAll(long training) {
         Cursor res = database.rawQuery("SELECT r._id " +
                 "FROM ROUND r " +
                 "WHERE r.training=" + training + " " +
@@ -137,5 +138,21 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
         }
         standardRound.rounds = roundTemplates;
         standardRoundDataSource.update(standardRound);
+    }
+
+
+    public List<Round> getAll() {
+        Cursor res = database.rawQuery("SELECT r._id " +
+                "FROM ROUND r " +
+                "ORDER BY r._id ASC", null);
+        ArrayList<Round> list = new ArrayList<>(res.getCount());
+        if (res.moveToFirst()) {
+            do {
+                Round r = get(res.getLong(0));
+                list.add(r);
+            } while (res.moveToNext());
+        }
+        res.close();
+        return list;
     }
 }

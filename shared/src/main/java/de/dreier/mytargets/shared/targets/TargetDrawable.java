@@ -12,7 +12,7 @@ import android.graphics.Region;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
@@ -132,7 +132,7 @@ public class TargetDrawable extends Drawable {
         }
     }
 
-    public void drawArrows(Canvas canvas, ArrayList<Passe> passes, boolean transparent) {
+    public void drawArrows(Canvas canvas, List<Passe> passes, boolean transparent) {
         for (Passe p : passes) {
             drawArrows(canvas, p, transparent);
         }

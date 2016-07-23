@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.utils.Circle;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
@@ -69,7 +68,7 @@ public class TargetSelectView extends TargetViewBase {
         int curZone = getCurrentlySelectedZone();
         for (int i = 0; i < selectableZones.size(); i++) {
             Coordinate coordinate = getCircularCoordinates(i);
-            circle.draw(canvas, coordinate.x, coordinate.y, selectableZones.get(i).zone,
+            circle.draw(canvas, coordinate.x, coordinate.y, selectableZones.get(i).index,
                     i == curZone ? 23 : 17, false, currentArrow, null);
         }
 
@@ -99,8 +98,7 @@ public class TargetSelectView extends TargetViewBase {
 
     @Override
     protected Coordinate initAnimationPositions(int i) {
-        final SelectableZone dummyZone = new SelectableZone(passe.shot[i].zone, "");
-        return getCircularCoordinates(selectableZones.indexOf(dummyZone));
+        return getCircularCoordinates(getSelectableZoneIndexFromShot(passe.shot[i]));
     }
 
     @Override
@@ -144,7 +142,7 @@ public class TargetSelectView extends TargetViewBase {
                 degree += 360.0;
             }
             int index = (int) (zones * ((360.0 - degree) / 360.0));
-            s.zone = selectableZones.get(index).zone;
+            s.zone = selectableZones.get(index).index;
         }
 
         if (s.zone == Shot.NOTHING_SELECTED) {

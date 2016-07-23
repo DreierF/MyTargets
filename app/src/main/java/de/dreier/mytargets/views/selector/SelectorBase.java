@@ -62,8 +62,6 @@ public abstract class SelectorBase<T> extends LinearLayout {
             mAddButton.setVisibility(item == null ? VISIBLE : GONE);
         }
         boolean progress = item == null && mAddButton == null;
-        setClickable(!progress);
-        setEnabled(!progress);
         mProgress.setVisibility(progress ? VISIBLE : GONE);
         mView.setVisibility(item != null ? VISIBLE : GONE);
         if (item != null) {
@@ -77,7 +75,7 @@ public abstract class SelectorBase<T> extends LinearLayout {
 
     Intent getDefaultIntent() {
         Intent i = new Intent(getContext(), defaultActivity);
-        i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(item));
+        i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(getSelectedItem()));
         if (index != -1) {
             i.putExtra(INDEX, index);
         }

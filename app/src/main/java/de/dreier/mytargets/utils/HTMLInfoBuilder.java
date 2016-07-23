@@ -30,7 +30,7 @@ public class HTMLInfoBuilder {
 
     @NonNull
     private String getKeyValueLine(@StringRes int key, Object value) {
-        return getKeyValueLine(ApplicationInstance.getContext().getString(key), value);
+        return getKeyValueLine(ApplicationInstance.get(key), value);
     }
 
     @Override

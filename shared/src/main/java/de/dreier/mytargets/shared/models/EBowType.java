@@ -23,7 +23,7 @@ public enum EBowType {
 
     @Override
     public String toString() {
-        return SharedApplicationInstance.getContext().getString(name);
+        return SharedApplicationInstance.get(name);
     }
 
     public int getId() {

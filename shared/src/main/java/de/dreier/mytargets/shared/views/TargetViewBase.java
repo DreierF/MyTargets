@@ -152,6 +152,10 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         updateVirtualViews();
     }
 
+    protected int getSelectableZoneIndexFromShot(Shot shot) {
+        return selectableZones.indexOf(new SelectableZone(shot.zone, null, "", 0));
+    }
+
     protected abstract void calcSizes();
 
     public void setOnTargetSetListener(OnTargetSetListener listener) {
