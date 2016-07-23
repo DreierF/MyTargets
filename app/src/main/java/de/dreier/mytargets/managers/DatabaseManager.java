@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -437,34 +438,41 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void exportAll(File file) throws IOException {
+        file.getParentFile().mkdirs();
+        file.createNewFile();
+        FileWriter writer = new FileWriter(file);
+        writeExportData(writer);
+    }
+
+    public void writeExportData(Writer writer) throws IOException {
         SQLiteDatabase db = getWritableDatabase();
         Cursor cur = db.rawQuery(
-                "SELECT t.title,sr.name AS standard_round,datetime(t.datum/1000, 'unixepoch') AS date,sr.indoor,i.distance, i.unit," +
-                        "r.target, r.scoring_style, i.size, i.target_unit, s.arrow_index, a.name, s.x, s.y, s.arrow, b.name AS bow, s.points AS score " +
+                "SELECT t.title,sr.name AS standard_round,date(t.datum/1000, 'unixepoch', 'localtime') AS date, sr.indoor, i.r_index, i.distance, i.unit," +
+                        "r.target, r.scoring_style, i.size, i.target_unit, s.arrow_index, a.name, s.x, s.y, s.arrow, b.name AS bow, s.points AS score, " +
+                        "(SELECT COUNT(x._id) FROM PASSE x WHERE x.round=p.round AND x._id<=p._id) AS end_index " +
                         "FROM TRAINING t, ROUND r, PASSE p, SHOOT s " +
                         "LEFT JOIN BOW b ON b._id=t.bow " +
                         "LEFT JOIN ARROW a ON a._id=t.arrow " +
                         "LEFT JOIN ROUND_TEMPLATE i ON r.template=i._id " +
                         "LEFT JOIN STANDARD_ROUND_TEMPLATE sr ON t.standard_round=sr._id " +
                         "WHERE t._id = r.training AND r._id = p.round AND p._id = s.passe", null);
-        file.getParentFile().mkdirs();
-        file.createNewFile();
-        FileWriter writer = new FileWriter(file);
         writer.append("\"")
-                .append(mContext.getString(R.string.title))
-                .append("\";\"")
-                .append(mContext.getString(R.string.standard_round)).append("\";\"")
+                .append(mContext.getString(R.string.title)).append("\";\"")
                 .append(mContext.getString(R.string.date)).append("\";\"")
+                .append(mContext.getString(R.string.standard_round)).append("\";\"")
                 .append(mContext.getString(R.string.indoor)).append("\";\"")
+                .append(mContext.getString(R.string.bow)).append("\";\"")
+                .append(mContext.getString(R.string.arrow)).append("\";\"")
+                .append(mContext.getString(R.string.round)).append("\";\"")
                 .append(mContext.getString(R.string.distance)).append("\";\"")
                 .append(mContext.getString(R.string.target)).append("\";\"")
+                .append(mContext.getString(R.string.passe)).append("\";\"")
                 .append(mContext.getString(R.string.points)).append("\";\"")
                 .append("x").append("\";\"")
-                .append("y").append("\";\"")
-                .append(mContext.getString(R.string.bow)).append("\";\"")
-                .append(mContext.getString(R.string.arrow)).append("\"\n");
+                .append("y").append("\"\n");
         int titleInd = cur.getColumnIndexOrThrow("title");
         int standardRound = cur.getColumnIndexOrThrow("standard_round");
+        int roundIndex = cur.getColumnIndexOrThrow("r_index");
         int dateInd = cur.getColumnIndexOrThrow("date");
         int indoorInd = cur.getColumnIndexOrThrow("indoor");
         int distanceInd = cur.getColumnIndexOrThrow("distance");
@@ -480,6 +488,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         int arrowNumberInd = cur.getColumnIndexOrThrow("arrow");
         int shotInd = cur.getColumnIndexOrThrow("arrow_index");
         int scoreInd = cur.getColumnIndexOrThrow("score");
+        int endInd = cur.getColumnIndexOrThrow("end_index");
         if (cur.moveToFirst()) {
             do {
                 // Title
@@ -487,12 +496,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 writer.append(cur.getString(titleInd));
                 writer.append("\";\"");
 
-                // StandardRound
-                writer.append(cur.getString(standardRound));
-                writer.append("\";\"");
-
                 // Date
                 writer.append(cur.getString(dateInd));
+                writer.append("\";\"");
+
+                // StandardRound
+                writer.append(cur.getString(standardRound));
                 writer.append("\";\"");
 
                 // Indoor
@@ -501,31 +510,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 } else {
                     writer.append("Indoor\";\"");
                 }
-
-                // Distance
-                writer.append(new Dimension(
-                        cur.getInt(distanceInd),
-                        cur.getString(distanceUnitInd))
-                        .toString());
-                writer.append("\";\"");
-
-                // Target
-                Target target = new Target(cur.getInt(targetInd), cur.getInt(styleInd),
-                        new Dimension(cur.getInt(targetSizeInd), cur.getString(targetUnitInd)));
-                writer.append(target.getModel().toString())
-                        .append(" (")
-                        .append(target.size.toString())
-                        .append(")\";\"");
-
-                // Score
-                writer.append(target.zoneToString(cur.getInt(scoreInd), cur.getInt(shotInd)));
-                writer.append("\";\"");
-
-                // Coordinates (X, Y)
-                writer.append(String.valueOf(cur.getFloat(xInd)));
-                writer.append("\";\"");
-                writer.append(String.valueOf(cur.getFloat(yInd)));
-                writer.append("\";\"");
 
                 // Bow
                 if (cur.getString(bowInd) != null) {
@@ -542,6 +526,40 @@ public class DatabaseManager extends SQLiteOpenHelper {
                         writer.append(")");
                     }
                 }
+                writer.append("\";\"");
+
+                // Round
+                writer.append(String.valueOf(cur.getInt(roundIndex) + 1));
+                writer.append("\";\"");
+
+                // Distance
+                writer.append(new Dimension(
+                        cur.getInt(distanceInd),
+                        cur.getString(distanceUnitInd))
+                        .toString());
+                writer.append("\";\"");
+
+                // Target
+                Target target = new Target(cur.getInt(targetInd), cur.getInt(styleInd),
+                        new Dimension(cur.getInt(targetSizeInd), cur.getString(targetUnitInd)));
+                writer.append(target.getModel().toString())
+                        .append(" (")
+                        .append(target.size.toString())
+                        .append(")\";\"");
+
+                // End
+                writer.append(String.valueOf(cur.getInt(endInd)));
+                writer.append("\";\"");
+
+                // Score
+                writer.append(target.zoneToString(cur.getInt(scoreInd), cur.getInt(shotInd)));
+                writer.append("\";\"");
+
+                // Coordinates (X, Y)
+                writer.append(String.valueOf(cur.getFloat(xInd)));
+                writer.append("\";\"");
+                writer.append(String.valueOf(cur.getFloat(yInd)));
+
                 writer.append("\"\n");
             } while (cur.moveToNext());
         }

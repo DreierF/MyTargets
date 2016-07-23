@@ -164,7 +164,7 @@ public class EditRoundFragment extends EditFragmentBase {
 
         SettingsManager.setTarget(roundTemplate.target);
         SettingsManager.setDistance(roundTemplate.distance);
-        SettingsManager.setArrowsPerPasse(roundTemplate.arrowsPerPasse);
+        SettingsManager.setArrowsPerEnd(roundTemplate.arrowsPerPasse);
         return roundTemplate;
     }
 
