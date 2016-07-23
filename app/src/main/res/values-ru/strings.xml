@@ -278,4 +278,5 @@
   <string name="arrow_number_removed">Номер стрелы удален!</string>
   <string name="new_end">New end</string>
   <string name="distribution">Distribution</string>
+  <string name="count">Count</string>
 </resources>

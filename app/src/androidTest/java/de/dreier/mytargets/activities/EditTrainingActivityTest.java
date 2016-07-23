@@ -119,5 +119,7 @@ public class EditTrainingActivityTest extends UITestBase {
         pressBack();
 
         onView(withId(R.id.action_save)).perform(click());
+        pressBack();
+        pressBack();
     }
 }

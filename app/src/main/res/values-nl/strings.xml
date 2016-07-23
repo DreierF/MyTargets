@@ -265,4 +265,5 @@ Gebruik deze optie om gegevens met uw smartwatch of historische gegevens in te v
   <string name="arrow_number_removed">Arrow number removed!</string>
   <string name="new_end">New end</string>
   <string name="distribution">Distribution</string>
+  <string name="count">Count</string>
 </resources>

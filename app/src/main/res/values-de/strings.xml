@@ -264,4 +264,5 @@
   <string name="arrow_number_removed">Pfeilnummer gelöscht!</string>
   <string name="new_end">Neue Passe</string>
   <string name="distribution">Verteilung</string>
+  <string name="count">Count</string>
 </resources>

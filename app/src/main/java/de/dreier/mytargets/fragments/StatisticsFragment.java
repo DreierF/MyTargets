@@ -28,7 +28,9 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.joda.time.DateTime;
@@ -40,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.dreier.mytargets.ApplicationInstance;
@@ -59,6 +62,7 @@ import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.utils.Color;
 import de.dreier.mytargets.utils.DataLoaderBase;
+import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.RoundedTextDrawable;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -68,6 +72,11 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
     public static final String ARG_TARGET = "target";
     public static final String ARG_ROUND_IDS = "round_ids";
+    private static final String PIE_CHART_CENTER_TEXT_FORMAT = "<font color='gray'>%s</font><br>" +
+            "<big>%s</big><br>" +
+            "<small>&nbsp;</small><br>" +
+            "<font color='gray'>%s</font><br>" +
+            "<big>%d</big>";
 
     private long[] roundIds;
     private List<Round> rounds;
@@ -93,7 +102,6 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         showLineChart();
         showPieChart();
         showDispersionView();
-        showHitsAndMisses();
 
         arrowStatisticDataSource = new ArrowStatisticDataSource();
         binding.arrows.setHasFixedSize(true);
@@ -109,7 +117,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
                 .filter(p -> p.exact)
                 .flatMap(p -> Stream.of(p.shotList()))
                 .collect(Collectors.toList());
-        if(exactShots.isEmpty()) {
+        if (exactShots.isEmpty()) {
             binding.dispersionPatternLayout.setVisibility(View.GONE);
             return;
         }
@@ -127,18 +135,11 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         });
     }
 
-    private void showHitsAndMisses() {
-        final List<Shot> shots = Stream.of(rounds)
-                .flatMap(r -> Stream.of(new PasseDataSource().getAllByRound(r.getId())))
-                .flatMap(p -> Stream.of(p.shotList()))
-                .collect(Collectors.toList());
-        long missCount = Stream.of(shots).filter(s -> s.zone == Shot.MISS).count();
-        binding.hits.setText(String.valueOf(shots.size() - missCount));
-        binding.misses.setText(String.valueOf(missCount));
-    }
-
     private void showLineChart() {
         LineData data = getLineChartDataSet();
+        if (data == null) {
+            return;
+        }
         binding.chartView.getXAxis().setTextSize(10);
         binding.chartView.getXAxis().setTextColor(0xFF848484);
         binding.chartView.getAxisRight().setEnabled(false);
@@ -146,13 +147,14 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         binding.chartView.setData(data);
         binding.chartView.animateXY(2000, 2000);
         binding.chartView.setDescription("");
+        binding.chartView.getAxisLeft().setAxisMinValue(0);
     }
 
     private void showPieChart() {
         // enable hole and configure
         //binding.distributionChart.setDrawHoleEnabled(true);
         //binding.distributionChart.setHoleRadius(7);
-        binding.distributionChart.setTransparentCircleRadius(10);
+        binding.distributionChart.setTransparentCircleRadius(15);
         binding.distributionChart.getLegend().setEnabled(false);
         binding.distributionChart.setDescription("");
 
@@ -200,6 +202,38 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         data.setValueTextColors(textColors);
 
         binding.distributionChart.setData(data);
+        final String text = getHitMissText();
+        binding.distributionChart.setCenterText(HtmlUtils.fromHtml(text));
+
+        binding.distributionChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+                final String s = String.format(Locale.ENGLISH,
+                        PIE_CHART_CENTER_TEXT_FORMAT,
+                        getString(R.string.points), xValues.get(e.getXIndex()),
+                        getString(R.string.count), (int)e.getVal());
+                binding.distributionChart.setCenterText(HtmlUtils.fromHtml(s));
+            }
+
+            @Override
+            public void onNothingSelected() {
+                binding.distributionChart.setCenterText(HtmlUtils.fromHtml(text));
+            }
+        });
+    }
+
+    private String getHitMissText() {
+        final List<Shot> shots = Stream.of(rounds)
+                .flatMap(r -> Stream.of(new PasseDataSource().getAllByRound(r.getId())))
+                .flatMap(p -> Stream.of(p.shotList()))
+                .collect(Collectors.toList());
+        long missCount = Stream.of(shots).filter(s -> s.zone == Shot.MISS).count();
+        long hitCount = shots.size() - missCount;
+
+        return String.format(Locale.ENGLISH,
+                PIE_CHART_CENTER_TEXT_FORMAT,
+                getString(R.string.hits), String.valueOf(hitCount),
+                getString(R.string.misses), missCount);
     }
 
     @Override
@@ -233,12 +267,14 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         getActivity().getSupportLoaderManager().restartLoader(0, null, this);
     }
 
-    @NonNull
     private LineData getLineChartDataSet() {
         List<Pair<Integer, DateTime>> values = Stream.of(Utils.toList(roundIds))
                 .flatMap(roundId -> Stream.of(new PasseDataSource().getAllByRound(roundId)))
                 .map(passe -> getPairEndSummary(target, passe))
                 .collect(Collectors.toList());
+        if (values.isEmpty()) {
+            return null;
+        }
 
         final DateFormat dateFormat = getDateFormat(values);
         List<String> xValues = Stream.of(values)
@@ -287,17 +323,18 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         series.setCircleRadius(5);
         series.setCircleColorHole(color);
         series.setDrawValues(false);
+        series.setHighLightColor(0xff9c9c9c);
         return series;
     }
 
     private ILineDataSet generateLinearRegressionLine(List<Pair<Integer, DateTime>> values) {
         int dataSetSize = values.size();
-        float[] x = new float[dataSetSize];
-        float[] y = new float[dataSetSize];
+        double[] x = new double[dataSetSize];
+        double[] y = new double[dataSetSize];
         // first pass: read in data, compute x bar and y bar
         int n = 0;
-        float sumX = 0.0f;
-        float sumY = 0.0f;
+        double sumX = 0.0f;
+        double sumY = 0.0f;
         for (int i = 0; i < dataSetSize; i++) {
             x[n] = values.get(i).getSecond().getMillis();
             y[n] = values.get(i).getFirst();
@@ -308,25 +345,25 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         if (n < 1) {
             return null;
         }
-        float xBar = sumX / n;
-        float yBar = sumY / n;
+        double xBar = sumX / n;
+        double yBar = sumY / n;
 
         // second pass: compute summary statistics
-        float xxBar = 0.0f;
-        float xyBar = 0.0f;
+        double xxBar = 0.0f;
+        double xyBar = 0.0f;
         for (int i = 0; i < n; i++) {
             xxBar += (x[i] - xBar) * (x[i] - xBar);
             xyBar += (x[i] - xBar) * (y[i] - yBar);
         }
-        float beta1 = xyBar / xxBar;
-        float beta0 = yBar - beta1 * xBar;
-        float y0 = beta1 * values.get(0).getFirst() + beta0;
-        float y1 = beta1 * values.get(dataSetSize - 1).getFirst() + beta0;
+        double beta1 = xyBar / xxBar;
+        double beta0 = yBar - beta1 * xBar;
+        float y0 = (float) (beta1 * values.get(0).getSecond().getMillis() + beta0);
+        float y1 = (float) (beta1 * values.get(dataSetSize - 1).getSecond().getMillis() + beta0);
         Entry first = new Entry(y0, 0);
         Entry last = new Entry(y1, dataSetSize - 1);
         List<Entry> yValues = Arrays.asList(first, last);
         LineDataSet lineDataSet = new LineDataSet(yValues, "");
-        lineDataSet.setColors(new int[]{0xffdbdbdb});
+        lineDataSet.setColors(new int[]{0xff9100});
         lineDataSet.setCircleRadius(0);
         lineDataSet.setValueTextSize(0);
         lineDataSet.setLineWidth(1);
