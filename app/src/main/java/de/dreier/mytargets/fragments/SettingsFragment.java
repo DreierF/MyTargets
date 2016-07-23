@@ -50,9 +50,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         if (rootKey == null) {
             getActivity().setTitle(R.string.preferences);
-            updateTimerSummaries();
         } else if ("timer".equals(rootKey)) {
             getActivity().setTitle(R.string.timer);
+            updateTimerSummaries();
         } else if ("scoreboard".equals(rootKey)) {
             getActivity().setTitle(R.string.scoreboard);
             updateProfileSummaries();
