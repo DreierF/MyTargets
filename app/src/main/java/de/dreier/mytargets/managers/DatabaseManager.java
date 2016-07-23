@@ -447,7 +447,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public void writeExportData(Writer writer) throws IOException {
         SQLiteDatabase db = getWritableDatabase();
         Cursor cur = db.rawQuery(
-                "SELECT t.title,sr.name AS standard_round,date(t.datum/1000, 'unixepoch') AS date, sr.indoor, i.r_index, i.distance, i.unit," +
+                "SELECT t.title,sr.name AS standard_round,date(t.datum/1000, 'unixepoch', 'localtime') AS date, sr.indoor, i.r_index, i.distance, i.unit," +
                         "r.target, r.scoring_style, i.size, i.target_unit, s.arrow_index, a.name, s.x, s.y, s.arrow, b.name AS bow, s.points AS score, " +
                         "(SELECT COUNT(x._id) FROM PASSE x WHERE x.round=p.round AND x._id<=p._id) AS end_index " +
                         "FROM TRAINING t, ROUND r, PASSE p, SHOOT s " +
