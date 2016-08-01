@@ -62,13 +62,11 @@ public class TrainingFragment extends EditableFragment<Round> {
     private StandardRoundDataSource standardRoundDataSource;
     private TrainingDataSource trainingDataSource;
 
-
     public TrainingFragment() {
         itemTypeSelRes = R.plurals.round_selected;
         itemTypeDelRes = R.plurals.round_deleted;
         newStringRes = R.string.new_round;
     }
-
 
     @Override
     @CallSuper
