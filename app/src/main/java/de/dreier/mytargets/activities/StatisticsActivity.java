@@ -89,7 +89,7 @@ public class StatisticsActivity extends ChildActivityBase {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return targets.get(position).getFirst().getName();
+            return targets.get(position).getFirst().toString();
         }
     }
 }

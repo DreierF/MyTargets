@@ -1,5 +1,5 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
                 android:id="@+id/chartView"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:layout_margin="8dp" />
+                android:layout_margin="8dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -28,13 +28,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
-                    android:text="@string/distribution" />
+                    android:text="@string/distribution"/>
 
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/distributionChart"
                     android:layout_width="250dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_height="250dp" />
+                    android:layout_height="250dp"
+                    android:layout_gravity="center_horizontal"/>
 
                 <LinearLayout
                     android:id="@+id/dispersionPatternLayout"
@@ -47,7 +47,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingTop="16dp"
-                        android:text="@string/dispersion_pattern" />
+                        android:text="@string/dispersion_pattern"/>
 
                     <FrameLayout
                         android:id="@+id/dispersionViewOverlay"
@@ -59,7 +59,7 @@
                             android:id="@+id/dispersionView"
                             android:layout_width="200dp"
                             android:layout_height="200dp"
-                            android:layout_gravity="center_horizontal" />
+                            android:layout_gravity="center_horizontal"/>
 
                     </FrameLayout>
 
@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:layout_marginTop="16dp"
-                    android:text="@string/arrow_ranking" />
+                    android:text="@string/arrow_ranking"/>
 
             </LinearLayout>
 
@@ -80,7 +80,7 @@
                 android:id="@+id/arrows"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layoutManager="LinearLayoutManager" />
+                app:layoutManager="LinearLayoutManager"/>
 
         </LinearLayout>
 
