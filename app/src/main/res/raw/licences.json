@@ -46,12 +46,12 @@
       "license": "apache2"
     },
     {
-      "name": "RxAndroid",
-      "version": "1.1.0",
+      "name": "FloatingActionButton",
+      "version": "1.6.4",
       "year": "2015",
-      "owner": "The RxAndroid authors",
-      "description": "Android specific bindings for RxJava.",
-      "url": "https://github.com/ReactiveX/RxAndroid",
+      "owner": "Dmytro Tarianyk",
+      "description": "Android Floating Action Button based on Material Design specification.",
+      "url": "https://github.com/Clans/FloatingActionButton",
       "license": "apache2"
     },
     {
