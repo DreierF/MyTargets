@@ -67,6 +67,7 @@ public class StatisticsActivity extends ChildActivityBase {
         StatisticsPagerAdapter(FragmentManager fm, List<Pair<Target, List<Round>>> pairs) {
             super(fm);
             targets = pairs;
+            Collections.sort(targets, (p1, p2) -> p2.getSecond().size() - p1.getSecond().size());
         }
 
         @Override

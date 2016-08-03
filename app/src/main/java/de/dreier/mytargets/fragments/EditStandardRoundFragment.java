@@ -44,7 +44,7 @@ import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 public class EditStandardRoundFragment extends EditFragmentBase {
 
     @State(ParcelsBundler.class)
-    ArrayList<RoundTemplate> roundTemplateList = new ArrayList<>();
+    List<RoundTemplate> roundTemplateList = new ArrayList<>();
     private long standardRoundId = -1;
     private RoundTemplateAdapter adapter;
     private FragmentEditStandardRoundBinding binding;

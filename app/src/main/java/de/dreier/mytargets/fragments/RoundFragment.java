@@ -100,6 +100,7 @@ public class RoundFragment extends EditableFragment<Passe> {
     public void onLoadFinished(Loader<List<Passe>> loader, List<Passe> data) {
         // Set round info
         mAdapter.setList(data);
+        dataSource = new PasseDataSource();
 
         StandardRound standardRound = new StandardRoundDataSource()
                 .get(new TrainingDataSource().get(round.trainingId).standardRoundId);

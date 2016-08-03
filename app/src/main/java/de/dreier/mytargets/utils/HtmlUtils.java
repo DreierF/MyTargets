@@ -217,7 +217,7 @@ public class HtmlUtils {
         } else {
             String html = "";
             for (Round round : rounds) {
-                html += BR + bold(get(R.string.round) + " " + round.info.index);
+                html += BR + bold(get(R.string.round) + " " + (round.info.index + 1));
                 html += getStatisticsForRound(Collections.singletonList(round));
             }
             html += BR + bold(get(R.string.training));

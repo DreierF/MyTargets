@@ -13,6 +13,7 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.Round;
@@ -95,7 +96,7 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
                 "FROM ROUND r " +
                 "WHERE r.training=" + training + " " +
                 "ORDER BY r._id ASC", null);
-        ArrayList<Round> list = new ArrayList<>(res.getCount());
+        List<Round> list = new ArrayList<>(res.getCount());
         if (res.moveToFirst()) {
             do {
                 Round r = get(res.getLong(0));
@@ -103,6 +104,7 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
             } while (res.moveToNext());
         }
         res.close();
+        Collections.sort(list, (round1, round2) -> round1.info.index - round2.info.index);
         return list;
     }
 
@@ -112,7 +114,7 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
         long standardRoundId = item.info.standardRound;
         StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource();
         StandardRound standardRound = standardRoundDataSource.get(standardRoundId);
-        ArrayList<RoundTemplate> roundTemplates = standardRound.rounds;
+        List<RoundTemplate> roundTemplates = standardRound.rounds;
 
         if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
             throw new IllegalStateException("Only practice rounds may be deleted!");
