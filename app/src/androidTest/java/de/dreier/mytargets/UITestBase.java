@@ -4,13 +4,16 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.test.espresso.FailureHandler;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Tap;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.uiautomator.UiDevice;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
@@ -30,8 +33,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.endsWith;
+import static org.junit.Assert.assertThat;
 
-public class UITestBase {
+public class UITestBase extends InstrumentedTestBase {
 
     private static Matcher<View> androidHomeMatcher() {
         return allOf(
@@ -68,6 +72,29 @@ public class UITestBase {
         return LowLevelActions.release(new float[]{x, y});
     }
 
+    @NonNull
+    protected static Matcher<View> matchFab() {
+        return Matchers.allOf(withParent(withId(R.id.fab)), withClassName(endsWith("ImageView")), isDisplayed());
+    }
+
+    public static ViewAction nestedScrollTo() {
+        return ViewActions.actionWithAssertions(new NestedScrollToAction());
+    }
+
+    public static ViewAssertion assertItemCount(int expectedCount) {
+        return new ViewAssertion() {
+            public void check (View view, NoMatchingViewException noViewFoundException){
+                if (noViewFoundException != null) {
+                    throw noViewFoundException;
+                }
+
+                RecyclerView recyclerView = (RecyclerView) view;
+                RecyclerView.Adapter adapter = recyclerView.getAdapter();
+                assertThat(adapter.getItemCount(), is(expectedCount));
+            }
+        };
+    }
+
     protected void clickActionBarItem(@IdRes int menuItem, @StringRes int title) {
         onView(withId(menuItem)).withFailureHandler(new FailureHandler() {
             @Override
@@ -76,14 +103,5 @@ public class UITestBase {
                 onView(withText(title)).perform(click());
             }
         }).perform(click());
-    }
-
-    @NonNull
-    protected static Matcher<View> matchFab() {
-        return Matchers.allOf(withParent(withId(R.id.fab)), withClassName(endsWith("ImageView")), isDisplayed());
-    }
-
-    public static ViewAction nestedScrollTo() {
-        return ViewActions.actionWithAssertions(new NestedScrollToAction());
     }
 }

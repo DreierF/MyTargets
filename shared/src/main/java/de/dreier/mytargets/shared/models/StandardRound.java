@@ -22,7 +22,7 @@ public class StandardRound implements IIdSettable, IImageProvider, IDetailProvid
     public int club;
     public String name;
     public boolean indoor;
-    public ArrayList<RoundTemplate> rounds = new ArrayList<>();
+    public List<RoundTemplate> rounds = new ArrayList<>();
     public int usages;
 
     public void insert(RoundTemplate template) {
