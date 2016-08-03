@@ -455,7 +455,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                         "LEFT JOIN ARROW a ON a._id=t.arrow " +
                         "LEFT JOIN ROUND_TEMPLATE i ON r.template=i._id " +
                         "LEFT JOIN STANDARD_ROUND_TEMPLATE sr ON t.standard_round=sr._id " +
-                        "WHERE t._id = r.training AND r._id = p.round AND p._id = s.passe", null);
+                        "WHERE t._id = r.training AND r._id=p.round AND p._id=s.passe", null);
         writer.append("\"")
                 .append(mContext.getString(R.string.title)).append("\";\"")
                 .append(mContext.getString(R.string.date)).append("\";\"")

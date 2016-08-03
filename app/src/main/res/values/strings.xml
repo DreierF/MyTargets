@@ -104,8 +104,8 @@
     <!-- Scoreboard -->
     <string name="scoreboard">Scoreboard</string>
     <string name="arrows">Arrows</string>
-    <string name="sum">Sum</string>
-    <string name="carry">Carry</string>
+    <string name="sum">Score</string>
+    <string name="carry">R.Total</string>
     <string name="action_print">Print</string>
     <string name="average">Average</string>
 
