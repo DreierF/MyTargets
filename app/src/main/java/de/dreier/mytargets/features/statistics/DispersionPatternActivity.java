@@ -74,6 +74,10 @@ public class DispersionPatternActivity extends ChildActivityBase {
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.menu_scoreboard, menu);
         menu.findItem(R.id.action_settings).setVisible(false);
+        menu.findItem(R.id.action_print).setVisible(Build.VERSION.SDK_INT >=
+                        Build.VERSION_CODES.KITKAT);
+        menu.findItem(R.id.action_pdf).setVisible(Build.VERSION.SDK_INT >=
+                        Build.VERSION_CODES.KITKAT);
         return true;
     }
 
@@ -85,6 +89,9 @@ public class DispersionPatternActivity extends ChildActivityBase {
                 return true;
             case R.id.action_print:
                 print();
+                return true;
+            case R.id.action_pdf:
+                //TODO
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

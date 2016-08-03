@@ -156,6 +156,9 @@ public class ScoreboardActivity extends ChildActivityBase {
         menu.findItem(R.id.action_print).setVisible(pageLoaded &&
                 Build.VERSION.SDK_INT >=
                         Build.VERSION_CODES.KITKAT);
+        menu.findItem(R.id.action_pdf).setVisible(pageLoaded &&
+                Build.VERSION.SDK_INT >=
+                        Build.VERSION_CODES.KITKAT);
         return true;
     }
 
@@ -168,6 +171,9 @@ public class ScoreboardActivity extends ChildActivityBase {
             case R.id.action_print:
                 print();
                 return true;
+            case R.id.action_pdf:
+                exportPdf();
+                return true;
             case R.id.action_settings:
                 SettingsActivity.getIntent(ESettingsScreens.SCOREBOARD)
                         .withContext(this)
@@ -176,6 +182,10 @@ public class ScoreboardActivity extends ChildActivityBase {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void exportPdf() {
+
     }
 
     /* Called after the user selected with items he wants to share */
