@@ -56,7 +56,7 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
         RoundTemplate roundTemplate = new RoundTemplate();
         roundTemplate.setId(cursor.getLong(startColumnIndex));
         roundTemplate.index = cursor.getInt(startColumnIndex + 1);
-        roundTemplate.arrowsPerPasse = cursor.getInt(startColumnIndex + 2);
+        roundTemplate.arrowsPerEnd = cursor.getInt(startColumnIndex + 2);
         final Dimension diameter = new Dimension(
                 cursor.getInt(startColumnIndex + 9), cursor.getString(startColumnIndex + 10));
         roundTemplate.targetTemplate = new Target(cursor.getInt(startColumnIndex + 3),
@@ -65,7 +65,7 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
                 cursor.getInt(startColumnIndex + 6), diameter);
         roundTemplate.distance = new Dimension(cursor.getInt(startColumnIndex + 7),
                 cursor.getString(startColumnIndex + 8));
-        roundTemplate.passes = cursor.getInt(startColumnIndex + 11);
+        roundTemplate.endCount = cursor.getInt(startColumnIndex + 11);
         roundTemplate.standardRound = cursor.getLong(startColumnIndex + 12);
         return roundTemplate;
     }
@@ -77,8 +77,8 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
         values.put(INDEX, roundTemplate.index);
         values.put(DISTANCE, roundTemplate.distance.value);
         values.put(UNIT, roundTemplate.distance.unit.toString());
-        values.put(PASSES, roundTemplate.passes);
-        values.put(ARROWS_PER_PASSE, roundTemplate.arrowsPerPasse);
+        values.put(PASSES, roundTemplate.endCount);
+        values.put(ARROWS_PER_PASSE, roundTemplate.arrowsPerEnd);
         values.put(TARGET, roundTemplate.targetTemplate.id);
         values.put(TARGET_SIZE, roundTemplate.targetTemplate.size.value);
         values.put(TARGET_SIZE_UNIT, Dimension.Unit.toStringHandleNull(roundTemplate.targetTemplate.size.unit));
@@ -102,17 +102,17 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
     }
 
     public void addPasse(RoundTemplate roundTemplate) {
-        roundTemplate.passes++;
+        roundTemplate.endCount++;
         ContentValues values = new ContentValues();
-        values.put(PASSES, roundTemplate.passes);
+        values.put(PASSES, roundTemplate.endCount);
         database.update(TABLE, values, "_id=?",
                 new String[]{String.valueOf(roundTemplate.getId())});
     }
 
     void deletePasse(RoundTemplate roundTemplate) {
-        roundTemplate.passes--;
+        roundTemplate.endCount--;
         ContentValues values = new ContentValues();
-        values.put(PASSES, roundTemplate.passes);
+        values.put(PASSES, roundTemplate.endCount);
         database.update(TABLE, values, "_id=?",
                 new String[]{String.valueOf(roundTemplate.getId())});
     }

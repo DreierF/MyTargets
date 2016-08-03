@@ -56,8 +56,8 @@ public class StandardRound implements IIdSettable, IImageProvider, IDetailProvid
             if (!desc.isEmpty()) {
                 desc += "\n";
             }
-            desc += context.getString(R.string.round_desc, r.distance, r.passes,
-                    r.arrowsPerPasse, r.target.size);
+            desc += context.getString(R.string.round_desc, r.distance, r.endCount,
+                    r.arrowsPerEnd, r.target.size);
         }
         return desc;
     }

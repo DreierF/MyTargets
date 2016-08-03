@@ -80,9 +80,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
     private long[] roundIds;
     private List<Round> rounds;
-
     private ArrowStatisticDataSource arrowStatisticDataSource;
-
     private ArrowStatisticAdapter adapter;
     private FragmentStatisticsBinding binding;
     private Target target;
@@ -105,7 +103,6 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         binding.arrows.setHasFixedSize(true);
         adapter = new ArrowStatisticAdapter();
         binding.arrows.setAdapter(adapter);
-        getActivity().getSupportLoaderManager().initLoader(0, null, this);
 
         binding.arrows.setNestedScrollingEnabled(false);
 
@@ -261,7 +258,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().getSupportLoaderManager().restartLoader(0, null, this);
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     private LineData getLineChartDataSet() {

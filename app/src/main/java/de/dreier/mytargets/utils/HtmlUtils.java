@@ -99,14 +99,14 @@ public class HtmlUtils {
 
     private static String getRoundTable(ScoreboardConfiguration configuration, Round round) {
         String html = "<table class=\"myTable\">";
-        html += getTableHeader(round.info.arrowsPerPasse);
+        html += getTableHeader(round.info.arrowsPerEnd);
         int carry = 0;
         List<Passe> passes = new PasseDataSource().getAllByRound(round.getId());
         for (Passe passe : passes) {
             html += "<tr class=\"align_center\">";
             html += "<td>" + (passe.index + 1) + "</td>";
             int sum = 0;
-            for (Shot shot : passe.shot) {
+            for (Shot shot : passe.getSortedShotList()) {
                 html += "<td>";
                 html += getPoints(configuration, shot, round.info.target);
                 html += "</td>";
