@@ -42,15 +42,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.models.EShowMode;
 import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.models.EShowMode;
 import de.dreier.mytargets.shared.models.ArrowNumber;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.targets.SelectableZone;
-import de.dreier.mytargets.shared.utils.PasseDrawer;
+import de.dreier.mytargets.shared.utils.ScoresDrawer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import icepick.Icepick;
 import icepick.State;
@@ -77,6 +77,7 @@ public class TargetView extends TargetViewBase {
     private ValueAnimator animator;
     private float inputModeProgress = 0;
     private ValueAnimator inputAnimator;
+    private Midpoint[] midpoints;
 
     public TargetView(Context context) {
         super(context);
@@ -96,9 +97,10 @@ public class TargetView extends TargetViewBase {
     public void setPasse(Passe passe) {
         currentArrow = passe.shot.length;
         lastSetArrow = passe.shot.length;
-        this.passe = passe;
-        passeDrawer.setSelection(currentArrow, null, PasseDrawer.MAX_CIRCLE_SIZE);
-        passeDrawer.setPasse(passe);
+        this.end = passe;
+        scoresDrawer.setSelection(currentArrow, null, ScoresDrawer.MAX_CIRCLE_SIZE);
+        scoresDrawer.setShots(passe.shotList());
+        updateMidpoints();
         if (passe.getId() != -1) {
             switchMode(!passe.exact, true);
         }
@@ -111,6 +113,7 @@ public class TargetView extends TargetViewBase {
         super.reset();
         inputModeTransitioning = false;
         zoomTransitioning = false;
+        updateMidpoints();
     }
 
     public void setArrowNumbers(@NonNull List<ArrowNumber> arrowNumbers) {
@@ -133,6 +136,11 @@ public class TargetView extends TargetViewBase {
         super.setRoundTemplate(r);
         switchMode(SettingsManager.getInputMode(), false);
         initSpotBounds();
+
+        // Initialize midpoints
+        int spots = targetModel.getFaceCount();
+        midpoints = new Midpoint[spots];
+        updateMidpoints();
     }
 
     private void initSpotBounds() {
@@ -174,8 +182,8 @@ public class TargetView extends TargetViewBase {
     @Override
     protected void onDraw(Canvas canvas) {
         int curZone;
-        if (currentArrow > -1 && currentArrow < round.arrowsPerPasse) {
-            curZone = passe.shot[currentArrow].zone;
+        if (currentArrow > -1 && currentArrow < round.arrowsPerEnd) {
+            curZone = end.shot[currentArrow].zone;
         } else {
             curZone = -2;
         }
@@ -196,13 +204,13 @@ public class TargetView extends TargetViewBase {
         // Draw right indicator
         drawRightSelectorBar(canvas);
 
-        // Draw all points of this passe at the bottom
-        passeDrawer.draw(canvas);
+        // Draw all points of this end at the bottom
+        scoresDrawer.draw(canvas);
     }
 
     private void drawZoomedInTarget(Canvas canvas) {
-        float px = passe.shot[currentArrow].x;
-        float py = passe.shot[currentArrow].y;
+        float px = end.shot[currentArrow].x;
+        float py = end.shot[currentArrow].y;
         int radius2 = (int) (radius * ZOOM_FACTOR);
         int x = (int) ((midX - orgMidX) * ZOOM_FACTOR + orgMidX - px * (orgRadius + 30 * density));
         int y = (int) ((midY - orgMidY) * ZOOM_FACTOR + orgMidY - py * (orgRadius + 30 * density) -
@@ -227,12 +235,12 @@ public class TargetView extends TargetViewBase {
     }
 
     private void drawArrows(Canvas canvas) {
-        for (int i = 0; i < passe.shot.length && i <= lastSetArrow + 1; i++) {
-            Shot shot = passe.shot[i];
+        for (int i = 0; i < end.shot.length && i <= lastSetArrow + 1; i++) {
+            Shot shot = end.shot[i];
             if (shot.zone == Shot.NOTHING_SELECTED) {
                 continue;
             }
-            if (i == currentArrow) {
+            if (shot.index == currentArrow) {
                 targetDrawable.drawFocusedArrow(canvas, shot);
                 continue;
             }
@@ -250,28 +258,23 @@ public class TargetView extends TargetViewBase {
 
         int spots = targetModel.getFaceCount();
         for (int i = 0; i < spots; i++) {
-            Midpoint m = getMidpoint(i);
-            if (m.count >= 2) {
-                targetDrawable.drawArrowAvg(canvas, m.sumX / m.count,
-                        m.sumY / m.count, i);
+            if (midpoints[i].shouldDraw()) {
+                targetDrawable.drawArrowAvg(canvas, midpoints[i].getX(), midpoints[i].getY(), i);
             }
         }
     }
 
     private boolean shouldShowPasse(Passe p) {
-        return p.getId() != passe
-                .getId() && (showMode == EShowMode.TRAINING || p.roundId == passe.roundId);
+        return p.getId() != end
+                .getId() && (showMode == EShowMode.TRAINING || p.roundId == end.roundId);
     }
 
     private Midpoint getMidpoint(int spot) {
         Midpoint m = new Midpoint();
         int spots = targetModel.getFaceCount();
-        for (int i = spot; i < passe.shot.length && i <= lastSetArrow + 1; i += spots) {
-            Shot shot = passe.shot[i];
-            if (shot.zone != Shot.NOTHING_SELECTED && i != currentArrow) {
-                m.add(shot);
-            }
-        }
+        Stream.of(end.shotList())
+                .filter(s -> s.index % spots == spot)
+                .reduce(m, Midpoint::add);
 
         if (showMode == EShowMode.END) {
             return m;
@@ -291,11 +294,11 @@ public class TargetView extends TargetViewBase {
         if (zoneSelectionMode) {
             coordinate.x = contentWidth - 100 * density;
             int indicatorHeight = contentHeight / selectableZones.size();
-            int index = getSelectableZoneIndexFromShot(passe.shot[i]);
+            int index = getSelectableZoneIndexFromShot(end.shot[i]);
             coordinate.y = indicatorHeight * index + indicatorHeight / 2.0f;
         } else {
-            coordinate.x = orgMidX + orgRadius * passe.shot[i].x;
-            coordinate.y = orgMidY + orgRadius * passe.shot[i].y;
+            coordinate.x = orgMidX + orgRadius * end.shot[i].x;
+            coordinate.y = orgMidY + orgRadius * end.shot[i].y;
         }
         return coordinate;
     }
@@ -318,7 +321,7 @@ public class TargetView extends TargetViewBase {
         rect.right = availableWidth - 30 * density;
         rect.top = 10 * density;
         rect.bottom = orgMidY - orgRadius - 10 * density;
-        passeDrawer.animateToRect(rect);
+        scoresDrawer.animateToRect(rect);
         animateToZoomSpot();
     }
 
@@ -364,18 +367,18 @@ public class TargetView extends TargetViewBase {
     @Override
     protected boolean selectPreviousShots(MotionEvent motionEvent, float x, float y) {
         // Handle selection of already saved shoots
-        int arrow = passeDrawer.getPressedPosition(x, y);
-        if (arrow != -1 && currentArrow != arrow) {
+        int arrow = scoresDrawer.getPressedPosition(x, y);
+        if (arrow != -1) {
             if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 if (longPressTimer != null) {
-                    passeDrawer.setPressed(-1);
+                    scoresDrawer.setPressed(-1);
                     longPressTimer.cancel();
                     longPressTimer = null;
                     super.onArrowChanged(arrow);
                 }
-            } else if (passeDrawer.getPressed() != arrow) {
+            } else if (scoresDrawer.getPressed() != arrow) {
                 // If new item gets selected cancel old timer and start new one
-                passeDrawer.setPressed(arrow);
+                scoresDrawer.setPressed(arrow);
                 if (longPressTimer != null) {
                     longPressTimer.cancel();
                 }
@@ -396,7 +399,7 @@ public class TargetView extends TargetViewBase {
                     longPressTimer = null;
                 }
             }
-            passeDrawer.setPressed(-1);
+            scoresDrawer.setPressed(-1);
         }
         return false;
     }
@@ -450,7 +453,7 @@ public class TargetView extends TargetViewBase {
                 cancelPendingAnimations();
                 animator = ValueAnimator.ofFloat(0, 1);
                 animator.setInterpolator(
-                        currentArrow < round.arrowsPerPasse ? new AccelerateInterpolator() :
+                        currentArrow < round.arrowsPerEnd ? new AccelerateInterpolator() :
                                 new AccelerateDecelerateInterpolator());
                 animator.addUpdateListener(valueAnimator -> {
                     curAnimationProgress = (Float) valueAnimator.getAnimatedValue();
@@ -492,7 +495,7 @@ public class TargetView extends TargetViewBase {
             midX = orgMidX;
             midY = orgMidY;
         }
-        if (targetModel.getFaceCount() > 1 && currentArrow < round.arrowsPerPasse && radius > 0 &&
+        if (targetModel.getFaceCount() > 1 && currentArrow < round.arrowsPerEnd && radius > 0 &&
                 !spotFocused && !zoneSelectionMode && !zoomTransitioning) {
             cancelPendingAnimations();
             animator = ValueAnimator.ofFloat(0, 1);
@@ -545,22 +548,23 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    protected void onArrowChanged(int i) {
+    protected void onArrowChanged(int index) {
+        updateMidpoints();
         if (arrowNumbers.isEmpty() ||
-                currentArrow < round.arrowsPerPasse && passe.shot[currentArrow].arrow != null) {
-            super.onArrowChanged(i);
+                currentArrow < round.arrowsPerEnd && end.shot[currentArrow].arrow != null) {
+            super.onArrowChanged(index);
         } else {
             List<String> numbersLeft = Stream.of(arrowNumbers).map(an -> an.number)
                     .collect(Collectors.toList());
-            for (Shot s : passe.shot) {
+            for (Shot s : end.shot) {
                 numbersLeft.remove(s.arrow);
             }
-            if (numbersLeft.size() == 0 || currentArrow >= round.arrowsPerPasse) {
-                super.onArrowChanged(i);
+            if (numbersLeft.size() == 0 || currentArrow >= round.arrowsPerEnd) {
+                super.onArrowChanged(index);
                 return;
             } else if (numbersLeft.size() == 1) {
-                passe.shot[currentArrow].arrow = numbersLeft.get(0);
-                super.onArrowChanged(i);
+                end.shot[currentArrow].arrow = numbersLeft.get(0);
+                super.onArrowChanged(index);
                 return;
             }
 
@@ -579,13 +583,22 @@ public class TargetView extends TargetViewBase {
             gridView.setNumColumns(cols);
             gridView.setOnItemClickListener((parent, view, position, id) ->
             {
-                if (currentArrow < passe.shot.length) {
-                    passe.shot[currentArrow].arrow = numbersLeft.get(position);
+                if (currentArrow < end.shot.length) {
+                    end.shot[currentArrow].arrow = numbersLeft.get(position);
                 }
                 dialog.dismiss();
-                super.onArrowChanged(i);
+                super.onArrowChanged(index);
             });
             dialog.show();
+        }
+    }
+
+    private void updateMidpoints() {
+        if (midpoints == null)
+            return;
+        int spots = targetModel.getFaceCount();
+        for (int i = 0; i < spots; i++) {
+            midpoints[i] = getMidpoint(i);
         }
     }
 
@@ -632,27 +645,27 @@ public class TargetView extends TargetViewBase {
 
     private void onLongPressArrow() {
         longPressTimer = null;
-        final int pressed = passeDrawer.getPressed();
+        final int pressed = scoresDrawer.getPressed();
         if (pressed == -1) {
             return;
         }
         longPressTimer = null;
         Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(500);
-        onArrowChanged(round.arrowsPerPasse);
+        onArrowChanged(round.arrowsPerEnd);
 
         new MaterialDialog.Builder(getContext())
                 .title(R.string.comment)
                 .inputType(InputType.TYPE_CLASS_TEXT)
-                .input("", passe.shot[pressed].comment, (dialog, input) -> {
-                    passe.shot[pressed].comment = input.toString();
-                    if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
-                        setListener.onTargetSet(new Passe(passe), false);
+                .input("", end.shot[pressed].comment, (dialog, input) -> {
+                    end.shot[pressed].comment = input.toString();
+                    if (lastSetArrow + 1 >= round.arrowsPerEnd && setListener != null) {
+                        setListener.onTargetSet(new Passe(end), false);
                     }
                 })
                 .negativeText(android.R.string.cancel)
                 .dismissListener(dialog -> {
-                    passeDrawer.setPressed(-1);
+                    scoresDrawer.setPressed(-1);
                     invalidate();
                 })
                 .show();
@@ -662,7 +675,7 @@ public class TargetView extends TargetViewBase {
     public boolean onTouch(View view, MotionEvent motionEvent) {
         // Cancel animation
         if (inputModeTransitioning || zoomTransitioning) {
-            passeDrawer.cancel();
+            scoresDrawer.cancel();
         }
 
         return super.onTouch(view, motionEvent);
@@ -699,15 +712,30 @@ public class TargetView extends TargetViewBase {
     }
 
     private class Midpoint {
-        float count = 0;
-        float sumX = 0;
-        float sumY = 0;
+        private float count = 0;
+        private float sumX = 0;
+        private float sumY = 0;
 
         public Midpoint add(Shot s) {
+            if(s.zone == Shot.NOTHING_SELECTED) {
+                return this;
+            }
             sumX += s.x;
             sumY += s.y;
             count++;
             return this;
+        }
+
+        public boolean shouldDraw() {
+            return count >= 2;
+        }
+
+        public float getX() {
+            return sumX / count;
+        }
+
+        public float getY() {
+            return sumY / count;
         }
     }
 }

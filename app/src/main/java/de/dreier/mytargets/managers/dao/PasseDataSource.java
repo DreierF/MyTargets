@@ -89,7 +89,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                         "FROM SHOOT s, PASSE p " +
                         "WHERE s.passe=p._id " +
                         "AND p._id=" + passeId + " " +
-                        "ORDER BY s._id ASC", null);
+                        "ORDER BY s.arrow_index ASC", null);
         int count = res.getCount();
 
         res.moveToFirst();
@@ -112,7 +112,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                         "FROM PASSE p  " +
                         "LEFT JOIN SHOOT s ON p._id = s.passe " +
                         "WHERE p.round = " + round + " " +
-                        "ORDER BY p._id ASC, s._id ASC", null);
+                        "ORDER BY p._id ASC, s.arrow_index ASC", null);
         List<Passe> list = new ArrayList<>();
         if (res.moveToFirst()) {
             long oldRoundId = -1;
@@ -151,7 +151,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                         "LEFT JOIN PASSE p ON r._id = p.round " +
                         "LEFT JOIN SHOOT s ON p._id = s.passe " +
                         "WHERE r.training = " + training + " " +
-                        "ORDER BY r._id ASC, p._id ASC, s._id ASC", null);
+                        "ORDER BY r._id ASC, p._id ASC, s.arrow_index ASC", null);
         ArrayList<Passe> list = new ArrayList<>();
         if (res.moveToFirst()) {
             long oldRoundId = -1;
@@ -180,32 +180,6 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         }
         res.close();
         return list;
-    }
-
-    public float getAverageScore(long training) {
-        Cursor res = database.rawQuery(
-                "SELECT s.points, a.target, a.scoring_style, s.arrow_index " +
-                        "FROM ROUND r " +
-                        "LEFT JOIN PASSE p ON r._id = p.round " +
-                        "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                        "LEFT JOIN ROUND_TEMPLATE a ON a._id = r.template " +
-                        "WHERE r.training = " + training + " " +
-                        "ORDER BY r._id ASC, p._id ASC, s._id ASC", null);
-        int count = 0;
-        int sum = 0;
-        if (res.moveToFirst()) {
-            do {
-                count++;
-                sum += new Target(res.getInt(1), res.getInt(2))
-                        .getPointsByZone(res.getInt(0), res.getInt(3));
-            } while (res.moveToNext());
-        }
-        res.close();
-        float average = 0;
-        if (count > 0) {
-            average = ((sum * 100) / count) / 100.0f;
-        }
-        return average;
     }
 
     public List<Pair<Target, List<Round>>> groupByTarget(List<Round> rounds) {
@@ -253,9 +227,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         return scoreCount;
     }
 
-    public List<Pair<String, Integer>> getTopScoreDistribution(List<Round> rounds) {
-        List<Map.Entry<SelectableZone, Integer>> sortedScore = getSortedScoreDistribution(rounds);
-
+    public List<Pair<String, Integer>> getTopScoreDistribution(List<Map.Entry<SelectableZone, Integer>> sortedScore) {
         final List<Pair<String, Integer>> result = Stream.of(sortedScore)
                 .map(value -> new Pair<>(value.getKey().text, value.getValue()))
                 .collect(Collectors.toList());
@@ -276,12 +248,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     public List<Map.Entry<SelectableZone, Integer>> getSortedScoreDistribution(List<Round> rounds) {
         Map<SelectableZone, Integer> scoreCount = getRoundScores(rounds);
         return Stream.of(scoreCount)
-                .sorted((lhs, rhs) -> {
-                    if (lhs.getKey().index == rhs.getKey().index) {
-                        return -lhs.getKey().text.compareTo(rhs.getKey().text);
-                    }
-                    return rhs.getKey().index - lhs.getKey().index;
-                })
+                .sorted((lhs, rhs) -> lhs.getKey().compareTo(rhs.getKey()))
                 .collect(Collectors.toList());
     }
 }

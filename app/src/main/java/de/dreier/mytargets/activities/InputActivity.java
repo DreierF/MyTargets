@@ -49,7 +49,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     public static final String PASSE_IND = "passe_ind";
 
     /**
-     * Zero-based index of the currently displayed passe.
+     * Zero-based index of the currently displayed end.
      */
     @State
     int curPasse = 0;
@@ -92,7 +92,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
             binding.targetView.setArrowNumbers(new ArrowNumberDataSource().getAll(training.arrow));
         }
 
-        // Send message to wearable app, that we are starting a passe
+        // Send message to wearable app, that we are starting a end
         new Thread(this::startWearNotification).start();
 
         Icepick.restoreInstanceState(this, savedInstanceState);
@@ -150,7 +150,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     }
 
     private void setPasse(int passe) {
-        if (passe >= template.passes) {
+        if (passe >= template.endCount) {
             if (rounds.size() > template.index + 1) {
                 // Go to next round if current round is finished
                 round = rounds.get(template.index + 1);
@@ -165,14 +165,14 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
             }
         } else if (passe == -1 && template.index > 0) {
             // If we navigate backwards and go past the beginning of lets say round 2
-            // -> go to the last passe of round 1
+            // -> go to the last end of round 1
             round = rounds.get(template.index - 1);
             template = round.info;
-            passe = template.passes - 1;
-            savedPasses = template.passes;
+            passe = template.endCount - 1;
+            savedPasses = template.endCount;
         }
         if (passe < savedPasses) {
-            // If the passe is already saved load it from the database
+            // If the end is already saved load it from the database
             Passe p = passeDataSource.get(round.getId(), passe);
             if (p != null) {
                 binding.targetView.setPasse(p);
@@ -200,7 +200,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     private void updatePasse() {
         binding.prev.setEnabled(curPasse > 0 || template.index > 0);
         binding.next.setEnabled(curPasse < savedPasses &&
-                (curPasse + 1 < template.passes || // The current round is not finished
+                (curPasse + 1 < template.endCount || // The current round is not finished
                         rounds.size() > template.index + 1 || // We still have another round
                         standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE)); // or we don't have an exit condition
 
@@ -246,13 +246,8 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
 
     @Override
     public long onTargetSet(Passe passe, boolean remote) {
-        // Only sort shots when all arrows are on one target face
-        if (template.target.getModel().getFaceCount() == 1) {
-            passe.sort();
-        }
-
-        // Change round template if passe is out of range defined in template
-        if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE && template.passes <= curPasse) {
+        // Change round template if end is out of range defined in template
+        if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE && template.endCount <= curPasse) {
             new RoundTemplateDataSource().addPasse(template);
         }
 

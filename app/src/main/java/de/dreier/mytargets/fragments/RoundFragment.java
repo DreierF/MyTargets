@@ -48,7 +48,7 @@ import de.dreier.mytargets.utils.ToolbarUtils;
  */
 public class RoundFragment extends EditableFragment<Passe> {
 
-    static final String ROUND_ID = "round_id";
+    public static final String ROUND_ID = "round_id";
 
     private long mRound;
     private PasseDataSource passeDataSource;
@@ -65,8 +65,7 @@ public class RoundFragment extends EditableFragment<Passe> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
-        binding.recyclerView.addItemDecoration(
-                new DividerItemDecoration(getContext(), R.drawable.inset_divider));
+        binding.recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), R.drawable.full_divider));
         mAdapter = new EndAdapter(getContext());
         binding.recyclerView.setAdapter(mAdapter);
         binding.fab.setVisibility(View.GONE);
@@ -77,9 +76,7 @@ public class RoundFragment extends EditableFragment<Passe> {
         }
 
         round = new RoundDataSource().get(mRound);
-        ToolbarUtils.setTitle(this,
-                String.format(Locale.ENGLISH, "%s %d", getString(R.string.round),
-                        round.info.index + 1));
+        ToolbarUtils.setTitle(this, String.format(Locale.ENGLISH, "%s %d", getString(R.string.round), round.info.index + 1));
         ToolbarUtils.setSubtitle(this, round.getReachedPointsFormatted());
         setHasOptionsMenu(true);
 
@@ -106,7 +103,7 @@ public class RoundFragment extends EditableFragment<Passe> {
 
         StandardRound standardRound = new StandardRoundDataSource()
                 .get(new TrainingDataSource().get(round.trainingId).standardRoundId);
-        boolean showFab = data.size() < round.info.passes || standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
+        boolean showFab = data.size() < round.info.endCount || standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
         binding.fab.setVisibility(showFab ? View.VISIBLE : View.GONE);
 
     }

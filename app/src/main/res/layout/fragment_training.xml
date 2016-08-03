@@ -73,33 +73,14 @@
                     android:background="@drawable/toolbar_drop_shadow"
                     app:layout_anchor="@id/appbar" />
 
-                <com.github.clans.fab.FloatingActionMenu
+                <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/fab"
-                    style="@style/fabMenu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
-                    android:layout_margin="16dp">
-
-                    <com.github.clans.fab.FloatingActionButton
-                        android:id="@+id/fab2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/fab_refresh_white_24dp"
-                        app:fab_colorNormal="#2196F3"
-                        app:fab_label="@string/round"
-                        app:fab_size="mini" />
-
-                    <com.github.clans.fab.FloatingActionButton
-                        android:id="@+id/fab1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/fab_adjust_white_24dp"
-                        app:fab_colorNormal="#4CAF50"
-                        app:fab_label="@string/passe"
-                        app:fab_size="mini" />
-
-                </com.github.clans.fab.FloatingActionMenu>
+                    android:layout_margin="16dp"
+                    android:src="@drawable/fab_add_white_24dp"
+                    app:fab_colorNormal="@color/colorAccent" />
 
             </FrameLayout>
 

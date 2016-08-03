@@ -33,8 +33,8 @@
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/distributionChart"
                     android:layout_width="250dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_height="250dp" />
+                    android:layout_height="250dp"
+                    android:layout_gravity="center_horizontal" />
 
                 <LinearLayout
                     android:id="@+id/dispersionPatternLayout"

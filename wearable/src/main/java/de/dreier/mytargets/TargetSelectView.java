@@ -72,13 +72,13 @@ public class TargetSelectView extends TargetViewBase {
                     i == curZone ? 23 : 17, false, currentArrow, null);
         }
 
-        // Draw all points of this passe in the center
-        passeDrawer.draw(canvas);
+        // Draw all points of this end in the center
+        scoresDrawer.draw(canvas);
     }
 
     private int getCurrentlySelectedZone() {
-        if (passe != null && currentArrow < round.arrowsPerPasse) {
-            return passe.shot[currentArrow].zone;
+        if (end != null && currentArrow < round.arrowsPerEnd) {
+            return end.shot[currentArrow].zone;
         } else {
             return Shot.NOTHING_SELECTED;
         }
@@ -98,7 +98,7 @@ public class TargetSelectView extends TargetViewBase {
 
     @Override
     protected Coordinate initAnimationPositions(int i) {
-        return getCircularCoordinates(getSelectableZoneIndexFromShot(passe.shot[i]));
+        return getCircularCoordinates(getSelectableZoneIndexFromShot(end.shot[i]));
     }
 
     @Override
@@ -110,7 +110,7 @@ public class TargetSelectView extends TargetViewBase {
         rect.right = radius + 35 * density;
         rect.top = radius / 2;
         rect.bottom = radius;
-        passeDrawer.animateToRect(rect);
+        scoresDrawer.animateToRect(rect);
     }
 
     @NonNull

@@ -72,7 +72,6 @@ public abstract class DbTestRuleBase implements TestRule {
             p.shot[i].index = i;
             p.shot[i].zone = gen.nextInt(5);
         }
-        p.sort();
         return p;
     }
 

@@ -158,13 +158,13 @@ public class EditRoundFragment extends EditFragmentBase {
         RoundTemplate roundTemplate = new RoundTemplate();
         roundTemplate.target = binding.targetSpinner.getSelectedItem();
         roundTemplate.targetTemplate = roundTemplate.target;
-        roundTemplate.arrowsPerPasse = binding.arrows.getProgress();
-        roundTemplate.passes = 1;
+        roundTemplate.arrowsPerEnd = binding.arrows.getProgress();
+        roundTemplate.endCount = 1;
         roundTemplate.distance = binding.distanceSpinner.getSelectedItem();
 
         SettingsManager.setTarget(roundTemplate.target);
         SettingsManager.setDistance(roundTemplate.distance);
-        SettingsManager.setArrowsPerEnd(roundTemplate.arrowsPerPasse);
+        SettingsManager.setArrowsPerEnd(roundTemplate.arrowsPerEnd);
         return roundTemplate;
     }
 

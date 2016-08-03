@@ -1,6 +1,8 @@
 package de.dreier.mytargets.shared.targets;
 
-public class SelectableZone {
+import android.support.annotation.NonNull;
+
+public class SelectableZone implements Comparable<SelectableZone> {
     public final int index;
     public final Zone zone;
     public final int points;
@@ -28,5 +30,16 @@ public class SelectableZone {
         result = 31 * result + points;
         result = 31 * result + text.hashCode();
         return result;
+    }
+
+    @Override
+    public int compareTo(@NonNull SelectableZone another) {
+        if (another.index == index) {
+            return 0;
+        } else if (another.index >= 0 && index >= 0) {
+            return index - another.index;
+        } else {
+            return another.index - index;
+        }
     }
 }

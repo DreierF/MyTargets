@@ -9,6 +9,7 @@ package de.dreier.mytargets.utils;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -31,6 +32,10 @@ public class ScoreboardImage {
 
         final CountDownLatch signal = new CountDownLatch(1);
         context.runOnUiThread(() -> {
+            // Enable the drawing of the whole document for Lollipop to get the whole WebView
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                WebView.enableSlowWholeDocumentDraw();
+            }
             // Attach WebView to activity
             final WebView webView = new WebView(context);
             webView.setVisibility(View.INVISIBLE);
@@ -47,10 +52,9 @@ public class ScoreboardImage {
             webView.setPictureListener((view, picture) -> {
                 picture = webView.capturePicture();
 
-                Bitmap b = BitmapUtils.pictureDrawable2Bitmap(picture);
-
                 // Write bitmap to stream
                 try {
+                    Bitmap b = BitmapUtils.pictureDrawable2Bitmap(picture);
                     OutputStream fOut = new FileOutputStream(f);
                     b.compress(Bitmap.CompressFormat.PNG, 50, fOut);
                     fOut.flush();

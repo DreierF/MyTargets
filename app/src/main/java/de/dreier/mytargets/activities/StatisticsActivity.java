@@ -18,6 +18,7 @@ import com.annimon.stream.Stream;
 
 import org.parceler.Parcels;
 
+import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.R;
@@ -53,7 +54,7 @@ public class StatisticsActivity extends ChildActivityBase {
                 rounds = new RoundDataSource().getAll(trainingId);
             }
         } else {
-            rounds = new RoundDataSource().getAll(roundId);
+            rounds = Collections.singletonList(new RoundDataSource().get(roundId));
         }
         binding.viewPager.setAdapter(new StatisticsPagerAdapter(getSupportFragmentManager(), new PasseDataSource().groupByTarget(rounds)));
 
@@ -89,7 +90,7 @@ public class StatisticsActivity extends ChildActivityBase {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return targets.get(position).getFirst().getName();
+            return targets.get(position).getFirst().toString();
         }
     }
 }

@@ -3,6 +3,7 @@ package de.dreier.mytargets.shared.models;
 import org.joda.time.DateTime;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Passe implements IIdSettable {
@@ -37,11 +38,10 @@ public class Passe implements IIdSettable {
         return Arrays.asList(shot);
     }
 
-    public void sort() {
-        Arrays.sort(shot);
-        for (int i = 0; i < shot.length; i++) {
-            shot[i].index = i;
-        }
+    public List<Shot> getSortedShotList() {
+        final List<Shot> shots = shotList();
+        Collections.sort(shots);
+        return shots;
     }
 
     public long getId() {

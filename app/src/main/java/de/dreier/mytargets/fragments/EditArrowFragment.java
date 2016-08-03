@@ -84,7 +84,17 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
 
     private void onAddArrow() {
         arrowNumbersList.add(new ArrowNumber());
-        adapter.notifyItemInserted(arrowNumbersList.size() - 1);
+        final int newItemPosition = arrowNumbersList.size() - 1;
+        adapter.notifyItemInserted(newItemPosition);
+        contentBinding.arrowNumbers.post(
+                () -> {
+                    binding.content.fullScroll(View.FOCUS_DOWN);
+                    contentBinding.arrowNumbers
+                            .findViewHolderForAdapterPosition(newItemPosition)
+                            .itemView
+                            .requestFocus();
+                }
+        );
     }
 
     @Override
@@ -112,18 +122,6 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
                 .filter(value -> value != null)
                 .collect(Collectors.toList());
         return arrow;
-    }
-
-    private class ArrowNumbersAdapter extends DynamicItemAdapter<ArrowNumber> {
-        ArrowNumbersAdapter(Fragment fragment, List<ArrowNumber> list) {
-            super(fragment, list, R.string.arrow_number_removed);
-        }
-
-        @Override
-        public DynamicItemHolder<ArrowNumber> onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = inflater.inflate(R.layout.dynamicitem_arrow_numbers, parent, false);
-            return new ArrowNumberHolder(v);
-        }
     }
 
     static class ArrowNumberHolder extends DynamicItemHolder<ArrowNumber> {
@@ -159,6 +157,18 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
             item = number;
             binding.arrowNumber.setText(number.number);
             binding.removeArrowNumber.setOnClickListener(removeListener);
+        }
+    }
+
+    private class ArrowNumbersAdapter extends DynamicItemAdapter<ArrowNumber> {
+        ArrowNumbersAdapter(Fragment fragment, List<ArrowNumber> list) {
+            super(fragment, list, R.string.arrow_number_removed);
+        }
+
+        @Override
+        public DynamicItemHolder<ArrowNumber> onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = inflater.inflate(R.layout.dynamicitem_arrow_numbers, parent, false);
+            return new ArrowNumberHolder(v);
         }
     }
 }

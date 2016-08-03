@@ -80,10 +80,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
     private long[] roundIds;
     private List<Round> rounds;
-
     private ArrowStatisticDataSource arrowStatisticDataSource;
-
-    private List<ArrowStatistic> data;
     private ArrowStatisticAdapter adapter;
     private FragmentStatisticsBinding binding;
     private Target target;
@@ -103,9 +100,11 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         showPieChart();
         showDispersionView();
 
-        arrowStatisticDataSource = new ArrowStatisticDataSource();
         binding.arrows.setHasFixedSize(true);
-        getActivity().getSupportLoaderManager().initLoader(0, null, this);
+        adapter = new ArrowStatisticAdapter();
+        binding.arrows.setAdapter(adapter);
+
+        binding.arrows.setNestedScrollingEnabled(false);
 
         ToolbarUtils.showHomeAsUp(this);
         return binding.getRoot();
@@ -205,21 +204,22 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         final String text = getHitMissText();
         binding.distributionChart.setCenterText(HtmlUtils.fromHtml(text));
 
-        binding.distributionChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-                final String s = String.format(Locale.ENGLISH,
-                        PIE_CHART_CENTER_TEXT_FORMAT,
-                        getString(R.string.points), xValues.get(e.getXIndex()),
-                        getString(R.string.count), (int)e.getVal());
-                binding.distributionChart.setCenterText(HtmlUtils.fromHtml(s));
-            }
+        binding.distributionChart
+                .setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+                    @Override
+                    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+                        final String s = String.format(Locale.ENGLISH,
+                                PIE_CHART_CENTER_TEXT_FORMAT,
+                                getString(R.string.points), xValues.get(e.getXIndex()),
+                                getString(R.string.count), (int) e.getVal());
+                        binding.distributionChart.setCenterText(HtmlUtils.fromHtml(s));
+                    }
 
-            @Override
-            public void onNothingSelected() {
-                binding.distributionChart.setCenterText(HtmlUtils.fromHtml(text));
-            }
-        });
+                    @Override
+                    public void onNothingSelected() {
+                        binding.distributionChart.setCenterText(HtmlUtils.fromHtml(text));
+                    }
+                });
     }
 
     private String getHitMissText() {
@@ -240,20 +240,14 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     public Loader<List<ArrowStatistic>> onCreateLoader(int id, Bundle args) {
         arrowStatisticDataSource = new ArrowStatisticDataSource();
         return new DataLoaderBase<ArrowStatistic, DataSourceBase>(getContext(),
-                arrowStatisticDataSource, arrowStatisticDataSource::getAll);
+                arrowStatisticDataSource, () -> arrowStatisticDataSource.getAll(Utils.toList(roundIds)));
     }
 
     @Override
     public void onLoadFinished(Loader<List<ArrowStatistic>> loader, List<ArrowStatistic> data) {
-        this.data = data;
         binding.arrowRankingLabel.setVisibility(data.isEmpty() ? View.GONE : View.VISIBLE);
         Collections.sort(data);
-        if (binding.arrows.getAdapter() == null) {
-            adapter = new ArrowStatisticAdapter();
-            binding.arrows.setAdapter(adapter);
-        } else {
-            adapter.notifyDataSetChanged();
-        }
+        adapter.setData(data);
     }
 
     @Override
@@ -264,7 +258,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().getSupportLoaderManager().restartLoader(0, null, this);
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     private LineData getLineChartDataSet() {
@@ -280,9 +274,16 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         List<String> xValues = Stream.of(values)
                 .map(v -> dateFormat.format(v.getSecond().toDate()))
                 .collect(Collectors.toList());
-        LineData data = new LineData(xValues, generateLinearRegressionLine(values));
+
+        LineData data;
+        if (values.size() < 2) {
+            // Without regression line
+            data = new LineData(xValues, convertToLineData(values));
+        } else {
+            data = new LineData(xValues, generateLinearRegressionLine(values));
+            data.addDataSet(convertToLineData(values));
+        }
         data.setDrawValues(false);
-        data.addDataSet(convertToLineData(values));
         return data;
     }
 
@@ -372,6 +373,8 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
     private class ArrowStatisticAdapter extends RecyclerView.Adapter<ViewHolder> {
 
+        private List<ArrowStatistic> data = new ArrayList<>();
+
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(parent.getContext())
@@ -387,6 +390,11 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         @Override
         public int getItemCount() {
             return data.size();
+        }
+
+        public void setData(List<ArrowStatistic> data) {
+            this.data = data;
+            notifyDataSetChanged();
         }
     }
 

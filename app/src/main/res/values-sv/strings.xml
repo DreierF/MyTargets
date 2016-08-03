@@ -41,29 +41,29 @@
   <string name="statistic">Statistik</string>
   <!-- Share -->
   <string name="share">Dela</string>
-  <string name="my_share_text">Titta på mitt bågskytte resultat. Jag fick: \n%1$s det är totalt av %2$d av %3$d poäng.</string>
+  <string name="my_share_text">Titta på mitt bågskytteresultat. Jag fick: \n%1$sDet är totalt av %2$d av %3$d poäng.</string>
   <string name="d_times_s">%1$d gånger %2$s\n</string>
   <string name="text">Text</string>
-  <string name="dispersion_pattern">Spridning mönster</string>
-  <string name="sharing_failed">Delning misslykats!</string>
+  <string name="dispersion_pattern">Spridningsmönster</string>
+  <string name="sharing_failed">Delning misslyckades!</string>
   <!-- Export -->
   <string name="send_exported">Skicka exporterade data</string>
-  <string name="exporting_failed">Exportering misslyckad!</string>
+  <string name="exporting_failed">Exportering misslyckades!</string>
   <!-- New bow -->
-  <string name="add_bow">Ny pilbåge</string>
+  <string name="add_bow">Lägg till pilbåge</string>
   <string name="name">Namn</string>
   <string name="bow_type">Pilbågs typ</string>
   <string name="properties">Egenskaper</string>
   <string name="brand">Märke</string>
   <string name="size">Storlek</string>
   <string name="description">Beskrivning</string>
-  <string name="height">Stränghöjden</string>
+  <string name="height">Stränghöjd</string>
   <string name="tiller">Tiller</string>
-  <string name="sight_settings">Inställningar sikte</string>
+  <string name="sight_settings">Siktesinställningar</string>
   <string name="add">Lägg tilll</string>
   <string name="select_picture">Välj en bild</string>
   <string name="take_picture">Ta en bild</string>
-  <string name="pick_from_gallery">Välj en bild från galleriet</string>
+  <string name="pick_from_gallery">Välj en bild från galleri</string>
   <!-- New arrow -->
   <string name="add_arrow">Ny pil</string>
   <string name="length">Längd</string>
@@ -93,7 +93,7 @@
   <string name="scoreboard">Resultattavla</string>
   <string name="arrows">Pilar</string>
   <string name="sum">Summa</string>
-  <string name="carry">Bära</string>
+  <string name="carry">Delsumma</string>
   <string name="action_print">Skriv ut</string>
   <string name="average">Medelvärde</string>
   <!-- Input mode -->
@@ -200,12 +200,12 @@
     <item quantity="other">Rundor %d</item>
   </plurals>
   <plurals name="round_selected">
-    <item quantity="one">%d round selected</item>
-    <item quantity="other">%d rounds selected</item>
+    <item quantity="one">%d omgång vald</item>
+    <item quantity="other">%d omgångar valda</item>
   </plurals>
   <plurals name="round_deleted">
-    <item quantity="one">%d round deleted</item>
-    <item quantity="other">%d rounds deleted</item>
+    <item quantity="one">%d omgång raderad</item>
+    <item quantity="other">%d omgångar raderade</item>
   </plurals>
   <string name="date">Datum</string>
   <string name="edit_round">Redigera runda</string>

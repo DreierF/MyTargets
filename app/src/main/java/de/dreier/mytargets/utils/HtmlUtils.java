@@ -14,6 +14,8 @@ import android.text.TextUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.SettingsManager;
@@ -31,6 +33,7 @@ import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
@@ -38,6 +41,7 @@ import static de.dreier.mytargets.shared.targets.ScoringStyle.MISS_SYMBOL;
 
 public class HtmlUtils {
 
+    public static final String BR = "<br>";
     private static final String CSS = "<style type=\"text/css\">\n" +
             "body{font-family: Roboto, Sans-serif;}\n" +
             ".myTable { border-collapse:collapse; width:100%; }\n" +
@@ -62,27 +66,27 @@ public class HtmlUtils {
         String html = "<html>" + CSS;
 
         if (configuration.showTitle) {
-            html += "<h3>" + training.title + " (" + training.getFormattedDate() + ")</h3>";
+            html += "<h3>" + training.title + "</h3>";
         }
 
         boolean[] equals = new boolean[2];
         if (configuration.showProperties) {
-            html += "<table width=\"100%\" style=\"border:0px;\"><tr>" +
-                    "<td width=\"50%\">" + getTrainingInfoHTML(training, rounds, equals,
-                    true) + "</td>" +
-                    "<td width=\"50%\">" + getTrainingTopScoreDistribution(trainingId) + "</td>" +
-                    "</tr></table>";
+            html += getTrainingInfoHTML(training, rounds, equals, true) + BR;
         }
 
         if (configuration.showTable) {
             for (int r = 0; r < rounds.size(); r++) {
                 Round round = rounds.get(r);
-                html += "<b>" + get(R.string.round) + " " + (round.info.index + 1) + "</b>";
+                html += BR + bold(get(R.string.round) + " " + (round.info.index + 1));
                 if (configuration.showProperties) {
-                    html += "<br>" + getRoundInfo(round, equals);
+                    html += BR + getRoundInfo(round, equals);
                 }
                 html += getRoundTable(configuration, round);
             }
+        }
+
+        if (configuration.showStatistics) {
+            html += getStatistics(rounds);
         }
 
         if (configuration.showComments) {
@@ -99,14 +103,14 @@ public class HtmlUtils {
 
     private static String getRoundTable(ScoreboardConfiguration configuration, Round round) {
         String html = "<table class=\"myTable\">";
-        html += getTableHeader(round.info.arrowsPerPasse);
+        html += getTableHeader(round.info.arrowsPerEnd);
         int carry = 0;
         List<Passe> passes = new PasseDataSource().getAllByRound(round.getId());
         for (Passe passe : passes) {
             html += "<tr class=\"align_center\">";
             html += "<td>" + (passe.index + 1) + "</td>";
             int sum = 0;
-            for (Shot shot : passe.shot) {
+            for (Shot shot : passe.getSortedShotList()) {
                 html += "<td>";
                 html += getPoints(configuration, shot, round.info.target);
                 html += "</td>";
@@ -138,9 +142,8 @@ public class HtmlUtils {
 
     private static String getTableHeader(int ppp) {
         String html = "<tr class=\"align_center\">" +
-                "<th rowspan=\"2\"><b>" + get(R.string.passe) + "</b></th>" +
-                "<th colspan=\"" + ppp + "\"><b>" + get(R.string.arrows) +
-                "</b></th>" +
+                "<th rowspan=\"2\">" + get(R.string.passe) + "</th>" +
+                "<th colspan=\"" + ppp + "\">" + get(R.string.arrows) + "</th>" +
                 "<th rowspan=\"2\">" + get(R.string.sum) + "</th>" +
                 "<th rowspan=\"2\">" + get(R.string.carry) + "</th>" +
                 "</tr><tr class=\"align_center\">";
@@ -206,29 +209,69 @@ public class HtmlUtils {
     }
 
     @NonNull
-    private static String getTrainingTopScoreDistribution(long training) {
-        HTMLInfoBuilder info = new HTMLInfoBuilder();
-        PasseDataSource passeDataSource = new PasseDataSource();
-
-        List<Pair<String, Integer>> scoreDistribution = passeDataSource.getTopScoreDistribution(new RoundDataSource().getAll(training));
-        int misses = 0;
-        int hits = 0;
-        for (Pair<String, Integer> score : scoreDistribution) {
-            if (score.getFirst().equals(MISS_SYMBOL)) {
-                misses += score.getSecond();
-            } else {
-                hits += score.getSecond();
+    private static String getStatistics(List<Round> rounds) {
+        if (rounds.size() == 0) {
+            return "";
+        } else if (rounds.size() == 1) {
+            return getStatisticsForRound(rounds);
+        } else {
+            String html = "";
+            for (Round round : rounds) {
+                html += BR + bold(get(R.string.round) + " " + round.info.index);
+                html += getStatisticsForRound(Collections.singletonList(round));
             }
+            html += BR + bold(get(R.string.training));
+            return html + getStatisticsForRound(rounds);
         }
-        info.addLine(R.string.hits, hits);
-        info.addLine(R.string.misses, misses);
+    }
 
-        for (Pair<String, Integer> score : scoreDistribution.subList(0, Math.min(scoreDistribution.size(), 3))) {
-            info.addLine(score.getFirst(), score.getSecond());
+    @NonNull
+    private static String bold(String text) {
+        return "<b>" + text + "</b>";
+    }
+
+    @NonNull
+    private static String getStatisticsForRound(List<Round> rounds) {
+        String html = BR + "<table class=\"myTable\" style=\"margin-top:5px;\"><tr>";
+        PasseDataSource passeDataSource = new PasseDataSource();
+        List<Map.Entry<SelectableZone, Integer>> scoreDistribution = passeDataSource.getSortedScoreDistribution(rounds);
+        int hits = 0;
+        int total = 0;
+        for (Map.Entry<SelectableZone, Integer> score : scoreDistribution) {
+            if (!score.getKey().text.equals(MISS_SYMBOL)) {
+                hits += score.getValue();
+            }
+            total += score.getValue();
         }
 
-        info.addLine(R.string.average, passeDataSource.getAverageScore(training));
-        return info.toString();
+        List<Pair<String, Integer>> topScores = passeDataSource.getTopScoreDistribution(scoreDistribution);
+        for (Pair<String, Integer> topScore : topScores) {
+            html += "<th>" + topScore.getFirst() + "</th>";
+        }
+        html += "<th>" + get(R.string.hits) + "</th>";
+        html += "<th>" + get(R.string.average) + "</th>";
+        html += "</tr><tr class=\"align_center\">";
+
+        for (Pair<String, Integer> topScore : topScores) {
+            html += "<td>" + topScore.getSecond() + "</td>";
+        }
+        html += "<td>" + hits + "/" + total + "</td>";
+        html += "<td>" + getAverageScore(scoreDistribution) + "</td>";
+        return html + "</tr></table>";
+    }
+
+    private static String getAverageScore(List<Map.Entry<SelectableZone, Integer>> scoreDistribution) {
+        int sum = 0;
+        int count = 0;
+        for (Map.Entry<SelectableZone, Integer> entry : scoreDistribution) {
+            sum += entry.getValue() * entry.getKey().points;
+            count += entry.getValue();
+        }
+        if (count == 0) {
+            return "-";
+        } else {
+            return String.format(Locale.getDefault(), "%.2f", sum * 1.0f / count);
+        }
     }
 
     @NonNull
@@ -321,6 +364,7 @@ public class HtmlUtils {
             String value = getReachedPointsFormatted(training.getId());
             info.addLine(R.string.points, value);
         }
+        info.addLine(R.string.date, training.getFormattedDate());
     }
 
     private static String getSignature() {
