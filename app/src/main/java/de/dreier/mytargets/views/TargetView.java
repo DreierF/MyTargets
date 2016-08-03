@@ -240,7 +240,7 @@ public class TargetView extends TargetViewBase {
             if (shot.zone == Shot.NOTHING_SELECTED) {
                 continue;
             }
-            if (i == currentArrow) {
+            if (shot.index == currentArrow) {
                 targetDrawable.drawFocusedArrow(canvas, shot);
                 continue;
             }

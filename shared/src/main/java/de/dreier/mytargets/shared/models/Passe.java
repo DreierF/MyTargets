@@ -44,13 +44,6 @@ public class Passe implements IIdSettable {
         return shots;
     }
 
-    public void sort() {
-        Arrays.sort(shot);
-        for (int i = 0; i < shot.length; i++) {
-            shot[i].index = i;
-        }
-    }
-
     public long getId() {
         return id;
     }

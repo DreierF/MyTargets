@@ -13,6 +13,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -82,7 +83,7 @@ public class ScoresDrawer {
 
     public void setShots(List<Shot> shots) {
         boolean calcLayout = rect != null && shotList == null;
-        shotList = shots;
+        shotList = new ArrayList<>(shots);
         shotCount = shotList.size();
         oldCoordinate = new Coordinate[shotCount];
         Collections.sort(shotList);
@@ -159,19 +160,18 @@ public class ScoresDrawer {
         }
     }
 
-    public void animateToSelection(int selected, Coordinate c, int radius) {
+    public void animateToSelection(int selectedShot, Coordinate c, int radius) {
         saveCoordinates();
-        selected = selected > 0 ? shotList.get(selected).index : selected;
-        setSelection(selected, c, radius);
+        setSelection(selectedShot, c, radius);
         Collections.sort(shotList);
         animate();
     }
 
-    public void setSelection(int selected, Coordinate c, int radius) {
+    public void setSelection(int selectedShot, Coordinate c, int radius) {
         // Cancel eventually currently running animation
         cancel();
 
-        this.selected = selected;
+        selected = selectedShot;
         selectedPosition = c;
         selectedRadius = radius;
     }
@@ -229,7 +229,7 @@ public class ScoresDrawer {
             int row = (int) Math.floor((y - rect.top) / rowHeight);
             final int arrow = row * shotsPerRow + col;
             if (arrow < shotCount && shotList.get(arrow).zone != Shot.NOTHING_SELECTED) {
-                return shotList.get(arrow).index == selected ? -1 : arrow;
+                return shotList.get(arrow).index == selected ? -1 : shotList.get(arrow).index;
             }
         }
         return -1;
