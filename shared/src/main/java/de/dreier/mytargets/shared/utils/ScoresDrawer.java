@@ -69,8 +69,7 @@ public class ScoresDrawer {
         int neededRows;
         int maxRows;
         do {
-            neededRows = (int) Math
-                    .ceil((radius * 2 * density * shotCount) / rect.width());
+            neededRows = (int) Math.ceil((radius * 2 * density * shotCount) / rect.width());
             maxRows = (int) Math.floor(rect.height() / (radius * 2 * density));
             radius--;
         } while (neededRows > maxRows);

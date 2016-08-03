@@ -33,7 +33,6 @@ public class NFAAIndoor extends TargetModelBase {
                 new ScoringStyle(false, 6, 5, 4, 3, 2, 1),
                 new ScoringStyle(false, 7, 5, 4, 3, 2, 1)
         };
-        //TODO 6 if inner ring is hit but only 7 if arrow is inside
         diameters = new Dimension[]{
                 new Dimension(40, CENTIMETER)
         };
