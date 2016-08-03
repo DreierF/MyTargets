@@ -18,19 +18,18 @@ class Beursault extends TargetModelBase {
     public Beursault() {
         super(23, R.string.beursault);
         zones = new Zone[] {
-                new Zone(31.089f, WHITE, DARK_GRAY, 27),
-                new Zone(69.673f, WHITE, DARK_GRAY, 6),
-                new Zone(98.578f, WHITE, DARK_GRAY, 6),
-                new Zone(141.358f, WHITE, DARK_GRAY, 27),
-                new Zone(231.017f, WHITE, DARK_GRAY, 6),
-                new Zone(320.679f, WHITE, DARK_GRAY, 6),
-                new Zone(410.339f, WHITE, DARK_GRAY, 6),
-                new Zone(500, WHITE, DARK_GRAY, 27)
+                new Zone(31.089f, WHITE, DARK_GRAY, 27, false),
+                new Zone(69.673f, WHITE, DARK_GRAY, 6, false),
+                new Zone(98.578f, WHITE, DARK_GRAY, 6, false),
+                new Zone(141.358f, WHITE, DARK_GRAY, 27, false),
+                new Zone(231.017f, WHITE, DARK_GRAY, 6, false),
+                new Zone(320.679f, WHITE, DARK_GRAY, 6, false),
+                new Zone(410.339f, WHITE, DARK_GRAY, 6, false),
+                new Zone(500, WHITE, DARK_GRAY, 27, false)
         };
         scoringStyles = new ScoringStyle[]{
                 new ScoringStyle(false, 4, 4, 3, 3, 2, 2, 1, 1)
         };
-        //TODO inside out, see http://scores-sca.org/public/scores_rules.php?R=25&Shoot=108
         diameters = new Dimension[]{
                 new Dimension(48, CENTIMETER)
         };
