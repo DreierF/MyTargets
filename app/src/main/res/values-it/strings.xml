@@ -162,13 +162,13 @@
   <string name="undo">Annulla</string>
   <string name="standard_rounds">Standard rounds</string>
   <string name="expand_collapse">Expand/Collapse</string>
-  <string name="new_round_template">New template</string>
+  <string name="new_round_template">Nuovo modello</string>
   <string name="arrow_numbers">Arrow numbers</string>
   <string name="round_removed">Round deleted!</string>
   <string name="custom_round">Custom round</string>
   <string name="filter">Filter</string>
   <string name="club">Club</string>
-  <string name="target">Target</string>
+  <string name="target">Bersaglio</string>
   <string name="field">Field</string>
   <string name="three_d">3D</string>
   <string name="standard_round">Standard round</string>

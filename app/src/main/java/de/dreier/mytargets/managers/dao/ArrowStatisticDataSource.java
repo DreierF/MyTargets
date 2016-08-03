@@ -9,6 +9,8 @@ package de.dreier.mytargets.managers.dao;
 import android.database.Cursor;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +22,9 @@ import de.dreier.mytargets.shared.models.Target;
 
 public class ArrowStatisticDataSource {
 
-    public List<ArrowStatistic> getAll() {
+    public List<ArrowStatistic> getAll(List<Long> roundIds) {
         List<ArrowStatistic> list = new ArrayList<>();
+        final String ids = Stream.of(roundIds).map(id -> Long.toString(id)).collect(Collectors.joining(","));
         Cursor res = FlowManager.getWritableDatabase(AppDatabase.class)
                 .rawQuery(
                         "SELECT t.arrow,s.arrow AS number, s.x, s.y, s.points, r.target, r.scoring_style, s.arrow_index, n.name, p._id " +
@@ -33,6 +36,7 @@ public class ArrowStatisticDataSource {
                                 "AND a._id=r.template " +
                                 "AND t.arrow=n._id " +
                                 "AND p.exact=1 " +
+                                "AND r._id IN (" + ids + ") " +
                                 "ORDER BY t.arrow, s.arrow", null);
         if (res.moveToFirst()) {
             long lastArrowId = 0;

@@ -27,7 +27,7 @@ import de.dreier.mytargets.shared.targets.TargetModelBase;
 import de.dreier.mytargets.shared.targets.WAFull;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
-import de.dreier.mytargets.shared.utils.PasseDrawer;
+import de.dreier.mytargets.shared.utils.ScoresDrawer;
 import icepick.Icepick;
 import icepick.State;
 
@@ -40,9 +40,9 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     @State
     protected int lastSetArrow = -1;
     @State(ParcelsBundler.class)
-    protected PasseDrawer passeDrawer = new PasseDrawer();
+    protected ScoresDrawer scoresDrawer = new ScoresDrawer();
     @State(ParcelsBundler.class)
-    protected Passe passe;
+    protected Passe end;
     @State(ParcelsBundler.class)
     protected RoundTemplate round;
     protected int contentWidth;
@@ -80,16 +80,16 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         ViewCompat.setAccessibilityDelegate(this, touchHelper);
         if (isInEditMode()) {
             round = new RoundTemplate();
-            round.arrowsPerPasse = 3;
-            passe = new Passe(3);
-            passe.getShots().get(0).zone = 0;
-            passe.getShots().get(0).x = 0.01f;
-            passe.getShots().get(0).y = 0.05f;
+            round.arrowsPerEnd = 3;
+            end = new Passe(3);
+            end.getShots().get(0).zone = 0;
+            end.getShots().get(0).x = 0.01f;
+            end.getShots().get(0).y = 0.05f;
             target = new Target(WAFull.ID, 0);
             targetModel = target.getModel();
             targetDrawable = target.getDrawable();
-            passeDrawer.init(this, density, target);
-            passeDrawer.setPasse(passe);
+            scoresDrawer.init(this, density, target);
+            scoresDrawer.setShots(end.shotList());
             currentArrow = 1;
             updateSelectableZones();
         }
@@ -98,15 +98,15 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     public void reset() {
         currentArrow = 0;
         lastSetArrow = -1;
-        passe = new Passe(round.arrowsPerPasse);
-        passeDrawer.setPasse(passe);
+        end = new Passe(round.arrowsPerEnd);
+        scoresDrawer.setShots(end.shotList());
         updateSelectableZones();
         animateToZoomSpot();
         invalidate();
     }
 
     public void setRoundId(long roundId) {
-        passe.roundId = roundId;
+        end.roundId = roundId;
     }
 
     protected void setRoundTemplate(RoundTemplate r) {
@@ -114,7 +114,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         target = r.target;
         targetModel = r.target.getModel();
         targetDrawable = r.target.getDrawable();
-        passeDrawer.init(this, density, r.target);
+        scoresDrawer.init(this, density, r.target);
         updateSelectableZones();
         reset();
     }
@@ -169,7 +169,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         float x = motionEvent.getX();
         float y = motionEvent.getY();
 
-        boolean currentlySelecting = currentArrow < round.arrowsPerPasse && passe.getShots().get(currentArrow).zone != Shot.NOTHING_SELECTED;
+        boolean currentlySelecting = currentArrow < round.arrowsPerEnd && end.getShots().get(currentArrow).zone != Shot.NOTHING_SELECTED;
         if (selectPreviousShots(motionEvent, x, y) && !currentlySelecting) {
             return true;
         }
@@ -179,14 +179,14 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             return true;
         }
 
-        // If a valid selection was made save it in the passe
-        if (currentArrow < round.arrowsPerPasse &&
-                (passe.getShots().get(currentArrow).zone != shot.zone || !zoneSelectionMode)) {
-            passe.getShots().get(currentArrow).zone = shot.zone;
-            passe.getShots().get(currentArrow).x = shot.x;
-            passe.getShots().get(currentArrow).y = shot.y;
-            passeDrawer.setSelection(currentArrow, initAnimationPositions(currentArrow),
-                    zoneSelectionMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0);
+        // If a valid selection was made save it in the end
+        if (currentArrow < round.arrowsPerEnd &&
+                (end.getShots().get(currentArrow).zone != shot.zone || !zoneSelectionMode)) {
+            end.getShots().get(currentArrow).zone = shot.zone;
+            end.getShots().get(currentArrow).x = shot.x;
+            end.getShots().get(currentArrow).y = shot.y;
+            scoresDrawer.setSelection(currentArrow, initAnimationPositions(currentArrow),
+                    zoneSelectionMode ? ScoresDrawer.MAX_CIRCLE_SIZE : 0);
             invalidate();
         }
 
@@ -212,22 +212,22 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
         animateFromZoomSpot();
 
-        if (lastSetArrow + 1 >= round.arrowsPerPasse && setListener != null) {
-            passe.exact = !zoneSelectionMode;
-            passe.setId(setListener.onTargetSet(new Passe(passe), false));
+        if (lastSetArrow + 1 >= round.arrowsPerEnd && setListener != null) {
+            end.exact = !zoneSelectionMode;
+            end.setId(setListener.onTargetSet(new Passe(end), false));
         }
     }
 
     private void animateCircle(int i) {
         Coordinate pos = null;
         int nextSel = i;
-        if (i > -1 && i < round.arrowsPerPasse && passe.getShots().get(i).zone > Shot.NOTHING_SELECTED) {
+        if (i > -1 && i < round.arrowsPerEnd && end.getShots().get(i).zone > Shot.NOTHING_SELECTED) {
             pos = initAnimationPositions(i);
         } else {
-            nextSel = PasseDrawer.NO_SELECTION;
+            nextSel = ScoresDrawer.NO_SELECTION;
         }
-        int initialSize = zoneSelectionMode ? PasseDrawer.MAX_CIRCLE_SIZE : 0;
-        passeDrawer.animateToSelection(nextSel, pos, initialSize);
+        int initialSize = zoneSelectionMode ? ScoresDrawer.MAX_CIRCLE_SIZE : 0;
+        scoresDrawer.animateToSelection(nextSel, pos, initialSize);
         currentArrow = i;
     }
 
@@ -258,7 +258,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     @Override
     public void onRestoreInstanceState(Parcelable state) {
         super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
-        passeDrawer.init(this, density, target);
+        scoresDrawer.init(this, density, target);
     }
 
     private static class TargetAccessibilityTouchHelper extends ExploreByTouchHelper {

@@ -12,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Picture;
-import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
 import android.util.Log;
 
@@ -93,11 +92,9 @@ public class BitmapUtils {
 
     // Convert Picture to Bitmap
     public static Bitmap pictureDrawable2Bitmap(Picture picture) {
-        PictureDrawable pd = new PictureDrawable(picture);
-        Bitmap bitmap = Bitmap.createBitmap(pd.getIntrinsicWidth(), pd.getIntrinsicHeight(),
-                Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(picture.getWidth(), picture.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        canvas.drawPicture(pd.getPicture());
+        picture.draw(canvas);
         return bitmap;
     }
 

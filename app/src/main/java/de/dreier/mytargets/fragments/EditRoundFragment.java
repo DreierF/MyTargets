@@ -21,6 +21,8 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentEditRoundBinding;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.db.Round;
+
+import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
@@ -150,13 +152,13 @@ public class EditRoundFragment extends EditFragmentBase {
         RoundTemplate roundTemplate = new RoundTemplate();
         roundTemplate.target = binding.targetSpinner.getSelectedItem();
         roundTemplate.setTargetTemplate(roundTemplate.target);
-        roundTemplate.arrowsPerPasse = binding.arrows.getProgress();
+        roundTemplate.arrowsPerEnd = binding.arrows.getProgress();
         roundTemplate.passes = 1;
         roundTemplate.distance = binding.distanceSpinner.getSelectedItem();
 
         SettingsManager.setTarget(roundTemplate.target);
         SettingsManager.setDistance(roundTemplate.distance);
-        SettingsManager.setArrowsPerPasse(roundTemplate.arrowsPerPasse);
+        SettingsManager.setArrowsPerEnd(roundTemplate.arrowsPerEnd);
         return roundTemplate;
     }
 

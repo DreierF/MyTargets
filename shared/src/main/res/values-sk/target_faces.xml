@@ -6,7 +6,7 @@
   <string name="wa_5_ring">WA 5 kruh</string>
   <string name="wa_3_ring">WA 3 kruh</string>
   <string name="vegas_3_spot">Vegas 3 terč</string>
-  <string name="vertical_3_spot">WA Vertical 3 Spot</string>
+  <string name="vertical_3_spot">WA vertikálny 3 terč</string>
   <string name="wa_3_ring_3_spot">WA 3 kruh 3 terč</string>
   <string name="nfaa_field">NFAA terénny</string>
   <string name="nfaa_expert_field">NFAA terénny Expert</string>
@@ -26,5 +26,5 @@
   <string name="nfas_field">NFAS terénny</string>
   <string name="beursault">Beursault</string>
   <string name="sca_period">SCA bodka</string>
-  <string name="wa_field_3_spot">WA Field 3 Spot</string>
+  <string name="wa_field_3_spot">WA terénny 3 terč</string>
 </resources>

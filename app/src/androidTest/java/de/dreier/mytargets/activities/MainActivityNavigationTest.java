@@ -55,7 +55,7 @@ public class MainActivityNavigationTest extends UITestBase {
         SettingsManager.setIndoor(false);
         SettingsManager.setInputMode(false);
         SettingsManager.setTimerEnabled(false);
-        SettingsManager.setArrowsPerPasse(3);
+        SettingsManager.setArrowsPerEnd(3);
     }
 
     @Test

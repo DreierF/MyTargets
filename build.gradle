@@ -24,7 +24,7 @@ plugins {
 ext {
     supportLibVersion = '24.1.1'
     testSupportLibVersion = '0.5'
-    playServiceVersion = '9.2.0'
+    playServiceVersion = '9.4.0'
     espressoVersion = '2.2.2'
     parcelerVersion = '1.1.5'
     dbFlowVersion = '3.0.1'

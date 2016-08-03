@@ -704,7 +704,7 @@ public class StandardRoundFactory {
      * @param distanceUnit   Unit of the distance specified in round Details
      * @param targetUnit     Unit of the target size specified in roundDetails
      * @param target         Index of the target that is used for shooting
-     * @param arrowsPerPasse Number of arrows that are shot per passe
+     * @param arrowsPerPasse Number of arrows that are shot per end
      * @param roundDetails   Per round distance, targetSize and number of passes are expected
      * @return The standard round with the specified properties
      */
@@ -715,11 +715,11 @@ public class StandardRoundFactory {
         standardRound.club = institution;
         for (int i = 0; i < roundDetails.length; i += 3) {
             RoundTemplate roundTemplate = new RoundTemplate();
-            roundTemplate.arrowsPerPasse = arrowsPerPasse;
+            roundTemplate.arrowsPerEnd = arrowsPerPasse;
             roundTemplate.distance = new Dimension(roundDetails[i], distanceUnit);
             roundTemplate.setTargetTemplate(
                     new Target(target, scoringStyle, new Dimension(roundDetails[i + 1], targetUnit)));
-            roundTemplate.passes = roundDetails[i + 2];
+            roundTemplate.endCount = roundDetails[i + 2];
             standardRound.insert(roundTemplate);
         }
         return standardRound;

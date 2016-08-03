@@ -52,6 +52,7 @@ public final class LicencesFragment extends Fragment {
 
         binding.recyclerView.addItemDecoration(
                 new DividerItemDecoration(getContext(), R.drawable.full_divider));
+        binding.fab.setVisibility(View.GONE);
         return new HomageAdapter(homage, HomageView.ExtraInfoMode.EXPANDABLE, false);
     }
 

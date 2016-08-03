@@ -39,6 +39,10 @@
                     android:title="@string/table"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
+                    android:key="scoreboard_display_statistics"
+                    android:title="@string/statistic"/>
+                <CheckBoxPreference
+                    android:defaultValue="true"
                     android:key="scoreboard_display_comments"
                     android:title="@string/comments"/>
                 <CheckBoxPreference
@@ -65,6 +69,10 @@
                     android:title="@string/table"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
+                    android:key="scoreboard_print_statistics"
+                    android:title="@string/statistic"/>
+                <CheckBoxPreference
+                    android:defaultValue="true"
                     android:key="scoreboard_print_comments"
                     android:title="@string/comments"/>
                 <CheckBoxPreference
@@ -89,6 +97,10 @@
                     android:defaultValue="true"
                     android:key="scoreboard_share_table"
                     android:title="@string/table"/>
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="scoreboard_share_statistics"
+                    android:title="@string/statistic"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_share_comments"

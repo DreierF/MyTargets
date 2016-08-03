@@ -28,6 +28,7 @@ import de.dreier.mytargets.databinding.DynamicitemRoundTemplateBinding;
 import de.dreier.mytargets.databinding.FragmentEditStandardRoundBinding;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
+import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
@@ -72,8 +73,8 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                 binding.outdoor.setChecked(!SettingsManager.getIndoor());
 
                 RoundTemplate round = new RoundTemplate();
-                round.arrowsPerPasse = SettingsManager.getArrowsPerPasse();
-                round.passes = SettingsManager.getPasses();
+                round.arrowsPerEnd = SettingsManager.getArrowsPerPasse();
+                round.endCount = SettingsManager.getPasses();
                 round.target = SettingsManager.getTarget();
                 round.setTargetTemplate(round.target);
                 round.distance = SettingsManager.getDistance();
@@ -107,8 +108,8 @@ public class EditStandardRoundFragment extends EditFragmentBase {
     private void onAddRound() {
         RoundTemplate r = roundTemplateList.get(roundTemplateList.size() - 1);
         RoundTemplate roundTemplate = new RoundTemplate();
-        roundTemplate.passes = r.passes;
-        roundTemplate.arrowsPerPasse = r.arrowsPerPasse;
+        roundTemplate.endCount = r.endCount;
+        roundTemplate.arrowsPerEnd = r.arrowsPerEnd;
         roundTemplate.distance = r.distance;
         roundTemplate.target = r.target;
         roundTemplate.target.size = r.target.size;
@@ -134,8 +135,8 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         SettingsManager.setIndoor(standardRound.indoor);
 
         RoundTemplate round = roundTemplateList.get(0);
-        SettingsManager.setArrowsPerPasse(round.arrowsPerPasse);
-        SettingsManager.setPasses(round.passes);
+        SettingsManager.setArrowsPerEnd(round.arrowsPerEnd);
+        SettingsManager.setPasses(round.endCount);
         SettingsManager.setTarget(round.target);
         SettingsManager.setDistance(round.distance);
 
@@ -203,15 +204,15 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
             // Passes
             binding.passes.setTextPattern(R.plurals.passe);
-            binding.passes.setOnValueChangedListener(val -> item.passes = val);
-            binding.passes.setValue(item.passes);
+            binding.passes.setOnValueChangedListener(val -> item.endCount = val);
+            binding.passes.setValue(item.endCount);
 
-            // Arrows per passe
+            // Arrows per end
             binding.arrows.setTextPattern(R.plurals.arrow);
             binding.arrows.setMinimum(1);
             binding.arrows.setMaximum(12);
-            binding.arrows.setOnValueChangedListener(val -> item.arrowsPerPasse = val);
-            binding.arrows.setValue(item.arrowsPerPasse);
+            binding.arrows.setOnValueChangedListener(val -> item.arrowsPerEnd = val);
+            binding.arrows.setValue(item.arrowsPerEnd);
 
             if (position == 0) {
                 binding.remove.setVisibility(View.GONE);

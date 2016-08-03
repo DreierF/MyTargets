@@ -125,6 +125,7 @@ public class TrainingFragment extends EditableFragment<Round> {
         binding.weatherIcon.setImageResource(training.environment.weather.getColorDrawable());
         binding.detailRoundInfo.setText(HtmlUtils.fromHtml(HtmlUtils.getTrainingInfoHTML(training, data, equals, false)));
         mAdapter.setList(data);
+        dataSource = new RoundDataSource();
         getActivity().supportInvalidateOptionsMenu();
 
         ToolbarUtils.setTitle(this, training.title);
