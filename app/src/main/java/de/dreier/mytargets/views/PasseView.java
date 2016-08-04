@@ -48,7 +48,7 @@ public class PasseView extends View {
         if (rect.width() > 0) {
             mScoresDrawer.animateToRect(rect);
         }
-        mScoresDrawer.setShots(p.shotList());
+        mScoresDrawer.setShots(p.getShots());
         invalidate();
     }
 

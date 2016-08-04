@@ -99,7 +99,7 @@ public class TargetView extends TargetViewBase {
         lastSetArrow = passe.getShots().size();
         this.end = passe;
         scoresDrawer.setSelection(currentArrow, null, ScoresDrawer.MAX_CIRCLE_SIZE);
-        scoresDrawer.setShots(passe.shotList());
+        scoresDrawer.setShots(passe.getShots());
         updateMidpoints();
         if (passe.getId() != -1) {
             switchMode(!passe.exact, true);

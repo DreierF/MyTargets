@@ -3,6 +3,7 @@ package de.dreier.mytargets.shared.models.db;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
+import com.annimon.stream.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.AppDatabase;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
@@ -74,17 +76,6 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable {
 
     public List<SightSetting> sightSettings = new ArrayList<>();
 
-    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "sightSettings")
-    public List<SightSetting> getSightSettings() {
-        if (sightSettings == null || sightSettings.isEmpty()) {
-            sightSettings = SQLite.select()
-                    .from(SightSetting.class)
-                    //.where(SightSetting_Table.bowId__id.eq(id))
-                    .queryList();
-        }
-        return sightSettings;
-    }
-
     public static List<Bow> getAll() {
         return SQLite.select().from(Bow.class).queryList();
     }
@@ -94,6 +85,21 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable {
                 .from(Bow.class)
                 //.where(Bow_Table.id__id.eq(id))
                 .querySingle();
+    }
+
+    public static void deleteAll() {
+        SQLite.delete(Bow.class).execute();
+    }
+
+    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "sightSettings")
+    public List<SightSetting> getSightSettings() {
+        if (sightSettings == null || sightSettings.isEmpty()) {
+            sightSettings = SQLite.select()
+                    .from(SightSetting.class)
+                    //.where(SightSetting_Table.bowId__id.eq(id))
+                    .queryList();
+        }
+        return sightSettings;
     }
 
     public Long getId() {
@@ -125,7 +131,10 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable {
                 id.equals(((Bow) another).id);
     }
 
-    public static void deleteAll() {
-        SQLite.delete(Bow.class).execute();
+    public SightSetting getSightSetting(Dimension distance) {
+        return Stream.of(getSightSettings())
+                .filter(s -> s.distance.equals(distance))
+                .findFirst()
+                .orElse(null);
     }
 }

@@ -36,6 +36,8 @@ import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.BackupUtils;
 
+import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
+
 public class DatabaseManager extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
     private static final int DATABASE_VERSION = 15;
@@ -459,7 +461,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         writeExportData(writer);
     }
 
-    public void writeExportData(Writer writer) throws IOException {
+    public static void writeExportData(Writer writer) throws IOException {
         DatabaseWrapper db = FlowManager.getWritableDatabase(AppDatabase.class);
         Cursor cur = db.rawQuery(
                 "SELECT t.title,sr.name AS standard_round,date(t.datum/1000, 'unixepoch', 'localtime') AS date, sr.indoor, i.r_index, i.distance, i.unit," +
@@ -472,17 +474,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
                         "LEFT JOIN STANDARD_ROUND_TEMPLATE sr ON t.standard_round=sr._id " +
                         "WHERE t._id = r.training AND r._id=p.round AND p._id=s.passe", null);
         writer.append("\"")
-                .append(mContext.getString(R.string.title)).append("\";\"")
-                .append(mContext.getString(R.string.date)).append("\";\"")
-                .append(mContext.getString(R.string.standard_round)).append("\";\"")
-                .append(mContext.getString(R.string.indoor)).append("\";\"")
-                .append(mContext.getString(R.string.bow)).append("\";\"")
-                .append(mContext.getString(R.string.arrow)).append("\";\"")
-                .append(mContext.getString(R.string.round)).append("\";\"")
-                .append(mContext.getString(R.string.distance)).append("\";\"")
-                .append(mContext.getString(R.string.target)).append("\";\"")
-                .append(mContext.getString(R.string.passe)).append("\";\"")
-                .append(mContext.getString(R.string.points)).append("\";\"")
+                .append(get(R.string.title)).append("\";\"")
+                .append(get(R.string.date)).append("\";\"")
+                .append(get(R.string.standard_round)).append("\";\"")
+                .append(get(R.string.indoor)).append("\";\"")
+                .append(get(R.string.bow)).append("\";\"")
+                .append(get(R.string.arrow)).append("\";\"")
+                .append(get(R.string.round)).append("\";\"")
+                .append(get(R.string.distance)).append("\";\"")
+                .append(get(R.string.target)).append("\";\"")
+                .append(get(R.string.passe)).append("\";\"")
+                .append(get(R.string.points)).append("\";\"")
                 .append("x").append("\";\"")
                 .append("y").append("\"\n");
         int titleInd = cur.getColumnIndexOrThrow("title");

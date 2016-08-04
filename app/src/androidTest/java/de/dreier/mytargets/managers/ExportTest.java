@@ -1,7 +1,5 @@
 package de.dreier.mytargets.managers;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -75,10 +73,8 @@ public class ExportTest extends InstrumentedTestBase {
     @Test
     public void testDataExport() throws IOException {
         setLocale("en", "EN");
-        Context context = InstrumentationRegistry.getTargetContext();
-        DatabaseManager database = DatabaseManager.getInstance(context);
         final StringWriter writer = new StringWriter();
-        database.writeExportData(writer);
+        DatabaseManager.writeExportData(writer);
         Assert.assertEquals(EXPECTED, writer.toString());
     }
 }

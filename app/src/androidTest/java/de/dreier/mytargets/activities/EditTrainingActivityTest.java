@@ -13,6 +13,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditTrainingActivity;
 import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.models.ETrainingType;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.WAFull;
@@ -32,7 +33,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.PermissionGranter.allowPermissionsIfNeeded;
-import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_TYPE;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
@@ -63,7 +63,7 @@ public class EditTrainingActivityTest extends UITestBase {
         onView(allOf(withId(R.id.fab1), withParent(withId(R.id.fab)))).perform(click());
 
         intended(allOf(hasComponent(EditTrainingActivity.class.getName()),
-                hasExtra(TRAINING_TYPE, FREE_TRAINING)));
+                hasExtra(TRAINING_TYPE, ETrainingType.FREE_TRAINING.toString())));
         allowPermissionsIfNeeded(mActivityTestRule.getActivity(), ACCESS_FINE_LOCATION);
 
         // Select distance 20m

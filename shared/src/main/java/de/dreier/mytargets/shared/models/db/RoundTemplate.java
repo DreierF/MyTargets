@@ -81,4 +81,9 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
         endCount--;
         update();
     }
+
+    public void addPasse() {
+        endCount++;
+        update();
+    }
 }
