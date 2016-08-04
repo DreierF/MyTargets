@@ -59,7 +59,7 @@ public class TargetView extends TargetViewBase {
     private static final int ZOOM_FACTOR = 2;
     private final Handler h = new Handler();
     @State
-    List<Passe> oldPasses;
+    ArrayList<Passe> oldPasses;
     private boolean inputModeTransitioning = false;
     private boolean zoomTransitioning = false;
     private float radius, midX, midY;
@@ -127,7 +127,7 @@ public class TargetView extends TargetViewBase {
     }
 
     public void setOldShoots(List<Passe> oldOnes) {
-        oldPasses = oldOnes;
+        oldPasses = new ArrayList<>(oldOnes);
         invalidate();
     }
 
