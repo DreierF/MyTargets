@@ -124,4 +124,8 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable {
                 getClass().equals(another.getClass()) &&
                 id.equals(((Bow) another).id);
     }
+
+    public static void deleteAll() {
+        SQLite.delete(Bow.class).execute();
+    }
 }

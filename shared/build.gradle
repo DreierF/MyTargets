@@ -25,7 +25,6 @@ dependencies {
     compile 'joda-time:joda-time:2.9.4'
 
     compile "org.parceler:parceler-api:$parcelerVersion"
-    apt "org.parceler:parceler:$parcelerVersion"
 
     apt "com.github.Raizlabs.DBFlow:dbflow-processor:$dbFlowVersion"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:$dbFlowVersion"

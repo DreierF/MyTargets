@@ -45,6 +45,22 @@ public class ActivityUtils {
 
     /**
      * Starts the given activity with the standard forward animation (Right in).
+     * Attaches the given key-String value pair to the intent.
+     *
+     * @param context  Activity context used to fire the intent
+     * @param activity Activity to start
+     * @param key      Extra key
+     * @param value    Extra value
+     */
+    public static void startActivityAnimated(Activity context, Class<?> activity, String key, String value) {
+        Intent i = new Intent(context, activity);
+        i.putExtra(key, value);
+        context.startActivity(i);
+        context.overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    /**
+     * Starts the given activity with the standard forward animation (Right in).
      * Attaches the given key-int value pair to the intent.
      *
      * @param context  Activity context used to fire the intent

@@ -77,4 +77,8 @@ public class Round extends BaseModel implements IIdSettable {
         String percent = maxPoints == 0 ? "" : " (" + (reachedPoints * 100 / maxPoints) + "%)";
         return reachedPoints + "/" + maxPoints + percent;
     }
+
+    public static void deleteAll() {
+        SQLite.delete(Round.class).execute();
+    }
 }

@@ -4,24 +4,23 @@ import org.parceler.ParcelClass;
 import org.parceler.ParcelClasses;
 
 import de.dreier.mytargets.shared.SharedApplicationInstance;
-import de.dreier.mytargets.shared.models.db.Arrow;
-import de.dreier.mytargets.shared.models.db.ArrowNumber;
-import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.NotificationInfo;
+import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.Thumbnail;
+import de.dreier.mytargets.shared.models.db.Arrow;
+import de.dreier.mytargets.shared.models.db.ArrowNumber;
+import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Passe;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.SightSetting;
 import de.dreier.mytargets.shared.models.db.StandardRound;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.Training;
-import de.dreier.mytargets.shared.utils.ScoresDrawer;
-import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.utils.ScoresDrawer;
 
 /**
  * Application singleton. Gets instantiated exactly once and is used

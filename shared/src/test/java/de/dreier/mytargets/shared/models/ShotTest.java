@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.dreier.mytargets.shared.models.db.Shot;
+
 public class ShotTest {
 
     @Test

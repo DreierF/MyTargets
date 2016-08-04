@@ -15,31 +15,20 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.EWeather;
-import de.dreier.mytargets.shared.models.Environment;
-import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.models.Training;
-import de.dreier.mytargets.shared.utils.BitmapUtils;
-import de.dreier.mytargets.utils.ThumbnailUtils;
+import de.dreier.mytargets.shared.models.Thumbnail;
+import de.dreier.mytargets.shared.models.db.Bow;
+import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.StandardRound;
+import de.dreier.mytargets.shared.models.db.Training;
 
 public abstract class DbTestRuleBase implements TestRule {
     protected final Context context;
-    protected final TrainingDataSource trainingDataSource;
-    protected final RoundDataSource roundDataSource;
-    protected final BowDataSource bowDataSource;
-    protected final StandardRoundDataSource standardRoundDataSource;
-    protected final PasseDataSource passeDataSource;
 
     public DbTestRuleBase() {
         context = InstrumentationRegistry.getTargetContext();
-        trainingDataSource = new TrainingDataSource();
-        roundDataSource = new RoundDataSource();
-        bowDataSource = new BowDataSource();
-        standardRoundDataSource = new StandardRoundDataSource();
-        passeDataSource = new PasseDataSource();
     }
 
     @Override
@@ -77,10 +66,10 @@ public abstract class DbTestRuleBase implements TestRule {
     protected abstract void addDatabaseContent();
 
     void deleteAll() {
-        trainingDataSource.deleteAll();
-        roundDataSource.deleteAll();
-        bowDataSource.deleteAll();
-        passeDataSource.deleteAll();
+        Training.deleteAll();
+        Round.deleteAll();
+        Bow.deleteAll();
+        Passe.deleteAll();
     }
 
     @NonNull
@@ -94,12 +83,9 @@ public abstract class DbTestRuleBase implements TestRule {
         bow.imageFile = null;
         Bitmap bitmap = BitmapFactory
                 .decodeResource(context.getResources(), R.drawable.recurve_bow);
-        Bitmap thumbnail = ThumbnailUtils.extractThumbnail(bitmap,
-                ThumbnailUtils.TARGET_SIZE_MICRO_THUMBNAIL,
-                ThumbnailUtils.TARGET_SIZE_MICRO_THUMBNAIL, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
-        bow.thumb = BitmapUtils.getBitmapAsByteArray(thumbnail);
+        bow.thumbnail = new Thumbnail(bitmap);
         bow.sightSettings = new ArrayList<>();
-        bowDataSource.update(bow);
+        bow.insert();
         return bow;
     }
 
@@ -108,17 +94,16 @@ public abstract class DbTestRuleBase implements TestRule {
         Training training = new Training();
         training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training);
         training.date = new LocalDate(2016, 4 + generator.nextInt(5), generator.nextInt(29));
-        training.environment = new Environment();
-        training.environment.location = "";
-        training.environment.weather = EWeather.SUNNY;
-        training.environment.windSpeed = 1;
-        training.environment.windDirection = 0;
-        training.standardRoundId = standardRound.id;
-        training.bow = 0;
-        training.arrow = 0;
+        training.location = "";
+        training.weather = EWeather.SUNNY;
+        training.windSpeed = 1;
+        training.windDirection = 0;
+        training.standardRoundId = standardRound.getId();
+        training.bow = null;
+        training.arrow = null;
         training.arrowNumbering = false;
         training.timePerPasse = 0;
-        trainingDataSource.update(training);
+        training.insert();
         return training;
     }
 }

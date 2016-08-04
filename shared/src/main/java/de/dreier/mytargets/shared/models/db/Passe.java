@@ -173,4 +173,8 @@ public class Passe extends BaseModel implements IIdSettable {
                 .sorted((lhs, rhs) -> lhs.getKey().compareTo(rhs.getKey()))
                 .collect(Collectors.toList());
     }
+
+    public static void deleteAll() {
+        SQLite.delete(Passe.class).execute();
+    }
 }

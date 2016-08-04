@@ -27,19 +27,16 @@ import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
 import de.dreier.mytargets.databinding.FragmentTrainingsBinding;
 import de.dreier.mytargets.databinding.ItemHeaderMonthBinding;
 import de.dreier.mytargets.databinding.ItemTrainingBinding;
+import de.dreier.mytargets.models.ETrainingType;
 import de.dreier.mytargets.models.Month;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.utils.ActivityUtils;
 import de.dreier.mytargets.utils.FlowDataLoader;
-import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.HeaderBindingHolder;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.Utils;
 
-import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_TYPE;
-import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND;
 import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 
 /**
@@ -68,9 +65,9 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
         mAdapter = new TrainingAdapter();
         binding.recyclerView.setAdapter(mAdapter);
         binding.fab1.setOnClickListener(view -> startActivityAnimated(getActivity(),
-            EditTrainingActivity.class, TRAINING_TYPE, FREE_TRAINING));
+            EditTrainingActivity.class, TRAINING_TYPE, ETrainingType.FREE_TRAINING.toString()));
         binding.fab2.setOnClickListener(view -> startActivityAnimated(getActivity(),
-                EditTrainingActivity.class, TRAINING_TYPE, TRAINING_WITH_STANDARD_ROUND));
+                EditTrainingActivity.class, TRAINING_TYPE, ETrainingType.TRAINING_WITH_STANDARD_ROUND.toString()));
         return binding.getRoot();
     }
 
@@ -134,7 +131,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
             binding.training.setText(mItem.title);
             binding.trainingDate.setText(mItem.getFormattedDate());
             List<Round> rounds = mItem.getRounds();
-            binding.gesTraining.setText(mItem.getReachedPoints(rounds));
+            binding.gesTraining.setText(mItem.getReachedPointsFormatted(rounds, false));
         }
     }
 

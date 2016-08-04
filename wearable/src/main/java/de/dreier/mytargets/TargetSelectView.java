@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.Shot;
-import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.utils.Circle;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
@@ -99,8 +98,7 @@ public class TargetSelectView extends TargetViewBase {
 
     @Override
     protected Coordinate initAnimationPositions(int i) {
-        final SelectableZone dummyZone = new SelectableZone(passe.getShots().get(i).zone, "");
-        return getCircularCoordinates(getSelectableZoneIndexFromShot(end.shot[i]));
+        return getCircularCoordinates(getSelectableZoneIndexFromShot(end.getShots().get(i)));
     }
 
     @Override

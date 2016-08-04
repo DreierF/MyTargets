@@ -15,14 +15,13 @@ import org.parceler.Parcel;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.utils.LocalDateConverter;
-import java.util.List;
-import java.util.Locale;
 
 @Parcel
 @Table(database = AppDatabase.class, name = "TRAINING")
@@ -111,13 +110,21 @@ public class Training extends BaseModel implements IIdSettable {
         return DateFormat.getDateInstance().format(date.toDate());
     }
 
-    public String getReachedPoints(List<Round> rounds) {
+    public String getReachedPointsFormatted(List<Round> rounds, boolean appendPercent) {
         int maxPoints = 0;
         int reachedPoints = 0;
         for (Round r : rounds) {
             maxPoints += r.info.getMaxPoints();
             reachedPoints += r.reachedPoints;
         }
-        return String.format(Locale.ENGLISH, "%d/%d", reachedPoints, maxPoints);
+        if(appendPercent && maxPoints > 0) {
+            return String.format(Locale.ENGLISH, "%d/%d (%d)", reachedPoints, maxPoints, (reachedPoints * 100 / maxPoints));
+        } else {
+            return String.format(Locale.ENGLISH, "%d/%d", reachedPoints, maxPoints);
+        }
+    }
+
+    public static void deleteAll() {
+        SQLite.delete(Training.class).execute();
     }
 }
