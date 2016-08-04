@@ -30,16 +30,13 @@ import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemEndBinding;
-import de.dreier.mytargets.managers.dao.PasseDataSource;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
-import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
-import de.dreier.mytargets.managers.dao.TrainingDataSource;
-import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.StandardRound;
+import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
+import de.dreier.mytargets.utils.FlowDataLoader;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
@@ -51,7 +48,6 @@ public class RoundFragment extends EditableFragment<Passe> {
     public static final String ROUND_ID = "round_id";
 
     private long mRound;
-    private PasseDataSource passeDataSource;
     private FragmentListBinding binding;
     private Round round;
 
@@ -75,12 +71,10 @@ public class RoundFragment extends EditableFragment<Passe> {
             mRound = getArguments().getLong(ROUND_ID, -1);
         }
 
-        round = new RoundDataSource().get(mRound);
+        round = Round.get(mRound);
         ToolbarUtils.setTitle(this, String.format(Locale.ENGLISH, "%s %d", getString(R.string.round), round.info.index + 1));
         ToolbarUtils.setSubtitle(this, round.getReachedPointsFormatted());
         setHasOptionsMenu(true);
-
-        passeDataSource = new PasseDataSource();
         return binding.getRoot();
     }
 
@@ -92,18 +86,16 @@ public class RoundFragment extends EditableFragment<Passe> {
 
     @Override
     public Loader<List<Passe>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader<>(getContext(), new PasseDataSource(),
-                () -> passeDataSource.getAllByRound(mRound));
+        return new FlowDataLoader<>(getContext(), () -> round.getPasses());
     }
 
     @Override
     public void onLoadFinished(Loader<List<Passe>> loader, List<Passe> data) {
         // Set round info
         mAdapter.setList(data);
-        dataSource = new PasseDataSource();
 
-        StandardRound standardRound = new StandardRoundDataSource()
-                .get(new TrainingDataSource().get(round.trainingId).standardRoundId);
+        StandardRound standardRound = StandardRound
+                .get(Training.get(round.trainingId).standardRoundId);
         boolean showFab = data.size() < round.info.endCount || standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
         binding.fab.setVisibility(showFab ? View.VISIBLE : View.GONE);
 

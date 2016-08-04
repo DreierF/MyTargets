@@ -241,12 +241,12 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     public long onTargetSet(Passe passe, boolean remote) {
         // Change round template if end is out of range defined in template
         if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE && template.endCount <= curPasse) {
-            new RoundTemplateDataSource().addPasse(template);
+            //TODO RoundTemplate.addPasse(template);
         }
 
         // Change round template if passe is out of range defined in template
-        if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE && template.passes <= curPasse) {
-            template.passes++;
+        if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE && template.endCount <= curPasse) {
+            template.endCount++;
             template.update();
         }
 

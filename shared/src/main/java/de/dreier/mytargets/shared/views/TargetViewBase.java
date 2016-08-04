@@ -89,7 +89,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             targetModel = target.getModel();
             targetDrawable = target.getDrawable();
             scoresDrawer.init(this, density, target);
-            scoresDrawer.setShots(end.shotList());
+            scoresDrawer.setShots(end.getShots());
             currentArrow = 1;
             updateSelectableZones();
         }
@@ -99,7 +99,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         currentArrow = 0;
         lastSetArrow = -1;
         end = new Passe(round.arrowsPerEnd);
-        scoresDrawer.setShots(end.shotList());
+        scoresDrawer.setShots(end.getShots());
         updateSelectableZones();
         animateToZoomSpot();
         invalidate();

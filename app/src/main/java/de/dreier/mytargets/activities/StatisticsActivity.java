@@ -24,11 +24,11 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityStatisticsBinding;
 import de.dreier.mytargets.fragments.StatisticsFragment;
-import de.dreier.mytargets.managers.dao.PasseDataSource;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
-import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.utils.Pair;
+import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.utils.Pair;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
 
@@ -48,15 +48,17 @@ public class StatisticsActivity extends ChildActivityBase {
 
         List<Round> rounds;
         if (roundId == -1) {
-            if(trainingId == -1) {
-                rounds = new RoundDataSource().getAll();
+            if (trainingId == -1) {
+                rounds = Stream.of(Training.getAll())
+                        .flatMap(t -> Stream.of(t.getRounds()))
+                        .collect(Collectors.toList());
             } else {
-                rounds = new RoundDataSource().getAll(trainingId);
+                rounds = Training.get(trainingId).getRounds();
             }
         } else {
-            rounds = Collections.singletonList(new RoundDataSource().get(roundId));
+            rounds = Collections.singletonList(Round.get(roundId));
         }
-        binding.viewPager.setAdapter(new StatisticsPagerAdapter(getSupportFragmentManager(), new PasseDataSource().groupByTarget(rounds)));
+        binding.viewPager.setAdapter(new StatisticsPagerAdapter(getSupportFragmentManager(), Passe.groupByTarget(rounds)));
 
         ToolbarUtils.showHomeAsUp(this);
     }

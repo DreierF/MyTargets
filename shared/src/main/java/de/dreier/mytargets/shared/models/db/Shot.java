@@ -52,8 +52,11 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
     public int compareTo(@NonNull Shot another) {
         if (another.zone == zone) {
             return 0;
+        } else if (another.zone >= 0 && zone >= 0) {
+            return zone - another.zone;
+        } else {
+            return another.zone - zone;
         }
-        return ((zone > another.zone && another.zone != MISS) || zone == MISS) ? 1 : -1;
     }
 
     public Long getId() {

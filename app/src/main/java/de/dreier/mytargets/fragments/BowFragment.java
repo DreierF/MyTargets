@@ -25,11 +25,8 @@ import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.SightSetting;
-import de.dreier.mytargets.utils.ActivityUtils;
-import de.dreier.mytargets.utils.FlowDataLoader;
-import de.dreier.mytargets.shared.models.SightSetting;
-import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
+import de.dreier.mytargets.utils.FlowDataLoader;
 import de.dreier.mytargets.utils.HTMLInfoBuilder;
 import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.SelectableViewHolder;
@@ -40,7 +37,6 @@ import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 public class BowFragment extends EditableFragment<Bow> {
 
     protected FragmentListBinding binding;
-    private BowDataSource bowDataSource;
 
     public BowFragment() {
         itemTypeSelRes = R.plurals.bow_selected;
@@ -68,7 +64,6 @@ public class BowFragment extends EditableFragment<Bow> {
 
     @Override
     public void onLoadFinished(Loader<List<Bow>> loader, List<Bow> data) {
-        this.dataSource = bowDataSource;
         mAdapter.setList(data);
     }
 

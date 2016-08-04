@@ -3,12 +3,7 @@ package de.dreier.mytargets.shared.targets;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
-import java.util.ArrayList;
-import de.dreier.mytargets.shared.models.Passe;
-import java.util.List;
-
 import de.dreier.mytargets.shared.models.db.Passe;
-import de.dreier.mytargets.shared.models.db.Shot;
 
 public class ScoringStyle {
 

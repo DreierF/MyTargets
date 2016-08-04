@@ -51,19 +51,16 @@ import de.dreier.mytargets.activities.DispersionPatternActivity;
 import de.dreier.mytargets.databinding.FragmentStatisticsBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
 import de.dreier.mytargets.managers.dao.ArrowStatisticDataSource;
-import de.dreier.mytargets.managers.dao.DataSourceBase;
-import de.dreier.mytargets.managers.dao.PasseDataSource;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.models.ArrowStatistic;
-import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.utils.Color;
-import de.dreier.mytargets.utils.DataLoaderBase;
+import de.dreier.mytargets.shared.utils.Pair;
+import de.dreier.mytargets.utils.FlowDataLoaderBase;
 import de.dreier.mytargets.utils.HtmlUtils;
-import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.RoundedTextDrawable;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
@@ -93,7 +90,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         target = Parcels.unwrap(getArguments().getParcelable(ARG_TARGET));
         roundIds = getArguments().getLongArray(ARG_ROUND_IDS);
         rounds = Stream.of(Utils.toList(roundIds))
-                .map(id -> new RoundDataSource().get(id))
+                .map(Round::get)
                 .collect(Collectors.toList());
 
         showLineChart();
@@ -112,9 +109,9 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
     private void showDispersionView() {
         final List<Shot> exactShots = Stream.of(rounds)
-                .flatMap(r -> Stream.of(new PasseDataSource().getAllByRound(r.getId())))
+                .flatMap(r -> Stream.of(r.getPasses()))
                 .filter(p -> p.exact)
-                .flatMap(p -> Stream.of(p.shotList()))
+                .flatMap(p -> Stream.of(p.getShots()))
                 .collect(Collectors.toList());
         if (exactShots.isEmpty()) {
             binding.dispersionPatternLayout.setVisibility(View.GONE);
@@ -168,7 +165,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     }
 
     private void addPieData() {
-        List<Map.Entry<SelectableZone, Integer>> scores = new PasseDataSource()
+        List<Map.Entry<SelectableZone, Integer>> scores = Passe
                 .getSortedScoreDistribution(rounds);
 
         ArrayList<String> xValues = new ArrayList<>();
@@ -224,8 +221,8 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
     private String getHitMissText() {
         final List<Shot> shots = Stream.of(rounds)
-                .flatMap(r -> Stream.of(new PasseDataSource().getAllByRound(r.getId())))
-                .flatMap(p -> Stream.of(p.shotList()))
+                .flatMap(r -> Stream.of(r.getPasses()))
+                .flatMap(p -> Stream.of(p.getShots()))
                 .collect(Collectors.toList());
         long missCount = Stream.of(shots).filter(s -> s.zone == Shot.MISS).count();
         long hitCount = shots.size() - missCount;
@@ -239,8 +236,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     @Override
     public Loader<List<ArrowStatistic>> onCreateLoader(int id, Bundle args) {
         arrowStatisticDataSource = new ArrowStatisticDataSource();
-        return new DataLoaderBase<ArrowStatistic, DataSourceBase>(getContext(),
-                arrowStatisticDataSource, () -> arrowStatisticDataSource.getAll(Utils.toList(roundIds)));
+        return new FlowDataLoaderBase<>(getContext(), () -> arrowStatisticDataSource.getAll(Utils.toList(roundIds)));
     }
 
     @Override
@@ -263,7 +259,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
     private LineData getLineChartDataSet() {
         List<Pair<Integer, DateTime>> values = Stream.of(Utils.toList(roundIds))
-                .flatMap(roundId -> Stream.of(new PasseDataSource().getAllByRound(roundId)))
+                .flatMap(roundId -> Stream.of(Round.get(roundId).getPasses()))
                 .map(passe -> getPairEndSummary(target, passe))
                 .collect(Collectors.toList());
         if (values.isEmpty()) {

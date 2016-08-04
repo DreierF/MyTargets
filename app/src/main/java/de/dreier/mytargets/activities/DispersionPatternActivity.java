@@ -22,9 +22,8 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityArrowRankingDetailsBinding;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.models.ArrowStatistic;
-import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.utils.DistributionPatternUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
@@ -86,7 +85,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
                 File dir = getCacheDir();
                 final File f = File.createTempFile("dispersion_pattern", ".png", dir);
                 List<Round> rounds = Stream.of(Utils.toList(roundIds))
-                        .map(id -> new RoundDataSource().get(id))
+                        .map(Round::get)
                         .collect(Collectors.toList());
                 DistributionPatternUtils.createDistributionPatternImageFile(800, rounds, f);
 
@@ -110,7 +109,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
 
         // Get the image
         List<Round> rounds = Stream.of(Utils.toList(roundIds))
-                .map(id -> new RoundDataSource().get(id))
+                .map(Round::get)
                 .collect(Collectors.toList());
         Bitmap image = DistributionPatternUtils.getDistributionPatternBitmap(800, rounds);
         if (image != null) {

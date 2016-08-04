@@ -24,10 +24,10 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
     @Column(name = "r_index")
     public int index;
     @Column(name = "arrows")
-    public int arrowsPerPasse;
+    public int arrowsPerEnd;
     public Target target;
     @Column(name = "passes")
-    public int passes;
+    public int endCount;
     @Column(typeConverter = DimensionConverter.class, name = "distance")
     public Dimension distance;
     @Column(name = "_id")
@@ -41,7 +41,7 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
     Dimension targetTemplateSize;
 
     public int getMaxPoints() {
-        return target.getEndMaxPoints(arrowsPerPasse) * passes;
+        return target.getEndMaxPoints(arrowsPerEnd) * endCount;
     }
 
     public Long getId() {
@@ -78,7 +78,7 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
     }
 
     void deletePasse() {
-        passes--;
+        endCount--;
         update();
     }
 }

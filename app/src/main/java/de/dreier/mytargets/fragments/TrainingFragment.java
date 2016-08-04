@@ -21,12 +21,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,12 +40,12 @@ import de.dreier.mytargets.shared.models.db.Passe;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.utils.DataLoader;
-import de.dreier.mytargets.utils.FlowDataLoader;
-import de.dreier.mytargets.utils.DividerItemDecoration;
-import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.shared.utils.Pair;
+import de.dreier.mytargets.shared.utils.StandardRoundFactory;
+import de.dreier.mytargets.utils.DividerItemDecoration;
+import de.dreier.mytargets.utils.FlowDataLoader;
+import de.dreier.mytargets.utils.HeaderBindingHolder;
+import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.ToolbarUtils;

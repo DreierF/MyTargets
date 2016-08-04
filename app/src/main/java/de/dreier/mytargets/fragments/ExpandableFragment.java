@@ -33,8 +33,7 @@ abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSettable &
     @Nullable
     private Bundle savedInstanceState;
 
-    void setList(IdProviderDataSource<C> dataSource, List<H> headers, List<C> children, PartitionDelegate<C> parentDelegate, boolean opened) {
-        this.dataSource = dataSource;
+    void setList(RecyclerView recyclerView, List<H> headers, List<C> children, PartitionDelegate<C> parentDelegate, boolean opened) {
         if (mAdapter.getItemCount() == 0) {
             mAdapter.setList(headers, children, parentDelegate, opened);
             if (savedInstanceState != null && savedInstanceState.containsKey(KEY_EXPANDED)) {

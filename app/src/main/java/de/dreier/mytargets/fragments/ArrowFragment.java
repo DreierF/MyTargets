@@ -25,18 +25,16 @@ import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
 import de.dreier.mytargets.shared.models.db.Arrow;
-import de.dreier.mytargets.utils.ActivityUtils;
-import de.dreier.mytargets.utils.FlowDataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
+import de.dreier.mytargets.utils.FlowDataLoader;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
 import static de.dreier.mytargets.fragments.EditArrowFragment.ARROW_ID;
 import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 
-public class ArrowFragment extends EditableFragment<Arrow> implements View.OnClickListener {
+public class ArrowFragment extends EditableFragment<Arrow> {
 
     protected FragmentListBinding binding;
-    private ArrowDataSource arrowDataSource;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -69,7 +67,6 @@ public class ArrowFragment extends EditableFragment<Arrow> implements View.OnCli
 
     @Override
     public void onLoadFinished(Loader<List<Arrow>> loader, List<Arrow> data) {
-        this.dataSource = arrowDataSource;
         mAdapter.setList(data);
     }
 
