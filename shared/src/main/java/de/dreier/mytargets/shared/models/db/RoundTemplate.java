@@ -1,6 +1,8 @@
 package de.dreier.mytargets.shared.models.db;
 
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -18,8 +20,11 @@ import de.dreier.mytargets.shared.utils.DimensionConverter;
 @Table(database = AppDatabase.class, name = "ROUND_TEMPLATE")
 public class RoundTemplate extends BaseModel implements IIdSettable {
 
-    //@ForeignKey(tableClass = StandardRound.class, references = {
-    //        @ForeignKeyReference(columnName = "sid", columnType = Long.class, foreignKeyColumnName = "_id")})
+    @Column(name = "_id")
+    @PrimaryKey(autoincrement = true)
+    Long _id;
+    @ForeignKey(tableClass = StandardRound.class, references = {
+            @ForeignKeyReference(columnName = "sid", columnType = Long.class, foreignKeyColumnName = "_id")})
     public Long standardRound;
     @Column(name = "r_index")
     public int index;
@@ -30,9 +35,6 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
     public int endCount;
     @Column(typeConverter = DimensionConverter.class, name = "distance")
     public Dimension distance;
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    Long id;
     @Column(name = "target")
     int targetTemplateId;
     @Column(name = "scoring_style")
@@ -45,18 +47,18 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
     }
 
     public Long getId() {
-        return id;
+        return _id;
     }
 
     public void setId(long id) {
-        this.id = id;
+        this._id = id;
     }
 
     @Override
     public boolean equals(Object another) {
         return another instanceof RoundTemplate &&
                 getClass().equals(another.getClass()) &&
-                id.equals(((RoundTemplate) another).id);
+                _id.equals(((RoundTemplate) another)._id);
     }
 
     public Target getTargetTemplate() {
