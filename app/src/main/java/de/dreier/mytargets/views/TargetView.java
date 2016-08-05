@@ -46,6 +46,7 @@ import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.models.EShowMode;
 import de.dreier.mytargets.shared.models.ArrowNumber;
 import de.dreier.mytargets.shared.models.Coordinate;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
@@ -56,7 +57,6 @@ import icepick.Icepick;
 import icepick.State;
 
 public class TargetView extends TargetViewBase {
-    private static final int ZOOM_FACTOR = 2;
     private final Handler h = new Handler();
     @State
     ArrayList<Passe> oldPasses;
@@ -78,6 +78,8 @@ public class TargetView extends TargetViewBase {
     private float inputModeProgress = 0;
     private ValueAnimator inputAnimator;
     private Midpoint[] midpoints;
+    private Dimension arrowDiameter;
+    private float targetZoomFactor;
 
     public TargetView(Context context) {
         super(context);
@@ -211,10 +213,11 @@ public class TargetView extends TargetViewBase {
     private void drawZoomedInTarget(Canvas canvas) {
         float px = end.shot[currentArrow].x;
         float py = end.shot[currentArrow].y;
-        int radius2 = (int) (radius * ZOOM_FACTOR);
-        int x = (int) ((midX - orgMidX) * ZOOM_FACTOR + orgMidX - px * (orgRadius + 30 * density));
-        int y = (int) ((midY - orgMidY) * ZOOM_FACTOR + orgMidY - py * (orgRadius + 30 * density) -
-                60 * density);
+        int radius2 = (int) (radius * targetZoomFactor);
+        int x = (int) ((midX - orgMidX) * targetZoomFactor + orgMidX
+                - px * (targetZoomFactor - 1) * orgRadius - px * 30 * density);
+        int y = (int) ((midY - orgMidY) * targetZoomFactor + orgMidY
+                - py * (targetZoomFactor - 1) * orgRadius - py * 30 * density - 60 * density);
         drawTarget(canvas, x, y, radius2);
     }
 
@@ -711,13 +714,23 @@ public class TargetView extends TargetViewBase {
         super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
     }
 
+    public void setArrowDiameter(Dimension arrowDiameter) {
+        this.arrowDiameter = arrowDiameter;
+        targetDrawable.setArrowDiameter(arrowDiameter, SettingsManager.getInputArrowDiameterScale());
+    }
+
+    public void reloadSettings() {
+        this.targetZoomFactor = SettingsManager.getInputTargetZoom();
+        targetDrawable.setArrowDiameter(arrowDiameter, SettingsManager.getInputArrowDiameterScale());
+    }
+
     private class Midpoint {
         private float count = 0;
         private float sumX = 0;
         private float sumY = 0;
 
         public Midpoint add(Shot s) {
-            if(s.zone == Shot.NOTHING_SELECTED) {
+            if (s.zone == Shot.NOTHING_SELECTED) {
                 return this;
             }
             sumX += s.x;

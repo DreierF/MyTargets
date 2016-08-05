@@ -44,6 +44,8 @@ public class SettingsManager {
     private static final String KEY_SHOW_MODE = "show_mode";
     private static final SharedPreferences preferences = ApplicationInstance
             .getLastSharedPreferences();
+    public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
+    public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
 
     public static int getStandardRound() {
         return preferences.getInt(KEY_STANDARD_ROUND, 32);
@@ -83,8 +85,8 @@ public class SettingsManager {
 
     public static void setDistance(Dimension distance) {
         preferences.edit()
-                .putInt(KEY_DISTANCE_VALUE, distance.value)
-                .putString(KEY_DISTANCE_UNIT, distance.unit.toString())
+                .putInt(KEY_DISTANCE_VALUE, (int) distance.value)
+                .putString(KEY_DISTANCE_UNIT, Dimension.Unit.toStringHandleNull(distance.unit))
                 .apply();
     }
 
@@ -112,7 +114,7 @@ public class SettingsManager {
         preferences.edit()
                 .putInt(KEY_TARGET, (int) target.getId())
                 .putInt(KEY_SCORING_STYLE, target.scoringStyle)
-                .putInt(KEY_TARGET_DIAMETER_VALUE, target.size.value)
+                .putInt(KEY_TARGET_DIAMETER_VALUE, (int) target.size.value)
                 .putString(KEY_TARGET_DIAMETER_UNIT, Dimension.Unit.toStringHandleNull(target.size.unit))
                 .apply();
     }
@@ -290,5 +292,15 @@ public class SettingsManager {
             return -1;
         }
         return Years.yearsBetween(birthDay, LocalDate.now()).getYears();
+    }
+
+    public static float getInputArrowDiameterScale() {
+        return Float.parseFloat(ApplicationInstance.getSharedPreferences()
+                .getString(KEY_INPUT_ARROW_DIAMETER_SCALE, "1.0"));
+    }
+
+    public static float getInputTargetZoom() {
+        return Float.parseFloat(ApplicationInstance.getSharedPreferences()
+                .getString(KEY_INPUT_TARGET_ZOOM, "3.0"));
     }
 }

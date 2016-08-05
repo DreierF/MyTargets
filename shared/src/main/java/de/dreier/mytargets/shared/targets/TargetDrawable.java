@@ -15,6 +15,7 @@ import android.text.TextPaint;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.Coordinate;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
@@ -24,7 +25,6 @@ public class TargetDrawable extends Drawable {
 
     public static final Region HEART_REGION;
     public static final Region ELLIPSE_REGION;
-    static final float ARROW_RADIUS = 8;
     private static final Path heart = new Path();
     private static final Path ellipse = new Path();
     private static final Path one = new Path();
@@ -164,11 +164,17 @@ public class TargetDrawable extends Drawable {
     private Paint paintFill;
     private Paint paintStroke;
     private TextPaint paintText;
+    private float arrowRadius = 8;
 
     public TargetDrawable(Target target) {
         this.target = target;
         this.model = target.getModel();
         initPaint();
+    }
+
+    public void setArrowDiameter(Dimension arrowDiameter, float scale) {
+        Dimension targetSize = target.size.convertTo(arrowDiameter.unit);
+        arrowRadius = arrowDiameter.value * 500 * scale / targetSize.value;
     }
 
     public Target getTarget() {
@@ -267,7 +273,8 @@ public class TargetDrawable extends Drawable {
         canvas.drawCircle(pos[0], pos[1], getArrowSize(rect, shot.index), paintFill);
 
         // Draw cross
-        float lineLen = reCalc(targetRect, 20);
+        float lineLen = reCalc(targetRect, 2 * arrowRadius);
+        paintFill.setStrokeWidth(reCalc(targetRect, 0.2f * arrowRadius));
         canvas.drawLine(pos[0] - lineLen, pos[1], pos[0] + lineLen, pos[1], paintFill);
         canvas.drawLine(pos[0], pos[1] - lineLen, pos[0], pos[1] + lineLen, paintFill);
 
@@ -277,13 +284,13 @@ public class TargetDrawable extends Drawable {
         paintText.getTextBounds(zoneString, 0, zoneString.length(), tr);
         float width = tr.width() / 2.0f;
         float height = tr.height() / 2.0f;
-        paintText.setTextSize(reCalc(targetRect, 12));
+        paintText.setTextSize(reCalc(targetRect, 1.5f * arrowRadius));
         paintText.setColor(0xFFFFFFFF);
         canvas.drawText(zoneString, pos[0] - width, pos[1] + height, paintText);
     }
 
     private float getArrowSize(Rect rect, int arrow) {
-        return reCalc(getTargetBounds(rect, arrow), ARROW_RADIUS);
+        return reCalc(getTargetBounds(rect, arrow), arrowRadius);
     }
 
     private Rect getTargetBounds(Rect rect, int index) {
@@ -352,7 +359,7 @@ public class TargetDrawable extends Drawable {
 
 
     public int getZoneFromPoint(float x, float y) {
-        return model.getZoneFromPoint(500.0f + x * 500, 500.0f + y * 500);
+        return model.getZoneFromPoint(500.0f + x * 500, 500.0f + y * 500, arrowRadius);
     }
 
     private void onPostDraw(Canvas canvas, Rect rect) {

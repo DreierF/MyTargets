@@ -26,16 +26,16 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
     private static final int XLARGE_VALUE = -2;
     public static final Dimension XLARGE = new Dimension(XLARGE_VALUE, (Unit) null);
 
-    public final int value;
+    public final float value;
     public final Unit unit;
 
     @ParcelConstructor
-    public Dimension(int value, Unit unit) {
+    public Dimension(float value, Unit unit) {
         this.value = value;
         this.unit = unit;
     }
 
-    public Dimension(int value, String unit) {
+    public Dimension(float value, String unit) {
         this.value = value;
         if (value < 0) {
             this.unit = null;
@@ -63,7 +63,7 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
         if (value == -1) {
             return context.getString(R.string.unknown);
         } else if (unit == null) {
-            switch (value) {
+            switch ((int) value) {
                 case MINI_VALUE:
                     return context.getString(R.string.mini);
                 case SMALL_VALUE:
@@ -78,7 +78,7 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
                     return "";
             }
         }
-        return value + unit.toString();
+        return Integer.toString((int) value) + unit.toString();
     }
 
     public long getId() {
@@ -91,25 +91,37 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
         if (o == null || getClass() != o.getClass()) return false;
         Dimension dimension = (Dimension) o;
         return value == dimension.value && unit == dimension.unit;
-
     }
 
     @Override
     public int hashCode() {
-        return 31 * value + (unit != null ? unit.hashCode() : 0);
+        int result = (value != +0.0f ? Float.floatToIntBits(value) : 0);
+        return 31 * result + (unit != null ? unit.hashCode() : 0);
+    }
+
+    public Dimension convertTo(Unit unit) {
+        if (this.unit == null) {
+            return new Dimension((8f - this.value) * 4f, Unit.CENTIMETER).convertTo(unit);
+        }
+        float newValue = value * unit.factor / this.unit.factor;
+        return new Dimension(newValue, unit);
     }
 
     public enum Unit {
-        CENTIMETER("cm"),
-        INCH("in"),
-        METER("m"),
-        YARDS("yd"),
-        FEET("ft");
+        CENTIMETER("cm", 100f),
+        INCH("in", 39.3701f),
+        METER("m", 1f),
+        YARDS("yd", 1.09361f),
+        FEET("ft", 3.28084f),
+        MILLIMETER("mm", 1000f);
 
         private final String abbreviation;
+        /* factor <units> = 1 meter */
+        private final float factor;
 
-        Unit(String abbreviation) {
+        Unit(String abbreviation, float factor) {
             this.abbreviation = abbreviation;
+            this.factor = factor;
         }
 
         public static Unit from(String unit) {
@@ -127,6 +139,8 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
                     return YARDS;
                 case "ft":
                     return FEET;
+                case "mm":
+                    return MILLIMETER;
                 default:
                     return null;
             }

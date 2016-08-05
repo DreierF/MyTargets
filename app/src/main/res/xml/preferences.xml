@@ -2,6 +2,22 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/general">
         <PreferenceScreen
+            android:key="input"
+            android:title="@string/input">
+            <ListPreference
+                android:defaultValue="3.0"
+                android:entries="@array/target_zoom_entries"
+                android:entryValues="@array/target_zoom_values"
+                android:key="input_target_zoom"
+                android:title="@string/target_zoom"/>
+            <ListPreference
+                android:defaultValue="1.0"
+                android:entries="@array/arrow_diameter_scale_entries"
+                android:entryValues="@array/arrow_diameter_scale_values"
+                android:key="input_arrow_diameter_scale"
+                android:title="@string/arrow_diameter_scale" />
+        </PreferenceScreen>
+        <PreferenceScreen
             android:key="scoreboard"
             android:title="@string/scoreboard">
             <PreferenceCategory android:title="@string/profile">

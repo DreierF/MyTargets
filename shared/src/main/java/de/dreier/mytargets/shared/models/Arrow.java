@@ -20,6 +20,7 @@ public class Arrow implements IImageProvider, IIdSettable {
     public String vanes = "";
     public String nock = "";
     public String comment = "";
+    public Dimension diameter = new Dimension(5, Dimension.Unit.MILLIMETER);
     public List<ArrowNumber> numbers = new ArrayList<>();
     public byte[] thumb;
     public String imageFile;
