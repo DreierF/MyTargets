@@ -48,7 +48,11 @@ public class HtmlUtils {
             ".myTable td, .myTable th { padding:5px; border:1px solid #000; }\n" +
             ".align_left td {text-align: left; }\n" +
             ".align_center td {text-align: center; }\n" +
-            ".circle {border-radius: 50%; width: 20px; height: 20px; padding: 5px; text-align: center; margin: auto;}\n" +
+            ".circle {border-radius: 50%; width: 20px; height: 20px; padding: 5px; text-align: center; margin: auto; position: relative;}\n" +
+            ".circle_arrow { border-radius: 50%; width: 13px; height: 13px; \n" +
+            "  padding: 2px; font-size: 11px; text-align: center; \n" +
+            "  vertical-align: center; background: black; color: white;\n" +
+            "  position: absolute; bottom: -4px; right: -4px; }" +
             "</style>";
 
     public static String getScoreboard(long trainingId, long roundId, ScoreboardConfiguration configuration) {
@@ -132,9 +136,12 @@ public class HtmlUtils {
         if (configuration.showPointsColored) {
             int fillColor = target.getModel().getZone(shot.zone).getFillColor();
             int color = target.getModel().getTextColor(shot.zone);
-            return String
-                    .format("<div class=\"circle\" style='background: #%06X; color: #%06X'>%s</div>",
-                            fillColor & 0xFFFFFF, color & 0xFFFFFF, points);
+            final String pointsDiv = String.format(
+                    "<div class=\"circle\" style='background: #%06X; color: #%06X'>%s",
+                    fillColor & 0xFFFFFF, color & 0xFFFFFF, points);
+            final String arrowDiv = shot.arrow == null ? "" : String.format(
+                    "<div class=\"circle_arrow\">%s</div>", shot.arrow);
+            return pointsDiv + arrowDiv + "</div>";
         } else {
             return points;
         }
