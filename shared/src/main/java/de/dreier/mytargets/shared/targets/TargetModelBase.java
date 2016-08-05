@@ -116,9 +116,9 @@ public class TargetModelBase implements IIdProvider {
         return zone < 0 || zone >= getZoneCount();
     }
 
-    public int getZoneFromPoint(float ax, float ay) {
+    public int getZoneFromPoint(float ax, float ay, float arrowRadius) {
         for (int i = 0; i < zones.length; i++) {
-            if (getZone(i).isInZone(ax, ay)) {
+            if (getZone(i).isInZone(ax, ay, arrowRadius)) {
                 return i;
             }
         }

@@ -21,6 +21,7 @@ import de.dreier.mytargets.databinding.ActivityInputBinding;
 import de.dreier.mytargets.fragments.TimerFragment;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.WearMessageManager;
+import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.managers.dao.ArrowNumberDataSource;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
@@ -29,6 +30,8 @@ import de.dreier.mytargets.managers.dao.SightSettingDataSource;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.models.EShowMode;
+import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
@@ -88,6 +91,14 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         savedPasses = passeDataSource.getAllByRound(roundId).size();
 
         binding.targetView.setRoundTemplate(template);
+        Dimension diameter = new Dimension(5, Dimension.Unit.MILLIMETER);
+        if(training.arrow >0) {
+            Arrow arrow = new ArrowDataSource().get(training.arrow);
+            if(arrow != null) {
+                diameter = arrow.diameter;
+            }
+        }
+        binding.targetView.setArrowDiameter(diameter);
         if (training.arrowNumbering) {
             binding.targetView.setArrowNumbers(new ArrowNumberDataSource().getAll(training.arrow));
         }
@@ -111,6 +122,12 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     private void startWearNotification() {
         NotificationInfo info = buildInfo();
         manager = new WearMessageManager(this, info);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        binding.targetView.reloadSettings();
     }
 
     @Override

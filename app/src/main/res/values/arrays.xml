@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="arrow_diameter_units">
+        <item>mm</item>
+        <item>inch</item>
+    </string-array>
+    <string-array name="target_zoom_entries">
+        <item>1.0x</item>
+        <item>1.5x</item>
+        <item>2.0x</item>
+        <item>2.5x</item>
+        <item>3.0x</item>
+        <item>3.5x</item>
+        <item>4.0x</item>
+        <item>4.5x</item>
+        <item>5.0x</item>
+    </string-array>
+    <string-array name="target_zoom_values">
+        <item>1.0</item>
+        <item>1.5</item>
+        <item>2.0</item>
+        <item>2.5</item>
+        <item>3.0</item>
+        <item>3.5</item>
+        <item>4.0</item>
+        <item>4.5</item>
+        <item>5.0</item>
+    </string-array>
+    <string-array name="arrow_diameter_scale_entries">
+        <item>1.0x</item>
+        <item>1.5x</item>
+        <item>2.0x</item>
+        <item>2.5x</item>
+        <item>3.0x</item>
+        <item>3.5x</item>
+    </string-array>
+    <string-array name="arrow_diameter_scale_values">
+        <item>1.0</item>
+        <item>1.5</item>
+        <item>2.0</item>
+        <item>2.5</item>
+        <item>3.0</item>
+        <item>3.5</item>
+    </string-array>
+</resources>
