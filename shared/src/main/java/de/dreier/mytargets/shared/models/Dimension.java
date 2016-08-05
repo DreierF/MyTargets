@@ -100,6 +100,9 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
     }
 
     public Dimension convertTo(Unit unit) {
+        if (this.unit == null) {
+            return new Dimension((8f - this.value) * 4f, Unit.CENTIMETER).convertTo(unit);
+        }
         float newValue = value * unit.factor / this.unit.factor;
         return new Dimension(newValue, unit);
     }
