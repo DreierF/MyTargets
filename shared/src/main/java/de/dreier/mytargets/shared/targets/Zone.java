@@ -37,15 +37,16 @@ public class Zone {
     }
 
     /**
-     * @param ax x-Coordinate scaled to a 0 ... 1000 coordinate system
-     * @param ay y-Coordinate scaled to a 0 ... 1000 coordinate system
+     * @param ax          x-Coordinate scaled to a 0 ... 1000 coordinate system
+     * @param ay          y-Coordinate scaled to a 0 ... 1000 coordinate system
+     * @param arrowRadius Radius of the arrow, which is needed to determine if the arrow already touches the zones stroke.
      * @return Returns true if the given coordinates are within the zone.
      */
-    boolean isInZone(float ax, float ay) {
+    boolean isInZone(float ax, float ay, float arrowRadius) {
         switch (type) {
             case CIRCLE:
                 float distance = (ax - midpoint.x) * (ax - midpoint.x) + (ay - midpoint.y) * (ay - midpoint.y);
-                float adaptedRadius = radius + (scoresAsOutsideIn ? 1f : -1f) * (TargetDrawable.ARROW_RADIUS + strokeWidth / 2.0f);
+                float adaptedRadius = radius + (scoresAsOutsideIn ? 1f : -1f) * (arrowRadius + strokeWidth / 2.0f);
                 return adaptedRadius * adaptedRadius > distance;
             case HEART:
                 return TargetDrawable.HEART_REGION.contains((int) ax, (int) ay);

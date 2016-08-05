@@ -32,6 +32,8 @@ import permissions.dispatcher.RuntimePermissions;
 import static de.dreier.mytargets.fragments.SettingsFragmentPermissionsDispatcher.doBackupWithCheck;
 import static de.dreier.mytargets.fragments.SettingsFragmentPermissionsDispatcher.doExportWithCheck;
 import static de.dreier.mytargets.fragments.SettingsFragmentPermissionsDispatcher.doImportWithCheck;
+import static de.dreier.mytargets.managers.SettingsManager.KEY_INPUT_ARROW_DIAMETER_SCALE;
+import static de.dreier.mytargets.managers.SettingsManager.KEY_INPUT_TARGET_ZOOM;
 import static de.dreier.mytargets.managers.SettingsManager.KEY_PROFILE_BIRTHDAY;
 import static de.dreier.mytargets.managers.SettingsManager.KEY_PROFILE_CLUB;
 import static de.dreier.mytargets.managers.SettingsManager.KEY_PROFILE_FIRST_NAME;
@@ -50,6 +52,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         if (rootKey == null) {
             getActivity().setTitle(R.string.preferences);
+        } else if ("input".equals(rootKey)) {
+            getActivity().setTitle(R.string.input);
+            updateInputSummaries();
         } else if ("timer".equals(rootKey)) {
             getActivity().setTitle(R.string.timer);
             updateTimerSummaries();
@@ -218,6 +223,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
             updateTimerSummaries();
         } else if (key.startsWith("profile_")) {
             updateProfileSummaries();
+        } else if (key.startsWith("input_")) {
+            updateInputSummaries();
         }
     }
 
@@ -232,6 +239,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
         setSecondsSummary(KEY_TIMER_WAIT_TIME, SettingsManager.getTimerWaitTime());
         setSecondsSummary(KEY_TIMER_SHOOT_TIME, SettingsManager.getTimerShootTime());
         setSecondsSummary(KEY_TIMER_WARN_TIME, SettingsManager.getTimerWarnTime());
+    }
+
+    private void updateInputSummaries() {
+        setSummary(KEY_INPUT_ARROW_DIAMETER_SCALE, SettingsManager.getInputArrowDiameterScale() + "x");
+        setSummary(KEY_INPUT_TARGET_ZOOM, SettingsManager.getInputTargetZoom() + "x");
     }
 
     private void setSecondsSummary(String key, int value) {

@@ -13,6 +13,7 @@ import android.database.Cursor;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.shared.models.Dimension;
 
 public class ArrowDataSource extends IdProviderDataSource<Arrow> {
     public static final String TABLE = "ARROW";
@@ -27,6 +28,8 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
     private static final String NOCK = "nock";
     private static final String COMMENT = "comment";
     private static final String IMAGE = "image";
+    private static final String DIAMETER_VALUE = "diameter";
+    private static final String DIAMETER_UNIT = "diameter_unit";
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -40,7 +43,9 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
                     NOCK + " TEXT," +
                     COMMENT + " TEXT," +
                     THUMBNAIL + " BLOB," +
-                    IMAGE + " TEXT);";
+                    IMAGE + " TEXT," +
+                    DIAMETER_VALUE + " TEXT," +
+                    DIAMETER_UNIT + " TEXT);";
 
     public ArrowDataSource() {
         super(TABLE);
@@ -66,6 +71,8 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
         values.put(COMMENT, arrow.comment);
         values.put(THUMBNAIL, arrow.thumb);
         values.put(IMAGE, arrow.imageFile);
+        values.put(DIAMETER_VALUE, arrow.diameter.value);
+        values.put(DIAMETER_UNIT, Dimension.Unit.toStringHandleNull(arrow.diameter.unit));
         return values;
     }
 
@@ -83,12 +90,16 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
         arrow.comment = cursor.getString(startColumnIndex + 9);
         arrow.thumb = cursor.getBlob(startColumnIndex + 10);
         arrow.imageFile = cursor.getString(startColumnIndex + 11);
+        final float value = cursor.getFloat(startColumnIndex + 12);
+        final String unit = cursor.getString(startColumnIndex + 13);
+        arrow.diameter = new Dimension(value, unit);
         return arrow;
     }
 
     public Arrow get(long arrow) {
         Cursor cursor = database.rawQuery("SELECT _id, name, length, material, " +
-                "spine, weight, tip_weight, vanes, nock, comment, thumbnail, image " +
+                "spine, weight, tip_weight, vanes, nock, comment, thumbnail, image, " +
+                "diameter, diameter_unit " +
                 "FROM ARROW WHERE _id = " + arrow, null);
         Arrow a = null;
         if (cursor.moveToFirst()) {
@@ -102,7 +113,7 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
     public ArrayList<Arrow> getAll() {
         Cursor res = database.rawQuery(
                 "SELECT _id, name, length, material, spine, weight, tip_weight, vanes, " +
-                        "nock, comment, thumbnail, image " +
+                        "nock, comment, thumbnail, image, diameter, diameter_unit " +
                         "FROM ARROW ORDER BY _id ASC", null);
         ArrayList<Arrow> list = new ArrayList<>(res.getCount());
         if (res.moveToFirst()) {
