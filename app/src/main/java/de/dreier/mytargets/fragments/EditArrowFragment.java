@@ -28,9 +28,13 @@ import de.dreier.mytargets.databinding.DynamicitemArrowNumbersBinding;
 import de.dreier.mytargets.databinding.EditArrowFragmentBinding;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.ArrowNumber;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import icepick.State;
+
+import static de.dreier.mytargets.shared.models.Dimension.Unit.INCH;
+import static de.dreier.mytargets.shared.models.Dimension.Unit.MILLIMETER;
 
 public class EditArrowFragment extends EditWithImageFragmentBase {
 
@@ -73,6 +77,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
             ToolbarUtils.setTitle(this, arrow.name);
             contentBinding.setArrow(arrow);
             arrowNumbersList = arrow.getArrowNumbers();
+            contentBinding.diameterUnit.setSelection(arrow.diameter.unit == MILLIMETER ? 0 : 1);
         }
 
         loadImage(imageFile);
@@ -120,6 +125,10 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         arrow.numbers = Stream.of(arrowNumbersList)
                 .filter(value -> value != null)
                 .collect(Collectors.toList());
+        final float diameterValue = Float.parseFloat(contentBinding.diameter.getText().toString());
+        final int selectedUnit = contentBinding.diameterUnit.getSelectedItemPosition();
+        Dimension.Unit diameterUnit = selectedUnit == 0 ? MILLIMETER : INCH;
+        arrow.diameter = new Dimension(diameterValue, diameterUnit);
         return arrow;
     }
 

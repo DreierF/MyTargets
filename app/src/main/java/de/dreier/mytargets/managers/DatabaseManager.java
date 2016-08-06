@@ -40,7 +40,7 @@ import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 16;
     private static DatabaseManager sInstance;
 
     public DatabaseManager(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -376,6 +376,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     "FROM PASSE p, SHOOT s " +
                     "WHERE p._id=s.passe " +
                     "AND s.x!=0)");
+        }
+        if (oldVersion < 16) {
+            db.execSQL("ALTER TABLE ARROW ADD COLUMN diameter TEXT DEFAULT '5.0'");
+            db.execSQL("ALTER TABLE ARROW ADD COLUMN diameter_unit TEXT DEFAULT 'mm'");
         }
         onCreate(db);
     }

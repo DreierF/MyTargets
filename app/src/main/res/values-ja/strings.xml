@@ -86,8 +86,8 @@
   <!-- Scoreboard -->
   <string name="scoreboard">Scoreboard</string>
   <string name="arrows">Arrows</string>
-  <string name="sum">Sum</string>
-  <string name="carry">Carry</string>
+  <string name="sum">Score</string>
+  <string name="carry">R.Total</string>
   <string name="action_print">Print</string>
   <string name="average">Average</string>
   <!-- Input mode -->
@@ -251,4 +251,8 @@
   <string name="new_end">New end</string>
   <string name="distribution">Distribution</string>
   <string name="count">Count</string>
+  <string name="diameter">Diameter</string>
+  <string name="input">Input</string>
+  <string name="target_zoom">Target zoom level</string>
+  <string name="arrow_diameter_scale">Arrow diameter scale</string>
 </resources>

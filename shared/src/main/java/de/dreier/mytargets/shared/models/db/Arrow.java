@@ -16,9 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.AppDatabase;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
 import de.dreier.mytargets.shared.models.Thumbnail;
+import de.dreier.mytargets.shared.utils.DimensionConverter;
 import de.dreier.mytargets.shared.utils.ThumbnailConverter;
 
 @Parcel
@@ -55,6 +57,9 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable {
 
     @Column(name = "comment")
     public String comment = "";
+
+    @Column(typeConverter = DimensionConverter.class, name = "diameter") // "diameter" "diameter_unit"
+    public Dimension diameter = new Dimension(5, Dimension.Unit.MILLIMETER);
 
     @Column(name = "thumbnail", typeConverter = ThumbnailConverter.class)
     public Thumbnail thumbnail;
