@@ -82,7 +82,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
 
     @NonNull
     @Override
-    protected LoaderUICallback onLoad() {
+    protected LoaderUICallback onLoad(Bundle args) {
         final List<Training> trainings = Training.getAll();
         Set<Long> monthMap = new HashSet<>();
         List<Month> months = new ArrayList<>();

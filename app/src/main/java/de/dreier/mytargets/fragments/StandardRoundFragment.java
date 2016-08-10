@@ -12,9 +12,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -44,7 +43,6 @@ import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.utils.FlowDataLoader;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
@@ -53,8 +51,7 @@ import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
 import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 
 public class StandardRoundFragment extends SelectItemFragment<StandardRound>
-        implements View.OnClickListener, SearchView.OnQueryTextListener,
-        LoaderManager.LoaderCallbacks<List<StandardRound>> {
+        implements View.OnClickListener, SearchView.OnQueryTextListener {
 
     private static final int NEW_STANDARD_ROUND = 1;
     private static final String KEY_QUERY = "query";
@@ -89,16 +86,45 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         initFilter();
     }
 
+    @NonNull
     @Override
-    public Loader<List<StandardRound>> onCreateLoader(int id, Bundle args) {
-        final FlowDataLoader.BackgroundAction<StandardRound> action;
+    protected LoaderUICallback onLoad(Bundle args) {
+        List<StandardRound> data;
         if (args == null) {
-            action = StandardRound::getAll;
+            data = StandardRound.getAll();
         } else {
             String query = args.getString(KEY_QUERY);
-            action = () -> StandardRound.getAllSearch(query);
+            data = StandardRound.getAllSearch(query);
         }
-        return new FlowDataLoader<>(getContext(), action);
+        return new LoaderUICallback() {
+            @Override
+            public void applyData() {
+                mAdapter.setList(data);
+                int position = data.indexOf(currentSelection);
+                // Test if our currentSelection has been deleted
+                if (position == -1 && StandardRound.get(currentSelection.getId()) == null) {
+                    currentSelection = data.size() > 0 ? data.get(0) : StandardRound.get(32L);
+                    Intent dataIntent = new Intent();
+                    dataIntent.putExtra(ITEM, Parcels.wrap(currentSelection));
+                    StandardRoundFragment.this.getActivity().setResult(Activity.RESULT_OK, dataIntent);
+                }
+                if (position > -1) {
+                    binding.recyclerView.post(() -> {
+                        mSelector.setSelected(position, currentSelection.getId(), true);
+                        LinearLayoutManager manager = (LinearLayoutManager) binding.recyclerView
+                                .getLayoutManager();
+                        int first = manager.findFirstCompletelyVisibleItemPosition();
+                        int last = manager.findLastCompletelyVisibleItemPosition();
+                        if (first > position || last < position) {
+                            binding.recyclerView.scrollToPosition(position);
+                        }
+                    });
+                } else {
+                    mSelector.clearSelections();
+                }
+
+            }
+        };
     }
 
     @Override
@@ -107,42 +133,10 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         if (searchView != null) {
             Bundle args = new Bundle();
             args.putString(KEY_QUERY, searchView.getQuery().toString());
-            getLoaderManager().restartLoader(0, args, this);
+            reloadData(args);
         } else {
-            getLoaderManager().restartLoader(0, null, this);
+            reloadData();
         }
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<StandardRound>> loader, List<StandardRound> data) {
-        mAdapter.setList(data);
-        int position = data.indexOf(currentSelection);
-        // Test if our currentSelection has been deleted
-        if (position == -1 && StandardRound.get(currentSelection.getId()) == null) {
-            currentSelection = data.size() > 0 ? data.get(0) : StandardRound.get(32L);
-            Intent dataIntent = new Intent();
-            dataIntent.putExtra(ITEM, Parcels.wrap(currentSelection));
-            getActivity().setResult(Activity.RESULT_OK, dataIntent);
-        }
-        if (position > -1) {
-            binding.recyclerView.post(() -> {
-                mSelector.setSelected(position, currentSelection.getId(), true);
-                LinearLayoutManager manager = (LinearLayoutManager) binding.recyclerView
-                        .getLayoutManager();
-                int first = manager.findFirstCompletelyVisibleItemPosition();
-                int last = manager.findLastCompletelyVisibleItemPosition();
-                if (first > position || last < position) {
-                    binding.recyclerView.scrollToPosition(position);
-                }
-            });
-        } else {
-            mSelector.clearSelections();
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<StandardRound>> loader) {
-
     }
 
     private void initFilter() {

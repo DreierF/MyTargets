@@ -97,7 +97,7 @@ public class TrainingFragment extends EditableFragment<Round> {
 
     @NonNull
     @Override
-    protected LoaderUICallback onLoad() {
+    protected LoaderUICallback onLoad(Bundle args) {
         training = Training.get(mTraining);
         List<Round> rounds = training.getRounds();
         StandardRound standardRound = StandardRound.get(training.standardRoundId);

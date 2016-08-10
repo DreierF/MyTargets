@@ -96,7 +96,7 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> implemen
     }
 
     @Override
-    protected LoaderUICallback onLoad() {
+    protected LoaderUICallback onLoad(Bundle args) {
         final List<Dimension> distances = new DistanceDataSource().getAll(distance, unit);
         return () -> mAdapter.setList(distances);
     }

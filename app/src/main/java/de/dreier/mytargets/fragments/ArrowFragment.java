@@ -61,7 +61,7 @@ public class ArrowFragment extends EditableFragment<Arrow> {
 
     @NonNull
     @Override
-    protected LoaderUICallback onLoad() {
+    protected LoaderUICallback onLoad(Bundle args) {
         List<Arrow> arrows = Arrow.getAll();
         return () -> mAdapter.setList(arrows);
     }

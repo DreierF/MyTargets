@@ -85,7 +85,7 @@ public class RoundFragment extends EditableFragment<Passe> {
 
     @NonNull
     @Override
-    protected LoaderUICallback onLoad() {
+    protected LoaderUICallback onLoad(Bundle args) {
         final List<Passe> passes = round.getPasses();
         StandardRound standardRound = StandardRound
                 .get(Training.get(round.trainingId).standardRoundId);

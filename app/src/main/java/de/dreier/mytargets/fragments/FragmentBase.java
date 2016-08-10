@@ -61,14 +61,14 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
         return new AsyncTaskLoader<LoaderUICallback>(getContext()) {
             @Override
             public LoaderUICallback loadInBackground() {
-                return onLoad();
+                return onLoad(args);
             }
         };
     }
 
     @WorkerThread
     @NonNull
-    protected LoaderUICallback onLoad() {
+    protected LoaderUICallback onLoad(Bundle args) {
         return () -> {};
     }
 
@@ -84,6 +84,10 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
 
     protected void reloadData() {
         getLoaderManager().restartLoader(0, null, this);
+    }
+
+    protected void reloadData(Bundle args) {
+        getLoaderManager().restartLoader(0, args, this);
     }
 
     /**

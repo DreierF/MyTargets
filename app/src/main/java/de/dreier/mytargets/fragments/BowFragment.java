@@ -58,7 +58,7 @@ public class BowFragment extends EditableFragment<Bow> {
 
     @NonNull
     @Override
-    protected LoaderUICallback onLoad() {
+    protected LoaderUICallback onLoad(Bundle args) {
         List<Bow> bows = Bow.getAll();
         return () -> mAdapter.setList(bows);
     }

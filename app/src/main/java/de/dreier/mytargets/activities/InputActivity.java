@@ -84,7 +84,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         binding.targetView.setRoundTemplate(template);
         Dimension diameter = new Dimension(5, Dimension.Unit.MILLIMETER);
         if(training.arrow >0) {
-            Arrow arrow = new ArrowDataSource().get(training.arrow);
+            Arrow arrow = Arrow.get(training.arrow);
             if(arrow != null) {
                 diameter = arrow.diameter;
             }
