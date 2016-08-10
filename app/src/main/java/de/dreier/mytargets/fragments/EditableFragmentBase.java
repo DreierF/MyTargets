@@ -6,12 +6,8 @@
  */
 package de.dreier.mytargets.fragments;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.view.Menu;
@@ -28,12 +24,10 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.utils.OnCardClickListener;
 import de.dreier.mytargets.shared.utils.Pair;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
-abstract class EditableFragmentBase<T extends IIdSettable & Model> extends FragmentBase<T>
-        implements OnCardClickListener<T>, LoaderManager.LoaderCallbacks<List<T>> {
+abstract class EditableFragmentBase<T extends IIdSettable & Model> extends FragmentBase<T> {
 
     final MultiSelector mSelector = new MultiSelector();
     @PluralsRes
@@ -85,22 +79,9 @@ abstract class EditableFragmentBase<T extends IIdSettable & Model> extends Fragm
     };
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        getLoaderManager().restartLoader(0, null, this);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<T>> loader) {
-        // Called when the loader is restarted, but we
-        // don't want to remove all elements from the
-        // screen on resume just in case something changed
+        reloadData();
     }
 
     private void remove(List<Integer> positions) {
@@ -131,8 +112,7 @@ abstract class EditableFragmentBase<T extends IIdSettable & Model> extends Fragm
                                     item.getSecond().delete();
                                 }
                                 if (isAdded()) {
-                                    getLoaderManager()
-                                            .restartLoader(0, null, EditableFragmentBase.this);
+                                    reloadData();
                                 }
                             }
 

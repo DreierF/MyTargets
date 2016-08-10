@@ -9,7 +9,7 @@ package de.dreier.mytargets.fragments;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.content.Loader;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +31,6 @@ import de.dreier.mytargets.models.ETrainingType;
 import de.dreier.mytargets.models.Month;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.utils.FlowDataLoader;
 import de.dreier.mytargets.utils.HeaderBindingHolder;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.Utils;
@@ -81,16 +80,13 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
         startActivityAnimated(getActivity(), EditTrainingActivity.class, ITEM_ID, item.getId());
     }
 
+    @NonNull
     @Override
-    public Loader<List<Training>> onCreateLoader(int id, Bundle args) {
-        return new FlowDataLoader<>(getContext(), Training::getAll);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Training>> loader, List<Training> data) {
+    protected LoaderUICallback onLoad() {
+        final List<Training> trainings = Training.getAll();
         Set<Long> monthMap = new HashSet<>();
         List<Month> months = new ArrayList<>();
-        for (Training t : data) {
+        for (Training t : trainings) {
             long parentId = Utils.getMonthId(t.date);
             if (!monthMap.contains(parentId)) {
                 monthMap.add(parentId);
@@ -98,7 +94,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
             }
         }
         Collections.sort(months, Collections.reverseOrder());
-        setList(binding.recyclerView, months, data, child -> Utils.getMonthId(child.date), false);
+        return () -> setList(months, trainings, child -> Utils.getMonthId(child.date), false);
     }
 
     private class TrainingAdapter extends ExpandableNowListAdapter<Month, Training> {

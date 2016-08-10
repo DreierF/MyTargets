@@ -53,7 +53,7 @@ public class TargetFragment extends SelectItemFragment<Target>
         binding.recyclerView.setHasFixedSize(true);
         mAdapter = new TargetAdapter(getContext());
         binding.recyclerView.setAdapter(mAdapter);
-        useDoubleClickSelection = true;
+        usesDoubleClickSelection = true;
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
         ToolbarUtils.showHomeAsUp(this);
         ToolbarUtils.showUpAsX(this);

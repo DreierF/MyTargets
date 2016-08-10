@@ -19,6 +19,8 @@ import junit.framework.Assert;
 
 import org.parceler.Parcels;
 
+import java.util.List;
+
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.NowListAdapter;
 import de.dreier.mytargets.databinding.FragmentListBinding;
@@ -89,14 +91,14 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> implemen
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mAdapter.setList(new DistanceDataSource().getAll(distance, unit));
+    public void onLongClick(SelectableViewHolder holder) {
+        onClick(holder, (Dimension) holder.getItem());
     }
 
     @Override
-    public void onLongClick(SelectableViewHolder holder) {
-        onClick(holder, (Dimension) holder.getItem());
+    protected LoaderUICallback onLoad() {
+        final List<Dimension> distances = new DistanceDataSource().getAll(distance, unit);
+        return () -> mAdapter.setList(distances);
     }
 
     private class DistanceAdapter extends NowListAdapter<Dimension> {

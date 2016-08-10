@@ -76,7 +76,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         mAdapter = new StandardRoundAdapter(getContext());
         binding.recyclerView.setAdapter(mAdapter);
         binding.fab.setOnClickListener(this);
-        useDoubleClickSelection = true;
+        usesDoubleClickSelection = true;
         ToolbarUtils.showUpAsX(this);
         setHasOptionsMenu(true);
         return binding.getRoot();

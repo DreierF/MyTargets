@@ -11,7 +11,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
-import android.support.v4.content.Loader;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +26,6 @@ import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.SightSetting;
 import de.dreier.mytargets.utils.DividerItemDecoration;
-import de.dreier.mytargets.utils.FlowDataLoader;
 import de.dreier.mytargets.utils.HTMLInfoBuilder;
 import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.SelectableViewHolder;
@@ -57,14 +56,11 @@ public class BowFragment extends EditableFragment<Bow> {
         return binding.getRoot();
     }
 
+    @NonNull
     @Override
-    public Loader<List<Bow>> onCreateLoader(int id, Bundle args) {
-        return new FlowDataLoader<>(getContext(), Bow::getAll);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Bow>> loader, List<Bow> data) {
-        mAdapter.setList(data);
+    protected LoaderUICallback onLoad() {
+        List<Bow> bows = Bow.getAll();
+        return () -> mAdapter.setList(bows);
     }
 
     @Override

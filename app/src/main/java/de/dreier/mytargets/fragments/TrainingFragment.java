@@ -12,8 +12,9 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.Loader;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,7 +39,6 @@ import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DividerItemDecoration;
-import de.dreier.mytargets.utils.FlowDataLoader;
 import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -95,26 +95,29 @@ public class TrainingFragment extends EditableFragment<Round> {
         setHasOptionsMenu(true);
     }
 
+    @NonNull
     @Override
-    public Loader<List<Round>> onCreateLoader(int id, Bundle args) {
-        return new FlowDataLoader<>(getContext(), () -> training.getRounds());
-    }
-
-    public void onLoadFinished(Loader<List<Round>> loader, List<Round> data) {
+    protected LoaderUICallback onLoad() {
         training = Training.get(mTraining);
-
-        // Hide fab for standard rounds
+        List<Round> rounds = training.getRounds();
         StandardRound standardRound = StandardRound.get(training.standardRoundId);
-        binding.fab.setVisibility(standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE ? View.VISIBLE : View.GONE);
+        return new LoaderUICallback() {
+            @Override
+            public void applyData() {
+                // Hide fab for standard rounds
+                binding.fab.setVisibility(standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE ? View.VISIBLE : View.GONE);
 
-        // Set round info
-        binding.weatherIcon.setImageResource(training.weather.getColorDrawable());
-        binding.detailRoundInfo.setText(HtmlUtils.fromHtml(HtmlUtils.getTrainingInfoHTML(training, data, equals, false)));
-        mAdapter.setList(data);
-        getActivity().supportInvalidateOptionsMenu();
+                // Set round info
+                binding.weatherIcon.setImageResource(training.weather.getColorDrawable());
+                final Spanned details = HtmlUtils.fromHtml(HtmlUtils.getTrainingInfoHTML(training, rounds, equals, false));
+                binding.detailRoundInfo.setText(details);
+                mAdapter.setList(rounds);
+                TrainingFragment.this.getActivity().supportInvalidateOptionsMenu();
 
-        ToolbarUtils.setTitle(this, training.title);
-        ToolbarUtils.setSubtitle(this, training.getFormattedDate());
+                ToolbarUtils.setTitle(TrainingFragment.this, training.title);
+                ToolbarUtils.setSubtitle(TrainingFragment.this, training.getFormattedDate());
+            }
+        };
     }
 
     @Override

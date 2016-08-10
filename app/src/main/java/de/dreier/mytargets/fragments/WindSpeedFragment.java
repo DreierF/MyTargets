@@ -32,7 +32,7 @@ public class WindSpeedFragment extends SelectItemFragment<WindSpeed> {
         binding.recyclerView.setHasFixedSize(true);
         mAdapter = new WindSpeedAdapter(getContext());
         binding.recyclerView.setAdapter(mAdapter);
-        useDoubleClickSelection = false;
+        usesDoubleClickSelection = false;
         ToolbarUtils.showUpAsX(this);
         return binding.getRoot();
     }

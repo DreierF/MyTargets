@@ -11,8 +11,8 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +26,6 @@ import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.utils.DividerItemDecoration;
-import de.dreier.mytargets.utils.FlowDataLoader;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 
 import static de.dreier.mytargets.fragments.EditArrowFragment.ARROW_ID;
@@ -36,16 +35,16 @@ public class ArrowFragment extends EditableFragment<Arrow> {
 
     protected FragmentListBinding binding;
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        binding.fab.setOnClickListener(view1 -> startActivityAnimated(getActivity(), EditArrowActivity.class));
-    }
-
     public ArrowFragment() {
         itemTypeSelRes = R.plurals.arrow_selected;
         itemTypeDelRes = R.plurals.arrow_deleted;
         newStringRes = R.string.new_arrow;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        binding.fab.setOnClickListener(view1 -> startActivityAnimated(getActivity(), EditArrowActivity.class));
     }
 
     @Override
@@ -60,14 +59,11 @@ public class ArrowFragment extends EditableFragment<Arrow> {
         return binding.getRoot();
     }
 
+    @NonNull
     @Override
-    public Loader<List<Arrow>> onCreateLoader(int id, Bundle args) {
-        return new FlowDataLoader<>(getContext(), Arrow::getAll);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Arrow>> loader, List<Arrow> data) {
-        mAdapter.setList(data);
+    protected LoaderUICallback onLoad() {
+        List<Arrow> arrows = Arrow.getAll();
+        return () -> mAdapter.setList(arrows);
     }
 
     @Override

@@ -10,7 +10,6 @@ package de.dreier.mytargets.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 
 import com.raizlabs.android.dbflow.structure.Model;
 
@@ -33,7 +32,7 @@ abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSettable &
     @Nullable
     private Bundle savedInstanceState;
 
-    void setList(RecyclerView recyclerView, List<H> headers, List<C> children, PartitionDelegate<C> parentDelegate, boolean opened) {
+    void setList(List<H> headers, List<C> children, PartitionDelegate<C> parentDelegate, boolean opened) {
         if (mAdapter.getItemCount() == 0) {
             mAdapter.setList(headers, children, parentDelegate, opened);
             if (savedInstanceState != null && savedInstanceState.containsKey(KEY_EXPANDED)) {

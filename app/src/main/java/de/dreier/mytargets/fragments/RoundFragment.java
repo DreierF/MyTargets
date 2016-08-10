@@ -11,8 +11,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,7 +36,6 @@ import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DividerItemDecoration;
-import de.dreier.mytargets.utils.FlowDataLoader;
 import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
@@ -84,21 +83,21 @@ public class RoundFragment extends EditableFragment<Passe> {
         ToolbarUtils.showHomeAsUp(this);
     }
 
+    @NonNull
     @Override
-    public Loader<List<Passe>> onCreateLoader(int id, Bundle args) {
-        return new FlowDataLoader<>(getContext(), () -> round.getPasses());
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Passe>> loader, List<Passe> data) {
-        // Set round info
-        mAdapter.setList(data);
-
+    protected LoaderUICallback onLoad() {
+        final List<Passe> passes = round.getPasses();
         StandardRound standardRound = StandardRound
                 .get(Training.get(round.trainingId).standardRoundId);
-        boolean showFab = data.size() < round.info.endCount || standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
-        binding.fab.setVisibility(showFab ? View.VISIBLE : View.GONE);
-
+        final boolean showFab = passes.size() < round.info.endCount || standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
+        return new LoaderUICallback() {
+            @Override
+            public void applyData() {
+                // Set round info
+                mAdapter.setList(passes);
+                binding.fab.setVisibility(showFab ? View.VISIBLE : View.GONE);
+            }
+        };
     }
 
     @Override
