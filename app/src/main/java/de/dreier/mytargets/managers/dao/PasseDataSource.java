@@ -14,6 +14,8 @@ import android.util.Log;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,12 +33,14 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     private static final String ROUND = "round";
     private static final String IMAGE = "image";
     private static final String EXACT = "exact";
+    private static final String SAVE_TIME = "save_time";
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     ROUND + " INTEGER," +
                     IMAGE + " TEXT," +
-                    EXACT + " INTEGER);";
+                    EXACT + " INTEGER," +
+                    SAVE_TIME + " INTEGER);";
 
     public PasseDataSource() {
         super(TABLE);
@@ -66,6 +70,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         ContentValues values = new ContentValues();
         values.put(ROUND, passe.roundId);
         values.put(EXACT, passe.exact ? 1 : 0);
+        values.put(SAVE_TIME, passe.saveDate.toDate().getTime());
         return values;
     }
 
@@ -85,7 +90,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
 
     private Passe get(long passeId) {
         Cursor res = database.rawQuery(
-                "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, p.exact " +
+                "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, p.exact, p.save_time " +
                         "FROM SHOOT s, PASSE p " +
                         "WHERE s.passe=p._id " +
                         "AND p._id=" + passeId + " " +
@@ -97,6 +102,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         p.setId(passeId);
         p.index = -1;
         p.exact = res.getInt(8) == 1;
+        p.saveDate = new DateTime(res.getLong(9));
         for (int i = 0; i < count; i++) {
             p.shot[i] = ShotDataSource.cursorToShot(res, i);
             res.moveToNext();
@@ -108,7 +114,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     public List<Passe> getAllByRound(long round) {
         Cursor res = database.rawQuery(
                 "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, " +
-                        "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id), p.exact " +
+                        "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id), p.exact, p.save_time " +
                         "FROM PASSE p  " +
                         "LEFT JOIN SHOOT s ON p._id = s.passe " +
                         "WHERE p.round = " + round + " " +
@@ -127,6 +133,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                 passe.setId(res.getLong(1));
                 passe.roundId = round;
                 passe.exact = res.getInt(9) == 1;
+                passe.saveDate = new DateTime(res.getLong(10));
                 if (oldRoundId != passe.roundId) {
                     pIndex = 0;
                     oldRoundId = passe.roundId;
@@ -146,7 +153,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     public ArrayList<Passe> getAllByTraining(long training) {
         Cursor res = database.rawQuery(
                 "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, r._id, " +
-                        "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id), p.exact " +
+                        "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id), p.exact, p.save_time " +
                         "FROM ROUND r " +
                         "LEFT JOIN PASSE p ON r._id = p.round " +
                         "LEFT JOIN SHOOT s ON p._id = s.passe " +
@@ -166,6 +173,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                 passe.setId(res.getLong(1));
                 passe.roundId = res.getLong(8);
                 passe.exact = res.getInt(10) == 1;
+                passe.saveDate = new DateTime(res.getLong(11));
                 if (oldRoundId != passe.roundId) {
                     pIndex = 0;
                     oldRoundId = passe.roundId;
