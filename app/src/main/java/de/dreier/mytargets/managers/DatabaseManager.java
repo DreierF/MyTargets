@@ -179,8 +179,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     "comment TEXT," +
                     "thumbnail BLOB," +
                     "image TEXT);");
-            db.execSQL("ALTER TABLE ROUND ADD COLUMN arrow INTEGER REFERENCES ARROW" +
-                    " ON DELETE SET NULL");
+            db.execSQL("ALTER TABLE ROUND ADD COLUMN arrow INTEGER REFERENCES ARROW ON DELETE SET NULL");
             db.execSQL("ALTER TABLE ROUND ADD COLUMN comment TEXT DEFAULT ''");
             db.execSQL("ALTER TABLE SHOOT ADD COLUMN comment TEXT DEFAULT ''");
             db.execSQL("UPDATE ROUND SET target=0 WHERE target=1 OR target=2 OR target=3");
@@ -380,6 +379,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (oldVersion < 16) {
             db.execSQL("ALTER TABLE ARROW ADD COLUMN diameter TEXT DEFAULT '5.0'");
             db.execSQL("ALTER TABLE ARROW ADD COLUMN diameter_unit TEXT DEFAULT 'mm'");
+            db.execSQL("ALTER TABLE PASSE ADD COLUMN save_time INTEGER");
+            db.execSQL("UPDATE PASSE " +
+                    "SET save_time=(" +
+                    "SELECT t.datum + 43200000 + COUNT(p2._id) * 300000 " +
+                    "FROM TRAINING t " +
+                    "JOIN  ROUND r1 ON r1.training = t._id AND r1._id = PASSE.round " +
+                    "LEFT OUTER JOIN ROUND r2 ON r2.training = t._id " +
+                    "LEFT OUTER JOIN PASSE p2 ON r2._id = p2.round AND p2._id < PASSE._id " +
+                    "GROUP BY t._id, t.datum" +
+                    ")");
         }
         onCreate(db);
     }

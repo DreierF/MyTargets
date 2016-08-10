@@ -360,7 +360,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         Entry last = new Entry(y1, dataSetSize - 1);
         List<Entry> yValues = Arrays.asList(first, last);
         LineDataSet lineDataSet = new LineDataSet(yValues, "");
-        lineDataSet.setColors(new int[]{0xff9100});
+        lineDataSet.setColors(new int[]{0xffff9100});
         lineDataSet.setCircleRadius(0);
         lineDataSet.setValueTextSize(0);
         lineDataSet.setLineWidth(1);

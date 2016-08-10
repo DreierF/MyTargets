@@ -26,6 +26,7 @@ import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.SelectableZone;
+import de.dreier.mytargets.shared.utils.DateTimeConverter;
 import de.dreier.mytargets.shared.utils.Pair;
 
 @Parcel
@@ -44,6 +45,7 @@ public class Passe extends BaseModel implements IIdSettable {
 
     public List<Shot> shots = new ArrayList<>();
     public Shot[] shot;
+    @Column(typeConverter = DateTimeConverter.class, name = "save_time")
     public DateTime saveDate = new DateTime();
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)

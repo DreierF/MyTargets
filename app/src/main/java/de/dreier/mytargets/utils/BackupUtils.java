@@ -164,8 +164,9 @@ public class BackupUtils {
         }
     }
 
-    public static File unzip(Context context, InputStream in) {
+    public static File unzip(Context context, InputStream in) throws IOException {
         File tmpDb = null;
+        int dbFiles = 0;
         try {
             tmpDb = File.createTempFile("import", ".db");
 
@@ -188,6 +189,7 @@ public class BackupUtils {
                 if (sourceEntry.getName().endsWith(".db")) {
                     // Write database to tmp file
                     fOut = new FileOutputStream(tmpDb);
+                    dbFiles++;
                 } else {
                     // Write all other files(images) to files dir in apps data
                     int start = sourceEntry.getName().lastIndexOf("/") + 1;
@@ -213,16 +215,12 @@ public class BackupUtils {
                 }
                 zin.closeEntry();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } finally {
-            try {
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            in.close();
         }
-
+        if (dbFiles != 1) {
+            throw new IllegalStateException("Input file is not a valid backup");
+        }
         return tmpDb;
     }
 }
