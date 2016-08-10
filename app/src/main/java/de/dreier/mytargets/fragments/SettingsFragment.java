@@ -19,11 +19,11 @@ import android.widget.Toast;
 import java.io.IOException;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.MainActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.views.DatePreference;
 import de.dreier.mytargets.views.DatePreferenceDialogFragmentCompat;
 import permissions.dispatcher.NeedsPermission;
@@ -128,19 +128,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 .onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1 && resultCode == AppCompatActivity.RESULT_OK) {
-            final Uri uri = data.getData();
-            if (BackupUtils.Import(getActivity(), uri)) {
-                Intent intent = new Intent(getContext(), MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     private void save(final boolean export) {
         new AsyncTask<Void, Void, Uri>() {
 
@@ -185,6 +172,34 @@ public class SettingsFragment extends PreferenceFragmentCompat
         showFilePicker();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1 && resultCode == AppCompatActivity.RESULT_OK) {
+            final Uri uri = data.getData();
+            new AsyncTask<Void, Void, Boolean>() {
+
+                @Override
+                protected Boolean doInBackground(Void... params) {
+                    try {
+                        return BackupUtils.backup(getActivity().getApplicationContext()) != null;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                }
+
+                @Override
+                protected void onPostExecute(Boolean backupSuccessful) {
+                    super.onPostExecute(backupSuccessful);
+                    if (backupSuccessful && BackupUtils.Import(getActivity(), uri)) {
+                        Utils.doRestart(getContext());
+                    }
+                }
+            }.execute();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void doBackup() {
         save(false);
@@ -197,7 +212,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     private void showFilePicker() {
         final Intent getContentIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getContentIntent.setType("*/*");
+        getContentIntent.setType("*/zip");
         getContentIntent.addCategory(Intent.CATEGORY_OPENABLE);
         Intent intent = Intent.createChooser(getContentIntent, getString(R.string.select_a_file));
         startActivityForResult(intent, 1);
