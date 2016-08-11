@@ -24,7 +24,6 @@ import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.ScoresDrawer;
 import de.dreier.mytargets.utils.MyBackupAgent;
-import de.dreier.mytargets.views.TagGroup;
 
 /**
  * Application singleton. Gets instantiated exactly once and is used
@@ -47,7 +46,6 @@ import de.dreier.mytargets.views.TagGroup;
         @ParcelClass(StandardRound.class),
         @ParcelClass(NotificationInfo.class),
         @ParcelClass(Target.class),
-        @ParcelClass(TagGroup.Tag.class),
         @ParcelClass(Training.class)
 })
 public class ApplicationInstance extends SharedApplicationInstance {

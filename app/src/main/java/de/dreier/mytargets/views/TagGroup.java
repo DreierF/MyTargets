@@ -17,11 +17,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.parceler.Parcel;
+import org.parceler.ParcelConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import icepick.Icepick;
+import icepick.State;
 
 public class TagGroup extends ViewGroup {
     private final int default_border_color = Color.rgb(0x49, 0xC1, 0x20);
@@ -223,13 +228,6 @@ public class TagGroup extends ViewGroup {
     }
 
     /**
-     * @see #setTags(Tag...)
-     */
-    public void setTags(List<Tag> tagList) {
-        setTags(tagList.toArray(new Tag[tagList.size()]));
-    }
-
-    /**
      * Set the tags. It will remove all previous tags first.
      *
      * @param tags the tag list to set.
@@ -239,6 +237,13 @@ public class TagGroup extends ViewGroup {
         for (final Tag tag : tags) {
             appendTag(tag);
         }
+    }
+
+    /**
+     * @see #setTags(Tag...)
+     */
+    public void setTags(List<Tag> tagList) {
+        setTags(tagList.toArray(new Tag[tagList.size()]));
     }
 
     /**
@@ -312,6 +317,24 @@ public class TagGroup extends ViewGroup {
         }
     }
 
+    @Parcel
+    public static class Tag {
+
+        public long id;
+
+        public String text;
+
+        /** Indicates the tag if checked. */
+        public boolean isChecked = false;
+
+        @ParcelConstructor
+        public Tag(long id, String text, boolean isChecked) {
+            this.id = id;
+            this.text = text;
+            this.isChecked = isChecked;
+        }
+    }
+
     /**
      * The tag view click listener for internal use.
      */
@@ -326,29 +349,12 @@ public class TagGroup extends ViewGroup {
         }
     }
 
-    @org.parceler.Parcel
-    public static class Tag {
-
-        public long id;
-
-        public String tag;
-
-        /** Indicates the tag if checked. */
-        public boolean isChecked = false;
-
-        public Tag(long id, String text, boolean isChecked) {
-            this.id = id;
-            this.tag = text;
-            this.isChecked = isChecked;
-        }
-    }
-
     /**
      * The tag view which has two states can be either NORMAL or INPUT.
      */
     class TagView extends TextView {
 
-        //@State(ParcelsBundler.class)
+        @State(ParcelsBundler.class)
         Tag tag;
 
         /** Indicates the tag if pressed. */
@@ -392,7 +398,7 @@ public class TagGroup extends ViewGroup {
                     TagGroup.LayoutParams.WRAP_CONTENT));
 
             setGravity(Gravity.CENTER);
-            setText(tag.tag);
+            setText(tag.text);
             setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
 
             setClickable(true);
