@@ -349,7 +349,7 @@ public class TagGroup extends ViewGroup {
     class TagView extends TextView {
 
         //@State(ParcelsBundler.class)
-        private Tag tag;
+        Tag tag;
 
         /** Indicates the tag if pressed. */
         private boolean isPressed = false;

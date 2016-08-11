@@ -30,7 +30,9 @@
 
                 <de.dreier.mytargets.views.TagGroup
                     android:id="@+id/tag_group"
-                    style="@style/TagGroup" />
+                    style="@style/TagGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
             </android.support.v7.widget.Toolbar>
 

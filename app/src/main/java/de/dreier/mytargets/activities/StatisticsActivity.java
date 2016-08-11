@@ -36,6 +36,8 @@ import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.views.TagGroup;
+import icepick.Icepick;
+import icepick.State;
 
 public class StatisticsActivity extends ChildActivityBase {
 
@@ -43,8 +45,8 @@ public class StatisticsActivity extends ChildActivityBase {
     public static final String ROUND_ID = "round_id";
     private ActivityStatisticsBinding binding;
 
-   // @State
-    private boolean showFilter = false;
+    @State
+    boolean showFilter = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +74,7 @@ public class StatisticsActivity extends ChildActivityBase {
         binding.tagGroup.setOnTagClickListener(tag -> Snackbar.make(binding.getRoot(), "Clicked " + tag, Snackbar.LENGTH_SHORT).show());
 
         ToolbarUtils.showHomeAsUp(this);
-        //Icepick.restoreInstanceState(this, savedInstanceState);
+        Icepick.restoreInstanceState(this, savedInstanceState);
         updateFilter();
     }
 
@@ -106,11 +108,11 @@ public class StatisticsActivity extends ChildActivityBase {
         binding.filterView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
     }
 
-    /*@Override
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Icepick.saveInstanceState(this, outState);
-    }*/
+    }
 
     private class StatisticsPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Pair<Target, List<Round>>> targets;
