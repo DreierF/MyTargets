@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Parcelable;
 
+import java.util.List;
+
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.InputActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.fragments.RoundFragment;
 import de.dreier.mytargets.fragments.TrainingFragment;
 
@@ -23,6 +26,13 @@ public class ActivityUtils {
      */
     public static void startActivityAnimated(Activity context, Class<?> activity) {
         Intent i = new Intent(context, activity);
+        context.startActivity(i);
+        context.overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    public static void showStatistics(Activity context, List<Long> roundIds) {
+        Intent i = new Intent(context, StatisticsActivity.class);
+        i.putExtra(StatisticsActivity.ROUND_IDS, Utils.toArray(roundIds));
         context.startActivity(i);
         context.overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }

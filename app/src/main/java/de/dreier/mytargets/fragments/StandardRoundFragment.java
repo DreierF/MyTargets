@@ -37,7 +37,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditStandardRoundActivity;
-import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentStandardRoundBinding;
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
 import de.dreier.mytargets.managers.SettingsManager;
@@ -47,8 +47,8 @@ import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DataLoaderBase.BackgroundAction;
-import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
@@ -330,9 +330,9 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         return false;
     }
 
-    private class StandardRoundAdapter extends NowListAdapter<StandardRound> {
+    private class StandardRoundAdapter extends ListAdapterBase<StandardRound> {
         StandardRoundAdapter(Context context) {
-            super(context);
+            super(context, (l, r) -> l.getName().compareTo(r.getName()));
         }
 
         @Override

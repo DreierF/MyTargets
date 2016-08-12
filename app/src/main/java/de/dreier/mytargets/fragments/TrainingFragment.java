@@ -30,7 +30,7 @@ import de.dreier.mytargets.activities.ScoreboardActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditRoundActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase.RoundActivity;
 import de.dreier.mytargets.activities.StatisticsActivity;
-import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentTrainingBinding;
 import de.dreier.mytargets.databinding.ItemRoundBinding;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
@@ -43,10 +43,11 @@ import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.HtmlUtils;
-import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.fragments.RoundFragment.ROUND_ID;
+import static de.dreier.mytargets.utils.ActivityUtils.showStatistics;
 import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 
 /**
@@ -66,6 +67,7 @@ public class TrainingFragment extends EditableFragment<Round> {
         itemTypeSelRes = R.plurals.round_selected;
         itemTypeDelRes = R.plurals.round_deleted;
         newStringRes = R.string.new_round;
+        supportsStatistics = true;
     }
 
     @Override
@@ -164,10 +166,15 @@ public class TrainingFragment extends EditableFragment<Round> {
         startActivity(i);
     }
 
-    private class RoundAdapter extends NowListAdapter<Round> {
+    @Override
+    protected void onStatistics(List<Long> roundIds) {
+        showStatistics(getActivity(), roundIds);
+    }
+
+    private class RoundAdapter extends ListAdapterBase<Round> {
 
         RoundAdapter(Context context) {
-            super(context);
+            super(context, (lhs, rhs) -> lhs.info.index - rhs.info.index);
         }
 
         @Override

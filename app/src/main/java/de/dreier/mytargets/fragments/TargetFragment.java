@@ -28,15 +28,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentTargetSelectBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
-import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
@@ -171,7 +171,7 @@ public class TargetFragment extends SelectItemFragment<Target>
 
     }
 
-    private class TargetAdapter extends NowListAdapter<Target> {
+    private class TargetAdapter extends ListAdapterBase<Target> {
         TargetAdapter(Context context) {
             super(context);
         }

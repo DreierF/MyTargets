@@ -152,8 +152,6 @@ dependencies {
 
     compile 'com.anjlab.android.iab.v3:library:1.0.31'
 
-    compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'
-
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
 
     compile 'com.github.clans:fab:1.6.4'

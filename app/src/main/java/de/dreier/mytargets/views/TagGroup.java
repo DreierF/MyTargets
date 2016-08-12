@@ -171,7 +171,7 @@ public class TagGroup extends ViewGroup {
         if (row == 0) {
             width = rowWidth;
             width += getPaddingLeft() + getPaddingRight();
-        } else {// If the tags grouped exceed one line, set the width to match the parent.
+        } else { // If the tags grouped exceed one line, set the width to match the parent.
             width = widthSize;
         }
 
@@ -212,19 +212,37 @@ public class TagGroup extends ViewGroup {
     }
 
     /**
-     * Returns the tag array in group, except the INPUT tag.
+     * Returns the tag list in group.
      *
-     * @return the tag array.
+     * @return the tag list.
      */
-    public String[] getTags() {
+    public List<Tag> getTags() {
         final int count = getChildCount();
-        final List<String> tagList = new ArrayList<>();
+        final List<Tag> tagList = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             final TagView tagView = getTagAt(i);
-            tagList.add(tagView.getText().toString());
+            tagList.add(tagView.tag);
         }
 
-        return tagList.toArray(new String[tagList.size()]);
+        return tagList;
+    }
+
+    /**
+     * Returns the tag list in group.
+     *
+     * @return the tag list.
+     */
+    public List<Tag> getCheckedTags() {
+        final int count = getChildCount();
+        final List<Tag> tagList = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            final TagView tagView = getTagAt(i);
+            if(tagView.tag.isChecked) {
+                tagList.add(tagView.tag);
+            }
+        }
+
+        return tagList;
     }
 
     /**

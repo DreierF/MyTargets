@@ -73,15 +73,6 @@
       "license": "apache2"
     },
     {
-      "name": "RecyclerView MultiSelect",
-      "version": "0.2",
-      "year": "2014",
-      "owner": "Big Nerd Ranch",
-      "description": "RecyclerView MultiSelect is a tool to help implement single or multichoice selection on RecyclerView items.",
-      "url": "http://bignerdranch.github.io/recyclerview-multiselect/",
-      "license": "mit"
-    },
-    {
       "name": "MPAndroidChart",
       "version": "2.2.4",
       "year": "2016",

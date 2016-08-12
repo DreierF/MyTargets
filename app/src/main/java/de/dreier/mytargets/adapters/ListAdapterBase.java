@@ -13,19 +13,27 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.IIdProvider;
-import de.dreier.mytargets.utils.SelectableViewHolder;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 
-public abstract class NowListAdapter<T extends IIdProvider>
+public abstract class ListAdapterBase<T extends IIdProvider>
         extends RecyclerView.Adapter<SelectableViewHolder<T>> {
 
-    private List<T> mList = new ArrayList<>();
     protected final LayoutInflater inflater;
+    private final Comparator<T> comparator;
+    private List<T> mList = new ArrayList<>();
 
-    public NowListAdapter(Context context) {
+    public ListAdapterBase(Context context) {
+        this(context, (l, r) -> (int) (l.getId() - r.getId()));
+    }
+
+    public ListAdapterBase(Context context, Comparator<T> comparator) {
+        this.comparator = comparator;
         inflater = LayoutInflater.from(context);
     }
 
@@ -60,12 +68,21 @@ public abstract class NowListAdapter<T extends IIdProvider>
         return mList.get(pos);
     }
 
-    public void add(int pos, T item) {
-        mList.add(pos, item);
-        notifyItemInserted(pos);
+    public void add(T item) {
+        int pos = Collections.binarySearch(mList, item, comparator);
+        if (pos < 0) {
+            mList.add(-pos - 1, item);
+            notifyItemInserted(-pos - 1);
+        } else {
+            throw new IllegalArgumentException("Item must not be inserted twice!");
+        }
     }
 
-    public void remove(int pos) {
+    public void remove(T item) {
+        int pos = Collections.binarySearch(mList, item, comparator);
+        if (pos < 0) {
+            throw new IllegalArgumentException("Item must not be inserted twice!");
+        }
         mList.remove(pos);
         notifyItemRemoved(pos);
     }
@@ -75,4 +92,12 @@ public abstract class NowListAdapter<T extends IIdProvider>
         notifyDataSetChanged();
     }
 
+    public T getItemById(long id) {
+        for (T item : mList) {
+            if (item.getId() == id) {
+                return item;
+            }
+        }
+        return null;
+    }
 }

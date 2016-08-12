@@ -15,12 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemTextBinding;
 import de.dreier.mytargets.models.WindSpeed;
-import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 public class WindSpeedFragment extends SelectItemFragment<WindSpeed> {
 
@@ -42,7 +42,7 @@ public class WindSpeedFragment extends SelectItemFragment<WindSpeed> {
         onClick(holder, (WindSpeed) holder.getItem());
     }
 
-    private class WindSpeedAdapter extends NowListAdapter<WindSpeed> {
+    private class WindSpeedAdapter extends ListAdapterBase<WindSpeed> {
         WindSpeedAdapter(Context context) {
             super(context);
             setList(WindSpeed.getList(getContext()));
