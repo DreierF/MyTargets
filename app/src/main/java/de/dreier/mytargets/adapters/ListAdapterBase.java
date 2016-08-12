@@ -26,25 +26,26 @@ public abstract class ListAdapterBase<T extends IIdProvider>
 
     protected final LayoutInflater inflater;
     private final Comparator<T> comparator;
-    private List<T> mList = new ArrayList<>();
+    private List<T> list = new ArrayList<>();
 
     public ListAdapterBase(Context context) {
         this(context, (l, r) -> (int) (l.getId() - r.getId()));
     }
 
     public ListAdapterBase(Context context, Comparator<T> comparator) {
-        this.comparator = comparator;
         inflater = LayoutInflater.from(context);
+        this.comparator = comparator;
+        setHasStableIds(true);
     }
 
     @Override
     public long getItemId(int position) {
-        return mList.get(position).getId();
+        return list.get(position).getId();
     }
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        return list.size();
     }
 
     @Override
@@ -61,17 +62,17 @@ public abstract class ListAdapterBase<T extends IIdProvider>
 
     @Override
     public final void onBindViewHolder(SelectableViewHolder<T> viewHolder, int position) {
-        viewHolder.bindCursor(mList.get(position));
+        viewHolder.bindCursor(list.get(position));
     }
 
     public T getItem(int pos) {
-        return mList.get(pos);
+        return list.get(pos);
     }
 
     public void add(T item) {
-        int pos = Collections.binarySearch(mList, item, comparator);
+        int pos = Collections.binarySearch(list, item, comparator);
         if (pos < 0) {
-            mList.add(-pos - 1, item);
+            list.add(-pos - 1, item);
             notifyItemInserted(-pos - 1);
         } else {
             throw new IllegalArgumentException("Item must not be inserted twice!");
@@ -79,21 +80,21 @@ public abstract class ListAdapterBase<T extends IIdProvider>
     }
 
     public void remove(T item) {
-        int pos = Collections.binarySearch(mList, item, comparator);
+        int pos = Collections.binarySearch(list, item, comparator);
         if (pos < 0) {
             throw new IllegalArgumentException("Item must not be inserted twice!");
         }
-        mList.remove(pos);
+        list.remove(pos);
         notifyItemRemoved(pos);
     }
 
     public void setList(List<T> list) {
-        mList = list;
+        this.list = list;
         notifyDataSetChanged();
     }
 
     public T getItemById(long id) {
-        for (T item : mList) {
+        for (T item : list) {
             if (item.getId() == id) {
                 return item;
             }

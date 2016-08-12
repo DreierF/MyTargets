@@ -34,7 +34,6 @@ import de.dreier.mytargets.shared.utils.BitmapUtils;
 import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.ThumbnailUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import icepick.Icepick;
 import icepick.State;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -67,7 +66,6 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
         ToolbarUtils.showUpAsX(this);
         setHasOptionsMenu(true);
-        Icepick.restoreInstanceState(this, savedInstanceState);
         binding.fab.setOnClickListener(this::onFabClicked);
         return binding.getRoot();
     }
@@ -235,11 +233,5 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
             thumbnail = ThumbnailUtils.createImageThumbnail(imageFile.getPath(), MICRO_KIND);
         }
         return BitmapUtils.getBitmapAsByteArray(thumbnail);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
     }
 }

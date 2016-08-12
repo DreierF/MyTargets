@@ -21,6 +21,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -29,7 +32,6 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ScoreboardActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditRoundActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase.RoundActivity;
-import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentTrainingBinding;
 import de.dreier.mytargets.databinding.ItemRoundBinding;
@@ -144,9 +146,10 @@ public class TrainingFragment extends EditableFragment<Round> {
                 startActivity(intent);
                 return true;
             case R.id.action_statistics:
-                Intent i = new Intent(getContext(), StatisticsActivity.class);
-                i.putExtra(StatisticsActivity.TRAINING_ID, mTraining);
-                startActivity(i);
+                showStatistics(getActivity(),
+                        Stream.of(new RoundDataSource().getAll(training.getId()))
+                                .map(Round::getId)
+                                .collect(Collectors.toList()));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -47,7 +47,6 @@ import icepick.State;
 
 public class StatisticsActivity extends ChildActivityBase {
 
-    public static final String TRAINING_ID = "training_id";
     public static final String ROUND_IDS = "round_id";
     @State
     boolean showFilter = false;
@@ -56,24 +55,11 @@ public class StatisticsActivity extends ChildActivityBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil
-                .setContentView(this, R.layout.activity_statistics);
-
-        long trainingId = getIntent().getLongExtra(TRAINING_ID, -1);
-        long roundId = getIntent().getLongExtra(ROUND_IDS, -1);
-
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_statistics);
         setSupportActionBar(binding.toolbar);
 
-        List<Round> rounds;
-        if (roundId == -1) {
-            if (trainingId == -1) {
-                rounds = new RoundDataSource().getAll();
-            } else {
-                rounds = new RoundDataSource().getAll(trainingId);
-            }
-        } else {
-            rounds = Collections.singletonList(new RoundDataSource().get(roundId));
-        }
+        long[] roundIds = getIntent().getLongArrayExtra(ROUND_IDS);
+        List<Round> rounds = new RoundDataSource().getAll(roundIds);
 
         ToolbarUtils.showHomeAsUp(this);
         Icepick.restoreInstanceState(this, savedInstanceState);

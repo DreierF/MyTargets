@@ -27,14 +27,17 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.utils.OnCardClickListener;
+import de.dreier.mytargets.utils.SelectorBundler;
 import de.dreier.mytargets.utils.multiselector.MultiSelector;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+import icepick.State;
 
 abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<T>
         implements OnCardClickListener<T>, LoaderManager.LoaderCallbacks<List<T>> {
 
     protected boolean supportsStatistics = false;
-    final MultiSelector mSelector = new MultiSelector();
+    @State(SelectorBundler.class)
+    MultiSelector mSelector = new MultiSelector();
     @PluralsRes
     int itemTypeDelRes;
     IdProviderDataSource<T> dataSource;
@@ -51,7 +54,6 @@ abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mSelector.clearSelections();
             mSelector.setSelectable(true);
             actionMode = mode;
             MenuInflater inflater = mode.getMenuInflater();

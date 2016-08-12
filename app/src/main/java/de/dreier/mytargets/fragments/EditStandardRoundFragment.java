@@ -36,7 +36,6 @@ import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.views.selector.DistanceSelector;
 import de.dreier.mytargets.views.selector.SelectorBase;
 import de.dreier.mytargets.views.selector.TargetSelector;
-import icepick.Icepick;
 import icepick.State;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
@@ -58,7 +57,6 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
         ToolbarUtils.showUpAsX(this);
         setHasOptionsMenu(true);
-        Icepick.restoreInstanceState(this, savedInstanceState);
 
         StandardRound standardRound = null;
         if (getArguments() != null) {
@@ -171,12 +169,6 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                     break;
             }
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
     }
 
     private static class RoundTemplateHolder extends DynamicItemHolder<RoundTemplate> {
