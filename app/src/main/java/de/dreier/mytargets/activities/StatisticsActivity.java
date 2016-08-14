@@ -82,7 +82,7 @@ public class StatisticsActivity extends ChildActivityBase {
                 .map(bid -> {
                     if (bid > 0) {
                         Bow bow = new BowDataSource().get(bid);
-                        return new ChipGroup.Tag(bow.getId(), bow.getName(), true);
+                        return new ChipGroup.Tag(bow.getId(), bow.getName(), bow.thumb, true);
                     } else {
                         return new ChipGroup.Tag(bid, getString(R.string.unknown), true);
                     }
@@ -98,7 +98,7 @@ public class StatisticsActivity extends ChildActivityBase {
                 .map(aid -> {
                     if (aid > 0) {
                         Arrow arrow = new ArrowDataSource().get(aid);
-                        return new ChipGroup.Tag(arrow.getId(), arrow.getName(), true);
+                        return new ChipGroup.Tag(arrow.getId(), arrow.getName(), arrow.thumb, true);
                     } else {
                         return new ChipGroup.Tag(aid, getString(R.string.unknown), true);
                     }

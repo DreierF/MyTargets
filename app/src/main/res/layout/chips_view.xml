@@ -3,17 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!--<data>
+    <data>
         <import type="android.view.View"/>
         <variable
             name="tag"
             type="de.dreier.mytargets.views.ChipGroup.Tag" />
-    </data>-->
+    </data>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="32dp"
-        android:background="@drawable/chip_background">
+        android:focusable="true"
+        android:clickable="true"
+        android:focusableInTouchMode="true"
+        android:background="@drawable/chip_background_selector">
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/avatar"
@@ -22,10 +25,10 @@
             android:layout_marginEnd="-4dp"
             android:layout_marginRight="-4dp"
             android:scaleType="centerCrop"
+            android:src="@{tag.drawable}"
+            android:visibility="@{tag.image==null ? View.GONE : View.VISIBLE}"
             app:riv_mutate_background="true"
             app:riv_oval="true" />
-        <!--
-            android:visibility="@{tag.image==null?View.GONE:View.VISIBLE}" -->
 
         <TextView
             android:id="@+id/name"
@@ -40,9 +43,8 @@
             android:layout_toRightOf="@id/avatar"
             android:singleLine="true"
             android:textSize="14sp"
+            android:text="@{tag.text}"
             tools:text="30m" />
-        <!--
-            android:text="@{tag.text}" -->
 
     </RelativeLayout>
 

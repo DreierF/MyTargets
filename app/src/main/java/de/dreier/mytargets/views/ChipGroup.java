@@ -3,6 +3,8 @@ package de.dreier.mytargets.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Parcelable;
@@ -25,9 +27,8 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ChipsViewBinding;
-import de.dreier.mytargets.shared.utils.ParcelsBundler;
+import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
 import icepick.Icepick;
-import icepick.State;
 
 public class ChipGroup extends ViewGroup {
     private final int default_border_color = Color.rgb(0x49, 0xC1, 0x20);
@@ -44,7 +45,6 @@ public class ChipGroup extends ViewGroup {
     private final float default_horizontal_padding;
     private final float default_vertical_padding;
 
-    @State(ParcelsBundler.class)
     ArrayList<Tag> tagList = new ArrayList<>();
 
     /**
@@ -250,6 +250,15 @@ public class ChipGroup extends ViewGroup {
     }
 
     /**
+     * Set the tags. It will remove all previous tags first.
+     *
+     * @param tags the tag list to set.
+     */
+    public void setTags(Tag... tags) {
+        setTags(Arrays.asList(tags));
+    }
+
+    /**
      * @see #setTags(Tag...)
      */
     public void setTags(List<Tag> tags) {
@@ -273,15 +282,6 @@ public class ChipGroup extends ViewGroup {
     }
 
     /**
-     * Set the tags. It will remove all previous tags first.
-     *
-     * @param tags the tag list to set.
-     */
-    public void setTags(Tag... tags) {
-        setTags(Arrays.asList(tags));
-    }
-
-    /**
      * Append tag to this group.
      *
      * @param tag the tag to append.
@@ -290,6 +290,7 @@ public class ChipGroup extends ViewGroup {
         ChipsViewBinding binding = tag.getView(getContext(), this);
         binding.getRoot().setOnClickListener(v -> {
             tag.isChecked = !tag.isChecked;
+            v.setActivated(tag.isChecked);
             if (mOnTagClickListener != null) {
                 mOnTagClickListener.onTagClick(tagList);
             }
@@ -363,25 +364,39 @@ public class ChipGroup extends ViewGroup {
 
         public long id;
         public String text;
-        public Drawable image;
-        /**
-         * Indicates the tag if checked.
-         */
+        public byte[] image;
         public boolean isChecked = false;
+        private transient Bitmap thumbnail;
+
+        public Tag(long id, String text, boolean isChecked) {
+            this(id, text, null, isChecked);
+        }
 
         @ParcelConstructor
-        public Tag(long id, String text, boolean isChecked) {
+        public Tag(long id, String text, byte[] image, boolean isChecked) {
             this.id = id;
             this.text = text;
             this.isChecked = isChecked;
+            this.image = image;
         }
 
-            binding.setTag(this);
         public ChipsViewBinding getView(Context context, ViewGroup parent) {
             ChipsViewBinding binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.chips_view, parent, false);
+            binding.setTag(this);
+            binding.getRoot().setActivated(isChecked);
             float mDensity = context.getResources().getDisplayMetrics().density;
             binding.getRoot().setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (CHIP_HEIGHT * mDensity)));
             return binding;
+        }
+
+        public Drawable getDrawable() {
+            if (image == null) {
+                return null;
+            }
+            if (thumbnail == null) {
+                thumbnail = BitmapFactory.decodeByteArray(image, 0, image.length);
+            }
+            return new RoundedAvatarDrawable(thumbnail);
         }
     }
 

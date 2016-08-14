@@ -25,8 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/colorPrimary"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+                android:theme="@style/ThemeOverlay.AppCompat.Light">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -36,14 +35,14 @@
                     android:orientation="vertical">
 
                     <de.dreier.mytargets.views.ChipGroup
-                        android:id="@+id/bowTags"
+                        android:id="@+id/distanceTags"
                         style="@style/ChipGroup"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="4dp" />
 
                     <de.dreier.mytargets.views.ChipGroup
-                        android:id="@+id/distanceTags"
+                        android:id="@+id/bowTags"
                         style="@style/ChipGroup"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

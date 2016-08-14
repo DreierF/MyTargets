@@ -13,7 +13,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Picture;
 import android.net.Uri;
-import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -120,7 +119,6 @@ public class BitmapUtils {
                 if (imageFile.contains("/")) {
                     imageFile = imageFile.substring(imageFile.lastIndexOf("/") + 1);
                 }
-                Log.d("getImage", imageFile);
                 FileInputStream in = context.openFileInput(imageFile);
                 return BitmapFactory.decodeStream(in);
             }
