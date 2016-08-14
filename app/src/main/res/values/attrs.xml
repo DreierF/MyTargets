@@ -1,6 +1,5 @@
 <resources>
-    <declare-styleable name="TagGroup">
-
+    <declare-styleable name="ChipGroup">
         <!-- The tag view outline border color. -->
         <attr name="atg_borderColor" format="color" />
         <!-- The tag view text color. -->

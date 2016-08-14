@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--<data>
+        <import type="android.view.View"/>
+        <variable
+            name="tag"
+            type="de.dreier.mytargets.views.ChipGroup.Tag" />
+    </data>-->
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:background="@drawable/chip_background">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/avatar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="-4dp"
+            android:layout_marginRight="-4dp"
+            android:scaleType="centerCrop"
+            app:riv_mutate_background="true"
+            app:riv_oval="true" />
+        <!--
+            android:visibility="@{tag.image==null?View.GONE:View.VISIBLE}" -->
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_toEndOf="@id/avatar"
+            android:layout_toRightOf="@id/avatar"
+            android:singleLine="true"
+            android:textSize="14sp"
+            tools:text="30m" />
+        <!--
+            android:text="@{tag.text}" -->
+
+    </RelativeLayout>
+
+</layout>

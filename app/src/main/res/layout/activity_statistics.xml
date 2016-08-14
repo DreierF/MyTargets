@@ -9,7 +9,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:background="?attr/colorPrimary"
             android:orientation="vertical">
 
@@ -29,23 +28,35 @@
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-                <de.dreier.mytargets.views.TagGroup
-                    android:id="@+id/bowTags"
-                    style="@style/TagGroup"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    android:background="?attr/colorPrimary"
+                    android:orientation="vertical">
 
-                <de.dreier.mytargets.views.TagGroup
-                    android:id="@+id/distanceTags"
-                    style="@style/TagGroup"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    <de.dreier.mytargets.views.ChipGroup
+                        android:id="@+id/bowTags"
+                        style="@style/ChipGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp" />
 
-                <de.dreier.mytargets.views.TagGroup
-                    android:id="@+id/arrowTags"
-                    style="@style/TagGroup"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    <de.dreier.mytargets.views.ChipGroup
+                        android:id="@+id/distanceTags"
+                        style="@style/ChipGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp" />
+
+                    <de.dreier.mytargets.views.ChipGroup
+                        android:id="@+id/arrowTags"
+                        style="@style/ChipGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp" />
+
+                </LinearLayout>
 
             </android.support.v7.widget.Toolbar>
 
@@ -54,7 +65,8 @@
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="#fafafa">
 
             <android.support.v4.view.PagerTitleStrip
                 android:layout_width="match_parent"

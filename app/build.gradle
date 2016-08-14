@@ -169,6 +169,8 @@ dependencies {
     compile 'me.oriley.homage:homage-core:0.2.0'
     compile 'me.oriley.homage:homage-recyclerview:0.2.0'
 
+    compile 'com.makeramen:roundedimageview:2.0.1'
+
     compile project(':shared')
     wearApp project(':wearable')
 

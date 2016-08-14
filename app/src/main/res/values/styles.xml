@@ -54,7 +54,7 @@
         <item name="menu_openDirection">up</item>-->
     </style>
 
-    <style name="TagGroup">
+    <style name="ChipGroup">
         <item name="atg_borderColor">#ccc</item>
         <item name="atg_textColor">#000</item>
         <item name="atg_backgroundColor">#FFD180</item>

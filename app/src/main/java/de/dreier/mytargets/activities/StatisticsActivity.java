@@ -41,7 +41,7 @@ import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
-import de.dreier.mytargets.views.TagGroup;
+import de.dreier.mytargets.views.ChipGroup;
 import icepick.Icepick;
 import icepick.State;
 
@@ -74,7 +74,7 @@ public class StatisticsActivity extends ChildActivityBase {
         applyFilter(rounds);
     }
 
-    private List<TagGroup.Tag> getBowTags(List<Round> rounds) {
+    private List<ChipGroup.Tag> getBowTags(List<Round> rounds) {
         return Stream.of(rounds).map(r -> r.trainingId)
                 .distinct()
                 .map(tid -> new TrainingDataSource().get(tid).bow)
@@ -82,15 +82,15 @@ public class StatisticsActivity extends ChildActivityBase {
                 .map(bid -> {
                     if (bid > 0) {
                         Bow bow = new BowDataSource().get(bid);
-                        return new TagGroup.Tag(bow.getId(), bow.getName(), true);
+                        return new ChipGroup.Tag(bow.getId(), bow.getName(), true);
                     } else {
-                        return new TagGroup.Tag(bid, getString(R.string.unknown), true);
+                        return new ChipGroup.Tag(bid, getString(R.string.unknown), true);
                     }
                 })
                 .collect(Collectors.toList());
     }
 
-    private List<TagGroup.Tag> getArrowTags(List<Round> rounds) {
+    private List<ChipGroup.Tag> getArrowTags(List<Round> rounds) {
         return Stream.of(rounds).map(r -> r.trainingId)
                 .distinct()
                 .map(tid -> new TrainingDataSource().get(tid).arrow)
@@ -98,9 +98,9 @@ public class StatisticsActivity extends ChildActivityBase {
                 .map(aid -> {
                     if (aid > 0) {
                         Arrow arrow = new ArrowDataSource().get(aid);
-                        return new TagGroup.Tag(arrow.getId(), arrow.getName(), true);
+                        return new ChipGroup.Tag(arrow.getId(), arrow.getName(), true);
                     } else {
-                        return new TagGroup.Tag(aid, getString(R.string.unknown), true);
+                        return new ChipGroup.Tag(aid, getString(R.string.unknown), true);
                     }
                 })
                 .collect(Collectors.toList());
@@ -125,17 +125,26 @@ public class StatisticsActivity extends ChildActivityBase {
         binding.viewPager.setAdapter(new StatisticsPagerAdapter(getSupportFragmentManager(), new PasseDataSource().groupByTarget(filteredRounds)));
     }
 
-    private List<TagGroup.Tag> getDistanceTags(List<Round> rounds) {
+    private List<ChipGroup.Tag> getDistanceTags(List<Round> rounds) {
         return Stream.of(rounds).map(r -> r.info.distance)
                 .distinct()
                 .sorted()
-                .map(d -> new TagGroup.Tag(d.getId(), d.toString(), true))
+                .map(d -> new ChipGroup.Tag(d.getId(), d.toString(), true))
                 .collect(Collectors.toList());
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.filter, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_filter).setIcon(showFilter ?
+                R.drawable.ic_clear_filter_white_24dp :
+                R.drawable.ic_filter_white_24dp);
         return true;
     }
 
@@ -153,6 +162,7 @@ public class StatisticsActivity extends ChildActivityBase {
 
     protected void updateFilter() {
         binding.filterView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
+        invalidateOptionsMenu();
     }
 
     @Override
