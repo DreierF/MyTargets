@@ -69,6 +69,7 @@ public class StatisticsActivity extends ChildActivityBase {
         binding.arrowTags.setOnTagClickListener(t -> applyFilter(rounds));
         binding.bowTags.setTags(getBowTags(rounds));
         binding.bowTags.setOnTagClickListener(t -> applyFilter(rounds));
+        //TODO save filter on rotation
 
         updateFilter();
         applyFilter(rounds);

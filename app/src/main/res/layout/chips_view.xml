@@ -13,9 +13,6 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="32dp"
-        android:focusable="true"
-        android:clickable="true"
-        android:focusableInTouchMode="true"
         android:background="@drawable/chip_background_selector">
 
         <com.makeramen.roundedimageview.RoundedImageView

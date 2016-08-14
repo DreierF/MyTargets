@@ -1,13 +1,10 @@
 package de.dreier.mytargets.views;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -22,137 +19,34 @@ import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ChipsViewBinding;
 import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
-import icepick.Icepick;
 
 public class ChipGroup extends ViewGroup {
-    private final int default_border_color = Color.rgb(0x49, 0xC1, 0x20);
-    private final int default_text_color = Color.rgb(0x49, 0xC1, 0x20);
-    private final int default_background_color = Color.WHITE;
-    private final int default_checked_border_color = Color.rgb(0x49, 0xC1, 0x20);
-    private final int default_checked_text_color = Color.WHITE;
-    private final int default_checked_background_color = Color.rgb(0x49, 0xC1, 0x20);
-    private final int default_pressed_background_color = Color.rgb(0xED, 0xED, 0xED);
-    private final float default_border_stroke_width;
-    private final float default_text_size;
-    private final float default_horizontal_spacing;
-    private final float default_vertical_spacing;
-    private final float default_horizontal_padding;
-    private final float default_vertical_padding;
+    List<Tag> tagList = new ArrayList<>();
 
-    ArrayList<Tag> tagList = new ArrayList<>();
+    private int horizontalSpacing = (int) dp2px(8.0f);
 
-    /**
-     * The tag outline border color.
-     */
-    private int borderColor;
-
-    /**
-     * The tag text color.
-     */
-    private int textColor;
-
-    /**
-     * The tag background color.
-     */
-    private int backgroundColor;
-
-    /**
-     * The checked tag outline border color.
-     */
-    private int checkedBorderColor;
-
-    /**
-     * The check text color
-     */
-    private int checkedTextColor;
-
-    /**
-     * The checked tag background color.
-     */
-    private int checkedBackgroundColor;
-
-    /**
-     * The tag background color, when the tag is being pressed.
-     */
-    private int pressedBackgroundColor;
-
-    /**
-     * The tag outline border stroke width, default is 0.5dp.
-     */
-    private float borderStrokeWidth;
-
-    /**
-     * The tag text size, default is 13sp.
-     */
-    private float textSize;
-
-    /**
-     * The horizontal tag spacing, default is 8.0dp.
-     */
-    private int horizontalSpacing;
-
-    /**
-     * The vertical tag spacing, default is 4.0dp.
-     */
-    private int verticalSpacing;
-
-    /**
-     * The horizontal tag padding, default is 12.0dp.
-     */
-    private int horizontalPadding;
-
-    /**
-     * The vertical tag padding, default is 3.0dp.
-     */
-    private int verticalPadding;
+    private int verticalSpacing = (int) dp2px(4.0f);
 
     /**
      * Listener used to dispatch tag click event.
      */
-    private OnTagClickListener mOnTagClickListener;
+    private OnSelectionChangedListener mOnSelectionChangedListener;
 
     public ChipGroup(Context context) {
         this(context, null);
     }
 
     public ChipGroup(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.tagGroupStyle);
+        this(context, attrs, 0);
     }
 
     public ChipGroup(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        default_border_stroke_width = dp2px(0.5f);
-        default_text_size = sp2px(13.0f);
-        default_horizontal_spacing = dp2px(8.0f);
-        default_vertical_spacing = dp2px(4.0f);
-        default_horizontal_padding = dp2px(12.0f);
-        default_vertical_padding = dp2px(3.0f);
-
-        // Load styled attributes.
-        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ChipGroup, defStyleAttr, R.style.ChipGroup);
-        try {
-            borderColor = a.getColor(R.styleable.ChipGroup_atg_borderColor, default_border_color);
-            textColor = a.getColor(R.styleable.ChipGroup_atg_textColor, default_text_color);
-            backgroundColor = a.getColor(R.styleable.ChipGroup_atg_backgroundColor, default_background_color);
-            checkedBorderColor = a.getColor(R.styleable.ChipGroup_atg_checkedBorderColor, default_checked_border_color);
-            checkedTextColor = a.getColor(R.styleable.ChipGroup_atg_checkedTextColor, default_checked_text_color);
-            checkedBackgroundColor = a.getColor(R.styleable.ChipGroup_atg_checkedBackgroundColor, default_checked_background_color);
-            pressedBackgroundColor = a.getColor(R.styleable.ChipGroup_atg_pressedBackgroundColor, default_pressed_background_color);
-            borderStrokeWidth = a.getDimension(R.styleable.ChipGroup_atg_borderStrokeWidth, default_border_stroke_width);
-            textSize = a.getDimension(R.styleable.ChipGroup_atg_textSize, default_text_size);
-            horizontalSpacing = (int) a.getDimension(R.styleable.ChipGroup_atg_horizontalSpacing, default_horizontal_spacing);
-            verticalSpacing = (int) a.getDimension(R.styleable.ChipGroup_atg_verticalSpacing, default_vertical_spacing);
-            horizontalPadding = (int) a.getDimension(R.styleable.ChipGroup_atg_horizontalPadding, default_horizontal_padding);
-            verticalPadding = (int) a.getDimension(R.styleable.ChipGroup_atg_verticalPadding, default_vertical_padding);
-        } finally {
-            a.recycle();
-        }
     }
 
     @Override
@@ -241,25 +135,9 @@ public class ChipGroup extends ViewGroup {
     }
 
     /**
-     * Returns the tag list in group.
-     *
-     * @return the tag list.
-     */
-    public List<Tag> getTags() {
-        return tagList;
-    }
-
-    /**
      * Set the tags. It will remove all previous tags first.
      *
      * @param tags the tag list to set.
-     */
-    public void setTags(Tag... tags) {
-        setTags(Arrays.asList(tags));
-    }
-
-    /**
-     * @see #setTags(Tag...)
      */
     public void setTags(List<Tag> tags) {
         removeAllViews();
@@ -290,9 +168,9 @@ public class ChipGroup extends ViewGroup {
         ChipsViewBinding binding = tag.getView(getContext(), this);
         binding.getRoot().setOnClickListener(v -> {
             tag.isChecked = !tag.isChecked;
-            v.setActivated(tag.isChecked);
-            if (mOnTagClickListener != null) {
-                mOnTagClickListener.onTagClick(tagList);
+            binding.getRoot().setActivated(tag.isChecked);
+            if (mOnSelectionChangedListener != null) {
+                mOnSelectionChangedListener.onSelectionChanged(tag);
             }
         });
         addView(binding.getRoot());
@@ -300,11 +178,6 @@ public class ChipGroup extends ViewGroup {
 
     public float dp2px(float dp) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-                getResources().getDisplayMetrics());
-    }
-
-    public float sp2px(float sp) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp,
                 getResources().getDisplayMetrics());
     }
 
@@ -318,30 +191,20 @@ public class ChipGroup extends ViewGroup {
      *
      * @param l the callback that will run.
      */
-    public void setOnTagClickListener(OnTagClickListener l) {
-        mOnTagClickListener = l;
-    }
-
-    @Override
-    public Parcelable onSaveInstanceState() {
-        return Icepick.saveInstanceState(this, super.onSaveInstanceState());
-    }
-
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
+    public void setOnTagClickListener(OnSelectionChangedListener l) {
+        mOnSelectionChangedListener = l;
     }
 
     /**
      * Interface definition for a callback to be invoked when a tag is clicked.
      */
-    public interface OnTagClickListener {
+    public interface OnSelectionChangedListener {
         /**
          * Called when a tag has been clicked.
          *
-         * @param tag The tag text of the tag that was clicked.
+         * @param tag The tag that was clicked.
          */
-        void onTagClick(List<Tag> tag);
+        void onSelectionChanged(Tag tag);
     }
 
     /**
@@ -350,10 +213,6 @@ public class ChipGroup extends ViewGroup {
     public static class LayoutParams extends ViewGroup.LayoutParams {
         public LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
-        }
-
-        public LayoutParams(int width, int height) {
-            super(width, height);
         }
     }
 
