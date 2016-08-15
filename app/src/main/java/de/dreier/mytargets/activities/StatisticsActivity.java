@@ -47,7 +47,7 @@ import icepick.State;
 
 public class StatisticsActivity extends ChildActivityBase {
 
-    public static final String ROUND_IDS = "round_id";
+    public static final String ROUND_IDS = "round_ids";
     @State
     boolean showFilter = false;
     private ActivityStatisticsBinding binding;
