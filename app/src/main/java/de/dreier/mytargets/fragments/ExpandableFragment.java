@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import java.util.List;
 
 import de.dreier.mytargets.adapters.ExpandableListAdapter;
+import de.dreier.mytargets.interfaces.ItemAdapter;
 import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.shared.models.IIdSettable;
@@ -44,20 +45,9 @@ abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSettable> 
         mAdapter.setList(children);
     }
 
-    @NonNull
     @Override
-    protected C getItem(long id) {
-        return mAdapter.getItemById(id);
-    }
-
-    @Override
-    protected void removeItem(C item) {
-        mAdapter.remove(item);
-    }
-
-    @Override
-    protected void addItem(C item) {
-        mAdapter.add(item);
+    protected ItemAdapter<C> getAdapter() {
+        return mAdapter;
     }
 
     @Override

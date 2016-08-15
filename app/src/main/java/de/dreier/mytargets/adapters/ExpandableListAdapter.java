@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import de.dreier.mytargets.interfaces.ItemAdapter;
 import de.dreier.mytargets.interfaces.PartitionDelegate;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.utils.multiselector.HeaderBindingHolder;
@@ -26,7 +27,7 @@ import de.dreier.mytargets.utils.multiselector.ItemBindingHolder;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD extends IIdProvider>
-        extends RecyclerView.Adapter<ItemBindingHolder<IIdProvider>> {
+        extends RecyclerView.Adapter<ItemBindingHolder<IIdProvider>> implements ItemAdapter<CHILD> {
 
     private static final int ITEM_TYPE = 2;
     private static final int HEADER_TYPE = 1;
@@ -101,10 +102,7 @@ public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD ex
     private HeaderHolder getHeaderForPosition(int position) {
         int items = 0;
         for (HeaderHolder header : headersList) {
-            if (items == position) {
-                return header;
-            }
-            if (items + header.children.size() >= position && header.expanded) {
+            if (header.getTotalSize() > position - items) {
                 return header;
             }
             items += header.getTotalSize();
@@ -115,18 +113,16 @@ public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD ex
     private int getHeaderRelativePosition(int position) {
         int items = 0;
         for (HeaderHolder header : headersList) {
-            if (items == position) {
-                return 0;
-            }
-            if (items + header.children.size() >= position && header.expanded) {
-                return position - items;
+            final int relativePos = position - items;
+            if (header.getTotalSize() > relativePos) {
+                return relativePos;
             }
             items += header.getTotalSize();
         }
         throw new IllegalStateException("Position is not in list!");
     }
 
-    public void expandOrCollapse(HeaderHolder header) {
+    private void expandOrCollapse(HeaderHolder header) {
         int childLength = header.children.size();
         if (!header.expanded) {
             notifyItemRangeInserted(header.getAbsolutePosition() + 1, childLength);
@@ -136,12 +132,14 @@ public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD ex
         header.expanded = !header.expanded;
     }
 
-    public void add(CHILD item) {
+    @Override
+    public void addItem(CHILD item) {
         addChildToMap(item);
         notifyDataSetChanged();
     }
 
-    public void remove(CHILD item) {
+    @Override
+    public void removeItem(CHILD item) {
         HEADER parent = partitionDelegate.getParent(item);
         int headerIndex = new HeaderHolder(parent).getHeaderIndex();
         if (headerIndex < 0) {
@@ -149,9 +147,6 @@ public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD ex
         }
         HeaderHolder header = headersList.get(headerIndex);
         header.remove(item);
-        if (header.children.size() < 1) {
-            headersList.remove(headerIndex);
-        }
     }
 
     public void setList(List<CHILD> children) {
@@ -167,7 +162,7 @@ public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD ex
         notifyDataSetChanged();
     }
 
-    protected void fillChildMap(List<CHILD> children) {
+    private void fillChildMap(List<CHILD> children) {
         headersList.clear();
         for (CHILD child : children) {
             addChildToMap(child);
@@ -206,6 +201,7 @@ public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD ex
         }
     }
 
+    @Override
     public CHILD getItemById(long id) {
         for (HeaderHolder header : headersList) {
             for (CHILD child : header.children) {
@@ -218,7 +214,9 @@ public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD ex
     }
 
     public void expandFirst() {
-        expandOrCollapse(headersList.get(0));
+        if (!headersList.get(0).expanded) {
+            expandOrCollapse(headersList.get(0));
+        }
     }
 
     private class HeaderHolder implements Comparable<HeaderHolder> {
@@ -226,7 +224,7 @@ public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD ex
         boolean expanded;
         List<CHILD> children;
 
-        public HeaderHolder(HEADER parent) {
+        HeaderHolder(HEADER parent) {
             item = parent;
             expanded = false;
             children = new ArrayList<>();
@@ -250,11 +248,11 @@ public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD ex
             children.remove(item);
         }
 
-        public int getHeaderIndex() {
+        int getHeaderIndex() {
             return Collections.binarySearch(headersList, this);
         }
 
-        public int getAbsolutePosition() {
+        int getAbsolutePosition() {
             int headerIndex = getHeaderIndex();
             int pos = 0;
             for (int i = 0; i < headerIndex; i++) {
@@ -263,7 +261,10 @@ public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD ex
             return pos;
         }
 
-        public int getTotalSize() {
+        int getTotalSize() {
+            if (children.size() < 1) {
+                return 0;
+            }
             return expanded ? 1 + children.size() : 1;
         }
     }

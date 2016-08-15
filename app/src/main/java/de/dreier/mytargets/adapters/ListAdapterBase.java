@@ -17,12 +17,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import de.dreier.mytargets.interfaces.ItemAdapter;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 
 public abstract class ListAdapterBase<T extends IIdProvider>
-        extends RecyclerView.Adapter<SelectableViewHolder<T>> {
+        extends RecyclerView.Adapter<SelectableViewHolder<T>> implements ItemAdapter<T> {
 
     protected final LayoutInflater inflater;
     private final Comparator<T> comparator;
@@ -65,11 +66,17 @@ public abstract class ListAdapterBase<T extends IIdProvider>
         viewHolder.bindCursor(list.get(position));
     }
 
+    public void setList(List<T> list) {
+        this.list = list;
+        notifyDataSetChanged();
+    }
+
     public T getItem(int pos) {
         return list.get(pos);
     }
 
-    public void add(T item) {
+    @Override
+    public void addItem(T item) {
         int pos = Collections.binarySearch(list, item, comparator);
         if (pos < 0) {
             list.add(-pos - 1, item);
@@ -79,7 +86,8 @@ public abstract class ListAdapterBase<T extends IIdProvider>
         }
     }
 
-    public void remove(T item) {
+    @Override
+    public void removeItem(T item) {
         int pos = Collections.binarySearch(list, item, comparator);
         if (pos < 0) {
             throw new IllegalArgumentException("Item must not be inserted twice!");
@@ -88,11 +96,7 @@ public abstract class ListAdapterBase<T extends IIdProvider>
         notifyItemRemoved(pos);
     }
 
-    public void setList(List<T> list) {
-        this.list = list;
-        notifyDataSetChanged();
-    }
-
+    @Override
     public T getItemById(long id) {
         for (T item : list) {
             if (item.getId() == id) {

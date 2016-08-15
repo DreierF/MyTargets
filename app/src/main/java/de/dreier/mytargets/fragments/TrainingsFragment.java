@@ -109,7 +109,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
 
     private class TrainingAdapter extends ExpandableListAdapter<Month, Training> {
 
-        public TrainingAdapter() {
+        TrainingAdapter() {
             super(child -> new Month(Utils.getMonthId(child.date)),
                     Collections.reverseOrder(),
                     Collections.reverseOrder((l, r) -> {

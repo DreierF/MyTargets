@@ -24,6 +24,7 @@ import com.annimon.stream.Stream;
 import java.util.List;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.interfaces.ItemAdapter;
 import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.utils.OnCardClickListener;
@@ -81,10 +82,10 @@ abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<
             }
         }
 
-        protected List<T> getSelectedItems() {
+        private List<T> getSelectedItems() {
             List<Long> ids = mSelector.getSelectedIds();
             return Stream.of(ids)
-                    .map(id -> getItem(id))
+                    .map(id -> getAdapter().getItemById(id))
                     .collect(Collectors.toList());
         }
 
@@ -117,13 +118,14 @@ abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<
 
     private void remove(List<T> deleted) {
         for (T item : deleted) {
-            removeItem(item);
+            getAdapter().removeItem(item);
         }
+        getAdapter().notifyDataSetChanged();
         String message = getResources().getQuantityString(itemTypeDelRes, deleted.size(), deleted.size());
         Snackbar.make(getView(), message, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, v -> {
                     for (T item : deleted) {
-                        addItem(item);
+                        getAdapter().addItem(item);
                     }
                     deleted.clear();
                 })
@@ -146,9 +148,7 @@ abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<
                         }).show();
     }
 
-    protected abstract void addItem(T item);
-
-    protected abstract void removeItem(T item);
+    protected abstract ItemAdapter<T> getAdapter();
 
     private void updateTitle() {
         if (actionMode == null) {
@@ -197,12 +197,4 @@ abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<
      * @param itemIds Items that have been selected
      */
     protected void onStatistics(List<Long> itemIds) {}
-
-    /**
-     * Gets the item by a given id
-     *
-     * @param id Id to get the item for
-     * @return Item with the given id
-     */
-    protected abstract T getItem(long id);
 }
