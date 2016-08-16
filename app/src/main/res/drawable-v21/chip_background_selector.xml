@@ -11,6 +11,8 @@
             <item
                 android:state_activated="true"
                 android:drawable="@drawable/chip_background_selected"/>
+            <item
+                android:drawable="@drawable/chip_background"/>
         </selector>
     </item>
 
