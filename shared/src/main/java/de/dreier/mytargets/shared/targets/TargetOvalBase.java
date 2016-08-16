@@ -9,6 +9,7 @@ package de.dreier.mytargets.shared.targets;
 import android.support.annotation.StringRes;
 
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.targets.models.TargetModelBase;
 
 import static de.dreier.mytargets.shared.models.Dimension.LARGE;
 import static de.dreier.mytargets.shared.models.Dimension.MEDIUM;
@@ -17,7 +18,7 @@ import static de.dreier.mytargets.shared.models.Dimension.XLARGE;
 
 public class TargetOvalBase extends TargetModelBase {
 
-    TargetOvalBase(long id, @StringRes int name) {
+    protected TargetOvalBase(long id, @StringRes int name) {
         super(id, name);
         diameters = new Dimension[]{SMALL, MEDIUM, LARGE, XLARGE};
     }

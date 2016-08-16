@@ -4,18 +4,18 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import java.util.List;
+import java.util.Set;
 
-import de.dreier.mytargets.shared.targets.SelectableZone;
-import de.dreier.mytargets.shared.targets.TargetDrawable;
 import de.dreier.mytargets.shared.targets.TargetFactory;
-import de.dreier.mytargets.shared.targets.TargetModelBase;
+import de.dreier.mytargets.shared.targets.drawable.TargetImpactDrawable;
+import de.dreier.mytargets.shared.targets.models.TargetModelBase;
 
 public class Target implements IIdProvider, IImageProvider, IDetailProvider {
     public int id;
     public int scoringStyle;
     public Dimension size;
     private transient TargetModelBase model;
-    private transient TargetDrawable drawable;
+    private transient TargetImpactDrawable drawable;
 
     public Target() {
     }
@@ -40,9 +40,9 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
         this.id = (int) id;
     }*/
 
-    public TargetDrawable getDrawable() {
+    public TargetImpactDrawable getDrawable() {
         if (drawable == null) {
-            drawable = new TargetDrawable(this);
+            drawable = new TargetImpactDrawable(this);
         }
         return drawable;
     }
@@ -103,5 +103,9 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
     @Override
     public String toString() {
         return getModel().toString();
+    }
+
+    public Set<SelectableZone> getAllPossibleSelectableZones() {
+        return getModel().getAllPossibleSelectableZones(scoringStyle);
     }
 }

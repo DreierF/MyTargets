@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.targets.CombinedSpot;
-import de.dreier.mytargets.shared.targets.TargetDrawable;
+import de.dreier.mytargets.shared.targets.models.CombinedSpot;
+import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
 
 public class StandardRound implements IIdSettable, IImageProvider, IDetailProvider {
 

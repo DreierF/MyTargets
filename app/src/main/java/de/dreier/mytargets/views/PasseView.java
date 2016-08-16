@@ -16,8 +16,8 @@ import android.view.View;
 
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
-import de.dreier.mytargets.shared.utils.ScoresDrawer;
 import icepick.Icepick;
 import icepick.State;
 
@@ -26,7 +26,7 @@ public class PasseView extends View {
     private Passe passe = new Passe(3);
     private float density;
     @State(ParcelsBundler.class)
-    ScoresDrawer mScoresDrawer = new ScoresDrawer();
+    EndRenderer mEndRenderer = new EndRenderer();
     private final RectF rect = new RectF();
 
     public PasseView(Context context) {
@@ -44,18 +44,18 @@ public class PasseView extends View {
     public void setPoints(Passe p, Target target) {
         passe = p;
         density = getResources().getDisplayMetrics().density;
-        mScoresDrawer.init(this, density, target);
+        mEndRenderer.init(this, density, target);
         if (rect.width() > 0) {
-            mScoresDrawer.animateToRect(rect);
+            mEndRenderer.animateToRect(rect);
         }
-        mScoresDrawer.setShots(p.shotList());
+        mEndRenderer.setShots(p.shotList());
         invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mScoresDrawer.draw(canvas);
+        mEndRenderer.draw(canvas);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class PasseView extends View {
         rect.right = contentWidth;
         rect.top = 0;
         rect.bottom = contentHeight;
-        mScoresDrawer.animateToRect(rect);
+        mEndRenderer.animateToRect(rect);
     }
 
     @Override

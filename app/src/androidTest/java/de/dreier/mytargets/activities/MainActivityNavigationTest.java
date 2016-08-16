@@ -14,7 +14,7 @@ import de.dreier.mytargets.UITestBase;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.targets.WAFull;
+import de.dreier.mytargets.shared.targets.models.WAFull;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;

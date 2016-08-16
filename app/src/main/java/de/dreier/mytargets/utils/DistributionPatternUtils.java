@@ -26,7 +26,8 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.targets.TargetDrawable;
+import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
+import de.dreier.mytargets.shared.targets.drawable.TargetImpactDrawable;
 
 public class DistributionPatternUtils {
 
@@ -70,7 +71,7 @@ public class DistributionPatternUtils {
 
         for (int i = 0; i < rounds.size(); i++) {
             List<Passe> oldOnes = new PasseDataSource().getAllByRound(rounds.get(i).getId());
-            TargetDrawable target = rounds.get(i).info.target.getDrawable();
+            TargetImpactDrawable target = rounds.get(i).info.target.getDrawable();
             target.setBounds(bounds.get(i));
             target.draw(canvas);
             target.drawArrows(canvas, oldOnes, false);
@@ -85,6 +86,7 @@ public class DistributionPatternUtils {
         return b;
     }
 
+    //TODO check this: guess its out of date
     private static List<Rect> getBoundsForTargetFaces(List<Round> rounds, int size) {
         int padding = (int) (size * 0.05f);
         int headerHeight = size / 10;
@@ -94,8 +96,8 @@ public class DistributionPatternUtils {
         boolean narrow;
         for (int i = 0; i < rounds.size(); i++) {
             TargetDrawable target = rounds.get(i).info.target.getDrawable();
-            int width = target.getWidth();
-            int height = target.getHeight();
+            int width = (int) target.getWidth();
+            int height = (int) target.getHeight();
             narrow = width / height < 0.5;
             if (lastNarrow && narrow) {
                 narrow = false;

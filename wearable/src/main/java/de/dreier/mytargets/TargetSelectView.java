@@ -73,7 +73,7 @@ public class TargetSelectView extends TargetViewBase {
         }
 
         // Draw all points of this end in the center
-        scoresDrawer.draw(canvas);
+        endRenderer.draw(canvas);
     }
 
     private int getCurrentlySelectedZone() {
@@ -110,7 +110,7 @@ public class TargetSelectView extends TargetViewBase {
         rect.right = radius + 35 * density;
         rect.top = radius / 2;
         rect.bottom = radius;
-        scoresDrawer.animateToRect(rect);
+        endRenderer.animateToRect(rect);
     }
 
     @NonNull

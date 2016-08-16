@@ -5,7 +5,7 @@ import android.graphics.Paint;
 import android.text.TextPaint;
 
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.targets.Zone;
+import de.dreier.mytargets.shared.targets.zone.ZoneBase;
 
 public class Circle {
     private final float density;
@@ -30,7 +30,7 @@ public class Circle {
     public void draw(Canvas can, float x, float y, int zone, int rad, boolean comment, int arrow, String number) {
         // Get color index and font size
         int font_size = (int) (1.2323f * rad + 0.7953f);
-        final Zone zone1 = target.getModel().getZone(zone);
+        final ZoneBase zone1 = target.getModel().getZone(zone);
 
         // Draw the circles background
         circleColorP.setStrokeWidth(2 * density);
@@ -45,7 +45,7 @@ public class Circle {
 
         // Draw the text inside the circle
         mTextPaint.setTextSize(22 * density);
-        mTextPaint.setColor(target.getModel().getTextColor(zone));
+        mTextPaint.setColor(target.getModel().getZone(zone).getTextColor());
         mTextPaint.setTextSize(font_size * density);
         can.drawText(target.zoneToString(zone, arrow), x, y + font_size * 7 * density / 22.0f,
                 mTextPaint);

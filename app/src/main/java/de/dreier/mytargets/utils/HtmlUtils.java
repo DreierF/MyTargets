@@ -33,11 +33,11 @@ import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
-import de.dreier.mytargets.shared.targets.SelectableZone;
+import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
-import static de.dreier.mytargets.shared.targets.ScoringStyle.MISS_SYMBOL;
+import static de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle.MISS_SYMBOL;
 
 public class HtmlUtils {
 
@@ -135,7 +135,7 @@ public class HtmlUtils {
         final String points = target.zoneToString(shot.zone, shot.index);
         if (configuration.showPointsColored) {
             int fillColor = target.getModel().getZone(shot.zone).getFillColor();
-            int color = target.getModel().getTextColor(shot.zone);
+            int color = target.getModel().getZone(shot.zone).getTextColor();
             final String pointsDiv = String.format(
                     "<div class=\"circle\" style='background: #%06X; color: #%06X'>%s",
                     fillColor & 0xFFFFFF, color & 0xFFFFFF, points);

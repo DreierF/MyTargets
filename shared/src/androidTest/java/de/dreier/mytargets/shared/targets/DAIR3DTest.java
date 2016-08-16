@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import de.dreier.mytargets.shared.targets.models.DAIR3D;
+
 @SmallTest
 @RunWith(AndroidJUnit4.class)
 public class DAIR3DTest {

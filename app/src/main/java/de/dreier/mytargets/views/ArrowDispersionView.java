@@ -17,7 +17,7 @@ import android.view.View;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.targets.TargetDrawable;
+import de.dreier.mytargets.shared.targets.drawable.TargetImpactDrawable;
 
 public class ArrowDispersionView extends View implements View.OnTouchListener {
     private static final float ZOOM_FACTOR = 3;
@@ -27,7 +27,7 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
     private final Paint fillPaint;
     private List<Shot> shots;
     private float orgRadius, orgMidX, orgMidY;
-    private TargetDrawable target;
+    private TargetImpactDrawable target;
     private float zoomInX = -1, zoomInY = -1;
 
     public ArrowDispersionView(Context context) {
@@ -81,7 +81,7 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         invalidate();
     }
 
-    public void setTarget(TargetDrawable target) {
+    public void setTarget(TargetImpactDrawable target) {
         this.target = target;
         reset();
     }
