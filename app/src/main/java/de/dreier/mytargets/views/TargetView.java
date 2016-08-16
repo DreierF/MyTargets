@@ -80,6 +80,7 @@ public class TargetView extends TargetViewBase {
     private Midpoint[] midpoints;
     private Dimension arrowDiameter;
     private float targetZoomFactor;
+    private boolean midpointsDirty = true;
 
     public TargetView(Context context) {
         super(context);
@@ -102,7 +103,7 @@ public class TargetView extends TargetViewBase {
         this.end = passe;
         scoresDrawer.setSelection(currentArrow, null, ScoresDrawer.MAX_CIRCLE_SIZE);
         scoresDrawer.setShots(passe.shotList());
-        updateMidpoints();
+        midpointsDirty = true;
         if (passe.getId() != -1) {
             switchMode(!passe.exact, true);
         }
@@ -115,7 +116,7 @@ public class TargetView extends TargetViewBase {
         super.reset();
         inputModeTransitioning = false;
         zoomTransitioning = false;
-        updateMidpoints();
+        midpointsDirty = true;
     }
 
     public void setArrowNumbers(@NonNull List<ArrowNumber> arrowNumbers) {
@@ -138,11 +139,7 @@ public class TargetView extends TargetViewBase {
         super.setRoundTemplate(r);
         switchMode(SettingsManager.getInputMode(), false);
         initSpotBounds();
-
-        // Initialize midpoints
-        int spots = targetModel.getFaceCount();
-        midpoints = new Midpoint[spots];
-        updateMidpoints();
+        midpointsDirty = true;
     }
 
     private void initSpotBounds() {
@@ -257,6 +254,9 @@ public class TargetView extends TargetViewBase {
                     targetDrawable.drawArrows(canvas, p, true);
                 }
             }
+        }
+        if(midpointsDirty) {
+            updateMidpoints();
         }
 
         int spots = targetModel.getFaceCount();
@@ -552,7 +552,7 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void onArrowChanged(int index) {
-        updateMidpoints();
+        midpointsDirty = true;
         if (arrowNumbers.isEmpty() ||
                 currentArrow < round.arrowsPerEnd && end.shot[currentArrow].arrow != null) {
             super.onArrowChanged(index);
@@ -598,12 +598,15 @@ public class TargetView extends TargetViewBase {
 
     private void updateMidpoints() {
         if (midpoints == null) {
-            return;
+            // Initialize midpoints
+            int spots = targetModel.getFaceCount();
+            midpoints = new Midpoint[spots];
         }
         int spots = targetModel.getFaceCount();
         for (int i = 0; i < spots; i++) {
             midpoints[i] = getMidpoint(i);
         }
+        midpointsDirty = false;
     }
 
     /**

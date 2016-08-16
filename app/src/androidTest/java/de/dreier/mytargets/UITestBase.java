@@ -23,6 +23,7 @@ import org.hamcrest.Matchers;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static android.support.test.espresso.Espresso.openContextualActionModeOverflowMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
@@ -100,6 +101,16 @@ public class UITestBase extends InstrumentedTestBase {
             @Override
             public void handle(Throwable error, Matcher<View> viewMatcher) {
                 openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+                onView(withText(title)).perform(click());
+            }
+        }).perform(click());
+    }
+
+    protected void clickContextualActionBarItem(@IdRes int menuItem, @StringRes int title) {
+        onView(withId(menuItem)).withFailureHandler(new FailureHandler() {
+            @Override
+            public void handle(Throwable error, Matcher<View> viewMatcher) {
+                openContextualActionModeOverflowMenu();
                 onView(withText(title)).perform(click());
             }
         }).perform(click());
