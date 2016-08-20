@@ -160,7 +160,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.numberArrows.setVisibility(View.GONE);
         } else {
             binding.numberArrows.setVisibility(View.VISIBLE);
-            binding.numberArrows.setChecked(true);
         }
     }
 

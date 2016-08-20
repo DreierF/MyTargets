@@ -19,6 +19,8 @@ import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemTextBinding;
 import de.dreier.mytargets.models.WindSpeed;
+import de.dreier.mytargets.utils.SelectableViewHolder;
+import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
@@ -31,6 +33,7 @@ public class WindSpeedFragment extends SelectItemFragment<WindSpeed> {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
         mAdapter = new WindSpeedAdapter(getContext());
+        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
         useDoubleClickSelection = false;
         ToolbarUtils.showUpAsX(this);

@@ -47,6 +47,8 @@ import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.ActivityUtils;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DataLoaderBase.BackgroundAction;
+import de.dreier.mytargets.utils.SelectableViewHolder;
+import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
@@ -75,6 +77,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
                 .inflate(inflater, R.layout.fragment_standard_round, container, false);
         binding.recyclerView.setHasFixedSize(true);
         mAdapter = new StandardRoundAdapter(getContext());
+        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
         binding.fab.setOnClickListener(this);
         useDoubleClickSelection = true;

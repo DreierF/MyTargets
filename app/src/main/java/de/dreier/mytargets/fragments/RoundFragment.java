@@ -40,6 +40,8 @@ import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
+import de.dreier.mytargets.utils.SelectableViewHolder;
+import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
@@ -69,6 +71,7 @@ public class RoundFragment extends EditableFragment<Passe> {
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), R.drawable.full_divider));
         mAdapter = new EndAdapter(getContext());
+        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
         binding.fab.setVisibility(View.GONE);
         binding.fab.setOnClickListener(v -> openPasse(round.getId(), binding.recyclerView.getAdapter().getItemCount()));

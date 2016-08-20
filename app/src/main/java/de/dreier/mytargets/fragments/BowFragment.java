@@ -31,6 +31,7 @@ import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.HTMLInfoBuilder;
 import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+import de.dreier.mytargets.utils.SlideInItemAnimator;
 
 import static de.dreier.mytargets.fragments.EditBowFragment.BOW_ID;
 import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
@@ -55,6 +56,7 @@ public class BowFragment extends EditableFragment<Bow> {
                 new DividerItemDecoration(getContext(), R.drawable.inset_divider));
         binding.fab.setOnClickListener(view1 -> startActivityAnimated(getActivity(), EditBowActivity.class));
         mAdapter = new BowAdapter(getContext());
+        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
         return binding.getRoot();
     }

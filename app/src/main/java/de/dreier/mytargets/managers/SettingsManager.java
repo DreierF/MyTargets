@@ -130,7 +130,7 @@ public class SettingsManager {
     }
 
     public static boolean getArrowNumbersEnabled() {
-        return preferences.getBoolean(KEY_NUMBERING_ENABLED, false);
+        return preferences.getBoolean(KEY_NUMBERING_ENABLED, true);
     }
 
     public static void setArrowNumbersEnabled(boolean enabled) {
