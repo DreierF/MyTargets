@@ -36,6 +36,7 @@ import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
 import de.dreier.mytargets.utils.SelectableViewHolder;
+import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
@@ -52,6 +53,7 @@ public class TargetFragment extends SelectItemFragment<Target>
                 .inflate(inflater, R.layout.fragment_target_select, container, false);
         binding.recyclerView.setHasFixedSize(true);
         mAdapter = new TargetAdapter(getContext());
+        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
         useDoubleClickSelection = true;
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);

@@ -29,6 +29,7 @@ import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.SelectableViewHolder;
+import de.dreier.mytargets.utils.SlideInItemAnimator;
 
 import static de.dreier.mytargets.fragments.EditArrowFragment.ARROW_ID;
 import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
@@ -58,6 +59,7 @@ public class ArrowFragment extends EditableFragment<Arrow> {
         binding.recyclerView.addItemDecoration(
                 new DividerItemDecoration(getContext(), R.drawable.inset_divider));
         mAdapter = new ArrowAdapter(getContext());
+        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
         return binding.getRoot();
     }

@@ -68,8 +68,8 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_trainings, container, false);
         binding.recyclerView.setHasFixedSize(true);
         mAdapter = new TrainingAdapter();
-        binding.recyclerView.setAdapter(mAdapter);
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
+        binding.recyclerView.setAdapter(mAdapter);
         binding.fab1.setOnClickListener(view -> startActivityAnimated(getActivity(),
             EditTrainingActivity.class, TRAINING_TYPE, FREE_TRAINING));
         binding.fab2.setOnClickListener(view -> startActivityAnimated(getActivity(),

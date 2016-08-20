@@ -1,8 +1,8 @@
-
 package de.dreier.mytargets.utils;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.os.Handler;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +20,7 @@ public class SlideInItemAnimator extends DefaultItemAnimator {
 
     private final List<RecyclerView.ViewHolder> pendingAdds = new ArrayList<>();
     private final int slideFromEdge;
+    private boolean useDefaultAnimator = false;
 
     /**
      * Default to sliding in upward.
@@ -35,15 +36,18 @@ public class SlideInItemAnimator extends DefaultItemAnimator {
 
     @Override
     public boolean animateAdd(RecyclerView.ViewHolder holder) {
+        if (useDefaultAnimator) {
+            return super.animateAdd(holder);
+        }
         holder.itemView.setAlpha(0f);
         switch (slideFromEdge) {
-            case Gravity.LEFT:
+            case Gravity.START:
                 holder.itemView.setTranslationX(-holder.itemView.getWidth() / 3);
                 break;
             case Gravity.TOP:
                 holder.itemView.setTranslationY(-holder.itemView.getHeight() / 3);
                 break;
-            case Gravity.RIGHT:
+            case Gravity.END:
                 holder.itemView.setTranslationX(holder.itemView.getWidth() / 3);
                 break;
             default: // Gravity.BOTTOM
@@ -55,36 +59,41 @@ public class SlideInItemAnimator extends DefaultItemAnimator {
 
     @Override
     public void runPendingAnimations() {
-        super.runPendingAnimations();
-        if (!pendingAdds.isEmpty()) {
+        if (useDefaultAnimator) {
+            super.runPendingAnimations();
+            return;
+        }
+        if (!pendingAdds.isEmpty() && !useDefaultAnimator) {
             for (int i = pendingAdds.size() - 1; i >= 0; i--) {
                 final RecyclerView.ViewHolder holder = pendingAdds.get(i);
-                holder.itemView.animate()
-                        .alpha(1f)
-                        .translationX(0f)
-                        .translationY(0f)
-                        .setDuration(getAddDuration())
-                        .setListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationStart(Animator animation) {
-                                dispatchAddStarting(holder);
-                            }
+                new Handler().postDelayed(() -> holder.itemView.animate()
+                                .alpha(1f)
+                                .translationX(0f)
+                                .translationY(0f)
+                                .setDuration(getAddDuration())
+                                .setListener(new AnimatorListenerAdapter() {
+                                    @Override
+                                    public void onAnimationStart(Animator animation) {
+                                        dispatchAddStarting(holder);
+                                    }
 
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                animation.getListeners().remove(this);
-                                dispatchAddFinished(holder);
-                                dispatchFinishedWhenDone();
-                            }
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        animation.getListeners().remove(this);
+                                        dispatchAddFinished(holder);
+                                        dispatchFinishedWhenDone();
+                                    }
 
-                            @Override
-                            public void onAnimationCancel(Animator animation) {
-                                clearAnimatedValues(holder.itemView);
-                            }
-                        })
-                        .setInterpolator(new LinearOutSlowInInterpolator());
+                                    @Override
+                                    public void onAnimationCancel(Animator animation) {
+                                        clearAnimatedValues(holder.itemView);
+                                    }
+                                })
+                                .setInterpolator(new LinearOutSlowInInterpolator()),
+                        holder.getAdapterPosition() * 30);
                 pendingAdds.remove(i);
             }
+            useDefaultAnimator = true;
         }
     }
 
@@ -124,6 +133,7 @@ public class SlideInItemAnimator extends DefaultItemAnimator {
         view.setAlpha(1f);
         view.setTranslationX(0f);
         view.setTranslationY(0f);
+        view.animate().setStartDelay(0);
     }
 
 }

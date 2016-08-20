@@ -20,6 +20,7 @@ import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemTextBinding;
 import de.dreier.mytargets.models.WindDirection;
 import de.dreier.mytargets.utils.SelectableViewHolder;
+import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
 public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
@@ -31,6 +32,7 @@ public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
         mAdapter = new WindDirectionAdapter(getContext());
+        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
         useDoubleClickSelection = false;
         ToolbarUtils.showUpAsX(this);

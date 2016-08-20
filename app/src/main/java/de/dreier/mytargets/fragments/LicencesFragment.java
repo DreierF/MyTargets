@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.utils.DividerItemDecoration;
+import de.dreier.mytargets.utils.SlideInItemAnimator;
 import me.oriley.homage.Homage;
 import me.oriley.homage.recyclerview.HomageAdapter;
 import me.oriley.homage.recyclerview.HomageView;
@@ -62,6 +63,7 @@ public final class LicencesFragment extends Fragment {
         binding = FragmentListBinding.inflate(inflater, container, false);
         binding.recyclerView.setHasFixedSize(true);
         RecyclerView.Adapter adapter = createAdapter();
+        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(adapter);
         layoutManager = binding.recyclerView.getLayoutManager();
 
