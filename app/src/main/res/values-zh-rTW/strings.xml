@@ -38,6 +38,7 @@
   <!-- Share -->
   <string name="share">分享</string>
   <string name="dispersion_pattern">箭的落點</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
   <string name="send_exported">傳送資料</string>
   <string name="exporting_failed">傳送資料失敗!</string>

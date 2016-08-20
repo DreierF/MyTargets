@@ -46,6 +46,7 @@
   <!-- Share -->
   <string name="share">Zdieľať</string>
   <string name="dispersion_pattern">Rozptyl</string>
+  <string name="sharing_failed">Zdieľanie zlyhalo!</string>
   <!-- Export -->
   <string name="send_exported">Poslať exportované údaje</string>
   <string name="exporting_failed">Exportovanie zlyhalo!</string>
@@ -261,8 +262,8 @@
   <string name="new_end">Nová sada</string>
   <string name="distribution">Distribúcia</string>
   <string name="count">Počet</string>
-  <string name="diameter">Diameter</string>
-  <string name="input">Input</string>
-  <string name="target_zoom">Target zoom level</string>
-  <string name="arrow_diameter_scale">Arrow diameter scale</string>
+  <string name="diameter">Priemer</string>
+  <string name="input">Vstup</string>
+  <string name="target_zoom">Cieľová úroveň priblíženia</string>
+  <string name="arrow_diameter_scale">Stupnica priemerov šípov</string>
 </resources>

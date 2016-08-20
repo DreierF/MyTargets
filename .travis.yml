@@ -44,6 +44,7 @@ after_success:
 - codacy-coverage-reporter -l Java -r file:///home/travis/build/DreierF/MyTargets/app/build/reports/coverage/regular/debug/report.xml
 after_failure:
   - sudo ls -a
+  - sudo chmod +x dropbox_uploader.sh
   - sudo ./dropbox_uploader.sh upload file:///home/travis/build/DreierF/MyTargets/app/build/reports/androidTests/connected/flavors/REGULAR/ /$TRAVIS_JOB_NUMBER/Reports/
 deploy:
   provider: releases

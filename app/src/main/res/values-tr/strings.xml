@@ -42,6 +42,7 @@
   <!-- Share -->
   <string name="share">Paylaş</string>
   <string name="dispersion_pattern">Dağılım şekli</string>
+  <string name="sharing_failed">Paylaşım başarısız oldu!</string>
   <!-- Export -->
   <string name="send_exported">Aktarılan verileri gönder</string>
   <string name="exporting_failed">Dışa aktarma başarısız oldu!</string>

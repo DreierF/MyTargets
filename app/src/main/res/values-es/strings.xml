@@ -42,6 +42,7 @@
   <!-- Share -->
   <string name="share">Compartir</string>
   <string name="dispersion_pattern">Patrón de Dispersión</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
   <string name="send_exported">Enviando Datos Exportados</string>
   <string name="exporting_failed">Fallo en la Exportación!</string>

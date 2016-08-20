@@ -50,6 +50,7 @@
   <!-- Share -->
   <string name="share">Deli</string>
   <string name="dispersion_pattern">Razporeditov zadetkov</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
   <string name="send_exported">Pošlji izvožene podatke</string>
   <string name="exporting_failed">Pošiljanje izvoženih podatkov je bilo neuspešno!</string>

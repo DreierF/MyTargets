@@ -42,6 +42,7 @@
   <!-- Share -->
   <string name="share">Megosztás</string>
   <string name="dispersion_pattern">Szórás kép</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
   <string name="send_exported">Küldött adat</string>
   <string name="exporting_failed">Küldés sikertelen!</string>

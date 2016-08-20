@@ -42,6 +42,7 @@
   <!-- Share -->
   <string name="share">Condividi</string>
   <string name="dispersion_pattern">modello di dispersione</string>
+  <string name="sharing_failed">Condivisione fallita!</string>
   <!-- Export -->
   <string name="send_exported">Invia dati esportati</string>
   <string name="exporting_failed">Esportazione fallita!</string>

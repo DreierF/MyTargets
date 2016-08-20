@@ -42,6 +42,7 @@
   <!-- Share -->
   <string name="share">Delen</string>
   <string name="dispersion_pattern">Verspreidingspatroon</string>
+  <string name="sharing_failed">Delen mislukt!</string>
   <!-- Export -->
   <string name="send_exported">Geëxporteerde data versturen</string>
   <string name="exporting_failed">Exporteren mislukt!</string>

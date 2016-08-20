@@ -42,6 +42,7 @@
   <!-- Share -->
   <string name="share">Dela</string>
   <string name="dispersion_pattern">Spridningsmönster</string>
+  <string name="sharing_failed">Delning misslyckades!</string>
   <!-- Export -->
   <string name="send_exported">Skicka exporterade data</string>
   <string name="exporting_failed">Exportering misslyckades!</string>

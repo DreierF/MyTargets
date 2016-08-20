@@ -50,6 +50,7 @@
   <!-- Share -->
   <string name="share">שתף</string>
   <string name="dispersion_pattern">דפוס הפיזור</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
   <string name="send_exported">Send exported data</string>
   <string name="exporting_failed">ייצוא נכשל!</string>

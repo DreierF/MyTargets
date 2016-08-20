@@ -38,6 +38,7 @@
   <!-- Share -->
   <string name="share">Share</string>
   <string name="dispersion_pattern">Dispersion pattern</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
   <string name="send_exported">エクスポートされたデータを送信します。</string>
   <string name="exporting_failed">エクスポートに失敗しました。</string>

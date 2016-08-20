@@ -42,6 +42,7 @@
   <!-- Share -->
   <string name="share">Del</string>
   <string name="dispersion_pattern">Pil fordelings modell</string>
+  <string name="sharing_failed">Deling mislyktes!</string>
   <!-- Export -->
   <string name="send_exported">Send eksportert data</string>
   <string name="exporting_failed">Eksportering mislyktes!</string>

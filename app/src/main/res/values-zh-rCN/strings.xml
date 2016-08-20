@@ -38,6 +38,7 @@
   <!-- Share -->
   <string name="share">分享</string>
   <string name="dispersion_pattern">散步模式</string>
+  <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
   <string name="send_exported">发送导出的数据</string>
   <string name="exporting_failed">导出失败！</string>

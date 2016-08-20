@@ -46,6 +46,7 @@
   <!-- Share -->
   <string name="share">Поделиться</string>
   <string name="dispersion_pattern">Pазброс</string>
+  <string name="sharing_failed">Поделиться не удалось!</string>
   <!-- Export -->
   <string name="send_exported">Данные отправлены</string>
   <string name="exporting_failed">Передача не удалась!</string>
