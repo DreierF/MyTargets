@@ -36,7 +36,6 @@ import org.parceler.Parcels;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditStandardRoundActivity;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentStandardRoundBinding;
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
@@ -45,6 +44,7 @@ import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
+import de.dreier.mytargets.utils.ActivityUtils;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DataLoaderBase.BackgroundAction;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -52,13 +52,12 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
-import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 
 public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         implements View.OnClickListener, SearchView.OnQueryTextListener,
         LoaderManager.LoaderCallbacks<List<StandardRound>> {
 
-    private static final int NEW_STANDARD_ROUND = 1;
+    public static final int NEW_STANDARD_ROUND = 1;
     private static final String KEY_QUERY = "query";
     private static final String KEY_INDOOR = "indoor";
     private static final String KEY_METRIC = "metric";
@@ -265,7 +264,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
     }
 
     private void startEditStandardRound(StandardRound item) {
-        startActivityAnimated(getActivity(), EditStandardRoundActivity.class, NEW_STANDARD_ROUND, ITEM, Parcels.wrap(item));
+        ActivityUtils.editStandardRound(getActivity(), NEW_STANDARD_ROUND, item);
     }
 
     @Override
@@ -300,7 +299,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
 
     @Override
     public void onClick(View v) {
-        startActivityAnimated(getActivity(), EditStandardRoundActivity.class, NEW_STANDARD_ROUND);
+        ActivityUtils.createStandardRound(getActivity(), NEW_STANDARD_ROUND);
     }
 
     @Override

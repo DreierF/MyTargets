@@ -45,11 +45,7 @@
   <string name="statistic">Štatistika</string>
   <!-- Share -->
   <string name="share">Zdieľať</string>
-  <string name="my_share_text">Wow, pozri sa na moje lukostrelecké skóre. Nastrieľal som: \n%1$s To je %2$d bodov z celkových %3$d.</string>
-  <string name="d_times_s">%1$d krát %2$s\n</string>
-  <string name="text">Text</string>
   <string name="dispersion_pattern">Rozptyl</string>
-  <string name="sharing_failed">Zdieľanie zlyhalo!</string>
   <!-- Export -->
   <string name="send_exported">Poslať exportované údaje</string>
   <string name="exporting_failed">Exportovanie zlyhalo!</string>
@@ -65,7 +61,6 @@
   <string name="tiller">Tiler</string>
   <string name="sight_settings">Nastavenie zameriavača</string>
   <string name="add">Pridať</string>
-  <string name="select_picture">Vybrať obrázok</string>
   <string name="take_picture">Odfotiť</string>
   <string name="pick_from_gallery">Vybrať obrázok z galérie</string>
   <!-- New arrow -->
@@ -106,9 +101,6 @@
   <string name="show_all">Zobraziť všetky zásahy</string>
   <string name="comment">Komentár</string>
   <!-- Statistics -->
-  <string name="all_trainings">Všetky tréningy</string>
-  <string name="entire_training">Celý tréning</string>
-  <string name="current_round">Aktuálne kolo</string>
   <!-- Import/Backup -->
   <string name="select_a_file">Vybrať súbor</string>
   <string name="dir_not_created">Adresár nebolo možné vytvoriť!</string>
@@ -118,14 +110,11 @@
   <string name="file_not_found">Súbor sa nenašiel!</string>
   <string name="failed_reading_file">Zlyhalo čítanie súboru!</string>
   <!-- Donate -->
-  <string name="donate_action">Prispieť</string>
   <string name="donate_2">Darujte mi hamburger</string>
   <string name="donate_5">Darujte mi kebab</string>
   <string name="donate_10">Darujte mi veľkú pizzu</string>
   <string name="donate_20">Darujte mi nejaké palivo</string>
-  <string name="donate_infinite">Trvalá podpora</string>
   <string name="donation_thank">Vďaka za Vašu podporu!</string>
-  <string name="monthly">mesačne %s</string>
   <string name="donate_text">Suma je vrátane DPH a 30% poplatkov pre Google. Prípadne ma môžete obdarovať cez PayPal účet dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Časovač</string>
@@ -144,9 +133,6 @@
   <string name="import_action">Importovať</string>
   <string name="export">Exportovať</string>
   <string name="exports_as_csv">Uloží exportované dáta do *.csv</string>
-  <string name="app_rate">Hodnotenie aplikácie</string>
-  <string name="app_share">Zdieľanie aplikácie</string>
-  <string name="contact_developer">Kontaktovať vývojára</string>
   <string name="licences">Open Source licencie</string>
   <string name="licences_summary">Právne poznámky na licenciu</string>
   <string name="version">Verzia %s</string>
@@ -181,7 +167,6 @@
   <string name="standard_round">Štandardné kolo</string>
   <string name="use_as_template">Použiť ako šablónu?</string>
   <string name="create_copy">Jedná sa o štandardné kolo! \nChcete vytvoriť kópiu, aby ste ho mohli upraviť?</string>
-  <string name="not_matches_sheme">Vstup nezodpovedá očakávanému formátu ako 1,3,5</string>
   <string name="arrow_numbers_desc">Zadajte všetky čísla šípov, ktoré používate pre streľbu napr 1,2,5,6,7</string>
   <string name="practice">Tréning</string>
   <string name="edit_training">Upraviť tréning</string>
@@ -257,8 +242,6 @@
   <string name="donate_via_paypal">Prispieť cez PayPal</string>
   <string name="translate_crowdin">Preložiť v Crowdin-e</string>
   <string name="network_linkedin">Sieť v LinkedIn</string>
-  <string name="enter_scores_only_description">Umožňuje zadať iba skóre nie presnú pozíciu šípu. Použite túto možnosť pre zadávanie údajov cez vaše smart hodinky alebo pre zadanie historických údajov.</string>
-  <string name="enter_scores_only">Zadať iba skóre</string>
   <string name="search">Hľadať</string>
   <string name="us">US</string>
   <string name="show_shots_training">Celý tréning</string>
@@ -274,7 +257,6 @@
   <string name="archer">Lukostrelec</string>
   <string name="hits">Zásahov</string>
   <string name="misses">Minutí</string>
-  <string name="percentage_reached_points">Percento dosiahnutých bodov</string>
   <string name="arrow_number_removed">Čísla šípov odstránené!</string>
   <string name="new_end">Nová sada</string>
   <string name="distribution">Distribúcia</string>

@@ -96,7 +96,7 @@ public class BowFragment extends EditableFragment<Bow> {
 
     class ViewHolder extends SelectableViewHolder<Bow> {
 
-        ItemImageDetailsBinding binding;
+        final ItemImageDetailsBinding binding;
 
         public ViewHolder(View itemView) {
             super(itemView, mSelector, BowFragment.this);

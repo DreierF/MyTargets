@@ -21,9 +21,6 @@ public class MultiSelector {
     private WeakHolderTracker mTracker = new WeakHolderTracker();
     private boolean mIsSelectable;
 
-    public MultiSelector() {
-    }
-
     public boolean isSelectable() {
         return this.mIsSelectable;
     }
@@ -46,7 +43,7 @@ public class MultiSelector {
         this.refreshHolder(mTracker.getHolder(position));
     }
 
-    public boolean isSelected(int position, long id) {
+    public boolean isSelected(long id) {
         return mSelections.contains(id);
     }
 
@@ -70,7 +67,7 @@ public class MultiSelector {
 
     public boolean tapSelection(int position, long itemId) {
         if(mIsSelectable) {
-            boolean isSelected = isSelected(position, itemId);
+            boolean isSelected = isSelected(itemId);
             this.setSelected(position, itemId, !isSelected);
             return true;
         } else {

@@ -87,8 +87,12 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Dimension dimension = (Dimension) o;
         return value == dimension.value && unit == dimension.unit;
     }

@@ -597,8 +597,9 @@ public class TargetView extends TargetViewBase {
     }
 
     private void updateMidpoints() {
-        if (midpoints == null)
+        if (midpoints == null) {
             return;
+        }
         int spots = targetModel.getFaceCount();
         for (int i = 0; i < spots; i++) {
             midpoints[i] = getMidpoint(i);

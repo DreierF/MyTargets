@@ -45,11 +45,7 @@
   <string name="statistic">Статистика</string>
   <!-- Share -->
   <string name="share">Поделиться</string>
-  <string name="my_share_text">Вау! Посмотрите как я стреляю. Я выбил: \n%1$s Это составляет в общей сложности %2$d из %3$d колец.</string>
-  <string name="d_times_s">%1$d раз %2$s\n</string>
-  <string name="text">Текст</string>
   <string name="dispersion_pattern">Pазброс</string>
-  <string name="sharing_failed">Поделиться не удалось!</string>
   <!-- Export -->
   <string name="send_exported">Данные отправлены</string>
   <string name="exporting_failed">Передача не удалась!</string>
@@ -65,7 +61,6 @@
   <string name="tiller">Режим плечей</string>
   <string name="sight_settings">Настройки прицела</string>
   <string name="add">Добавить</string>
-  <string name="select_picture">Выбрать изображение</string>
   <string name="take_picture">Сделать снимок</string>
   <string name="pick_from_gallery">Выбрать изображение из галереи</string>
   <!-- New arrow -->
@@ -106,9 +101,6 @@
   <string name="show_all">Показать все попадания</string>
   <string name="comment">Комментарии</string>
   <!-- Statistics -->
-  <string name="all_trainings">Все тренировки</string>
-  <string name="entire_training">Текущая тренировка</string>
-  <string name="current_round">Текущий раунд</string>
   <!-- Import/Backup -->
   <string name="select_a_file">Выберите файл</string>
   <string name="dir_not_created">Директория не может быть создана!</string>
@@ -118,14 +110,11 @@
   <string name="file_not_found">Файл не найден!</string>
   <string name="failed_reading_file">Не удалось прочитать файл!</string>
   <!-- Donate -->
-  <string name="donate_action">Поддержать автора</string>
   <string name="donate_2">Угостите меня бургером</string>
   <string name="donate_5">Угостите меня кебабом</string>
   <string name="donate_10">Угостите меня большой пиццей</string>
   <string name="donate_20">Заправьте мою машину</string>
-  <string name="donate_infinite">Любая другая поддрежка</string>
   <string name="donation_thank">Спасибо за вашу поддержку!</string>
-  <string name="monthly">ежемесячно %s</string>
   <string name="donate_text">Сумма включает НДС и 30% платежи для Google. Вместо этого можете воспользоваться PayPal. Мой аккаунт dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Таймер</string>
@@ -144,9 +133,6 @@
   <string name="import_action">Восстановить резервную копию</string>
   <string name="export">Отправить</string>
   <string name="exports_as_csv">Данные для передачи сохранены как *.csv</string>
-  <string name="app_rate">Оценить приложение</string>
-  <string name="app_share">Поделиться приложением</string>
-  <string name="contact_developer">Связаться с разработчиком</string>
   <string name="licences">Открытая лицензия</string>
   <string name="licences_summary">Правовая информация</string>
   <string name="version">Версия %s</string>
@@ -181,7 +167,6 @@
   <string name="standard_round">Стандартный раунд</string>
   <string name="use_as_template">Использовать шаблон?</string>
   <string name="create_copy">Это стандартный раунд! Вы хотите создать копию, чтобы изменить его?</string>
-  <string name="not_matches_sheme">Ввод не соответствует ожидаемому формату как 1,3,5</string>
   <string name="arrow_numbers_desc">Введите все номера стрел, которые вы используете для стрельбы. Например 1,2,5,6,7</string>
   <string name="practice">Тренировка</string>
   <string name="edit_training">Изменить тренировку</string>
@@ -257,8 +242,6 @@
   <string name="donate_via_paypal">Сделать пожертвование через PayPal</string>
   <string name="translate_crowdin">Перевести с помощью Crowdin</string>
   <string name="network_linkedin">Страница на LinkedIn</string>
-  <string name="enter_scores_only_description">Позволяет вам только вводить значение в баллах, а не точную позицию стрелы. Этот параметр используется для ввода данных с ваших \"умных часов\" или ввести историю попаданий.</string>
-  <string name="enter_scores_only">Вводите только результаты</string>
   <string name="search">Поиск</string>
   <string name="us">США</string>
   <string name="show_shots_training">Вся тренировка</string>
@@ -274,7 +257,6 @@
   <string name="archer">Стрелок</string>
   <string name="hits">Попадания</string>
   <string name="misses">Промахи</string>
-  <string name="percentage_reached_points">Процент от достигнутых результатов</string>
   <string name="arrow_number_removed">Номер стрелы удален!</string>
   <string name="new_end">New end</string>
   <string name="distribution">Distribution</string>

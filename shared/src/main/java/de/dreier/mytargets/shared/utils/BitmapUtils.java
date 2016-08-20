@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class BitmapUtils {
-    public static Bitmap decodeSampledBitmapFromFile(Context context, File file, int reqWidth, int reqHeight)
+    public static Bitmap decodeSampledBitmapFromFile(File file, int reqWidth, int reqHeight)
             throws IOException {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;

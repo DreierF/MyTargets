@@ -41,11 +41,7 @@
   <string name="statistic">Statisztika</string>
   <!-- Share -->
   <string name="share">Megosztás</string>
-  <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$sThis makes a total of %2$d out of %3$d rings.</string>
-  <string name="d_times_s">%1$d times %2$s\n</string>
-  <string name="text">Szöveg</string>
   <string name="dispersion_pattern">Szórás kép</string>
-  <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
   <string name="send_exported">Küldött adat</string>
   <string name="exporting_failed">Küldés sikertelen!</string>
@@ -61,7 +57,6 @@
   <string name="tiller">Tiller</string>
   <string name="sight_settings">Irányzék beállítás</string>
   <string name="add">Hozzáadás</string>
-  <string name="select_picture">válassz egy képet</string>
   <string name="take_picture">Készíts egy képet</string>
   <string name="pick_from_gallery">válassz képet a galériából</string>
   <!-- New arrow -->
@@ -100,9 +95,6 @@
   <string name="show_all">Összes becsapódás</string>
   <string name="comment">Komment</string>
   <!-- Statistics -->
-  <string name="all_trainings">Edzések</string>
-  <string name="entire_training">Teljes edzés</string>
-  <string name="current_round">Jelenlegi forduló</string>
   <!-- Import/Backup -->
   <string name="select_a_file">Fájl kiválasztása</string>
   <string name="dir_not_created">Mappa nem hozható létre!</string>
@@ -112,14 +104,11 @@
   <string name="file_not_found">A fájl nem található!</string>
   <string name="failed_reading_file">A fájl olvasása sikertelen!</string>
   <!-- Donate -->
-  <string name="donate_action">Támogatás</string>
   <string name="donate_2">Adomány egy burgerre</string>
   <string name="donate_5">Adomány egy kebabra</string>
   <string name="donate_10">Adomány egy nagy pizzára</string>
   <string name="donate_20">Adomány egy kis üzemanyagra</string>
-  <string name="donate_infinite">Tartós támogatás</string>
   <string name="donation_thank">Köszönöm a támogatást!</string>
-  <string name="monthly">havi %s</string>
   <string name="donate_text">Az összegek incl . ÁFA és 30 % díjat Google . Vagy lehet szívesen adományoz a PayPal számla dreier.florian@gmail.com .</string>
   <!-- Timer -->
   <string name="timer">Stopper</string>
@@ -138,9 +127,6 @@
   <string name="import_action">Importálás</string>
   <string name="export">Exportálás</string>
   <string name="exports_as_csv">Exportált mentett adatok *.csv</string>
-  <string name="app_rate">App értékelése</string>
-  <string name="app_share">App megosztása</string>
-  <string name="contact_developer">Kapcsolat a fejlesztõvel</string>
   <string name="licences">Nyílt forráskódú licencek</string>
   <string name="licences_summary">Jogi engedélyek</string>
   <string name="version">Verzió %s</string>
@@ -174,7 +160,6 @@
   <string name="standard_round">Standard round</string>
   <string name="use_as_template">Use as template?</string>
   <string name="create_copy">This is a standard round!\nDo you want to create a copy in order to edit it?</string>
-  <string name="not_matches_sheme">Input does not match the expected format like 1,3,5</string>
   <string name="arrow_numbers_desc">Enter all arrow number that you use for shooting e.g. 1,2,5,6,7</string>
   <string name="practice">Practice</string>
   <string name="edit_training">Edit Training</string>
@@ -243,8 +228,6 @@
   <string name="donate_via_paypal">Donate via PayPal</string>
   <string name="translate_crowdin">Translate on Crowdin</string>
   <string name="network_linkedin">Network on LinkedIn</string>
-  <string name="enter_scores_only_description">Lets you only enter the scores not the exact arrow position. Use this option to enter data with your smartwatch or to enter historical data.</string>
-  <string name="enter_scores_only">Enter scores only</string>
   <string name="search">Search</string>
   <string name="us">US</string>
   <string name="show_shots_training">Whole training</string>
@@ -260,7 +243,6 @@
   <string name="archer">Archer</string>
   <string name="hits">Hits</string>
   <string name="misses">Misses</string>
-  <string name="percentage_reached_points">Percentage of reached points</string>
   <string name="arrow_number_removed">Arrow number removed!</string>
   <string name="new_end">New end</string>
   <string name="distribution">Distribution</string>

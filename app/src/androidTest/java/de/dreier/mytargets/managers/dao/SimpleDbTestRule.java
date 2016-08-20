@@ -24,9 +24,6 @@ import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
 public class SimpleDbTestRule extends DbTestRuleBase {
 
-    public SimpleDbTestRule() {
-    }
-
     @Override
     protected void addDatabaseContent() {
         SettingsManager.setTarget(

@@ -45,11 +45,7 @@
   <string name="statistic">Statistiky</string>
   <!-- Share -->
   <string name="share">Sdílet</string>
-  <string name="my_share_text">Joo, podívejte se na mé lukostřelecké skóre. Mám: \n%1$sTo je celkem %2$d z %3$d kruhů.</string>
-  <string name="d_times_s">%1$d krát %2$s\n</string>
-  <string name="text">Popis</string>
   <string name="dispersion_pattern">Rozptylový vzor</string>
-  <string name="sharing_failed">Sdílení se nezdařilo!</string>
   <!-- Export -->
   <string name="send_exported">Odeslat exportovaná data</string>
   <string name="exporting_failed">Export se nezdařil!</string>
@@ -65,7 +61,6 @@
   <string name="tiller">Tiler</string>
   <string name="sight_settings">Nastavení zaměřovače</string>
   <string name="add">Přidat</string>
-  <string name="select_picture">Vybrat obrázek</string>
   <string name="take_picture">Vyfotit obrázek</string>
   <string name="pick_from_gallery">Vyber obrázek z galerie</string>
   <!-- New arrow -->
@@ -106,9 +101,6 @@
   <string name="show_all">Zobrazit všechny zásahy</string>
   <string name="comment">Komentář</string>
   <!-- Statistics -->
-  <string name="all_trainings">Všechny tréninky</string>
-  <string name="entire_training">Celý trénink</string>
-  <string name="current_round">Aktuální kolo</string>
   <!-- Import/Backup -->
   <string name="select_a_file">Vybrat soubor</string>
   <string name="dir_not_created">Nelze vytvořit adresář!</string>
@@ -118,14 +110,11 @@
   <string name="file_not_found">Soubor nenalezen!</string>
   <string name="failed_reading_file">Selhalo načtení souboru!</string>
   <!-- Donate -->
-  <string name="donate_action">Přispět</string>
   <string name="donate_2">Přispět na hamburgr</string>
   <string name="donate_5">Přispět na kebab</string>
   <string name="donate_10">Přispět na velkou pizzu</string>
   <string name="donate_20">Přispět na nějaké palivo</string>
-  <string name="donate_infinite">Trvalá podpora</string>
   <string name="donation_thank">Děkuji Vám za vaši podporu!</string>
-  <string name="monthly">měsíčně %s</string>
   <string name="donate_text">Částky jsou včetně DPH a 30% poplatku Googlu. Také můžete přispět na PayPal účet dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Časovač</string>
@@ -144,9 +133,6 @@
   <string name="import_action">Importovat</string>
   <string name="export">Exportovat</string>
   <string name="exports_as_csv">Export uložených dat do *.csv</string>
-  <string name="app_rate">Ohodnotit aplikaci</string>
-  <string name="app_share">Sdílet aplikaci</string>
-  <string name="contact_developer">Obraťte se na vývojáře</string>
   <string name="licences">Licence Open-Source</string>
   <string name="licences_summary">Právní poznámky k licencím</string>
   <string name="version">Verze %s</string>
@@ -181,7 +167,6 @@
   <string name="standard_round">Standardní kolo</string>
   <string name="use_as_template">Použít jako šablonu?</string>
   <string name="create_copy">Toto je standardní kolo!\nChcete vytvořit kopii, abyste ho mohli upravovat?</string>
-  <string name="not_matches_sheme">Zadání neodpovídá očekávanému formátu jako 1,3,5</string>
   <string name="arrow_numbers_desc">Zadejte počet všech šípů, které používáte pro střelbu např. 1,2,5,6,7</string>
   <string name="practice">Cvičení</string>
   <string name="edit_training">Upravit trénink</string>
@@ -257,8 +242,6 @@
   <string name="donate_via_paypal">Podpořit přes PayPal</string>
   <string name="translate_crowdin">Přeložit na Crowdin</string>
   <string name="network_linkedin">Síť na LinkedIn</string>
-  <string name="enter_scores_only_description">Umožňuje zadat pouze skóre bez přesné pozice šípu. Tuto možnost použijte k zadání dat s hodinkami smartwatch nebo zadání starších údajů.</string>
-  <string name="enter_scores_only">Zadat pouze výsledky</string>
   <string name="search">Hledat</string>
   <string name="us">US</string>
   <string name="show_shots_training">Celý trénink</string>
@@ -274,7 +257,6 @@
   <string name="archer">Střelec</string>
   <string name="hits">Zásahy</string>
   <string name="misses">Minuto</string>
-  <string name="percentage_reached_points">Procenta dosažených bodů</string>
   <string name="arrow_number_removed">Číslo šípu odstraněno!</string>
   <string name="new_end">Nová sada</string>
   <string name="distribution">Distribuce</string>

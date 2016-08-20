@@ -152,7 +152,9 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
                         //Cancel handling, you might wanna remove taken photo if it was canceled
                         if (source == EasyImage.ImageSource.CAMERA) {
                             File photoFile = EasyImage.lastlyTakenButCanceledPhoto(getContext());
-                            if (photoFile != null) photoFile.delete();
+                            if (photoFile != null) {
+                                photoFile.delete();
+                            }
                         }
                     }
                 });

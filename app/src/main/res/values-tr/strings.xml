@@ -41,11 +41,7 @@
   <string name="statistic">Istatistik</string>
   <!-- Share -->
   <string name="share">Paylaş</string>
-  <string name="my_share_text">İşte bu, puanıma bak! Puanım:\n%1$s. %3$d turda toplam %2$d puan.</string>
-  <string name="d_times_s">%1$d kere %2$s\n</string>
-  <string name="text">Metin</string>
   <string name="dispersion_pattern">Dağılım şekli</string>
-  <string name="sharing_failed">Paylaşım başarısız oldu!</string>
   <!-- Export -->
   <string name="send_exported">Aktarılan verileri gönder</string>
   <string name="exporting_failed">Dışa aktarma başarısız oldu!</string>
@@ -61,7 +57,6 @@
   <string name="tiller">Tiller</string>
   <string name="sight_settings">Nişangah ayarları</string>
   <string name="add">Ekle</string>
-  <string name="select_picture">Görüntü seç</string>
   <string name="take_picture">Fotoğraf Çek</string>
   <string name="pick_from_gallery">Galeri\'den bir görüntü seçin</string>
   <!-- New arrow -->
@@ -100,9 +95,6 @@
   <string name="show_all">Tüm etkileri göster</string>
   <string name="comment">Yorum</string>
   <!-- Statistics -->
-  <string name="all_trainings">Tüm antrenmanlar</string>
-  <string name="entire_training">Tüm antrenman</string>
-  <string name="current_round">Geçerli tur</string>
   <!-- Import/Backup -->
   <string name="select_a_file">Dosya seç</string>
   <string name="dir_not_created">Dizin oluşturulamadı!</string>
@@ -112,14 +104,11 @@
   <string name="file_not_found">Dosya bulunamadı!</string>
   <string name="failed_reading_file">Dosya okuma başarısız!</string>
   <!-- Donate -->
-  <string name="donate_action">Bağışta bulun</string>
   <string name="donate_2">Donate me a burger</string>
   <string name="donate_5">Donate me a kebab</string>
   <string name="donate_10">Donate me a large pizza</string>
   <string name="donate_20">Donate me some fuel</string>
-  <string name="donate_infinite">Lasting support</string>
   <string name="donation_thank">Desteğiniz için teşekkürler!</string>
-  <string name="monthly">aylık %s</string>
   <string name="donate_text">Ücretler vergi ve %30 Google giderleridir. Alternatif olarak PayPal üzerinden  dreier.florian@gmail.com hesabına bağışta bulunabilirsiniz.</string>
   <!-- Timer -->
   <string name="timer">kronometre</string>
@@ -138,9 +127,6 @@
   <string name="import_action">Içe aktarma</string>
   <string name="export">Dışa aktarma</string>
   <string name="exports_as_csv">Kaydedilen veriyi *.csv olarak aktar</string>
-  <string name="app_rate">Uygulamayı derecelendir</string>
-  <string name="app_share">Uygulamayı paylaş</string>
-  <string name="contact_developer">Iletişim</string>
   <string name="licences">Açık kaynak lisansları</string>
   <string name="licences_summary">Lisanslar için yasal notlar</string>
   <string name="version">Sürüm %s</string>
@@ -174,7 +160,6 @@
   <string name="standard_round">Standart tur</string>
   <string name="use_as_template">Şablon olarak kullan?</string>
   <string name="create_copy">Bu standart bir turdur. Düzenlemek üzere kopyasını kaydetmek ister misin \n?</string>
-  <string name="not_matches_sheme">Yapılan giriş istenilen formatla eşleşmiyor. 1,3,6 gibi</string>
   <string name="arrow_numbers_desc">Atış için kullandığın tüm ok numaralarını gir ör. 1.2.5.6.7</string>
   <string name="practice">İdman</string>
   <string name="edit_training">Antrenmanı Düzenle</string>
@@ -243,8 +228,6 @@
   <string name="donate_via_paypal">PayPal ile bağış yap</string>
   <string name="translate_crowdin">Crowdin\'de çeviri yap</string>
   <string name="network_linkedin">Network on LinkedIn</string>
-  <string name="enter_scores_only_description">Lets you only enter the scores not the exact arrow position. Use this option to enter data with your smartwatch or to enter historical data.</string>
-  <string name="enter_scores_only">Sadece puanları girin</string>
   <string name="search">Search</string>
   <string name="us">US</string>
   <string name="show_shots_training">Whole training</string>
@@ -260,7 +243,6 @@
   <string name="archer">Archer</string>
   <string name="hits">Hits</string>
   <string name="misses">Misses</string>
-  <string name="percentage_reached_points">Percentage of reached points</string>
   <string name="arrow_number_removed">Arrow number removed!</string>
   <string name="new_end">New end</string>
   <string name="distribution">Distribution</string>

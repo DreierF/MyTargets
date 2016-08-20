@@ -38,10 +38,10 @@ import de.dreier.mytargets.utils.multiselector.HeaderBindingHolder;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
-import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_TYPE;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND;
 import static de.dreier.mytargets.utils.ActivityUtils.showStatistics;
 import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
+import static de.dreier.mytargets.utils.ActivityUtils.startNewTraining;
 
 /**
  * Shows an overview over all training days
@@ -70,10 +70,8 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
         binding.recyclerView.setHasFixedSize(true);
         mAdapter = new TrainingAdapter();
         binding.recyclerView.setAdapter(mAdapter);
-        binding.fab1.setOnClickListener(view -> startActivityAnimated(getActivity(),
-                EditTrainingActivity.class, TRAINING_TYPE, FREE_TRAINING));
-        binding.fab2.setOnClickListener(view -> startActivityAnimated(getActivity(),
-                EditTrainingActivity.class, TRAINING_TYPE, TRAINING_WITH_STANDARD_ROUND));
+        binding.fab1.setOnClickListener(view -> startNewTraining(getActivity(), FREE_TRAINING));
+        binding.fab2.setOnClickListener(view -> startNewTraining(getActivity(), TRAINING_WITH_STANDARD_ROUND));
         return binding.getRoot();
     }
 
