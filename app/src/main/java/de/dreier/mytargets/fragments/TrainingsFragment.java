@@ -35,6 +35,7 @@ import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.HeaderBindingHolder;
 import de.dreier.mytargets.utils.SelectableViewHolder;
+import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.Utils;
 
 import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
@@ -67,6 +68,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_trainings, container, false);
         binding.recyclerView.setHasFixedSize(true);
         mAdapter = new TrainingAdapter();
+        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
         binding.fab1.setOnClickListener(view -> startActivityAnimated(getActivity(),
             EditTrainingActivity.class, TRAINING_TYPE, FREE_TRAINING));
