@@ -33,8 +33,6 @@ import de.dreier.mytargets.models.Month;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.DataLoader;
-import de.dreier.mytargets.utils.HeaderBindingHolder;
-import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.multiselector.HeaderBindingHolder;

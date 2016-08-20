@@ -19,7 +19,7 @@ import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemTextBinding;
 import de.dreier.mytargets.models.WindDirection;
-import de.dreier.mytargets.utils.SelectableViewHolder;
+
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
