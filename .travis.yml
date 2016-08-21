@@ -27,7 +27,6 @@ before_install:
 - export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
 - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
 - export JAVA_HOME=$JAVA8_HOME
-- openssl aes-256-cbc -K $encrypted_143bf53fc355_key -iv $encrypted_143bf53fc355_iv -in dropbox_uploader.sh.enc -out dropbox_uploader.sh -d
 script:
 - ./gradlew clean assembleRegularRelease
 - adb shell input keyevent 82 &
@@ -36,16 +35,15 @@ after_success:
 - |
   if [[ "$TRAVIS_TAG" ]]; then
     ./gradlew publishApkRegularRelease
-    sudo ./dropbox_uploader.sh upload file:///home/travis/build/DreierF/MyTargets/app/build/outputs/apk/app-regular-release.apk /$TRAVIS_TAG/MyTargets.apk
-    sudo ./dropbox_uploader.sh upload file:///home/travis/build/DreierF/MyTargets/app/build/outputs/mapping/regular/release/mapping.txt /$TRAVIS_TAG/mapping.txt
+    sudo ./dropbox_uploader.sh upload app/build/outputs/apk/app-regular-release.apk /$TRAVIS_TAG/MyTargets.apk
+    sudo ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /$TRAVIS_TAG/mapping.txt
   fi
 - curl https://www.jpm4j.org/install/script | sudo sh
 - sudo jpm install com.codacy:codacy-coverage-reporter:assembly
-- codacy-coverage-reporter -l Java -r file:///home/travis/build/DreierF/MyTargets/app/build/reports/coverage/regular/debug/report.xml
+- codacy-coverage-reporter -l Java -r app/build/reports/coverage/regular/debug/report.xml
 after_failure:
-  - sudo ls -a
-  - sudo chmod +x dropbox_uploader.sh
-  - sudo ./dropbox_uploader.sh upload file:///home/travis/build/DreierF/MyTargets/app/build/reports/androidTests/connected/flavors/REGULAR/ /$TRAVIS_JOB_NUMBER/Reports/
+  - chmod +x dropbox_uploader.sh
+  - ./dropbox_uploader.sh upload app/build/reports/androidTests/connected/flavors/REGULAR/ /$TRAVIS_JOB_NUMBER/Reports/
 deploy:
   provider: releases
   skip_cleanup: true

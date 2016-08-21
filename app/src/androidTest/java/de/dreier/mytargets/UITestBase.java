@@ -16,7 +16,6 @@ import android.support.test.uiautomator.UiDevice;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageButton;
 
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -31,6 +30,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.endsWith;
 import static org.junit.Assert.assertThat;
@@ -40,7 +40,7 @@ public class UITestBase extends InstrumentedTestBase {
     private static Matcher<View> androidHomeMatcher() {
         return allOf(
                 withParent(withClassName(is(Toolbar.class.getName()))),
-                withClassName(is(ImageButton.class.getName()))
+                withClassName(containsString("ImageButton"))
         );
     }
 
