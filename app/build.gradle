@@ -118,11 +118,11 @@ if (new File('gradle.properties').exists()) {
 }
 
 dependencies {
+    compile "com.android.support:support-v4:$supportLibVersion"
     compile "com.android.support:support-compat:$supportLibVersion"
     compile "com.android.support:support-core-utils:$supportLibVersion"
     compile "com.android.support:support-core-ui:$supportLibVersion"
     compile "com.android.support:support-fragment:$supportLibVersion"
-
     compile "com.android.support:appcompat-v7:$supportLibVersion"
     compile "com.android.support:design:$supportLibVersion"
     compile "com.android.support:support-annotations:$supportLibVersion"
@@ -180,6 +180,10 @@ dependencies {
 
     androidTestCompile 'com.google.code.findbugs:jsr305:3.0.0'
     androidTestCompile "com.android.support:support-v4:$supportLibVersion"
+    androidTestCompile "com.android.support:support-compat:$supportLibVersion"
+    androidTestCompile "com.android.support:support-core-utils:$supportLibVersion"
+    androidTestCompile "com.android.support:support-core-ui:$supportLibVersion"
+    androidTestCompile "com.android.support:support-fragment:$supportLibVersion"
     androidTestCompile "com.android.support:appcompat-v7:$supportLibVersion"
     androidTestCompile "com.android.support:design:$supportLibVersion"
     androidTestCompile "com.android.support:support-annotations:$supportLibVersion"
