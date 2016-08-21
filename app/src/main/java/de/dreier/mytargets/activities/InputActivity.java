@@ -13,11 +13,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityInputBinding;
 import de.dreier.mytargets.fragments.TimerFragment;
+import de.dreier.mytargets.interfaces.OnEndUpdatedListener;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.WearMessageManager;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
@@ -45,7 +50,7 @@ import de.dreier.mytargets.utils.ToolbarUtils;
 import icepick.Icepick;
 import icepick.State;
 
-public class InputActivity extends ChildActivityBase implements OnTargetSetListener {
+public class InputActivity extends ChildActivityBase implements OnTargetSetListener, OnEndUpdatedListener {
 
     public static final String ROUND_ID = "round_id";
     public static final String PASSE_IND = "passe_ind";
@@ -71,7 +76,10 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_input);
 
+        setSupportActionBar(binding.toolbar);
+
         binding.targetView.setOnTargetSetListener(this);
+        binding.targetView.setUpdateListener(this);
 
         RoundDataSource roundDataSource = new RoundDataSource();
         passeDataSource = new PasseDataSource();
@@ -89,9 +97,9 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
 
         binding.targetView.setRoundTemplate(template);
         Dimension diameter = new Dimension(5, Dimension.Unit.MILLIMETER);
-        if(training.arrow >0) {
+        if (training.arrow > 0) {
             Arrow arrow = new ArrowDataSource().get(training.arrow);
-            if(arrow != null) {
+            if (arrow != null) {
                 diameter = arrow.diameter;
             }
         }
@@ -164,13 +172,11 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     }
 
     private void setPasse(int passe) {
-        if (passe >= template.endCount) {
-            if (savedPasses <= curPasse && standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
-                // If standard round is over exit the input activity
-                finish();
-                overridePendingTransition(R.anim.left_in, R.anim.right_out);
-                return;
-            }
+        if (passe >= template.endCount && savedPasses <= curPasse && standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
+            // If standard round is over exit the input activity
+            finish();
+            overridePendingTransition(R.anim.left_in, R.anim.right_out);
+            return;
         }
         if (passe < savedPasses) {
             // If the end is already saved load it from the database
@@ -267,6 +273,21 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         }
         runOnUiThread(this::updatePasse);
         return passe.getId();
+    }
+
+    @Override
+    public void onEndUpdated(Passe p, List<Passe> old) {
+        int reachedEndPoints = p.getReachedPoints(template.target);
+        int maxEndPoints = round.info.target.getEndMaxPoints(round.info.arrowsPerEnd);
+        binding.scoreEnd.setText(reachedEndPoints + "/" + maxEndPoints);
+        final List<Passe> ends = Stream.of(old)
+                .filter(p2 -> round.getId() == p2.roundId && p2.getId() != p.getId())
+                .collect(Collectors.toList());
+        ends.add(p);
+        int reachedRoundPoints = Stream.of(ends)
+                .reduce(0, (sum, end) -> sum + end.getReachedPoints(round.info.target));
+        int maxRoundPoints = maxEndPoints * ends.size();
+        binding.scoreRound.setText(reachedRoundPoints + "/" + maxRoundPoints);
     }
 
     private NotificationInfo buildInfo() {
