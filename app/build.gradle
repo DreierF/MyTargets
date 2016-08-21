@@ -85,7 +85,14 @@ tasks.withType(DataBindingExportBuildInfoTask) { task ->
     }
 }
 
-if (new File('gradle.properties').exists()) {
+task renameFolders {
+    file('app/src/main/play/ca-ES').renameTo(file('app/src/main/play/ca'))
+    file('app/src/main/play/sk-SK').renameTo(file('app/src/main/play/sk'))
+    file('app/src/main/play/sl-SI').renameTo(file('app/src/main/play/sl'))
+}
+
+def CROWDIN_API_KEY = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
+if (CROWDIN_API_KEY != null && !CROWDIN_API_KEY.isEmpty()) {
     afterEvaluate {
         tasks.whenTaskAdded { task ->
             if (task.name.equals("assembleRelease")) {
@@ -101,20 +108,16 @@ if (new File('gradle.properties').exists()) {
             }
         }
 
-        task renameFolders {
-            file('app/src/main/play/ca-ES').renameTo(file('app/src/main/play/ca'))
-            file('app/src/main/play/sk-SK').renameTo(file('app/src/main/play/sk'))
-            file('app/src/main/play/sl-SI').renameTo(file('app/src/main/play/sl'))
-        }
-
         task generateLocalizedScreenshots(type: Exec, group: 'play store', dependsOn: [':crowdinDownload', 'assembleScreengrabDebugAndroidTest', 'assembleScreengrabDebug']) {
             workingDir '..'
             commandLine './make_screenshots.sh'
         }
-    }
 
-    play {
-        jsonFile = file(PLAY_STORE_JSON)
+        if (new File('googlePlayAndroidDeveloper.json').exists()) {
+            play {
+                jsonFile = file('googlePlayAndroidDeveloper.json')
+            }
+        }
     }
 }
 

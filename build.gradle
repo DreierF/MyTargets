@@ -11,7 +11,7 @@ buildscript {
         classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
         classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.0.9'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
-        classpath 'com.github.triplet.gradle:play-publisher:1.1.4'
+        classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
         classpath 'com.trickyandroid:jacoco-everywhere:0.2.1'
         classpath 'org.ajoberstar:grgit:1.7.0'
     }
