@@ -13,8 +13,8 @@ import android.support.annotation.Nullable;
 
 import java.util.List;
 
-import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
-import de.dreier.mytargets.interfaces.PartitionDelegate;
+import de.dreier.mytargets.adapters.ExpandableListAdapter;
+import de.dreier.mytargets.interfaces.ItemAdapter;
 import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.shared.models.IIdSettable;
@@ -26,40 +26,28 @@ import de.dreier.mytargets.utils.Utils;
 abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSettable> extends EditableFragmentBase<C> {
 
     private static final String KEY_EXPANDED = "expanded";
-    ExpandableNowListAdapter<H, C> mAdapter;
+    ExpandableListAdapter<H, C> mAdapter;
     @Nullable
     private Bundle savedInstanceState;
 
-    void setList(IdProviderDataSource<C> dataSource, List<H> headers, List<C> children, PartitionDelegate<C> parentDelegate, boolean opened) {
+    void setList(IdProviderDataSource<C> dataSource, List<C> children, boolean opened) {
         this.dataSource = dataSource;
         if (mAdapter.getItemCount() == 0) {
-            mAdapter.setList(headers, children, parentDelegate, opened);
+            mAdapter.setList(children, opened);
             if (savedInstanceState != null && savedInstanceState.containsKey(KEY_EXPANDED)) {
                 mAdapter.setExpandedIds(
                         Utils.toList(savedInstanceState.getLongArray(KEY_EXPANDED)));
             } else if (!opened && mAdapter.getItemCount() > 0) {
-                mAdapter.expandOrCollapse(0);
+                mAdapter.expandFirst();
             }
             return;
         }
-        mAdapter.setList(headers, children, parentDelegate);
-    }
-
-    @SuppressWarnings("unchecked")
-    @NonNull
-    @Override
-    protected C getItem(int id) {
-        return (C) mAdapter.getItem(id);
+        mAdapter.setList(children);
     }
 
     @Override
-    protected void removeItem(int pos) {
-        mAdapter.remove(pos);
-    }
-
-    @Override
-    protected void addItem(int pos, C item) {
-        mAdapter.add(pos, item);
+    protected ItemAdapter<C> getAdapter() {
+        return mAdapter;
     }
 
     @Override

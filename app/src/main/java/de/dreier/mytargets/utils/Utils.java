@@ -40,8 +40,9 @@ public class Utils {
     public static long[] toArray(List<Long> values) {
         long[] result = new long[values.size()];
         int i = 0;
-        for (Long l : values)
+        for (Long l : values) {
             result[i++] = l;
+        }
         return result;
     }
 

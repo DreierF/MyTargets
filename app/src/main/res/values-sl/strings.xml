@@ -49,9 +49,6 @@
   <string name="statistic">Statistika</string>
   <!-- Share -->
   <string name="share">Deli</string>
-  <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$sThis makes a total of %2$d out of %3$d rings.</string>
-  <string name="d_times_s">%1$d times %2$s\n</string>
-  <string name="text">Besedilo</string>
   <string name="dispersion_pattern">Razporeditov zadetkov</string>
   <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
@@ -69,7 +66,6 @@
   <string name="tiller">Tiler</string>
   <string name="sight_settings">Nastavitve merilne naprave</string>
   <string name="add">Dodaj</string>
-  <string name="select_picture">Izberi fotografijo</string>
   <string name="take_picture">Posnemi fotografijo</string>
   <string name="pick_from_gallery">Izberi sliko iz albuma</string>
   <!-- New arrow -->
@@ -112,9 +108,6 @@
   <string name="show_all">Prikaži vse zadetke</string>
   <string name="comment">Komentar</string>
   <!-- Statistics -->
-  <string name="all_trainings">Vsi treningi</string>
-  <string name="entire_training">Celoten trening</string>
-  <string name="current_round">Trenutni krog</string>
   <!-- Import/Backup -->
   <string name="select_a_file">Izberi datoteko</string>
   <string name="dir_not_created">Directory could not be created!</string>
@@ -124,14 +117,11 @@
   <string name="file_not_found">Datoteka ni bila najdena!</string>
   <string name="failed_reading_file">Datoteke ni mogoèe prebrati!</string>
   <!-- Donate -->
-  <string name="donate_action">Doniraj</string>
   <string name="donate_2">Doniraj mi burger</string>
   <string name="donate_5">Doniraj mi kebab</string>
   <string name="donate_10">Doniraj mi veliko pico</string>
   <string name="donate_20">Doniraj mi nekaj goriva</string>
-  <string name="donate_infinite">Trajna podpora</string>
   <string name="donation_thank">Hvala za vašo podporo!</string>
-  <string name="monthly">meseèno %s</string>
   <string name="donate_text"> V donacijo je vkljuèen DDV in 30% pristojbine za Google. Zaželjena alternativa je donacija preko PayPal na raèun dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Odštevalnik</string>
@@ -150,9 +140,6 @@
   <string name="import_action">Uvozi</string>
   <string name="export">Izvozi</string>
   <string name="exports_as_csv">Izvozi shranjene datoteke kot *.csv</string>
-  <string name="app_rate">Oceni aplikacijo</string>
-  <string name="app_share">Deli aplikacijo</string>
-  <string name="contact_developer">Kontaktiraj razvijalca</string>
   <string name="licences">Licence</string>
   <string name="licences_summary">Pravna obvestila</string>
   <string name="version">Verzija %s</string>
@@ -188,7 +175,6 @@
   <string name="standard_round">Standard round</string>
   <string name="use_as_template">Use as template?</string>
   <string name="create_copy">This is a standard round!\nDo you want to create a copy in order to edit it?</string>
-  <string name="not_matches_sheme">Input does not match the expected format like 1,3,5</string>
   <string name="arrow_numbers_desc">Enter all arrow number that you use for shooting e.g. 1,2,5,6,7</string>
   <string name="practice">Practice</string>
   <string name="edit_training">Edit Training</string>
@@ -271,8 +257,6 @@
   <string name="donate_via_paypal">Donate via PayPal</string>
   <string name="translate_crowdin">Translate on Crowdin</string>
   <string name="network_linkedin">Network on LinkedIn</string>
-  <string name="enter_scores_only_description">Lets you only enter the scores not the exact arrow position. Use this option to enter data with your smartwatch or to enter historical data.</string>
-  <string name="enter_scores_only">Enter scores only</string>
   <string name="search">Search</string>
   <string name="us">US</string>
   <string name="show_shots_training">Whole training</string>
@@ -288,7 +272,6 @@
   <string name="archer">Archer</string>
   <string name="hits">Hits</string>
   <string name="misses">Misses</string>
-  <string name="percentage_reached_points">Percentage of reached points</string>
   <string name="arrow_number_removed">Arrow number removed!</string>
   <string name="new_end">New end</string>
   <string name="distribution">Distribution</string>

@@ -20,14 +20,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.InputActivity;
 import de.dreier.mytargets.activities.ScoreboardActivity;
-import de.dreier.mytargets.activities.StatisticsActivity;
-import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemEndBinding;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
@@ -40,9 +40,11 @@ import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
-import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+
+import static de.dreier.mytargets.utils.ActivityUtils.showStatistics;
 
 /**
  * Shows all passes of one round
@@ -126,10 +128,7 @@ public class RoundFragment extends EditableFragment<Passe> {
                 startActivity(intent);
                 return true;
             case R.id.action_statistics:
-                Intent i = new Intent(getContext(), StatisticsActivity.class);
-                i.putExtra(StatisticsActivity.TRAINING_ID, round.trainingId);
-                i.putExtra(StatisticsActivity.ROUND_ID, round.getId());
-                startActivity(i);
+                showStatistics(getActivity(), Collections.singletonList(round.getId()));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -161,10 +160,10 @@ public class RoundFragment extends EditableFragment<Passe> {
         startActivity(i);
     }
 
-    private class EndAdapter extends NowListAdapter<Passe> {
+    private class EndAdapter extends ListAdapterBase<Passe> {
 
         EndAdapter(Context context) {
-            super(context);
+            super(context, (l, r) -> l.index - r.index);
         }
 
         @Override

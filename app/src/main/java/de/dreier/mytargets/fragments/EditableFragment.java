@@ -11,12 +11,13 @@ import android.content.Context;
 
 import org.parceler.Parcels;
 
-import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.adapters.ListAdapterBase;
+import de.dreier.mytargets.interfaces.ItemAdapter;
 import de.dreier.mytargets.shared.models.IIdSettable;
 
 public abstract class EditableFragment<T extends IIdSettable> extends EditableFragmentBase<T> {
 
-    protected NowListAdapter<T> mAdapter;
+    protected ListAdapterBase<T> mAdapter;
     private OnItemSelectedListener listener;
 
     @Override
@@ -41,17 +42,7 @@ public abstract class EditableFragment<T extends IIdSettable> extends EditableFr
     protected abstract void onItemSelected(T item);
 
     @Override
-    protected T getItem(int id) {
-        return mAdapter.getItem(id);
-    }
-
-    @Override
-    protected void addItem(int pos, T item) {
-        mAdapter.add(pos, item);
-    }
-
-    @Override
-    protected void removeItem(int pos) {
-        mAdapter.remove(pos);
+    protected ItemAdapter<T> getAdapter() {
+        return mAdapter;
     }
 }

@@ -1,18 +1,10 @@
 package de.dreier.mytargets.managers.dao;
 
-import android.support.annotation.NonNull;
-import android.support.test.InstrumentationRegistry;
-
-import org.joda.time.LocalDate;
-
 import java.util.Random;
 
-import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.EWeather;
-import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
@@ -20,9 +12,6 @@ import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.targets.WAFull;
 
 public class MiniDbTestRule extends DbTestRuleBase {
-
-    public MiniDbTestRule() {
-    }
 
     @Override
     protected void addDatabaseContent() {

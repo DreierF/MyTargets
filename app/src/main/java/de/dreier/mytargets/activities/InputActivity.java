@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityInputBinding;
@@ -62,7 +61,6 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     private WearMessageManager manager;
     private Training training;
     private RoundTemplate template;
-    private List<Round> rounds;
     private PasseDataSource passeDataSource;
     private StandardRound standardRound;
 
@@ -87,7 +85,6 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         template = round.info;
         training = new TrainingDataSource().get(round.trainingId);
         standardRound = new StandardRoundDataSource().get(training.standardRoundId);
-        rounds = roundDataSource.getAll(round.trainingId);
         savedPasses = passeDataSource.getAllByRound(roundId).size();
 
         binding.targetView.setRoundTemplate(template);
@@ -168,25 +165,12 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
 
     private void setPasse(int passe) {
         if (passe >= template.endCount) {
-            if (rounds.size() > template.index + 1) {
-                // Go to next round if current round is finished
-                round = rounds.get(template.index + 1);
-                template = round.info;
-                passe = 0;
-                savedPasses = passeDataSource.getAllByRound(round.getId()).size();
-            } else if (savedPasses <= curPasse && standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
+            if (savedPasses <= curPasse && standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
                 // If standard round is over exit the input activity
                 finish();
                 overridePendingTransition(R.anim.left_in, R.anim.right_out);
                 return;
             }
-        } else if (passe == -1 && template.index > 0) {
-            // If we navigate backwards and go past the beginning of lets say round 2
-            // -> go to the last end of round 1
-            round = rounds.get(template.index - 1);
-            template = round.info;
-            passe = template.endCount - 1;
-            savedPasses = template.endCount;
         }
         if (passe < savedPasses) {
             // If the end is already saved load it from the database
@@ -215,10 +199,9 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     }
 
     private void updatePasse() {
-        binding.prev.setEnabled(curPasse > 0 || template.index > 0);
+        binding.prev.setEnabled(curPasse > 0);
         binding.next.setEnabled(curPasse < savedPasses &&
                 (curPasse + 1 < template.endCount || // The current round is not finished
-                        rounds.size() > template.index + 1 || // We still have another round
                         standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE)); // or we don't have an exit condition
 
         ToolbarUtils.setTitle(this, getString(R.string.passe) + " " + (curPasse + 1));

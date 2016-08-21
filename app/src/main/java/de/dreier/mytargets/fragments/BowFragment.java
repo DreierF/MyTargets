@@ -20,7 +20,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditBowActivity;
-import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
 import de.dreier.mytargets.managers.dao.BowDataSource;
@@ -30,7 +30,7 @@ import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.HTMLInfoBuilder;
 import de.dreier.mytargets.utils.HtmlUtils;
-import de.dreier.mytargets.utils.SelectableViewHolder;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 
 import static de.dreier.mytargets.fragments.EditBowFragment.BOW_ID;
@@ -83,9 +83,9 @@ public class BowFragment extends EditableFragment<Bow> {
         startActivityAnimated(getActivity(), EditBowActivity.class, BOW_ID, item.getId());
     }
 
-    private class BowAdapter extends NowListAdapter<Bow> {
+    private class BowAdapter extends ListAdapterBase<Bow> {
         public BowAdapter(Context context) {
-            super(context);
+            super(context, (l, r) -> l.getName().compareTo(r.getName()));
         }
 
         @Override
@@ -98,7 +98,7 @@ public class BowFragment extends EditableFragment<Bow> {
 
     class ViewHolder extends SelectableViewHolder<Bow> {
 
-        ItemImageDetailsBinding binding;
+        final ItemImageDetailsBinding binding;
 
         public ViewHolder(View itemView) {
             super(itemView, mSelector, BowFragment.this);

@@ -14,16 +14,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditTrainingActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase.TrainingActivity;
-import de.dreier.mytargets.adapters.ExpandableNowListAdapter;
+import de.dreier.mytargets.adapters.ExpandableListAdapter;
 import de.dreier.mytargets.databinding.FragmentTrainingsBinding;
 import de.dreier.mytargets.databinding.ItemHeaderMonthBinding;
 import de.dreier.mytargets.databinding.ItemTrainingBinding;
@@ -33,15 +33,16 @@ import de.dreier.mytargets.models.Month;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.DataLoader;
-import de.dreier.mytargets.utils.HeaderBindingHolder;
-import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.Utils;
+import de.dreier.mytargets.utils.multiselector.HeaderBindingHolder;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
-import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_TYPE;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND;
+import static de.dreier.mytargets.utils.ActivityUtils.showStatistics;
 import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
+import static de.dreier.mytargets.utils.ActivityUtils.startNewTraining;
 
 /**
  * Shows an overview over all training days
@@ -55,6 +56,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
         itemTypeSelRes = R.plurals.training_selected;
         itemTypeDelRes = R.plurals.training_deleted;
         newStringRes = R.string.new_training;
+        supportsStatistics = true;
     }
 
     @Override
@@ -70,16 +72,23 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
         mAdapter = new TrainingAdapter();
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
-        binding.fab1.setOnClickListener(view -> startActivityAnimated(getActivity(),
-            EditTrainingActivity.class, TRAINING_TYPE, FREE_TRAINING));
-        binding.fab2.setOnClickListener(view -> startActivityAnimated(getActivity(),
-                EditTrainingActivity.class, TRAINING_TYPE, TRAINING_WITH_STANDARD_ROUND));
+        binding.fab1.setOnClickListener(view -> startNewTraining(getActivity(), FREE_TRAINING));
+        binding.fab2.setOnClickListener(view -> startNewTraining(getActivity(), TRAINING_WITH_STANDARD_ROUND));
         return binding.getRoot();
     }
 
     @Override
     public void onSelected(Training item) {
         startActivityAnimated(getActivity(), TrainingActivity.class, ITEM_ID, item.getId());
+    }
+
+    @Override
+    protected void onStatistics(List<Long> trainingIds) {
+        showStatistics(getActivity(),
+                Stream.of(trainingIds)
+                        .flatMap(tid -> Stream.of(new RoundDataSource().getAll(tid)))
+                        .map(Round::getId)
+                        .collect(Collectors.toList()));
     }
 
     @Override
@@ -95,20 +104,21 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
 
     @Override
     public void onLoadFinished(Loader<List<Training>> loader, List<Training> data) {
-        Set<Long> monthMap = new HashSet<>();
-        List<Month> months = new ArrayList<>();
-        for (Training t : data) {
-            long parentId = Utils.getMonthId(t.date);
-            if (!monthMap.contains(parentId)) {
-                monthMap.add(parentId);
-                months.add(new Month(parentId));
-            }
-        }
-        Collections.sort(months, Collections.reverseOrder());
-        setList(trainingDataSource, months, data, child -> Utils.getMonthId(child.date), false);
+        setList(trainingDataSource,data, false);
     }
 
-    private class TrainingAdapter extends ExpandableNowListAdapter<Month, Training> {
+    private class TrainingAdapter extends ExpandableListAdapter<Month, Training> {
+
+        TrainingAdapter() {
+            super(child -> new Month(Utils.getMonthId(child.date)),
+                    Collections.reverseOrder(),
+                    Collections.reverseOrder((l, r) -> {
+                        if (l.date.equals(r.date)) {
+                            return (int) (l.getId() - r.getId());
+                        }
+                        return l.date.compareTo(r.date);
+                    }));
+        }
 
         @Override
         protected HeaderViewHolder getTopLevelViewHolder(ViewGroup parent) {

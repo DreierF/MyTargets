@@ -157,4 +157,12 @@ public class RoundDataSource extends IdProviderDataSource<Round> {
         res.close();
         return list;
     }
+
+    public List<Round> getAll(long[] roundIds) {
+        List<Round> list = new ArrayList<>();
+        for (long roundId : roundIds) {
+            list.add(get(roundId));
+        }
+        return list;
+    }
 }

@@ -281,8 +281,9 @@ public class SettingsManager {
 
     public static String getProfileBirthDayFormatted() {
         final LocalDate birthDay = getProfileBirthDay();
-        if (birthDay == null)
+        if (birthDay == null) {
             return null;
+        }
         return DateTimeFormat.mediumDate().print(birthDay);
     }
 

@@ -341,7 +341,9 @@ public class ThumbnailUtils {
      */
     private static void createThumbnailFromEXIF(String filePath, int targetSize,
                                                 int maxPixels, SizedThumbnailBitmap sizedThumbBitmap) {
-        if (filePath == null) return;
+        if (filePath == null) {
+            return;
+        }
 
         ExifInterface exif;
         byte[] thumbData = null;

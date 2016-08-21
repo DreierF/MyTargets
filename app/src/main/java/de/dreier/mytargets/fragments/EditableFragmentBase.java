@@ -18,39 +18,44 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
-import com.bignerdranch.android.multiselector.MultiSelector;
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.interfaces.ItemAdapter;
 import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.utils.OnCardClickListener;
-import de.dreier.mytargets.utils.Pair;
-import de.dreier.mytargets.utils.SelectableViewHolder;
+import de.dreier.mytargets.utils.SelectorBundler;
+import de.dreier.mytargets.utils.multiselector.MultiSelector;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+import icepick.State;
 
 abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<T>
         implements OnCardClickListener<T>, LoaderManager.LoaderCallbacks<List<T>> {
 
+    protected boolean supportsStatistics = false;
+    @State(SelectorBundler.class)
+    MultiSelector mSelector = new MultiSelector();
     @PluralsRes
     int itemTypeDelRes;
-    final MultiSelector mSelector = new MultiSelector();
     IdProviderDataSource<T> dataSource;
-    private final ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(mSelector) {
+    private final ActionMode.Callback mDeleteMode = new ActionMode.Callback() {
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             MenuItem edit = menu.findItem(R.id.action_edit);
-            edit.setVisible(mSelector.getSelectedPositions().size() == 1);
+            edit.setVisible(mSelector.getSelectedIds().size() == 1);
+            MenuItem stats = menu.findItem(R.id.action_statistics);
+            stats.setVisible(supportsStatistics);
             return false;
         }
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            super.onCreateActionMode(mode, menu);
+            mSelector.setSelectable(true);
             actionMode = mode;
             MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.context_menu_edit_delete, menu);
@@ -61,13 +66,15 @@ abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_edit:
-                    int id = mSelector.getSelectedPositions().get(0);
-                    onEdit(getItem(id));
+                    onEdit(getSelectedItems().get(0));
+                    mode.finish();
+                    return true;
+                case R.id.action_statistics:
+                    onStatistics(mSelector.getSelectedIds());
                     mode.finish();
                     return true;
                 case R.id.action_delete:
-                    List<Integer> positions = mSelector.getSelectedPositions();
-                    remove(positions);
+                    remove(getSelectedItems());
                     mode.finish();
                     return true;
                 default:
@@ -75,10 +82,17 @@ abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<
             }
         }
 
+        private List<T> getSelectedItems() {
+            List<Long> ids = mSelector.getSelectedIds();
+            return Stream.of(ids)
+                    .map(id -> getAdapter().getItemById(id))
+                    .collect(Collectors.toList());
+        }
+
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            super.onDestroyActionMode(mode);
-            getMultiSelector().clearSelections();
+            mSelector.setSelectable(false);
+            mSelector.clearSelections();
             actionMode = null;
         }
     };
@@ -102,23 +116,16 @@ abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<
         // screen on resume just in case something changed
     }
 
-    private void remove(List<Integer> positions) {
-        Collections.sort(positions);
-        Collections.reverse(positions);
-        final ArrayList<Pair<Integer, T>> deleted = new ArrayList<>();
-        for (int pos : positions) {
-            //FIXME causes a crash if month gets collapsed during action mode,
-            //because then the selected item ids change
-            deleted.add(new Pair<>(pos, getItem(pos)));
-            removeItem(pos);
+    private void remove(List<T> deleted) {
+        for (T item : deleted) {
+            getAdapter().removeItem(item);
         }
-        Collections.reverse(deleted);
-        String message = getResources().getQuantityString(itemTypeDelRes, deleted.size(),
-                deleted.size());
+        getAdapter().notifyDataSetChanged();
+        String message = getResources().getQuantityString(itemTypeDelRes, deleted.size(), deleted.size());
         Snackbar.make(getView(), message, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, v -> {
-                    for (Pair<Integer, T> item : deleted) {
-                        addItem(item.getFirst(), item.getSecond());
+                    for (T item : deleted) {
+                        getAdapter().addItem(item);
                     }
                     deleted.clear();
                 })
@@ -126,8 +133,8 @@ abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<
                         new Snackbar.Callback() {
                             @Override
                             public void onDismissed(Snackbar snackbar, int event) {
-                                for (Pair<Integer, T> item : deleted) {
-                                    dataSource.delete(item.getSecond());
+                                for (T item : deleted) {
+                                    dataSource.delete(item);
                                 }
                                 if (isAdded()) {
                                     getLoaderManager()
@@ -141,15 +148,13 @@ abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<
                         }).show();
     }
 
-    protected abstract void addItem(int pos, T item);
-
-    protected abstract void removeItem(int pos);
+    protected abstract ItemAdapter<T> getAdapter();
 
     private void updateTitle() {
         if (actionMode == null) {
             return;
         }
-        int count = mSelector.getSelectedPositions().size();
+        int count = mSelector.getSelectedIds().size();
         if (count == 0) {
             actionMode.finish();
         } else {
@@ -189,10 +194,7 @@ abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<
     protected abstract void onSelected(T item);
 
     /**
-     * Gets the item by a given id
-     *
-     * @param id Id to get the item for
-     * @return Item with the given id
+     * @param itemIds Items that have been selected
      */
-    protected abstract T getItem(int id);
+    protected void onStatistics(List<Long> itemIds) {}
 }

@@ -141,9 +141,7 @@
         </activity>
         <activity
             android:name=".activities.StatisticsActivity"
-            android:label="@string/statistic"/>
-        <activity
-            android:name=".activities.SimpleFragmentActivityBase$ChartActivity"
+            android:theme="@style/AppTheme.CustomToolbar"
             android:label="@string/statistic"/>
         <activity
             android:name=".activities.ItemSelectActivity$ArrowActivity"

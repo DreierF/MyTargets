@@ -21,6 +21,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -29,8 +32,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ScoreboardActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditRoundActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase.RoundActivity;
-import de.dreier.mytargets.activities.StatisticsActivity;
-import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentTrainingBinding;
 import de.dreier.mytargets.databinding.ItemRoundBinding;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
@@ -43,11 +45,12 @@ import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.HtmlUtils;
-import de.dreier.mytargets.utils.SelectableViewHolder;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.fragments.RoundFragment.ROUND_ID;
+import static de.dreier.mytargets.utils.ActivityUtils.showStatistics;
 import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 
 /**
@@ -67,6 +70,7 @@ public class TrainingFragment extends EditableFragment<Round> {
         itemTypeSelRes = R.plurals.round_selected;
         itemTypeDelRes = R.plurals.round_deleted;
         newStringRes = R.string.new_round;
+        supportsStatistics = true;
     }
 
     @Override
@@ -113,8 +117,6 @@ public class TrainingFragment extends EditableFragment<Round> {
     }
 
     public void onLoadFinished(Loader<List<Round>> loader, List<Round> data) {
-        training = trainingDataSource.get(mTraining);
-
         // Hide fab for standard rounds
         StandardRound standardRound = standardRoundDataSource.get(training.standardRoundId);
         binding.fab.setVisibility(standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE ? View.VISIBLE : View.GONE);
@@ -144,9 +146,10 @@ public class TrainingFragment extends EditableFragment<Round> {
                 startActivity(intent);
                 return true;
             case R.id.action_statistics:
-                Intent i = new Intent(getContext(), StatisticsActivity.class);
-                i.putExtra(StatisticsActivity.TRAINING_ID, mTraining);
-                startActivity(i);
+                showStatistics(getActivity(),
+                        Stream.of(new RoundDataSource().getAll(training.getId()))
+                                .map(Round::getId)
+                                .collect(Collectors.toList()));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -166,10 +169,15 @@ public class TrainingFragment extends EditableFragment<Round> {
         startActivity(i);
     }
 
-    private class RoundAdapter extends NowListAdapter<Round> {
+    @Override
+    protected void onStatistics(List<Long> roundIds) {
+        showStatistics(getActivity(), roundIds);
+    }
+
+    private class RoundAdapter extends ListAdapterBase<Round> {
 
         RoundAdapter(Context context) {
-            super(context);
+            super(context, (lhs, rhs) -> lhs.info.index - rhs.info.index);
         }
 
         @Override

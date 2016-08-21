@@ -212,8 +212,9 @@ public class TargetDrawable extends Drawable {
         for (int faceIndex = 0; faceIndex < model.facePositions.length; faceIndex++) {
             Rect targetRect = getTargetBounds(rect, faceIndex);
             for (int i = getZones() - 1; i >= 0; i--) {
-                if (!model.shouldDrawZone(i, target.scoringStyle))
+                if (!model.shouldDrawZone(i, target.scoringStyle)) {
                     continue;
+                }
                 Zone zone = model.getZone(i);
                 paintFill.setColor(zone.fillColor);
                 paintStroke.setColor(zone.strokeColor);
