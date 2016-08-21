@@ -170,8 +170,8 @@ dependencies {
 
     compile 'com.github.medyo:android-about-page:1.0.6'
 
-    compile 'me.oriley.homage:homage-core:0.2.0'
-    compile 'me.oriley.homage:homage-recyclerview:0.2.0'
+    compile 'com.github.oriley-me.homage:homage-core:0.2.0'
+    compile 'com.github.oriley-me.homage:homage-recyclerview:0.2.0'
 
     compile 'com.makeramen:roundedimageview:2.0.1'
 
