@@ -19,10 +19,10 @@ import junit.framework.Assert;
 import org.parceler.Parcels;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.shared.models.IIdProvider;
-import de.dreier.mytargets.utils.SelectableViewHolder;
-import de.dreier.mytargets.utils.SingleSelector;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+import de.dreier.mytargets.utils.multiselector.SingleSelector;
 
 /**
  * Base class for handling single item selection
@@ -39,7 +39,7 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
     /**
      * Adapter for the fragment's RecyclerView
      */
-    NowListAdapter<T> mAdapter;
+    ListAdapterBase<T> mAdapter;
 
     /**
      * Listener which gets called when item gets selected

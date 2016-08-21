@@ -119,6 +119,10 @@ if (new File('gradle.properties').exists()) {
 
 dependencies {
     compile "com.android.support:support-v4:$supportLibVersion"
+    compile "com.android.support:support-compat:$supportLibVersion"
+    compile "com.android.support:support-core-utils:$supportLibVersion"
+    compile "com.android.support:support-core-ui:$supportLibVersion"
+    compile "com.android.support:support-fragment:$supportLibVersion"
     compile "com.android.support:appcompat-v7:$supportLibVersion"
     compile "com.android.support:design:$supportLibVersion"
     compile "com.android.support:support-annotations:$supportLibVersion"
@@ -152,8 +156,6 @@ dependencies {
 
     compile 'com.anjlab.android.iab.v3:library:1.0.31'
 
-    compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'
-
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
 
     compile 'com.github.clans:fab:1.6.4'
@@ -168,14 +170,20 @@ dependencies {
 
     compile 'com.github.medyo:android-about-page:1.0.6'
 
-    compile 'me.oriley.homage:homage-core:0.2.0'
-    compile 'me.oriley.homage:homage-recyclerview:0.2.0'
+    compile 'com.github.oriley-me.homage:homage-core:0.2.0'
+    compile 'com.github.oriley-me.homage:homage-recyclerview:0.2.0'
+
+    compile 'com.makeramen:roundedimageview:2.0.1'
 
     compile project(':shared')
     wearApp project(':wearable')
 
     androidTestCompile 'com.google.code.findbugs:jsr305:3.0.0'
     androidTestCompile "com.android.support:support-v4:$supportLibVersion"
+    androidTestCompile "com.android.support:support-compat:$supportLibVersion"
+    androidTestCompile "com.android.support:support-core-utils:$supportLibVersion"
+    androidTestCompile "com.android.support:support-core-ui:$supportLibVersion"
+    androidTestCompile "com.android.support:support-fragment:$supportLibVersion"
     androidTestCompile "com.android.support:appcompat-v7:$supportLibVersion"
     androidTestCompile "com.android.support:design:$supportLibVersion"
     androidTestCompile "com.android.support:support-annotations:$supportLibVersion"

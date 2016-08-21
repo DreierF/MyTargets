@@ -72,8 +72,9 @@ public class ScoringStyle {
         int max = 0;
         for (int[] arrowPoints : points) {
             for (int point : arrowPoints) {
-                if (point > max)
+                if (point > max) {
                     max = point;
+                }
             }
         }
         return max;

@@ -19,8 +19,12 @@ public class SelectableZone implements Comparable<SelectableZone> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         SelectableZone that = (SelectableZone) o;
         return index == that.index && points == that.points && text.equals(that.text);

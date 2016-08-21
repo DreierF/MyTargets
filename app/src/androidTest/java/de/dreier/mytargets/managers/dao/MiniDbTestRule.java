@@ -1,10 +1,5 @@
 package de.dreier.mytargets.managers.dao;
 
-import android.support.annotation.NonNull;
-import android.support.test.InstrumentationRegistry;
-
-import org.joda.time.LocalDate;
-
 import java.util.Random;
 
 import de.dreier.mytargets.managers.SettingsManager;
@@ -17,9 +12,6 @@ import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.targets.models.WAFull;
 
 public class MiniDbTestRule extends DbTestRuleBase {
-
-    public MiniDbTestRule() {
-    }
 
     @Override
     protected void addDatabaseContent() {

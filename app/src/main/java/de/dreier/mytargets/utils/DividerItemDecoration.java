@@ -68,8 +68,9 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
             return;
         }
 
-        if (mOrientation == -1)
+        if (mOrientation == -1) {
             getOrientation(parent);
+        }
 
         if (mOrientation == LinearLayoutManager.VERTICAL) {
             outRect.top = mDivider.getIntrinsicHeight();

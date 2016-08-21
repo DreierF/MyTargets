@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector android:exitFadeDuration="@android:integer/config_longAnimTime"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_focused="true" android:drawable="@drawable/chip_background"/>
+    <item android:state_pressed="true" android:drawable="@drawable/chip_background"/>
+    <item android:state_activated="true" android:drawable="@drawable/chip_background_selected"/>
+    <item android:drawable="@drawable/chip_background"/>
+
+</selector>

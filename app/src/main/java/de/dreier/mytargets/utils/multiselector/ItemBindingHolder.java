@@ -1,9 +1,7 @@
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.utils.multiselector;
 
 import android.support.v7.widget.RebindReportingHolder;
 import android.view.View;
-
-import com.bignerdranch.android.multiselector.SelectableHolder;
 
 public abstract class ItemBindingHolder<T> extends RebindReportingHolder implements SelectableHolder, View.OnClickListener, View.OnLongClickListener {
     protected T mItem;

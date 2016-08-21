@@ -21,14 +21,15 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditArrowActivity;
-import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
-import de.dreier.mytargets.utils.SelectableViewHolder;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+import de.dreier.mytargets.utils.SlideInItemAnimator;
 
 import static de.dreier.mytargets.fragments.EditArrowFragment.ARROW_ID;
 import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
@@ -38,16 +39,16 @@ public class ArrowFragment extends EditableFragment<Arrow> {
     protected FragmentListBinding binding;
     private ArrowDataSource arrowDataSource;
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        binding.fab.setOnClickListener(view1 -> startActivityAnimated(getActivity(), EditArrowActivity.class));
-    }
-
     public ArrowFragment() {
         itemTypeSelRes = R.plurals.arrow_selected;
         itemTypeDelRes = R.plurals.arrow_deleted;
         newStringRes = R.string.new_arrow;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        binding.fab.setOnClickListener(view1 -> startActivityAnimated(getActivity(), EditArrowActivity.class));
     }
 
     @Override
@@ -58,6 +59,7 @@ public class ArrowFragment extends EditableFragment<Arrow> {
         binding.recyclerView.addItemDecoration(
                 new DividerItemDecoration(getContext(), R.drawable.inset_divider));
         mAdapter = new ArrowAdapter(getContext());
+        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
         return binding.getRoot();
     }
@@ -85,9 +87,9 @@ public class ArrowFragment extends EditableFragment<Arrow> {
         startActivityAnimated(getActivity(), EditArrowActivity.class, ARROW_ID, item.getId());
     }
 
-    private class ArrowAdapter extends NowListAdapter<Arrow> {
+    private class ArrowAdapter extends ListAdapterBase<Arrow> {
         ArrowAdapter(Context context) {
-            super(context);
+            super(context, (l, r) -> l.getName().compareTo(r.getName()));
         }
 
         @Override

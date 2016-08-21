@@ -18,13 +18,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
-import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
 import de.dreier.mytargets.databinding.FragmentMainBinding;
+import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
+import de.dreier.mytargets.shared.models.Round;
 
+import static de.dreier.mytargets.utils.ActivityUtils.showStatistics;
 import static de.dreier.mytargets.utils.ToolbarUtils.setSupportActionBar;
 
 public class MainFragment extends Fragment {
@@ -67,7 +72,10 @@ public class MainFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_statistics:
-                startActivity(new Intent(getContext(), StatisticsActivity.class));
+                showStatistics(getActivity(),
+                        Stream.of(new RoundDataSource().getAll())
+                                .map(Round::getId)
+                                .collect(Collectors.toList()));
                 return true;
             case R.id.action_preferences:
                 startActivity(new Intent(getContext(), SimpleFragmentActivityBase.SettingsActivity.class));

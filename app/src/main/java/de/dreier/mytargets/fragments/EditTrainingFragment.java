@@ -115,6 +115,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.environmentSpinner.setItem(train.environment);
             setTrainingDate();
             binding.notEditable.setVisibility(View.GONE);
+            binding.timer.setChecked(train.timePerPasse != -1);
         }
         binding.standardRound.setOnActivityResultContext(this);
         binding.arrow.setOnActivityResultContext(this);
@@ -159,7 +160,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.numberArrows.setVisibility(View.GONE);
         } else {
             binding.numberArrows.setVisibility(View.VISIBLE);
-            binding.numberArrows.setChecked(true);
         }
     }
 

@@ -147,6 +147,8 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         binding.chartView.animateXY(2000, 2000);
         binding.chartView.setDescription("");
         binding.chartView.getAxisLeft().setAxisMinValue(0);
+        binding.chartView.getXAxis().setDrawGridLines(false);
+        binding.chartView.setDoubleTapToZoomEnabled(false);
     }
 
     private void showPieChart() {
@@ -240,7 +242,8 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     public Loader<List<ArrowStatistic>> onCreateLoader(int id, Bundle args) {
         arrowStatisticDataSource = new ArrowStatisticDataSource();
         return new DataLoaderBase<ArrowStatistic, DataSourceBase>(getContext(),
-                arrowStatisticDataSource, () -> arrowStatisticDataSource.getAll(Utils.toList(roundIds)));
+                arrowStatisticDataSource,
+                () -> arrowStatisticDataSource.getAll(Utils.toList(roundIds)));
     }
 
     @Override
@@ -325,6 +328,9 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         series.setCircleColorHole(color);
         series.setDrawValues(false);
         series.setHighLightColor(0xff9c9c9c);
+        series.setDrawHorizontalHighlightIndicator(false);
+        series.setDrawVerticalHighlightIndicator(true);
+        series.enableDashedHighlightLine(4, 4, 0);
         return series;
     }
 

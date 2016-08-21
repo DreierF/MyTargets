@@ -78,7 +78,8 @@
         <activity
             android:name=".activities.InputActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$RoundActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivityBase$RoundActivity"
+            android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.SimpleFragmentActivityBase$RoundActivity" />
@@ -141,9 +142,7 @@
         </activity>
         <activity
             android:name=".activities.StatisticsActivity"
-            android:label="@string/statistic" />
-        <activity
-            android:name=".activities.SimpleFragmentActivityBase$ChartActivity"
+            android:theme="@style/AppTheme.CustomToolbar"
             android:label="@string/statistic" />
         <activity
             android:name=".activities.ItemSelectActivity$ArrowActivity"
@@ -263,7 +262,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/file_paths"/>
         </provider>
     </application>
 

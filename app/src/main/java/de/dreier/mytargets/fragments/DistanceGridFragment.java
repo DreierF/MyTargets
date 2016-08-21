@@ -20,14 +20,15 @@ import junit.framework.Assert;
 import org.parceler.Parcels;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemDistanceBinding;
 import de.dreier.mytargets.managers.dao.DistanceDataSource;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Dimension.Unit;
 import de.dreier.mytargets.utils.DistanceInputDialog;
-import de.dreier.mytargets.utils.SelectableViewHolder;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.views.CardItemDecorator;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
@@ -59,6 +60,7 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> implemen
         binding.recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         binding.recyclerView.addItemDecoration(new CardItemDecorator(getActivity(), 3));
         mAdapter = new DistanceAdapter(getContext());
+        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
         binding.fab.setOnClickListener(view -> new DistanceInputDialog.Builder(getContext())
                 .setUnit(unit.toString())
@@ -99,9 +101,9 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> implemen
         onClick(holder, (Dimension) holder.getItem());
     }
 
-    private class DistanceAdapter extends NowListAdapter<Dimension> {
+    private class DistanceAdapter extends ListAdapterBase<Dimension> {
         DistanceAdapter(Context context) {
-            super(context);
+            super(context, Dimension::compareTo);
         }
 
         @Override

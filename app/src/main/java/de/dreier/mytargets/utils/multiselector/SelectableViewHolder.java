@@ -1,9 +1,8 @@
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.utils.multiselector;
 
 import android.view.View;
 
-import com.bignerdranch.android.multiselector.MultiSelector;
-import com.bignerdranch.android.multiselector.SelectableHolder;
+import de.dreier.mytargets.utils.OnCardClickListener;
 
 /**
  * A holder extended to support having a selectable mode with a different

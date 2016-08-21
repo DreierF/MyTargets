@@ -39,7 +39,7 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, getLayoutResource());
+        binding = DataBindingUtil.setContentView(this, R.layout.layout_frame);
 
         if (savedInstanceState == null) {
             // Create the fragment only when the activity is created for the first time.
@@ -55,10 +55,6 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
             ft.replace(R.id.content, childFragment, FRAGMENT_TAG);
             ft.commit();
         }
-    }
-
-    int getLayoutResource() {
-        return R.layout.layout_frame;
     }
 
     public static class TimerActivity extends SimpleFragmentActivityBase {
