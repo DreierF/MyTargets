@@ -34,11 +34,9 @@ public class Environment implements IImageProvider, IDetailProvider {
 
     @Override
     public String getDetails(Context context) {
-        String description = context.getString(R.string.wind) + ": " + windSpeed + " Btf " +
-                context.getResources().getStringArray(R.array.wind_directions)[windDirection];
+        String description = context.getString(R.string.wind) + ": " + windSpeed + " Btf " + WindDirection.getList(context).get(windDirection).getName();
         if (!TextUtils.isEmpty(location)) {
-            description +=
-                    "\n" + context.getString(R.string.location) + ": " + location;
+            description += "\n" + context.getString(R.string.location) + ": " + location;
         }
         return description;
     }
