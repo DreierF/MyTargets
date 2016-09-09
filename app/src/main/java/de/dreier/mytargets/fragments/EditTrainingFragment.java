@@ -54,6 +54,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private LocalDate date = new LocalDate();
     private FragmentEditTrainingBinding binding;
 
+    //TODO make vies save their state on rotation
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

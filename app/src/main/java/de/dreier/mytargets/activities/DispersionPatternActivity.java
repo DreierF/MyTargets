@@ -61,6 +61,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_scoreboard, menu);
+        menu.findItem(R.id.action_settings).setVisible(false);
         return true;
     }
 
