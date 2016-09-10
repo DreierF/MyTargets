@@ -95,7 +95,8 @@ public class AboutFragment extends Fragment {
         PackageInfo appVersionInfo = Utils.getAppVersionInfo(getContext());
         if (appVersionInfo != null) {
             String versionName = appVersionInfo.versionName;
-            return getString(R.string.version, versionName);
+            return getString(R.string.version,
+                    versionName) + " (" + appVersionInfo.versionCode + ")";
         } else {
             return getString(R.string.version, "unknown");
         }
