@@ -87,7 +87,19 @@ tasks.withType(DataBindingExportBuildInfoTask) { task ->
 
 if (new File('gradle.properties').exists()) {
     afterEvaluate {
-        assembleRelease.dependsOn(':crowdinDownload')
+        tasks.whenTaskAdded { task ->
+            if (task.name.equals("assembleRelease")) {
+                task.dependsOn(':crowdinDownload')
+            } else if(task.name.equals("generateRegularReleasePlayResources")) {
+                task.dependsOn(':crowdinDownload')
+                task.dependsOn renameFolders
+                task.doLast {
+                    file('app/src/main/play/ca').renameTo(file('app/src/main/play/ca-ES'))
+                    file('app/src/main/play/sk').renameTo(file('app/src/main/play/sk-SK'))
+                    file('app/src/main/play/sl').renameTo(file('app/src/main/play/sl-SI'))
+                }
+            }
+        }
 
         task renameFolders {
             file('app/src/main/play/ca-ES').renameTo(file('app/src/main/play/ca'))
@@ -95,21 +107,10 @@ if (new File('gradle.properties').exists()) {
             file('app/src/main/play/sl-SI').renameTo(file('app/src/main/play/sl'))
         }
 
-        generateRegularReleasePlayResources.dependsOn(':crowdinDownload')
-        generateRegularReleasePlayResources.dependsOn renameFolders
-        generateRegularReleasePlayResources.doLast {
-            file('app/src/main/play/ca').renameTo(file('app/src/main/play/ca-ES'))
-            file('app/src/main/play/sk').renameTo(file('app/src/main/play/sk-SK'))
-            file('app/src/main/play/sl').renameTo(file('app/src/main/play/sl-SI'))
-        }
-
-        task generateLocalizedScreenshots(type: Exec, group: 'play store') {
+        task generateLocalizedScreenshots(type: Exec, group: 'play store', dependsOn: [':crowdinDownload', 'assembleScreengrabDebugAndroidTest', 'assembleScreengrabDebug']) {
             workingDir '..'
             commandLine './make_screenshots.sh'
         }
-        generateLocalizedScreenshots.dependsOn(':crowdinDownload')
-        generateLocalizedScreenshots.dependsOn assembleScreengrabDebugAndroidTest
-        generateLocalizedScreenshots.dependsOn assembleScreengrabDebug
     }
 
     play {
@@ -162,7 +163,7 @@ dependencies {
 
     compile 'org.adw.library:discrete-seekbar:1.0.1'
 
-    compile 'com.github.jkwiecien:EasyImage:1.2.1'
+    compile 'com.github.jkwiecien:EasyImage:1.3.0'
 
     compile('com.github.afollestad.material-dialogs:core:0.8.5.8@aar') {
         transitive = true

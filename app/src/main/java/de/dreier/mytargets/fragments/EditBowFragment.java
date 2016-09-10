@@ -54,6 +54,8 @@ public class EditBowFragment extends EditWithImageFragmentBase {
     private EditBowFragmentBinding contentBinding;
     private long bowId = -1;
     private SightSettingsAdapter adapter;
+    @State(ParcelsBundler.class)
+    Bow bow;
 
     public EditBowFragment() {
         super(R.drawable.recurve_bow);
@@ -80,7 +82,6 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         contentBinding.yumiBow.setOnClickListener(v -> setBowType(YUMI));
 
         if (savedInstanceState == null) {
-            Bow bow;
             if (bowId != -1) {
                 // Load data from database
                 bow = new BowDataSource().get(bowId);
@@ -97,12 +98,20 @@ public class EditBowFragment extends EditWithImageFragmentBase {
             ToolbarUtils.setTitle(this, bow.name);
             contentBinding.setBow(bow);
             setBowType(bow.type);
+        } else {
+            contentBinding.setBow(bow);
         }
 
         loadImage(imageFile);
         adapter = new SightSettingsAdapter(this, sightSettingsList);
         contentBinding.sightSettings.setAdapter(adapter);
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        bow = buildBow();
+        super.onSaveInstanceState(outState);
     }
 
     private void onAddSightSetting() {
@@ -150,6 +159,8 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         bow.sightSettings = sightSettingsList;
         return bow;
     }
+
+
 
     private void setBowType(EBowType type) {
         contentBinding.recurveBow.setChecked(type == RECURVE_BOW);

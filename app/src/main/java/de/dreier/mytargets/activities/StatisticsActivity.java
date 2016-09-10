@@ -51,6 +51,7 @@ public class StatisticsActivity extends ChildActivityBase {
     @State
     boolean showFilter = false;
     private ActivityStatisticsBinding binding;
+    private List<Round> rounds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,7 @@ public class StatisticsActivity extends ChildActivityBase {
         setSupportActionBar(binding.toolbar);
 
         long[] roundIds = getIntent().getLongArrayExtra(ROUND_IDS);
-        List<Round> rounds = new RoundDataSource().getAll(roundIds);
+        rounds = new RoundDataSource().getAll(roundIds);
 
         ToolbarUtils.showHomeAsUp(this);
         Icepick.restoreInstanceState(this, savedInstanceState);
@@ -129,7 +130,8 @@ public class StatisticsActivity extends ChildActivityBase {
                 filteredRounds.add(round);
             }
         }
-        binding.viewPager.setAdapter(new StatisticsPagerAdapter(getSupportFragmentManager(), new PasseDataSource().groupByTarget(filteredRounds)));
+        binding.viewPager.setAdapter(new StatisticsPagerAdapter(getSupportFragmentManager(),
+                new PasseDataSource().groupByTarget(filteredRounds)));
     }
 
     private List<ChipGroup.Tag> getDistanceTags(List<Round> rounds) {
@@ -168,7 +170,19 @@ public class StatisticsActivity extends ChildActivityBase {
     }
 
     protected void updateFilter() {
+        if (!showFilter) {
+            Stream.of(binding.distanceTags.getTags())
+                    .forEach(tag -> tag.isChecked = true);
+            Stream.of(binding.arrowTags.getTags())
+                    .forEach(tag -> tag.isChecked = true);
+            Stream.of(binding.bowTags.getTags())
+                    .forEach(tag -> tag.isChecked = true);
+            binding.distanceTags.setTags(binding.distanceTags.getTags());
+            binding.arrowTags.setTags(binding.arrowTags.getTags());
+            binding.bowTags.setTags(binding.bowTags.getTags());
+        }
         binding.filterView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
+        applyFilter(rounds);
         invalidateOptionsMenu();
     }
 

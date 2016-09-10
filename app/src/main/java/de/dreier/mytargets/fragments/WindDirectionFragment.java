@@ -17,9 +17,8 @@ import android.view.ViewGroup;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
-import de.dreier.mytargets.databinding.ItemTextBinding;
-import de.dreier.mytargets.models.WindDirection;
-
+import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
+import de.dreier.mytargets.shared.models.WindDirection;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
@@ -35,6 +34,7 @@ public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
         mAdapter = new WindDirectionAdapter(getContext());
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
+        binding.fab.setVisibility(View.GONE);
         useDoubleClickSelection = false;
         ToolbarUtils.showUpAsX(this);
         return binding.getRoot();
@@ -54,13 +54,13 @@ public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_text, parent, false);
+                    .inflate(R.layout.item_image_simple, parent, false);
             return new ViewHolder(itemView);
         }
     }
 
     private class ViewHolder extends SelectableViewHolder<WindDirection> {
-        ItemTextBinding binding;
+        ItemImageSimpleBinding binding;
 
         public ViewHolder(View itemView) {
             super(itemView, mSelector, WindDirectionFragment.this);
@@ -70,6 +70,7 @@ public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
         @Override
         public void bindCursor() {
             binding.name.setText(mItem.name);
+            binding.image.setImageDrawable(mItem.getDrawable(getContext()));
         }
     }
 }

@@ -17,12 +17,15 @@ import android.view.ViewGroup;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
+import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
 import de.dreier.mytargets.databinding.ItemTextBinding;
-import de.dreier.mytargets.models.WindSpeed;
+import de.dreier.mytargets.shared.models.WindSpeed;
 
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+
+import static de.dreier.mytargets.shared.SharedApplicationInstance.getContext;
 
 public class WindSpeedFragment extends SelectItemFragment<WindSpeed> {
 
@@ -35,6 +38,7 @@ public class WindSpeedFragment extends SelectItemFragment<WindSpeed> {
         mAdapter = new WindSpeedAdapter(getContext());
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
+        binding.fab.setVisibility(View.GONE);
         useDoubleClickSelection = false;
         ToolbarUtils.showUpAsX(this);
         return binding.getRoot();
@@ -54,14 +58,14 @@ public class WindSpeedFragment extends SelectItemFragment<WindSpeed> {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_text, parent, false);
+                    .inflate(R.layout.item_image_simple, parent, false);
             return new ViewHolder(itemView);
         }
     }
 
     private class ViewHolder extends SelectableViewHolder<WindSpeed> {
 
-        ItemTextBinding binding;
+        ItemImageSimpleBinding binding;
 
         public ViewHolder(View itemView) {
             super(itemView, mSelector, WindSpeedFragment.this);
@@ -71,6 +75,7 @@ public class WindSpeedFragment extends SelectItemFragment<WindSpeed> {
         @Override
         public void bindCursor() {
             binding.name.setText(mItem.name);
+            binding.image.setImageDrawable(mItem.getDrawable(getContext()));
         }
     }
 }

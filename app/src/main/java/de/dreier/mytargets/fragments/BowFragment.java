@@ -109,6 +109,7 @@ public class BowFragment extends EditableFragment<Bow> {
         public void bindCursor() {
             binding.name.setText(mItem.name);
             binding.image.setImageDrawable(mItem.getDrawable());
+            binding.details.setVisibility(View.VISIBLE);
 
             HTMLInfoBuilder info = new HTMLInfoBuilder();
             info.addLine(R.string.bow_type, mItem.type);

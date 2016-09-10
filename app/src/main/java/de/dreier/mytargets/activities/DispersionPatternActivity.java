@@ -61,6 +61,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_scoreboard, menu);
+        menu.findItem(R.id.action_settings).setVisible(false);
         return true;
     }
 
@@ -92,7 +93,9 @@ public class DispersionPatternActivity extends ChildActivityBase {
 
                 // Build and fire intent to ask for share provider
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, getUriForFile(DispersionPatternActivity.this, "de.dreier.mytargets", f));
+                String packageName = getApplicationContext().getPackageName();
+                String authority = packageName + ".easyphotopicker.fileprovider";
+                shareIntent.putExtra(Intent.EXTRA_STREAM, getUriForFile(DispersionPatternActivity.this, authority, f));
                 shareIntent.setType("*/*");
                 startActivity(shareIntent);
             } catch (IOException e) {

@@ -48,6 +48,8 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     private ArrowNumbersAdapter adapter;
 
     private long arrowId = -1;
+    @State(ParcelsBundler.class)
+    Arrow arrow;
 
     public EditArrowFragment() {
         super(R.drawable.arrows);
@@ -64,7 +66,6 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
             arrowId = bundle.getLong(ARROW_ID, -1);
         }
         if (savedInstanceState == null) {
-            Arrow arrow;
             if (arrowId != -1) {
                 arrow = new ArrowDataSource().get(arrowId);
                 setImageFile(arrow.imageFile);
@@ -79,12 +80,20 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
             contentBinding.setArrow(arrow);
             arrowNumbersList = arrow.numbers;
             contentBinding.diameterUnit.setSelection(arrow.diameter.unit == MILLIMETER ? 0 : 1);
+        } else {
+            contentBinding.setArrow(arrow);
         }
 
         loadImage(imageFile);
         adapter = new ArrowNumbersAdapter(this, arrowNumbersList);
         contentBinding.arrowNumbers.setAdapter(adapter);
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        arrow = buildArrow();
+        super.onSaveInstanceState(outState);
     }
 
     private void onAddArrow() {

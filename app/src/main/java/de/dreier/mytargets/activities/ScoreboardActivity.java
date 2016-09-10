@@ -136,8 +136,10 @@ public class ScoreboardActivity extends AppCompatActivity {
 
                 // Build and fire intent to ask for share provider
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                String packageName = getApplicationContext().getPackageName();
+                String authority = packageName + ".easyphotopicker.fileprovider";
                 shareIntent.putExtra(Intent.EXTRA_STREAM,
-                        getUriForFile(ScoreboardActivity.this, "de.dreier.mytargets", f));
+                        getUriForFile(ScoreboardActivity.this, authority, f));
                 shareIntent.setType("*/*");
                 startActivity(shareIntent);
             } catch (IOException e) {
