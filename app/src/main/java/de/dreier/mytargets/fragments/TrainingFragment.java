@@ -79,7 +79,8 @@ public class TrainingFragment extends EditableFragment<Round> {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_training, container, false);
 
         binding.recyclerView.setHasFixedSize(true);
-        binding.recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), R.drawable.full_divider));
+        binding.recyclerView.addItemDecoration(
+                new DividerItemDecoration(getContext(), R.drawable.full_divider));
         mAdapter = new RoundAdapter(getContext());
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
@@ -113,17 +114,24 @@ public class TrainingFragment extends EditableFragment<Round> {
 
     @Override
     public Loader<List<Round>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader<>(getContext(), new RoundDataSource(), () -> roundDataSource.getAll(mTraining));
+        return new DataLoader<>(getContext(), new RoundDataSource(),
+                () -> roundDataSource.getAll(mTraining));
     }
 
     public void onLoadFinished(Loader<List<Round>> loader, List<Round> data) {
         // Hide fab for standard rounds
         StandardRound standardRound = standardRoundDataSource.get(training.standardRoundId);
-        binding.fab.setVisibility(standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE ? View.VISIBLE : View.GONE);
+        binding.fab.setVisibility(
+                standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE ? View.VISIBLE : View.GONE);
 
         // Set round info
-        binding.weatherIcon.setImageResource(training.environment.weather.getColorDrawable());
-        binding.detailRoundInfo.setText(HtmlUtils.fromHtml(HtmlUtils.getTrainingInfoHTML(training, data, equals, false)));
+        int weatherDrawable = R.drawable.ic_house_24dp;
+        if (!standardRound.indoor) {
+            weatherDrawable = training.environment.weather.getColorDrawable();
+        }
+        binding.weatherIcon.setImageResource(weatherDrawable);
+        binding.detailRoundInfo.setText(
+                HtmlUtils.fromHtml(HtmlUtils.getTrainingInfoHTML(training, data, equals, false)));
         mAdapter.setList(data);
         dataSource = new RoundDataSource();
         getActivity().supportInvalidateOptionsMenu();
@@ -198,7 +206,8 @@ public class TrainingFragment extends EditableFragment<Round> {
 
         @Override
         public void bindCursor() {
-            binding.title.setText(String.format(Locale.ENGLISH, "%s %d", ApplicationInstance.getContext().getString(R.string.round),
+            binding.title.setText(String.format(Locale.ENGLISH, "%s %d",
+                    ApplicationInstance.getContext().getString(R.string.round),
                     mItem.info.index + 1));
             binding.subtitle.setText(HtmlUtils.fromHtml(HtmlUtils.getRoundInfo(mItem, equals)));
             if (binding.subtitle.getText().toString().isEmpty()) {

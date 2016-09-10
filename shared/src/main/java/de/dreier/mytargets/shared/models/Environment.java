@@ -8,6 +8,7 @@ package de.dreier.mytargets.shared.models;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import de.dreier.mytargets.shared.R;
@@ -34,11 +35,16 @@ public class Environment implements IImageProvider, IDetailProvider {
 
     @Override
     public String getDetails(Context context) {
-        String description = context.getString(R.string.wind) + ": " + windSpeed + " Btf " + WindDirection.getList(context).get(windDirection).getName();
+        String description = context.getString(R.string.wind) + ": " + getWindSpeed(context);
         if (!TextUtils.isEmpty(location)) {
             description += "\n" + context.getString(R.string.location) + ": " + location;
         }
         return description;
+    }
+
+    @NonNull
+    public String getWindSpeed(Context context) {
+        return windSpeed + " Btf " + WindDirection.getList(context).get(windDirection).getName();
     }
 
     @Override
