@@ -257,10 +257,12 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="de.dreier.mytargets"
+            android:authorities="${applicationId}.easyphotopicker.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
             <meta-data
+                tools:replace="android:resource"
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"/>
         </provider>
