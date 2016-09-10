@@ -27,6 +27,10 @@ before_install:
 - export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
 - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
 - export JAVA_HOME=$JAVA8_HOME
+install:
+  - git clone https://github.com/$TRAVIS_REPO_SLUG.git $TRAVIS_REPO_SLUG
+  - cd $TRAVIS_REPO_SLUG
+  - git checkout -qf $TRAVIS_COMMIT
 script:
 - ./gradlew clean assembleRegularRelease
 - adb shell input keyevent 82 &
