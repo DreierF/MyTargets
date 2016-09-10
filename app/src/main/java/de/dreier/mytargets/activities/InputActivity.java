@@ -95,6 +95,8 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         standardRound = new StandardRoundDataSource().get(training.standardRoundId);
         savedPasses = passeDataSource.getAllByRound(roundId).size();
 
+        setTitle(training.title);
+
         binding.targetView.setRoundTemplate(template);
         Dimension diameter = new Dimension(5, Dimension.Unit.MILLIMETER);
         if (training.arrow > 0) {
@@ -210,8 +212,8 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
                 (curPasse + 1 < template.endCount || // The current round is not finished
                         standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE)); // or we don't have an exit condition
 
-        ToolbarUtils.setTitle(this, getString(R.string.passe) + " " + (curPasse + 1));
-        ToolbarUtils.setSubtitle(this, getString(R.string.round) + " " + (round.info.index + 1));
+        binding.endTitle.setText(getString(R.string.passe) + " " + (curPasse + 1));
+        binding.roundTitle.setText(getString(R.string.round) + " " + (round.info.index + 1));
     }
 
     @Override
