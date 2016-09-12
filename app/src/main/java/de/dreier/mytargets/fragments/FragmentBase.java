@@ -44,7 +44,6 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
      */
     ActionMode actionMode = null;
 
-
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Icepick.restoreInstanceState(this, savedInstanceState);
