@@ -128,16 +128,15 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                     changeStatus(status.getNext());
                 }
             }.start();
-        } else if (status.timeGetter == null) {
+        } else if (status.timeOffsetCallback == null) {
             binding.timerTime.setText("");
         } else {
-            final int startValue = status.startValueGetter.getSetting();
-            final int timeToNext = status.getTimeToNext();
-            countdown = new CountDownTimer(timeToNext * 1000, 100) {
+            final int value = status.valueCallback.getValue();
+            final int offset = status.timeOffsetCallback.getValue();
+            countdown = new CountDownTimer((value - offset) * 1000, 100) {
                 public void onTick(long millisUntilFinished) {
                     binding.timerTime.setText(
-                            String.valueOf(
-                                    (startValue + millisUntilFinished - timeToNext) / 1000));
+                            String.valueOf((millisUntilFinished / 1000) + offset));
                 }
 
                 public void onFinish() {
@@ -176,29 +175,27 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
 
     enum TimerState {
         WAIT_FOR_START(R.color.timer_red, R.string.touch_to_start, 0, null, null),
-        PREPARATION(R.color.timer_red, R.string.preparation, 2, SettingsManager::getTimerWaitTime, () -> 0),
-        SHOOTING(R.color.timer_green, R.string.shooting, 1,
-                SettingsManager::getTimerShootTime, SettingsManager::getTimerWarnTime),
-        COUNTDOWN(R.color.timer_orange, R.string.shooting, 0, SettingsManager::getTimerWarnTime, () -> 0),
+        PREPARATION(R.color.timer_red, R.string.preparation, 2, SettingsManager::getTimerWaitTime,
+                () -> 0),
+        SHOOTING(R.color.timer_green, R.string.shooting, 1, SettingsManager::getTimerShootTime,
+                SettingsManager::getTimerWarnTime),
+        COUNTDOWN(R.color.timer_orange, R.string.shooting, 0, SettingsManager::getTimerWarnTime,
+                () -> 0),
         FINISHED(R.color.timer_red, R.string.stop, 3, null, null),
         EXIT(R.color.timer_red, R.string.stop, 0, null, null);
 
         public int color;
         public int text;
         public int signalCount;
-        public SettingsGetter timeGetter;
-        public SettingsGetter startValueGetter;
+        public ValueCallback valueCallback;
+        public ValueCallback timeOffsetCallback;
 
-        TimerState(@ColorRes int color, @StringRes int text, int signalCount, SettingsGetter startValueGetter, SettingsGetter timeGetter) {
+        TimerState(@ColorRes int color, @StringRes int text, int signalCount, ValueCallback valueCallback, ValueCallback timeOffsetCallback) {
             this.color = color;
             this.text = text;
             this.signalCount = signalCount;
-            this.startValueGetter = startValueGetter;
-            this.timeGetter = timeGetter;
-        }
-
-        int getTimeToNext() {
-            return startValueGetter.getSetting() - timeGetter.getSetting();
+            this.valueCallback = valueCallback;
+            this.timeOffsetCallback = timeOffsetCallback;
         }
 
         public TimerState getNext() {
@@ -217,8 +214,8 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
             return WAIT_FOR_START;
         }
 
-        private interface SettingsGetter {
-            int getSetting();
+        private interface ValueCallback {
+            int getValue();
         }
     }
 }
