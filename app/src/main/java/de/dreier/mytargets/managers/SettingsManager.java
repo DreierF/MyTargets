@@ -51,6 +51,7 @@ public class SettingsManager {
     public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
     public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
     public static final String KEY_INPUT_KEYBOARD_TYPE = "input_keyboard_type";
+    public static final String KEY_FIRST_TRAINING_SHOWN = "first_training_shown";
     private static final String KEY_BACKUP_INTERVAL = "backup_interval";
     private static final String KEY_DONATED = "donated";
     private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
@@ -427,6 +428,18 @@ public class SettingsManager {
         preferences
                 .edit()
                 .putString(KEY_INPUT_KEYBOARD_TYPE, type.name())
+                .apply();
+    }
+
+    public static boolean isFirstTrainingShown() {
+        return ApplicationInstance.getSharedPreferences()
+                .getBoolean(KEY_FIRST_TRAINING_SHOWN, false);
+    }
+
+    public static void setFirstTrainingShown(boolean shown) {
+        ApplicationInstance.getSharedPreferences()
+                .edit()
+                .putBoolean(KEY_FIRST_TRAINING_SHOWN, shown)
                 .apply();
     }
 
