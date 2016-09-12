@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
 
@@ -21,7 +20,7 @@ public class Arrow implements IImageProvider, IIdSettable {
     public String nock = "";
     public String comment = "";
     public Dimension diameter = new Dimension(5, Dimension.Unit.MILLIMETER);
-    public List<ArrowNumber> numbers = new ArrayList<>();
+    public ArrayList<ArrowNumber> numbers = new ArrayList<>();
     public byte[] thumb;
     public String imageFile;
 

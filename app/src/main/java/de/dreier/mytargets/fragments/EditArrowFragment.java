@@ -41,9 +41,6 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
 
     static final String ARROW_ID = "arrow_id";
 
-    @State(ParcelsBundler.class)
-    List<ArrowNumber> arrowNumbersList = new ArrayList<>();
-
     private EditArrowFragmentBinding contentBinding;
     private ArrowNumbersAdapter adapter;
 
@@ -78,14 +75,13 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
 
             ToolbarUtils.setTitle(this, arrow.name);
             contentBinding.setArrow(arrow);
-            arrowNumbersList = arrow.numbers;
             contentBinding.diameterUnit.setSelection(arrow.diameter.unit == MILLIMETER ? 0 : 1);
         } else {
             contentBinding.setArrow(arrow);
         }
 
         loadImage(imageFile);
-        adapter = new ArrowNumbersAdapter(this, arrowNumbersList);
+        adapter = new ArrowNumbersAdapter(this, arrow.numbers);
         contentBinding.arrowNumbers.setAdapter(adapter);
         return rootView;
     }
@@ -97,8 +93,8 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     }
 
     private void onAddArrow() {
-        arrowNumbersList.add(new ArrowNumber());
-        final int newItemPosition = arrowNumbersList.size() - 1;
+        arrow.numbers.add(new ArrowNumber());
+        final int newItemPosition = arrow.numbers.size() - 1;
         adapter.notifyItemInserted(newItemPosition);
         contentBinding.arrowNumbers.post(
                 () -> {
@@ -132,9 +128,9 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         arrow.comment = contentBinding.comment.getText().toString();
         arrow.imageFile = getImageFile();
         arrow.thumb = getThumbnail();
-        arrow.numbers = Stream.of(arrowNumbersList)
+        arrow.numbers = new ArrayList<>(Stream.of(arrow.numbers)
                 .filter(value -> value != null)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
         final float diameterValue = Float.parseFloat(contentBinding.diameter.getText().toString());
         final int selectedUnit = contentBinding.diameterUnit.getSelectedItemPosition();
         Dimension.Unit diameterUnit = selectedUnit == 0 ? MILLIMETER : INCH;
