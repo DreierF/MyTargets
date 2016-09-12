@@ -123,6 +123,7 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
             new MaterialTapTargetPrompt.Builder(getActivity())
                     .setDrawView(binding.fab)
                     .setTarget(binding.fab.getChildAt(2))
+                    .setBackgroundColourFromRes(R.color.colorPrimary)
                     .setPrimaryText(R.string.your_first_training)
                     .setSecondaryText(R.string.first_training_description)
                     .setAnimationInterpolator(new FastOutSlowInInterpolator())
