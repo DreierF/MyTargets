@@ -153,7 +153,14 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     protected int getSelectableZoneIndexFromShot(Shot shot) {
-        return selectableZones.indexOf(new SelectableZone(shot.zone, null, "", 0));
+        int i = 0;
+        for (SelectableZone selectableZone : selectableZones) {
+            if (shot.zone == selectableZone.index) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
     }
 
     protected abstract void calcSizes();

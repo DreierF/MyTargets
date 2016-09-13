@@ -27,6 +27,8 @@ before_install:
 - export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
 - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
 - export JAVA_HOME=$JAVA8_HOME
+install:
+  - git fetch --unshallow
 script:
 - ./gradlew clean assembleRegularRelease
 - adb shell input keyevent 82 &

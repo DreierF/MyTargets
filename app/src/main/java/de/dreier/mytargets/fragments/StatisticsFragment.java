@@ -153,9 +153,8 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
     private void showPieChart() {
         // enable hole and configure
-        //binding.distributionChart.setDrawHoleEnabled(true);
-        //binding.distributionChart.setHoleRadius(7);
         binding.distributionChart.setTransparentCircleRadius(15);
+        binding.distributionChart.setHoleColor(0x00000000);
         binding.distributionChart.getLegend().setEnabled(false);
         binding.distributionChart.setDescription("");
 

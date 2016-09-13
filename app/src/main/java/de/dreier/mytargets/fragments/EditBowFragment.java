@@ -49,8 +49,6 @@ import static de.dreier.mytargets.shared.models.EBowType.YUMI;
 public class EditBowFragment extends EditWithImageFragmentBase {
 
     static final String BOW_ID = "bow_id";
-    @State(ParcelsBundler.class)
-    ArrayList<SightSetting> sightSettingsList = new ArrayList<>();
     private EditBowFragmentBinding contentBinding;
     private long bowId = -1;
     private SightSettingsAdapter adapter;
@@ -103,7 +101,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         }
 
         loadImage(imageFile);
-        adapter = new SightSettingsAdapter(this, sightSettingsList);
+        adapter = new SightSettingsAdapter(this, bow.sightSettings);
         contentBinding.sightSettings.setAdapter(adapter);
         return rootView;
     }
@@ -115,8 +113,8 @@ public class EditBowFragment extends EditWithImageFragmentBase {
     }
 
     private void onAddSightSetting() {
-        sightSettingsList.add(new SightSetting());
-        adapter.notifyItemInserted(sightSettingsList.size() - 1);
+        bow.sightSettings.add(new SightSetting());
+        adapter.notifyItemInserted(bow.sightSettings.size() - 1);
     }
 
     @Override
@@ -127,7 +125,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
             Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
             final int index = intentData.getInt(SelectorBase.INDEX);
             final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
-            sightSettingsList.get(index).distance = Parcels.unwrap(parcelable);
+            bow.sightSettings.get(index).distance = Parcels.unwrap(parcelable);
             adapter.notifyItemChanged(index);
         }
     }
@@ -156,11 +154,8 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         bow.type = getType();
         bow.imageFile = getImageFile();
         bow.thumb = getThumbnail();
-        bow.sightSettings = sightSettingsList;
         return bow;
     }
-
-
 
     private void setBowType(EBowType type) {
         contentBinding.recurveBow.setChecked(type == RECURVE_BOW);
