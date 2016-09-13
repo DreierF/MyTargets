@@ -37,7 +37,7 @@ script:
 after_success:
 - |
   if [[ "$TRAVIS_TAG" ]]; then
-    ./gradlew publishApkRegularRelease
+    ./gradlew publishRegularRelease
     sudo ./dropbox_uploader.sh upload app/build/outputs/apk/app-regular-release.apk /$TRAVIS_TAG/MyTargets.apk
     sudo ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /$TRAVIS_TAG/mapping.txt
   fi
