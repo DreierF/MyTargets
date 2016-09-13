@@ -24,6 +24,8 @@ plugins {
 }
 
 ext {
+    compileSdkVersionCode = 24
+    buildToolsVersionCode = '24.0.2'
     supportLibVersion = '24.2.0'
     testSupportLibVersion = '0.5'
     playServiceVersion = '9.4.0'
@@ -76,7 +78,7 @@ crowdinDownload {
     projectId = 'mytargets'
     destination = "$projectDir"
     renameMapping = [
-            from: '^(.*)/values-((?!(pt|zh))(.*)-r(.*)|((pt|zh).*))/(.*)$',
-            to  : /\1\/values-\4\6\/\8/
+            from: '^((?:(?!values).)*)(?:(values-)((?!(pt|zh))(.*)-r(.*)|((pt|zh).*)))?(/(?:(?!values).)*)$',
+            to  : /\1\2\5\7\9/
     ]
 }.dependsOn crowdinUpload

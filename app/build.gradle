@@ -12,8 +12,8 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    compileSdkVersion 24
-    buildToolsVersion '24.0.0'
+    compileSdkVersion compileSdkVersionCode
+    buildToolsVersion buildToolsVersionCode
 
     defaultConfig {
         applicationId 'de.dreier.mytargets'
@@ -115,7 +115,7 @@ if (CROWDIN_API_KEY != null && !CROWDIN_API_KEY.isEmpty()) {
 
         if (new File('googlePlayAndroidDeveloper.json').exists()) {
             play {
-                jsonFile = file('googlePlayAndroidDeveloper.json')
+                jsonFile = file('../googlePlayAndroidDeveloper.json')
             }
         }
     }

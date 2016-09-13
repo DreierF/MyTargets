@@ -195,7 +195,7 @@
   <plurals name="rounds">
     <item quantity="one">Kolo %d</item>
     <item quantity="few">Kolo %d</item>
-    <item quantity="other">Kolo %d</item>
+    <item quantity="other">Kolá %d</item>
   </plurals>
   <plurals name="round_selected">
     <item quantity="one">Vybraté %d kolo</item>
