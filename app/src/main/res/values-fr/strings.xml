@@ -183,7 +183,7 @@
   </plurals>
   <plurals name="rounds">
     <item quantity="one">Série %d</item>
-    <item quantity="other">Séries %d</item>
+    <item quantity="other">Série %d</item>
   </plurals>
   <plurals name="round_selected">
     <item quantity="one">%d round selected</item>
