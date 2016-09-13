@@ -138,8 +138,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                     item -> roundTarget = item.getRounds().get(0).getTargetTemplate());
             binding.numberArrows.setChecked(SettingsManager.getArrowNumbersEnabled());
             binding.timer.setChecked(SettingsManager.getTimerEnabled());
-            binding.indoor.setChecked(SettingsManager.getIndoor());
-            binding.outdoor.setChecked(!SettingsManager.getIndoor());
+            //binding.indoor.setChecked(SettingsManager.getIndoor());
+            //binding.outdoor.setChecked(!SettingsManager.getIndoor());
             binding.environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
 
             final StandardRound item = binding.standardRound.getSelectedItem();
@@ -159,10 +159,14 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         }
         binding.standardRound.setOnActivityResultContext(this);
         binding.standardRound.setOnUpdateListener(this::updateChangeTargetFaceVisibility);
-        binding.changeTargetFace.setOnClickListener(v -> TargetListFragment.getIntent(roundTarget)
+        binding.changeTargetFace.setOnClickListener(v -> {
+            final StandardRound item = binding.standardRound.getSelectedItem();
+            Target target = item.rounds.get(0).targetTemplate;
+TargetListFragment.getIntent(target)
                 .withContext(this)
                 .forResult(SR_TARGET_REQUEST_CODE)
                 .start());
+        });
         updateChangeTargetFaceVisibility(binding.standardRound.getSelectedItem());
         binding.arrow.setOnActivityResultContext(this);
         binding.bow.setOnActivityResultContext(this);
@@ -325,6 +329,21 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             rounds.add(round);
         }
         return rounds;
+    }
+
+    @NonNull
+    private StandardRound getCustomRound() {
+        StandardRound standardRound; // Generate and save standard round template for practice
+        standardRound = new StandardRound();
+        standardRound.club = StandardRoundFactory.CUSTOM_PRACTICE;
+        standardRound.name = getString(R.string.practice);
+        //standardRound.indoor = binding.indoor.isChecked();
+        ArrayList<RoundTemplate> rounds = new ArrayList<>();
+        rounds.add(getRoundTemplate());
+        standardRound.rounds = rounds;
+
+        SettingsManager.setIndoor(standardRound.indoor);
+        return standardRound;
     }
 
     @Override

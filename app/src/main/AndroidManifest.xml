@@ -188,7 +188,8 @@
             android:name=".activities.ItemSelectActivity$EnvironmentActivity"
             android:label="@string/environment"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"
+            android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"/>

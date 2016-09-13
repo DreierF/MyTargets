@@ -18,7 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,6 +37,8 @@ import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 public class EnvironmentFragment extends FragmentBase {
@@ -45,11 +47,15 @@ public class EnvironmentFragment extends FragmentBase {
     private Environment mEnvironment;
     private EWeather weather;
     private FragmentEnvironmentBinding binding;
+    private SwitchCompat switchView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_environment, container, false);
+
+        ToolbarUtils.setSupportActionBar(this, binding.toolbar);
+        ToolbarUtils.showHomeAsUp(this);
 
         Bundle i = getArguments();
         if (i != null) {
@@ -71,13 +77,8 @@ public class EnvironmentFragment extends FragmentBase {
 
         binding.windDirection.setOnActivityResultContext(this);
         binding.windSpeed.setOnActivityResultContext(this);
-        return binding.getRoot();
-    }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        ToolbarUtils.showUpAsX(this);
+        return binding.getRoot();
     }
 
     private void setOnClickWeather(ImageButton b, final EWeather w) {
@@ -95,12 +96,23 @@ public class EnvironmentFragment extends FragmentBase {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.save, menu);
+        inflater.inflate(R.menu.environment_switch, menu);
+
+        MenuItem item = menu.findItem(R.id.action_switch);
+        switchView = (SwitchCompat) item.getActionView().findViewById(R.id.action_switch_control);
+        switchView.setOnCheckedChangeListener((compoundButton, checked) -> setOutdoor(checked));
+        setOutdoor(true);
+    }
+
+    protected void setOutdoor(boolean checked) {
+        switchView.setText(checked ? R.string.outdoor : R.string.indoor);
+        binding.indoorImageView.setVisibility(checked ? GONE : VISIBLE);
+        binding.weatherLayout.setVisibility(checked ? VISIBLE : GONE);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
+        if (item.getItemId() == android.R.id.home) {
             onSave();
             finish();
             return true;
