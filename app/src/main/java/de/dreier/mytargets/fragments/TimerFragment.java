@@ -210,8 +210,9 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
                     return FINISHED;
                 case FINISHED:
                     return EXIT;
+                default:
+                    return WAIT_FOR_START;
             }
-            return WAIT_FOR_START;
         }
 
         private interface ValueCallback {
