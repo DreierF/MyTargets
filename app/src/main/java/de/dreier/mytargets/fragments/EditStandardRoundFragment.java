@@ -37,7 +37,7 @@ import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.transitions.FabTransform;
+import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import de.dreier.mytargets.views.selector.DistanceSelector;
 import de.dreier.mytargets.views.selector.SelectorBase;
 import de.dreier.mytargets.views.selector.TargetSelector;
@@ -125,7 +125,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        FabTransform.setup(getActivity(), binding.getRoot());
+        FabTransformUtil.setup(getActivity(), binding.getRoot());
     }
 
     private void onAddRound() {

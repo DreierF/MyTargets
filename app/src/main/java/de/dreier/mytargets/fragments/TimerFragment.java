@@ -7,7 +7,9 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.os.CountDownTimer;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
@@ -24,11 +27,12 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.databinding.FragmentTimerBinding;
 import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
-import de.dreier.mytargets.utils.transitions.FabTransform;
 
 import static de.dreier.mytargets.fragments.TimerFragment.TimerState.EXIT;
 import static de.dreier.mytargets.fragments.TimerFragment.TimerState.FINISHED;
@@ -39,13 +43,20 @@ import static de.dreier.mytargets.fragments.TimerFragment.TimerState.WAIT_FOR_ST
  */
 public class TimerFragment extends FragmentBase implements View.OnClickListener {
 
-    public static final String SHOOTING_TIME = "shooting_time";
+    private static final String SHOOTING_TIME = "shooting_time";
     private TimerState mCurStatus = WAIT_FOR_START;
     private CountDownTimer countdown;
     private MediaPlayer horn;
     private boolean mSound, mVibrate;
     private PowerManager.WakeLock wakeLock;
     private FragmentTimerBinding binding;
+
+    @NonNull
+    public static IntentWrapper getIntent(Activity activity, int timePerPasse) {
+        Intent intent = new Intent(activity, SimpleFragmentActivityBase.TimerActivity.class);
+        intent.putExtra(SHOOTING_TIME, timePerPasse);
+        return new IntentWrapper(activity, intent);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,7 +70,6 @@ public class TimerFragment extends FragmentBase implements View.OnClickListener 
         super.onActivityCreated(savedInstanceState);
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
         ToolbarUtils.showHomeAsUp(this);
-        FabTransform.setup(getActivity(), binding.getRoot());
     }
 
     @Override

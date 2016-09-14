@@ -114,7 +114,7 @@ public class FabTransform extends Transition {
      * Create a {@link FabTransform} from the supplied {@code activity} extras and set as its
      * shared element enter/return transition.
      */
-    public static boolean setup(@NonNull Activity activity, @Nullable View target) {
+    static boolean setup(@NonNull Activity activity, @Nullable View target) {
         final Intent intent = activity.getIntent();
         if (!intent.hasExtra(EXTRA_FAB_COLOR) || !intent.hasExtra(EXTRA_FAB_ICON_RES_ID)) {
             return false;
