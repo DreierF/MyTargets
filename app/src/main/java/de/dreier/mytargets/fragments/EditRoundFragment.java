@@ -46,7 +46,7 @@ public class EditRoundFragment extends EditFragmentBase {
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            trainingId = arguments.getLong(FragmentBase.ITEM_ID, -1);
+            trainingId = arguments.getLong(ListFragmentBase.ITEM_ID, -1);
             roundId = arguments.getLong(ROUND_ID, -1);
         }
 
@@ -92,7 +92,7 @@ public class EditRoundFragment extends EditFragmentBase {
             } else if (standardRound.rounds.size() > 1) {
                 binding.removeButton.setOnClickListener(v -> {
                     roundDataSource.delete(round);
-                    getActivity().finish();
+                    finish();
                 });
             } else {
                 binding.removeButton.setVisibility(View.GONE);
@@ -103,7 +103,7 @@ public class EditRoundFragment extends EditFragmentBase {
 
     @Override
     protected void onSave() {
-        getActivity().finish();
+        finish();
         if (roundId == -1) {
             Round round = onSaveRound();
             ActivityUtils.openPasseForNewRound(getActivity(), -1, round.getId());

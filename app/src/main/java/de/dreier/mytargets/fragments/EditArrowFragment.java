@@ -111,7 +111,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     public void onSave() {
         super.onSave();
         new ArrowDataSource().update(buildArrow());
-        getActivity().finish();
+        finish();
     }
 
     private Arrow buildArrow() {

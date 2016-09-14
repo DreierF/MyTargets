@@ -13,21 +13,21 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.fragments.ArrowFragment;
-import de.dreier.mytargets.fragments.BowFragment;
-import de.dreier.mytargets.fragments.FragmentBase;
+import de.dreier.mytargets.fragments.ArrowListFragment;
+import de.dreier.mytargets.fragments.BowListFragment;
+import de.dreier.mytargets.fragments.ListFragmentBase;
 import de.dreier.mytargets.fragments.TrainingsFragment;
 
 public class MainTabsFragmentPagerAdapter extends FragmentPagerAdapter {
     private final Context context;
-    private final FragmentBase[] fragments = new FragmentBase[3];
+    private final ListFragmentBase[] fragments = new ListFragmentBase[3];
 
     public MainTabsFragmentPagerAdapter(Context context, FragmentManager fragmentManager) {
         super(fragmentManager);
         this.context = context;
         fragments[0] = new TrainingsFragment();
-        fragments[1] = new BowFragment();
-        fragments[2] = new ArrowFragment();
+        fragments[1] = new BowListFragment();
+        fragments[2] = new ArrowListFragment();
     }
 
     @Override

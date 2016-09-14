@@ -49,7 +49,7 @@ import static de.dreier.mytargets.utils.ActivityUtils.showStatistics;
 /**
  * Shows all passes of one round
  */
-public class RoundFragment extends EditableFragment<Passe> {
+public class RoundFragment extends EditableListFragment<Passe> {
 
     public static final String ROUND_ID = "round_id";
 

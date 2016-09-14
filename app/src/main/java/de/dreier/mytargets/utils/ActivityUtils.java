@@ -1,7 +1,9 @@
 package de.dreier.mytargets.utils;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.view.View;
 
 import org.parceler.Parcels;
 
@@ -14,6 +16,7 @@ import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.fragments.RoundFragment;
 import de.dreier.mytargets.fragments.TrainingFragment;
 import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.utils.transitions.FabTransform;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_TYPE;
@@ -28,18 +31,28 @@ public class ActivityUtils {
      *
      * @param context  Activity context used to fire the intent
      * @param activity Activity to start
+     * @param color
+     * @param icon
+     */
+    public static void startActivityAnimatedFromFab(Activity context, Class<?> activity, int color, int icon, View fab) {
+        new IntentWrapper(context, activity)
+                .startFromFab(fab, color, icon);
+    }
+
+    /**
+     * Starts the given activity with the standard forward animation (Right in).
+     *
+     * @param context  Activity context used to fire the intent
+     * @param activity Activity to start
      */
     public static void startActivityAnimated(Activity context, Class<?> activity) {
-        Intent i = new Intent(context, activity);
-        context.startActivity(i);
-        context.overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        new IntentWrapper(context, activity).start();
     }
 
     public static void showStatistics(Activity context, List<Long> roundIds) {
         Intent i = new Intent(context, StatisticsActivity.class);
         i.putExtra(StatisticsActivity.ROUND_IDS, Utils.toArray(roundIds));
-        context.startActivity(i);
-        context.overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        new IntentWrapper(context, i).start();
     }
 
     /**
@@ -54,15 +67,14 @@ public class ActivityUtils {
     public static void startActivityAnimated(Activity context, Class<?> activity, String key, long value) {
         Intent i = new Intent(context, activity);
         i.putExtra(key, value);
-        context.startActivity(i);
-        context.overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        new IntentWrapper(context, i).start();
     }
 
     /**
      * Starts the EditTraining activity to create a training of the given type with the standard forward animation (Right in).
      *
-     * @param context  Activity context used to fire the intent
-     * @param trainingType    FREE_TRAINING or TRAINING_WITH_STANDARD_ROUND
+     * @param context      Activity context used to fire the intent
+     * @param trainingType FREE_TRAINING or TRAINING_WITH_STANDARD_ROUND
      */
     public static void startNewTraining(Activity context, int trainingType) {
         Intent i = new Intent(context, SimpleFragmentActivityBase.EditTrainingActivity.class);
@@ -85,20 +97,17 @@ public class ActivityUtils {
         if (trainingId != -1) {
             Intent i = new Intent(activity, SimpleFragmentActivityBase.TrainingActivity.class);
             i.putExtra(TrainingFragment.ITEM_ID, trainingId);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            activity.startActivity(i);
+            new IntentWrapper(activity, i).startWithoutAnimation();
         }
 
         Intent i = new Intent(activity, SimpleFragmentActivityBase.RoundActivity.class);
         i.putExtra(RoundFragment.ROUND_ID, roundId);
-        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        activity.startActivity(i);
+        new IntentWrapper(activity, i).startWithoutAnimation();
 
         i = new Intent(activity, InputActivity.class);
         i.putExtra(InputActivity.ROUND_ID, roundId);
         i.putExtra(InputActivity.PASSE_IND, 0);
-        activity.startActivity(i);
-        activity.overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        new IntentWrapper(activity, i).start();
     }
 
     /**
@@ -108,9 +117,8 @@ public class ActivityUtils {
      * @param requestCode Request code for Activity#startActivityForResult
      */
     public static void createStandardRound(Activity context, int requestCode) {
-        Intent i = new Intent(context, SimpleFragmentActivityBase.EditStandardRoundActivity.class);
-        context.startActivityForResult(i, requestCode);
-        context.overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        new IntentWrapper(context, SimpleFragmentActivityBase.EditStandardRoundActivity.class)
+                .startForResult(requestCode);
     }
 
     /**
@@ -123,7 +131,48 @@ public class ActivityUtils {
     public static void editStandardRound(Activity context, int requestCode, StandardRound item) {
         Intent i = new Intent(context, SimpleFragmentActivityBase.EditStandardRoundActivity.class);
         i.putExtra(ITEM, Parcels.wrap(item));
-        context.startActivityForResult(i, requestCode);
-        context.overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        new IntentWrapper(context, i).startForResult(requestCode);
+    }
+
+    public static class IntentWrapper {
+        private final Activity activity;
+        private final Intent intent;
+
+        public IntentWrapper(Activity activity, Intent intent) {
+            this.activity = activity;
+            this.intent = intent;
+        }
+
+        public IntentWrapper(Activity context, Class<?> activity) {
+            this.activity = context;
+            this.intent = new Intent(context, activity);
+        }
+
+        public void startFromFab(View fab, int color, int icon) {
+            if (Utils.isLollipop()) {
+                FabTransform.addExtras(intent, color, icon);
+                ActivityOptions options = ActivityOptions
+                        .makeSceneTransitionAnimation(activity, fab,
+                                activity.getString(R.string.transition_root_view));
+                activity.startActivity(intent, options.toBundle());
+            } else {
+                start();
+            }
+        }
+
+        public void start() {
+            activity.startActivity(intent);
+            activity.overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        }
+
+        public void startWithoutAnimation() {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            activity.startActivity(intent);
+        }
+
+        public void startForResult(int requestCode) {
+            activity.startActivityForResult(intent, requestCode);
+            activity.overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        }
     }
 }

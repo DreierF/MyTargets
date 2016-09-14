@@ -63,7 +63,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            trainingId = arguments.getLong(FragmentBase.ITEM_ID, -1);
+            trainingId = arguments.getLong(ListFragmentBase.ITEM_ID, -1);
             trainingType = arguments.getInt(TRAINING_TYPE, FREE_TRAINING);
         }
 
@@ -185,7 +185,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     protected void onSave() {
         Training training = getTraining();
 
-        getActivity().finish();
+        finish();
 
         TrainingDataSource trainingDataSource = new TrainingDataSource();
         if (trainingId == -1) {

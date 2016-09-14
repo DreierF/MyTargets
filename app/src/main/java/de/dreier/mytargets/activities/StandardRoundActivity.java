@@ -9,16 +9,16 @@ package de.dreier.mytargets.activities;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import de.dreier.mytargets.fragments.StandardRoundFragment;
+import de.dreier.mytargets.fragments.StandardRoundListFragment;
 
 public class StandardRoundActivity extends ItemSelectActivity implements View.OnClickListener {
     @Override
     protected Fragment instantiateFragment() {
-        return new StandardRoundFragment();
+        return new StandardRoundListFragment();
     }
 
     @Override
     public void onClick(View v) {
-        ((StandardRoundFragment) childFragment).onClick(v);
+        ((StandardRoundListFragment) childFragment).onClick(v);
     }
 }

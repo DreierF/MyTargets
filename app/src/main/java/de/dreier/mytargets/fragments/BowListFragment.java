@@ -11,6 +11,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,18 +31,19 @@ import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.HTMLInfoBuilder;
 import de.dreier.mytargets.utils.HtmlUtils;
-import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.fragments.EditBowFragment.BOW_ID;
 import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
+import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimatedFromFab;
 
-public class BowFragment extends EditableFragment<Bow> {
+public class BowListFragment extends EditableListFragment<Bow> {
 
     protected FragmentListBinding binding;
     private BowDataSource bowDataSource;
 
-    public BowFragment() {
+    public BowListFragment() {
         itemTypeSelRes = R.plurals.bow_selected;
         itemTypeDelRes = R.plurals.bow_deleted;
         newStringRes = R.string.new_bow;
@@ -54,7 +56,9 @@ public class BowFragment extends EditableFragment<Bow> {
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.addItemDecoration(
                 new DividerItemDecoration(getContext(), R.drawable.inset_divider));
-        binding.fab.setOnClickListener(view1 -> startActivityAnimated(getActivity(), EditBowActivity.class));
+        binding.fab.setOnClickListener(view1 -> startActivityAnimatedFromFab(BowListFragment.this.getActivity(), EditBowActivity.class,
+                ContextCompat.getColor(getContext(), R.color.colorAccent),
+                R.drawable.ic_add_white_24dp, binding.fab));
         mAdapter = new BowAdapter(getContext());
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
@@ -101,7 +105,7 @@ public class BowFragment extends EditableFragment<Bow> {
         final ItemImageDetailsBinding binding;
 
         public ViewHolder(View itemView) {
-            super(itemView, mSelector, BowFragment.this);
+            super(itemView, mSelector, BowListFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }
 

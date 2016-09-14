@@ -120,8 +120,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
     private void onDeleteStandardRound() {
         new StandardRoundDataSource().delete(standardRoundId);
-        getActivity().finish();
-        getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        finish();
     }
 
     @Override
@@ -145,8 +144,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         Intent data = new Intent();
         data.putExtra(ITEM, Parcels.wrap(standardRound));
         getActivity().setResult(Activity.RESULT_OK, data);
-        getActivity().finish();
-        getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        finish();
     }
 
     @Override

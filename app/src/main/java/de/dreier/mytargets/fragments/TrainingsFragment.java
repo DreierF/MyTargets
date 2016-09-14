@@ -47,7 +47,7 @@ import static de.dreier.mytargets.utils.ActivityUtils.startNewTraining;
 /**
  * Shows an overview over all training days
  */
-public class TrainingsFragment extends ExpandableFragment<Month, Training> {
+public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
 
     protected FragmentTrainingsBinding binding;
     private TrainingDataSource trainingDataSource;

@@ -55,7 +55,7 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
 
-public class StandardRoundFragment extends SelectItemFragment<StandardRound>
+public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
         implements View.OnClickListener, SearchView.OnQueryTextListener,
         LoaderManager.LoaderCallbacks<List<StandardRound>> {
 
@@ -347,7 +347,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         private final ItemStandardRoundBinding binding;
 
         public ViewHolder(ItemStandardRoundBinding binding) {
-            super(binding.getRoot(), mSelector, StandardRoundFragment.this);
+            super(binding.getRoot(), mSelector, StandardRoundListFragment.this);
             this.binding = binding;
         }
 

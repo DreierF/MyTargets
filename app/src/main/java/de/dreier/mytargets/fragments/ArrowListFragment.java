@@ -34,12 +34,12 @@ import de.dreier.mytargets.utils.SlideInItemAnimator;
 import static de.dreier.mytargets.fragments.EditArrowFragment.ARROW_ID;
 import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 
-public class ArrowFragment extends EditableFragment<Arrow> {
+public class ArrowListFragment extends EditableListFragment<Arrow> {
 
     protected FragmentListBinding binding;
     private ArrowDataSource arrowDataSource;
 
-    public ArrowFragment() {
+    public ArrowListFragment() {
         itemTypeSelRes = R.plurals.arrow_selected;
         itemTypeDelRes = R.plurals.arrow_deleted;
         newStringRes = R.string.new_arrow;
@@ -104,7 +104,7 @@ public class ArrowFragment extends EditableFragment<Arrow> {
         private final ItemImageDetailsBinding binding;
 
         public ViewHolder(View itemView) {
-            super(itemView, mSelector, ArrowFragment.this);
+            super(itemView, mSelector, ArrowListFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }
 

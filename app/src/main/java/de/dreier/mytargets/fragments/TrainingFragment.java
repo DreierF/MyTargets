@@ -56,7 +56,7 @@ import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 /**
  * Shows all passes of one training
  */
-public class TrainingFragment extends EditableFragment<Round> {
+public class TrainingFragment extends EditableListFragment<Round> {
 
     private final boolean[] equals = new boolean[2];
     protected FragmentTrainingBinding binding;

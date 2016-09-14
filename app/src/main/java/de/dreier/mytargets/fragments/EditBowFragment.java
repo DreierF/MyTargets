@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.R;
@@ -35,6 +34,7 @@ import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.views.selector.SelectorBase;
 import de.dreier.mytargets.views.selector.SimpleDistanceSelector;
 import icepick.State;
@@ -49,11 +49,11 @@ import static de.dreier.mytargets.shared.models.EBowType.YUMI;
 public class EditBowFragment extends EditWithImageFragmentBase {
 
     static final String BOW_ID = "bow_id";
+    @State(ParcelsBundler.class)
+    Bow bow;
     private EditBowFragmentBinding contentBinding;
     private long bowId = -1;
     private SightSettingsAdapter adapter;
-    @State(ParcelsBundler.class)
-    Bow bow;
 
     public EditBowFragment() {
         super(R.drawable.recurve_bow);
@@ -134,7 +134,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
     public void onSave() {
         super.onSave();
         new BowDataSource().update(buildBow());
-        getActivity().finish();
+        finish();
     }
 
     private Bow buildBow() {

@@ -18,12 +18,13 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
-import de.dreier.mytargets.shared.models.WindDirection;
+import de.dreier.mytargets.shared.models.WindSpeed;
+
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
-public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
+public class WindSpeedListFragment extends SelectItemFragment<WindSpeed> {
 
     protected FragmentListBinding binding;
 
@@ -31,7 +32,7 @@ public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
-        mAdapter = new WindDirectionAdapter(getContext());
+        mAdapter = new WindSpeedAdapter(getContext());
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
         binding.fab.setVisibility(View.GONE);
@@ -42,13 +43,13 @@ public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
 
     @Override
     public void onLongClick(SelectableViewHolder holder) {
-        onClick(holder, (WindDirection) holder.getItem());
+        onClick(holder, (WindSpeed) holder.getItem());
     }
 
-    private class WindDirectionAdapter extends ListAdapterBase<WindDirection> {
-        WindDirectionAdapter(Context context) {
+    private class WindSpeedAdapter extends ListAdapterBase<WindSpeed> {
+        WindSpeedAdapter(Context context) {
             super(context);
-            setList(WindDirection.getList(getContext()));
+            setList(WindSpeed.getList(getContext()));
         }
 
         @Override
@@ -59,11 +60,12 @@ public class WindDirectionFragment extends SelectItemFragment<WindDirection> {
         }
     }
 
-    private class ViewHolder extends SelectableViewHolder<WindDirection> {
+    private class ViewHolder extends SelectableViewHolder<WindSpeed> {
+
         ItemImageSimpleBinding binding;
 
         public ViewHolder(View itemView) {
-            super(itemView, mSelector, WindDirectionFragment.this);
+            super(itemView, mSelector, WindSpeedListFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }
 
