@@ -22,7 +22,7 @@ import de.dreier.mytargets.utils.OnCardClickListener;
 public abstract class ListFragmentBase<T extends IIdProvider> extends FragmentBase
         implements OnCardClickListener<T> {
 
-    public static final String ITEM_ID = "id";
+    protected static final String ITEM_ID = "id";
 
     /**
      * Resource used to set title when items are selected

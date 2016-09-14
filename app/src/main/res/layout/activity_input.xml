@@ -5,7 +5,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:transitionName="@string/transition_root_view"
+        tools:targetApi="lollipop">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"

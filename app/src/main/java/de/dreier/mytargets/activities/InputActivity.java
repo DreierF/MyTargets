@@ -50,13 +50,14 @@ import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.transitions.FabTransform;
 import icepick.Icepick;
 import icepick.State;
 
 public class InputActivity extends ChildActivityBase implements OnTargetSetListener, OnEndUpdatedListener {
 
-    public static final String ROUND_ID = "round_id";
-    public static final String PASSE_IND = "passe_ind";
+    private static final String ROUND_ID = "round_id";
+    private static final String PASSE_IND = "passe_ind";
 
     /**
      * Zero-based index of the currently displayed end.
@@ -76,9 +77,13 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
 
     @NonNull
     public static IntentWrapper newEndIntent(Activity activity, long roundId) {
+        return getEndIntent(activity, roundId, 0);
+    }
+
+    public static IntentWrapper getEndIntent(Activity activity, long roundId, int passeIndex) {
         Intent i = new Intent(activity, InputActivity.class);
         i.putExtra(ROUND_ID, roundId);
-        i.putExtra(PASSE_IND, 0);
+        i.putExtra(PASSE_IND, passeIndex);
         return new IntentWrapper(activity, i);
     }
 
@@ -88,6 +93,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         binding = DataBindingUtil.setContentView(this, R.layout.activity_input);
 
         setSupportActionBar(binding.toolbar);
+        FabTransform.setup(this, binding.getRoot());
 
         binding.targetView.setOnTargetSetListener(this);
         binding.targetView.setUpdateListener(this);

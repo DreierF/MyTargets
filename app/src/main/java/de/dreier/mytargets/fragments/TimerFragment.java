@@ -10,7 +10,6 @@ package de.dreier.mytargets.fragments;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.PowerManager;
@@ -29,6 +28,7 @@ import de.dreier.mytargets.databinding.FragmentTimerBinding;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
+import de.dreier.mytargets.utils.transitions.FabTransform;
 
 import static de.dreier.mytargets.fragments.TimerFragment.TimerState.EXIT;
 import static de.dreier.mytargets.fragments.TimerFragment.TimerState.FINISHED;
@@ -59,6 +59,7 @@ public class TimerFragment extends FragmentBase implements View.OnClickListener 
         super.onActivityCreated(savedInstanceState);
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
         ToolbarUtils.showHomeAsUp(this);
+        FabTransform.setup(getActivity(), binding.getRoot());
     }
 
     @Override

@@ -70,9 +70,12 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         binding.recyclerView.setAdapter(mAdapter);
         binding.fab1.setOnClickListener(
                 view -> EditTrainingFragment.createTrainingIntent(getActivity(), FREE_TRAINING)
+                        .fromFab(binding.fab1, 0xFF4CAF50, R.drawable.fab_trending_up_white_24dp)
                         .start());
         binding.fab2.setOnClickListener(view -> EditTrainingFragment.createTrainingIntent(
-                getActivity(), TRAINING_WITH_STANDARD_ROUND).start());
+                getActivity(), TRAINING_WITH_STANDARD_ROUND)
+                .fromFab(binding.fab2, 0xFF2196F3, R.drawable.fab_album_24dp)
+                .start());
         return binding.getRoot();
     }
 
@@ -84,10 +87,10 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
 
     @Override
     protected void onStatistics(List<Long> trainingIds) {
-        StatisticsActivity.showStatisticsIntent(getActivity(), Stream.of(trainingIds)
-                        .flatMap(tid -> Stream.of(new RoundDataSource().getAll(tid)))
-                        .map(Round::getId)
-                        .collect(Collectors.toList())).start();
+        StatisticsActivity.getIntent(getActivity(), Stream.of(trainingIds)
+                .flatMap(tid -> Stream.of(new RoundDataSource().getAll(tid)))
+                .map(Round::getId)
+                .collect(Collectors.toList())).start();
     }
 
     @Override

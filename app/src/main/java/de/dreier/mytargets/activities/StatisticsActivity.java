@@ -22,8 +22,6 @@ import android.view.View;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
-import org.parceler.Parcels;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -59,7 +57,7 @@ public class StatisticsActivity extends ChildActivityBase {
     private List<Round> rounds;
 
     @NonNull
-    public static IntentWrapper showStatisticsIntent(Activity context, List<Long> roundIds) {
+    public static IntentWrapper getIntent(Activity context, List<Long> roundIds) {
         Intent i = new Intent(context, StatisticsActivity.class);
         i.putExtra(ROUND_IDS, Utils.toArray(roundIds));
         return new IntentWrapper(context, i);
@@ -215,16 +213,11 @@ public class StatisticsActivity extends ChildActivityBase {
 
         @Override
         public Fragment getItem(int position) {
-            StatisticsFragment fragment = new StatisticsFragment();
-            Bundle bundle = new Bundle();
             final Pair<Target, List<Round>> item = targets.get(position);
-            bundle.putParcelable(StatisticsFragment.ARG_TARGET, Parcels.wrap(item.getFirst()));
             final List<Long> roundIds = Stream.of(item.getSecond())
                     .map(Round::getId)
                     .collect(Collectors.toList());
-            bundle.putLongArray(StatisticsFragment.ARG_ROUND_IDS, Utils.toArray(roundIds));
-            fragment.setArguments(bundle);
-            return fragment;
+            return StatisticsFragment.newInstance(roundIds, item.getFirst());
         }
 
         @Override

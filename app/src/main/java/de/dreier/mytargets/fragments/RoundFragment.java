@@ -54,7 +54,7 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
  */
 public class RoundFragment extends EditableListFragment<Passe> {
 
-    public static final String ROUND_ID = "round_id";
+    private static final String ROUND_ID = "round_id";
 
     private long mRound;
     private PasseDataSource passeDataSource;
@@ -83,7 +83,11 @@ public class RoundFragment extends EditableListFragment<Passe> {
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
         binding.fab.setVisibility(View.GONE);
-        binding.fab.setOnClickListener(v -> openPasse(round.getId(), binding.recyclerView.getAdapter().getItemCount()));
+        binding.fab.setOnClickListener(
+                v -> InputActivity.getEndIntent(getActivity(), round.getId(),
+                        binding.recyclerView.getAdapter().getItemCount())
+                                .fromFab(binding.fab)
+                                .start());
         // Get round
         if (getArguments() != null) {
             mRound = getArguments().getLong(ROUND_ID, -1);
@@ -132,13 +136,13 @@ public class RoundFragment extends EditableListFragment<Passe> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_scoreboard:
-                Intent intent = new Intent(getContext(), ScoreboardActivity.class);
-                intent.putExtra(ScoreboardActivity.TRAINING_ID, round.trainingId);
-                intent.putExtra(ScoreboardActivity.ROUND_ID, round.getId());
-                startActivity(intent);
+                ScoreboardActivity
+                        .getIntent(getActivity(), round.trainingId, round.getId())
+                        .start();
                 return true;
             case R.id.action_statistics:
-                StatisticsActivity.showStatisticsIntent(getActivity(),
+                StatisticsActivity
+                        .getIntent(getActivity(),
                         Collections.singletonList(round.getId())).start();
                 return true;
             default:
@@ -148,27 +152,14 @@ public class RoundFragment extends EditableListFragment<Passe> {
 
     @Override
     protected void onItemSelected(Passe item) {
-        openInputActivityForPasse(item);
+        InputActivity.getEndIntent(getActivity(), item.roundId, item.index)
+                .start();
     }
 
     @Override
     protected void onEdit(Passe item) {
-        openInputActivityForPasse(item);
-    }
-
-    private void openInputActivityForPasse(Passe item) {
-        Intent i = new Intent(getContext(), InputActivity.class);
-        i.putExtra(InputActivity.ROUND_ID, item.roundId);
-        i.putExtra(InputActivity.PASSE_IND, item.index);
-        startActivity(i);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
-    }
-
-    private void openPasse(long roundId, int passeIndex) {
-        Intent i = new Intent(getContext(), InputActivity.class);
-        i.putExtra(InputActivity.ROUND_ID, roundId);
-        i.putExtra(InputActivity.PASSE_IND, passeIndex);
-        startActivity(i);
+        InputActivity.getEndIntent(getActivity(), item.roundId, item.index)
+                .start();
     }
 
     private class EndAdapter extends ListAdapterBase<Passe> {

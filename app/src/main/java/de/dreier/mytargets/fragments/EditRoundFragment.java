@@ -34,6 +34,7 @@ import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.transitions.FabTransform;
 
 import static de.dreier.mytargets.fragments.ListFragmentBase.ITEM_ID;
 
@@ -119,6 +120,12 @@ public class EditRoundFragment extends EditFragmentBase {
             }
         }
         return binding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        FabTransform.setup(getActivity(), binding.getRoot());
     }
 
     @Override

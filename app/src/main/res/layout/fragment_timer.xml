@@ -5,7 +5,9 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/timer_red">
+        android:background="@color/timer_red"
+        android:transitionName="@string/transition_root_view"
+        tools:targetApi="lollipop">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"

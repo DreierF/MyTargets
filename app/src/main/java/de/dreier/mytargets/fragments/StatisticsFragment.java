@@ -7,7 +7,6 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -70,8 +69,8 @@ import de.dreier.mytargets.utils.Utils;
 
 public class StatisticsFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<ArrowStatistic>> {
 
-    public static final String ARG_TARGET = "target";
-    public static final String ARG_ROUND_IDS = "round_ids";
+    private static final String ARG_TARGET = "target";
+    private static final String ARG_ROUND_IDS = "round_ids";
     private static final String PIE_CHART_CENTER_TEXT_FORMAT = "<font color='gray'>%s</font><br>" +
             "<big>%s</big><br>" +
             "<small>&nbsp;</small><br>" +
@@ -84,6 +83,15 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     private ArrowStatisticAdapter adapter;
     private FragmentStatisticsBinding binding;
     private Target target;
+
+    public static StatisticsFragment newInstance(List<Long> roundIds, Target item) {
+        StatisticsFragment fragment = new StatisticsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(StatisticsFragment.ARG_TARGET, Parcels.wrap(item));
+        bundle.putLongArray(StatisticsFragment.ARG_ROUND_IDS, Utils.toArray(roundIds));
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -124,13 +132,12 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         binding.dispersionView.setShoots(exactShots);
         binding.dispersionView.setEnabled(false);
         binding.dispersionViewOverlay.setOnClickListener(view -> {
-            Intent intent = new Intent(getContext(), DispersionPatternActivity.class);
             ArrowStatistic statistics = new ArrowStatistic();
             statistics.target = target;
             statistics.addShots(exactShots);
-            intent.putExtra(DispersionPatternActivity.ITEM, Parcels.wrap(statistics));
-            intent.putExtra(DispersionPatternActivity.ROUND_IDS, roundIds);
-            startActivity(intent);
+            DispersionPatternActivity
+                    .getIntent(getActivity(), statistics)
+                    .start();
         });
     }
 
@@ -416,9 +423,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         }
 
         private void onItemClicked() {
-            Intent i = new Intent(getContext(), DispersionPatternActivity.class);
-            i.putExtra(DispersionPatternActivity.ITEM, Parcels.wrap(mItem));
-            startActivity(i);
+            DispersionPatternActivity.getIntent(getActivity(), mItem).start();
         }
 
         void bindItem(ArrowStatistic item) {

@@ -90,7 +90,6 @@ public class TrainingFragment extends EditableListFragment<Round> {
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
 
-
         // Get training
         if (getArguments() != null) {
             mTraining = getArguments().getLong(ITEM_ID, -1);
@@ -98,7 +97,9 @@ public class TrainingFragment extends EditableListFragment<Round> {
         binding.fab.setVisibility(View.GONE);
         binding.fab.setOnClickListener(view -> {
             // New round to free training
-            EditRoundFragment.createRoundIntent(getActivity(), mTraining).start();
+            EditRoundFragment.createRoundIntent(getActivity(), mTraining)
+                    .fromFab(binding.fab)
+                    .start();
         });
 
         TrainingDataSource trainingDataSource = new TrainingDataSource();
@@ -154,12 +155,11 @@ public class TrainingFragment extends EditableListFragment<Round> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_scoreboard:
-                Intent intent = new Intent(getContext(), ScoreboardActivity.class);
-                intent.putExtra(ScoreboardActivity.TRAINING_ID, mTraining);
-                startActivity(intent);
+                ScoreboardActivity.getIntent(getActivity(), mTraining)
+                        .start();
                 return true;
             case R.id.action_statistics:
-                StatisticsActivity.showStatisticsIntent(getActivity(),
+                StatisticsActivity.getIntent(getActivity(),
                         Stream.of(new RoundDataSource().getAll(training.getId()))
                                         .map(Round::getId)
                                         .collect(Collectors.toList())).start();
@@ -182,7 +182,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
 
     @Override
     protected void onStatistics(List<Long> roundIds) {
-        StatisticsActivity.showStatisticsIntent(getActivity(), roundIds).start();
+        StatisticsActivity.getIntent(getActivity(), roundIds).start();
     }
 
     private class RoundAdapter extends ListAdapterBase<Round> {

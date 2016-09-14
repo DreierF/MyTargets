@@ -73,7 +73,7 @@ public class MainFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_statistics:
                 StatisticsActivity
-                        .showStatisticsIntent(getActivity(), Stream.of(new RoundDataSource().getAll())
+                        .getIntent(getActivity(), Stream.of(new RoundDataSource().getAll())
                                         .map(Round::getId)
                                         .collect(Collectors.toList())).start();
                 return true;
