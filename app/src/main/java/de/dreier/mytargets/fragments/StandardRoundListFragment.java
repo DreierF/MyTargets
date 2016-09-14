@@ -44,10 +44,8 @@ import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.utils.ActivityUtils;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DataLoaderBase.BackgroundAction;
-
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
@@ -267,7 +265,9 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
     }
 
     private void startEditStandardRound(StandardRound item) {
-        ActivityUtils.editStandardRound(getActivity(), NEW_STANDARD_ROUND, item);
+        EditStandardRoundFragment
+                .editStandardRoundIntent(getActivity(), item)
+                .startForResult(NEW_STANDARD_ROUND);
     }
 
     @Override
@@ -302,7 +302,9 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
 
     @Override
     public void onClick(View v) {
-        ActivityUtils.createStandardRound(getActivity(), NEW_STANDARD_ROUND);
+        EditStandardRoundFragment.createStandardRoundIntent(getActivity())
+                .fromFab(binding.fab)
+                .startForResult(NEW_STANDARD_ROUND);
     }
 
     @Override

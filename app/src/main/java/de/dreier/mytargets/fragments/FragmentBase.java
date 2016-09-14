@@ -7,7 +7,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.utils.Utils;
 import icepick.Icepick;
 
-public class FragmentBase extends Fragment {
+public abstract class FragmentBase extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

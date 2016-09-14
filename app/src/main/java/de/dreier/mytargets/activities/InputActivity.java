@@ -7,9 +7,11 @@
 
 package de.dreier.mytargets.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -46,6 +48,7 @@ import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import icepick.Icepick;
 import icepick.State;
@@ -70,6 +73,14 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     private StandardRound standardRound;
 
     private ActivityInputBinding binding;
+
+    @NonNull
+    public static IntentWrapper newEndIntent(Activity activity, long roundId) {
+        Intent i = new Intent(activity, InputActivity.class);
+        i.putExtra(ROUND_ID, roundId);
+        i.putExtra(PASSE_IND, 0);
+        return new IntentWrapper(activity, i);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

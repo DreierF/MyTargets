@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditArrowActivity;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
@@ -28,11 +27,8 @@ import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
-import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
-
-import static de.dreier.mytargets.fragments.EditArrowFragment.ARROW_ID;
-import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 public class ArrowListFragment extends EditableListFragment<Arrow> {
 
@@ -48,7 +44,10 @@ public class ArrowListFragment extends EditableListFragment<Arrow> {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.fab.setOnClickListener(view1 -> startActivityAnimated(getActivity(), EditArrowActivity.class));
+        binding.fab.setOnClickListener(
+                view1 -> EditArrowFragment.createArrowIntent(getActivity())
+                        .fromFab(binding.fab)
+                        .start());
     }
 
     @Override
@@ -78,13 +77,12 @@ public class ArrowListFragment extends EditableListFragment<Arrow> {
 
     @Override
     protected void onEdit(Arrow item) {
-        startActivityAnimated(getActivity(),
-                EditArrowActivity.class, ARROW_ID, item.getId());
+        EditArrowFragment.editArrowIntent(getActivity(), item.getId()).start();
     }
 
     @Override
     protected void onItemSelected(Arrow item) {
-        startActivityAnimated(getActivity(), EditArrowActivity.class, ARROW_ID, item.getId());
+        EditArrowFragment.editArrowIntent(getActivity(), item.getId()).start();
     }
 
     private class ArrowAdapter extends ListAdapterBase<Arrow> {

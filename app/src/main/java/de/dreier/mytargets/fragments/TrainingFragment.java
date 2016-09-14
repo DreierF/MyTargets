@@ -7,11 +7,13 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -30,8 +32,8 @@ import java.util.Locale;
 import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ScoreboardActivity;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditRoundActivity;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase.RoundActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentTrainingBinding;
 import de.dreier.mytargets.databinding.ItemRoundBinding;
@@ -45,13 +47,10 @@ import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.HtmlUtils;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
-
-import static de.dreier.mytargets.fragments.RoundFragment.ROUND_ID;
-import static de.dreier.mytargets.utils.ActivityUtils.showStatistics;
-import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 
 /**
  * Shows all passes of one training
@@ -64,13 +63,19 @@ public class TrainingFragment extends EditableListFragment<Round> {
     private Training training;
     private RoundDataSource roundDataSource;
     private StandardRoundDataSource standardRoundDataSource;
-    private TrainingDataSource trainingDataSource;
 
     public TrainingFragment() {
         itemTypeSelRes = R.plurals.round_selected;
         itemTypeDelRes = R.plurals.round_deleted;
         newStringRes = R.string.new_round;
         supportsStatistics = true;
+    }
+
+    @NonNull
+    public static IntentWrapper getTrainingIntent(Activity activity, long trainingId) {
+        Intent i = new Intent(activity, SimpleFragmentActivityBase.TrainingActivity.class);
+        i.putExtra(ITEM_ID, trainingId);
+        return new IntentWrapper(activity, i);
     }
 
     @Override
@@ -93,10 +98,10 @@ public class TrainingFragment extends EditableListFragment<Round> {
         binding.fab.setVisibility(View.GONE);
         binding.fab.setOnClickListener(view -> {
             // New round to free training
-            startActivityAnimated(getActivity(), EditRoundActivity.class, ITEM_ID, mTraining);
+            EditRoundFragment.createRoundIntent(getActivity(), mTraining).start();
         });
 
-        trainingDataSource = new TrainingDataSource();
+        TrainingDataSource trainingDataSource = new TrainingDataSource();
         roundDataSource = new RoundDataSource();
         standardRoundDataSource = new StandardRoundDataSource();
 
@@ -154,10 +159,10 @@ public class TrainingFragment extends EditableListFragment<Round> {
                 startActivity(intent);
                 return true;
             case R.id.action_statistics:
-                showStatistics(getActivity(),
+                StatisticsActivity.showStatisticsIntent(getActivity(),
                         Stream.of(new RoundDataSource().getAll(training.getId()))
-                                .map(Round::getId)
-                                .collect(Collectors.toList()));
+                                        .map(Round::getId)
+                                        .collect(Collectors.toList())).start();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -166,20 +171,18 @@ public class TrainingFragment extends EditableListFragment<Round> {
 
     @Override
     protected void onItemSelected(Round item) {
-        startActivityAnimated(getActivity(), RoundActivity.class, ROUND_ID, item.getId());
+        RoundFragment.getRoundIntent(getActivity(), item.getId()).start();
     }
 
     @Override
     protected void onEdit(Round item) {
-        Intent i = new Intent(getContext(), EditRoundActivity.class);
-        i.putExtra(ITEM_ID, mTraining);
-        i.putExtra(EditRoundFragment.ROUND_ID, item.getId());
-        startActivity(i);
+        EditRoundFragment.editRoundIntent(getActivity(), mTraining, item.getId())
+                .start();
     }
 
     @Override
     protected void onStatistics(List<Long> roundIds) {
-        showStatistics(getActivity(), roundIds);
+        StatisticsActivity.showStatisticsIntent(getActivity(), roundIds).start();
     }
 
     private class RoundAdapter extends ListAdapterBase<Round> {

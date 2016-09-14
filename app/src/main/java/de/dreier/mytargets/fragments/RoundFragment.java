@@ -7,10 +7,12 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -27,6 +29,8 @@ import java.util.Locale;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.InputActivity;
 import de.dreier.mytargets.activities.ScoreboardActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemEndBinding;
@@ -40,11 +44,10 @@ import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
-
-import static de.dreier.mytargets.utils.ActivityUtils.showStatistics;
 
 /**
  * Shows all passes of one round
@@ -62,6 +65,13 @@ public class RoundFragment extends EditableListFragment<Passe> {
         itemTypeSelRes = R.plurals.passe_selected;
         itemTypeDelRes = R.plurals.passe_deleted;
         newStringRes = R.string.new_end;
+    }
+
+    @NonNull
+    public static IntentWrapper getRoundIntent(Activity activity, long roundId) {
+        Intent i = new Intent(activity, SimpleFragmentActivityBase.RoundActivity.class);
+        i.putExtra(ROUND_ID, roundId);
+        return new IntentWrapper(activity, i);
     }
 
     @Override
@@ -128,7 +138,8 @@ public class RoundFragment extends EditableListFragment<Passe> {
                 startActivity(intent);
                 return true;
             case R.id.action_statistics:
-                showStatistics(getActivity(), Collections.singletonList(round.getId()));
+                StatisticsActivity.showStatisticsIntent(getActivity(),
+                        Collections.singletonList(round.getId())).start();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

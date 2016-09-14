@@ -12,7 +12,9 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
 import de.dreier.mytargets.databinding.DynamicitemSightSettingsBinding;
 import de.dreier.mytargets.databinding.EditBowFragmentBinding;
@@ -33,8 +36,8 @@ import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.views.selector.SelectorBase;
 import de.dreier.mytargets.views.selector.SimpleDistanceSelector;
 import icepick.State;
@@ -48,7 +51,7 @@ import static de.dreier.mytargets.shared.models.EBowType.YUMI;
 
 public class EditBowFragment extends EditWithImageFragmentBase {
 
-    static final String BOW_ID = "bow_id";
+    private static final String BOW_ID = "bow_id";
     @State(ParcelsBundler.class)
     Bow bow;
     private EditBowFragmentBinding contentBinding;
@@ -57,6 +60,18 @@ public class EditBowFragment extends EditWithImageFragmentBase {
 
     public EditBowFragment() {
         super(R.drawable.recurve_bow);
+    }
+
+    @NonNull
+    protected static IntentWrapper createBowIntent(FragmentActivity activity) {
+        return new IntentWrapper(activity, SimpleFragmentActivityBase.EditBowActivity.class);
+    }
+
+    @NonNull
+    static IntentWrapper editBowIntent(Activity activity, long bowId) {
+        Intent i = new Intent(activity, SimpleFragmentActivityBase.EditBowActivity.class);
+        i.putExtra(BOW_ID, bowId);
+        return new IntentWrapper(activity, i);
     }
 
     @Override

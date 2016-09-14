@@ -216,8 +216,7 @@ public class FabTransform extends Transition {
                     view.getHeight() / 2,
                     (float) Math.hypot(startBounds.width() / 2, startBounds.height() / 2),
                     endBounds.width() / 2);
-            circularReveal.setInterpolator(
-                    new LinearOutSlowInInterpolator());
+            circularReveal.setInterpolator(new LinearOutSlowInInterpolator());
 
             // Persist the end clip i.e. stay at FAB size after the reveal has run
             circularReveal.addListener(new AnimatorListenerAdapter() {

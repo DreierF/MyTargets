@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
 import de.dreier.mytargets.databinding.DynamicitemRoundTemplateBinding;
 import de.dreier.mytargets.databinding.FragmentEditStandardRoundBinding;
@@ -32,6 +34,7 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.views.selector.DistanceSelector;
 import de.dreier.mytargets.views.selector.SelectorBase;
@@ -47,6 +50,18 @@ public class EditStandardRoundFragment extends EditFragmentBase {
     private long standardRoundId = -1;
     private RoundTemplateAdapter adapter;
     private FragmentEditStandardRoundBinding binding;
+
+    @NonNull
+    public static IntentWrapper createStandardRoundIntent(Activity activity) {
+        return new IntentWrapper(activity, SimpleFragmentActivityBase.EditStandardRoundActivity.class);
+    }
+
+    @NonNull
+    public static IntentWrapper editStandardRoundIntent(Activity activity, StandardRound item) {
+        Intent i = new Intent(activity, SimpleFragmentActivityBase.EditStandardRoundActivity.class);
+        i.putExtra(ITEM, Parcels.wrap(item));
+        return new IntentWrapper(activity, i);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

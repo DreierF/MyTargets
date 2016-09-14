@@ -117,7 +117,7 @@
         <activity
             android:name=".activities.SimpleFragmentActivityBase$EditBowActivity"
             android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.CustomToolbar.Translucent"
+            android:theme="@style/AppTheme.CustomToolbar"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

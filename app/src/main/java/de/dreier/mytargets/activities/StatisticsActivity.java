@@ -7,8 +7,11 @@
 
 package de.dreier.mytargets.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -38,6 +41,7 @@ import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
@@ -47,11 +51,19 @@ import icepick.State;
 
 public class StatisticsActivity extends ChildActivityBase {
 
-    public static final String ROUND_IDS = "round_ids";
+    private static final String ROUND_IDS = "round_ids";
+
     @State
     boolean showFilter = false;
     private ActivityStatisticsBinding binding;
     private List<Round> rounds;
+
+    @NonNull
+    public static IntentWrapper showStatisticsIntent(Activity context, List<Long> roundIds) {
+        Intent i = new Intent(context, StatisticsActivity.class);
+        i.putExtra(ROUND_IDS, Utils.toArray(roundIds));
+        return new IntentWrapper(context, i);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
