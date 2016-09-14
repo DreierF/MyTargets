@@ -12,6 +12,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.transitions.FabTransform;
 import de.dreier.mytargets.views.selector.DistanceSelector;
 import de.dreier.mytargets.views.selector.SelectorBase;
 import de.dreier.mytargets.views.selector.TargetSelector;
@@ -118,6 +120,12 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         binding.deleteStandardRound.setOnClickListener((view) -> onDeleteStandardRound());
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        FabTransform.setup(getActivity(), binding.getRoot());
     }
 
     private void onAddRound() {
