@@ -54,7 +54,6 @@ import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
-import de.dreier.mytargets.utils.transitions.FabTransform;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import icepick.Icepick;
 import icepick.State;
@@ -379,6 +378,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         public void onTransitionStart(Transition transition) {
 
         }
+
         @Override
         public void onTransitionCancel(Transition transition) {
 

@@ -7,8 +7,6 @@
 
 package de.dreier.mytargets.activities;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
@@ -29,7 +27,6 @@ import de.dreier.mytargets.fragments.RoundFragment;
 import de.dreier.mytargets.fragments.SettingsFragment;
 import de.dreier.mytargets.fragments.TimerFragment;
 import de.dreier.mytargets.fragments.TrainingFragment;
-import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.Utils;
 
 public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
