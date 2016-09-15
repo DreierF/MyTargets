@@ -106,10 +106,8 @@ public abstract class SelectorBase<T> extends LinearLayout {
     }
 
     public void setOnActivityResultContext(Fragment fragment) {
-        setOnClickListener(v -> {
-            new IntentWrapper(fragment.getActivity(), getDefaultIntent())
-                    .startForResult(requestCode);
-        });
+        setOnClickListener(v -> new IntentWrapper(fragment, getDefaultIntent())
+                .startForResult(requestCode));
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

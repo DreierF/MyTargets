@@ -13,7 +13,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -59,15 +58,15 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     }
 
     @NonNull
-    protected static IntentWrapper createArrowIntent(FragmentActivity activity) {
-        return new IntentWrapper(activity, SimpleFragmentActivityBase.EditArrowActivity.class);
+    protected static IntentWrapper createIntent(Fragment fragment) {
+        return new IntentWrapper(fragment, SimpleFragmentActivityBase.EditArrowActivity.class);
     }
 
     @NonNull
-    static IntentWrapper editArrowIntent(Activity activity, long arrowId) {
-        Intent i = new Intent(activity, SimpleFragmentActivityBase.EditArrowActivity.class);
-        i.putExtra(ARROW_ID, arrowId);
-        return new IntentWrapper(activity, i);
+    static IntentWrapper editIntent(Fragment fragment, Arrow arrow) {
+        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditArrowActivity.class);
+        i.putExtra(ARROW_ID, arrow.getId());
+        return new IntentWrapper(fragment, i);
     }
 
     @Override

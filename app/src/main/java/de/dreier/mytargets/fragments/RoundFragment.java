@@ -7,13 +7,13 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -68,10 +68,10 @@ public class RoundFragment extends EditableListFragment<Passe> {
     }
 
     @NonNull
-    public static IntentWrapper getRoundIntent(Activity activity, long roundId) {
-        Intent i = new Intent(activity, SimpleFragmentActivityBase.RoundActivity.class);
-        i.putExtra(ROUND_ID, roundId);
-        return new IntentWrapper(activity, i);
+    public static IntentWrapper getIntent(Fragment fragment, Round round) {
+        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.RoundActivity.class);
+        i.putExtra(ROUND_ID, round.getId());
+        return new IntentWrapper(fragment, i);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class RoundFragment extends EditableListFragment<Passe> {
         binding.recyclerView.setAdapter(mAdapter);
         binding.fab.setVisibility(View.GONE);
         binding.fab.setOnClickListener(
-                v -> InputActivity.getEndIntent(getActivity(), round.getId(),
+                v -> InputActivity.getIntent(this, round,
                         binding.recyclerView.getAdapter().getItemCount())
                                 .fromFab(binding.fab)
                                 .start());
@@ -137,12 +137,12 @@ public class RoundFragment extends EditableListFragment<Passe> {
         switch (item.getItemId()) {
             case R.id.action_scoreboard:
                 ScoreboardActivity
-                        .getIntent(getActivity(), round.trainingId, round.getId())
+                        .getIntent(this, round.trainingId, round.getId())
                         .start();
                 return true;
             case R.id.action_statistics:
                 StatisticsActivity
-                        .getIntent(getActivity(),
+                        .getIntent(this,
                         Collections.singletonList(round.getId())).start();
                 return true;
             default:
@@ -152,13 +152,13 @@ public class RoundFragment extends EditableListFragment<Passe> {
 
     @Override
     protected void onItemSelected(Passe item) {
-        InputActivity.getEndIntent(getActivity(), item.roundId, item.index)
+        InputActivity.getIntent(this, round, item.index)
                 .start();
     }
 
     @Override
     protected void onEdit(Passe item) {
-        InputActivity.getEndIntent(getActivity(), item.roundId, item.index)
+        InputActivity.getIntent(this, round, item.index)
                 .start();
     }
 

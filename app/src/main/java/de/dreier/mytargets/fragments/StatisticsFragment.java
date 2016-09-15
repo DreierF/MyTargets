@@ -136,7 +136,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
             statistics.target = target;
             statistics.addShots(exactShots);
             DispersionPatternActivity
-                    .getIntent(getActivity(), statistics)
+                    .getIntent(this, statistics)
                     .start();
         });
     }
@@ -423,7 +423,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         }
 
         private void onItemClicked() {
-            DispersionPatternActivity.getIntent(getActivity(), mItem).start();
+            DispersionPatternActivity.getIntent(StatisticsFragment.this, mItem).start();
         }
 
         void bindItem(ArrowStatistic item) {

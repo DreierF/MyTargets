@@ -49,7 +49,7 @@ public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
             final StandardRound item = getSelectedItem();
             Target target = item.rounds.get(0).targetTemplate;
             if (target.id < 7 || target.id == 10 || target.id == 11) {
-                TargetListFragment.getIntent(fragment.getActivity(), target)
+                TargetListFragment.getIntent(fragment, target)
                         .startForResult(SR_TARGET_REQUEST_CODE);
             } else {
                 fragment.startActivityForResult(getDefaultIntent(), requestCode);

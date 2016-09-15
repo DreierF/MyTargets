@@ -54,15 +54,15 @@ public class EditStandardRoundFragment extends EditFragmentBase {
     private FragmentEditStandardRoundBinding binding;
 
     @NonNull
-    public static IntentWrapper createStandardRoundIntent(Activity activity) {
-        return new IntentWrapper(activity, SimpleFragmentActivityBase.EditStandardRoundActivity.class);
+    public static IntentWrapper createIntent(Fragment fragment) {
+        return new IntentWrapper(fragment, SimpleFragmentActivityBase.EditStandardRoundActivity.class);
     }
 
     @NonNull
-    public static IntentWrapper editStandardRoundIntent(Activity activity, StandardRound item) {
-        Intent i = new Intent(activity, SimpleFragmentActivityBase.EditStandardRoundActivity.class);
+    public static IntentWrapper editIntent(Fragment fragment, StandardRound item) {
+        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditStandardRoundActivity.class);
         i.putExtra(ITEM, Parcels.wrap(item));
-        return new IntentWrapper(activity, i);
+        return new IntentWrapper(fragment, i);
     }
 
     @Override
