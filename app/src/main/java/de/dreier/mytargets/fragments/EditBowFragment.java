@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -63,15 +62,15 @@ public class EditBowFragment extends EditWithImageFragmentBase {
     }
 
     @NonNull
-    protected static IntentWrapper createBowIntent(FragmentActivity activity) {
-        return new IntentWrapper(activity, SimpleFragmentActivityBase.EditBowActivity.class);
+    protected static IntentWrapper createIntent(Fragment fragment) {
+        return new IntentWrapper(fragment, SimpleFragmentActivityBase.EditBowActivity.class);
     }
 
     @NonNull
-    static IntentWrapper editBowIntent(Activity activity, long bowId) {
-        Intent i = new Intent(activity, SimpleFragmentActivityBase.EditBowActivity.class);
-        i.putExtra(BOW_ID, bowId);
-        return new IntentWrapper(activity, i);
+    static IntentWrapper editIntent(Fragment fragment, Bow bow) {
+        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditBowActivity.class);
+        i.putExtra(BOW_ID, bow.getId());
+        return new IntentWrapper(fragment, i);
     }
 
     @Override

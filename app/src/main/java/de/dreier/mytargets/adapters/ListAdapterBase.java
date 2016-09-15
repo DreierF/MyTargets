@@ -14,28 +14,24 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import de.dreier.mytargets.interfaces.ItemAdapter;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
-
-public abstract class ListAdapterBase<T extends IIdProvider>
+/**
+ *
+ * The list is automatically sorted in natural order.
+ * */
+public abstract class ListAdapterBase<T extends IIdProvider & Comparable<T>>
         extends RecyclerView.Adapter<SelectableViewHolder<T>> implements ItemAdapter<T> {
 
     protected final LayoutInflater inflater;
-    private final Comparator<T> comparator;
     private List<T> list = new ArrayList<>();
 
     public ListAdapterBase(Context context) {
-        this(context, (l, r) -> (int) (l.getId() - r.getId()));
-    }
-
-    public ListAdapterBase(Context context, Comparator<T> comparator) {
         inflater = LayoutInflater.from(context);
-        this.comparator = comparator;
         setHasStableIds(true);
     }
 
@@ -67,6 +63,7 @@ public abstract class ListAdapterBase<T extends IIdProvider>
     }
 
     public void setList(List<T> list) {
+        Collections.sort(list);
         this.list = list;
         notifyDataSetChanged();
     }
@@ -77,7 +74,7 @@ public abstract class ListAdapterBase<T extends IIdProvider>
 
     @Override
     public void addItem(T item) {
-        int pos = Collections.binarySearch(list, item, comparator);
+        int pos = Collections.binarySearch(list, item);
         if (pos < 0) {
             list.add(-pos - 1, item);
             notifyItemInserted(-pos - 1);
@@ -88,9 +85,9 @@ public abstract class ListAdapterBase<T extends IIdProvider>
 
     @Override
     public void removeItem(T item) {
-        int pos = Collections.binarySearch(list, item, comparator);
+        int pos = Collections.binarySearch(list, item);
         if (pos < 0) {
-            throw new IllegalArgumentException("Item must not be inserted twice!");
+            throw new IllegalArgumentException("Item has already been removed!");
         }
         list.remove(pos);
         notifyItemRemoved(pos);

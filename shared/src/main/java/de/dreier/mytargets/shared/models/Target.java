@@ -2,6 +2,7 @@ package de.dreier.mytargets.shared.models;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import de.dreier.mytargets.shared.targets.TargetDrawable;
 import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
 
-public class Target implements IIdProvider, IImageProvider, IDetailProvider {
+public class Target implements IIdProvider, IImageProvider, IDetailProvider, Comparable<Target> {
     public int id;
     public int scoringStyle;
     public Dimension size;
@@ -103,5 +104,10 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
     @Override
     public String toString() {
         return getModel().toString();
+    }
+
+    @Override
+    public int compareTo(@NonNull Target target) {
+        return id - target.id;
     }
 }

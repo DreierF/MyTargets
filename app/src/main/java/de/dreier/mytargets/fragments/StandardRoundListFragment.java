@@ -266,7 +266,7 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
 
     private void startEditStandardRound(StandardRound item) {
         EditStandardRoundFragment
-                .editStandardRoundIntent(getActivity(), item)
+                .editIntent(this, item)
                 .startForResult(NEW_STANDARD_ROUND);
     }
 
@@ -302,7 +302,7 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
 
     @Override
     public void onClick(View v) {
-        EditStandardRoundFragment.createStandardRoundIntent(getActivity())
+        EditStandardRoundFragment.createIntent(this)
                 .fromFab(binding.fab)
                 .startForResult(NEW_STANDARD_ROUND);
     }
@@ -336,7 +336,7 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
 
     private class StandardRoundAdapter extends ListAdapterBase<StandardRound> {
         StandardRoundAdapter(Context context) {
-            super(context, (l, r) -> l.getName().compareTo(r.getName()));
+            super(context);
         }
 
         @Override

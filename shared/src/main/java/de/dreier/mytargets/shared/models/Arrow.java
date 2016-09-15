@@ -3,12 +3,13 @@ package de.dreier.mytargets.shared.models;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
 
-public class Arrow implements IImageProvider, IIdSettable {
+public class Arrow implements IImageProvider, IIdSettable, Comparable<Arrow> {
     public long id = -1;
     public String name = "";
     public String length = "";
@@ -51,5 +52,11 @@ public class Arrow implements IImageProvider, IIdSettable {
         return another instanceof Arrow &&
                 getClass().equals(another.getClass()) &&
                 id == ((Arrow) another).id;
+    }
+
+    @Override
+    public int compareTo(@NonNull Arrow another) {
+        final int result = getName().compareTo(another.getName());
+        return result == 0 ? (int) (id - another.id) : result;
     }
 }

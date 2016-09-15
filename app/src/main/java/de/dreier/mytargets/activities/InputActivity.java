@@ -7,13 +7,13 @@
 
 package de.dreier.mytargets.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.Fragment;
 import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -81,15 +81,15 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     private boolean transitionFinished = true;
 
     @NonNull
-    public static IntentWrapper newEndIntent(Activity activity, long roundId) {
-        return getEndIntent(activity, roundId, 0);
+    public static IntentWrapper createIntent(Fragment fragment, Round round) {
+        return getIntent(fragment, round, 0);
     }
 
-    public static IntentWrapper getEndIntent(Activity activity, long roundId, int passeIndex) {
-        Intent i = new Intent(activity, InputActivity.class);
-        i.putExtra(ROUND_ID, roundId);
+    public static IntentWrapper getIntent(Fragment fragment, Round round, int passeIndex) {
+        Intent i = new Intent(fragment.getContext(), InputActivity.class);
+        i.putExtra(ROUND_ID, round.getId());
         i.putExtra(PASSE_IND, passeIndex);
-        return new IntentWrapper(activity, i);
+        return new IntentWrapper(fragment, i);
     }
 
     @Override

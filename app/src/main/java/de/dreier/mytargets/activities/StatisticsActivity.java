@@ -7,7 +7,6 @@
 
 package de.dreier.mytargets.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -57,10 +56,10 @@ public class StatisticsActivity extends ChildActivityBase {
     private List<Round> rounds;
 
     @NonNull
-    public static IntentWrapper getIntent(Activity context, List<Long> roundIds) {
-        Intent i = new Intent(context, StatisticsActivity.class);
+    public static IntentWrapper getIntent(Fragment fragment, List<Long> roundIds) {
+        Intent i = new Intent(fragment.getContext(), StatisticsActivity.class);
         i.putExtra(ROUND_IDS, Utils.toArray(roundIds));
-        return new IntentWrapper(context, i);
+        return new IntentWrapper(fragment, i);
     }
 
     @Override

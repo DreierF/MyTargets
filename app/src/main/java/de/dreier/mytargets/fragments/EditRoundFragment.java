@@ -6,12 +6,12 @@
  */
 package de.dreier.mytargets.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,18 +45,18 @@ public class EditRoundFragment extends EditFragmentBase {
     private FragmentEditRoundBinding binding;
 
     @NonNull
-    protected static IntentWrapper createRoundIntent(Activity activity, long trainingId) {
-        Intent i = new Intent(activity, SimpleFragmentActivityBase.EditRoundActivity.class);
+    protected static IntentWrapper createIntent(Fragment fragment, long trainingId) {
+        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditRoundActivity.class);
         i.putExtra(ITEM_ID, trainingId);
-        return new IntentWrapper(activity, i);
+        return new IntentWrapper(fragment, i);
     }
 
     @NonNull
-    protected static IntentWrapper editRoundIntent(Activity activity, long trainingId, long roundId) {
-        Intent i = new Intent(activity, SimpleFragmentActivityBase.EditRoundActivity.class);
+    protected static IntentWrapper editIntent(Fragment fragment, long trainingId, Round round) {
+        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditRoundActivity.class);
         i.putExtra(ITEM_ID, trainingId);
-        i.putExtra(ROUND_ID, roundId);
-        return new IntentWrapper(activity, i);
+        i.putExtra(ROUND_ID, round.getId());
+        return new IntentWrapper(fragment, i);
     }
 
     @Nullable
@@ -133,9 +133,8 @@ public class EditRoundFragment extends EditFragmentBase {
         finish();
         if (roundId == -1) {
             Round round = onSaveRound();
-            Activity activity = getActivity();
-            RoundFragment.getRoundIntent(activity, round.getId()).startWithoutAnimation();
-            InputActivity.newEndIntent(activity, round.getId()).start();
+            RoundFragment.getIntent(this, round).startWithoutAnimation();
+            InputActivity.createIntent(this, round).start();
         } else {
             onSaveRound();
             getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);

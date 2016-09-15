@@ -8,6 +8,7 @@ package de.dreier.mytargets.shared.models;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.targets.CombinedSpot;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 
-public class StandardRound implements IIdSettable, IImageProvider, IDetailProvider {
+public class StandardRound implements IIdSettable, IImageProvider, IDetailProvider, Comparable<StandardRound> {
 
     public long id;
     public int club;
@@ -85,5 +86,11 @@ public class StandardRound implements IIdSettable, IImageProvider, IDetailProvid
     @Override
     public String getDetails(Context context) {
         return getDescription(context);
+    }
+
+    @Override
+    public int compareTo(@NonNull StandardRound another) {
+        final int result = getName().compareTo(another.getName());
+        return result == 0 ? (int) (id - another.id) : result;
     }
 }

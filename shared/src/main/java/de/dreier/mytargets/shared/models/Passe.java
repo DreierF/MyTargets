@@ -1,19 +1,21 @@
 package de.dreier.mytargets.shared.models;
 
+import android.support.annotation.NonNull;
+
 import org.joda.time.DateTime;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Passe implements IIdSettable {
+public class Passe implements IIdSettable, Comparable<Passe> {
 
-    long id;
     public int index;
     public long roundId;
     public Shot[] shot;
     public boolean exact;
     public DateTime saveDate = new DateTime();
+    long id;
 
     public Passe() {
     }
@@ -64,5 +66,10 @@ public class Passe implements IIdSettable {
 
     public int getReachedPoints(Target target) {
         return target.getReachedPoints(this);
+    }
+
+    @Override
+    public int compareTo(@NonNull Passe passe) {
+        return index - passe.index;
     }
 }

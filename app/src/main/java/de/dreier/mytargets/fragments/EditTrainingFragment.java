@@ -6,13 +6,13 @@
  */
 package de.dreier.mytargets.fragments;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,20 +60,19 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private FragmentEditTrainingBinding binding;
 
     @NonNull
-    public static IntentWrapper createTrainingIntent(Activity context, int trainingType) {
-        Intent i = new Intent(context, SimpleFragmentActivityBase.EditTrainingActivity.class);
+    public static IntentWrapper createIntent(Fragment fragment, int trainingType) {
+        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditTrainingActivity.class);
         i.putExtra(TRAINING_TYPE, trainingType);
-        return new IntentWrapper(context, i);
+        return new IntentWrapper(fragment, i);
     }
 
     @NonNull
-    public static IntentWrapper editTrainingIntent(Activity context, long trainingId) {
-        Intent i = new Intent(context, SimpleFragmentActivityBase.EditTrainingActivity.class);
-        i.putExtra(ITEM_ID, trainingId);
-        return new IntentWrapper(context, i);
+    public static IntentWrapper editIntent(Fragment fragment, Training training) {
+        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditTrainingActivity.class);
+        i.putExtra(ITEM_ID, training.getId());
+        return new IntentWrapper(fragment, i);
     }
 
-    //TODO make views save their state on rotation
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -225,12 +224,11 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             training.standardRoundId = standardRound.getId();
 
             trainingDataSource.update(training);
-            long roundId = createRoundsFromTemplate(standardRound, training).get(0).getId();
+            Round round = createRoundsFromTemplate(standardRound, training).get(0);
 
-            Activity activity = getActivity();
-            TrainingFragment.getTrainingIntent(activity, training.getId()).startWithoutAnimation();
-            RoundFragment.getRoundIntent(activity, roundId).startWithoutAnimation();
-            InputActivity.newEndIntent(activity, roundId).start();
+            TrainingFragment.getIntent(this, training).startWithoutAnimation();
+            RoundFragment.getIntent(this, round).startWithoutAnimation();
+            InputActivity.createIntent(this, round).start();
         } else {
             // Edit training
             trainingDataSource.update(training);

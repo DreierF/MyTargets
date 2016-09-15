@@ -69,11 +69,11 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
         binding.fab1.setOnClickListener(
-                view -> EditTrainingFragment.createTrainingIntent(getActivity(), FREE_TRAINING)
+                view -> EditTrainingFragment.createIntent(this, FREE_TRAINING)
                         .fromFab(binding.fab1, 0xFF4CAF50, R.drawable.fab_trending_up_white_24dp)
                         .start());
-        binding.fab2.setOnClickListener(view -> EditTrainingFragment.createTrainingIntent(
-                getActivity(), TRAINING_WITH_STANDARD_ROUND)
+        binding.fab2.setOnClickListener(view -> EditTrainingFragment.createIntent(
+                this, TRAINING_WITH_STANDARD_ROUND)
                 .fromFab(binding.fab2, 0xFF2196F3, R.drawable.fab_album_24dp)
                 .start());
         return binding.getRoot();
@@ -81,13 +81,13 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
 
     @Override
     public void onSelected(Training item) {
-        TrainingFragment.getTrainingIntent(getActivity(), item.getId())
+        TrainingFragment.getIntent(this, item)
                 .start();
     }
 
     @Override
     protected void onStatistics(List<Long> trainingIds) {
-        StatisticsActivity.getIntent(getActivity(), Stream.of(trainingIds)
+        StatisticsActivity.getIntent(this, Stream.of(trainingIds)
                 .flatMap(tid -> Stream.of(new RoundDataSource().getAll(tid)))
                 .map(Round::getId)
                 .collect(Collectors.toList())).start();
@@ -95,7 +95,7 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
 
     @Override
     protected void onEdit(final Training item) {
-        EditTrainingFragment.editTrainingIntent(getActivity(), item.getId())
+        EditTrainingFragment.editIntent(this, item)
                 .start();
     }
 
@@ -115,12 +115,7 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         TrainingAdapter() {
             super(child -> new Month(Utils.getMonthId(child.date)),
                     Collections.reverseOrder(),
-                    Collections.reverseOrder((l, r) -> {
-                        if (l.date.equals(r.date)) {
-                            return (int) (l.getId() - r.getId());
-                        }
-                        return l.date.compareTo(r.date);
-                    }));
+                    Collections.reverseOrder());
         }
 
         @Override

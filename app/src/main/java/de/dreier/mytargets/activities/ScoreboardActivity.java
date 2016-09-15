@@ -8,7 +8,6 @@
 package de.dreier.mytargets.activities;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
@@ -19,6 +18,7 @@ import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.Menu;
@@ -57,16 +57,16 @@ public class ScoreboardActivity extends AppCompatActivity {
     private ActivityScoreboardBinding binding;
 
     @NonNull
-    public static IntentWrapper getIntent(Activity activity, long trainingId) {
-        return getIntent(activity, trainingId, -1);
+    public static IntentWrapper getIntent(Fragment fragment, long trainingId) {
+        return getIntent(fragment, trainingId, -1);
     }
 
     @NonNull
-    public static IntentWrapper getIntent(Activity activity, long trainingId, long roundId) {
-        Intent intent = new Intent(activity, ScoreboardActivity.class);
+    public static IntentWrapper getIntent(Fragment fragment, long trainingId, long roundId) {
+        Intent intent = new Intent(fragment.getContext(), ScoreboardActivity.class);
         intent.putExtra(TRAINING_ID, trainingId);
         intent.putExtra(ROUND_ID, roundId);
-        return new IntentWrapper(activity, intent);
+        return new IntentWrapper(fragment, intent);
     }
 
     @Override

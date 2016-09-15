@@ -1,12 +1,14 @@
 package de.dreier.mytargets.shared.models;
 
+import android.support.annotation.NonNull;
+
 import org.joda.time.LocalDate;
 
 import java.text.DateFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class Training implements IIdSettable {
+public class Training implements IIdSettable, Comparable<Training> {
     public String title = "";
     public LocalDate date = new LocalDate();
     public Environment environment;
@@ -44,5 +46,13 @@ public class Training implements IIdSettable {
             reachedPoints += r.reachedPoints;
         }
         return String.format(Locale.ENGLISH, "%d/%d", reachedPoints, maxPoints);
+    }
+
+    @Override
+    public int compareTo(@NonNull Training training) {
+        if (date.equals(training.date)) {
+            return (int) (id - training.id);
+        }
+        return date.compareTo(training.date);
     }
 }

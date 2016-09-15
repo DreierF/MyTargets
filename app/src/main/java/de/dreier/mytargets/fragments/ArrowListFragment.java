@@ -45,7 +45,7 @@ public class ArrowListFragment extends EditableListFragment<Arrow> {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.fab.setOnClickListener(
-                view1 -> EditArrowFragment.createArrowIntent(getActivity())
+                view1 -> EditArrowFragment.createIntent(this)
                         .fromFab(binding.fab)
                         .start());
     }
@@ -77,17 +77,19 @@ public class ArrowListFragment extends EditableListFragment<Arrow> {
 
     @Override
     protected void onEdit(Arrow item) {
-        EditArrowFragment.editArrowIntent(getActivity(), item.getId()).start();
+        EditArrowFragment.editIntent(this, item)
+                .start();
     }
 
     @Override
     protected void onItemSelected(Arrow item) {
-        EditArrowFragment.editArrowIntent(getActivity(), item.getId()).start();
+        EditArrowFragment.editIntent(this, item)
+                .start();
     }
 
     private class ArrowAdapter extends ListAdapterBase<Arrow> {
         ArrowAdapter(Context context) {
-            super(context, (l, r) -> l.getName().compareTo(r.getName()));
+            super(context);
         }
 
         @Override

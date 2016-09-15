@@ -49,10 +49,8 @@ public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
             final StandardRound item = getSelectedItem();
             Target target = item.rounds.get(0).targetTemplate;
             if (target.id < 7 || target.id == 10 || target.id == 11) {
-                Intent i = new Intent(getContext(), ItemSelectActivity.TargetActivity.class);
-                i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(target));
-                i.putExtra(TargetListFragment.TYPE_FIXED, true);
-                fragment.startActivityForResult(i, SR_TARGET_REQUEST_CODE);
+                TargetListFragment.getIntent(fragment, target)
+                        .startForResult(SR_TARGET_REQUEST_CODE);
             } else {
                 fragment.startActivityForResult(getDefaultIntent(), requestCode);
             }
