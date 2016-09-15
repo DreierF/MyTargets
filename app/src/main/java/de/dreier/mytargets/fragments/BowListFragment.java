@@ -84,7 +84,7 @@ public class BowListFragment extends EditableListFragment<Bow> {
 
     private class BowAdapter extends ListAdapterBase<Bow> {
         public BowAdapter(Context context) {
-            super(context, (l, r) -> l.getName().compareTo(r.getName()));
+            super(context);
         }
 
         @Override

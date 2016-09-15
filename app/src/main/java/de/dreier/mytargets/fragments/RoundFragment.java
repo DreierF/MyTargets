@@ -165,7 +165,7 @@ public class RoundFragment extends EditableListFragment<Passe> {
     private class EndAdapter extends ListAdapterBase<Passe> {
 
         EndAdapter(Context context) {
-            super(context, (l, r) -> l.index - r.index);
+            super(context);
         }
 
         @Override

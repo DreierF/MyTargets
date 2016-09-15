@@ -115,12 +115,7 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         TrainingAdapter() {
             super(child -> new Month(Utils.getMonthId(child.date)),
                     Collections.reverseOrder(),
-                    Collections.reverseOrder((l, r) -> {
-                        if (l.date.equals(r.date)) {
-                            return (int) (l.getId() - r.getId());
-                        }
-                        return l.date.compareTo(r.date);
-                    }));
+                    Collections.reverseOrder());
         }
 
         @Override

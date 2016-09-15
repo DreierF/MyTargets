@@ -24,6 +24,7 @@ import org.parceler.Parcels;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.utils.IntentWrapper;
 
 
 public abstract class SelectorBase<T> extends LinearLayout {
@@ -106,8 +107,8 @@ public abstract class SelectorBase<T> extends LinearLayout {
 
     public void setOnActivityResultContext(Fragment fragment) {
         setOnClickListener(v -> {
-            fragment.startActivityForResult(getDefaultIntent(), requestCode);
-            fragment.getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+            new IntentWrapper(fragment.getActivity(), getDefaultIntent())
+                    .startForResult(requestCode);
         });
     }
 

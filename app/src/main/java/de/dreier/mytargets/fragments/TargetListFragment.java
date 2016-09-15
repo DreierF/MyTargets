@@ -7,9 +7,12 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -28,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentTargetSelectBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
@@ -36,6 +40,7 @@ import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
 
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
@@ -44,9 +49,18 @@ import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 public class TargetListFragment extends SelectItemFragment<Target>
         implements SeekBar.OnSeekBarChangeListener {
-    public static final String TYPE_FIXED = "type_fixed";
-    protected FragmentTargetSelectBinding binding;
+
+    private static final String TYPE_FIXED = "type_fixed";
+    private FragmentTargetSelectBinding binding;
     private boolean typeFixed = false;
+
+    @NonNull
+    public static IntentWrapper getIntent(Activity activity, Target target) {
+        Intent i = new Intent(activity, ItemSelectActivity.TargetActivity.class);
+        i.putExtra(ITEM, Parcels.wrap(target));
+        i.putExtra(TYPE_FIXED, true);
+        return new IntentWrapper(activity, i);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -192,7 +206,7 @@ public class TargetListFragment extends SelectItemFragment<Target>
 
         public ViewHolder(View itemView) {
             super(itemView, mSelector, TargetListFragment.this);
-            binding = ItemImageSimpleBinding.bind(itemView);
+            binding = DataBindingUtil.bind(itemView);
         }
 
         @Override

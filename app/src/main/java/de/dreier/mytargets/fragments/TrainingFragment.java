@@ -188,7 +188,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
     private class RoundAdapter extends ListAdapterBase<Round> {
 
         RoundAdapter(Context context) {
-            super(context, (lhs, rhs) -> lhs.info.index - rhs.info.index);
+            super(context);
         }
 
         @Override

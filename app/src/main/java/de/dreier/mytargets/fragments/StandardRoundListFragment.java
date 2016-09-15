@@ -336,7 +336,7 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
 
     private class StandardRoundAdapter extends ListAdapterBase<StandardRound> {
         StandardRoundAdapter(Context context) {
-            super(context, (l, r) -> l.getName().compareTo(r.getName()));
+            super(context);
         }
 
         @Override

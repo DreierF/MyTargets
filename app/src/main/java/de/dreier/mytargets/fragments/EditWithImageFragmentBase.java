@@ -9,6 +9,7 @@ package de.dreier.mytargets.fragments;
 
 import android.Manifest;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -63,7 +64,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentEditImageBinding.inflate(inflater, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_image, container, false);
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
         ToolbarUtils.showUpAsX(this);
         setHasOptionsMenu(true);

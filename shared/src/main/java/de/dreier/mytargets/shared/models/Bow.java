@@ -4,12 +4,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
 
-public class Bow implements IImageProvider, IIdSettable {
+public class Bow implements IImageProvider, IIdSettable, Comparable<Bow> {
     public long id = -1;
     public String name = "";
     public EBowType type = EBowType.RECURVE_BOW;
@@ -58,5 +59,11 @@ public class Bow implements IImageProvider, IIdSettable {
         return another instanceof Bow &&
                 getClass().equals(another.getClass()) &&
                 id == ((Bow) another).id;
+    }
+
+    @Override
+    public int compareTo(@NonNull Bow another) {
+        final int result = getName().compareTo(another.getName());
+        return result == 0 ? (int) (id - another.id) : result;
     }
 }

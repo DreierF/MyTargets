@@ -29,7 +29,7 @@ import de.dreier.mytargets.utils.multiselector.SingleSelector;
  * <p>
  * Parent activity must implement {@link ListFragmentBase.OnItemSelectedListener}.
  */
-public abstract class SelectItemFragment<T extends IIdProvider> extends ListFragmentBase<T> {
+public abstract class SelectItemFragment<T extends IIdProvider & Comparable<T>> extends ListFragmentBase<T> {
 
     /**
      * Selector which manages the item selection

@@ -8,6 +8,7 @@ package de.dreier.mytargets.shared.models;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import org.parceler.ParcelConstructor;
 
@@ -16,7 +17,7 @@ import java.util.List;
 
 import de.dreier.mytargets.shared.R;
 
-public class WindSpeed implements IIdProvider, IImageProvider {
+public class WindSpeed implements IIdProvider, IImageProvider, Comparable<WindSpeed> {
 
     public long id;
     public String name;
@@ -31,16 +32,26 @@ public class WindSpeed implements IIdProvider, IImageProvider {
 
     public static List<WindSpeed> getList(Context context) {
         List<WindSpeed> list = new ArrayList<>();
-        list.add(new WindSpeed(0, context.getString(R.string.bft_0), R.drawable.ic_bft_0_black_24dp));
-        list.add(new WindSpeed(1, context.getString(R.string.bft_1), R.drawable.ic_bft_1_black_24dp));
-        list.add(new WindSpeed(2, context.getString(R.string.bft_2), R.drawable.ic_bft_2_black_24dp));
-        list.add(new WindSpeed(3, context.getString(R.string.bft_3), R.drawable.ic_bft_3_black_24dp));
-        list.add(new WindSpeed(4, context.getString(R.string.bft_4), R.drawable.ic_bft_4_black_24dp));
-        list.add(new WindSpeed(5, context.getString(R.string.bft_5), R.drawable.ic_bft_5_black_24dp));
-        list.add(new WindSpeed(6, context.getString(R.string.bft_6), R.drawable.ic_bft_6_black_24dp));
-        list.add(new WindSpeed(7, context.getString(R.string.bft_7), R.drawable.ic_bft_7_black_24dp));
-        list.add(new WindSpeed(8, context.getString(R.string.bft_8), R.drawable.ic_bft_8_black_24dp));
-        list.add(new WindSpeed(9, context.getString(R.string.bft_9), R.drawable.ic_bft_9_black_24dp));
+        list.add(new WindSpeed(0, context.getString(R.string.bft_0),
+                R.drawable.ic_bft_0_black_24dp));
+        list.add(new WindSpeed(1, context.getString(R.string.bft_1),
+                R.drawable.ic_bft_1_black_24dp));
+        list.add(new WindSpeed(2, context.getString(R.string.bft_2),
+                R.drawable.ic_bft_2_black_24dp));
+        list.add(new WindSpeed(3, context.getString(R.string.bft_3),
+                R.drawable.ic_bft_3_black_24dp));
+        list.add(new WindSpeed(4, context.getString(R.string.bft_4),
+                R.drawable.ic_bft_4_black_24dp));
+        list.add(new WindSpeed(5, context.getString(R.string.bft_5),
+                R.drawable.ic_bft_5_black_24dp));
+        list.add(new WindSpeed(6, context.getString(R.string.bft_6),
+                R.drawable.ic_bft_6_black_24dp));
+        list.add(new WindSpeed(7, context.getString(R.string.bft_7),
+                R.drawable.ic_bft_7_black_24dp));
+        list.add(new WindSpeed(8, context.getString(R.string.bft_8),
+                R.drawable.ic_bft_8_black_24dp));
+        list.add(new WindSpeed(9, context.getString(R.string.bft_9),
+                R.drawable.ic_bft_9_black_24dp));
         return list;
     }
 
@@ -63,5 +74,10 @@ public class WindSpeed implements IIdProvider, IImageProvider {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public int compareTo(@NonNull WindSpeed windSpeed) {
+        return (int) (id - windSpeed.id);
     }
 }

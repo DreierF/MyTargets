@@ -87,7 +87,7 @@ public class ArrowListFragment extends EditableListFragment<Arrow> {
 
     private class ArrowAdapter extends ListAdapterBase<Arrow> {
         ArrowAdapter(Context context) {
-            super(context, (l, r) -> l.getName().compareTo(r.getName()));
+            super(context);
         }
 
         @Override
