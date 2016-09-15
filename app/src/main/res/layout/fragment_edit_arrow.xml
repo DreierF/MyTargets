@@ -12,13 +12,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="0px"
-            android:layout_height="0px"
-            android:focusable="true"
-            android:focusableInTouchMode="true" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -393,7 +389,7 @@
             <Button
                 android:id="@+id/addButton"
                 style="@style/addButton"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add" />
 
