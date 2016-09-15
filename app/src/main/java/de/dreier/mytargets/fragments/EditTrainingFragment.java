@@ -73,7 +73,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         return new IntentWrapper(fragment, i);
     }
 
-    //TODO make views save their state on rotation
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
