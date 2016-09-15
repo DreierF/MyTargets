@@ -6,6 +6,7 @@
  */
 package de.dreier.mytargets.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import android.view.ViewGroup;
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.InputActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.databinding.FragmentEditRoundBinding;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
@@ -29,14 +32,32 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.utils.ActivityUtils;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.transitions.FabTransformUtil;
+
+import static de.dreier.mytargets.fragments.ListFragmentBase.ITEM_ID;
 
 public class EditRoundFragment extends EditFragmentBase {
-    static final String ROUND_ID = "round_id";
+    private static final String ROUND_ID = "round_id";
     private long trainingId = -1;
     private long roundId = -1;
     private FragmentEditRoundBinding binding;
+
+    @NonNull
+    protected static IntentWrapper createRoundIntent(Activity activity, long trainingId) {
+        Intent i = new Intent(activity, SimpleFragmentActivityBase.EditRoundActivity.class);
+        i.putExtra(ITEM_ID, trainingId);
+        return new IntentWrapper(activity, i);
+    }
+
+    @NonNull
+    protected static IntentWrapper editRoundIntent(Activity activity, long trainingId, long roundId) {
+        Intent i = new Intent(activity, SimpleFragmentActivityBase.EditRoundActivity.class);
+        i.putExtra(ITEM_ID, trainingId);
+        i.putExtra(ROUND_ID, roundId);
+        return new IntentWrapper(activity, i);
+    }
 
     @Nullable
     @Override
@@ -46,7 +67,7 @@ public class EditRoundFragment extends EditFragmentBase {
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            trainingId = arguments.getLong(FragmentBase.ITEM_ID, -1);
+            trainingId = arguments.getLong(ITEM_ID, -1);
             roundId = arguments.getLong(ROUND_ID, -1);
         }
 
@@ -92,7 +113,7 @@ public class EditRoundFragment extends EditFragmentBase {
             } else if (standardRound.rounds.size() > 1) {
                 binding.removeButton.setOnClickListener(v -> {
                     roundDataSource.delete(round);
-                    getActivity().finish();
+                    finish();
                 });
             } else {
                 binding.removeButton.setVisibility(View.GONE);
@@ -102,11 +123,19 @@ public class EditRoundFragment extends EditFragmentBase {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        FabTransformUtil.setup(getActivity(), binding.getRoot());
+    }
+
+    @Override
     protected void onSave() {
-        getActivity().finish();
+        finish();
         if (roundId == -1) {
             Round round = onSaveRound();
-            ActivityUtils.openPasseForNewRound(getActivity(), -1, round.getId());
+            Activity activity = getActivity();
+            RoundFragment.getRoundIntent(activity, round.getId()).startWithoutAnimation();
+            InputActivity.newEndIntent(activity, round.getId()).start();
         } else {
             onSaveRound();
             getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);

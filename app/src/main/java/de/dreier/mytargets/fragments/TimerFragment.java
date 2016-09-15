@@ -7,18 +7,19 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +27,12 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.databinding.FragmentTimerBinding;
 import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.Utils;
 
 import static de.dreier.mytargets.fragments.TimerFragment.TimerState.EXIT;
 import static de.dreier.mytargets.fragments.TimerFragment.TimerState.FINISHED;
@@ -37,15 +41,22 @@ import static de.dreier.mytargets.fragments.TimerFragment.TimerState.WAIT_FOR_ST
 /**
  * Shows all passes of one round
  */
-public class TimerFragment extends Fragment implements View.OnClickListener {
+public class TimerFragment extends FragmentBase implements View.OnClickListener {
 
-    public static final String SHOOTING_TIME = "shooting_time";
+    private static final String SHOOTING_TIME = "shooting_time";
     private TimerState mCurStatus = WAIT_FOR_START;
     private CountDownTimer countdown;
     private MediaPlayer horn;
     private boolean mSound, mVibrate;
     private PowerManager.WakeLock wakeLock;
     private FragmentTimerBinding binding;
+
+    @NonNull
+    public static IntentWrapper getIntent(Activity activity, int timePerPasse) {
+        Intent intent = new Intent(activity, SimpleFragmentActivityBase.TimerActivity.class);
+        intent.putExtra(SHOOTING_TIME, timePerPasse);
+        return new IntentWrapper(activity, intent);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -103,13 +114,12 @@ public class TimerFragment extends Fragment implements View.OnClickListener {
             countdown.cancel();
         }
         if (status == EXIT) {
-            getActivity().finish();
-            getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
+            finish();
             return;
         }
         mCurStatus = status;
         binding.getRoot().setBackgroundResource(status.color);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Utils.isLollipop()) {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getContext().getResources().getColor(status.color));

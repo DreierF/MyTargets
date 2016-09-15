@@ -21,8 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditTrainingActivity;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase.TrainingActivity;
+import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ExpandableListAdapter;
 import de.dreier.mytargets.databinding.FragmentTrainingsBinding;
 import de.dreier.mytargets.databinding.ItemHeaderMonthBinding;
@@ -40,14 +39,11 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND;
-import static de.dreier.mytargets.utils.ActivityUtils.showStatistics;
-import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
-import static de.dreier.mytargets.utils.ActivityUtils.startNewTraining;
 
 /**
  * Shows an overview over all training days
  */
-public class TrainingsFragment extends ExpandableFragment<Month, Training> {
+public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
 
     protected FragmentTrainingsBinding binding;
     private TrainingDataSource trainingDataSource;
@@ -72,28 +68,35 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
         mAdapter = new TrainingAdapter();
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
-        binding.fab1.setOnClickListener(view -> startNewTraining(getActivity(), FREE_TRAINING));
-        binding.fab2.setOnClickListener(view -> startNewTraining(getActivity(), TRAINING_WITH_STANDARD_ROUND));
+        binding.fab1.setOnClickListener(
+                view -> EditTrainingFragment.createTrainingIntent(getActivity(), FREE_TRAINING)
+                        .fromFab(binding.fab1, 0xFF4CAF50, R.drawable.fab_trending_up_white_24dp)
+                        .start());
+        binding.fab2.setOnClickListener(view -> EditTrainingFragment.createTrainingIntent(
+                getActivity(), TRAINING_WITH_STANDARD_ROUND)
+                .fromFab(binding.fab2, 0xFF2196F3, R.drawable.fab_album_24dp)
+                .start());
         return binding.getRoot();
     }
 
     @Override
     public void onSelected(Training item) {
-        startActivityAnimated(getActivity(), TrainingActivity.class, ITEM_ID, item.getId());
+        TrainingFragment.getTrainingIntent(getActivity(), item.getId())
+                .start();
     }
 
     @Override
     protected void onStatistics(List<Long> trainingIds) {
-        showStatistics(getActivity(),
-                Stream.of(trainingIds)
-                        .flatMap(tid -> Stream.of(new RoundDataSource().getAll(tid)))
-                        .map(Round::getId)
-                        .collect(Collectors.toList()));
+        StatisticsActivity.getIntent(getActivity(), Stream.of(trainingIds)
+                .flatMap(tid -> Stream.of(new RoundDataSource().getAll(tid)))
+                .map(Round::getId)
+                .collect(Collectors.toList())).start();
     }
 
     @Override
     protected void onEdit(final Training item) {
-        startActivityAnimated(getActivity(), EditTrainingActivity.class, ITEM_ID, item.getId());
+        EditTrainingFragment.editTrainingIntent(getActivity(), item.getId())
+                .start();
     }
 
     @Override
@@ -104,7 +107,7 @@ public class TrainingsFragment extends ExpandableFragment<Month, Training> {
 
     @Override
     public void onLoadFinished(Loader<List<Training>> loader, List<Training> data) {
-        setList(trainingDataSource,data, false);
+        setList(trainingDataSource, data, false);
     }
 
     private class TrainingAdapter extends ExpandableListAdapter<Month, Training> {

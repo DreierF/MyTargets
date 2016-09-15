@@ -42,7 +42,7 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class TargetFragment extends SelectItemFragment<Target>
+public class TargetListFragment extends SelectItemFragment<Target>
         implements SeekBar.OnSeekBarChangeListener {
     public static final String TYPE_FIXED = "type_fixed";
     protected FragmentTargetSelectBinding binding;
@@ -191,7 +191,7 @@ public class TargetFragment extends SelectItemFragment<Target>
         private ItemImageSimpleBinding binding;
 
         public ViewHolder(View itemView) {
-            super(itemView, mSelector, TargetFragment.this);
+            super(itemView, mSelector, TargetListFragment.this);
             binding = ItemImageSimpleBinding.bind(itemView);
         }
 

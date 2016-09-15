@@ -23,7 +23,7 @@ import de.dreier.mytargets.utils.Utils;
 /**
  * Shows all rounds of one training day
  */
-abstract class ExpandableFragment<H extends IIdProvider, C extends IIdSettable> extends EditableFragmentBase<C> {
+abstract class ExpandableListFragment<H extends IIdProvider, C extends IIdSettable> extends EditableListFragmentBase<C> {
 
     private static final String KEY_EXPANDED = "expanded";
     ExpandableListAdapter<H, C> mAdapter;

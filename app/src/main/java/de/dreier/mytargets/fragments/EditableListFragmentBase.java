@@ -33,7 +33,7 @@ import de.dreier.mytargets.utils.multiselector.MultiSelector;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import icepick.State;
 
-abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<T>
+abstract class EditableListFragmentBase<T extends IIdSettable> extends ListFragmentBase<T>
         implements OnCardClickListener<T>, LoaderManager.LoaderCallbacks<List<T>> {
 
     protected boolean supportsStatistics = false;
@@ -138,7 +138,7 @@ abstract class EditableFragmentBase<T extends IIdSettable> extends FragmentBase<
                                 }
                                 if (isAdded()) {
                                     getLoaderManager()
-                                            .restartLoader(0, null, EditableFragmentBase.this);
+                                            .restartLoader(0, null, EditableListFragmentBase.this);
                                 }
                             }
 

@@ -6,6 +6,7 @@
  */
 package de.dreier.mytargets.fragments;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -24,6 +25,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.InputActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.databinding.FragmentEditTrainingBinding;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
@@ -35,10 +38,12 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.utils.ActivityUtils;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 
 import static de.dreier.mytargets.fragments.DatePickerFragment.ARG_CURRENT_DATE;
+import static de.dreier.mytargets.fragments.ListFragmentBase.ITEM_ID;
 
 public class EditTrainingFragment extends EditFragmentBase implements DatePickerDialog.OnDateSetListener {
     public static final String TRAINING_TYPE = "training_type";
@@ -54,7 +59,21 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private LocalDate date = new LocalDate();
     private FragmentEditTrainingBinding binding;
 
-    //TODO make vies save their state on rotation
+    @NonNull
+    public static IntentWrapper createTrainingIntent(Activity context, int trainingType) {
+        Intent i = new Intent(context, SimpleFragmentActivityBase.EditTrainingActivity.class);
+        i.putExtra(TRAINING_TYPE, trainingType);
+        return new IntentWrapper(context, i);
+    }
+
+    @NonNull
+    public static IntentWrapper editTrainingIntent(Activity context, long trainingId) {
+        Intent i = new Intent(context, SimpleFragmentActivityBase.EditTrainingActivity.class);
+        i.putExtra(ITEM_ID, trainingId);
+        return new IntentWrapper(context, i);
+    }
+
+    //TODO make views save their state on rotation
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -63,7 +82,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            trainingId = arguments.getLong(FragmentBase.ITEM_ID, -1);
+            trainingId = arguments.getLong(ITEM_ID, -1);
             trainingType = arguments.getInt(TRAINING_TYPE, FREE_TRAINING);
         }
 
@@ -130,6 +149,12 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         return binding.getRoot();
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        FabTransformUtil.setup(getActivity(), binding.getRoot());
+    }
+
     private void applyTrainingType() {
         View in;
         View out;
@@ -185,7 +210,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     protected void onSave() {
         Training training = getTraining();
 
-        getActivity().finish();
+        finish();
 
         TrainingDataSource trainingDataSource = new TrainingDataSource();
         if (trainingId == -1) {
@@ -202,7 +227,10 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             trainingDataSource.update(training);
             long roundId = createRoundsFromTemplate(standardRound, training).get(0).getId();
 
-            ActivityUtils.openPasseForNewRound(getActivity(), training.getId(), roundId);
+            Activity activity = getActivity();
+            TrainingFragment.getTrainingIntent(activity, training.getId()).startWithoutAnimation();
+            RoundFragment.getRoundIntent(activity, roundId).startWithoutAnimation();
+            InputActivity.newEndIntent(activity, roundId).start();
         } else {
             // Edit training
             trainingDataSource.update(training);

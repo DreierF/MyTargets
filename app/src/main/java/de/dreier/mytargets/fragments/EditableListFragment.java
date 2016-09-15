@@ -15,7 +15,7 @@ import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.interfaces.ItemAdapter;
 import de.dreier.mytargets.shared.models.IIdSettable;
 
-public abstract class EditableFragment<T extends IIdSettable> extends EditableFragmentBase<T> {
+public abstract class EditableListFragment<T extends IIdSettable> extends EditableListFragmentBase<T> {
 
     protected ListAdapterBase<T> mAdapter;
     private OnItemSelectedListener listener;

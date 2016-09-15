@@ -27,12 +27,13 @@ import de.dreier.mytargets.fragments.RoundFragment;
 import de.dreier.mytargets.fragments.SettingsFragment;
 import de.dreier.mytargets.fragments.TimerFragment;
 import de.dreier.mytargets.fragments.TrainingFragment;
+import de.dreier.mytargets.utils.Utils;
 
 public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
 
     private static final String FRAGMENT_TAG = "fragment";
-    Fragment childFragment;
     protected ViewDataBinding binding;
+    Fragment childFragment;
 
     protected abstract Fragment instantiateFragment();
 
@@ -63,6 +64,7 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
         public Fragment instantiateFragment() {
             return new TimerFragment();
         }
+
     }
 
     public static class TrainingActivity extends SimpleFragmentActivityBase {
@@ -90,6 +92,16 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
             return new EditTrainingFragment();
         }
 
+        @Override
+        public void onBackPressed() {
+            // Workaround: When cancelling a new training don't animate
+            // back to the fab, because clans FAB breaks the transition
+            if (Utils.isLollipop()) {
+                getWindow().setSharedElementReturnTransition(null);
+                getWindow().setSharedElementReenterTransition(null);
+            }
+            finish();
+        }
     }
 
     public static class EditRoundActivity extends SimpleFragmentActivityBase {

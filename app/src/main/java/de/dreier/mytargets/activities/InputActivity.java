@@ -7,9 +7,14 @@
 
 package de.dreier.mytargets.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
+import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -46,14 +51,17 @@ import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.Utils;
+import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import icepick.Icepick;
 import icepick.State;
 
 public class InputActivity extends ChildActivityBase implements OnTargetSetListener, OnEndUpdatedListener {
 
-    public static final String ROUND_ID = "round_id";
-    public static final String PASSE_IND = "passe_ind";
+    private static final String ROUND_ID = "round_id";
+    private static final String PASSE_IND = "passe_ind";
 
     /**
      * Zero-based index of the currently displayed end.
@@ -70,6 +78,19 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     private StandardRound standardRound;
 
     private ActivityInputBinding binding;
+    private boolean transitionFinished = true;
+
+    @NonNull
+    public static IntentWrapper newEndIntent(Activity activity, long roundId) {
+        return getEndIntent(activity, roundId, 0);
+    }
+
+    public static IntentWrapper getEndIntent(Activity activity, long roundId, int passeIndex) {
+        Intent i = new Intent(activity, InputActivity.class);
+        i.putExtra(ROUND_ID, roundId);
+        i.putExtra(PASSE_IND, passeIndex);
+        return new IntentWrapper(activity, i);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +98,11 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         binding = DataBindingUtil.setContentView(this, R.layout.activity_input);
 
         setSupportActionBar(binding.toolbar);
+        FabTransformUtil.setup(this, binding.getRoot());
+
+        if (Utils.isLollipop()) {
+            setupTransitionListener();
+        }
 
         binding.targetView.setOnTargetSetListener(this);
         binding.targetView.setUpdateListener(this);
@@ -124,6 +150,20 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         binding.prev.setOnClickListener(view -> setPasse(curPasse - 1));
 
         ToolbarUtils.showHomeAsUp(this);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setupTransitionListener() {
+        if (getWindow().getSharedElementEnterTransition() != null) {
+            transitionFinished = false;
+            getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
+                @Override
+                public void onTransitionEnd(Transition transition) {
+                    transitionFinished = true;
+                    getWindow().getSharedElementEnterTransition().removeListener(this);
+                }
+            });
+        }
     }
 
     private void startWearNotification() {
@@ -241,9 +281,23 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     }
 
     private void openTimer() {
-        Intent intent = new Intent(this, SimpleFragmentActivityBase.TimerActivity.class);
-        intent.putExtra(TimerFragment.SHOOTING_TIME, training.timePerPasse);
-        startActivity(intent);
+        if (transitionFinished) {
+            TimerFragment.getIntent(this, training.timePerPasse)
+                    .start();
+        } else if (Utils.isLollipop()) {
+            startTimerDelayed();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void startTimerDelayed() {
+        getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                TimerFragment.getIntent(InputActivity.this, training.timePerPasse).start();
+                getWindow().getSharedElementEnterTransition().removeListener(this);
+            }
+        });
     }
 
     @Override
@@ -316,5 +370,28 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
             }
         }
         return new NotificationInfo(round, title, text);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private static abstract class TransitionAdapter implements Transition.TransitionListener {
+        @Override
+        public void onTransitionStart(Transition transition) {
+
+        }
+
+        @Override
+        public void onTransitionCancel(Transition transition) {
+
+        }
+
+        @Override
+        public void onTransitionPause(Transition transition) {
+
+        }
+
+        @Override
+        public void onTransitionResume(Transition transition) {
+
+        }
     }
 }

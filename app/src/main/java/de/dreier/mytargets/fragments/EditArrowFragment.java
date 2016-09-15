@@ -7,9 +7,13 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -23,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
 import de.dreier.mytargets.databinding.DynamicitemArrowNumbersBinding;
 import de.dreier.mytargets.databinding.EditArrowFragmentBinding;
@@ -31,6 +36,7 @@ import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.ArrowNumber;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import icepick.State;
 
@@ -39,7 +45,7 @@ import static de.dreier.mytargets.shared.models.Dimension.Unit.MILLIMETER;
 
 public class EditArrowFragment extends EditWithImageFragmentBase {
 
-    static final String ARROW_ID = "arrow_id";
+    private static final String ARROW_ID = "arrow_id";
 
     private EditArrowFragmentBinding contentBinding;
     private ArrowNumbersAdapter adapter;
@@ -50,6 +56,18 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
 
     public EditArrowFragment() {
         super(R.drawable.arrows);
+    }
+
+    @NonNull
+    protected static IntentWrapper createArrowIntent(FragmentActivity activity) {
+        return new IntentWrapper(activity, SimpleFragmentActivityBase.EditArrowActivity.class);
+    }
+
+    @NonNull
+    static IntentWrapper editArrowIntent(Activity activity, long arrowId) {
+        Intent i = new Intent(activity, SimpleFragmentActivityBase.EditArrowActivity.class);
+        i.putExtra(ARROW_ID, arrowId);
+        return new IntentWrapper(activity, i);
     }
 
     @Override
@@ -111,7 +129,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     public void onSave() {
         super.onSave();
         new ArrowDataSource().update(buildArrow());
-        getActivity().finish();
+        finish();
     }
 
     private Arrow buildArrow() {

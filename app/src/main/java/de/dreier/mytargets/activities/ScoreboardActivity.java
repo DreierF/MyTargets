@@ -8,6 +8,7 @@
 package de.dreier.mytargets.activities;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
@@ -32,6 +34,7 @@ import java.io.IOException;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityScoreboardBinding;
 import de.dreier.mytargets.utils.HtmlUtils;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ScoreboardConfiguration;
 import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -41,8 +44,8 @@ import static android.support.v7.preference.PreferenceFragmentCompat.ARG_PREFERE
 
 public class ScoreboardActivity extends AppCompatActivity {
 
-    public static final String TRAINING_ID = "training_id";
-    public static final String ROUND_ID = "round_id";
+    private static final String TRAINING_ID = "training_id";
+    private static final String ROUND_ID = "round_id";
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -52,6 +55,19 @@ public class ScoreboardActivity extends AppCompatActivity {
     private long mRound;
     private boolean pageLoaded = true;
     private ActivityScoreboardBinding binding;
+
+    @NonNull
+    public static IntentWrapper getIntent(Activity activity, long trainingId) {
+        return getIntent(activity, trainingId, -1);
+    }
+
+    @NonNull
+    public static IntentWrapper getIntent(Activity activity, long trainingId, long roundId) {
+        Intent intent = new Intent(activity, ScoreboardActivity.class);
+        intent.putExtra(TRAINING_ID, trainingId);
+        intent.putExtra(ROUND_ID, roundId);
+        return new IntentWrapper(activity, intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -44,10 +44,8 @@ import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.utils.ActivityUtils;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DataLoaderBase.BackgroundAction;
-
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
@@ -55,7 +53,7 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
 
-public class StandardRoundFragment extends SelectItemFragment<StandardRound>
+public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
         implements View.OnClickListener, SearchView.OnQueryTextListener,
         LoaderManager.LoaderCallbacks<List<StandardRound>> {
 
@@ -267,7 +265,9 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
     }
 
     private void startEditStandardRound(StandardRound item) {
-        ActivityUtils.editStandardRound(getActivity(), NEW_STANDARD_ROUND, item);
+        EditStandardRoundFragment
+                .editStandardRoundIntent(getActivity(), item)
+                .startForResult(NEW_STANDARD_ROUND);
     }
 
     @Override
@@ -302,7 +302,9 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
 
     @Override
     public void onClick(View v) {
-        ActivityUtils.createStandardRound(getActivity(), NEW_STANDARD_ROUND);
+        EditStandardRoundFragment.createStandardRoundIntent(getActivity())
+                .fromFab(binding.fab)
+                .startForResult(NEW_STANDARD_ROUND);
     }
 
     @Override
@@ -347,7 +349,7 @@ public class StandardRoundFragment extends SelectItemFragment<StandardRound>
         private final ItemStandardRoundBinding binding;
 
         public ViewHolder(ItemStandardRoundBinding binding) {
-            super(binding.getRoot(), mSelector, StandardRoundFragment.this);
+            super(binding.getRoot(), mSelector, StandardRoundListFragment.this);
             this.binding = binding;
         }
 

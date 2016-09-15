@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditArrowActivity;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
@@ -28,18 +27,15 @@ import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
-import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
-import static de.dreier.mytargets.fragments.EditArrowFragment.ARROW_ID;
-import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
-
-public class ArrowFragment extends EditableFragment<Arrow> {
+public class ArrowListFragment extends EditableListFragment<Arrow> {
 
     protected FragmentListBinding binding;
     private ArrowDataSource arrowDataSource;
 
-    public ArrowFragment() {
+    public ArrowListFragment() {
         itemTypeSelRes = R.plurals.arrow_selected;
         itemTypeDelRes = R.plurals.arrow_deleted;
         newStringRes = R.string.new_arrow;
@@ -48,7 +44,10 @@ public class ArrowFragment extends EditableFragment<Arrow> {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.fab.setOnClickListener(view1 -> startActivityAnimated(getActivity(), EditArrowActivity.class));
+        binding.fab.setOnClickListener(
+                view1 -> EditArrowFragment.createArrowIntent(getActivity())
+                        .fromFab(binding.fab)
+                        .start());
     }
 
     @Override
@@ -78,13 +77,12 @@ public class ArrowFragment extends EditableFragment<Arrow> {
 
     @Override
     protected void onEdit(Arrow item) {
-        startActivityAnimated(getActivity(),
-                EditArrowActivity.class, ARROW_ID, item.getId());
+        EditArrowFragment.editArrowIntent(getActivity(), item.getId()).start();
     }
 
     @Override
     protected void onItemSelected(Arrow item) {
-        startActivityAnimated(getActivity(), EditArrowActivity.class, ARROW_ID, item.getId());
+        EditArrowFragment.editArrowIntent(getActivity(), item.getId()).start();
     }
 
     private class ArrowAdapter extends ListAdapterBase<Arrow> {
@@ -104,7 +102,7 @@ public class ArrowFragment extends EditableFragment<Arrow> {
         private final ItemImageDetailsBinding binding;
 
         public ViewHolder(View itemView) {
-            super(itemView, mSelector, ArrowFragment.this);
+            super(itemView, mSelector, ArrowListFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }
 
