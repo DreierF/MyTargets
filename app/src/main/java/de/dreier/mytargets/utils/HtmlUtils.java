@@ -293,9 +293,7 @@ public class HtmlUtils {
             maxPoints += r.info.getMaxPoints();
             reachedPoints += r.reachedPoints;
         }
-        String percent = maxPoints == 0 ? "" :
-                " (" + (reachedPoints * 100 / maxPoints) + "%)";
-        return reachedPoints + "/" + maxPoints + percent;
+        return reachedPoints + "/" + maxPoints;
     }
 
     public static String getTrainingInfoHTML(Training training, List<Round> rounds, boolean[] equals, boolean scoreboard) {
