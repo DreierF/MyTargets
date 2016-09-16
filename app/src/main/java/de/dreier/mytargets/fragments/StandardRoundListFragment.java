@@ -139,11 +139,11 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
 
     @Override
     public void onClick(SelectableViewHolder holder, StandardRound mItem) {
-        super.onClick(holder, mItem);
         if (mItem == null) {
             return;
         }
         currentSelection = mItem;
+        super.onClick(holder, mItem);
     }
 
     @Override
@@ -238,7 +238,7 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
         }
 
         @Override
-        public void bindCursor() {
+        public void bindItem() {
             binding.name.setText(mItem.name);
 
             if (mItem.equals(currentSelection)) {

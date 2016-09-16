@@ -105,7 +105,7 @@ public class BowListFragment extends EditableListFragment<Bow> {
         }
 
         @Override
-        public void bindCursor() {
+        public void bindItem() {
             binding.name.setText(mItem.name);
             binding.image.setImageDrawable(mItem.getDrawable());
             binding.details.setVisibility(View.VISIBLE);

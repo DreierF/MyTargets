@@ -59,7 +59,7 @@ public abstract class ListAdapterBase<T extends IIdProvider & Comparable<T>>
 
     @Override
     public final void onBindViewHolder(SelectableViewHolder<T> viewHolder, int position) {
-        viewHolder.bindCursor(list.get(position));
+        viewHolder.bindItem(list.get(position));
     }
 
     public void setList(List<T> list) {

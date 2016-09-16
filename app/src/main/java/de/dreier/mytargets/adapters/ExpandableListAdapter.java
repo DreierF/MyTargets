@@ -96,7 +96,7 @@ public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD ex
             ((HeaderBindingHolder) viewHolder)
                     .setExpandOnClickListener(v -> expandOrCollapse(header), header.expanded);
         }
-        viewHolder.bindCursor(getItem(position));
+        viewHolder.bindItem(getItem(position));
     }
 
     private HeaderHolder getHeaderForPosition(int position) {

@@ -68,7 +68,7 @@ public class WindDirectionListFragment extends SelectItemFragment<WindDirection>
         }
 
         @Override
-        public void bindCursor() {
+        public void bindItem() {
             binding.name.setText(mItem.name);
             binding.image.setImageDrawable(mItem.getDrawable(getContext()));
         }
