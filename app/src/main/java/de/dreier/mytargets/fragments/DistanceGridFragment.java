@@ -124,7 +124,7 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> implemen
         }
 
         @Override
-        public void bindCursor() {
+        public void bindItem() {
             binding.distance.setText(mItem.toString());
         }
     }

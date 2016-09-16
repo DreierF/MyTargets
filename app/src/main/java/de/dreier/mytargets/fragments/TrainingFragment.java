@@ -208,7 +208,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
         }
 
         @Override
-        public void bindCursor() {
+        public void bindItem() {
             binding.title.setText(String.format(Locale.ENGLISH, "%s %d",
                     ApplicationInstance.getContext().getString(R.string.round),
                     mItem.info.index + 1));

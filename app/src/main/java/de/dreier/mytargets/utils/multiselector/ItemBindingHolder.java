@@ -23,10 +23,10 @@ public abstract class ItemBindingHolder<T> extends RebindReportingHolder impleme
         return true;
     }
 
-    public void bindCursor(T t) {
+    public void bindItem(T t) {
         setItem(t);
-        bindCursor();
+        bindItem();
     }
 
-    public abstract void bindCursor();
+    public abstract void bindItem();
 }

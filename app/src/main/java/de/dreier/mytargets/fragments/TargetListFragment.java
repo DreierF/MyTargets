@@ -209,7 +209,7 @@ public class TargetListFragment extends SelectItemFragment<Target>
         }
 
         @Override
-        public void bindCursor() {
+        public void bindItem() {
             binding.name.setText(mItem.getModel().toString());
             binding.image.setImageDrawable(mItem.getDrawable());
         }

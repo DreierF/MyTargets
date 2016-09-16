@@ -101,9 +101,6 @@ public abstract class SelectItemFragment<T extends IIdProvider & Comparable<T>> 
         mSelector.setSelected(holder, true);
         if (alreadySelected || !useDoubleClickSelection) {
             onSaveItem();
-        } else {
-            mAdapter.notifyItemChanged(oldSelectedPosition);
-            mAdapter.notifyItemChanged(holder.getAdapterPosition());
         }
     }
 

@@ -70,7 +70,7 @@ public class WindSpeedListFragment extends SelectItemFragment<WindSpeed> {
         }
 
         @Override
-        public void bindCursor() {
+        public void bindItem() {
             binding.name.setText(mItem.name);
             binding.image.setImageDrawable(mItem.getDrawable(getContext()));
         }

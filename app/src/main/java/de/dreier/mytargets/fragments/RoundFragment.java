@@ -186,7 +186,7 @@ public class RoundFragment extends EditableListFragment<Passe> {
         }
 
         @Override
-        public void bindCursor() {
+        public void bindItem() {
             binding.shoots.setPoints(mItem, round.info.target);
             binding.passe.setText(getString(R.string.passe_n, (mItem.index + 1)));
         }

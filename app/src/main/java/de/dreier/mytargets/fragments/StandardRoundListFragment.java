@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
@@ -25,7 +24,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -37,11 +35,9 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.ListAdapterBase;
-import de.dreier.mytargets.databinding.FragmentStandardRoundBinding;
+import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
-import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
-import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DataLoader;
@@ -51,28 +47,21 @@ import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
-import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
 
 public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
         implements View.OnClickListener, SearchView.OnQueryTextListener,
         LoaderManager.LoaderCallbacks<List<StandardRound>> {
 
-    public static final int NEW_STANDARD_ROUND = 1;
+    private static final int NEW_STANDARD_ROUND = 1;
     private static final String KEY_QUERY = "query";
-    private static final String KEY_INDOOR = "indoor";
-    private static final String KEY_METRIC = "metric";
-    private static final String KEY_CHECKED = "checked";
-    private static final String KEY_CLUB_FILTER = "club_filter";
-    private final CheckBox[] clubs = new CheckBox[9];
-    protected FragmentStandardRoundBinding binding;
+    private FragmentListBinding binding;
 
     private StandardRound currentSelection;
     private SearchView searchView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil
-                .inflate(inflater, R.layout.fragment_standard_round, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
         mAdapter = new StandardRoundAdapter(getContext());
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
@@ -88,25 +77,17 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         currentSelection = Parcels.unwrap(getArguments().getParcelable(ITEM));
-        initFilter();
     }
 
     @Override
     public Loader<List<StandardRound>> onCreateLoader(int id, Bundle args) {
         StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource();
         final BackgroundAction<StandardRound> action;
-        if (args == null) {
-            action = standardRoundDataSource::getAll;
-        } else if (args.containsKey(KEY_QUERY)) {
+        if (args != null && args.containsKey(KEY_QUERY)) {
             String query = args.getString(KEY_QUERY);
             action = () -> standardRoundDataSource.getAllSearch(query);
         } else {
-            int clubsFilter = args.getInt(KEY_CLUB_FILTER);
-            boolean indoor = args.getBoolean(KEY_INDOOR);
-            boolean isMetric = args.getBoolean(KEY_METRIC);
-            int checked = args.getInt(KEY_CHECKED);
-            action = () -> standardRoundDataSource
-                    .getAllFiltered(clubsFilter, indoor, isMetric, checked);
+            action = standardRoundDataSource::getAll;
         }
         return new DataLoader<>(getContext(), standardRoundDataSource, action);
     }
@@ -156,123 +137,38 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
 
     }
 
-    private void initFilter() {
-        getClubs();
-
-        // Set default values
-        RoundTemplate firstRound = currentSelection.rounds.get(0);
-        setLocation();
-        setMeasurementType(firstRound);
-        setRoundType(firstRound);
-        setInitialFilterMask();
-        updateFilter();
-
-        // Listen for filter setting changes
-        for (CheckBox club : clubs) {
-            club.setOnCheckedChangeListener((buttonView, isChecked) -> updateFilter());
-        }
-        binding.location.setOnCheckedChangeListener((group, checkedId) -> updateFilter());
-        binding.unit.setOnCheckedChangeListener((group, checkedId) -> updateFilter());
-        binding.roundTyp.setOnCheckedChangeListener((group, checkedId) -> updateFilter());
-    }
-
-    private void setLocation() {
-        binding.indoor.setChecked(currentSelection.indoor);
-        binding.outdoor.setChecked(!currentSelection.indoor);
-    }
-
-    private void setMeasurementType(RoundTemplate firstRound) {
-        if (METER.equals(firstRound.distance.unit)) {
-            binding.metric.setChecked(true);
-        } else {
-            binding.imperial.setChecked(true);
-        }
-    }
-
-    private void setRoundType(RoundTemplate firstRound) {
-        if (firstRound.target.getModel().isFieldTarget()) {
-            binding.field.setChecked(true);
-        } else if (firstRound.target.getModel().is3DTarget()) {
-            binding.threeD.setChecked(true);
-        } else {
-            binding.target.setChecked(true);
-        }
-    }
-
-    private void setInitialFilterMask() {
-        int filterMask = SettingsManager.getClubFilter();
-        filterMask |= currentSelection.club;
-        for (int i = 0; i < clubs.length; i++) {
-            clubs[i].setChecked((1 << i & filterMask) != 0);
-        }
-    }
-
-    private void getClubs() {
-        clubs[0] = binding.asa;
-        clubs[1] = binding.aussie;
-        clubs[2] = binding.archerygb;
-        clubs[3] = binding.ifaa;
-        clubs[4] = binding.nasp;
-        clubs[5] = binding.nfaa;
-        clubs[6] = binding.nfas;
-        clubs[7] = binding.wa;
-        clubs[8] = binding.custom;
-    }
-
-    private void updateFilter() {
-        int filter = getFilter();
-        SettingsManager.setClubFilter(filter);
-
-        Bundle args = new Bundle();
-        args.putBoolean(KEY_INDOOR, binding.location.getCheckedRadioButtonId() == R.id.indoor);
-        args.putBoolean(KEY_METRIC, binding.unit.getCheckedRadioButtonId() == R.id.metric);
-        args.putInt(KEY_CHECKED, binding.roundTyp.getCheckedRadioButtonId());
-        args.putInt(KEY_CLUB_FILTER, filter);
-        getLoaderManager().restartLoader(0, args, this);
-    }
-
-    private int getFilter() {
-        int filter = 0;
-        for (int i = 0; i < clubs.length; i++) {
-            filter |= (clubs[i].isChecked() ? 1 : 0) << i;
-        }
-        return filter;
-    }
-
     @Override
     public void onClick(SelectableViewHolder holder, StandardRound mItem) {
-        super.onClick(holder, mItem);
         if (mItem == null) {
             return;
         }
         currentSelection = mItem;
+        super.onClick(holder, mItem);
     }
 
     @Override
     public void onLongClick(SelectableViewHolder holder) {
         StandardRound item = (StandardRound) holder.getItem();
         if (item.club == StandardRoundFactory.CUSTOM && item.usages == 0) {
-            startEditStandardRound(item);
+            EditStandardRoundFragment
+                    .editIntent(this, item)
+                    .startForResult(NEW_STANDARD_ROUND);
         } else {
             new MaterialDialog.Builder(getContext())
                     .title(R.string.use_as_template)
                     .content(R.string.create_copy)
                     .positiveText(android.R.string.yes)
                     .negativeText(android.R.string.cancel)
-                    .onPositive((dialog1, which1) -> startEditStandardRound(item))
+                    .onPositive((dialog1, which1) -> EditStandardRoundFragment
+                                    .editIntent(this, item)
+                                    .startForResult(NEW_STANDARD_ROUND))
                     .show();
         }
     }
 
-    private void startEditStandardRound(StandardRound item) {
-        EditStandardRoundFragment
-                .editIntent(this, item)
-                .startForResult(NEW_STANDARD_ROUND);
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.search_filter, menu);
+        inflater.inflate(R.menu.search, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
@@ -285,19 +181,6 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
             searchView.onActionViewCollapsed();
             searchItem.collapseActionView();
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item != null && item.getItemId() == R.id.action_filter) {
-            if (binding.drawerLayout.isDrawerOpen(GravityCompat.END)) {
-                binding.drawerLayout.closeDrawer(GravityCompat.END);
-            } else {
-                binding.drawerLayout.openDrawer(GravityCompat.END);
-            }
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -341,7 +224,8 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
-            return new ViewHolder(DataBindingUtil.inflate(inflater, R.layout.item_standard_round, parent, false));
+            return new ViewHolder(
+                    DataBindingUtil.inflate(inflater, R.layout.item_standard_round, parent, false));
         }
     }
 
@@ -354,7 +238,7 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
         }
 
         @Override
-        public void bindCursor() {
+        public void bindItem() {
             binding.name.setText(mItem.name);
 
             if (mItem.equals(currentSelection)) {

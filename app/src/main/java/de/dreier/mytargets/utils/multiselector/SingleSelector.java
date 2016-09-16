@@ -6,14 +6,14 @@ package de.dreier.mytargets.utils.multiselector;
  */
 public class SingleSelector extends MultiSelector {
 
-    int selectedPosition = -1;
+    private int selectedPosition = -1;
 
     @Override
     public void setSelected(int position, long id, boolean isSelected) {
         if (isSelected) {
             for (Long selectedId : getSelectedIds()) {
                 if (selectedId != position) {
-                    super.setSelected(-1, selectedId, false);
+                    super.setSelected(selectedPosition, selectedId, false);
                 }
             }
             selectedPosition = position;
