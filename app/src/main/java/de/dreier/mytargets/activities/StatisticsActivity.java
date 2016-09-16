@@ -94,7 +94,7 @@ public class StatisticsActivity extends ChildActivityBase {
                     if (bid > 0) {
                         Bow bow = new BowDataSource().get(bid);
                         if (bow == null) {
-                            return new ChipGroup.Tag(0, "Deleted " + bid, true);
+                            return new ChipGroup.Tag(bid, "Deleted " + bid, true);
                         }
                         return new ChipGroup.Tag(bow.getId(), bow.getName(), bow.thumb, true);
                     } else {
@@ -113,7 +113,7 @@ public class StatisticsActivity extends ChildActivityBase {
                     if (aid > 0) {
                         Arrow arrow = new ArrowDataSource().get(aid);
                         if (arrow == null) {
-                            return new ChipGroup.Tag(0, "Deleted " + aid, true);
+                            return new ChipGroup.Tag(aid, "Deleted " + aid, true);
                         }
                         return new ChipGroup.Tag(arrow.getId(), arrow.getName(), arrow.thumb, true);
                     } else {
