@@ -27,8 +27,8 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
-import de.dreier.mytargets.databinding.DynamicitemArrowNumbersBinding;
 import de.dreier.mytargets.databinding.EditArrowFragmentBinding;
+import de.dreier.mytargets.databinding.ItemArrowNumberBinding;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.ArrowNumber;
@@ -155,7 +155,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     }
 
     static class ArrowNumberHolder extends DynamicItemHolder<ArrowNumber> {
-        private final DynamicitemArrowNumbersBinding binding;
+        private final ItemArrowNumberBinding binding;
 
         ArrowNumberHolder(View view) {
             super(view);

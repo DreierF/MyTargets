@@ -27,8 +27,8 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
-import de.dreier.mytargets.databinding.DynamicitemRoundTemplateBinding;
 import de.dreier.mytargets.databinding.FragmentEditStandardRoundBinding;
+import de.dreier.mytargets.databinding.ItemRoundTemplateBinding;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.shared.models.RoundTemplate;
@@ -194,7 +194,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
     private static class RoundTemplateHolder extends DynamicItemHolder<RoundTemplate> {
 
-        DynamicitemRoundTemplateBinding binding;
+        ItemRoundTemplateBinding binding;
 
         RoundTemplateHolder(View view) {
             super(view);

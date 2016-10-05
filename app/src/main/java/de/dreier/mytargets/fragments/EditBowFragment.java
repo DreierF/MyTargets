@@ -28,8 +28,8 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
-import de.dreier.mytargets.databinding.DynamicitemSightSettingsBinding;
 import de.dreier.mytargets.databinding.EditBowFragmentBinding;
+import de.dreier.mytargets.databinding.ItemSightMarkBinding;
 import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.EBowType;
@@ -200,7 +200,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
 
     private static class SightSettingHolder extends DynamicItemHolder<SightSetting> {
 
-        private final DynamicitemSightSettingsBinding binding;
+        private final ItemSightMarkBinding binding;
 
         SightSettingHolder(View view) {
             super(view);
