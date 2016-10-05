@@ -247,7 +247,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
         @Override
         public DynamicItemHolder<RoundTemplate> onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = inflater.inflate(R.layout.dynamicitem_round_template, parent, false);
+            View v = inflater.inflate(R.layout.item_round_template, parent, false);
             return new RoundTemplateHolder(v);
         }
     }

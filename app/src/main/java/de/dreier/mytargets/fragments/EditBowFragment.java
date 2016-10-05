@@ -241,7 +241,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
 
         @Override
         public DynamicItemHolder<SightSetting> onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = inflater.inflate(R.layout.dynamicitem_sight_settings, parent, false);
+            View v = inflater.inflate(R.layout.item_sight_mark, parent, false);
             return new SightSettingHolder(v);
         }
     }

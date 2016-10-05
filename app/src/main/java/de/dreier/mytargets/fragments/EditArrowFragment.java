@@ -7,7 +7,6 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -198,7 +197,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
 
         @Override
         public DynamicItemHolder<ArrowNumber> onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = inflater.inflate(R.layout.dynamicitem_arrow_numbers, parent, false);
+            View v = inflater.inflate(R.layout.item_arrow_number, parent, false);
             return new ArrowNumberHolder(v);
         }
     }
