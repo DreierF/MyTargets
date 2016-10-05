@@ -27,8 +27,8 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
-import de.dreier.mytargets.databinding.DynamicitemRoundTemplateBinding;
 import de.dreier.mytargets.databinding.FragmentEditStandardRoundBinding;
+import de.dreier.mytargets.databinding.ItemRoundTemplateBinding;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.shared.models.RoundTemplate;
@@ -194,7 +194,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
     private static class RoundTemplateHolder extends DynamicItemHolder<RoundTemplate> {
 
-        DynamicitemRoundTemplateBinding binding;
+        ItemRoundTemplateBinding binding;
 
         RoundTemplateHolder(View view) {
             super(view);
@@ -210,14 +210,14 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                     .getQuantityString(R.plurals.rounds, position + 1, position + 1));
             item.index = position;
 
-            binding.distanceSpinner.setOnActivityResultContext(fragment);
-            binding.distanceSpinner.setItemIndex(position);
-            binding.distanceSpinner.setItem(item.distance);
+            binding.distance.setOnActivityResultContext(fragment);
+            binding.distance.setItemIndex(position);
+            binding.distance.setItem(item.distance);
 
             // Target round
-            binding.targetSpinner.setOnActivityResultContext(fragment);
-            binding.targetSpinner.setItemIndex(position);
-            binding.targetSpinner.setItem(item.target);
+            binding.target.setOnActivityResultContext(fragment);
+            binding.target.setItemIndex(position);
+            binding.target.setItem(item.target);
 
             // Passes
             binding.passes.setTextPattern(R.plurals.passe);
@@ -247,7 +247,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
         @Override
         public DynamicItemHolder<RoundTemplate> onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = inflater.inflate(R.layout.dynamicitem_round_template, parent, false);
+            View v = inflater.inflate(R.layout.item_round_template, parent, false);
             return new RoundTemplateHolder(v);
         }
     }

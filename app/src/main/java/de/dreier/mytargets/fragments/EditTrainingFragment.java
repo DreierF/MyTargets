@@ -33,10 +33,14 @@ import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.targets.WA3Ring3Spot;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -61,14 +65,16 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
     @NonNull
     public static IntentWrapper createIntent(Fragment fragment, int trainingType) {
-        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditTrainingActivity.class);
+        Intent i = new Intent(fragment.getContext(),
+                SimpleFragmentActivityBase.EditTrainingActivity.class);
         i.putExtra(TRAINING_TYPE, trainingType);
         return new IntentWrapper(fragment, i);
     }
 
     @NonNull
     public static IntentWrapper editIntent(Fragment fragment, Training training) {
-        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditTrainingActivity.class);
+        Intent i = new Intent(fragment.getContext(),
+                SimpleFragmentActivityBase.EditTrainingActivity.class);
         i.putExtra(ITEM_ID, training.getId());
         return new IntentWrapper(fragment, i);
     }
@@ -104,8 +110,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
             }
         });
-        binding.targetSpinner.setOnActivityResultContext(this);
-        binding.distanceSpinner.setOnActivityResultContext(this);
+        binding.target.setOnActivityResultContext(this);
+        binding.distance.setOnActivityResultContext(this);
 
         binding.arrow.setOnUpdateListener(this::updateArrowNumbers);
 
@@ -121,8 +127,9 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.timer.setChecked(SettingsManager.getTimerEnabled());
             binding.indoor.setChecked(SettingsManager.getIndoor());
             binding.outdoor.setChecked(!SettingsManager.getIndoor());
-            binding.environmentSpinner.queryWeather(this, REQUEST_LOCATION_PERMISSION);
+            binding.environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
             loadRoundDefaultValues();
+            setScoringStyleForCompoundBow();
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_training);
             Training train = new TrainingDataSource().get(trainingId);
@@ -131,7 +138,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.bow.setItemId(train.bow);
             binding.arrow.setItemId(train.arrow);
             binding.standardRound.setItemId(train.standardRoundId);
-            binding.environmentSpinner.setItem(train.environment);
+            binding.environment.setItem(train.environment);
             setTrainingDate();
             binding.notEditable.setVisibility(View.GONE);
             binding.timer.setChecked(train.timePerPasse != -1);
@@ -139,13 +146,25 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         binding.standardRound.setOnActivityResultContext(this);
         binding.arrow.setOnActivityResultContext(this);
         binding.bow.setOnActivityResultContext(this);
-        binding.environmentSpinner.setOnActivityResultContext(this);
+        binding.environment.setOnActivityResultContext(this);
         binding.trainingDate.setOnClickListener((view) -> onDateClick());
         applyTrainingType();
         updateArrowsLabel();
         updateArrowNumbers(binding.arrow.getSelectedItem());
 
         return binding.getRoot();
+    }
+
+    protected void setScoringStyleForCompoundBow() {
+        Bow bow = binding.bow.getSelectedItem();
+        if (bow != null && bow.type == EBowType.COMPOUND_BOW) {
+            final Target target = binding.target.getSelectedItem();
+            if (target.id <= WA3Ring3Spot.ID && target.scoringStyle == 0) {
+                target.scoringStyle = 1;
+                // Update UI
+                binding.target.setItem(target);
+            }
+        }
     }
 
     @Override
@@ -191,7 +210,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
-            binding.environmentSpinner.onPermissionResult(getActivity(), grantResults);
+            binding.environment.onPermissionResult(getActivity(), grantResults);
         }
     }
 
@@ -246,7 +265,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         }
         training.title = binding.training.getText().toString();
         training.date = date;
-        training.environment = binding.environmentSpinner.getSelectedItem();
+        training.environment = binding.environment.getSelectedItem();
         training.bow = binding.bow.getSelectedItem() == null ? 0 : binding.bow.getSelectedItem()
                 .getId();
         training.arrow = binding.arrow.getSelectedItem() == null ? 0 : binding.arrow
@@ -298,12 +317,12 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        binding.targetSpinner.onActivityResult(requestCode, resultCode, data);
-        binding.distanceSpinner.onActivityResult(requestCode, resultCode, data);
+        binding.target.onActivityResult(requestCode, resultCode, data);
+        binding.distance.onActivityResult(requestCode, resultCode, data);
         binding.standardRound.onActivityResult(requestCode, resultCode, data);
         binding.arrow.onActivityResult(requestCode, resultCode, data);
         binding.bow.onActivityResult(requestCode, resultCode, data);
-        binding.environmentSpinner.onActivityResult(requestCode, resultCode, data);
+        binding.environment.onActivityResult(requestCode, resultCode, data);
     }
 
     private void updateArrowsLabel() {
@@ -313,19 +332,19 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     }
 
     private void loadRoundDefaultValues() {
-        binding.distanceSpinner.setItem(SettingsManager.getDistance());
+        binding.distance.setItem(SettingsManager.getDistance());
         binding.arrows.setProgress(SettingsManager.getArrowsPerPasse());
-        binding.targetSpinner.setItem(SettingsManager.getTarget());
+        binding.target.setItem(SettingsManager.getTarget());
     }
 
     @NonNull
     private RoundTemplate getRoundTemplate() {
         RoundTemplate roundTemplate = new RoundTemplate();
-        roundTemplate.target = binding.targetSpinner.getSelectedItem();
+        roundTemplate.target = binding.target.getSelectedItem();
         roundTemplate.targetTemplate = roundTemplate.target;
         roundTemplate.arrowsPerEnd = binding.arrows.getProgress();
         roundTemplate.endCount = 1;
-        roundTemplate.distance = binding.distanceSpinner.getSelectedItem();
+        roundTemplate.distance = binding.distance.getSelectedItem();
 
         SettingsManager.setTarget(roundTemplate.target);
         SettingsManager.setDistance(roundTemplate.distance);
