@@ -70,7 +70,7 @@ public class EditTrainingActivityTest extends UITestBase {
         onView(withId(R.id.distance)).perform(nestedScrollTo(), click());
         onView(allOf(withId(R.id.recyclerView), isDisplayed()))
                 .perform(actionOnItemAtPosition(4, click()));
-        onView(withId(R.id.distance)).check(matches(withText("20m")));
+        onView(withId(R.id.distanceValue)).check(matches(withText("20m")));
 
         // Change distance to 23yd as custom distance
         onView(withId(R.id.distance)).perform(nestedScrollTo(), click());
@@ -78,7 +78,7 @@ public class EditTrainingActivityTest extends UITestBase {
         onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
         onView(withId(R.id.shot_comment)).perform(replaceText("23"));
         onView(withText(android.R.string.ok)).perform(click());
-        onView(withId(R.id.distance)).check(matches(withText("23yd")));
+        onView(withId(R.id.distanceValue)).check(matches(withText("23yd")));
 
         // Change target to vertical 3 spot
         onView(withId(R.id.target)).perform(nestedScrollTo(), click());
