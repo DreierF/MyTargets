@@ -33,10 +33,14 @@ import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.targets.WA3Ring3Spot;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -61,14 +65,16 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
     @NonNull
     public static IntentWrapper createIntent(Fragment fragment, int trainingType) {
-        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditTrainingActivity.class);
+        Intent i = new Intent(fragment.getContext(),
+                SimpleFragmentActivityBase.EditTrainingActivity.class);
         i.putExtra(TRAINING_TYPE, trainingType);
         return new IntentWrapper(fragment, i);
     }
 
     @NonNull
     public static IntentWrapper editIntent(Fragment fragment, Training training) {
-        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditTrainingActivity.class);
+        Intent i = new Intent(fragment.getContext(),
+                SimpleFragmentActivityBase.EditTrainingActivity.class);
         i.putExtra(ITEM_ID, training.getId());
         return new IntentWrapper(fragment, i);
     }
@@ -123,6 +129,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.outdoor.setChecked(!SettingsManager.getIndoor());
             binding.environmentSpinner.queryWeather(this, REQUEST_LOCATION_PERMISSION);
             loadRoundDefaultValues();
+            setScoringStyleForCompoundBow();
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_training);
             Training train = new TrainingDataSource().get(trainingId);
@@ -146,6 +153,18 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         updateArrowNumbers(binding.arrow.getSelectedItem());
 
         return binding.getRoot();
+    }
+
+    protected void setScoringStyleForCompoundBow() {
+        Bow bow = binding.bow.getSelectedItem();
+        if (bow != null && bow.type == EBowType.COMPOUND_BOW) {
+            final Target target = binding.targetSpinner.getSelectedItem();
+            if (target.id <= WA3Ring3Spot.ID && target.scoringStyle == 0) {
+                target.scoringStyle = 1;
+                // Update UI
+                binding.targetSpinner.setItem(target);
+            }
+        }
     }
 
     @Override
