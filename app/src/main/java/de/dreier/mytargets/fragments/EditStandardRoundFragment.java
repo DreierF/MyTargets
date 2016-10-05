@@ -210,14 +210,14 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                     .getQuantityString(R.plurals.rounds, position + 1, position + 1));
             item.index = position;
 
-            binding.distanceSpinner.setOnActivityResultContext(fragment);
-            binding.distanceSpinner.setItemIndex(position);
-            binding.distanceSpinner.setItem(item.distance);
+            binding.distance.setOnActivityResultContext(fragment);
+            binding.distance.setItemIndex(position);
+            binding.distance.setItem(item.distance);
 
             // Target round
-            binding.targetSpinner.setOnActivityResultContext(fragment);
-            binding.targetSpinner.setItemIndex(position);
-            binding.targetSpinner.setItem(item.target);
+            binding.target.setOnActivityResultContext(fragment);
+            binding.target.setItemIndex(position);
+            binding.target.setItem(item.target);
 
             // Passes
             binding.passes.setTextPattern(R.plurals.passe);

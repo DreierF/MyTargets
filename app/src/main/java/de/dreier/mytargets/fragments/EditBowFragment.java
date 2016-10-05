@@ -226,9 +226,9 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         @Override
         public void onBind(SightSetting sightSetting, int position, Fragment fragment, View.OnClickListener removeListener) {
             item = sightSetting;
-            binding.distanceSpinner.setOnActivityResultContext(fragment);
-            binding.distanceSpinner.setItemIndex(position);
-            binding.distanceSpinner.setItem(sightSetting.distance);
+            binding.distance.setOnActivityResultContext(fragment);
+            binding.distance.setItemIndex(position);
+            binding.distance.setItem(sightSetting.distance);
             binding.sightSetting.setText(sightSetting.value);
             binding.removeSightSetting.setOnClickListener(removeListener);
         }
