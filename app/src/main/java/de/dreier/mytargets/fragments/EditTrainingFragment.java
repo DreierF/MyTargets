@@ -59,7 +59,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private static final int REQ_SELECTED_DATE = 2;
 
     private long trainingId = -1;
-    private int trainingType = 0;
+    private int trainingType = FREE_TRAINING;
     private LocalDate date = new LocalDate();
     private FragmentEditTrainingBinding binding;
 
@@ -113,6 +113,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         binding.target.setOnActivityResultContext(this);
         binding.distance.setOnActivityResultContext(this);
 
+        binding.bow.setOnUpdateListener(this::setScoringStyleForCompoundBow);
         binding.arrow.setOnUpdateListener(this::updateArrowNumbers);
 
         if (trainingId == -1) {
@@ -120,6 +121,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.training.setText(getString(
                     trainingType == COMPETITION ? R.string.competition : R.string.training));
             setTrainingDate();
+            loadRoundDefaultValues();
             binding.bow.setItemId(SettingsManager.getBow());
             binding.arrow.setItemId(SettingsManager.getArrow());
             binding.standardRound.setItemId(SettingsManager.getStandardRound());
@@ -128,8 +130,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.indoor.setChecked(SettingsManager.getIndoor());
             binding.outdoor.setChecked(!SettingsManager.getIndoor());
             binding.environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
-            loadRoundDefaultValues();
-            setScoringStyleForCompoundBow();
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_training);
             Training train = new TrainingDataSource().get(trainingId);
@@ -147,7 +147,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         binding.arrow.setOnActivityResultContext(this);
         binding.bow.setOnActivityResultContext(this);
         binding.environment.setOnActivityResultContext(this);
-        binding.trainingDate.setOnClickListener((view) -> onDateClick());
+        binding.trainingDate.setOnClickListener(view -> onDateClick());
         applyTrainingType();
         updateArrowsLabel();
         updateArrowNumbers(binding.arrow.getSelectedItem());
@@ -155,23 +155,15 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         return binding.getRoot();
     }
 
-    protected void setScoringStyleForCompoundBow() {
-        Bow bow = binding.bow.getSelectedItem();
-        if (bow != null) {
-            if (bow.type == EBowType.COMPOUND_BOW) {
-                final Target target = binding.target.getSelectedItem();
-                if (target.id <= WA3Ring3Spot.ID && target.scoringStyle == 0) {
-                    target.scoringStyle = 1;
-                    // Update UI
-                    binding.target.setItem(target);
-                }
-            } else {
-                final Target target = binding.target.getSelectedItem();
-                if (target.id <= WA3Ring3Spot.ID && target.scoringStyle == 1) {
-                    target.scoringStyle = 0;
-                    // Update UI
-                    binding.target.setItem(target);
-                }
+    protected void setScoringStyleForCompoundBow(Bow bow) {
+        final Target target = binding.target.getSelectedItem();
+        if (bow != null && target.id <= WA3Ring3Spot.ID) {
+            if (bow.type == EBowType.COMPOUND_BOW && target.scoringStyle == 0) {
+                target.scoringStyle = 1;
+                binding.target.setItem(target);
+            } else if (bow.type != EBowType.COMPOUND_BOW && target.scoringStyle == 1) {
+                target.scoringStyle = 0;
+                binding.target.setItem(target);
             }
         }
     }
@@ -185,7 +177,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private void applyTrainingType() {
         View in;
         View out;
-        if (trainingType == 0) {
+        if (trainingType == FREE_TRAINING) {
             in = binding.practiceLayout;
             out = binding.standardRound;
         } else {
