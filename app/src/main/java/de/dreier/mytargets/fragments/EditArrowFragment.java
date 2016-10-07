@@ -7,7 +7,6 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -28,8 +27,8 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
-import de.dreier.mytargets.databinding.DynamicitemArrowNumbersBinding;
 import de.dreier.mytargets.databinding.EditArrowFragmentBinding;
+import de.dreier.mytargets.databinding.ItemArrowNumberBinding;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.ArrowNumber;
@@ -156,7 +155,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     }
 
     static class ArrowNumberHolder extends DynamicItemHolder<ArrowNumber> {
-        private final DynamicitemArrowNumbersBinding binding;
+        private final ItemArrowNumberBinding binding;
 
         ArrowNumberHolder(View view) {
             super(view);
@@ -198,7 +197,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
 
         @Override
         public DynamicItemHolder<ArrowNumber> onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = inflater.inflate(R.layout.dynamicitem_arrow_numbers, parent, false);
+            View v = inflater.inflate(R.layout.item_arrow_number, parent, false);
             return new ArrowNumberHolder(v);
         }
     }

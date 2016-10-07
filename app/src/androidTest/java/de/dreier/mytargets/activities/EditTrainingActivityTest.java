@@ -67,21 +67,21 @@ public class EditTrainingActivityTest extends UITestBase {
         allowPermissionsIfNeeded(mActivityTestRule.getActivity(), ACCESS_FINE_LOCATION);
 
         // Select distance 20m
-        onView(withId(R.id.distanceSpinner)).perform(nestedScrollTo(), click());
+        onView(withId(R.id.distance)).perform(nestedScrollTo(), click());
         onView(allOf(withId(R.id.recyclerView), isDisplayed()))
                 .perform(actionOnItemAtPosition(4, click()));
-        onView(withId(R.id.distance)).check(matches(withText("20m")));
+        onView(withId(R.id.distanceValue)).check(matches(withText("20m")));
 
         // Change distance to 23yd as custom distance
-        onView(withId(R.id.distanceSpinner)).perform(nestedScrollTo(), click());
+        onView(withId(R.id.distance)).perform(nestedScrollTo(), click());
         onView(withText(R.string.imperial)).perform(click());
         onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
         onView(withId(R.id.shot_comment)).perform(replaceText("23"));
         onView(withText(android.R.string.ok)).perform(click());
-        onView(withId(R.id.distance)).check(matches(withText("23yd")));
+        onView(withId(R.id.distanceValue)).check(matches(withText("23yd")));
 
         // Change target to vertical 3 spot
-        onView(withId(R.id.targetSpinner)).perform(nestedScrollTo(), click());
+        onView(withId(R.id.target)).perform(nestedScrollTo(), click());
         onView(withId(R.id.recyclerView)).perform(actionOnItemAtPosition(5, click()));
         onView(withId(R.id.scoring_style)).perform(click());
         onView(withText("10, 9, 8, 7, 6")).perform(click());
@@ -89,16 +89,16 @@ public class EditTrainingActivityTest extends UITestBase {
         onView(withText("40cm")).perform(click());
         onView(withId(R.id.action_save)).perform(click());
         onView(allOf(withId(R.id.name),
-                withParent(withParent(withParent(withParent(withId(R.id.targetSpinner)))))))
+                withParent(withParent(withParent(withParent(withId(R.id.target)))))))
                 .check(matches(withText(containsString(
                         mActivityTestRule.getActivity().getString(R.string.vertical_3_spot)))))
                 .check(matches(withText(containsString("40cm"))));
         onView(allOf(withId(R.id.details),
-                withParent(withParent(withParent(withParent(withId(R.id.targetSpinner)))))))
+                withParent(withParent(withParent(withParent(withId(R.id.target)))))))
                 .check(matches(withText("10, 9, 8, 7, 6")));
 
         // Change environment
-        onView(withId(R.id.environmentSpinner)).perform(nestedScrollTo(), click());
+        onView(withId(R.id.environment)).perform(nestedScrollTo(), click());
         onView(withId(R.id.rain)).perform(click());
         onView(withId(R.id.windSpeed)).perform(click());
         onView(withId(R.id.recyclerView)).perform(actionOnItemAtPosition(9, click()));
@@ -107,10 +107,10 @@ public class EditTrainingActivityTest extends UITestBase {
         onView(withId(R.id.location)).perform(nestedScrollTo(), replaceText("My location"));
         onView(withId(R.id.action_save)).perform(click());
         onView(allOf(withId(R.id.name),
-                withParent(withParent(withParent(withParent(withId(R.id.environmentSpinner)))))))
+                withParent(withParent(withParent(withParent(withId(R.id.environment)))))))
                 .check(matches(withText(R.string.rain)));
         onView(allOf(withId(R.id.details),
-                withParent(withParent(withParent(withParent(withId(R.id.environmentSpinner)))))))
+                withParent(withParent(withParent(withParent(withId(R.id.environment)))))))
                 .check(matches(withText(containsString("9 Btf"))))
                 .check(matches(withText(containsString("My location"))));
 

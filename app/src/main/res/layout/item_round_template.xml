@@ -38,13 +38,13 @@
         </RelativeLayout>
 
         <de.dreier.mytargets.views.selector.DistanceSelector
-            android:id="@+id/distanceSpinner"
+            android:id="@+id/distance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"/>
 
         <de.dreier.mytargets.views.selector.TargetSelector
-            android:id="@+id/targetSpinner"
+            android:id="@+id/target"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"/>

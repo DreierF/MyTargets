@@ -28,8 +28,8 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
-import de.dreier.mytargets.databinding.DynamicitemSightSettingsBinding;
 import de.dreier.mytargets.databinding.EditBowFragmentBinding;
+import de.dreier.mytargets.databinding.ItemSightMarkBinding;
 import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.EBowType;
@@ -200,7 +200,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
 
     private static class SightSettingHolder extends DynamicItemHolder<SightSetting> {
 
-        private final DynamicitemSightSettingsBinding binding;
+        private final ItemSightMarkBinding binding;
 
         SightSettingHolder(View view) {
             super(view);
@@ -226,9 +226,9 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         @Override
         public void onBind(SightSetting sightSetting, int position, Fragment fragment, View.OnClickListener removeListener) {
             item = sightSetting;
-            binding.distanceSpinner.setOnActivityResultContext(fragment);
-            binding.distanceSpinner.setItemIndex(position);
-            binding.distanceSpinner.setItem(sightSetting.distance);
+            binding.distance.setOnActivityResultContext(fragment);
+            binding.distance.setItemIndex(position);
+            binding.distance.setItem(sightSetting.distance);
             binding.sightSetting.setText(sightSetting.value);
             binding.removeSightSetting.setOnClickListener(removeListener);
         }
@@ -241,7 +241,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
 
         @Override
         public DynamicItemHolder<SightSetting> onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = inflater.inflate(R.layout.dynamicitem_sight_settings, parent, false);
+            View v = inflater.inflate(R.layout.item_sight_mark, parent, false);
             return new SightSettingHolder(v);
         }
     }
