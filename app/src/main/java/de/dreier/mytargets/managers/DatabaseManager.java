@@ -15,12 +15,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
 
+import org.joda.time.DateTime;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 
 import de.dreier.mytargets.R;
@@ -472,7 +476,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         Cursor cur = db.rawQuery(
                 "SELECT t.title,sr.name AS standard_round,date(t.datum/1000, 'unixepoch', 'localtime') AS date, sr.indoor, i.r_index, i.distance, i.unit," +
                         "r.target, r.scoring_style, i.size, i.target_unit, s.arrow_index, a.name, s.x, s.y, s.arrow, b.name AS bow, s.points AS score, " +
-                        "(SELECT COUNT(x._id) FROM PASSE x WHERE x.round=p.round AND x._id<=p._id) AS end_index " +
+                        "(SELECT COUNT(x._id) FROM PASSE x WHERE x.round=p.round AND x._id<=p._id) AS end_index, p.save_time " +
                         "FROM TRAINING t, ROUND r, PASSE p, SHOOT s " +
                         "LEFT JOIN BOW b ON b._id=t.bow " +
                         "LEFT JOIN ARROW a ON a._id=t.arrow " +
@@ -490,6 +494,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 .append(mContext.getString(R.string.distance)).append("\";\"")
                 .append(mContext.getString(R.string.target)).append("\";\"")
                 .append(mContext.getString(R.string.passe)).append("\";\"")
+                .append(mContext.getString(R.string.timestamp)).append("\";\"")
                 .append(mContext.getString(R.string.points)).append("\";\"")
                 .append("x").append("\";\"")
                 .append("y").append("\"\n");
@@ -512,6 +517,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         int shotInd = cur.getColumnIndexOrThrow("arrow_index");
         int scoreInd = cur.getColumnIndexOrThrow("score");
         int endInd = cur.getColumnIndexOrThrow("end_index");
+        int timestampInd = cur.getColumnIndexOrThrow("save_time");
         if (cur.moveToFirst()) {
             do {
                 // Title
@@ -572,6 +578,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
                 // End
                 writer.append(String.valueOf(cur.getInt(endInd)));
+                writer.append("\";\"");
+
+                // Timestamp
+                Date saveDate = new DateTime(cur.getLong(timestampInd)).toDate();
+                writer.append(SimpleDateFormat.getTimeInstance().format(saveDate));
                 writer.append("\";\"");
 
                 // Score
