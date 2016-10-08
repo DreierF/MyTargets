@@ -44,13 +44,11 @@ import static de.dreier.mytargets.shared.models.Dimension.Unit.MILLIMETER;
 public class EditArrowFragment extends EditWithImageFragmentBase {
 
     private static final String ARROW_ID = "arrow_id";
-
-    private EditArrowFragmentBinding contentBinding;
-    private ArrowNumbersAdapter adapter;
-
-    private long arrowId = -1;
     @State(ParcelsBundler.class)
     Arrow arrow;
+    private EditArrowFragmentBinding contentBinding;
+    private ArrowNumbersAdapter adapter;
+    private long arrowId = -1;
 
     public EditArrowFragment() {
         super(R.drawable.arrows);
@@ -63,7 +61,8 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
 
     @NonNull
     static IntentWrapper editIntent(Fragment fragment, Arrow arrow) {
-        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditArrowActivity.class);
+        Intent i = new Intent(fragment.getContext(),
+                SimpleFragmentActivityBase.EditArrowActivity.class);
         i.putExtra(ARROW_ID, arrow.getId());
         return new IntentWrapper(fragment, i);
     }
@@ -147,7 +146,12 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         arrow.numbers = new ArrayList<>(Stream.of(arrow.numbers)
                 .filter(value -> value != null)
                 .collect(Collectors.toList()));
-        final float diameterValue = Float.parseFloat(contentBinding.diameter.getText().toString());
+        float diameterValue;
+        try {
+            diameterValue = Float.parseFloat(contentBinding.diameter.getText().toString());
+        } catch (NumberFormatException ignored) {
+            diameterValue = 5f;
+        }
         final int selectedUnit = contentBinding.diameterUnit.getSelectedItemPosition();
         Dimension.Unit diameterUnit = selectedUnit == 0 ? MILLIMETER : INCH;
         arrow.diameter = new Dimension(diameterValue, diameterUnit);
