@@ -22,10 +22,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
@@ -582,7 +584,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
                 // Timestamp
                 Date saveDate = new DateTime(cur.getLong(timestampInd)).toDate();
-                writer.append(SimpleDateFormat.getTimeInstance().format(saveDate));
+                writer.append(SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN).format(saveDate));
                 writer.append("\";\"");
 
                 // Score
