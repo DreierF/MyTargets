@@ -46,7 +46,8 @@ after_success:
 - codacy-coverage-reporter -l Java -r app/build/reports/coverage/regular/debug/report.xml
 after_failure:
 - chmod +x dropbox_uploader.sh
-- ./dropbox_uploader.sh upload app/build/reports/androidTests/connected/flavors/REGULAR/ /$TRAVIS_JOB_NUMBER/Reports/
+- zip -r reports.zip app/build/reports/androidTests/connected/flavors/REGULAR/
+- ./dropbox_uploader.sh upload reports.zip /$TRAVIS_JOB_NUMBER/Reports.zip
 deploy:
   provider: releases
   skip_cleanup: true

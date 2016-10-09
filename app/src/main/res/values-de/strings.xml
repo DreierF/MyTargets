@@ -252,4 +252,5 @@
   <string name="input">Eingabe</string>
   <string name="target_zoom">Zoomstufe für Zielscheibe</string>
   <string name="arrow_diameter_scale">Pfeildurchmesser Skalierung</string>
+  <string name="timestamp">Timestamp</string>
 </resources>

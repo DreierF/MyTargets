@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -65,13 +66,14 @@ public abstract class DbTestRuleBase implements TestRule {
         return p;
     }
 
-    protected Passe randomPasse(Round round, int arrowsPerEnd, Random gen) {
+    protected Passe randomPasse(Training training, Round round, int arrowsPerEnd, Random gen) {
         Passe p = new Passe(arrowsPerEnd);
         p.roundId = round.getId();
         for (int i = 0; i < arrowsPerEnd; i++) {
             p.shot[i].index = i;
             p.shot[i].zone = gen.nextInt(5);
         }
+        p.saveDate = new DateTime().withDate(training.date).withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
         return p;
     }
 
