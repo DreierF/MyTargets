@@ -14,7 +14,7 @@
   <string name="round">Forduló</string>
   <string name="points">Pontok</string>
   <string name="passe">Sorozat</string>
-  <string name="passe_n">%. sorozat</string>
+  <string name="passe_n">%d sorozat</string>
   <!-- Overview -->
   <string name="new_training">Új edzés</string>
   <string name="new_bow">Új íj</string>
