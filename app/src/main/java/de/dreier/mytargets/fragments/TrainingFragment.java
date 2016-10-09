@@ -29,7 +29,6 @@ import com.annimon.stream.Stream;
 import java.util.List;
 import java.util.Locale;
 
-import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ScoreboardActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
@@ -127,8 +126,8 @@ public class TrainingFragment extends EditableListFragment<Round> {
     public void onLoadFinished(Loader<List<Round>> loader, List<Round> data) {
         // Hide fab for standard rounds
         StandardRound standardRound = standardRoundDataSource.get(training.standardRoundId);
-        binding.fab.setVisibility(
-                standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE ? View.VISIBLE : View.GONE);
+        supportsDeletion = standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
+        binding.fab.setVisibility(supportsDeletion ? View.VISIBLE : View.GONE);
 
         // Set round info
         int weatherDrawable = R.drawable.ic_house_24dp;
@@ -210,7 +209,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
         @Override
         public void bindItem() {
             binding.title.setText(String.format(Locale.ENGLISH, "%s %d",
-                    ApplicationInstance.getContext().getString(R.string.round),
+                    getContext().getString(R.string.round),
                     mItem.info.index + 1));
             binding.subtitle.setText(HtmlUtils.fromHtml(HtmlUtils.getRoundInfo(mItem, equals)));
             if (binding.subtitle.getText().toString().isEmpty()) {
