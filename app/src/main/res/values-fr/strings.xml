@@ -41,9 +41,6 @@
   <string name="statistic">Statistique</string>
   <!-- Share -->
   <string name="share">Partager</string>
-  <string name="my_share_text">Ouais ! Regarde mon score de tir à l\'arc. J\'ai obtenu : \n%1$sÇa fait un total de %2$d sur %3$d anneaux.</string>
-  <string name="d_times_s">%1$d fois %2$s\n</string>
-  <string name="text">Texte</string>
   <string name="dispersion_pattern">Diagramme de dispersion</string>
   <string name="sharing_failed">Échec du partage!</string>
   <!-- Export -->
@@ -61,7 +58,6 @@
   <string name="tiller">Tiller</string>
   <string name="sight_settings">Réglages du viseur</string>
   <string name="add">Ajouter</string>
-  <string name="select_picture">Choisir une image</string>
   <string name="take_picture">Prendre une photo</string>
   <string name="pick_from_gallery">Choisir une photo dans la galerie</string>
   <!-- New arrow -->
@@ -100,9 +96,6 @@
   <string name="show_all">Montrer tous les tirs</string>
   <string name="comment">Commentaire</string>
   <!-- Statistics -->
-  <string name="all_trainings">Tous les entraînements</string>
-  <string name="entire_training">Entraînement complet</string>
-  <string name="current_round">Série actuelle</string>
   <!-- Import/Backup -->
   <string name="select_a_file">Choisir un fichier</string>
   <string name="dir_not_created"> Le répertoire ne peut pas être créé!</string>
@@ -112,14 +105,11 @@
   <string name="file_not_found">Fichier non trouvé!</string>
   <string name="failed_reading_file">Echec de la lecture du fichier!</string>
   <!-- Donate -->
-  <string name="donate_action">Soutien au développeur</string>
   <string name="donate_2">Donner un Hamburger</string>
   <string name="donate_5">Donner un kebab</string>
   <string name="donate_10">Donner une grande pizza</string>
   <string name="donate_20">Donner de l\'essence</string>
-  <string name="donate_infinite">Soutient régulier</string>
   <string name="donation_thank">Merci pour votre soutient!</string>
-  <string name="monthly">Mensuellement %s</string>
   <string name="donate_text">Les montants inclus la TVA et 30% de commission pour Google. Si vous préférez, vous pouvez également faire un don PayPal sur le compte dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Chronomètre</string>
@@ -138,9 +128,6 @@
   <string name="import_action">Importer</string>
   <string name="export">Exporter</string>
   <string name="exports_as_csv">Exporter les données au format *.csv</string>
-  <string name="app_rate">Noter l\'application</string>
-  <string name="app_share">Partager l\'application</string>
-  <string name="contact_developer">Contacter le développeur</string>
   <string name="licences">Licences - Open Source</string>
   <string name="licences_summary">Notes légales sur les licences</string>
   <string name="version">Version %s</string>
@@ -174,7 +161,6 @@
   <string name="standard_round">Épreuve standard</string>
   <string name="use_as_template">Utiliser comme modèle?</string>
   <string name="create_copy">Ceci est une manche standard\nVoulez-vous en créer une copie afin de l\'éditée?</string>
-  <string name="not_matches_sheme">L\'entrée ne correspond pas au format attendu, par exemple 1,3,5</string>
   <string name="arrow_numbers_desc">Entrez tous les numéros de flèche que vous utilisez pour le tir, par exemple 1,2,5,6,7</string>
   <string name="practice">Entraînement</string>
   <string name="edit_training">Modifier la séance</string>
@@ -197,15 +183,15 @@
   </plurals>
   <plurals name="rounds">
     <item quantity="one">Série %d</item>
-    <item quantity="other">Séries %d</item>
+    <item quantity="other">Série %d</item>
   </plurals>
   <plurals name="round_selected">
-    <item quantity="one">%d round selected</item>
-    <item quantity="other">%d rounds selected</item>
+    <item quantity="one">%d Série sélectionnée</item>
+    <item quantity="other">%d Séries sélectionnées</item>
   </plurals>
   <plurals name="round_deleted">
-    <item quantity="one">%d round deleted</item>
-    <item quantity="other">%d rounds deleted</item>
+    <item quantity="one">%d série effacée</item>
+    <item quantity="other">%d séries effacées</item>
   </plurals>
   <string name="date">Date</string>
   <string name="edit_round">Modifier la série</string>
@@ -243,30 +229,28 @@
   <string name="donate_via_paypal">Faire un don par PayPal</string>
   <string name="translate_crowdin">Traduire sur Crowdin</string>
   <string name="network_linkedin">Connecter avec LinkedIn</string>
-  <string name="enter_scores_only_description">Vous permet de ne saisir que le score, sans la position de la flèche. Utilisez cette option avec votre smartwatch ou pour entrer d\'anciennes données.</string>
-  <string name="enter_scores_only">Saisir seulement les scores</string>
   <string name="search">Rechercher</string>
   <string name="us">US</string>
   <string name="show_shots_training">Entrainement complet</string>
   <string name="show_shots_round">Série en cours</string>
-  <string name="show_shots_end">Current end</string>
-  <string name="profile">Profile</string>
+  <string name="show_shots_end">Fin actuelle</string>
+  <string name="profile">Profil</string>
   <string name="birthday">Anniversaire</string>
-  <string name="first_name">First name</string>
-  <string name="last_name">Last name</string>
+  <string name="first_name">Prénom</string>
+  <string name="last_name">Nom</string>
   <string name="age">Age</string>
   <string name="show_signature">Signature</string>
   <string name="witness">Témoin</string>
   <string name="archer">Archer</string>
-  <string name="hits">Hits</string>
-  <string name="misses">Misses</string>
-  <string name="percentage_reached_points">Percentage of reached points</string>
-  <string name="arrow_number_removed">Arrow number removed!</string>
-  <string name="new_end">New end</string>
-  <string name="distribution">Distribution</string>
-  <string name="count">Count</string>
-  <string name="diameter">Diameter</string>
-  <string name="input">Input</string>
-  <string name="target_zoom">Target zoom level</string>
-  <string name="arrow_diameter_scale">Arrow diameter scale</string>
+  <string name="hits">Marquées</string>
+  <string name="misses">Manquées</string>
+  <string name="arrow_number_removed">Numéro de flèche effacé !</string>
+  <string name="new_end">Nouvelle fin</string>
+  <string name="distribution">Répartition</string>
+  <string name="count">Décompte</string>
+  <string name="diameter">Diamètre</string>
+  <string name="input">Saisie</string>
+  <string name="target_zoom">Niveau de zoom de cible</string>
+  <string name="arrow_diameter_scale">Échelle de diamètre de flèche</string>
+  <string name="timestamp">Timestamp</string>
 </resources>

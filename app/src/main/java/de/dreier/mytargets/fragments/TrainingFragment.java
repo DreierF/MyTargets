@@ -12,7 +12,9 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,11 +29,10 @@ import com.annimon.stream.Stream;
 import java.util.List;
 import java.util.Locale;
 
-import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ScoreboardActivity;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditRoundActivity;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase.RoundActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentTrainingBinding;
 import de.dreier.mytargets.databinding.ItemRoundBinding;
@@ -45,17 +46,15 @@ import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.HtmlUtils;
+import de.dreier.mytargets.utils.IntentWrapper;
+import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
-
-import static de.dreier.mytargets.fragments.RoundFragment.ROUND_ID;
-import static de.dreier.mytargets.utils.ActivityUtils.showStatistics;
-import static de.dreier.mytargets.utils.ActivityUtils.startActivityAnimated;
 
 /**
  * Shows all passes of one training
  */
-public class TrainingFragment extends EditableFragment<Round> {
+public class TrainingFragment extends EditableListFragment<Round> {
 
     private final boolean[] equals = new boolean[2];
     protected FragmentTrainingBinding binding;
@@ -63,7 +62,6 @@ public class TrainingFragment extends EditableFragment<Round> {
     private Training training;
     private RoundDataSource roundDataSource;
     private StandardRoundDataSource standardRoundDataSource;
-    private TrainingDataSource trainingDataSource;
 
     public TrainingFragment() {
         itemTypeSelRes = R.plurals.round_selected;
@@ -72,16 +70,24 @@ public class TrainingFragment extends EditableFragment<Round> {
         supportsStatistics = true;
     }
 
+    @NonNull
+    public static IntentWrapper getIntent(Fragment fragment, Training training) {
+        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.TrainingActivity.class);
+        i.putExtra(ITEM_ID, training.getId());
+        return new IntentWrapper(fragment, i);
+    }
+
     @Override
     @CallSuper
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_training, container, false);
 
         binding.recyclerView.setHasFixedSize(true);
-        binding.recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), R.drawable.full_divider));
+        binding.recyclerView.addItemDecoration(
+                new DividerItemDecoration(getContext(), R.drawable.full_divider));
         mAdapter = new RoundAdapter(getContext());
+        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
-
 
         // Get training
         if (getArguments() != null) {
@@ -90,10 +96,12 @@ public class TrainingFragment extends EditableFragment<Round> {
         binding.fab.setVisibility(View.GONE);
         binding.fab.setOnClickListener(view -> {
             // New round to free training
-            startActivityAnimated(getActivity(), EditRoundActivity.class, ITEM_ID, mTraining);
+            EditRoundFragment.createIntent(this, mTraining)
+                    .fromFab(binding.fab)
+                    .start();
         });
 
-        trainingDataSource = new TrainingDataSource();
+        TrainingDataSource trainingDataSource = new TrainingDataSource();
         roundDataSource = new RoundDataSource();
         standardRoundDataSource = new StandardRoundDataSource();
 
@@ -111,19 +119,24 @@ public class TrainingFragment extends EditableFragment<Round> {
 
     @Override
     public Loader<List<Round>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader<>(getContext(), new RoundDataSource(), () -> roundDataSource.getAll(mTraining));
+        return new DataLoader<>(getContext(), new RoundDataSource(),
+                () -> roundDataSource.getAll(mTraining));
     }
 
     public void onLoadFinished(Loader<List<Round>> loader, List<Round> data) {
-        training = trainingDataSource.get(mTraining);
-
         // Hide fab for standard rounds
         StandardRound standardRound = standardRoundDataSource.get(training.standardRoundId);
-        binding.fab.setVisibility(standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE ? View.VISIBLE : View.GONE);
+        supportsDeletion = standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
+        binding.fab.setVisibility(supportsDeletion ? View.VISIBLE : View.GONE);
 
         // Set round info
-        binding.weatherIcon.setImageResource(training.environment.weather.getColorDrawable());
-        binding.detailRoundInfo.setText(HtmlUtils.fromHtml(HtmlUtils.getTrainingInfoHTML(training, data, equals, false)));
+        int weatherDrawable = R.drawable.ic_house_24dp;
+        if (!standardRound.indoor) {
+            weatherDrawable = training.environment.weather.getColorDrawable();
+        }
+        binding.weatherIcon.setImageResource(weatherDrawable);
+        binding.detailRoundInfo.setText(
+                HtmlUtils.fromHtml(HtmlUtils.getTrainingInfoHTML(training, data, equals, false)));
         mAdapter.setList(data);
         dataSource = new RoundDataSource();
         getActivity().supportInvalidateOptionsMenu();
@@ -141,15 +154,14 @@ public class TrainingFragment extends EditableFragment<Round> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_scoreboard:
-                Intent intent = new Intent(getContext(), ScoreboardActivity.class);
-                intent.putExtra(ScoreboardActivity.TRAINING_ID, mTraining);
-                startActivity(intent);
+                ScoreboardActivity.getIntent(this, mTraining)
+                        .start();
                 return true;
             case R.id.action_statistics:
-                showStatistics(getActivity(),
+                StatisticsActivity.getIntent(this,
                         Stream.of(new RoundDataSource().getAll(training.getId()))
-                                .map(Round::getId)
-                                .collect(Collectors.toList()));
+                                        .map(Round::getId)
+                                        .collect(Collectors.toList())).start();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -158,26 +170,24 @@ public class TrainingFragment extends EditableFragment<Round> {
 
     @Override
     protected void onItemSelected(Round item) {
-        startActivityAnimated(getActivity(), RoundActivity.class, ROUND_ID, item.getId());
+        RoundFragment.getIntent(this, item).start();
     }
 
     @Override
     protected void onEdit(Round item) {
-        Intent i = new Intent(getContext(), EditRoundActivity.class);
-        i.putExtra(ITEM_ID, mTraining);
-        i.putExtra(EditRoundFragment.ROUND_ID, item.getId());
-        startActivity(i);
+        EditRoundFragment.editIntent(this, mTraining, item)
+                .start();
     }
 
     @Override
     protected void onStatistics(List<Long> roundIds) {
-        showStatistics(getActivity(), roundIds);
+        StatisticsActivity.getIntent(this, roundIds).start();
     }
 
     private class RoundAdapter extends ListAdapterBase<Round> {
 
         RoundAdapter(Context context) {
-            super(context, (lhs, rhs) -> lhs.info.index - rhs.info.index);
+            super(context);
         }
 
         @Override
@@ -197,8 +207,9 @@ public class TrainingFragment extends EditableFragment<Round> {
         }
 
         @Override
-        public void bindCursor() {
-            binding.title.setText(String.format(Locale.ENGLISH, "%s %d", ApplicationInstance.getContext().getString(R.string.round),
+        public void bindItem() {
+            binding.title.setText(String.format(Locale.ENGLISH, "%s %d",
+                    getContext().getString(R.string.round),
                     mItem.info.index + 1));
             binding.subtitle.setText(HtmlUtils.fromHtml(HtmlUtils.getRoundInfo(mItem, equals)));
             if (binding.subtitle.getText().toString().isEmpty()) {

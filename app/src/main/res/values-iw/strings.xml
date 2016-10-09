@@ -49,9 +49,6 @@
   <string name="statistic">סטטיסטיקה</string>
   <!-- Share -->
   <string name="share">שתף</string>
-  <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$sThis makes a total of %2$d out of %3$d rings.</string>
-  <string name="d_times_s">%1$d times %2$s\n</string>
-  <string name="text">טקסט</string>
   <string name="dispersion_pattern">דפוס הפיזור</string>
   <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
@@ -69,7 +66,6 @@
   <string name="tiller">Tiller</string>
   <string name="sight_settings">הגדרות מראה</string>
   <string name="add">הוסף</string>
-  <string name="select_picture">Select a picture</string>
   <string name="take_picture">Take a picture</string>
   <string name="pick_from_gallery">Select a picture from gallery</string>
   <!-- New arrow -->
@@ -112,9 +108,6 @@
   <string name="show_all">Show all impacts</string>
   <string name="comment">Comment</string>
   <!-- Statistics -->
-  <string name="all_trainings">All trainings</string>
-  <string name="entire_training">Entire training</string>
-  <string name="current_round">Current round</string>
   <!-- Import/Backup -->
   <string name="select_a_file">Select a file</string>
   <string name="dir_not_created">Directory could not be created!</string>
@@ -124,14 +117,11 @@
   <string name="file_not_found">קובץ לא נמצא!</string>
   <string name="failed_reading_file">קריאת הקובץ נכשלה!</string>
   <!-- Donate -->
-  <string name="donate_action">תרום</string>
   <string name="donate_2">תרום לי המבורגר</string>
   <string name="donate_5">תרום לי קבב</string>
   <string name="donate_10">רום לי מגש פיצה גדול</string>
   <string name="donate_20">תרום לי קצת דלק</string>
-  <string name="donate_infinite">תמיכה מתמשכת</string>
   <string name="donation_thank">תודה לך על תמיכתך!</string>
-  <string name="monthly">%s חודשי</string>
   <string name="donate_text">The amounts are incl. VAT and 30% fees for Google. Alternatively you may gladly donate on the PayPal account dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">טיימר</string>
@@ -150,9 +140,6 @@
   <string name="import_action">יבא</string>
   <string name="export">ייצא</string>
   <string name="exports_as_csv">יצוא נתונים שמורים כקובץ *. csv</string>
-  <string name="app_rate">דרג אפליקציה</string>
-  <string name="app_share">שתף אפליקציה</string>
-  <string name="contact_developer">צור קשר עם המפתח</string>
   <string name="licences">קוד רשיון פתוח</string>
   <string name="licences_summary">הערות משפטיות לרישיונות</string>
   <string name="version">גירסה %s</string>
@@ -188,7 +175,6 @@
   <string name="standard_round">Standard round</string>
   <string name="use_as_template">Use as template?</string>
   <string name="create_copy">This is a standard round!\nDo you want to create a copy in order to edit it?</string>
-  <string name="not_matches_sheme">Input does not match the expected format like 1,3,5</string>
   <string name="arrow_numbers_desc">Enter all arrow number that you use for shooting e.g. 1,2,5,6,7</string>
   <string name="practice">Practice</string>
   <string name="edit_training">Edit Training</string>
@@ -271,8 +257,6 @@
   <string name="donate_via_paypal">Donate via PayPal</string>
   <string name="translate_crowdin">Translate on Crowdin</string>
   <string name="network_linkedin">Network on LinkedIn</string>
-  <string name="enter_scores_only_description">Lets you only enter the scores not the exact arrow position. Use this option to enter data with your smartwatch or to enter historical data.</string>
-  <string name="enter_scores_only">Enter scores only</string>
   <string name="search">Search</string>
   <string name="us">US</string>
   <string name="show_shots_training">Whole training</string>
@@ -288,7 +272,6 @@
   <string name="archer">Archer</string>
   <string name="hits">Hits</string>
   <string name="misses">Misses</string>
-  <string name="percentage_reached_points">Percentage of reached points</string>
   <string name="arrow_number_removed">Arrow number removed!</string>
   <string name="new_end">New end</string>
   <string name="distribution">Distribution</string>
@@ -297,4 +280,5 @@
   <string name="input">Input</string>
   <string name="target_zoom">Target zoom level</string>
   <string name="arrow_diameter_scale">Arrow diameter scale</string>
+  <string name="timestamp">Timestamp</string>
 </resources>

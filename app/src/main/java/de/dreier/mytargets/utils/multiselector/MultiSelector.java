@@ -21,13 +21,6 @@ public class MultiSelector {
     private WeakHolderTracker mTracker = new WeakHolderTracker();
     private boolean mIsSelectable;
 
-    public MultiSelector() {
-    }
-
-    public boolean isSelectable() {
-        return this.mIsSelectable;
-    }
-
     public void setSelectable(boolean isSelectable) {
         this.mIsSelectable = isSelectable;
         refreshAllHolders();
@@ -38,7 +31,7 @@ public class MultiSelector {
     }
 
     public void setSelected(int position, long id, boolean isSelected) {
-        if(isSelected) {
+        if (isSelected) {
             mSelections.add(id);
         } else {
             mSelections.remove(id);
@@ -46,7 +39,7 @@ public class MultiSelector {
         this.refreshHolder(mTracker.getHolder(position));
     }
 
-    public boolean isSelected(int position, long id) {
+    private boolean isSelected(long id) {
         return mSelections.contains(id);
     }
 
@@ -68,9 +61,9 @@ public class MultiSelector {
         return tapSelection(holder.getAdapterPosition(), holder.getItemId());
     }
 
-    public boolean tapSelection(int position, long itemId) {
-        if(mIsSelectable) {
-            boolean isSelected = isSelected(position, itemId);
+    private boolean tapSelection(int position, long itemId) {
+        if (mIsSelectable) {
+            boolean isSelected = isSelected(itemId);
             this.setSelected(position, itemId, !isSelected);
             return true;
         } else {
@@ -78,14 +71,19 @@ public class MultiSelector {
         }
     }
 
-    public void refreshAllHolders() {
+    private void refreshAllHolders() {
         for (SelectableHolder holder : mTracker.getTrackedHolders()) {
             this.refreshHolder(holder);
         }
     }
 
     private void refreshHolder(SelectableHolder holder) {
-        if(holder != null) {
+        if (holder != null) {
+            if (holder instanceof ItemBindingHolder) {
+                if (((ItemBindingHolder) holder).getItem() != null) {
+                    ((ItemBindingHolder) holder).bindItem();
+                }
+            }
             holder.setSelectable(mIsSelectable);
             boolean isActivated = mSelections.contains(holder.getItemId());
             holder.setActivated(isActivated);
@@ -95,7 +93,7 @@ public class MultiSelector {
     public Bundle saveSelectionStates() {
         Bundle information = new Bundle();
         information.putLongArray(SELECTION_IDS, Utils.toArray(getSelectedIds()));
-        information.putBoolean(SELECTIONS_STATE, isSelectable());
+        information.putBoolean(SELECTIONS_STATE, this.mIsSelectable);
         return information;
     }
 
@@ -106,7 +104,7 @@ public class MultiSelector {
     }
 
     private void restoreSelections(List<Long> selected) {
-        if(selected != null) {
+        if (selected != null) {
             mSelections.clear();
             mSelections.addAll(selected);
             this.refreshAllHolders();

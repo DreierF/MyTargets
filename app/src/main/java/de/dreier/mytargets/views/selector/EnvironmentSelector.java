@@ -79,7 +79,7 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
                 weatherCall.enqueue(new Callback<CurrentWeather>() {
                     @Override
                     public void onResponse(Call<CurrentWeather> call, Response<CurrentWeather> response) {
-                        if (response.isSuccessful()) {
+                        if (response.isSuccessful() && response.body().httpCode == 200) {
                             setItem(response.body().toEnvironment());
                         } else {
                             setDefaultWeather();

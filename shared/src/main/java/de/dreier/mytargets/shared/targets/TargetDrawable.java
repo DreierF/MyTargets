@@ -10,6 +10,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.text.TextPaint;
 
 import java.util.List;
@@ -201,7 +202,7 @@ public class TargetDrawable extends Drawable {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         draw(canvas, getBounds());
     }
 
@@ -212,8 +213,9 @@ public class TargetDrawable extends Drawable {
         for (int faceIndex = 0; faceIndex < model.facePositions.length; faceIndex++) {
             Rect targetRect = getTargetBounds(rect, faceIndex);
             for (int i = getZones() - 1; i >= 0; i--) {
-                if (!model.shouldDrawZone(i, target.scoringStyle))
+                if (!model.shouldDrawZone(i, target.scoringStyle)) {
                     continue;
+                }
                 Zone zone = model.getZone(i);
                 paintFill.setColor(zone.fillColor);
                 paintStroke.setColor(zone.strokeColor);
@@ -224,9 +226,9 @@ public class TargetDrawable extends Drawable {
         }
     }
 
-    public void drawArrows(Canvas canvas, List<Passe> passes, boolean transparent) {
-        for (Passe p : passes) {
-            drawArrows(canvas, p, transparent);
+    public void drawArrows(Canvas canvas, List<Shot> shots, boolean transparent) {
+        for (Shot s : shots) {
+            drawArrow(canvas, s, transparent);
         }
     }
 
@@ -444,33 +446,6 @@ public class TargetDrawable extends Drawable {
 
     @Override
     public void setColorFilter(ColorFilter arg0) {
-    }
-
-    /**
-     * Used to determine if the target is vertical like 3 spot and
-     * thus multiple targets fit next to each other onto one page.
-     */
-    public int getWidth() {
-        return getDiff(0);
-    }
-
-    public int getHeight() {
-        return getDiff(1);
-    }
-
-    private int getDiff(int coordinate) {
-        int min = Integer.MAX_VALUE;
-        int max = Integer.MIN_VALUE;
-        for (Coordinate facePosition : model.facePositions) {
-            final float v = coordinate == 0 ? facePosition.x : facePosition.y;
-            if (v < min) {
-                min = (int) v;
-            }
-            if (v > max) {
-                max = (int) v;
-            }
-        }
-        return max - min + model.faceRadius * 2;
     }
 
     public RectF getBoundsF(int index, Rect rect) {

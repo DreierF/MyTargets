@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.LinearLayoutManager;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.anjlab.android.iab.v3.BillingProcessor;
@@ -81,8 +82,7 @@ public class DonateActivity extends AppCompatActivity implements BillingProcesso
 
         new MaterialDialog.Builder(this)
                 .title(R.string.donate)
-                .adapter(new DonationAdapter(this),
-                        (dialog, itemView, position, text) -> onDonate(position))
+                .adapter(new DonationAdapter(this, this::onDonate), new LinearLayoutManager(this))
                 .dismissListener(dialog1 -> {
                     finish();
                     overridePendingTransition(0, 0);
@@ -90,7 +90,7 @@ public class DonateActivity extends AppCompatActivity implements BillingProcesso
                 .show();
     }
 
-    private void onDonate(int position) {
+    public void onDonate(int position) {
         final String item = donations.get(position);
         if (position < 4) {
             bp.purchase(this, item);

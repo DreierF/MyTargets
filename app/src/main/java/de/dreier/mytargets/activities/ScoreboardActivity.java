@@ -16,7 +16,9 @@ import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.Menu;
@@ -32,6 +34,7 @@ import java.io.IOException;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityScoreboardBinding;
 import de.dreier.mytargets.utils.HtmlUtils;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ScoreboardConfiguration;
 import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -41,8 +44,8 @@ import static android.support.v7.preference.PreferenceFragmentCompat.ARG_PREFERE
 
 public class ScoreboardActivity extends AppCompatActivity {
 
-    public static final String TRAINING_ID = "training_id";
-    public static final String ROUND_ID = "round_id";
+    private static final String TRAINING_ID = "training_id";
+    private static final String ROUND_ID = "round_id";
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -52,6 +55,19 @@ public class ScoreboardActivity extends AppCompatActivity {
     private long mRound;
     private boolean pageLoaded = true;
     private ActivityScoreboardBinding binding;
+
+    @NonNull
+    public static IntentWrapper getIntent(Fragment fragment, long trainingId) {
+        return getIntent(fragment, trainingId, -1);
+    }
+
+    @NonNull
+    public static IntentWrapper getIntent(Fragment fragment, long trainingId, long roundId) {
+        Intent intent = new Intent(fragment.getContext(), ScoreboardActivity.class);
+        intent.putExtra(TRAINING_ID, trainingId);
+        intent.putExtra(ROUND_ID, roundId);
+        return new IntentWrapper(fragment, intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,10 +152,12 @@ public class ScoreboardActivity extends AppCompatActivity {
 
                 // Build and fire intent to ask for share provider
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM,
-                        getUriForFile(ScoreboardActivity.this, "de.dreier.mytargets", f));
                 shareIntent.setType("*/*");
-                startActivity(shareIntent);
+                String packageName = getApplicationContext().getPackageName();
+                String authority = packageName + ".easyphotopicker.fileprovider";
+                shareIntent.putExtra(Intent.EXTRA_STREAM,
+                        getUriForFile(ScoreboardActivity.this, authority, f));
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
             } catch (IOException e) {
                 e.printStackTrace();
                 Snackbar.make(binding.getRoot(), R.string.sharing_failed, Snackbar.LENGTH_SHORT)

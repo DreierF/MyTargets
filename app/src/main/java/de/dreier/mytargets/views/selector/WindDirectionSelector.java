@@ -8,15 +8,13 @@
 package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.util.AttributeSet;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
-import de.dreier.mytargets.databinding.SelectorItemSimpleTextBinding;
-import de.dreier.mytargets.models.WindDirection;
+import de.dreier.mytargets.shared.models.WindDirection;
 
-public class WindDirectionSelector extends SelectorBase<WindDirection> {
+public class WindDirectionSelector extends ImageSelectorBase<WindDirection> {
 
     private static final int WIND_DIRECTION_REQUEST_CODE = 3;
 
@@ -25,15 +23,10 @@ public class WindDirectionSelector extends SelectorBase<WindDirection> {
     }
 
     public WindDirectionSelector(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.selector_item_simple_text);
+        super(context, attrs);
+        setTitle(R.string.wind_direction);
         defaultActivity = ItemSelectActivity.WindDirectionActivity.class;
         requestCode = WIND_DIRECTION_REQUEST_CODE;
-    }
-
-    @Override
-    protected void bindView() {
-        SelectorItemSimpleTextBinding binding = DataBindingUtil.bind(mView);
-        binding.text.setText(item.name);
     }
 
     public void setItemId(long direction) {

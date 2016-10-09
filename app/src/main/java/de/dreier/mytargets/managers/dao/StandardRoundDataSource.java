@@ -11,22 +11,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.targets.TargetModelBase;
-import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-
-import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
-import static de.dreier.mytargets.shared.models.Dimension.Unit.YARDS;
 
 public class StandardRoundDataSource extends IdProviderDataSource<StandardRound> {
     private static final String TABLE = "STANDARD_ROUND_TEMPLATE";
@@ -116,27 +108,6 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRound>
         cursor.close();
         Collections.sort(list, (lhs, rhs) -> rhs.usages - lhs.usages);
         return list;
-    }
-
-    @NonNull
-    public List<StandardRound> getAllFiltered(int clubs, boolean indoor, boolean isMetric, int checked) {
-        List<StandardRound> list = getAll();
-        ArrayList<StandardRound> displayList = new ArrayList<>();
-        Dimension.Unit unitDistance = isMetric ? METER : YARDS;
-        for (StandardRound r : list) {
-            List<RoundTemplate> rounds = r.rounds;
-            if (rounds.size() > 0 && ((r.club & clubs) != 0 ||
-                    r.name.startsWith("NFAA/IFAA") && (clubs & StandardRoundFactory.IFAA) != 0) &&
-                    rounds.get(0).distance.unit == unitDistance &&
-                    r.indoor == indoor) {
-                TargetModelBase target = rounds.get(0).target.getModel();
-                if ((checked != R.id.field || target.isFieldTarget()) &&
-                        (checked != R.id.three_d || target.is3DTarget())) {
-                    displayList.add(r);
-                }
-            }
-        }
-        return displayList;
     }
 
     public List<StandardRound> getAllSearch(String query) {

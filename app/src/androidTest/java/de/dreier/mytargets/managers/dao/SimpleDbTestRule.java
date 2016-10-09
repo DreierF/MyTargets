@@ -24,9 +24,6 @@ import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
 public class SimpleDbTestRule extends DbTestRuleBase {
 
-    public SimpleDbTestRule() {
-    }
-
     @Override
     protected void addDatabaseContent() {
         SettingsManager.setTarget(
@@ -67,19 +64,19 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         round2.comment = "";
         roundDataSource.update(round2);
 
-        passeDataSource.update(randomPasse(round1, 6, generator));
-        passeDataSource.update(randomPasse(round1, 6, generator));
-        passeDataSource.update(randomPasse(round1, 6, generator));
-        passeDataSource.update(randomPasse(round1, 6, generator));
-        passeDataSource.update(randomPasse(round1, 6, generator));
-        passeDataSource.update(randomPasse(round1, 6, generator));
+        passeDataSource.update(randomPasse(training, round1, 6, generator));
+        passeDataSource.update(randomPasse(training, round1, 6, generator));
+        passeDataSource.update(randomPasse(training, round1, 6, generator));
+        passeDataSource.update(randomPasse(training, round1, 6, generator));
+        passeDataSource.update(randomPasse(training, round1, 6, generator));
+        passeDataSource.update(randomPasse(training, round1, 6, generator));
 
-        passeDataSource.update(randomPasse(round2, 6, generator));
-        passeDataSource.update(randomPasse(round2, 6, generator));
-        passeDataSource.update(randomPasse(round2, 6, generator));
-        passeDataSource.update(randomPasse(round2, 6, generator));
-        passeDataSource.update(randomPasse(round2, 6, generator));
-        passeDataSource.update(randomPasse(round2, 6, generator));
+        passeDataSource.update(randomPasse(training, round2, 6, generator));
+        passeDataSource.update(randomPasse(training, round2, 6, generator));
+        passeDataSource.update(randomPasse(training, round2, 6, generator));
+        passeDataSource.update(randomPasse(training, round2, 6, generator));
+        passeDataSource.update(randomPasse(training, round2, 6, generator));
+        passeDataSource.update(randomPasse(training, round2, 6, generator));
     }
 
     @NonNull
@@ -126,19 +123,19 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         round2.comment = "";
         roundDataSource.update(round2);
 
-        passeDataSource.update(randomPasse(round1, 6, generator));
-        passeDataSource.update(randomPasse(round1, 6, generator));
-        passeDataSource.update(randomPasse(round1, 6, generator));
-        passeDataSource.update(randomPasse(round1, 6, generator));
-        passeDataSource.update(randomPasse(round1, 6, generator));
-        passeDataSource.update(randomPasse(round1, 6, generator));
+        passeDataSource.update(randomPasse(training, round1, 6, generator));
+        passeDataSource.update(randomPasse(training, round1, 6, generator));
+        passeDataSource.update(randomPasse(training, round1, 6, generator));
+        passeDataSource.update(randomPasse(training, round1, 6, generator));
+        passeDataSource.update(randomPasse(training, round1, 6, generator));
+        passeDataSource.update(randomPasse(training, round1, 6, generator));
 
-        passeDataSource.update(randomPasse(round2, 6, generator));
-        passeDataSource.update(randomPasse(round2, 6, generator));
-        passeDataSource.update(randomPasse(round2, 6, generator));
-        passeDataSource.update(randomPasse(round2, 6, generator));
-        passeDataSource.update(randomPasse(round2, 6, generator));
-        passeDataSource.update(randomPasse(round2, 6, generator));
+        passeDataSource.update(randomPasse(training, round2, 6, generator));
+        passeDataSource.update(randomPasse(training, round2, 6, generator));
+        passeDataSource.update(randomPasse(training, round2, 6, generator));
+        passeDataSource.update(randomPasse(training, round2, 6, generator));
+        passeDataSource.update(randomPasse(training, round2, 6, generator));
+        passeDataSource.update(randomPasse(training, round2, 6, generator));
     }
 
     private void addFullTraining(Bow bow) {

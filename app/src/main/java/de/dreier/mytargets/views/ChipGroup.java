@@ -135,6 +135,16 @@ public class ChipGroup extends ViewGroup {
     }
 
     /**
+     * Returns the tag list in group.
+     *
+     * @return the tag list.
+     */
+    public List<Tag> getTags() {
+        return Stream.of(tagList)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Set the tags. It will remove all previous tags first.
      *
      * @param tags the tag list to set.
@@ -149,7 +159,7 @@ public class ChipGroup extends ViewGroup {
     }
 
     /**
-     * Returns the tag list in group.
+     * Returns the checked tag list in group.
      *
      * @return the tag list.
      */
@@ -168,7 +178,7 @@ public class ChipGroup extends ViewGroup {
         ChipsViewBinding binding = tag.getView(getContext(), this);
         binding.getRoot().setOnClickListener(v -> {
             tag.isChecked = !tag.isChecked;
-            binding.getRoot().setActivated(tag.isChecked);
+            binding.getRoot().setActivated(!tag.isChecked);
             if (mOnSelectionChangedListener != null) {
                 mOnSelectionChangedListener.onSelectionChanged(tag);
             }
@@ -242,7 +252,7 @@ public class ChipGroup extends ViewGroup {
         public ChipsViewBinding getView(Context context, ViewGroup parent) {
             ChipsViewBinding binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.chips_view, parent, false);
             binding.setTag(this);
-            binding.getRoot().setActivated(isChecked);
+            binding.getRoot().setActivated(!isChecked);
             float mDensity = context.getResources().getDisplayMetrics().density;
             binding.getRoot().setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (CHIP_HEIGHT * mDensity)));
             return binding;

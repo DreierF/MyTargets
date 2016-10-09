@@ -7,8 +7,10 @@
 
 package de.dreier.mytargets.activities;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -18,8 +20,6 @@ import android.view.View;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +38,7 @@ import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
@@ -47,10 +48,19 @@ import icepick.State;
 
 public class StatisticsActivity extends ChildActivityBase {
 
-    public static final String ROUND_IDS = "round_ids";
+    private static final String ROUND_IDS = "round_ids";
+
     @State
     boolean showFilter = false;
     private ActivityStatisticsBinding binding;
+    private List<Round> rounds;
+
+    @NonNull
+    public static IntentWrapper getIntent(Fragment fragment, List<Long> roundIds) {
+        Intent i = new Intent(fragment.getContext(), StatisticsActivity.class);
+        i.putExtra(ROUND_IDS, Utils.toArray(roundIds));
+        return new IntentWrapper(fragment, i);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +69,7 @@ public class StatisticsActivity extends ChildActivityBase {
         setSupportActionBar(binding.toolbar);
 
         long[] roundIds = getIntent().getLongArrayExtra(ROUND_IDS);
-        List<Round> rounds = new RoundDataSource().getAll(roundIds);
+        rounds = new RoundDataSource().getAll(roundIds);
 
         ToolbarUtils.showHomeAsUp(this);
         Icepick.restoreInstanceState(this, savedInstanceState);
@@ -83,6 +93,9 @@ public class StatisticsActivity extends ChildActivityBase {
                 .map(bid -> {
                     if (bid > 0) {
                         Bow bow = new BowDataSource().get(bid);
+                        if (bow == null) {
+                            return new ChipGroup.Tag(bid, "Deleted " + bid, true);
+                        }
                         return new ChipGroup.Tag(bow.getId(), bow.getName(), bow.thumb, true);
                     } else {
                         return new ChipGroup.Tag(bid, getString(R.string.unknown), true);
@@ -99,6 +112,9 @@ public class StatisticsActivity extends ChildActivityBase {
                 .map(aid -> {
                     if (aid > 0) {
                         Arrow arrow = new ArrowDataSource().get(aid);
+                        if (arrow == null) {
+                            return new ChipGroup.Tag(aid, "Deleted " + aid, true);
+                        }
                         return new ChipGroup.Tag(arrow.getId(), arrow.getName(), arrow.thumb, true);
                     } else {
                         return new ChipGroup.Tag(aid, getString(R.string.unknown), true);
@@ -123,7 +139,8 @@ public class StatisticsActivity extends ChildActivityBase {
                 filteredRounds.add(round);
             }
         }
-        binding.viewPager.setAdapter(new StatisticsPagerAdapter(getSupportFragmentManager(), new PasseDataSource().groupByTarget(filteredRounds)));
+        binding.viewPager.setAdapter(new StatisticsPagerAdapter(getSupportFragmentManager(),
+                new PasseDataSource().groupByTarget(filteredRounds)));
     }
 
     private List<ChipGroup.Tag> getDistanceTags(List<Round> rounds) {
@@ -162,7 +179,19 @@ public class StatisticsActivity extends ChildActivityBase {
     }
 
     protected void updateFilter() {
+        if (!showFilter) {
+            Stream.of(binding.distanceTags.getTags())
+                    .forEach(tag -> tag.isChecked = true);
+            Stream.of(binding.arrowTags.getTags())
+                    .forEach(tag -> tag.isChecked = true);
+            Stream.of(binding.bowTags.getTags())
+                    .forEach(tag -> tag.isChecked = true);
+            binding.distanceTags.setTags(binding.distanceTags.getTags());
+            binding.arrowTags.setTags(binding.arrowTags.getTags());
+            binding.bowTags.setTags(binding.bowTags.getTags());
+        }
         binding.filterView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
+        applyFilter(rounds);
         invalidateOptionsMenu();
     }
 
@@ -183,16 +212,11 @@ public class StatisticsActivity extends ChildActivityBase {
 
         @Override
         public Fragment getItem(int position) {
-            StatisticsFragment fragment = new StatisticsFragment();
-            Bundle bundle = new Bundle();
             final Pair<Target, List<Round>> item = targets.get(position);
-            bundle.putParcelable(StatisticsFragment.ARG_TARGET, Parcels.wrap(item.getFirst()));
             final List<Long> roundIds = Stream.of(item.getSecond())
                     .map(Round::getId)
                     .collect(Collectors.toList());
-            bundle.putLongArray(StatisticsFragment.ARG_ROUND_IDS, Utils.toArray(roundIds));
-            fragment.setArguments(bundle);
-            return fragment;
+            return StatisticsFragment.newInstance(roundIds, item.getFirst());
         }
 
         @Override

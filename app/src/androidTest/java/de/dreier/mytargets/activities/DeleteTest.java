@@ -50,13 +50,13 @@ public class DeleteTest extends UITestBase {
                 RecyclerViewActions.actionOnItemAtPosition(1, longClick()));
         onView(allOf(withId(R.id.recyclerView), isDisplayed())).perform(
                 RecyclerViewActions.actionOnItemAtPosition(3, click()));
-        clickActionBarItem(R.id.action_delete, R.string.delete);
+        clickContextualActionBarItem(R.id.action_delete, R.string.delete);
         onView(withId(R.id.snackbar_action)).perform(click());
 
         // Delete training
         onView(allOf(withId(R.id.recyclerView), isDisplayed())).perform(
                 RecyclerViewActions.actionOnItemAtPosition(3, longClick()));
-        clickActionBarItem(R.id.action_delete, R.string.delete);
+        clickContextualActionBarItem(R.id.action_delete, R.string.delete);
         final String trainingText = mActivityTestRule.getActivity().getResources().getQuantityString(R.plurals.training_deleted, 1, 1);
         onView(withId(R.id.snackbar_text)).check(ViewAssertions.matches(withText(trainingText)));
 
@@ -67,7 +67,7 @@ public class DeleteTest extends UITestBase {
 
         onView(withId(R.id.recyclerView)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
-        clickActionBarItem(R.id.action_delete, R.string.delete);
+        clickContextualActionBarItem(R.id.action_delete, R.string.delete);
 
         // Open round
         onView(withId(R.id.recyclerView)).perform(
@@ -78,7 +78,7 @@ public class DeleteTest extends UITestBase {
                 RecyclerViewActions.actionOnItemAtPosition(2, longClick()));
         onView(withId(R.id.recyclerView)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(3, click()));
-        clickActionBarItem(R.id.action_delete, R.string.delete);
+        clickContextualActionBarItem(R.id.action_delete, R.string.delete);
         final String endsText = mActivityTestRule.getActivity().getResources().getQuantityString(R.plurals.passe_deleted, 2, 2);
         onView(withId(R.id.snackbar_text)).check(ViewAssertions.matches(withText(endsText)));
         onView(withId(R.id.snackbar_action)).perform(click());
@@ -88,7 +88,7 @@ public class DeleteTest extends UITestBase {
                 RecyclerViewActions.actionOnItemAtPosition(1, longClick()));
         onView(withId(R.id.recyclerView)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(3, click()));
-        clickActionBarItem(R.id.action_delete, R.string.delete);
+        clickContextualActionBarItem(R.id.action_delete, R.string.delete);
 
         onView(withId(R.id.snackbar_text)).check(ViewAssertions.matches(withText(endsText)));
 

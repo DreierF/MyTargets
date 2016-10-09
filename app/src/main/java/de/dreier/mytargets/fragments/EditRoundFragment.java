@@ -11,6 +11,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import android.view.ViewGroup;
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.InputActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.databinding.FragmentEditRoundBinding;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
@@ -29,14 +32,32 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.utils.ActivityUtils;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.transitions.FabTransformUtil;
+
+import static de.dreier.mytargets.fragments.ListFragmentBase.ITEM_ID;
 
 public class EditRoundFragment extends EditFragmentBase {
-    static final String ROUND_ID = "round_id";
+    private static final String ROUND_ID = "round_id";
     private long trainingId = -1;
     private long roundId = -1;
     private FragmentEditRoundBinding binding;
+
+    @NonNull
+    protected static IntentWrapper createIntent(Fragment fragment, long trainingId) {
+        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditRoundActivity.class);
+        i.putExtra(ITEM_ID, trainingId);
+        return new IntentWrapper(fragment, i);
+    }
+
+    @NonNull
+    protected static IntentWrapper editIntent(Fragment fragment, long trainingId, Round round) {
+        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditRoundActivity.class);
+        i.putExtra(ITEM_ID, trainingId);
+        i.putExtra(ROUND_ID, round.getId());
+        return new IntentWrapper(fragment, i);
+    }
 
     @Nullable
     @Override
@@ -46,7 +67,7 @@ public class EditRoundFragment extends EditFragmentBase {
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            trainingId = arguments.getLong(FragmentBase.ITEM_ID, -1);
+            trainingId = arguments.getLong(ITEM_ID, -1);
             roundId = arguments.getLong(ROUND_ID, -1);
         }
 
@@ -69,8 +90,8 @@ public class EditRoundFragment extends EditFragmentBase {
             public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
             }
         });
-        binding.targetSpinner.setOnActivityResultContext(this);
-        binding.distanceSpinner.setOnActivityResultContext(this);
+        binding.target.setOnActivityResultContext(this);
+        binding.distance.setOnActivityResultContext(this);
 
 
         if (roundId == -1) {
@@ -82,7 +103,7 @@ public class EditRoundFragment extends EditFragmentBase {
             ToolbarUtils.setTitle(this, R.string.edit_round);
             RoundDataSource roundDataSource = new RoundDataSource();
             Round round = roundDataSource.get(roundId);
-            binding.distanceSpinner.setItem(round.info.distance);
+            binding.distance.setItem(round.info.distance);
             binding.comment.setText(round.comment);
             binding.notEditable.setVisibility(View.GONE);
             StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource();
@@ -92,7 +113,7 @@ public class EditRoundFragment extends EditFragmentBase {
             } else if (standardRound.rounds.size() > 1) {
                 binding.removeButton.setOnClickListener(v -> {
                     roundDataSource.delete(round);
-                    getActivity().finish();
+                    finish();
                 });
             } else {
                 binding.removeButton.setVisibility(View.GONE);
@@ -102,11 +123,18 @@ public class EditRoundFragment extends EditFragmentBase {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        FabTransformUtil.setup(getActivity(), binding.getRoot());
+    }
+
+    @Override
     protected void onSave() {
-        getActivity().finish();
+        finish();
         if (roundId == -1) {
             Round round = onSaveRound();
-            ActivityUtils.openPasseForNewRound(getActivity(), -1, round.getId());
+            RoundFragment.getIntent(this, round).startWithoutAnimation();
+            InputActivity.createIntent(this, round).start();
         } else {
             onSaveRound();
             getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
@@ -132,7 +160,7 @@ public class EditRoundFragment extends EditFragmentBase {
         round.comment = binding.comment.getText().toString();
 
         if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE) {
-            round.info.distance = binding.distanceSpinner.getSelectedItem();
+            round.info.distance = binding.distance.getSelectedItem();
             round.info.index = standardRound.rounds.size();
             new RoundTemplateDataSource().update(round.info);
         }
@@ -148,19 +176,19 @@ public class EditRoundFragment extends EditFragmentBase {
     }
 
     private void loadRoundDefaultValues() {
-        binding.distanceSpinner.setItem(SettingsManager.getDistance());
+        binding.distance.setItem(SettingsManager.getDistance());
         binding.arrows.setProgress(SettingsManager.getArrowsPerPasse());
-        binding.targetSpinner.setItem(SettingsManager.getTarget());
+        binding.target.setItem(SettingsManager.getTarget());
     }
 
     @NonNull
     private RoundTemplate getRoundTemplate() {
         RoundTemplate roundTemplate = new RoundTemplate();
-        roundTemplate.target = binding.targetSpinner.getSelectedItem();
+        roundTemplate.target = binding.target.getSelectedItem();
         roundTemplate.targetTemplate = roundTemplate.target;
         roundTemplate.arrowsPerEnd = binding.arrows.getProgress();
         roundTemplate.endCount = 1;
-        roundTemplate.distance = binding.distanceSpinner.getSelectedItem();
+        roundTemplate.distance = binding.distance.getSelectedItem();
 
         SettingsManager.setTarget(roundTemplate.target);
         SettingsManager.setDistance(roundTemplate.distance);
@@ -171,7 +199,7 @@ public class EditRoundFragment extends EditFragmentBase {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        binding.targetSpinner.onActivityResult(requestCode, resultCode, data);
-        binding.distanceSpinner.onActivityResult(requestCode, resultCode, data);
+        binding.target.onActivityResult(requestCode, resultCode, data);
+        binding.distance.onActivityResult(requestCode, resultCode, data);
     }
 }

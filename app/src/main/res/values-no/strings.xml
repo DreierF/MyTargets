@@ -41,9 +41,6 @@
   <string name="statistic">Statistikk</string>
   <!-- Share -->
   <string name="share">Del</string>
-  <string name="my_share_text">Hei, sjekk ut scooringen min. Jeg fikk:\n%1$sDet er en total sum på %2$d ut av %3$d mulige poeng.</string>
-  <string name="d_times_s">%1$d ganger %2$s\n</string>
-  <string name="text">Tekst</string>
   <string name="dispersion_pattern">Pil fordelings modell</string>
   <string name="sharing_failed">Deling mislyktes!</string>
   <!-- Export -->
@@ -61,7 +58,6 @@
   <string name="tiller">Tiller</string>
   <string name="sight_settings">Siktemerker</string>
   <string name="add">Legg til</string>
-  <string name="select_picture">Velg et bilde</string>
   <string name="take_picture">Ta et bilde</string>
   <string name="pick_from_gallery">Velg et bilde fra galleri</string>
   <!-- New arrow -->
@@ -100,9 +96,6 @@
   <string name="show_all">Vis alle treff</string>
   <string name="comment">Kommentar</string>
   <!-- Statistics -->
-  <string name="all_trainings">Alle treninger</string>
-  <string name="entire_training">Hele treningen</string>
-  <string name="current_round">Gjeldende runde</string>
   <!-- Import/Backup -->
   <string name="select_a_file">Velg en fil</string>
   <string name="dir_not_created">Katalog kunne ikke opprettes!</string>
@@ -112,14 +105,11 @@
   <string name="file_not_found">Fil ikke funnet!</string>
   <string name="failed_reading_file">Lesing av fil mislyktes!</string>
   <!-- Donate -->
-  <string name="donate_action">Doner</string>
   <string name="donate_2">Doner meg en burger</string>
   <string name="donate_5">Doner meg en kebab</string>
   <string name="donate_10">Doner meg en stor pizza</string>
   <string name="donate_20">Doner meg litt drivstoff</string>
-  <string name="donate_infinite">Varig støtte</string>
   <string name="donation_thank">Takk for din støtte!</string>
-  <string name="monthly">månedlig %s</string>
   <string name="donate_text">Beløpene er inkl. mva. og 30% gebyr for Google. Alternativt kan du gledelig donere til PayPal brukeren min: dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Tidtaker</string>
@@ -138,9 +128,6 @@
   <string name="import_action">Importer</string>
   <string name="export">Eksporter</string>
   <string name="exports_as_csv">Eksporter lagret data som *.csv</string>
-  <string name="app_rate">Vurder app</string>
-  <string name="app_share">Del app</string>
-  <string name="contact_developer">Kontakt utvikleren</string>
   <string name="licences">Åpne kildekode-lisenser</string>
   <string name="licences_summary">Juridisk notater til lisenser</string>
   <string name="version">Versjon %s</string>
@@ -174,7 +161,6 @@
   <string name="standard_round">Standard runde</string>
   <string name="use_as_template">Bruke som mal?</string>
   <string name="create_copy">Dette er en standard runde!\nØnsker du å lagen en kopi for å redigere den?</string>
-  <string name="not_matches_sheme">Input samsvarer ikke med det forventede formatet som 1,3,5</string>
   <string name="arrow_numbers_desc">Angi alle pil nummer som du bruker til skyting f.eks 1,2,5,6,7</string>
   <string name="practice">Trening</string>
   <string name="edit_training">Endre trening</string>
@@ -243,8 +229,6 @@
   <string name="donate_via_paypal">Doner via PayPal</string>
   <string name="translate_crowdin">Oversett på Crowdin</string>
   <string name="network_linkedin">Nettverk på LinkedIn</string>
-  <string name="enter_scores_only_description">Lar deg kun notere poeng og ikke pilens nøyaktige posisjon. Bruk denne instillingen til å legge inn data på smartklokken din eller legge inn historik.</string>
-  <string name="enter_scores_only">Angi kun score</string>
   <string name="search">Søk</string>
   <string name="us">OSS</string>
   <string name="show_shots_training">Hele treningen</string>
@@ -260,7 +244,6 @@
   <string name="archer">Archer</string>
   <string name="hits">Hits</string>
   <string name="misses">Misses</string>
-  <string name="percentage_reached_points">Percentage of reached points</string>
   <string name="arrow_number_removed">Arrow number removed!</string>
   <string name="new_end">New end</string>
   <string name="distribution">Distribution</string>
@@ -269,4 +252,5 @@
   <string name="input">Input</string>
   <string name="target_zoom">Target zoom level</string>
   <string name="arrow_diameter_scale">Arrow diameter scale</string>
+  <string name="timestamp">Timestamp</string>
 </resources>

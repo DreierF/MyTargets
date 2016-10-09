@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
-        android:minHeight="88dp">
+        android:minHeight="48dp">
 
         <ImageView
             android:id="@+id/image"
@@ -22,14 +22,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
             android:layout_marginEnd="16dp"
             android:layout_marginLeft="72dp"
             android:layout_marginRight="16dp"
             android:layout_marginStart="72dp"
             android:orientation="vertical"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp">
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp">
 
             <TextView
                 android:id="@+id/name"
@@ -41,7 +41,8 @@
                 android:id="@+id/details"
                 style="@style/secondary_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

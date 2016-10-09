@@ -78,7 +78,8 @@
         <activity
             android:name=".activities.InputActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$RoundActivity">
+            android:parentActivityName=".activities.SimpleFragmentActivityBase$RoundActivity"
+            android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.SimpleFragmentActivityBase$RoundActivity"/>
@@ -141,8 +142,8 @@
         </activity>
         <activity
             android:name=".activities.StatisticsActivity"
-            android:theme="@style/AppTheme.CustomToolbar"
-            android:label="@string/statistic"/>
+            android:label="@string/statistic"
+            android:theme="@style/AppTheme.CustomToolbar"/>
         <activity
             android:name=".activities.ItemSelectActivity$ArrowActivity"
             android:label="@string/arrow"
@@ -247,7 +248,7 @@
         <activity
             android:name=".activities.DonateActivity"
             android:parentActivityName=".activities.SimpleFragmentActivityBase$AboutActivity"
-            android:theme="@style/Theme.AppCompat.Translucent">
+            android:theme="@style/AppTheme.CustomToolbar.Translucent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.SimpleFragmentActivityBase$AboutActivity"/>
@@ -256,12 +257,14 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="de.dreier.mytargets"
+            android:authorities="${applicationId}.easyphotopicker.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/file_paths"
+                tools:replace="android:resource"/>
         </provider>
     </application>
 

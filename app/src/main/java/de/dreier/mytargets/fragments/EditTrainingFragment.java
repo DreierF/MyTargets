@@ -12,6 +12,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,21 +25,29 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.InputActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.databinding.FragmentEditTrainingBinding;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
+import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.targets.WA3Ring3Spot;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.utils.ActivityUtils;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 
 import static de.dreier.mytargets.fragments.DatePickerFragment.ARG_CURRENT_DATE;
+import static de.dreier.mytargets.fragments.ListFragmentBase.ITEM_ID;
 
 public class EditTrainingFragment extends EditFragmentBase implements DatePickerDialog.OnDateSetListener {
     public static final String TRAINING_TYPE = "training_type";
@@ -50,9 +59,25 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private static final int REQ_SELECTED_DATE = 2;
 
     private long trainingId = -1;
-    private int trainingType = 0;
+    private int trainingType = FREE_TRAINING;
     private LocalDate date = new LocalDate();
     private FragmentEditTrainingBinding binding;
+
+    @NonNull
+    public static IntentWrapper createIntent(Fragment fragment, int trainingType) {
+        Intent i = new Intent(fragment.getContext(),
+                SimpleFragmentActivityBase.EditTrainingActivity.class);
+        i.putExtra(TRAINING_TYPE, trainingType);
+        return new IntentWrapper(fragment, i);
+    }
+
+    @NonNull
+    public static IntentWrapper editIntent(Fragment fragment, Training training) {
+        Intent i = new Intent(fragment.getContext(),
+                SimpleFragmentActivityBase.EditTrainingActivity.class);
+        i.putExtra(ITEM_ID, training.getId());
+        return new IntentWrapper(fragment, i);
+    }
 
     @Nullable
     @Override
@@ -62,7 +87,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            trainingId = arguments.getLong(FragmentBase.ITEM_ID, -1);
+            trainingId = arguments.getLong(ITEM_ID, -1);
             trainingType = arguments.getInt(TRAINING_TYPE, FREE_TRAINING);
         }
 
@@ -85,9 +110,10 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
             }
         });
-        binding.targetSpinner.setOnActivityResultContext(this);
-        binding.distanceSpinner.setOnActivityResultContext(this);
+        binding.target.setOnActivityResultContext(this);
+        binding.distance.setOnActivityResultContext(this);
 
+        binding.bow.setOnUpdateListener(this::setScoringStyleForCompoundBow);
         binding.arrow.setOnUpdateListener(this::updateArrowNumbers);
 
         if (trainingId == -1) {
@@ -95,6 +121,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.training.setText(getString(
                     trainingType == COMPETITION ? R.string.competition : R.string.training));
             setTrainingDate();
+            loadRoundDefaultValues();
             binding.bow.setItemId(SettingsManager.getBow());
             binding.arrow.setItemId(SettingsManager.getArrow());
             binding.standardRound.setItemId(SettingsManager.getStandardRound());
@@ -102,8 +129,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.timer.setChecked(SettingsManager.getTimerEnabled());
             binding.indoor.setChecked(SettingsManager.getIndoor());
             binding.outdoor.setChecked(!SettingsManager.getIndoor());
-            binding.environmentSpinner.queryWeather(this, REQUEST_LOCATION_PERMISSION);
-            loadRoundDefaultValues();
+            binding.environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_training);
             Training train = new TrainingDataSource().get(trainingId);
@@ -112,7 +138,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.bow.setItemId(train.bow);
             binding.arrow.setItemId(train.arrow);
             binding.standardRound.setItemId(train.standardRoundId);
-            binding.environmentSpinner.setItem(train.environment);
+            binding.environment.setItem(train.environment);
             setTrainingDate();
             binding.notEditable.setVisibility(View.GONE);
             binding.timer.setChecked(train.timePerPasse != -1);
@@ -120,8 +146,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         binding.standardRound.setOnActivityResultContext(this);
         binding.arrow.setOnActivityResultContext(this);
         binding.bow.setOnActivityResultContext(this);
-        binding.environmentSpinner.setOnActivityResultContext(this);
-        binding.trainingDate.setOnClickListener((view) -> onDateClick());
+        binding.environment.setOnActivityResultContext(this);
+        binding.trainingDate.setOnClickListener(view -> onDateClick());
         applyTrainingType();
         updateArrowsLabel();
         updateArrowNumbers(binding.arrow.getSelectedItem());
@@ -129,10 +155,29 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         return binding.getRoot();
     }
 
+    protected void setScoringStyleForCompoundBow(Bow bow) {
+        final Target target = binding.target.getSelectedItem();
+        if (bow != null && target != null && target.id <= WA3Ring3Spot.ID) {
+            if (bow.type == EBowType.COMPOUND_BOW && target.scoringStyle == 0) {
+                target.scoringStyle = 1;
+                binding.target.setItem(target);
+            } else if (bow.type != EBowType.COMPOUND_BOW && target.scoringStyle == 1) {
+                target.scoringStyle = 0;
+                binding.target.setItem(target);
+            }
+        }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        FabTransformUtil.setup(getActivity(), binding.getRoot());
+    }
+
     private void applyTrainingType() {
         View in;
         View out;
-        if (trainingType == 0) {
+        if (trainingType == FREE_TRAINING) {
             in = binding.practiceLayout;
             out = binding.standardRound;
         } else {
@@ -160,14 +205,13 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.numberArrows.setVisibility(View.GONE);
         } else {
             binding.numberArrows.setVisibility(View.VISIBLE);
-            binding.numberArrows.setChecked(true);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
-            binding.environmentSpinner.onPermissionResult(getActivity(), grantResults);
+            binding.environment.onPermissionResult(getActivity(), grantResults);
         }
     }
 
@@ -185,7 +229,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     protected void onSave() {
         Training training = getTraining();
 
-        getActivity().finish();
+        finish();
 
         TrainingDataSource trainingDataSource = new TrainingDataSource();
         if (trainingId == -1) {
@@ -200,9 +244,11 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             training.standardRoundId = standardRound.getId();
 
             trainingDataSource.update(training);
-            long roundId = createRoundsFromTemplate(standardRound, training).get(0).getId();
+            Round round = createRoundsFromTemplate(standardRound, training).get(0);
 
-            ActivityUtils.openPasseForNewRound(getActivity(), training.getId(), roundId);
+            TrainingFragment.getIntent(this, training).startWithoutAnimation();
+            RoundFragment.getIntent(this, round).startWithoutAnimation();
+            InputActivity.createIntent(this, round).start();
         } else {
             // Edit training
             trainingDataSource.update(training);
@@ -220,7 +266,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         }
         training.title = binding.training.getText().toString();
         training.date = date;
-        training.environment = binding.environmentSpinner.getSelectedItem();
+        training.environment = binding.environment.getSelectedItem();
         training.bow = binding.bow.getSelectedItem() == null ? 0 : binding.bow.getSelectedItem()
                 .getId();
         training.arrow = binding.arrow.getSelectedItem() == null ? 0 : binding.arrow
@@ -272,12 +318,12 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        binding.targetSpinner.onActivityResult(requestCode, resultCode, data);
-        binding.distanceSpinner.onActivityResult(requestCode, resultCode, data);
+        binding.target.onActivityResult(requestCode, resultCode, data);
+        binding.distance.onActivityResult(requestCode, resultCode, data);
         binding.standardRound.onActivityResult(requestCode, resultCode, data);
         binding.arrow.onActivityResult(requestCode, resultCode, data);
         binding.bow.onActivityResult(requestCode, resultCode, data);
-        binding.environmentSpinner.onActivityResult(requestCode, resultCode, data);
+        binding.environment.onActivityResult(requestCode, resultCode, data);
     }
 
     private void updateArrowsLabel() {
@@ -287,19 +333,19 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     }
 
     private void loadRoundDefaultValues() {
-        binding.distanceSpinner.setItem(SettingsManager.getDistance());
+        binding.distance.setItem(SettingsManager.getDistance());
         binding.arrows.setProgress(SettingsManager.getArrowsPerPasse());
-        binding.targetSpinner.setItem(SettingsManager.getTarget());
+        binding.target.setItem(SettingsManager.getTarget());
     }
 
     @NonNull
     private RoundTemplate getRoundTemplate() {
         RoundTemplate roundTemplate = new RoundTemplate();
-        roundTemplate.target = binding.targetSpinner.getSelectedItem();
+        roundTemplate.target = binding.target.getSelectedItem();
         roundTemplate.targetTemplate = roundTemplate.target;
         roundTemplate.arrowsPerEnd = binding.arrows.getProgress();
         roundTemplate.endCount = 1;
-        roundTemplate.distance = binding.distanceSpinner.getSelectedItem();
+        roundTemplate.distance = binding.distance.getSelectedItem();
 
         SettingsManager.setTarget(roundTemplate.target);
         SettingsManager.setDistance(roundTemplate.distance);

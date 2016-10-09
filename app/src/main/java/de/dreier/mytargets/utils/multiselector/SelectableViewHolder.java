@@ -101,12 +101,12 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
         return true;
     }
 
-    public void bindCursor(T t) {
+    public void bindItem(T t) {
         setItem(t);
-        bindCursor();
+        bindItem();
     }
 
-    public abstract void bindCursor();
+    public abstract void bindItem();
 
     /**
      * Calls through to {@link #itemView#setActivated}.

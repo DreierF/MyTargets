@@ -37,9 +37,6 @@
   <string name="statistic">统计</string>
   <!-- Share -->
   <string name="share">分享</string>
-  <string name="my_share_text">快看看我的射箭成绩。我得到了：\n%1$s %2$d环（满分%3$d环）。</string>
-  <string name="d_times_s">%1$d 次 %2$s\n</string>
-  <string name="text">文本</string>
   <string name="dispersion_pattern">散步模式</string>
   <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
@@ -57,7 +54,6 @@
   <string name="tiller">弓档差</string>
   <string name="sight_settings">瞄具设置</string>
   <string name="add">添加</string>
-  <string name="select_picture">选择图片</string>
   <string name="take_picture">拍摄照片</string>
   <string name="pick_from_gallery">从图库中选择一张图片</string>
   <!-- New arrow -->
@@ -94,9 +90,6 @@
   <string name="show_all">显示所有影响</string>
   <string name="comment">备注</string>
   <!-- Statistics -->
-  <string name="all_trainings">所有的训练</string>
-  <string name="entire_training">整个训练</string>
-  <string name="current_round">当前回合</string>
   <!-- Import/Backup -->
   <string name="select_a_file">选择文件</string>
   <string name="dir_not_created">无法创建目录！</string>
@@ -106,14 +99,11 @@
   <string name="file_not_found">未找到文件！</string>
   <string name="failed_reading_file">文件读取失败！</string>
   <!-- Donate -->
-  <string name="donate_action">捐赠</string>
   <string name="donate_2">捐助我一个汉堡</string>
   <string name="donate_5">捐助我一串烤肉</string>
   <string name="donate_10">捐助我一个大披萨</string>
   <string name="donate_20">捐助我一些燃料</string>
-  <string name="donate_infinite">持续支持</string>
   <string name="donation_thank">谢谢您的支持 ！</string>
-  <string name="monthly">每月 %s</string>
   <string name="donate_text">款项含有增值税和给谷歌的30%费用。你可能乐意直接捐助到PayPal帐户 dreier.florian@gmail.com。</string>
   <!-- Timer -->
   <string name="timer">定时器</string>
@@ -132,9 +122,6 @@
   <string name="import_action">导入</string>
   <string name="export">导出</string>
   <string name="exports_as_csv">导出数据保存为CSV文件</string>
-  <string name="app_rate">为应用评分</string>
-  <string name="app_share">分享应用</string>
-  <string name="contact_developer">联系开发者</string>
   <string name="licences">开源许可</string>
   <string name="licences_summary">法律许可</string>
   <string name="version">版本 %s</string>
@@ -167,7 +154,6 @@
   <string name="standard_round">标准回合</string>
   <string name="use_as_template">作为模板使用？</string>
   <string name="create_copy">这是一个标准回合！ \nDo 您想要创建一个副本，以便对其进行编辑吗？</string>
-  <string name="not_matches_sheme">输入的格式不匹配，格式应该类似 1,3,5</string>
   <string name="arrow_numbers_desc">输入所有你用来射击的箭支数，格式1,2,5,6,7</string>
   <string name="practice">练习</string>
   <string name="edit_training">编辑训练</string>
@@ -229,8 +215,6 @@
   <string name="donate_via_paypal">Donate via PayPal</string>
   <string name="translate_crowdin">Translate on Crowdin</string>
   <string name="network_linkedin">Network on LinkedIn</string>
-  <string name="enter_scores_only_description">Lets you only enter the scores not the exact arrow position. Use this option to enter data with your smartwatch or to enter historical data.</string>
-  <string name="enter_scores_only">Enter scores only</string>
   <string name="search">Search</string>
   <string name="us">US</string>
   <string name="show_shots_training">Whole training</string>
@@ -246,7 +230,6 @@
   <string name="archer">Archer</string>
   <string name="hits">Hits</string>
   <string name="misses">Misses</string>
-  <string name="percentage_reached_points">Percentage of reached points</string>
   <string name="arrow_number_removed">Arrow number removed!</string>
   <string name="new_end">New end</string>
   <string name="distribution">Distribution</string>
@@ -255,4 +238,5 @@
   <string name="input">Input</string>
   <string name="target_zoom">Target zoom level</string>
   <string name="arrow_diameter_scale">Arrow diameter scale</string>
+  <string name="timestamp">Timestamp</string>
 </resources>

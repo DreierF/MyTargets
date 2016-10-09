@@ -24,7 +24,10 @@ import org.parceler.Parcels;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
-
+import de.dreier.mytargets.shared.utils.ParcelsBundler;
+import de.dreier.mytargets.utils.IntentWrapper;
+import icepick.Icepick;
+import icepick.State;
 
 public abstract class SelectorBase<T> extends LinearLayout {
 
@@ -36,6 +39,7 @@ public abstract class SelectorBase<T> extends LinearLayout {
     Class<?> defaultActivity;
     Class<?> addActivity;
     Button mAddButton;
+    @State(ParcelsBundler.class)
     T item = null;
     private OnUpdateListener<T> updateListener;
     private int index = -1;
@@ -105,10 +109,8 @@ public abstract class SelectorBase<T> extends LinearLayout {
     }
 
     public void setOnActivityResultContext(Fragment fragment) {
-        setOnClickListener(v -> {
-            fragment.startActivityForResult(getDefaultIntent(), requestCode);
-            fragment.getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
-        });
+        setOnClickListener(v -> new IntentWrapper(fragment, getDefaultIntent())
+                .startForResult(requestCode));
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -119,6 +121,16 @@ public abstract class SelectorBase<T> extends LinearLayout {
                 setItem(Parcels.unwrap(parcelable));
             }
         }
+    }
+
+    @Override
+    public Parcelable onSaveInstanceState() {
+        return Icepick.saveInstanceState(this, super.onSaveInstanceState());
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
     }
 
     public interface OnUpdateListener<T> {

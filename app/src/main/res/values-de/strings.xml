@@ -41,9 +41,6 @@
   <string name="statistic">Statistik</string>
   <!-- Share -->
   <string name="share">Teilen</string>
-  <string name="my_share_text">Yeah, schaue dir mal meine Bogenschießergebnisse an. Ich habe:\n%1$sDas macht insgesamt %2$d von %3$d Ringe.</string>
-  <string name="d_times_s">%1$d mal %2$s\n</string>
-  <string name="text">Text</string>
   <string name="dispersion_pattern">Trefferbild</string>
   <string name="sharing_failed">Teilen fehlgeschlagen!</string>
   <!-- Export -->
@@ -61,7 +58,6 @@
   <string name="tiller">Tiller</string>
   <string name="sight_settings">Visiereinstellungen</string>
   <string name="add">Hinzufügen</string>
-  <string name="select_picture">Wähle ein Bild</string>
   <string name="take_picture">Neues Foto aufnehmen</string>
   <string name="pick_from_gallery">Foto aus Galerie auswählen</string>
   <!-- New arrow -->
@@ -100,9 +96,6 @@
   <string name="show_all">Zeige alle Schüsse</string>
   <string name="comment">Kommentar</string>
   <!-- Statistics -->
-  <string name="all_trainings">Alle Trainings</string>
-  <string name="entire_training">Gesamtes Training</string>
-  <string name="current_round">Aktuelle Runde</string>
   <!-- Import/Backup -->
   <string name="select_a_file">Wähle eine Datei</string>
   <string name="dir_not_created">Ordner konnte nicht erstellt werden!</string>
@@ -112,14 +105,11 @@
   <string name="file_not_found">Datei nicht gefunden!</string>
   <string name="failed_reading_file">Fehler beim Einlesen der Datei!</string>
   <!-- Donate -->
-  <string name="donate_action">Spenden</string>
   <string name="donate_2">Spende mir einen Burger</string>
   <string name="donate_5">Spende mir einen Döner</string>
   <string name="donate_10">Spende mir eine große Pizza</string>
   <string name="donate_20">Spende mir ein bisschen Benzin</string>
-  <string name="donate_infinite">Dauerhafte Unterstützung</string>
   <string name="donation_thank">Vielen Dank für Ihre Unterstützung!</string>
-  <string name="monthly">monatlich %s</string>
   <string name="donate_text">Die Beträge sind inkl. Mehrwertsteuer und 30% Gebühren für Google. Alternativ kannst du mir auch gerne auf das PayPal Konto dreier.florian@gmail.com spenden.</string>
   <!-- Timer -->
   <string name="timer">Schießuhr</string>
@@ -138,9 +128,6 @@
   <string name="import_action">Importieren</string>
   <string name="export">Exportieren</string>
   <string name="exports_as_csv">Exportiert die gespeicherten Daten als *.csv</string>
-  <string name="app_rate">App bewerten</string>
-  <string name="app_share">App teilen</string>
-  <string name="contact_developer">Entwickler kontaktieren</string>
   <string name="licences">Open Source-Lizenzen</string>
   <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
   <string name="version">Version %s</string>
@@ -174,7 +161,6 @@
   <string name="standard_round">Standardrunde</string>
   <string name="use_as_template">Als Vorlage verwenden?</string>
   <string name="create_copy">Das ist eine Standardrunde!\nWillst du eine Kopie erzeugen um sie bearbeiten zu können?</string>
-  <string name="not_matches_sheme">Die Eingabe entspricht nicht dem erwarteten Format wie z.B. 1,3,5</string>
   <string name="arrow_numbers_desc">Gib hier alle Pfeil Nummern ein die du zum Schießen verwendest z.B. 1,2,5,6,7</string>
   <string name="practice">Übung</string>
   <string name="edit_training">Training bearbeiten</string>
@@ -243,8 +229,6 @@
   <string name="donate_via_paypal">Spenden via PayPal</string>
   <string name="translate_crowdin">Auf Crowdin übersetzen</string>
   <string name="network_linkedin">Auf LinkedIn vernetzen</string>
-  <string name="enter_scores_only_description">Lässt dich nur die erzielten Ringe erfassen und nicht die exakte Pfeil Position. Diese Option sollte verwendet werden wenn die Ergebnisse über die Smartwatch eingeben werden sollen oder historische Daten eingegeben werden.</string>
-  <string name="enter_scores_only">Nur Ringe erfassen</string>
   <string name="search">Suche</string>
   <string name="us">US</string>
   <string name="show_shots_training">Ganzes Training</string>
@@ -260,13 +244,13 @@
   <string name="archer">Bogenschütze</string>
   <string name="hits">Treffer</string>
   <string name="misses">Nicht-Treffer</string>
-  <string name="percentage_reached_points">Geschossene Ringe (in %)</string>
   <string name="arrow_number_removed">Pfeilnummer gelöscht!</string>
   <string name="new_end">Neue Passe</string>
   <string name="distribution">Verteilung</string>
   <string name="count">Anzahl</string>
-  <string name="diameter">Diameter</string>
-  <string name="input">Input</string>
-  <string name="target_zoom">Target zoom level</string>
-  <string name="arrow_diameter_scale">Arrow diameter scale</string>
+  <string name="diameter">Durchmesser</string>
+  <string name="input">Eingabe</string>
+  <string name="target_zoom">Zoomstufe für Zielscheibe</string>
+  <string name="arrow_diameter_scale">Pfeildurchmesser Skalierung</string>
+  <string name="timestamp">Timestamp</string>
 </resources>

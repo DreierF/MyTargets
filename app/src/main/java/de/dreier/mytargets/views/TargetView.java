@@ -42,6 +42,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.interfaces.OnEndUpdatedListener;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.models.EShowMode;
 import de.dreier.mytargets.shared.models.ArrowNumber;
@@ -80,6 +81,8 @@ public class TargetView extends TargetViewBase {
     private Midpoint[] midpoints;
     private Dimension arrowDiameter;
     private float targetZoomFactor;
+    private boolean midpointsDirty = true;
+    private OnEndUpdatedListener updateListener;
 
     public TargetView(Context context) {
         super(context);
@@ -102,12 +105,13 @@ public class TargetView extends TargetViewBase {
         this.end = passe;
         scoresDrawer.setSelection(currentArrow, null, ScoresDrawer.MAX_CIRCLE_SIZE);
         scoresDrawer.setShots(passe.shotList());
-        updateMidpoints();
+        midpointsDirty = true;
         if (passe.getId() != -1) {
             switchMode(!passe.exact, true);
         }
         animateFromZoomSpot();
         invalidate();
+        triggerUpdate();
     }
 
     @Override
@@ -115,7 +119,8 @@ public class TargetView extends TargetViewBase {
         super.reset();
         inputModeTransitioning = false;
         zoomTransitioning = false;
-        updateMidpoints();
+        midpointsDirty = true;
+        triggerUpdate();
     }
 
     public void setArrowNumbers(@NonNull List<ArrowNumber> arrowNumbers) {
@@ -131,6 +136,7 @@ public class TargetView extends TargetViewBase {
     public void setOldShoots(ArrayList<Passe> oldOnes) {
         oldPasses = oldOnes;
         invalidate();
+        triggerUpdate();
     }
 
     @Override
@@ -138,11 +144,7 @@ public class TargetView extends TargetViewBase {
         super.setRoundTemplate(r);
         switchMode(SettingsManager.getInputMode(), false);
         initSpotBounds();
-
-        // Initialize midpoints
-        int spots = targetModel.getFaceCount();
-        midpoints = new Midpoint[spots];
-        updateMidpoints();
+        midpointsDirty = true;
     }
 
     private void initSpotBounds() {
@@ -257,6 +259,9 @@ public class TargetView extends TargetViewBase {
                     targetDrawable.drawArrows(canvas, p, true);
                 }
             }
+        }
+        if (midpointsDirty) {
+            updateMidpoints();
         }
 
         int spots = targetModel.getFaceCount();
@@ -552,7 +557,9 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void onArrowChanged(int index) {
-        updateMidpoints();
+        midpointsDirty = true;
+
+        triggerUpdate();
         if (arrowNumbers.isEmpty() ||
                 currentArrow < round.arrowsPerEnd && end.shot[currentArrow].arrow != null) {
             super.onArrowChanged(index);
@@ -597,12 +604,16 @@ public class TargetView extends TargetViewBase {
     }
 
     private void updateMidpoints() {
-        if (midpoints == null)
-            return;
+        if (midpoints == null) {
+            // Initialize midpoints
+            int spots = targetModel.getFaceCount();
+            midpoints = new Midpoint[spots];
+        }
         int spots = targetModel.getFaceCount();
         for (int i = 0; i < spots; i++) {
             midpoints[i] = getMidpoint(i);
         }
+        midpointsDirty = false;
     }
 
     /**
@@ -704,6 +715,10 @@ public class TargetView extends TargetViewBase {
         }
     }
 
+    public void setUpdateListener(OnEndUpdatedListener updateListener) {
+        this.updateListener = updateListener;
+    }
+
     @Override
     public Parcelable onSaveInstanceState() {
         return Icepick.saveInstanceState(this, super.onSaveInstanceState());
@@ -712,16 +727,25 @@ public class TargetView extends TargetViewBase {
     @Override
     public void onRestoreInstanceState(Parcelable state) {
         super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
+        triggerUpdate();
     }
 
     public void setArrowDiameter(Dimension arrowDiameter) {
         this.arrowDiameter = arrowDiameter;
-        targetDrawable.setArrowDiameter(arrowDiameter, SettingsManager.getInputArrowDiameterScale());
+        targetDrawable
+                .setArrowDiameter(arrowDiameter, SettingsManager.getInputArrowDiameterScale());
     }
 
     public void reloadSettings() {
         this.targetZoomFactor = SettingsManager.getInputTargetZoom();
-        targetDrawable.setArrowDiameter(arrowDiameter, SettingsManager.getInputArrowDiameterScale());
+        targetDrawable
+                .setArrowDiameter(arrowDiameter, SettingsManager.getInputArrowDiameterScale());
+    }
+
+    private void triggerUpdate() {
+        if (updateListener != null && oldPasses != null) {
+            updateListener.onEndUpdated(end, oldPasses);
+        }
     }
 
     private class Midpoint {
