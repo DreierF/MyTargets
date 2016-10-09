@@ -21,20 +21,20 @@
   <string name="new_arrow">Új nyílvesszõ</string>
   <string name="new_round">Új forduló</string>
   <plurals name="training_selected">
-    <item quantity="one">%. edzés kiválasztása</item>
-    <item quantity="other">%. edzések kiválasztása</item>
+    <item quantity="one">%d edzés kiválasztása</item>
+    <item quantity="other">%d edzések kiválasztása</item>
   </plurals>
   <plurals name="bow_selected">
-    <item quantity="one">%. íj kiválasztása</item>
-    <item quantity="other">%. íjak kiválasztása</item>
+    <item quantity="one">%d íj kiválasztása</item>
+    <item quantity="other">%d íjak kiválasztása</item>
   </plurals>
   <plurals name="arrow_selected">
-    <item quantity="one">%. nyílvesszõ kiválasztása</item>
-    <item quantity="other">%. nyílvesszõk kiválasztása</item>
+    <item quantity="one">%d nyílvesszõ kiválasztása</item>
+    <item quantity="other">%d nyílvesszõk kiválasztása</item>
   </plurals>
   <plurals name="passe_selected">
-    <item quantity="one">%. sorozat kiválasztása</item>
-    <item quantity="other">%. sorozatok kiválasztása</item>
+    <item quantity="one">%d sorozat kiválasztása</item>
+    <item quantity="other">%d sorozatok kiválasztása</item>
   </plurals>
   <string name="edit">Szerkesztés</string>
   <string name="delete">Törlés</string>
@@ -76,13 +76,13 @@
   <string name="format">Formátum</string>
   <!-- x ends of y arrows -->
   <plurals name="passe">
-    <item quantity="one">%. sorozat</item>
-    <item quantity="other">%. sorozatok</item>
+    <item quantity="one">%d sorozat</item>
+    <item quantity="other">%d sorozatok</item>
   </plurals>
   <string name="with">Kitartás</string>
   <plurals name="arrow">
-    <item quantity="one">%. nyílvesszõ</item>
-    <item quantity="other">%. nyílvesszõk</item>
+    <item quantity="one">%d nyílvesszõ</item>
+    <item quantity="other">%d nyílvesszõk</item>
   </plurals>
   <string name="target_face">A lőlap tipusa</string>
   <!-- Scoreboard -->
@@ -110,7 +110,7 @@
   <string name="donate_10">Adomány egy nagy pizzára</string>
   <string name="donate_20">Adomány egy kis üzemanyagra</string>
   <string name="donation_thank">Köszönöm a támogatást!</string>
-  <string name="donate_text">Az összegek incl . ÁFA és 30 % díjat Google . Vagy lehet szívesen adományoz a PayPal számla dreier.florian@gmail.com .</string>
+  <string name="donate_text">Az összegek incl. ÁFA és 30% díjat Google. Vagy lehet szívesen adományoz a PayPal számla dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Stopper</string>
   <string name="stop">Állj</string>
@@ -130,10 +130,10 @@
   <string name="exports_as_csv">Exportált mentett adatok *.csv</string>
   <string name="licences">Nyílt forráskódú licencek</string>
   <string name="licences_summary">Jogi engedélyek</string>
-  <string name="version">Verzió %.</string>
+  <string name="version">Verzió %s</string>
   <plurals name="second">
-    <item quantity="one">%. másodperc</item>
-    <item quantity="other">%. másodpercek</item>
+    <item quantity="one">%d másodperc</item>
+    <item quantity="other">%d másodpercek</item>
   </plurals>
   <string name="info">Információ</string>
   <string name="data">Adat</string>
@@ -166,32 +166,32 @@
   <string name="edit_training">Edzés szerkesztése</string>
   <string name="edit_standard_round">Szabványos forduló szerkesztése</string>
   <plurals name="arrow_deleted">
-    <item quantity="one">%. vessző törölve</item>
-    <item quantity="other">%. vesszők törölve</item>
+    <item quantity="one">%d vessző törölve</item>
+    <item quantity="other">%d vesszők törölve</item>
   </plurals>
   <plurals name="bow_deleted">
-    <item quantity="one">%. íj törölve</item>
-    <item quantity="other">%. íjak törölve</item>
+    <item quantity="one">%d íj törölve</item>
+    <item quantity="other">%d íjak törölve</item>
   </plurals>
   <plurals name="training_deleted">
-    <item quantity="one">%. edzés törölve</item>
-    <item quantity="other">%. edzések törölve</item>
+    <item quantity="one">%d edzés törölve</item>
+    <item quantity="other">%d edzések törölve</item>
   </plurals>
   <plurals name="passe_deleted">
-    <item quantity="one">%. sorozat törölve</item>
+    <item quantity="one">%d sorozat törölve</item>
     <item quantity="other">% sorozatok törölve</item>
   </plurals>
   <plurals name="rounds">
-    <item quantity="one">%. forduló</item>
-    <item quantity="other">%. fordulók</item>
+    <item quantity="one">%d forduló</item>
+    <item quantity="other">%d fordulók</item>
   </plurals>
   <plurals name="round_selected">
-    <item quantity="one">%. forduló kiválasztása</item>
-    <item quantity="other">%. fordulók kiválasztása</item>
+    <item quantity="one">%d forduló kiválasztása</item>
+    <item quantity="other">%d fordulók kiválasztása</item>
   </plurals>
   <plurals name="round_deleted">
-    <item quantity="one">%. forduló törölve</item>
-    <item quantity="other">%. fordulók törölve</item>
+    <item quantity="one">%d forduló törölve</item>
+    <item quantity="other">%d fordulók törölve</item>
   </plurals>
   <string name="date">Dátum</string>
   <string name="edit_round">Forduló szerkesztése</string>
@@ -202,7 +202,7 @@
   <string name="my_arrow">Vesszőim</string>
   <string name="tip_weight">X súly</string>
   <string name="arrow_ranking">Vessző rangsor</string>
-  <string name="arrow_x_of_set_of_arrows">%2$. a nyíl-%1$-ból</string>
+  <string name="arrow_x_of_set_of_arrows">%2$s a nyíl-%1$d-ból</string>
   <string name="display">Megjelenítés</string>
   <string name="print">Nyomtatás</string>
   <string name="table">Táblázat</string>
@@ -210,7 +210,7 @@
   <string name="show_points_colored">Találatok színes megjelenítése</string>
   <string name="stabilizer">Stabilizátor</string>
   <string name="clicker">Kattintó</string>
-  <string name="arrow_number_x">%. vessző</string>
+  <string name="arrow_number_x">%d vessző</string>
   <string name="training_with_standard_round">A Standard fordulós gyakorlás</string>
   <string name="free_training">Szabad gyakorlás</string>
   <string name="competition">Verseny</string>
