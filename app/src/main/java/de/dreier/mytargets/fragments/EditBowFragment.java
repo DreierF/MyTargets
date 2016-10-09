@@ -152,7 +152,6 @@ public class EditBowFragment extends EditWithImageFragmentBase {
     }
 
     private Bow buildBow() {
-        Bow bow = contentBinding.getBow();
         bow.setId(bowId);
         bow.name = contentBinding.name.getText().toString();
         bow.brand = contentBinding.brand.getText().toString();

@@ -130,7 +130,6 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     }
 
     private Arrow buildArrow() {
-        Arrow arrow = new Arrow();
         arrow.setId(arrowId);
         arrow.name = contentBinding.name.getText().toString();
         arrow.length = contentBinding.length.getText().toString();
