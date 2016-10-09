@@ -54,7 +54,6 @@ public class EditBowFragment extends EditWithImageFragmentBase {
     @State(ParcelsBundler.class)
     Bow bow;
     private EditBowFragmentBinding contentBinding;
-    private long bowId = -1;
     private SightSettingsAdapter adapter;
 
     public EditBowFragment() {
@@ -80,11 +79,6 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         contentBinding = EditBowFragmentBinding.inflate(inflater, binding.content, true);
         contentBinding.addButton.setOnClickListener((view) -> onAddSightSetting());
 
-        Bundle bundle = getArguments();
-        if (bundle != null && bundle.containsKey(BOW_ID)) {
-            bowId = bundle.getLong(BOW_ID, -1);
-        }
-
         // TODO make this a selector
         contentBinding.recurveBow.setOnClickListener(v -> setBowType(RECURVE_BOW));
         contentBinding.compoundBow.setOnClickListener(v -> setBowType(COMPOUND_BOW));
@@ -94,8 +88,10 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         contentBinding.yumiBow.setOnClickListener(v -> setBowType(YUMI));
 
         if (savedInstanceState == null) {
-            if (bowId != -1) {
+            Bundle bundle = getArguments();
+            if (bundle != null && bundle.containsKey(BOW_ID)) {
                 // Load data from database
+                long bowId = bundle.getLong(BOW_ID);
                 bow = new BowDataSource().get(bowId);
                 setImageFile(bow.imageFile);
             } else {
@@ -152,7 +148,6 @@ public class EditBowFragment extends EditWithImageFragmentBase {
     }
 
     private Bow buildBow() {
-        bow.setId(bowId);
         bow.name = contentBinding.name.getText().toString();
         bow.brand = contentBinding.brand.getText().toString();
         bow.size = contentBinding.size.getText().toString();

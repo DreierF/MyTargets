@@ -48,7 +48,6 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     Arrow arrow;
     private EditArrowFragmentBinding contentBinding;
     private ArrowNumbersAdapter adapter;
-    private long arrowId = -1;
 
     public EditArrowFragment() {
         super(R.drawable.arrows);
@@ -73,12 +72,10 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         contentBinding = EditArrowFragmentBinding.inflate(inflater, binding.content, true);
         contentBinding.addButton.setOnClickListener((view) -> onAddArrow());
 
-        Bundle bundle = getArguments();
-        if (bundle != null && bundle.containsKey(ARROW_ID)) {
-            arrowId = bundle.getLong(ARROW_ID, -1);
-        }
         if (savedInstanceState == null) {
-            if (arrowId != -1) {
+            Bundle bundle = getArguments();
+            if (bundle != null && bundle.containsKey(ARROW_ID)) {
+                long arrowId = bundle.getLong(ARROW_ID);
                 arrow = new ArrowDataSource().get(arrowId);
                 setImageFile(arrow.imageFile);
             } else {
@@ -130,7 +127,6 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     }
 
     private Arrow buildArrow() {
-        arrow.setId(arrowId);
         arrow.name = contentBinding.name.getText().toString();
         arrow.length = contentBinding.length.getText().toString();
         arrow.material = contentBinding.material.getText().toString();
