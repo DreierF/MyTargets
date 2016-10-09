@@ -266,4 +266,5 @@
   <string name="input">Vstup</string>
   <string name="target_zoom">Úroveň zvětšení terče</string>
   <string name="arrow_diameter_scale">Míra průměru šípu</string>
+  <string name="timestamp">Timestamp</string>
 </resources>
