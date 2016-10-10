@@ -253,4 +253,5 @@
   <string name="target_zoom">Cél nagyítási szint</string>
   <string name="arrow_diameter_scale">Vessző átmérő skála</string>
   <string name="timestamp">Timestamp</string>
+  <string name="change_target_face">Change target face</string>
 </resources>

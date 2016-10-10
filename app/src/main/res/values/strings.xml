@@ -278,4 +278,5 @@
     <string name="arrow_diameter_scale">Arrow diameter scale</string>
     <string translatable="false" name="transition_root_view">transition_root_view</string>
     <string name="timestamp">Timestamp</string>
+    <string name="change_target_face">Change target face</string>
 </resources>

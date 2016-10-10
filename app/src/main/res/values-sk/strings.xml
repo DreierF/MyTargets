@@ -267,4 +267,5 @@
   <string name="target_zoom">Cieľová úroveň priblíženia</string>
   <string name="arrow_diameter_scale">Stupnica priemerov šípov</string>
   <string name="timestamp">Timestamp</string>
+  <string name="change_target_face">Change target face</string>
 </resources>

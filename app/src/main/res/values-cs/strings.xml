@@ -267,4 +267,5 @@
   <string name="target_zoom">Úroveň zvětšení terče</string>
   <string name="arrow_diameter_scale">Míra průměru šípu</string>
   <string name="timestamp">Timestamp</string>
+  <string name="change_target_face">Change target face</string>
 </resources>
