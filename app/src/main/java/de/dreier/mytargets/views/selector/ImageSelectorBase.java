@@ -9,7 +9,6 @@ package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 
@@ -40,19 +39,7 @@ public abstract class ImageSelectorBase<T extends IImageProvider> extends Select
             binding.details.setText(((IDetailProvider) item).getDetails(getContext()));
         }
         binding.image.setImageDrawable(item.getDrawable(getContext()));
-        if (!isImageSelectable()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                binding.image.setBackground(null);
-            } else {
-                //noinspection deprecation
-                binding.image.setBackgroundDrawable(null);
-            }
-        }
         invalidate();
-    }
-
-    boolean isImageSelectable() {
-        return false;
     }
 
     void setTitle(@StringRes int title) {
