@@ -54,6 +54,7 @@ import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
+import de.dreier.mytargets.utils.transitions.FabTransform;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import icepick.Icepick;
 import icepick.State;
@@ -154,7 +155,9 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setupTransitionListener() {
-        if (getWindow().getSharedElementEnterTransition() != null) {
+        final Transition sharedElementEnterTransition = getWindow()
+                .getSharedElementEnterTransition();
+        if (sharedElementEnterTransition != null && sharedElementEnterTransition instanceof FabTransform) {
             transitionFinished = false;
             getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
                 @Override
