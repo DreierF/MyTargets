@@ -24,9 +24,13 @@ public class TargetSelector extends ImageSelectorBase<Target> {
 
     public TargetSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setTitle(R.string.target_face);
         defaultActivity = ItemSelectActivity.TargetActivity.class;
         requestCode = TARGET_REQUEST_CODE;
     }
 
+    @Override
+    protected void bindView() {
+        super.bindView();
+        setTitle(R.string.target_face);
+    }
 }

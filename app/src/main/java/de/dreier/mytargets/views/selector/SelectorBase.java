@@ -33,41 +33,45 @@ public abstract class SelectorBase<T> extends LinearLayout {
 
     public static final String INDEX = "index";
 
-    protected final View mView;
-    private final View mProgress;
+    @State(ParcelsBundler.class)
+    T item = null;
+
+    protected View view;
+    private View progress;
+    private final int layout;
     int requestCode;
     Class<?> defaultActivity;
     Class<?> addActivity;
-    Button mAddButton;
-    @State(ParcelsBundler.class)
-    T item = null;
+    Button addButton;
     private OnUpdateListener<T> updateListener;
     private int index = -1;
 
     public SelectorBase(Context context, AttributeSet attrs, @LayoutRes int layout) {
         super(context, attrs);
-        LayoutInflater inflater = (LayoutInflater) getContext()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mProgress = inflater.inflate(R.layout.selector_item_process, this, false);
-        mView = inflater.inflate(layout, this, false);
-        addView(mProgress);
-        addView(mView);
+        this.layout = layout;
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mAddButton = (Button) getChildAt(2);
+        addButton = (Button) getChildAt(0);
+
+        LayoutInflater inflater = (LayoutInflater) getContext()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        progress = inflater.inflate(R.layout.selector_item_process, this, false);
+        view = inflater.inflate(layout, this, false);
+        addView(progress);
+        addView(view);
         updateView();
     }
 
     private void updateView() {
-        if (mAddButton != null) {
-            mAddButton.setVisibility(item == null ? VISIBLE : GONE);
+        if (addButton != null) {
+            addButton.setVisibility(item == null ? VISIBLE : GONE);
         }
-        boolean progress = item == null && mAddButton == null;
-        mProgress.setVisibility(progress ? VISIBLE : GONE);
-        mView.setVisibility(item != null ? VISIBLE : GONE);
+        boolean progress = item == null && addButton == null;
+        this.progress.setVisibility(progress ? VISIBLE : GONE);
+        view.setVisibility(item != null ? VISIBLE : GONE);
         if (item != null) {
             post(this::bindView);
         }

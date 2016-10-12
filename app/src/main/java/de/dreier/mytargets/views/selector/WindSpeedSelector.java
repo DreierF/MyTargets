@@ -24,12 +24,17 @@ public class WindSpeedSelector extends ImageSelectorBase<WindSpeed> {
 
     public WindSpeedSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setTitle(R.string.wind_speed);
         defaultActivity = ItemSelectActivity.WindSpeedActivity.class;
         requestCode = WIND_SPEED_REQUEST_CODE;
     }
 
     public void setItemId(long speed) {
         setItem(WindSpeed.getList(getContext()).get((int) speed));
+    }
+
+    @Override
+    protected void bindView() {
+        super.bindView();
+        setTitle(R.string.wind_speed);
     }
 }
