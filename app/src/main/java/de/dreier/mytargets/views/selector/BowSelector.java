@@ -41,7 +41,7 @@ public class BowSelector extends ImageSelectorBase<Bow> {
         super.setOnActivityResultContext(fragment);
         OnClickListener listener = v -> fragment
                 .startActivityForResult(getAddIntent(), BOW_ADD_REQUEST_CODE);
-        mAddButton.setOnClickListener(listener);
+        addButton.setOnClickListener(listener);
     }
 
     @Override

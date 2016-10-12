@@ -28,7 +28,12 @@ public abstract class ImageSelectorBase<T extends IImageProvider> extends Select
 
     public ImageSelectorBase(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.selector_item_image_details);
-        binding = DataBindingUtil.bind(mView);
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        binding = DataBindingUtil.bind(view);
     }
 
     @Override

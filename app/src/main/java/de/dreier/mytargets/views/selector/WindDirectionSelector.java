@@ -24,12 +24,17 @@ public class WindDirectionSelector extends ImageSelectorBase<WindDirection> {
 
     public WindDirectionSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setTitle(R.string.wind_direction);
         defaultActivity = ItemSelectActivity.WindDirectionActivity.class;
         requestCode = WIND_DIRECTION_REQUEST_CODE;
     }
 
     public void setItemId(long direction) {
         setItem(WindDirection.getList(getContext()).get((int) direction));
+    }
+
+    @Override
+    protected void bindView() {
+        super.bindView();
+        setTitle(R.string.wind_direction);
     }
 }
