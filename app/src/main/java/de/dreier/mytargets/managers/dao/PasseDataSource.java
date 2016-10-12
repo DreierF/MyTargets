@@ -190,13 +190,6 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         return list;
     }
 
-    public List<Pair<Target, List<Round>>> groupByTarget(List<Round> rounds) {
-        return Stream.of(rounds)
-                .groupBy(value -> new Pair<>(value.info.target.getId(), value.info.target.scoringStyle))
-                .map(value1 -> new Pair<>(value1.getValue().get(0).info.target, value1.getValue()))
-                .collect(Collectors.toList());
-    }
-
     @NonNull
     private Map<SelectableZone, Integer> getRoundScores(List<Round> rounds) {
         final Target t = rounds.get(0).info.target;
