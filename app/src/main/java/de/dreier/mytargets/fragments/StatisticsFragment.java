@@ -71,6 +71,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
     private static final String ARG_TARGET = "target";
     private static final String ARG_ROUND_IDS = "round_ids";
+    private static final String ARG_ANIMATE = "animate";
     private static final String PIE_CHART_CENTER_TEXT_FORMAT = "<font color='gray'>%s</font><br>" +
             "<big>%s</big><br>" +
             "<small>&nbsp;</small><br>" +
@@ -83,12 +84,14 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     private ArrowStatisticAdapter adapter;
     private FragmentStatisticsBinding binding;
     private Target target;
+    private boolean animate;
 
-    public static StatisticsFragment newInstance(List<Long> roundIds, Target item) {
+    public static StatisticsFragment newInstance(List<Long> roundIds, Target item, boolean animate) {
         StatisticsFragment fragment = new StatisticsFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(StatisticsFragment.ARG_TARGET, Parcels.wrap(item));
         bundle.putLongArray(StatisticsFragment.ARG_ROUND_IDS, Utils.toArray(roundIds));
+        bundle.putBoolean(StatisticsFragment.ARG_ANIMATE, animate);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -100,6 +103,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
         target = Parcels.unwrap(getArguments().getParcelable(ARG_TARGET));
         roundIds = getArguments().getLongArray(ARG_ROUND_IDS);
+        animate = getArguments().getBoolean(ARG_ANIMATE);
         rounds = Stream.of(Utils.toList(roundIds))
                 .map(id -> new RoundDataSource().get(id))
                 .collect(Collectors.toList());
@@ -111,7 +115,6 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         binding.arrows.setHasFixedSize(true);
         adapter = new ArrowStatisticAdapter();
         binding.arrows.setAdapter(adapter);
-
         binding.arrows.setNestedScrollingEnabled(false);
 
         ToolbarUtils.showHomeAsUp(this);
@@ -151,11 +154,13 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         binding.chartView.getAxisRight().setEnabled(false);
         binding.chartView.getLegend().setEnabled(false);
         binding.chartView.setData(data);
-        binding.chartView.animateXY(2000, 2000);
         binding.chartView.setDescription("");
         binding.chartView.getAxisLeft().setAxisMinValue(0);
         binding.chartView.getXAxis().setDrawGridLines(false);
         binding.chartView.setDoubleTapToZoomEnabled(false);
+        if(animate) {
+            binding.chartView.animateXY(2000, 2000);
+        }
     }
 
     private void showPieChart() {
