@@ -32,17 +32,16 @@ import icepick.State;
 public abstract class SelectorBase<T> extends LinearLayout {
 
     public static final String INDEX = "index";
-
+    private final int layout;
+    protected View view;
+    protected Fragment fragment;
     @State(ParcelsBundler.class)
     T item = null;
-
-    protected View view;
-    private View progress;
-    private final int layout;
     int requestCode;
     Class<?> defaultActivity;
     Class<?> addActivity;
-    Button addButton;
+    private Button addButton;
+    private View progress;
     private OnUpdateListener<T> updateListener;
     private int index = -1;
 
@@ -55,7 +54,9 @@ public abstract class SelectorBase<T> extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         addButton = (Button) getChildAt(0);
-
+        if (addButton != null) {
+            addButton.setOnClickListener(v -> onAddButtonClicked());
+        }
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         progress = inflater.inflate(R.layout.selector_item_process, this, false);
@@ -65,15 +66,18 @@ public abstract class SelectorBase<T> extends LinearLayout {
         updateView();
     }
 
+    protected void onAddButtonClicked() {
+    }
+
     private void updateView() {
+        boolean displayProgress = item == null && addButton == null;
         if (addButton != null) {
             addButton.setVisibility(item == null ? VISIBLE : GONE);
         }
-        boolean progress = item == null && addButton == null;
-        this.progress.setVisibility(progress ? VISIBLE : GONE);
+        progress.setVisibility(displayProgress ? VISIBLE : GONE);
         view.setVisibility(item != null ? VISIBLE : GONE);
         if (item != null) {
-            post(this::bindView);
+            bindView();
         }
     }
 
@@ -113,6 +117,7 @@ public abstract class SelectorBase<T> extends LinearLayout {
     }
 
     public void setOnActivityResultContext(Fragment fragment) {
+        this.fragment = fragment;
         setOnClickListener(v -> new IntentWrapper(fragment, getDefaultIntent())
                 .startForResult(requestCode));
     }

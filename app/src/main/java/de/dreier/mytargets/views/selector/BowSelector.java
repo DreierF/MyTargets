@@ -10,7 +10,6 @@ package de.dreier.mytargets.views.selector;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 
 import java.util.ArrayList;
@@ -37,11 +36,8 @@ public class BowSelector extends ImageSelectorBase<Bow> {
     }
 
     @Override
-    public void setOnActivityResultContext(Fragment fragment) {
-        super.setOnActivityResultContext(fragment);
-        OnClickListener listener = v -> fragment
-                .startActivityForResult(getAddIntent(), BOW_ADD_REQUEST_CODE);
-        addButton.setOnClickListener(listener);
+    protected void onAddButtonClicked() {
+        fragment.startActivityForResult(getAddIntent(), BOW_ADD_REQUEST_CODE);
     }
 
     @Override

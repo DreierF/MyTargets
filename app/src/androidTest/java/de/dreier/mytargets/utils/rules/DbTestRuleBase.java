@@ -87,7 +87,7 @@ public abstract class DbTestRuleBase implements TestRule {
 
     protected abstract void addDatabaseContent();
 
-    void deleteAll() {
+    private void deleteAll() {
         trainingDataSource.deleteAll();
         roundDataSource.deleteAll();
         bowDataSource.deleteAll();
