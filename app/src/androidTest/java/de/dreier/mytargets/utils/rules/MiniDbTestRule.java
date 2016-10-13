@@ -1,4 +1,4 @@
-package de.dreier.mytargets.managers.dao;
+package de.dreier.mytargets.utils.rules;
 
 import java.util.Random;
 
