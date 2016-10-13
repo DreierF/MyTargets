@@ -25,15 +25,12 @@ public class SelectableZone implements Comparable<SelectableZone> {
         }
 
         SelectableZone that = (SelectableZone) o;
-        return index == that.index && points == that.points && text.equals(that.text);
+        return points == that.points && text.equals(that.text);
     }
 
     @Override
     public int hashCode() {
-        int result = index;
-        result = 31 * result + points;
-        result = 31 * result + text.hashCode();
-        return result;
+        return 31 * points + text.hashCode();
     }
 
     @Override
