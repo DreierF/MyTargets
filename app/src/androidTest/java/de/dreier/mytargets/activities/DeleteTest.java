@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
-import de.dreier.mytargets.managers.dao.SimpleDbTestRule;
+import de.dreier.mytargets.utils.rules.SimpleDbTestRule;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
