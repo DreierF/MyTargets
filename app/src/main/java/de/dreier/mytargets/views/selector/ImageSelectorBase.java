@@ -17,7 +17,6 @@ import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding;
 import de.dreier.mytargets.shared.models.IDetailProvider;
 import de.dreier.mytargets.shared.models.IImageProvider;
 
-
 public abstract class ImageSelectorBase<T extends IImageProvider> extends SelectorBase<T> {
 
     protected SelectorItemImageDetailsBinding binding;

@@ -10,7 +10,7 @@ public class Zone {
     final int fillColor;
     final int strokeColor;
     final int strokeWidth;
-    final boolean scoresAsOutsideIn;
+    private final boolean scoresAsOutsideIn;
 
     public Zone(float radius, int fillColor, int strokeColor, int strokeWidth) {
         this(radius, fillColor, strokeColor, strokeWidth, true);
