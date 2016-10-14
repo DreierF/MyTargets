@@ -60,8 +60,6 @@ public class TrainingFragment extends EditableListFragment<Round> {
     protected FragmentTrainingBinding binding;
     private long mTraining;
     private Training training;
-    private RoundDataSource roundDataSource;
-    private StandardRoundDataSource standardRoundDataSource;
 
     public TrainingFragment() {
         itemTypeSelRes = R.plurals.round_selected;
@@ -100,12 +98,6 @@ public class TrainingFragment extends EditableListFragment<Round> {
                     .fromFab(binding.fab)
                     .start();
         });
-
-        TrainingDataSource trainingDataSource = new TrainingDataSource();
-        roundDataSource = new RoundDataSource();
-        standardRoundDataSource = new StandardRoundDataSource();
-
-        training = trainingDataSource.get(mTraining);
         return binding.getRoot();
     }
 
@@ -120,10 +112,15 @@ public class TrainingFragment extends EditableListFragment<Round> {
     @Override
     public Loader<List<Round>> onCreateLoader(int id, Bundle args) {
         return new DataLoader<>(getContext(), new RoundDataSource(),
-                () -> roundDataSource.getAll(mTraining));
+                () -> new RoundDataSource().getAll(mTraining));
     }
 
     public void onLoadFinished(Loader<List<Round>> loader, List<Round> data) {
+        TrainingDataSource trainingDataSource = new TrainingDataSource();
+        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource();
+
+        training = trainingDataSource.get(mTraining);
+
         // Hide fab for standard rounds
         StandardRound standardRound = standardRoundDataSource.get(training.standardRoundId);
         supportsDeletion = standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
