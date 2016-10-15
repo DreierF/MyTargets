@@ -37,7 +37,7 @@ import static org.hamcrest.Matchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class ArrowSelectorTest extends UITestBase {
 
-    private IntentsTestRule activityTestRule = new IntentsTestRule<>(
+    private IntentsTestRule<SimpleFragmentActivityBase.EditTrainingActivity> activityTestRule = new IntentsTestRule<>(
             SimpleFragmentActivityBase.EditTrainingActivity.class, true, false);
 
     @Rule
