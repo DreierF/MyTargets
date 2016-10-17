@@ -70,6 +70,8 @@ public class TargetFactory {
         list.add(new Beursault());
         list.add(new SCAPeriod());
         list.add(new WAField3Spot());
+        list.add(new WADanage3Spot());
+        list.add(new WADanage6Spot());
     }
 
     public static List<TargetModelBase> getList() {
