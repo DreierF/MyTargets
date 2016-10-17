@@ -19,8 +19,9 @@ import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
-import de.dreier.mytargets.shared.utils.EndRenderer;
+import de.dreier.mytargets.shared.models.WindDirection;
 import de.dreier.mytargets.shared.models.WindSpeed;
+import de.dreier.mytargets.shared.utils.EndRenderer;
 
 /**
  * Application singleton. Gets instantiated exactly once and is used
