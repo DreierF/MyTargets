@@ -183,15 +183,15 @@
   </plurals>
   <plurals name="rounds">
     <item quantity="one">Série %d</item>
-    <item quantity="other">Séries %d</item>
+    <item quantity="other">Série %d</item>
   </plurals>
   <plurals name="round_selected">
-    <item quantity="one">%d round selected</item>
-    <item quantity="other">%d rounds selected</item>
+    <item quantity="one">%d Série sélectionnée</item>
+    <item quantity="other">%d Séries sélectionnées</item>
   </plurals>
   <plurals name="round_deleted">
-    <item quantity="one">%d round deleted</item>
-    <item quantity="other">%d rounds deleted</item>
+    <item quantity="one">%d série effacée</item>
+    <item quantity="other">%d séries effacées</item>
   </plurals>
   <string name="date">Date</string>
   <string name="edit_round">Modifier la série</string>
@@ -233,23 +233,25 @@
   <string name="us">US</string>
   <string name="show_shots_training">Entrainement complet</string>
   <string name="show_shots_round">Série en cours</string>
-  <string name="show_shots_end">Current end</string>
-  <string name="profile">Profile</string>
+  <string name="show_shots_end">Fin actuelle</string>
+  <string name="profile">Profil</string>
   <string name="birthday">Anniversaire</string>
-  <string name="first_name">First name</string>
-  <string name="last_name">Last name</string>
+  <string name="first_name">Prénom</string>
+  <string name="last_name">Nom</string>
   <string name="age">Age</string>
   <string name="show_signature">Signature</string>
   <string name="witness">Témoin</string>
   <string name="archer">Archer</string>
-  <string name="hits">Hits</string>
-  <string name="misses">Misses</string>
-  <string name="arrow_number_removed">Arrow number removed!</string>
-  <string name="new_end">New end</string>
-  <string name="distribution">Distribution</string>
-  <string name="count">Count</string>
-  <string name="diameter">Diameter</string>
-  <string name="input">Input</string>
-  <string name="target_zoom">Target zoom level</string>
-  <string name="arrow_diameter_scale">Arrow diameter scale</string>
+  <string name="hits">Marquées</string>
+  <string name="misses">Manquées</string>
+  <string name="arrow_number_removed">Numéro de flèche effacé !</string>
+  <string name="new_end">Nouvelle fin</string>
+  <string name="distribution">Répartition</string>
+  <string name="count">Décompte</string>
+  <string name="diameter">Diamètre</string>
+  <string name="input">Saisie</string>
+  <string name="target_zoom">Niveau de zoom de cible</string>
+  <string name="arrow_diameter_scale">Échelle de diamètre de flèche</string>
+  <string name="timestamp">Timestamp</string>
+  <string name="change_target_face">Change target face</string>
 </resources>

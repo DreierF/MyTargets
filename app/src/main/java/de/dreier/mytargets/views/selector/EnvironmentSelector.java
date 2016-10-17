@@ -40,9 +40,14 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
 
     public EnvironmentSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setTitle(R.string.environment);
         defaultActivity = ItemSelectActivity.EnvironmentActivity.class;
         requestCode = ENVIRONMENT_REQUEST_CODE;
+    }
+
+    @Override
+    protected void bindView() {
+        super.bindView();
+        setTitle(R.string.environment);
     }
 
     public void queryWeather(Fragment fragment, int request_code) {

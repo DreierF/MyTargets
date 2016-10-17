@@ -83,14 +83,6 @@ public class TargetModelBase implements IIdProvider {
         return false;
     }
 
-    public boolean is3DTarget() {
-        return is3DTarget;
-    }
-
-    public boolean isFieldTarget() {
-        return isFieldTarget;
-    }
-
     public int getFaceCount() {
         return facePositions.length;
     }
@@ -124,16 +116,25 @@ public class TargetModelBase implements IIdProvider {
         return Shot.MISS;
     }
 
+    /**
+     * Lists all zones that can be selected for the given scoringStyle and arrow index.
+     * Consecutive zones with the same text are excluded.
+     * @param scoringStyleIndex Index of the scoring style for this target.
+     * @param arrow Shot index, describes whether it is the first arrow(0), the second one, ...
+     *              This has an impact on the yielded score for some animal target faces.
+     */
     public List<SelectableZone> getSelectableZoneList(int scoringStyleIndex, int arrow) {
         ScoringStyle scoringStyle = getScoringStyle(scoringStyleIndex);
         List<SelectableZone> list = new ArrayList<>();
         String last = "";
         for (int i = 0; i <= zones.length; i++) {
-            String zone = scoringStyle.zoneToString(i, arrow);
-            if (!last.equals(zone)) {
-                list.add(new SelectableZone(i == zones.length ? -1 : i, getZone(i), zone, scoringStyle.getPointsByZone(i, arrow)));
+            String zoneText = scoringStyle.zoneToString(i, arrow);
+            if (!last.equals(zoneText)) {
+                final int index = i == zones.length ? -1 : i;
+                final int score = scoringStyle.getPointsByZone(i, arrow);
+                list.add(new SelectableZone(index, getZone(i), zoneText, score));
+                last = zoneText;
             }
-            last = zone;
         }
         return list;
     }

@@ -5,7 +5,7 @@ android:
   components:
   - platform-tools
   - tools
-  - build-tools-24.0.0
+  - build-tools-24.0.2
   - android-24
   - extra-android-support
   - extra-android-m2repository
@@ -16,6 +16,13 @@ sudo: required
 env:
   global:
   - ADB_INSTALL_TIMEOUT=8
+before_install:
+- export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
+- export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
+- export JAVA_HOME=$JAVA8_HOME
+- openssl aes-256-cbc -K $encrypted_143bf53fc355_key -iv $encrypted_143bf53fc355_iv -in googlePlayAndroidDeveloper.json.enc -out googlePlayAndroidDeveloper.json -d
+install:
+- git fetch --unshallow --tags
 before_script:
 - echo no | android create avd -f -n test -t android-19 -b armeabi-v7a
 - emulator -avd test -no-audio -no-window &
@@ -23,10 +30,6 @@ before_script:
 - adb shell settings put global window_animation_scale 0
 - adb shell settings put global transition_animation_scale 0
 - adb shell settings put global animator_duration_scale 0
-before_install:
-- export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
-- export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
-- export JAVA_HOME=$JAVA8_HOME
 script:
 - ./gradlew clean assembleRegularRelease
 - adb shell input keyevent 82 &
@@ -34,7 +37,7 @@ script:
 after_success:
 - |
   if [[ "$TRAVIS_TAG" ]]; then
-    ./gradlew publishApkRegularRelease
+    ./gradlew publishRegularRelease
     sudo ./dropbox_uploader.sh upload app/build/outputs/apk/app-regular-release.apk /$TRAVIS_TAG/MyTargets.apk
     sudo ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /$TRAVIS_TAG/mapping.txt
   fi
@@ -42,8 +45,9 @@ after_success:
 - sudo jpm install com.codacy:codacy-coverage-reporter:assembly
 - codacy-coverage-reporter -l Java -r app/build/reports/coverage/regular/debug/report.xml
 after_failure:
-  - chmod +x dropbox_uploader.sh
-  - ./dropbox_uploader.sh upload app/build/reports/androidTests/connected/flavors/REGULAR/ /$TRAVIS_JOB_NUMBER/Reports/
+- chmod +x dropbox_uploader.sh
+- zip -r reports.zip app/build/reports/androidTests/connected/flavors/REGULAR/
+- ./dropbox_uploader.sh upload reports.zip /$TRAVIS_JOB_NUMBER/Reports.zip
 deploy:
   provider: releases
   skip_cleanup: true

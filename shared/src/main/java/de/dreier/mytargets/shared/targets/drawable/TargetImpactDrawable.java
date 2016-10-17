@@ -94,9 +94,9 @@ public class TargetImpactDrawable extends TargetDrawable {
         }
     }
 
-    public void drawArrows(Canvas canvas, List<Passe> passes, boolean transparent) {
-        for (Passe p : passes) {
-            drawArrows(canvas, p, transparent);
+    public void drawArrows(Canvas canvas, List<Shot> shots, boolean transparent) {
+        for (Shot s : shots) {
+            drawArrow(canvas, s, transparent);
         }
     }
 

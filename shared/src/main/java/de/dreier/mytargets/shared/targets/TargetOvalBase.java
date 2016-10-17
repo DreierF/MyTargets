@@ -28,8 +28,4 @@ public class TargetOvalBase extends TargetModelBase {
         return true;
     }
 
-    @Override
-    public boolean is3DTarget() {
-        return true;
-    }
 }

@@ -195,7 +195,7 @@
   <plurals name="rounds">
     <item quantity="one">Kolo %d</item>
     <item quantity="few">Kolo %d</item>
-    <item quantity="other">Kolo %d</item>
+    <item quantity="other">Kolá %d</item>
   </plurals>
   <plurals name="round_selected">
     <item quantity="one">Vybraté %d kolo</item>
@@ -260,10 +260,12 @@
   <string name="misses">Minutí</string>
   <string name="arrow_number_removed">Čísla šípov odstránené!</string>
   <string name="new_end">Nová sada</string>
-  <string name="distribution">Distribúcia</string>
+  <string name="distribution">Rozloženie</string>
   <string name="count">Počet</string>
   <string name="diameter">Priemer</string>
   <string name="input">Vstup</string>
   <string name="target_zoom">Cieľová úroveň priblíženia</string>
   <string name="arrow_diameter_scale">Stupnica priemerov šípov</string>
+  <string name="timestamp">Timestamp</string>
+  <string name="change_target_face">Change target face</string>
 </resources>

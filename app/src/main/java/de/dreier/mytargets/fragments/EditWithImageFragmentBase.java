@@ -9,6 +9,7 @@ package de.dreier.mytargets.fragments;
 
 import android.Manifest;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import de.dreier.mytargets.shared.utils.BitmapUtils;
 import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.ThumbnailUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import icepick.State;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -62,7 +64,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentEditImageBinding.inflate(inflater, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_image, container, false);
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
         ToolbarUtils.showUpAsX(this);
         setHasOptionsMenu(true);
@@ -74,6 +76,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setFocusListenerForAllEditText(getView());
+        FabTransformUtil.setup(getActivity(), binding.getRoot());
     }
 
     private void setFocusListenerForAllEditText(View view) {

@@ -1,11 +1,13 @@
 package de.dreier.mytargets.shared.models;
 
-public class Round implements IIdSettable {
+import android.support.annotation.NonNull;
+
+public class Round implements IIdSettable, Comparable<Round> {
+    long id;
     public long trainingId;
     public RoundTemplate info;
     public String comment;
     public int reachedPoints;
-    long id;
 
     public long getId() {
         return id;
@@ -24,7 +26,11 @@ public class Round implements IIdSettable {
 
     public String getReachedPointsFormatted() {
         final int maxPoints = info.getMaxPoints();
-        String percent = maxPoints == 0 ? "" : " (" + (reachedPoints * 100 / maxPoints) + "%)";
-        return reachedPoints + "/" + maxPoints + percent;
+        return reachedPoints + "/" + maxPoints;
+    }
+
+    @Override
+    public int compareTo(@NonNull Round round) {
+        return info.index - round.info.index;
     }
 }

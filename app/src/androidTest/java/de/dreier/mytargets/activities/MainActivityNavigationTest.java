@@ -38,8 +38,8 @@ import static de.dreier.mytargets.PermissionGranter.allowPermissionsIfNeeded;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_TYPE;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.endsWith;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityNavigationTest extends UITestBase {
@@ -112,5 +112,7 @@ public class MainActivityNavigationTest extends UITestBase {
         onView(isRoot()).perform(orientationLandscape(mActivityTestRule));
         navigateUp();
         onView(isRoot()).perform(orientationPortrait(mActivityTestRule));
+        pressBack();
+        pressBack();
     }
 }

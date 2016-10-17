@@ -27,9 +27,9 @@ import de.dreier.mytargets.utils.multiselector.SingleSelector;
 /**
  * Base class for handling single item selection
  * <p>
- * Parent activity must implement {@link de.dreier.mytargets.fragments.FragmentBase.OnItemSelectedListener}.
+ * Parent activity must implement {@link ListFragmentBase.OnItemSelectedListener}.
  */
-public abstract class SelectItemFragment<T extends IIdProvider> extends FragmentBase<T> {
+public abstract class SelectItemFragment<T extends IIdProvider & Comparable<T>> extends ListFragmentBase<T> {
 
     /**
      * Selector which manages the item selection
@@ -101,9 +101,6 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
         mSelector.setSelected(holder, true);
         if (alreadySelected || !useDoubleClickSelection) {
             onSaveItem();
-        } else {
-            mAdapter.notifyItemChanged(oldSelectedPosition);
-            mAdapter.notifyItemChanged(holder.getAdapterPosition());
         }
     }
 

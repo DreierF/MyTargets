@@ -13,7 +13,7 @@ import de.dreier.mytargets.shared.models.Dimension;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 
 public class WA3Ring3Spot extends WA3Ring {
-    private static final int ID = 6;
+    public static final int ID = 6;
 
     public WA3Ring3Spot() {
         super(ID, R.string.wa_3_ring_3_spot);

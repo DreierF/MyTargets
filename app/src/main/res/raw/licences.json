@@ -92,7 +92,7 @@
     },
     {
       "name": "EasyImage",
-      "version": "1.2.1",
+      "version": "1.3.0",
       "year": "2015",
       "owner": "Jacek Kwiecień",
       "description": "Library for picking pictures from gallery or camera.",
@@ -101,7 +101,7 @@
     },
     {
       "name": "Material Dialogs",
-      "version": "0.8.5.8",
+      "version": "0.9.0.2",
       "year": "2014-2016",
       "owner": "Aidan Michael Follestad",
       "description": "A beautiful, easy-to-use, and customizable dialogs API, enabling you to use Material designed dialogs down to API 8.",
@@ -110,7 +110,7 @@
     },
     {
       "name": "Android About Page",
-      "version": "1.0.6",
+      "version": "1.1.1",
       "year": "2016",
       "owner": "Mehdi Sakout",
       "description": "Create an awesome About Page for your Android App in 2 minutes.",

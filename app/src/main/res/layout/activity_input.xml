@@ -5,7 +5,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:transitionName="@string/transition_root_view"
+        tools:targetApi="lollipop">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -43,6 +45,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/endTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/passe"
@@ -51,9 +54,9 @@
 
                     <TextView
                         android:id="@+id/scoreEnd"
+                        style="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle"
                         android:textSize="16sp"
                         tools:text="27/30"/>
 
@@ -66,6 +69,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/roundTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/round"
@@ -74,9 +78,9 @@
 
                     <TextView
                         android:id="@+id/scoreRound"
+                        style="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle"
                         android:textSize="16sp"
                         tools:text="270/300"/>
 

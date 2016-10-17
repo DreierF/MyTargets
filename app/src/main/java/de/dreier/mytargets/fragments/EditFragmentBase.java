@@ -7,14 +7,13 @@
 package de.dreier.mytargets.fragments;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import de.dreier.mytargets.R;
 
-public abstract class EditFragmentBase extends Fragment {
+public abstract class EditFragmentBase extends FragmentBase {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

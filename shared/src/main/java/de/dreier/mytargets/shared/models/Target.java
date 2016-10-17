@@ -2,6 +2,7 @@ package de.dreier.mytargets.shared.models;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import java.util.List;
 import java.util.Set;
@@ -9,8 +10,9 @@ import java.util.Set;
 import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactDrawable;
 import de.dreier.mytargets.shared.targets.models.TargetModelBase;
+import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
 
-public class Target implements IIdProvider, IImageProvider, IDetailProvider {
+public class Target implements IIdProvider, IImageProvider, IDetailProvider, Comparable<Target> {
     public int id;
     public int scoringStyle;
     public Dimension size;
@@ -36,10 +38,6 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
         return id;
     }
 
-    /*public void setId(long id) {
-        this.id = (int) id;
-    }*/
-
     public TargetImpactDrawable getDrawable() {
         if (drawable == null) {
             drawable = new TargetImpactDrawable(this);
@@ -48,7 +46,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
     }
 
     public String zoneToString(int zone, int arrow) {
-        return getModel().getScoringStyle(scoringStyle).zoneToString(zone, arrow);
+        return getScoringStyle().zoneToString(zone, arrow);
     }
 
     @Override
@@ -66,7 +64,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
     }
 
     public int getPointsByZone(int zone, int arrow) {
-        return model.getScoringStyle(scoringStyle).getPointsByZone(zone, arrow);
+        return getScoringStyle().getPointsByZone(zone, arrow);
     }
 
     @Override
@@ -88,16 +86,20 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
         return getModel().getSelectableZoneList(scoringStyle, arrow);
     }
 
+    private ScoringStyle getScoringStyle() {
+        return getModel().getScoringStyle(scoringStyle);
+    }
+
     public int getMaxPoints() {
-        return getModel().getScoringStyle(scoringStyle).getMaxPoints();
+        return getScoringStyle().getMaxPoints();
     }
 
     public int getEndMaxPoints(int arrowsPerPasse) {
-        return getModel().getScoringStyle(scoringStyle).getEndMaxPoints(arrowsPerPasse);
+        return getScoringStyle().getEndMaxPoints(arrowsPerPasse);
     }
 
     public int getReachedPoints(Passe passe) {
-        return getModel().getScoringStyle(scoringStyle).getReachedPoints(passe);
+        return getScoringStyle().getReachedPoints(passe);
     }
 
     @Override
@@ -107,5 +109,10 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider {
 
     public Set<SelectableZone> getAllPossibleSelectableZones() {
         return getModel().getAllPossibleSelectableZones(scoringStyle);
+    }
+    
+    @Override
+    public int compareTo(@NonNull Target target) {
+        return id - target.id;
     }
 }

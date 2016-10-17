@@ -32,7 +32,7 @@ public class SimpleDistanceSelector extends SelectorBase<Dimension> {
 
     @Override
     protected void bindView() {
-        SelectorItemSimpleTextBinding binding = DataBindingUtil.bind(mView);
+        SelectorItemSimpleTextBinding binding = DataBindingUtil.bind(view);
         binding.text.setText(item.toString());
     }
 }

@@ -15,13 +15,19 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
 
+import org.joda.time.DateTime;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
@@ -43,7 +49,7 @@ import de.dreier.mytargets.utils.BackupUtils;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 17;
     private static DatabaseManager sInstance;
     private final Context mContext;
 
@@ -176,7 +182,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     "comment TEXT," +
                     "thumbnail BLOB," +
                     "image TEXT);");
-            db.execSQL("ALTER TABLE ROUND ADD COLUMN arrow INTEGER REFERENCES ARROW ON DELETE SET NULL");
+            db.execSQL(
+                    "ALTER TABLE ROUND ADD COLUMN arrow INTEGER REFERENCES ARROW ON DELETE SET NULL");
             db.execSQL("ALTER TABLE ROUND ADD COLUMN comment TEXT DEFAULT ''");
             db.execSQL("ALTER TABLE SHOOT ADD COLUMN comment TEXT DEFAULT ''");
             db.execSQL("UPDATE ROUND SET target=0 WHERE target=1 OR target=2 OR target=3");
@@ -383,6 +390,42 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     "GROUP BY t._id, t.datum" +
                     ")");
         }
+        if (oldVersion < 17) {
+            db.execSQL("CREATE TEMP TABLE IF NOT EXISTS DAIR_TRANSLATION AS " +
+                    "SELECT  sr._id " +
+                    "FROM STANDARD_ROUND_TEMPLATE sr " +
+                    "WHERE sr._id>198 " +
+                    "AND sr.club<256 " +
+                    "AND sr.name='DAIR 380'");
+            db.execSQL("CREATE TEMP TABLE IF NOT EXISTS SR_TRANSLATION AS " +
+                    "SELECT  sr._id AS fromSR, (4+sr._id-(SELECT MAX(tr._id) FROM DAIR_TRANSLATION tr WHERE tr._id-4<sr._id)) AS toSR " +
+                    "FROM STANDARD_ROUND_TEMPLATE sr " +
+                    "WHERE sr._id>198 " +
+                    "AND sr.club<256");
+            db.execSQL("CREATE TEMP TABLE IF NOT EXISTS R_TRANSLATION AS " +
+                    "SELECT  r1._id AS fromR, r2._id AS toR " +
+                    "FROM ROUND_TEMPLATE r1, ROUND_TEMPLATE r2, SR_TRANSLATION sr " +
+                    "WHERE r1.sid=sr.fromSR " +
+                    "AND r2.sid=sr.toSR " +
+                    "AND r1.r_index=r2.r_index");
+            db.execSQL("UPDATE ROUND " +
+                    "SET template = (SELECT toR " +
+                    "FROM R_TRANSLATION " +
+                    "WHERE fromR=template) " +
+                    "WHERE template IN (SELECT fromR FROM R_TRANSLATION)");
+            db.execSQL("UPDATE TRAINING " +
+                    "SET standard_round = (SELECT toSR " +
+                    "FROM SR_TRANSLATION " +
+                    "WHERE fromSR=standard_round) " +
+                    "WHERE standard_round IN (SELECT fromSR FROM SR_TRANSLATION)");
+            db.execSQL("DELETE FROM STANDARD_ROUND_TEMPLATE " +
+                    "WHERE _id IN (SELECT fromSR FROM SR_TRANSLATION)");
+            db.execSQL("DELETE FROM ROUND_TEMPLATE " +
+                    "WHERE _id IN (SELECT fromR FROM R_TRANSLATION)");
+            db.execSQL("DROP TABLE DAIR_TRANSLATION");
+            db.execSQL("DROP TABLE SR_TRANSLATION");
+            db.execSQL("DROP TABLE R_TRANSLATION");
+        }
         onCreate(db);
     }
 
@@ -451,13 +494,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return sr.getId();
     }
 
-
-////// GET AGGREGATED INFORMATION //////
-
-
 ////// EXPORT ALL //////
-
-////// BACKUP DATABASE //////
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void exportAll(File file) throws IOException {
@@ -472,7 +509,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         Cursor cur = db.rawQuery(
                 "SELECT t.title,sr.name AS standard_round,date(t.datum/1000, 'unixepoch', 'localtime') AS date, sr.indoor, i.r_index, i.distance, i.unit," +
                         "r.target, r.scoring_style, i.size, i.target_unit, s.arrow_index, a.name, s.x, s.y, s.arrow, b.name AS bow, s.points AS score, " +
-                        "(SELECT COUNT(x._id) FROM PASSE x WHERE x.round=p.round AND x._id<=p._id) AS end_index " +
+                        "(SELECT COUNT(x._id) FROM PASSE x WHERE x.round=p.round AND x._id<=p._id) AS end_index, p.save_time " +
                         "FROM TRAINING t, ROUND r, PASSE p, SHOOT s " +
                         "LEFT JOIN BOW b ON b._id=t.bow " +
                         "LEFT JOIN ARROW a ON a._id=t.arrow " +
@@ -490,6 +527,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 .append(mContext.getString(R.string.distance)).append("\";\"")
                 .append(mContext.getString(R.string.target)).append("\";\"")
                 .append(mContext.getString(R.string.passe)).append("\";\"")
+                .append(mContext.getString(R.string.timestamp)).append("\";\"")
                 .append(mContext.getString(R.string.points)).append("\";\"")
                 .append("x").append("\";\"")
                 .append("y").append("\"\n");
@@ -512,6 +550,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         int shotInd = cur.getColumnIndexOrThrow("arrow_index");
         int scoreInd = cur.getColumnIndexOrThrow("score");
         int endInd = cur.getColumnIndexOrThrow("end_index");
+        int timestampInd = cur.getColumnIndexOrThrow("save_time");
         if (cur.moveToFirst()) {
             do {
                 // Title
@@ -572,6 +611,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
                 // End
                 writer.append(String.valueOf(cur.getInt(endInd)));
+                writer.append("\";\"");
+
+                // Timestamp
+                Date saveDate = new DateTime(cur.getLong(timestampInd)).toDate();
+                writer.append(SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN)
+                        .format(saveDate));
                 writer.append("\";\"");
 
                 // Score

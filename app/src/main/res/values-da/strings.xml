@@ -252,4 +252,6 @@
   <string name="input">Input</string>
   <string name="target_zoom">Target zoomniveau</string>
   <string name="arrow_diameter_scale">Pil diameter skala</string>
+  <string name="timestamp">Timestamp</string>
+  <string name="change_target_face">Change target face</string>
 </resources>

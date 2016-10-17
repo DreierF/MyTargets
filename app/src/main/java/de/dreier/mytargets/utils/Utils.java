@@ -70,4 +70,8 @@ public class Utils {
         // Kill the application
         Process.killProcess(Process.myPid());
     }
+
+    public static boolean isLollipop() {
+        return android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP;
+    }
 }

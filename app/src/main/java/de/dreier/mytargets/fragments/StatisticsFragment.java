@@ -7,7 +7,6 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -70,8 +69,9 @@ import de.dreier.mytargets.utils.Utils;
 
 public class StatisticsFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<ArrowStatistic>> {
 
-    public static final String ARG_TARGET = "target";
-    public static final String ARG_ROUND_IDS = "round_ids";
+    private static final String ARG_TARGET = "target";
+    private static final String ARG_ROUND_IDS = "round_ids";
+    private static final String ARG_ANIMATE = "animate";
     private static final String PIE_CHART_CENTER_TEXT_FORMAT = "<font color='gray'>%s</font><br>" +
             "<big>%s</big><br>" +
             "<small>&nbsp;</small><br>" +
@@ -84,6 +84,17 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     private ArrowStatisticAdapter adapter;
     private FragmentStatisticsBinding binding;
     private Target target;
+    private boolean animate;
+
+    public static StatisticsFragment newInstance(List<Long> roundIds, Target item, boolean animate) {
+        StatisticsFragment fragment = new StatisticsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(StatisticsFragment.ARG_TARGET, Parcels.wrap(item));
+        bundle.putLongArray(StatisticsFragment.ARG_ROUND_IDS, Utils.toArray(roundIds));
+        bundle.putBoolean(StatisticsFragment.ARG_ANIMATE, animate);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -92,6 +103,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
         target = Parcels.unwrap(getArguments().getParcelable(ARG_TARGET));
         roundIds = getArguments().getLongArray(ARG_ROUND_IDS);
+        animate = getArguments().getBoolean(ARG_ANIMATE);
         rounds = Stream.of(Utils.toList(roundIds))
                 .map(id -> new RoundDataSource().get(id))
                 .collect(Collectors.toList());
@@ -103,7 +115,6 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         binding.arrows.setHasFixedSize(true);
         adapter = new ArrowStatisticAdapter();
         binding.arrows.setAdapter(adapter);
-
         binding.arrows.setNestedScrollingEnabled(false);
 
         ToolbarUtils.showHomeAsUp(this);
@@ -124,13 +135,12 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         binding.dispersionView.setShoots(exactShots);
         binding.dispersionView.setEnabled(false);
         binding.dispersionViewOverlay.setOnClickListener(view -> {
-            Intent intent = new Intent(getContext(), DispersionPatternActivity.class);
             ArrowStatistic statistics = new ArrowStatistic();
             statistics.target = target;
             statistics.addShots(exactShots);
-            intent.putExtra(DispersionPatternActivity.ITEM, Parcels.wrap(statistics));
-            intent.putExtra(DispersionPatternActivity.ROUND_IDS, roundIds);
-            startActivity(intent);
+            DispersionPatternActivity
+                    .getIntent(this, statistics)
+                    .start();
         });
     }
 
@@ -144,18 +154,19 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         binding.chartView.getAxisRight().setEnabled(false);
         binding.chartView.getLegend().setEnabled(false);
         binding.chartView.setData(data);
-        binding.chartView.animateXY(2000, 2000);
         binding.chartView.setDescription("");
         binding.chartView.getAxisLeft().setAxisMinValue(0);
         binding.chartView.getXAxis().setDrawGridLines(false);
         binding.chartView.setDoubleTapToZoomEnabled(false);
+        if(animate) {
+            binding.chartView.animateXY(2000, 2000);
+        }
     }
 
     private void showPieChart() {
         // enable hole and configure
-        //binding.distributionChart.setDrawHoleEnabled(true);
-        //binding.distributionChart.setHoleRadius(7);
         binding.distributionChart.setTransparentCircleRadius(15);
+        binding.distributionChart.setHoleColor(0x00EEEEEE);
         binding.distributionChart.getLegend().setEnabled(false);
         binding.distributionChart.setDescription("");
 
@@ -165,6 +176,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
         binding.distributionChart.setUsePercentValues(false);
         binding.distributionChart.highlightValues(null);
+        binding.distributionChart.setBackgroundColor(0x00EEEEEE);
         binding.distributionChart.invalidate();
         addPieData();
     }
@@ -417,9 +429,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         }
 
         private void onItemClicked() {
-            Intent i = new Intent(getContext(), DispersionPatternActivity.class);
-            i.putExtra(DispersionPatternActivity.ITEM, Parcels.wrap(mItem));
-            startActivity(i);
+            DispersionPatternActivity.getIntent(StatisticsFragment.this, mItem).start();
         }
 
         void bindItem(ArrowStatistic item) {

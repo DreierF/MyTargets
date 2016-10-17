@@ -20,6 +20,7 @@ import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.EndRenderer;
+import de.dreier.mytargets.shared.models.WindSpeed;
 
 /**
  * Application singleton. Gets instantiated exactly once and is used
@@ -42,7 +43,9 @@ import de.dreier.mytargets.shared.utils.EndRenderer;
         @ParcelClass(StandardRound.class),
         @ParcelClass(NotificationInfo.class),
         @ParcelClass(Target.class),
-        @ParcelClass(Training.class)
+        @ParcelClass(Training.class),
+        @ParcelClass(WindDirection.class),
+        @ParcelClass(WindSpeed.class)
 })
 public class ApplicationInstance extends SharedApplicationInstance {
 

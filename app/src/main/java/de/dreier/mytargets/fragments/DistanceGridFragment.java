@@ -103,7 +103,7 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> implemen
 
     private class DistanceAdapter extends ListAdapterBase<Dimension> {
         DistanceAdapter(Context context) {
-            super(context, Dimension::compareTo);
+            super(context);
         }
 
         @Override
@@ -120,11 +120,11 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> implemen
 
         public ViewHolder(View itemView) {
             super(itemView, mSelector, DistanceGridFragment.this);
-            binding = ItemDistanceBinding.bind(itemView);
+            binding = DataBindingUtil.bind(itemView);
         }
 
         @Override
-        public void bindCursor() {
+        public void bindItem() {
             binding.distance.setText(mItem.toString());
         }
     }

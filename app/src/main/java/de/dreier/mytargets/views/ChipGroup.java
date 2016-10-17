@@ -135,6 +135,16 @@ public class ChipGroup extends ViewGroup {
     }
 
     /**
+     * Returns the tag list in group.
+     *
+     * @return the tag list.
+     */
+    public List<Tag> getTags() {
+        return Stream.of(tagList)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Set the tags. It will remove all previous tags first.
      *
      * @param tags the tag list to set.
@@ -149,7 +159,7 @@ public class ChipGroup extends ViewGroup {
     }
 
     /**
-     * Returns the tag list in group.
+     * Returns the checked tag list in group.
      *
      * @return the tag list.
      */

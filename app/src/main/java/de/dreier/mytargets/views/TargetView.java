@@ -657,8 +657,7 @@ public class TargetView extends TargetViewBase {
 
                 // For yellow and white background use black font color
                 textPaint.setColor(zone.zone.getTextColor());
-                canvas.drawText(zone.text, rect.centerX(), rect.centerY() + 10 * density,
-                        textPaint);
+                canvas.drawText(zone.text, rect.centerX(), rect.centerY() + 10 * density, textPaint);
             }
         }
     }

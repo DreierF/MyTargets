@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -10,21 +11,23 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             style="@style/card_list"
-            app:layoutManager="LinearLayoutManager" />
+            app:layoutManager="LinearLayoutManager"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_drop_shadow_height"
-            android:background="@drawable/toolbar_drop_shadow" />
+            android:background="@drawable/toolbar_drop_shadow"/>
 
-        <com.github.clans.fab.FloatingActionButton
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
             android:src="@drawable/fab_add_white_24dp"
-            app:fab_colorNormal="@color/colorAccent" />
+            android:transitionName="@string/transition_root_view"
+            app:fab_colorNormal="@color/colorAccent"
+            tools:targetApi="lollipop"/>
 
     </FrameLayout>
 
