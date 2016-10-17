@@ -33,6 +33,8 @@ import de.dreier.mytargets.shared.targets.models.WA3Ring;
 import de.dreier.mytargets.shared.targets.models.WA3Ring3Spot;
 import de.dreier.mytargets.shared.targets.models.WA5Ring;
 import de.dreier.mytargets.shared.targets.models.WA6Ring;
+import de.dreier.mytargets.shared.targets.models.WADanage3Spot;
+import de.dreier.mytargets.shared.targets.models.WADanage6Spot;
 import de.dreier.mytargets.shared.targets.models.WAField;
 import de.dreier.mytargets.shared.targets.models.WAField3Spot;
 import de.dreier.mytargets.shared.targets.models.WAFull;

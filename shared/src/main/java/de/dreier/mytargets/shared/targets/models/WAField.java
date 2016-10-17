@@ -21,7 +21,6 @@ import static de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW;
 public class WAField extends TargetModelBase {
     public static final int ID = 13;
 
-
     public WAField() {
         this(ID, R.string.wa_field);
     }

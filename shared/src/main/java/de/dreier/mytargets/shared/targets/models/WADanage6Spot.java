@@ -4,7 +4,7 @@
  * Copyright (C) 2015 Florian Dreier
  * All rights reserved
  */
-package de.dreier.mytargets.shared.targets;
+package de.dreier.mytargets.shared.targets.models;
 
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.Coordinate;
@@ -17,14 +17,14 @@ public class WADanage6Spot extends WA3Ring {
 
     public WADanage6Spot() {
         super(ID, R.string.wa_danage_6_spot);
-        faceRadius = 193;
+        faceRadius = 0.38692f;
         facePositions = new Coordinate[]{
-                new Coordinate(500, 515.7644f),
-                new Coordinate(500, 193.46f),
-                new Coordinate(806.54f, 416.16437f),
-                new Coordinate(193.46f, 416.16437f),
-                new Coordinate(689.461f, 776.5344f),
-                new Coordinate(310.539f, 776.5344f)
+                new Coordinate(0.0f, 0.03152883f),
+                new Coordinate(0.0f, -0.61308f),
+                new Coordinate(0.6130799f, -0.16767126f),
+                new Coordinate(-0.61308f, -0.16767126f),
+                new Coordinate(0.378922f, 0.5530689f),
+                new Coordinate(-0.378922f, 0.5530689f)
         };
         diameters = new Dimension[]{
                 new Dimension(40, CENTIMETER),

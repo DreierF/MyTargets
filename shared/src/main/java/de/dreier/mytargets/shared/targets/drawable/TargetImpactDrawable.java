@@ -25,10 +25,10 @@ import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
 public class TargetImpactDrawable extends TargetDrawable {
 
-    Paint paintFill;
-    Paint paintStroke;
-    Map<String, Bitmap> scoresTextCache = new HashMap<>();
-    RectF textRect;
+    private Paint paintFill;
+    private Paint paintStroke;
+    private Map<String, Bitmap> scoresTextCache = new HashMap<>();
+    private RectF textRect;
     private float arrowRadius = 8;
 
     public TargetImpactDrawable(Target target) {

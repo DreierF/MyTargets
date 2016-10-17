@@ -7,6 +7,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Target;
@@ -37,7 +38,7 @@ public class TargetDrawable extends Drawable {
     }
 
     @Override
-    public void setBounds(Rect bounds) {
+    public void setBounds(@NonNull Rect bounds) {
         super.setBounds(bounds);
         matrix.setRectToRect(new RectF(-1, -1, 1, 1),
                 new RectF(bounds),
@@ -48,16 +49,12 @@ public class TargetDrawable extends Drawable {
         return target;
     }
 
-    public TargetModelBase getModel() {
-        return model;
-    }
-
     private int getZones() {
         return model.getZoneCount();
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         canvas.save();
         for (int faceIndex = 0; faceIndex < model.facePositions.length; faceIndex++) {
             Matrix targetMatrix = getTargetMatrix(faceIndex);
@@ -112,42 +109,5 @@ public class TargetDrawable extends Drawable {
 
     @Override
     public void setColorFilter(ColorFilter arg0) {
-    }
-
-    /**
-     * Used to determine if the target is vertical like 3 spot and
-     * thus multiple targets fit next to each other onto one page.
-     */
-    public float getWidth() {
-        return getDiff(0);
-    }
-
-    public float getHeight() {
-        return getDiff(1);
-    }
-
-    private float getDiff(int coordinate) {
-        int min = Integer.MAX_VALUE;
-        int max = Integer.MIN_VALUE;
-        for (Coordinate facePosition : model.facePositions) {
-            final float v = coordinate == 0 ? facePosition.x : facePosition.y;
-            if (v < min) {
-                min = (int) v;
-            }
-            if (v > max) {
-                max = (int) v;
-            }
-        }
-        return max - min + model.faceRadius * 2;
-    }
-
-    public RectF getBoundsF(int index, Rect rect) {
-        Coordinate pos = model.facePositions[index];
-        RectF bounds = new RectF();
-        bounds.left = rect.left + (500f + pos.x * 500f - model.faceRadius * 500f) * 0.5f;
-        bounds.top = rect.top + (500f + pos.y * 500f - model.faceRadius * 500f) * 0.5f;
-        bounds.right = rect.left + (500f + pos.x * 500f + model.faceRadius * 500f) * 0.5f;
-        bounds.bottom = rect.top + (500f + pos.y * 500f + model.faceRadius * 500f) * 0.5f;
-        return bounds;
     }
 }
