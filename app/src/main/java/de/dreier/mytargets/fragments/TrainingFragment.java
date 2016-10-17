@@ -58,10 +58,8 @@ public class TrainingFragment extends EditableListFragment<Round> {
 
     private final boolean[] equals = new boolean[2];
     protected FragmentTrainingBinding binding;
-    private long mTraining;
+    private long trainingId;
     private Training training;
-    private RoundDataSource roundDataSource;
-    private StandardRoundDataSource standardRoundDataSource;
 
     public TrainingFragment() {
         itemTypeSelRes = R.plurals.round_selected;
@@ -91,21 +89,15 @@ public class TrainingFragment extends EditableListFragment<Round> {
 
         // Get training
         if (getArguments() != null) {
-            mTraining = getArguments().getLong(ITEM_ID, -1);
+            trainingId = getArguments().getLong(ITEM_ID);
         }
         binding.fab.setVisibility(View.GONE);
         binding.fab.setOnClickListener(view -> {
             // New round to free training
-            EditRoundFragment.createIntent(this, mTraining)
+            EditRoundFragment.createIntent(this, trainingId)
                     .fromFab(binding.fab)
                     .start();
         });
-
-        TrainingDataSource trainingDataSource = new TrainingDataSource();
-        roundDataSource = new RoundDataSource();
-        standardRoundDataSource = new StandardRoundDataSource();
-
-        training = trainingDataSource.get(mTraining);
         return binding.getRoot();
     }
 
@@ -120,12 +112,14 @@ public class TrainingFragment extends EditableListFragment<Round> {
     @Override
     public Loader<List<Round>> onCreateLoader(int id, Bundle args) {
         return new DataLoader<>(getContext(), new RoundDataSource(),
-                () -> roundDataSource.getAll(mTraining));
+                () -> new RoundDataSource().getAll(trainingId));
     }
 
     public void onLoadFinished(Loader<List<Round>> loader, List<Round> data) {
+        training = new TrainingDataSource().get(trainingId);
+
         // Hide fab for standard rounds
-        StandardRound standardRound = standardRoundDataSource.get(training.standardRoundId);
+        StandardRound standardRound = new StandardRoundDataSource().get(training.standardRoundId);
         supportsDeletion = standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
         binding.fab.setVisibility(supportsDeletion ? View.VISIBLE : View.GONE);
 
@@ -154,7 +148,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_scoreboard:
-                ScoreboardActivity.getIntent(this, mTraining)
+                ScoreboardActivity.getIntent(this, trainingId)
                         .start();
                 return true;
             case R.id.action_statistics:
@@ -175,7 +169,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
 
     @Override
     protected void onEdit(Round item) {
-        EditRoundFragment.editIntent(this, mTraining, item)
+        EditRoundFragment.editIntent(this, trainingId, item)
                 .start();
     }
 

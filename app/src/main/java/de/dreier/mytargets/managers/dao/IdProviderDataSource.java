@@ -54,7 +54,7 @@ public abstract class IdProviderDataSource<T extends IIdSettable> extends DataSo
     protected abstract ContentValues getContentValues(T item);
 
     @VisibleForTesting
-    void deleteAll() {
+    public void deleteAll() {
         database.delete(table, null, null);
     }
 }

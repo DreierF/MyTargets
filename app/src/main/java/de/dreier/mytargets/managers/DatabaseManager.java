@@ -49,7 +49,7 @@ import de.dreier.mytargets.utils.BackupUtils;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 17;
     private static DatabaseManager sInstance;
     private final Context mContext;
 
@@ -182,7 +182,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     "comment TEXT," +
                     "thumbnail BLOB," +
                     "image TEXT);");
-            db.execSQL("ALTER TABLE ROUND ADD COLUMN arrow INTEGER REFERENCES ARROW ON DELETE SET NULL");
+            db.execSQL(
+                    "ALTER TABLE ROUND ADD COLUMN arrow INTEGER REFERENCES ARROW ON DELETE SET NULL");
             db.execSQL("ALTER TABLE ROUND ADD COLUMN comment TEXT DEFAULT ''");
             db.execSQL("ALTER TABLE SHOOT ADD COLUMN comment TEXT DEFAULT ''");
             db.execSQL("UPDATE ROUND SET target=0 WHERE target=1 OR target=2 OR target=3");
@@ -389,6 +390,42 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     "GROUP BY t._id, t.datum" +
                     ")");
         }
+        if (oldVersion < 17) {
+            db.execSQL("CREATE TEMP TABLE IF NOT EXISTS DAIR_TRANSLATION AS " +
+                    "SELECT  sr._id " +
+                    "FROM STANDARD_ROUND_TEMPLATE sr " +
+                    "WHERE sr._id>198 " +
+                    "AND sr.club<256 " +
+                    "AND sr.name='DAIR 380'");
+            db.execSQL("CREATE TEMP TABLE IF NOT EXISTS SR_TRANSLATION AS " +
+                    "SELECT  sr._id AS fromSR, (4+sr._id-(SELECT MAX(tr._id) FROM DAIR_TRANSLATION tr WHERE tr._id-4<sr._id)) AS toSR " +
+                    "FROM STANDARD_ROUND_TEMPLATE sr " +
+                    "WHERE sr._id>198 " +
+                    "AND sr.club<256");
+            db.execSQL("CREATE TEMP TABLE IF NOT EXISTS R_TRANSLATION AS " +
+                    "SELECT  r1._id AS fromR, r2._id AS toR " +
+                    "FROM ROUND_TEMPLATE r1, ROUND_TEMPLATE r2, SR_TRANSLATION sr " +
+                    "WHERE r1.sid=sr.fromSR " +
+                    "AND r2.sid=sr.toSR " +
+                    "AND r1.r_index=r2.r_index");
+            db.execSQL("UPDATE ROUND " +
+                    "SET template = (SELECT toR " +
+                    "FROM R_TRANSLATION " +
+                    "WHERE fromR=template) " +
+                    "WHERE template IN (SELECT fromR FROM R_TRANSLATION)");
+            db.execSQL("UPDATE TRAINING " +
+                    "SET standard_round = (SELECT toSR " +
+                    "FROM SR_TRANSLATION " +
+                    "WHERE fromSR=standard_round) " +
+                    "WHERE standard_round IN (SELECT fromSR FROM SR_TRANSLATION)");
+            db.execSQL("DELETE FROM STANDARD_ROUND_TEMPLATE " +
+                    "WHERE _id IN (SELECT fromSR FROM SR_TRANSLATION)");
+            db.execSQL("DELETE FROM ROUND_TEMPLATE " +
+                    "WHERE _id IN (SELECT fromR FROM R_TRANSLATION)");
+            db.execSQL("DROP TABLE DAIR_TRANSLATION");
+            db.execSQL("DROP TABLE SR_TRANSLATION");
+            db.execSQL("DROP TABLE R_TRANSLATION");
+        }
         onCreate(db);
     }
 
@@ -457,13 +494,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return sr.getId();
     }
 
-
-////// GET AGGREGATED INFORMATION //////
-
-
 ////// EXPORT ALL //////
-
-////// BACKUP DATABASE //////
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void exportAll(File file) throws IOException {
@@ -584,7 +615,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
                 // Timestamp
                 Date saveDate = new DateTime(cur.getLong(timestampInd)).toDate();
-                writer.append(SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN).format(saveDate));
+                writer.append(SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN)
+                        .format(saveDate));
                 writer.append("\";\"");
 
                 // Score

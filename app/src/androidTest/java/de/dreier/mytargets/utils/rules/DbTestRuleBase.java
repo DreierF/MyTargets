@@ -1,4 +1,4 @@
-package de.dreier.mytargets.managers.dao;
+package de.dreier.mytargets.utils.rules;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,6 +16,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.managers.dao.ArrowDataSource;
+import de.dreier.mytargets.managers.dao.BowDataSource;
+import de.dreier.mytargets.managers.dao.PasseDataSource;
+import de.dreier.mytargets.managers.dao.RoundDataSource;
+import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
+import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.EWeather;
@@ -34,6 +40,7 @@ public abstract class DbTestRuleBase implements TestRule {
     protected final BowDataSource bowDataSource;
     protected final StandardRoundDataSource standardRoundDataSource;
     protected final PasseDataSource passeDataSource;
+    protected final ArrowDataSource arrowDataSource;
 
     public DbTestRuleBase() {
         context = InstrumentationRegistry.getTargetContext();
@@ -42,6 +49,7 @@ public abstract class DbTestRuleBase implements TestRule {
         bowDataSource = new BowDataSource();
         standardRoundDataSource = new StandardRoundDataSource();
         passeDataSource = new PasseDataSource();
+        arrowDataSource = new ArrowDataSource();
     }
 
     @Override
@@ -79,11 +87,12 @@ public abstract class DbTestRuleBase implements TestRule {
 
     protected abstract void addDatabaseContent();
 
-    void deleteAll() {
+    private void deleteAll() {
         trainingDataSource.deleteAll();
         roundDataSource.deleteAll();
         bowDataSource.deleteAll();
         passeDataSource.deleteAll();
+        arrowDataSource.deleteAll();
     }
 
     @NonNull
