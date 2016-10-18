@@ -10,8 +10,8 @@ import de.dreier.mytargets.shared.utils.RegionUtils;
 
 public class EllipseZone extends ZoneBase {
 
-    public static final float REGION_SCALE_FACTOR = 1000f;
-    public static final Region ELLIPSE_REGION;
+    private static final float REGION_SCALE_FACTOR = 1000f;
+    private static final Region ELLIPSE_REGION;
     private static final Path ellipse = new Path();
 
     static {
@@ -35,10 +35,14 @@ public class EllipseZone extends ZoneBase {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void drawFill(Canvas canvas) {
         initPaint();
         drawPath(canvas, ellipse, paintFill);
-        drawPath(canvas, ellipse, paintStroke);
     }
 
+    @Override
+    public void drawStroke(Canvas canvas) {
+        initPaint();
+        drawPath(canvas, ellipse, paintStroke);
+    }
 }

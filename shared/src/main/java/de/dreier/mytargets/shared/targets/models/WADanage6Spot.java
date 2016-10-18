@@ -19,12 +19,12 @@ public class WADanage6Spot extends WA3Ring {
         super(ID, R.string.wa_danage_6_spot);
         faceRadius = 0.38692f;
         facePositions = new Coordinate[]{
-                new Coordinate(0.0f, 0.03152883f),
                 new Coordinate(0.0f, -0.61308f),
-                new Coordinate(0.6130799f, -0.16767126f),
                 new Coordinate(-0.61308f, -0.16767126f),
-                new Coordinate(0.378922f, 0.5530689f),
-                new Coordinate(-0.378922f, 0.5530689f)
+                new Coordinate(0.6130799f, -0.16767126f),
+                new Coordinate(0.0f, 0.03152883f),
+                new Coordinate(-0.378922f, 0.5530689f),
+                new Coordinate(0.378922f, 0.5530689f)
         };
         diameters = new Dimension[]{
                 new Dimension(40, CENTIMETER),

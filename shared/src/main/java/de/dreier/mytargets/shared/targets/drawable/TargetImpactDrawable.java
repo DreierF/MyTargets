@@ -119,14 +119,15 @@ public class TargetImpactDrawable extends TargetDrawable {
             color = 0x55000000 | color & 0xFFFFFF;
         }
         paintFill.setColor(color);
-        Matrix targetMatrix = getTargetMatrix(shot.index);
-        canvas.setMatrix(targetMatrix); // TODO move this drawArrow stuff to onPostDraw or introduce a onDrawTargetFace
+        // TODO move this drawArrow stuff to onPostDraw or introduce a onDrawTargetFace
+        setMatrixForTargetFace(canvas, shot.index);
         canvas.drawCircle(shot.x, shot.y, arrowRadius, paintFill);
     }
 
     public void drawFocusedArrow(Canvas canvas, Shot shot) {
-        Matrix targetMatrix = getTargetMatrix(shot.index);
+        Matrix targetMatrix = getTargetFaceMatrix(shot.index);
         canvas.setMatrix(targetMatrix);
+
         paintFill.setColor(0xFF009900);
         canvas.drawCircle(shot.x, shot.y, arrowRadius, paintFill);
 
@@ -148,8 +149,7 @@ public class TargetImpactDrawable extends TargetDrawable {
     }
 
     public void drawArrowAvg(Canvas canvas, float x, float y, int arrow) {
-        Matrix targetMatrix = getTargetMatrix(arrow);
-        canvas.setMatrix(targetMatrix);
+        setMatrixForTargetFace(canvas, arrow);
         int zone = getZoneFromPoint(x, y);
         int color = model.getContrastColor(zone);
         paintStroke.setColor(color);

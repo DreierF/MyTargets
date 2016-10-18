@@ -30,9 +30,15 @@ public class CircularZone extends ZoneBase {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void drawFill(Canvas canvas) {
         initPaint();
         canvas.drawCircle(midpoint.x, midpoint.y, radius, paintFill);
+    }
+
+
+    @Override
+    public void drawStroke(Canvas canvas) {
+        initPaint();
         canvas.drawCircle(midpoint.x, midpoint.y, radius, paintStroke);
     }
 

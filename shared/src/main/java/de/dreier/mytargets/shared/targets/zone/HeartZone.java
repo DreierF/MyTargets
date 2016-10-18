@@ -54,10 +54,14 @@ public class HeartZone extends ZoneBase {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void drawFill(Canvas canvas) {
         initPaint();
         drawPath(canvas, heart, paintFill);
-        drawPath(canvas, heart, paintStroke);
     }
 
+    @Override
+    public void drawStroke(Canvas canvas) {
+        initPaint();
+        drawPath(canvas, heart, paintStroke);
+    }
 }

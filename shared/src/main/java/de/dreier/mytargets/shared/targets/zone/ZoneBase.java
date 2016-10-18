@@ -60,7 +60,8 @@ public abstract class ZoneBase {
         return Color.getContrast(fillColor);
     }
 
-    public abstract void draw(Canvas canvas);
+    public abstract void drawFill(Canvas canvas);
+    public abstract void drawStroke(Canvas canvas);
 
     /**
      * Workaround for http://stackoverflow.com/questions/16090607/blurry-offset-paths-when-canvas-is-scaled-under-hardware-acceleration
