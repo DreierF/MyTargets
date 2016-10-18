@@ -1,4 +1,4 @@
-package de.dreier.mytargets.managers.dao;
+package de.dreier.mytargets.utils.rules;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -15,6 +16,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.managers.dao.ArrowDataSource;
+import de.dreier.mytargets.managers.dao.BowDataSource;
+import de.dreier.mytargets.managers.dao.PasseDataSource;
+import de.dreier.mytargets.managers.dao.RoundDataSource;
+import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
+import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.EWeather;
@@ -33,6 +40,7 @@ public abstract class DbTestRuleBase implements TestRule {
     protected final BowDataSource bowDataSource;
     protected final StandardRoundDataSource standardRoundDataSource;
     protected final PasseDataSource passeDataSource;
+    protected final ArrowDataSource arrowDataSource;
 
     public DbTestRuleBase() {
         context = InstrumentationRegistry.getTargetContext();
@@ -41,6 +49,7 @@ public abstract class DbTestRuleBase implements TestRule {
         bowDataSource = new BowDataSource();
         standardRoundDataSource = new StandardRoundDataSource();
         passeDataSource = new PasseDataSource();
+        arrowDataSource = new ArrowDataSource();
     }
 
     @Override
@@ -65,23 +74,25 @@ public abstract class DbTestRuleBase implements TestRule {
         return p;
     }
 
-    protected Passe randomPasse(Round round, int arrowsPerEnd, Random gen) {
+    protected Passe randomPasse(Training training, Round round, int arrowsPerEnd, Random gen) {
         Passe p = new Passe(arrowsPerEnd);
         p.roundId = round.getId();
         for (int i = 0; i < arrowsPerEnd; i++) {
             p.shot[i].index = i;
             p.shot[i].zone = gen.nextInt(5);
         }
+        p.saveDate = new DateTime().withDate(training.date).withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
         return p;
     }
 
     protected abstract void addDatabaseContent();
 
-    void deleteAll() {
+    private void deleteAll() {
         trainingDataSource.deleteAll();
         roundDataSource.deleteAll();
         bowDataSource.deleteAll();
         passeDataSource.deleteAll();
+        arrowDataSource.deleteAll();
     }
 
     @NonNull

@@ -1,4 +1,4 @@
-package de.dreier.mytargets.managers.dao;
+package de.dreier.mytargets.utils.rules;
 
 import java.util.Random;
 
@@ -47,11 +47,11 @@ public class MiniDbTestRule extends DbTestRuleBase {
         round2.comment = "";
         roundDataSource.update(round2);
 
-        passeDataSource.update(randomPasse(round1, 6, generator));
-        passeDataSource.update(randomPasse(round1, 6, generator));
+        passeDataSource.update(randomPasse(training, round1, 6, generator));
+        passeDataSource.update(randomPasse(training, round1, 6, generator));
 
-        passeDataSource.update(randomPasse(round2, 6, generator));
-        passeDataSource.update(randomPasse(round2, 6, generator));
+        passeDataSource.update(randomPasse(training, round2, 6, generator));
+        passeDataSource.update(randomPasse(training, round2, 6, generator));
     }
 
 }

@@ -31,7 +31,7 @@ public class DistanceDataSource extends DataSourceBase {
         HashSet<Long> set = new HashSet<>();
 
         // Add currently selected distance to list
-        if (distance.unit.equals(unit)) {
+        if (distance.unit == unit) {
             distances.add(distance);
             set.add(distance.getId());
         }

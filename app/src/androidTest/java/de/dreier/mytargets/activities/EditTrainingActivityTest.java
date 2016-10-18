@@ -1,6 +1,7 @@
 package de.dreier.mytargets.activities;
 
 
+import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -24,9 +25,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
@@ -43,7 +41,7 @@ import static org.hamcrest.Matchers.containsString;
 public class EditTrainingActivityTest extends UITestBase {
 
     @Rule
-    public IntentsTestRule<MainActivity> mActivityTestRule = new IntentsTestRule<>(MainActivity.class);
+    public IntentsTestRule<EditTrainingActivity> activityTestRule = new IntentsTestRule<>(EditTrainingActivity.class, true, false);
 
     @Before
     public void setUp() {
@@ -59,12 +57,11 @@ public class EditTrainingActivityTest extends UITestBase {
 
     @Test
     public void editTrainingActivityTest() {
-        onView(matchFab()).perform(click());
-        onView(allOf(withId(R.id.fab1), withParent(withId(R.id.fab)))).perform(click());
+        Intent intent = new Intent();
+        intent.putExtra(TRAINING_TYPE, FREE_TRAINING);
+        activityTestRule.launchActivity(intent);
 
-        intended(allOf(hasComponent(EditTrainingActivity.class.getName()),
-                hasExtra(TRAINING_TYPE, FREE_TRAINING)));
-        allowPermissionsIfNeeded(mActivityTestRule.getActivity(), ACCESS_FINE_LOCATION);
+        allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
 
         // Select distance 20m
         onView(withId(R.id.distance)).perform(nestedScrollTo(), click());
@@ -91,7 +88,7 @@ public class EditTrainingActivityTest extends UITestBase {
         onView(allOf(withId(R.id.name),
                 withParent(withParent(withParent(withParent(withId(R.id.target)))))))
                 .check(matches(withText(containsString(
-                        mActivityTestRule.getActivity().getString(R.string.vertical_3_spot)))))
+                        activityTestRule.getActivity().getString(R.string.vertical_3_spot)))))
                 .check(matches(withText(containsString("40cm"))));
         onView(allOf(withId(R.id.details),
                 withParent(withParent(withParent(withParent(withId(R.id.target)))))))

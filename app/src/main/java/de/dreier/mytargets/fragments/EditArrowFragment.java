@@ -44,13 +44,10 @@ import static de.dreier.mytargets.shared.models.Dimension.Unit.MILLIMETER;
 public class EditArrowFragment extends EditWithImageFragmentBase {
 
     private static final String ARROW_ID = "arrow_id";
-
-    private EditArrowFragmentBinding contentBinding;
-    private ArrowNumbersAdapter adapter;
-
-    private long arrowId = -1;
     @State(ParcelsBundler.class)
     Arrow arrow;
+    private EditArrowFragmentBinding contentBinding;
+    private ArrowNumbersAdapter adapter;
 
     public EditArrowFragment() {
         super(R.drawable.arrows);
@@ -63,7 +60,8 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
 
     @NonNull
     static IntentWrapper editIntent(Fragment fragment, Arrow arrow) {
-        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditArrowActivity.class);
+        Intent i = new Intent(fragment.getContext(),
+                SimpleFragmentActivityBase.EditArrowActivity.class);
         i.putExtra(ARROW_ID, arrow.getId());
         return new IntentWrapper(fragment, i);
     }
@@ -74,12 +72,10 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         contentBinding = EditArrowFragmentBinding.inflate(inflater, binding.content, true);
         contentBinding.addButton.setOnClickListener((view) -> onAddArrow());
 
-        Bundle bundle = getArguments();
-        if (bundle != null && bundle.containsKey(ARROW_ID)) {
-            arrowId = bundle.getLong(ARROW_ID, -1);
-        }
         if (savedInstanceState == null) {
-            if (arrowId != -1) {
+            Bundle bundle = getArguments();
+            if (bundle != null && bundle.containsKey(ARROW_ID)) {
+                long arrowId = bundle.getLong(ARROW_ID);
                 arrow = new ArrowDataSource().get(arrowId);
                 setImageFile(arrow.imageFile);
             } else {
@@ -131,8 +127,6 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     }
 
     private Arrow buildArrow() {
-        Arrow arrow = new Arrow();
-        arrow.setId(arrowId);
         arrow.name = contentBinding.name.getText().toString();
         arrow.length = contentBinding.length.getText().toString();
         arrow.material = contentBinding.material.getText().toString();
@@ -147,7 +141,12 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         arrow.numbers = new ArrayList<>(Stream.of(arrow.numbers)
                 .filter(value -> value != null)
                 .collect(Collectors.toList()));
-        final float diameterValue = Float.parseFloat(contentBinding.diameter.getText().toString());
+        float diameterValue;
+        try {
+            diameterValue = Float.parseFloat(contentBinding.diameter.getText().toString());
+        } catch (NumberFormatException ignored) {
+            diameterValue = 5f;
+        }
         final int selectedUnit = contentBinding.diameterUnit.getSelectedItemPosition();
         Dimension.Unit diameterUnit = selectedUnit == 0 ? MILLIMETER : INCH;
         arrow.diameter = new Dimension(diameterValue, diameterUnit);

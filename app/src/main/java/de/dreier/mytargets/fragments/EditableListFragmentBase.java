@@ -37,6 +37,7 @@ abstract class EditableListFragmentBase<T extends IIdSettable> extends ListFragm
         implements OnCardClickListener<T>, LoaderManager.LoaderCallbacks<List<T>> {
 
     protected boolean supportsStatistics = false;
+    protected boolean supportsDeletion = true;
     @State(SelectorBundler.class)
     MultiSelector mSelector = new MultiSelector();
     @PluralsRes
@@ -48,8 +49,8 @@ abstract class EditableListFragmentBase<T extends IIdSettable> extends ListFragm
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             MenuItem edit = menu.findItem(R.id.action_edit);
             edit.setVisible(mSelector.getSelectedIds().size() == 1);
-            MenuItem stats = menu.findItem(R.id.action_statistics);
-            stats.setVisible(supportsStatistics);
+            menu.findItem(R.id.action_statistics).setVisible(supportsStatistics);
+            menu.findItem(R.id.action_delete).setVisible(supportsDeletion);
             return false;
         }
 
@@ -86,6 +87,7 @@ abstract class EditableListFragmentBase<T extends IIdSettable> extends ListFragm
             List<Long> ids = mSelector.getSelectedIds();
             return Stream.of(ids)
                     .map(id -> getAdapter().getItemById(id))
+                    .filter(item -> item != null)
                     .collect(Collectors.toList());
         }
 
@@ -121,7 +123,8 @@ abstract class EditableListFragmentBase<T extends IIdSettable> extends ListFragm
             getAdapter().removeItem(item);
         }
         getAdapter().notifyDataSetChanged();
-        String message = getResources().getQuantityString(itemTypeDelRes, deleted.size(), deleted.size());
+        String message = getResources()
+                .getQuantityString(itemTypeDelRes, deleted.size(), deleted.size());
         Snackbar.make(getView(), message, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, v -> {
                     for (T item : deleted) {
@@ -196,5 +199,6 @@ abstract class EditableListFragmentBase<T extends IIdSettable> extends ListFragm
     /**
      * @param itemIds Items that have been selected
      */
-    protected void onStatistics(List<Long> itemIds) {}
+    protected void onStatistics(List<Long> itemIds) {
+    }
 }

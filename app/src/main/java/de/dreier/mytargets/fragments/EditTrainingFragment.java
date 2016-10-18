@@ -6,10 +6,12 @@
  */
 package de.dreier.mytargets.fragments;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,12 +22,14 @@ import android.widget.DatePicker;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import org.joda.time.LocalDate;
+import org.parceler.Parcels;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.InputActivity;
+import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.databinding.FragmentEditTrainingBinding;
 import de.dreier.mytargets.managers.SettingsManager;
@@ -34,6 +38,7 @@ import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.RoundTemplate;
@@ -57,6 +62,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private static final int COMPETITION = 2;
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private static final int REQ_SELECTED_DATE = 2;
+    private static final int SR_TARGET_REQUEST_CODE = 11;
 
     private long trainingId = -1;
     private int trainingType = FREE_TRAINING;
@@ -144,6 +150,14 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.timer.setChecked(train.timePerPasse != -1);
         }
         binding.standardRound.setOnActivityResultContext(this);
+        binding.standardRound.setOnUpdateListener(this::updateChangeTargetFaceVisibility);
+        binding.changeTargetFace.setOnClickListener(v -> {
+            final StandardRound item = binding.standardRound.getSelectedItem();
+            Target target = item.rounds.get(0).targetTemplate;
+            TargetListFragment.getIntent(this, target)
+                    .startForResult(SR_TARGET_REQUEST_CODE);
+        });
+        updateChangeTargetFaceVisibility(binding.standardRound.getSelectedItem());
         binding.arrow.setOnActivityResultContext(this);
         binding.bow.setOnActivityResultContext(this);
         binding.environment.setOnActivityResultContext(this);
@@ -155,9 +169,16 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         return binding.getRoot();
     }
 
+    private void updateChangeTargetFaceVisibility(StandardRound item) {
+        Target target = item.rounds.get(0).targetTemplate;
+        final boolean canBeChanged = (target.id < 7 || target.id == 10 || target.id == 11)
+                && trainingType == TRAINING_WITH_STANDARD_ROUND;
+        binding.changeTargetFace.setVisibility(canBeChanged ? View.VISIBLE : View.GONE);
+    }
+
     protected void setScoringStyleForCompoundBow(Bow bow) {
         final Target target = binding.target.getSelectedItem();
-        if (bow != null && target.id <= WA3Ring3Spot.ID) {
+        if (bow != null && target != null && target.id <= WA3Ring3Spot.ID) {
             if (bow.type == EBowType.COMPOUND_BOW && target.scoringStyle == 0) {
                 target.scoringStyle = 1;
                 binding.target.setItem(target);
@@ -310,7 +331,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         rounds.add(getRoundTemplate());
         standardRound.rounds = rounds;
 
-
         SettingsManager.setIndoor(standardRound.indoor);
         return standardRound;
     }
@@ -324,6 +344,16 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         binding.arrow.onActivityResult(requestCode, resultCode, data);
         binding.bow.onActivityResult(requestCode, resultCode, data);
         binding.environment.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && requestCode == SR_TARGET_REQUEST_CODE) {
+            final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
+            final Target st = Parcels.unwrap(parcelable);
+            StandardRound item = binding.standardRound.getSelectedItem();
+            for (RoundTemplate template : item.rounds) {
+                Dimension size = template.target.size;
+                template.target = new Target(st.id, st.scoringStyle, size);
+            }
+            binding.standardRound.setItem(item);
+        }
     }
 
     private void updateArrowsLabel() {

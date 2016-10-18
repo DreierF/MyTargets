@@ -76,7 +76,7 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
         values.put(STANDARD_ID, roundTemplate.standardRound);
         values.put(INDEX, roundTemplate.index);
         values.put(DISTANCE, roundTemplate.distance.value);
-        values.put(UNIT, roundTemplate.distance.unit.toString());
+        values.put(UNIT, Dimension.Unit.toStringHandleNull(roundTemplate.distance.unit));
         values.put(PASSES, roundTemplate.endCount);
         values.put(ARROWS_PER_PASSE, roundTemplate.arrowsPerEnd);
         values.put(TARGET, roundTemplate.targetTemplate.id);
