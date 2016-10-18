@@ -19,7 +19,6 @@ import de.dreier.mytargets.shared.models.Dimension;
 public class DistanceSelector extends SelectorBase<Dimension> {
 
     public static final int DISTANCE_REQUEST_CODE = 1;
-    private SelectorItemDistanceBinding binding;
 
     public DistanceSelector(Context context) {
         this(context, null);
@@ -29,11 +28,11 @@ public class DistanceSelector extends SelectorBase<Dimension> {
         super(context, attrs, R.layout.selector_item_distance);
         defaultActivity = ItemSelectActivity.DistanceActivity.class;
         requestCode = DISTANCE_REQUEST_CODE;
-        binding = DataBindingUtil.bind(mView);
     }
 
     @Override
     protected void bindView() {
-        binding.distance.setText(item.toString());
+        SelectorItemDistanceBinding binding = DataBindingUtil.bind(view);
+        binding.distanceValue.setText(item.toString());
     }
 }

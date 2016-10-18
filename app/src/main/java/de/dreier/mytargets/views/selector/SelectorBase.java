@@ -24,48 +24,60 @@ import org.parceler.Parcels;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
-
+import de.dreier.mytargets.shared.utils.ParcelsBundler;
+import de.dreier.mytargets.utils.IntentWrapper;
+import icepick.Icepick;
+import icepick.State;
 
 public abstract class SelectorBase<T> extends LinearLayout {
 
     public static final String INDEX = "index";
-
-    protected final View mView;
-    private final View mProgress;
+    private final int layout;
+    protected View view;
+    protected Fragment fragment;
+    @State(ParcelsBundler.class)
+    T item = null;
     int requestCode;
     Class<?> defaultActivity;
     Class<?> addActivity;
-    Button mAddButton;
-    T item = null;
+    private Button addButton;
+    private View progress;
     private OnUpdateListener<T> updateListener;
     private int index = -1;
 
     public SelectorBase(Context context, AttributeSet attrs, @LayoutRes int layout) {
         super(context, attrs);
-        LayoutInflater inflater = (LayoutInflater) getContext()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mProgress = inflater.inflate(R.layout.selector_item_process, this, false);
-        mView = inflater.inflate(layout, this, false);
-        addView(mProgress);
-        addView(mView);
+        this.layout = layout;
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mAddButton = (Button) getChildAt(2);
+        addButton = (Button) getChildAt(0);
+        if (addButton != null) {
+            addButton.setOnClickListener(v -> onAddButtonClicked());
+        }
+        LayoutInflater inflater = (LayoutInflater) getContext()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        progress = inflater.inflate(R.layout.selector_item_process, this, false);
+        view = inflater.inflate(layout, this, false);
+        addView(progress);
+        addView(view);
         updateView();
     }
 
+    protected void onAddButtonClicked() {
+    }
+
     private void updateView() {
-        if (mAddButton != null) {
-            mAddButton.setVisibility(item == null ? VISIBLE : GONE);
+        boolean displayProgress = item == null && addButton == null;
+        if (addButton != null) {
+            addButton.setVisibility(item == null ? VISIBLE : GONE);
         }
-        boolean progress = item == null && mAddButton == null;
-        mProgress.setVisibility(progress ? VISIBLE : GONE);
-        mView.setVisibility(item != null ? VISIBLE : GONE);
+        progress.setVisibility(displayProgress ? VISIBLE : GONE);
+        view.setVisibility(item != null ? VISIBLE : GONE);
         if (item != null) {
-            post(this::bindView);
+            bindView();
         }
     }
 
@@ -105,10 +117,9 @@ public abstract class SelectorBase<T> extends LinearLayout {
     }
 
     public void setOnActivityResultContext(Fragment fragment) {
-        setOnClickListener(v -> {
-            fragment.startActivityForResult(getDefaultIntent(), requestCode);
-            fragment.getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
-        });
+        this.fragment = fragment;
+        setOnClickListener(v -> new IntentWrapper(fragment, getDefaultIntent())
+                .startForResult(requestCode));
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -119,6 +130,16 @@ public abstract class SelectorBase<T> extends LinearLayout {
                 setItem(Parcels.unwrap(parcelable));
             }
         }
+    }
+
+    @Override
+    public Parcelable onSaveInstanceState() {
+        return Icepick.saveInstanceState(this, super.onSaveInstanceState());
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
     }
 
     public interface OnUpdateListener<T> {

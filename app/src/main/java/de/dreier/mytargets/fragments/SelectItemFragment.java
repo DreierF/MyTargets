@@ -19,17 +19,17 @@ import junit.framework.Assert;
 import org.parceler.Parcels;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.shared.models.IIdProvider;
-import de.dreier.mytargets.utils.SelectableViewHolder;
-import de.dreier.mytargets.utils.SingleSelector;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+import de.dreier.mytargets.utils.multiselector.SingleSelector;
 
 /**
  * Base class for handling single item selection
  * <p>
- * Parent activity must implement {@link de.dreier.mytargets.fragments.FragmentBase.OnItemSelectedListener}.
+ * Parent activity must implement {@link ListFragmentBase.OnItemSelectedListener}.
  */
-public abstract class SelectItemFragment<T extends IIdProvider> extends FragmentBase<T> {
+public abstract class SelectItemFragment<T extends IIdProvider & Comparable<T>> extends ListFragmentBase<T> {
 
     /**
      * Selector which manages the item selection
@@ -39,7 +39,7 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
     /**
      * Adapter for the fragment's RecyclerView
      */
-    NowListAdapter<T> mAdapter;
+    ListAdapterBase<T> mAdapter;
 
     /**
      * Listener which gets called when item gets selected
@@ -101,9 +101,6 @@ public abstract class SelectItemFragment<T extends IIdProvider> extends Fragment
         mSelector.setSelected(holder, true);
         if (alreadySelected || !usesDoubleClickSelection) {
             onSaveItem();
-        } else {
-            mAdapter.notifyItemChanged(oldSelectedPosition);
-            mAdapter.notifyItemChanged(holder.getAdapterPosition());
         }
     }
 

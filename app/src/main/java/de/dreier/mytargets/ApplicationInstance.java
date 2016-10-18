@@ -24,6 +24,8 @@ import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.SightSetting;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.WindDirection;
+import de.dreier.mytargets.shared.models.WindSpeed;
 import de.dreier.mytargets.shared.utils.ScoresDrawer;
 import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.models.db.Training;
@@ -51,7 +53,9 @@ import de.dreier.mytargets.utils.MyBackupAgent;
         @ParcelClass(NotificationInfo.class),
         @ParcelClass(Target.class),
         @ParcelClass(Training.class),
-        @ParcelClass(Thumbnail.class)
+        @ParcelClass(Thumbnail.class),
+        @ParcelClass(WindDirection.class),
+        @ParcelClass(WindSpeed.class)
 })
 public class ApplicationInstance extends SharedApplicationInstance {
 

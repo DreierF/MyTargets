@@ -18,11 +18,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
 import de.dreier.mytargets.databinding.FragmentMainBinding;
+import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 
 import static de.dreier.mytargets.utils.ToolbarUtils.setSupportActionBar;
@@ -32,7 +36,8 @@ public class MainFragment extends Fragment {
     private boolean showStatistics = false;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FragmentMainBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
+        FragmentMainBinding binding = DataBindingUtil
+                .inflate(inflater, R.layout.fragment_main, container, false);
 
         setSupportActionBar(this, binding.toolbar);
         setHasOptionsMenu(true);
@@ -66,10 +71,15 @@ public class MainFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_statistics:
-                startActivity(new Intent(getContext(), StatisticsActivity.class));
+                StatisticsActivity
+                        .getIntent(this, Stream.of(Training.getAll())
+                                .flatMap((training) -> Stream.of(training.getRounds()))
+                                .map(Round::getId)
+                                .collect(Collectors.toList())).start();
                 return true;
             case R.id.action_preferences:
-                startActivity(new Intent(getContext(), SimpleFragmentActivityBase.SettingsActivity.class));
+                startActivity(new Intent(getContext(),
+                        SimpleFragmentActivityBase.SettingsActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

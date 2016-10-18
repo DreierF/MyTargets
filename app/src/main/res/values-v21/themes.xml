@@ -5,4 +5,8 @@
         <item name="android:windowContentTransitions">true</item>
     </style>
 
+    <style name="AppTheme.CustomToolbar.Translucent" parent="AppBaseTheme.CustomToolbar.Translucent">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
 </resources>

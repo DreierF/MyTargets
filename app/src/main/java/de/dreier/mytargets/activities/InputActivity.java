@@ -9,7 +9,12 @@ package de.dreier.mytargets.activities;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.Fragment;
+import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -21,6 +26,7 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityInputBinding;
 import de.dreier.mytargets.fragments.TimerFragment;
+import de.dreier.mytargets.interfaces.OnEndUpdatedListener;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.WearMessageManager;
 import de.dreier.mytargets.models.EShowMode;
@@ -37,14 +43,18 @@ import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.Utils;
+import de.dreier.mytargets.utils.transitions.FabTransform;
+import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import icepick.Icepick;
 import icepick.State;
 
-public class InputActivity extends ChildActivityBase implements OnTargetSetListener {
+public class InputActivity extends ChildActivityBase implements OnTargetSetListener, OnEndUpdatedListener {
 
-    public static final String ROUND_ID = "round_id";
-    public static final String PASSE_IND = "passe_ind";
+    private static final String ROUND_ID = "round_id";
+    private static final String PASSE_IND = "passe_ind";
 
     /**
      * Zero-based index of the currently displayed end.
@@ -57,17 +67,37 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     private WearMessageManager manager;
     private Training training;
     private RoundTemplate template;
-    private List<Round> rounds;
     private StandardRound standardRound;
 
     private ActivityInputBinding binding;
+    private boolean transitionFinished = true;
+
+    @NonNull
+    public static IntentWrapper createIntent(Fragment fragment, Round round) {
+        return getIntent(fragment, round, 0);
+    }
+
+    public static IntentWrapper getIntent(Fragment fragment, Round round, int passeIndex) {
+        Intent i = new Intent(fragment.getContext(), InputActivity.class);
+        i.putExtra(ROUND_ID, round.getId());
+        i.putExtra(PASSE_IND, passeIndex);
+        return new IntentWrapper(fragment, i);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_input);
 
+        setSupportActionBar(binding.toolbar);
+        FabTransformUtil.setup(this, binding.getRoot());
+
+        if (Utils.isLollipop()) {
+            setupTransitionListener();
+        }
+
         binding.targetView.setOnTargetSetListener(this);
+        binding.targetView.setUpdateListener(this);
 
         Intent intent = getIntent();
         assert intent != null;
@@ -78,14 +108,15 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         template = round.info;
         training = Training.get(round.trainingId);
         standardRound = StandardRound.get(training.standardRoundId);
-        rounds = training.getRounds();
         savedPasses = round.getPasses().size();
+
+        setTitle(training.title);
 
         binding.targetView.setRoundTemplate(template);
         Dimension diameter = new Dimension(5, Dimension.Unit.MILLIMETER);
-        if(training.arrow >0) {
+        if (training.arrow > 0) {
             Arrow arrow = Arrow.get(training.arrow);
-            if(arrow != null) {
+            if (arrow != null) {
                 diameter = arrow.diameter;
             }
         }
@@ -108,6 +139,22 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         binding.prev.setOnClickListener(view -> setPasse(curPasse - 1));
 
         ToolbarUtils.showHomeAsUp(this);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setupTransitionListener() {
+        final Transition sharedElementEnterTransition = getWindow()
+                .getSharedElementEnterTransition();
+        if (sharedElementEnterTransition != null && sharedElementEnterTransition instanceof FabTransform) {
+            transitionFinished = false;
+            getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
+                @Override
+                public void onTransitionEnd(Transition transition) {
+                    transitionFinished = true;
+                    getWindow().getSharedElementEnterTransition().removeListener(this);
+                }
+            });
+        }
     }
 
     private void startWearNotification() {
@@ -158,26 +205,11 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     }
 
     private void setPasse(int passe) {
-        if (passe >= template.endCount) {
-            if (rounds.size() > template.index + 1) {
-                // Go to next round if current round is finished
-                round = rounds.get(template.index + 1);
-                template = round.info;
-                passe = 0;
-                savedPasses = round.getPasses().size();
-            } else if (savedPasses <= curPasse && standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
-                // If standard round is over exit the input activity
-                finish();
-                overridePendingTransition(R.anim.left_in, R.anim.right_out);
-                return;
-            }
-        } else if (passe == -1 && template.index > 0) {
-            // If we navigate backwards and go past the beginning of lets say round 2
-            // -> go to the last end of round 1
-            round = rounds.get(template.index - 1);
-            template = round.info;
-            passe = template.endCount - 1;
-            savedPasses = template.endCount;
+        if (passe >= template.endCount && savedPasses <= curPasse && standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
+            // If standard round is over exit the input activity
+            finish();
+            overridePendingTransition(R.anim.left_in, R.anim.right_out);
+            return;
         }
         if (passe < savedPasses) {
             // If the end is already saved load it from the database
@@ -208,14 +240,13 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     }
 
     private void updatePasse() {
-        binding.prev.setEnabled(curPasse > 0 || template.index > 0);
+        binding.prev.setEnabled(curPasse > 0);
         binding.next.setEnabled(curPasse < savedPasses &&
                 (curPasse + 1 < template.endCount || // The current round is not finished
-                        rounds.size() > template.index + 1 || // We still have another round
                         standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE)); // or we don't have an exit condition
 
-        ToolbarUtils.setTitle(this, getString(R.string.passe) + " " + (curPasse + 1));
-        ToolbarUtils.setSubtitle(this, getString(R.string.round) + " " + (round.info.index + 1));
+        binding.endTitle.setText(getString(R.string.passe) + " " + (curPasse + 1));
+        binding.roundTitle.setText(getString(R.string.round) + " " + (round.info.index + 1));
     }
 
     @Override
@@ -243,9 +274,23 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     }
 
     private void openTimer() {
-        Intent intent = new Intent(this, SimpleFragmentActivityBase.TimerActivity.class);
-        intent.putExtra(TimerFragment.SHOOTING_TIME, training.timePerPasse);
-        startActivity(intent);
+        if (transitionFinished) {
+            TimerFragment.getIntent(this, training.timePerPasse)
+                    .start();
+        } else if (Utils.isLollipop()) {
+            startTimerDelayed();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void startTimerDelayed() {
+        getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                TimerFragment.getIntent(InputActivity.this, training.timePerPasse).start();
+                getWindow().getSharedElementEnterTransition().removeListener(this);
+            }
+        });
     }
 
     @Override
@@ -285,6 +330,21 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         return passe.getId();
     }
 
+    @Override
+    public void onEndUpdated(Passe p, List<Passe> old) {
+        int reachedEndPoints = p.getReachedPoints(template.target);
+        int maxEndPoints = round.info.target.getEndMaxPoints(round.info.arrowsPerEnd);
+        binding.scoreEnd.setText(reachedEndPoints + "/" + maxEndPoints);
+        final List<Passe> ends = Stream.of(old)
+                .filter(p2 -> round.getId() == p2.roundId && p2.getId() != p.getId())
+                .collect(Collectors.toList());
+        ends.add(p);
+        int reachedRoundPoints = Stream.of(ends)
+                .reduce(0, (sum, end) -> sum + end.getReachedPoints(round.info.target));
+        int maxRoundPoints = maxEndPoints * ends.size();
+        binding.scoreRound.setText(reachedRoundPoints + "/" + maxRoundPoints);
+    }
+
     private NotificationInfo buildInfo() {
         String title = getString(R.string.passe) + " " + (savedPasses + 1);
         String text = "";
@@ -308,5 +368,28 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
             }
         }
         return new NotificationInfo(round, title, text);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private static abstract class TransitionAdapter implements Transition.TransitionListener {
+        @Override
+        public void onTransitionStart(Transition transition) {
+
+        }
+
+        @Override
+        public void onTransitionCancel(Transition transition) {
+
+        }
+
+        @Override
+        public void onTransitionPause(Transition transition) {
+
+        }
+
+        @Override
+        public void onTransitionResume(Transition transition) {
+
+        }
     }
 }

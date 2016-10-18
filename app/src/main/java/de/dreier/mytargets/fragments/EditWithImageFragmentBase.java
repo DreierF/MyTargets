@@ -9,6 +9,7 @@ package de.dreier.mytargets.fragments;
 
 import android.Manifest;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -33,7 +34,7 @@ import de.dreier.mytargets.databinding.FragmentEditImageBinding;
 import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import icepick.Icepick;
+import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import icepick.State;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -61,11 +62,10 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentEditImageBinding.inflate(inflater, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_image, container, false);
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
         ToolbarUtils.showUpAsX(this);
         setHasOptionsMenu(true);
-        Icepick.restoreInstanceState(this, savedInstanceState);
         binding.fab.setOnClickListener(this::onFabClicked);
         return binding.getRoot();
     }
@@ -74,6 +74,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setFocusListenerForAllEditText(getView());
+        FabTransformUtil.setup(getActivity(), binding.getRoot());
     }
 
     private void setFocusListenerForAllEditText(View view) {
@@ -152,7 +153,9 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
                         //Cancel handling, you might wanna remove taken photo if it was canceled
                         if (source == EasyImage.ImageSource.CAMERA) {
                             File photoFile = EasyImage.lastlyTakenButCanceledPhoto(getContext());
-                            if (photoFile != null) photoFile.delete();
+                            if (photoFile != null) {
+                                photoFile.delete();
+                            }
                         }
                     }
                 });
@@ -227,11 +230,5 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
             return new Thumbnail(bitmap);
         }
         return new Thumbnail(imageFile);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
     }
 }

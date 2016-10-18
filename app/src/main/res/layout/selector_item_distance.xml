@@ -18,7 +18,7 @@
             android:text="@string/distance"/>
 
         <TextView
-            android:id="@+id/distance"
+            android:id="@+id/distanceValue"
             style="@style/primary_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

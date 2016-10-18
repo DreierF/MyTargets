@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuItem;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.utils.Utils;
 
 public class ChildActivityBase extends AppCompatActivity {
 
@@ -26,7 +27,11 @@ public class ChildActivityBase extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
-        overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        if (Utils.isLollipop()) {
+            finishAfterTransition();
+        } else {
+            finish();
+            overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        }
     }
 }

@@ -31,25 +31,29 @@ import de.dreier.mytargets.shared.utils.Pair;
 
 @Parcel
 @Table(database = AppDatabase.class, name = "PASSE")
-public class Passe extends BaseModel implements IIdSettable {
+public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> {
+
+    @Column(name = "_id")
+    @PrimaryKey(autoincrement = true)
+    Long id;
 
     //@Column(name = "index") TODO migration, does no yet exist in db
     public int index;
+
     @Column(name = "image")
     public String image;
+
     @ForeignKey(tableClass = Round.class, references = {
             @ForeignKeyReference(columnName = "round", columnType = Long.class, foreignKeyColumnName = "_id")})
     public Long roundId;
+
     @Column(name = "exact")
     public boolean exact;
 
     public List<Shot> shots = new ArrayList<>();
-    public Shot[] shot;
+
     @Column(typeConverter = DateTimeConverter.class, name = "save_time")
     public DateTime saveDate = new DateTime();
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    Long id;
 
     public Passe() {
     }
@@ -122,7 +126,7 @@ public class Passe extends BaseModel implements IIdSettable {
         Map<SelectableZone, Integer> scoreCount = getAllPossibleZones(t);
         for (Round round : rounds) {
             for (Passe p : round.getPasses()) {
-                for (Shot s : p.shot) {
+                for (Shot s : p.shots) {
                     SelectableZone tuple = new SelectableZone(s.zone, t.getModel().getZone(s.zone),
                             t.zoneToString(s.zone, s.index), t.getPointsByZone(s.zone, s.index));
                     final Integer integer = scoreCount.get(tuple);
@@ -178,5 +182,10 @@ public class Passe extends BaseModel implements IIdSettable {
 
     public static void deleteAll() {
         SQLite.delete(Passe.class).execute();
+    }
+
+    @Override
+    public int compareTo(@NonNull Passe passe) {
+        return index - passe.index;
     }
 }

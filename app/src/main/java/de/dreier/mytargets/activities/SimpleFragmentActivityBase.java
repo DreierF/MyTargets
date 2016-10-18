@@ -27,19 +27,20 @@ import de.dreier.mytargets.fragments.RoundFragment;
 import de.dreier.mytargets.fragments.SettingsFragment;
 import de.dreier.mytargets.fragments.TimerFragment;
 import de.dreier.mytargets.fragments.TrainingFragment;
+import de.dreier.mytargets.utils.Utils;
 
 public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
 
     private static final String FRAGMENT_TAG = "fragment";
-    Fragment childFragment;
     protected ViewDataBinding binding;
+    Fragment childFragment;
 
     protected abstract Fragment instantiateFragment();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, getLayoutResource());
+        binding = DataBindingUtil.setContentView(this, R.layout.layout_frame);
 
         if (savedInstanceState == null) {
             // Create the fragment only when the activity is created for the first time.
@@ -57,16 +58,13 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
         }
     }
 
-    int getLayoutResource() {
-        return R.layout.layout_frame;
-    }
-
     public static class TimerActivity extends SimpleFragmentActivityBase {
 
         @Override
         public Fragment instantiateFragment() {
             return new TimerFragment();
         }
+
     }
 
     public static class TrainingActivity extends SimpleFragmentActivityBase {
@@ -94,6 +92,16 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
             return new EditTrainingFragment();
         }
 
+        @Override
+        public void onBackPressed() {
+            // Workaround: When cancelling a new training don't animate
+            // back to the fab, because clans FAB breaks the transition
+            if (Utils.isLollipop()) {
+                getWindow().setSharedElementReturnTransition(null);
+                getWindow().setSharedElementReenterTransition(null);
+            }
+            finish();
+        }
     }
 
     public static class EditRoundActivity extends SimpleFragmentActivityBase {

@@ -42,6 +42,8 @@ public class StandardRoundFactory {
     private static final int WA = 128;
     private static final boolean CAT_INDOOR = true;
     private static final boolean CAT_OUTDOOR = false;
+    private static long idCounter;
+    private static long roundCounter;
 
     public static List<StandardRound> initTable() {
         List<StandardRound> rounds = new ArrayList<>();
@@ -53,6 +55,9 @@ public class StandardRoundFactory {
             * 5 arrows, indoor, i/nfaa, nasp = 4 min
             * 6 arrows = 4 min
             * */
+
+        idCounter = 0;
+        roundCounter = 0;
 
         // Indoor
         rounds.add(build(AUSTRALIAN, R.string.australian_combined_indoor, CAT_INDOOR,
@@ -710,11 +715,15 @@ public class StandardRoundFactory {
      */
     private static StandardRound build(int institution, int name, boolean indoor, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, int target, int scoringStyle, int arrowsPerPasse, int... roundDetails) {
         StandardRound standardRound = new StandardRound();
+        idCounter++;
+        standardRound.setId(idCounter);
         standardRound.name = SharedApplicationInstance.getContext().getString(name);
         standardRound.indoor = indoor;
         standardRound.club = institution;
         for (int i = 0; i < roundDetails.length; i += 3) {
+            roundCounter++;
             RoundTemplate roundTemplate = new RoundTemplate();
+            roundTemplate.setId(roundCounter);
             roundTemplate.arrowsPerEnd = arrowsPerPasse;
             roundTemplate.distance = new Dimension(roundDetails[i], distanceUnit);
             roundTemplate.setTargetTemplate(

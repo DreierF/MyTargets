@@ -6,7 +6,6 @@
     <color name="colorAccent">#ff9100</color>
 
     <color name="white">#FFFFFFFF</color>
-    <color name="new_text_color">#FF666666</color>
 
     <!-- Timer -->
     <color name="timer_green">#ff43a047</color>
@@ -15,7 +14,10 @@
     <color name="dividerColor">#1F000000</color>
     <color name="dim_overlay">#55000000</color>
 
-    <color name="list_choice_normal_bg_light">#ffff</color>
     <color name="list_choice_pressed_bg_light">#fccc</color>
+
+    <!-- Chips -->
+    <color name="base10">#eaeaea</color>
+    <color name="base30">#ff0000</color>
 
 </resources>

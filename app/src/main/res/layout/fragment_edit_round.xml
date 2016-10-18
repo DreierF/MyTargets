@@ -6,7 +6,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:transitionName="@string/transition_root_view"
+        tools:targetApi="lollipop">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -37,7 +39,7 @@
                         android:orientation="vertical">
 
                         <de.dreier.mytargets.views.selector.DistanceSelector
-                            android:id="@+id/distanceSpinner"
+                            android:id="@+id/distance"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"/>
@@ -55,7 +57,7 @@
 
 
                         <de.dreier.mytargets.views.selector.TargetSelector
-                            android:id="@+id/targetSpinner"
+                            android:id="@+id/target"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"/>

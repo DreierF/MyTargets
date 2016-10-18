@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,7 +31,7 @@ import de.dreier.mytargets.utils.ToolbarUtils;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class EnvironmentFragment extends Fragment {
+public class EnvironmentFragment extends FragmentBase {
 
     private SelectItemFragment.OnItemSelectedListener listener;
     private Environment mEnvironment;
@@ -95,8 +94,7 @@ public class EnvironmentFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
             onSave();
-            getActivity().finish();
-            getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

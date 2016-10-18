@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.Target;
@@ -32,6 +33,7 @@ import de.dreier.mytargets.shared.utils.Pair;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
+import static de.dreier.mytargets.shared.models.db.Passe.getSortedScoreDistribution;
 import static de.dreier.mytargets.shared.targets.ScoringStyle.MISS_SYMBOL;
 
 public class HtmlUtils {
@@ -232,7 +234,7 @@ public class HtmlUtils {
     @NonNull
     private static String getStatisticsForRound(List<Round> rounds) {
         String html = BR + "<table class=\"myTable\" style=\"margin-top:5px;\"><tr>";
-        List<Map.Entry<SelectableZone, Integer>> scoreDistribution = Passe.getSortedScoreDistribution(rounds);
+        List<Map.Entry<SelectableZone, Integer>> scoreDistribution = getSortedScoreDistribution(rounds);
         int hits = 0;
         int total = 0;
         for (Map.Entry<SelectableZone, Integer> score : scoreDistribution) {
@@ -274,9 +276,8 @@ public class HtmlUtils {
 
     public static String getTrainingInfoHTML(Training training, List<Round> rounds, boolean[] equals, boolean scoreboard) {
         HTMLInfoBuilder info = new HTMLInfoBuilder();
-        StandardRound standardRound = addStaticTrainingHeaderInfo(info, training, rounds,
-                scoreboard);
-        addDynamicTrainingHeaderInfo(rounds, equals, info, standardRound);
+        addStaticTrainingHeaderInfo(info, training, rounds, scoreboard);
+        addDynamicTrainingHeaderInfo(rounds, equals, info);
         return info.toString();
     }
 
@@ -284,6 +285,18 @@ public class HtmlUtils {
     private static StandardRound addStaticTrainingHeaderInfo(HTMLInfoBuilder info, Training training, List<Round> rounds, boolean scoreboard) {
         if (scoreboard) {
             getScoreboardOnlyHeaderInfo(info, training, rounds);
+        }
+
+        StandardRound standardRound = StandardRound.get(training.standardRoundId);
+        if (standardRound.indoor) {
+            info.addLine(R.string.environment, get(R.string.indoor));
+        } else {
+            info.addLine(R.string.weather, training.getEnvironment().weather.getName());
+            info.addLine(R.string.wind,
+                    training.getEnvironment().getWindSpeed(ApplicationInstance.getContext()));
+            if (!TextUtils.isEmpty(training.getEnvironment().location)) {
+                info.addLine(R.string.location, training.getEnvironment().location);
+            }
         }
 
         Bow bow = Bow.get(training.bow);
@@ -299,20 +312,18 @@ public class HtmlUtils {
             info.addLine(R.string.arrow, arrow.name);
         }
 
-        StandardRound standardRound = StandardRound.get(training.standardRoundId);
         if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
             info.addLine(R.string.standard_round, standardRound.name);
         }
         return standardRound;
     }
 
-    private static void addDynamicTrainingHeaderInfo(List<Round> rounds, boolean[] equals, HTMLInfoBuilder info, StandardRound standardRound) {
+    private static void addDynamicTrainingHeaderInfo(List<Round> rounds, boolean[] equals, HTMLInfoBuilder info) {
         if (rounds.size() > 0) {
             getEqualValues(rounds, equals);
             Round round = rounds.get(0);
             if (equals[0]) {
-                final int envStringResId = standardRound.indoor ? R.string.indoor : R.string.outdoor;
-                info.addLine(R.string.distance, String.format("%s - %s", round.info.distance, get(envStringResId)));
+                info.addLine(R.string.distance, round.info.distance);
             }
             if (equals[1]) {
                 info.addLine(R.string.target_face, round.info.target);

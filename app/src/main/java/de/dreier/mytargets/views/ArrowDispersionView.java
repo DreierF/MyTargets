@@ -105,10 +105,6 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
     }
 
     private void drawTarget(Canvas canvas, float x, float y, float radius) {
-        // Erase background
-        //fillPaint.setColor(0xFFEEEEEE);
-        //canvas.drawRect(0, 0, contentWidth, contentHeight, fillPaint);
-
         // Draw actual target face
         target.setBounds((int) (x - radius), (int) (y - radius), (int) (x + radius),
                 (int) (y + radius));

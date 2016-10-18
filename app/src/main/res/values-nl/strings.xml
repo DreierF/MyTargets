@@ -41,9 +41,6 @@
   <string name="statistic">Statistiek</string>
   <!-- Share -->
   <string name="share">Delen</string>
-  <string name="my_share_text">Yeah, kijk eens naar mijn score. Ik heb: \n%1$s. Totaal %2$d uit maximaal %3$d punten.</string>
-  <string name="d_times_s">%1$d keer %2$s\n</string>
-  <string name="text">Tekst</string>
   <string name="dispersion_pattern">Verspreidingspatroon</string>
   <string name="sharing_failed">Delen mislukt!</string>
   <!-- Export -->
@@ -61,7 +58,6 @@
   <string name="tiller">Tiller</string>
   <string name="sight_settings">Vizier instellingen</string>
   <string name="add">Toevoegen</string>
-  <string name="select_picture">Kies een afbeelding</string>
   <string name="take_picture">Neem een foto</string>
   <string name="pick_from_gallery">Kies een afbeelding uit gallerij</string>
   <!-- New arrow -->
@@ -100,9 +96,6 @@
   <string name="show_all">Toon alle schoten</string>
   <string name="comment">Opmerking</string>
   <!-- Statistics -->
-  <string name="all_trainings">Alle trainingen</string>
-  <string name="entire_training">Hele training</string>
-  <string name="current_round">Huidige ronde</string>
   <!-- Import/Backup -->
   <string name="select_a_file">Kies een bestand</string>
   <string name="dir_not_created">Map kan niet worden aangemaakt!</string>
@@ -112,14 +105,11 @@
   <string name="file_not_found">Bestand niet gevonden!</string>
   <string name="failed_reading_file">Lezen van bestand mislukt!</string>
   <!-- Donate -->
-  <string name="donate_action">Doneren</string>
   <string name="donate_2">Doneer mij een hamburger</string>
   <string name="donate_5">Doneer mij een kebab</string>
   <string name="donate_10">Doneer mij een grote pizza</string>
   <string name="donate_20">Doneer mij wat benzine</string>
-  <string name="donate_infinite">Doorlopende donatie</string>
   <string name="donation_thank">Bedankt voor uw donatie!</string>
-  <string name="monthly">Maandelijks %s</string>
   <string name="donate_text"> De bedragen zijn inclusief BTW en 30% kosten voor Google. Als alternatief mag u ook doneren via PayPal, op account dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Schietklok</string>
@@ -138,9 +128,6 @@
   <string name="import_action">Importeren</string>
   <string name="export">Exporteren</string>
   <string name="exports_as_csv">Exporteert de opgeslagen gegevens als *.csv</string>
-  <string name="app_rate">App beoordelen</string>
-  <string name="app_share">App delen</string>
-  <string name="contact_developer">Contact opnemen met ontwikkelaar</string>
   <string name="licences">Open Source-Licentie</string>
   <string name="licences_summary">Licentievoorwaarden</string>
   <string name="version">Versie %s</string>
@@ -174,7 +161,6 @@
   <string name="standard_round">Standaard ronde</string>
   <string name="use_as_template">Template gebruiken?</string>
   <string name="create_copy">Dit is een standaard ronde! \nWilt u een kopie maken om te bewerken?</string>
-  <string name="not_matches_sheme">Input komt niet overeen met de verwachte notatie (bijvoorbeeld 1,3,5)</string>
   <string name="arrow_numbers_desc">Voer de pijlnummers in waarmee u gaat schieten (bijvoorbeeld 1,2,5,6,7)</string>
   <string name="practice">Oefening</string>
   <string name="edit_training">Training wijzigen</string>
@@ -243,9 +229,6 @@
   <string name="donate_via_paypal">Doneer via PayPal</string>
   <string name="translate_crowdin">Vertaal op Crowdin</string>
   <string name="network_linkedin">Netwerk op LinkedIn</string>
-  <string name="enter_scores_only_description">Hiermee kunt u alleen de scores invoeren, niet de exacte pijl positie. 
-Gebruik deze optie om gegevens met uw smartwatch of historische gegevens in te voeren.</string>
-  <string name="enter_scores_only">Alleen scores invoeren</string>
   <string name="search">Zoeken</string>
   <string name="us">Verenigde Staten</string>
   <string name="show_shots_training">Hele training</string>
@@ -261,7 +244,6 @@ Gebruik deze optie om gegevens met uw smartwatch of historische gegevens in te v
   <string name="archer">Schutter</string>
   <string name="hits">Hits</string>
   <string name="misses">Gemist</string>
-  <string name="percentage_reached_points">Percentage of reached points</string>
   <string name="arrow_number_removed">Arrow number removed!</string>
   <string name="new_end">New end</string>
   <string name="distribution">Distribution</string>
@@ -270,4 +252,6 @@ Gebruik deze optie om gegevens met uw smartwatch of historische gegevens in te v
   <string name="input">Input</string>
   <string name="target_zoom">Target zoom level</string>
   <string name="arrow_diameter_scale">Arrow diameter scale</string>
+  <string name="timestamp">Timestamp</string>
+  <string name="change_target_face">Change target face</string>
 </resources>

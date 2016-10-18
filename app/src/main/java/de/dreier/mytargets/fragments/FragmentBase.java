@@ -1,55 +1,43 @@
-/*
- * MyTargets Archery
- *
- * Copyright (C) 2015 Florian Dreier
- * All rights reserved
- */
 package de.dreier.mytargets.fragments;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.PluralsRes;
-import android.support.annotation.StringRes;
 import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.view.ActionMode;
 
-import de.dreier.mytargets.shared.models.IIdProvider;
-import de.dreier.mytargets.utils.OnCardClickListener;
+import de.dreier.mytargets.R;
+import de.dreier.mytargets.utils.Utils;
+import icepick.Icepick;
 
-/**
- * Generic fragment class used as base for most fragments.
- *
- * @param <T> Model of the item which is managed within the fragment
- */
-public abstract class FragmentBase<T extends IIdProvider> extends Fragment
-        implements OnCardClickListener<T>, LoaderManager.LoaderCallbacks<FragmentBase.LoaderUICallback> {
+public abstract class FragmentBase extends Fragment implements LoaderManager.LoaderCallbacks<FragmentBase.LoaderUICallback> {
 
-    public static final String ITEM_ID = "id";
 
-    /**
-     * Resource used to set title when items are selected
-     */
-    @PluralsRes
-    int itemTypeSelRes;
+        @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Icepick.restoreInstanceState(this, savedInstanceState);
+    }
 
-    /**
-     * Resource describing FAB action
-     */
-    @StringRes
-    int newStringRes;
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
+    }
 
-    /**
-     * Action mode manager
-     */
-    ActionMode actionMode = null;
-
+    protected void finish() {
+        if (Utils.isLollipop()) {
+            getActivity().finishAfterTransition();
+        } else {
+            getActivity().finish();
+            getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        }
+    }
+    
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -90,17 +78,6 @@ public abstract class FragmentBase<T extends IIdProvider> extends Fragment
         getLoaderManager().restartLoader(0, args, this);
     }
 
-    /**
-     * Used for communicating item selection
-     */
-    public interface OnItemSelectedListener {
-        /**
-         * Called when a item has been selected.
-         *
-         * @param item Item that has been selected
-         */
-        void onItemSelected(Parcelable item);
-    }
 
     public interface LoaderUICallback {
         @UiThread

@@ -49,7 +49,7 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
     @Override
     public int compareTo(@NonNull Dimension another) {
         if (unit == another.unit) {
-            return (int) (getId() - another.getId());
+            return (int) (value - another.value);
         } else if (unit == null) {
             return -1;
         } else if (another.unit == null) {
@@ -89,8 +89,12 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Dimension dimension = (Dimension) o;
         return value == dimension.value && unit == dimension.unit;
     }

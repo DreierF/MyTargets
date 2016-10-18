@@ -12,7 +12,6 @@ import org.junit.runner.RunWith;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
 import de.dreier.mytargets.managers.SettingsManager;
-import de.dreier.mytargets.models.ETrainingType;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.WAFull;
@@ -36,9 +35,11 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.OrientationChangeAction.orientationLandscape;
 import static de.dreier.mytargets.OrientationChangeAction.orientationPortrait;
 import static de.dreier.mytargets.PermissionGranter.allowPermissionsIfNeeded;
+import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_TYPE;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.endsWith;
+import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.endsWith;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityNavigationTest extends UITestBase {
@@ -73,7 +74,7 @@ public class MainActivityNavigationTest extends UITestBase {
         onView(matchFab()).perform(click());
         onView(allOf(withId(R.id.fab1), withParent(withId(R.id.fab)))).perform(click());
         intended(allOf(hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
-                hasExtra(TRAINING_TYPE, ETrainingType.FREE_TRAINING.toString())));
+                hasExtra(TRAINING_TYPE, FREE_TRAINING)));
         allowPermissionsIfNeeded(mActivityTestRule.getActivity(), ACCESS_FINE_LOCATION);
         pressBack();
 
@@ -82,7 +83,7 @@ public class MainActivityNavigationTest extends UITestBase {
         onView(allOf(withId(R.id.fab2), withParent(withId(R.id.fab)))).perform(click());
         intended(allOf(
                 hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
-                hasExtra(TRAINING_TYPE, ETrainingType.TRAINING_WITH_STANDARD_ROUND.toString())));
+                hasExtra(TRAINING_TYPE, TRAINING_WITH_STANDARD_ROUND)));
         pressBack();
 
         // TODO test with existing trainings, bows and arrows
@@ -111,5 +112,7 @@ public class MainActivityNavigationTest extends UITestBase {
         onView(isRoot()).perform(orientationLandscape(mActivityTestRule));
         navigateUp();
         onView(isRoot()).perform(orientationPortrait(mActivityTestRule));
+        pressBack();
+        pressBack();
     }
 }

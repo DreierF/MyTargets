@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,19 +25,21 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
-import de.dreier.mytargets.databinding.DynamicitemRoundTemplateBinding;
 import de.dreier.mytargets.databinding.FragmentEditStandardRoundBinding;
+import de.dreier.mytargets.databinding.ItemRoundTemplateBinding;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import de.dreier.mytargets.views.selector.DistanceSelector;
 import de.dreier.mytargets.views.selector.SelectorBase;
 import de.dreier.mytargets.views.selector.TargetSelector;
-import icepick.Icepick;
 import icepick.State;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
@@ -48,6 +52,18 @@ public class EditStandardRoundFragment extends EditFragmentBase {
     private RoundTemplateAdapter adapter;
     private FragmentEditStandardRoundBinding binding;
 
+    @NonNull
+    public static IntentWrapper createIntent(Fragment fragment) {
+        return new IntentWrapper(fragment, SimpleFragmentActivityBase.EditStandardRoundActivity.class);
+    }
+
+    @NonNull
+    public static IntentWrapper editIntent(Fragment fragment, StandardRound item) {
+        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditStandardRoundActivity.class);
+        i.putExtra(ITEM, Parcels.wrap(item));
+        return new IntentWrapper(fragment, i);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +73,6 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
         ToolbarUtils.showUpAsX(this);
         setHasOptionsMenu(true);
-        Icepick.restoreInstanceState(this, savedInstanceState);
 
         if (getArguments() != null) {
             standardRound = Parcels.unwrap(getArguments().getParcelable(ITEM));
@@ -104,6 +119,12 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         return binding.getRoot();
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        FabTransformUtil.setup(getActivity(), binding.getRoot());
+    }
+
     private void onAddRound() {
         RoundTemplate r = roundTemplateList.get(roundTemplateList.size() - 1);
         RoundTemplate roundTemplate = new RoundTemplate();
@@ -119,8 +140,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
     private void onDeleteStandardRound() {
         standardRound.delete();
-        getActivity().finish();
-        getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        finish();
     }
 
     @Override
@@ -142,8 +162,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         Intent data = new Intent();
         data.putExtra(ITEM, Parcels.wrap(standardRound));
         getActivity().setResult(Activity.RESULT_OK, data);
-        getActivity().finish();
-        getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        finish();
     }
 
     @Override
@@ -168,15 +187,9 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
-    }
-
     private static class RoundTemplateHolder extends DynamicItemHolder<RoundTemplate> {
 
-        DynamicitemRoundTemplateBinding binding;
+        ItemRoundTemplateBinding binding;
 
         RoundTemplateHolder(View view) {
             super(view);
@@ -192,14 +205,14 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                     .getQuantityString(R.plurals.rounds, position + 1, position + 1));
             item.index = position;
 
-            binding.distanceSpinner.setOnActivityResultContext(fragment);
-            binding.distanceSpinner.setItemIndex(position);
-            binding.distanceSpinner.setItem(item.distance);
+            binding.distance.setOnActivityResultContext(fragment);
+            binding.distance.setItemIndex(position);
+            binding.distance.setItem(item.distance);
 
             // Target round
-            binding.targetSpinner.setOnActivityResultContext(fragment);
-            binding.targetSpinner.setItemIndex(position);
-            binding.targetSpinner.setItem(item.target);
+            binding.target.setOnActivityResultContext(fragment);
+            binding.target.setItemIndex(position);
+            binding.target.setItem(item.target);
 
             // Passes
             binding.passes.setTextPattern(R.plurals.passe);
@@ -229,7 +242,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
         @Override
         public DynamicItemHolder<RoundTemplate> onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = inflater.inflate(R.layout.dynamicitem_round_template, parent, false);
+            View v = inflater.inflate(R.layout.item_round_template, parent, false);
             return new RoundTemplateHolder(v);
         }
     }

@@ -2,4 +2,6 @@
     <cache-path
         name="share"
         path="."/>
+    <external-cache-path name="picturesext" path="EasyImage/" />
+    <cache-path name="picturesint" path="EasyImage/" />
 </paths>

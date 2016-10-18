@@ -12,6 +12,8 @@ import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.ArrowNumber;
+import de.dreier.mytargets.shared.models.WindDirection;
+import de.dreier.mytargets.shared.models.WindSpeed;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Passe;
 import de.dreier.mytargets.shared.models.db.Round;
@@ -44,7 +46,9 @@ import de.dreier.mytargets.shared.utils.ScoresDrawer;
         @ParcelClass(NotificationInfo.class),
         @ParcelClass(Target.class),
         @ParcelClass(Training.class),
-        @ParcelClass(Thumbnail.class)
+        @ParcelClass(Thumbnail.class),
+        @ParcelClass(WindDirection.class),
+        @ParcelClass(WindSpeed.class)
 })
 public class ApplicationInstance extends SharedApplicationInstance {
 

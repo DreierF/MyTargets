@@ -8,6 +8,7 @@ package de.dreier.mytargets.shared.models.db;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -30,7 +31,7 @@ import de.dreier.mytargets.shared.targets.TargetDrawable;
 
 @Parcel
 @Table(database = AppDatabase.class)
-public class StandardRound extends BaseModel implements IIdSettable, IImageProvider, IDetailProvider {
+public class StandardRound extends BaseModel implements IIdSettable, IImageProvider, IDetailProvider, Comparable<StandardRound> {
 
     @Column
     public int club;
@@ -117,6 +118,12 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
         return getDescription(context);
     }
 
+    @Override
+    public int compareTo(@NonNull StandardRound another) {
+        final int result = getName().compareTo(another.getName());
+        return result == 0 ? (int) (id - another.id) : result;
+    }
+    
     public static List<StandardRound> getAllSearch(String query) {
         query = "%" + query.replace(' ', '%') + "%";
         return SQLite.select()

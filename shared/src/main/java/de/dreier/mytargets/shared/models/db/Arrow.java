@@ -2,6 +2,7 @@ package de.dreier.mytargets.shared.models.db;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
@@ -25,7 +26,7 @@ import de.dreier.mytargets.shared.utils.ThumbnailConverter;
 
 @Parcel
 @Table(database = AppDatabase.class, name = "ARROW")
-public class Arrow extends BaseModel implements IImageProvider, IIdSettable {
+public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Comparable<Arrow> {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
@@ -118,5 +119,11 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable {
         return another instanceof Arrow &&
                 getClass().equals(another.getClass()) &&
                 id.equals(((Arrow) another).id);
+    }
+
+    @Override
+    public int compareTo(@NonNull Arrow another) {
+        final int result = getName().compareTo(another.getName());
+        return result == 0 ? (int) (id - another.id) : result;
     }
 }

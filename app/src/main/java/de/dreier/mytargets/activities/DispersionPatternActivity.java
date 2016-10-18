@@ -6,36 +6,39 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.print.PrintHelper;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
 
 import org.parceler.Parcels;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityArrowRankingDetailsBinding;
 import de.dreier.mytargets.models.ArrowStatistic;
-import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.utils.DistributionPatternUtils;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.Utils;
 
 import static android.support.v4.content.FileProvider.getUriForFile;
 
 public class DispersionPatternActivity extends ChildActivityBase {
 
-    public static final String ITEM = "item";
-    public static final String ROUND_IDS = "round_ids";
+    private static final String ITEM = "item";
     private ActivityArrowRankingDetailsBinding binding;
-    private long[] roundIds;
+    private ArrowStatistic statistic;
+
+    @NonNull
+    public static IntentWrapper getIntent(Fragment fragment, ArrowStatistic statistics) {
+        Intent intent = new Intent(fragment.getContext(), DispersionPatternActivity.class);
+        intent.putExtra(ITEM, Parcels.wrap(statistics));
+        return new IntentWrapper(fragment, intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +46,14 @@ public class DispersionPatternActivity extends ChildActivityBase {
         binding = DataBindingUtil
                 .setContentView(this, R.layout.activity_arrow_ranking_details);
 
-        ArrowStatistic item = Parcels.unwrap(getIntent().getParcelableExtra(ITEM));
-        roundIds = getIntent().getLongArrayExtra(ROUND_IDS);
-        binding.dispersionView.setShoots(item.shots);
-        binding.dispersionView.setTarget(item.target.getDrawable());
+        statistic = Parcels.unwrap(getIntent().getParcelableExtra(ITEM));
+        binding.dispersionView.setShoots(statistic.shots);
+        binding.dispersionView.setTarget(statistic.target.getDrawable());
 
         ToolbarUtils.showHomeAsUp(this);
-        if (item.arrowName != null) {
-            ToolbarUtils.setTitle(this, getString(R.string.arrow_number_x, item.arrowNumber));
-            ToolbarUtils.setSubtitle(this, item.arrowName);
+        if (statistic.arrowName != null) {
+            ToolbarUtils.setTitle(this, getString(R.string.arrow_number_x, statistic.arrowNumber));
+            ToolbarUtils.setSubtitle(this, statistic.arrowName);
         } else {
             ToolbarUtils.setTitle(this, R.string.dispersion_pattern);
         }
@@ -60,6 +62,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_scoreboard, menu);
+        menu.findItem(R.id.action_settings).setVisible(false);
         return true;
     }
 
@@ -84,16 +87,15 @@ public class DispersionPatternActivity extends ChildActivityBase {
             try {
                 File dir = getCacheDir();
                 final File f = File.createTempFile("dispersion_pattern", ".png", dir);
-                List<Round> rounds = Stream.of(Utils.toList(roundIds))
-                        .map(Round::get)
-                        .collect(Collectors.toList());
-                DistributionPatternUtils.createDistributionPatternImageFile(800, rounds, f);
+                DistributionPatternUtils.createDistributionPatternImageFile(800, f, statistic);
 
                 // Build and fire intent to ask for share provider
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, getUriForFile(DispersionPatternActivity.this, "de.dreier.mytargets", f));
                 shareIntent.setType("*/*");
-                startActivity(shareIntent);
+                String packageName = getApplicationContext().getPackageName();
+                String authority = packageName + ".easyphotopicker.fileprovider";
+                shareIntent.putExtra(Intent.EXTRA_STREAM, getUriForFile(DispersionPatternActivity.this, authority, f));
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
             } catch (IOException e) {
                 e.printStackTrace();
                 Snackbar.make(binding.getRoot(), R.string.sharing_failed, Snackbar.LENGTH_SHORT)
@@ -108,10 +110,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
         printHelper.setScaleMode(PrintHelper.SCALE_MODE_FIT);
 
         // Get the image
-        List<Round> rounds = Stream.of(Utils.toList(roundIds))
-                .map(Round::get)
-                .collect(Collectors.toList());
-        Bitmap image = DistributionPatternUtils.getDistributionPatternBitmap(800, rounds);
+        Bitmap image = DistributionPatternUtils.getDistributionPatternBitmap(800, statistic);
         if (image != null) {
             // Send it to the print helper
             printHelper.printBitmap("MyTargets", image);

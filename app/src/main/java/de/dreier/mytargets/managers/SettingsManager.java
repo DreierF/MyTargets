@@ -130,7 +130,7 @@ public class SettingsManager {
     }
 
     public static boolean getArrowNumbersEnabled() {
-        return preferences.getBoolean(KEY_NUMBERING_ENABLED, false);
+        return preferences.getBoolean(KEY_NUMBERING_ENABLED, true);
     }
 
     public static void setArrowNumbersEnabled(boolean enabled) {
@@ -281,8 +281,9 @@ public class SettingsManager {
 
     public static String getProfileBirthDayFormatted() {
         final LocalDate birthDay = getProfileBirthDay();
-        if (birthDay == null)
+        if (birthDay == null) {
             return null;
+        }
         return DateTimeFormat.mediumDate().print(birthDay);
     }
 

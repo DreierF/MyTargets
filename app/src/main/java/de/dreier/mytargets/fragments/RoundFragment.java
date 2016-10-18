@@ -13,6 +13,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,14 +21,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.InputActivity;
 import de.dreier.mytargets.activities.ScoreboardActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.activities.StatisticsActivity;
-import de.dreier.mytargets.adapters.NowListAdapter;
+import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemEndBinding;
 import de.dreier.mytargets.shared.models.db.Passe;
@@ -36,15 +39,17 @@ import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DividerItemDecoration;
-import de.dreier.mytargets.utils.SelectableViewHolder;
+import de.dreier.mytargets.utils.IntentWrapper;
+import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 /**
  * Shows all passes of one round
  */
-public class RoundFragment extends EditableFragment<Passe> {
+public class RoundFragment extends EditableListFragment<Passe> {
 
-    public static final String ROUND_ID = "round_id";
+    private static final String ROUND_ID = "round_id";
 
     private long mRound;
     private FragmentListBinding binding;
@@ -56,15 +61,27 @@ public class RoundFragment extends EditableFragment<Passe> {
         newStringRes = R.string.new_end;
     }
 
+    @NonNull
+    public static IntentWrapper getIntent(Fragment fragment, Round round) {
+        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.RoundActivity.class);
+        i.putExtra(ROUND_ID, round.getId());
+        return new IntentWrapper(fragment, i);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), R.drawable.full_divider));
         mAdapter = new EndAdapter(getContext());
+        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
         binding.fab.setVisibility(View.GONE);
-        binding.fab.setOnClickListener(v -> openPasse(round.getId(), binding.recyclerView.getAdapter().getItemCount()));
+        binding.fab.setOnClickListener(
+                v -> InputActivity.getIntent(this, round,
+                        binding.recyclerView.getAdapter().getItemCount())
+                                .fromFab(binding.fab)
+                                .start());
         // Get round
         if (getArguments() != null) {
             mRound = getArguments().getLong(ROUND_ID, -1);
@@ -109,16 +126,14 @@ public class RoundFragment extends EditableFragment<Passe> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_scoreboard:
-                Intent intent = new Intent(getContext(), ScoreboardActivity.class);
-                intent.putExtra(ScoreboardActivity.TRAINING_ID, round.trainingId);
-                intent.putExtra(ScoreboardActivity.ROUND_ID, round.getId());
-                startActivity(intent);
+                ScoreboardActivity
+                        .getIntent(this, round.trainingId, round.getId())
+                        .start();
                 return true;
             case R.id.action_statistics:
-                Intent i = new Intent(getContext(), StatisticsActivity.class);
-                i.putExtra(StatisticsActivity.TRAINING_ID, round.trainingId);
-                i.putExtra(StatisticsActivity.ROUND_ID, round.getId());
-                startActivity(i);
+                StatisticsActivity
+                        .getIntent(this,
+                        Collections.singletonList(round.getId())).start();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -127,30 +142,17 @@ public class RoundFragment extends EditableFragment<Passe> {
 
     @Override
     protected void onItemSelected(Passe item) {
-        openInputActivityForPasse(item);
+        InputActivity.getIntent(this, round, item.index)
+                .start();
     }
 
     @Override
     protected void onEdit(Passe item) {
-        openInputActivityForPasse(item);
+        InputActivity.getIntent(this, round, item.index)
+                .start();
     }
 
-    private void openInputActivityForPasse(Passe item) {
-        Intent i = new Intent(getContext(), InputActivity.class);
-        i.putExtra(InputActivity.ROUND_ID, item.roundId);
-        i.putExtra(InputActivity.PASSE_IND, item.index);
-        startActivity(i);
-        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
-    }
-
-    private void openPasse(long roundId, int passeIndex) {
-        Intent i = new Intent(getContext(), InputActivity.class);
-        i.putExtra(InputActivity.ROUND_ID, roundId);
-        i.putExtra(InputActivity.PASSE_IND, passeIndex);
-        startActivity(i);
-    }
-
-    private class EndAdapter extends NowListAdapter<Passe> {
+    private class EndAdapter extends ListAdapterBase<Passe> {
 
         EndAdapter(Context context) {
             super(context);
@@ -174,7 +176,7 @@ public class RoundFragment extends EditableFragment<Passe> {
         }
 
         @Override
-        public void bindCursor() {
+        public void bindItem() {
             binding.shoots.setPoints(mItem, round.info.target);
             binding.passe.setText(getString(R.string.passe_n, (mItem.index + 1)));
         }

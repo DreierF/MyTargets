@@ -37,9 +37,6 @@
   <string name="statistic">數據分析</string>
   <!-- Share -->
   <string name="share">分享</string>
-  <string name="my_share_text">Yeah, look at my archery score. I got:\n%1$sThis makes a total of %2$d out of %3$d rings.</string>
-  <string name="d_times_s">%1$d times %2$s\n</string>
-  <string name="text">文字</string>
   <string name="dispersion_pattern">箭的落點</string>
   <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
@@ -57,7 +54,6 @@
   <string name="tiller">上下弦距差</string>
   <string name="sight_settings">瞄準器刻度</string>
   <string name="add">加入</string>
-  <string name="select_picture">選擇圖片</string>
   <string name="take_picture">拍新照片</string>
   <string name="pick_from_gallery">從相庫中選擇</string>
   <!-- New arrow -->
@@ -94,9 +90,6 @@
   <string name="show_all">顯示所有資料</string>
   <string name="comment">備註</string>
   <!-- Statistics -->
-  <string name="all_trainings">所有訓練</string>
-  <string name="entire_training">最近的訓練</string>
-  <string name="current_round">目前一輪</string>
   <!-- Import/Backup -->
   <string name="select_a_file">選擇檔案</string>
   <string name="dir_not_created">未能建立目錄</string>
@@ -106,14 +99,11 @@
   <string name="file_not_found">找不到資料!</string>
   <string name="failed_reading_file">讀取資料失敗!</string>
   <!-- Donate -->
-  <string name="donate_action">捐款</string>
   <string name="donate_2">送我一個漢堡</string>
   <string name="donate_5">送我一串烤肉</string>
   <string name="donate_10">送我一份薄餅</string>
   <string name="donate_20">送我一些汽油</string>
-  <string name="donate_infinite">每個月也支持我</string>
   <string name="donation_thank">謝謝您的支持!</string>
-  <string name="monthly">每月 %s</string>
   <string name="donate_text">以上金額包含商品及服務稅, 三成金額將會繳交給谷歌(Google). 另外, 歡迎捐贈到 PayPal 帳號 dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">計時器</string>
@@ -132,9 +122,6 @@
   <string name="import_action">存取</string>
   <string name="export">提取</string>
   <string name="exports_as_csv">提取檔案儲存為 *.csv</string>
-  <string name="app_rate">應用程式評分</string>
-  <string name="app_share">分享應用程式</string>
-  <string name="contact_developer">聯絡開發人員</string>
   <string name="licences">開放程式許可</string>
   <string name="licences_summary">法律聲明許可</string>
   <string name="version">版本 %s</string>
@@ -167,7 +154,6 @@
   <string name="standard_round">Standard round</string>
   <string name="use_as_template">Use as template?</string>
   <string name="create_copy">This is a standard round!\nDo you want to create a copy in order to edit it?</string>
-  <string name="not_matches_sheme">Input does not match the expected format like 1,3,5</string>
   <string name="arrow_numbers_desc">Enter all arrow number that you use for shooting e.g. 1,2,5,6,7</string>
   <string name="practice">Practice</string>
   <string name="edit_training">Edit Training</string>
@@ -229,8 +215,6 @@
   <string name="donate_via_paypal">Donate via PayPal</string>
   <string name="translate_crowdin">Translate on Crowdin</string>
   <string name="network_linkedin">Network on LinkedIn</string>
-  <string name="enter_scores_only_description">Lets you only enter the scores not the exact arrow position. Use this option to enter data with your smartwatch or to enter historical data.</string>
-  <string name="enter_scores_only">Enter scores only</string>
   <string name="search">Search</string>
   <string name="us">US</string>
   <string name="show_shots_training">Whole training</string>
@@ -246,7 +230,6 @@
   <string name="archer">Archer</string>
   <string name="hits">Hits</string>
   <string name="misses">Misses</string>
-  <string name="percentage_reached_points">Percentage of reached points</string>
   <string name="arrow_number_removed">Arrow number removed!</string>
   <string name="new_end">New end</string>
   <string name="distribution">Distribution</string>
@@ -255,4 +238,6 @@
   <string name="input">Input</string>
   <string name="target_zoom">Target zoom level</string>
   <string name="arrow_diameter_scale">Arrow diameter scale</string>
+  <string name="timestamp">Timestamp</string>
+  <string name="change_target_face">Change target face</string>
 </resources>

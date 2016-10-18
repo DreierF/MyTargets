@@ -2,6 +2,7 @@ package de.dreier.mytargets.shared.models.db;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import com.annimon.stream.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -26,7 +27,7 @@ import de.dreier.mytargets.shared.utils.ThumbnailConverter;
 
 @Parcel
 @Table(database = AppDatabase.class, name = "BOW")
-public class Bow extends BaseModel implements IImageProvider, IIdSettable {
+public class Bow extends BaseModel implements IImageProvider, IIdSettable, Comparable<Bow> {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
@@ -136,5 +137,11 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable {
                 .filter(s -> s.distance.equals(distance))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public int compareTo(@NonNull Bow another) {
+        final int result = getName().compareTo(another.getName());
+        return result == 0 ? (int) (id - another.id) : result;
     }
 }

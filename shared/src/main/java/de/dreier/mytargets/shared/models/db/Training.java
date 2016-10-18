@@ -85,7 +85,7 @@ public class Training extends BaseModel implements IIdSettable {
     public static Training get(Long id) {
         return SQLite.select()
                 .from(Training.class)
-                .where(Training_Table._id.eq(id))
+                //.where(Training_Table._id.eq(id))
                 .querySingle();
     }
 
@@ -100,7 +100,7 @@ public class Training extends BaseModel implements IIdSettable {
         if (rounds == null || rounds.isEmpty()) {
             rounds = SQLite.select()
                     .from(Round.class)
-                    .where(Round_Table.training.eq(id))
+                   // .where(Round_Table.training.eq(id))
                     .queryList();
         }
         return rounds;

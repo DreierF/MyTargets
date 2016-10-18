@@ -1,5 +1,7 @@
 package de.dreier.mytargets.shared.models.db;
 
+import android.support.annotation.NonNull;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
@@ -19,7 +21,7 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 
 @Parcel
 @Table(database = AppDatabase.class, name = "ROUND")
-public class Round extends BaseModel implements IIdSettable {
+public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
@@ -75,11 +77,20 @@ public class Round extends BaseModel implements IIdSettable {
 
     public String getReachedPointsFormatted() {
         final int maxPoints = info.getMaxPoints();
-        String percent = maxPoints == 0 ? "" : " (" + (reachedPoints * 100 / maxPoints) + "%)";
-        return reachedPoints + "/" + maxPoints + percent;
+        return reachedPoints + "/" + maxPoints;
     }
 
     public static void deleteAll() {
         SQLite.delete(Round.class).execute();
+    }
+
+    public static List<Round> getAll(long[] roundIds) {
+        //TODO
+        return new ArrayList<>();
+    }
+
+    @Override
+    public int compareTo(@NonNull Round round) {
+        return info.index - round.info.index;
     }
 }

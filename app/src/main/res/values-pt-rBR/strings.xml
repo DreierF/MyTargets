@@ -41,11 +41,8 @@
   <string name="statistic">Estatística</string>
   <!-- Share -->
   <string name="share">Compartilhar</string>
-  <string name="my_share_text">Uhul, Olha só minha pontuação na arqueria. Consegui:\n%1$sCom um total de %2$d de %3$d pontos.</string>
-  <string name="d_times_s">%1$d vezes %2$s\n</string>
-  <string name="text">Texto</string>
   <string name="dispersion_pattern">Padrão de dispersão</string>
-  <string name="sharing_failed">Sharing failed!</string>
+  <string name="sharing_failed">Falha ao compartilhar!</string>
   <!-- Export -->
   <string name="send_exported">Enviar dados exportados</string>
   <string name="exporting_failed">Exportação falhou!</string>
@@ -61,7 +58,6 @@
   <string name="tiller">Tiller</string>
   <string name="sight_settings">Ajustes da mira</string>
   <string name="add">Adicionar</string>
-  <string name="select_picture">Selecione uma imagem</string>
   <string name="take_picture">Tirar uma foto</string>
   <string name="pick_from_gallery">Selecione uma imagem da Galeria</string>
   <!-- New arrow -->
@@ -100,9 +96,6 @@
   <string name="show_all">Mostrar todos os impactos</string>
   <string name="comment">Comentar</string>
   <!-- Statistics -->
-  <string name="all_trainings">Todos os treinos</string>
-  <string name="entire_training">Treino inteiro</string>
-  <string name="current_round">Partida atual</string>
   <!-- Import/Backup -->
   <string name="select_a_file">Selecione um arquivo</string>
   <string name="dir_not_created">Diretório não pôde ser criado!</string>
@@ -112,14 +105,11 @@
   <string name="file_not_found">Arquivo não encontrado!</string>
   <string name="failed_reading_file">Falha na leitura do arquivo!</string>
   <!-- Donate -->
-  <string name="donate_action">Fazer uma doação</string>
   <string name="donate_2">Doe-me um hamburger</string>
   <string name="donate_5">Doe-me um kebab</string>
   <string name="donate_10">Doe-me uma pizza grande</string>
   <string name="donate_20">Doe-me combustível</string>
-  <string name="donate_infinite">Apoio duradouro</string>
   <string name="donation_thank">Obrigado pelo seu apoio!</string>
-  <string name="monthly">mensalmente %s</string>
   <string name="donate_text">Os valores incluem impostos e 30% de taxas para o Google. Como alternativa, você pode doar livremente na conta PayPal dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Cronômetro</string>
@@ -138,9 +128,6 @@
   <string name="import_action">Importar</string>
   <string name="export">Exportar</string>
   <string name="exports_as_csv">Exporta dados como *.csv</string>
-  <string name="app_rate">Avaliar app</string>
-  <string name="app_share">Compartilhar app</string>
-  <string name="contact_developer">Contatar desenvolvedor</string>
   <string name="licences">Licenças de código aberto</string>
   <string name="licences_summary">Notas legais de Licenças</string>
   <string name="version">Versão %s</string>
@@ -156,7 +143,7 @@
   <string name="environment">Ambiente</string>
   <string name="wind_speed">Velocidade do vento</string>
   <string name="wind_direction">Direção do vento</string>
-  <string name="sight_setting_removed">Sight setting deleted!</string>
+  <string name="sight_setting_removed">Configuração de mira excluída!</string>
   <string name="metric">Métrico</string>
   <string name="imperial">Imperial</string>
   <string name="undo">Desfazer</string>
@@ -164,7 +151,7 @@
   <string name="expand_collapse">Expandir/recolher</string>
   <string name="new_round_template">Novo modelo</string>
   <string name="arrow_numbers">Números de Flecha</string>
-  <string name="round_removed">Round deleted!</string>
+  <string name="round_removed">Round removido!</string>
   <string name="custom_round">Partida personalizada</string>
   <string name="filter">Filtro</string>
   <string name="club">Infantil</string>
@@ -174,7 +161,6 @@
   <string name="standard_round">Partida padrão</string>
   <string name="use_as_template">Usar como modelo?</string>
   <string name="create_copy">Esse é um round padrão!\n Deseja criar uma cópia para editar?</string>
-  <string name="not_matches_sheme">Entrada não bate com o formato ( 1,3,5 )</string>
   <string name="arrow_numbers_desc">Insira os números das flechas utilizadas ex: 1,2,5,6,7</string>
   <string name="practice">Treinar</string>
   <string name="edit_training">Editar o treino</string>
@@ -200,12 +186,12 @@
     <item quantity="other">Partida %d</item>
   </plurals>
   <plurals name="round_selected">
-    <item quantity="one">%d round selected</item>
-    <item quantity="other">%d rounds selected</item>
+    <item quantity="one">%d rounds selecionado</item>
+    <item quantity="other">%d rounds selecionados</item>
   </plurals>
   <plurals name="round_deleted">
-    <item quantity="one">%d round deleted</item>
-    <item quantity="other">%d rounds deleted</item>
+    <item quantity="one">%d round excluído</item>
+    <item quantity="other">%d rounds excluídos</item>
   </plurals>
   <string name="date">Data</string>
   <string name="edit_round">Editar round</string>
@@ -224,49 +210,48 @@
   <string name="show_points_colored">Mostrar pontos coloridos</string>
   <string name="stabilizer">Estabilizador</string>
   <string name="clicker">Clicker</string>
-  <string name="arrow_number_x">Arrow number %d</string>
-  <string name="training_with_standard_round">Training with Standard Round</string>
-  <string name="free_training">Free Training</string>
-  <string name="competition">Competition</string>
+  <string name="arrow_number_x">Flecha número %d</string>
+  <string name="training_with_standard_round">Treinamento com Standard Round</string>
+  <string name="free_training">Treino Livre</string>
+  <string name="competition">Competição</string>
   <string name="unit_lbs">lbs</string>
-  <string name="about">About</string>
-  <string name="general">General</string>
-  <string name="contribute">Contribute</string>
-  <string name="connect">Connect</string>
-  <string name="special_thanks_to">Special thanks to</string>
-  <string name="all_translators">All guys, who helped translating the app!</string>
-  <string name="all_beta_testers">Everyone who joined the beta testers group and therefore helps to continuously improve the app.</string>
-  <string name="test_beta">Test the latest beta version</string>
-  <string name="join_on_google_plus">Join us on Google+</string>
-  <string name="share_with_friends">Share with your friends</string>
-  <string name="donate">Donate</string>
-  <string name="donate_via_paypal">Donate via PayPal</string>
-  <string name="translate_crowdin">Translate on Crowdin</string>
-  <string name="network_linkedin">Network on LinkedIn</string>
-  <string name="enter_scores_only_description">Lets you only enter the scores not the exact arrow position. Use this option to enter data with your smartwatch or to enter historical data.</string>
-  <string name="enter_scores_only">Enter scores only</string>
-  <string name="search">Search</string>
+  <string name="about">Sobre</string>
+  <string name="general">Geral</string>
+  <string name="contribute">Contribua</string>
+  <string name="connect">Conectar</string>
+  <string name="special_thanks_to">Agradecimentos especiais para</string>
+  <string name="all_translators">Todos os caras, que ajudaram a traduzir o app!</string>
+  <string name="all_beta_testers">Todos os que se juntaram ao grupo de testadores beta e, portanto, ajudaram a melhorar continuamente o app.</string>
+  <string name="test_beta">Testar a versão beta mais recente</string>
+  <string name="join_on_google_plus">Junte-se a nós no Google+</string>
+  <string name="share_with_friends">Compartilhe com seus amigos</string>
+  <string name="donate">Faça uma doação</string>
+  <string name="donate_via_paypal">Doar via PayPal</string>
+  <string name="translate_crowdin">Traduza no Crowdin</string>
+  <string name="network_linkedin">Rede no LinkedIn</string>
+  <string name="search">Busca</string>
   <string name="us">US</string>
-  <string name="show_shots_training">Whole training</string>
-  <string name="show_shots_round">Current round</string>
-  <string name="show_shots_end">Current end</string>
-  <string name="profile">Profile</string>
-  <string name="birthday">Birthday</string>
-  <string name="first_name">First name</string>
-  <string name="last_name">Last name</string>
-  <string name="age">Age</string>
-  <string name="show_signature">Signature</string>
-  <string name="witness">Witness</string>
-  <string name="archer">Archer</string>
-  <string name="hits">Hits</string>
-  <string name="misses">Misses</string>
-  <string name="percentage_reached_points">Percentage of reached points</string>
-  <string name="arrow_number_removed">Arrow number removed!</string>
-  <string name="new_end">New end</string>
-  <string name="distribution">Distribution</string>
-  <string name="count">Count</string>
-  <string name="diameter">Diameter</string>
-  <string name="input">Input</string>
-  <string name="target_zoom">Target zoom level</string>
-  <string name="arrow_diameter_scale">Arrow diameter scale</string>
+  <string name="show_shots_training">Treino Completo</string>
+  <string name="show_shots_round">Round atual</string>
+  <string name="show_shots_end">Entrada atual</string>
+  <string name="profile">Perfil	</string>
+  <string name="birthday">Data de nascimento</string>
+  <string name="first_name">Nome</string>
+  <string name="last_name">Sobrenome</string>
+  <string name="age">Idade</string>
+  <string name="show_signature">Assinatura</string>
+  <string name="witness">Testemunha</string>
+  <string name="archer">Arqueiro</string>
+  <string name="hits">Acertos</string>
+  <string name="misses">Erros</string>
+  <string name="arrow_number_removed">Flecha removida !</string>
+  <string name="new_end">Nova entrada</string>
+  <string name="distribution">Distribuição</string>
+  <string name="count">Contagem</string>
+  <string name="diameter">Diâmetro</string>
+  <string name="input">Entrada</string>
+  <string name="target_zoom">Nível de zoom do alvo</string>
+  <string name="arrow_diameter_scale">Escala do diâmetro da flecha</string>
+  <string name="timestamp">Timestamp</string>
+  <string name="change_target_face">Change target face</string>
 </resources>
