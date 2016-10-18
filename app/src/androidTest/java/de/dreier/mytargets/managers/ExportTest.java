@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import de.dreier.mytargets.InstrumentedTestBase;
-import de.dreier.mytargets.managers.dao.MiniDbTestRule;
+import de.dreier.mytargets.utils.rules.MiniDbTestRule;
 
 @SmallTest
 @RunWith(AndroidJUnit4.class)

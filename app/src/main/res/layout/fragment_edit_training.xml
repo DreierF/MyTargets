@@ -94,6 +94,18 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
 
+                        <Button
+                            android:id="@+id/change_target_face"
+                            style="@style/primary_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:gravity="start"
+                            android:padding="16dp"
+                            android:text="@string/change_target_face"
+                            android:textStyle="normal"
+                            android:visibility="gone"/>
+
                         <LinearLayout
                             android:id="@+id/practiceLayout"
                             android:layout_width="match_parent"
@@ -235,6 +247,8 @@
                         android:layout_marginStart="16dp"
                         android:button="@drawable/timer"
                         android:padding="16dp"
+                        android:paddingLeft="32dp"
+                        android:paddingStart="32dp"
                         android:text="@string/timer"/>
 
                 </LinearLayout>

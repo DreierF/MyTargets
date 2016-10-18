@@ -9,7 +9,6 @@ package de.dreier.mytargets.managers.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -190,13 +189,6 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         return list;
     }
 
-    public List<Pair<Target, List<Round>>> groupByTarget(List<Round> rounds) {
-        return Stream.of(rounds)
-                .groupBy(value -> new Pair<>(value.info.target.getId(), value.info.target.scoringStyle))
-                .map(value1 -> new Pair<>(value1.getValue().get(0).info.target, value1.getValue()))
-                .collect(Collectors.toList());
-    }
-
     @NonNull
     private Map<SelectableZone, Integer> getRoundScores(List<Round> rounds) {
         final Target t = rounds.get(0).info.target;
@@ -208,11 +200,9 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                     SelectableZone tuple = new SelectableZone(s.zone, t.getModel().getZone(s.zone),
                             t.zoneToString(s.zone, s.index), t.getPointsByZone(s.zone, s.index));
                     final Integer integer = scoreCount.get(tuple);
-                    if(integer!=null) {
-                    int count = integer + 1;
-                    scoreCount.put(tuple, count);
-                    } else {
-                        Log.d("", "");
+                    if (integer != null) {
+                        int count = integer + 1;
+                        scoreCount.put(tuple, count);
                     }
                 }
             }
@@ -253,6 +243,9 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         return result;
     }
 
+    /**
+     * Compound 9ers are already collapsed to one SelectableZone.
+     */
     public List<Map.Entry<SelectableZone, Integer>> getSortedScoreDistribution(List<Round> rounds) {
         Map<SelectableZone, Integer> scoreCount = getRoundScores(rounds);
         return Stream.of(scoreCount)

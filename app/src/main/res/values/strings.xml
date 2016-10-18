@@ -225,7 +225,6 @@
     <string name="tip_weight">Tip weight</string>
     <string name="arrow_ranking">Arrow ranking</string>
     <string name="arrow_x_of_set_of_arrows">Arrow %1$d of %2$s</string>
-
     <string name="display">Display</string>
     <string name="print">Print</string>
     <string name="table">Table</string>
@@ -279,4 +278,5 @@
     <string name="arrow_diameter_scale">Arrow diameter scale</string>
     <string translatable="false" name="transition_root_view">transition_root_view</string>
     <string name="timestamp">Timestamp</string>
+    <string name="change_target_face">Change target face</string>
 </resources>

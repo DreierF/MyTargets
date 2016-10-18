@@ -198,7 +198,7 @@ public class ScoresDrawer {
     }
 
     public void animateToRect(RectF newRect) {
-        if (rect == null) {
+        if (rect == null || shotList == null || shotsPerRow == 0) {
             setRect(newRect);
             return;
         }

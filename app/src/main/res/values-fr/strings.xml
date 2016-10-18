@@ -253,4 +253,5 @@
   <string name="target_zoom">Niveau de zoom de cible</string>
   <string name="arrow_diameter_scale">Échelle de diamètre de flèche</string>
   <string name="timestamp">Timestamp</string>
+  <string name="change_target_face">Change target face</string>
 </resources>

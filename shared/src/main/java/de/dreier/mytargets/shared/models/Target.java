@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
+import de.dreier.mytargets.shared.targets.ScoringStyle;
 import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 import de.dreier.mytargets.shared.targets.TargetFactory;
@@ -37,10 +38,6 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         return id;
     }
 
-    /*public void setId(long id) {
-        this.id = (int) id;
-    }*/
-
     public TargetDrawable getDrawable() {
         if (drawable == null) {
             drawable = new TargetDrawable(this);
@@ -49,7 +46,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
     }
 
     public String zoneToString(int zone, int arrow) {
-        return getModel().getScoringStyle(scoringStyle).zoneToString(zone, arrow);
+        return getScoringStyle().zoneToString(zone, arrow);
     }
 
     @Override
@@ -67,7 +64,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
     }
 
     public int getPointsByZone(int zone, int arrow) {
-        return model.getScoringStyle(scoringStyle).getPointsByZone(zone, arrow);
+        return getScoringStyle().getPointsByZone(zone, arrow);
     }
 
     @Override
@@ -89,16 +86,20 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         return getModel().getSelectableZoneList(scoringStyle, arrow);
     }
 
+    private ScoringStyle getScoringStyle() {
+        return getModel().getScoringStyle(scoringStyle);
+    }
+
     public int getMaxPoints() {
-        return getModel().getScoringStyle(scoringStyle).getMaxPoints();
+        return getScoringStyle().getMaxPoints();
     }
 
     public int getEndMaxPoints(int arrowsPerPasse) {
-        return getModel().getScoringStyle(scoringStyle).getEndMaxPoints(arrowsPerPasse);
+        return getScoringStyle().getEndMaxPoints(arrowsPerPasse);
     }
 
     public int getReachedPoints(Passe passe) {
-        return getModel().getScoringStyle(scoringStyle).getReachedPoints(passe);
+        return getScoringStyle().getReachedPoints(passe);
     }
 
     @Override
