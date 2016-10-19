@@ -51,15 +51,15 @@ public class SimpleDbTestRule extends DbTestRuleBase {
 
         Round round1 = new Round();
         round1.trainingId = training.getId();
-        round1.info = standardRound.rounds.get(0);
-        round1.info.target = round1.info.getTargetTemplate();
+        round1.info = standardRound.getRounds().get(0);
+        round1.getTarget() = round1.info.getTargetTemplate();
         round1.comment = "";
         round1.insert();
 
         Round round2 = new Round();
         round2.trainingId = training.getId();
-        round2.info = standardRound.rounds.get(1);
-        round2.info.target = round2.info.getTargetTemplate();
+        round2.info = standardRound.getRounds().get(1);
+        round2.getTarget() = round2.info.getTargetTemplate();
         round2.comment = "";
         round2.insert();
 
@@ -85,7 +85,7 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         standardRound.club = StandardRoundFactory.CUSTOM_PRACTICE;
         standardRound.name = "Practice";
         standardRound.indoor = true;
-        standardRound.rounds = Arrays.asList(getRoundTemplate(0, 50), getRoundTemplate(1, 30));
+        standardRound.setRounds(Arrays.asList(getRoundTemplate(0, 50), getRoundTemplate(1, 30)));
         standardRound.insert();
         return standardRound;
     }
@@ -110,15 +110,15 @@ public class SimpleDbTestRule extends DbTestRuleBase {
 
         Round round1 = new Round();
         round1.trainingId = training.getId();
-        round1.info = standardRound.rounds.get(0);
-        round1.info.target = round1.info.getTargetTemplate();
+        round1.info = standardRound.getRounds().get(0);
+        round1.getTarget() = round1.info.getTargetTemplate();
         round1.comment = "";
         round1.insert();
 
         Round round2 = new Round();
         round2.trainingId = training.getId();
-        round2.info = standardRound.rounds.get(1);
-        round2.info.target = round2.info.getTargetTemplate();
+        round2.info = standardRound.getRounds().get(1);
+        round2.getTarget() = round2.info.getTargetTemplate();
         round2.comment = "";
         round2.insert();
 
@@ -156,15 +156,15 @@ public class SimpleDbTestRule extends DbTestRuleBase {
 
         Round round1 = new Round();
         round1.trainingId = training.getId();
-        round1.info = standardRound.rounds.get(0);
-        round1.info.target = round1.info.getTargetTemplate();
+        round1.info = standardRound.getRounds().get(0);
+        round1.getTarget() = round1.info.getTargetTemplate();
         round1.comment = "";
         round1.insert();
 
         Round round2 = new Round();
         round2.trainingId = training.getId();
-        round2.info = standardRound.rounds.get(1);
-        round2.info.target = round2.info.getTargetTemplate();
+        round2.info = standardRound.getRounds().get(1);
+        round2.getTarget() = round2.info.getTargetTemplate();
         round2.comment = "";
         round2.insert();
 

@@ -1,7 +1,6 @@
 package de.dreier.mytargets;
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -10,25 +9,25 @@ import org.parceler.ParcelClass;
 import org.parceler.ParcelClasses;
 
 import de.dreier.mytargets.shared.SharedApplicationInstance;
-import de.dreier.mytargets.shared.models.db.Arrow;
-import de.dreier.mytargets.shared.models.db.ArrowNumber;
-import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.NotificationInfo;
+import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.Thumbnail;
+import de.dreier.mytargets.shared.models.WindDirection;
+import de.dreier.mytargets.shared.models.WindSpeed;
+import de.dreier.mytargets.shared.models.db.Arrow;
+import de.dreier.mytargets.shared.models.db.ArrowNumber;
+import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Passe;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.SightSetting;
 import de.dreier.mytargets.shared.models.db.StandardRound;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.WindDirection;
-import de.dreier.mytargets.shared.models.WindSpeed;
-import de.dreier.mytargets.shared.utils.ScoresDrawer;
-import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.utils.ScoresDrawer;
 import de.dreier.mytargets.utils.MyBackupAgent;
 
 /**
@@ -59,10 +58,6 @@ import de.dreier.mytargets.utils.MyBackupAgent;
 })
 public class ApplicationInstance extends SharedApplicationInstance {
 
-    public static SharedPreferences getSharedPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(mContext);
-    }
-
     public static SharedPreferences getLastSharedPreferences() {
         return mContext.getSharedPreferences(MyBackupAgent.PREFS, 0);
     }
@@ -70,6 +65,8 @@ public class ApplicationInstance extends SharedApplicationInstance {
     @Override
     public void onCreate() {
         super.onCreate();
-        FlowManager.init(new FlowConfig.Builder(this).build());
+        FlowManager.init(new FlowConfig.Builder(this)
+                .openDatabasesOnInit(true)
+                .build());
     }
 }

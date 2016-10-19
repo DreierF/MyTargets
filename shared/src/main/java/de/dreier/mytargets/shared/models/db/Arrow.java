@@ -96,7 +96,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -125,5 +125,9 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
     public int compareTo(@NonNull Arrow another) {
         final int result = getName().compareTo(another.getName());
         return result == 0 ? (int) (id - another.id) : result;
+    }
+
+    public static void deleteAll() {
+        SQLite.delete(Arrow.class).execute();
     }
 }

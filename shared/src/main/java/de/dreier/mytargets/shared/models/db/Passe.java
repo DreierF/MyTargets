@@ -79,7 +79,7 @@ public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> 
         if (shots == null || shots.isEmpty()) {
             shots = SQLite.select()
                     .from(Shot.class)
-                    //.where(Shot_Table.passeId__id.eq(id))
+                    .where(Shot_Table.passe.eq(id))
                     .queryList();
         }
         return shots;
@@ -95,7 +95,7 @@ public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> 
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
         for (Shot s : shots) {
             s.passe = id;
@@ -115,14 +115,14 @@ public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> 
 
     public static List<Pair<Target, List<Round>>> groupByTarget(List<Round> rounds) {
         return Stream.of(rounds)
-                .groupBy(value -> new Pair<>(value.info.target.getId(), value.info.target.scoringStyle))
-                .map(value1 -> new Pair<>(value1.getValue().get(0).info.target, value1.getValue()))
+                .groupBy(value -> new Pair<>(value.getTarget().getId(), value.getTarget().scoringStyle))
+                .map(value1 -> new Pair<>(value1.getValue().get(0).getTarget(), value1.getValue()))
                 .collect(Collectors.toList());
     }
 
     @NonNull
     private static Map<SelectableZone, Integer> getRoundScores(List<Round> rounds) {
-        final Target t = rounds.get(0).info.target;
+        final Target t = rounds.get(0).getTarget();
         Map<SelectableZone, Integer> scoreCount = getAllPossibleZones(t);
         for (Round round : rounds) {
             for (Passe p : round.getPasses()) {

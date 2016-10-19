@@ -16,8 +16,7 @@ import icepick.Icepick;
 
 public abstract class FragmentBase extends Fragment implements LoaderManager.LoaderCallbacks<FragmentBase.LoaderUICallback> {
 
-
-        @Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Icepick.restoreInstanceState(this, savedInstanceState);
@@ -37,11 +36,11 @@ public abstract class FragmentBase extends Fragment implements LoaderManager.Loa
             getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
         }
     }
-    
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(0, null, this).forceLoad();
     }
 
     @Override
@@ -57,7 +56,8 @@ public abstract class FragmentBase extends Fragment implements LoaderManager.Loa
     @WorkerThread
     @NonNull
     protected LoaderUICallback onLoad(Bundle args) {
-        return () -> {};
+        return () -> {
+        };
     }
 
     @Override

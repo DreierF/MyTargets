@@ -139,7 +139,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                     } else {
                         return BackupUtils.backup(getActivity().getApplicationContext());
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     return null;
                 }

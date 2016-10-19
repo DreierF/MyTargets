@@ -37,23 +37,6 @@ public class Utils {
         return new LocalDate(date).withDayOfMonth(1).toDate().getTime();
     }
 
-    public static long[] toArray(List<Long> values) {
-        long[] result = new long[values.size()];
-        int i = 0;
-        for (Long l : values) {
-            result[i++] = l;
-        }
-        return result;
-    }
-
-    public static List<Long> toList(long[] array) {
-        List<Long> list = new ArrayList<>();
-        for (long value : array) {
-            list.add(value);
-        }
-        return list;
-    }
-
     public static void doRestart(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

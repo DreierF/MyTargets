@@ -49,7 +49,6 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.DispersionPatternActivity;
 import de.dreier.mytargets.databinding.FragmentStatisticsBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
-import de.dreier.mytargets.managers.dao.ArrowStatisticDataSource;
 import de.dreier.mytargets.models.ArrowStatistic;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Passe;
@@ -57,14 +56,13 @@ import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.utils.Color;
+import de.dreier.mytargets.shared.utils.LongUtils;
 import de.dreier.mytargets.shared.utils.Pair;
-import de.dreier.mytargets.utils.FlowDataLoaderBase;
 import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.RoundedTextDrawable;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.Utils;
 
-public class StatisticsFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<ArrowStatistic>> {
+public class StatisticsFragment extends FragmentBase {
 
     private static final String ARG_TARGET = "target";
     private static final String ARG_ROUND_IDS = "round_ids";
@@ -77,7 +75,6 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
     private long[] roundIds;
     private List<Round> rounds;
-    private ArrowStatisticDataSource arrowStatisticDataSource;
     private ArrowStatisticAdapter adapter;
     private FragmentStatisticsBinding binding;
     private Target target;
@@ -87,7 +84,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         StatisticsFragment fragment = new StatisticsFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(StatisticsFragment.ARG_TARGET, Parcels.wrap(item));
-        bundle.putLongArray(StatisticsFragment.ARG_ROUND_IDS, Utils.toArray(roundIds));
+        bundle.putLongArray(StatisticsFragment.ARG_ROUND_IDS, LongUtils.toArray(roundIds));
         bundle.putBoolean(StatisticsFragment.ARG_ANIMATE, animate);
         fragment.setArguments(bundle);
         return fragment;
@@ -101,7 +98,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         target = Parcels.unwrap(getArguments().getParcelable(ARG_TARGET));
         roundIds = getArguments().getLongArray(ARG_ROUND_IDS);
         animate = getArguments().getBoolean(ARG_ANIMATE);
-        rounds = Stream.of(Utils.toList(roundIds))
+        rounds = Stream.of(LongUtils.toList(roundIds))
                 .map(Round::get)
                 .collect(Collectors.toList());
 
@@ -247,32 +244,28 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
                 getString(R.string.misses), missCount);
     }
 
+    @NonNull
     @Override
-    public Loader<List<ArrowStatistic>> onCreateLoader(int id, Bundle args) {
-        arrowStatisticDataSource = new ArrowStatisticDataSource();
-        return new FlowDataLoaderBase<>(getContext(), () -> arrowStatisticDataSource.getAll(Utils.toList(roundIds)));
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<ArrowStatistic>> loader, List<ArrowStatistic> data) {
-        binding.arrowRankingLabel.setVisibility(data.isEmpty() ? View.GONE : View.VISIBLE);
-        Collections.sort(data);
-        adapter.setData(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<ArrowStatistic>> loader) {
-
+    protected LoaderUICallback onLoad(Bundle args) {
+        List<ArrowStatistic> data = ArrowStatistic.getAll(LongUtils.toList(roundIds));
+        return new LoaderUICallback() {
+            @Override
+            public void applyData() {
+                binding.arrowRankingLabel.setVisibility(data.isEmpty() ? View.GONE : View.VISIBLE);
+                Collections.sort(data);
+                adapter.setData(data);
+            }
+        };
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getLoaderManager().restartLoader(0, null, this);
+        reloadData();
     }
 
     private LineData getLineChartDataSet() {
-        List<Pair<Integer, DateTime>> values = Stream.of(Utils.toList(roundIds))
+        List<Pair<Integer, DateTime>> values = Stream.of(LongUtils.toList(roundIds))
                 .flatMap(roundId -> Stream.of(Round.get(roundId).getPasses()))
                 .map(passe -> getPairEndSummary(target, passe))
                 .collect(Collectors.toList());

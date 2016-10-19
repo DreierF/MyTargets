@@ -32,7 +32,7 @@ import java.io.IOException;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentEditImageBinding;
 import de.dreier.mytargets.shared.models.Thumbnail;
-import de.dreier.mytargets.utils.BackupUtils;
+import de.dreier.mytargets.shared.utils.FileUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import icepick.State;
@@ -188,7 +188,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
                 oldImageFile = imageFile;
                 imageFile = File
                         .createTempFile("img", oldImageFile.getName(), getContext().getFilesDir());
-                BackupUtils.copy(oldImageFile, imageFile);
+                FileUtils.copy(oldImageFile, imageFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }

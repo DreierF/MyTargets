@@ -19,6 +19,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Thumbnail;
+import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Passe;
 import de.dreier.mytargets.shared.models.db.Round;
@@ -26,8 +27,7 @@ import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 
 public abstract class DbTestRuleBase implements TestRule {
-    protected final Context context;
-    protected final ArrowDataSource arrowDataSource;
+    private final Context context;
 
     public DbTestRuleBase() {
         context = InstrumentationRegistry.getTargetContext();
@@ -49,8 +49,8 @@ public abstract class DbTestRuleBase implements TestRule {
         Passe p = new Passe(shots.length);
         p.roundId = round.getId();
         for (int i = 0; i < shots.length; i++) {
-            p.shot[i].index = i;
-            p.shot[i].zone = shots[i];
+            p.shots.get(i).index = i;
+            p.shots.get(i).zone = shots[i];
         }
         return p;
     }
@@ -59,8 +59,8 @@ public abstract class DbTestRuleBase implements TestRule {
         Passe p = new Passe(arrowsPerEnd);
         p.roundId = round.getId();
         for (int i = 0; i < arrowsPerEnd; i++) {
-            p.shot[i].index = i;
-            p.shot[i].zone = gen.nextInt(5);
+            p.shots.get(i).index = i;
+            p.shots.get(i).zone = gen.nextInt(5);
         }
         p.saveDate = new DateTime().withDate(training.date).withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
         return p;

@@ -17,10 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.Coordinate;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.Shot;
-import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.targets.TargetDrawable;
 import de.dreier.mytargets.shared.targets.TargetModelBase;
@@ -44,7 +45,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     @State(ParcelsBundler.class)
     protected Passe end;
     @State(ParcelsBundler.class)
-    protected RoundTemplate round;
+    protected Round round;
     protected int contentWidth;
     protected int contentHeight;
     protected OnTargetSetListener setListener = null;
@@ -79,8 +80,9 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     private void initForDesigner() {
         ViewCompat.setAccessibilityDelegate(this, touchHelper);
         if (isInEditMode()) {
-            round = new RoundTemplate();
-            round.arrowsPerEnd = 3;
+            round = new Round();
+            round.info = new RoundTemplate();
+            round.info.arrowsPerEnd = 3;
             end = new Passe(3);
             end.getShots().get(0).zone = 0;
             end.getShots().get(0).x = 0.01f;
@@ -98,7 +100,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     public void reset() {
         currentArrow = 0;
         lastSetArrow = -1;
-        end = new Passe(round.arrowsPerEnd);
+        end = new Passe(round.info.arrowsPerEnd);
         scoresDrawer.setShots(end.getShots());
         updateSelectableZones();
         animateToZoomSpot();
@@ -109,12 +111,12 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         end.roundId = roundId;
     }
 
-    protected void setRoundTemplate(RoundTemplate r) {
+    protected void setRound(Round r) {
         round = r;
-        target = r.target;
-        targetModel = r.target.getModel();
-        targetDrawable = r.target.getDrawable();
-        scoresDrawer.init(this, density, r.target);
+        target = r.getTarget();
+        targetModel = target.getModel();
+        targetDrawable = target.getDrawable();
+        scoresDrawer.init(this, density, target);
         updateSelectableZones();
         reset();
     }
@@ -176,7 +178,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         float x = motionEvent.getX();
         float y = motionEvent.getY();
 
-        boolean currentlySelecting = currentArrow < round.arrowsPerEnd && end.getShots().get(currentArrow).zone != Shot.NOTHING_SELECTED;
+        boolean currentlySelecting = currentArrow < round.info.arrowsPerEnd && end.getShots().get(currentArrow).zone != Shot.NOTHING_SELECTED;
         if (selectPreviousShots(motionEvent, x, y) && !currentlySelecting) {
             return true;
         }
@@ -187,7 +189,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
 
         // If a valid selection was made save it in the end
-        if (currentArrow < round.arrowsPerEnd &&
+        if (currentArrow < round.info.arrowsPerEnd &&
                 (end.getShots().get(currentArrow).zone != shot.zone || !zoneSelectionMode)) {
             end.getShots().get(currentArrow).zone = shot.zone;
             end.getShots().get(currentArrow).x = shot.x;
@@ -219,7 +221,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
         animateFromZoomSpot();
 
-        if (lastSetArrow + 1 >= round.arrowsPerEnd && setListener != null) {
+        if (lastSetArrow + 1 >= round.info.arrowsPerEnd && setListener != null) {
             end.exact = !zoneSelectionMode;
             end.setId(setListener.onTargetSet(new Passe(end), false));
         }
@@ -228,7 +230,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     private void animateCircle(int i) {
         Coordinate pos = null;
         int nextSel = i;
-        if (i > -1 && i < round.arrowsPerEnd && end.getShots().get(i).zone > Shot.NOTHING_SELECTED) {
+        if (i > -1 && i < round.info.arrowsPerEnd && end.getShots().get(i).zone > Shot.NOTHING_SELECTED) {
             pos = initAnimationPositions(i);
         } else {
             nextSel = ScoresDrawer.NO_SELECTION;

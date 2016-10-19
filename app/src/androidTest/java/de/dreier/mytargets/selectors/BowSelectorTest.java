@@ -16,6 +16,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.models.ETrainingType;
 import de.dreier.mytargets.utils.rules.EmptyDbTestRule;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -29,9 +30,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.PermissionGranter.allowPermissionsIfNeeded;
-import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_TYPE;
-import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND;
+import static de.dreier.mytargets.models.ETrainingType.FREE_TRAINING;
+import static de.dreier.mytargets.models.ETrainingType.TRAINING_WITH_STANDARD_ROUND;
 import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
@@ -54,7 +55,7 @@ public class BowSelectorTest extends UITestBase {
         bowSelectionTest(TRAINING_WITH_STANDARD_ROUND);
     }
 
-    private void bowSelectionTest(int type) {
+    private void bowSelectionTest(ETrainingType type) {
         Intent intent = new Intent();
         intent.putExtra(TRAINING_TYPE, type);
         activityTestRule.launchActivity(intent);

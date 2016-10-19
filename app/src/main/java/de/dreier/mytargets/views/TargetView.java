@@ -45,11 +45,11 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.interfaces.OnEndUpdatedListener;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.models.EShowMode;
-import de.dreier.mytargets.shared.models.db.ArrowNumber;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.db.ArrowNumber;
 import de.dreier.mytargets.shared.models.db.Passe;
-import de.dreier.mytargets.shared.models.db.RoundTemplate;
+import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.utils.ScoresDrawer;
@@ -140,8 +140,8 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    public void setRoundTemplate(RoundTemplate r) {
-        super.setRoundTemplate(r);
+    public void setRound(Round r) {
+        super.setRound(r);
         switchMode(SettingsManager.getInputMode(), false);
         initSpotBounds();
         midpointsDirty = true;
@@ -186,7 +186,7 @@ public class TargetView extends TargetViewBase {
     @Override
     protected void onDraw(Canvas canvas) {
         int curZone;
-        if (currentArrow > -1 && currentArrow < round.arrowsPerEnd) {
+        if (currentArrow > -1 && currentArrow < round.info.arrowsPerEnd) {
             curZone = end.getShots().get(currentArrow).zone;
         } else {
             curZone = -2;
@@ -461,7 +461,7 @@ public class TargetView extends TargetViewBase {
                 cancelPendingAnimations();
                 animator = ValueAnimator.ofFloat(0, 1);
                 animator.setInterpolator(
-                        currentArrow < round.arrowsPerEnd ? new AccelerateInterpolator() :
+                        currentArrow < round.info.arrowsPerEnd ? new AccelerateInterpolator() :
                                 new AccelerateDecelerateInterpolator());
                 animator.addUpdateListener(valueAnimator -> {
                     curAnimationProgress = (Float) valueAnimator.getAnimatedValue();
@@ -503,7 +503,7 @@ public class TargetView extends TargetViewBase {
             midX = orgMidX;
             midY = orgMidY;
         }
-        if (targetModel.getFaceCount() > 1 && currentArrow < round.arrowsPerEnd && radius > 0 &&
+        if (targetModel.getFaceCount() > 1 && currentArrow < round.info.arrowsPerEnd && radius > 0 &&
                 !spotFocused && !zoneSelectionMode && !zoomTransitioning) {
             cancelPendingAnimations();
             animator = ValueAnimator.ofFloat(0, 1);
@@ -561,7 +561,7 @@ public class TargetView extends TargetViewBase {
 
         triggerUpdate();
         if (arrowNumbers.isEmpty() ||
-                currentArrow < round.arrowsPerEnd && end.getShots().get(currentArrow).arrow != null) {
+                currentArrow < round.info.arrowsPerEnd && end.getShots().get(currentArrow).arrow != null) {
             super.onArrowChanged(index);
         } else {
             List<String> numbersLeft = Stream.of(arrowNumbers).map(an -> an.number)
@@ -569,7 +569,7 @@ public class TargetView extends TargetViewBase {
             for (Shot s : end.getShots()) {
                 numbersLeft.remove(s.arrow);
             }
-            if (numbersLeft.size() == 0 || currentArrow >= round.arrowsPerEnd) {
+            if (numbersLeft.size() == 0 || currentArrow >= round.info.arrowsPerEnd) {
                 super.onArrowChanged(index);
                 return;
             } else if (numbersLeft.size() == 1) {
@@ -665,14 +665,14 @@ public class TargetView extends TargetViewBase {
         longPressTimer = null;
         Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(500);
-        onArrowChanged(round.arrowsPerEnd);
+        onArrowChanged(round.info.arrowsPerEnd);
 
         new MaterialDialog.Builder(getContext())
                 .title(R.string.comment)
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .input("", end.getShots().get(pressed).comment, (dialog, input) -> {
                     end.getShots().get(pressed).comment = input.toString();
-                    if (lastSetArrow + 1 >= round.arrowsPerEnd && setListener != null) {
+                    if (lastSetArrow + 1 >= round.info.arrowsPerEnd && setListener != null) {
                         setListener.onTargetSet(new Passe(end), false);
                     }
                 })

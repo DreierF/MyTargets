@@ -9,11 +9,23 @@ package de.dreier.mytargets.shared.models;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
+import de.dreier.mytargets.shared.models.db.RoundTemplate;
+import de.dreier.mytargets.shared.models.db.RoundTemplate_Table;
+import de.dreier.mytargets.shared.models.db.SightSetting;
+import de.dreier.mytargets.shared.models.db.SightSetting_Table;
 
 @Parcel
 public class Dimension implements IIdProvider, Comparable<Dimension> {
@@ -44,6 +56,41 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
         } else {
             this.unit = Unit.from(unit);
         }
+    }
+
+    /**
+     * Returns a list of all distances that are either default values or used somewhere in the app
+     *
+     * @param distance Distance to add to the list (current selected value)
+     * @param unit     Distances are only returned which match the specified unit
+     * @return List of distances
+     */
+    public static List<Dimension> getAll(Dimension distance, Unit unit) {
+        HashSet<Dimension> distances = new HashSet<>();
+
+        // Add currently selected distance to list
+        if (distance.unit == unit) {
+            distances.add(distance);
+        }
+
+        // Get all distances used in ROUND or VISIER table
+        distances.addAll(Stream.of(SQLite
+                .select(SightSetting_Table.distance)
+                .from(SightSetting.class)
+                .queryList())
+                .map(sightSetting -> sightSetting.distance)
+                .filter(d -> d.unit == unit)
+                .collect(Collectors.toSet()));
+
+        distances.addAll(Stream.of(SQLite
+                .select(RoundTemplate_Table.distance)
+                .from(RoundTemplate.class)
+                .queryList())
+                .map(roundTemplate -> roundTemplate.distance)
+                .filter(d -> d.unit == unit)
+                .collect(Collectors.toSet()));
+
+        return new ArrayList<>(distances);
     }
 
     @Override

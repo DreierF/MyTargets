@@ -107,7 +107,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

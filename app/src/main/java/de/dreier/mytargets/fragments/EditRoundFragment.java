@@ -104,7 +104,7 @@ public class EditRoundFragment extends EditFragmentBase {
             StandardRound standardRound = StandardRound.get(round.info.standardRound);
             if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
                 binding.distanceLayout.setVisibility(View.GONE);
-            } else if (standardRound.rounds.size() > 1) {
+            } else if (standardRound.getRounds().size() > 1) {
                 binding.removeButton.setOnClickListener(v -> {
                     round.delete();
                     finish();
@@ -145,6 +145,7 @@ public class EditRoundFragment extends EditFragmentBase {
         } else {
             round = new Round();
             round.trainingId = trainingId;
+            round.setTarget(binding.target.getSelectedItem());
             round.info = getRoundTemplate();
             round.info.standardRound = standardRound.getId();
         }
@@ -153,7 +154,7 @@ public class EditRoundFragment extends EditFragmentBase {
 
         if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE) {
             round.info.distance = binding.distance.getSelectedItem();
-            round.info.index = standardRound.rounds.size();
+            round.info.index = standardRound.getRounds().size();
             round.info.save();
         }
         round.save();
@@ -176,13 +177,12 @@ public class EditRoundFragment extends EditFragmentBase {
     @NonNull
     private RoundTemplate getRoundTemplate() {
         RoundTemplate roundTemplate = new RoundTemplate();
-        roundTemplate.target = binding.target.getSelectedItem();
-        roundTemplate.setTargetTemplate(roundTemplate.target);
+        roundTemplate.setTargetTemplate(binding.target.getSelectedItem());
         roundTemplate.arrowsPerEnd = binding.arrows.getProgress();
         roundTemplate.endCount = 1;
         roundTemplate.distance = binding.distance.getSelectedItem();
 
-        SettingsManager.setTarget(roundTemplate.target);
+        SettingsManager.setTarget(binding.target.getSelectedItem());
         SettingsManager.setDistance(roundTemplate.distance);
         SettingsManager.setArrowsPerEnd(roundTemplate.arrowsPerEnd);
         return roundTemplate;

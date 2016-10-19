@@ -110,9 +110,9 @@ public class HtmlUtils {
             int sum = 0;
             for (Shot shot : passe.getSortedShotList()) {
                 html += "<td>";
-                html += getPoints(configuration, shot, round.info.target);
+                html += getPoints(configuration, shot, round.getTarget());
                 html += "</td>";
-                int points = round.info.target.getPointsByZone(shot.zone, shot.index);
+                int points = round.getTarget().getPointsByZone(shot.zone, shot.index);
                 sum += points;
                 carry += points;
             }
@@ -174,7 +174,7 @@ public class HtmlUtils {
                     if (!TextUtils.isEmpty(shot.comment)) {
                         comments += "<tr class=\"align_center\"><td>" + j + "</td>" +
                                 "<td>" + i + "</td>" +
-                                "<td>" + round.info.target.zoneToString(shot.zone, s) +
+                                "<td>" + round.getTarget().zoneToString(shot.zone, s) +
                                 "</td>" +
                                 "<td>" +
                                 TextUtils.htmlEncode(shot.comment).replace("\n", "<br />") +
@@ -196,12 +196,12 @@ public class HtmlUtils {
     }
 
     public static String getRoundInfo(Round round, boolean[] equals) {
-        HTMLInfoBuilder info = new HTMLInfoBuilder();
+        HtmlInfoBuilder info = new HtmlInfoBuilder();
         if (!equals[0]) {
             info.addLine(R.string.distance, round.info.distance);
         }
         if (!equals[1]) {
-            info.addLine(R.string.target_face, round.info.target);
+            info.addLine(R.string.target_face, round.getTarget());
         }
         if (!round.comment.isEmpty()) {
             info.addLine(R.string.comment, round.comment);
@@ -275,14 +275,14 @@ public class HtmlUtils {
     }
 
     public static String getTrainingInfoHTML(Training training, List<Round> rounds, boolean[] equals, boolean scoreboard) {
-        HTMLInfoBuilder info = new HTMLInfoBuilder();
+        HtmlInfoBuilder info = new HtmlInfoBuilder();
         addStaticTrainingHeaderInfo(info, training, rounds, scoreboard);
         addDynamicTrainingHeaderInfo(rounds, equals, info);
         return info.toString();
     }
 
     @NonNull
-    private static StandardRound addStaticTrainingHeaderInfo(HTMLInfoBuilder info, Training training, List<Round> rounds, boolean scoreboard) {
+    private static StandardRound addStaticTrainingHeaderInfo(HtmlInfoBuilder info, Training training, List<Round> rounds, boolean scoreboard) {
         if (scoreboard) {
             getScoreboardOnlyHeaderInfo(info, training, rounds);
         }
@@ -318,7 +318,7 @@ public class HtmlUtils {
         return standardRound;
     }
 
-    private static void addDynamicTrainingHeaderInfo(List<Round> rounds, boolean[] equals, HTMLInfoBuilder info) {
+    private static void addDynamicTrainingHeaderInfo(List<Round> rounds, boolean[] equals, HtmlInfoBuilder info) {
         if (rounds.size() > 0) {
             getEqualValues(rounds, equals);
             Round round = rounds.get(0);
@@ -326,7 +326,7 @@ public class HtmlUtils {
                 info.addLine(R.string.distance, round.info.distance);
             }
             if (equals[1]) {
-                info.addLine(R.string.target_face, round.info.target);
+                info.addLine(R.string.target_face, round.getTarget());
             }
         }
     }
@@ -338,11 +338,11 @@ public class HtmlUtils {
         Round round = rounds.get(0);
         for (Round r : rounds) {
             equals[0] = r.info.distance.equals(round.info.distance) && equals[0];
-            equals[1] = r.info.target.equals(round.info.target) && equals[1];
+            equals[1] = r.getTarget().equals(round.getTarget()) && equals[1];
         }
     }
 
-    private static void getScoreboardOnlyHeaderInfo(HTMLInfoBuilder info, Training training, List<Round> rounds) {
+    private static void getScoreboardOnlyHeaderInfo(HtmlInfoBuilder info, Training training, List<Round> rounds) {
         final String fullName = SettingsManager.getProfileFullName();
         if (!fullName.trim().isEmpty()) {
             info.addLine(R.string.name, fullName);

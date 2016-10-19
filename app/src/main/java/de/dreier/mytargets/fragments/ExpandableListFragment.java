@@ -19,7 +19,7 @@ import de.dreier.mytargets.adapters.ExpandableListAdapter;
 import de.dreier.mytargets.interfaces.ItemAdapter;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.utils.Utils;
+import de.dreier.mytargets.shared.utils.LongUtils;
 
 /**
  * Shows all rounds of one training day
@@ -36,7 +36,7 @@ abstract class ExpandableListFragment<H extends IIdProvider, C extends IIdSettab
             mAdapter.setList(children, opened);
             if (savedInstanceState != null && savedInstanceState.containsKey(KEY_EXPANDED)) {
                 mAdapter.setExpandedIds(
-                        Utils.toList(savedInstanceState.getLongArray(KEY_EXPANDED)));
+                        LongUtils.toList(savedInstanceState.getLongArray(KEY_EXPANDED)));
             } else if (!opened && mAdapter.getItemCount() > 0) {
                 mAdapter.expandFirst();
             }
@@ -54,7 +54,7 @@ abstract class ExpandableListFragment<H extends IIdProvider, C extends IIdSettab
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mAdapter != null) {
-            outState.putLongArray(KEY_EXPANDED, Utils.toArray(mAdapter.getExpandedIds()));
+            outState.putLongArray(KEY_EXPANDED, LongUtils.toArray(mAdapter.getExpandedIds()));
         }
     }
 

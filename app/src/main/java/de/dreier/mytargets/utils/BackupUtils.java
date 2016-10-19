@@ -17,10 +17,14 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -31,8 +35,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -40,6 +44,7 @@ import java.util.zip.ZipOutputStream;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.shared.AppDatabase;
 
 
 public class BackupUtils {
@@ -69,27 +74,6 @@ public class BackupUtils {
         builder.setNegativeButton("", null);
         builder.setPositiveButton(android.R.string.ok, null).show();
         return false;
-    }
-
-    public static void copy(File src, File dst) throws IOException {
-        FileInputStream inStream = new FileInputStream(src);
-        FileOutputStream outStream = new FileOutputStream(dst);
-        FileChannel inChannel = inStream.getChannel();
-        FileChannel outChannel = outStream.getChannel();
-        inChannel.transferTo(0, inChannel.size(), outChannel);
-        inStream.close();
-        outStream.close();
-    }
-
-    public static void copy(InputStream in, File dst) throws IOException {
-        OutputStream out = new FileOutputStream(dst);
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        in.close();
-        out.close();
     }
 
     public static Uri export(Context context) throws IOException {
@@ -132,7 +116,7 @@ public class BackupUtils {
             ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
             byte data[] = new byte[BUFFER];
 
-            File db = context.getDatabasePath(DatabaseManager.DATABASE_NAME);
+            File db = context.getDatabasePath(AppDatabase.NAME+".db");
             FileInputStream fi = new FileInputStream(db);
             origin = new BufferedInputStream(fi, BUFFER);
 
@@ -144,7 +128,7 @@ public class BackupUtils {
             }
             origin.close();
 
-            String[] files = DatabaseManager.getImages();
+            String[] files = getImages();
             for (String file : files) {
                 fi = new FileInputStream(new File(context.getFilesDir(), file));
                 origin = new BufferedInputStream(fi, BUFFER);
@@ -162,6 +146,24 @@ public class BackupUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String[] getImages() {
+        ArrayList<String> list = new ArrayList<>();
+        DatabaseWrapper db = FlowManager.getWritableDatabase(AppDatabase.class);
+        Cursor cur = db.rawQuery("SELECT image FROM BOW WHERE image IS NOT NULL", null);
+        if (cur.moveToFirst()) {
+            list.add(cur.getString(0));
+        }
+        cur.close();
+
+        // Migrate all arrow images
+        cur = db.rawQuery("SELECT image FROM ARROW WHERE image IS NOT NULL", null);
+        if (cur.moveToFirst()) {
+            list.add(cur.getString(0));
+        }
+        cur.close();
+        return list.toArray(new String[list.size()]);
     }
 
     public static File unzip(Context context, InputStream in) throws IOException {

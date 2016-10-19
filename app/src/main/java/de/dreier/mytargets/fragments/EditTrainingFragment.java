@@ -34,7 +34,6 @@ import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.databinding.FragmentEditTrainingBinding;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.models.ETrainingType;
-import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Arrow;
@@ -48,6 +47,7 @@ import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
+import de.dreier.mytargets.views.selector.SelectorBase;
 
 import static de.dreier.mytargets.fragments.DatePickerFragment.ARG_CURRENT_DATE;
 import static de.dreier.mytargets.fragments.ListFragmentBase.ITEM_ID;
@@ -64,6 +64,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private ETrainingType trainingType = ETrainingType.FREE_TRAINING;
     private LocalDate date = new LocalDate();
     private FragmentEditTrainingBinding binding;
+    private Target roundTarget;
 
     @NonNull
     public static IntentWrapper createIntent(Fragment fragment, ETrainingType trainingType) {
@@ -127,11 +128,16 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.bow.setItemId(SettingsManager.getBow());
             binding.arrow.setItemId(SettingsManager.getArrow());
             binding.standardRound.setItemId(SettingsManager.getStandardRound());
+            binding.standardRound.setOnUpdateListener(
+                    item -> roundTarget = item.getRounds().get(0).getTargetTemplate());
             binding.numberArrows.setChecked(SettingsManager.getArrowNumbersEnabled());
             binding.timer.setChecked(SettingsManager.getTimerEnabled());
             binding.indoor.setChecked(SettingsManager.getIndoor());
             binding.outdoor.setChecked(!SettingsManager.getIndoor());
             binding.environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
+
+            final StandardRound item = binding.standardRound.getSelectedItem();
+            roundTarget = item.getRounds().get(0).getTargetTemplate();
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_training);
             Training train = Training.get(trainingId);
@@ -148,9 +154,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         binding.standardRound.setOnActivityResultContext(this);
         binding.standardRound.setOnUpdateListener(this::updateChangeTargetFaceVisibility);
         binding.changeTargetFace.setOnClickListener(v -> {
-            final StandardRound item = binding.standardRound.getSelectedItem();
-            Target target = item.rounds.get(0).getTargetTemplate();
-            TargetListFragment.getIntent(this, target)
+            TargetListFragment.getIntent(this, roundTarget)
                     .startForResult(SR_TARGET_REQUEST_CODE);
         });
         updateChangeTargetFaceVisibility(binding.standardRound.getSelectedItem());
@@ -166,7 +170,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     }
 
     private void updateChangeTargetFaceVisibility(StandardRound item) {
-        Target target = item.rounds.get(0).getTargetTemplate();
+        Target target = item.getRounds().get(0).getTargetTemplate();
         final boolean canBeChanged = (target.id < 7 || target.id == 10 || target.id == 11)
                 && trainingType == TRAINING_WITH_STANDARD_ROUND;
         binding.changeTargetFace.setVisibility(canBeChanged ? View.VISIBLE : View.GONE);
@@ -261,6 +265,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
             training.save();
             Round round = createRoundsFromTemplate(standardRound, training).get(0);
+            round.setTarget(binding.target.getSelectedItem());
 
             TrainingFragment.getIntent(this, training).startWithoutAnimation();
             RoundFragment.getIntent(this, round).startWithoutAnimation();
@@ -303,7 +308,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     @NonNull
     private ArrayList<Round> createRoundsFromTemplate(StandardRound standardRound, Training training) {
         ArrayList<Round> rounds = new ArrayList<>();
-        for (RoundTemplate template : standardRound.rounds) {
+        for (RoundTemplate template : standardRound.getRounds()) {
             Round round = new Round();
             round.trainingId = training.getId();
             round.info = template;
@@ -323,7 +328,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         standardRound.indoor = binding.indoor.isChecked();
         ArrayList<RoundTemplate> rounds = new ArrayList<>();
         rounds.add(getRoundTemplate());
-        standardRound.rounds = rounds;
+        standardRound.setRounds(rounds);
 
         SettingsManager.setIndoor(standardRound.indoor);
         return standardRound;
@@ -340,13 +345,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         binding.environment.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == SR_TARGET_REQUEST_CODE) {
             final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
-            final Target st = Parcels.unwrap(parcelable);
-            StandardRound item = binding.standardRound.getSelectedItem();
-            for (RoundTemplate template : item.rounds) {
-                Dimension size = template.target.size;
-                template.target = new Target(st.id, st.scoringStyle, size);
-            }
-            binding.standardRound.setItem(item);
+            roundTarget = Parcels.unwrap(parcelable);
         }
     }
 
@@ -365,13 +364,12 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     @NonNull
     private RoundTemplate getRoundTemplate() {
         RoundTemplate roundTemplate = new RoundTemplate();
-        roundTemplate.target = binding.target.getSelectedItem();
-        roundTemplate.setTargetTemplate(roundTemplate.target);
+        roundTemplate.setTargetTemplate(binding.target.getSelectedItem());
         roundTemplate.arrowsPerEnd = binding.arrows.getProgress();
         roundTemplate.endCount = 1;
         roundTemplate.distance = binding.distance.getSelectedItem();
 
-        SettingsManager.setTarget(roundTemplate.target);
+        SettingsManager.setTarget(binding.target.getSelectedItem());
         SettingsManager.setDistance(roundTemplate.distance);
         SettingsManager.setArrowsPerEnd(roundTemplate.arrowsPerEnd);
         return roundTemplate;

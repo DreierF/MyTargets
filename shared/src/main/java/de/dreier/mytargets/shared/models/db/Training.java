@@ -27,9 +27,6 @@ import de.dreier.mytargets.shared.utils.LocalDateConverter;
 @Table(database = AppDatabase.class, name = "TRAINING")
 public class Training extends BaseModel implements IIdSettable {
 
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    Long id;
     @Column(name = "title")
     public String title = "";
     @Column(typeConverter = LocalDateConverter.class, name = "datum")
@@ -55,12 +52,31 @@ public class Training extends BaseModel implements IIdSettable {
     public boolean arrowNumbering;
     @Column(name = "time")
     public int timePerPasse;
+    public List<Round> rounds = new ArrayList<>();
+    @Column(name = "_id")
+    @PrimaryKey(autoincrement = true)
+    Long id;
+
+    public static Training get(Long id) {
+        return SQLite.select()
+                .from(Training.class)
+                .where(Training_Table._id.eq(id))
+                .querySingle();
+    }
+
+    public static List<Training> getAll() {
+        return SQLite.select().from(Training.class).queryList();
+    }
+
+    public static void deleteAll() {
+        SQLite.delete(Training.class).execute();
+    }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -82,28 +98,22 @@ public class Training extends BaseModel implements IIdSettable {
         location = env.location;
     }
 
-    public static Training get(Long id) {
-        return SQLite.select()
-                .from(Training.class)
-                //.where(Training_Table._id.eq(id))
-                .querySingle();
-    }
-
-    public static List<Training> getAll() {
-        return SQLite.select().from(Training.class).queryList();
-    }
-
-    public List<Round> rounds = new ArrayList<>();
-
     @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "rounds")
     public List<Round> getRounds() {
         if (rounds == null || rounds.isEmpty()) {
             rounds = SQLite.select()
                     .from(Round.class)
-                   // .where(Round_Table.training.eq(id))
+                    .where(Round_Table.training.eq(id))
                     .queryList();
         }
         return rounds;
+    }
+
+    public StandardRound getStandardRound() {
+        return SQLite.select()
+                .from(StandardRound.class)
+                .where(StandardRound_Table._id.eq(standardRoundId))
+                .querySingle();
     }
 
     public String getFormattedDate() {
@@ -114,17 +124,14 @@ public class Training extends BaseModel implements IIdSettable {
         int maxPoints = 0;
         int reachedPoints = 0;
         for (Round r : rounds) {
-            maxPoints += r.info.getMaxPoints();
+            maxPoints += r.getMaxPoints();
             reachedPoints += r.reachedPoints;
         }
-        if(appendPercent && maxPoints > 0) {
-            return String.format(Locale.ENGLISH, "%d/%d (%d)", reachedPoints, maxPoints, (reachedPoints * 100 / maxPoints));
+        if (appendPercent && maxPoints > 0) {
+            return String.format(Locale.ENGLISH, "%d/%d (%d)", reachedPoints, maxPoints,
+                    (reachedPoints * 100 / maxPoints));
         } else {
             return String.format(Locale.ENGLISH, "%d/%d", reachedPoints, maxPoints);
         }
-    }
-
-    public static void deleteAll() {
-        SQLite.delete(Training.class).execute();
     }
 }

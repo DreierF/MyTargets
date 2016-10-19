@@ -51,6 +51,8 @@ import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import icepick.Icepick;
 import icepick.State;
 
+import static de.dreier.mytargets.shared.models.db.Round_Table.template;
+
 public class InputActivity extends ChildActivityBase implements OnTargetSetListener, OnEndUpdatedListener {
 
     private static final String ROUND_ID = "round_id";
@@ -66,7 +68,6 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     private Round round;
     private WearMessageManager manager;
     private Training training;
-    private RoundTemplate template;
     private StandardRound standardRound;
 
     private ActivityInputBinding binding;
@@ -105,14 +106,13 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         long roundId = intent.getLongExtra(ROUND_ID, -1);
         curPasse = intent.getIntExtra(PASSE_IND, -1);
         round = Round.get(roundId);
-        template = round.info;
         training = Training.get(round.trainingId);
         standardRound = StandardRound.get(training.standardRoundId);
         savedPasses = round.getPasses().size();
 
         setTitle(training.title);
 
-        binding.targetView.setRoundTemplate(template);
+        binding.targetView.setRound(round);
         Dimension diameter = new Dimension(5, Dimension.Unit.MILLIMETER);
         if (training.arrow > 0) {
             Arrow arrow = Arrow.get(training.arrow);
@@ -205,7 +205,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     }
 
     private void setPasse(int passe) {
-        if (passe >= template.endCount && savedPasses <= curPasse && standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
+        if (passe >= round.info.endCount && savedPasses <= curPasse && standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
             // If standard round is over exit the input activity
             finish();
             overridePendingTransition(R.anim.left_in, R.anim.right_out);
@@ -242,7 +242,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     private void updatePasse() {
         binding.prev.setEnabled(curPasse > 0);
         binding.next.setEnabled(curPasse < savedPasses &&
-                (curPasse + 1 < template.endCount || // The current round is not finished
+                (curPasse + 1 < round.info.endCount || // The current round is not finished
                         standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE)); // or we don't have an exit condition
 
         binding.endTitle.setText(getString(R.string.passe) + " " + (curPasse + 1));
@@ -302,14 +302,14 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     @Override
     public long onTargetSet(Passe passe, boolean remote) {
         // Change round template if end is out of range defined in template
-        if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE && template.endCount <= curPasse) {
-            template.addPasse();
+        if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE && round.info.endCount <= curPasse) {
+            round.info.addPasse();
         }
 
         // Change round template if passe is out of range defined in template
-        if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE && template.endCount <= curPasse) {
-            template.endCount++;
-            template.update();
+        if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE && round.info.endCount <= curPasse) {
+            round.info.endCount++;
+            round.info.update();
         }
 
         passe.roundId = round.getId();
@@ -332,15 +332,15 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
 
     @Override
     public void onEndUpdated(Passe p, List<Passe> old) {
-        int reachedEndPoints = p.getReachedPoints(template.target);
-        int maxEndPoints = round.info.target.getEndMaxPoints(round.info.arrowsPerEnd);
+        int reachedEndPoints = p.getReachedPoints(round.getTarget());
+        int maxEndPoints = round.getTarget().getEndMaxPoints(round.info.arrowsPerEnd);
         binding.scoreEnd.setText(reachedEndPoints + "/" + maxEndPoints);
         final List<Passe> ends = Stream.of(old)
-                .filter(p2 -> round.getId() == p2.roundId && p2.getId() != p.getId())
+                .filter(p2 -> round.getId().equals(p2.roundId) && !p2.getId().equals(p.getId()))
                 .collect(Collectors.toList());
         ends.add(p);
         int reachedRoundPoints = Stream.of(ends)
-                .reduce(0, (sum, end) -> sum + end.getReachedPoints(round.info.target));
+                .reduce(0, (sum, end) -> sum + end.getReachedPoints(round.getTarget()));
         int maxRoundPoints = maxEndPoints * ends.size();
         binding.scoreRound.setText(reachedRoundPoints + "/" + maxRoundPoints);
     }
@@ -353,7 +353,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         Passe lastPasse = round.getPasses().get(savedPasses);
         if (lastPasse != null) {
             for (Shot shot : lastPasse.getShots()) {
-                text += template.target.zoneToString(shot.zone, 0) + " ";
+                text += round.getTarget().zoneToString(shot.zone, 0) + " ";
             }
             text += "\n";
         } else {
@@ -362,9 +362,9 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
 
         // Load bow settings
         if (training.bow > 0) {
-            SightSetting sightSetting = Bow.get(training.bow).getSightSetting(template.distance);
+            SightSetting sightSetting = Bow.get(training.bow).getSightSetting(round.info.distance);
             if (sightSetting != null) {
-                text += String.format("%s: %s", template.distance, sightSetting.value);
+                text += String.format("%s: %s", round.info.distance, sightSetting.value);
             }
         }
         return new NotificationInfo(round, title, text);

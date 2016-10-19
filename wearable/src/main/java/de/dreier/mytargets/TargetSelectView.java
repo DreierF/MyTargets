@@ -77,7 +77,7 @@ public class TargetSelectView extends TargetViewBase {
     }
 
     private int getCurrentlySelectedZone() {
-        if (end != null && currentArrow < round.arrowsPerEnd) {
+        if (end != null && currentArrow < TargetViewBase.this.round.info.arrowsPerEnd) {
             return end.getShots().get(currentArrow).zone;
         } else {
             return Shot.NOTHING_SELECTED;

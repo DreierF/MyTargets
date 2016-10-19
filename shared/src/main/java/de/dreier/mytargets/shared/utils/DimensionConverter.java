@@ -21,7 +21,7 @@ public final class DimensionConverter extends TypeConverter<String, Dimension> {
             int index = data.indexOf(' ');
             final String value = data.substring(0, index);
             final String unit = data.substring(index + 1);
-            return new Dimension(Integer.parseInt(value), Dimension.Unit.from(unit));
+            return new Dimension(Float.parseFloat(value), Dimension.Unit.from(unit));
         }
 
         return null;

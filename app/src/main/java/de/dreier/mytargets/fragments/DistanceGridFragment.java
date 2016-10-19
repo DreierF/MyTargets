@@ -10,6 +10,7 @@ package de.dreier.mytargets.fragments;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +26,6 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemDistanceBinding;
-import de.dreier.mytargets.managers.dao.DistanceDataSource;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Dimension.Unit;
 import de.dreier.mytargets.utils.DistanceInputDialog;
@@ -97,9 +97,10 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> implemen
         onClick(holder, (Dimension) holder.getItem());
     }
 
+    @NonNull
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
-        final List<Dimension> distances = new DistanceDataSource().getAll(distance, unit);
+        final List<Dimension> distances = Dimension.getAll(distance, unit);
         return () -> mAdapter.setList(distances);
     }
 

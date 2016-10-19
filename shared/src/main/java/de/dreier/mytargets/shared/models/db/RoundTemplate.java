@@ -30,7 +30,6 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
     public int index;
     @Column(name = "arrows")
     public int arrowsPerEnd;
-    public Target target;
     @Column(name = "passes")
     public int endCount;
     @Column(typeConverter = DimensionConverter.class, name = "distance")
@@ -42,15 +41,11 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
     @Column(typeConverter = DimensionConverter.class, name = "size")
     Dimension targetTemplateSize;
 
-    public int getMaxPoints() {
-        return target.getEndMaxPoints(arrowsPerEnd) * endCount;
-    }
-
     public Long getId() {
         return _id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this._id = id;
     }
 
@@ -74,8 +69,8 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
     public static RoundTemplate get(long sid, int index) {
         return SQLite.select()
                 .from(RoundTemplate.class)
-                //.where(RoundTemplate_Table.sid.eq(sid))
-                //.and(RoundTemplate_Table.r_index.eq(index))
+                .where(RoundTemplate_Table.sid.eq(sid))
+                .and(RoundTemplate_Table.r_index.eq(index))
                 .querySingle();
     }
 

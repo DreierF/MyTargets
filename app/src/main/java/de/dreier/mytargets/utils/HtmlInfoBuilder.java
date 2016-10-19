@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import de.dreier.mytargets.ApplicationInstance;
 
-public class HTMLInfoBuilder {
+public class HtmlInfoBuilder {
     private final StringBuilder info = new StringBuilder();
 
     public void addLine(int key, Object value) {

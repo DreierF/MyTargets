@@ -82,15 +82,14 @@ public class EditStandardRoundFragment extends EditFragmentBase {
             if (standardRound == null) {
                 ToolbarUtils.setTitle(this, R.string.new_round_template);
                 binding.name.setText(R.string.custom_round);
-                // Initialise with default values
+                // Initialize with default values
                 binding.indoor.setChecked(SettingsManager.getIndoor());
                 binding.outdoor.setChecked(!SettingsManager.getIndoor());
 
                 RoundTemplate round = new RoundTemplate();
                 round.arrowsPerEnd = SettingsManager.getArrowsPerPasse();
                 round.endCount = SettingsManager.getPasses();
-                round.target = SettingsManager.getTarget();
-                round.setTargetTemplate(round.target);
+                round.setTargetTemplate(SettingsManager.getTarget());
                 round.distance = SettingsManager.getDistance();
                 roundTemplateList.add(round);
             } else {
@@ -98,14 +97,14 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                 // Load saved values
                 binding.indoor.setChecked(standardRound.indoor);
                 binding.outdoor.setChecked(!standardRound.indoor);
-                roundTemplateList = standardRound.rounds;
+                roundTemplateList = standardRound.getRounds();
                 if (standardRound.club == StandardRoundFactory.CUSTOM) {
                     binding.name.setText(standardRound.name);
                 } else {
                     binding.name.setText(
                             String.format("%s %s", getString(R.string.custom), standardRound.name));
                     for (RoundTemplate round : roundTemplateList) {
-                        round.setId(-1);
+                        round.setId(-1L);
                     }
                 }
             }
@@ -131,8 +130,6 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         roundTemplate.endCount = r.endCount;
         roundTemplate.arrowsPerEnd = r.arrowsPerEnd;
         roundTemplate.distance = r.distance;
-        roundTemplate.target = r.target;
-        roundTemplate.target.size = r.target.size;
         roundTemplate.setTargetTemplate(r.getTargetTemplate());
         roundTemplateList.add(roundTemplate);
         adapter.notifyItemInserted(roundTemplateList.size() - 1);
@@ -148,7 +145,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         standardRound.club = StandardRoundFactory.CUSTOM;
         standardRound.name = binding.name.getText().toString();
         standardRound.indoor = binding.indoor.isChecked();
-        standardRound.rounds = roundTemplateList;
+        standardRound.setRounds(roundTemplateList);
         standardRound.save();
 
         SettingsManager.setIndoor(standardRound.indoor);
@@ -156,7 +153,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         RoundTemplate round = roundTemplateList.get(0);
         SettingsManager.setArrowsPerEnd(round.arrowsPerEnd);
         SettingsManager.setPasses(round.endCount);
-        SettingsManager.setTarget(round.target);
+        SettingsManager.setTarget(round.getTargetTemplate());
         SettingsManager.setDistance(round.distance);
 
         Intent data = new Intent();
@@ -179,7 +176,6 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                     adapter.notifyItemChanged(index);
                     break;
                 case TargetSelector.TARGET_REQUEST_CODE:
-                    roundTemplateList.get(index).target = Parcels.unwrap(parcelable);
                     roundTemplateList.get(index).setTargetTemplate(Parcels.unwrap(parcelable));
                     adapter.notifyItemChanged(index);
                     break;
@@ -212,7 +208,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
             // Target round
             binding.target.setOnActivityResultContext(fragment);
             binding.target.setItemIndex(position);
-            binding.target.setItem(item.target);
+            binding.target.setItem(item.getTargetTemplate());
 
             // Passes
             binding.passes.setTextPattern(R.plurals.passe);

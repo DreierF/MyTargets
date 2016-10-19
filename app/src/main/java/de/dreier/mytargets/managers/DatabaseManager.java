@@ -7,12 +7,9 @@
 
 package de.dreier.mytargets.managers;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
@@ -26,32 +23,19 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 
-import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.RoundTemplate;
-import de.dreier.mytargets.shared.models.db.StandardRound;
-import de.dreier.mytargets.shared.utils.StandardRoundFactory;
+import de.dreier.mytargets.shared.utils.FileUtils;
 import de.dreier.mytargets.utils.BackupUtils;
 
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 
-public class DatabaseManager extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "database";
-    private static final int DATABASE_VERSION = 17;
-    private static DatabaseManager sInstance;
-
-    public DatabaseManager(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
-    }
+public class DatabaseManager {
 
     public static boolean Import(Context context, InputStream in) {
         try {
@@ -59,13 +43,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
             File file = BackupUtils.unzip(context, in);
 
             // Replace database file
-            File db_file = context.getDatabasePath(DatabaseManager.DATABASE_NAME);
-            DatabaseManager tmp = sInstance;
-            sInstance = null;
-            if (tmp != null) {
-                tmp.close();
-            }
-            BackupUtils.copy(file, db_file);
+            File db_file = context.getDatabasePath(AppDatabase.NAME);
+            //TODO close all open handles to the database
+            FileUtils.copy(file, db_file);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -95,414 +75,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 "WHERE a._id IS NULL)");
     }
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        //db.execSQL(BowDataSource.CREATE_TABLE_BOW);
-        //db.execSQL(SightSettingDataSource.CREATE_TABLE_VISIER);
-        //db.execSQL(ArrowNumberDataSource.CREATE_TABLE_NUMBER);
-       // db.execSQL(ArrowDataSource.CREATE_TABLE);
-        //db.execSQL(TrainingDataSource.CREATE_TABLE);
-        //db.execSQL(RoundTemplateDataSource.CREATE_TABLE);
-        //db.execSQL(RoundDataSource.CREATE_TABLE);
-        //db.execSQL(PasseDataSource.CREATE_TABLE);
-        //db.execSQL(ShotDataSource.CREATE_TABLE);
-        //fillStandardRound(db);
-    }
-
-    private void fillStandardRound(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS STANDARD_ROUND_TEMPLATE (" +
-                "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "name TEXT," +
-                "club INTEGER," +
-                "indoor INTEGER);");
-        db.execSQL("CREATE TABLE IF NOT EXISTS ROUND_TEMPLATE (" +
-                "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "sid INTEGER," +
-                "r_index INTEGER," +
-                "distance INTEGER," +
-                "unit TEXT," +
-                "passes INTEGER," +
-                "arrows INTEGER," +
-                "target INTEGER," +
-                "size INTEGER," +
-                "target_unit INTEGER," +
-                "scoring_style INTEGER," +
-                "UNIQUE(sid, r_index) ON CONFLICT REPLACE);");
-        List<StandardRound> rounds = StandardRoundFactory.initTable();
-        for (StandardRound round : rounds) {
-            round.update();
-        }
-    }
-
-////// SCOREBOARD //////
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < 2) {
-            db.execSQL("DROP TABLE IF EXISTS BOW");
-            db.execSQL("DROP TABLE IF EXISTS BOW_IMAGE");
-            db.execSQL("DROP TABLE IF EXISTS VISIER");
-        }
-        if (oldVersion < 3) {
-            db.execSQL("ALTER TABLE SHOOT ADD COLUMN x REAL");
-            db.execSQL("ALTER TABLE SHOOT ADD COLUMN y REAL");
-            Cursor cur = db.rawQuery("SELECT s._id, s.points, r.target " +
-                    "FROM SHOOT s, PASSE p, ROUND r " +
-                    "WHERE s.passe=p._id " +
-                    "AND p.round=r._id", null);
-            if (cur.moveToFirst()) {
-                do {
-                    int shoot = cur.getInt(0);
-                    db.execSQL("UPDATE SHOOT SET x=0, y=0 WHERE _id=" + shoot);
-                } while (cur.moveToNext());
-            }
-            cur.close();
-        }
-        if (oldVersion < 4) {
-            int[] valuesMetric = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
-            for (String table : new String[]{"ROUND", "VISIER"}) {
-                for (int i = 10; i >= 0; i--) {
-                    db.execSQL("UPDATE " + table + " SET distance=" +
-                            valuesMetric[i] + " WHERE distance=" +
-                            i);
-                }
-            }
-            SharedPreferences prefs = ApplicationInstance.getSharedPreferences();
-            int defaultDist = valuesMetric[prefs.getInt("distance", 0)];
-            prefs.edit().putInt("distance", defaultDist).apply();
-        }
-        if (oldVersion < 5) {
-            db.execSQL("CREATE TABLE IF NOT EXISTS ARROW (" +
-                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "name TEXT," +
-                    "length TEXT," +
-                    "material TEXT," +
-                    "spine TEXT," +
-                    "weight TEXT," +
-                    "tip_weight TEXT," +
-                    "vanes TEXT," +
-                    "nock TEXT," +
-                    "comment TEXT," +
-                    "thumbnail BLOB," +
-                    "image TEXT);");
-            db.execSQL(
-                    "ALTER TABLE ROUND ADD COLUMN arrow INTEGER REFERENCES ARROW ON DELETE SET NULL");
-            db.execSQL("ALTER TABLE ROUND ADD COLUMN comment TEXT DEFAULT ''");
-            db.execSQL("ALTER TABLE SHOOT ADD COLUMN comment TEXT DEFAULT ''");
-            db.execSQL("UPDATE ROUND SET target=0 WHERE target=1 OR target=2 OR target=3");
-            db.execSQL("UPDATE ROUND SET target=2 WHERE target=5 OR target=6 OR target=7");
-            db.execSQL("UPDATE ROUND SET target=3 WHERE target=4");
-            db.execSQL("UPDATE ROUND SET target=4 WHERE target=8");
-            db.execSQL("UPDATE ROUND SET target=5 WHERE target=9");
-            db.execSQL("UPDATE ROUND SET target=6 WHERE target=10");
-            db.execSQL("UPDATE SHOOT SET points=2 WHERE _id IN (SELECT s._id " +
-                    "FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow " +
-                    "WHERE r._id=p.round AND s.passe=p._id " +
-                    "AND (r.bow=-2 OR b.type=1) AND s.points=1 AND r.target=3)");
-        }
-        if (oldVersion < 6) {
-            File filesDir = ApplicationInstance.getContext().getFilesDir();
-
-            // Migrate all bow images
-            Cursor cur = db.rawQuery("SELECT image FROM BOW WHERE image IS NOT NULL", null);
-            if (cur.moveToFirst()) {
-                String fileName = cur.getString(0);
-                try {
-                    File file = File.createTempFile("img_", ".png", filesDir);
-                    BackupUtils.copy(new File(fileName), file);
-                    db.execSQL("UPDATE BOW SET image=\"" + file.getName() + "\" WHERE image=\"" +
-                            fileName + "\"");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            cur.close();
-
-            // Migrate all arrows images
-            cur = db.rawQuery("SELECT image FROM ARROW WHERE image IS NOT NULL", null);
-            if (cur.moveToFirst()) {
-                String fileName = cur.getString(0);
-                try {
-                    File file = File.createTempFile("img_", ".png", filesDir);
-                    BackupUtils.copy(new File(fileName), file);
-                    db.execSQL("UPDATE ARROW SET image=\"" + file.getName() + "\" WHERE image=\"" +
-                            fileName + "\"");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            cur.close();
-        }
-        if (oldVersion < 7) {
-            cleanup(db);
-        }
-        if (oldVersion < 8) {
-            db.execSQL("UPDATE ROUND SET target=4 WHERE target=8");
-            db.execSQL("UPDATE ROUND SET target=5 WHERE target=9");
-            db.execSQL("UPDATE ROUND SET target=6 WHERE target=10");
-        }
-        if (oldVersion < 9) {
-            db.execSQL("DROP TABLE IF EXISTS ZONE_MATRIX");
-            db.execSQL("ALTER TABLE VISIER ADD COLUMN unit TEXT DEFAULT 'm'");
-            db.execSQL("ALTER TABLE PASSE ADD COLUMN image TEXT DEFAULT ''");
-            db.execSQL("ALTER TABLE SHOOT ADD COLUMN arrow INTEGER DEFAULT '-1'");
-            db.execSQL("ALTER TABLE SHOOT ADD COLUMN arrow_index INTEGER DEFAULT '-1'");
-            db.execSQL("ALTER TABLE TRAINING ADD COLUMN weather INTEGER DEFAULT '0'");
-            db.execSQL("ALTER TABLE TRAINING ADD COLUMN wind_speed INTEGER DEFAULT '0'");
-            db.execSQL("ALTER TABLE TRAINING ADD COLUMN wind_direction INTEGER DEFAULT '0'");
-            db.execSQL("ALTER TABLE TRAINING ADD COLUMN location TEXT DEFAULT ''");
-            db.execSQL("ALTER TABLE TRAINING ADD COLUMN standard_round INTEGER DEFAULT '0'");
-            db.execSQL("ALTER TABLE TRAINING ADD COLUMN bow INTEGER DEFAULT '0'");
-            db.execSQL("ALTER TABLE TRAINING ADD COLUMN arrow INTEGER DEFAULT '0'");
-            db.execSQL("ALTER TABLE TRAINING ADD COLUMN arrow_numbering INTEGER DEFAULT '0'");
-            db.execSQL("ALTER TABLE TRAINING ADD COLUMN time INTEGER DEFAULT '-1'");
-            db.execSQL("UPDATE ROUND SET target=11 WHERE target=6"); // DFBV Spiegel Spot
-            db.execSQL("UPDATE ROUND SET target=10 WHERE target=5"); // DFBV Spiegel
-            db.execSQL("UPDATE ROUND SET target=13 WHERE target=4"); // WA Field
-            db.execSQL("UPDATE ROUND SET target=4 WHERE target=3"); // WA 3 Spot -> vegas
-
-            // Set all compound 3 spot to vertical
-            db.execSQL("UPDATE ROUND SET target=target+1 " +
-                    "WHERE _id IN (SELECT r._id FROM ROUND r " +
-                    "LEFT JOIN BOW b ON b._id=r.bow " +
-                    "WHERE (r.bow=-2 OR b.type=1) AND r.target=4)");
-
-            // Add shot indices
-            db.execSQL("UPDATE SHOOT SET arrow_index=( " +
-                    "SELECT COUNT(*) FROM SHOOT s " +
-                    "WHERE s._id<SHOOT._id " +
-                    "AND s.passe=SHOOT.passe) " +
-                    "WHERE arrow_index=-1");
-
-            // transform before inner points to after inner points
-            db.execSQL("UPDATE SHOOT SET x = x/2.0, y = y/2.0 " +
-                    "WHERE _id IN (SELECT s._id " +
-                    "FROM ROUND r " +
-                    "LEFT JOIN PASSE p ON r._id = p.round " +
-                    "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                    "WHERE r.target<11 AND s.points=0);");
-            db.execSQL("ALTER TABLE ROUND RENAME TO ROUND_OLD");
-
-            fillStandardRound(db);
-
-            db.execSQL("CREATE TABLE IF NOT EXISTS ROUND (" +
-                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "training INTEGER," +
-                    "comment TEXT," +
-                    "template INTEGER," +
-                    "target INTEGER," +
-                    "scoring_style INTEGER);");
-
-            Cursor trainings = db.rawQuery("SELECT _id FROM TRAINING", null);
-            if (trainings.moveToFirst()) {
-                do {
-                    long training = trainings.getLong(0);
-                    long sid = getOrCreateStandardRound(db, training);
-                    if (sid == 0) {
-                        db.execSQL("DELETE FROM TRAINING WHERE _id=?",
-                                new String[]{"" + training});
-                    } else {
-                        db.execSQL("UPDATE TRAINING SET standard_round=? WHERE _id=?",
-                                new String[]{"" + sid, "" + training});
-                    }
-
-                    Cursor res = db.rawQuery(
-                            "SELECT r._id, r.comment, r.target, r.bow, r.arrow " +
-                                    "FROM ROUND_OLD r " +
-                                    "WHERE r.training=" + training + " " +
-                                    "GROUP BY r._id " +
-                                    "ORDER BY r._id ASC", null);
-                    int index = 0;
-                    if (res.moveToFirst()) {
-                        long bow = res.getLong(3);
-                        long arrow = res.getLong(4);
-                        db.execSQL("UPDATE TRAINING SET bow=?, arrow=? WHERE _id=?",
-                                new String[]{"" + bow, "" + arrow, "" + training});
-                        do {
-                            RoundTemplate info = RoundTemplate.get(sid, index);
-                            int target = res.getInt(2);
-                            ContentValues contentValues = new ContentValues();
-                            contentValues.put("_id", res.getLong(0));
-                            contentValues.put("comment", res.getString(1));
-                            contentValues.put("training", training);
-                            contentValues.put("template", info.getId());
-                            contentValues
-                                    .put("target", target == 4 ? 5 : target);
-                            contentValues.put("scoring_style",
-                                    target == 5 ? 1 : 0);
-                            db.insert("ROUND", null, contentValues);
-                            index++;
-                        } while (res.moveToNext());
-                    }
-                    res.close();
-                } while (trainings.moveToNext());
-            }
-            trainings.close();
-        }
-        if (oldVersion < 10) {
-            // Add new properties to bow
-            db.execSQL("ALTER TABLE BOW ADD COLUMN limbs TEXT DEFAULT ''");
-            db.execSQL("ALTER TABLE BOW ADD COLUMN sight TEXT DEFAULT ''");
-            db.execSQL("ALTER TABLE BOW ADD COLUMN draw_weight TEXT DEFAULT ''");
-        }
-        if (oldVersion < 11) {
-            db.execSQL("ALTER TABLE ARROW ADD COLUMN tip_weight TEXT DEFAULT ''");
-            db.execSQL("ALTER TABLE PASSE ADD COLUMN exact INTEGER DEFAULT 0");
-            db.execSQL("UPDATE PASSE SET exact=1 WHERE _id IN (SELECT DISTINCT p._id " +
-                    "FROM PASSE p, SHOOT s " +
-                    "WHERE p._id=s.passe " +
-                    "AND s.x!=0)");
-        }
-        if (oldVersion < 12) {
-            // Add new properties to bow
-            db.execSQL("ALTER TABLE BOW ADD COLUMN stabilizer TEXT DEFAULT ''");
-            db.execSQL("ALTER TABLE BOW ADD COLUMN clicker TEXT DEFAULT ''");
-        }
-        if (oldVersion < 13) {
-            db.execSQL("UPDATE PASSE SET exact=1 WHERE _id IN (SELECT DISTINCT p._id " +
-                    "FROM PASSE p, SHOOT s " +
-                    "WHERE p._id=s.passe " +
-                    "AND s.x!=0)");
-            db.execSQL("ALTER TABLE TRAINING ADD COLUMN exact INTEGER DEFAULT 0");
-            db.execSQL("UPDATE TRAINING SET exact=1 WHERE _id IN (SELECT DISTINCT t._id " +
-                    "FROM TRAINING t, ROUND r, PASSE p " +
-                    "WHERE t._id=r.training AND r._id=p.round " +
-                    "AND p.exact=1)");
-        }
-        if (oldVersion < 14) {
-            db.execSQL("UPDATE PASSE SET exact=1 WHERE _id IN (SELECT DISTINCT p._id " +
-                    "FROM PASSE p, ROUND r, TRAINING t " +
-                    "WHERE p.round=r._id " +
-                    "AND r.training=t._id " +
-                    "AND t.exact=1)");
-        }
-        if (oldVersion < 15) {
-            db.execSQL("UPDATE SHOOT SET arrow=NULL WHERE arrow='-1'");
-            db.execSQL("UPDATE PASSE SET exact=1 WHERE _id IN (SELECT DISTINCT p._id " +
-                    "FROM PASSE p, SHOOT s " +
-                    "WHERE p._id=s.passe " +
-                    "AND s.x!=0)");
-        }
-        if (oldVersion < 16) {
-            db.execSQL("ALTER TABLE ARROW ADD COLUMN diameter TEXT DEFAULT '5.0'");
-            db.execSQL("ALTER TABLE ARROW ADD COLUMN diameter_unit TEXT DEFAULT 'mm'");
-            db.execSQL("ALTER TABLE PASSE ADD COLUMN save_time INTEGER");
-            db.execSQL("UPDATE PASSE " +
-                    "SET save_time=(" +
-                    "SELECT t.datum + 43200000 + COUNT(p2._id) * 300000 " +
-                    "FROM TRAINING t " +
-                    "JOIN  ROUND r1 ON r1.training = t._id AND r1._id = PASSE.round " +
-                    "LEFT OUTER JOIN ROUND r2 ON r2.training = t._id " +
-                    "LEFT OUTER JOIN PASSE p2 ON r2._id = p2.round AND p2._id < PASSE._id " +
-                    "GROUP BY t._id, t.datum" +
-                    ")");
-        }
-        if (oldVersion < 17) {
-            db.execSQL("CREATE TEMP TABLE IF NOT EXISTS DAIR_TRANSLATION AS " +
-                    "SELECT  sr._id " +
-                    "FROM STANDARD_ROUND_TEMPLATE sr " +
-                    "WHERE sr._id>198 " +
-                    "AND sr.club<256 " +
-                    "AND sr.name='DAIR 380'");
-            db.execSQL("CREATE TEMP TABLE IF NOT EXISTS SR_TRANSLATION AS " +
-                    "SELECT  sr._id AS fromSR, (4+sr._id-(SELECT MAX(tr._id) FROM DAIR_TRANSLATION tr WHERE tr._id-4<sr._id)) AS toSR " +
-                    "FROM STANDARD_ROUND_TEMPLATE sr " +
-                    "WHERE sr._id>198 " +
-                    "AND sr.club<256");
-            db.execSQL("CREATE TEMP TABLE IF NOT EXISTS R_TRANSLATION AS " +
-                    "SELECT  r1._id AS fromR, r2._id AS toR " +
-                    "FROM ROUND_TEMPLATE r1, ROUND_TEMPLATE r2, SR_TRANSLATION sr " +
-                    "WHERE r1.sid=sr.fromSR " +
-                    "AND r2.sid=sr.toSR " +
-                    "AND r1.r_index=r2.r_index");
-            db.execSQL("UPDATE ROUND " +
-                    "SET template = (SELECT toR " +
-                    "FROM R_TRANSLATION " +
-                    "WHERE fromR=template) " +
-                    "WHERE template IN (SELECT fromR FROM R_TRANSLATION)");
-            db.execSQL("UPDATE TRAINING " +
-                    "SET standard_round = (SELECT toSR " +
-                    "FROM SR_TRANSLATION " +
-                    "WHERE fromSR=standard_round) " +
-                    "WHERE standard_round IN (SELECT fromSR FROM SR_TRANSLATION)");
-            db.execSQL("DELETE FROM STANDARD_ROUND_TEMPLATE " +
-                    "WHERE _id IN (SELECT fromSR FROM SR_TRANSLATION)");
-            db.execSQL("DELETE FROM ROUND_TEMPLATE " +
-                    "WHERE _id IN (SELECT fromR FROM R_TRANSLATION)");
-            db.execSQL("DROP TABLE DAIR_TRANSLATION");
-            db.execSQL("DROP TABLE SR_TRANSLATION");
-            db.execSQL("DROP TABLE R_TRANSLATION");
-        }
-        onCreate(db);
-    }
-
-    private Long getOrCreateStandardRound(SQLiteDatabase db, long training) {
-        Cursor res = db.rawQuery(
-                "SELECT r.ppp, r.target, r.distance, r.unit, COUNT(p._id), r.indoor " +
-                        "FROM ROUND_OLD r " +
-                        "LEFT JOIN PASSE p ON r._id = p.round " +
-                        "WHERE r.training=" + training + " " +
-                        "GROUP BY r._id " +
-                        "ORDER BY r._id ASC", null);
-        int index = 0;
-        HashSet<Long> sid = new HashSet<>();
-        StandardRound sr = new StandardRound();
-        sr.name = ApplicationInstance.getContext().getString(R.string.practice);
-        sr.club = StandardRoundFactory.CUSTOM_PRACTICE;
-        if (res.moveToFirst()) {
-            sr.indoor = res.getInt(5) == 1;
-            do {
-                RoundTemplate template = new RoundTemplate();
-                template.arrowsPerEnd = res.getInt(0);
-                int target = res.getInt(1);
-                template.target = new Target(target == 4 ? 5 : target, target == 5 ? 1 : 0);
-                template.distance = new Dimension(res.getInt(2), res.getString(3));
-                template.endCount = res.getInt(4);
-                template.setTargetTemplate(template.target);
-                sr.insert(template);
-                long tid = template.target.getId();
-                tid = tid < 7 ? 0 : tid;
-                tid = tid == 11 ? 10 : tid;
-                Cursor sids = db.rawQuery("SELECT sid FROM ROUND_TEMPLATE " +
-                        "WHERE r_index=" + index + " " +
-                        "AND distance=" + template.distance.value + " " +
-                        "AND unit=\"" + template.distance.unit + "\" " +
-                        "AND arrows=" + template.arrowsPerEnd + " " +
-                        "AND passes=" + template.endCount + " " +
-                        "AND target=" + tid + " " +
-                        "AND (SELECT COUNT(r._id) FROM ROUND_TEMPLATE r WHERE r.sid=ROUND_TEMPLATE.sid)=" +
-                        res.getCount(), null);
-                HashSet<Long> sid_tmp = new HashSet<>();
-                if (sids.moveToFirst()) {
-                    do {
-                        sid_tmp.add(sids.getLong(0));
-                    } while (sids.moveToNext());
-                }
-                sids.close();
-                if (index == 0) {
-                    sid = sid_tmp;
-                } else {
-                    sid.retainAll(sid_tmp);
-                }
-                index++;
-            } while (res.moveToNext());
-        }
-        res.close();
-
-        // A standard round exists that matches this specific pattern
-        if (!sid.isEmpty()) {
-            return sid.toArray(new Long[sid.size()])[0];
-        }
-
-        if (sr.rounds.isEmpty()) {
-            return 0L;
-        }
-        sr.save();
-        return sr.getId();
-    }
 
 ////// EXPORT ALL //////
 
+    // TODO move to separate class and introduce helper class to make it more readable
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void exportAll(File file) throws IOException {
         file.getParentFile().mkdirs();
@@ -641,23 +217,5 @@ public class DatabaseManager extends SQLiteOpenHelper {
         writer.flush();
         writer.close();
         cur.close();
-    }
-
-    public static String[] getImages() {
-        ArrayList<String> list = new ArrayList<>();
-        DatabaseWrapper db = FlowManager.getWritableDatabase(AppDatabase.class);
-        Cursor cur = db.rawQuery("SELECT image FROM BOW WHERE image IS NOT NULL", null);
-        if (cur.moveToFirst()) {
-            list.add(cur.getString(0));
-        }
-        cur.close();
-
-        // Migrate all arrow images
-        cur = db.rawQuery("SELECT image FROM ARROW WHERE image IS NOT NULL", null);
-        if (cur.moveToFirst()) {
-            list.add(cur.getString(0));
-        }
-        cur.close();
-        return list.toArray(new String[list.size()]);
     }
 }

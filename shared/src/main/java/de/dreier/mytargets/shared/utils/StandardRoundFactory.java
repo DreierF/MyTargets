@@ -737,7 +737,7 @@ public class StandardRoundFactory {
     private static StandardRound build(int institution, int name, boolean indoor, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, int target, int scoringStyle, Target target2, int arrowsPerPasse, int... roundDetails) {
         StandardRound standardRound = build(institution, name, indoor, distanceUnit,
                 targetUnit, target, scoringStyle, arrowsPerPasse, roundDetails);
-        RoundTemplate round2 = standardRound.rounds.get(1);
+        RoundTemplate round2 = standardRound.getRounds().get(1);
         target2.size = round2.getTargetTemplate().size;
         round2.setTargetTemplate(target2);
         return standardRound;

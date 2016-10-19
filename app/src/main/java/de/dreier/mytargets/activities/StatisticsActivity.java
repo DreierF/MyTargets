@@ -36,10 +36,10 @@ import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.utils.LongUtils;
 import de.dreier.mytargets.shared.utils.Pair;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.views.ChipGroup;
 import icepick.Icepick;
 import icepick.State;
@@ -56,7 +56,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     @NonNull
     public static IntentWrapper getIntent(Fragment fragment, List<Long> roundIds) {
         Intent i = new Intent(fragment.getContext(), StatisticsActivity.class);
-        i.putExtra(ROUND_IDS, Utils.toArray(roundIds));
+        i.putExtra(ROUND_IDS, LongUtils.toArray(roundIds));
         return new IntentWrapper(fragment, i);
     }
 
@@ -115,9 +115,9 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                         && arrowTags.contains(pair.getFirst().arrow)
                         && bowTags.contains(pair.getFirst().bow))
                 .map(Pair::getSecond)
-                .groupBy(value -> new Pair<>(value.info.target.getId(),
-                        value.info.target.scoringStyle))
-                .map(value1 -> new Pair<>(value1.getValue().get(0).info.target, value1.getValue()))
+                .groupBy(value -> new Pair<>(value.getTarget().getId(),
+                        value.getTarget().scoringStyle))
+                .map(value1 -> new Pair<>(value1.getValue().get(0).getTarget(), value1.getValue()))
                 .collect(Collectors.toList());
         boolean animate = binding.viewPager.getAdapter() == null;
         final StatisticsPagerAdapter adapter = new StatisticsPagerAdapter(
