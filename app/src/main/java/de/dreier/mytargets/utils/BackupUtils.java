@@ -43,6 +43,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.managers.CsvExporter;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.shared.AppDatabase;
 
@@ -88,7 +89,7 @@ public class BackupUtils {
             throw new IOException(context.getString(R.string.dir_not_created));
         }
         File file = new File(baseDir + fileName);
-        DatabaseManager.exportAll(file);
+        CsvExporter.exportAll(file);
         return Uri.fromFile(file);
     }
 

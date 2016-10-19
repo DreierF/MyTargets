@@ -36,20 +36,20 @@ public class MiniDbTestRule extends DbTestRuleBase {
         round1.info = standardRound.getRounds().get(0);
         round1.setTarget(round1.info.getTargetTemplate());
         round1.comment = "";
-        round1.update();
+        round1.insert();
 
         Round round2 = new Round();
         round2.trainingId = training.getId();
         round2.info = standardRound.getRounds().get(1);
         round2.setTarget(round2.info.getTargetTemplate());
         round2.comment = "";
-        round2.update();
+        round2.insert();
 
-        randomPasse(training, round1, 6, generator).update();
-        randomPasse(training, round1, 6, generator).update();
+        randomPasse(training, round1, 6, generator).insert();
+        randomPasse(training, round1, 6, generator).insert();
 
-        randomPasse(training, round2, 6, generator).update();
-        randomPasse(training, round2, 6, generator).update();
+        randomPasse(training, round2, 6, generator).insert();
+        randomPasse(training, round2, 6, generator).insert();
     }
 
 }

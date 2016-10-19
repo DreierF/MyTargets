@@ -74,7 +74,7 @@ public class ExportTest extends InstrumentedTestBase {
     public void testDataExport() throws IOException {
         setLocale("en", "EN");
         final StringWriter writer = new StringWriter();
-        DatabaseManager.writeExportData(writer);
+        CsvExporter.writeExportData(writer);
         Assert.assertEquals(EXPECTED, writer.toString());
     }
 }

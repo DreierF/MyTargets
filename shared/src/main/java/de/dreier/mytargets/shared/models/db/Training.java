@@ -131,6 +131,20 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
                 .querySingle();
     }
 
+    public Bow getBow() {
+        return SQLite.select()
+                .from(Bow.class)
+                .where(Bow_Table._id.eq(bow))
+                .querySingle();
+    }
+
+    public Arrow getArrow() {
+        return SQLite.select()
+                .from(Arrow.class)
+                .where(Arrow_Table._id.eq(arrow))
+                .querySingle();
+    }
+
     public String getFormattedDate() {
         return DateFormat.getDateInstance().format(date.toDate());
     }
