@@ -59,7 +59,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
     @Column(name = "comment")
     public String comment = "";
 
-    @Column(typeConverter = DimensionConverter.class, name = "diameter") // "diameter" "diameter_unit"
+    @Column(typeConverter = DimensionConverter.class, name = "diameter")
     public Dimension diameter = new Dimension(5, Dimension.Unit.MILLIMETER);
 
     @Column(name = "thumbnail", typeConverter = ThumbnailConverter.class)
@@ -77,7 +77,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
     public static Arrow get(Long id) {
         return SQLite.select()
                 .from(Arrow.class)
-                //.where(Arrow_Table.id__id.eq(id))
+                .where(Arrow_Table._id.eq(id))
                 .querySingle();
     }
 
@@ -86,7 +86,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
         if (numbers == null || numbers.isEmpty()) {
             numbers = SQLite.select()
                     .from(ArrowNumber.class)
-                    //.where(ArrowNumber_Table.arrowId__id.eq(id))
+                    .where(ArrowNumber_Table.arrow.eq(id))
                     .queryList();
         }
         return numbers;

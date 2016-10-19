@@ -47,10 +47,10 @@ import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
-import de.dreier.mytargets.views.selector.SelectorBase;
 
 import static de.dreier.mytargets.fragments.DatePickerFragment.ARG_CURRENT_DATE;
 import static de.dreier.mytargets.fragments.ListFragmentBase.ITEM_ID;
+import static de.dreier.mytargets.models.ETrainingType.FREE_TRAINING;
 import static de.dreier.mytargets.models.ETrainingType.TRAINING_WITH_STANDARD_ROUND;
 
 public class EditTrainingFragment extends EditFragmentBase implements DatePickerDialog.OnDateSetListener {
@@ -265,7 +265,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
             training.save();
             Round round = createRoundsFromTemplate(standardRound, training).get(0);
-            round.setTarget(binding.target.getSelectedItem());
 
             TrainingFragment.getIntent(this, training).startWithoutAnimation();
             RoundFragment.getIntent(this, round).startWithoutAnimation();
@@ -312,6 +311,11 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             Round round = new Round();
             round.trainingId = training.getId();
             round.info = template;
+            if(trainingType == FREE_TRAINING) {
+                round.setTarget(binding.target.getSelectedItem());
+            } else {
+                round.setTarget(roundTarget);
+            }
             round.comment = "";
             round.save();
             rounds.add(round);

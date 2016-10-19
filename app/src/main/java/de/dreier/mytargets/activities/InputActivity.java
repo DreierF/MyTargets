@@ -36,7 +36,6 @@ import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Passe;
 import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.SightSetting;
 import de.dreier.mytargets.shared.models.db.StandardRound;
@@ -50,8 +49,6 @@ import de.dreier.mytargets.utils.transitions.FabTransform;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import icepick.Icepick;
 import icepick.State;
-
-import static de.dreier.mytargets.shared.models.db.Round_Table.template;
 
 public class InputActivity extends ChildActivityBase implements OnTargetSetListener, OnEndUpdatedListener {
 
@@ -323,8 +320,6 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
             if (remote) {
                 curPasse = savedPasses;
             }
-        } else if (curPasse + 1 == savedPasses && manager != null) {
-            manager.sendMessageUpdate(buildInfo());
         }
         runOnUiThread(this::updatePasse);
         return passe.getId();
@@ -350,7 +345,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         String text = "";
 
         // Initialize message text
-        Passe lastPasse = round.getPasses().get(savedPasses);
+        Passe lastPasse = lastItem(round.getPasses());
         if (lastPasse != null) {
             for (Shot shot : lastPasse.getShots()) {
                 text += round.getTarget().zoneToString(shot.zone, 0) + " ";
@@ -368,6 +363,10 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
             }
         }
         return new NotificationInfo(round, title, text);
+    }
+
+    private static <T> T lastItem(List<T> list) {
+        return list.isEmpty() ? null : list.get(list.size() - 1);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

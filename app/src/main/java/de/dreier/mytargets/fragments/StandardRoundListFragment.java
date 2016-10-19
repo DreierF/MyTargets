@@ -139,7 +139,7 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
     @Override
     public void onLongClick(SelectableViewHolder holder) {
         StandardRound item = (StandardRound) holder.getItem();
-        if (item.club == StandardRoundFactory.CUSTOM && item.usages == 0) {
+        if (item.club == StandardRoundFactory.CUSTOM) { //TODO && item.usages == 0
             EditStandardRoundFragment
                     .editIntent(this, item)
                     .startForResult(NEW_STANDARD_ROUND);

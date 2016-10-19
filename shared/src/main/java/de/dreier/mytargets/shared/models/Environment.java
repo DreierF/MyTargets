@@ -45,7 +45,7 @@ public class Environment implements IImageProvider, IDetailProvider {
 
     @NonNull
     public String getWindSpeed(Context context) {
-        return windSpeed + " Btf " + WindDirection.getList(context).get(windDirection).getName();
+        return windSpeed + " Bft " + WindDirection.getList(context).get(windDirection).getName();
     }
 
     @Override

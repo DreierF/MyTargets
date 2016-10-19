@@ -56,8 +56,7 @@ public abstract class FragmentBase extends Fragment implements LoaderManager.Loa
     @WorkerThread
     @NonNull
     protected LoaderUICallback onLoad(Bundle args) {
-        return () -> {
-        };
+        return () -> {};
     }
 
     @Override
@@ -71,13 +70,12 @@ public abstract class FragmentBase extends Fragment implements LoaderManager.Loa
     }
 
     protected void reloadData() {
-        getLoaderManager().restartLoader(0, null, this);
+        getLoaderManager().restartLoader(0, null, this).forceLoad();
     }
 
     protected void reloadData(Bundle args) {
-        getLoaderManager().restartLoader(0, args, this);
+        getLoaderManager().restartLoader(0, args, this).forceLoad();
     }
-
 
     public interface LoaderUICallback {
         @UiThread

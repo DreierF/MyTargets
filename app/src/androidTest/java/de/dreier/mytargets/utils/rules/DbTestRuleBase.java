@@ -12,7 +12,6 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import de.dreier.mytargets.R;
@@ -88,7 +87,6 @@ public abstract class DbTestRuleBase implements TestRule {
         Bitmap bitmap = BitmapFactory
                 .decodeResource(context.getResources(), R.drawable.recurve_bow);
         bow.thumbnail = new Thumbnail(bitmap);
-        bow.sightSettings = new ArrayList<>();
         bow.insert();
         return bow;
     }

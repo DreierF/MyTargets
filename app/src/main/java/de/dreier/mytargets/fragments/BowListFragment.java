@@ -110,7 +110,7 @@ public class BowListFragment extends EditableListFragment<Bow> {
             if (!mItem.size.trim().isEmpty()) {
                 info.addLine(R.string.size, mItem.size);
             }
-            for (SightSetting s : mItem.sightSettings) {
+            for (SightSetting s : mItem.getSightSettings()) {
                 info.addLine(s.distance.toString(), s.value);
             }
             binding.details.setText(HtmlUtils.fromHtml(info.toString()));

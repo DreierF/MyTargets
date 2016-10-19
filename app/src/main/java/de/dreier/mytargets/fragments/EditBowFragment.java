@@ -98,7 +98,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
                 bow = new Bow();
                 bow.name = getString(R.string.my_bow);
                 bow.type = RECURVE_BOW;
-                bow.sightSettings.add(new SightSetting());
+                bow.getSightSettings().add(new SightSetting());
                 setImageFile(null);
             }
 
@@ -110,7 +110,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         }
 
         loadImage(imageFile);
-        adapter = new SightSettingsAdapter(this, bow.sightSettings);
+        adapter = new SightSettingsAdapter(this, bow.getSightSettings());
         contentBinding.sightSettings.setAdapter(adapter);
         return rootView;
     }
@@ -122,8 +122,8 @@ public class EditBowFragment extends EditWithImageFragmentBase {
     }
 
     private void onAddSightSetting() {
-        bow.sightSettings.add(new SightSetting());
-        adapter.notifyItemInserted(bow.sightSettings.size() - 1);
+        bow.getSightSettings().add(new SightSetting());
+        adapter.notifyItemInserted(bow.getSightSettings().size() - 1);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
             Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
             final int index = intentData.getInt(SelectorBase.INDEX);
             final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
-            bow.sightSettings.get(index).distance = Parcels.unwrap(parcelable);
+            bow.getSightSettings().get(index).distance = Parcels.unwrap(parcelable);
             adapter.notifyItemChanged(index);
         }
     }

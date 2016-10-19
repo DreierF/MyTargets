@@ -84,7 +84,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
     public static Bow get(Long id) {
         return SQLite.select()
                 .from(Bow.class)
-                //.where(Bow_Table.id__id.eq(id))
+                .where(Bow_Table._id.eq(id))
                 .querySingle();
     }
 
@@ -97,7 +97,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
         if (sightSettings == null || sightSettings.isEmpty()) {
             sightSettings = SQLite.select()
                     .from(SightSetting.class)
-                    //.where(SightSetting_Table.bowId__id.eq(id))
+                    .where(SightSetting_Table.bow.eq(id))
                     .queryList();
         }
         return sightSettings;

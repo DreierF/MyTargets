@@ -26,7 +26,7 @@ public class TranslationUtils {
         String shortLocale = Locale.getDefault().getLanguage();
         if (!supportedLanguages.contains(shortLocale) && !shown && !shownThisTime) {
             // Link the e-mail address in the message
-            final SpannableString s = new SpannableString(Html.fromHtml("If you would like " +
+            final SpannableString s = new SpannableString(HtmlUtils.fromHtml("If you would like " +
                     "to help make MyTargets even better by translating the app to " +
                     longLang +
                     " visit <a href=\"https://crowdin.com/project/mytargets\">crowdin</a>!<br /><br />" +

@@ -10,13 +10,12 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.models.db.RoundTemplate;
+import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.utils.Circle;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
 import static android.graphics.Color.WHITE;
-
 
 public class TargetSelectView extends TargetViewBase {
 
@@ -53,9 +52,9 @@ public class TargetSelectView extends TargetViewBase {
     }
 
     @Override
-    public void setRoundTemplate(RoundTemplate r) {
-        super.setRoundTemplate(r);
-        circle = new Circle(density, r.target);
+    public void setRound(Round r) {
+        super.setRound(r);
+        circle = new Circle(density, r.getTarget());
     }
 
     @Override
@@ -77,7 +76,7 @@ public class TargetSelectView extends TargetViewBase {
     }
 
     private int getCurrentlySelectedZone() {
-        if (end != null && currentArrow < TargetViewBase.this.round.info.arrowsPerEnd) {
+        if (end != null && currentArrow < round.info.arrowsPerEnd) {
             return end.getShots().get(currentArrow).zone;
         } else {
             return Shot.NOTHING_SELECTED;

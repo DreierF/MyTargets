@@ -37,7 +37,7 @@ public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> 
     @PrimaryKey(autoincrement = true)
     Long id;
 
-    //@Column(name = "index") TODO migration, does no yet exist in db
+    @Column(name = "index")
     public int index;
 
     @Column(name = "image")
@@ -71,7 +71,7 @@ public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> 
         index = p.index;
         exact = p.exact;
         shots = p.shots;
-        //shots = p.shots.clone(); TODO clone
+        shots = new ArrayList<>(p.shots);
     }
 
     @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "shots")
@@ -111,13 +111,6 @@ public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> 
 
     public int getReachedPoints(Target target) {
         return target.getReachedPoints(this);
-    }
-
-    public static List<Pair<Target, List<Round>>> groupByTarget(List<Round> rounds) {
-        return Stream.of(rounds)
-                .groupBy(value -> new Pair<>(value.getTarget().getId(), value.getTarget().scoringStyle))
-                .map(value1 -> new Pair<>(value1.getValue().get(0).getTarget(), value1.getValue()))
-                .collect(Collectors.toList());
     }
 
     @NonNull
@@ -173,6 +166,10 @@ public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> 
         return result;
     }
 
+
+    /**
+     * Compound 9ers are already collapsed to one SelectableZone.
+     */
     public static List<Map.Entry<SelectableZone, Integer>> getSortedScoreDistribution(List<Round> rounds) {
         Map<SelectableZone, Integer> scoreCount = getRoundScores(rounds);
         return Stream.of(scoreCount)

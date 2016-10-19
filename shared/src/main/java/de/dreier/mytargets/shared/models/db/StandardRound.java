@@ -36,7 +36,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
-    private Long id;
+    Long id;
 
     @Column
     public int club;
@@ -46,9 +46,6 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
 
     @Column
     public boolean indoor;
-
-    @Column
-    public int usages;
 
     List<RoundTemplate> rounds = new ArrayList<>();
 

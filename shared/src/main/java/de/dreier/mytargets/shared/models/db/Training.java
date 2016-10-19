@@ -1,5 +1,7 @@
 package de.dreier.mytargets.shared.models.db;
 
+import android.support.annotation.NonNull;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
@@ -25,37 +27,49 @@ import de.dreier.mytargets.shared.utils.LocalDateConverter;
 
 @Parcel
 @Table(database = AppDatabase.class, name = "TRAINING")
-public class Training extends BaseModel implements IIdSettable {
+public class Training extends BaseModel implements IIdSettable, Comparable<Training> {
 
-    @Column(name = "title")
-    public String title = "";
-    @Column(typeConverter = LocalDateConverter.class, name = "datum")
-    public LocalDate date = new LocalDate();
-    @Column(name = "weather")
-    public EWeather weather;
-    @Column(name = "wind_direction")
-    public int windDirection;
-    @Column(name = "wind_speed")
-    public int windSpeed;
-    @Column(name = "location")
-    public String location;
-    @ForeignKey(tableClass = StandardRound.class, references = {
-            @ForeignKeyReference(columnName = "standard_round", columnType = Long.class, foreignKeyColumnName = "_id")})
-    public Long standardRoundId;
-    @ForeignKey(tableClass = Bow.class, references = {
-            @ForeignKeyReference(columnName = "bow", columnType = Long.class, foreignKeyColumnName = "_id")})
-    public Long bow;
-    @ForeignKey(tableClass = Arrow.class, references = {
-            @ForeignKeyReference(columnName = "arrow", columnType = Long.class, foreignKeyColumnName = "_id")})
-    public Long arrow;
-    @Column(name = "arrow_numbering")
-    public boolean arrowNumbering;
-    @Column(name = "time")
-    public int timePerPasse;
-    public List<Round> rounds = new ArrayList<>();
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     Long id;
+
+    @Column(name = "title")
+    public String title = "";
+
+    @Column(typeConverter = LocalDateConverter.class, name = "datum")
+    public LocalDate date = new LocalDate();
+
+    @ForeignKey(tableClass = StandardRound.class, references = {
+            @ForeignKeyReference(columnName = "standard_round", columnType = Long.class, foreignKeyColumnName = "_id")})
+    public Long standardRoundId;
+
+    @ForeignKey(tableClass = Bow.class, references = {
+            @ForeignKeyReference(columnName = "bow", columnType = Long.class, foreignKeyColumnName = "_id")})
+    public Long bow;
+
+    @ForeignKey(tableClass = Arrow.class, references = {
+            @ForeignKeyReference(columnName = "arrow", columnType = Long.class, foreignKeyColumnName = "_id")})
+    public Long arrow;
+
+    @Column(name = "arrow_numbering")
+    public boolean arrowNumbering;
+
+    @Column(name = "time")
+    public int timePerPasse;
+
+    @Column(name = "weather")
+    public EWeather weather;
+
+    @Column(name = "wind_direction")
+    public int windDirection;
+
+    @Column(name = "wind_speed")
+    public int windSpeed;
+
+    @Column(name = "location")
+    public String location;
+
+    public List<Round> rounds = new ArrayList<>();
 
     public static Training get(Long id) {
         return SQLite.select()
@@ -133,5 +147,13 @@ public class Training extends BaseModel implements IIdSettable {
         } else {
             return String.format(Locale.ENGLISH, "%d/%d", reachedPoints, maxPoints);
         }
+    }
+
+    @Override
+    public int compareTo(@NonNull Training training) {
+        if (date.equals(training.date)) {
+            return (int) (id - training.id);
+        }
+        return date.compareTo(training.date);
     }
 }

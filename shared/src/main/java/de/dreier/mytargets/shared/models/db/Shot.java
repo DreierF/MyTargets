@@ -20,6 +20,10 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
     public static final int NOTHING_SELECTED = -2;
     public static final int MISS = -1;
 
+    @Column(name = "_id")
+    @PrimaryKey(autoincrement = true)
+    Long id;
+
     @ForeignKey(tableClass = Passe.class, references = {
             @ForeignKeyReference(columnName = "passe", columnType = Long.class, foreignKeyColumnName = "_id")})
     public Long passe;
@@ -37,9 +41,6 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
     // The index of the shot in the containing passe
     @Column(name = "arrow_index")
     public int index;
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    Long id;
 
     public Shot() {
     }

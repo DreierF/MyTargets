@@ -28,7 +28,7 @@ public class AppDatabase {
 
     public static final String NAME = "database";
 
-    public static final int VERSION = 17;
+    public static final int VERSION = 18;
 
     @Migration(version = 0, database = AppDatabase.class)
     public static class Migration0 extends BaseMigration {

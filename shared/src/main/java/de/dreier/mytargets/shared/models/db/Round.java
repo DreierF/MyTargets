@@ -27,6 +27,10 @@ import de.dreier.mytargets.shared.utils.LongUtils;
 @Table(database = AppDatabase.class, name = "ROUND")
 public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
 
+    @Column(name = "_id")
+    @PrimaryKey(autoincrement = true)
+    Long id;
+
     @ForeignKey(tableClass = Training.class, references = {
             @ForeignKeyReference(columnName = "training", columnType = Long.class, foreignKeyColumnName = "_id")})
     public Long trainingId;
@@ -49,10 +53,6 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
 
     public int reachedPoints;
     public List<Passe> passes = new ArrayList<>();
-
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    Long id;
 
     public static Round get(Long id) {
         return SQLite.select()
