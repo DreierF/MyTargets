@@ -2,6 +2,7 @@ package de.dreier.mytargets.shared.models.db;
 
 import android.support.annotation.NonNull;
 
+import com.annimon.stream.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
@@ -51,7 +52,6 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
     @Column(typeConverter = DimensionConverter.class, name = "size")
     Dimension targetSize;
 
-    public int reachedPoints;
     public List<Passe> passes = new ArrayList<>();
 
     public static Round get(Long id) {
@@ -113,7 +113,14 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
     }
 
     public String getReachedPointsFormatted() {
-        return reachedPoints + "/" + getMaxPoints();
+        return getReachedPoints() + "/" + getMaxPoints();
+    }
+
+    public int getReachedPoints() {
+        final Target target = getTarget();
+        return Stream.of(getPasses())
+                .map(p -> p.getReachedPoints(target))
+                .reduce(0, (value1, value2) -> value1+value2);
     }
 
     @Override

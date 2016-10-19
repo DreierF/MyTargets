@@ -56,7 +56,7 @@ public class BackupUtils {
         AlertDialog.Builder builder = new AlertDialog.Builder(a);
         try {
             InputStream st = a.getContentResolver().openInputStream(uri);
-            if (!DatabaseManager.Import(a, st)) {
+            if (!DatabaseManager.importZip(a, st)) {
                 throw new IllegalStateException();
             }
 

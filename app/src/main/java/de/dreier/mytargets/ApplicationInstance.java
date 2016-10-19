@@ -8,6 +8,8 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 import org.parceler.ParcelClass;
 import org.parceler.ParcelClasses;
 
+import java.io.File;
+
 import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
@@ -65,6 +67,14 @@ public class ApplicationInstance extends SharedApplicationInstance {
     @Override
     public void onCreate() {
         super.onCreate();
+        final File newDatabasePath = getDatabasePath("database.db");
+        final File oldDatabasePath = getDatabasePath("database");
+        if(oldDatabasePath.exists()) {
+            if(newDatabasePath.exists()) {
+                newDatabasePath.delete();
+            }
+            oldDatabasePath.renameTo(newDatabasePath);
+        }
         FlowManager.init(new FlowConfig.Builder(this)
                 .openDatabasesOnInit(true)
                 .build());

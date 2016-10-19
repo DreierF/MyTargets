@@ -23,6 +23,7 @@ import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
 import de.dreier.mytargets.shared.models.Thumbnail;
+import de.dreier.mytargets.shared.utils.EBowTypeConverter;
 import de.dreier.mytargets.shared.utils.ThumbnailConverter;
 
 @Parcel
@@ -36,7 +37,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
     @Column(name = "name")
     public String name = "";
 
-    @Column(name = "type")
+    @Column(typeConverter = EBowTypeConverter.class, name = "type")
     public EBowType type = EBowType.RECURVE_BOW;
 
     @Column(name = "brand")

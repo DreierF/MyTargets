@@ -37,7 +37,7 @@ import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 
 public class DatabaseManager {
 
-    public static boolean Import(Context context, InputStream in) {
+    public static boolean importZip(Context context, InputStream in) {
         try {
             // Unzip all images and database
             File file = BackupUtils.unzip(context, in);

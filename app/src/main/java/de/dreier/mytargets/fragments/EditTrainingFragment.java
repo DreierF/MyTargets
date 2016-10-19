@@ -61,7 +61,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private static final int SR_TARGET_REQUEST_CODE = 11;
 
     private Long trainingId = null;
-    private ETrainingType trainingType = ETrainingType.FREE_TRAINING;
+    private ETrainingType trainingType = FREE_TRAINING;
     private LocalDate date = new LocalDate();
     private FragmentEditTrainingBinding binding;
     private Target roundTarget;
@@ -198,7 +198,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private void applyTrainingType() {
         View in;
         View out;
-        if (trainingType == ETrainingType.FREE_TRAINING) {
+        if (trainingType == FREE_TRAINING) {
             in = binding.practiceLayout;
             out = binding.standardRound;
         } else {
@@ -254,7 +254,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
         if (trainingId == -1) {
             StandardRound standardRound;
-            if (trainingType == ETrainingType.FREE_TRAINING) {
+            if (trainingType == FREE_TRAINING) {
                 standardRound = getCustomRound();
             } else {
                 standardRound = binding.standardRound.getSelectedItem();

@@ -23,6 +23,7 @@ import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.utils.EWeatherConverter;
 import de.dreier.mytargets.shared.utils.LocalDateConverter;
 
 @Parcel
@@ -57,7 +58,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     @Column(name = "time")
     public int timePerPasse;
 
-    @Column(name = "weather")
+    @Column(typeConverter = EWeatherConverter.class, name = "weather")
     public EWeather weather;
 
     @Column(name = "wind_direction")
@@ -139,7 +140,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         int reachedPoints = 0;
         for (Round r : rounds) {
             maxPoints += r.getMaxPoints();
-            reachedPoints += r.reachedPoints;
+            reachedPoints += r.getReachedPoints();
         }
         if (appendPercent && maxPoints > 0) {
             return String.format(Locale.ENGLISH, "%d/%d (%d)", reachedPoints, maxPoints,

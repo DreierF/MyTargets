@@ -101,7 +101,7 @@ public class MainActivity extends Activity implements OnTargetSetListener,
 
     private void setUpTargetView() {
         if (round != null && mTarget != null) {
-            mTarget.setRoundTemplate(round.info);
+            mTarget.setRound(round);
             mTarget.reset();
             mTarget.setOnTargetSetListener(MainActivity.this);
             stub.setVisibility(View.VISIBLE);
