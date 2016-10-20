@@ -18,7 +18,7 @@ android {
     defaultConfig {
         applicationId 'de.dreier.mytargets'
         minSdkVersion 14
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode appVersionCode
         versionName appVersionName
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
