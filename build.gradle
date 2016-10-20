@@ -25,7 +25,7 @@ plugins {
 
 ext {
     compileSdkVersionCode = 24
-    buildToolsVersionCode = '24.0.2'
+    buildToolsVersionCode = '25.0.0'
     supportLibVersion = '25.0.0'
     testSupportLibVersion = '0.5'
     playServiceVersion = '9.6.1'
