@@ -14,7 +14,7 @@ android {
     defaultConfig {
         applicationId 'de.dreier.mytargets'
         minSdkVersion 20
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode appVersionCode
         versionName appVersionName
     }
