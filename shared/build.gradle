@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         minSdkVersion 11
-        targetSdkVersion 24
+        targetSdkVersion 25
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
 }
@@ -37,6 +37,6 @@ dependencies {
     provided 'frankiesardo:icepick-processor:3.2.0'
 
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.9.5'
+    testCompile 'org.mockito:mockito-core:2.2.2'
     androidTestCompile "com.android.support.test:runner:$testSupportLibVersion"
 }
