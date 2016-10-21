@@ -5,7 +5,7 @@ android:
   components:
   - platform-tools
   - tools
-  - build-tools-24.0.2
+  - build-tools-25.0.0
   - android-24
   - extra-android-support
   - extra-android-m2repository
@@ -41,6 +41,7 @@ after_success:
     sudo ./dropbox_uploader.sh upload app/build/outputs/apk/app-regular-release.apk /$TRAVIS_TAG/MyTargets.apk
     sudo ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /$TRAVIS_TAG/mapping.txt
   fi
+- ./gradlew -Pversioneye.projectid=5808adf4e1e050004075dc1d versionEyeUpdate
 - bash <(curl -s https://codecov.io/bash)
 - curl https://www.jpm4j.org/install/script -k | sudo sh
 - sudo jpm install com.codacy:codacy-coverage-reporter:assembly

@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.1'
+        classpath 'com.android.tools.build:gradle:2.2.2'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'me.tatarka:gradle-retrolambda:3.3.0'
         classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.0.9'
@@ -22,12 +22,17 @@ buildscript {
 
 plugins {
     id 'com.mendhak.gradlecrowdin' version '0.0.9'
+    id 'org.standardout.versioneye' version '1.4.0'
+}
+
+versioneye {
+    includeSubProjects = true
 }
 
 ext {
     compileSdkVersionCode = 24
-    buildToolsVersionCode = '24.0.2'
-    supportLibVersion = '24.2.1'
+    buildToolsVersionCode = '25.0.0'
+    supportLibVersion = '25.0.0'
     testSupportLibVersion = '0.5'
     playServiceVersion = '9.6.1'
     espressoVersion = '2.2.2'
