@@ -33,7 +33,7 @@ before_script:
 script:
 - ./gradlew clean assembleRegularRelease
 - adb shell input keyevent 82 &
-- ./gradlew jacocoTestReport connectedRegularDebugAndroidTest
+- ./gradlew createRegularDebugCoverageReport
 after_success:
 - |
   if [[ "$TRAVIS_TAG" ]]; then
