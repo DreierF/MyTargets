@@ -33,7 +33,7 @@ ext {
     buildToolsVersionCode = '25.0.0'
     supportLibVersion = '25.0.0'
     testSupportLibVersion = '0.5'
-    playServiceVersion = '9.6.1'
+    playServiceVersion = '9.8.00'
     espressoVersion = '2.2.2'
     parcelerVersion = '1.1.5'
     git = Grgit.open()

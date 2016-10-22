@@ -45,8 +45,6 @@ after_success:
 - bash <(curl -s https://codecov.io/bash)
 - curl https://www.jpm4j.org/install/script -k | sudo sh
 - sudo jpm install com.codacy:codacy-coverage-reporter:assembly
-- cat app/build/reports/coverage/regular/debug/report.xml
-- codacy-coverage-reporter --help
 - codacy-coverage-reporter -l Java -r app/build/reports/coverage/regular/debug/report.xml
 after_failure:
 - chmod +x dropbox_uploader.sh
