@@ -134,6 +134,7 @@ dependencies {
     compile "com.android.support:preference-v14:$supportLibVersion"
 
     compile "com.google.android.gms:play-services-wearable:$playServiceVersion"
+    compile "com.google.android.gms:play-services-drive:$playServiceVersion"
 
     compile 'com.google.code.gson:gson:2.7'
 

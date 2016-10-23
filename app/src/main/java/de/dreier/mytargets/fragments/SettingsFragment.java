@@ -19,6 +19,7 @@ import android.widget.Toast;
 import java.io.IOException;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.BackupActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.utils.BackupUtils;
@@ -202,7 +203,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void doBackup() {
-        save(false);
+        startActivity(new Intent(getContext(), BackupActivity.class));
+        //save(false);
     }
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)

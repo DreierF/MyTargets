@@ -19,11 +19,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
+import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -40,6 +41,8 @@ import java.util.zip.ZipOutputStream;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
+
+import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 
 
 public class BackupUtils {
@@ -78,59 +81,63 @@ public class BackupUtils {
         FileChannel outChannel = outStream.getChannel();
         inChannel.transferTo(0, inChannel.size(), outChannel);
         inStream.close();
+        outStream.flush();
         outStream.close();
     }
 
-    public static void copy(InputStream in, File dst) throws IOException {
-        OutputStream out = new FileOutputStream(dst);
+    public static void copy(InputStream in, OutputStream out) throws IOException {
         byte[] buf = new byte[1024];
         int len;
         while ((len = in.read(buf)) > 0) {
             out.write(buf, 0, len);
         }
+        out.flush();
         in.close();
         out.close();
     }
 
     public static Uri export(Context context) throws IOException {
         DatabaseManager db = DatabaseManager.getInstance(context);
-        String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");
-        String fileName =
-                "/" + FOLDER_NAME + "/exported_data_" + format.format(new Date()) + ".csv";
-        File f = new File(baseDir);
-        f.mkdir();
-        if (!f.exists() || !f.isDirectory()) {
-            throw new IOException(context.getString(R.string.dir_not_created));
-        }
-        File file = new File(baseDir + fileName);
+        File exportDir = new File(Environment.getExternalStorageDirectory(), FOLDER_NAME);
+        createDirectory(exportDir);
+        File file = new File(exportDir, getExportFileName());
         db.exportAll(file);
         return Uri.fromFile(file);
     }
 
-    public static Uri backup(Context context) throws IOException {
-        String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");
-        String fileName = baseDir + "/" + FOLDER_NAME + "/backup_" + format
-                .format(new Date()) + ".zip";
-        File f = new File(baseDir + "/" + FOLDER_NAME);
-        f.mkdir();
-        if (!f.exists() || !f.isDirectory()) {
-            throw new IOException(context.getString(R.string.dir_not_created));
+    private static void createDirectory(File directory) throws IOException {
+        directory.mkdir();
+        if (!directory.exists() || !directory.isDirectory()) {
+            throw new IOException(get(R.string.dir_not_created));
         }
-
-        zip(context, fileName);
-
-        return Uri.fromFile(new File(fileName));
     }
 
-    private static void zip(Context context, String zipFileName) {
+    @NonNull
+    private static String getExportFileName() {
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");
+        return "exported_data_" + format.format(new Date()) + ".csv";
+    }
+
+    public static Uri backup(Context context) throws IOException {
+        File backupDir = new File(Environment.getExternalStorageDirectory(), FOLDER_NAME);
+        createDirectory(backupDir);
+        final File zipFile = new File(backupDir, getBackupName());
+        zip(context, new FileOutputStream(zipFile));
+        return Uri.fromFile(zipFile);
+    }
+
+    @NonNull
+    private static String getBackupName() {
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");
+        return "backup_" + format.format(new Date()) + ".zip";
+    }
+
+    public static void zip(Context context, OutputStream dest) throws IOException {
+        ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
         try {
             BufferedInputStream origin;
-            FileOutputStream dest = new FileOutputStream(zipFileName);
-            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
             byte data[] = new byte[BUFFER];
 
             File db = context.getDatabasePath(DatabaseManager.DATABASE_NAME);
@@ -160,6 +167,13 @@ public class BackupUtils {
             }
 
             out.close();
+        } finally {
+            safeCloseClosable(out);
+        }
+    }
+    private static void safeCloseClosable(Closeable closeable) {
+        try {
+            closeable.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -195,7 +209,6 @@ public class BackupUtils {
                     // Write all other files(images) to files dir in apps data
                     int start = sourceEntry.getName().lastIndexOf("/") + 1;
                     String name = sourceEntry.getName().substring(start);
-                    Log.d("", name);
                     fOut = context.openFileOutput(name, Context.MODE_PRIVATE);
                 }
 
@@ -212,12 +225,12 @@ public class BackupUtils {
                     }
                     targetStream.flush();
                 } finally {
-                    targetStream.close();
+                    safeCloseClosable(targetStream);
                 }
                 zin.closeEntry();
             }
         } finally {
-            in.close();
+            safeCloseClosable(in);
         }
         if (dbFiles != 1) {
             throw new IllegalStateException("Input file is not a valid backup");
