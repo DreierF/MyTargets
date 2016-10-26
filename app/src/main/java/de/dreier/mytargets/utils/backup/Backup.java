@@ -16,6 +16,7 @@ public interface Backup {
 
     interface OnLoadFinishedListener {
         void onLoadFinished(List<BackupEntry> backupEntries);
+        void onError(String message);
     }
 
     interface BackupStatusListener {

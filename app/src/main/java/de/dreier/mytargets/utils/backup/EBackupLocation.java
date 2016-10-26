@@ -17,7 +17,8 @@ import de.dreier.mytargets.shared.models.IImageProvider;
 
 public enum EBackupLocation implements IIdProvider, IImageProvider {
     LOCAL_DEVICE(1, R.string.local_device, R.drawable.ic_phone_android_black_24dp),
-    GOOGLE_DRIVE(2, R.string.google_drive, R.drawable.ic_google_drive_24dp);
+    GOOGLE_DRIVE(2, R.string.google_drive, R.drawable.ic_google_drive_24dp),
+    DROPBOX(3, R.string.dropbox, R.drawable.ic_dropbox_24dp);
 
     int id;
     int drawable;
@@ -39,8 +40,10 @@ public enum EBackupLocation implements IIdProvider, IImageProvider {
         switch (this) {
             case LOCAL_DEVICE:
                 return new LocalDeviceBackup();
-            default:
+            case GOOGLE_DRIVE:
                 return new GoogleDriveBackup();
+            default:
+                return new DropboxBackup();
         }
     }
 
@@ -55,6 +58,6 @@ public enum EBackupLocation implements IIdProvider, IImageProvider {
     }
 
     public static List<EBackupLocation> getList() {
-        return Arrays.asList(LOCAL_DEVICE, GOOGLE_DRIVE);
+        return Arrays.asList(LOCAL_DEVICE, GOOGLE_DRIVE, DROPBOX);
     }
 }

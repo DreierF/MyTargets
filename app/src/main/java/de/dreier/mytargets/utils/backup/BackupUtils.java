@@ -16,6 +16,7 @@ package de.dreier.mytargets.utils.backup;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -126,9 +127,11 @@ public class BackupUtils {
         }
     }
 
-    private static void safeCloseClosable(Closeable closeable) {
+    static void safeCloseClosable(@Nullable Closeable closeable) {
         try {
-            closeable.close();
+            if (closeable != null) {
+                closeable.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

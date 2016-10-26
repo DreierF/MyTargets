@@ -25,7 +25,6 @@ import com.google.android.gms.drive.query.SearchableField;
 import com.google.android.gms.drive.query.SortOrder;
 import com.google.android.gms.drive.query.SortableField;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -216,8 +215,6 @@ public class GoogleDriveBackup implements Backup,
                     } catch (IOException e) {
                         e.printStackTrace();
                         listener.onError(e.getLocalizedMessage());
-                    } finally {
-                        safeCloseClosable(input);
                     }
                 });
     }
@@ -243,13 +240,5 @@ public class GoogleDriveBackup implements Backup,
             googleApiClient = null;
         }
         activity = null;
-    }
-
-    private void safeCloseClosable(Closeable closeable) {
-        try {
-            closeable.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

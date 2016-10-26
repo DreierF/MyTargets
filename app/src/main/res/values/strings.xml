@@ -293,11 +293,13 @@
     <string name="local_device">Local device</string>
     <string name="automatic_backup">Automatic backup</string>
     <string name="restoring_backup_failed">Restoring backup failed!</string>
-    <string name="google_drive">Google Drive</string>
+    <string name="google_drive" translatable="false">Google Drive</string>
     <string name="restoring">Restoring backup…</string>
     <string name="restore_failed">Restore failed</string>
     <string name="delete_failed">Deletion failed</string>
     <string name="creating_backup">Creating backup…</string>
     <string name="backup_restore_desc">Backup and restore app data</string>
     <string name="exporting">Exporting…</string>
+    <string name="dropbox" translatable="false">Dropbox</string>
+    <string name="loading_backups_failed">Loading backups failed!</string>
 </resources>

@@ -252,7 +252,6 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
 
     }
 
-
     void export() {
         MaterialDialog progress = new MaterialDialog.Builder(this)
                 .content(R.string.exporting)

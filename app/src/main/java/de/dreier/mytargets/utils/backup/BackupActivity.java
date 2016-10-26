@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
@@ -52,20 +53,23 @@ public class BackupActivity extends AppCompatActivity {
         assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        EBackupLocation backupLocation = SettingsManager.getBackupLocation();
-        setBackupLocation(backupLocation);
         binding.backupLocation.setOnActivityResultContext(this);
-        binding.backupLocation.setItem(backupLocation);
         binding.backupLocation.setOnUpdateListener(item -> {
-            if (item == SettingsManager.getBackupLocation()) {
-                return;
-            }
             SettingsManager.setBackupLocation(item);
-            backup.stop();
+            if (backup != null) {
+                backup.stop();
+            }
             setBackupLocation(item);
         });
 
         binding.backupNowButton.setOnClickListener(v -> backupNow());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EBackupLocation backupLocation = SettingsManager.getBackupLocation();
+        binding.backupLocation.setItem(backupLocation);
     }
 
     @Override
@@ -88,9 +92,9 @@ public class BackupActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onPause() {
         backup.stop();
-        super.onDestroy();
+        super.onPause();
     }
 
     @Override
@@ -107,7 +111,17 @@ public class BackupActivity extends AppCompatActivity {
         backup = item.createBackup();
         adapter = new BackupAdapter(this, this::showBackupDetails, this::deleteBackup);
         binding.recentBackupsList.setAdapter(adapter);
-        backup.start(this, this::onBackupsLoaded);
+        backup.start(this, new Backup.OnLoadFinishedListener() {
+            @Override
+            public void onLoadFinished(List<BackupEntry> backupEntries) {
+                onBackupsLoaded(backupEntries);
+            }
+
+            @Override
+            public void onError(String message) {
+                showError(R.string.loading_backups_failed, message);
+            }
+        });
     }
 
     private void onBackupsLoaded(List<BackupEntry> list) {
@@ -213,6 +227,13 @@ public class BackupActivity extends AppCompatActivity {
         startActivityForResult(intent, IMPORT_FROM_URI);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        BackupActivityPermissionsDispatcher
+                .onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
     private void importFromUri(final Uri uri) {
         MaterialDialog progress = showProgressDialog(R.string.restoring);
         new AsyncTask<Void, Void, String>() {
@@ -227,7 +248,7 @@ public class BackupActivity extends AppCompatActivity {
                     return getString(R.string.file_not_found);
                 } catch (Exception e) {
                     e.printStackTrace();
-                     return getString(R.string.failed_reading_file);
+                    return getString(R.string.failed_reading_file);
                 }
             }
 

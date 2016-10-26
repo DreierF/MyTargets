@@ -136,6 +136,8 @@ dependencies {
     compile "com.google.android.gms:play-services-wearable:$playServiceVersion"
     compile "com.google.android.gms:play-services-drive:$playServiceVersion"
 
+    compile 'com.dropbox.core:dropbox-core-sdk:2.1.2'
+
     compile 'com.google.code.gson:gson:2.7'
 
     compile 'joda-time:joda-time:2.9.4'
