@@ -15,6 +15,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
 import org.joda.time.DateTime;
 
 import java.io.File;
@@ -27,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 
 import de.dreier.mytargets.R;
@@ -65,24 +69,18 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return sInstance;
     }
 
-    public static boolean Import(Context context, InputStream in) {
-        try {
-            // Unzip all images and database
-            File file = BackupUtils.unzip(context, in);
+    public static void Import(Context context, InputStream in) throws IOException {
+        // Unzip all images and database
+        File file = BackupUtils.unzip(context, in);
 
-            // Replace database file
-            File db_file = context.getDatabasePath(DatabaseManager.DATABASE_NAME);
-            DatabaseManager tmp = sInstance;
-            sInstance = null;
-            if (tmp != null) {
-                tmp.close();
-            }
-            BackupUtils.copy(file, db_file);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
+        // Replace database file
+        File db_file = context.getDatabasePath(DatabaseManager.DATABASE_NAME);
+        DatabaseManager tmp = sInstance;
+        sInstance = null;
+        if (tmp != null) {
+            tmp.close();
         }
-        return false;
+        BackupUtils.copy(file, db_file);
     }
 
     public static void cleanup(SQLiteDatabase db) {
@@ -497,15 +495,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
 ////// EXPORT ALL //////
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void exportAll(File file) throws IOException {
+    public void exportAll(File file, List<Long> roundIds) throws IOException {
         file.getParentFile().mkdirs();
         file.createNewFile();
         FileWriter writer = new FileWriter(file);
-        writeExportData(writer);
+        writeExportData(writer, roundIds);
     }
 
-    public void writeExportData(Writer writer) throws IOException {
+    public void writeExportData(Writer writer, List<Long> roundIds) throws IOException {
         SQLiteDatabase db = getWritableDatabase();
+        final String ids = Stream.of(roundIds).map(id -> Long.toString(id))
+                .collect(Collectors.joining(","));
         Cursor cur = db.rawQuery(
                 "SELECT t.title,sr.name AS standard_round,date(t.datum/1000, 'unixepoch', 'localtime') AS date, sr.indoor, i.r_index, i.distance, i.unit," +
                         "r.target, r.scoring_style, i.size, i.target_unit, s.arrow_index, a.name, s.x, s.y, s.arrow, b.name AS bow, s.points AS score, " +
@@ -515,7 +515,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
                         "LEFT JOIN ARROW a ON a._id=t.arrow " +
                         "LEFT JOIN ROUND_TEMPLATE i ON r.template=i._id " +
                         "LEFT JOIN STANDARD_ROUND_TEMPLATE sr ON t.standard_round=sr._id " +
-                        "WHERE t._id = r.training AND r._id=p.round AND p._id=s.passe", null);
+                        "WHERE t._id = r.training " +
+                        "AND r._id=p.round " +
+                        "AND p._id=s.passe " +
+                        "AND r._id IN (" + ids + ") ", null);
         writer.append("\"")
                 .append(mContext.getString(R.string.title)).append("\";\"")
                 .append(mContext.getString(R.string.date)).append("\";\"")

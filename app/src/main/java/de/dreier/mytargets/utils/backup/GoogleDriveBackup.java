@@ -31,7 +31,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-import de.dreier.mytargets.utils.Utils;
+import de.dreier.mytargets.managers.DatabaseManager;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -70,7 +70,6 @@ public class GoogleDriveBackup implements Backup,
         Drive.DriveApi.newDriveContents(googleApiClient)
                 .setResultCallback(result -> {
                     if (!result.getStatus().isSuccess()) {
-                        Log.e(TAG, "Error while trying to create new file contents");
                         listener.onError(result.getStatus().getStatusMessage());
                         return;
                     }
@@ -88,6 +87,7 @@ public class GoogleDriveBackup implements Backup,
                             } catch (IOException e) {
                                 listener.onError(e.getLocalizedMessage());
                                 e.printStackTrace();
+                                return;
                             }
 
                             MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
@@ -185,8 +185,8 @@ public class GoogleDriveBackup implements Backup,
                             long backupSize = metadata.getFileSize();
                             backupsArray.add(new BackupEntry(driveId.encodeToString(),
                                     metadata.getModifiedDate(), backupSize));
-                            listener.onLoadFinished(backupsArray);
                         }
+                        listener.onLoadFinished(backupsArray);
                         buffer.release();
 
                     }
@@ -210,16 +210,29 @@ public class GoogleDriveBackup implements Backup,
                     // DriveContents object contains pointers to the actual byte stream
                     DriveContents contents = result.getDriveContents();
                     InputStream input = contents.getInputStream();
-
                     try {
-                        BackupUtils.unzip(activity, input);
+                        DatabaseManager.Import(activity, input);
+                        listener.onFinished();
                     } catch (IOException e) {
                         e.printStackTrace();
+                        listener.onError(e.getLocalizedMessage());
                     } finally {
                         safeCloseClosable(input);
                     }
+                });
+    }
 
-                    Utils.doRestart(activity);
+    @Override
+    public void deleteBackup(BackupEntry backup, BackupStatusListener listener) {
+        DriveId.decodeFromString(backup.getFileId())
+                .asDriveFile()
+                .delete(googleApiClient)
+                .setResultCallback(result -> {
+                    if (result.getStatus().isSuccess()) {
+                        listener.onFinished();
+                    } else {
+                        listener.onError(result.getStatus().getStatusMessage());
+                    }
                 });
     }
 

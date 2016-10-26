@@ -164,16 +164,8 @@
         android:title="@string/data">
         <Preference
             android:key="pref_backup"
-            android:summary="@string/create_backup_on_sd"
+            android:summary="@string/backup_restore_desc"
             android:title="@string/backup_action"/>
-        <Preference
-            android:key="pref_import"
-            android:summary="@string/restore_backup"
-            android:title="@string/import_action"/>
-        <Preference
-            android:key="pref_export"
-            android:summary="@string/exports_as_csv"
-            android:title="@string/export"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/info">
         <Preference

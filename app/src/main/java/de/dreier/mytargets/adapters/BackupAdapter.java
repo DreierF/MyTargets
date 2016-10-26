@@ -43,8 +43,10 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.BackupView
         final String modified = formatDateTime.format(p.getModifiedDate());
         holder.binding.name.setText(modified);
         holder.binding.details.setText(p.getHumanReadableSize());
-        holder.binding.primaryAction.setOnClickListener(view -> primaryActionListener.onItemClicked(p));
-        holder.binding.secondaryAction.setOnClickListener(view -> secondaryActionListener.onItemClicked(p));
+        holder.binding.primaryAction
+                .setOnClickListener(view -> primaryActionListener.onItemClicked(p));
+        holder.binding.secondaryAction
+                .setOnClickListener(view -> secondaryActionListener.onItemClicked(p));
     }
 
     @Override
@@ -55,6 +57,14 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.BackupView
     public void setList(List<BackupEntry> list) {
         this.backupEntries = list;
         notifyDataSetChanged();
+    }
+
+    public void remove(BackupEntry backupEntry) {
+        int index = backupEntries.indexOf(backupEntry);
+        if (index > -1) {
+            backupEntries.remove(index);
+            notifyItemRemoved(index);
+        }
     }
 
     public interface OnItemClickListener<T> {

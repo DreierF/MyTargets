@@ -11,15 +11,14 @@ public interface Backup {
     void onActivityResult(int requestCode, int resultCode, Intent data);
     void getBackups();
     void restoreBackup(BackupEntry backup, BackupStatusListener listener);
+    void deleteBackup(BackupEntry backup, BackupStatusListener listener);
     void stop();
-
 
     interface OnLoadFinishedListener {
         void onLoadFinished(List<BackupEntry> backupEntries);
     }
 
     interface BackupStatusListener {
-        void onStarted();
         void onFinished();
         void onError(String message);
     }

@@ -13,20 +13,15 @@
 
 package de.dreier.mytargets.utils.backup;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,45 +29,20 @@ import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 
-import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
+import static android.support.v4.content.FileProvider.getUriForFile;
 
 
 public class BackupUtils {
 
-    private static final String FOLDER_NAME = "MyTargets";
     private static final int BUFFER = 1024;
-
-    public static boolean Import(Activity a, Uri uri) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(a);
-        try {
-            InputStream st = a.getContentResolver().openInputStream(uri);
-            if (!DatabaseManager.Import(a, st)) {
-                throw new IllegalStateException();
-            }
-
-            Toast.makeText(a, R.string.import_successful, Toast.LENGTH_SHORT).show();
-            return true;
-        } catch (FileNotFoundException ioe) {
-            ioe.printStackTrace();
-            builder.setTitle(R.string.import_failed);
-            builder.setMessage(a.getString(R.string.file_not_found));
-        } catch (Exception e) {
-            e.printStackTrace();
-            builder.setTitle(R.string.import_failed);
-            builder.setMessage(a.getString(R.string.failed_reading_file));
-        }
-        builder.setNegativeButton("", null);
-        builder.setPositiveButton(android.R.string.ok, null).show();
-        return false;
-    }
 
     public static void copy(File src, File dst) throws IOException {
         FileInputStream inStream = new FileInputStream(src);
@@ -96,21 +66,14 @@ public class BackupUtils {
         out.close();
     }
 
-    public static Uri export(Context context) throws IOException {
-        DatabaseManager db = DatabaseManager.getInstance(context);
-        File exportDir = new File(Environment.getExternalStorageDirectory(), FOLDER_NAME);
-        createDirectory(exportDir);
-        File file = new File(exportDir, getExportFileName());
-        db.exportAll(file);
-        return Uri.fromFile(file);
-    }
+    public static Uri export(Context context, List<Long> roundIds) throws IOException {
+        String packageName = context.getPackageName();
+        String authority = packageName + ".easyphotopicker.fileprovider";
 
-    static void createDirectory(File directory) throws IOException {
-        //noinspection ResultOfMethodCallIgnored
-        directory.mkdir();
-        if (!directory.exists() || !directory.isDirectory()) {
-            throw new IOException(get(R.string.dir_not_created));
-        }
+        DatabaseManager db = DatabaseManager.getInstance(context);
+        final File f = new File(context.getCacheDir(), getExportFileName());
+        db.exportAll(f, roundIds);
+        return getUriForFile(context, authority, f);
     }
 
     @NonNull
@@ -162,6 +125,7 @@ public class BackupUtils {
             safeCloseClosable(out);
         }
     }
+
     private static void safeCloseClosable(Closeable closeable) {
         try {
             closeable.close();

@@ -6,22 +6,32 @@ import android.os.Environment;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 
-import static de.dreier.mytargets.utils.backup.BackupUtils.createDirectory;
+import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 import static de.dreier.mytargets.utils.backup.BackupUtils.getBackupName;
-import static pl.aprilapps.easyphotopicker.BundleKeys.FOLDER_NAME;
 
 public class LocalDeviceBackup implements Backup {
+    private static final String FOLDER_NAME = "MyTargets";
+
     private Activity activity;
     private OnLoadFinishedListener listener;
+
+    private static void createDirectory(File directory) throws IOException {
+        //noinspection ResultOfMethodCallIgnored
+        directory.mkdir();
+        if (!directory.exists() || !directory.isDirectory()) {
+            throw new IOException(get(R.string.dir_not_created));
+        }
+    }
 
     @Override
     public void start(Activity activity, OnLoadFinishedListener listener) {
@@ -33,7 +43,6 @@ public class LocalDeviceBackup implements Backup {
     @Override
     public void startBackup(BackupStatusListener listener) {
         try {
-            listener.onStarted();
             File backupDir = new File(Environment.getExternalStorageDirectory(), FOLDER_NAME);
             createDirectory(backupDir);
             final File zipFile = new File(backupDir, getBackupName());
@@ -63,6 +72,8 @@ public class LocalDeviceBackup implements Backup {
                     backups.add(entry);
                 }
             }
+            Collections.sort(backups, (b1, b2) -> b2.getModifiedDate()
+                    .compareTo(b1.getModifiedDate()));
             listener.onLoadFinished(backups);
         }
     }
@@ -77,9 +88,19 @@ public class LocalDeviceBackup implements Backup {
         File file = new File(backup.getFileId());
         try {
             DatabaseManager.Import(activity, new FileInputStream(file));
-        } catch (FileNotFoundException e) {
+            listener.onFinished();
+        } catch (IOException e) {
             listener.onError(e.getLocalizedMessage());
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteBackup(BackupEntry backup, BackupStatusListener listener) {
+        if (new File(backup.getFileId()).delete()) {
+            listener.onFinished();
+        } else {
+            listener.onError("Backup could not be deleted!");
         }
     }
 

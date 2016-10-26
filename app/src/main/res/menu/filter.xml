@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_export"
+        android:icon="@drawable/ic_excel_white_24dp"
+        android:title="@string/exports_as_csv"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/action_filter"
         android:icon="@drawable/ic_filter_white_24dp"
         android:title="@string/filter"

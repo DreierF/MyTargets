@@ -4,34 +4,25 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.View;
-import android.widget.Toast;
-
-import java.io.IOException;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.backup.BackupActivity;
-import de.dreier.mytargets.utils.backup.BackupUtils;
 import de.dreier.mytargets.views.DatePreference;
 import de.dreier.mytargets.views.DatePreferenceDialogFragmentCompat;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
 import static de.dreier.mytargets.fragments.SettingsFragmentPermissionsDispatcher.doBackupWithCheck;
-import static de.dreier.mytargets.fragments.SettingsFragmentPermissionsDispatcher.doExportWithCheck;
-import static de.dreier.mytargets.fragments.SettingsFragmentPermissionsDispatcher.doImportWithCheck;
 import static de.dreier.mytargets.managers.SettingsManager.KEY_INPUT_ARROW_DIAMETER_SCALE;
 import static de.dreier.mytargets.managers.SettingsManager.KEY_INPUT_TARGET_ZOOM;
 import static de.dreier.mytargets.managers.SettingsManager.KEY_PROFILE_BIRTHDAY;
@@ -98,23 +89,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
     @Override
     public boolean onPreferenceTreeClick(@NonNull Preference preference) {
         switch (preference.getKey()) {
-            case "pref_import":
-                doImportWithCheck(this);
-                return true;
             case "pref_backup":
                 doBackupWithCheck(this);
                 return true;
-            case "pref_export":
-                doExportWithCheck(this);
-                return true;
             case "pref_about":
-                getActivity().startActivity(
-                        new Intent(getContext(), SimpleFragmentActivityBase.AboutActivity.class));
+                startActivity(new Intent(getContext(), SimpleFragmentActivityBase.AboutActivity.class));
                 return true;
             case "pref_licence":
-                getActivity().startActivity(
-                        new Intent(getContext(),
-                                SimpleFragmentActivityBase.LicencesActivity.class));
+                startActivity(new Intent(getContext(), SimpleFragmentActivityBase.LicencesActivity.class));
                 return true;
             default:
                 return super.onPreferenceTreeClick(preference);
@@ -128,84 +110,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 .onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
-    private void export() {
-        new AsyncTask<Void, Void, Uri>() {
-
-            @Override
-            protected Uri doInBackground(Void... params) {
-                try {
-                    return BackupUtils.export(getActivity().getApplicationContext());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(Uri uri) {
-                super.onPostExecute(uri);
-                if (uri != null) {
-                    Intent email = new Intent(Intent.ACTION_SEND);
-                    email.putExtra(Intent.EXTRA_STREAM, uri);
-                    email.setType("text/csv");
-                    startActivity(Intent.createChooser(email, getString(R.string.send_exported)));
-                } else {
-                    Toast.makeText(getActivity(), R.string.exporting_failed, Toast.LENGTH_LONG).show();
-                }
-            }
-        }.execute();
-    }
-
-    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void doImport() {
-        showFilePicker();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1 && resultCode == AppCompatActivity.RESULT_OK) {
-            final Uri uri = data.getData();
-            /*new AsyncTask<Void, Void, Boolean>() {
-
-                @Override
-                protected Boolean doInBackground(Void... params) {
-                    try {
-                        //return BackupUtils.backup(getActivity().getApplicationContext()) != null;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        return false;
-                    }
-                }
-
-                @Override
-                protected void onPostExecute(Boolean backupSuccessful) {
-                    super.onPostExecute(backupSuccessful);
-                    if (backupSuccessful && BackupUtils.Import(getActivity(), uri)) {
-                        Utils.doRestart(getContext());
-                    }
-                }
-            }.execute();*/
-            //TODO add import from uri
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
+    //TODO move into backup activity
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void doBackup() {
         startActivity(new Intent(getContext(), BackupActivity.class));
-    }
-
-    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void doExport() {
-        export();
-    }
-
-    private void showFilePicker() {
-        final Intent getContentIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getContentIntent.setType("*/zip");
-        getContentIntent.addCategory(Intent.CATEGORY_OPENABLE);
-        Intent intent = Intent.createChooser(getContentIntent, getString(R.string.select_a_file));
-        startActivityForResult(intent, 1);
     }
 
     @Override
