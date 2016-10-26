@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.print.PrintHelper;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,10 +33,9 @@ public class DispersionPatternActivity extends ChildActivityBase {
     private ArrowStatistic statistic;
 
     @NonNull
-    public static IntentWrapper getIntent(Fragment fragment, ArrowStatistic statistics) {
-        Intent intent = new Intent(fragment.getContext(), DispersionPatternActivity.class);
-        intent.putExtra(ITEM, Parcels.wrap(statistics));
-        return new IntentWrapper(fragment, intent);
+    public static IntentWrapper getIntent(ArrowStatistic statistics) {
+        return new IntentWrapper(DispersionPatternActivity.class)
+                .with(ITEM, Parcels.wrap(statistics));
     }
 
     @Override

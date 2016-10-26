@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,15 +23,35 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="@string/automatic_backup"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
+
+                        <Switch
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"/>
+
+                    </LinearLayout>
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:layout_marginBottom="16dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
                         android:text="@string/backup_drive_desc"/>
 
                     <Button
-                        android:id="@+id/activity_backup_drive_button_backup"
+                        android:id="@+id/backup_now_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
@@ -37,91 +60,39 @@
                         android:text="@string/backup_now"
                         android:textColor="#80000000"/>
 
-                    <LinearLayout
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:visibility="gone">
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:text="@string/last_backup"
+                        android:textStyle="italic"
+                        android:visibility="gone"
+                        tools:visibility="visible"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="16dp"
-                            android:text="@string/last_backup"/>
+                    <include layout="@layout/divider_full"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="8dp"
-                            android:text="N/A"/>
-                    </LinearLayout>
-
-                    <TextView
+                    <de.dreier.mytargets.utils.backup.BackupLocationSelector
+                        android:id="@+id/backup_location"
                         android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:layout_marginTop="8dp"
-                        android:background="@color/about_separator_color"/>
+                        android:layout_height="wrap_content"/>
 
-                    <LinearLayout
-                        android:id="@+id/activity_backup_drive_button_folder"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:orientation="horizontal"
-                        android:paddingTop="8dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="8dp"
-                            android:text="@string/backup_folder"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:id="@+id/activity_backup_drive_textview_folder"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:gravity="right"
-                            android:paddingRight="16dp"
-                            android:text="N/A"/>
-                    </LinearLayout>
+                    <include layout="@layout/divider_full"/>
 
                     <TextView
-                        android:id="@+id/activity_backup_drive_button_manage_drive"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dp"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:padding="4dp"
-                        android:text="@string/open_drive"
-                        android:textAllCaps="true"
-                        android:textColor="@android:color/primary_text_light"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:visibility="gone"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@color/about_separator_color"/>
-
-                    <TextView
+                        style="@style/Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
-                        android:text="@string/recent_backups"
-                        android:textAllCaps="true"
-                        android:textStyle="bold"/>
+                        android:text="@string/recent_backups"/>
 
                     <android.support.v7.widget.RecyclerView
-                        android:id="@+id/activity_backup_drive_listview_restore"
+                        android:id="@+id/recent_backups_list"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        app:layoutManager="LinearLayoutManager"
+                        tools:listitem="@layout/item_image_details_secondary_action"/>
 
                 </LinearLayout>
 

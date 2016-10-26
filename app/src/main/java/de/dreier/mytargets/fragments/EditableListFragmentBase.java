@@ -9,6 +9,7 @@ package de.dreier.mytargets.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -27,22 +28,49 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.interfaces.ItemAdapter;
 import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.utils.OnCardClickListener;
+import de.dreier.mytargets.utils.OnItemClickListener;
 import de.dreier.mytargets.utils.SelectorBundler;
 import de.dreier.mytargets.utils.multiselector.MultiSelector;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import icepick.State;
+/**
+ *
+ *
+ * @param <T> Model of the item which is managed within the fragment.*/
+public abstract class EditableListFragmentBase<T extends IIdSettable> extends FragmentBase
+        implements OnItemClickListener<T>, LoaderManager.LoaderCallbacks<List<T>> {
 
-abstract class EditableListFragmentBase<T extends IIdSettable> extends ListFragmentBase<T>
-        implements OnCardClickListener<T>, LoaderManager.LoaderCallbacks<List<T>> {
+    protected static final String ITEM_ID = "id";
 
     protected boolean supportsStatistics = false;
     protected boolean supportsDeletion = true;
     @State(SelectorBundler.class)
     MultiSelector mSelector = new MultiSelector();
+
+    /**
+     * Resource describing FAB action
+     */
+    @StringRes
+    int newStringRes;
+
+    /**
+     * Resource used to set title when items are selected.
+     */
+    @PluralsRes
+    int itemTypeSelRes;
+
+    /**
+     * Resource used to set title when items are deleted.
+     */
     @PluralsRes
     int itemTypeDelRes;
+
+    /**
+     * Action mode manager
+     */
+    ActionMode actionMode = null;
     IdProviderDataSource<T> dataSource;
+
     private final ActionMode.Callback mDeleteMode = new ActionMode.Callback() {
 
         @Override

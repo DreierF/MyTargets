@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +51,7 @@ import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 
 import static de.dreier.mytargets.fragments.DatePickerFragment.ARG_CURRENT_DATE;
-import static de.dreier.mytargets.fragments.ListFragmentBase.ITEM_ID;
+import static de.dreier.mytargets.fragments.EditableListFragmentBase.ITEM_ID;
 
 public class EditTrainingFragment extends EditFragmentBase implements DatePickerDialog.OnDateSetListener {
     public static final String TRAINING_TYPE = "training_type";
@@ -70,29 +69,16 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private FragmentEditTrainingBinding binding;
 
     @NonNull
-    public static IntentWrapper createIntent(Fragment fragment, int trainingType) {
-        Intent i = new Intent(fragment.getContext(),
-                SimpleFragmentActivityBase.EditTrainingActivity.class);
-        i.putExtra(TRAINING_TYPE, trainingType);
-        i.setAction(Intent.ACTION_VIEW);
-        return new IntentWrapper(fragment, i);
+    public static IntentWrapper createIntent(int trainingType) {
+        return new IntentWrapper(SimpleFragmentActivityBase.EditTrainingActivity.class)
+                .with(TRAINING_TYPE, trainingType)
+                .action(Intent.ACTION_VIEW);
     }
 
     @NonNull
-    public static IntentWrapper createIntent(Activity fragment, int trainingType) {
-        Intent i = new Intent(fragment,
-                SimpleFragmentActivityBase.EditTrainingActivity.class);
-        i.putExtra(TRAINING_TYPE, trainingType);
-        i.setAction(Intent.ACTION_VIEW);
-        return new IntentWrapper(fragment, i);
-    }
-
-    @NonNull
-    public static IntentWrapper editIntent(Fragment fragment, Training training) {
-        Intent i = new Intent(fragment.getContext(),
-                SimpleFragmentActivityBase.EditTrainingActivity.class);
-        i.putExtra(ITEM_ID, training.getId());
-        return new IntentWrapper(fragment, i);
+    public static IntentWrapper editIntent(Training training) {
+        return new IntentWrapper(SimpleFragmentActivityBase.EditTrainingActivity.class)
+                .with(ITEM_ID, training.getId());
     }
 
     @Nullable
@@ -164,8 +150,10 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         binding.changeTargetFace.setOnClickListener(v -> {
             final StandardRound item = binding.standardRound.getSelectedItem();
             Target target = item.rounds.get(0).targetTemplate;
-            TargetListFragment.getIntent(this, target)
-                    .startForResult(SR_TARGET_REQUEST_CODE);
+            TargetListFragment.getIntent(target)
+                    .withContext(this)
+                    .forResult(SR_TARGET_REQUEST_CODE)
+                    .start();
         });
         updateChangeTargetFaceVisibility(binding.standardRound.getSelectedItem());
         binding.arrow.setOnActivityResultContext(this);
@@ -277,9 +265,17 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             trainingDataSource.update(training);
             Round round = createRoundsFromTemplate(standardRound, training).get(0);
 
-            TrainingFragment.getIntent(this, training).startWithoutAnimation();
-            RoundFragment.getIntent(this, round).startWithoutAnimation();
-            InputActivity.createIntent(this, round).start();
+            TrainingFragment.getIntent(training)
+                    .withContext(this)
+                    .noAnimation()
+                    .start();
+            RoundFragment.getIntent(round)
+                    .withContext(this)
+                    .noAnimation()
+                    .start();
+            InputActivity.createIntent(round)
+                    .withContext(this)
+                    .start();
         } else {
             // Edit training
             trainingDataSource.update(training);

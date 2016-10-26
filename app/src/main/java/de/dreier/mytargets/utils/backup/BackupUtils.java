@@ -11,9 +11,8 @@
  * All rights reserved
  */
 
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.utils.backup;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -35,6 +34,7 @@ import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -105,7 +105,8 @@ public class BackupUtils {
         return Uri.fromFile(file);
     }
 
-    private static void createDirectory(File directory) throws IOException {
+    static void createDirectory(File directory) throws IOException {
+        //noinspection ResultOfMethodCallIgnored
         directory.mkdir();
         if (!directory.exists() || !directory.isDirectory()) {
             throw new IOException(get(R.string.dir_not_created));
@@ -114,23 +115,13 @@ public class BackupUtils {
 
     @NonNull
     private static String getExportFileName() {
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
         return "exported_data_" + format.format(new Date()) + ".csv";
     }
 
-    public static Uri backup(Context context) throws IOException {
-        File backupDir = new File(Environment.getExternalStorageDirectory(), FOLDER_NAME);
-        createDirectory(backupDir);
-        final File zipFile = new File(backupDir, getBackupName());
-        zip(context, new FileOutputStream(zipFile));
-        return Uri.fromFile(zipFile);
-    }
-
     @NonNull
-    private static String getBackupName() {
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");
+    static String getBackupName() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
         return "backup_" + format.format(new Date()) + ".zip";
     }
 

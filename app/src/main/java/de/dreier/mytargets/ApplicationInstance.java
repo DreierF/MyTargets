@@ -26,6 +26,7 @@ import de.dreier.mytargets.shared.models.WindDirection;
 import de.dreier.mytargets.shared.models.WindSpeed;
 import de.dreier.mytargets.shared.utils.ScoresDrawer;
 import de.dreier.mytargets.utils.MyBackupAgent;
+import de.dreier.mytargets.utils.backup.EBackupLocation;
 
 /**
  * Application singleton. Gets instantiated exactly once and is used
@@ -39,6 +40,7 @@ import de.dreier.mytargets.utils.MyBackupAgent;
         @ParcelClass(Coordinate.class),
         @ParcelClass(Dimension.class),
         @ParcelClass(Environment.class),
+        @ParcelClass(EBackupLocation.class),
         @ParcelClass(Passe.class),
         @ParcelClass(ScoresDrawer.class),
         @ParcelClass(Round.class),

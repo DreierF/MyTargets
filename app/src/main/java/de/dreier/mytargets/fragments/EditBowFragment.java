@@ -61,15 +61,14 @@ public class EditBowFragment extends EditWithImageFragmentBase {
     }
 
     @NonNull
-    protected static IntentWrapper createIntent(Fragment fragment) {
-        return new IntentWrapper(fragment, SimpleFragmentActivityBase.EditBowActivity.class);
+    public static IntentWrapper createIntent() {
+        return new IntentWrapper(SimpleFragmentActivityBase.EditBowActivity.class);
     }
 
     @NonNull
-    static IntentWrapper editIntent(Fragment fragment, Bow bow) {
-        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditBowActivity.class);
-        i.putExtra(BOW_ID, bow.getId());
-        return new IntentWrapper(fragment, i);
+    public static IntentWrapper editIntent(Bow bow) {
+        return new IntentWrapper(SimpleFragmentActivityBase.EditBowActivity.class)
+                .with(BOW_ID, bow.getId());
     }
 
     @Override

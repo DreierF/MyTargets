@@ -51,7 +51,8 @@ public class BowListFragment extends EditableListFragment<Bow> {
         binding.recyclerView.addItemDecoration(
                 new DividerItemDecoration(getContext(), R.drawable.inset_divider));
         binding.fab.setOnClickListener(
-                view1 -> EditBowFragment.createIntent(this)
+                view1 -> EditBowFragment.createIntent()
+                        .withContext(this)
                         .fromFab(binding.fab)
                         .start());
         mAdapter = new BowAdapter(getContext());
@@ -74,12 +75,12 @@ public class BowListFragment extends EditableListFragment<Bow> {
 
     @Override
     protected void onEdit(Bow item) {
-        EditBowFragment.editIntent(this, item).start();
+        EditBowFragment.editIntent(item).withContext(this).start();
     }
 
     @Override
     protected void onItemSelected(Bow item) {
-        EditBowFragment.editIntent(this, item).start();
+        EditBowFragment.editIntent(item).withContext(this).start();
     }
 
     private class BowAdapter extends ListAdapterBase<Bow> {

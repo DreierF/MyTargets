@@ -19,12 +19,11 @@ import android.widget.Toast;
 import java.io.IOException;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.BackupActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.managers.SettingsManager;
-import de.dreier.mytargets.utils.BackupUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.Utils;
+import de.dreier.mytargets.utils.backup.BackupActivity;
+import de.dreier.mytargets.utils.backup.BackupUtils;
 import de.dreier.mytargets.views.DatePreference;
 import de.dreier.mytargets.views.DatePreferenceDialogFragmentCompat;
 import permissions.dispatcher.NeedsPermission;
@@ -129,17 +128,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 .onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
-    private void save(final boolean export) {
+    private void export() {
         new AsyncTask<Void, Void, Uri>() {
 
             @Override
             protected Uri doInBackground(Void... params) {
                 try {
-                    if (export) {
-                        return BackupUtils.export(getActivity().getApplicationContext());
-                    } else {
-                        return BackupUtils.backup(getActivity().getApplicationContext());
-                    }
+                    return BackupUtils.export(getActivity().getApplicationContext());
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;
@@ -152,17 +147,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 if (uri != null) {
                     Intent email = new Intent(Intent.ACTION_SEND);
                     email.putExtra(Intent.EXTRA_STREAM, uri);
-                    if (export) {
-                        email.setType("text/csv");
-                    } else {
-                        email.setType("application/zip");
-                    }
-                    startActivity(
-                            Intent.createChooser(email, getString(R.string.send_exported)));
+                    email.setType("text/csv");
+                    startActivity(Intent.createChooser(email, getString(R.string.send_exported)));
                 } else {
-                    Toast.makeText(getActivity(),
-                            export ? R.string.exporting_failed : R.string.backup_failed,
-                            Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.exporting_failed, Toast.LENGTH_LONG).show();
                 }
             }
         }.execute();
@@ -177,12 +165,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == AppCompatActivity.RESULT_OK) {
             final Uri uri = data.getData();
-            new AsyncTask<Void, Void, Boolean>() {
+            /*new AsyncTask<Void, Void, Boolean>() {
 
                 @Override
                 protected Boolean doInBackground(Void... params) {
                     try {
-                        return BackupUtils.backup(getActivity().getApplicationContext()) != null;
+                        //return BackupUtils.backup(getActivity().getApplicationContext()) != null;
                     } catch (IOException e) {
                         e.printStackTrace();
                         return false;
@@ -196,7 +184,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
                         Utils.doRestart(getContext());
                     }
                 }
-            }.execute();
+            }.execute();*/
+            //TODO add import from uri
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -204,12 +193,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void doBackup() {
         startActivity(new Intent(getContext(), BackupActivity.class));
-        //save(false);
     }
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void doExport() {
-        save(true);
+        export();
     }
 
     private void showFilePicker() {

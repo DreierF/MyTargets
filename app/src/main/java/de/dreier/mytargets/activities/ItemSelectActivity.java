@@ -14,13 +14,14 @@ import de.dreier.mytargets.fragments.ArrowListFragment;
 import de.dreier.mytargets.fragments.BowListFragment;
 import de.dreier.mytargets.fragments.DistanceFragment;
 import de.dreier.mytargets.fragments.EnvironmentFragment;
-import de.dreier.mytargets.fragments.ListFragmentBase;
+import de.dreier.mytargets.fragments.FragmentBase;
 import de.dreier.mytargets.fragments.TargetListFragment;
 import de.dreier.mytargets.fragments.WindDirectionListFragment;
 import de.dreier.mytargets.fragments.WindSpeedListFragment;
+import de.dreier.mytargets.utils.backup.BackupLocationListFragment;
 
 public abstract class ItemSelectActivity extends SimpleFragmentActivityBase
-        implements ListFragmentBase.OnItemSelectedListener {
+        implements FragmentBase.OnItemSelectedListener {
 
     public static final String ITEM = "item";
     public static final String INTENT = "intent";
@@ -82,6 +83,13 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivityBase
         @Override
         protected Fragment instantiateFragment() {
             return new WindSpeedListFragment();
+        }
+    }
+
+    public static class BackupLocationActivity extends ItemSelectActivity {
+        @Override
+        protected Fragment instantiateFragment() {
+            return new BackupLocationListFragment();
         }
     }
 }

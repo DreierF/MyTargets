@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.Fragment;
 import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -82,15 +81,14 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     private boolean transitionFinished = true;
 
     @NonNull
-    public static IntentWrapper createIntent(Fragment fragment, Round round) {
-        return getIntent(fragment, round, 0);
+    public static IntentWrapper createIntent(Round round) {
+        return getIntent(round, 0);
     }
 
-    public static IntentWrapper getIntent(Fragment fragment, Round round, int passeIndex) {
-        Intent i = new Intent(fragment.getContext(), InputActivity.class);
-        i.putExtra(ROUND_ID, round.getId());
-        i.putExtra(PASSE_IND, passeIndex);
-        return new IntentWrapper(fragment, i);
+    public static IntentWrapper getIntent(Round round, int passeIndex) {
+        return new IntentWrapper(InputActivity.class)
+                .with(ROUND_ID, round.getId())
+                .with(PASSE_IND, passeIndex);
     }
 
     @Override
@@ -285,7 +283,8 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
 
     private void openTimer() {
         if (transitionFinished) {
-            TimerFragment.getIntent(this, training.timePerPasse)
+            TimerFragment.getIntent(training.timePerPasse)
+                    .withContext(this)
                     .start();
         } else if (Utils.isLollipop()) {
             startTimerDelayed();
@@ -297,7 +296,9 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
             @Override
             public void onTransitionEnd(Transition transition) {
-                TimerFragment.getIntent(InputActivity.this, training.timePerPasse).start();
+                TimerFragment.getIntent(training.timePerPasse)
+                        .withContext(InputActivity.this)
+                        .start();
                 getWindow().getSharedElementEnterTransition().removeListener(this);
             }
         });

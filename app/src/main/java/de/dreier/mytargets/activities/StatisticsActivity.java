@@ -9,7 +9,6 @@ package de.dreier.mytargets.activities;
 
 import android.app.LoaderManager;
 import android.content.AsyncTaskLoader;
-import android.content.Intent;
 import android.content.Loader;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -58,10 +57,9 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     private List<Pair<Training, Round>> rounds;
 
     @NonNull
-    public static IntentWrapper getIntent(Fragment fragment, List<Long> roundIds) {
-        Intent i = new Intent(fragment.getContext(), StatisticsActivity.class);
-        i.putExtra(ROUND_IDS, Utils.toArray(roundIds));
-        return new IntentWrapper(fragment, i);
+    public static IntentWrapper getIntent(List<Long> roundIds) {
+        return new IntentWrapper(StatisticsActivity.class)
+                .with(ROUND_IDS, Utils.toArray(roundIds));
     }
 
     @Override

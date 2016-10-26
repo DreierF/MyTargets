@@ -39,7 +39,7 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> implemen
     protected FragmentListBinding binding;
     private Dimension distance;
     private Unit unit;
-    private SelectItemFragment.OnItemSelectedListener listener;
+    private OnItemSelectedListener listener;
 
     public static DistanceGridFragment newInstance(Dimension distance, Unit unit) {
         DistanceGridFragment fragment = new DistanceGridFragment();

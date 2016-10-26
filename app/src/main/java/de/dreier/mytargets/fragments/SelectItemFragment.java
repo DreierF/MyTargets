@@ -21,31 +21,34 @@ import org.parceler.Parcels;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.shared.models.IIdProvider;
+import de.dreier.mytargets.utils.OnItemClickListener;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import de.dreier.mytargets.utils.multiselector.SingleSelector;
 
 /**
  * Base class for handling single item selection
  * <p>
- * Parent activity must implement {@link ListFragmentBase.OnItemSelectedListener}.
+ * Parent activity must implement {@link FragmentBase.OnItemSelectedListener}.
+ *
+ * @param <T> Model of the item which is managed within the fragment.
  */
-public abstract class SelectItemFragment<T extends IIdProvider & Comparable<T>> extends ListFragmentBase<T> {
+public abstract class SelectItemFragment<T extends IIdProvider & Comparable<T>> extends FragmentBase
+        implements OnItemClickListener<T> {
 
     /**
      * Selector which manages the item selection
      */
-    final SingleSelector mSelector = new SingleSelector();
+    protected final SingleSelector mSelector = new SingleSelector();
 
     /**
      * Adapter for the fragment's RecyclerView
      */
-    ListAdapterBase<T> mAdapter;
-
+    protected ListAdapterBase<T> mAdapter;
+    protected boolean useDoubleClickSelection;
     /**
      * Listener which gets called when item gets selected
      */
     private OnItemSelectedListener listener;
-    boolean useDoubleClickSelection;
 
     /**
      * {@inheritDoc}

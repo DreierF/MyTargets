@@ -289,4 +289,9 @@
     <string name="restore_desc">Restoring the data will override all the existing data with the backup.</string>
     <string name="backup_details">Backup details</string>
     <string name="restore">Restore</string>
+    <string name="backup_location">Backup location</string>
+    <string name="local_device">Local device</string>
+    <string name="automatic_backup">Automatic backup</string>
+    <string name="restoring_backup_failed">Restoring backup failed!</string>
+    <string name="google_drive">Google Drive</string>
 </resources>

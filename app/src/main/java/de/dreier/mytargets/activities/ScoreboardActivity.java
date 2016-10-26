@@ -18,7 +18,6 @@ import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.Menu;
@@ -57,16 +56,15 @@ public class ScoreboardActivity extends AppCompatActivity {
     private ActivityScoreboardBinding binding;
 
     @NonNull
-    public static IntentWrapper getIntent(Fragment fragment, long trainingId) {
-        return getIntent(fragment, trainingId, -1);
+    public static IntentWrapper getIntent(long trainingId) {
+        return getIntent(trainingId, -1);
     }
 
     @NonNull
-    public static IntentWrapper getIntent(Fragment fragment, long trainingId, long roundId) {
-        Intent intent = new Intent(fragment.getContext(), ScoreboardActivity.class);
-        intent.putExtra(TRAINING_ID, trainingId);
-        intent.putExtra(ROUND_ID, roundId);
-        return new IntentWrapper(fragment, intent);
+    public static IntentWrapper getIntent(long trainingId, long roundId) {
+        return new IntentWrapper(ScoreboardActivity.class)
+                .with(TRAINING_ID, trainingId)
+                .with(ROUND_ID, roundId);
     }
 
     @Override

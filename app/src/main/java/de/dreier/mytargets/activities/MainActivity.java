@@ -30,14 +30,15 @@ public class MainActivity extends SimpleFragmentActivityBase {
     public void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_CustomToolbar);
         super.onCreate(savedInstanceState);
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N_MR1) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
 
             ShortcutInfo shortcut1 = new ShortcutInfo.Builder(this, "free_training")
                     .setShortLabel(getString(R.string.free_training))
                     .setIcon(Icon.createWithResource(this, R.drawable.ic_app_shortcut_trending_up_blue_24px))
                     .setIntent(EditTrainingFragment
-                            .createIntent(this, EditTrainingFragment.FREE_TRAINING)
+                            .createIntent(EditTrainingFragment.FREE_TRAINING)
+                            .withContext(this)
                             .build())
                     .build();
 
@@ -45,7 +46,8 @@ public class MainActivity extends SimpleFragmentActivityBase {
                     .setShortLabel(getString(R.string.training_with_standard_round))
                     .setIcon(Icon.createWithResource(this, R.drawable.ic_app_shortcut_album_blue_24px))
                     .setIntent(EditTrainingFragment
-                            .createIntent(this, EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND)
+                            .createIntent(EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND)
+                            .withContext(this)
                             .build())
                     .build();
 

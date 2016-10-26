@@ -15,12 +15,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.ArrowListFragment;
 import de.dreier.mytargets.fragments.BowListFragment;
-import de.dreier.mytargets.fragments.ListFragmentBase;
+import de.dreier.mytargets.fragments.EditableListFragmentBase;
 import de.dreier.mytargets.fragments.TrainingsFragment;
 
 public class MainTabsFragmentPagerAdapter extends FragmentPagerAdapter {
     private final Context context;
-    private final ListFragmentBase[] fragments = new ListFragmentBase[3];
+    private final EditableListFragmentBase[] fragments = new EditableListFragmentBase[3];
 
     public MainTabsFragmentPagerAdapter(Context context, FragmentManager fragmentManager) {
         super(fragmentManager);

@@ -8,12 +8,10 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,11 +52,10 @@ public class TargetListFragment extends SelectItemFragment<Target>
     private boolean typeFixed = false;
 
     @NonNull
-    public static IntentWrapper getIntent(Fragment fragment, Target target) {
-        Intent i = new Intent(fragment.getContext(), ItemSelectActivity.TargetActivity.class);
-        i.putExtra(ITEM, Parcels.wrap(target));
-        i.putExtra(TYPE_FIXED, true);
-        return new IntentWrapper(fragment, i);
+    public static IntentWrapper getIntent(Target target) {
+        return new IntentWrapper(ItemSelectActivity.TargetActivity.class)
+                .with(ITEM, Parcels.wrap(target))
+                .with(TYPE_FIXED, true);
     }
 
     @Override

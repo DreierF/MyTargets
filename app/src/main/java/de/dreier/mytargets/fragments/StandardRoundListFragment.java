@@ -150,9 +150,9 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
     public void onLongClick(SelectableViewHolder holder) {
         StandardRound item = (StandardRound) holder.getItem();
         if (item.club == StandardRoundFactory.CUSTOM && item.usages == 0) {
-            EditStandardRoundFragment
-                    .editIntent(this, item)
-                    .startForResult(NEW_STANDARD_ROUND);
+            EditStandardRoundFragment.editIntent(item)
+                    .withContext(this).forResult(NEW_STANDARD_ROUND)
+                    .start();
         } else {
             new MaterialDialog.Builder(getContext())
                     .title(R.string.use_as_template)
@@ -160,8 +160,10 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
                     .positiveText(android.R.string.yes)
                     .negativeText(android.R.string.cancel)
                     .onPositive((dialog1, which1) -> EditStandardRoundFragment
-                                    .editIntent(this, item)
-                                    .startForResult(NEW_STANDARD_ROUND))
+                            .editIntent(item)
+                            .withContext(this)
+                            .forResult(NEW_STANDARD_ROUND)
+                            .start())
                     .show();
         }
     }
@@ -185,9 +187,10 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
 
     @Override
     public void onClick(View v) {
-        EditStandardRoundFragment.createIntent(this)
-                .fromFab(binding.fab)
-                .startForResult(NEW_STANDARD_ROUND);
+        EditStandardRoundFragment.createIntent()
+                .withContext(this)
+                .fromFab(binding.fab).forResult(NEW_STANDARD_ROUND)
+                .start();
     }
 
     @Override
