@@ -37,7 +37,7 @@ import icepick.State;
  *
  *
  * @param <T> Model of the item which is managed within the fragment.*/
-public abstract class EditableListFragmentBase<T extends IIdSettable> extends FragmentBase
+public abstract class EditableListFragmentBase<T extends IIdSettable> extends ListFragmentBase<T>
         implements OnItemClickListener<T>, LoaderManager.LoaderCallbacks<List<T>> {
 
     protected static final String ITEM_ID = "id";

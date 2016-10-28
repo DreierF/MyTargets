@@ -33,7 +33,7 @@ import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 public class EnvironmentFragment extends FragmentBase {
 
-    private SelectItemFragment.OnItemSelectedListener listener;
+    private ListFragmentBase.OnItemSelectedListener listener;
     private Environment mEnvironment;
     private EWeather weather;
     private FragmentEnvironmentBinding binding;
@@ -104,8 +104,8 @@ public class EnvironmentFragment extends FragmentBase {
     public void onAttach(Context activity) {
         super.onAttach(activity);
         activity = getActivity();
-        if (activity instanceof SelectItemFragment.OnItemSelectedListener) {
-            listener = (SelectItemFragment.OnItemSelectedListener) activity;
+        if (activity instanceof ListFragmentBase.OnItemSelectedListener) {
+            listener = (ListFragmentBase.OnItemSelectedListener) activity;
         }
         Assert.assertNotNull(listener);
     }

@@ -290,7 +290,7 @@
     <string name="backup_details">Backup details</string>
     <string name="restore">Restore</string>
     <string name="backup_location">Backup location</string>
-    <string name="local_device">Local device</string>
+    <string name="internal_storage">Internal storage</string>
     <string name="automatic_backup">Automatic backup</string>
     <string name="restoring_backup_failed">Restoring backup failed!</string>
     <string name="google_drive" translatable="false">Google Drive</string>
@@ -302,4 +302,5 @@
     <string name="exporting">Exporting…</string>
     <string name="dropbox" translatable="false">Dropbox</string>
     <string name="loading_backups_failed">Loading backups failed!</string>
+    <string name="external_storage">External storage</string>
 </resources>

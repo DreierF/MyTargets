@@ -16,9 +16,10 @@ import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.shared.models.IImageProvider;
 
 public enum EBackupLocation implements IIdProvider, IImageProvider {
-    LOCAL_DEVICE(1, R.string.local_device, R.drawable.ic_phone_android_black_24dp),
-    GOOGLE_DRIVE(2, R.string.google_drive, R.drawable.ic_google_drive_24dp),
-    DROPBOX(3, R.string.dropbox, R.drawable.ic_dropbox_24dp);
+    INTERNAL_STORAGE(1, R.string.internal_storage, R.drawable.ic_phone_android_black_24dp),
+    EXTERNAL_STORAGE(2, R.string.external_storage, R.drawable.ic_micro_sd_card_24dp),
+    GOOGLE_DRIVE(3, R.string.google_drive, R.drawable.ic_google_drive_24dp),
+    DROPBOX(4, R.string.dropbox, R.drawable.ic_dropbox_24dp);
 
     int id;
     int drawable;
@@ -31,6 +32,14 @@ public enum EBackupLocation implements IIdProvider, IImageProvider {
         this.drawable = drawable;
     }
 
+    public static List<EBackupLocation> getList() {
+        if (ExternalStorageBackup.getMicroSdCardPath() != null) {
+            return Arrays.asList(INTERNAL_STORAGE, EXTERNAL_STORAGE, GOOGLE_DRIVE, DROPBOX);
+        } else {
+            return Arrays.asList(INTERNAL_STORAGE, GOOGLE_DRIVE, DROPBOX);
+        }
+    }
+
     @Override
     public long getId() {
         return id;
@@ -38,7 +47,7 @@ public enum EBackupLocation implements IIdProvider, IImageProvider {
 
     public Backup createBackup() {
         switch (this) {
-            case LOCAL_DEVICE:
+            case INTERNAL_STORAGE:
                 return new LocalDeviceBackup();
             case GOOGLE_DRIVE:
                 return new GoogleDriveBackup();
@@ -55,9 +64,5 @@ public enum EBackupLocation implements IIdProvider, IImageProvider {
     @Override
     public String getName() {
         return ApplicationInstance.get(name);
-    }
-
-    public static List<EBackupLocation> getList() {
-        return Arrays.asList(LOCAL_DEVICE, GOOGLE_DRIVE, DROPBOX);
     }
 }

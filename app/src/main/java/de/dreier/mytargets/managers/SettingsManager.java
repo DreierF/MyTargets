@@ -299,7 +299,7 @@ public class SettingsManager {
     }
 
     public static EBackupLocation getBackupLocation() {
-        final String defaultLocation = EBackupLocation.LOCAL_DEVICE.name();
+        final String defaultLocation = EBackupLocation.INTERNAL_STORAGE.name();
         String location = preferences.getString(KEY_BACKUP_LOCATION, defaultLocation);
         return EBackupLocation.valueOf(location);
     }

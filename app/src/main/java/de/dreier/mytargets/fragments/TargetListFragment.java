@@ -44,7 +44,7 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class TargetListFragment extends SelectItemFragment<Target>
+public class TargetListFragment extends SelectItemFragmentBase<Target>
         implements SeekBar.OnSeekBarChangeListener {
 
     private static final String TYPE_FIXED = "type_fixed";
@@ -111,7 +111,7 @@ public class TargetListFragment extends SelectItemFragment<Target>
     }
 
     @Override
-    public void onClick(SelectableViewHolder holder, Target mItem) {
+    public void onClick(SelectableViewHolder<Target> holder, Target mItem) {
         super.onClick(holder, mItem);
         if (mItem == null) {
             return;

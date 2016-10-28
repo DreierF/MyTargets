@@ -35,16 +35,4 @@ public abstract class FragmentBase extends Fragment {
             getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
         }
     }
-
-    /**
-     * Used for communicating item selection
-     */
-    public interface OnItemSelectedListener {
-        /**
-         * Called when a item has been selected.
-         *
-         * @param item Item that has been selected
-         */
-        void onItemSelected(Parcelable item);
-    }
 }

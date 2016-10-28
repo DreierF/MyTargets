@@ -21,19 +21,17 @@ import org.parceler.Parcels;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.shared.models.IIdProvider;
-import de.dreier.mytargets.utils.OnItemClickListener;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import de.dreier.mytargets.utils.multiselector.SingleSelector;
 
 /**
  * Base class for handling single item selection
  * <p>
- * Parent activity must implement {@link FragmentBase.OnItemSelectedListener}.
+ * Parent activity must implement {@link OnItemSelectedListener}.
  *
  * @param <T> Model of the item which is managed within the fragment.
  */
-public abstract class SelectItemFragment<T extends IIdProvider & Comparable<T>> extends FragmentBase
-        implements OnItemClickListener<T> {
+public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<T>> extends ListFragmentBase<T> {
 
     /**
      * Selector which manages the item selection
@@ -44,11 +42,12 @@ public abstract class SelectItemFragment<T extends IIdProvider & Comparable<T>> 
      * Adapter for the fragment's RecyclerView
      */
     protected ListAdapterBase<T> mAdapter;
-    protected boolean useDoubleClickSelection;
+
     /**
-     * Listener which gets called when item gets selected
-     */
-    private OnItemSelectedListener listener;
+     * Set to true when items are expanded when they are clicked and
+     * selected only after hitting them the second time.
+     * */
+    protected boolean useDoubleClickSelection = false;
 
     /**
      * {@inheritDoc}
@@ -65,9 +64,6 @@ public abstract class SelectItemFragment<T extends IIdProvider & Comparable<T>> 
     @Override
     public void onAttach(Context activity) {
         super.onAttach(activity);
-        if (activity instanceof OnItemSelectedListener) {
-            this.listener = (OnItemSelectedListener) activity;
-        }
         Assert.assertNotNull(listener);
     }
 
@@ -95,7 +91,7 @@ public abstract class SelectItemFragment<T extends IIdProvider & Comparable<T>> 
      * {@inheritDoc}
      */
     @Override
-    public void onClick(SelectableViewHolder holder, T mItem) {
+    public void onClick(SelectableViewHolder<T> holder, T mItem) {
         if (mItem == null) {
             return;
         }
