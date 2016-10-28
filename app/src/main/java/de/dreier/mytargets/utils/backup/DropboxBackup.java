@@ -238,7 +238,6 @@ public class DropboxBackup implements Backup {
                 try {
                     FileMetadata metadata = metadataFrom(backup);
                     DropboxClientFactory.getClient().files().delete(metadata.getPathLower());
-                    listener.onFinished();
                 } catch (DbxException e) {
                     e.printStackTrace();
                     mException = e;
