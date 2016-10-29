@@ -22,7 +22,7 @@ import static de.dreier.mytargets.utils.backup.BackupUtils.getBackupName;
 
 public class ExternalStorageBackup implements Backup {
     private static final String FOLDER_NAME = "MyTargets";
-    private static final String TAG = "ExternalStorageBackup";
+
     private Activity activity;
     private OnLoadFinishedListener listener;
 
@@ -35,30 +35,25 @@ public class ExternalStorageBackup implements Backup {
     }
 
     public static File getMicroSdCardPath() {
-        final String state = Environment.getExternalStorageState();
+        String strSDCardPath = System.getenv("SECONDARY_STORAGE");
 
-        if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY
-                .equals(state)) {  // we can read the External Storage...
-            // Retrieve the primary external storage:
-            final File primaryExternalStorage = Environment.getExternalStorageDirectory();
+        if ((strSDCardPath == null) || (strSDCardPath.length() == 0)) {
+            strSDCardPath = System.getenv("EXTERNAL_SDCARD_STORAGE");
+        }
 
-            // Retrieve the external storage root directory:
-            final String externalStorageRootDir = primaryExternalStorage.getParent();
-            if (externalStorageRootDir == null) {  // no parent...
-                Log.d(TAG, "External Storage: " + primaryExternalStorage + "\n");
-                return primaryExternalStorage;
-            } else {
-                final File externalStorageRoot = new File(externalStorageRootDir);
-                final File[] files = externalStorageRoot.listFiles();
-                if (files != null) {
-                    for (final File file : files) {
-                        if (file.isDirectory() && file.canRead() && (file
-                                .listFiles().length > 0)) {  // it is a real directory (not a USB drive)...
-                            Log.d(TAG, "External Storage: " + file.getAbsolutePath() + "\n");
-                            return file;
-                        }
-                    }
-                }
+        //If may get a full path that is not the right one, even if we don't have the SD Card there.
+        //We just need the "/mnt/extSdCard/" i.e and check if it's writable
+        if (strSDCardPath != null) {
+            if (strSDCardPath.contains(":")) {
+                strSDCardPath = strSDCardPath.substring(0, strSDCardPath.indexOf(":"));
+            }
+            Log.d("External", "getMicroSdCardPath: "+strSDCardPath);
+            File externalFilePath = new File(strSDCardPath);
+
+            if (externalFilePath.exists() && externalFilePath.canWrite()) {
+                Log.d("External", "getMicroSdCardPath: "+externalFilePath.getAbsolutePath());
+                //do what you need here
+                return externalFilePath;
             }
         }
         return null;

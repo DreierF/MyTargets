@@ -24,6 +24,7 @@ android {
         versionName appVersionName
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
 
     dataBinding {
@@ -138,6 +139,8 @@ dependencies {
     compile "com.google.android.gms:play-services-drive:$playServiceVersion"
 
     compile 'com.dropbox.core:dropbox-core-sdk:2.1.2'
+
+    compile 'com.android.support:multidex:1.0.1'
 
     compile 'com.google.code.gson:gson:2.7'
 

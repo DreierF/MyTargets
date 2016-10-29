@@ -49,6 +49,8 @@ public enum EBackupLocation implements IIdProvider, IImageProvider {
         switch (this) {
             case INTERNAL_STORAGE:
                 return new LocalDeviceBackup();
+            case EXTERNAL_STORAGE:
+                return new ExternalStorageBackup();
             case GOOGLE_DRIVE:
                 return new GoogleDriveBackup();
             default:

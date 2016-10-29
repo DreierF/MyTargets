@@ -1,7 +1,9 @@
 package de.dreier.mytargets;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.multidex.MultiDex;
 
 import org.parceler.ParcelClass;
 import org.parceler.ParcelClasses;
@@ -55,6 +57,12 @@ import de.dreier.mytargets.utils.backup.EBackupLocation;
         @ParcelClass(WindSpeed.class)
 })
 public class ApplicationInstance extends SharedApplicationInstance {
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(base);
+    }
 
     public static SharedPreferences getSharedPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(mContext);
