@@ -8,6 +8,10 @@
 -dontnote org.apache.commons.**
 -dontnote org.apache.http.**
 
+# Google Play Services
+-keep public class com.google.android.gms.* { public *; }
+-dontwarn com.google.android.gms.**
+
 # Ignore duplicate classes in legacy android's http stuff
 -dontnote org.apache.http.**
 -dontnote android.net.http.**

@@ -5,6 +5,7 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.triplet.play'
 apply plugin: 'jacoco-android'
+apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
     compileOptions {

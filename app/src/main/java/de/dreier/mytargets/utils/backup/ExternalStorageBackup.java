@@ -43,20 +43,20 @@ public class ExternalStorageBackup implements Backup {
             final File primaryExternalStorage = Environment.getExternalStorageDirectory();
 
             // Retrieve the external storage root directory:
-            final String externalStorageRootDir;
-            if ((externalStorageRootDir = primaryExternalStorage
-                    .getParent()) == null) {  // no parent...
+            final String externalStorageRootDir = primaryExternalStorage.getParent();
+            if (externalStorageRootDir == null) {  // no parent...
                 Log.d(TAG, "External Storage: " + primaryExternalStorage + "\n");
                 return primaryExternalStorage;
             } else {
                 final File externalStorageRoot = new File(externalStorageRootDir);
                 final File[] files = externalStorageRoot.listFiles();
-
-                for (final File file : files) {
-                    if (file.isDirectory() && file.canRead() && (file
-                            .listFiles().length > 0)) {  // it is a real directory (not a USB drive)...
-                        Log.d(TAG, "External Storage: " + file.getAbsolutePath() + "\n");
-                        return file;
+                if (files != null) {
+                    for (final File file : files) {
+                        if (file.isDirectory() && file.canRead() && (file
+                                .listFiles().length > 0)) {  // it is a real directory (not a USB drive)...
+                            Log.d(TAG, "External Storage: " + file.getAbsolutePath() + "\n");
+                            return file;
+                        }
                     }
                 }
             }
@@ -138,30 +138,5 @@ public class ExternalStorageBackup implements Backup {
     @Override
     public void stop() {
         activity = null;
-    }
-
-    public static String getMicroSdCardPath() {
-        final String state = Environment.getExternalStorageState();
-
-        if ( Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state) ) {  // we can read the External Storage...
-            //Retrieve the primary External Storage:
-            final File primaryExternalStorage = Environment.getExternalStorageDirectory();
-
-            //Retrieve the External Storages root directory:
-            final String externalStorageRootDir;
-            if ( (externalStorageRootDir = primaryExternalStorage.getParent()) == null ) {  // no parent...
-                Log.d(TAG, "External Storage: " + primaryExternalStorage + "\n");
-            }
-            else {
-                final File externalStorageRoot = new File( externalStorageRootDir );
-                final File[] files = externalStorageRoot.listFiles();
-
-                for ( final File file : files ) {
-                    if ( file.isDirectory() && file.canRead() && (file.listFiles().length > 0) ) {  // it is a real directory (not a USB drive)...
-                        Log.d(TAG, "External Storage: " + file.getAbsolutePath() + "\n");
-                    }
-                }
-            }
-        }
     }
 }
