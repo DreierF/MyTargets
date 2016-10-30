@@ -54,10 +54,11 @@ import static de.dreier.mytargets.fragments.DatePickerFragment.ARG_CURRENT_DATE;
 import static de.dreier.mytargets.fragments.EditableListFragmentBase.ITEM_ID;
 
 public class EditTrainingFragment extends EditFragmentBase implements DatePickerDialog.OnDateSetListener {
-    public static final String TRAINING_TYPE = "training_type";
+    public static final String CREATE_FREE_TRAINING_ACTION = "free_training";
+    public static final String CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION = "with_standard_round";
 
-    public static final int FREE_TRAINING = 0;
-    public static final int TRAINING_WITH_STANDARD_ROUND = 1;
+    private static final int FREE_TRAINING = 0;
+    private static final int TRAINING_WITH_STANDARD_ROUND = 1;
     private static final int COMPETITION = 2;
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private static final int REQ_SELECTED_DATE = 2;
@@ -69,10 +70,9 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private FragmentEditTrainingBinding binding;
 
     @NonNull
-    public static IntentWrapper createIntent(int trainingType) {
+    public static IntentWrapper createIntent(String trainingTypeAction) {
         return new IntentWrapper(SimpleFragmentActivityBase.EditTrainingActivity.class)
-                .with(TRAINING_TYPE, trainingType)
-                .action(Intent.ACTION_VIEW);
+                .action(trainingTypeAction);
     }
 
     @NonNull
@@ -90,7 +90,12 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         Bundle arguments = getArguments();
         if (arguments != null) {
             trainingId = arguments.getLong(ITEM_ID, -1);
-            trainingType = arguments.getInt(TRAINING_TYPE, FREE_TRAINING);
+        }
+        Intent i = getActivity().getIntent();
+        if (i != null && CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION.equals(i.getAction())) {
+            trainingType = TRAINING_WITH_STANDARD_ROUND;
+        } else {
+            trainingType = FREE_TRAINING;
         }
 
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);

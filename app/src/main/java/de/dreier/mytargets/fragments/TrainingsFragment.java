@@ -37,8 +37,8 @@ import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.multiselector.HeaderBindingHolder;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
-import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
-import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND;
+import static de.dreier.mytargets.fragments.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION;
+import static de.dreier.mytargets.fragments.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION;
 
 /**
  * Shows an overview over all training days
@@ -69,12 +69,12 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
         binding.fab1.setOnClickListener(view -> EditTrainingFragment
-                .createIntent(FREE_TRAINING)
+                .createIntent(CREATE_FREE_TRAINING_ACTION)
                 .withContext(this)
                 .fromFab(binding.fab1, 0xFF4CAF50, R.drawable.fab_trending_up_white_24dp)
                 .start());
         binding.fab2.setOnClickListener(view -> EditTrainingFragment
-                .createIntent(TRAINING_WITH_STANDARD_ROUND)
+                .createIntent(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
                 .withContext(this)
                 .fromFab(binding.fab2, 0xFF2196F3, R.drawable.fab_album_24dp)
                 .start());
