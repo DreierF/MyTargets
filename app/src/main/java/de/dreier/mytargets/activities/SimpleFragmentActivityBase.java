@@ -164,8 +164,10 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
 
         @Override
         public void onBackPressed() {
-            super.onBackPressed();
-            overridePendingTransition(0, 0);
+            if (!getSupportFragmentManager().popBackStackImmediate()) {
+                super.onBackPressed();
+                overridePendingTransition(0, 0);
+            }
         }
     }
 

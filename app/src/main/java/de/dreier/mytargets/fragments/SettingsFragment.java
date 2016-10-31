@@ -93,10 +93,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 doBackupWithCheck(this);
                 return true;
             case "pref_about":
-                startActivity(new Intent(getContext(), SimpleFragmentActivityBase.AboutActivity.class));
+                startActivity(
+                        new Intent(getContext(), SimpleFragmentActivityBase.AboutActivity.class));
                 return true;
             case "pref_licence":
-                startActivity(new Intent(getContext(), SimpleFragmentActivityBase.LicencesActivity.class));
+                startActivity(new Intent(getContext(),
+                        SimpleFragmentActivityBase.LicencesActivity.class));
                 return true;
             default:
                 return super.onPreferenceTreeClick(preference);
@@ -155,7 +157,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     private void updateInputSummaries() {
-        setSummary(KEY_INPUT_ARROW_DIAMETER_SCALE, SettingsManager.getInputArrowDiameterScale() + "x");
+        setSummary(KEY_INPUT_ARROW_DIAMETER_SCALE,
+                SettingsManager.getInputArrowDiameterScale() + "x");
         setSummary(KEY_INPUT_TARGET_ZOOM, SettingsManager.getInputTargetZoom() + "x");
     }
 

@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/general">
-        <PreferenceScreen
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <android.support.v7.preference.PreferenceCategory android:title="@string/general">
+        <android.support.v7.preference.PreferenceScreen
             android:key="input"
             android:title="@string/input">
-            <ListPreference
+            <android.support.v7.preference.ListPreference
                 android:defaultValue="3.0"
                 android:entries="@array/target_zoom_entries"
                 android:entryValues="@array/target_zoom_values"
                 android:key="input_target_zoom"
                 android:title="@string/target_zoom"/>
-            <ListPreference
+            <android.support.v7.preference.ListPreference
                 android:defaultValue="1.0"
                 android:entries="@array/arrow_diameter_scale_entries"
                 android:entryValues="@array/arrow_diameter_scale_values"
                 android:key="input_arrow_diameter_scale"
-                android:title="@string/arrow_diameter_scale" />
-        </PreferenceScreen>
-        <PreferenceScreen
+                android:title="@string/arrow_diameter_scale"/>
+        </android.support.v7.preference.PreferenceScreen>
+        <android.support.v7.preference.PreferenceScreen
             android:key="scoreboard"
             android:title="@string/scoreboard">
-            <PreferenceCategory android:title="@string/profile">
-                <EditTextPreference
+            <android.support.v7.preference.PreferenceCategory android:title="@string/profile">
+                <android.support.v7.preference.EditTextPreference
                     android:defaultValue=""
                     android:inputType="textAutoComplete"
                     android:key="profile_first_name"
                     android:title="@string/first_name"/>
-                <EditTextPreference
+                <android.support.v7.preference.EditTextPreference
                     android:defaultValue=""
                     android:inputType="textAutoComplete"
                     android:key="profile_last_name"
@@ -34,147 +34,146 @@
                 <de.dreier.mytargets.views.DatePreference
                     android:key="profile_birthday"
                     android:title="@string/birthday"/>
-                <EditTextPreference
+                <android.support.v7.preference.EditTextPreference
                     android:defaultValue=""
                     android:inputType="textAutoComplete"
                     android:key="profile_club"
                     android:title="@string/club"/>
-            </PreferenceCategory>
-            <PreferenceCategory android:title="@string/display">
-                <CheckBoxPreference
+            </android.support.v7.preference.PreferenceCategory>
+            <android.support.v7.preference.PreferenceCategory android:title="@string/display">
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_display_title"
                     android:title="@string/title"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_display_properties"
                     android:title="@string/properties"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_display_table"
                     android:title="@string/table"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_display_statistics"
                     android:title="@string/statistic"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_display_comments"
                     android:title="@string/comments"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_display_points_colored"
                     android:title="@string/show_points_colored"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="false"
                     android:key="scoreboard_display_signature"
                     android:title="@string/show_signature"/>
-            </PreferenceCategory>
-            <PreferenceCategory android:title="@string/print">
-                <CheckBoxPreference
+            </android.support.v7.preference.PreferenceCategory>
+            <android.support.v7.preference.PreferenceCategory android:title="@string/print">
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_print_title"
                     android:title="@string/title"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_print_properties"
                     android:title="@string/properties"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_print_table"
                     android:title="@string/table"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_print_statistics"
                     android:title="@string/statistic"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_print_comments"
                     android:title="@string/comments"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="false"
                     android:key="scoreboard_print_points_colored"
                     android:title="@string/show_points_colored"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_print_signature"
                     android:title="@string/show_signature"/>
-            </PreferenceCategory>
-            <PreferenceCategory android:title="@string/share">
-                <CheckBoxPreference
+            </android.support.v7.preference.PreferenceCategory>
+            <android.support.v7.preference.PreferenceCategory android:title="@string/share">
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_share_title"
                     android:title="@string/title"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_share_properties"
                     android:title="@string/properties"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_share_table"
                     android:title="@string/table"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_share_statistics"
                     android:title="@string/statistic"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_share_comments"
                     android:title="@string/comments"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="true"
                     android:key="scoreboard_share_points_colored"
                     android:title="@string/show_points_colored"/>
-                <CheckBoxPreference
+                <android.support.v7.preference.CheckBoxPreference
                     android:defaultValue="false"
                     android:key="scoreboard_share_signature"
                     android:title="@string/show_signature"/>
-            </PreferenceCategory>
-        </PreferenceScreen>
-        <PreferenceScreen
+            </android.support.v7.preference.PreferenceCategory>
+        </android.support.v7.preference.PreferenceScreen>
+        <android.support.v7.preference.PreferenceScreen
             android:key="timer"
             android:title="@string/timer">
-            <EditTextPreference
+            <android.support.v7.preference.EditTextPreference
                 android:defaultValue="20"
                 android:inputType="number"
                 android:key="timer_wait_time"
                 android:title="@string/timer_waiting_time"/>
-            <EditTextPreference
+            <android.support.v7.preference.EditTextPreference
                 android:defaultValue="120"
                 android:inputType="number"
                 android:key="timer_shoot_time"
                 android:title="@string/timer_shooting_time"/>
-            <EditTextPreference
+            <android.support.v7.preference.EditTextPreference
                 android:defaultValue="30"
                 android:inputType="number"
                 android:key="timer_warn_time"
                 android:title="@string/timer_warning_time"/>
-            <CheckBoxPreference
+            <android.support.v7.preference.CheckBoxPreference
                 android:defaultValue="true"
                 android:key="timer_sound"
                 android:title="@string/timer_sound"/>
-            <CheckBoxPreference
+            <android.support.v7.preference.CheckBoxPreference
                 android:defaultValue="false"
                 android:key="timer_vibrate"
                 android:title="@string/timer_vibrate"/>
-        </PreferenceScreen>
-    </PreferenceCategory>
-    <PreferenceCategory
+        </android.support.v7.preference.PreferenceScreen>
+    </android.support.v7.preference.PreferenceCategory>
+    <android.support.v7.preference.PreferenceCategory
         android:key="pref_key_storage_settings"
         android:title="@string/data">
-        <Preference
+        <android.support.v7.preference.Preference
             android:key="pref_backup"
             android:summary="@string/backup_restore_desc"
             android:title="@string/backup_action"/>
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/info">
-        <Preference
+    </android.support.v7.preference.PreferenceCategory>
+    <android.support.v7.preference.PreferenceCategory android:title="@string/info">
+        <android.support.v7.preference.Preference
             android:key="pref_about"
             android:title="@string/about"/>
-        <Preference
+        <android.support.v7.preference.Preference
             android:key="pref_licence"
             android:summary="@string/licences_summary"
             android:title="@string/licences"/>
-    </PreferenceCategory>
-
-</PreferenceScreen>
+    </android.support.v7.preference.PreferenceCategory>
+</android.support.v7.preference.PreferenceScreen>
