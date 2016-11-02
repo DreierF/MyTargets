@@ -12,23 +12,28 @@ import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Tap;
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.uiautomator.UiDevice;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.DatePicker;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 
+import de.dreier.mytargets.utils.matchers.MatcherUtils;
+
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.Espresso.openContextualActionModeOverflowMenu;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -38,6 +43,7 @@ import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 public class UITestBase extends InstrumentedTestBase {
@@ -79,7 +85,8 @@ public class UITestBase extends InstrumentedTestBase {
 
     @NonNull
     protected static Matcher<View> matchFab() {
-        return Matchers.allOf(withParent(withId(R.id.fab)), withClassName(endsWith("ImageView")), isDisplayed());
+        return Matchers.allOf(withParent(withId(R.id.fab)), withClassName(endsWith("ImageView")),
+                isDisplayed());
     }
 
     public static ViewAction nestedScrollTo() {
@@ -88,7 +95,7 @@ public class UITestBase extends InstrumentedTestBase {
 
     public static ViewAssertion assertItemCount(int expectedCount) {
         return new ViewAssertion() {
-            public void check (View view, NoMatchingViewException noViewFoundException){
+            public void check(View view, NoMatchingViewException noViewFoundException) {
                 if (noViewFoundException != null) {
                     throw noViewFoundException;
                 }
@@ -97,6 +104,47 @@ public class UITestBase extends InstrumentedTestBase {
                 RecyclerView.Adapter adapter = recyclerView.getAdapter();
                 assertThat(adapter.getItemCount(), is(expectedCount));
             }
+        };
+    }
+
+    protected static Matcher<View> childAtPosition(
+            final Matcher<View> parentMatcher, final int position) {
+
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("Child at position " + position + " in parent ");
+                parentMatcher.describeTo(description);
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                ViewParent parent = view.getParent();
+                return parent instanceof ViewGroup && parentMatcher.matches(parent)
+                        && view.equals(((ViewGroup) parent).getChildAt(position));
+            }
+        };
+    }
+
+    protected static Matcher<View> isOnForegroundFragment() {
+
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("is on foreground Fragment ");
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                View content = MatcherUtils.getParentViewById(view, R.id.content);
+                if(content!=null && content  instanceof ViewGroup) {
+                    final View currentFragment = ((ViewGroup) content)
+                            .getChildAt(((ViewGroup) content).getChildCount() - 1);
+                    return MatcherUtils.isInViewHierarchy(view, currentFragment);
+                }
+                return false;
+            }
+
         };
     }
 
@@ -120,22 +168,9 @@ public class UITestBase extends InstrumentedTestBase {
         }).perform(click());
     }
 
-    protected static Matcher<View> childAtPosition(
-            final Matcher<View> parentMatcher, final int position) {
-
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Child at position " + position + " in parent ");
-                parentMatcher.describeTo(description);
-            }
-
-            @Override
-            public boolean matchesSafely(View view) {
-                ViewParent parent = view.getParent();
-                return parent instanceof ViewGroup && parentMatcher.matches(parent)
-                        && view.equals(((ViewGroup) parent).getChildAt(position));
-            }
-        };
+    protected void enterDate(int year, int monthOfYear, int dayOfMonth) {
+        onView(withClassName(equalTo(DatePicker.class.getName())))
+                .perform(PickerActions.setDate(year, monthOfYear, dayOfMonth));
+        onView(withId(android.R.id.button1)).perform(scrollTo(), click());
     }
 }

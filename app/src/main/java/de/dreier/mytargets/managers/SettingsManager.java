@@ -15,9 +15,6 @@ import de.dreier.mytargets.utils.backup.EBackupLocation;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 
 public class SettingsManager {
-    private static final String KEY_DONATED = "donated";
-    private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
-    private static final String KEY_TIMER_SOUND = "timer_sound";
     public static final String KEY_TIMER_WARN_TIME = "timer_warn_time";
     public static final String KEY_TIMER_WAIT_TIME = "timer_wait_time";
     public static final String KEY_TIMER_SHOOT_TIME = "timer_shoot_time";
@@ -25,6 +22,11 @@ public class SettingsManager {
     public static final String KEY_PROFILE_LAST_NAME = "profile_last_name";
     public static final String KEY_PROFILE_BIRTHDAY = "profile_birthday";
     public static final String KEY_PROFILE_CLUB = "profile_club";
+    public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
+    public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
+    private static final String KEY_DONATED = "donated";
+    private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
+    private static final String KEY_TIMER_SOUND = "timer_sound";
     private static final String KEY_STANDARD_ROUND = "standard_round";
     private static final String KEY_ARROW = "arrow";
     private static final String KEY_BOW = "bow";
@@ -47,8 +49,6 @@ public class SettingsManager {
             .getLastSharedPreferences();
     private static final SharedPreferences preferences = ApplicationInstance
             .getSharedPreferences();
-    public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
-    public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
     private static final String KEY_BACKUP_LOCATION = "backup_location";
 
     public static int getStandardRound() {
@@ -119,7 +119,8 @@ public class SettingsManager {
                 .putInt(KEY_TARGET, (int) target.getId())
                 .putInt(KEY_SCORING_STYLE, target.scoringStyle)
                 .putInt(KEY_TARGET_DIAMETER_VALUE, (int) target.size.value)
-                .putString(KEY_TARGET_DIAMETER_UNIT, Dimension.Unit.toStringHandleNull(target.size.unit))
+                .putString(KEY_TARGET_DIAMETER_UNIT,
+                        Dimension.Unit.toStringHandleNull(target.size.unit))
                 .apply();
     }
 
@@ -293,9 +294,21 @@ public class SettingsManager {
                 .getString(KEY_INPUT_ARROW_DIAMETER_SCALE, "1.0"));
     }
 
+    public static void setInputArrowDiameterScale(float diameterScale) {
+        preferences.edit()
+                .putString(KEY_INPUT_ARROW_DIAMETER_SCALE, String.valueOf(diameterScale))
+                .apply();
+    }
+
     public static float getInputTargetZoom() {
         return Float.parseFloat(preferences
                 .getString(KEY_INPUT_TARGET_ZOOM, "3.0"));
+    }
+
+    public static void setInputTargetZoom(float targetZoom) {
+        preferences.edit()
+                .putString(KEY_INPUT_TARGET_ZOOM, String.valueOf(targetZoom))
+                .apply();
     }
 
     public static EBackupLocation getBackupLocation() {

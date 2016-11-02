@@ -37,22 +37,12 @@ import static de.dreier.mytargets.managers.SettingsManager.KEY_TIMER_WARN_TIME;
 public class SettingsFragment extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private String rootKey;
+
     @Override
     public void onCreatePreferences(Bundle bundle, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
-
-        if (rootKey == null) {
-            getActivity().setTitle(R.string.preferences);
-        } else if ("input".equals(rootKey)) {
-            getActivity().setTitle(R.string.input);
-            updateInputSummaries();
-        } else if ("timer".equals(rootKey)) {
-            getActivity().setTitle(R.string.timer);
-            updateTimerSummaries();
-        } else if ("scoreboard".equals(rootKey)) {
-            getActivity().setTitle(R.string.scoreboard);
-            updateProfileSummaries();
-        }
+        this.rootKey = rootKey;
     }
 
     @Override
@@ -125,6 +115,21 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 .registerOnSharedPreferenceChangeListener(this);
     }
 
+    private void setActivityTitle() {
+        if (rootKey == null) {
+            getActivity().setTitle(R.string.preferences);
+        } else {
+            getActivity().setTitle(findPreference(rootKey).getTitle());
+            if ("input".equals(rootKey)) {
+                updateInputSummaries();
+            } else if ("timer".equals(rootKey)) {
+                updateTimerSummaries();
+            } else if ("scoreboard".equals(rootKey)) {
+                updateProfileSummaries();
+            }
+        }
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -168,5 +173,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     private void setSummary(String key, String value) {
         findPreference(key).setSummary(value);
+    }
+
+    public void onFragmentResume() {
+        setActivityTitle();
     }
 }

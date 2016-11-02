@@ -11,6 +11,7 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
@@ -146,6 +147,25 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
         @Override
         public Fragment instantiateFragment() {
             return new SettingsFragment();
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            getSupportFragmentManager().addOnBackStackChangedListener(
+                    new FragmentManager.OnBackStackChangedListener() {
+                        @Override
+                        public void onBackStackChanged() {
+                            FragmentManager manager = getSupportFragmentManager();
+
+                            if (manager != null) {
+                                SettingsFragment currFrag = (SettingsFragment) manager
+                                        .findFragmentById(R.id.content);
+
+                                currFrag.onFragmentResume();
+                            }
+                        }
+                    });
         }
 
         @Override
