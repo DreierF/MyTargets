@@ -34,8 +34,8 @@ import static org.hamcrest.Matchers.allOf;
 public class SettingsActivityTest extends UITestBase {
 
     @Rule
-    public ActivityTestRule<SimpleFragmentActivityBase.SettingsActivity> mActivityTestRule = new ActivityTestRule<>(
-            SimpleFragmentActivityBase.SettingsActivity.class);
+    public ActivityTestRule<SettingsActivity> mActivityTestRule = new ActivityTestRule<>(
+            SettingsActivity.class);
 
     @Before
     public void setUp() {
@@ -129,7 +129,7 @@ public class SettingsActivityTest extends UITestBase {
         pressBack();
     }
 
-    private SimpleFragmentActivityBase.SettingsActivity getActivity() {
+    private SettingsActivity getActivity() {
         return mActivityTestRule.getActivity();
     }
 

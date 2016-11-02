@@ -39,7 +39,6 @@ import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
 import static android.support.v4.content.FileProvider.getUriForFile;
-import static android.support.v7.preference.PreferenceFragmentCompat.ARG_PREFERENCE_ROOT;
 
 public class ScoreboardActivity extends AppCompatActivity {
 
@@ -130,9 +129,9 @@ public class ScoreboardActivity extends AppCompatActivity {
                 print();
                 return true;
             case R.id.action_settings:
-                Intent i = new Intent(this, SimpleFragmentActivityBase.SettingsActivity.class);
-                i.putExtra(ARG_PREFERENCE_ROOT, "scoreboard");
-                startActivity(i);
+                SettingsActivity.getIntent("scoreboard")
+                        .withContext(this)
+                        .start();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

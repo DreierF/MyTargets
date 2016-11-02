@@ -65,7 +65,7 @@ public class MainActivityNavigationTest extends UITestBase {
     public void mainActivityNavigationTest() {
         // Do settings work
         onView(allOf(withId(R.id.action_preferences), isDisplayed())).perform(click());
-        intended(hasComponent(SimpleFragmentActivityBase.SettingsActivity.class.getName()));
+        intended(hasComponent(SettingsActivity.class.getName()));
         pressBack();
 
         // Does new free training work

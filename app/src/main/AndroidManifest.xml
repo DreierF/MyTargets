@@ -225,7 +225,7 @@
 
         <!-- Preferences activity -->
         <activity
-            android:name=".activities.SimpleFragmentActivityBase$SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/preferences"
             android:parentActivityName=".activities.MainActivity">
@@ -236,18 +236,18 @@
         <activity
             android:name=".activities.SimpleFragmentActivityBase$AboutActivity"
             android:label="@string/about"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$SettingsActivity">
+            android:parentActivityName=".activities.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivityBase$SettingsActivity"/>
+                android:value=".activities.SettingsActivity"/>
         </activity>
         <activity
             android:name=".activities.SimpleFragmentActivityBase$LicencesActivity"
             android:label="@string/licences"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$SettingsActivity">
+            android:parentActivityName=".activities.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivityBase$SettingsActivity"/>
+                android:value=".activities.SettingsActivity"/>
         </activity>
         <activity
             android:name=".activities.DonateActivity"
@@ -262,10 +262,10 @@
             android:name=".utils.backup.BackupActivity"
             android:label="@string/backup_action"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$SettingsActivity">
+            android:parentActivityName=".activities.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivityBase$SettingsActivity"/>
+                android:value=".activities.SettingsActivity"/>
         </activity>
         <activity
             android:name=".activities.ItemSelectActivity$BackupLocationActivity"
