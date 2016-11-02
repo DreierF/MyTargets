@@ -115,7 +115,9 @@ public abstract class SelectorBase<T> extends LinearLayout {
     }
 
     public final void setOnActivityResultContext(Fragment fragment) {
-        this.addIntent = getAddIntent().withContext(fragment);
+        if (addButton != null) {
+            addIntent = getAddIntent().withContext(fragment);
+        }
         setOnClickListener(v -> getDefaultIntent()
                 .withContext(fragment)
                 .forResult(requestCode)
@@ -124,7 +126,7 @@ public abstract class SelectorBase<T> extends LinearLayout {
 
     public final void setOnActivityResultContext(Activity activity) {
         if (addButton != null) {
-            this.addIntent = getAddIntent().withContext(activity);
+            addIntent = getAddIntent().withContext(activity);
         }
         setOnClickListener(v -> getDefaultIntent()
                 .withContext(activity)
