@@ -16,7 +16,7 @@ import static de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW;
 
 class WA3Ring extends TargetModelBase {
 
-    private static final int ID = 3;
+    public static final int ID = 3;
 
     public WA3Ring() {
         this(ID, R.string.wa_3_ring);
