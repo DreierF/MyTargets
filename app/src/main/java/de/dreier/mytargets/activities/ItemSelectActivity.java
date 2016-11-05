@@ -18,7 +18,6 @@ import de.dreier.mytargets.fragments.ListFragmentBase;
 import de.dreier.mytargets.fragments.TargetListFragment;
 import de.dreier.mytargets.fragments.WindDirectionListFragment;
 import de.dreier.mytargets.fragments.WindSpeedListFragment;
-import de.dreier.mytargets.utils.backup.BackupLocationListFragment;
 
 public abstract class ItemSelectActivity extends SimpleFragmentActivityBase
         implements ListFragmentBase.OnItemSelectedListener {
@@ -83,13 +82,6 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivityBase
         @Override
         protected Fragment instantiateFragment() {
             return new WindSpeedListFragment();
-        }
-    }
-
-    public static class BackupLocationActivity extends ItemSelectActivity {
-        @Override
-        protected Fragment instantiateFragment() {
-            return new BackupLocationListFragment();
         }
     }
 }

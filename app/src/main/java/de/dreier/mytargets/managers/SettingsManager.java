@@ -7,11 +7,13 @@ import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
 
 import de.dreier.mytargets.ApplicationInstance;
+import de.dreier.mytargets.R;
+import de.dreier.mytargets.features.settings.backup.EBackupLocation;
 import de.dreier.mytargets.models.EShowMode;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.utils.backup.EBackupLocation;
 
+import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 
 public class SettingsManager {
@@ -24,6 +26,7 @@ public class SettingsManager {
     public static final String KEY_PROFILE_CLUB = "profile_club";
     public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
     public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
+    public static final String KEY_BACKUP_INTERVAL = "backup_interval";
     private static final String KEY_DONATED = "donated";
     private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
     private static final String KEY_TIMER_SOUND = "timer_sound";
@@ -42,7 +45,6 @@ public class SettingsManager {
     private static final String KEY_INDOOR = "indoor";
     private static final String KEY_PASSES = "rounds";
     private static final String KEY_TRANSLATION_DIALOG_SHOWN = "translation_dialog_shown";
-    private static final String KEY_FILTER_CLUB = "filter_club";
     private static final String KEY_INPUT_MODE = "target_mode";
     private static final String KEY_SHOW_MODE = "show_mode";
     private static final SharedPreferences lastUsed = ApplicationInstance
@@ -322,5 +324,26 @@ public class SettingsManager {
                 .edit()
                 .putString(KEY_BACKUP_LOCATION, location.name())
                 .apply();
+    }
+
+    public static int getBackupInterval() {
+        return Integer.parseInt(preferences.getString(KEY_BACKUP_INTERVAL, "7"));
+    }
+
+    public static void setBackupInterval(int interval) {
+        preferences.edit()
+                .putString(KEY_BACKUP_INTERVAL, String.valueOf(interval))
+                .apply();
+    }
+
+    public static String getBackupIntervalString() {
+        switch (getBackupInterval()) {
+            case 1:
+                return get(R.string.daily);
+            case 7:
+                return get(R.string.weekly);
+            default:
+                return get(R.string.monthly);
+        }
     }
 }

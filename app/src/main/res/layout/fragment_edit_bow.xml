@@ -95,7 +95,7 @@
 
         </LinearLayout>
 
-        <include layout="@layout/divider_full"/>
+        <include layout="@layout/partial_divider_full"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -328,7 +328,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <include layout="@layout/divider_full"/>
+        <include layout="@layout/partial_divider_full"/>
 
         <LinearLayout
             android:layout_width="match_parent"

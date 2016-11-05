@@ -49,7 +49,7 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.utils.backup.BackupUtils;
+import de.dreier.mytargets.features.settings.backup.BackupUtils;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";

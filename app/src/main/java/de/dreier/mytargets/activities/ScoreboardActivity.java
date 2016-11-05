@@ -32,6 +32,7 @@ import java.io.IOException;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityScoreboardBinding;
+import de.dreier.mytargets.features.settings.ESettingsScreens;
 import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ScoreboardConfiguration;
@@ -129,7 +130,7 @@ public class ScoreboardActivity extends AppCompatActivity {
                 print();
                 return true;
             case R.id.action_settings:
-                SettingsActivity.getIntent("scoreboard")
+                SettingsActivity.getIntent(ESettingsScreens.SCOREBOARD)
                         .withContext(this)
                         .start();
                 return true;

@@ -7,21 +7,22 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.fragments.SettingsFragment;
+import de.dreier.mytargets.features.settings.ESettingsScreens;
+import de.dreier.mytargets.features.settings.MainSettingsFragment;
+import de.dreier.mytargets.features.settings.SettingsFragmentBase;
 import de.dreier.mytargets.utils.IntentWrapper;
 
 public class SettingsActivity extends SimpleFragmentActivityBase implements
         PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
-    public static IntentWrapper getIntent(String subScreenKey) {
+    public static IntentWrapper getIntent(ESettingsScreens subScreen) {
         return new IntentWrapper(SettingsActivity.class)
-                .with(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, subScreenKey);
+                .with(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, subScreen.getKey());
     }
 
     @Override
     public Fragment instantiateFragment() {
-        return new SettingsFragment();
+        return new MainSettingsFragment();
     }
 
     @Override
@@ -31,8 +32,8 @@ public class SettingsActivity extends SimpleFragmentActivityBase implements
                 () -> {
                     FragmentManager manager = getSupportFragmentManager();
                     if (manager != null) {
-                        SettingsFragment currFrag = (SettingsFragment) manager
-                                .findFragmentById(R.id.content);
+                        SettingsFragmentBase currFrag = (SettingsFragmentBase) manager
+                                .findFragmentById(android.R.id.content);
 
                         currFrag.onFragmentResume();
                     }
@@ -43,11 +44,12 @@ public class SettingsActivity extends SimpleFragmentActivityBase implements
     public boolean onPreferenceStartScreen(PreferenceFragmentCompat preferenceFragmentCompat,
                                            PreferenceScreen preferenceScreen) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        SettingsFragment fragment = new SettingsFragment();
+        ESettingsScreens screen = ESettingsScreens.from(preferenceScreen.getKey());
+        SettingsFragmentBase fragment = screen.create();
         Bundle args = new Bundle();
         args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, preferenceScreen.getKey());
         fragment.setArguments(args);
-        ft.add(R.id.content, fragment, preferenceScreen.getKey());
+        ft.add(android.R.id.content, fragment, preferenceScreen.getKey());
         ft.addToBackStack(preferenceScreen.getKey());
         ft.commit();
         return true;

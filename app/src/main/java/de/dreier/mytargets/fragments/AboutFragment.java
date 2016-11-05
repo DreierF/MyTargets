@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.DonateActivity;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.Utils;
 import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
@@ -23,6 +25,10 @@ public class AboutFragment extends Fragment {
     private static final String URL_PAYPAL = "https://www.paypal.me/floriandreier";
     private static final String URL_CROWDIN = "https://crowdin.com/project/mytargets";
     private static final String URL_LINKEDIN = "https://de.linkedin.com/in/florian-dreier-b056a1113";
+
+    public static IntentWrapper getIntent() {
+        return new IntentWrapper(SimpleFragmentActivityBase.AboutActivity.class);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

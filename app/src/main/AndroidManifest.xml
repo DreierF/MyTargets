@@ -259,24 +259,6 @@
         </activity>
         <activity android:name=".activities.DispersionPatternActivity"/>
         <activity
-            android:name=".utils.backup.BackupActivity"
-            android:label="@string/backup_action"
-            android:launchMode="singleTop"
-            android:parentActivityName=".activities.SettingsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SettingsActivity"/>
-        </activity>
-        <activity
-            android:name=".activities.ItemSelectActivity$BackupLocationActivity"
-            android:label="@string/backup_location"
-            android:launchMode="singleTop"
-            android:parentActivityName=".utils.backup.BackupActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".utils.backup.BackupActivity"/>
-        </activity>
-        <activity
             android:name="com.dropbox.core.android.AuthActivity"
             android:configChanges="orientation|keyboard"
             android:launchMode="singleTask">

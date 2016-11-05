@@ -14,7 +14,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ItemImageDetailsSecondaryActionBinding;
-import de.dreier.mytargets.utils.backup.BackupEntry;
+import de.dreier.mytargets.features.settings.backup.BackupEntry;
 
 public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.BackupViewHolder> {
 

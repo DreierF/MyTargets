@@ -11,7 +11,7 @@
  * All rights reserved
  */
 
-package de.dreier.mytargets.utils.backup;
+package de.dreier.mytargets.features.settings.backup;
 
 import android.content.Context;
 import android.net.Uri;

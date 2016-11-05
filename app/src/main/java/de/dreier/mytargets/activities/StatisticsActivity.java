@@ -49,7 +49,7 @@ import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
-import de.dreier.mytargets.utils.backup.BackupUtils;
+import de.dreier.mytargets.features.settings.backup.BackupUtils;
 import de.dreier.mytargets.views.ChipGroup;
 import icepick.Icepick;
 import icepick.State;

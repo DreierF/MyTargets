@@ -1,16 +1,17 @@
-package de.dreier.mytargets.utils.backup;
+package de.dreier.mytargets.features.settings.backup;
 
 import android.Manifest;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
-import android.text.format.DateUtils;
+import android.support.v7.preference.PreferenceScreen;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -23,84 +24,81 @@ import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.BackupAdapter;
-import de.dreier.mytargets.databinding.BackupDriveActivityBinding;
+import de.dreier.mytargets.features.settings.SettingsFragmentBase;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.utils.HtmlUtils;
+import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
+import me.mvdw.recyclerviewmergeadapter.adapter.RecyclerViewMergeAdapter;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static de.dreier.mytargets.shared.SharedApplicationInstance.getContext;
-import static de.dreier.mytargets.utils.backup.BackupActivityPermissionsDispatcher.showFilePickerWithCheck;
+import static de.dreier.mytargets.features.settings.backup.BackupSettingsFragmentPermissionsDispatcher.showFilePickerWithCheck;
 
 @RuntimePermissions
-public class BackupActivity extends AppCompatActivity {
+public class BackupSettingsFragment extends SettingsFragmentBase {
 
     private static final int IMPORT_FROM_URI = 1234;
 
     private Backup backup;
     private BackupAdapter adapter;
-    private BackupDriveActivityBinding binding;
+
+    @Override
+    protected void updateItemSummaries() {
+        setSummary(SettingsManager.KEY_BACKUP_INTERVAL, SettingsManager.getBackupIntervalString());
+    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.backup_drive_activity);
+        ToolbarUtils.showHomeAsUp(this);
 
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        binding.backupLocation.setOnActivityResultContext(this);
-        binding.backupLocation.setOnUpdateListener(item -> {
-            SettingsManager.setBackupLocation(item);
-            if (backup != null) {
-                backup.stop();
-            }
-            setBackupLocation(item);
-        });
-
-        binding.backupNowButton.setOnClickListener(v -> backupNow());
+//        binding.backupLocation.setOnActivityResultContext(this);
+//        binding.backupLocation.setOnUpdateListener(item -> {
+//            SettingsManager.setBackupLocation(item);
+//            if (backup != null) {
+//                backup.stop();
+//            }
+//            setBackupLocation(item);
+//        });
+//
+//        binding.backupNowButton.setOnClickListener(v -> backupNow());
+        setHasOptionsMenu(true);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        EBackupLocation backupLocation = SettingsManager.getBackupLocation();
-        binding.backupLocation.setItem(backupLocation);
+    protected RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
+        RecyclerViewMergeAdapter mergeAdapter = new RecyclerViewMergeAdapter();
+        mergeAdapter.addAdapter(super.onCreateAdapter(preferenceScreen));
+        adapter = new BackupAdapter(getContext(), this::showBackupDetails, this::deleteBackup);
+        mergeAdapter.addAdapter((RecyclerView.Adapter) adapter);
+        return mergeAdapter;
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.backup_import, menu);
-        return true;
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.backup_import, menu);
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_import:
-                showFilePickerWithCheck(this);
-                break;
-            case android.R.id.home:
-                finish();
-                break;
-            default:
+        if (item.getItemId() == R.id.action_import) {
+            showFilePickerWithCheck(this);
+            return true;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         backup.stop();
         super.onPause();
     }
 
     @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         backup.onActivityResult(requestCode, resultCode, data);
-        binding.backupLocation.onActivityResult(requestCode, resultCode, data);
         if (requestCode == IMPORT_FROM_URI && resultCode == AppCompatActivity.RESULT_OK) {
             importFromUri(data.getData());
         }
@@ -109,9 +107,9 @@ public class BackupActivity extends AppCompatActivity {
 
     private void setBackupLocation(EBackupLocation item) {
         backup = item.createBackup();
-        adapter = new BackupAdapter(this, this::showBackupDetails, this::deleteBackup);
-        binding.recentBackupsList.setAdapter(adapter);
-        backup.start(this, new Backup.OnLoadFinishedListener() {
+        adapter = new BackupAdapter(getContext(), this::showBackupDetails, this::deleteBackup);
+//        binding.recentBackupsList.setAdapter(adapter);
+        backup.start(getActivity(), new Backup.OnLoadFinishedListener() {
             @Override
             public void onLoadFinished(List<BackupEntry> backupEntries) {
                 onBackupsLoaded(backupEntries);
@@ -126,10 +124,10 @@ public class BackupActivity extends AppCompatActivity {
 
     private void onBackupsLoaded(List<BackupEntry> list) {
         adapter.setList(list);
-        binding.lastBackupLabel.setVisibility(list.size() > 0 ? VISIBLE : GONE);
+//        binding.lastBackupLabel.setVisibility(list.size() > 0 ? VISIBLE : GONE);
         if (list.size() > 0) {
-            binding.lastBackupLabel.setText(getString(R.string.last_backup, DateUtils
-                    .getRelativeTimeSpanString(list.get(0).getModifiedDate().getTime())));
+//            binding.lastBackupLabel.setText(getString(R.string.last_backup, DateUtils
+//                    .getRelativeTimeSpanString(list.get(0).getModifiedDate().getTime())));
         }
     }
 
@@ -151,7 +149,7 @@ public class BackupActivity extends AppCompatActivity {
     }
 
     private void showError(@StringRes int title, String message) {
-        new MaterialDialog.Builder(BackupActivity.this)
+        new MaterialDialog.Builder(getContext())
                 .title(title)
                 .content(message)
                 .positiveText(android.R.string.ok)
@@ -159,7 +157,7 @@ public class BackupActivity extends AppCompatActivity {
     }
 
     private MaterialDialog showProgressDialog(@StringRes int title) {
-        return new MaterialDialog.Builder(BackupActivity.this)
+        return new MaterialDialog.Builder(getContext())
                 .content(title)
                 .progress(true, 0)
                 .show();
@@ -174,7 +172,7 @@ public class BackupActivity extends AppCompatActivity {
                         .format(item.getModifiedDate()),
                 item.getHumanReadableSize()
         );
-        new MaterialDialog.Builder(this)
+        new MaterialDialog.Builder(getContext())
                 .title(R.string.dialog_restore_title)
                 .content(HtmlUtils.fromHtml(html))
                 .positiveText(R.string.restore)
@@ -192,7 +190,7 @@ public class BackupActivity extends AppCompatActivity {
                     @Override
                     public void onFinished() {
                         progress.dismiss();
-                        Utils.doRestart(BackupActivity.this);
+                        Utils.doRestart(getContext());
                     }
 
                     @Override
@@ -230,7 +228,7 @@ public class BackupActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        BackupActivityPermissionsDispatcher
+        BackupSettingsFragmentPermissionsDispatcher
                 .onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
@@ -240,8 +238,8 @@ public class BackupActivity extends AppCompatActivity {
             @Override
             protected String doInBackground(Void... params) {
                 try {
-                    InputStream st = getContentResolver().openInputStream(uri);
-                    DatabaseManager.Import(BackupActivity.this, st);
+                    InputStream st = getContext().getContentResolver().openInputStream(uri);
+                    DatabaseManager.Import(getContext(), st);
                     return null;
                 } catch (FileNotFoundException ioe) {
                     ioe.printStackTrace();

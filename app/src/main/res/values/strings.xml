@@ -303,4 +303,8 @@
     <string name="dropbox" translatable="false">Dropbox</string>
     <string name="loading_backups_failed">Loading backups failed!</string>
     <string name="external_storage">External storage</string>
+    <string name="backup_interval">Backup interval</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
 </resources>

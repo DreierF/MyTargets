@@ -1,4 +1,4 @@
-package de.dreier.mytargets.utils.backup;
+package de.dreier.mytargets.features.settings.backup;
 
 import java.util.Date;
 

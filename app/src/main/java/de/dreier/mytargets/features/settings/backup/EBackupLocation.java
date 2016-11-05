@@ -1,4 +1,4 @@
-package de.dreier.mytargets.utils.backup;
+package de.dreier.mytargets.features.settings.backup;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -48,7 +48,7 @@ public enum EBackupLocation implements IIdProvider, IImageProvider {
     public Backup createBackup() {
         switch (this) {
             case INTERNAL_STORAGE:
-                return new LocalDeviceBackup();
+                return new InternalStorageBackup();
             case EXTERNAL_STORAGE:
                 return new ExternalStorageBackup();
             case GOOGLE_DRIVE:

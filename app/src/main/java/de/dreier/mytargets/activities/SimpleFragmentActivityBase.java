@@ -7,13 +7,10 @@
 
 package de.dreier.mytargets.activities;
 
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
-import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.AboutFragment;
 import de.dreier.mytargets.fragments.EditArrowFragment;
 import de.dreier.mytargets.fragments.EditBowFragment;
@@ -29,7 +26,6 @@ import de.dreier.mytargets.utils.Utils;
 public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
 
     private static final String FRAGMENT_TAG = "fragment";
-    protected ViewDataBinding binding;
     Fragment childFragment;
 
     protected abstract Fragment instantiateFragment();
@@ -37,7 +33,6 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.layout_frame);
 
         if (savedInstanceState == null) {
             // Create the fragment only when the activity is created for the first time.
@@ -50,7 +45,7 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
             }
 
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.content, childFragment, FRAGMENT_TAG);
+            ft.replace(android.R.id.content, childFragment, FRAGMENT_TAG);
             ft.commit();
         }
     }

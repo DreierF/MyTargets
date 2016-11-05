@@ -1,9 +1,8 @@
-package de.dreier.mytargets.utils.backup;
+package de.dreier.mytargets.features.settings.backup;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,9 +17,9 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
 
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
-import static de.dreier.mytargets.utils.backup.BackupUtils.getBackupName;
+import static de.dreier.mytargets.features.settings.backup.BackupUtils.getBackupName;
 
-public class ExternalStorageBackup implements Backup {
+public class InternalStorageBackup implements Backup {
     private static final String FOLDER_NAME = "MyTargets";
 
     private Activity activity;
@@ -32,31 +31,6 @@ public class ExternalStorageBackup implements Backup {
         if (!directory.exists() || !directory.isDirectory()) {
             throw new IOException(get(R.string.dir_not_created));
         }
-    }
-
-    public static File getMicroSdCardPath() {
-        String strSDCardPath = System.getenv("SECONDARY_STORAGE");
-
-        if ((strSDCardPath == null) || (strSDCardPath.length() == 0)) {
-            strSDCardPath = System.getenv("EXTERNAL_SDCARD_STORAGE");
-        }
-
-        //If may get a full path that is not the right one, even if we don't have the SD Card there.
-        //We just need the "/mnt/extSdCard/" i.e and check if it's writable
-        if (strSDCardPath != null) {
-            if (strSDCardPath.contains(":")) {
-                strSDCardPath = strSDCardPath.substring(0, strSDCardPath.indexOf(":"));
-            }
-            Log.d("External", "getMicroSdCardPath: "+strSDCardPath);
-            File externalFilePath = new File(strSDCardPath);
-
-            if (externalFilePath.exists() && externalFilePath.canWrite()) {
-                Log.d("External", "getMicroSdCardPath: "+externalFilePath.getAbsolutePath());
-                //do what you need here
-                return externalFilePath;
-            }
-        }
-        return null;
     }
 
     @Override

@@ -162,10 +162,33 @@
     <android.support.v7.preference.PreferenceCategory
         android:key="pref_key_storage_settings"
         android:title="@string/data">
-        <android.support.v7.preference.Preference
-            android:key="pref_backup"
+        <android.support.v7.preference.PreferenceScreen
+            android:key="backup"
             android:summary="@string/backup_restore_desc"
-            android:title="@string/backup_action"/>
+            android:title="@string/backup_action">
+            <android.support.v7.preference.SwitchPreferenceCompat
+                android:defaultValue="true"
+                android:key="automatic_backup"
+                android:title="@string/automatic_backup"/>
+            <android.support.v7.preference.ListPreference
+                android:defaultValue="7"
+                android:dependency="automatic_backup"
+                android:entries="@array/backup_interval_entries"
+                android:entryValues="@array/backup_interval_values"
+                android:key="backup_interval"
+                android:title="@string/backup_interval"/>
+            <Preference android:layout="@layout/item_preference_backup_now"/>
+            <android.support.v7.preference.PreferenceCategory android:title="@string/backup_location">
+                <android.support.v7.preference.ListPreference
+                    android:defaultValue="2"
+                    android:entries="@array/backup_interval_entries"
+                    android:entryValues="@array/backup_interval_values"
+                    android:key="backup_location"
+                    android:title="@string/backup_location"/>
+            </android.support.v7.preference.PreferenceCategory>
+            <android.support.v7.preference.PreferenceCategory android:title="@string/recent_backups">
+            </android.support.v7.preference.PreferenceCategory>
+        </android.support.v7.preference.PreferenceScreen>
     </android.support.v7.preference.PreferenceCategory>
     <android.support.v7.preference.PreferenceCategory android:title="@string/info">
         <android.support.v7.preference.Preference

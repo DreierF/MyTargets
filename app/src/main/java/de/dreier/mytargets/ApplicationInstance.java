@@ -28,7 +28,7 @@ import de.dreier.mytargets.shared.models.WindDirection;
 import de.dreier.mytargets.shared.models.WindSpeed;
 import de.dreier.mytargets.shared.utils.ScoresDrawer;
 import de.dreier.mytargets.utils.MyBackupAgent;
-import de.dreier.mytargets.utils.backup.EBackupLocation;
+import de.dreier.mytargets.features.settings.backup.EBackupLocation;
 
 /**
  * Application singleton. Gets instantiated exactly once and is used
