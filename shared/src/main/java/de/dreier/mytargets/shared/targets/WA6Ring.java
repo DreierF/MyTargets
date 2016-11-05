@@ -21,6 +21,7 @@ public class WA6Ring extends TargetModelBase {
 
     public WA6Ring() {
         super(ID, R.string.wa_6_ring);
+        realSizeFactor = 0.6f;
         zones = new Zone[]{
                 new Zone(42, LEMON_YELLOW, DARK_GRAY, 3),
                 new Zone(83, LEMON_YELLOW, DARK_GRAY, 3),
