@@ -22,13 +22,20 @@ public class TargetModelBase implements IIdProvider {
     boolean isFieldTarget;
     long id;
     Zone[] zones;
-    Dimension[] diameters;
+    protected Dimension[] diameters;
     ScoringStyle[] scoringStyles;
     int faceRadius;
     Coordinate[] facePositions;
     boolean is3DTarget;
     CenterMark centerMark;
     TargetDecoration decoration;
+
+    /**
+     * Factor that needs to be applied to the target's diameter to get the real target size.
+     * e.g. 5 Ring 40cm is half the size of a full 40cm, therefore the target is 20cm in reality,
+     * hence the factor is 0.5f.
+     * */
+    protected float realSizeFactor = 1f;
 
     TargetModelBase(long id, @StringRes int nameRes) {
         this.id = id;
@@ -56,6 +63,10 @@ public class TargetModelBase implements IIdProvider {
 
     public Dimension[] getDiameters() {
         return diameters;
+    }
+
+    public Dimension getRealSize(Dimension diameter) {
+        return new Dimension(realSizeFactor * diameter.value, diameter.unit);
     }
 
     public int getZoneCount() {

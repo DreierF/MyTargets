@@ -174,16 +174,12 @@ public class TargetDrawable extends Drawable {
     }
 
     public void setArrowDiameter(Dimension arrowDiameter, float scale) {
-        Dimension targetSize = target.size.convertTo(arrowDiameter.unit);
+        Dimension targetSize = model.getRealSize(target.size).convertTo(arrowDiameter.unit);
         arrowRadius = arrowDiameter.value * 500 * scale / targetSize.value;
     }
 
     public Target getTarget() {
         return target;
-    }
-
-    public TargetModelBase getModel() {
-        return model;
     }
 
     private void initPaint() {
@@ -383,8 +379,8 @@ public class TargetDrawable extends Drawable {
     }
 
     private void drawPathsForZone(Canvas canvas, Rect rect, int innerZoneIndex, int outerZoneIndex, float scale, Path path, RectF pathBounds) {
-        final Zone outerZone = getModel().getZone(outerZoneIndex);
-        final Zone innerZone = getModel().getZone(innerZoneIndex);
+        final Zone outerZone = model.getZone(outerZoneIndex);
+        final Zone innerZone = model.getZone(innerZoneIndex);
         final float outerRadius = outerZone.radius - outerZone.strokeWidth * 0.5f;
         final float innerRadius = innerZone.radius + innerZone.strokeWidth * 0.5f;
         final float rel = (500f - (outerRadius + innerRadius) * 0.5f) / 1000f;
