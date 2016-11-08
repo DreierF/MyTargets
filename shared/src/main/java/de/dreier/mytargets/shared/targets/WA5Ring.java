@@ -24,6 +24,7 @@ public class WA5Ring extends TargetModelBase {
 
     WA5Ring(int id, int nameRes) {
         super(id, nameRes);
+        realSizeFactor = 0.5f;
         zones = new Zone[] {
                 new Zone(50, LEMON_YELLOW, DARK_GRAY, 4),
                 new Zone(100, LEMON_YELLOW, DARK_GRAY, 4),

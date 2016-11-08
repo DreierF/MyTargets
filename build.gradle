@@ -6,14 +6,14 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.1'
+        classpath 'com.android.tools.build:gradle:2.2.2'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'me.tatarka:gradle-retrolambda:3.3.0'
         classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.0.9'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
-        classpath 'com.trickyandroid:jacoco-everywhere:0.2.1'
         classpath 'org.ajoberstar:grgit:1.7.0'
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
     }
 
     configurations.classpath.exclude group: 'com.android.tools.external.lombok'
@@ -21,14 +21,19 @@ buildscript {
 
 plugins {
     id 'com.mendhak.gradlecrowdin' version '0.0.9'
+    id 'org.standardout.versioneye' version '1.4.0'
+}
+
+versioneye {
+    includeSubProjects = true
 }
 
 ext {
-    compileSdkVersionCode = 24
-    buildToolsVersionCode = '24.0.2'
-    supportLibVersion = '24.2.1'
+    compileSdkVersionCode = 25
+    buildToolsVersionCode = '25.0.0'
+    supportLibVersion = '25.0.0'
     testSupportLibVersion = '0.5'
-    playServiceVersion = '9.6.1'
+    playServiceVersion = '9.8.0'
     espressoVersion = '2.2.2'
     parcelerVersion = '1.1.5'
     git = Grgit.open()
