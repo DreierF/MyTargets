@@ -57,7 +57,6 @@ public class EndRenderer {
     private transient int radius;
     private transient Paint grayBackground;
     private transient float density;
-    private transient int shotCount;
     private transient int shotsPerRow;
     private transient float rowHeight;
     private transient float columnWidth;
@@ -84,13 +83,13 @@ public class EndRenderer {
         int neededRows;
         int maxRows;
         do {
-            neededRows = (int) Math.ceil((radius * 2 * density * shotCount) / rect.width());
+            neededRows = (int) Math.ceil((radius * 2 * density * shotList.size()) / rect.width());
             maxRows = (int) Math.floor(rect.height() / (radius * 2 * density));
             radius--;
         } while (neededRows > maxRows);
         radius -= MIN_PADDING;
         int numRows = Math.max(neededRows, 1);
-        shotsPerRow = (int) Math.ceil(shotCount / numRows);
+        shotsPerRow = (int) Math.ceil(shotList.size() / numRows);
         rowHeight = rect.height() / numRows;
         columnWidth = rect.width() / shotsPerRow;
     }
@@ -98,8 +97,7 @@ public class EndRenderer {
     public void setShots(List<Shot> shots) {
         boolean calcLayout = rect != null && shotList == null;
         shotList = new ArrayList<>(shots);
-        shotCount = shotList.size();
-        oldCoordinate = new Coordinate[shotCount];
+        oldCoordinate = new Coordinate[shotList.size()];
         Collections.sort(shotList);
         if (calcLayout) {
             setRect(rect);
@@ -112,7 +110,7 @@ public class EndRenderer {
         }
 
         // Draw all points of this end into the given rect
-        for (int i = 0; i < shotCount; i++) {
+        for (int i = 0; i < shotList.size(); i++) {
             Shot shot = shotList.get(i);
             if (shot.zone == Shot.NOTHING_SELECTED) {
                 break;
@@ -232,7 +230,7 @@ public class EndRenderer {
         oldSelectedRadius = selectedRadius;
         oldRadius = radius;
         oldSelected = selected;
-        for (int i = 0; i < shotCount; i++) {
+        for (int i = 0; i < shotList.size(); i++) {
             oldCoordinate[shotList.get(i).index] = getPosition(i, shotList.get(i));
         }
     }
@@ -242,7 +240,7 @@ public class EndRenderer {
             int col = (int) Math.floor((x - rect.left) / columnWidth);
             int row = (int) Math.floor((y - rect.top) / rowHeight);
             final int arrow = row * shotsPerRow + col;
-            if (arrow < shotCount && shotList.get(arrow).zone != Shot.NOTHING_SELECTED) {
+            if (arrow < shotList.size() && shotList.get(arrow).zone != Shot.NOTHING_SELECTED) {
                 return shotList.get(arrow).index == selected ? -1 : shotList.get(arrow).index;
             }
         }
