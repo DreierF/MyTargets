@@ -50,10 +50,9 @@ public class DistributionPatternUtils {
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
 
         TargetImpactDrawable target = statistic.target.getDrawable();
+        target.setShots(statistic.shots);
         target.setBounds(new Rect(0, 0, size, size));
         target.draw(canvas);
-        target.drawArrows(canvas, statistic.shots, false);
-        //TODO draw average on every spot
         return b;
     }
 }

@@ -6,7 +6,7 @@ android:
   - platform-tools
   - tools
   - build-tools-25.0.0
-  - android-24
+  - android-25
   - extra-android-support
   - extra-android-m2repository
   - extra-google-m2repository
@@ -33,7 +33,7 @@ before_script:
 script:
 - ./gradlew clean assembleRegularRelease
 - adb shell input keyevent 82 &
-- ./gradlew connectedRegularDebugAndroidTest
+- ./gradlew createRegularDebugCoverageReport
 after_success:
 - |
   if [[ "$TRAVIS_TAG" ]]; then
@@ -42,7 +42,8 @@ after_success:
     sudo ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /$TRAVIS_TAG/mapping.txt
   fi
 - ./gradlew -Pversioneye.projectid=5808adf4e1e050004075dc1d versionEyeUpdate
-- curl https://www.jpm4j.org/install/script | sudo sh
+- bash <(curl -s https://codecov.io/bash)
+- curl https://www.jpm4j.org/install/script -k | sudo sh
 - sudo jpm install com.codacy:codacy-coverage-reporter:assembly
 - codacy-coverage-reporter -l Java -r app/build/reports/coverage/regular/debug/report.xml
 after_failure:

@@ -20,7 +20,7 @@ import static de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW;
 
 public class WA3Ring extends TargetModelBase {
 
-    private static final int ID = 3;
+    public static final int ID = 3;
 
     public WA3Ring() {
         this(ID, R.string.wa_3_ring);
@@ -28,6 +28,7 @@ public class WA3Ring extends TargetModelBase {
 
     WA3Ring(int id, int nameRes) {
         super(id, nameRes);
+        realSizeFactor = 0.3f;
         zones = new ZoneBase[] {
                 new CircularZone(0.166f, LEMON_YELLOW, DARK_GRAY, 4),
                 new CircularZone(0.334f, LEMON_YELLOW, DARK_GRAY, 4),

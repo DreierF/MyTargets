@@ -9,6 +9,9 @@ import android.graphics.RectF;
 import android.support.v4.util.Pair;
 import android.text.TextPaint;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +19,6 @@ import java.util.Map;
 import java.util.Set;
 
 import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
@@ -24,17 +26,23 @@ import de.dreier.mytargets.shared.models.Target;
 import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
 public class TargetImpactDrawable extends TargetDrawable {
-
     private Paint paintFill;
     private Paint paintStroke;
     private Map<String, Bitmap> scoresTextCache = new HashMap<>();
     private RectF textRect;
     private float arrowRadius = 8;
+    protected List<List<Shot>> shots = new ArrayList<>();
+    protected List<List<Shot>> transparentShots = new ArrayList<>();
 
     public TargetImpactDrawable(Target target) {
         super(target);
         initPaint();
         initScoresBitmapCache();
+        setArrowDiameter(new Dimension(5, Dimension.Unit.MILLIMETER), 1);
+        for (int i = 0; i < model.getFaceCount(); i++) {
+            shots.add(new ArrayList<>());
+            transparentShots.add(new ArrayList<>());
+        }
     }
 
     private void initPaint() {
@@ -82,21 +90,26 @@ public class TargetImpactDrawable extends TargetDrawable {
     }
 
     public void setArrowDiameter(Dimension arrowDiameter, float scale) {
-        Dimension targetSize = target.size.convertTo(arrowDiameter.unit);
+        Dimension targetSize = model.getRealSize(target.size).convertTo(arrowDiameter.unit);
         arrowRadius = arrowDiameter.value * scale / targetSize.value;
     }
 
     @Override
-    protected void onPostDraw(Canvas canvas) {
-        super.onPostDraw(canvas);
+    protected void onPostDraw(Canvas canvas, int faceIndex) {
+        super.onPostDraw(canvas, faceIndex);
         if (paintFill == null) {
             initPaint();
         }
-    }
 
-    public void drawArrows(Canvas canvas, List<Shot> shots, boolean transparent) {
-        for (Shot s : shots) {
-            drawArrow(canvas, s, transparent);
+        if (transparentShots.size() > faceIndex) {
+            for (Shot s : transparentShots.get(faceIndex)) {
+                drawArrow(canvas, s, true);
+            }
+        }
+        if (shots.size() > faceIndex) {
+            for (Shot s : shots.get(faceIndex)) {
+                drawArrow(canvas, s, false);
+            }
         }
     }
 
@@ -104,23 +117,12 @@ public class TargetImpactDrawable extends TargetDrawable {
         return model.getZoneFromPoint(x, y, arrowRadius);
     }
 
-    public void drawArrows(Canvas canvas, Passe passe, boolean transparent) {
-        if (!passe.exact) {
-            return;
-        }
-        for (int arrow = 0; arrow < passe.shot.length; arrow++) {
-            drawArrow(canvas, passe.shot[arrow], transparent);
-        }
-    }
-
-    public void drawArrow(Canvas canvas, Shot shot, boolean transparent) {
+    private void drawArrow(Canvas canvas, Shot shot, boolean transparent) {
         int color = model.getContrastColor(shot.zone);
         if (transparent) {
             color = 0x55000000 | color & 0xFFFFFF;
         }
         paintFill.setColor(color);
-        // TODO move this drawArrow stuff to onPostDraw or introduce a onDrawTargetFace
-        setMatrixForTargetFace(canvas, shot.index);
         canvas.drawCircle(shot.x, shot.y, arrowRadius, paintFill);
     }
 
@@ -148,15 +150,31 @@ public class TargetImpactDrawable extends TargetDrawable {
         canvas.drawBitmap(scoresTextCache.get(zoneString), 0, 0, null);
     }
 
-    public void drawArrowAvg(Canvas canvas, float x, float y, int arrow) {
-        setMatrixForTargetFace(canvas, arrow);
-        int zone = getZoneFromPoint(x, y);
-        int color = model.getContrastColor(zone);
-        paintStroke.setColor(color);
-        paintStroke.setStrokeWidth(0.0015f);
-        float radius = arrowRadius;
-        canvas.drawCircle(x, y, radius, paintStroke);
-        canvas.drawLine(x, y + radius, x, y - radius, paintStroke);
-        canvas.drawLine(x - radius, y, x + radius, y, paintStroke);
+    public void setShots(List<Shot> shots) {
+        for (int i = 0; i < this.shots.size(); i++) {
+            this.shots.get(i).clear();
+        }
+        Map<Integer, List<Shot>> map = Stream.of(shots)
+                .collect(Collectors.groupingBy(shot -> shot.index % model.getFaceCount()));
+        for (Map.Entry<Integer, List<Shot>> entry : map.entrySet()) {
+            this.shots.set(entry.getKey(), entry.getValue());
+        }
+        notifyArrowSetChanged();
+    }
+
+    public void setTransparentShots(List<Shot> transparentShots) {
+        for (int i = 0; i < this.transparentShots.size(); i++) {
+            this.transparentShots.get(i).clear();
+        }
+        Map<Integer, List<Shot>> map = Stream.of(transparentShots)
+                .collect(Collectors.groupingBy(shot -> shot.index % model.getFaceCount()));
+        for (Map.Entry<Integer, List<Shot>> entry : map.entrySet()) {
+            this.transparentShots.set(entry.getKey(), entry.getValue());
+        }
+        notifyArrowSetChanged();
+    }
+
+    public void notifyArrowSetChanged() {
+        invalidateSelf();
     }
 }

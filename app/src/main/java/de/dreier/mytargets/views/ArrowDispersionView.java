@@ -21,10 +21,10 @@ import de.dreier.mytargets.shared.targets.drawable.TargetImpactDrawable;
 
 public class ArrowDispersionView extends View implements View.OnTouchListener {
     private static final float ZOOM_FACTOR = 3;
-    private int contentWidth;
-    private int contentHeight;
     private final float density;
     private final Paint fillPaint;
+    private int contentWidth;
+    private int contentHeight;
     private List<Shot> shots;
     private float orgRadius, orgMidX, orgMidY;
     private TargetImpactDrawable target;
@@ -44,10 +44,6 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         fillPaint = new Paint();
         fillPaint.setAntiAlias(true);
         density = getResources().getDisplayMetrics().density;
-    }
-
-    private void reset() {
-        invalidate();
     }
 
     @Override
@@ -78,12 +74,18 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
 
     public void setShoots(List<Shot> passes) {
         shots = passes;
+        if (target != null) {
+            target.setShots(shots);
+        }
         invalidate();
     }
 
     public void setTarget(TargetImpactDrawable target) {
         this.target = target;
-        reset();
+        if (shots != null) {
+            target.setShots(shots);
+        }
+        invalidate();
     }
 
     @Override
@@ -109,28 +111,6 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         target.setBounds((int) (x - radius), (int) (y - radius), (int) (x + radius),
                 (int) (y + radius));
         target.draw(canvas);
-
-        // Draw exact arrow position
-        drawArrows(canvas);
-    }
-
-    private void drawArrows(Canvas canvas) {
-        int spots = 1;
-        Midpoint m = new Midpoint();
-
-        for (Shot shot : shots) {
-            target.drawArrow(canvas, shot, false);
-            m.sumX += shot.x;
-            m.sumY += shot.y;
-            m.count++;
-        }
-
-        for (int i = 0; i < spots; i++) {
-            if (m.count >= 2) {
-                target.drawArrowAvg(canvas, m.sumX / m.count,
-                        m.sumY / m.count, i);
-            }
-        }
     }
 
     private void calcSizes() {

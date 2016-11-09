@@ -86,12 +86,12 @@ public class TargetDrawable extends Drawable {
             for (ZoneBase zone : zonesToDraw) {
                 zone.drawStroke(canvas);
             }
-            onPostDraw(canvas);
+            onPostDraw(canvas, faceIndex);
         }
         canvas.restore();
     }
 
-    protected void setMatrixForTargetFace(@NonNull Canvas canvas, int faceIndex) {
+    private void setMatrixForTargetFace(@NonNull Canvas canvas, int faceIndex) {
         canvas.setMatrix(getTargetFaceMatrix(faceIndex));
     }
 
@@ -113,7 +113,7 @@ public class TargetDrawable extends Drawable {
         return matrix;
     }
 
-    protected void onPostDraw(Canvas canvas) {
+    protected void onPostDraw(Canvas canvas, int faceIndex) {
         if (model.getDecorator() != null) {
             model.getDecorator().drawDecoration(canvas);
         }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.dreier.mytargets.shared.targets.TargetFactory;
+import de.dreier.mytargets.shared.targets.drawable.TargetClusterImpactDrawable;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactDrawable;
 import de.dreier.mytargets.shared.targets.models.TargetModelBase;
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
@@ -40,7 +41,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
 
     public TargetImpactDrawable getDrawable() {
         if (drawable == null) {
-            drawable = new TargetImpactDrawable(this);
+            drawable = new TargetClusterImpactDrawable(this);
         }
         return drawable;
     }

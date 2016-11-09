@@ -26,6 +26,7 @@ import de.dreier.mytargets.shared.utils.Color;
 import static de.dreier.mytargets.shared.utils.Color.BLACK;
 
 public class TargetModelBase implements IIdProvider {
+    private long id;
     private final int nameRes;
     public float faceRadius;
     public Coordinate[] facePositions;
@@ -34,8 +35,14 @@ public class TargetModelBase implements IIdProvider {
     protected ScoringStyle[] scoringStyles;
     protected boolean is3DTarget;
     protected boolean isFieldTarget;
-    long id;
-    TargetDecorator decorator;
+    protected TargetDecorator decorator;
+
+    /**
+     * Factor that needs to be applied to the target's diameter to get the real target size.
+     * e.g. 5 Ring 40cm is half the size of a full 40cm, therefore the target is 20cm in reality,
+     * hence the factor is 0.5f.
+     * */
+    protected float realSizeFactor = 1f;
 
     protected TargetModelBase(long id, @StringRes int nameRes) {
         this.id = id;
@@ -63,6 +70,10 @@ public class TargetModelBase implements IIdProvider {
 
     public Dimension[] getDiameters() {
         return diameters;
+    }
+
+    public Dimension getRealSize(Dimension diameter) {
+        return new Dimension(realSizeFactor * diameter.value, diameter.unit);
     }
 
     public int getZoneCount() {

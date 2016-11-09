@@ -80,10 +80,8 @@ public class TargetView extends TargetViewBase {
     private ValueAnimator animator;
     private float inputModeProgress = 0;
     private ValueAnimator inputAnimator;
-    private Midpoint[] midpoints;
     private Dimension arrowDiameter;
     private float targetZoomFactor;
-    private boolean midpointsDirty = true;
     private OnEndUpdatedListener updateListener;
 
     public TargetView(Context context) {
@@ -107,13 +105,11 @@ public class TargetView extends TargetViewBase {
         this.end = passe;
         endRenderer.setSelection(currentArrow, null, EndRenderer.MAX_CIRCLE_SIZE);
         endRenderer.setShots(passe.shotList());
-        midpointsDirty = true;
         if (passe.getId() != -1) {
             switchMode(!passe.exact, true);
         }
         animateFromZoomSpot();
-        invalidate();
-        triggerUpdate();
+        notifyTargetShotsChanged();
     }
 
     @Override
@@ -121,7 +117,6 @@ public class TargetView extends TargetViewBase {
         super.reset();
         inputModeTransitioning = false;
         zoomTransitioning = false;
-        midpointsDirty = true;
         triggerUpdate();
     }
 
@@ -132,13 +127,12 @@ public class TargetView extends TargetViewBase {
     public void setShowMode(EShowMode showMode) {
         this.showMode = showMode;
         SettingsManager.setShowMode(showMode);
-        invalidate();
+        notifyTargetOldShotsChanged();
     }
 
     public void setOldShoots(ArrayList<Passe> oldOnes) {
         oldPasses = oldOnes;
-        invalidate();
-        triggerUpdate();
+        notifyTargetOldShotsChanged();
     }
 
     @Override
@@ -146,7 +140,6 @@ public class TargetView extends TargetViewBase {
         super.setRoundTemplate(r);
         switchMode(SettingsManager.getInputMode(), false);
         initSpotBounds();
-        midpointsDirty = true;
     }
 
     private void initSpotBounds() {
@@ -243,22 +236,16 @@ public class TargetView extends TargetViewBase {
     private void drawTarget(Canvas canvas, float x, float y, float radius) {
         canvas.save();
         // Draw actual target face
-        targetDrawable.setBounds((int) (x - radius), (int) (y - radius), (int) (x + radius), (int) (y + radius));
+        targetDrawable.setBounds((int) (x - radius), (int) (y - radius), (int) (x + radius),
+                (int) (y + radius));
         targetDrawable.draw(canvas);
         canvas.restore();
     }
 
     private void drawArrows(Canvas canvas) {
         canvas.save();
-        if (showMode != EShowMode.END) {
-            //noinspection Convert2streamapi
-            for (Passe p : oldPasses) {
-                if (shouldShowEnd(p)) {
-                    targetDrawable.drawArrows(canvas, p, true);
-                }
-            }
-        }
 
+        // TODO remove for loop
         for (int i = 0; i < end.shot.length && i <= lastSetArrow + 1; i++) {
             Shot shot = end.shot[i];
             if (shot.zone == Shot.NOTHING_SELECTED) {
@@ -266,55 +253,42 @@ public class TargetView extends TargetViewBase {
             }
             if (shot.index == currentArrow) {
                 targetDrawable.drawFocusedArrow(canvas, shot);
-                continue;
-            }
-            targetDrawable.drawArrow(canvas, shot, false);
-        }
-
-        if (showMode != EShowMode.END) {
-            //noinspection Convert2streamapi
-            for (Passe p : oldPasses) {
-                if (shouldShowEnd(p)) {
-                    targetDrawable.drawArrows(canvas, p, true);
-                }
-            }
-        }
-        if (midpointsDirty) {
-            updateMidpoints();
-        }
-        int spots = targetModel.getFaceCount();
-        for (int i = 0; i < spots; i++) {
-            if (midpoints[i].shouldDraw()) {
-                targetDrawable.drawArrowAvg(canvas, midpoints[i].getX(), midpoints[i].getY(), i);
+                break;
             }
         }
         canvas.restore();
     }
 
-    private Midpoint getMidpoint(int spot) {
-        Midpoint m = new Midpoint();
-        int spots = targetModel.getFaceCount();
-        return Stream.of(getShownEnds())
-                .map(Passe::shotList)
-                .flatMap(Stream::of)
-                .filter(s -> s.index % spots == spot)
-                .reduce(m, Midpoint::add);
-    }
-
-    private List<Passe> getShownEnds() {
-        if (showMode == EShowMode.END) {
-            return Collections.singletonList(end);
+    private void notifyTargetOldShotsChanged() {
+        if (showMode != EShowMode.END) {
+            final List<Shot> transparentShots = Stream.of(oldPasses)
+                    .filter(this::shouldShowEnd)
+                    .flatMap(p -> Stream.of(p.shotList()))
+                    .collect(Collectors.toList());
+            targetDrawable.setTransparentShots(transparentShots);
+        } else {
+            targetDrawable.setTransparentShots(Collections.emptyList());
         }
-        final List<Passe> relevantEnds = Stream.of(oldPasses)
-                .filter(this::shouldShowEnd)
-                .collect(Collectors.toList());
-        relevantEnds.add(end);
-        return relevantEnds;
+        invalidate();
+        triggerUpdate();
     }
 
     private boolean shouldShowEnd(Passe p) {
         return p.getId() != end.getId() &&
-                (showMode == EShowMode.TRAINING || p.roundId == end.roundId);
+                (showMode == EShowMode.TRAINING || p.roundId == end.roundId) && p.exact;
+    }
+
+    private void notifyTargetShotsChanged() {
+        List<Shot> shots = new ArrayList<>();
+        for (int i = 0; i < end.shot.length && i <= lastSetArrow + 1; i++) {
+            Shot shot = end.shot[i];
+            if (shot.zone != Shot.NOTHING_SELECTED && shot.index != currentArrow) {
+                shots.add(shot);
+            }
+        }
+        targetDrawable.setShots(shots);
+        invalidate();
+        triggerUpdate();
     }
 
     @Override
@@ -578,9 +552,8 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void onArrowChanged(int index) {
-        midpointsDirty = true;
+        notifyTargetShotsChanged();
 
-        triggerUpdate();
         if (arrowNumbers.isEmpty() ||
                 currentArrow < round.arrowsPerEnd && end.shot[currentArrow].arrow != null) {
             super.onArrowChanged(index);
@@ -624,19 +597,6 @@ public class TargetView extends TargetViewBase {
         }
     }
 
-    private void updateMidpoints() {
-        if (midpoints == null) {
-            // Initialize midpoints
-            int spots = targetModel.getFaceCount();
-            midpoints = new Midpoint[spots];
-        }
-        int spots = targetModel.getFaceCount();
-        for (int i = 0; i < spots; i++) {
-            midpoints[i] = getMidpoint(i);
-        }
-        midpointsDirty = false;
-    }
-
     /**
      * Draws a rect on the right that shows all possible points.
      *
@@ -657,7 +617,8 @@ public class TargetView extends TargetViewBase {
 
                 // For yellow and white background use black font color
                 textPaint.setColor(zone.zone.getTextColor());
-                canvas.drawText(zone.text, rect.centerX(), rect.centerY() + 10 * density, textPaint);
+                canvas.drawText(zone.text, rect.centerX(), rect.centerY() + 10 * density,
+                        textPaint);
             }
         }
     }
@@ -765,34 +726,6 @@ public class TargetView extends TargetViewBase {
     private void triggerUpdate() {
         if (updateListener != null && oldPasses != null) {
             updateListener.onEndUpdated(end, oldPasses);
-        }
-    }
-
-    private class Midpoint {
-        private float count = 0;
-        private float sumX = 0;
-        private float sumY = 0;
-
-        public Midpoint add(Shot s) {
-            if (s.zone == Shot.NOTHING_SELECTED) {
-                return this;
-            }
-            sumX += s.x;
-            sumY += s.y;
-            count++;
-            return this;
-        }
-
-        public boolean shouldDraw() {
-            return count >= 2;
-        }
-
-        public float getX() {
-            return sumX / count;
-        }
-
-        public float getY() {
-            return sumY / count;
         }
     }
 }

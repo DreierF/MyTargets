@@ -100,4 +100,8 @@ public class IntentWrapper {
             activity.overridePendingTransition(R.anim.right_in, R.anim.left_out);
         }
     }
+
+    public Intent build() {
+        return intent;
+    }
 }
