@@ -112,7 +112,7 @@ public class ClusterStrategy implements IAggregationStrategy {
         resultListeners.remove(onAggregationResult);
     }
 
-    public void withdraw() {
+    public void cleanup() {
         if (computeClustersTask != null) {
             computeClustersTask.cancel(true);
         }
@@ -137,6 +137,7 @@ public class ClusterStrategy implements IAggregationStrategy {
         }
 
         protected Void doInBackground(final ArrayList<PointF>... array) {
+            // Agglomerative hierarchical clustering implementation
             final ArrayList<PointF> list = array[0];
             final int size = list.size();
             clusters.clear();

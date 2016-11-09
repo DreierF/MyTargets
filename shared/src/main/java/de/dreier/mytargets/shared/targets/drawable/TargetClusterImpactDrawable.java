@@ -105,7 +105,7 @@ public class TargetClusterImpactDrawable extends TargetImpactDrawable implements
         clusterPaths[index].rewind();
         if (cluster != null) {
             Log.i(TAG, "onPrepareDraw: " + cluster.toString());
-            float v = (float) (Math.sqrt(cluster.getWeight()) * 0.5D);
+            float v = (float) (Math.sqrt(cluster.getWeight()) * 0.2D);
             PointF center = cluster.getCenterOfGroup();
             clusterPaths[index]
                     .addOval(new RectF(center.x - v, center.y - v, center.x + v, center.y + v),
@@ -122,7 +122,7 @@ public class TargetClusterImpactDrawable extends TargetImpactDrawable implements
     public void cleanup() {
         for (ClusterStrategy cluster : faceAggregations) {
             cluster.unregisterOnAggregationResultListener(this);
-            cluster.withdraw();
+            cluster.cleanup();
         }
     }
 
