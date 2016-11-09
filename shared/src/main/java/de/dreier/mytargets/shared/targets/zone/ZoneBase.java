@@ -74,6 +74,6 @@ public abstract class ZoneBase {
     }
 
     public abstract void drawFill(Canvas canvas);
-    public abstract void drawStroke(Canvas canvas);
 
+    public abstract void drawStroke(Canvas canvas);
 }

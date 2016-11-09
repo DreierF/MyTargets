@@ -76,9 +76,9 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
      * Zero-based index of the currently displayed end.
      */
     @State
-    int curPasse = 0;
+    int curPasse = -1;
 
-    private int savedPasses = 0;
+    private int savedPasses;
     private Round round;
     private WearMessageManager manager;
     private Training training;
@@ -123,7 +123,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         assert intent != null;
 
         long roundId = intent.getLongExtra(ROUND_ID, -1);
-        curPasse = intent.getIntExtra(PASSE_IND, -1);
+        int passe = intent.getIntExtra(PASSE_IND, -1);
         round = roundDataSource.get(roundId);
         template = round.info;
         training = new TrainingDataSource().get(round.trainingId);
@@ -152,7 +152,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         if (savedInstanceState != null) {
             updatePasse();
         } else {
-            setPasse(curPasse);
+            setPasse(passe);
         }
 
         binding.next.setOnClickListener(view -> setPasse(curPasse + 1));

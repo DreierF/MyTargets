@@ -41,13 +41,14 @@ import de.dreier.mytargets.shared.models.Target;
 import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
 public class TargetImpactDrawable extends TargetDrawable {
+    protected List<List<Shot>> shots = new ArrayList<>();
+    protected List<List<Shot>> transparentShots = new ArrayList<>();
     private Paint paintFill;
     private Paint paintStroke;
     private Map<String, Bitmap> scoresTextCache = new HashMap<>();
     private RectF textRect;
     private float arrowRadius = 8;
-    protected List<List<Shot>> shots = new ArrayList<>();
-    protected List<List<Shot>> transparentShots = new ArrayList<>();
+    private boolean shouldDrawArrows = true;
 
     public TargetImpactDrawable(Target target) {
         super(target);
@@ -112,6 +113,9 @@ public class TargetImpactDrawable extends TargetDrawable {
     @Override
     protected void onPostDraw(Canvas canvas, int faceIndex) {
         super.onPostDraw(canvas, faceIndex);
+        if (!shouldDrawArrows) {
+            return;
+        }
         if (paintFill == null) {
             initPaint();
         }
@@ -142,7 +146,7 @@ public class TargetImpactDrawable extends TargetDrawable {
     }
 
     public void drawFocusedArrow(Canvas canvas, Shot shot) {
-        Matrix targetMatrix = getTargetFaceMatrix(shot.index);
+        Matrix targetMatrix = getTargetFaceMatrix(shot.index % model.getFaceCount());
         canvas.setMatrix(targetMatrix);
 
         paintFill.setColor(0xFF009900);
@@ -191,5 +195,13 @@ public class TargetImpactDrawable extends TargetDrawable {
 
     public void notifyArrowSetChanged() {
         invalidateSelf();
+    }
+
+    public void drawArrowsEnabled(boolean enabled) {
+        shouldDrawArrows = enabled;
+    }
+
+    public void cleanup() {
+
     }
 }

@@ -17,6 +17,7 @@ package de.dreier.mytargets.shared.views;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -34,9 +35,9 @@ import java.util.List;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.RoundTemplate;
+import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactDrawable;
 import de.dreier.mytargets.shared.targets.models.TargetModelBase;
 import de.dreier.mytargets.shared.targets.models.WAFull;
@@ -72,6 +73,22 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected TargetModelBase targetModel;
     protected List<SelectableZone> selectableZones;
     private Target target;
+    private Drawable.Callback invalidateCallback = new Drawable.Callback() {
+        @Override
+        public void invalidateDrawable(@NonNull Drawable drawable) {
+            invalidate();
+        }
+
+        @Override
+        public void scheduleDrawable(@NonNull Drawable drawable, @NonNull Runnable runnable, long l) {
+
+        }
+
+        @Override
+        public void unscheduleDrawable(@NonNull Drawable drawable, @NonNull Runnable runnable) {
+
+        }
+    };
 
     public TargetViewBase(Context context) {
         super(context);
@@ -110,6 +127,13 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        targetDrawable.setCallback(null);
+        targetDrawable.cleanup();
+    }
+
     public void reset() {
         currentArrow = 0;
         lastSetArrow = -1;
@@ -117,7 +141,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         endRenderer.setShots(end.shotList());
         updateSelectableZones();
         animateToZoomSpot();
-        invalidate();
+        notifyTargetShotsChanged();
     }
 
     public void setRoundId(long roundId) {
@@ -129,6 +153,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         target = r.target;
         targetModel = r.target.getModel();
         targetDrawable = r.target.getDrawable();
+        targetDrawable.setCallback(invalidateCallback);
         endRenderer.init(this, density, r.target);
         updateSelectableZones();
         reset();
@@ -165,6 +190,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         contentHeight = getHeight();
         calcSizes();
         updateVirtualViews();
+        invalidate();
     }
 
     protected int getSelectableZoneIndexFromShot(Shot shot) {
@@ -233,11 +259,15 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
 
         animateFromZoomSpot();
+        notifyTargetShotsChanged();
+    }
 
+    protected void notifyTargetShotsChanged() {
         if (lastSetArrow + 1 >= round.arrowsPerEnd && setListener != null) {
             end.exact = !zoneSelectionMode;
             end.setId(setListener.onTargetSet(new Passe(end), false));
         }
+        invalidate();
     }
 
     private void animateCircle(int i) {

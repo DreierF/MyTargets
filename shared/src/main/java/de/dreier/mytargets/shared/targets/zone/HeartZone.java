@@ -20,7 +20,7 @@ import android.graphics.Path;
 import android.graphics.Region;
 
 import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.utils.RegionUtils;
+import de.dreier.mytargets.shared.utils.PathUtils;
 
 public class HeartZone extends ZoneBase {
 
@@ -56,7 +56,7 @@ public class HeartZone extends ZoneBase {
 
         /** The region needs to be bigger, because the Region#contains(x,y) only allows to test for
          * integers, which is obviously to inaccurate for a -1..1 coordinate system. */
-        HEART_REGION = RegionUtils.getScaledRegion(heart, REGION_SCALE_FACTOR);
+        HEART_REGION = PathUtils.getScaledRegion(heart, REGION_SCALE_FACTOR);
     }
 
     public HeartZone(float radius, float midpointX, float midpointY, int fillColor, int strokeColor, int strokeWidth) {
@@ -71,12 +71,12 @@ public class HeartZone extends ZoneBase {
     @Override
     public void drawFill(Canvas canvas) {
         initPaint();
-        drawPath(canvas, heart, paintFill);
+        PathUtils.drawPath(canvas, heart, paintFill);
     }
 
     @Override
     public void drawStroke(Canvas canvas) {
         initPaint();
-        drawPath(canvas, heart, paintStroke);
+        PathUtils.drawPath(canvas, heart, paintStroke);
     }
 }

@@ -21,7 +21,7 @@ import android.graphics.RectF;
 import android.graphics.Region;
 
 import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.utils.RegionUtils;
+import de.dreier.mytargets.shared.utils.PathUtils;
 
 public class EllipseZone extends ZoneBase {
 
@@ -37,7 +37,7 @@ public class EllipseZone extends ZoneBase {
 
         /** The region needs to be bigger, because the Region#contains(x,y) only allows to test for
          * integers, which is obviously to inaccurate for a -1..1 coordinate system. */
-        ELLIPSE_REGION = RegionUtils.getScaledRegion(ellipse, REGION_SCALE_FACTOR);
+        ELLIPSE_REGION = PathUtils.getScaledRegion(ellipse, REGION_SCALE_FACTOR);
     }
 
     public EllipseZone(float radius, float midpointX, float midpointY, int fillColor, int strokeColor, int strokeWidth) {
@@ -52,12 +52,12 @@ public class EllipseZone extends ZoneBase {
     @Override
     public void drawFill(Canvas canvas) {
         initPaint();
-        drawPath(canvas, ellipse, paintFill);
+        PathUtils.drawPath(canvas, ellipse, paintFill);
     }
 
     @Override
     public void drawStroke(Canvas canvas) {
         initPaint();
-        drawPath(canvas, ellipse, paintStroke);
+        PathUtils.drawPath(canvas, ellipse, paintStroke);
     }
 }

@@ -116,6 +116,7 @@ public class TargetView extends TargetViewBase {
         if (passe.getId() != -1) {
             switchMode(!passe.exact, true);
         }
+        end = passe;
         animateFromZoomSpot();
         notifyTargetShotsChanged();
     }
@@ -125,7 +126,6 @@ public class TargetView extends TargetViewBase {
         super.reset();
         inputModeTransitioning = false;
         zoomTransitioning = false;
-        triggerUpdate();
     }
 
     public void setArrowNumbers(@NonNull List<ArrowNumber> arrowNumbers) {
@@ -268,7 +268,7 @@ public class TargetView extends TargetViewBase {
     }
 
     private void notifyTargetOldShotsChanged() {
-        if (showMode != EShowMode.END) {
+        if (showMode != EShowMode.END && !zoneSelectionMode) {
             final List<Shot> transparentShots = Stream.of(oldPasses)
                     .filter(this::shouldShowEnd)
                     .flatMap(p -> Stream.of(p.shotList()))
@@ -286,7 +286,7 @@ public class TargetView extends TargetViewBase {
                 (showMode == EShowMode.TRAINING || p.roundId == end.roundId) && p.exact;
     }
 
-    private void notifyTargetShotsChanged() {
+    protected void notifyTargetShotsChanged() {
         List<Shot> shots = new ArrayList<>();
         for (int i = 0; i < end.shot.length && i <= lastSetArrow + 1; i++) {
             Shot shot = end.shot[i];
@@ -295,7 +295,7 @@ public class TargetView extends TargetViewBase {
             }
         }
         targetDrawable.setShots(shots);
-        invalidate();
+        super.notifyTargetShotsChanged();
         triggerUpdate();
     }
 
@@ -349,6 +349,7 @@ public class TargetView extends TargetViewBase {
                 animateToZoomSpot();
             }
             SettingsManager.setInputMode(zoneSelectionMode);
+            targetDrawable.drawArrowsEnabled(!zoneSelectionMode);
         }
     }
 
@@ -560,8 +561,6 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void onArrowChanged(int index) {
-        notifyTargetShotsChanged();
-
         if (arrowNumbers.isEmpty() ||
                 currentArrow < round.arrowsPerEnd && end.shot[currentArrow].arrow != null) {
             super.onArrowChanged(index);

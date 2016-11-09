@@ -53,7 +53,7 @@ public class TargetDrawable extends Drawable {
         }
         targetFaceMatrices = new ArrayList<>();
         drawMatrices = new ArrayList<>();
-        for (int faceIndex = 0; faceIndex < model.facePositions.length; faceIndex++) {
+        for (int faceIndex = 0; faceIndex < model.getFaceCount(); faceIndex++) {
             targetFaceMatrices.add(calculateTargetFaceMatrix(faceIndex));
             drawMatrices.add(new Matrix());
         }

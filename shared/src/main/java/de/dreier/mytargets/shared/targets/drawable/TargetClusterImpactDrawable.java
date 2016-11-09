@@ -28,7 +28,9 @@ import java.util.ArrayList;
 import de.dreier.mytargets.shared.analysis.aggregation.Cluster;
 import de.dreier.mytargets.shared.analysis.aggregation.ClusterStrategy;
 import de.dreier.mytargets.shared.analysis.aggregation.IAggregationStrategy;
+import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.utils.PathUtils;
 
 public class TargetClusterImpactDrawable extends TargetImpactDrawable implements IAggregationStrategy.OnAggregationResult {
 
@@ -48,34 +50,39 @@ public class TargetClusterImpactDrawable extends TargetImpactDrawable implements
             clusterStrategy.getNClusters();
             faceAggregations.add(clusterStrategy);
         }
-        this.clusterPaths = new Path[N_CLUSTERS];
-        this.drawClusterPaths = new Path[N_CLUSTERS];
-        this.innerPaints = new Paint[N_CLUSTERS];
+        clusterPaths = new Path[N_CLUSTERS];
+        drawClusterPaths = new Path[N_CLUSTERS];
+        innerPaints = new Paint[N_CLUSTERS];
 
         for (int i = 0; i < N_CLUSTERS; ++i) {
-            this.clusterPaths[i] = new Path();
-            this.drawClusterPaths[i] = new Path();
-            this.innerPaints[i] = new Paint(Paint.ANTI_ALIAS_FLAG);
-            this.innerPaints[i].setStrokeWidth(0.1F);
-            this.innerPaints[i].setARGB(255, 255, 0, 0);
-            this.innerPaints[i].setStyle(Paint.Style.FILL);
+            clusterPaths[i] = new Path();
+            drawClusterPaths[i] = new Path();
+            innerPaints[i] = new Paint(Paint.ANTI_ALIAS_FLAG);
+            innerPaints[i].setStrokeWidth(0.1F);
+            innerPaints[i].setARGB(255, 255, 0, 0);
+            innerPaints[i].setStyle(Paint.Style.FILL);
         }
 
-        this.clear();
+        clear();
         setColor(0xAAAAAAAA);
     }
 
     public void clear() {
         for (ClusterStrategy strategy : faceAggregations) {
             for (int i = 0; i < strategy.getNClusters(); ++i) {
-                this.clusterPaths[i].rewind();
+                clusterPaths[i].rewind();
             }
         }
     }
 
     @Override
     public void onResult() {
-        Log.d(TAG, "onResult: ");
+        for (int faceIndex = 0; faceIndex < model.getFaceCount(); faceIndex++) {
+            final ClusterStrategy clusterStrategy = faceAggregations.get(faceIndex);
+            for (int i = 0; i < clusterStrategy.getNClusters(); ++i) {
+                onPrepareDraw(clusterStrategy, i);
+            }
+        }
         invalidateSelf();
     }
 
@@ -89,31 +96,30 @@ public class TargetClusterImpactDrawable extends TargetImpactDrawable implements
         super.onPostDraw(canvas, faceIndex);
         final ClusterStrategy clusterStrategy = faceAggregations.get(faceIndex);
         for (int i = 0; i < clusterStrategy.getNClusters(); ++i) {
-            Log.i(TAG, "onPostDraw: Face: " + faceIndex + " cluster: " + i);
-            this.onPrepareDraw(clusterStrategy, i);
-            this.onDraw(canvas, i);
+            onDraw(canvas, i);
         }
     }
 
     private void onPrepareDraw(ClusterStrategy clusterStrategy, int index) {
         Cluster cluster = clusterStrategy.getCluster(index);
+        clusterPaths[index].rewind();
         if (cluster != null) {
             Log.i(TAG, "onPrepareDraw: " + cluster.toString());
-            float v = (float) (Math.sqrt(cluster.getWeight()) * 2.0D);
+            float v = (float) (Math.sqrt(cluster.getWeight()) * 0.5D);
             PointF center = cluster.getCenterOfGroup();
-            this.clusterPaths[index].rewind();
-            this.clusterPaths[index]
+            clusterPaths[index]
                     .addOval(new RectF(center.x - v, center.y - v, center.x + v, center.y + v),
                             Path.Direction.CW);
         }
+        drawClusterPaths[index].set(clusterPaths[index]);
     }
 
     private void onDraw(Canvas canvas, int index) {
-        this.drawClusterPaths[index].set(this.clusterPaths[index]);
-        canvas.drawPath(this.drawClusterPaths[index], this.innerPaints[index]);
+        PathUtils.drawPath(canvas, drawClusterPaths[index], innerPaints[index]);
     }
 
-    public void onWithDrawDrawable() {
+    @Override
+    public void cleanup() {
         for (ClusterStrategy cluster : faceAggregations) {
             cluster.unregisterOnAggregationResultListener(this);
             cluster.withdraw();
@@ -122,7 +128,7 @@ public class TargetClusterImpactDrawable extends TargetImpactDrawable implements
 
     public void setColor(@ColorInt int color) {
         for (int i = 0; i < N_CLUSTERS; ++i) {
-            this.innerPaints[i].setColor(color);
+            innerPaints[i].setColor(color);
         }
     }
 
@@ -133,8 +139,11 @@ public class TargetClusterImpactDrawable extends TargetImpactDrawable implements
     }
 
     private void recalculateAggregation() {
-        for (int i = 0; i < model.getFaceCount(); i++) {
-            faceAggregations.get(i).calculate(shots.get(i));
+        for (int faceIndex = 0; faceIndex < model.getFaceCount(); faceIndex++) {
+            ArrayList<Shot> combinedList = new ArrayList<>();
+            combinedList.addAll(transparentShots.get(faceIndex));
+            combinedList.addAll(shots.get(faceIndex));
+            faceAggregations.get(faceIndex).calculate(combinedList);
         }
     }
 }

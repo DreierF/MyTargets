@@ -45,7 +45,7 @@ public class Cluster {
         d2 /= points.size();
         d1 /= points.size();
         centerOfGroup.set((float) d2, (float) d1);
-        weight = (points.size() / totalNumber);
+        weight = (points.size() / (double) totalNumber);
         isDirty = false;
     }
 
