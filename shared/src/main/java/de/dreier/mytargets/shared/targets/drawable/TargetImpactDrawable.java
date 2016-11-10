@@ -21,6 +21,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.AsyncTask;
 import android.support.v4.util.Pair;
 import android.text.TextPaint;
 
@@ -181,16 +182,26 @@ public class TargetImpactDrawable extends TargetDrawable {
         notifyArrowSetChanged();
     }
 
-    public void setTransparentShots(List<Shot> transparentShots) {
-        for (int i = 0; i < this.transparentShots.size(); i++) {
-            this.transparentShots.get(i).clear();
-        }
-        Map<Integer, List<Shot>> map = Stream.of(transparentShots)
-                .collect(Collectors.groupingBy(shot -> shot.index % model.getFaceCount()));
-        for (Map.Entry<Integer, List<Shot>> entry : map.entrySet()) {
-            this.transparentShots.set(entry.getKey(), entry.getValue());
-        }
-        notifyArrowSetChanged();
+    public void setTransparentShots(List<Shot> shots) {
+        new AsyncTask<Void, Void, Map<Integer, List<Shot>>>() {
+            @Override
+            protected Map<Integer, List<Shot>> doInBackground(Void... objects) {
+                return Stream.of(shots)
+                        .collect(Collectors.groupingBy(shot -> shot.index % model.getFaceCount()));
+            }
+
+            @Override
+            protected void onPostExecute(Map<Integer, List<Shot>> map) {
+                super.onPostExecute(map);
+                for (List<Shot> shotList : transparentShots) {
+                    shotList.clear();
+                }
+                for (Map.Entry<Integer, List<Shot>> entry : map.entrySet()) {
+                    transparentShots.set(entry.getKey(), entry.getValue());
+                }
+                notifyArrowSetChanged();
+            }
+        }.execute();
     }
 
     public void notifyArrowSetChanged() {

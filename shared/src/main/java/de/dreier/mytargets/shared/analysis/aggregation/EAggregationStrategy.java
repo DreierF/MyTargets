@@ -15,6 +15,28 @@
 
 package de.dreier.mytargets.shared.analysis.aggregation;
 
+import de.dreier.mytargets.shared.analysis.aggregation.average.AverageStrategy;
+import de.dreier.mytargets.shared.analysis.aggregation.cluster.ClusterStrategy;
+
 public enum EAggregationStrategy {
-    AVERAGE, CLUSTER, MOVING_AVERAGE;
+    NONE(NoneStrategy.class),
+    AVERAGE(AverageStrategy.class),
+    CLUSTER(ClusterStrategy.class);
+    public final Class<? extends IAggregationStrategy> strategyClass;
+
+    EAggregationStrategy(Class<? extends IAggregationStrategy> strategyClass) {
+        this.strategyClass = strategyClass;
+    }
+
+    public IAggregationStrategy newInstance() {
+        try {
+            return strategyClass.newInstance();
+        } catch (InstantiationException e) {
+            throw new IllegalArgumentException(
+                    "Strategy must have zero argument constructor!");
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException(
+                    "Strategy must have a public zero argument constructor!");
+        }
+    }
 }

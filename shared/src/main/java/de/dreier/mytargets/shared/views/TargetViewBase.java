@@ -38,7 +38,7 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.targets.drawable.TargetImpactDrawable;
+import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
 import de.dreier.mytargets.shared.targets.models.TargetModelBase;
 import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.shared.utils.EndRenderer;
@@ -69,7 +69,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected float density;
     protected float outFromX;
     protected float outFromY;
-    protected TargetImpactDrawable targetDrawable;
+    protected TargetImpactAggregationDrawable targetDrawable;
     protected TargetModelBase targetModel;
     protected List<SelectableZone> selectableZones;
     private Target target;
@@ -119,7 +119,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             end.shot[0].y = 0.05f;
             target = new Target(WAFull.ID, 0);
             targetModel = target.getModel();
-            targetDrawable = target.getDrawable();
+            targetDrawable = target.getImpactAggregationDrawable();
             endRenderer.init(this, density, target);
             endRenderer.setShots(end.shotList());
             currentArrow = 1;
@@ -152,7 +152,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         round = r;
         target = r.target;
         targetModel = r.target.getModel();
-        targetDrawable = r.target.getDrawable();
+        targetDrawable = r.target.getImpactAggregationDrawable();
         targetDrawable.setCallback(invalidateCallback);
         endRenderer.init(this, density, r.target);
         updateSelectableZones();

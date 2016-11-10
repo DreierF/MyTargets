@@ -15,8 +15,31 @@
 
 package de.dreier.mytargets.shared.analysis.aggregation;
 
-public class SimpleMovingAverage extends MovingAverage {
-    public SimpleMovingAverage(int windowSize) {
-        super(windowSize);
+import java.util.List;
+
+public class NoneStrategy implements IAggregationStrategy {
+    @Override
+    public void setOnAggregationResultListener(OnAggregationResult onAggregationResult) {
+
+    }
+
+    @Override
+    public IAggregationResultRenderer getResult() {
+        return null;
+    }
+
+    @Override
+    public void cleanup() {
+
+    }
+
+    @Override
+    public void setColor(int color) {
+
+    }
+
+    @Override
+    public void calculate(List list) {
+
     }
 }

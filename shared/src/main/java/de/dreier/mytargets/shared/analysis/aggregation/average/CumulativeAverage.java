@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.analysis.aggregation;
+package de.dreier.mytargets.shared.analysis.aggregation.average;
 
 public class CumulativeAverage extends Average {
     public CumulativeAverage() {

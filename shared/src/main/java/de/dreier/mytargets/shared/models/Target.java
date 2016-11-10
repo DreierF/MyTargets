@@ -22,10 +22,9 @@ import android.support.annotation.NonNull;
 import java.util.List;
 import java.util.Set;
 
-import de.dreier.mytargets.shared.analysis.aggregation.CumulativeAverage;
 import de.dreier.mytargets.shared.targets.TargetFactory;
-import de.dreier.mytargets.shared.targets.drawable.ShotAverageDrawable;
-import de.dreier.mytargets.shared.targets.drawable.TargetImpactDrawable;
+import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
+import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
 import de.dreier.mytargets.shared.targets.models.TargetModelBase;
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
 
@@ -34,7 +33,8 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
     public int scoringStyle;
     public Dimension size;
     private transient TargetModelBase model;
-    private transient TargetImpactDrawable drawable;
+    private transient TargetDrawable drawable;
+    private transient TargetImpactAggregationDrawable targetImpactAggregationDrawable;
 
     public Target() {
     }
@@ -55,11 +55,18 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         return id;
     }
 
-    public TargetImpactDrawable getDrawable() {
+    public TargetDrawable getDrawable() {
         if (drawable == null) {
-            drawable = new ShotAverageDrawable(this, new CumulativeAverage());
+            drawable = new TargetDrawable(this);
         }
         return drawable;
+    }
+
+    public TargetImpactAggregationDrawable getImpactAggregationDrawable() {
+        if (targetImpactAggregationDrawable == null) {
+            targetImpactAggregationDrawable = new TargetImpactAggregationDrawable(this);
+        }
+        return targetImpactAggregationDrawable;
     }
 
     public String zoneToString(int zone, int arrow) {

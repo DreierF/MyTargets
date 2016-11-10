@@ -15,26 +15,11 @@
 
 package de.dreier.mytargets.shared.analysis.aggregation;
 
-import android.support.annotation.UiThread;
+import android.graphics.Canvas;
+import android.support.annotation.ColorInt;
 
-import java.util.List;
-
-import de.dreier.mytargets.shared.analysis.aggregation.cluster.ClusterStrategy;
-import de.dreier.mytargets.shared.models.Shot;
-
-public interface IAggregationStrategy<T extends IAggregationResultRenderer> {
-    void setOnAggregationResultListener(final ClusterStrategy.OnAggregationResult onAggregationResult);
-
-    void calculate(List<Shot> shots);
-
-    T getResult();
-
-    void cleanup();
-
-    void setColor(int color);
-
-    interface OnAggregationResult {
-        @UiThread
-        void onResult();
-    }
+public interface IAggregationResultRenderer {
+    void onPrepareDraw();
+    void onDraw(Canvas canvas);
+    void setColor(@ColorInt int color);
 }

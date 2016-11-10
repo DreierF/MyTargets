@@ -294,4 +294,8 @@
     <string translatable="false" name="transition_root_view">transition_root_view</string>
     <string name="timestamp">Timestamp</string>
     <string name="change_target_face">Change target face</string>
+    <string name="grouping">Grouping</string>
+    <string name="show_clusters">Clusters</string>
+    <string name="show_average">Average</string>
+    <string name="show_none">None</string>
 </resources>

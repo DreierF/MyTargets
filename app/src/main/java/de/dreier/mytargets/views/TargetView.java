@@ -55,6 +55,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.interfaces.OnEndUpdatedListener;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.models.EShowMode;
+import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.ArrowNumber;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
@@ -734,5 +735,9 @@ public class TargetView extends TargetViewBase {
         if (updateListener != null && oldPasses != null) {
             updateListener.onEndUpdated(end, oldPasses);
         }
+    }
+
+    public void setAggregationStrategy(EAggregationStrategy aggregationStrategy) {
+        targetDrawable.setAggregationStrategy(aggregationStrategy);
     }
 }

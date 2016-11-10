@@ -47,6 +47,7 @@ import de.dreier.mytargets.managers.dao.SightSettingDataSource;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.models.EShowMode;
+import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.NotificationInfo;
@@ -198,13 +199,13 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.passe, menu);
+        getMenuInflater().inflate(R.menu.input_end, menu);
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        final MenuItem eye = menu.findItem(R.id.action_show_all);
+        final MenuItem eye = menu.findItem(R.id.action_show);
         eye.setVisible(!binding.targetView.getInputMode());
         final MenuItem showSidebar = menu.findItem(R.id.action_show_sidebar);
         showSidebar.setIcon(binding.targetView.getInputMode() ? R.drawable.ic_album_24dp :
@@ -270,18 +271,24 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_grouping_none:
+                binding.targetView.setAggregationStrategy(EAggregationStrategy.NONE);
+                break;
+            case R.id.action_grouping_average:
+                binding.targetView.setAggregationStrategy(EAggregationStrategy.AVERAGE);
+                break;
+            case R.id.action_grouping_cluster:
+                binding.targetView.setAggregationStrategy(EAggregationStrategy.CLUSTER);
+                break;
             case R.id.action_show_end:
-                item.setChecked(true);
                 binding.targetView.setShowMode(EShowMode.END);
-                return true;
+                break;
             case R.id.action_show_round:
-                item.setChecked(true);
                 binding.targetView.setShowMode(EShowMode.ROUND);
-                return true;
+                break;
             case R.id.action_show_training:
-                item.setChecked(true);
                 binding.targetView.setShowMode(EShowMode.TRAINING);
-                return true;
+                break;
             case R.id.action_show_sidebar:
                 binding.targetView.switchMode(!binding.targetView.getInputMode(), true);
                 supportInvalidateOptionsMenu();
@@ -289,6 +296,8 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
             default:
                 return super.onOptionsItemSelected(item);
         }
+        item.setChecked(true);
+        return true;
     }
 
     private void openTimer() {

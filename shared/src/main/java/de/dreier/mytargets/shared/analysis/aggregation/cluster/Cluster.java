@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.analysis.aggregation;
+package de.dreier.mytargets.shared.analysis.aggregation.cluster;
 
 import android.graphics.PointF;
 

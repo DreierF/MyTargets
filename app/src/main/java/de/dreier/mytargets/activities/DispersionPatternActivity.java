@@ -63,7 +63,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
 
         statistic = Parcels.unwrap(getIntent().getParcelableExtra(ITEM));
         binding.dispersionView.setShoots(statistic.shots);
-        binding.dispersionView.setTarget(statistic.target.getDrawable());
+        binding.dispersionView.setTarget(statistic.target.getImpactAggregationDrawable());
 
         ToolbarUtils.showHomeAsUp(this);
         if (statistic.arrowName != null) {

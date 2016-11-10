@@ -57,7 +57,7 @@ public class DistributionPatternUtils {
         Canvas canvas = new Canvas(b);
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
 
-        TargetImpactDrawable target = statistic.target.getDrawable();
+        TargetImpactDrawable target = statistic.target.getImpactAggregationDrawable();
         target.setShots(statistic.shots);
         target.setBounds(new Rect(0, 0, size, size));
         target.draw(canvas);

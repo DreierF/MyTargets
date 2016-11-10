@@ -13,47 +13,41 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.analysis.aggregation;
+package de.dreier.mytargets.shared.analysis.aggregation.average;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Average {
 
     protected final PointF average = new PointF(0.0F, 0.0F);
-    protected final ArrayList<PointF> data = new ArrayList<>();
-    protected final RectF nonUniformStdDev = new RectF(-1.0F, -1.0F, -1.0F, -1.0F);
-    protected double centerStdDev = -1.0D;
-    protected double dirVariance = -1.0D;
-    protected double stdDevX = -1.0D;
-    protected double stdDevY = -1.0D;
-    private boolean dirty = false;
+    protected final PointF weightedAverage = new PointF(0.0F, 0.0F);
+    private final RectF nonUniformStdDev = new RectF(-1.0F, -1.0F, -1.0F, -1.0F);
+    private double centerStdDev = -1.0D;
+    private double dirVariance = -1.0D;
+    private double stdDevX = -1.0D;
+    private double stdDevY = -1.0D;
+    int dataPointCount;
 
-    private void compute() {
-        if (dirty) {
-            if (data.size() == 0) {
-                average.set(0.0F, 0.0F);
-                nonUniformStdDev.set(-1.0F, -1.0F, -1.0F, -1.0F);
-                centerStdDev = -1.0D;
-                stdDevX = -1.0D;
-                stdDevY = -1.0D;
-                dirVariance = -1.0D;
-            } else {
-                computeAverage();
-                computeNonUniformStdDeviations();
-                computeCenterStdDev();
-                computeStdDevX();
-                computeStdDevY();
-                computeDirectionalVariance();
-            }
+    void computeWeightedAverage(ArrayList<PointF> data) {
+        double sumX = 0.0D;
+        double sumY = 0.0D;
+        int i = 0;
 
-            dirty = false;
+        for (PointF point : data) {
+            ++i;
+            sumX += (double) ((float) i * point.x);
+            sumY += (double) ((float) i * point.y);
         }
+
+        i = (i + 1) * i / 2;
+        weightedAverage.set((float) (sumX / (double) i), (float) (sumY / (double) i));
     }
 
-    private void computeCenterStdDev() {
+    void computeCenterStdDev(ArrayList<PointF> data) {
         double sumXSquare = 0.0D;
         double sumYSquare = 0.0D;
         for (PointF point : data) {
@@ -65,7 +59,7 @@ public abstract class Average {
                 .sqrt(sumYSquare / (double) data.size())) / 2.0D;
     }
 
-    private void computeDirectionalVariance() {
+    void computeDirectionalVariance(ArrayList<PointF> data) {
         double cosSum = 0.0D;
         double sinSum = 0.0D;
 
@@ -78,7 +72,7 @@ public abstract class Average {
         dirVariance = 1.0D - Math.sqrt(cosSum * cosSum + sinSum * sinSum) / (double) data.size();
     }
 
-    private void computeNonUniformStdDeviations() {
+    void computeNonUniformStdDeviations(ArrayList<PointF> data) {
         int negCountX = 0;
         int posCountX = 0;
         int posCountY = 0;
@@ -113,7 +107,7 @@ public abstract class Average {
                 (float) Math.sqrt(negSquaredYError / (double) negCountY));
     }
 
-    private void computeStdDevX() {
+    void computeStdDevX(ArrayList<PointF> data) {
         double sumSquaredXError = 0.0D;
 
         for (PointF point : data) {
@@ -124,7 +118,7 @@ public abstract class Average {
         stdDevX = Math.sqrt(sumSquaredXError / (double) data.size());
     }
 
-    private void computeStdDevY() {
+    void computeStdDevY(ArrayList<PointF> data) {
         double sumSquaredYError = 0.0D;
 
         for (PointF point : data) {
@@ -135,12 +129,7 @@ public abstract class Average {
         stdDevY = Math.sqrt(sumSquaredYError / (double) data.size());
     }
 
-    public void add(float var1, float var2) {
-        data.add(new PointF(var1, var2));
-        dirty = true;
-    }
-
-    protected void computeAverage() {
+    protected void computeAverage(List<PointF> data) {
         double sumX = 0.0D;
         double sumY = 0.0D;
 
@@ -153,52 +142,38 @@ public abstract class Average {
     }
 
     public PointF getAverage() {
-        compute();
         return average;
     }
 
     public double getDirectionalVariance() {
-        compute();
         return dirVariance;
     }
 
     public double getISV() {
-        compute();
         return getISV(getStdDev());
     }
 
-    public double getISV(double var1) {
-        compute();
+    private double getISV(double var1) {
         return (Math.log(var1) - 2.57D) / -0.027D;
     }
 
     public RectF getNonUniformStdDev() {
-        compute();
         return nonUniformStdDev;
     }
 
-    public double getStdDev() {
-        compute();
+    private double getStdDev() {
         return (stdDevX + stdDevY) / 2.0D;
     }
 
     public double getStdDevX() {
-        compute();
         return stdDevX;
     }
 
     public double getStdDevY() {
-        compute();
         return stdDevY;
     }
 
-    public void reset() {
-        data.clear();
-        dirty = true;
-        compute();
-    }
-
-    public int size() {
-        return data.size();
+    public int getDataPointCount() {
+        return dataPointCount;
     }
 }
