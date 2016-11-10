@@ -22,8 +22,9 @@ import android.support.annotation.NonNull;
 import java.util.List;
 import java.util.Set;
 
+import de.dreier.mytargets.shared.analysis.aggregation.CumulativeAverage;
 import de.dreier.mytargets.shared.targets.TargetFactory;
-import de.dreier.mytargets.shared.targets.drawable.TargetClusterImpactDrawable;
+import de.dreier.mytargets.shared.targets.drawable.ShotAverageDrawable;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactDrawable;
 import de.dreier.mytargets.shared.targets.models.TargetModelBase;
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
@@ -56,7 +57,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
 
     public TargetImpactDrawable getDrawable() {
         if (drawable == null) {
-            drawable = new TargetClusterImpactDrawable(this);
+            drawable = new ShotAverageDrawable(this, new CumulativeAverage());
         }
         return drawable;
     }
