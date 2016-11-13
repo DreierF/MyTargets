@@ -139,6 +139,11 @@ public class TargetView extends TargetViewBase {
         notifyTargetOldShotsChanged();
     }
 
+    public void setAggregationStrategy(EAggregationStrategy aggregationStrategy) {
+        SettingsManager.setAggregationStrategy(aggregationStrategy);
+        targetDrawable.setAggregationStrategy(aggregationStrategy);
+    }
+
     public void setOldShoots(ArrayList<Passe> oldOnes) {
         oldPasses = oldOnes;
         notifyTargetOldShotsChanged();
@@ -735,9 +740,5 @@ public class TargetView extends TargetViewBase {
         if (updateListener != null && oldPasses != null) {
             updateListener.onEndUpdated(end, oldPasses);
         }
-    }
-
-    public void setAggregationStrategy(EAggregationStrategy aggregationStrategy) {
-        targetDrawable.setAggregationStrategy(aggregationStrategy);
     }
 }

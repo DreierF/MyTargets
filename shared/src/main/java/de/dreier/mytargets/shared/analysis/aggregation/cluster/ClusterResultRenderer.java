@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared.analysis.aggregation.cluster;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
@@ -66,9 +67,10 @@ public class ClusterResultRenderer implements IAggregationResultRenderer {
         }
     }
 
+    @Override
     public void setColor(int color) {
         for (Paint innerPaint : innerPaints) {
-            innerPaint.setColor(color);
+            innerPaint.setARGB(120, Color.red(color), Color.green(color), Color.blue(color));
         }
     }
 }

@@ -24,7 +24,9 @@ import android.view.View;
 
 import java.util.List;
 
+import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactDrawable;
 
 public class ArrowDispersionView extends View implements View.OnTouchListener {
@@ -88,8 +90,9 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         invalidate();
     }
 
-    public void setTarget(TargetImpactDrawable target) {
+    public void setTarget(TargetImpactAggregationDrawable target) {
         this.target = target;
+        target.setAggregationStrategy(SettingsManager.getAggregationStrategy());
         if (shots != null) {
             target.setShots(shots);
         }

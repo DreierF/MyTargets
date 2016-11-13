@@ -15,6 +15,16 @@
 
 package de.dreier.mytargets.models;
 
+import de.dreier.mytargets.R;
+
 public enum EShowMode {
-    END, ROUND, TRAINING
+    END(R.id.action_show_end),
+    ROUND(R.id.action_show_round),
+    TRAINING(R.id.action_show_training);
+
+    public final int actionItemId;
+
+    EShowMode(int actionItemId) {
+        this.actionItemId = actionItemId;
+    }
 }

@@ -134,6 +134,7 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         setTitle(training.title);
 
         binding.targetView.setRoundTemplate(template);
+        binding.targetView.setAggregationStrategy(SettingsManager.getAggregationStrategy());
         Dimension diameter = new Dimension(5, Dimension.Unit.MILLIMETER);
         if (training.arrow > 0) {
             Arrow arrow = new ArrowDataSource().get(training.arrow);
@@ -211,15 +212,16 @@ public class InputActivity extends ChildActivityBase implements OnTargetSetListe
         showSidebar.setIcon(binding.targetView.getInputMode() ? R.drawable.ic_album_24dp :
                 R.drawable.ic_grain_24dp);
         showSidebar.setVisible(curPasse >= savedPasses);
-        switch (SettingsManager.getShowMode()) {
-            case END:
-                menu.findItem(R.id.action_show_end).setChecked(true);
+        menu.findItem(SettingsManager.getShowMode().actionItemId).setChecked(true);
+        switch (SettingsManager.getAggregationStrategy()) {
+            case NONE:
+                menu.findItem(R.id.action_grouping_none).setChecked(true);
                 break;
-            case ROUND:
-                menu.findItem(R.id.action_show_round).setChecked(true);
+            case AVERAGE:
+                menu.findItem(R.id.action_grouping_average).setChecked(true);
                 break;
-            case TRAINING:
-                menu.findItem(R.id.action_show_training).setChecked(true);
+            case CLUSTER:
+                menu.findItem(R.id.action_grouping_cluster).setChecked(true);
                 break;
         }
         return true;

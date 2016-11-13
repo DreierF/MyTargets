@@ -23,6 +23,7 @@ import org.joda.time.format.DateTimeFormat;
 
 import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.models.EShowMode;
+import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 
@@ -61,6 +62,7 @@ public class SettingsManager {
             .getLastSharedPreferences();
     public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
     public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
+    private static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
 
     public static int getStandardRound() {
         return preferences.getInt(KEY_STANDARD_ROUND, 32);
@@ -225,6 +227,18 @@ public class SettingsManager {
         ApplicationInstance.getSharedPreferences()
                 .edit()
                 .putString(KEY_SHOW_MODE, showMode.toString())
+                .apply();
+    }
+
+    public static EAggregationStrategy getAggregationStrategy() {
+        return EAggregationStrategy.valueOf(ApplicationInstance.getSharedPreferences()
+                .getString(KEY_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString()));
+    }
+
+    public static void setAggregationStrategy(EAggregationStrategy aggregationStrategy) {
+        ApplicationInstance.getSharedPreferences()
+                .edit()
+                .putString(KEY_AGGREGATION_STRATEGY, aggregationStrategy.toString())
                 .apply();
     }
 
