@@ -77,11 +77,37 @@ public abstract class DbTestRuleBase implements TestRule {
     protected Passe randomPasse(Training training, Round round, int arrowsPerEnd, Random gen) {
         Passe p = new Passe(arrowsPerEnd);
         p.roundId = round.getId();
+        p.exact = true;
+        for (int i = 0; i < arrowsPerEnd; i++) {
+            p.shot[i].index = i;
+            p.shot[i].x = gaussianRand(gen);
+            p.shot[i].y = gaussianRand(gen);
+            p.shot[i].zone = round.info.target.getModel()
+                    .getZoneFromPoint((p.shot[i].x) * 500 + 500,
+                            (p.shot[i].y) * 500 + 500, 0.05f * 500f);
+        }
+        p.saveDate = new DateTime().withDate(training.date)
+                .withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
+        return p;
+    }
+
+    private float gaussianRand(Random gen) {
+        final float rand1 = gen.nextFloat();
+        final float rand2 = gen.nextFloat();
+        return (float) (Math.sqrt(-2 * Math.log(rand1) / Math.log(Math.E)) *
+                Math.cos(2 * Math.PI * rand2)) * 0.4f;
+    }
+
+    protected Passe randomPasseZone(Training training, Round round, int arrowsPerEnd, Random gen) {
+        Passe p = new Passe(arrowsPerEnd);
+        p.roundId = round.getId();
+        p.exact = false;
         for (int i = 0; i < arrowsPerEnd; i++) {
             p.shot[i].index = i;
             p.shot[i].zone = gen.nextInt(5);
         }
-        p.saveDate = new DateTime().withDate(training.date).withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
+        p.saveDate = new DateTime().withDate(training.date)
+                .withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
         return p;
     }
 

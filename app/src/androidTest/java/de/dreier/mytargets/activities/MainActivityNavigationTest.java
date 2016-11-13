@@ -7,6 +7,7 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.R;
@@ -15,6 +16,7 @@ import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.WAFull;
+import de.dreier.mytargets.utils.rules.SimpleDbTestRule;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;
@@ -44,8 +46,11 @@ import static org.hamcrest.CoreMatchers.endsWith;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityNavigationTest extends UITestBase {
 
+    private IntentsTestRule activityTestRule = new IntentsTestRule<>(MainActivity.class);
+
     @Rule
-    public IntentsTestRule<MainActivity> mActivityTestRule = new IntentsTestRule<>(MainActivity.class);
+    public final RuleChain rule = RuleChain.outerRule(new SimpleDbTestRule()).around(
+            activityTestRule);
 
     @Before
     public void setUp() {
@@ -64,10 +69,14 @@ public class MainActivityNavigationTest extends UITestBase {
     }
 
     @Test
-    public void mainActivityNavigationTest() {
+    public void navigationTest() {
         // Do settings work
         onView(allOf(withId(R.id.action_preferences), isDisplayed())).perform(click());
         intended(hasComponent(SimpleFragmentActivityBase.SettingsActivity.class.getName()));
+        pressBack();
+
+        onView(allOf(withId(R.id.action_statistics), isDisplayed())).perform(click());
+        intended(hasComponent(StatisticsActivity.class.getName()));
         pressBack();
 
         // Does new free training work
@@ -75,7 +84,7 @@ public class MainActivityNavigationTest extends UITestBase {
         onView(allOf(withId(R.id.fab1), withParent(withId(R.id.fab)))).perform(click());
         intended(allOf(hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
                 hasExtra(TRAINING_TYPE, FREE_TRAINING)));
-        allowPermissionsIfNeeded(mActivityTestRule.getActivity(), ACCESS_FINE_LOCATION);
+        allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
         pressBack();
 
         // Does new training with standard round work
@@ -107,11 +116,11 @@ public class MainActivityNavigationTest extends UITestBase {
         onView(allOf(withParent(withId(R.id.fab)), withClassName(endsWith("ImageView")), isDisplayed()))
                 .perform(click());
         onView(withId(R.id.fab1)).perform(click());
-        allowPermissionsIfNeeded(mActivityTestRule.getActivity(), ACCESS_FINE_LOCATION);
+        allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
         onView(withId(R.id.action_save)).perform(click());
-        onView(isRoot()).perform(orientationLandscape(mActivityTestRule));
+        onView(isRoot()).perform(orientationLandscape(activityTestRule));
         navigateUp();
-        onView(isRoot()).perform(orientationPortrait(mActivityTestRule));
+        onView(isRoot()).perform(orientationPortrait(activityTestRule));
         pressBack();
         pressBack();
     }
