@@ -16,94 +16,151 @@
 package de.dreier.mytargets.shared.analysis.aggregation.cluster;
 
 import android.graphics.PointF;
-import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ClusterStrategy extends AggregationStrategyBase<ClusterResultRenderer> {
 
-    private static final int N_CLUSTERS = 4;
-
+    private static final double EPS = 1.0;
+    private static final int MINIMUM_POINTS_FOR_CLUSTER = 3;
     private final ArrayList<Cluster> clusters;
-    private final int nClusters;
-    private boolean overflow;
-    private double distance;
 
     public ClusterStrategy() {
         super();
         this.clusters = new ArrayList<>();
         this.isDirty = false;
-        this.isDirty = true;
-        this.overflow = false;
-        this.nClusters = N_CLUSTERS;
     }
 
     public void add(final float n1, final float n2) {
-        if (!overflow) {
-            data.add(new PointF(n1, n2));
-            isDirty = true;
-            if (data.size() > 500) {
-                if (!overflow) {
-                    Log.d("Cluster-analysis", "Cluster-analysis overflows (N>500)");
-                }
-                this.overflow = true;
-            }
-        }
+        data.add(new PointF(n1, n2));
+        isDirty = true;
     }
 
     @Override
     protected void reset() {
         super.reset();
         clusters.clear();
-        overflow = false;
     }
 
     @Override
     protected ClusterResultRenderer compute(ArrayList<PointF> list) {
-        // Agglomerative hierarchical clustering implementation
-        final int size = list.size();
+        // DBSCAN
         clusters.clear();
-        for (PointF point : list) {
-            clusters.add(new Cluster(point, size));
-        }
-        while (clusters.size() > nClusters) {
-            Cluster cluster1 = null;
-            Cluster cluster2 = null;
-            double distance = Double.MAX_VALUE;
-            for (int i = 0; i < clusters.size() - 1; i++) {
-                if (isCancelled()) {
-                    return null;
-                }
-                for (int j = i + 1; j < clusters.size(); j++) {
-                    if (isCloser(distance, clusters.get(i), clusters.get(j))) {
-                        distance = this.distance;
-                        cluster1 = clusters.get(i);
-                        cluster2 = clusters.get(j);
-                    }
-                }
+        final Map<PointF, PointStatus> visited = new HashMap<>();
+
+        for (final PointF point : list) {
+            if (visited.get(point) != null) {
+                continue;
             }
-            for (PointF point : cluster2.points) {
-                cluster1.add(point);
+            final List<PointF> neighbors = getNeighbors(point, list);
+            if (neighbors.size() >= MINIMUM_POINTS_FOR_CLUSTER) {
+                // DBSCAN does not care about center points
+                final Cluster cluster = new Cluster(list.size());
+                clusters.add(expandCluster(cluster, point, neighbors, list, visited));
+            } else {
+                visited.put(point, PointStatus.NOISE);
             }
-            clusters.remove(cluster2);
         }
         final ClusterResultRenderer clusterResultRenderer = new ClusterResultRenderer(clusters);
         clusterResultRenderer.onPrepareDraw();
         return clusterResultRenderer;
     }
 
-    private boolean isCloser(final double n, final Cluster cluster1, final Cluster cluster2) {
-        final PointF cog1 = cluster1.getCenterOfGroup();
-        final PointF cog2 = cluster2.getCenterOfGroup();
-        final double n2 = cog1.x - cog2.x;
-        if (n2 > n || -n2 > n) {
-            return false;
+    /**
+     * Expands the cluster to include density-reachable items.
+     *
+     * @param cluster   Cluster to expand
+     * @param point     Point to add to cluster
+     * @param neighbors List of neighbors
+     * @param points    the data set
+     * @param visited   the set of already visited points
+     * @return the expanded cluster
+     */
+    private Cluster expandCluster(final Cluster cluster,
+                                  final PointF point,
+                                  final List<PointF> neighbors,
+                                  final Collection<PointF> points,
+                                  final Map<PointF, PointStatus> visited) {
+        cluster.add(point);
+        visited.put(point, PointStatus.PART_OF_CLUSTER);
+
+        List<PointF> seeds = new ArrayList<>(neighbors);
+        int index = 0;
+        while (index < seeds.size()) {
+            final PointF current = seeds.get(index);
+            PointStatus pStatus = visited.get(current);
+            // only check non-visited points
+            if (pStatus == null) {
+                final List<PointF> currentNeighbors = getNeighbors(current, points);
+                if (currentNeighbors.size() >= MINIMUM_POINTS_FOR_CLUSTER) {
+                    seeds = merge(seeds, currentNeighbors);
+                }
+            }
+
+            if (pStatus != PointStatus.PART_OF_CLUSTER) {
+                visited.put(current, PointStatus.PART_OF_CLUSTER);
+                cluster.add(current);
+            }
+
+            index++;
         }
-        final double n3 = cog1.y - cog2.y;
-        if (n3 > n || -n3 > n) {
-            return false;
+        return cluster;
+    }
+
+    /**
+     * Returns a list of density-reachable neighbors of a {@code point}.
+     *
+     * @param point  the point to look for
+     * @param points possible neighbors
+     * @return the List of neighbors
+     */
+    private List<PointF> getNeighbors(final PointF point, final Collection<PointF> points) {
+        final List<PointF> neighbors = new ArrayList<>();
+        for (final PointF neighbor : points) {
+            if (point != neighbor && distanceFrom(neighbor, point) <= EPS) {
+                neighbors.add(neighbor);
+            }
         }
-        distance = Math.sqrt(n2 * n2 + n3 * n3);
-        return distance < n;
+        return neighbors;
+    }
+
+    /**
+     * Merges two lists together.
+     *
+     * @param one first list
+     * @param two second list
+     * @return merged lists
+     */
+    private List<PointF> merge(final List<PointF> one, final List<PointF> two) {
+        final Set<PointF> oneSet = new HashSet<>(one);
+        for (PointF item : two) {
+            if (!oneSet.contains(item)) {
+                one.add(item);
+            }
+        }
+        return one;
+    }
+
+    private double distanceFrom(PointF p1, PointF p2) {
+        final double diffX = p1.x - p2.x;
+        final double diffY = p1.y - p2.y;
+        return Math.sqrt(diffX * diffX + diffY * diffY);
+    }
+
+    private enum PointStatus {
+        /**
+         * The point has is considered to be noise.
+         */
+        NOISE,
+        /**
+         * The point is already part of a cluster.
+         */
+        PART_OF_CLUSTER
     }
 }

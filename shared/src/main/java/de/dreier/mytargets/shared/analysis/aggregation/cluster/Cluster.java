@@ -26,8 +26,7 @@ public class Cluster {
     private boolean isDirty;
     private double weight = 0.0;
 
-    public Cluster(PointF paramPointF, int paramInt) {
-        points.add(paramPointF);
+    public Cluster(int paramInt) {
         totalNumber = paramInt;
         isDirty = true;
     }
@@ -64,6 +63,7 @@ public class Cluster {
     }
 
     public double getWeight() {
+        compute();
         return weight;
     }
 
