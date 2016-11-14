@@ -71,11 +71,11 @@ public class MainActivityNavigationTest extends UITestBase {
     @Test
     public void navigationTest() {
         // Do settings work
-        onView(allOf(withId(R.id.action_preferences), isDisplayed())).perform(click());
+        clickActionBarItem(R.id.action_preferences, R.string.preferences);
         intended(hasComponent(SimpleFragmentActivityBase.SettingsActivity.class.getName()));
         pressBack();
 
-        onView(allOf(withId(R.id.action_statistics), isDisplayed())).perform(click());
+        clickActionBarItem(R.id.action_statistics, R.string.statistic);
         intended(hasComponent(StatisticsActivity.class.getName()));
         pressBack();
 
@@ -117,7 +117,7 @@ public class MainActivityNavigationTest extends UITestBase {
                 .perform(click());
         onView(withId(R.id.fab1)).perform(click());
         allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
-        onView(withId(R.id.action_save)).perform(click());
+        clickActionBarItem(R.id.action_save, R.string.save);
         onView(isRoot()).perform(orientationLandscape(activityTestRule));
         navigateUp();
         onView(isRoot()).perform(orientationPortrait(activityTestRule));
