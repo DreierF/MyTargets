@@ -27,7 +27,7 @@ import java.util.Set;
 
 public class ClusterStrategy extends AggregationStrategyBase<ClusterResultRenderer> {
 
-    private static final double EPS = 1.0;
+    private static final double EPS = 0.2;
     private static final int MINIMUM_POINTS_FOR_CLUSTER = 3;
     private final ArrayList<Cluster> clusters;
 
@@ -59,7 +59,7 @@ public class ClusterStrategy extends AggregationStrategyBase<ClusterResultRender
                 continue;
             }
             final List<PointF> neighbors = getNeighbors(point, list);
-            if (neighbors.size() >= MINIMUM_POINTS_FOR_CLUSTER) {
+            if (neighbors.size() + 1 >= MINIMUM_POINTS_FOR_CLUSTER) {
                 // DBSCAN does not care about center points
                 final Cluster cluster = new Cluster(list.size());
                 clusters.add(expandCluster(cluster, point, neighbors, list, visited));

@@ -107,7 +107,7 @@ public abstract class Average {
                 (float) Math.sqrt(negSquaredYError / (double) negCountY));
     }
 
-    void computeStdDevX(ArrayList<PointF> data) {
+    public void computeStdDevX(ArrayList<PointF> data) {
         double sumSquaredXError = 0.0D;
 
         for (PointF point : data) {
@@ -118,7 +118,7 @@ public abstract class Average {
         stdDevX = Math.sqrt(sumSquaredXError / (double) data.size());
     }
 
-    void computeStdDevY(ArrayList<PointF> data) {
+    public void computeStdDevY(ArrayList<PointF> data) {
         double sumSquaredYError = 0.0D;
 
         for (PointF point : data) {
@@ -129,7 +129,7 @@ public abstract class Average {
         stdDevY = Math.sqrt(sumSquaredYError / (double) data.size());
     }
 
-    protected void computeAverage(List<PointF> data) {
+    public void computeAverage(List<PointF> data) {
         double sumX = 0.0D;
         double sumY = 0.0D;
 
@@ -161,7 +161,7 @@ public abstract class Average {
         return nonUniformStdDev;
     }
 
-    private double getStdDev() {
+    public double getStdDev() {
         return (stdDevX + stdDevY) / 2.0D;
     }
 

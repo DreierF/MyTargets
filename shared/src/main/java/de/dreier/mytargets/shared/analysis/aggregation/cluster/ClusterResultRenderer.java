@@ -32,14 +32,17 @@ public class ClusterResultRenderer implements IAggregationResultRenderer {
     private final Path[] clusterPaths;
     private final Paint[] innerPaints;
     private final List<Cluster> clusters;
+    private final Path[] outerClusterPaths;
 
     public ClusterResultRenderer(List<Cluster> clusters) {
         this.clusters = clusters;
         clusterPaths = new Path[clusters.size()];
+        outerClusterPaths = new Path[clusters.size()];
         innerPaints = new Paint[clusters.size()];
 
         for (int i = 0; i < clusters.size(); ++i) {
             clusterPaths[i] = new Path();
+            outerClusterPaths[i] = new Path();
             innerPaints[i] = new Paint(Paint.ANTI_ALIAS_FLAG);
             innerPaints[i].setStrokeWidth(0.1F);
             innerPaints[i].setARGB(255, 255, 0, 0);
@@ -52,9 +55,14 @@ public class ClusterResultRenderer implements IAggregationResultRenderer {
         for (int index = 0; index < clusters.size(); index++) {
             clusterPaths[index].rewind();
             Cluster cluster = clusters.get(index);
-            float v = (float) (Math.sqrt(cluster.getWeight()) * 0.2D);
+            //float v = (float) (Math.sqrt(cluster.getWeight()) * 0.2D);
             PointF center = cluster.getCenterOfGroup();
+            float v = (float) cluster.stdDev;
             clusterPaths[index]
+                    .addOval(new RectF(center.x - v, center.y - v, center.x + v, center.y + v),
+                            Path.Direction.CW);
+            v *= 2;
+            outerClusterPaths[index]
                     .addOval(new RectF(center.x - v, center.y - v, center.x + v, center.y + v),
                             Path.Direction.CW);
         }
@@ -63,6 +71,7 @@ public class ClusterResultRenderer implements IAggregationResultRenderer {
     @Override
     public void onDraw(Canvas canvas) {
         for (int index = 0; index < clusters.size(); index++) {
+            PathUtils.drawPath(canvas, outerClusterPaths[index], innerPaints[index]);
             PathUtils.drawPath(canvas, clusterPaths[index], innerPaints[index]);
         }
     }
