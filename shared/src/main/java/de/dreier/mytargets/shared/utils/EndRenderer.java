@@ -134,7 +134,7 @@ public class EndRenderer {
 
     @NonNull
     private Coordinate getPosition(int i, Shot shot) {
-        if (selected == shot.index) {
+        if (selected == shot.index && selectedPosition != null) {
             return new Coordinate(selectedPosition.x, selectedPosition.y);
         } else {
             Coordinate coordinate = new Coordinate();

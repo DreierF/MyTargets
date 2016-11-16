@@ -109,7 +109,7 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplate>
         return r;
     }
 
-    public void addPasse(RoundTemplate roundTemplate) {
+    public void addEnd(RoundTemplate roundTemplate) {
         roundTemplate.endCount++;
         ContentValues values = new ContentValues();
         values.put(PASSES, roundTemplate.endCount);

@@ -151,10 +151,10 @@ dependencies {
 
     compile 'com.google.code.gson:gson:2.8.0'
 
-    compile 'joda-time:joda-time:2.9.4'
+    compile "joda-time:joda-time:$jodaTimeVersion"
 
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
-    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.4.1'
+    compile 'com.squareup.okhttp3:okhttp:3.4.2'
+    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.4.2'
 
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
@@ -170,7 +170,7 @@ dependencies {
     compile "org.parceler:parceler-api:$parcelerVersion"
     annotationProcessor "org.parceler:parceler:$parcelerVersion"
 
-    compile 'com.anjlab.android.iab.v3:library:1.0.33'
+    compile 'com.anjlab.android.iab.v3:library:1.0.34'
 
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
 

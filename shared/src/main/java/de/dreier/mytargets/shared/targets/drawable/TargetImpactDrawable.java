@@ -182,12 +182,11 @@ public class TargetImpactDrawable extends TargetDrawable {
         notifyArrowSetChanged();
     }
 
-    public void setTransparentShots(List<Shot> shots) {
+    public void setTransparentShots(Stream<Shot> shots) {
         new AsyncTask<Void, Void, Map<Integer, List<Shot>>>() {
             @Override
             protected Map<Integer, List<Shot>> doInBackground(Void... objects) {
-                return Stream.of(shots)
-                        .collect(Collectors.groupingBy(shot -> shot.index % model.getFaceCount()));
+                return shots.collect(Collectors.groupingBy(shot -> shot.index % model.getFaceCount()));
             }
 
             @Override

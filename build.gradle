@@ -45,11 +45,12 @@ versioneye {
 ext {
     compileSdkVersionCode = 25
     buildToolsVersionCode = '25.0.0'
-    supportLibVersion = '25.0.0'
+    supportLibVersion = '25.0.1'
     testSupportLibVersion = '0.5'
     playServiceVersion = '9.8.0'
     espressoVersion = '2.2.2'
     parcelerVersion = '1.1.6'
+    jodaTimeVersion = '2.9.6'
     git = Grgit.open()
     appVersionCode = Integer.parseInt("${git.tag.list().size()}")
     appVersionName = "${git.describe()}"

@@ -18,45 +18,37 @@ package de.dreier.mytargets.shared.models;
 import android.support.annotation.NonNull;
 
 import org.joda.time.DateTime;
+import org.parceler.ParcelConstructor;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Passe implements IIdSettable, Comparable<Passe> {
 
+    private long id;
     public int index;
     public long roundId;
-    public Shot[] shot;
+    public List<Shot> shots;
     public boolean exact;
     public DateTime saveDate = new DateTime();
-    long id;
 
-    public Passe() {
+    @ParcelConstructor
+    public Passe(long id) {
+        this.id = id;
     }
 
     public Passe(int ppp) {
-        shot = new Shot[ppp];
+        shots = new ArrayList<>(ppp);
         for (int i = 0; i < ppp; i++) {
-            shot[i] = new Shot(i);
-            shot[i].index = i;
+            final Shot shot = new Shot();
+            shot.index = i;
+            shots.add(shot);
         }
     }
 
-    public Passe(Passe p) {
-        id = p.id;
-        roundId = p.roundId;
-        index = p.index;
-        exact = p.exact;
-        shot = p.shot.clone();
-    }
-
-    public List<Shot> shotList() {
-        return Arrays.asList(shot);
-    }
-
     public List<Shot> getSortedShotList() {
-        final List<Shot> shots = shotList();
+        final List<Shot> shots = this.shots;
         Collections.sort(shots);
         return shots;
     }
@@ -67,7 +59,7 @@ public class Passe implements IIdSettable, Comparable<Passe> {
 
     public void setId(long id) {
         this.id = id;
-        for (Shot s : shot) {
+        for (Shot s : shots) {
             s.passe = id;
         }
     }

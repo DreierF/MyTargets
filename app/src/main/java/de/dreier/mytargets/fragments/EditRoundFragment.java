@@ -101,7 +101,6 @@ public class EditRoundFragment extends EditFragmentBase {
         binding.target.setOnActivityResultContext(this);
         binding.distance.setOnActivityResultContext(this);
 
-
         if (roundId == -1) {
             ToolbarUtils.setTitle(this, R.string.new_round);
             loadRoundDefaultValues();

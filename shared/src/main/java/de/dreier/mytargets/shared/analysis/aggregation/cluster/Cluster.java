@@ -20,15 +20,14 @@ import android.graphics.PointF;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.analysis.aggregation.average.Average;
-import de.dreier.mytargets.shared.analysis.aggregation.average.CumulativeAverage;
+import de.dreier.mytargets.shared.models.Shot;
 
 public class Cluster {
-    public final ArrayList<PointF> points = new ArrayList<>();
+    public final ArrayList<Shot> points = new ArrayList<>();
     private final PointF centerOfGroup = new PointF();
     private final int totalNumber;
     private boolean isDirty;
     private double weight = 0.0;
-    private Average average;
     public double stdDev;
 
     public Cluster(int paramInt) {
@@ -40,7 +39,7 @@ public class Cluster {
         if (!isDirty) {
             return;
         }
-        average = new CumulativeAverage();
+        Average average = new Average();
         average.computeAverage(points);
         average.computeStdDevX(points);
         average.computeStdDevY(points);
@@ -49,7 +48,7 @@ public class Cluster {
         isDirty = false;
     }
 
-    public void add(PointF paramPointF) {
+    public void add(Shot paramPointF) {
         points.add(paramPointF);
         isDirty = true;
     }

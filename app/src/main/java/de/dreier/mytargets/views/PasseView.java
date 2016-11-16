@@ -56,7 +56,7 @@ public class PasseView extends View {
         if (rect.width() > 0) {
             mEndRenderer.animateToRect(rect);
         }
-        mEndRenderer.setShots(p.shotList());
+        mEndRenderer.setShots(p.shots);
         invalidate();
     }
 
@@ -81,7 +81,7 @@ public class PasseView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int desiredWidth = (int) (60 * passe.shot.length * density);
+        int desiredWidth = (int) (60 * passe.shots.size() * density);
         int desiredHeight = (int) (50 * density);
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);

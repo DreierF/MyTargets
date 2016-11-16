@@ -15,13 +15,10 @@
 
 package de.dreier.mytargets.shared.analysis.aggregation.cluster;
 
-import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
-
-import com.annimon.stream.Stream;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +28,11 @@ import de.dreier.mytargets.shared.analysis.aggregation.IAggregationStrategy;
 import de.dreier.mytargets.shared.models.Shot;
 
 public abstract class AggregationStrategyBase<R extends IAggregationResultRenderer> implements IAggregationStrategy<R> {
-    protected final ArrayList<PointF> data;
+    protected final ArrayList<Shot> data;
     protected R result;
     protected boolean isDirty;
     private OnAggregationResult resultListener;
-    private AsyncTask<ArrayList<PointF>, Integer, R> computeTask;
+    private AsyncTask<List<Shot>, Integer, R> computeTask;
     private int color;
 
     public AggregationStrategyBase() {
@@ -65,22 +62,12 @@ public abstract class AggregationStrategyBase<R extends IAggregationResultRender
     @Override
     public void calculate(List<Shot> shots) {
         reset();
-        Stream.of(shots).forEach(shot -> add(shot.x, shot.y));
-        restartComputationTask();
+        computeTask = new ComputeTask().execute(shots);
     }
-
-    private void restartComputationTask() {
-        if (computeTask != null) {
-            computeTask.cancel(true);
-        }
-        computeTask = new ComputeTask().execute(data);
-    }
-
-    protected abstract void add(float x, float y);
 
     @WorkerThread
     @Nullable
-    protected abstract R compute(ArrayList<PointF> pointFs);
+    protected abstract R compute(List<Shot> shots);
 
     @Override
     public void cleanup() {
@@ -99,11 +86,10 @@ public abstract class AggregationStrategyBase<R extends IAggregationResultRender
         return computeTask.isCancelled();
     }
 
-    private class ComputeTask extends AsyncTask<ArrayList<PointF>, Integer, R> {
+    private class ComputeTask extends AsyncTask<List<Shot>, Integer, R> {
 
-        protected R doInBackground(final ArrayList<PointF>... array) {
+        protected R doInBackground(final List<Shot>... array) {
             return compute(array[0]);
-
         }
 
         protected void onPostExecute(final R clusterResultRenderer) {

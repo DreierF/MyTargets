@@ -36,16 +36,16 @@ import java.util.HashSet;
 import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Passe$$Parcelable;
-import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.WearableUtils;
+import de.dreier.mytargets.shared.views.TargetViewBase;
 
 public class WearMessageManager
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         MessageApi.MessageListener {
 
     private static final String TAG = "wearMessageManager";
-    private final OnTargetSetListener mListener;
+    private final TargetViewBase.OnEndFinishedListener mListener;
     private final NotificationInfo info;
 
     private final GoogleApiClient mGoogleApiClient;
@@ -59,11 +59,11 @@ public class WearMessageManager
                 .build();
         mGoogleApiClient.connect();
 
-        if (!(context instanceof OnTargetSetListener)) {
+        if (!(context instanceof TargetViewBase.OnEndFinishedListener)) {
             throw new ClassCastException();
         }
 
-        mListener = (OnTargetSetListener) context;
+        mListener = (TargetViewBase.OnEndFinishedListener) context;
     }
 
     @Override
@@ -121,7 +121,7 @@ public class WearMessageManager
         Passe p = Parcels.unwrap(ParcelableUtil.unmarshall(data, Passe$$Parcelable.CREATOR));
 
         if (messageEvent.getPath().equals(WearableUtils.FINISHED_INPUT)) {
-            mListener.onTargetSet(p, true);
+            mListener.onEndFinished(p.shots, true);
         }
     }
 

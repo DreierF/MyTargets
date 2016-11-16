@@ -184,8 +184,8 @@ public class HtmlUtils {
             int i = 1;
             List<Passe> passes = new PasseDataSource().getAllByRound(round.getId());
             for (Passe passe : passes) {
-                for (int s = 0; s < passe.shot.length; s++) {
-                    Shot shot = passe.shot[s];
+                for (int s = 0; s < passe.shots.size(); s++) {
+                    Shot shot = passe.shots.get(s);
                     if (!TextUtils.isEmpty(shot.comment)) {
                         comments += "<tr class=\"align_center\"><td>" + j + "</td>" +
                                 "<td>" + i + "</td>" +

@@ -113,10 +113,12 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/details">
 
-            <de.dreier.mytargets.views.TargetView
-                android:id="@+id/targetView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            <ViewStub
+                android:id="@+id/targetViewStub"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inflatedId="@+id/targetViewContainer"
+                android:layout="@layout/partial_target_view"/>
 
             <View
                 android:layout_width="match_parent"

@@ -18,26 +18,26 @@ package de.dreier.mytargets.shared.analysis.aggregation.average;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Average {
+import de.dreier.mytargets.shared.models.Shot;
 
+public class Average {
     protected final PointF average = new PointF(0.0F, 0.0F);
     protected final PointF weightedAverage = new PointF(0.0F, 0.0F);
     private final RectF nonUniformStdDev = new RectF(-1.0F, -1.0F, -1.0F, -1.0F);
+    int dataPointCount;
     private double centerStdDev = -1.0D;
     private double dirVariance = -1.0D;
     private double stdDevX = -1.0D;
     private double stdDevY = -1.0D;
-    int dataPointCount;
 
-    void computeWeightedAverage(ArrayList<PointF> data) {
+    void computeWeightedAverage(List<Shot> data) {
         double sumX = 0.0D;
         double sumY = 0.0D;
         int i = 0;
 
-        for (PointF point : data) {
+        for (Shot point : data) {
             ++i;
             sumX += (double) ((float) i * point.x);
             sumY += (double) ((float) i * point.y);
@@ -47,10 +47,10 @@ public abstract class Average {
         weightedAverage.set((float) (sumX / (double) i), (float) (sumY / (double) i));
     }
 
-    void computeCenterStdDev(ArrayList<PointF> data) {
+    void computeCenterStdDev(List<Shot> data) {
         double sumXSquare = 0.0D;
         double sumYSquare = 0.0D;
-        for (PointF point : data) {
+        for (Shot point : data) {
             sumXSquare += (double) (point.x * point.x);
             sumYSquare += (double) (point.y * point.y);
         }
@@ -59,11 +59,11 @@ public abstract class Average {
                 .sqrt(sumYSquare / (double) data.size())) / 2.0D;
     }
 
-    void computeDirectionalVariance(ArrayList<PointF> data) {
+    void computeDirectionalVariance(List<Shot> data) {
         double cosSum = 0.0D;
         double sinSum = 0.0D;
 
-        for (PointF point : data) {
+        for (Shot point : data) {
             double atan2 = Math.atan2((double) point.x, (double) point.y);
             cosSum += Math.cos(atan2);
             sinSum += Math.sin(atan2);
@@ -72,7 +72,7 @@ public abstract class Average {
         dirVariance = 1.0D - Math.sqrt(cosSum * cosSum + sinSum * sinSum) / (double) data.size();
     }
 
-    void computeNonUniformStdDeviations(ArrayList<PointF> data) {
+    void computeNonUniformStdDeviations(List<Shot> data) {
         int negCountX = 0;
         int posCountX = 0;
         int posCountY = 0;
@@ -82,7 +82,7 @@ public abstract class Average {
         double posSquaredYError = 0.0D;
         double negSquaredYError = 0.0D;
 
-        for (PointF point : data) {
+        for (Shot point : data) {
             double error = (double) (point.x - average.x);
             if (error < 0.0D) {
                 negSquaredXError += error * error;
@@ -107,10 +107,10 @@ public abstract class Average {
                 (float) Math.sqrt(negSquaredYError / (double) negCountY));
     }
 
-    public void computeStdDevX(ArrayList<PointF> data) {
+    public void computeStdDevX(List<Shot> data) {
         double sumSquaredXError = 0.0D;
 
-        for (PointF point : data) {
+        for (Shot point : data) {
             double error = (double) (point.x - average.x);
             sumSquaredXError += error * error;
         }
@@ -118,10 +118,10 @@ public abstract class Average {
         stdDevX = Math.sqrt(sumSquaredXError / (double) data.size());
     }
 
-    public void computeStdDevY(ArrayList<PointF> data) {
+    public void computeStdDevY(List<Shot> data) {
         double sumSquaredYError = 0.0D;
 
-        for (PointF point : data) {
+        for (Shot point : data) {
             double error = (double) (point.y - average.y);
             sumSquaredYError += error * error;
         }
@@ -129,11 +129,11 @@ public abstract class Average {
         stdDevY = Math.sqrt(sumSquaredYError / (double) data.size());
     }
 
-    public void computeAverage(List<PointF> data) {
+    public void computeAverage(List<Shot> data) {
         double sumX = 0.0D;
         double sumY = 0.0D;
 
-        for (PointF point : data) {
+        for (Shot point : data) {
             sumX += (double) point.x;
             sumY += (double) point.y;
         }

@@ -133,7 +133,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         final List<Shot> exactShots = Stream.of(rounds)
                 .flatMap(r -> Stream.of(new PasseDataSource().getAllByRound(r.getId())))
                 .filter(p -> p.exact)
-                .flatMap(p -> Stream.of(p.shotList()))
+                .flatMap(p -> Stream.of(p.shots))
                 .collect(Collectors.toList());
         if (exactShots.isEmpty()) {
             binding.dispersionPatternLayout.setVisibility(View.GONE);
@@ -247,7 +247,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     private String getHitMissText() {
         final List<Shot> shots = Stream.of(rounds)
                 .flatMap(r -> Stream.of(new PasseDataSource().getAllByRound(r.getId())))
-                .flatMap(p -> Stream.of(p.shotList()))
+                .flatMap(p -> Stream.of(p.shots))
                 .collect(Collectors.toList());
         long missCount = Stream.of(shots).filter(s -> s.zone == Shot.MISS).count();
         long hitCount = shots.size() - missCount;
@@ -325,7 +325,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
     private Pair<Integer, DateTime> getPairEndSummary(Target target, Passe passe) {
         int actCounter = 0;
-        for (Shot s : passe.shot) {
+        for (Shot s : passe.shots) {
             actCounter += target.getPointsByZone(s.zone, s.index);
         }
         return new Pair<>(actCounter, passe.saveDate);

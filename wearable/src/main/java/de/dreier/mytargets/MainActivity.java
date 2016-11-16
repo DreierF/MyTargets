@@ -39,14 +39,16 @@ import org.parceler.Parcels;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.utils.OnTargetSetListener;
+import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.WearableUtils;
+import de.dreier.mytargets.shared.views.TargetViewBase;
 
-public class MainActivity extends Activity implements OnTargetSetListener,
+public class MainActivity extends Activity implements TargetViewBase.OnEndFinishedListener,
         GoogleApiClient.ConnectionCallbacks, WatchViewStub.OnLayoutInflatedListener {
 
     public static final String EXTRA_ROUND = "round";
@@ -125,7 +127,7 @@ public class MainActivity extends Activity implements OnTargetSetListener,
     }
 
     @Override
-    public long onTargetSet(final Passe passe, boolean remote) {
+    public long onEndFinished(final List<Shot> shotList, boolean remote) {
         confirm.setVisibility(View.VISIBLE);
         confirm.setTotalTimeMs(2500);
         confirm.start();
@@ -147,7 +149,7 @@ public class MainActivity extends Activity implements OnTargetSetListener,
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 v.vibrate(200);
                 finish();
-                sendMessage(passe);
+                sendMessage(shotList);
             }
         });
         return 0;

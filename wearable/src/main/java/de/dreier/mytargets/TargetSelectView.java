@@ -84,7 +84,7 @@ public class TargetSelectView extends TargetViewBase {
         for (int i = 0; i < selectableZones.size(); i++) {
             Coordinate coordinate = getCircularCoordinates(i);
             circle.draw(canvas, coordinate.x, coordinate.y, selectableZones.get(i).index,
-                    i == curZone ? 23 : 17, false, currentArrow, null);
+                    i == curZone ? 23 : 17, false, getCurrentShotIndex(), null);
         }
 
         // Draw all points of this end in the center
@@ -92,8 +92,8 @@ public class TargetSelectView extends TargetViewBase {
     }
 
     private int getCurrentlySelectedZone() {
-        if (end != null && currentArrow < round.arrowsPerEnd) {
-            return end.shot[currentArrow].zone;
+        if (end != null && getCurrentShotIndex() < round.arrowsPerEnd) {
+            return end.shots.get(getCurrentShotIndex()).zone;
         } else {
             return Shot.NOTHING_SELECTED;
         }
@@ -113,7 +113,7 @@ public class TargetSelectView extends TargetViewBase {
 
     @Override
     protected Coordinate initAnimationPositions(int i) {
-        return getCircularCoordinates(getSelectableZoneIndexFromShot(end.shot[i]));
+        return getCircularCoordinates(getSelectableZoneIndexFromShot(end.shots.get(i)));
     }
 
     @Override
@@ -144,7 +144,7 @@ public class TargetSelectView extends TargetViewBase {
     @Override
     protected Shot getShotFromPos(float x, float y) {
         int zones = selectableZones.size();
-        Shot s = new Shot(currentArrow);
+        Shot s = new Shot(getCurrentShotIndex());
 
         double xDiff = x - radius;
         double yDiff = y - radius;

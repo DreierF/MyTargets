@@ -15,8 +15,6 @@
 
 package de.dreier.mytargets.shared.analysis.aggregation.cluster;
 
-import android.graphics.PointF;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,6 +22,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import de.dreier.mytargets.shared.models.Shot;
 
 public class ClusterStrategy extends AggregationStrategyBase<ClusterResultRenderer> {
 
@@ -37,11 +37,6 @@ public class ClusterStrategy extends AggregationStrategyBase<ClusterResultRender
         this.isDirty = false;
     }
 
-    public void add(final float n1, final float n2) {
-        data.add(new PointF(n1, n2));
-        isDirty = true;
-    }
-
     @Override
     protected void reset() {
         super.reset();
@@ -49,20 +44,23 @@ public class ClusterStrategy extends AggregationStrategyBase<ClusterResultRender
     }
 
     @Override
-    protected ClusterResultRenderer compute(ArrayList<PointF> list) {
+    protected ClusterResultRenderer compute(List<Shot> shots) {
         // DBSCAN
         clusters.clear();
-        final Map<PointF, PointStatus> visited = new HashMap<>();
+        final Map<Shot, PointStatus> visited = new HashMap<>();
 
-        for (final PointF point : list) {
+        for (final Shot point : shots) {
+            if(isCancelled()) {
+                break;
+            }
             if (visited.get(point) != null) {
                 continue;
             }
-            final List<PointF> neighbors = getNeighbors(point, list);
+            final List<Shot> neighbors = getNeighbors(point, shots);
             if (neighbors.size() + 1 >= MINIMUM_POINTS_FOR_CLUSTER) {
                 // DBSCAN does not care about center points
-                final Cluster cluster = new Cluster(list.size());
-                clusters.add(expandCluster(cluster, point, neighbors, list, visited));
+                final Cluster cluster = new Cluster(shots.size());
+                clusters.add(expandCluster(cluster, point, neighbors, shots, visited));
             } else {
                 visited.put(point, PointStatus.NOISE);
             }
@@ -83,21 +81,21 @@ public class ClusterStrategy extends AggregationStrategyBase<ClusterResultRender
      * @return the expanded cluster
      */
     private Cluster expandCluster(final Cluster cluster,
-                                  final PointF point,
-                                  final List<PointF> neighbors,
-                                  final Collection<PointF> points,
-                                  final Map<PointF, PointStatus> visited) {
+                                  final Shot point,
+                                  final List<Shot> neighbors,
+                                  final Collection<Shot> points,
+                                  final Map<Shot, PointStatus> visited) {
         cluster.add(point);
         visited.put(point, PointStatus.PART_OF_CLUSTER);
 
-        List<PointF> seeds = new ArrayList<>(neighbors);
+        List<Shot> seeds = new ArrayList<>(neighbors);
         int index = 0;
         while (index < seeds.size()) {
-            final PointF current = seeds.get(index);
+            final Shot current = seeds.get(index);
             PointStatus pStatus = visited.get(current);
             // only check non-visited points
             if (pStatus == null) {
-                final List<PointF> currentNeighbors = getNeighbors(current, points);
+                final List<Shot> currentNeighbors = getNeighbors(current, points);
                 if (currentNeighbors.size() >= MINIMUM_POINTS_FOR_CLUSTER) {
                     seeds = merge(seeds, currentNeighbors);
                 }
@@ -120,9 +118,9 @@ public class ClusterStrategy extends AggregationStrategyBase<ClusterResultRender
      * @param points possible neighbors
      * @return the List of neighbors
      */
-    private List<PointF> getNeighbors(final PointF point, final Collection<PointF> points) {
-        final List<PointF> neighbors = new ArrayList<>();
-        for (final PointF neighbor : points) {
+    private List<Shot> getNeighbors(final Shot point, final Collection<Shot> points) {
+        final List<Shot> neighbors = new ArrayList<>();
+        for (final Shot neighbor : points) {
             if (point != neighbor && distanceFrom(neighbor, point) <= EPS) {
                 neighbors.add(neighbor);
             }
@@ -137,9 +135,9 @@ public class ClusterStrategy extends AggregationStrategyBase<ClusterResultRender
      * @param two second list
      * @return merged lists
      */
-    private List<PointF> merge(final List<PointF> one, final List<PointF> two) {
-        final Set<PointF> oneSet = new HashSet<>(one);
-        for (PointF item : two) {
+    private List<Shot> merge(final List<Shot> one, final List<Shot> two) {
+        final Set<Shot> oneSet = new HashSet<>(one);
+        for (Shot item : two) {
             if (!oneSet.contains(item)) {
                 one.add(item);
             }
@@ -147,7 +145,7 @@ public class ClusterStrategy extends AggregationStrategyBase<ClusterResultRender
         return one;
     }
 
-    private double distanceFrom(PointF p1, PointF p2) {
+    private double distanceFrom(Shot p1, Shot p2) {
         final double diffX = p1.x - p2.x;
         final double diffY = p1.y - p2.y;
         return Math.sqrt(diffX * diffX + diffY * diffY);

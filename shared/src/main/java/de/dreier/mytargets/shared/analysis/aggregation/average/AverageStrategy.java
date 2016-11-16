@@ -15,35 +15,30 @@
 
 package de.dreier.mytargets.shared.analysis.aggregation.average;
 
-import android.graphics.PointF;
 import android.support.annotation.Nullable;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.shared.analysis.aggregation.cluster.AggregationStrategyBase;
+import de.dreier.mytargets.shared.models.Shot;
 
 public class AverageStrategy extends AggregationStrategyBase<AverageResultRenderer> {
-    @Override
-    protected void add(float x, float y) {
-        data.add(new PointF(x, y));
-        isDirty = true;
-    }
 
     @Nullable
     @Override
-    protected AverageResultRenderer compute(ArrayList<PointF> data) {
-        if (data.size() == 0) {
+    protected AverageResultRenderer compute(List<Shot> shots) {
+        if (shots.size() == 0) {
             return null;
         }
-        Average average = new CumulativeAverage();
-        average.dataPointCount = data.size();
-        average.computeAverage(data);
-        average.computeNonUniformStdDeviations(data);
-        average.computeCenterStdDev(data);
-        average.computeStdDevX(data);
-        average.computeStdDevY(data);
-        average.computeDirectionalVariance(data);
-        average.computeWeightedAverage(data);
+        Average average = new Average();
+        average.dataPointCount = shots.size();
+        average.computeAverage(shots);
+        average.computeNonUniformStdDeviations(shots);
+        average.computeCenterStdDev(shots);
+        average.computeStdDevX(shots);
+        average.computeStdDevY(shots);
+        average.computeDirectionalVariance(shots);
+        average.computeWeightedAverage(shots);
         final AverageResultRenderer averageResultRenderer = new AverageResultRenderer(average);
         averageResultRenderer.onPrepareDraw();
         return averageResultRenderer;

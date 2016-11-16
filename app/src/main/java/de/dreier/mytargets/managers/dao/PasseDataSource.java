@@ -58,7 +58,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     public void update(Passe item) {
         super.update(item);
         ShotDataSource sds = new ShotDataSource();
-        for (Shot shot : item.shot) {
+        for (Shot shot : item.shots) {
             sds.update(shot);
         }
     }
@@ -72,7 +72,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
 
     @Override
     public ContentValues getContentValues(Passe passe) {
-        if (passe.shot.length == 0) {
+        if (passe.shots.size() == 0) {
             return null;
         }
         ContentValues values = new ContentValues();
@@ -113,7 +113,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         p.saveDate = new DateTime(res.getLong(9));
         p.roundId = res.getLong(10);
         for (int i = 0; i < count; i++) {
-            p.shot[i] = ShotDataSource.cursorToShot(res, i);
+            p.shots.set(i, ShotDataSource.cursorToShot(res, i));
             res.moveToNext();
         }
         res.close();
@@ -149,7 +149,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                 }
                 passe.index = pIndex++;
                 for (int i = 0; i < ppp; i++) {
-                    passe.shot[i] = ShotDataSource.cursorToShot(res, i);
+                    passe.shots.set(i, ShotDataSource.cursorToShot(res, i));
                     res.moveToNext();
                 }
                 list.add(passe);
@@ -189,7 +189,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                 }
                 passe.index = pIndex++;
                 for (int i = 0; i < ppp; i++) {
-                    passe.shot[i] = ShotDataSource.cursorToShot(res, i);
+                    passe.shots.set(i, ShotDataSource.cursorToShot(res, i));
                     res.moveToNext();
                 }
                 list.add(passe);
@@ -210,7 +210,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         for (Round round : rounds) {
             List<Passe> passes = new PasseDataSource().getAllByRound(round.getId());
             for (Passe p : passes) {
-                for (Shot s : p.shot) {
+                for (Shot s : p.shots) {
                     SelectableZone tuple = new SelectableZone(s.zone, t.getModel().getZone(s.zone),
                             t.zoneToString(s.zone, s.index), t.getPointsByZone(s.zone, s.index));
                     final Integer integer = scoreCount.get(tuple);
