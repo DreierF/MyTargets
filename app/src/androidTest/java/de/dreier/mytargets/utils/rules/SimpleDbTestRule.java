@@ -45,7 +45,7 @@ public class SimpleDbTestRule extends DbTestRuleBase {
                 new Target(WAFull.ID, 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
         SettingsManager.setDistance(new Dimension(50, Dimension.Unit.METER));
         SettingsManager.setIndoor(false);
-        SettingsManager.setInputMode(false);
+        SettingsManager.setInputMethod(false);
         SettingsManager.setTimerEnabled(true);
         SettingsManager.setArrowsPerEnd(6);
         Bow bow = addBow();

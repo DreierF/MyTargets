@@ -19,6 +19,7 @@
 
     <de.dreier.mytargets.views.TargetView
         android:id="@+id/targetView"
+        android:background="#FAFAFA"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:showIn="@layout/activity_input"/>

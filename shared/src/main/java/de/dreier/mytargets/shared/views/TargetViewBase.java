@@ -19,7 +19,6 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
@@ -38,56 +37,33 @@ import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
-import de.dreier.mytargets.shared.targets.models.TargetModelBase;
 import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.shared.utils.EndRenderer;
-import de.dreier.mytargets.shared.utils.ParcelsBundler;
-import icepick.Icepick;
-import icepick.State;
 
 public abstract class TargetViewBase extends View implements View.OnTouchListener {
     private final TargetAccessibilityTouchHelper touchHelper = new TargetAccessibilityTouchHelper(
             this);
     private final List<VirtualView> virtualViews = new ArrayList<>();
-    @State
-    protected int currentShotIndex = 0;
-    @State
-    protected int lastSetArrow = -1;
-    @State(ParcelsBundler.class)
+    // TODO don't expose as public
+    public TargetImpactAggregationDrawable targetDrawable;
+    /**
+     * Zero-based index of the shot that is currently being changed.
+     * If no shot is selected it is set to EndRenderer#NO_SELECTION.
+     */
+    protected int currentShotIndex;
     protected EndRenderer endRenderer = new EndRenderer();
-    @State(ParcelsBundler.class)
     protected List<Shot> shots;
-    @State(ParcelsBundler.class)
     protected RoundTemplate round;
     protected int contentWidth;
     protected int contentHeight;
     protected OnEndFinishedListener setListener = null;
     protected float curAnimationProgress;
-    protected boolean zoneSelectionMode = true;
+    protected EInputMethod inputMethod = EInputMethod.KEYBOARD;
     protected float density;
     protected float outFromX;
     protected float outFromY;
-    // TODO don't expose as public
-    public TargetImpactAggregationDrawable targetDrawable;
-    protected TargetModelBase targetModel;
     protected List<SelectableZone> selectableZones;
-    private Target target;
-    private Drawable.Callback invalidateCallback = new Drawable.Callback() {
-        @Override
-        public void invalidateDrawable(@NonNull Drawable drawable) {
-            invalidate();
-        }
-
-        @Override
-        public void scheduleDrawable(@NonNull Drawable drawable, @NonNull Runnable runnable, long l) {
-
-        }
-
-        @Override
-        public void unscheduleDrawable(@NonNull Drawable drawable, @NonNull Runnable runnable) {
-
-        }
-    };
+    protected Target target;
 
     public TargetViewBase(Context context) {
         super(context);
@@ -108,16 +84,17 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     private void initForDesigner() {
+        density = getResources().getDisplayMetrics().density;
         ViewCompat.setAccessibilityDelegate(this, touchHelper);
         if (isInEditMode()) {
-            round = new RoundTemplate();
-            round.arrowsPerEnd = 3;
-            shots = new ArrayList<>(3);
+            shots = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                shots.add(new Shot());
+            }
             shots.get(0).zone = 0;
             shots.get(0).x = 0.01f;
             shots.get(0).y = 0.05f;
             target = new Target(WAFull.ID, 0);
-            targetModel = target.getModel();
             targetDrawable = target.getImpactAggregationDrawable();
             endRenderer.init(this, density, target);
             endRenderer.setShots(shots);
@@ -137,14 +114,18 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         notifyTargetShotsChanged();
     }
 
-    protected void setRoundTemplate(RoundTemplate r) {
-        round = r;
-        target = r.target;
-        targetModel = r.target.getModel();
-        targetDrawable = r.target.getImpactAggregationDrawable();
-        targetDrawable.setCallback(invalidateCallback);
-        endRenderer.init(this, density, r.target);
+    protected void setTarget(Target t) {
+        target = t;
+        targetDrawable = target.getImpactAggregationDrawable();
+        targetDrawable.setCallback(this);
+        endRenderer.init(this, density, target);
         updateSelectableZones();
+    }
+
+    @Override
+    public void invalidateDrawable(@NonNull Drawable drawable) {
+        super.invalidateDrawable(drawable);
+        invalidate();
     }
 
     protected void updateSelectableZones() {
@@ -154,7 +135,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     private void updateVirtualViews() {
         virtualViews.clear();
-        if (zoneSelectionMode) {
+        if (inputMethod == EInputMethod.KEYBOARD) {
             for (int i = 0; i < selectableZones.size(); i++) {
                 VirtualView vv = new VirtualView();
                 vv.id = i;
@@ -169,8 +150,6 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     public boolean dispatchHoverEvent(MotionEvent event) {
         return touchHelper.dispatchHoverEvent(event) || super.dispatchHoverEvent(event);
     }
-
-    protected abstract Coordinate initAnimationPositions(int i);
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -205,9 +184,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         float x = motionEvent.getX();
         float y = motionEvent.getY();
 
-        boolean currentlySelecting = getCurrentShotIndex() < round.arrowsPerEnd && shots.get(
-                getCurrentShotIndex()).zone != Shot.NOTHING_SELECTED;
-        if (selectPreviousShots(motionEvent, x, y) && !currentlySelecting) {
+        if (selectPreviousShots(motionEvent, x, y) && !isCurrentlySelecting()) {
             return true;
         }
 
@@ -217,55 +194,76 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
 
         // If a valid selection was made save it in the end
-        if (getCurrentShotIndex() < round.arrowsPerEnd &&
-                (shots.get(getCurrentShotIndex()).zone != shot.zone || !zoneSelectionMode)) {
+        if (getCurrentShotIndex() != EndRenderer.NO_SELECTION
+                && (shots.get(getCurrentShotIndex()).zone != shot.zone
+                || inputMethod == EInputMethod.PLOTTING)) {
             shots.get(getCurrentShotIndex()).zone = shot.zone;
             shots.get(getCurrentShotIndex()).x = shot.x;
             shots.get(getCurrentShotIndex()).y = shot.y;
             endRenderer.setSelection(
                     getCurrentShotIndex(), initAnimationPositions(getCurrentShotIndex()),
-                    zoneSelectionMode ? EndRenderer.MAX_CIRCLE_SIZE : 0);
+                    inputMethod == EInputMethod.KEYBOARD ? EndRenderer.MAX_CIRCLE_SIZE : 0);
             invalidate();
         }
 
         // If finger is released go to next shoot
         if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-            //go to next page
-            if (getCurrentShotIndex() == lastSetArrow + 1) {
-                lastSetArrow++;
-            }
-
-            onArrowChanged(lastSetArrow + 1);
+            onArrowChanged();
             return true;
         }
         return true;
     }
 
-    protected void onArrowChanged(final int i) {
-        animateCircle(i);
+    protected boolean isCurrentlySelecting() {
+        return getCurrentShotIndex() != EndRenderer.NO_SELECTION && shots.get(
+                getCurrentShotIndex()).zone != Shot.NOTHING_SELECTED;
+    }
+
+    protected void onArrowChanged() {
+        int nextShotIndex = getNextShotIndex(currentShotIndex);
+        animateCircle(nextShotIndex);
         animateFromZoomSpot();
         notifyTargetShotsChanged();
     }
 
+    /**
+     * Returns the index of the next shot, after the given one, which does not have a zone set yet.
+     *
+     * @param currentShotIndex Index of the current shot.
+     *                         Can also be set to -1, to start the search from the first shot.
+     * @return Returns a valid index or EndRenderer.NO_SELECTION
+     */
+    protected int getNextShotIndex(int currentShotIndex) {
+        int nextShotIndex = currentShotIndex + 1;
+        while (nextShotIndex < shots.size() && shots
+                .get(nextShotIndex).zone != Shot.NOTHING_SELECTED) {
+            nextShotIndex++;
+        }
+        if (nextShotIndex == shots.size()) {
+            return EndRenderer.NO_SELECTION;
+        }
+        return nextShotIndex;
+    }
+
     protected void notifyTargetShotsChanged() {
-        if (lastSetArrow + 1 >= round.arrowsPerEnd && setListener != null) {
+        if (currentShotIndex == EndRenderer.NO_SELECTION && setListener != null) {
             setListener.onEndFinished(shots, false);
         }
         invalidate();
     }
 
-    private void animateCircle(int i) {
+    private void animateCircle(int indexToSelect) {
         Coordinate pos = null;
-        int nextSel = i;
-        if (i > -1 && i < round.arrowsPerEnd && shots.get(i).zone > Shot.NOTHING_SELECTED) {
-            pos = initAnimationPositions(i);
-        } else {
-            nextSel = EndRenderer.NO_SELECTION;
+        if (indexToSelect != EndRenderer.NO_SELECTION
+                && shots.get(indexToSelect).zone != Shot.NOTHING_SELECTED) {
+            pos = initAnimationPositions(indexToSelect);
         }
-        int initialSize = zoneSelectionMode ? EndRenderer.MAX_CIRCLE_SIZE : 0;
-        endRenderer.animateToSelection(nextSel, pos, initialSize);
-        setCurrentShotIndex(i);
+        int initialSize = inputMethod == EInputMethod.KEYBOARD ? EndRenderer.MAX_CIRCLE_SIZE : 0;
+        endRenderer.animateToSelection(indexToSelect, pos, initialSize);
+        setCurrentShotIndex(indexToSelect);
     }
+
+    protected abstract Coordinate initAnimationPositions(int i);
 
     protected void animateFromZoomSpot() {
         // Extension point for sub-classes making use of spots
@@ -286,26 +284,23 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     protected abstract boolean selectPreviousShots(MotionEvent motionEvent, float x, float y);
 
-    @Override
-    public Parcelable onSaveInstanceState() {
-        return Icepick.saveInstanceState(this, super.onSaveInstanceState());
-    }
-
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
-        endRenderer.init(this, density, target);
-    }
-
     protected int getCurrentShotIndex() {
         return currentShotIndex;
     }
 
     protected void setCurrentShotIndex(int currentArrow) {
         this.currentShotIndex = currentArrow;
-        if (targetModel.dependsOnArrowIndex()) {
+        if (target.getModel().dependsOnArrowIndex()) {
             updateSelectableZones();
         }
+    }
+
+    public enum EInputMethod {
+        KEYBOARD, PLOTTING
+    }
+
+    public interface OnEndFinishedListener {
+        void onEndFinished(List<Shot> shotList, boolean remote);
     }
 
     private static class TargetAccessibilityTouchHelper extends ExploreByTouchHelper {
@@ -384,9 +379,5 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         public boolean shot;
         public Rect rect;
         public String description;
-    }
-
-    public interface OnEndFinishedListener {
-        void onEndFinished(List<Shot> shotList, boolean remote);
     }
 }

@@ -57,9 +57,9 @@ import de.dreier.mytargets.shared.models.ArrowNumber;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import icepick.Icepick;
@@ -102,57 +102,12 @@ public class TargetView extends TargetViewBase {
         init();
     }
 
-    public void setEnd(Passe end) {
-        shots = end.shots;
-        lastSetArrow = -1;
-        for (int i = 0; i < shots.size(); i++) {
-            if (shots.get(i).zone == Shot.NOTHING_SELECTED) {
-                break;
-            }
-            lastSetArrow = i;
-        }
-        setCurrentShotIndex(end.getId() == 0 ? lastSetArrow + 1 : shots.size());
-        endRenderer.setShots(shots);
-        endRenderer.setSelection(getCurrentShotIndex(), null, EndRenderer.MAX_CIRCLE_SIZE);
-        if (end.getId() != 0) {
-            switchMode(!end.exact, true);
-        }
-        cancelPendingInputAnimations();
-        animateFromZoomSpot();
-        notifyTargetShotsChanged();
-    }
-
-    @Override
-    public void reset() {
-        super.reset();
-        cancelPendingAnimations();
-        cancelPendingInputAnimations();
-    }
-
-    public void setArrow(Dimension diameter, List<ArrowNumber> numbers) {
-        this.arrowNumbers = numbers;
-        this.arrowDiameter = diameter;
-        targetDrawable.setArrowDiameter(diameter, SettingsManager.getInputArrowDiameterScale());
-    }
-
-    public void setAggregationStrategy(EAggregationStrategy aggregationStrategy) {
-        SettingsManager.setAggregationStrategy(aggregationStrategy);
-        targetDrawable.setAggregationStrategy(aggregationStrategy);
-    }
-
-    @Override
-    public void setRoundTemplate(RoundTemplate r) {
-        super.setRoundTemplate(r);
-        switchMode(SettingsManager.getInputMode(), false);
-        initSpotBounds();
-    }
-
     private void initSpotBounds() {
         Rect rect = new Rect(0, 0, 1000, 1000);
         targetDrawable.setBounds(rect);
-        if (targetModel.getFaceCount() > 1) {
-            spotRects = new RectF[targetModel.getFaceCount()];
-            for (int i = 0; i < targetModel.getFaceCount(); i++) {
+        if (target.getModel().getFaceCount() > 1) {
+            spotRects = new RectF[target.getModel().getFaceCount()];
+            for (int i = 0; i < target.getModel().getFaceCount(); i++) {
                 spotRects[i] = targetDrawable.getBoundsF(i, rect);
             }
         } else {
@@ -164,7 +119,6 @@ public class TargetView extends TargetViewBase {
 
     private void init() {
         // Set up a default TextPaint object
-        density = getResources().getDisplayMetrics().density;
         textPaint = new TextPaint();
         textPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         textPaint.setTextAlign(Paint.Align.LEFT);
@@ -181,24 +135,46 @@ public class TargetView extends TargetViewBase {
         borderPaint.setStyle(Paint.Style.STROKE);
     }
 
+    public void setEnd(Passe end) {
+        shots = end.shots;
+        setCurrentShotIndex(getNextShotIndex(-1));
+        endRenderer.setShots(shots);
+        endRenderer.setSelection(getCurrentShotIndex(), null, EndRenderer.MAX_CIRCLE_SIZE);
+        if (end.getId() != 0) {
+            setInputMethod(end.exact ? EInputMethod.PLOTTING : EInputMethod.KEYBOARD, true);
+        }
+        cancelPendingInputAnimations();
+        animateFromZoomSpot();
+        notifyTargetShotsChanged();
+    }
+
+    public void setArrow(Dimension diameter, List<ArrowNumber> numbers) {
+        this.arrowNumbers = numbers;
+        this.arrowDiameter = diameter;
+        targetDrawable.setArrowDiameter(diameter, SettingsManager.getInputArrowDiameterScale());
+    }
+
+    public void setAggregationStrategy(EAggregationStrategy aggregationStrategy) {
+        SettingsManager.setAggregationStrategy(aggregationStrategy);
+        targetDrawable.setAggregationStrategy(aggregationStrategy);
+    }
+
+    @Override
+    public void setTarget(Target t) {
+        super.setTarget(t);
+        setInputMethod(SettingsManager.getInputMethod(), false);
+        initSpotBounds();
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
-        int curZone;
-        if (getCurrentShotIndex() > -1 && getCurrentShotIndex() < round.arrowsPerEnd) {
-            curZone = shots.get(getCurrentShotIndex()).zone;
-        } else {
-            curZone = -2;
-        }
-
-        drawBackground(canvas);
-
         // Draw target
         if (zoomTransitioning) {
             drawTarget(canvas, outFromX + (midX - outFromX) * curAnimationProgress,
                     outFromY + (midY - outFromY) * curAnimationProgress,
                     oldRadius + (radius - oldRadius) * curAnimationProgress);
         } else {
-            if (!zoneSelectionMode && curZone >= -1) {
+            if (inputMethod == EInputMethod.PLOTTING && isCurrentlySelecting()) {
                 drawZoomedInTarget(canvas);
             } else {
                 drawTarget(canvas, midX, midY, radius);
@@ -206,14 +182,14 @@ public class TargetView extends TargetViewBase {
         }
 
         // Draw exact arrow position
-        if (!zoneSelectionMode) {
-            drawArrows(canvas);
+        if (inputMethod == EInputMethod.PLOTTING) {
+            drawFocusedArrow(canvas);
         }
 
         // Draw right indicator
         drawRightSelectorBar(canvas);
 
-        // Draw all points of this end at the bottom
+        // Draw all points of this end at the top
         endRenderer.draw(canvas);
     }
 
@@ -228,12 +204,6 @@ public class TargetView extends TargetViewBase {
         drawTarget(canvas, x, y, radius2);
     }
 
-    private void drawBackground(Canvas canvas) {
-        // Erase background
-        fillPaint.setColor(0xfffafafa);
-        canvas.drawRect(0, 0, contentWidth, contentHeight, fillPaint);
-    }
-
     private void drawTarget(Canvas canvas, float x, float y, float radius) {
         canvas.save();
         // Draw actual target face
@@ -243,32 +213,23 @@ public class TargetView extends TargetViewBase {
         canvas.restore();
     }
 
-    private void drawArrows(Canvas canvas) {
+    private void drawFocusedArrow(Canvas canvas) {
         canvas.save();
-
-        // TODO remove for loop
-        for (int i = 0; i < shots.size() && i <= lastSetArrow + 1; i++) {
-            Shot shot = shots.get(i);
-            if (shot.zone == Shot.NOTHING_SELECTED) {
-                continue;
-            }
-            if (shot.index == getCurrentShotIndex()) {
-                targetDrawable.drawFocusedArrow(canvas, shot);
-                break;
-            }
+        if (isCurrentlySelecting()) {
+            Shot shot = shots.get(getCurrentShotIndex());
+            targetDrawable.drawFocusedArrow(canvas, shot);
         }
         canvas.restore();
     }
 
     protected void notifyTargetShotsChanged() {
-        List<Shot> shots = new ArrayList<>();
-        for (int i = 0; i < this.shots.size() && i <= lastSetArrow + 1; i++) {
-            Shot shot = this.shots.get(i);
+        List<Shot> displayedShots = new ArrayList<>();
+        for (Shot shot : shots) {
             if (shot.zone != Shot.NOTHING_SELECTED && shot.index != getCurrentShotIndex()) {
-                shots.add(shot);
+                displayedShots.add(shot);
             }
         }
-        targetDrawable.setShots(shots);
+        targetDrawable.setShots(displayedShots);
         super.notifyTargetShotsChanged();
         triggerUpdate();
     }
@@ -276,7 +237,7 @@ public class TargetView extends TargetViewBase {
     @Override
     protected Coordinate initAnimationPositions(int i) {
         Coordinate coordinate = new Coordinate();
-        if (zoneSelectionMode) {
+        if (inputMethod == EInputMethod.KEYBOARD) {
             coordinate.x = contentWidth - 100 * density;
             int indicatorHeight = contentHeight / selectableZones.size();
             int index = getSelectableZoneIndexFromShot(shots.get(i));
@@ -290,9 +251,9 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void calcSizes() {
-        int availableWidth = zoneSelectionMode ? (int) (contentWidth - 60 * density) : contentWidth;
+        int availableWidth = inputMethod == EInputMethod.KEYBOARD ? (int) (contentWidth - 60 * density) : contentWidth;
         float radH = (contentHeight - 10 * density) / 2.45f;
-        float radW = (availableWidth - (zoneSelectionMode ? 70 : 20) * density) * 0.5f;
+        float radW = (availableWidth - (inputMethod == EInputMethod.KEYBOARD ? 70 : 20) * density) * 0.5f;
         orgRadius = (int) (Math.min(radW, radH));
         orgMidX = availableWidth / 2;
         orgMidY = contentHeight - orgRadius - 10 * density;
@@ -310,20 +271,20 @@ public class TargetView extends TargetViewBase {
         animateToZoomSpot();
     }
 
-    public void switchMode(boolean mode, boolean animate) {
-        if (mode != zoneSelectionMode) {
+    public void setInputMethod(EInputMethod mode, boolean animate) {
+        if (mode != inputMethod) {
             // TODO make sure selected arrow indicator transforms as well
-            zoneSelectionMode = mode;
+            inputMethod = mode;
             if (animate) {
                 animateMode();
             }
-            if (zoneSelectionMode) {
+            if (inputMethod == EInputMethod.KEYBOARD) {
                 animateFromZoomSpot();
             } else {
                 animateToZoomSpot();
             }
-            SettingsManager.setInputMode(zoneSelectionMode);
-            targetDrawable.drawArrowsEnabled(!zoneSelectionMode);
+            SettingsManager.setInputMethod(inputMethod);
+            targetDrawable.drawArrowsEnabled(inputMethod == EInputMethod.PLOTTING);
         }
     }
 
@@ -334,7 +295,7 @@ public class TargetView extends TargetViewBase {
     protected Shot getShotFromPos(float x, float y) {
         // Create Shot object
         Shot s = new Shot(getCurrentShotIndex());
-        if (zoneSelectionMode) {
+        if (inputMethod == EInputMethod.KEYBOARD) {
             if (x > contentWidth - 60 * density) {
                 int i = (int) (y * selectableZones.size() / (float) contentHeight);
                 i = Math.min(Math.max(0, i), selectableZones.size() - 1);
@@ -360,7 +321,7 @@ public class TargetView extends TargetViewBase {
                     endRenderer.setPressed(-1);
                     longPressTimer.cancel();
                     longPressTimer = null;
-                    super.onArrowChanged(arrow);
+                    super.onArrowChanged();
                 }
             } else if (endRenderer.getPressed() != arrow) {
                 // If new item gets selected cancel old timer and start new one
@@ -431,7 +392,7 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void animateFromZoomSpot() {
-        if (targetModel.getFaceCount() > 1) {
+        if (target.getModel().getFaceCount() > 1) {
             if (!spotFocused) {
                 zoomTransitioning = false;
                 animateToZoomSpot();
@@ -439,8 +400,9 @@ public class TargetView extends TargetViewBase {
                 cancelPendingAnimations();
                 animator = ValueAnimator.ofFloat(0, 1);
                 animator.setInterpolator(
-                        getCurrentShotIndex() < round.arrowsPerEnd ? new AccelerateInterpolator() :
-                                new AccelerateDecelerateInterpolator());
+                        getCurrentShotIndex() != EndRenderer.NO_SELECTION
+                                ? new AccelerateInterpolator()
+                                : new AccelerateDecelerateInterpolator());
                 animator.addUpdateListener(valueAnimator -> {
                     curAnimationProgress = (Float) valueAnimator.getAnimatedValue();
                     invalidate();
@@ -481,9 +443,9 @@ public class TargetView extends TargetViewBase {
             midX = orgMidX;
             midY = orgMidY;
         }
-        if (targetModel
-                .getFaceCount() > 1 && getCurrentShotIndex() < round.arrowsPerEnd && radius > 0 &&
-                !spotFocused && !zoneSelectionMode && !zoomTransitioning) {
+        if (target.getModel()
+                .getFaceCount() > 1 && getCurrentShotIndex() != EndRenderer.NO_SELECTION && radius > 0 &&
+                !spotFocused && inputMethod == EInputMethod.PLOTTING && !zoomTransitioning) {
             cancelPendingAnimations();
             animator = ValueAnimator.ofFloat(0, 1);
             animator.setInterpolator(
@@ -535,23 +497,22 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    protected void onArrowChanged(int index) {
-        if (arrowNumbers.isEmpty() ||
-                getCurrentShotIndex() < round.arrowsPerEnd && shots
-                        .get(getCurrentShotIndex()).arrow != null) {
-            super.onArrowChanged(index);
+    protected void onArrowChanged() {
+        if (arrowNumbers.isEmpty() || getCurrentShotIndex() != EndRenderer.NO_SELECTION
+                && shots.get(getCurrentShotIndex()).arrow != null) {
+            super.onArrowChanged();
         } else {
             List<String> numbersLeft = Stream.of(arrowNumbers).map(an -> an.number)
                     .collect(Collectors.toList());
             for (Shot s : shots) {
                 numbersLeft.remove(s.arrow);
             }
-            if (numbersLeft.size() == 0 || getCurrentShotIndex() >= round.arrowsPerEnd) {
-                super.onArrowChanged(index);
+            if (numbersLeft.size() == 0 || getCurrentShotIndex() == EndRenderer.NO_SELECTION) {
+                super.onArrowChanged();
                 return;
             } else if (numbersLeft.size() == 1) {
                 shots.get(getCurrentShotIndex()).arrow = numbersLeft.get(0);
-                super.onArrowChanged(index);
+                super.onArrowChanged();
                 return;
             }
 
@@ -574,7 +535,7 @@ public class TargetView extends TargetViewBase {
                     shots.get(getCurrentShotIndex()).arrow = numbersLeft.get(position);
                 }
                 dialog.dismiss();
-                super.onArrowChanged(index);
+                super.onArrowChanged();
             });
             dialog.show();
         }
@@ -586,7 +547,7 @@ public class TargetView extends TargetViewBase {
      * @param canvas Canvas to draw on
      */
     private void drawRightSelectorBar(Canvas canvas) {
-        if (zoneSelectionMode || inputModeTransitioning) {
+        if (inputMethod == EInputMethod.KEYBOARD || inputModeTransitioning) {
             for (int i = 0; i < selectableZones.size(); i++) {
                 SelectableZone zone = selectableZones.get(i);
 
@@ -609,9 +570,9 @@ public class TargetView extends TargetViewBase {
     @Override
     @NonNull
     protected Rect getSelectableZonePosition(int i) {
-        float percent = zoneSelectionMode ? 1 : 0;
+        float percent = inputMethod == EInputMethod.KEYBOARD ? 1 : 0;
         if (inputModeTransitioning) {
-            percent = zoneSelectionMode ? inputModeProgress : 1 - inputModeProgress;
+            percent = inputMethod == EInputMethod.KEYBOARD ? inputModeProgress : 1 - inputModeProgress;
         }
         final Rect rect = new Rect();
         rect.left = (int) (contentWidth - 60 * percent * density);
@@ -630,7 +591,7 @@ public class TargetView extends TargetViewBase {
         longPressTimer = null;
         Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(500);
-        onArrowChanged(round.arrowsPerEnd);
+        onArrowChanged();
 
         new MaterialDialog.Builder(getContext())
                 .title(R.string.comment)
@@ -657,8 +618,8 @@ public class TargetView extends TargetViewBase {
         return super.onTouch(view, motionEvent);
     }
 
-    public boolean getInputMode() {
-        return zoneSelectionMode;
+    public EInputMethod getInputMode() {
+        return inputMethod;
     }
 
     private void cancelPendingAnimations() {

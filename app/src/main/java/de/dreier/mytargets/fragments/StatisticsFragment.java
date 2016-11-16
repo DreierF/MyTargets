@@ -139,8 +139,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
             binding.dispersionPatternLayout.setVisibility(View.GONE);
             return;
         }
-        binding.dispersionView.setTarget(target.getImpactAggregationDrawable());
-        binding.dispersionView.setShoots(exactShots);
+        binding.dispersionView.setShots(target.getImpactAggregationDrawable(), exactShots);
         binding.dispersionView.setEnabled(false);
         binding.dispersionViewOverlay.setOnClickListener(view -> {
             ArrowStatistic statistics = new ArrowStatistic();

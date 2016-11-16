@@ -35,7 +35,9 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
 import org.joda.time.DateTime;
+import org.parceler.Parcel;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -65,8 +67,10 @@ import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.shared.views.TargetViewBase;
+import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
@@ -84,18 +88,10 @@ public class InputActivity extends ChildActivityBase
     private static final String ROUND_ID = "round_id";
     private static final String END_INDEX = "end_ind";
 
-    /**
-     * Zero-based index of the currently displayed end.
-     */
-    @State
-    int endIndex = -1;
+    @State(ParcelsBundler.class)
+    LoaderResult data;
 
-    private Training training;
-    private List<Round> rounds;
-    private List<List<Passe>> ends;
-    private int roundIndex;
     private WearMessageManager manager;
-    private StandardRound standardRound;
     private ActivityInputBinding binding;
     private boolean transitionFinished = true;
     private EShowMode showMode = EShowMode.END;
@@ -130,7 +126,12 @@ public class InputActivity extends ChildActivityBase
         showMode = SettingsManager.getShowMode();
 
         Icepick.restoreInstanceState(this, savedInstanceState);
-        getSupportLoaderManager().initLoader(0, getIntent().getExtras(), this).forceLoad();
+        if (data != null) {
+            onDataLoadFinished();
+            updateEnd();
+        } else {
+            getSupportLoaderManager().initLoader(0, getIntent().getExtras(), this).forceLoad();
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -165,10 +166,11 @@ public class InputActivity extends ChildActivityBase
             showSidebar.setVisible(false);
             grouping.setVisible(false);
         } else {
-            eye.setVisible(!targetView.getInputMode());
-            grouping.setVisible(!targetView.getInputMode());
-            showSidebar.setIcon(targetView
-                    .getInputMode() ? R.drawable.ic_keyboard_white_off_24dp : R.drawable.ic_keyboard_white_24dp);
+            final boolean plotting = targetView.getInputMode() == EInputMethod.PLOTTING;
+            eye.setVisible(plotting);
+            grouping.setVisible(plotting);
+            showSidebar.setIcon(
+                    plotting ? R.drawable.ic_keyboard_white_24dp : R.drawable.ic_keyboard_white_off_24dp);
             showSidebar.setVisible(getCurrentEnd() != null ? getCurrentEnd().getId() == 0 : false);
         }
 
@@ -209,7 +211,11 @@ public class InputActivity extends ChildActivityBase
                 setShowMode(EShowMode.TRAINING);
                 break;
             case R.id.action_show_sidebar:
-                targetView.switchMode(!targetView.getInputMode(), true);
+                targetView.setInputMethod(
+                        targetView.getInputMode() == EInputMethod.KEYBOARD
+                                ? EInputMethod.PLOTTING
+                                : EInputMethod.KEYBOARD,
+                        true);
                 supportInvalidateOptionsMenu();
                 return true;
             default:
@@ -229,37 +235,31 @@ public class InputActivity extends ChildActivityBase
 
     @Override
     public void onLoadFinished(Loader<LoaderResult> loader, LoaderResult data) {
-        training = data.training;
-        rounds = data.rounds;
-        ends = data.ends;
-        standardRound = data.standardRound;
-        roundIndex = data.roundIndex;
-        setTitle(training.title);
+        this.data = data;
+        onDataLoadFinished();
+        showEnd(data.endIndex);
+    }
 
+    private void onDataLoadFinished() {
+        setTitle(data.training.title);
         if (!binding.targetViewStub.isInflated()) {
             binding.targetViewStub.getViewStub().inflate();
         }
         targetView = (TargetView) binding.targetViewStub.getBinding().getRoot();
+        targetView.setTarget(getTemplate().target);
+        targetView.setAggregationStrategy(SettingsManager.getAggregationStrategy());
+        targetView.setInputMethod(SettingsManager.getInputMethod(), false);
+        targetView.setArrow(data.arrowDiameter, data.arrowNumbers);
         targetView.setOnTargetSetListener(InputActivity.this);
         targetView.setUpdateListener(InputActivity.this);
-        targetView.setRoundTemplate(getTemplate());
-        targetView.setArrow(data.arrowDiameter, data.arrowNumbers);
-        targetView.setAggregationStrategy(SettingsManager.getAggregationStrategy());
-        targetView.switchMode(SettingsManager.getInputMode(), false);
+        targetView.reloadSettings();
+        updateOldShoots();
 
-        binding.next.setOnClickListener(view -> showEnd(endIndex + 1));
-        binding.prev.setOnClickListener(view -> showEnd(endIndex - 1));
-
-        if (endIndex > 0) {
-            updateEnd();
-        } else {
-            showEnd(data.endIndex);
-        }
+        binding.next.setOnClickListener(view -> showEnd(data.endIndex + 1));
+        binding.prev.setOnClickListener(view -> showEnd(data.endIndex - 1));
 
         // Send message to wearable app, that we are starting an end
         new Thread(InputActivity.this::startWearNotification).start();
-
-        targetView.reloadSettings();
     }
 
     @Override
@@ -289,11 +289,10 @@ public class InputActivity extends ChildActivityBase
             updateOldShoots();
         }
 
-        this.endIndex = endIndex;
-        targetView.setEnd(getCurrentEnd());
+        data.endIndex = endIndex;
 
         // Open timer if end has not been saved yet
-        if (getCurrentEnd().getId() == 0 && training.timePerPasse > 0) {
+        if (getCurrentEnd().getId() == 0 && data.training.timePerPasse > 0) {
             openTimer();
         }
         updateEnd();
@@ -301,9 +300,9 @@ public class InputActivity extends ChildActivityBase
     }
 
     public void updateOldShoots() {
-        Stream<Pair<Round, List<Passe>>> str = Stream
-                .zip(rounds.iterator(), ends.iterator(), Pair::new);
-        final Stream<Shot> shotStream = str
+        final LoaderResult data = this.data;
+        final Stream<Shot> shotStream = Stream
+                .zip(data.rounds.iterator(), data.ends.iterator(), Pair::new)
                 .filter(p -> shouldShowRound(p.first))
                 .flatMap(p -> Stream.of(p.second))
                 .filter(this::shouldShowEnd)
@@ -313,7 +312,6 @@ public class InputActivity extends ChildActivityBase
 
     private boolean shouldShowRound(Round r) {
         return showMode != EShowMode.END
-                && !targetView.getInputMode()
                 && (showMode == EShowMode.TRAINING || r.getId() == getCurrentEnd().roundId);
     }
 
@@ -322,16 +320,17 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void updateEnd() {
-        binding.endTitle.setText(getString(R.string.passe) + " " + (endIndex + 1));
+        targetView.setEnd(getCurrentEnd());
+        binding.endTitle.setText(getString(R.string.passe) + " " + (data.endIndex + 1));
         binding.roundTitle.setText(getString(R.string.round) + " " + (getTemplate().index + 1));
         updateNavigationButtons();
     }
 
     private void updateNavigationButtons() {
-        binding.prev.setEnabled(endIndex > 0);
+        binding.prev.setEnabled(data.endIndex > 0);
         binding.next.setEnabled(getCurrentEnd().getId() != 0 &&
-                (endIndex + 1 < getTemplate().endCount || // The current round is not finished
-                        standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE)); // or we don't have an exit condition
+                (data.endIndex + 1 < getTemplate().endCount || // The current round is not finished
+                        data.standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE)); // or we don't have an exit condition
     }
 
     public void setShowMode(EShowMode showMode) {
@@ -342,7 +341,7 @@ public class InputActivity extends ChildActivityBase
 
     private void openTimer() {
         if (transitionFinished) {
-            TimerFragment.getIntent(this, training.timePerPasse).start();
+            TimerFragment.getIntent(this, data.training.timePerPasse).start();
         } else if (Utils.isLollipop()) {
             startTimerDelayed();
         }
@@ -353,7 +352,7 @@ public class InputActivity extends ChildActivityBase
         getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
             @Override
             public void onTransitionEnd(Transition transition) {
-                TimerFragment.getIntent(InputActivity.this, training.timePerPasse).start();
+                TimerFragment.getIntent(InputActivity.this, data.training.timePerPasse).start();
                 getWindow().getSharedElementEnterTransition().removeListener(this);
             }
         });
@@ -384,11 +383,11 @@ public class InputActivity extends ChildActivityBase
     @Override
     public void onEndFinished(List<Shot> shots, boolean remote) {
         getCurrentEnd().shots = shots;
-        getCurrentEnd().exact = !targetView.getInputMode();
+        getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING;
         getCurrentEnd().saveDate = new DateTime();
 
         // Change round template if end is out of range defined in template
-        if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE && getTemplate().endCount - 1 == endIndex) {
+        if (data.standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE && getTemplate().endCount - 1 == data.endIndex) {
             new RoundTemplateDataSource().addEnd(getTemplate());
         }
 
@@ -399,9 +398,9 @@ public class InputActivity extends ChildActivityBase
                 manager.sendMessageUpdate(buildInfo());
             }
             if (remote) {
-                endIndex = getEnds().size();
+                data.endIndex = getEnds().size();
             }
-        } else if (endIndex + 1 == getEnds().size() && manager != null) {
+        } else if (data.endIndex + 1 == getEnds().size() && manager != null) {
             manager.sendMessageUpdate(buildInfo());
         }
         updateNavigationButtons();
@@ -423,9 +422,9 @@ public class InputActivity extends ChildActivityBase
         }
 
         // Load bow settings
-        if (training.bow > 0) {
+        if (data.training.bow > 0) {
             final SightSetting sightSetting = new SightSettingDataSource()
-                    .get(training.bow, getTemplate().distance);
+                    .get(data.training.bow, getTemplate().distance);
             if (sightSetting != null) {
                 text += String.format("%s: %s", getTemplate().distance, sightSetting.value);
             }
@@ -434,14 +433,14 @@ public class InputActivity extends ChildActivityBase
     }
 
     private List<Passe> getEnds() {
-        if (ends == null) {
+        if (data.ends == null) {
             return null;
         }
-        return ends.get(roundIndex);
+        return data.ends.get(data.roundIndex);
     }
 
     private Round getCurrentRound() {
-        return rounds.get(roundIndex);
+        return data.rounds.get(data.roundIndex);
     }
 
     private RoundTemplate getTemplate() {
@@ -453,7 +452,7 @@ public class InputActivity extends ChildActivityBase
         if (ends == null) {
             return null;
         }
-        return ends.get(endIndex);
+        return ends.get(data.endIndex);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -496,16 +495,16 @@ public class InputActivity extends ChildActivityBase
             LoaderResult result = new LoaderResult();
             result.endIndex = endIndex;
             result.training = new TrainingDataSource().get(trainingId);
-            result.rounds = new RoundDataSource().getAll(trainingId);
+            result.rounds = new ArrayList<>(new RoundDataSource().getAll(trainingId));
             result.roundIndex = 0;
             for (int i = 0; i < result.rounds.size(); i++) {
                 if (result.rounds.get(i).getId() == roundId) {
                     result.roundIndex = i;
                 }
             }
-            result.ends = Stream.of(result.rounds)
-                    .map(r -> new PasseDataSource().getAllByRound(r.getId()))
-                    .collect(Collectors.toList());
+            result.ends = new ArrayList<>(Stream.of(result.rounds)
+                    .map(r -> new ArrayList<>(new PasseDataSource().getAllByRound(r.getId())))
+                    .collect(Collectors.toList()));
 
             result.standardRound = new StandardRoundDataSource()
                     .get(result.training.standardRoundId);
@@ -525,10 +524,11 @@ public class InputActivity extends ChildActivityBase
         }
     }
 
+    @Parcel
     static class LoaderResult {
         Training training;
-        List<Round> rounds;
-        List<List<Passe>> ends;
+        ArrayList<Round> rounds;
+        ArrayList<ArrayList<Passe>> ends;
         StandardRound standardRound;
         int roundIndex;
         Dimension arrowDiameter;

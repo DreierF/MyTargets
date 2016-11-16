@@ -17,7 +17,6 @@ package de.dreier.mytargets;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
@@ -25,60 +24,44 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.Circle;
+import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
-
-import static android.graphics.Color.WHITE;
 
 
 public class TargetSelectView extends TargetViewBase {
 
     private int radius;
-    private Paint drawColorPaint;
     private int chinHeight;
     private double circleRadius;
     private Circle circle;
 
     public TargetSelectView(Context context) {
         super(context);
-        init();
     }
 
     public TargetSelectView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public TargetSelectView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init();
     }
 
     void setChinHeight(int chinHeight) {
         this.chinHeight = chinHeight;
     }
 
-    private void init() {
-        density = getResources().getDisplayMetrics().density;
-        drawColorPaint = new Paint();
-        drawColorPaint.setAntiAlias(true);
-        setOnTouchListener(this);
-    }
-
     @Override
-    public void setRoundTemplate(RoundTemplate r) {
-        super.setRoundTemplate(r);
-        circle = new Circle(density, r.target);
+    public void setTarget(Target target) {
+        super.setTarget(target);
+        circle = new Circle(density, target);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // Erase background
-        drawColorPaint.setColor(WHITE);
-        canvas.drawRect(0, 0, contentWidth, contentHeight, drawColorPaint);
-
         // Draw all possible points in a circular
         int curZone = getCurrentlySelectedZone();
         for (int i = 0; i < selectableZones.size(); i++) {
@@ -92,8 +75,8 @@ public class TargetSelectView extends TargetViewBase {
     }
 
     private int getCurrentlySelectedZone() {
-        if (end != null && getCurrentShotIndex() < round.arrowsPerEnd) {
-            return end.shots.get(getCurrentShotIndex()).zone;
+        if (getCurrentShotIndex() != EndRenderer.NO_SELECTION) {
+            return shots.get(getCurrentShotIndex()).zone;
         } else {
             return Shot.NOTHING_SELECTED;
         }
@@ -113,7 +96,7 @@ public class TargetSelectView extends TargetViewBase {
 
     @Override
     protected Coordinate initAnimationPositions(int i) {
-        return getCircularCoordinates(getSelectableZoneIndexFromShot(end.shots.get(i)));
+        return getCircularCoordinates(getSelectableZoneIndexFromShot(shots.get(i)));
     }
 
     @Override

@@ -17,7 +17,8 @@ package de.dreier.mytargets.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,17 +28,14 @@ import java.util.List;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
-import de.dreier.mytargets.shared.targets.drawable.TargetImpactDrawable;
 
 public class ArrowDispersionView extends View implements View.OnTouchListener {
     private static final float ZOOM_FACTOR = 3;
     private final float density;
-    private final Paint fillPaint;
     private int contentWidth;
     private int contentHeight;
-    private List<Shot> shots;
     private float orgRadius, orgMidX, orgMidY;
-    private TargetImpactDrawable target;
+    private TargetImpactAggregationDrawable target;
     private float zoomInX = -1, zoomInY = -1;
 
     public ArrowDispersionView(Context context) {
@@ -51,8 +49,6 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
     public ArrowDispersionView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setOnTouchListener(this);
-        fillPaint = new Paint();
-        fillPaint.setAntiAlias(true);
         density = getResources().getDisplayMetrics().density;
     }
 
@@ -82,20 +78,17 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         return true;
     }
 
-    public void setShoots(List<Shot> passes) {
-        shots = passes;
-        if (target != null) {
-            target.setShots(shots);
-        }
+    public void setShots(TargetImpactAggregationDrawable target, List<Shot> shots) {
+        this.target = target;
+        this.target.setAggregationStrategy(SettingsManager.getAggregationStrategy());
+        this.target.setShots(shots);
+        this.target.setCallback(this);
         invalidate();
     }
 
-    public void setTarget(TargetImpactAggregationDrawable target) {
-        this.target = target;
-        target.setAggregationStrategy(SettingsManager.getAggregationStrategy());
-        if (shots != null) {
-            target.setShots(shots);
-        }
+    @Override
+    public void invalidateDrawable(@NonNull Drawable drawable) {
+        super.invalidateDrawable(drawable);
         invalidate();
     }
 
@@ -130,11 +123,5 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         orgRadius = (int) (Math.min(radW, radH));
         orgMidX = contentWidth / 2;
         orgMidY = contentHeight / 2;
-    }
-
-    class Midpoint {
-        float count = 0;
-        float sumX = 0;
-        float sumY = 0;
     }
 }

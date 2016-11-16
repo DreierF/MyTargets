@@ -26,13 +26,11 @@ import de.dreier.mytargets.models.EShowMode;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.views.TargetViewBase;
 
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 
 public class SettingsManager {
-    private static final String KEY_DONATED = "donated";
-    private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
-    private static final String KEY_TIMER_SOUND = "timer_sound";
     public static final String KEY_TIMER_WARN_TIME = "timer_warn_time";
     public static final String KEY_TIMER_WAIT_TIME = "timer_wait_time";
     public static final String KEY_TIMER_SHOOT_TIME = "timer_shoot_time";
@@ -40,6 +38,11 @@ public class SettingsManager {
     public static final String KEY_PROFILE_LAST_NAME = "profile_last_name";
     public static final String KEY_PROFILE_BIRTHDAY = "profile_birthday";
     public static final String KEY_PROFILE_CLUB = "profile_club";
+    public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
+    public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
+    private static final String KEY_DONATED = "donated";
+    private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
+    private static final String KEY_TIMER_SOUND = "timer_sound";
     private static final String KEY_STANDARD_ROUND = "standard_round";
     private static final String KEY_ARROW = "arrow";
     private static final String KEY_BOW = "bow";
@@ -55,13 +58,10 @@ public class SettingsManager {
     private static final String KEY_INDOOR = "indoor";
     private static final String KEY_PASSES = "rounds";
     private static final String KEY_TRANSLATION_DIALOG_SHOWN = "translation_dialog_shown";
-    private static final String KEY_FILTER_CLUB = "filter_club";
     private static final String KEY_INPUT_MODE = "target_mode";
     private static final String KEY_SHOW_MODE = "show_mode";
     private static final SharedPreferences preferences = ApplicationInstance
             .getLastSharedPreferences();
-    public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
-    public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
     private static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
 
     public static int getStandardRound() {
@@ -132,7 +132,8 @@ public class SettingsManager {
                 .putInt(KEY_TARGET, (int) target.getId())
                 .putInt(KEY_SCORING_STYLE, target.scoringStyle)
                 .putInt(KEY_TARGET_DIAMETER_VALUE, (int) target.size.value)
-                .putString(KEY_TARGET_DIAMETER_UNIT, Dimension.Unit.toStringHandleNull(target.size.unit))
+                .putString(KEY_TARGET_DIAMETER_UNIT,
+                        Dimension.Unit.toStringHandleNull(target.size.unit))
                 .apply();
     }
 
@@ -188,26 +189,17 @@ public class SettingsManager {
                 .apply();
     }
 
-    public static int getClubFilter() {
-        return ApplicationInstance.getSharedPreferences().getInt(KEY_FILTER_CLUB, 0x1FF);
-    }
-
-    public static void setClubFilter(int filter) {
-        ApplicationInstance.getSharedPreferences()
-                .edit()
-                .putInt(KEY_FILTER_CLUB, filter)
-                .apply();
-    }
-
-    public static boolean getInputMode() {
+    public static TargetViewBase.EInputMethod getInputMethod() {
         return ApplicationInstance.getSharedPreferences()
-                .getBoolean(KEY_INPUT_MODE, false);
+                .getBoolean(KEY_INPUT_MODE, false)
+                ? TargetViewBase.EInputMethod.KEYBOARD
+                : TargetViewBase.EInputMethod.PLOTTING;
     }
 
-    public static void setInputMode(boolean inputMode) {
+    public static void setInputMethod(TargetViewBase.EInputMethod inputMethod) {
         ApplicationInstance.getSharedPreferences()
                 .edit()
-                .putBoolean(KEY_INPUT_MODE, inputMode)
+                .putBoolean(KEY_INPUT_MODE, inputMethod == TargetViewBase.EInputMethod.KEYBOARD)
                 .apply();
     }
 

@@ -32,6 +32,7 @@ import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.models.WAFull;
+import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;
@@ -64,7 +65,7 @@ public class EditTrainingActivityTest extends UITestBase {
                 .setTarget(new Target(WAFull.ID, 0, new Dimension(122, CENTIMETER)));
         SettingsManager.setDistance(new Dimension(50, METER));
         SettingsManager.setIndoor(false);
-        SettingsManager.setInputMode(false);
+        SettingsManager.setInputMethod(EInputMethod.PLOTTING);
         SettingsManager.setTimerEnabled(false);
         SettingsManager.setArrowsPerEnd(3);
         SettingsManager.setDistance(new Dimension(10, METER));
