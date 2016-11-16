@@ -44,8 +44,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     private final TargetAccessibilityTouchHelper touchHelper = new TargetAccessibilityTouchHelper(
             this);
     private final List<VirtualView> virtualViews = new ArrayList<>();
-    // TODO don't expose as public
-    public TargetImpactAggregationDrawable targetDrawable;
+
     /**
      * Zero-based index of the shot that is currently being changed.
      * If no shot is selected it is set to EndRenderer#NO_SELECTION.
@@ -64,6 +63,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected float outFromY;
     protected List<SelectableZone> selectableZones;
     protected Target target;
+    protected TargetImpactAggregationDrawable targetDrawable;
 
     public TargetViewBase(Context context) {
         super(context);

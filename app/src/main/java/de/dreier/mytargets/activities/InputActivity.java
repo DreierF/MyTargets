@@ -307,7 +307,7 @@ public class InputActivity extends ChildActivityBase
                 .flatMap(p -> Stream.of(p.second))
                 .filter(this::shouldShowEnd)
                 .flatMap(p -> Stream.of(p.shots));
-        targetView.targetDrawable.setTransparentShots(shotStream);
+        targetView.setTransparentShots(shotStream);
     }
 
     private boolean shouldShowRound(Round r) {

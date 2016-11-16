@@ -23,7 +23,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
@@ -42,7 +41,7 @@ public class EndRenderer {
     public static final int NO_SELECTION = -1;
     public static final int MAX_CIRCLE_SIZE = 17;
     private static final int MIN_PADDING = 2;
-    private static final String TAG = "EndRenderer";
+
     List<Shot> shotList;
     int pressed = NO_SELECTION;
     int selected = NO_SELECTION;
@@ -97,7 +96,6 @@ public class EndRenderer {
     public void setShots(List<Shot> shots) {
         boolean calcLayout = rect != null && shotList == null;
         shotList = new ArrayList<>(shots);
-        Log.d(TAG, "setShots: " + shots);
         oldCoordinate = new Coordinate[shotList.size()];
         Collections.sort(shotList);
         if (calcLayout) {

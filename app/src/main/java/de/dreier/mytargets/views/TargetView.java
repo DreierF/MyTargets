@@ -665,6 +665,10 @@ public class TargetView extends TargetViewBase {
         }
     }
 
+    public void setTransparentShots(Stream<Shot> shotStream) {
+        targetDrawable.setTransparentShots(shotStream);
+    }
+
     public interface OnEndUpdatedListener {
         void onEndUpdated(List<Shot> shots);
     }
