@@ -102,21 +102,6 @@ public class TargetView extends TargetViewBase {
         init();
     }
 
-    private void initSpotBounds() {
-        Rect rect = new Rect(0, 0, 1000, 1000);
-        targetDrawable.setBounds(rect);
-        if (target.getModel().getFaceCount() > 1) {
-            spotRects = new RectF[target.getModel().getFaceCount()];
-            for (int i = 0; i < target.getModel().getFaceCount(); i++) {
-                spotRects[i] = targetDrawable.getBoundsF(i, rect);
-            }
-        } else {
-            spotRects = new RectF[1];
-            spotRects[0] = new RectF(rect);
-        }
-        targetDrawable.setMatrix(new Matrix());
-    }
-
     private void init() {
         // Set up a default TextPaint object
         textPaint = new TextPaint();
@@ -135,6 +120,7 @@ public class TargetView extends TargetViewBase {
         borderPaint.setStyle(Paint.Style.STROKE);
     }
 
+    @Override
     public void setEnd(Passe end) {
         shots = end.shots;
         setCurrentShotIndex(getNextShotIndex(-1));
@@ -142,9 +128,9 @@ public class TargetView extends TargetViewBase {
         endRenderer.setSelection(getCurrentShotIndex(), null, EndRenderer.MAX_CIRCLE_SIZE);
         if (end.getId() != 0) {
             setInputMethod(end.exact ? EInputMethod.PLOTTING : EInputMethod.KEYBOARD, true);
+        } else {
+            animateFromZoomSpot();
         }
-        cancelPendingInputAnimations();
-        animateFromZoomSpot();
         notifyTargetShotsChanged();
     }
 
@@ -162,8 +148,22 @@ public class TargetView extends TargetViewBase {
     @Override
     public void setTarget(Target t) {
         super.setTarget(t);
-        setInputMethod(SettingsManager.getInputMethod(), false);
         initSpotBounds();
+    }
+
+    private void initSpotBounds() {
+        Rect rect = new Rect(0, 0, 1000, 1000);
+        targetDrawable.setBounds(rect);
+        if (target.getModel().getFaceCount() > 1) {
+            spotRects = new RectF[target.getModel().getFaceCount()];
+            for (int i = 0; i < target.getModel().getFaceCount(); i++) {
+                spotRects[i] = targetDrawable.getBoundsF(i, rect);
+            }
+        } else {
+            spotRects = new RectF[1];
+            spotRects[0] = new RectF(rect);
+        }
+        targetDrawable.setMatrix(new Matrix());
     }
 
     @Override

@@ -58,6 +58,7 @@ public class MainActivity extends Activity implements TargetViewBase.OnEndFinish
     private GoogleApiClient mGoogleApiClient;
     private WatchViewStub stub;
     private TextView startTrainingHint;
+
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -118,7 +119,7 @@ public class MainActivity extends Activity implements TargetViewBase.OnEndFinish
 
     private void setUpTargetView() {
         if (round != null && mTarget != null) {
-            mTarget.setRoundTemplate(round.info);
+            mTarget.setTarget(round.info.target);
             mTarget.reset();
             mTarget.setOnTargetSetListener(MainActivity.this);
             stub.setVisibility(View.VISIBLE);
@@ -127,14 +128,14 @@ public class MainActivity extends Activity implements TargetViewBase.OnEndFinish
     }
 
     @Override
-    public long onEndFinished(final List<Shot> shotList, boolean remote) {
+    public void onEndFinished(final List<Shot> shotList, boolean remote) {
         confirm.setVisibility(View.VISIBLE);
         confirm.setTotalTimeMs(2500);
         confirm.start();
         confirm.setListener(new DelayedConfirmationView.DelayedConfirmationListener() {
             @Override
             public void onTimerSelected(View view) {
-                mTarget.reset();
+                mTarget.setEnd(new Passe(round.info.arrowsPerEnd));
                 confirm.setVisibility(View.INVISIBLE);
                 confirm.reset();
             }
@@ -152,7 +153,6 @@ public class MainActivity extends Activity implements TargetViewBase.OnEndFinish
                 sendMessage(shotList);
             }
         });
-        return 0;
     }
 
     private Collection<String> getNodes() {
@@ -165,7 +165,7 @@ public class MainActivity extends Activity implements TargetViewBase.OnEndFinish
         return results;
     }
 
-    private void sendMessage(Passe p) {
+    private void sendMessage(List<Shot> p) {
         final byte[] data = ParcelableUtil.marshall(Parcels.wrap(p));
         new Thread(() -> {
             sendMessage(WearableUtils.FINISHED_INPUT, data);

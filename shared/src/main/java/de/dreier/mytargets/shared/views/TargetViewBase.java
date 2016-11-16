@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.Coordinate;
+import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Shot;
@@ -107,6 +108,15 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         super.onDetachedFromWindow();
         targetDrawable.setCallback(null);
         targetDrawable.cleanup();
+    }
+
+    public void setEnd(Passe end) {
+        shots = end.shots;
+        setCurrentShotIndex(getNextShotIndex(-1));
+        endRenderer.setShots(shots);
+        endRenderer.setSelection(getCurrentShotIndex(), null, EndRenderer.MAX_CIRCLE_SIZE);
+        animateFromZoomSpot();
+        notifyTargetShotsChanged();
     }
 
     public void reset() {
