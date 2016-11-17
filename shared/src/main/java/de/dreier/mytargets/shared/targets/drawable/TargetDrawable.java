@@ -36,10 +36,16 @@ public class TargetDrawable extends Drawable {
 
     protected final Target target;
     final TargetModelBase model;
-    private Matrix matrix = new Matrix();
     private final List<ZoneBase> zonesToDraw;
     private final ArrayList<Matrix> targetFaceMatrices;
     private final ArrayList<Matrix> drawMatrices;
+    private Matrix matrix = new Matrix();
+    private float zoom;
+    private float px;
+    private float py;
+    private Matrix spotMatrix = new Matrix();
+    private float xOffset;
+    private float yOffset;
 
     public TargetDrawable(Target target) {
         this.model = target.getModel();
@@ -112,19 +118,28 @@ public class TargetDrawable extends Drawable {
 
     protected Matrix getTargetFaceMatrix(int faceIndex) {
         Matrix m = drawMatrices.get(faceIndex);
-        m.set(matrix);
-        m.preConcat(targetFaceMatrices.get(faceIndex));
+        m.set(getPreCalculatedFaceMatrix(faceIndex));
+        m.postConcat(spotMatrix);
+        m.postTranslate(-px - 1, -py - 1);
+        m.postScale(zoom, zoom);
+        m.postTranslate(zoom + px, zoom + py);
+        m.postConcat(matrix);
+        m.postTranslate(xOffset, yOffset);
         return m;
+    }
+
+    public Matrix getPreCalculatedFaceMatrix(int faceIndex) {
+        return targetFaceMatrices.get(faceIndex);
     }
 
     @NonNull
     private Matrix calculateTargetFaceMatrix(int index) {
         Coordinate pos = model.facePositions[index % model.facePositions.length];
-        RectF fullRect = new RectF(-1f, -1f, 1f, 1f);
-        final RectF spotRectIn11 = new RectF(pos.x - model.faceRadius, pos.y - model.faceRadius,
-                pos.x + model.faceRadius, pos.y + model.faceRadius);
         Matrix matrix = new Matrix();
-        matrix.setRectToRect(fullRect, new RectF(spotRectIn11), Matrix.ScaleToFit.CENTER);
+        matrix.setRectToRect(new RectF(-1f, -1f, 1f, 1f),
+                new RectF(pos.x - model.faceRadius, pos.y - model.faceRadius,
+                        pos.x + model.faceRadius, pos.y + model.faceRadius),
+                Matrix.ScaleToFit.FILL);
         return matrix;
     }
 
@@ -156,13 +171,25 @@ public class TargetDrawable extends Drawable {
     public void setColorFilter(ColorFilter arg0) {
     }
 
-    public RectF getBoundsF(int index, Rect rect) {
-        Coordinate pos = model.facePositions[index];
-        RectF bounds = new RectF();
-        bounds.left = rect.left + (500f + pos.x * 500f - model.faceRadius * 500f) * 0.5f;
-        bounds.top = rect.top + (500f + pos.y * 500f - model.faceRadius * 500f) * 0.5f;
-        bounds.right = rect.left + (500f + pos.x * 500f + model.faceRadius * 500f) * 0.5f;
-        bounds.bottom = rect.top + (500f + pos.y * 500f + model.faceRadius * 500f) * 0.5f;
-        return bounds;
+    public void setZoom(float zoom) {
+        this.zoom = zoom;
+    }
+
+    public void setMid(float px, float py) {
+        this.px = px;
+        this.py = py;
+    }
+
+    public void setSpotMatrix(Matrix spotMatrix) {
+        this.spotMatrix = spotMatrix;
+    }
+
+    public void setOffset(float x, float y) {
+        xOffset = x;
+        yOffset = y;
+    }
+
+    public Matrix getSpotMatrix() {
+        return spotMatrix;
     }
 }

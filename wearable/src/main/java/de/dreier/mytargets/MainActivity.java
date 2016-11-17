@@ -120,7 +120,7 @@ public class MainActivity extends Activity implements TargetViewBase.OnEndFinish
     private void setUpTargetView() {
         if (round != null && mTarget != null) {
             mTarget.setTarget(round.info.target);
-            mTarget.reset();
+            mTarget.setEnd(new Passe(round.info.arrowsPerEnd));
             mTarget.setOnTargetSetListener(MainActivity.this);
             stub.setVisibility(View.VISIBLE);
             startTrainingHint.setVisibility(View.GONE);

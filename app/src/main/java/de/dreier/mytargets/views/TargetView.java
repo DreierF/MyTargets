@@ -17,6 +17,7 @@ package de.dreier.mytargets.views;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -27,7 +28,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.text.InputType;
@@ -36,8 +36,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
@@ -59,33 +57,31 @@ import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
-import icepick.Icepick;
 
 public class TargetView extends TargetViewBase {
 
     private final Handler h = new Handler();
-    private boolean inputModeTransitioning = false;
-    private boolean zoomTransitioning = false;
-    private float radius, midX, midY;
     private Paint fillPaint;
     private Timer longPressTimer;
-    private float oldRadius;
-    private RectF[] spotRects;
-    private float orgRadius, orgMidX, orgMidY;
-    private boolean spotFocused = false;
-    private RectF targetRect;
+    private Matrix[] spotMatrices;
     private List<ArrowNumber> arrowNumbers = new ArrayList<>();
     private TextPaint textPaint;
     private Paint borderPaint;
-    private ValueAnimator animator;
+    private AnimatorSet animator;
     private float inputModeProgress = 0;
     private ValueAnimator inputAnimator;
     private Dimension arrowDiameter;
     private float targetZoomFactor;
     private OnEndUpdatedListener updateListener;
+    private Matrix fullMatrix;
+    private Matrix fullMatrixInverse;
+    private float[] pt = new float[2];
+    private boolean inputModeTransitioning = false;
+    private float orgRadius;
+    private Matrix fullExtendedMatrix;
+    private Matrix fullExtendedMatrixInverse;
 
     public TargetView(Context context) {
         super(context);
@@ -146,80 +142,52 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    public void setTarget(Target t) {
-        super.setTarget(t);
-        initSpotBounds();
-    }
-
-    private void initSpotBounds() {
-        Rect rect = new Rect(0, 0, 1000, 1000);
-        targetDrawable.setBounds(rect);
-        if (target.getModel().getFaceCount() > 1) {
-            spotRects = new RectF[target.getModel().getFaceCount()];
-            for (int i = 0; i < target.getModel().getFaceCount(); i++) {
-                spotRects[i] = targetDrawable.getBoundsF(i, rect);
-            }
-        } else {
-            spotRects = new RectF[1];
-            spotRects[0] = new RectF(rect);
-        }
-        targetDrawable.setMatrix(new Matrix());
-    }
-
-    @Override
     protected void onDraw(Canvas canvas) {
         // Draw target
-        if (zoomTransitioning) {
-            drawTarget(canvas, outFromX + (midX - outFromX) * curAnimationProgress,
-                    outFromY + (midY - outFromY) * curAnimationProgress,
-                    oldRadius + (radius - oldRadius) * curAnimationProgress);
+        if (inputMethod == EInputMethod.PLOTTING && isCurrentlySelecting()) {
+            drawZoomedInTarget(canvas);
         } else {
-            if (inputMethod == EInputMethod.PLOTTING && isCurrentlySelecting()) {
-                drawZoomedInTarget(canvas);
-            } else {
-                drawTarget(canvas, midX, midY, radius);
-            }
-        }
-
-        // Draw exact arrow position
-        if (inputMethod == EInputMethod.PLOTTING) {
-            drawFocusedArrow(canvas);
+            drawTarget(canvas);
         }
 
         // Draw right indicator
-        drawRightSelectorBar(canvas);
+        drawKeyboard(canvas);
 
         // Draw all points of this end at the top
         endRenderer.draw(canvas);
     }
 
     private void drawZoomedInTarget(Canvas canvas) {
-        float px = shots.get(getCurrentShotIndex()).x;
-        float py = shots.get(getCurrentShotIndex()).y;
-        int radius2 = (int) (radius * targetZoomFactor);
-        int x = (int) ((midX - orgMidX) * targetZoomFactor + orgMidX
-                - px * (targetZoomFactor - 1) * orgRadius - px * 30 * density);
-        int y = (int) ((midY - orgMidY) * targetZoomFactor + orgMidY
-                - py * (targetZoomFactor - 1) * orgRadius - py * 30 * density - 60 * density);
-        drawTarget(canvas, x, y, radius2);
-    }
+        Shot shot = shots.get(getCurrentShotIndex());
 
-    private void drawTarget(Canvas canvas, float x, float y, float radius) {
-        canvas.save();
-        // Draw actual target face
-        targetDrawable.setBounds((int) (x - radius), (int) (y - radius), (int) (x + radius),
-                (int) (y + radius));
+        targetDrawable.setMatrix(fullExtendedMatrix);
+        targetDrawable.setSpotMatrix(
+                spotMatrices[getCurrentShotIndex() % target.getModel().getFaceCount()]);
+        targetDrawable.setZoom(targetZoomFactor);
+        targetDrawable.setMid(shot.x, shot.y);
+        targetDrawable.setOffset(0, -60 * density);
+
         targetDrawable.draw(canvas);
-        canvas.restore();
+
+        // Draw exact arrow position
+        targetDrawable.drawFocusedArrow(canvas, shot);
     }
 
-    private void drawFocusedArrow(Canvas canvas) {
-        canvas.save();
-        if (isCurrentlySelecting()) {
-            Shot shot = shots.get(getCurrentShotIndex());
-            targetDrawable.drawFocusedArrow(canvas, shot);
+    // Draw actual target face
+    private void drawTarget(Canvas canvas) {
+        targetDrawable.setMatrix(fullMatrix);
+        targetDrawable.setOffset(0, 0);
+        targetDrawable.setZoom(1);
+        targetDrawable.setMid(0, 0);
+        if (animator == null) {
+            if (getCurrentShotIndex() == EndRenderer.NO_SELECTION) {
+                targetDrawable.setSpotMatrix(new Matrix());
+            } else {
+                targetDrawable.setSpotMatrix(
+                        spotMatrices[getCurrentShotIndex() % target.getModel().getFaceCount()]);
+            }
         }
-        canvas.restore();
+        targetDrawable.draw(canvas);
     }
 
     protected void notifyTargetShotsChanged() {
@@ -231,7 +199,9 @@ public class TargetView extends TargetViewBase {
         }
         targetDrawable.setShots(displayedShots);
         super.notifyTargetShotsChanged();
-        triggerUpdate();
+        if (updateListener != null) {
+            updateListener.onEndUpdated(shots);
+        }
     }
 
     @Override
@@ -243,8 +213,11 @@ public class TargetView extends TargetViewBase {
             int index = getSelectableZoneIndexFromShot(shots.get(i));
             coordinate.y = indicatorHeight * index + indicatorHeight / 2.0f;
         } else {
-            coordinate.x = orgMidX + orgRadius * shots.get(i).x;
-            coordinate.y = orgMidY + orgRadius * shots.get(i).y;
+            pt[0] = shots.get(i).x;
+            pt[1] = shots.get(i).y;
+            fullMatrix.mapPoints(pt);
+            coordinate.x = pt[0];
+            coordinate.y = pt[1];
         }
         return coordinate;
     }
@@ -255,13 +228,34 @@ public class TargetView extends TargetViewBase {
         float radH = (contentHeight - 10 * density) / 2.45f;
         float radW = (availableWidth - (inputMethod == EInputMethod.KEYBOARD ? 70 : 20) * density) * 0.5f;
         orgRadius = (int) (Math.min(radW, radH));
-        orgMidX = availableWidth / 2;
-        orgMidY = contentHeight - orgRadius - 10 * density;
-        targetRect = new RectF(
+        float orgMidX = availableWidth / 2;
+        float orgMidY = contentHeight - orgRadius - 10 * density;
+        RectF targetRect = new RectF(
                 orgMidX - orgRadius,
                 orgMidY - orgRadius,
                 orgMidX + orgRadius,
                 orgMidY + orgRadius);
+
+        fullMatrix = new Matrix();
+        fullMatrix.setRectToRect(new RectF(-1f, -1f, 1f, 1f),
+                targetRect, Matrix.ScaleToFit.CENTER);
+        fullMatrixInverse = new Matrix();
+        fullMatrix.invert(fullMatrixInverse);
+
+        RectF targetRectExt = new RectF(
+                orgMidX - orgRadius + 30 * density,
+                orgMidY - orgRadius + 30 * density,
+                orgMidX + orgRadius - 30 * density,
+                orgMidY + orgRadius - 30 * density);
+
+        fullExtendedMatrix = new Matrix();
+        fullExtendedMatrix.setRectToRect(new RectF(-1f, -1f, 1f, 1f),
+                targetRectExt, Matrix.ScaleToFit.CENTER);
+        fullExtendedMatrixInverse = new Matrix();
+        fullExtendedMatrix.invert(fullExtendedMatrixInverse);
+
+        initSpotBounds();
+
         RectF rect = new RectF();
         rect.left = 30 * density;
         rect.right = availableWidth - 30 * density;
@@ -269,6 +263,14 @@ public class TargetView extends TargetViewBase {
         rect.bottom = orgMidY - orgRadius - 10 * density;
         endRenderer.animateToRect(rect);
         animateToZoomSpot();
+    }
+
+    private void initSpotBounds() {
+        spotMatrices = new Matrix[target.getModel().getFaceCount()];
+        for (int i = 0; i < target.getModel().getFaceCount(); i++) {
+            spotMatrices[i] = new Matrix();
+            targetDrawable.getPreCalculatedFaceMatrix(i).invert(spotMatrices[i]);
+        }
     }
 
     public void setInputMethod(EInputMethod mode, boolean animate) {
@@ -304,8 +306,11 @@ public class TargetView extends TargetViewBase {
                 return null;
             }
         } else { // Handle via target
-            s.x = (x - orgMidX) / (orgRadius - 30 * density);
-            s.y = (y - orgMidY) / (orgRadius - 30 * density);
+            pt[0] = x;
+            pt[1] = y;
+            fullExtendedMatrixInverse.mapPoints(pt);
+            s.x = pt[0];
+            s.y = pt[1];
             s.zone = targetDrawable.getZoneFromPoint(s.x, s.y);
         }
         return s;
@@ -385,115 +390,75 @@ public class TargetView extends TargetViewBase {
 
     private void initAnimation() {
         curAnimationProgress = 0;
-        outFromX = midX;
-        outFromY = midY;
-        oldRadius = radius;
     }
 
     @Override
     protected void animateFromZoomSpot() {
-        if (target.getModel().getFaceCount() > 1) {
-            if (!spotFocused) {
-                zoomTransitioning = false;
-                animateToZoomSpot();
-            } else {
-                cancelPendingAnimations();
-                animator = ValueAnimator.ofFloat(0, 1);
-                animator.setInterpolator(
-                        getCurrentShotIndex() != EndRenderer.NO_SELECTION
-                                ? new AccelerateInterpolator()
-                                : new AccelerateDecelerateInterpolator());
-                animator.addUpdateListener(valueAnimator -> {
-                    curAnimationProgress = (Float) valueAnimator.getAnimatedValue();
-                    invalidate();
-                });
-                animator.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        zoomTransitioning = true;
-                        initAnimation();
-                        radius = orgRadius;
-                        midX = orgMidX;
-                        midY = orgMidY;
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-                        onAnimationEnd(animation);
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        spotFocused = false;
-                        zoomTransitioning = false;
-                        animateToZoomSpot();
-                        invalidate();
-                    }
-                });
-                animator.setDuration(200);
-                animator.start();
-            }
-        }
+        animateToZoomSpot();
     }
 
     @Override
     protected void animateToZoomSpot() {
-        if (!spotFocused && !zoomTransitioning) {
-            radius = orgRadius;
-            midX = orgMidX;
-            midY = orgMidY;
+        if (spotMatrices == null) {
+            return;
         }
-        if (target.getModel()
-                .getFaceCount() > 1 && getCurrentShotIndex() != EndRenderer.NO_SELECTION && radius > 0 &&
-                !spotFocused && inputMethod == EInputMethod.PLOTTING && !zoomTransitioning) {
-            cancelPendingAnimations();
-            animator = ValueAnimator.ofFloat(0, 1);
-            animator.setInterpolator(
-                    getCurrentShotIndex() == 0 ? new AccelerateDecelerateInterpolator() :
-                            new DecelerateInterpolator());
-            animator.addUpdateListener(valueAnimator -> {
-                curAnimationProgress = (Float) valueAnimator.getAnimatedValue();
+        // Get current matrix
+        Matrix oldMatrix = targetDrawable.getSpotMatrix();
+        float[] oldValues = new float[9];
+        oldMatrix.getValues(oldValues);
+
+        // Intermediate matrix
+        Matrix midMatrix = new Matrix();
+        float[] midValues = new float[9];
+        midMatrix.getValues(midValues);
+
+        // Get new matrix
+        Matrix newMatrix;
+        if (inputMethod == EInputMethod.PLOTTING && getCurrentShotIndex() != EndRenderer.NO_SELECTION) {
+            newMatrix = spotMatrices[getCurrentShotIndex() % target.getModel().getFaceCount()];
+        } else {
+            newMatrix = new Matrix();
+        }
+        float[] newValues = new float[9];
+        newMatrix.getValues(newValues);
+
+        cancelPendingAnimations();
+
+        List<ValueAnimator> list = new ArrayList<>(9);
+        List<Animator> setList = new ArrayList<>(9);
+        for (int i = 0; i < 9; i++) {
+            final ValueAnimator animator = ValueAnimator
+                    .ofFloat(oldValues[i], midValues[i], newValues[i]);
+            list.add(animator);
+            setList.add(animator);
+        }
+        list.get(0).addUpdateListener(valueAnimator -> {
+            for (int i = 0; i < 9; i++) {
+                midValues[i] = (float) list.get(i).getAnimatedValue();
+            }
+            midMatrix.setValues(midValues);
+            targetDrawable.setSpotMatrix(midMatrix);
+            invalidate();
+        });
+        animator = new AnimatorSet();
+        animator.playTogether(setList);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                onAnimationEnd(animation);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                targetDrawable.setSpotMatrix(newMatrix);
+                animator = null;
                 invalidate();
-            });
-            animator.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    zoomTransitioning = true;
-                    initAnimation();
-
-                    RectF spotRect = new RectF(spotRects[getCurrentShotIndex() % spotRects.length]);
-                    float scale = orgRadius / 250;
-                    spotRect.left = targetRect.left + spotRect.left * scale;
-                    spotRect.top = targetRect.top + spotRect.top * scale;
-                    spotRect.right = targetRect.left + spotRect.right * scale;
-                    spotRect.bottom = targetRect.top + spotRect.bottom * scale;
-
-                    float zoomFactor = orgRadius * 2.0f / spotRect.width();
-                    radius = (int) (orgRadius * zoomFactor);
-                    midX = (int) (radius + orgMidX + (targetRect.left - spotRect
-                            .centerX()) * zoomFactor);
-                    midY = (int) (radius + orgMidY + (targetRect.top - spotRect
-                            .centerY()) * zoomFactor);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-                    onAnimationEnd(animation);
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    zoomTransitioning = false;
-                    spotFocused = true;
-                    invalidate();
-                }
-            });
-            /*if (currentArrow == 0) {
-                animator.setStartDelay(500);
-            }*/
-            animator.setDuration(200);
-            animator.start();
-        }
+            }
+        });
+        animator.setDuration(300);
+        animator.start();
     }
 
     @Override
@@ -546,7 +511,7 @@ public class TargetView extends TargetViewBase {
      *
      * @param canvas Canvas to draw on
      */
-    private void drawRightSelectorBar(Canvas canvas) {
+    private void drawKeyboard(Canvas canvas) {
         if (inputMethod == EInputMethod.KEYBOARD || inputModeTransitioning) {
             for (int i = 0; i < selectableZones.size(); i++) {
                 SelectableZone zone = selectableZones.get(i);
@@ -611,7 +576,7 @@ public class TargetView extends TargetViewBase {
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         // Cancel animation
-        if (inputModeTransitioning || zoomTransitioning) {
+        if (inputModeTransitioning || animator != null) {
             endRenderer.cancel();
         }
 
@@ -624,7 +589,7 @@ public class TargetView extends TargetViewBase {
 
     private void cancelPendingAnimations() {
         if (animator != null) {
-            ValueAnimator tmp = animator;
+            AnimatorSet tmp = animator;
             animator = null;
             tmp.cancel();
         }
@@ -642,27 +607,10 @@ public class TargetView extends TargetViewBase {
         this.updateListener = updateListener;
     }
 
-    @Override
-    public Parcelable onSaveInstanceState() {
-        return Icepick.saveInstanceState(this, super.onSaveInstanceState());
-    }
-
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
-        triggerUpdate();
-    }
-
     public void reloadSettings() {
         this.targetZoomFactor = SettingsManager.getInputTargetZoom();
         targetDrawable
                 .setArrowDiameter(arrowDiameter, SettingsManager.getInputArrowDiameterScale());
-    }
-
-    private void triggerUpdate() {
-        if (updateListener != null) {
-            updateListener.onEndUpdated(shots);
-        }
     }
 
     public void setTransparentShots(Stream<Shot> shotStream) {

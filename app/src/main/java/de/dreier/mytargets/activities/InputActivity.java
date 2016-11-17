@@ -247,12 +247,12 @@ public class InputActivity extends ChildActivityBase
         }
         targetView = (TargetView) binding.targetViewStub.getBinding().getRoot();
         targetView.setTarget(getTemplate().target);
-        targetView.setAggregationStrategy(SettingsManager.getAggregationStrategy());
-        targetView.setInputMethod(SettingsManager.getInputMethod(), false);
         targetView.setArrow(data.arrowDiameter, data.arrowNumbers);
         targetView.setOnTargetSetListener(InputActivity.this);
         targetView.setUpdateListener(InputActivity.this);
         targetView.reloadSettings();
+        targetView.setAggregationStrategy(SettingsManager.getAggregationStrategy());
+        targetView.setInputMethod(SettingsManager.getInputMethod(), false);
         updateOldShoots();
 
         binding.next.setOnClickListener(view -> showEnd(data.endIndex + 1));

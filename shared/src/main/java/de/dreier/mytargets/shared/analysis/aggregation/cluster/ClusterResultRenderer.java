@@ -25,7 +25,6 @@ import android.graphics.RectF;
 import java.util.List;
 
 import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer;
-import de.dreier.mytargets.shared.utils.PathUtils;
 
 public class ClusterResultRenderer implements IAggregationResultRenderer {
 
@@ -71,8 +70,8 @@ public class ClusterResultRenderer implements IAggregationResultRenderer {
     @Override
     public void onDraw(Canvas canvas) {
         for (int index = 0; index < clusters.size(); index++) {
-            PathUtils.drawPath(canvas, outerClusterPaths[index], innerPaints[index]);
-            PathUtils.drawPath(canvas, clusterPaths[index], innerPaints[index]);
+            canvas.drawPath(outerClusterPaths[index], innerPaints[index]);
+            canvas.drawPath(clusterPaths[index], innerPaints[index]);
         }
     }
 

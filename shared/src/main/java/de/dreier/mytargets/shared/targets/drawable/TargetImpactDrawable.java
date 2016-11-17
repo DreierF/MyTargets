@@ -45,7 +45,6 @@ public class TargetImpactDrawable extends TargetDrawable {
     protected List<List<Shot>> shots = new ArrayList<>();
     protected List<List<Shot>> transparentShots = new ArrayList<>();
     private Paint paintFill;
-    private Paint paintStroke;
     private Map<String, Bitmap> scoresTextCache = new HashMap<>();
     private RectF textRect;
     private float arrowRadius = 8;
@@ -65,9 +64,6 @@ public class TargetImpactDrawable extends TargetDrawable {
     private void initPaint() {
         paintFill = new Paint();
         paintFill.setAntiAlias(true);
-        paintStroke = new Paint();
-        paintStroke.setStyle(Paint.Style.STROKE);
-        paintStroke.setAntiAlias(true);
     }
 
     private void initScoresBitmapCache() {
@@ -75,7 +71,7 @@ public class TargetImpactDrawable extends TargetDrawable {
         paintText.setAntiAlias(true);
         paintText.setColor(WHITE);
         Rect tr = new Rect();
-        paintText.setTextSize(20);
+        paintText.setTextSize(40);
 
         final Set<SelectableZone> selectableZones = target.getAllPossibleSelectableZones();
         List<Pair<SelectableZone, Rect>> rects = new ArrayList<>();
@@ -147,6 +143,7 @@ public class TargetImpactDrawable extends TargetDrawable {
     }
 
     public void drawFocusedArrow(Canvas canvas, Shot shot) {
+        canvas.save();
         Matrix targetMatrix = getTargetFaceMatrix(shot.index % model.getFaceCount());
         canvas.setMatrix(targetMatrix);
 
@@ -168,6 +165,7 @@ public class TargetImpactDrawable extends TargetDrawable {
         m.postConcat(targetMatrix);
         canvas.setMatrix(m);
         canvas.drawBitmap(scoresTextCache.get(zoneString), 0, 0, null);
+        canvas.restore();
     }
 
     public void setShots(List<Shot> shots) {

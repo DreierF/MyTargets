@@ -110,6 +110,19 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         targetDrawable.cleanup();
     }
 
+    public void setTarget(Target t) {
+        target = t;
+        targetDrawable = target.getImpactAggregationDrawable();
+        targetDrawable.setCallback(this);
+        endRenderer.init(this, density, target);
+        updateSelectableZones();
+    }
+
+    protected void updateSelectableZones() {
+        selectableZones = target.getSelectableZoneList(getCurrentShotIndex());
+        updateVirtualViews();
+    }
+
     public void setEnd(Passe end) {
         shots = end.shots;
         setCurrentShotIndex(getNextShotIndex(-1));
@@ -119,28 +132,23 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         notifyTargetShotsChanged();
     }
 
-    public void reset() {
-        animateToZoomSpot();
-        notifyTargetShotsChanged();
-    }
-
-    protected void setTarget(Target t) {
-        target = t;
-        targetDrawable = target.getImpactAggregationDrawable();
-        targetDrawable.setCallback(this);
-        endRenderer.init(this, density, target);
-        updateSelectableZones();
-    }
-
     @Override
     public void invalidateDrawable(@NonNull Drawable drawable) {
         super.invalidateDrawable(drawable);
         invalidate();
     }
 
-    protected void updateSelectableZones() {
-        selectableZones = target.getSelectableZoneList(getCurrentShotIndex());
+    public boolean dispatchHoverEvent(MotionEvent event) {
+        return touchHelper.dispatchHoverEvent(event) || super.dispatchHoverEvent(event);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        contentWidth = getWidth();
+        contentHeight = getHeight();
+        calcSizes();
         updateVirtualViews();
+        invalidate();
     }
 
     private void updateVirtualViews() {
@@ -155,19 +163,6 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
                 virtualViews.add(vv);
             }
         }
-    }
-
-    public boolean dispatchHoverEvent(MotionEvent event) {
-        return touchHelper.dispatchHoverEvent(event) || super.dispatchHoverEvent(event);
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        contentWidth = getWidth();
-        contentHeight = getHeight();
-        calcSizes();
-        updateVirtualViews();
-        invalidate();
     }
 
     protected int getSelectableZoneIndexFromShot(Shot shot) {

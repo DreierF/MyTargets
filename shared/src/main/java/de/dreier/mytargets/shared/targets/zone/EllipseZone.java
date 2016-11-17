@@ -52,12 +52,12 @@ public class EllipseZone extends ZoneBase {
     @Override
     public void drawFill(Canvas canvas) {
         initPaint();
-        PathUtils.drawPath(canvas, ellipse, paintFill);
+        canvas.drawPath(ellipse, paintFill);
     }
 
     @Override
     public void drawStroke(Canvas canvas) {
         initPaint();
-        PathUtils.drawPath(canvas, ellipse, paintStroke);
+        canvas.drawPath(ellipse, paintStroke);
     }
 }
