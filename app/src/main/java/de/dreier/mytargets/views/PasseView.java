@@ -53,9 +53,6 @@ public class PasseView extends View {
         passe = p;
         density = getResources().getDisplayMetrics().density;
         mEndRenderer.init(this, density, target);
-        if (rect.width() > 0) {
-            mEndRenderer.animateToRect(rect);
-        }
         mEndRenderer.setShots(p.shots);
         invalidate();
     }
@@ -69,14 +66,11 @@ public class PasseView extends View {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-
-        int contentWidth = getWidth();
-        int contentHeight = getHeight();
         rect.left = 0;
-        rect.right = contentWidth;
+        rect.right = getWidth();
         rect.top = 0;
-        rect.bottom = contentHeight;
-        mEndRenderer.animateToRect(rect);
+        rect.bottom = getHeight();
+        mEndRenderer.setRect(rect);
     }
 
     @Override

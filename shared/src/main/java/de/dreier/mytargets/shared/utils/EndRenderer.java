@@ -59,7 +59,6 @@ public class EndRenderer {
     private transient int shotsPerRow;
     private transient float rowHeight;
     private transient float columnWidth;
-    private transient ValueAnimator selectionAnimator;
     private transient int oldRadius;
     private transient int oldSelected;
     private transient int oldSelectedRadius;
@@ -171,27 +170,29 @@ public class EndRenderer {
         }
     }
 
-    public void animateToSelection(int selectedShot, Coordinate c, int radius) {
+    public Animator getAnimationToSelection(int selectedShot, Coordinate c, int radius, RectF rect) {
+        if(rect == null) {
+            setSelection(selectedShot, c, radius);
+            return null;
+        }
+        if (this.rect == null) {
+            setRect(rect);
+        }
         saveCoordinates();
+        setRect(rect);
         setSelection(selectedShot, c, radius);
         Collections.sort(shotList);
-        animate();
+        return getAnimator();
     }
 
     public void setSelection(int selectedShot, Coordinate c, int radius) {
-        // Cancel eventually currently running animation
-        cancel();
-
         selected = selectedShot;
         selectedPosition = c;
         selectedRadius = radius;
     }
 
-    private void animate() {
-        // Cancel eventually currently running animation
-        cancel();
-
-        selectionAnimator = ValueAnimator.ofFloat(0, 1);
+    private ValueAnimator getAnimator() {
+        ValueAnimator selectionAnimator = ValueAnimator.ofFloat(0, 1);
         selectionAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         selectionAnimator.addUpdateListener(valueAnimator -> {
             currentAnimationProgress = (Float) valueAnimator.getAnimatedValue();
@@ -200,29 +201,10 @@ public class EndRenderer {
         selectionAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                selectionAnimator = null;
                 currentAnimationProgress = -1;
-                parent.invalidate();
             }
         });
-        selectionAnimator.setDuration(300);
-        selectionAnimator.start();
-    }
-
-    public void animateToRect(RectF newRect) {
-        if (rect == null || shotList == null || shotsPerRow == 0) {
-            setRect(newRect);
-            return;
-        }
-        saveCoordinates();
-        setRect(newRect);
-        animate();
-    }
-
-    public void cancel() {
-        if (selectionAnimator != null) {
-            selectionAnimator.cancel();
-        }
+        return selectionAnimator;
     }
 
     private void saveCoordinates() {

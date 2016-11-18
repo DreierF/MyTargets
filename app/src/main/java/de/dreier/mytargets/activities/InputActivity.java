@@ -404,6 +404,7 @@ public class InputActivity extends ChildActivityBase
             manager.sendMessageUpdate(buildInfo());
         }
         updateNavigationButtons();
+        supportInvalidateOptionsMenu();
     }
 
     private NotificationInfo buildInfo() {

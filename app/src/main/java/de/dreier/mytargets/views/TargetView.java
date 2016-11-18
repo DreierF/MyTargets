@@ -16,8 +16,6 @@
 package de.dreier.mytargets.views;
 
 import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -62,7 +60,6 @@ import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
 import static de.dreier.mytargets.views.TargetView.EKeyboardType.LEFT;
-import static de.dreier.mytargets.views.TargetView.EKeyboardType.RIGHT;
 
 //TODO add ui tests for TargetView
 public class TargetView extends TargetViewBase {
@@ -74,32 +71,68 @@ public class TargetView extends TargetViewBase {
     private static final int POINTER_OFFSET_Y_DP = -60;
     private static final int MIN_END_RECT_HEIGHT_DP = 80;
     private static final int KEYBOARD_INNER_PADDING_DP = 40;
-    private final Handler h = new Handler();
-    private Paint fillPaint;
-    private Timer longPressTimer;
+
     private Matrix[] spotMatrices;
     private List<ArrowNumber> arrowNumbers = new ArrayList<>();
-    private TextPaint textPaint;
-    private Paint borderPaint;
-    private AnimatorSet animator;
     private Dimension arrowDiameter;
     private float targetZoomFactor;
     private OnEndUpdatedListener updateListener;
+
+    /**
+     * Matrix to translate the target face with -1..1 coordinate system
+     * to the correct area on the screen.
+     */
     private Matrix fullMatrix;
-    private float[] pt = new float[2];
+
+    /**
+     * Matrix to translate the target face with -1..1 coordinate system
+     * to the correct area on the screen when selecting a shot position.
+     * This area is inset by 30dp to allow easier placement outside of the target face.
+     */
     private Matrix fullExtendedMatrix;
+
+    /**
+     * Inverse of {@link #fullExtendedMatrix}.
+     * Allows to map screen coordinates to -1..1 coordinate system.
+     */
     private Matrix fullExtendedMatrixInverse;
+
+    /**
+     * Temporary point vector used to translate between different coordinate systems.
+     */
+    private float[] pt = new float[2];
+
     private EAggregationStrategy aggregationStrategy = EAggregationStrategy.NONE;
 
     /**
-     * Percentage of the keyboard that is currently supposed to be shown. (0..1)
+     * Left-handed or right-handed mode.
+     */
+    private EKeyboardType keyboardType;
+
+    /**
+     * Used to draw the keyboard buttons.
+     */
+    private Paint fillPaint;
+
+    /**
+     * Used to draw the keyboard button borders.
+     */
+    private Paint borderPaint;
+
+    /**
+     * Used to draw the keyboard button texts.
+     */
+    private TextPaint textPaint;
+
+    /**
+     * Percentage of the keyboard that is currently supposed to be shown. (0..1).
      */
     private float keyboardVisibility = 0;
 
-    /**
-     * Left-handed or Right-handed mode
-     */
-    private EKeyboardType keyboardType;
+    private Timer longPressTimer;
+    private RectF keyboardRect;
+    private RectF targetRect;
+
 
     public TargetView(Context context) {
         super(context);
@@ -236,12 +269,13 @@ public class TargetView extends TargetViewBase {
     protected Coordinate initAnimationPositions(int i) {
         Coordinate coordinate = new Coordinate();
         if (inputMethod == EInputMethod.KEYBOARD) {
+            coordinate.x = keyboardRect.left;
             if (keyboardType == LEFT) {
-                coordinate.x = (KEYBOARD_TOTAL_WIDTH_DP + KEYBOARD_INNER_PADDING_DP) * density;
+                coordinate.x += (KEYBOARD_WIDTH_DP + KEYBOARD_INNER_PADDING_DP) * density;
             } else {
-                coordinate.x = contentWidth - (KEYBOARD_TOTAL_WIDTH_DP + KEYBOARD_INNER_PADDING_DP) * density;
+                coordinate.x -= KEYBOARD_INNER_PADDING_DP * density;
             }
-            int indicatorHeight = contentHeight / selectableZones.size();
+            float indicatorHeight = keyboardRect.height() / selectableZones.size();
             int index = getSelectableZoneIndexFromShot(shots.get(i));
             coordinate.y = indicatorHeight * index + indicatorHeight / 2.0f;
         } else {
@@ -265,9 +299,8 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    protected void calcSizes() {
-        RectF targetRect = new RectF(0, MIN_END_RECT_HEIGHT_DP * density,
-                contentWidth, contentHeight);
+    protected void updateLayoutBounds(int width, int height) {
+        targetRect = new RectF(0, MIN_END_RECT_HEIGHT_DP * density, width, height);
         targetRect.inset(TARGET_PADDING_DP * density, TARGET_PADDING_DP * density);
         if (inputMethod == EInputMethod.KEYBOARD) {
             if (keyboardType == LEFT) {
@@ -282,32 +315,41 @@ public class TargetView extends TargetViewBase {
         final RectF srcRect = new RectF(-1f, -1f, 1f, 1f);
 
         fullMatrix = new Matrix();
-        fullMatrix.setRectToRect(srcRect,
-                targetRect, Matrix.ScaleToFit.CENTER);
+        fullMatrix.setRectToRect(srcRect, targetRect, Matrix.ScaleToFit.CENTER);
 
         RectF targetRectExt = new RectF(targetRect);
         targetRectExt.inset(30 * density, 30 * density);
         fullExtendedMatrix = new Matrix();
-        fullExtendedMatrix.setRectToRect(srcRect,
-                targetRectExt, Matrix.ScaleToFit.CENTER);
+        fullExtendedMatrix.setRectToRect(srcRect, targetRectExt, Matrix.ScaleToFit.CENTER);
         fullExtendedMatrixInverse = new Matrix();
         fullExtendedMatrix.invert(fullExtendedMatrixInverse);
 
+        keyboardRect = new RectF();
+        keyboardRect.top = 0;
+        keyboardRect.bottom = height;
+        if (keyboardType == EKeyboardType.LEFT) {
+            keyboardRect.left = KEYBOARD_OUTER_PADDING_DP * density;
+        } else {
+            keyboardRect.left = width - KEYBOARD_TOTAL_WIDTH_DP * density;
+        }
+        keyboardRect.right = keyboardRect.left + KEYBOARD_WIDTH_DP * density;
+    }
+
+    @Override
+    protected RectF getEndRect() {
         RectF endRect = new RectF(targetRect);
         endRect.top = 0;
         endRect.bottom = targetRect.top;
         endRect.inset(20 * density, TARGET_PADDING_DP * density);
-        endRenderer.animateToRect(endRect);
+        return endRect;
     }
 
     public void setInputMethod(EInputMethod mode, boolean animate) {
         if (mode != inputMethod) {
-            // TODO make sure selected arrow indicator transforms as well
             inputMethod = mode;
             targetDrawable.drawArrowsEnabled(inputMethod == EInputMethod.PLOTTING);
             targetDrawable.setAggregationStrategy(inputMethod == EInputMethod.PLOTTING
-                    ? aggregationStrategy
-                    : EAggregationStrategy.NONE);
+                    ? aggregationStrategy : EAggregationStrategy.NONE);
             if (animate) {
                 animateToNewState();
             }
@@ -322,11 +364,10 @@ public class TargetView extends TargetViewBase {
         // Create Shot object
         Shot s = new Shot(getCurrentShotIndex());
         if (inputMethod == EInputMethod.KEYBOARD) {
-            if ((keyboardType == LEFT && x < KEYBOARD_TOTAL_WIDTH_DP * density) ||
-                    (keyboardType == RIGHT && x > contentWidth - KEYBOARD_TOTAL_WIDTH_DP * density)) {
-                int i = (int) (y * selectableZones.size() / (float) contentHeight);
-                i = Math.min(Math.max(0, i), selectableZones.size() - 1);
-                s.zone = selectableZones.get(i).index;
+            if (keyboardRect.contains(x, y)) {
+                int index = (int) (y * selectableZones.size() / keyboardRect.height());
+                index = Math.min(Math.max(0, index), selectableZones.size() - 1);
+                s.zone = selectableZones.get(index).index;
             } else {
                 return null;
             }
@@ -344,22 +385,24 @@ public class TargetView extends TargetViewBase {
     @Override
     protected boolean selectPreviousShots(MotionEvent motionEvent, float x, float y) {
         // Handle selection of already saved shoots
-        int arrow = endRenderer.getPressedPosition(x, y);
-        if (arrow != -1) {
+        int shotIndex = endRenderer.getPressedPosition(x, y);
+        if (shotIndex != EndRenderer.NO_SELECTION) {
             if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 if (longPressTimer != null) {
-                    endRenderer.setPressed(-1);
+                    endRenderer.setPressed(EndRenderer.NO_SELECTION);
                     longPressTimer.cancel();
                     longPressTimer = null;
-                    super.onArrowChanged();
+                    setCurrentShotIndex(shotIndex);
+                    animateToNewState();
                 }
-            } else if (endRenderer.getPressed() != arrow) {
+            } else if (endRenderer.getPressed() != shotIndex) {
                 // If new item gets selected cancel old timer and start new one
-                endRenderer.setPressed(arrow);
+                endRenderer.setPressed(shotIndex);
                 if (longPressTimer != null) {
                     longPressTimer.cancel();
                 }
                 longPressTimer = new Timer();
+                final Handler h = new Handler();
                 longPressTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
@@ -376,14 +419,15 @@ public class TargetView extends TargetViewBase {
                     longPressTimer = null;
                 }
             }
-            endRenderer.setPressed(-1);
+            endRenderer.setPressed(EndRenderer.NO_SELECTION);
         }
         return false;
     }
 
     @Override
-    protected void animateToNewState() {
+    protected void collectAnimations(List<Animator> animations) {
         if (spotMatrices == null) {
+            super.collectAnimations(animations);
             return;
         }
         // Get current matrix
@@ -406,11 +450,9 @@ public class TargetView extends TargetViewBase {
         float[] newValues = new float[9];
         newMatrix.getValues(newValues);
 
-        cancelPendingAnimations();
-        calcSizes();
+        updateLayout();
 
         List<ValueAnimator> valueAnimators = new ArrayList<>(9);
-        List<Animator> setList = new ArrayList<>(10);
         float newVisibility = inputMethod == EInputMethod.KEYBOARD ? 1 : 0;
         ValueAnimator inputAnimator = ValueAnimator.ofFloat(keyboardVisibility, newVisibility);
         inputAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -423,30 +465,14 @@ public class TargetView extends TargetViewBase {
             targetDrawable.setSpotMatrix(midMatrix);
             invalidate();
         });
-        setList.add(inputAnimator);
+        animations.add(inputAnimator);
 
         for (int i = 0; i < 9; i++) {
             final ValueAnimator animator = ValueAnimator.ofFloat(oldValues[i], newValues[i]);
             valueAnimators.add(animator);
-            setList.add(animator);
+            animations.add(animator);
         }
-        animator = new AnimatorSet();
-        animator.playTogether(setList);
-        animator.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                onAnimationEnd(animation);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                animator = null;
-                invalidate();
-            }
-        });
-        animator.setDuration(300);
-        animator.start();
+        super.collectAnimations(animations);
     }
 
     @Override
@@ -522,19 +548,17 @@ public class TargetView extends TargetViewBase {
     @NonNull
     protected Rect getSelectableZonePosition(int i) {
         final Rect rect = new Rect();
-        rect.top = (int) (contentHeight * i / selectableZones.size() + density);
-        rect.bottom = (int) (contentHeight * (i + 1) / selectableZones.size() - density);
-        rect.left = 0;
-        rect.right = (int) (KEYBOARD_WIDTH_DP * density);
-        int left;
-        if (keyboardType == EKeyboardType.RIGHT) {
-            left = (int) (contentWidth - KEYBOARD_TOTAL_WIDTH_DP * density);
-            left += KEYBOARD_TOTAL_WIDTH_DP * (1 - keyboardVisibility) * density;
+        final float singleZoneHeight = keyboardRect.height() / selectableZones.size();
+        rect.top = (int) (singleZoneHeight * i + density);
+        rect.bottom = (int) (singleZoneHeight * (i + 1) - density);
+        rect.left = (int) keyboardRect.left;
+        rect.right = (int) keyboardRect.right;
+        final int visibilityXOffset = (int) (KEYBOARD_TOTAL_WIDTH_DP * (1 - keyboardVisibility) * density);
+        if (keyboardType == EKeyboardType.LEFT) {
+            rect.offset(-visibilityXOffset, 0);
         } else {
-            left = (int) (KEYBOARD_OUTER_PADDING_DP * density);
-            left -= KEYBOARD_TOTAL_WIDTH_DP * (1 - keyboardVisibility) * density;
+            rect.offset(visibilityXOffset, 0);
         }
-        rect.offsetTo(left, rect.top);
         return rect;
     }
 
@@ -568,7 +592,8 @@ public class TargetView extends TargetViewBase {
     public boolean onTouch(View view, MotionEvent motionEvent) {
         // Cancel animation
         if (animator != null) {
-            endRenderer.cancel();
+            cancelPendingAnimations();
+            return true;
         }
 
         return super.onTouch(view, motionEvent);
@@ -576,14 +601,6 @@ public class TargetView extends TargetViewBase {
 
     public EInputMethod getInputMode() {
         return inputMethod;
-    }
-
-    private void cancelPendingAnimations() {
-        if (animator != null) {
-            AnimatorSet tmp = animator;
-            animator = null;
-            tmp.cancel();
-        }
     }
 
     public void setUpdateListener(OnEndUpdatedListener updateListener) {

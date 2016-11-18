@@ -15,8 +15,12 @@
 
 package de.dreier.mytargets.shared.views;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.content.Context;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,6 +31,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,14 +59,17 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected EndRenderer endRenderer = new EndRenderer();
     protected List<Shot> shots;
     protected RoundTemplate round;
-    protected int contentWidth;
-    protected int contentHeight;
     protected OnEndFinishedListener setListener = null;
     protected EInputMethod inputMethod = EInputMethod.KEYBOARD;
     protected float density;
     protected List<SelectableZone> selectableZones;
     protected Target target;
     protected TargetImpactAggregationDrawable targetDrawable;
+    protected AnimatorSet animator;
+    /**
+     * The screen area reserved to show the already entered shots.
+     */
+    private RectF endRect;
 
     public TargetViewBase(Context context) {
         super(context);
@@ -115,11 +123,6 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         updateSelectableZones();
     }
 
-    protected void updateSelectableZones() {
-        selectableZones = target.getSelectableZoneList(getCurrentShotIndex());
-        updateVirtualViews();
-    }
-
     public void setEnd(Passe end) {
         shots = end.shots;
         setCurrentShotIndex(getNextShotIndex(-1));
@@ -141,13 +144,20 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        contentWidth = getWidth();
-        contentHeight = getHeight();
-        calcSizes();
+        updateLayout();
         animateToNewState();
         updateVirtualViews();
         invalidate();
     }
+
+    protected void updateLayout() {
+        updateLayoutBounds(getWidth(), getHeight());
+        endRect = getEndRect();
+    }
+
+    protected abstract void updateLayoutBounds(int width, int height);
+
+    protected abstract RectF getEndRect();
 
     private void updateVirtualViews() {
         virtualViews.clear();
@@ -174,8 +184,6 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         return -1;
     }
 
-    protected abstract void calcSizes();
-
     public void setOnTargetSetListener(OnEndFinishedListener listener) {
         setListener = listener;
     }
@@ -187,7 +195,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         float x = motionEvent.getX();
         float y = motionEvent.getY();
 
-        if (selectPreviousShots(motionEvent, x, y) && !isCurrentlySelecting()) {
+        if (!isCurrentlySelecting() && selectPreviousShots(motionEvent, x, y)) {
             return true;
         }
 
@@ -210,7 +218,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
 
         // If finger is released go to next shoot
-        if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+        if (motionEvent.getAction() == MotionEvent.ACTION_UP && isCurrentlySelecting()) {
             onArrowChanged();
             return true;
         }
@@ -218,13 +226,12 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     protected boolean isCurrentlySelecting() {
-        return getCurrentShotIndex() != EndRenderer.NO_SELECTION && shots.get(
-                getCurrentShotIndex()).zone != Shot.NOTHING_SELECTED;
+        return getCurrentShotIndex() != EndRenderer.NO_SELECTION
+                && shots.get(getCurrentShotIndex()).zone != Shot.NOTHING_SELECTED;
     }
 
     protected void onArrowChanged() {
-        int nextShotIndex = getNextShotIndex(currentShotIndex);
-        animateCircle(nextShotIndex);
+        setCurrentShotIndex(getNextShotIndex(currentShotIndex));
         animateToNewState();
         notifyTargetShotsChanged();
     }
@@ -255,21 +262,60 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         invalidate();
     }
 
-    private void animateCircle(int indexToSelect) {
+    protected Animator getCircleAnimation() {
         Coordinate pos = null;
-        if (indexToSelect != EndRenderer.NO_SELECTION
-                && shots.get(indexToSelect).zone != Shot.NOTHING_SELECTED) {
-            pos = initAnimationPositions(indexToSelect);
+        if (isCurrentlySelecting()) {
+            pos = initAnimationPositions(getCurrentShotIndex());
         }
         int initialSize = inputMethod == EInputMethod.KEYBOARD ? EndRenderer.MAX_CIRCLE_SIZE : 0;
-        endRenderer.animateToSelection(indexToSelect, pos, initialSize);
-        setCurrentShotIndex(indexToSelect);
+        return endRenderer
+                .getAnimationToSelection(getCurrentShotIndex(), pos, initialSize, endRect);
     }
 
     protected abstract Coordinate initAnimationPositions(int i);
 
     protected void animateToNewState() {
         // Extension point for sub-classes making use of spots
+        List<Animator> animations = new ArrayList<>();
+        collectAnimations(animations);
+        playAnimations(animations);
+    }
+
+    protected void collectAnimations(List<Animator> animations) {
+        final Animator animation = getCircleAnimation();
+        if (animation != null) {
+            animations.add(animation);
+        }
+    }
+
+    protected void playAnimations(List<Animator> setList) {
+        cancelPendingAnimations();
+        animator = new AnimatorSet();
+        animator.playTogether(setList);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                onAnimationEnd(animation);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                animator = null;
+                updateVirtualViews();
+                invalidate();
+            }
+        });
+        animator.setDuration(300);
+        animator.start();
+    }
+
+    protected void cancelPendingAnimations() {
+        if (animator != null) {
+            AnimatorSet tmp = animator;
+            animator = null;
+            tmp.cancel();
+        }
     }
 
     /**
@@ -291,6 +337,13 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         this.currentShotIndex = currentArrow;
         if (target.getModel().dependsOnArrowIndex()) {
             updateSelectableZones();
+        }
+    }
+
+    protected void updateSelectableZones() {
+        selectableZones = target.getSelectableZoneList(getCurrentShotIndex());
+        if (virtualViews.size() > 0) {
+            updateVirtualViews();
         }
     }
 

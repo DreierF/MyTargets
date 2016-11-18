@@ -37,6 +37,7 @@ public class TargetSelectView extends TargetViewBase {
     private int chinHeight;
     private double circleRadius;
     private Circle circle;
+    private float chinBound;
 
     public TargetSelectView(Context context) {
         super(context);
@@ -87,9 +88,8 @@ public class TargetSelectView extends TargetViewBase {
         Coordinate coordinate = new Coordinate();
         coordinate.x = (float) (radius + (Math.cos(degree) * circleRadius));
         coordinate.y = (float) (radius + (Math.sin(degree) * circleRadius));
-        float bound = contentHeight - (chinHeight + 15) * density;
-        if (coordinate.y > bound) {
-            coordinate.y = bound;
+        if (coordinate.y > chinBound) {
+            coordinate.y = chinBound;
         }
         return coordinate;
     }
@@ -100,15 +100,20 @@ public class TargetSelectView extends TargetViewBase {
     }
 
     @Override
-    protected void calcSizes() {
-        radius = (int) (contentWidth / 2.0);
+    protected void updateLayoutBounds(int width, int height) {
+        radius = (int) (width / 2.0);
+        chinBound = height - (chinHeight + 15) * density;
         circleRadius = radius - 25 * density;
-        RectF rect = new RectF();
-        rect.left = radius - 35 * density;
-        rect.right = radius + 35 * density;
-        rect.top = radius / 2;
-        rect.bottom = radius;
-        endRenderer.animateToRect(rect);
+    }
+
+    @Override
+    protected RectF getEndRect() {
+        RectF endRect = new RectF();
+        endRect.left = radius - 35 * density;
+        endRect.right = radius + 35 * density;
+        endRect.top = radius / 2;
+        endRect.bottom = radius;
+        return endRect;
     }
 
     @NonNull
