@@ -60,6 +60,7 @@ import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
+//TODO add ui tests for TargetView
 public class TargetView extends TargetViewBase {
 
     private final Handler h = new Handler();
@@ -76,10 +77,8 @@ public class TargetView extends TargetViewBase {
     private float targetZoomFactor;
     private OnEndUpdatedListener updateListener;
     private Matrix fullMatrix;
-    private Matrix fullMatrixInverse;
     private float[] pt = new float[2];
     private boolean inputModeTransitioning = false;
-    private float orgRadius;
     private Matrix fullExtendedMatrix;
     private Matrix fullExtendedMatrixInverse;
 
@@ -227,7 +226,7 @@ public class TargetView extends TargetViewBase {
         int availableWidth = inputMethod == EInputMethod.KEYBOARD ? (int) (contentWidth - 60 * density) : contentWidth;
         float radH = (contentHeight - 10 * density) / 2.45f;
         float radW = (availableWidth - (inputMethod == EInputMethod.KEYBOARD ? 70 : 20) * density) * 0.5f;
-        orgRadius = (int) (Math.min(radW, radH));
+        float orgRadius = (int) (Math.min(radW, radH));
         float orgMidX = availableWidth / 2;
         float orgMidY = contentHeight - orgRadius - 10 * density;
         RectF targetRect = new RectF(
@@ -235,12 +234,10 @@ public class TargetView extends TargetViewBase {
                 orgMidY - orgRadius,
                 orgMidX + orgRadius,
                 orgMidY + orgRadius);
-
+//TODO ged rid of manual target position calculation
         fullMatrix = new Matrix();
         fullMatrix.setRectToRect(new RectF(-1f, -1f, 1f, 1f),
                 targetRect, Matrix.ScaleToFit.CENTER);
-        fullMatrixInverse = new Matrix();
-        fullMatrix.invert(fullMatrixInverse);
 
         RectF targetRectExt = new RectF(
                 orgMidX - orgRadius + 30 * density,
@@ -356,6 +353,7 @@ public class TargetView extends TargetViewBase {
         return false;
     }
 
+    //TODO implement in a more generic way
     private void animateMode() {
         cancelPendingInputAnimations();
         inputAnimator = ValueAnimator.ofFloat(0, 1);
@@ -392,6 +390,7 @@ public class TargetView extends TargetViewBase {
         curAnimationProgress = 0;
     }
 
+    // TODO get rid of this method
     @Override
     protected void animateFromZoomSpot() {
         animateToZoomSpot();
