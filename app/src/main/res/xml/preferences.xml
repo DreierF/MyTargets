@@ -31,6 +31,12 @@
                 android:entryValues="@array/arrow_diameter_scale_values"
                 android:key="input_arrow_diameter_scale"
                 android:title="@string/arrow_diameter_scale" />
+            <ListPreference
+                android:defaultValue="RIGHT"
+                android:entries="@array/keyboard_type_entries"
+                android:entryValues="@array/keyboard_type_values"
+                android:key="input_keyboard_type"
+                android:title="@string/keyboard" />
         </PreferenceScreen>
         <PreferenceScreen
             android:key="scoreboard"

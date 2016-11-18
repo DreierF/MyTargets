@@ -57,12 +57,23 @@ import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
+
+import static de.dreier.mytargets.views.TargetView.EKeyboardType.LEFT;
+import static de.dreier.mytargets.views.TargetView.EKeyboardType.RIGHT;
 
 //TODO add ui tests for TargetView
 public class TargetView extends TargetViewBase {
 
+    private static final int TARGET_PADDING_DP = 10;
+    private static final int KEYBOARD_OUTER_PADDING_DP = 20;
+    private static final int KEYBOARD_WIDTH_DP = 40;
+    private static final int KEYBOARD_TOTAL_WIDTH_DP = KEYBOARD_WIDTH_DP + KEYBOARD_OUTER_PADDING_DP;
+    private static final int POINTER_OFFSET_Y_DP = -60;
+    private static final int MIN_END_RECT_HEIGHT_DP = 80;
+    private static final int KEYBOARD_INNER_PADDING_DP = 40;
     private final Handler h = new Handler();
     private Paint fillPaint;
     private Timer longPressTimer;
@@ -71,16 +82,24 @@ public class TargetView extends TargetViewBase {
     private TextPaint textPaint;
     private Paint borderPaint;
     private AnimatorSet animator;
-    private float inputModeProgress = 0;
-    private ValueAnimator inputAnimator;
     private Dimension arrowDiameter;
     private float targetZoomFactor;
     private OnEndUpdatedListener updateListener;
     private Matrix fullMatrix;
     private float[] pt = new float[2];
-    private boolean inputModeTransitioning = false;
     private Matrix fullExtendedMatrix;
     private Matrix fullExtendedMatrixInverse;
+    private EAggregationStrategy aggregationStrategy = EAggregationStrategy.NONE;
+
+    /**
+     * Percentage of the keyboard that is currently supposed to be shown. (0..1)
+     */
+    private float keyboardVisibility = 0;
+
+    /**
+     * Left-handed or Right-handed mode
+     */
+    private EKeyboardType keyboardType;
 
     public TargetView(Context context) {
         super(context);
@@ -121,11 +140,14 @@ public class TargetView extends TargetViewBase {
         setCurrentShotIndex(getNextShotIndex(-1));
         endRenderer.setShots(shots);
         endRenderer.setSelection(getCurrentShotIndex(), null, EndRenderer.MAX_CIRCLE_SIZE);
+        EInputMethod inputMethod;
         if (end.getId() != 0) {
-            setInputMethod(end.exact ? EInputMethod.PLOTTING : EInputMethod.KEYBOARD, true);
+            inputMethod = end.exact ? EInputMethod.PLOTTING : EInputMethod.KEYBOARD;
         } else {
-            animateFromZoomSpot();
+            inputMethod = SettingsManager.getInputMethod();
         }
+        setInputMethod(inputMethod, false);
+        animateToNewState();
         notifyTargetShotsChanged();
     }
 
@@ -137,7 +159,12 @@ public class TargetView extends TargetViewBase {
 
     public void setAggregationStrategy(EAggregationStrategy aggregationStrategy) {
         SettingsManager.setAggregationStrategy(aggregationStrategy);
-        targetDrawable.setAggregationStrategy(aggregationStrategy);
+        this.aggregationStrategy = aggregationStrategy;
+        if (inputMethod == EInputMethod.KEYBOARD) {
+            targetDrawable.setAggregationStrategy(EAggregationStrategy.NONE);
+        } else {
+            targetDrawable.setAggregationStrategy(aggregationStrategy);
+        }
     }
 
     @Override
@@ -150,7 +177,9 @@ public class TargetView extends TargetViewBase {
         }
 
         // Draw right indicator
-        drawKeyboard(canvas);
+        if (keyboardVisibility > 0) {
+            drawKeyboard(canvas);
+        }
 
         // Draw all points of this end at the top
         endRenderer.draw(canvas);
@@ -162,9 +191,9 @@ public class TargetView extends TargetViewBase {
         targetDrawable.setMatrix(fullExtendedMatrix);
         targetDrawable.setSpotMatrix(
                 spotMatrices[getCurrentShotIndex() % target.getModel().getFaceCount()]);
-        targetDrawable.setZoom(targetZoomFactor);
-        targetDrawable.setMid(shot.x, shot.y);
-        targetDrawable.setOffset(0, -60 * density);
+        targetDrawable.setZoom(targetZoomFactor); //TODO zoom only if shot is set
+        targetDrawable.setMid(shot.x, shot.y); // TODO set shot instead
+        targetDrawable.setOffset(0, POINTER_OFFSET_Y_DP * density);
 
         targetDrawable.draw(canvas);
 
@@ -179,7 +208,7 @@ public class TargetView extends TargetViewBase {
         targetDrawable.setZoom(1);
         targetDrawable.setMid(0, 0);
         if (animator == null) {
-            if (getCurrentShotIndex() == EndRenderer.NO_SELECTION) {
+            if (getCurrentShotIndex() == EndRenderer.NO_SELECTION || inputMethod == EInputMethod.KEYBOARD) {
                 targetDrawable.setSpotMatrix(new Matrix());
             } else {
                 targetDrawable.setSpotMatrix(
@@ -207,7 +236,11 @@ public class TargetView extends TargetViewBase {
     protected Coordinate initAnimationPositions(int i) {
         Coordinate coordinate = new Coordinate();
         if (inputMethod == EInputMethod.KEYBOARD) {
-            coordinate.x = contentWidth - 100 * density;
+            if (keyboardType == LEFT) {
+                coordinate.x = (KEYBOARD_TOTAL_WIDTH_DP + KEYBOARD_INNER_PADDING_DP) * density;
+            } else {
+                coordinate.x = contentWidth - (KEYBOARD_TOTAL_WIDTH_DP + KEYBOARD_INNER_PADDING_DP) * density;
+            }
             int indicatorHeight = contentHeight / selectableZones.size();
             int index = getSelectableZoneIndexFromShot(shots.get(i));
             coordinate.y = indicatorHeight * index + indicatorHeight / 2.0f;
@@ -222,47 +255,8 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    protected void calcSizes() {
-        int availableWidth = inputMethod == EInputMethod.KEYBOARD ? (int) (contentWidth - 60 * density) : contentWidth;
-        float radH = (contentHeight - 10 * density) / 2.45f;
-        float radW = (availableWidth - (inputMethod == EInputMethod.KEYBOARD ? 70 : 20) * density) * 0.5f;
-        float orgRadius = (int) (Math.min(radW, radH));
-        float orgMidX = availableWidth / 2;
-        float orgMidY = contentHeight - orgRadius - 10 * density;
-        RectF targetRect = new RectF(
-                orgMidX - orgRadius,
-                orgMidY - orgRadius,
-                orgMidX + orgRadius,
-                orgMidY + orgRadius);
-//TODO ged rid of manual target position calculation
-        fullMatrix = new Matrix();
-        fullMatrix.setRectToRect(new RectF(-1f, -1f, 1f, 1f),
-                targetRect, Matrix.ScaleToFit.CENTER);
-
-        RectF targetRectExt = new RectF(
-                orgMidX - orgRadius + 30 * density,
-                orgMidY - orgRadius + 30 * density,
-                orgMidX + orgRadius - 30 * density,
-                orgMidY + orgRadius - 30 * density);
-
-        fullExtendedMatrix = new Matrix();
-        fullExtendedMatrix.setRectToRect(new RectF(-1f, -1f, 1f, 1f),
-                targetRectExt, Matrix.ScaleToFit.CENTER);
-        fullExtendedMatrixInverse = new Matrix();
-        fullExtendedMatrix.invert(fullExtendedMatrixInverse);
-
-        initSpotBounds();
-
-        RectF rect = new RectF();
-        rect.left = 30 * density;
-        rect.right = availableWidth - 30 * density;
-        rect.top = 10 * density;
-        rect.bottom = orgMidY - orgRadius - 10 * density;
-        endRenderer.animateToRect(rect);
-        animateToZoomSpot();
-    }
-
-    private void initSpotBounds() {
+    public void setTarget(Target t) {
+        super.setTarget(t);
         spotMatrices = new Matrix[target.getModel().getFaceCount()];
         for (int i = 0; i < target.getModel().getFaceCount(); i++) {
             spotMatrices[i] = new Matrix();
@@ -270,20 +264,53 @@ public class TargetView extends TargetViewBase {
         }
     }
 
+    @Override
+    protected void calcSizes() {
+        RectF targetRect = new RectF(0, MIN_END_RECT_HEIGHT_DP * density,
+                contentWidth, contentHeight);
+        targetRect.inset(TARGET_PADDING_DP * density, TARGET_PADDING_DP * density);
+        if (inputMethod == EInputMethod.KEYBOARD) {
+            if (keyboardType == LEFT) {
+                targetRect.left += KEYBOARD_TOTAL_WIDTH_DP * density;
+            } else {
+                targetRect.right -= KEYBOARD_TOTAL_WIDTH_DP * density;
+            }
+        }
+        if (targetRect.height() > targetRect.width()) {
+            targetRect.top = targetRect.bottom - targetRect.width();
+        }
+        final RectF srcRect = new RectF(-1f, -1f, 1f, 1f);
+
+        fullMatrix = new Matrix();
+        fullMatrix.setRectToRect(srcRect,
+                targetRect, Matrix.ScaleToFit.CENTER);
+
+        RectF targetRectExt = new RectF(targetRect);
+        targetRectExt.inset(30 * density, 30 * density);
+        fullExtendedMatrix = new Matrix();
+        fullExtendedMatrix.setRectToRect(srcRect,
+                targetRectExt, Matrix.ScaleToFit.CENTER);
+        fullExtendedMatrixInverse = new Matrix();
+        fullExtendedMatrix.invert(fullExtendedMatrixInverse);
+
+        RectF endRect = new RectF(targetRect);
+        endRect.top = 0;
+        endRect.bottom = targetRect.top;
+        endRect.inset(20 * density, TARGET_PADDING_DP * density);
+        endRenderer.animateToRect(endRect);
+    }
+
     public void setInputMethod(EInputMethod mode, boolean animate) {
         if (mode != inputMethod) {
             // TODO make sure selected arrow indicator transforms as well
             inputMethod = mode;
-            if (animate) {
-                animateMode();
-            }
-            if (inputMethod == EInputMethod.KEYBOARD) {
-                animateFromZoomSpot();
-            } else {
-                animateToZoomSpot();
-            }
-            SettingsManager.setInputMethod(inputMethod);
             targetDrawable.drawArrowsEnabled(inputMethod == EInputMethod.PLOTTING);
+            targetDrawable.setAggregationStrategy(inputMethod == EInputMethod.PLOTTING
+                    ? aggregationStrategy
+                    : EAggregationStrategy.NONE);
+            if (animate) {
+                animateToNewState();
+            }
         }
     }
 
@@ -295,7 +322,8 @@ public class TargetView extends TargetViewBase {
         // Create Shot object
         Shot s = new Shot(getCurrentShotIndex());
         if (inputMethod == EInputMethod.KEYBOARD) {
-            if (x > contentWidth - 60 * density) {
+            if ((keyboardType == LEFT && x < KEYBOARD_TOTAL_WIDTH_DP * density) ||
+                    (keyboardType == RIGHT && x > contentWidth - KEYBOARD_TOTAL_WIDTH_DP * density)) {
                 int i = (int) (y * selectableZones.size() / (float) contentHeight);
                 i = Math.min(Math.max(0, i), selectableZones.size() - 1);
                 s.zone = selectableZones.get(i).index;
@@ -353,51 +381,8 @@ public class TargetView extends TargetViewBase {
         return false;
     }
 
-    //TODO implement in a more generic way
-    private void animateMode() {
-        cancelPendingInputAnimations();
-        inputAnimator = ValueAnimator.ofFloat(0, 1);
-        inputAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-        inputAnimator.addUpdateListener(valueAnimator -> {
-            inputModeProgress = (Float) valueAnimator.getAnimatedValue();
-            invalidate();
-        });
-        inputAnimator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                inputModeTransitioning = true;
-                inputModeProgress = 0;
-                initAnimation();
-                calcSizes();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                onAnimationEnd(animation);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                inputModeTransitioning = false;
-                invalidate();
-            }
-        });
-        inputAnimator.setDuration(300);
-        inputAnimator.start();
-    }
-
-    private void initAnimation() {
-        curAnimationProgress = 0;
-    }
-
-    // TODO get rid of this method
     @Override
-    protected void animateFromZoomSpot() {
-        animateToZoomSpot();
-    }
-
-    @Override
-    protected void animateToZoomSpot() {
+    protected void animateToNewState() {
         if (spotMatrices == null) {
             return;
         }
@@ -422,28 +407,33 @@ public class TargetView extends TargetViewBase {
         newMatrix.getValues(newValues);
 
         cancelPendingAnimations();
+        calcSizes();
 
-        List<ValueAnimator> list = new ArrayList<>(9);
-        List<Animator> setList = new ArrayList<>(9);
-        for (int i = 0; i < 9; i++) {
-            final ValueAnimator animator = ValueAnimator
-                    .ofFloat(oldValues[i], midValues[i], newValues[i]);
-            list.add(animator);
-            setList.add(animator);
-        }
-        list.get(0).addUpdateListener(valueAnimator -> {
+        List<ValueAnimator> valueAnimators = new ArrayList<>(9);
+        List<Animator> setList = new ArrayList<>(10);
+        float newVisibility = inputMethod == EInputMethod.KEYBOARD ? 1 : 0;
+        ValueAnimator inputAnimator = ValueAnimator.ofFloat(keyboardVisibility, newVisibility);
+        inputAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        inputAnimator.addUpdateListener(valueAnimator -> {
+            keyboardVisibility = (Float) valueAnimator.getAnimatedValue();
             for (int i = 0; i < 9; i++) {
-                midValues[i] = (float) list.get(i).getAnimatedValue();
+                midValues[i] = (float) valueAnimators.get(i).getAnimatedValue();
             }
             midMatrix.setValues(midValues);
             targetDrawable.setSpotMatrix(midMatrix);
             invalidate();
         });
+        setList.add(inputAnimator);
+
+        for (int i = 0; i < 9; i++) {
+            final ValueAnimator animator = ValueAnimator.ofFloat(oldValues[i], newValues[i]);
+            valueAnimators.add(animator);
+            setList.add(animator);
+        }
         animator = new AnimatorSet();
         animator.playTogether(setList);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.addListener(new AnimatorListenerAdapter() {
-
             @Override
             public void onAnimationCancel(Animator animation) {
                 onAnimationEnd(animation);
@@ -451,7 +441,6 @@ public class TargetView extends TargetViewBase {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                targetDrawable.setSpotMatrix(newMatrix);
                 animator = null;
                 invalidate();
             }
@@ -511,38 +500,41 @@ public class TargetView extends TargetViewBase {
      * @param canvas Canvas to draw on
      */
     private void drawKeyboard(Canvas canvas) {
-        if (inputMethod == EInputMethod.KEYBOARD || inputModeTransitioning) {
-            for (int i = 0; i < selectableZones.size(); i++) {
-                SelectableZone zone = selectableZones.get(i);
+        for (int i = 0; i < selectableZones.size(); i++) {
+            SelectableZone zone = selectableZones.get(i);
 
-                Rect rect = getSelectableZonePosition(i);
+            Rect rect = getSelectableZonePosition(i);
 
-                fillPaint.setColor(zone.zone.getFillColor());
-                canvas.drawRect(rect, fillPaint);
+            fillPaint.setColor(zone.zone.getFillColor());
+            canvas.drawRect(rect, fillPaint);
 
-                borderPaint.setColor(zone.zone.getStrokeColor());
-                canvas.drawRect(rect, borderPaint);
+            borderPaint.setColor(zone.zone.getStrokeColor());
+            canvas.drawRect(rect, borderPaint);
 
-                // For yellow and white background use black font color
-                textPaint.setColor(zone.zone.getTextColor());
-                canvas.drawText(zone.text, rect.centerX(), rect.centerY() + 10 * density,
-                        textPaint);
-            }
+            // For yellow and white background use black font color
+            textPaint.setColor(zone.zone.getTextColor());
+            canvas.drawText(zone.text, rect.centerX(), rect.centerY() + 10 * density,
+                    textPaint);
         }
     }
 
     @Override
     @NonNull
     protected Rect getSelectableZonePosition(int i) {
-        float percent = inputMethod == EInputMethod.KEYBOARD ? 1 : 0;
-        if (inputModeTransitioning) {
-            percent = inputMethod == EInputMethod.KEYBOARD ? inputModeProgress : 1 - inputModeProgress;
-        }
         final Rect rect = new Rect();
-        rect.left = (int) (contentWidth - 60 * percent * density);
-        rect.right = (int) (rect.left + 40 * density);
         rect.top = (int) (contentHeight * i / selectableZones.size() + density);
         rect.bottom = (int) (contentHeight * (i + 1) / selectableZones.size() - density);
+        rect.left = 0;
+        rect.right = (int) (KEYBOARD_WIDTH_DP * density);
+        int left;
+        if (keyboardType == EKeyboardType.RIGHT) {
+            left = (int) (contentWidth - KEYBOARD_TOTAL_WIDTH_DP * density);
+            left += KEYBOARD_TOTAL_WIDTH_DP * (1 - keyboardVisibility) * density;
+        } else {
+            left = (int) (KEYBOARD_OUTER_PADDING_DP * density);
+            left -= KEYBOARD_TOTAL_WIDTH_DP * (1 - keyboardVisibility) * density;
+        }
+        rect.offsetTo(left, rect.top);
         return rect;
     }
 
@@ -575,7 +567,7 @@ public class TargetView extends TargetViewBase {
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         // Cancel animation
-        if (inputModeTransitioning || animator != null) {
+        if (animator != null) {
             endRenderer.cancel();
         }
 
@@ -594,26 +586,23 @@ public class TargetView extends TargetViewBase {
         }
     }
 
-    private void cancelPendingInputAnimations() {
-        if (inputAnimator != null) {
-            ValueAnimator tmp = inputAnimator;
-            inputAnimator = null;
-            tmp.cancel();
-        }
-    }
-
     public void setUpdateListener(OnEndUpdatedListener updateListener) {
         this.updateListener = updateListener;
     }
 
     public void reloadSettings() {
         this.targetZoomFactor = SettingsManager.getInputTargetZoom();
+        this.keyboardType = SettingsManager.getInputKeyboardType();
         targetDrawable
                 .setArrowDiameter(arrowDiameter, SettingsManager.getInputArrowDiameterScale());
     }
 
     public void setTransparentShots(Stream<Shot> shotStream) {
         targetDrawable.setTransparentShots(shotStream);
+    }
+
+    public enum EKeyboardType {
+        LEFT, RIGHT
     }
 
     public interface OnEndUpdatedListener {

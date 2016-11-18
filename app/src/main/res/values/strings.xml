@@ -298,4 +298,7 @@
     <string name="show_clusters">Clusters</string>
     <string name="show_average">Average</string>
     <string name="show_none">None</string>
+    <string name="left_handed">Left-handed</string>
+    <string name="right_handed">Right-handed</string>
+    <string name="keyboard">Keyboard</string>
 </resources>

@@ -24,7 +24,7 @@ import de.dreier.mytargets.shared.utils.PathUtils;
 
 public class HeartZone extends ZoneBase {
 
-    public static final float REGION_SCALE_FACTOR = 1000f;
+    private static final float REGION_SCALE_FACTOR = 1000f;
     private static final Region HEART_REGION;
     private static final Path heart = new Path();
 

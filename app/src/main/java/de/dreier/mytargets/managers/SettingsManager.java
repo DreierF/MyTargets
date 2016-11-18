@@ -27,6 +27,7 @@ import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.views.TargetViewBase;
+import de.dreier.mytargets.views.TargetView.EKeyboardType;
 
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 
@@ -63,6 +64,7 @@ public class SettingsManager {
     private static final SharedPreferences preferences = ApplicationInstance
             .getLastSharedPreferences();
     private static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
+    public static final String KEY_INPUT_KEYBOARD_TYPE = "input_keyboard_type";
 
     public static int getStandardRound() {
         return preferences.getInt(KEY_STANDARD_ROUND, 32);
@@ -324,5 +326,10 @@ public class SettingsManager {
     public static float getInputTargetZoom() {
         return Float.parseFloat(ApplicationInstance.getSharedPreferences()
                 .getString(KEY_INPUT_TARGET_ZOOM, "3.0"));
+    }
+
+    public static EKeyboardType getInputKeyboardType() {
+        return EKeyboardType.valueOf(ApplicationInstance.getSharedPreferences()
+                .getString(KEY_INPUT_KEYBOARD_TYPE, EKeyboardType.RIGHT.toString()));
     }
 }

@@ -57,11 +57,8 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected int contentWidth;
     protected int contentHeight;
     protected OnEndFinishedListener setListener = null;
-    protected float curAnimationProgress;
     protected EInputMethod inputMethod = EInputMethod.KEYBOARD;
     protected float density;
-    protected float outFromX;
-    protected float outFromY;
     protected List<SelectableZone> selectableZones;
     protected Target target;
     protected TargetImpactAggregationDrawable targetDrawable;
@@ -128,7 +125,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         setCurrentShotIndex(getNextShotIndex(-1));
         endRenderer.setShots(shots);
         endRenderer.setSelection(getCurrentShotIndex(), null, EndRenderer.MAX_CIRCLE_SIZE);
-        animateFromZoomSpot();
+        animateToNewState();
         notifyTargetShotsChanged();
     }
 
@@ -147,6 +144,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         contentWidth = getWidth();
         contentHeight = getHeight();
         calcSizes();
+        animateToNewState();
         updateVirtualViews();
         invalidate();
     }
@@ -227,7 +225,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected void onArrowChanged() {
         int nextShotIndex = getNextShotIndex(currentShotIndex);
         animateCircle(nextShotIndex);
-        animateFromZoomSpot();
+        animateToNewState();
         notifyTargetShotsChanged();
     }
 
@@ -270,11 +268,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     protected abstract Coordinate initAnimationPositions(int i);
 
-    protected void animateFromZoomSpot() {
-        // Extension point for sub-classes making use of spots
-    }
-
-    protected void animateToZoomSpot() {
+    protected void animateToNewState() {
         // Extension point for sub-classes making use of spots
     }
 

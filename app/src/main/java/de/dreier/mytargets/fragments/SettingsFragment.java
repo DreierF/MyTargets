@@ -48,6 +48,7 @@ import static de.dreier.mytargets.fragments.SettingsFragmentPermissionsDispatche
 import static de.dreier.mytargets.fragments.SettingsFragmentPermissionsDispatcher.doExportWithCheck;
 import static de.dreier.mytargets.fragments.SettingsFragmentPermissionsDispatcher.doImportWithCheck;
 import static de.dreier.mytargets.managers.SettingsManager.KEY_INPUT_ARROW_DIAMETER_SCALE;
+import static de.dreier.mytargets.managers.SettingsManager.KEY_INPUT_KEYBOARD_TYPE;
 import static de.dreier.mytargets.managers.SettingsManager.KEY_INPUT_TARGET_ZOOM;
 import static de.dreier.mytargets.managers.SettingsManager.KEY_PROFILE_BIRTHDAY;
 import static de.dreier.mytargets.managers.SettingsManager.KEY_PROFILE_CLUB;
@@ -56,6 +57,7 @@ import static de.dreier.mytargets.managers.SettingsManager.KEY_PROFILE_LAST_NAME
 import static de.dreier.mytargets.managers.SettingsManager.KEY_TIMER_SHOOT_TIME;
 import static de.dreier.mytargets.managers.SettingsManager.KEY_TIMER_WAIT_TIME;
 import static de.dreier.mytargets.managers.SettingsManager.KEY_TIMER_WARN_TIME;
+import static de.dreier.mytargets.views.TargetView.EKeyboardType.LEFT;
 
 @RuntimePermissions
 public class SettingsFragment extends PreferenceFragmentCompat
@@ -272,8 +274,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     private void updateInputSummaries() {
-        setSummary(KEY_INPUT_ARROW_DIAMETER_SCALE, SettingsManager.getInputArrowDiameterScale() + "x");
+        setSummary(KEY_INPUT_ARROW_DIAMETER_SCALE,
+                SettingsManager.getInputArrowDiameterScale() + "x");
         setSummary(KEY_INPUT_TARGET_ZOOM, SettingsManager.getInputTargetZoom() + "x");
+        setSummary(KEY_INPUT_KEYBOARD_TYPE, SettingsManager.getInputKeyboardType() == LEFT
+                ? getString(R.string.left_handed) : getString(R.string.right_handed));
     }
 
     private void setSecondsSummary(String key, int value) {

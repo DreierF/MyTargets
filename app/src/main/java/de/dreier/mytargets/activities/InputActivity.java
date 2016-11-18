@@ -211,11 +211,11 @@ public class InputActivity extends ChildActivityBase
                 setShowMode(EShowMode.TRAINING);
                 break;
             case R.id.action_show_sidebar:
-                targetView.setInputMethod(
-                        targetView.getInputMode() == EInputMethod.KEYBOARD
-                                ? EInputMethod.PLOTTING
-                                : EInputMethod.KEYBOARD,
-                        true);
+                final EInputMethod inputMethod = targetView.getInputMode() == EInputMethod.KEYBOARD
+                        ? EInputMethod.PLOTTING
+                        : EInputMethod.KEYBOARD;
+                targetView.setInputMethod(inputMethod, true);
+                SettingsManager.setInputMethod(inputMethod);
                 supportInvalidateOptionsMenu();
                 return true;
             default:

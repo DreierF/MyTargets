@@ -57,4 +57,12 @@
         <item>3.0</item>
         <item>3.5</item>
     </string-array>
+    <string-array name="keyboard_type_entries">
+        <item>@string/left_handed</item>
+        <item>@string/right_handed</item>
+    </string-array>
+    <string-array name="keyboard_type_values" translatable="false">
+        <item>LEFT</item>
+        <item>RIGHT</item>
+    </string-array>
 </resources>
