@@ -44,10 +44,10 @@ import static org.hamcrest.Matchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class DeleteTest extends UITestBase {
 
-    private ActivityTestRule mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    private ActivityTestRule activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Rule
-    public final RuleChain rule = RuleChain.outerRule(new SimpleDbTestRule()).around(mActivityTestRule);
+    public final RuleChain rule = RuleChain.outerRule(new SimpleDbTestRule()).around(activityTestRule);
 
     @Before
     public void setUp() {
@@ -72,7 +72,8 @@ public class DeleteTest extends UITestBase {
         onView(allOf(withId(R.id.recyclerView), isDisplayed())).perform(
                 RecyclerViewActions.actionOnItemAtPosition(3, longClick()));
         clickContextualActionBarItem(R.id.action_delete, R.string.delete);
-        final String trainingText = mActivityTestRule.getActivity().getResources().getQuantityString(R.plurals.training_deleted, 1, 1);
+        final String trainingText = activityTestRule
+                .getActivity().getResources().getQuantityString(R.plurals.training_deleted, 1, 1);
         onView(withId(R.id.snackbar_text)).check(ViewAssertions.matches(withText(trainingText)));
 
         // Open training
@@ -94,7 +95,8 @@ public class DeleteTest extends UITestBase {
         onView(withId(R.id.recyclerView)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(3, click()));
         clickContextualActionBarItem(R.id.action_delete, R.string.delete);
-        final String endsText = mActivityTestRule.getActivity().getResources().getQuantityString(R.plurals.passe_deleted, 2, 2);
+        final String endsText = activityTestRule
+                .getActivity().getResources().getQuantityString(R.plurals.passe_deleted, 2, 2);
         onView(withId(R.id.snackbar_text)).check(ViewAssertions.matches(withText(endsText)));
         onView(withId(R.id.snackbar_action)).perform(click());
 

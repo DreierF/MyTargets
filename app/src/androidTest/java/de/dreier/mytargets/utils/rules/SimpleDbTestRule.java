@@ -36,6 +36,7 @@ import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
+import de.dreier.mytargets.shared.views.TargetViewBase;
 
 public class SimpleDbTestRule extends DbTestRuleBase {
 
@@ -45,7 +46,7 @@ public class SimpleDbTestRule extends DbTestRuleBase {
                 new Target(WAFull.ID, 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
         SettingsManager.setDistance(new Dimension(50, Dimension.Unit.METER));
         SettingsManager.setIndoor(false);
-        SettingsManager.setInputMethod(false);
+        SettingsManager.setInputMethod(TargetViewBase.EInputMethod.PLOTTING);
         SettingsManager.setTimerEnabled(true);
         SettingsManager.setArrowsPerEnd(6);
         Bow bow = addBow();

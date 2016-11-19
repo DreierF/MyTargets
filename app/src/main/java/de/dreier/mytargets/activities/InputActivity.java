@@ -84,9 +84,9 @@ public class InputActivity extends ChildActivityBase
         implements TargetViewBase.OnEndFinishedListener, TargetView.OnEndUpdatedListener,
         LoaderManager.LoaderCallbacks<InputActivity.LoaderResult> {
 
-    private static final String TRAINING_ID = "training_id";
-    private static final String ROUND_ID = "round_id";
-    private static final String END_INDEX = "end_ind";
+    static final String TRAINING_ID = "training_id";
+    static final String ROUND_ID = "round_id";
+    static final String END_INDEX = "end_ind";
 
     @State(ParcelsBundler.class)
     LoaderResult data;
