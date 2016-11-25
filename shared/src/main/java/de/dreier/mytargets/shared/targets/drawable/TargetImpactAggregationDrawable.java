@@ -37,7 +37,6 @@ public class TargetImpactAggregationDrawable extends TargetImpactDrawable implem
     public TargetImpactAggregationDrawable(Target target) {
         super(target);
         setAggregationStrategy(NONE);
-        setColor(0xAAAAAAAA);
     }
 
     public void setAggregationStrategy(EAggregationStrategy aggregation) {
@@ -47,6 +46,7 @@ public class TargetImpactAggregationDrawable extends TargetImpactDrawable implem
             strategy.setOnAggregationResultListener(this);
             faceAggregations.add(strategy);
         }
+        setColor(0xAAAAAAAA);
         recalculateAggregation();
     }
 

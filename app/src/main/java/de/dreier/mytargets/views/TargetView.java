@@ -16,6 +16,7 @@
 package de.dreier.mytargets.views;
 
 import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -31,6 +32,7 @@ import android.support.annotation.NonNull;
 import android.text.InputType;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Property;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -58,12 +60,48 @@ import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
 import de.dreier.mytargets.shared.utils.EndRenderer;
+import de.dreier.mytargets.shared.utils.MatrixEvaluator;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
 import static de.dreier.mytargets.views.TargetView.EKeyboardType.LEFT;
 
-//TODO add ui tests for TargetView
 public class TargetView extends TargetViewBase {
+
+    /**
+     * This property is passed to ObjectAnimator when animating the spot matrix of TargetView
+     */
+    private static final Property<TargetView, Matrix> ANIMATED_SPOT_TRANSFORM_PROPERTY = new Property<TargetView, Matrix>(
+            Matrix.class, "animatedSpotTransform") {
+
+        @Override
+        public void set(TargetView targetView, Matrix matrix) {
+            targetView.targetDrawable.setSpotMatrix(matrix);
+            targetView.invalidate();
+        }
+
+        @Override
+        public Matrix get(TargetView targetView) {
+            return targetView.targetDrawable.getSpotMatrix();
+        }
+    };
+
+    /**
+     * This property is passed to ObjectAnimator when animating the full matrix of TargetView
+     */
+    private static final Property<TargetView, Matrix> ANIMATED_FULL_TRANSFORM_PROPERTY = new Property<TargetView, Matrix>(
+            Matrix.class, "animatedFullTransform") {
+
+        @Override
+        public void set(TargetView targetView, Matrix matrix) {
+            targetView.targetDrawable.setMatrix(matrix);
+            targetView.invalidate();
+        }
+
+        @Override
+        public Matrix get(TargetView targetView) {
+            return null;
+        }
+    };
 
     private static final int TARGET_PADDING_DP = 10;
     private static final int KEYBOARD_OUTER_PADDING_DP = 20;
@@ -78,62 +116,50 @@ public class TargetView extends TargetViewBase {
     private Dimension arrowDiameter;
     private float targetZoomFactor;
     private OnEndUpdatedListener updateListener;
-
     /**
      * Matrix to translate the target face with -1..1 coordinate system
      * to the correct area on the screen.
      */
     private Matrix fullMatrix;
-
     /**
      * Matrix to translate the target face with -1..1 coordinate system
      * to the correct area on the screen when selecting a shot position.
      * This area is inset by 30dp to allow easier placement outside of the target face.
      */
     private Matrix fullExtendedMatrix;
-
     /**
      * Inverse of {@link #fullExtendedMatrix}.
      * Allows to map screen coordinates to -1..1 coordinate system.
      */
     private Matrix fullExtendedMatrixInverse;
-
     /**
      * Temporary point vector used to translate between different coordinate systems.
      */
     private float[] pt = new float[2];
-
     private EAggregationStrategy aggregationStrategy = EAggregationStrategy.NONE;
-
     /**
      * Left-handed or right-handed mode.
      */
     private EKeyboardType keyboardType;
-
     /**
      * Used to draw the keyboard buttons.
      */
     private Paint fillPaint;
-
     /**
      * Used to draw the keyboard button borders.
      */
     private Paint borderPaint;
-
     /**
      * Used to draw the keyboard button texts.
      */
     private TextPaint textPaint;
-
     /**
      * Percentage of the keyboard that is currently supposed to be shown. (0..1).
      */
     private float keyboardVisibility = 0;
-
     private Timer longPressTimer;
     private RectF keyboardRect;
     private RectF targetRect;
-
 
     public TargetView(Context context) {
         super(context);
@@ -225,8 +251,8 @@ public class TargetView extends TargetViewBase {
         targetDrawable.setMatrix(fullExtendedMatrix);
         targetDrawable.setSpotMatrix(
                 spotMatrices[getCurrentShotIndex() % target.getModel().getFaceCount()]);
-        targetDrawable.setZoom(targetZoomFactor); //TODO zoom only if shot is set
-        targetDrawable.setMid(shot.x, shot.y); // TODO set shot instead
+        targetDrawable.setZoom(targetZoomFactor);
+        targetDrawable.setMid(shot.x, shot.y);
         targetDrawable.setOffset(0, POINTER_OFFSET_Y_DP * density);
 
         targetDrawable.draw(canvas);
@@ -237,11 +263,11 @@ public class TargetView extends TargetViewBase {
 
     // Draw actual target face
     private void drawTarget(Canvas canvas) {
-        targetDrawable.setMatrix(fullMatrix);
         targetDrawable.setOffset(0, 0);
         targetDrawable.setZoom(1);
         targetDrawable.setMid(0, 0);
         if (animator == null) {
+            targetDrawable.setMatrix(fullMatrix);
             if (getCurrentShotIndex() == EndRenderer.NO_SELECTION || inputMethod == EInputMethod.KEYBOARD) {
                 targetDrawable.setSpotMatrix(new Matrix());
             } else {
@@ -320,7 +346,8 @@ public class TargetView extends TargetViewBase {
         RectF targetRectExt = new RectF(targetRect);
         targetRectExt.inset(30 * density, 30 * density);
         fullExtendedMatrix = new Matrix();
-        fullExtendedMatrix.setRectToRect(TargetDrawable.SRC_RECT, targetRectExt, Matrix.ScaleToFit.CENTER);
+        fullExtendedMatrix
+                .setRectToRect(TargetDrawable.SRC_RECT, targetRectExt, Matrix.ScaleToFit.CENTER);
         fullExtendedMatrixInverse = new Matrix();
         fullExtendedMatrix.invert(fullExtendedMatrixInverse);
 
@@ -426,53 +453,34 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void collectAnimations(List<Animator> animations) {
-        if (spotMatrices == null) {
-            super.collectAnimations(animations);
-            return;
-        }
-        // Get current matrix
-        Matrix oldMatrix = targetDrawable.getSpotMatrix();
-        float[] oldValues = new float[9];
-        oldMatrix.getValues(oldValues);
-
-        // Intermediate matrix
-        Matrix midMatrix = new Matrix();
-        float[] midValues = new float[9];
-        midMatrix.getValues(midValues);
-
-        // Get new matrix
-        Matrix newMatrix;
-        if (inputMethod == EInputMethod.PLOTTING && getCurrentShotIndex() != EndRenderer.NO_SELECTION) {
-            newMatrix = spotMatrices[getCurrentShotIndex() % target.getModel().getFaceCount()];
-        } else {
-            newMatrix = new Matrix();
-        }
-        float[] newValues = new float[9];
-        newMatrix.getValues(newValues);
-
+        Matrix initFullMatrix = new Matrix(fullMatrix);
         updateLayout();
+        Matrix endMatrix = getSpotEndMatrix();
 
-        List<ValueAnimator> valueAnimators = new ArrayList<>(9);
         float newVisibility = inputMethod == EInputMethod.KEYBOARD ? 1 : 0;
         ValueAnimator inputAnimator = ValueAnimator.ofFloat(keyboardVisibility, newVisibility);
         inputAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         inputAnimator.addUpdateListener(valueAnimator -> {
             keyboardVisibility = (Float) valueAnimator.getAnimatedValue();
-            for (int i = 0; i < 9; i++) {
-                midValues[i] = (float) valueAnimators.get(i).getAnimatedValue();
-            }
-            midMatrix.setValues(midValues);
-            targetDrawable.setSpotMatrix(midMatrix);
             invalidate();
         });
         animations.add(inputAnimator);
 
-        for (int i = 0; i < 9; i++) {
-            final ValueAnimator animator = ValueAnimator.ofFloat(oldValues[i], newValues[i]);
-            valueAnimators.add(animator);
-            animations.add(animator);
-        }
+        animations.add(ObjectAnimator.ofObject(this, ANIMATED_FULL_TRANSFORM_PROPERTY,
+                new MatrixEvaluator(), initFullMatrix, fullMatrix));
+        animations.add(ObjectAnimator.ofObject(this, ANIMATED_SPOT_TRANSFORM_PROPERTY,
+                new MatrixEvaluator(), endMatrix));
         super.collectAnimations(animations);
+    }
+
+    private Matrix getSpotEndMatrix() {
+        Matrix endMatrix;
+        if ((getCurrentShotIndex() == EndRenderer.NO_SELECTION || inputMethod == EInputMethod.KEYBOARD)) {
+            endMatrix = new Matrix();
+        } else {
+            endMatrix = spotMatrices[getCurrentShotIndex() % target.getModel().getFaceCount()];
+        }
+        return endMatrix;
     }
 
     @Override

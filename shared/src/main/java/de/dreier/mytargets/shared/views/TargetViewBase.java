@@ -275,6 +275,9 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected abstract Coordinate initAnimationPositions(int i);
 
     protected void animateToNewState() {
+        if (endRect == null) {
+            return;
+        }
         // Extension point for sub-classes making use of spots
         List<Animator> animations = new ArrayList<>();
         collectAnimations(animations);

@@ -24,6 +24,13 @@ import android.graphics.RectF;
 import android.graphics.Region;
 
 public class PathUtils {
+
+    private static final Paint tempPen = new Paint();
+    private static final Matrix tempInvMatrix = new Matrix();
+    // two points 1 unit away from each other
+    private static final float[] PTS = new float[]{0, 0, 1, 0};
+    private static final float[] tmpPts = new float[4];
+
     /**
      * Workaround for http://stackoverflow.com/questions/16090607/blurry-offset-paths-when-canvas-is-scaled-under-hardware-acceleration
      */
@@ -34,29 +41,26 @@ public class PathUtils {
         Matrix mat = canvas.getMatrix();
 
         // reverse the effects of the current matrix
-        Matrix inv = new Matrix();
-        mat.invert(inv);
-        canvas.concat(inv);
+        mat.invert(tempInvMatrix);
+        canvas.concat(tempInvMatrix);
 
         // transform the path
         path.transform(mat);
 
         // get the scale for transforming the Paint
-        float[] pts = {0, 0, 1, 0}; // two points 1 unit away from each other
-        mat.mapPoints(pts);
-        float scale = (float) Math.sqrt(Math.pow(pts[0] - pts[2], 2) + Math.pow(pts[1] - pts[3], 2));
+        mat.mapPoints(tmpPts, PTS);
+        float scale = (float) Math.sqrt(Math.pow(tmpPts[0] - tmpPts[2], 2) + Math.pow(tmpPts[1] - tmpPts[3], 2));
 
         // copy the existing Paint
-        Paint pen2 = new Paint();
-        pen2.set(pen);
+        tempPen.set(pen);
 
         // scale the Paint
-        pen2.setStrokeMiter(pen.getStrokeMiter() * scale);
-        pen2.setStrokeWidth(pen.getStrokeWidth() * scale);
+        tempPen.setStrokeMiter(pen.getStrokeMiter() * scale);
+        tempPen.setStrokeWidth(pen.getStrokeWidth() * scale);
 
         // draw the path
-        canvas.drawPath(path, pen2);
-        path.transform(inv);
+        canvas.drawPath(path, tempPen);
+        path.transform(tempInvMatrix);
 
         canvas.restore();
     }
