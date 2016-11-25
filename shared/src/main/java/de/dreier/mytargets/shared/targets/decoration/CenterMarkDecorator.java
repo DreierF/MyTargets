@@ -44,15 +44,15 @@ public class CenterMarkDecorator implements TargetDecorator {
             initPaint();
         }
         paintStroke.setColor(color);
-        paintStroke.setStrokeWidth(stroke / 1000f);
+        paintStroke.setStrokeWidth(stroke / 500f);
         if (tilted) {
-            canvas.drawLine(-size * 0.001f, -size * 0.001f,
-                    size * 0.001f, size * 0.001f, paintStroke);
-            canvas.drawLine(-size * 0.001f, size * 0.001f,
-                    size * 0.001f, -size * 0.001f, paintStroke);
+            canvas.drawLine(-size * 0.002f, -size * 0.002f,
+                    size * 0.002f, size * 0.002f, paintStroke);
+            canvas.drawLine(-size * 0.002f, size * 0.002f,
+                    size * 0.002f, -size * 0.002f, paintStroke);
         } else {
-            canvas.drawLine(-size * 0.001f, 0, size * 0.001f, 0, paintStroke);
-            canvas.drawLine(0, -size * 0.001f, 0, size * 0.001f, paintStroke);
+            canvas.drawLine(-size * 0.002f, 0, size * 0.002f, 0, paintStroke);
+            canvas.drawLine(0, -size * 0.002f, 0, size * 0.002f, paintStroke);
         }
     }
 }

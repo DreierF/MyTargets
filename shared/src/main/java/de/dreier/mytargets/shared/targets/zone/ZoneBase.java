@@ -37,7 +37,7 @@ public abstract class ZoneBase {
         this.midpoint = midpoint;
         this.fillColor = fillColor;
         this.strokeColor = strokeColor;
-        this.strokeWidth = strokeWidth * 0.001f;
+        this.strokeWidth = strokeWidth * 0.002f;
         this.scoresAsOutsideIn = scoresAsOutsideIn;
     }
 

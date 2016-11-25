@@ -34,13 +34,14 @@ import de.dreier.mytargets.shared.targets.zone.ZoneBase;
 
 public class TargetDrawable extends Drawable {
 
+    public static final RectF SRC_RECT = new RectF(-1, -1, 1, 1);
     protected final Target target;
     final TargetModelBase model;
     private final List<ZoneBase> zonesToDraw;
     private final ArrayList<Matrix> targetFaceMatrices;
     private final ArrayList<Matrix> drawMatrices;
     private Matrix matrix = new Matrix();
-    private float zoom;
+    private float zoom = 1;
     private float px;
     private float py;
     private Matrix spotMatrix = new Matrix();
@@ -72,7 +73,7 @@ public class TargetDrawable extends Drawable {
     @Override
     public void setBounds(int left, int top, int right, int bottom) {
         super.setBounds(left, top, right, bottom);
-        matrix.setRectToRect(new RectF(-1, -1, 1, 1),
+        matrix.setRectToRect(SRC_RECT,
                 new RectF(left, top, right, bottom),
                 Matrix.ScaleToFit.CENTER);
     }
@@ -80,7 +81,7 @@ public class TargetDrawable extends Drawable {
     @Override
     public void setBounds(@NonNull Rect bounds) {
         super.setBounds(bounds);
-        matrix.setRectToRect(new RectF(-1, -1, 1, 1),
+        matrix.setRectToRect(SRC_RECT,
                 new RectF(bounds),
                 Matrix.ScaleToFit.CENTER);
     }
@@ -180,10 +181,6 @@ public class TargetDrawable extends Drawable {
         this.py = py;
     }
 
-    public void setSpotMatrix(Matrix spotMatrix) {
-        this.spotMatrix = spotMatrix;
-    }
-
     public void setOffset(float x, float y) {
         xOffset = x;
         yOffset = y;
@@ -191,5 +188,9 @@ public class TargetDrawable extends Drawable {
 
     public Matrix getSpotMatrix() {
         return spotMatrix;
+    }
+
+    public void setSpotMatrix(Matrix spotMatrix) {
+        this.spotMatrix = spotMatrix;
     }
 }

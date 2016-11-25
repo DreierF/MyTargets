@@ -25,6 +25,7 @@ import android.text.TextPaint;
 import de.dreier.mytargets.shared.targets.models.Beursault;
 import de.dreier.mytargets.shared.targets.zone.ZoneBase;
 import de.dreier.mytargets.shared.utils.Color;
+import de.dreier.mytargets.shared.utils.PathUtils;
 
 import static de.dreier.mytargets.shared.utils.Color.DARK_GRAY;
 
@@ -150,23 +151,23 @@ public class BeursaultDecorator extends CenterMarkDecorator {
         final ZoneBase innerZone = model.getZone(innerZoneIndex);
         final float outerRadius = outerZone.radius - outerZone.strokeWidth * 0.5f;
         final float innerRadius = innerZone.radius + innerZone.strokeWidth * 0.5f;
-        final float rel = -(outerRadius + innerRadius) * 0.5f;
-        drawFilledPath(canvas, 0.5f, rel, scale, path, pathBounds); // top
-        drawFilledPath(canvas, rel, 0.5f, scale, path, pathBounds); // left
-        drawFilledPath(canvas, 0.5f, 1f - rel, scale, path, pathBounds); // bottom
-        drawFilledPath(canvas, 1f - rel, 0.5f, scale, path, pathBounds); // right
+        final float rel = (outerRadius + innerRadius) * 0.5f;
+        drawFilledPath(canvas, 0f, -rel, scale, path, pathBounds); // top
+        drawFilledPath(canvas, -rel, 0f, scale, path, pathBounds); // left
+        drawFilledPath(canvas, 0f, rel, scale, path, pathBounds); // bottom
+        drawFilledPath(canvas, rel, 0f, scale, path, pathBounds); // right
     }
 
     private void drawFilledPath(Canvas canvas, float x, float y, float scaleFactor, Path path, RectF bounds) {
-        float rectSize = 12 * scaleFactor;
+        float rectSize = 0.012f*2 * scaleFactor;
         final RectF bgRect = new RectF(x - rectSize, y - rectSize, x + rectSize, y + rectSize);
         canvas.drawRect(bgRect, paintFill);
-        Matrix scaleMatrix = new Matrix();
-        rectSize = 0.007f * scaleFactor;
+        rectSize = 0.007f*2 * scaleFactor;
         final RectF numberRect = new RectF(x - rectSize, y - rectSize, x + rectSize, y + rectSize);
+        Matrix scaleMatrix = new Matrix();
         scaleMatrix.setRectToRect(bounds, numberRect, Matrix.ScaleToFit.CENTER);
         Path tmp = new Path(path);
         tmp.transform(scaleMatrix);
-        canvas.drawPath(tmp, paintText);
+        PathUtils.drawPath(canvas, tmp, paintText);
     }
 }

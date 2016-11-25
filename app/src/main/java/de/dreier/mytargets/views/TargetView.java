@@ -56,6 +56,7 @@ import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
@@ -312,15 +313,14 @@ public class TargetView extends TargetViewBase {
         if (targetRect.height() > targetRect.width()) {
             targetRect.top = targetRect.bottom - targetRect.width();
         }
-        final RectF srcRect = new RectF(-1f, -1f, 1f, 1f);
 
         fullMatrix = new Matrix();
-        fullMatrix.setRectToRect(srcRect, targetRect, Matrix.ScaleToFit.CENTER);
+        fullMatrix.setRectToRect(TargetDrawable.SRC_RECT, targetRect, Matrix.ScaleToFit.CENTER);
 
         RectF targetRectExt = new RectF(targetRect);
         targetRectExt.inset(30 * density, 30 * density);
         fullExtendedMatrix = new Matrix();
-        fullExtendedMatrix.setRectToRect(srcRect, targetRectExt, Matrix.ScaleToFit.CENTER);
+        fullExtendedMatrix.setRectToRect(TargetDrawable.SRC_RECT, targetRectExt, Matrix.ScaleToFit.CENTER);
         fullExtendedMatrixInverse = new Matrix();
         fullExtendedMatrix.invert(fullExtendedMatrixInverse);
 

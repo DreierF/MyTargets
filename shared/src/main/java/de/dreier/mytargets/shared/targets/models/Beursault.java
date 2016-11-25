@@ -30,14 +30,14 @@ public class Beursault extends TargetModelBase {
     public Beursault() {
         super(23, R.string.beursault);
         zones = new ZoneBase[] {
-                new CircularZone(31.089f, WHITE, DARK_GRAY, 27, false),
-                new CircularZone(69.673f, WHITE, DARK_GRAY, 6, false),
-                new CircularZone(98.578f, WHITE, DARK_GRAY, 6, false),
-                new CircularZone(141.358f, WHITE, DARK_GRAY, 27, false),
-                new CircularZone(231.017f, WHITE, DARK_GRAY, 6, false),
-                new CircularZone(320.679f, WHITE, DARK_GRAY, 6, false),
-                new CircularZone(410.339f, WHITE, DARK_GRAY, 6, false),
-                new CircularZone(500f, WHITE, DARK_GRAY, 27, false)
+                new CircularZone(0.062178f, WHITE, DARK_GRAY, 27, false),
+                new CircularZone(0.13934599f, WHITE, DARK_GRAY, 6, false),
+                new CircularZone(0.19715601f, WHITE, DARK_GRAY, 6, false),
+                new CircularZone(0.282716f, WHITE, DARK_GRAY, 27, false),
+                new CircularZone(0.462034f, WHITE, DARK_GRAY, 6, false),
+                new CircularZone(0.64135796f, WHITE, DARK_GRAY, 6, false),
+                new CircularZone(0.820678f, WHITE, DARK_GRAY, 6, false),
+                new CircularZone(1.0f, WHITE, DARK_GRAY, 27, false)
         };
         scoringStyles = new ScoringStyle[]{
                 new ScoringStyle(false, 4, 4, 3, 3, 2, 2, 1, 1)
