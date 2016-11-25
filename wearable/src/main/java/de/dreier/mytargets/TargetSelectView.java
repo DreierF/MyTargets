@@ -1,8 +1,22 @@
+/*
+ * Copyright (C) 2016 Florian Dreier
+ *
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
 package de.dreier.mytargets;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
@@ -10,75 +24,60 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.Circle;
+import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
-
-import static android.graphics.Color.WHITE;
 
 
 public class TargetSelectView extends TargetViewBase {
 
     private int radius;
-    private Paint drawColorPaint;
     private int chinHeight;
     private double circleRadius;
     private Circle circle;
+    private float chinBound;
 
     public TargetSelectView(Context context) {
         super(context);
-        init();
     }
 
     public TargetSelectView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public TargetSelectView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init();
     }
 
     void setChinHeight(int chinHeight) {
         this.chinHeight = chinHeight;
     }
 
-    private void init() {
-        density = getResources().getDisplayMetrics().density;
-        drawColorPaint = new Paint();
-        drawColorPaint.setAntiAlias(true);
-        setOnTouchListener(this);
-    }
-
     @Override
-    public void setRoundTemplate(RoundTemplate r) {
-        super.setRoundTemplate(r);
-        circle = new Circle(density, r.target);
+    public void setTarget(Target target) {
+        super.setTarget(target);
+        circle = new Circle(density, target);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // Erase background
-        drawColorPaint.setColor(WHITE);
-        canvas.drawRect(0, 0, contentWidth, contentHeight, drawColorPaint);
-
         // Draw all possible points in a circular
         int curZone = getCurrentlySelectedZone();
         for (int i = 0; i < selectableZones.size(); i++) {
             Coordinate coordinate = getCircularCoordinates(i);
             circle.draw(canvas, coordinate.x, coordinate.y, selectableZones.get(i).index,
-                    i == curZone ? 23 : 17, false, currentArrow, null);
+                    i == curZone ? 23 : 17, false, getCurrentShotIndex(), null);
         }
 
         // Draw all points of this end in the center
-        scoresDrawer.draw(canvas);
+        endRenderer.draw(canvas);
     }
 
     private int getCurrentlySelectedZone() {
-        if (end != null && currentArrow < round.arrowsPerEnd) {
-            return end.shot[currentArrow].zone;
+        if (getCurrentShotIndex() != EndRenderer.NO_SELECTION) {
+            return shots.get(getCurrentShotIndex()).zone;
         } else {
             return Shot.NOTHING_SELECTED;
         }
@@ -89,28 +88,32 @@ public class TargetSelectView extends TargetViewBase {
         Coordinate coordinate = new Coordinate();
         coordinate.x = (float) (radius + (Math.cos(degree) * circleRadius));
         coordinate.y = (float) (radius + (Math.sin(degree) * circleRadius));
-        float bound = contentHeight - (chinHeight + 15) * density;
-        if (coordinate.y > bound) {
-            coordinate.y = bound;
+        if (coordinate.y > chinBound) {
+            coordinate.y = chinBound;
         }
         return coordinate;
     }
 
     @Override
     protected Coordinate initAnimationPositions(int i) {
-        return getCircularCoordinates(getSelectableZoneIndexFromShot(end.shot[i]));
+        return getCircularCoordinates(getSelectableZoneIndexFromShot(shots.get(i)));
     }
 
     @Override
-    protected void calcSizes() {
-        radius = (int) (contentWidth / 2.0);
+    protected void updateLayoutBounds(int width, int height) {
+        radius = (int) (width / 2.0);
+        chinBound = height - (chinHeight + 15) * density;
         circleRadius = radius - 25 * density;
-        RectF rect = new RectF();
-        rect.left = radius - 35 * density;
-        rect.right = radius + 35 * density;
-        rect.top = radius / 2;
-        rect.bottom = radius;
-        scoresDrawer.animateToRect(rect);
+    }
+
+    @Override
+    protected RectF getEndRect() {
+        RectF endRect = new RectF();
+        endRect.left = radius - 35 * density;
+        endRect.right = radius + 35 * density;
+        endRect.top = radius / 2;
+        endRect.bottom = radius;
+        return endRect;
     }
 
     @NonNull
@@ -129,7 +132,7 @@ public class TargetSelectView extends TargetViewBase {
     @Override
     protected Shot getShotFromPos(float x, float y) {
         int zones = selectableZones.size();
-        Shot s = new Shot(currentArrow);
+        Shot s = new Shot(getCurrentShotIndex());
 
         double xDiff = x - radius;
         double yDiff = y - radius;

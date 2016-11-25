@@ -1,8 +1,16 @@
 /*
- * MyTargets Archery
+ * Copyright (C) 2016 Florian Dreier
  *
- * Copyright (C) 2015 Florian Dreier
- * All rights reserved
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  */
 package de.dreier.mytargets.managers.dao;
 
@@ -19,12 +27,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.utils.Pair;
 
 public class PasseDataSource extends IdProviderDataSource<Passe> {
@@ -49,7 +58,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     public void update(Passe item) {
         super.update(item);
         ShotDataSource sds = new ShotDataSource();
-        for (Shot shot : item.shot) {
+        for (Shot shot : item.shots) {
             sds.update(shot);
         }
     }
@@ -63,7 +72,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
 
     @Override
     public ContentValues getContentValues(Passe passe) {
-        if (passe.shot.length == 0) {
+        if (passe.shots.size() == 0) {
             return null;
         }
         ContentValues values = new ContentValues();
@@ -89,7 +98,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
 
     private Passe get(long passeId) {
         Cursor res = database.rawQuery(
-                "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, p.exact, p.save_time " +
+                "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, p.exact, p.save_time, p.round " +
                         "FROM SHOOT s, PASSE p " +
                         "WHERE s.passe=p._id " +
                         "AND p._id=" + passeId + " " +
@@ -102,8 +111,9 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
         p.index = -1;
         p.exact = res.getInt(8) == 1;
         p.saveDate = new DateTime(res.getLong(9));
+        p.roundId = res.getLong(10);
         for (int i = 0; i < count; i++) {
-            p.shot[i] = ShotDataSource.cursorToShot(res, i);
+            p.shots.set(i, ShotDataSource.cursorToShot(res, i));
             res.moveToNext();
         }
         res.close();
@@ -139,7 +149,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                 }
                 passe.index = pIndex++;
                 for (int i = 0; i < ppp; i++) {
-                    passe.shot[i] = ShotDataSource.cursorToShot(res, i);
+                    passe.shots.set(i, ShotDataSource.cursorToShot(res, i));
                     res.moveToNext();
                 }
                 list.add(passe);
@@ -179,7 +189,7 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                 }
                 passe.index = pIndex++;
                 for (int i = 0; i < ppp; i++) {
-                    passe.shot[i] = ShotDataSource.cursorToShot(res, i);
+                    passe.shots.set(i, ShotDataSource.cursorToShot(res, i));
                     res.moveToNext();
                 }
                 list.add(passe);
@@ -192,11 +202,15 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
     @NonNull
     private Map<SelectableZone, Integer> getRoundScores(List<Round> rounds) {
         final Target t = rounds.get(0).info.target;
-        Map<SelectableZone, Integer> scoreCount = getAllPossibleZones(t);
+        final Set<SelectableZone> selectableZones = t.getAllPossibleSelectableZones();
+        Map<SelectableZone, Integer> scoreCount = new HashMap<>();
+        for (SelectableZone zone : selectableZones) {
+            scoreCount.put(zone, 0);
+        }
         for (Round round : rounds) {
             List<Passe> passes = new PasseDataSource().getAllByRound(round.getId());
             for (Passe p : passes) {
-                for (Shot s : p.shot) {
+                for (Shot s : p.shots) {
                     SelectableZone tuple = new SelectableZone(s.zone, t.getModel().getZone(s.zone),
                             t.zoneToString(s.zone, s.index), t.getPointsByZone(s.zone, s.index));
                     final Integer integer = scoreCount.get(tuple);
@@ -205,21 +219,6 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                         scoreCount.put(tuple, count);
                     }
                 }
-            }
-        }
-        return scoreCount;
-    }
-
-    @NonNull
-    private Map<SelectableZone, Integer> getAllPossibleZones(Target t) {
-        Map<SelectableZone, Integer> scoreCount = new HashMap<>();
-        for (int arrow = 0; arrow < 3; arrow++) {
-            final List<SelectableZone> zoneList = t.getSelectableZoneList(arrow);
-            for (SelectableZone selectableZone : zoneList) {
-                scoreCount.put(selectableZone, 0);
-            }
-            if (!t.getModel().dependsOnArrowIndex()) {
-                break;
             }
         }
         return scoreCount;

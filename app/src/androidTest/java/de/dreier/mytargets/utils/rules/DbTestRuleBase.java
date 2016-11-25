@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Florian Dreier
+ *
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
 package de.dreier.mytargets.utils.rules;
 
 import android.content.Context;
@@ -68,8 +83,8 @@ public abstract class DbTestRuleBase implements TestRule {
         Passe p = new Passe(shots.length);
         p.roundId = round.getId();
         for (int i = 0; i < shots.length; i++) {
-            p.shot[i].index = i;
-            p.shot[i].zone = shots[i];
+            p.shots.get(i).index = i;
+            p.shots.get(i).zone = shots[i];
         }
         return p;
     }
@@ -103,8 +118,8 @@ public abstract class DbTestRuleBase implements TestRule {
         p.roundId = round.getId();
         p.exact = false;
         for (int i = 0; i < arrowsPerEnd; i++) {
-            p.shot[i].index = i;
-            p.shot[i].zone = gen.nextInt(5);
+            p.shots.get(i).index = i;
+            p.shots.get(i).zone = gen.nextInt(5);
         }
         p.saveDate = new DateTime().withDate(training.date)
                 .withTime(14, gen.nextInt(59), gen.nextInt(59), 0);

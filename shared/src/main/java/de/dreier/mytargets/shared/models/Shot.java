@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Florian Dreier
+ *
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
 package de.dreier.mytargets.shared.models;
 
 import android.support.annotation.NonNull;
@@ -5,6 +20,7 @@ import android.support.annotation.NonNull;
 public class Shot implements IIdSettable, Comparable<Shot> {
     public static final int NOTHING_SELECTED = -2;
     public static final int MISS = -1;
+    public long id;
     public int zone = NOTHING_SELECTED;
     public long passe;
     public float x, y;
@@ -15,7 +31,6 @@ public class Shot implements IIdSettable, Comparable<Shot> {
 
     // The index of the shot in the containing end
     public int index;
-    long id;
 
     public Shot() {
     }
