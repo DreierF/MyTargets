@@ -44,7 +44,6 @@ import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.SightSetting;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.utils.ScoresDrawer;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.utils.MyBackupAgent;
 

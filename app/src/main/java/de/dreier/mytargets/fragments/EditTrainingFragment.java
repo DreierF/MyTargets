@@ -84,7 +84,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     }
 
     @NonNull
-    public static IntentWrapper createIntent(Activity fragment, int trainingType) {
+    public static IntentWrapper createIntent(Activity fragment, ETrainingType trainingType) {
         Intent i = new Intent(fragment,
                 SimpleFragmentActivityBase.EditTrainingActivity.class);
         i.putExtra(TRAINING_TYPE, trainingType);

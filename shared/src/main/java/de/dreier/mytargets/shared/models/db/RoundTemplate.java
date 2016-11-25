@@ -74,12 +74,12 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
                 .querySingle();
     }
 
-    void deletePasse() {
+    void deleteEnd() {
         endCount--;
         update();
     }
 
-    public void addPasse() {
+    public void addEnd() {
         endCount++;
         update();
     }

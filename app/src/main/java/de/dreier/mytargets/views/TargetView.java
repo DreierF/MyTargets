@@ -39,6 +39,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
@@ -50,13 +51,14 @@ import java.util.TimerTask;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
-import de.dreier.mytargets.shared.models.db.ArrowNumber;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.db.Passe;
-import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.db.ArrowNumber;
+import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.Shot;
+import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.utils.MatrixEvaluator;
 import de.dreier.mytargets.shared.views.TargetViewBase;

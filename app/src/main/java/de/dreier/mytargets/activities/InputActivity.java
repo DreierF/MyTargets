@@ -47,7 +47,7 @@ import de.dreier.mytargets.fragments.TimerFragment;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.WearMessageManager;
 import de.dreier.mytargets.models.EShowMode;
-import de.dreier.mytargets.shared.models.ArrowNumber;
+import de.dreier.mytargets.shared.models.db.ArrowNumber;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.NotificationInfo;
@@ -59,9 +59,8 @@ import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.SightSetting;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
-import de.dreier.mytargets.shared.models.RoundTemplate;
+import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
@@ -86,9 +85,6 @@ public class InputActivity extends ChildActivityBase
     LoaderResult data;
 
     private WearMessageManager manager;
-    private Training training;
-    private StandardRound standardRound;
-
     private ActivityInputBinding binding;
     private boolean transitionFinished = true;
     private EShowMode showMode = EShowMode.END;
@@ -246,7 +242,7 @@ public class InputActivity extends ChildActivityBase
             binding.targetViewStub.getViewStub().inflate();
         }
         targetView = (TargetView) binding.targetViewStub.getBinding().getRoot();
-        targetView.setTarget(getTemplate().target);
+        targetView.setTarget(getCurrentRound().getTarget());
         targetView.setArrow(data.arrowDiameter, data.arrowNumbers);
         targetView.setOnTargetSetListener(InputActivity.this);
         targetView.setUpdateListener(InputActivity.this);
@@ -369,13 +365,13 @@ public class InputActivity extends ChildActivityBase
         getCurrentEnd().shots = changedEnd;
 
         // Set current end score
-        int reachedEndPoints = getCurrentEnd().getReachedPoints(getTemplate().target);
-        int maxEndPoints = getTemplate().target.getEndMaxPoints(getTemplate().arrowsPerEnd);
+        int reachedEndPoints = getCurrentEnd().getReachedPoints(getCurrentRound().getTarget());
+        int maxEndPoints = getCurrentRound().getTarget().getEndMaxPoints(getTemplate().arrowsPerEnd);
         binding.scoreEnd.setText(reachedEndPoints + "/" + maxEndPoints);
 
         // Set current round score
         int reachedRoundPoints = Stream.of(getEnds())
-                .reduce(0, (sum, end) -> sum + end.getReachedPoints(getTemplate().target));
+                .reduce(0, (sum, end) -> sum + end.getReachedPoints(getCurrentRound().getTarget()));
         int maxRoundPoints = maxEndPoints * getEnds().size();
         binding.scoreRound.setText(reachedRoundPoints + "/" + maxRoundPoints);
     }
@@ -415,7 +411,7 @@ public class InputActivity extends ChildActivityBase
         if (getEnds().size() > 0) {
             Passe lastEnd = lastItem(getEnds());
             for (Shot shot : lastEnd.shots) {
-                text += getTemplate().target.zoneToString(shot.zone, shot.index) + " ";
+                text += getCurrentRound().getTarget().zoneToString(shot.zone, shot.index) + " ";
             }
             text += "\n";
         } else {
@@ -498,8 +494,8 @@ public class InputActivity extends ChildActivityBase
         public LoaderResult loadInBackground() {
             LoaderResult result = new LoaderResult();
             result.endIndex = endIndex;
-            result.training = new TrainingDataSource().get(trainingId);
-            result.rounds = new ArrayList<>(new RoundDataSource().getAll(trainingId));
+            result.training = Training.get(trainingId);
+            result.rounds = new ArrayList<>(result.training.getRounds());
             result.roundIndex = 0;
             for (int i = 0; i < result.rounds.size(); i++) {
                 if (result.rounds.get(i).getId() == roundId) {
@@ -507,21 +503,20 @@ public class InputActivity extends ChildActivityBase
                 }
             }
             result.ends = new ArrayList<>(Stream.of(result.rounds)
-                    .map(r -> new ArrayList<>(new PasseDataSource().getAllByRound(r.getId())))
+                    .map(r -> new ArrayList<>(r.getPasses()))
                     .collect(Collectors.toList()));
 
-            result.standardRound = new StandardRoundDataSource()
-                    .get(result.training.standardRoundId);
+            result.standardRound = result.training.getStandardRound();
             result.arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
             if (result.training.arrow > 0) {
-                Arrow arrow = new ArrowDataSource().get(result.training.arrow);
+                Arrow arrow = result.training.getArrow();
                 if (arrow != null) {
                     result.arrowDiameter = arrow.diameter;
                 }
             }
 
             result.arrowNumbers = result.training.arrowNumbering
-                    ? new ArrowNumberDataSource().getAll(result.training.arrow)
+                    ? result.training.getArrow().getArrowNumbers()
                     : Collections.emptyList();
 
             return result;
