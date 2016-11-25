@@ -32,6 +32,10 @@ android {
     }
 }
 
+afterEvaluate {
+    assembleRelease.dependsOn(':crowdinDownload')
+}
+
 dependencies {
     compile "com.android.support:support-v4:$supportLibVersion"
     compile "com.android.support:support-core-ui:$supportLibVersion"

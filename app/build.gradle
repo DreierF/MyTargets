@@ -79,6 +79,10 @@ android {
     }
 }
 
+afterEvaluate {
+    assembleRelease.dependsOn(':crowdinDownload')
+}
+
 /*
  * Workaround for https://code.google.com/p/android/issues/detail?id=182715
  *
@@ -108,9 +112,7 @@ task renameFolders {
 def CROWDIN_API_KEY = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
 if (CROWDIN_API_KEY != null && !CROWDIN_API_KEY.isEmpty()) {
     tasks.whenTaskAdded { task ->
-        if (task.name.equals("assembleRelease")) {
-            task.dependsOn(':crowdinDownload')
-        } else if (task.name.equals("generateRegularReleasePlayResources")) {
+        if (task.name.equals("generateRegularReleasePlayResources")) {
             task.dependsOn(':crowdinDownload')
             task.dependsOn renameFolders
             task.doLast {
