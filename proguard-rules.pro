@@ -55,9 +55,8 @@
 -dontwarn com.squareup.okhttp.**
 
 -keepattributes Annotation
--keep class okhttp3.** { *; }
--keep interface okhttp3.* { *; }
 -dontwarn okhttp3.**
+-dontwarn okio.**
 
 # Butterknife
 -dontwarn butterknife.internal.**
@@ -72,9 +71,6 @@
     @butterknife.* <methods>;
 }
 
-# Okio
--dontwarn okio.**
-
 ## Joda Time 2.3
 -dontwarn org.joda.convert.**
 -dontwarn org.joda.time.**
@@ -83,3 +79,13 @@
 
 -keep class com.google.android.gms.** { *; }
 -dontwarn com.google.android.gms.**
+
+# Gson
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class sun.misc.Unsafe { *; }
+#-keep class com.google.gson.stream.** { *; }
+-keep class com.google.gson.examples.android.model.** { *; }
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
