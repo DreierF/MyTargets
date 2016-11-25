@@ -1,8 +1,16 @@
 /*
- * MyTargets Archery
+ * Copyright (C) 2016 Florian Dreier
  *
- * Copyright (C) 2015 Florian Dreier
- * All rights reserved
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  */
 
 package de.dreier.mytargets.utils;
@@ -18,7 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import de.dreier.mytargets.models.ArrowStatistic;
-import de.dreier.mytargets.shared.targets.TargetDrawable;
+import de.dreier.mytargets.shared.targets.drawable.TargetImpactDrawable;
 
 public class DistributionPatternUtils {
 
@@ -49,11 +57,10 @@ public class DistributionPatternUtils {
         Canvas canvas = new Canvas(b);
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
 
-        TargetDrawable target = statistic.target.getDrawable();
+        TargetImpactDrawable target = statistic.target.getImpactAggregationDrawable();
+        target.setShots(statistic.shots);
         target.setBounds(new Rect(0, 0, size, size));
         target.draw(canvas);
-        target.drawArrows(canvas, statistic.shots, false);
-        //TODO draw average on every spot
         return b;
     }
 }

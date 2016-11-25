@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Florian Dreier
+ *
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
 package de.dreier.mytargets.managers;
 
 import android.content.SharedPreferences;
@@ -8,15 +23,15 @@ import org.joda.time.format.DateTimeFormat;
 
 import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.models.EShowMode;
+import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.views.TargetViewBase;
+import de.dreier.mytargets.views.TargetView.EKeyboardType;
 
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 
 public class SettingsManager {
-    private static final String KEY_DONATED = "donated";
-    private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
-    private static final String KEY_TIMER_SOUND = "timer_sound";
     public static final String KEY_TIMER_WARN_TIME = "timer_warn_time";
     public static final String KEY_TIMER_WAIT_TIME = "timer_wait_time";
     public static final String KEY_TIMER_SHOOT_TIME = "timer_shoot_time";
@@ -24,6 +39,11 @@ public class SettingsManager {
     public static final String KEY_PROFILE_LAST_NAME = "profile_last_name";
     public static final String KEY_PROFILE_BIRTHDAY = "profile_birthday";
     public static final String KEY_PROFILE_CLUB = "profile_club";
+    public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
+    public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
+    private static final String KEY_DONATED = "donated";
+    private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
+    private static final String KEY_TIMER_SOUND = "timer_sound";
     private static final String KEY_STANDARD_ROUND = "standard_round";
     private static final String KEY_ARROW = "arrow";
     private static final String KEY_BOW = "bow";
@@ -39,13 +59,12 @@ public class SettingsManager {
     private static final String KEY_INDOOR = "indoor";
     private static final String KEY_PASSES = "rounds";
     private static final String KEY_TRANSLATION_DIALOG_SHOWN = "translation_dialog_shown";
-    private static final String KEY_FILTER_CLUB = "filter_club";
     private static final String KEY_INPUT_MODE = "target_mode";
     private static final String KEY_SHOW_MODE = "show_mode";
     private static final SharedPreferences preferences = ApplicationInstance
             .getLastSharedPreferences();
-    public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
-    public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
+    private static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
+    public static final String KEY_INPUT_KEYBOARD_TYPE = "input_keyboard_type";
 
     public static int getStandardRound() {
         return preferences.getInt(KEY_STANDARD_ROUND, 32);
@@ -115,7 +134,8 @@ public class SettingsManager {
                 .putInt(KEY_TARGET, (int) target.getId())
                 .putInt(KEY_SCORING_STYLE, target.scoringStyle)
                 .putInt(KEY_TARGET_DIAMETER_VALUE, (int) target.size.value)
-                .putString(KEY_TARGET_DIAMETER_UNIT, Dimension.Unit.toStringHandleNull(target.size.unit))
+                .putString(KEY_TARGET_DIAMETER_UNIT,
+                        Dimension.Unit.toStringHandleNull(target.size.unit))
                 .apply();
     }
 
@@ -171,26 +191,17 @@ public class SettingsManager {
                 .apply();
     }
 
-    public static int getClubFilter() {
-        return ApplicationInstance.getSharedPreferences().getInt(KEY_FILTER_CLUB, 0x1FF);
-    }
-
-    public static void setClubFilter(int filter) {
-        ApplicationInstance.getSharedPreferences()
-                .edit()
-                .putInt(KEY_FILTER_CLUB, filter)
-                .apply();
-    }
-
-    public static boolean getInputMode() {
+    public static TargetViewBase.EInputMethod getInputMethod() {
         return ApplicationInstance.getSharedPreferences()
-                .getBoolean(KEY_INPUT_MODE, false);
+                .getBoolean(KEY_INPUT_MODE, false)
+                ? TargetViewBase.EInputMethod.KEYBOARD
+                : TargetViewBase.EInputMethod.PLOTTING;
     }
 
-    public static void setInputMode(boolean inputMode) {
+    public static void setInputMethod(TargetViewBase.EInputMethod inputMethod) {
         ApplicationInstance.getSharedPreferences()
                 .edit()
-                .putBoolean(KEY_INPUT_MODE, inputMode)
+                .putBoolean(KEY_INPUT_MODE, inputMethod == TargetViewBase.EInputMethod.KEYBOARD)
                 .apply();
     }
 
@@ -210,6 +221,18 @@ public class SettingsManager {
         ApplicationInstance.getSharedPreferences()
                 .edit()
                 .putString(KEY_SHOW_MODE, showMode.toString())
+                .apply();
+    }
+
+    public static EAggregationStrategy getAggregationStrategy() {
+        return EAggregationStrategy.valueOf(ApplicationInstance.getSharedPreferences()
+                .getString(KEY_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString()));
+    }
+
+    public static void setAggregationStrategy(EAggregationStrategy aggregationStrategy) {
+        ApplicationInstance.getSharedPreferences()
+                .edit()
+                .putString(KEY_AGGREGATION_STRATEGY, aggregationStrategy.toString())
                 .apply();
     }
 
@@ -303,5 +326,10 @@ public class SettingsManager {
     public static float getInputTargetZoom() {
         return Float.parseFloat(ApplicationInstance.getSharedPreferences()
                 .getString(KEY_INPUT_TARGET_ZOOM, "3.0"));
+    }
+
+    public static EKeyboardType getInputKeyboardType() {
+        return EKeyboardType.valueOf(ApplicationInstance.getSharedPreferences()
+                .getString(KEY_INPUT_KEYBOARD_TYPE, EKeyboardType.RIGHT.toString()));
     }
 }

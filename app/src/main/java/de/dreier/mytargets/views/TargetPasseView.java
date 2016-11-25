@@ -1,8 +1,16 @@
 /*
- * MyTargets Archery
+ * Copyright (C) 2016 Florian Dreier
  *
- * Copyright (C) 2015 Florian Dreier
- * All rights reserved
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  */
 
 package de.dreier.mytargets.views;
@@ -71,12 +79,12 @@ public class TargetPasseView extends View {
         float count = 0;
         float sumX = 0;
         float sumY = 0;
-        for (int i = 0; i < passe.shot.length; i++) {
+        for (int i = 0; i < passe.shots.size(); i++) {
             // For yellow and white background use black font color
-            int color = i == mZoneCount || passe.shot[i].zone < 0 ? 0xFF000000 : target.getModel().getZone(passe.shot[i].zone).getFillColor();
+            int color = i == mZoneCount || passe.shots.get(i).zone < 0 ? 0xFF000000 : target.getModel().getZone(passe.shots.get(i).zone).getFillColor();
             drawColorP.setColor(color);
-            float selX = passe.shot[i].x;
-            float selY = passe.shot[i].y;
+            float selX = passe.shots.get(i).x;
+            float selY = passe.shots.get(i).y;
             sumX += selX;
             sumY += selY;
             count++;

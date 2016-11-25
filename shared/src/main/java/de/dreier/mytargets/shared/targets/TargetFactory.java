@@ -1,8 +1,16 @@
 /*
- * MyTargets Archery
+ * Copyright (C) 2016 Florian Dreier
  *
- * Copyright (C) 2015 Florian Dreier
- * All rights reserved
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  */
 package de.dreier.mytargets.shared.targets;
 
@@ -10,6 +18,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.targets.models.ASA3D;
+import de.dreier.mytargets.shared.targets.models.ASA3D14;
+import de.dreier.mytargets.shared.targets.models.Beursault;
+import de.dreier.mytargets.shared.targets.models.DAIR3D;
+import de.dreier.mytargets.shared.targets.models.HitOrMiss;
+import de.dreier.mytargets.shared.targets.models.IBO3D;
+import de.dreier.mytargets.shared.targets.models.IFAAAnimal;
+import de.dreier.mytargets.shared.targets.models.NFAAAnimal;
+import de.dreier.mytargets.shared.targets.models.NFAAExpertField;
+import de.dreier.mytargets.shared.targets.models.NFAAField;
+import de.dreier.mytargets.shared.targets.models.NFAAHunter;
+import de.dreier.mytargets.shared.targets.models.NFAAIndoor;
+import de.dreier.mytargets.shared.targets.models.NFAAIndoor5Spot;
+import de.dreier.mytargets.shared.targets.models.NFAS3D;
+import de.dreier.mytargets.shared.targets.models.NFASField;
+import de.dreier.mytargets.shared.targets.models.SCAPeriod;
+import de.dreier.mytargets.shared.targets.models.TargetModelBase;
+import de.dreier.mytargets.shared.targets.models.Vegas3Spot;
+import de.dreier.mytargets.shared.targets.models.Vertical3Spot;
+import de.dreier.mytargets.shared.targets.models.WA3Ring;
+import de.dreier.mytargets.shared.targets.models.WA3Ring3Spot;
+import de.dreier.mytargets.shared.targets.models.WA5Ring;
+import de.dreier.mytargets.shared.targets.models.WA6Ring;
+import de.dreier.mytargets.shared.targets.models.WADanage3Spot;
+import de.dreier.mytargets.shared.targets.models.WADanage6Spot;
+import de.dreier.mytargets.shared.targets.models.WAField;
+import de.dreier.mytargets.shared.targets.models.WAField3Spot;
+import de.dreier.mytargets.shared.targets.models.WAFull;
+import de.dreier.mytargets.shared.targets.models.Worcester;
 
 public class TargetFactory {
 
