@@ -1,33 +1,41 @@
 /*
- * MyTargets Archery
+ * Copyright (C) 2016 Florian Dreier
  *
- * Copyright (C) 2015 Florian Dreier
- * All rights reserved
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  */
 
 package de.dreier.mytargets.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.List;
 
+import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.Shot;
-import de.dreier.mytargets.shared.targets.TargetDrawable;
+import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
 
 public class ArrowDispersionView extends View implements View.OnTouchListener {
     private static final float ZOOM_FACTOR = 3;
+    private final float density;
     private int contentWidth;
     private int contentHeight;
-    private final float density;
-    private final Paint fillPaint;
-    private List<Shot> shots;
     private float orgRadius, orgMidX, orgMidY;
-    private TargetDrawable target;
+    private TargetImpactAggregationDrawable target;
     private float zoomInX = -1, zoomInY = -1;
 
     public ArrowDispersionView(Context context) {
@@ -41,13 +49,7 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
     public ArrowDispersionView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setOnTouchListener(this);
-        fillPaint = new Paint();
-        fillPaint.setAntiAlias(true);
         density = getResources().getDisplayMetrics().density;
-    }
-
-    private void reset() {
-        invalidate();
     }
 
     @Override
@@ -76,14 +78,18 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         return true;
     }
 
-    public void setShoots(List<Shot> passes) {
-        shots = passes;
+    public void setShots(TargetImpactAggregationDrawable target, List<Shot> shots) {
+        this.target = target;
+        this.target.setAggregationStrategy(SettingsManager.getAggregationStrategy());
+        this.target.setShots(shots);
+        this.target.setCallback(this);
         invalidate();
     }
 
-    public void setTarget(TargetDrawable target) {
-        this.target = target;
-        reset();
+    @Override
+    public void invalidateDrawable(@NonNull Drawable drawable) {
+        super.invalidateDrawable(drawable);
+        invalidate();
     }
 
     @Override
@@ -109,28 +115,6 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         target.setBounds((int) (x - radius), (int) (y - radius), (int) (x + radius),
                 (int) (y + radius));
         target.draw(canvas);
-
-        // Draw exact arrow position
-        drawArrows(canvas);
-    }
-
-    private void drawArrows(Canvas canvas) {
-        int spots = 1;
-        Midpoint m = new Midpoint();
-
-        for (Shot shot : shots) {
-            target.drawArrow(canvas, shot, false);
-            m.sumX += shot.x;
-            m.sumY += shot.y;
-            m.count++;
-        }
-
-        for (int i = 0; i < spots; i++) {
-            if (m.count >= 2) {
-                target.drawArrowAvg(canvas, m.sumX / m.count,
-                        m.sumY / m.count, i);
-            }
-        }
     }
 
     private void calcSizes() {
@@ -139,11 +123,5 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         orgRadius = (int) (Math.min(radW, radH));
         orgMidX = contentWidth / 2;
         orgMidY = contentHeight / 2;
-    }
-
-    class Midpoint {
-        float count = 0;
-        float sumX = 0;
-        float sumY = 0;
     }
 }

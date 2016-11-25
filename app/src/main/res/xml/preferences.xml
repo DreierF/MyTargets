@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <android.support.v7.preference.PreferenceCategory android:title="@string/general">
-        <android.support.v7.preference.PreferenceScreen
+<!--
+  ~ Copyright (C) 2016 Florian Dreier
+  ~
+  ~ This file is part of MyTargets.
+  ~
+  ~ MyTargets is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License version 2
+  ~ as published by the Free Software Foundation.
+  ~
+  ~ MyTargets is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/general">
+        <PreferenceScreen
             android:key="input"
             android:title="@string/input">
             <android.support.v7.preference.ListPreference
@@ -15,7 +30,13 @@
                 android:entries="@array/arrow_diameter_scale_entries"
                 android:entryValues="@array/arrow_diameter_scale_values"
                 android:key="input_arrow_diameter_scale"
-                android:title="@string/arrow_diameter_scale"/>
+                android:title="@string/arrow_diameter_scale" />
+            <android.support.v7.preference.ListPreference
+                android:defaultValue="RIGHT"
+                android:entries="@array/keyboard_type_entries"
+                android:entryValues="@array/keyboard_type_values"
+                android:key="input_keyboard_type"
+                android:title="@string/keyboard" />
         </android.support.v7.preference.PreferenceScreen>
         <android.support.v7.preference.PreferenceScreen
             android:key="scoreboard"

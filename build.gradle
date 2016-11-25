@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Florian Dreier
+ *
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
 import org.ajoberstar.grgit.Grgit
 
 buildscript {
@@ -7,8 +22,7 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.2'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'me.tatarka:gradle-retrolambda:3.3.0'
+        classpath 'me.tatarka:gradle-retrolambda:3.3.1'
         classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.0.9'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
@@ -31,12 +45,13 @@ versioneye {
 
 ext {
     compileSdkVersionCode = 25
-    buildToolsVersionCode = '25.0.0'
-    supportLibVersion = '25.0.0'
+    buildToolsVersionCode = '25.0.1'
+    supportLibVersion = '25.0.1'
     testSupportLibVersion = '0.5'
-    playServiceVersion = '9.8.0'
+    playServiceVersion = '10.0.0'
     espressoVersion = '2.2.2'
     parcelerVersion = '1.1.6'
+    jodaTimeVersion = '2.9.6'
     git = Grgit.open()
     appVersionCode = Integer.parseInt("${git.tag.list().size()}")
     appVersionName = "${git.describe()}"

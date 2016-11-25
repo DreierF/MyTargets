@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Florian Dreier
+ *
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
 package de.dreier.mytargets.activities;
 
 import android.annotation.TargetApi;
@@ -45,8 +60,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
                 .setContentView(this, R.layout.activity_arrow_ranking_details);
 
         statistic = Parcels.unwrap(getIntent().getParcelableExtra(ITEM));
-        binding.dispersionView.setShoots(statistic.shots);
-        binding.dispersionView.setTarget(statistic.target.getDrawable());
+        binding.dispersionView.setShots(statistic.target.getImpactAggregationDrawable(), statistic.shots);
 
         ToolbarUtils.showHomeAsUp(this);
         if (statistic.arrowName != null) {

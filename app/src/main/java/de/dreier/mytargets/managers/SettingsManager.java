@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Florian Dreier
+ *
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
 package de.dreier.mytargets.managers;
 
 import android.content.SharedPreferences;
@@ -10,8 +25,11 @@ import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.settings.backup.EBackupLocation;
 import de.dreier.mytargets.models.EShowMode;
+import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.views.TargetViewBase;
+import de.dreier.mytargets.views.TargetView.EKeyboardType;
 
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
@@ -52,6 +70,8 @@ public class SettingsManager {
     private static final SharedPreferences preferences = ApplicationInstance
             .getSharedPreferences();
     private static final String KEY_BACKUP_LOCATION = "backup_location";
+    private static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
+    public static final String KEY_INPUT_KEYBOARD_TYPE = "input_keyboard_type";
 
     public static int getStandardRound() {
         return lastUsed.getInt(KEY_STANDARD_ROUND, 32);
@@ -178,15 +198,17 @@ public class SettingsManager {
                 .apply();
     }
 
-    public static boolean getInputMode() {
+    public static TargetViewBase.EInputMethod getInputMethod() {
         return preferences
-                .getBoolean(KEY_INPUT_MODE, false);
+                .getBoolean(KEY_INPUT_MODE, false)
+                ? TargetViewBase.EInputMethod.KEYBOARD
+                : TargetViewBase.EInputMethod.PLOTTING;
     }
 
-    public static void setInputMode(boolean inputMode) {
+    public static void setInputMethod(TargetViewBase.EInputMethod inputMethod) {
         preferences
                 .edit()
-                .putBoolean(KEY_INPUT_MODE, inputMode)
+                .putBoolean(KEY_INPUT_MODE, inputMethod == TargetViewBase.EInputMethod.KEYBOARD)
                 .apply();
     }
 
@@ -206,6 +228,18 @@ public class SettingsManager {
         preferences
                 .edit()
                 .putString(KEY_SHOW_MODE, showMode.toString())
+                .apply();
+    }
+
+    public static EAggregationStrategy getAggregationStrategy() {
+        return EAggregationStrategy.valueOf(ApplicationInstance.getSharedPreferences()
+                .getString(KEY_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString()));
+    }
+
+    public static void setAggregationStrategy(EAggregationStrategy aggregationStrategy) {
+        ApplicationInstance.getSharedPreferences()
+                .edit()
+                .putString(KEY_AGGREGATION_STRATEGY, aggregationStrategy.toString())
                 .apply();
     }
 
@@ -305,6 +339,11 @@ public class SettingsManager {
     public static float getInputTargetZoom() {
         return Float.parseFloat(preferences
                 .getString(KEY_INPUT_TARGET_ZOOM, "3.0"));
+    }
+
+    public static EKeyboardType getInputKeyboardType() {
+        return EKeyboardType.valueOf(ApplicationInstance.getSharedPreferences()
+                .getString(KEY_INPUT_KEYBOARD_TYPE, EKeyboardType.RIGHT.toString()));
     }
 
     public static void setInputTargetZoom(float targetZoom) {

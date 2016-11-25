@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Florian Dreier
+ *
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
 package de.dreier.mytargets;
 
 import android.app.Activity;
@@ -24,14 +39,16 @@ import org.parceler.Parcels;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.utils.OnTargetSetListener;
+import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.WearableUtils;
+import de.dreier.mytargets.shared.views.TargetViewBase;
 
-public class MainActivity extends Activity implements OnTargetSetListener,
+public class MainActivity extends Activity implements TargetViewBase.OnEndFinishedListener,
         GoogleApiClient.ConnectionCallbacks, WatchViewStub.OnLayoutInflatedListener {
 
     public static final String EXTRA_ROUND = "round";
@@ -41,6 +58,7 @@ public class MainActivity extends Activity implements OnTargetSetListener,
     private GoogleApiClient mGoogleApiClient;
     private WatchViewStub stub;
     private TextView startTrainingHint;
+
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -101,8 +119,8 @@ public class MainActivity extends Activity implements OnTargetSetListener,
 
     private void setUpTargetView() {
         if (round != null && mTarget != null) {
-            mTarget.setRoundTemplate(round.info);
-            mTarget.reset();
+            mTarget.setTarget(round.info.target);
+            mTarget.setEnd(new Passe(round.info.arrowsPerEnd));
             mTarget.setOnTargetSetListener(MainActivity.this);
             stub.setVisibility(View.VISIBLE);
             startTrainingHint.setVisibility(View.GONE);
@@ -110,14 +128,14 @@ public class MainActivity extends Activity implements OnTargetSetListener,
     }
 
     @Override
-    public long onTargetSet(final Passe passe, boolean remote) {
+    public void onEndFinished(final List<Shot> shotList, boolean remote) {
         confirm.setVisibility(View.VISIBLE);
         confirm.setTotalTimeMs(2500);
         confirm.start();
         confirm.setListener(new DelayedConfirmationView.DelayedConfirmationListener() {
             @Override
             public void onTimerSelected(View view) {
-                mTarget.reset();
+                mTarget.setEnd(new Passe(round.info.arrowsPerEnd));
                 confirm.setVisibility(View.INVISIBLE);
                 confirm.reset();
             }
@@ -132,10 +150,9 @@ public class MainActivity extends Activity implements OnTargetSetListener,
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 v.vibrate(200);
                 finish();
-                sendMessage(passe);
+                sendMessage(shotList);
             }
         });
-        return 0;
     }
 
     private Collection<String> getNodes() {
@@ -148,7 +165,7 @@ public class MainActivity extends Activity implements OnTargetSetListener,
         return results;
     }
 
-    private void sendMessage(Passe p) {
+    private void sendMessage(List<Shot> p) {
         final byte[] data = ParcelableUtil.marshall(Parcels.wrap(p));
         new Thread(() -> {
             sendMessage(WearableUtils.FINISHED_INPUT, data);
