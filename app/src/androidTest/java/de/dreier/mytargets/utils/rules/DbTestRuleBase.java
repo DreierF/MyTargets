@@ -96,7 +96,8 @@ public abstract class DbTestRuleBase implements TestRule {
             p.shots.get(i).index = i;
             p.shots.get(i).zone = gen.nextInt(5);
         }
-        p.saveDate = new DateTime().withDate(training.date).withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
+        p.saveDate = new DateTime().withDate(training.date)
+                .withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
         return p;
     }
 

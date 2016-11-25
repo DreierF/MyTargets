@@ -50,7 +50,7 @@ public class ClusterStrategy extends AggregationStrategyBase<ClusterResultRender
         final Map<Shot, PointStatus> visited = new HashMap<>();
 
         for (final Shot point : shots) {
-            if(isCancelled()) {
+            if (isCancelled()) {
                 break;
             }
             if (visited.get(point) != null) {
@@ -121,7 +121,7 @@ public class ClusterStrategy extends AggregationStrategyBase<ClusterResultRender
     private List<Shot> getNeighbors(final Shot point, final Collection<Shot> points) {
         final List<Shot> neighbors = new ArrayList<>();
         for (final Shot neighbor : points) {
-            if (point != neighbor && distanceFrom(neighbor, point) <= EPS) {
+            if (!point.equals(neighbor) && distanceFrom(neighbor, point) <= EPS) {
                 neighbors.add(neighbor);
             }
         }

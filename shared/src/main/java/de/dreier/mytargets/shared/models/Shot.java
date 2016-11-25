@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 public class Shot implements IIdSettable, Comparable<Shot> {
     public static final int NOTHING_SELECTED = -2;
     public static final int MISS = -1;
+    public long id;
     public int zone = NOTHING_SELECTED;
     public long passe;
     public float x, y;
@@ -30,7 +31,6 @@ public class Shot implements IIdSettable, Comparable<Shot> {
 
     // The index of the shot in the containing end
     public int index;
-    long id;
 
     public Shot() {
     }

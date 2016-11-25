@@ -61,7 +61,8 @@ import static org.hamcrest.CoreMatchers.endsWith;
 public class MainActivityNavigationTest extends UITestBase {
 
     @Rule
-    public IntentsTestRule<MainActivity> mActivityTestRule = new IntentsTestRule<>(MainActivity.class);
+    public IntentsTestRule<MainActivity> mActivityTestRule = new IntentsTestRule<>(
+            MainActivity.class);
 
     @Before
     public void setUp() {
@@ -89,8 +90,9 @@ public class MainActivityNavigationTest extends UITestBase {
         // Does new free training work
         onView(matchFab()).perform(click());
         onView(allOf(withId(R.id.fab1), withParent(withId(R.id.fab)))).perform(click());
-        intended(allOf(hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
-                hasExtra(TRAINING_TYPE, FREE_TRAINING)));
+        intended(
+                allOf(hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
+                        hasExtra(TRAINING_TYPE, FREE_TRAINING)));
         allowPermissionsIfNeeded(mActivityTestRule.getActivity(), ACCESS_FINE_LOCATION);
         pressBack();
 
@@ -120,7 +122,8 @@ public class MainActivityNavigationTest extends UITestBase {
     @Test
     public void addTraining() throws InterruptedException {
         onView(withId(R.id.fab1)).check(matches(withEffectiveVisibility(INVISIBLE)));
-        onView(allOf(withParent(withId(R.id.fab)), withClassName(endsWith("ImageView")), isDisplayed()))
+        onView(allOf(withParent(withId(R.id.fab)), withClassName(endsWith("ImageView")),
+                isDisplayed()))
                 .perform(click());
         onView(withId(R.id.fab1)).perform(click());
         allowPermissionsIfNeeded(mActivityTestRule.getActivity(), ACCESS_FINE_LOCATION);

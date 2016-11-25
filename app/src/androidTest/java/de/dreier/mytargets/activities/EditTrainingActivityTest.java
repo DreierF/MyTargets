@@ -57,7 +57,8 @@ import static org.hamcrest.Matchers.containsString;
 public class EditTrainingActivityTest extends UITestBase {
 
     @Rule
-    public IntentsTestRule<EditTrainingActivity> activityTestRule = new IntentsTestRule<>(EditTrainingActivity.class, true, false);
+    public IntentsTestRule<EditTrainingActivity> activityTestRule = new IntentsTestRule<>(
+            EditTrainingActivity.class, true, false);
 
     @Before
     public void setUp() {

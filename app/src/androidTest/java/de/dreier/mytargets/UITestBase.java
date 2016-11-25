@@ -94,7 +94,8 @@ public class UITestBase extends InstrumentedTestBase {
 
     @NonNull
     protected static Matcher<View> matchFab() {
-        return Matchers.allOf(withParent(withId(R.id.fab)), withClassName(endsWith("ImageView")), isDisplayed());
+        return Matchers.allOf(withParent(withId(R.id.fab)), withClassName(endsWith("ImageView")),
+                isDisplayed());
     }
 
     public static ViewAction nestedScrollTo() {
@@ -103,7 +104,7 @@ public class UITestBase extends InstrumentedTestBase {
 
     public static ViewAssertion assertItemCount(int expectedCount) {
         return new ViewAssertion() {
-            public void check (View view, NoMatchingViewException noViewFoundException){
+            public void check(View view, NoMatchingViewException noViewFoundException) {
                 if (noViewFoundException != null) {
                     throw noViewFoundException;
                 }

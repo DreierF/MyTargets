@@ -47,7 +47,8 @@ public class DeleteTest extends UITestBase {
     private ActivityTestRule activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Rule
-    public final RuleChain rule = RuleChain.outerRule(new SimpleDbTestRule()).around(activityTestRule);
+    public final RuleChain rule = RuleChain.outerRule(new SimpleDbTestRule())
+            .around(activityTestRule);
 
     @Before
     public void setUp() {

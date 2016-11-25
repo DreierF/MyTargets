@@ -185,6 +185,9 @@ public class InputActivity extends ChildActivityBase
             case CLUSTER:
                 menu.findItem(R.id.action_grouping_cluster).setChecked(true);
                 break;
+            default:
+                // Never called: All enum values are checked
+                break;
         }
         return true;
     }

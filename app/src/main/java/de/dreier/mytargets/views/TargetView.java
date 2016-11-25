@@ -63,6 +63,8 @@ import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.utils.MatrixEvaluator;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
+import static de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.KEYBOARD;
+import static de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.PLOTTING;
 import static de.dreier.mytargets.views.TargetView.EKeyboardType.LEFT;
 
 public class TargetView extends TargetViewBase {
@@ -202,7 +204,7 @@ public class TargetView extends TargetViewBase {
         endRenderer.setSelection(getCurrentShotIndex(), null, EndRenderer.MAX_CIRCLE_SIZE);
         EInputMethod inputMethod;
         if (end.getId() != 0) {
-            inputMethod = end.exact ? EInputMethod.PLOTTING : EInputMethod.KEYBOARD;
+            inputMethod = end.exact ? PLOTTING : KEYBOARD;
         } else {
             inputMethod = SettingsManager.getInputMethod();
         }
@@ -220,7 +222,7 @@ public class TargetView extends TargetViewBase {
     public void setAggregationStrategy(EAggregationStrategy aggregationStrategy) {
         SettingsManager.setAggregationStrategy(aggregationStrategy);
         this.aggregationStrategy = aggregationStrategy;
-        if (inputMethod == EInputMethod.KEYBOARD) {
+        if (inputMethod == KEYBOARD) {
             targetDrawable.setAggregationStrategy(EAggregationStrategy.NONE);
         } else {
             targetDrawable.setAggregationStrategy(aggregationStrategy);
@@ -230,7 +232,7 @@ public class TargetView extends TargetViewBase {
     @Override
     protected void onDraw(Canvas canvas) {
         // Draw target
-        if (inputMethod == EInputMethod.PLOTTING && isCurrentlySelecting()) {
+        if (inputMethod == PLOTTING && isCurrentlySelecting()) {
             drawZoomedInTarget(canvas);
         } else {
             drawTarget(canvas);
@@ -268,7 +270,7 @@ public class TargetView extends TargetViewBase {
         targetDrawable.setMid(0, 0);
         if (animator == null) {
             targetDrawable.setMatrix(fullMatrix);
-            if (getCurrentShotIndex() == EndRenderer.NO_SELECTION || inputMethod == EInputMethod.KEYBOARD) {
+            if (getCurrentShotIndex() == EndRenderer.NO_SELECTION || inputMethod == KEYBOARD) {
                 targetDrawable.setSpotMatrix(new Matrix());
             } else {
                 targetDrawable.setSpotMatrix(
@@ -295,7 +297,7 @@ public class TargetView extends TargetViewBase {
     @Override
     protected Coordinate initAnimationPositions(int i) {
         Coordinate coordinate = new Coordinate();
-        if (inputMethod == EInputMethod.KEYBOARD) {
+        if (inputMethod == KEYBOARD) {
             coordinate.x = keyboardRect.left;
             if (keyboardType == LEFT) {
                 coordinate.x += (KEYBOARD_WIDTH_DP + KEYBOARD_INNER_PADDING_DP) * density;
@@ -329,7 +331,7 @@ public class TargetView extends TargetViewBase {
     protected void updateLayoutBounds(int width, int height) {
         targetRect = new RectF(0, MIN_END_RECT_HEIGHT_DP * density, width, height);
         targetRect.inset(TARGET_PADDING_DP * density, TARGET_PADDING_DP * density);
-        if (inputMethod == EInputMethod.KEYBOARD) {
+        if (inputMethod == KEYBOARD) {
             if (keyboardType == LEFT) {
                 targetRect.left += KEYBOARD_TOTAL_WIDTH_DP * density;
             } else {
@@ -354,7 +356,7 @@ public class TargetView extends TargetViewBase {
         keyboardRect = new RectF();
         keyboardRect.top = 0;
         keyboardRect.bottom = height;
-        if (keyboardType == EKeyboardType.LEFT) {
+        if (keyboardType == LEFT) {
             keyboardRect.left = KEYBOARD_OUTER_PADDING_DP * density;
         } else {
             keyboardRect.left = width - KEYBOARD_TOTAL_WIDTH_DP * density;
@@ -374,8 +376,8 @@ public class TargetView extends TargetViewBase {
     public void setInputMethod(EInputMethod mode, boolean animate) {
         if (mode != inputMethod) {
             inputMethod = mode;
-            targetDrawable.drawArrowsEnabled(inputMethod == EInputMethod.PLOTTING);
-            targetDrawable.setAggregationStrategy(inputMethod == EInputMethod.PLOTTING
+            targetDrawable.drawArrowsEnabled(inputMethod == PLOTTING);
+            targetDrawable.setAggregationStrategy(inputMethod == PLOTTING
                     ? aggregationStrategy : EAggregationStrategy.NONE);
             if (animate) {
                 animateToNewState();
@@ -390,7 +392,7 @@ public class TargetView extends TargetViewBase {
     protected Shot getShotFromPos(float x, float y) {
         // Create Shot object
         Shot s = new Shot(getCurrentShotIndex());
-        if (inputMethod == EInputMethod.KEYBOARD) {
+        if (inputMethod == KEYBOARD) {
             if (keyboardRect.contains(x, y)) {
                 int index = (int) (y * selectableZones.size() / keyboardRect.height());
                 index = Math.min(Math.max(0, index), selectableZones.size() - 1);
@@ -457,7 +459,7 @@ public class TargetView extends TargetViewBase {
         updateLayout();
         Matrix endMatrix = getSpotEndMatrix();
 
-        float newVisibility = inputMethod == EInputMethod.KEYBOARD ? 1 : 0;
+        float newVisibility = inputMethod == KEYBOARD ? 1 : 0;
         ValueAnimator inputAnimator = ValueAnimator.ofFloat(keyboardVisibility, newVisibility);
         inputAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         inputAnimator.addUpdateListener(valueAnimator -> {
@@ -475,7 +477,7 @@ public class TargetView extends TargetViewBase {
 
     private Matrix getSpotEndMatrix() {
         Matrix endMatrix;
-        if ((getCurrentShotIndex() == EndRenderer.NO_SELECTION || inputMethod == EInputMethod.KEYBOARD)) {
+        if ((getCurrentShotIndex() == EndRenderer.NO_SELECTION || inputMethod == KEYBOARD)) {
             endMatrix = new Matrix();
         } else {
             endMatrix = spotMatrices[getCurrentShotIndex() % target.getModel().getFaceCount()];
@@ -562,7 +564,7 @@ public class TargetView extends TargetViewBase {
         rect.left = (int) keyboardRect.left;
         rect.right = (int) keyboardRect.right;
         final int visibilityXOffset = (int) (KEYBOARD_TOTAL_WIDTH_DP * (1 - keyboardVisibility) * density);
-        if (keyboardType == EKeyboardType.LEFT) {
+        if (keyboardType == LEFT) {
             rect.offset(-visibilityXOffset, 0);
         } else {
             rect.offset(visibilityXOffset, 0);

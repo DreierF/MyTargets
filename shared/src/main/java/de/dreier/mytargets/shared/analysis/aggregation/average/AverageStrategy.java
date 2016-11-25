@@ -31,14 +31,7 @@ public class AverageStrategy extends AggregationStrategyBase<AverageResultRender
             return null;
         }
         Average average = new Average();
-        average.dataPointCount = shots.size();
-        average.computeAverage(shots);
-        average.computeNonUniformStdDeviations(shots);
-        average.computeCenterStdDev(shots);
-        average.computeStdDevX(shots);
-        average.computeStdDevY(shots);
-        average.computeDirectionalVariance(shots);
-        average.computeWeightedAverage(shots);
+        average.computeAll(shots);
         final AverageResultRenderer averageResultRenderer = new AverageResultRenderer(average);
         averageResultRenderer.onPrepareDraw();
         return averageResultRenderer;

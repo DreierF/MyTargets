@@ -23,16 +23,23 @@ import java.util.List;
 import de.dreier.mytargets.shared.models.Shot;
 
 public class Average {
+    private int dataPointCount;
     protected final PointF average = new PointF(0.0F, 0.0F);
     protected final PointF weightedAverage = new PointF(0.0F, 0.0F);
     private final RectF nonUniformStdDev = new RectF(-1.0F, -1.0F, -1.0F, -1.0F);
-    int dataPointCount;
-    private double centerStdDev = -1.0D;
-    private double dirVariance = -1.0D;
     private double stdDevX = -1.0D;
     private double stdDevY = -1.0D;
 
-    void computeWeightedAverage(List<Shot> data) {
+    public void computeAll(List<Shot> shots) {
+        dataPointCount = shots.size();
+        computeAverage(shots);
+        computeNonUniformStdDeviations(shots);
+        computeStdDevX(shots);
+        computeStdDevY(shots);
+        computeWeightedAverage(shots);
+    }
+
+    private void computeWeightedAverage(List<Shot> data) {
         double sumX = 0.0D;
         double sumY = 0.0D;
         int i = 0;
@@ -47,32 +54,7 @@ public class Average {
         weightedAverage.set((float) (sumX / (double) i), (float) (sumY / (double) i));
     }
 
-    void computeCenterStdDev(List<Shot> data) {
-        double sumXSquare = 0.0D;
-        double sumYSquare = 0.0D;
-        for (Shot point : data) {
-            sumXSquare += (double) (point.x * point.x);
-            sumYSquare += (double) (point.y * point.y);
-        }
-
-        centerStdDev = (Math.sqrt(sumXSquare / (double) data.size()) + Math
-                .sqrt(sumYSquare / (double) data.size())) / 2.0D;
-    }
-
-    void computeDirectionalVariance(List<Shot> data) {
-        double cosSum = 0.0D;
-        double sinSum = 0.0D;
-
-        for (Shot point : data) {
-            double atan2 = Math.atan2((double) point.x, (double) point.y);
-            cosSum += Math.cos(atan2);
-            sinSum += Math.sin(atan2);
-        }
-
-        dirVariance = 1.0D - Math.sqrt(cosSum * cosSum + sinSum * sinSum) / (double) data.size();
-    }
-
-    void computeNonUniformStdDeviations(List<Shot> data) {
+    private void computeNonUniformStdDeviations(List<Shot> data) {
         int negCountX = 0;
         int posCountX = 0;
         int posCountY = 0;
@@ -145,32 +127,12 @@ public class Average {
         return average;
     }
 
-    public double getDirectionalVariance() {
-        return dirVariance;
-    }
-
-    public double getISV() {
-        return getISV(getStdDev());
-    }
-
-    private double getISV(double var1) {
-        return (Math.log(var1) - 2.57D) / -0.027D;
-    }
-
     public RectF getNonUniformStdDev() {
         return nonUniformStdDev;
     }
 
     public double getStdDev() {
         return (stdDevX + stdDevY) / 2.0D;
-    }
-
-    public double getStdDevX() {
-        return stdDevX;
-    }
-
-    public double getStdDevY() {
-        return stdDevY;
     }
 
     public int getDataPointCount() {
