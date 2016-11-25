@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Florian Dreier
+ *
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
 package de.dreier.mytargets.shared.utils;
 
 import java.util.ArrayList;
@@ -7,22 +22,22 @@ import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.targets.models.DAIR3D;
+import de.dreier.mytargets.shared.targets.models.IFAAAnimal;
+import de.dreier.mytargets.shared.targets.models.NFAAAnimal;
+import de.dreier.mytargets.shared.targets.models.NFAAExpertField;
+import de.dreier.mytargets.shared.targets.models.NFAAField;
+import de.dreier.mytargets.shared.targets.models.NFAAHunter;
+import de.dreier.mytargets.shared.targets.models.NFAAIndoor;
+import de.dreier.mytargets.shared.targets.models.NFASField;
+import de.dreier.mytargets.shared.targets.models.Vertical3Spot;
+import de.dreier.mytargets.shared.targets.models.WA5Ring;
+import de.dreier.mytargets.shared.targets.models.WA6Ring;
+import de.dreier.mytargets.shared.targets.models.WAField;
+import de.dreier.mytargets.shared.targets.models.WAFull;
+import de.dreier.mytargets.shared.targets.models.Worcester;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
-import de.dreier.mytargets.shared.targets.DAIR3D;
-import de.dreier.mytargets.shared.targets.IFAAAnimal;
-import de.dreier.mytargets.shared.targets.NFAAAnimal;
-import de.dreier.mytargets.shared.targets.NFAAExpertField;
-import de.dreier.mytargets.shared.targets.NFAAField;
-import de.dreier.mytargets.shared.targets.NFAAHunter;
-import de.dreier.mytargets.shared.targets.NFAAIndoor;
-import de.dreier.mytargets.shared.targets.NFASField;
-import de.dreier.mytargets.shared.targets.Vertical3Spot;
-import de.dreier.mytargets.shared.targets.WA5Ring;
-import de.dreier.mytargets.shared.targets.WA6Ring;
-import de.dreier.mytargets.shared.targets.WAField;
-import de.dreier.mytargets.shared.targets.WAFull;
-import de.dreier.mytargets.shared.targets.Worcester;
 
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.INCH;

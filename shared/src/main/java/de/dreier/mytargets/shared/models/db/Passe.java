@@ -11,7 +11,6 @@ import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.joda.time.DateTime;
 import org.parceler.Parcel;
@@ -25,7 +24,7 @@ import java.util.Map;
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.targets.SelectableZone;
+import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.utils.DateTimeConverter;
 import de.dreier.mytargets.shared.utils.Pair;
 

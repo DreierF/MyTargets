@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Florian Dreier
+ *
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
 package de.dreier.mytargets.utils.rules;
 
 import android.content.Context;
@@ -61,7 +76,8 @@ public abstract class DbTestRuleBase implements TestRule {
             p.shots.get(i).index = i;
             p.shots.get(i).zone = gen.nextInt(5);
         }
-        p.saveDate = new DateTime().withDate(training.date).withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
+        p.saveDate = new DateTime().withDate(training.date)
+                .withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
         return p;
     }
 

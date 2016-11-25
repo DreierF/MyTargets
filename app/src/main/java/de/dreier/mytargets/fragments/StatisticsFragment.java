@@ -1,8 +1,16 @@
 /*
- * MyTargets Archery
+ * Copyright (C) 2016 Florian Dreier
  *
- * Copyright (C) 2015 Florian Dreier
- * All rights reserved
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  */
 
 package de.dreier.mytargets.fragments;
@@ -54,7 +62,7 @@ import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Passe;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
-import de.dreier.mytargets.shared.targets.SelectableZone;
+import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.utils.Color;
 import de.dreier.mytargets.shared.utils.LongUtils;
 import de.dreier.mytargets.shared.utils.Pair;
@@ -125,8 +133,7 @@ public class StatisticsFragment extends FragmentBase {
             binding.dispersionPatternLayout.setVisibility(View.GONE);
             return;
         }
-        binding.dispersionView.setTarget(target.getDrawable());
-        binding.dispersionView.setShoots(exactShots);
+        binding.dispersionView.setShots(target.getImpactAggregationDrawable(), exactShots);
         binding.dispersionView.setEnabled(false);
         binding.dispersionViewOverlay.setOnClickListener(view -> {
             ArrowStatistic statistics = new ArrowStatistic();

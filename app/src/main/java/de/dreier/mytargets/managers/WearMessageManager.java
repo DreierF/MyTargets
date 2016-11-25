@@ -1,8 +1,16 @@
 /*
- * MyTargets Archery
+ * Copyright (C) 2016 Florian Dreier
  *
- * Copyright (C) 2015 Florian Dreier
- * All rights reserved
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  */
 
 package de.dreier.mytargets.managers;
@@ -31,13 +39,14 @@ import de.dreier.mytargets.shared.models.db.Passe$$Parcelable;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.WearableUtils;
+import de.dreier.mytargets.shared.views.TargetViewBase;
 
 public class WearMessageManager
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         MessageApi.MessageListener {
 
     private static final String TAG = "wearMessageManager";
-    private final OnTargetSetListener mListener;
+    private final TargetViewBase.OnEndFinishedListener mListener;
     private final NotificationInfo info;
 
     private final GoogleApiClient mGoogleApiClient;
@@ -51,11 +60,11 @@ public class WearMessageManager
                 .build();
         mGoogleApiClient.connect();
 
-        if (!(context instanceof OnTargetSetListener)) {
+        if (!(context instanceof TargetViewBase.OnEndFinishedListener)) {
             throw new ClassCastException();
         }
 
-        mListener = (OnTargetSetListener) context;
+        mListener = (TargetViewBase.OnEndFinishedListener) context;
     }
 
     @Override
@@ -113,7 +122,7 @@ public class WearMessageManager
         Passe p = Parcels.unwrap(ParcelableUtil.unmarshall(data, Passe$$Parcelable.CREATOR));
 
         if (messageEvent.getPath().equals(WearableUtils.FINISHED_INPUT)) {
-            mListener.onTargetSet(p, true);
+            mListener.onEndFinished(p.shots, true);
         }
     }
 

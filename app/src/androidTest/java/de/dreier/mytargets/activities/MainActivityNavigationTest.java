@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Florian Dreier
+ *
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
 package de.dreier.mytargets.activities;
 
 
@@ -14,7 +29,8 @@ import de.dreier.mytargets.UITestBase;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.targets.WAFull;
+import de.dreier.mytargets.shared.targets.models.WAFull;
+import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;
@@ -45,7 +61,8 @@ import static org.hamcrest.CoreMatchers.endsWith;
 public class MainActivityNavigationTest extends UITestBase {
 
     @Rule
-    public IntentsTestRule<MainActivity> mActivityTestRule = new IntentsTestRule<>(MainActivity.class);
+    public IntentsTestRule<MainActivity> mActivityTestRule = new IntentsTestRule<>(
+            MainActivity.class);
 
     @Before
     public void setUp() {
@@ -53,7 +70,7 @@ public class MainActivityNavigationTest extends UITestBase {
                 .setTarget(new Target(WAFull.ID, 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
         SettingsManager.setDistance(new Dimension(50, Dimension.Unit.METER));
         SettingsManager.setIndoor(false);
-        SettingsManager.setInputMode(false);
+        SettingsManager.setInputMethod(EInputMethod.PLOTTING);
         SettingsManager.setTimerEnabled(false);
         SettingsManager.setArrowsPerEnd(3);
     }
@@ -73,8 +90,9 @@ public class MainActivityNavigationTest extends UITestBase {
         // Does new free training work
         onView(matchFab()).perform(click());
         onView(allOf(withId(R.id.fab1), withParent(withId(R.id.fab)))).perform(click());
-        intended(allOf(hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
-                hasExtra(TRAINING_TYPE, FREE_TRAINING)));
+        intended(
+                allOf(hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
+                        hasExtra(TRAINING_TYPE, FREE_TRAINING)));
         allowPermissionsIfNeeded(mActivityTestRule.getActivity(), ACCESS_FINE_LOCATION);
         pressBack();
 
@@ -104,7 +122,8 @@ public class MainActivityNavigationTest extends UITestBase {
     @Test
     public void addTraining() throws InterruptedException {
         onView(withId(R.id.fab1)).check(matches(withEffectiveVisibility(INVISIBLE)));
-        onView(allOf(withParent(withId(R.id.fab)), withClassName(endsWith("ImageView")), isDisplayed()))
+        onView(allOf(withParent(withId(R.id.fab)), withClassName(endsWith("ImageView")),
+                isDisplayed()))
                 .perform(click());
         onView(withId(R.id.fab1)).perform(click());
         allowPermissionsIfNeeded(mActivityTestRule.getActivity(), ACCESS_FINE_LOCATION);

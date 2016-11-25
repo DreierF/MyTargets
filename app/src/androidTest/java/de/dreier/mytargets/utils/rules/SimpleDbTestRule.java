@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Florian Dreier
+ *
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
 package de.dreier.mytargets.utils.rules;
 
 import android.support.annotation.NonNull;
@@ -18,8 +33,9 @@ import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.targets.WAFull;
+import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
+import de.dreier.mytargets.shared.views.TargetViewBase;
 
 public class SimpleDbTestRule extends DbTestRuleBase {
 
@@ -29,7 +45,7 @@ public class SimpleDbTestRule extends DbTestRuleBase {
                 new Target(WAFull.ID, 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
         SettingsManager.setDistance(new Dimension(50, Dimension.Unit.METER));
         SettingsManager.setIndoor(false);
-        SettingsManager.setInputMode(false);
+        SettingsManager.setInputMethod(TargetViewBase.EInputMethod.PLOTTING);
         SettingsManager.setTimerEnabled(true);
         SettingsManager.setArrowsPerEnd(6);
         Bow bow = addBow();

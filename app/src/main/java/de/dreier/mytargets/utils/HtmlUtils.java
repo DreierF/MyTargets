@@ -1,8 +1,16 @@
 /*
- * MyTargets Archery
+ * Copyright (C) 2016 Florian Dreier
  *
- * Copyright (C) 2015 Florian Dreier
- * All rights reserved
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  */
 
 package de.dreier.mytargets.utils;
@@ -28,13 +36,13 @@ import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.targets.SelectableZone;
 import de.dreier.mytargets.shared.utils.Pair;
+import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 import static de.dreier.mytargets.shared.models.db.Passe.getSortedScoreDistribution;
-import static de.dreier.mytargets.shared.targets.ScoringStyle.MISS_SYMBOL;
+import static de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle.MISS_SYMBOL;
 
 public class HtmlUtils {
 
@@ -129,7 +137,7 @@ public class HtmlUtils {
         final String points = target.zoneToString(shot.zone, shot.index);
         if (configuration.showPointsColored) {
             int fillColor = target.getModel().getZone(shot.zone).getFillColor();
-            int color = target.getModel().getTextColor(shot.zone);
+            int color = target.getModel().getZone(shot.zone).getTextColor();
             final String pointsDiv = String.format(
                     "<div class=\"circle\" style='background: #%06X; color: #%06X'>%s",
                     fillColor & 0xFFFFFF, color & 0xFFFFFF, points);
