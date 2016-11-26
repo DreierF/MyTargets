@@ -4,12 +4,15 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.preference.Preference;
 
+import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.views.DatePreference;
 import de.dreier.mytargets.views.DatePreferenceDialogFragmentCompat;
 
 import static de.dreier.mytargets.managers.SettingsManager.KEY_INPUT_ARROW_DIAMETER_SCALE;
+import static de.dreier.mytargets.managers.SettingsManager.KEY_INPUT_KEYBOARD_TYPE;
 import static de.dreier.mytargets.managers.SettingsManager.KEY_INPUT_TARGET_ZOOM;
+import static de.dreier.mytargets.views.TargetView.EKeyboardType.LEFT;
 
 public class InputSettingsFragment extends SettingsFragmentBase {
     @Override
@@ -17,6 +20,8 @@ public class InputSettingsFragment extends SettingsFragmentBase {
         setSummary(KEY_INPUT_ARROW_DIAMETER_SCALE,
                 SettingsManager.getInputArrowDiameterScale() + "x");
         setSummary(KEY_INPUT_TARGET_ZOOM, SettingsManager.getInputTargetZoom() + "x");
+        setSummary(KEY_INPUT_KEYBOARD_TYPE, SettingsManager.getInputKeyboardType() == LEFT
+                ? getString(R.string.left_handed) : getString(R.string.right_handed));
     }
 
     @Override

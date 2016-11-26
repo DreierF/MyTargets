@@ -16,13 +16,11 @@
 package de.dreier.mytargets.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -104,9 +102,9 @@ public class InputActivity extends ChildActivityBase
 
     public static IntentWrapper getIntent(Round round, int endIndex) {
         return new IntentWrapper(InputActivity.class)
-                .with(TRAINING_ID, round.trainingId);
+                .with(TRAINING_ID, round.trainingId)
                 .with(ROUND_ID, round.getId())
-                .with(PASSE_IND, endIndex);
+                .with(END_INDEX, endIndex);
     }
 
     @Override
