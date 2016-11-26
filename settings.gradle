@@ -13,6 +13,6 @@
  * GNU General Public License for more details.
  */
 
-include ':app'
+include ':app', ':dropbox'
 include ':wearable'
 include ':shared'

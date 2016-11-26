@@ -154,7 +154,7 @@ dependencies {
     compile "com.google.android.gms:play-services-wearable:$playServiceVersion"
     compile "com.google.android.gms:play-services-drive:$playServiceVersion"
 
-    compile 'com.dropbox.core:dropbox-core-sdk:2.1.2'
+    //compile 'com.dropbox.core:dropbox-core-sdk:2.1.2'
 
     compile 'com.android.support:multidex:1.0.1'
 
@@ -200,6 +200,7 @@ dependencies {
 
     compile 'me.mvdw.recyclerviewmergeadapter:recyclerviewmergeadapter:2.0.0'
 
+    compile project(':dropbox')
     compile project(':shared')
     wearApp project(':wearable')
 
