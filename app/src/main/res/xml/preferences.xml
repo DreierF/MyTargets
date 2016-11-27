@@ -191,24 +191,6 @@
                 android:defaultValue="true"
                 android:key="automatic_backup"
                 android:title="@string/automatic_backup"/>
-            <ListPreference
-                android:defaultValue="7"
-                android:dependency="automatic_backup"
-                android:entries="@array/backup_interval_entries"
-                android:entryValues="@array/backup_interval_values"
-                android:key="backup_interval"
-                android:title="@string/backup_interval"/>
-            <Preference android:layout="@layout/item_preference_backup_now"/>
-            <PreferenceCategory android:title="@string/backup_location">
-                <ListPreference
-                    android:defaultValue="2"
-                    android:entries="@array/backup_interval_entries"
-                    android:entryValues="@array/backup_interval_values"
-                    android:key="backup_location"
-                    android:title="@string/backup_location"/>
-            </PreferenceCategory>
-            <PreferenceCategory android:title="@string/recent_backups">
-            </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/info">

@@ -82,7 +82,7 @@ android {
 }
 
 afterEvaluate {
-    assembleRegularRelease.dependsOn(':crowdinDownload')
+   // assembleRegularRelease.dependsOn(':crowdinDownload')
 }
 
 /*

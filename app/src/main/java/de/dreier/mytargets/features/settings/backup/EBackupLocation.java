@@ -67,4 +67,8 @@ public enum EBackupLocation implements IIdProvider, IImageProvider {
     public String getName() {
         return ApplicationInstance.get(name);
     }
+
+    public boolean needsStoragePermissions() {
+        return this == INTERNAL_STORAGE || this == EXTERNAL_STORAGE;
+    }
 }

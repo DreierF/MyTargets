@@ -2,17 +2,20 @@ package de.dreier.mytargets.features.settings.backup;
 
 import android.Manifest;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceScreen;
-import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -24,16 +27,19 @@ import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.BackupAdapter;
+import de.dreier.mytargets.databinding.FragmentBackupBinding;
 import de.dreier.mytargets.features.settings.SettingsFragmentBase;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
-import me.mvdw.recyclerviewmergeadapter.adapter.RecyclerViewMergeAdapter;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static de.dreier.mytargets.features.settings.backup.BackupSettingsFragmentPermissionsDispatcher.applyBackupLocationWithCheck;
 import static de.dreier.mytargets.features.settings.backup.BackupSettingsFragmentPermissionsDispatcher.showFilePickerWithCheck;
 
 @RuntimePermissions
@@ -43,37 +49,41 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
 
     private Backup backup;
     private BackupAdapter adapter;
+    private FragmentBackupBinding binding;
+
+    @Override
+    public void onCreatePreferences() {
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_backup, container, false);
+        ToolbarUtils.showHomeAsUp(this);
+
+        binding.backupLocation.setOnActivityResultContext(this);
+        binding.backupLocation.setOnUpdateListener(item -> {
+            SettingsManager.setBackupLocation(item);
+            if (backup != null) {
+                backup.stop();
+            }
+            setBackupLocation(item);
+        });
+
+        binding.backupNowButton.setOnClickListener(v -> backupNow());
+        setHasOptionsMenu(true);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EBackupLocation backupLocation = SettingsManager.getBackupLocation();
+        binding.backupLocation.setItem(backupLocation);
+    }
 
     @Override
     protected void updateItemSummaries() {
-        setSummary(SettingsManager.KEY_BACKUP_INTERVAL, SettingsManager.getBackupIntervalString());
-    }
-
-    @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ToolbarUtils.showHomeAsUp(this);
-
-//        binding.backupLocation.setOnActivityResultContext(this);
-//        binding.backupLocation.setOnUpdateListener(item -> {
-//            SettingsManager.setBackupLocation(item);
-//            if (backup != null) {
-//                backup.stop();
-//            }
-//            setBackupLocation(item);
-//        });
-//
-//        binding.backupNowButton.setOnClickListener(v -> backupNow());
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    protected RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
-        RecyclerViewMergeAdapter mergeAdapter = new RecyclerViewMergeAdapter();
-        mergeAdapter.addAdapter(super.onCreateAdapter(preferenceScreen));
-        adapter = new BackupAdapter(getContext(), this::showBackupDetails, this::deleteBackup);
-        mergeAdapter.addAdapter((RecyclerView.Adapter) adapter);
-        return mergeAdapter;
+//        setSummary(SettingsManager.KEY_BACKUP_INTERVAL, SettingsManager.getBackupIntervalString());
     }
 
     @Override
@@ -92,13 +102,16 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
 
     @Override
     public void onPause() {
-        backup.stop();
+        if (backup != null) {
+            backup.stop();
+        }
         super.onPause();
     }
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         backup.onActivityResult(requestCode, resultCode, data);
+        binding.backupLocation.onActivityResult(requestCode, resultCode, data);
         if (requestCode == IMPORT_FROM_URI && resultCode == AppCompatActivity.RESULT_OK) {
             importFromUri(data.getData());
         }
@@ -106,9 +119,23 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
     }
 
     private void setBackupLocation(EBackupLocation item) {
+        if (item.needsStoragePermissions()) {
+            applyBackupLocationWithCheck(this, item);
+        } else {
+            applyBackupLocation(item);
+        }
+    }
+
+    @Override
+    protected void setActivityTitle() {
+        getActivity().setTitle(R.string.backup_action);
+    }
+
+    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void applyBackupLocation(EBackupLocation item) {
         backup = item.createBackup();
         adapter = new BackupAdapter(getContext(), this::showBackupDetails, this::deleteBackup);
-//        binding.recentBackupsList.setAdapter(adapter);
+        binding.recentBackupsList.setAdapter(adapter);
         backup.start(getActivity(), new Backup.OnLoadFinishedListener() {
             @Override
             public void onLoadFinished(List<BackupEntry> backupEntries) {
@@ -124,10 +151,10 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
 
     private void onBackupsLoaded(List<BackupEntry> list) {
         adapter.setList(list);
-//        binding.lastBackupLabel.setVisibility(list.size() > 0 ? VISIBLE : GONE);
+        binding.lastBackupLabel.setVisibility(list.size() > 0 ? VISIBLE : GONE);
         if (list.size() > 0) {
-//            binding.lastBackupLabel.setText(getString(R.string.last_backup, DateUtils
-//                    .getRelativeTimeSpanString(list.get(0).getModifiedDate().getTime())));
+            binding.lastBackupLabel.setText(getString(R.string.last_backup, DateUtils
+                    .getRelativeTimeSpanString(list.get(0).getModifiedDate().getTime())));
         }
     }
 

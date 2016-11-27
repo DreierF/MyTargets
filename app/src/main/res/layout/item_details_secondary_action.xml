@@ -7,26 +7,19 @@
         android:layout_height="wrap_content"
         android:minHeight="56dp">
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/primary_action"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/secondary_action"
+            android:orientation="vertical"
             android:layout_toStartOf="@+id/secondary_action"
             android:background="?attr/selectableItemBackground">
-
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_margin="16dp"
-                android:scaleType="centerCrop"/>
 
             <TextView
                 android:id="@+id/name"
@@ -38,15 +31,9 @@
                 android:id="@+id/details"
                 style="@style/secondary_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="72dp"
-                android:layout_marginStart="72dp"/>
+                android:layout_height="wrap_content"/>
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/secondary_action"

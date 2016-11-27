@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.View;
 
+import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
@@ -16,9 +17,13 @@ public abstract class SettingsFragmentBase extends PreferenceFragmentCompat
     private String rootKey;
 
     @Override
-    public void onCreatePreferences(Bundle bundle, String rootKey) {
-        setPreferencesFromResource(R.xml.preferences, rootKey);
+    public final void onCreatePreferences(Bundle bundle, String rootKey) {
         this.rootKey = rootKey;
+        onCreatePreferences();
+    }
+
+    protected void onCreatePreferences() {
+        setPreferencesFromResource(R.xml.preferences, rootKey);
         updateItemSummaries();
     }
 
@@ -50,23 +55,22 @@ public abstract class SettingsFragmentBase extends PreferenceFragmentCompat
     @Override
     public void onResume() {
         super.onResume();
-        getPreferenceScreen().getSharedPreferences()
+        ApplicationInstance.getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
     }
 
-    private void setActivityTitle() {
+    protected void setActivityTitle() {
         if (rootKey == null) {
             getActivity().setTitle(R.string.preferences);
         } else {
             getActivity().setTitle(findPreference(rootKey).getTitle());
-
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        getPreferenceScreen().getSharedPreferences()
+        ApplicationInstance.getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 

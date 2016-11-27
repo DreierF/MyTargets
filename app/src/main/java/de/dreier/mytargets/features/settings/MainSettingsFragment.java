@@ -6,11 +6,7 @@ import android.support.v7.preference.Preference;
 
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.fragments.AboutFragment;
-import permissions.dispatcher.RuntimePermissions;
 
-import static de.dreier.mytargets.features.settings.MainSettingsFragmentPermissionsDispatcher.doBackupWithCheck;
-
-@RuntimePermissions
 public class MainSettingsFragment extends SettingsFragmentBase {
 
     @Override
@@ -26,12 +22,5 @@ public class MainSettingsFragment extends SettingsFragmentBase {
             default:
                 return super.onPreferenceTreeClick(preference);
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        MainSettingsFragmentPermissionsDispatcher
-                .onRequestPermissionsResult(this, requestCode, grantResults);
     }
 }
