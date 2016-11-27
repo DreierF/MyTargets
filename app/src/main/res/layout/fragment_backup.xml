@@ -103,7 +103,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:layoutManager="LinearLayoutManager"
-                        tools:listitem="@layout/item_image_details_secondary_action"/>
+                        tools:listitem="@layout/item_details_secondary_action"/>
 
             </LinearLayout>
 

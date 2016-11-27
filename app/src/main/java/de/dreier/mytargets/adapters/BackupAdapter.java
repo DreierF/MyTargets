@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.databinding.ItemImageDetailsSecondaryActionBinding;
+import de.dreier.mytargets.databinding.ItemDetailsSecondaryActionBinding;
 import de.dreier.mytargets.features.settings.backup.BackupEntry;
 
 public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.BackupViewHolder> {
@@ -33,7 +33,7 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.BackupView
 
     @Override
     public BackupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = inflater.inflate(R.layout.item_image_details_secondary_action, parent, false);
+        View v = inflater.inflate(R.layout.item_details_secondary_action, parent, false);
         return new BackupViewHolder(v);
     }
 
@@ -73,7 +73,7 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.BackupView
 
     public static class BackupViewHolder extends RecyclerView.ViewHolder {
 
-        public final ItemImageDetailsSecondaryActionBinding binding;
+        public final ItemDetailsSecondaryActionBinding binding;
 
         public BackupViewHolder(View itemView) {
             super(itemView);

@@ -2,6 +2,8 @@ package de.dreier.mytargets.features.settings.backup;
 
 import java.util.Date;
 
+import de.dreier.mytargets.utils.Utils;
+
 public class BackupEntry {
 
     private String fileId;
@@ -39,6 +41,6 @@ public class BackupEntry {
     }
 
     public String getHumanReadableSize() {
-        return "";//Utils.humanReadableByteCount(backupSize, true);
+        return Utils.humanReadableByteCount(backupSize, true);
     }
 }

@@ -20,15 +20,6 @@ import org.junit.Test;
 
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.targets.TargetFactory;
-import de.dreier.mytargets.shared.targets.models.NFAAField;
-import de.dreier.mytargets.shared.targets.models.TargetModelBase;
-import de.dreier.mytargets.shared.targets.models.Vertical3Spot;
-import de.dreier.mytargets.shared.targets.models.WA3Ring;
-import de.dreier.mytargets.shared.targets.models.WA5Ring;
-import de.dreier.mytargets.shared.targets.models.WA6Ring;
-import de.dreier.mytargets.shared.targets.models.WAField;
-import de.dreier.mytargets.shared.targets.models.WAField3Spot;
-import de.dreier.mytargets.shared.targets.models.WAFull;
 
 public class TargetModelBaseTest {
     @Test

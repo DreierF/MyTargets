@@ -1,39 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="56dp">
+        android:layout_height="72dp">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/primary_action"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/secondary_action"
-            android:orientation="vertical"
             android:layout_toStartOf="@+id/secondary_action"
-            android:background="?attr/selectableItemBackground">
+            android:background="?attr/selectableItemBackground"
+            android:orientation="vertical"
+            android:paddingLeft="16dp">
 
-            <TextView
-                android:id="@+id/name"
-                style="@style/primary_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_centerVertical="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/details"
-                style="@style/secondary_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/name"
+                    style="@style/primary_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/details"
+                    style="@style/secondary_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
         <ImageButton
             android:id="@+id/secondary_action"
@@ -44,7 +50,7 @@
             android:layout_centerVertical="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="16dp"
-            tools:src="@drawable/ic_delete_black_24dp"/>
+            app:srcCompat="@drawable/ic_delete_black_24dp"/>
 
     </RelativeLayout>
 

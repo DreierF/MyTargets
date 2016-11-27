@@ -60,6 +60,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_backup, container, false);
         ToolbarUtils.showHomeAsUp(this);
 
+        binding.recentBackupsList.setNestedScrollingEnabled(false);
         binding.backupLocation.setOnActivityResultContext(this);
         binding.backupLocation.setOnUpdateListener(item -> {
             SettingsManager.setBackupLocation(item);
