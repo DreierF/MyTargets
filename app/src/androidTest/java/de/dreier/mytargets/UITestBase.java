@@ -18,11 +18,8 @@ package de.dreier.mytargets;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.test.espresso.FailureHandler;
-import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewAssertion;
-import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Tap;
@@ -81,12 +78,7 @@ public class UITestBase extends InstrumentedTestBase {
     protected static ViewAction clickTarget(final float x, final float y) {
         return new GeneralClickAction(
                 Tap.SINGLE,
-                new CoordinatesProvider() {
-                    @Override
-                    public float[] calculateCoordinates(View view) {
-                        return LowLevelActions.getTargetCoordinates(view, new float[]{x, y});
-                    }
-                },
+                view -> LowLevelActions.getTargetCoordinates(view, new float[]{x, y}),
                 Press.FINGER);
     }
 
@@ -109,16 +101,14 @@ public class UITestBase extends InstrumentedTestBase {
     }
 
     public static ViewAssertion assertItemCount(int expectedCount) {
-        return new ViewAssertion() {
-            public void check(View view, NoMatchingViewException noViewFoundException) {
-                if (noViewFoundException != null) {
-                    throw noViewFoundException;
-                }
-
-                RecyclerView recyclerView = (RecyclerView) view;
-                RecyclerView.Adapter adapter = recyclerView.getAdapter();
-                assertThat(adapter.getItemCount(), is(expectedCount));
+        return (view, noViewFoundException) -> {
+            if (noViewFoundException != null) {
+                throw noViewFoundException;
             }
+
+            RecyclerView recyclerView = (RecyclerView) view;
+            RecyclerView.Adapter adapter = recyclerView.getAdapter();
+            assertThat(adapter.getItemCount(), is(expectedCount));
         };
     }
 
@@ -164,22 +154,16 @@ public class UITestBase extends InstrumentedTestBase {
     }
 
     protected void clickActionBarItem(@IdRes int menuItem, @StringRes int title) {
-        onView(withId(menuItem)).withFailureHandler(new FailureHandler() {
-            @Override
-            public void handle(Throwable error, Matcher<View> viewMatcher) {
-                openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-                onView(withText(title)).perform(click());
-            }
+        onView(withId(menuItem)).withFailureHandler((error, viewMatcher) -> {
+            openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+            onView(withText(title)).perform(click());
         }).perform(click());
     }
 
     protected void clickContextualActionBarItem(@IdRes int menuItem, @StringRes int title) {
-        onView(withId(menuItem)).withFailureHandler(new FailureHandler() {
-            @Override
-            public void handle(Throwable error, Matcher<View> viewMatcher) {
-                openContextualActionModeOverflowMenu();
-                onView(withText(title)).perform(click());
-            }
+        onView(withId(menuItem)).withFailureHandler((error, viewMatcher) -> {
+            openContextualActionModeOverflowMenu();
+            onView(withText(title)).perform(click());
         }).perform(click());
     }
 
