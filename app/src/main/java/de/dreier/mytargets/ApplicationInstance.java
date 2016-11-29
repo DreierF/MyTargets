@@ -15,14 +15,13 @@
 
 package de.dreier.mytargets;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.multidex.MultiDex;
 
 import org.parceler.ParcelClass;
 import org.parceler.ParcelClasses;
 
+import de.dreier.mytargets.features.settings.backup.EBackupLocation;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.ArrowNumber;
@@ -43,7 +42,6 @@ import de.dreier.mytargets.shared.models.WindDirection;
 import de.dreier.mytargets.shared.models.WindSpeed;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.utils.MyBackupAgent;
-import de.dreier.mytargets.features.settings.backup.EBackupLocation;
 
 /**
  * Application singleton. Gets instantiated exactly once and is used
@@ -72,12 +70,6 @@ import de.dreier.mytargets.features.settings.backup.EBackupLocation;
         @ParcelClass(WindSpeed.class)
 })
 public class ApplicationInstance extends SharedApplicationInstance {
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(base);
-    }
 
     public static SharedPreferences getSharedPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(mContext);

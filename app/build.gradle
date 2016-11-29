@@ -137,6 +137,13 @@ if (CROWDIN_API_KEY != null && !CROWDIN_API_KEY.isEmpty()) {
     }
 }
 
+repositories {
+    jcenter()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
     compile "com.android.support:support-v4:$supportLibVersion"
     compile "com.android.support:support-compat:$supportLibVersion"
@@ -153,10 +160,6 @@ dependencies {
 
     compile "com.google.android.gms:play-services-wearable:$playServiceVersion"
     compile "com.google.android.gms:play-services-drive:$playServiceVersion"
-
-    //compile 'com.dropbox.core:dropbox-core-sdk:2.1.2'
-
-    compile 'com.android.support:multidex:1.0.1'
 
     compile 'com.google.code.gson:gson:2.8.0'
 
@@ -200,7 +203,11 @@ dependencies {
 
     compile 'me.mvdw.recyclerviewmergeadapter:recyclerviewmergeadapter:2.0.0'
 
-    compile project(':dropbox')
+    //compile 'com.dreier.dropbox:core-android:2.1.2'
+    compile(name:'dropbox', ext:'aar')
+    compile 'com.fasterxml.jackson.core:jackson-core:2.8.5'
+    compile 'javax.servlet:servlet-api:2.5'
+
     compile project(':shared')
     wearApp project(':wearable')
 
