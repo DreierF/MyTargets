@@ -26,7 +26,7 @@ import java.util.List;
 
 public class Passe implements IIdSettable, Comparable<Passe> {
 
-    private long id;
+    long id;
     public int index;
     public long roundId;
     public List<Shot> shots;
