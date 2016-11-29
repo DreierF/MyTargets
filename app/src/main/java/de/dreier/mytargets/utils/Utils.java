@@ -18,8 +18,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Process;
 
 import org.joda.time.LocalDate;
@@ -31,16 +29,6 @@ import java.util.Locale;
 import de.dreier.mytargets.activities.MainActivity;
 
 public class Utils {
-    public static PackageInfo getAppVersionInfo(Context context) {
-        PackageInfo pInfo;
-        try {
-            pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return pInfo;
-    }
 
     public static long getMonthId(LocalDate date) {
         return new LocalDate(date).withDayOfMonth(1).toDate().getTime();

@@ -1,7 +1,6 @@
 package de.dreier.mytargets.features.settings.backup;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -27,8 +26,8 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
 
+import de.dreier.mytargets.BuildConfig;
 import de.dreier.mytargets.managers.DatabaseManager;
-import de.dreier.mytargets.utils.Utils;
 
 import static de.dreier.mytargets.ApplicationInstance.getSharedPreferences;
 
@@ -61,7 +60,7 @@ public class DropboxBackup implements Backup {
     }
 
     private void initAndLoadData(String accessToken) {
-        DropboxClientFactory.init(activity, accessToken);
+        DropboxClientFactory.init(accessToken);
         getBackups();
     }
 
@@ -266,10 +265,10 @@ public class DropboxBackup implements Backup {
 
         private static DbxClientV2 sDbxClient;
 
-        public static void init(Context context, String accessToken) {
+        public static void init(String accessToken) {
             if (sDbxClient == null) {
-                DbxRequestConfig requestConfig = DbxRequestConfig.newBuilder("MyTargets/" + Utils
-                        .getAppVersionInfo(context))
+                DbxRequestConfig requestConfig = DbxRequestConfig
+                        .newBuilder("MyTargets/" + BuildConfig.VERSION_NAME + "")
                         .withHttpRequestor(OkHttp3Requestor.INSTANCE)
                         .build();
 
