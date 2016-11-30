@@ -1,8 +1,16 @@
 /*
- * MyTargets Archery
+ * Copyright (C) 2016 Florian Dreier
  *
- * Copyright (C) 2015 Florian Dreier
- * All rights reserved
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  */
 
 package de.dreier.mytargets.views;
@@ -16,8 +24,8 @@ import android.view.View;
 
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
-import de.dreier.mytargets.shared.utils.ScoresDrawer;
 import icepick.Icepick;
 import icepick.State;
 
@@ -26,7 +34,7 @@ public class PasseView extends View {
     private Passe passe = new Passe(3);
     private float density;
     @State(ParcelsBundler.class)
-    ScoresDrawer mScoresDrawer = new ScoresDrawer();
+    EndRenderer mEndRenderer = new EndRenderer();
     private final RectF rect = new RectF();
 
     public PasseView(Context context) {
@@ -44,36 +52,30 @@ public class PasseView extends View {
     public void setPoints(Passe p, Target target) {
         passe = p;
         density = getResources().getDisplayMetrics().density;
-        mScoresDrawer.init(this, density, target);
-        if (rect.width() > 0) {
-            mScoresDrawer.animateToRect(rect);
-        }
-        mScoresDrawer.setShots(p.shotList());
+        mEndRenderer.init(this, density, target);
+        mEndRenderer.setShots(p.shots);
         invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mScoresDrawer.draw(canvas);
+        mEndRenderer.draw(canvas);
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-
-        int contentWidth = getWidth();
-        int contentHeight = getHeight();
         rect.left = 0;
-        rect.right = contentWidth;
+        rect.right = getWidth();
         rect.top = 0;
-        rect.bottom = contentHeight;
-        mScoresDrawer.animateToRect(rect);
+        rect.bottom = getHeight();
+        mEndRenderer.setRect(rect);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int desiredWidth = (int) (60 * passe.shot.length * density);
+        int desiredWidth = (int) (60 * passe.shots.size() * density);
         int desiredHeight = (int) (50 * density);
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);

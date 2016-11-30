@@ -1,8 +1,16 @@
 /*
- * MyTargets Archery
+ * Copyright (C) 2016 Florian Dreier
  *
- * Copyright (C) 2015 Florian Dreier
- * All rights reserved
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  */
 package de.dreier.mytargets.shared.models;
 
@@ -14,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.targets.CombinedSpot;
-import de.dreier.mytargets.shared.targets.TargetDrawable;
+import de.dreier.mytargets.shared.targets.models.CombinedSpot;
+import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
 
 public class StandardRound implements IIdSettable, IImageProvider, IDetailProvider, Comparable<StandardRound> {
 

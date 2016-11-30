@@ -1,8 +1,16 @@
 /*
- * MyTargets Archery
+ * Copyright (C) 2016 Florian Dreier
  *
- * Copyright (C) 2015 Florian Dreier
- * All rights reserved
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  */
 
 package de.dreier.mytargets.fragments;
@@ -65,7 +73,7 @@ import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.targets.SelectableZone;
+import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.utils.Color;
 import de.dreier.mytargets.utils.DataLoaderBase;
 import de.dreier.mytargets.utils.HtmlUtils;
@@ -132,14 +140,13 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         final List<Shot> exactShots = Stream.of(rounds)
                 .flatMap(r -> Stream.of(new PasseDataSource().getAllByRound(r.getId())))
                 .filter(p -> p.exact)
-                .flatMap(p -> Stream.of(p.shotList()))
+                .flatMap(p -> Stream.of(p.shots))
                 .collect(Collectors.toList());
         if (exactShots.isEmpty()) {
             binding.dispersionPatternLayout.setVisibility(View.GONE);
             return;
         }
-        binding.dispersionView.setTarget(target.getDrawable());
-        binding.dispersionView.setShoots(exactShots);
+        binding.dispersionView.setShots(target.getImpactAggregationDrawable(), exactShots);
         binding.dispersionView.setEnabled(false);
         binding.dispersionViewOverlay.setOnClickListener(view -> {
             ArrowStatistic statistics = new ArrowStatistic();
@@ -277,7 +284,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     private String getHitMissText() {
         final List<Shot> shots = Stream.of(rounds)
                 .flatMap(r -> Stream.of(new PasseDataSource().getAllByRound(r.getId())))
-                .flatMap(p -> Stream.of(p.shotList()))
+                .flatMap(p -> Stream.of(p.shots))
                 .collect(Collectors.toList());
         long missCount = Stream.of(shots).filter(s -> s.zone == Shot.MISS).count();
         long hitCount = shots.size() - missCount;
@@ -363,7 +370,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
     private Pair<Integer, DateTime> getPairEndSummary(Target target, Passe passe) {
         int actCounter = 0;
-        for (Shot s : passe.shot) {
+        for (Shot s : passe.shots) {
             actCounter += target.getPointsByZone(s.zone, s.index);
         }
         return new Pair<>(actCounter, passe.saveDate);
