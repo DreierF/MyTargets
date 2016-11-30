@@ -24,6 +24,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,14 +33,13 @@ import android.view.ViewGroup;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
-import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -71,13 +71,12 @@ import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.models.ArrowStatistic;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.utils.Color;
 import de.dreier.mytargets.utils.DataLoaderBase;
 import de.dreier.mytargets.utils.HtmlUtils;
-import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.RoundedTextDrawable;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
@@ -92,6 +91,12 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
             "<small>&nbsp;</small><br>" +
             "<font color='gray'>%s</font><br>" +
             "<big>%d</big>";
+    private static final Description EMPTY_DESCRIPTION;
+
+    static {
+        EMPTY_DESCRIPTION = new Description();
+        EMPTY_DESCRIPTION.setText("");
+    }
 
     private long[] roundIds;
     private List<Round> rounds;
@@ -168,8 +173,8 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         binding.chartView.getAxisRight().setEnabled(false);
         binding.chartView.getLegend().setEnabled(false);
         binding.chartView.setData(data);
-        binding.chartView.setDescription("");
-        binding.chartView.getAxisLeft().setAxisMinValue(0);
+        binding.chartView.setDescription(EMPTY_DESCRIPTION);
+        binding.chartView.getAxisLeft().setAxisMinimum(0);
         binding.chartView.getXAxis().setDrawGridLines(false);
         binding.chartView.setDoubleTapToZoomEnabled(false);
         if(animate) {
@@ -212,7 +217,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         binding.distributionChart.setTransparentCircleRadius(15);
         binding.distributionChart.setHoleColor(0x00EEEEEE);
         binding.distributionChart.getLegend().setEnabled(false);
-        binding.distributionChart.setDescription("");
+        binding.distributionChart.setDescription(EMPTY_DESCRIPTION);
 
         // enable rotation of the chart by touch
         binding.distributionChart.setRotationAngle(0);
@@ -255,12 +260,12 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         PieData data = new PieData(dataSet);
         data.setValueTextSize(13f);
         data.setValueTextColor(Color.GRAY);
-        data.setDrawValues(false);
+        data.setDrawValues(true);
         data.setValueTextColors(textColors);
 
         binding.distributionChart.setData(data);
-        final String text = getHitMissText();
-        binding.distributionChart.setCenterText(HtmlUtils.fromHtml(text));
+        final String hitMissText = getHitMissText();
+        binding.distributionChart.setCenterText(HtmlUtils.fromHtml(hitMissText));
 
         binding.distributionChart
                 .setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
@@ -276,7 +281,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
                     @Override
                     public void onNothingSelected() {
-                        binding.distributionChart.setCenterText(HtmlUtils.fromHtml(text));
+                        binding.distributionChart.setCenterText(HtmlUtils.fromHtml(hitMissText));
                     }
                 });
     }
@@ -289,8 +294,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         long missCount = Stream.of(shots).filter(s -> s.zone == Shot.MISS).count();
         long hitCount = shots.size() - missCount;
 
-        return String.format(Locale.ENGLISH,
-                PIE_CHART_CENTER_TEXT_FORMAT,
+        return String.format(Locale.ENGLISH, PIE_CHART_CENTER_TEXT_FORMAT,
                 getString(R.string.hits), String.valueOf(hitCount),
                 getString(R.string.misses), missCount);
     }
@@ -330,18 +334,10 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
             return null;
         }
 
-        final DateFormat dateFormat = getDateFormat(values);
-        binding.chartView.getXAxis().setValueFormatter(new AxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return dateFormat.format(new Date((long)value));
-            }
 
-            @Override
-            public int getDecimalDigits() {
-                return -1;
-            }
-        });
+        final DateFormat dateFormat = getDateFormat(values);
+        binding.chartView.getXAxis().setValueFormatter(
+                (value, axis) -> dateFormat.format(new Date((long)value)));
 
         LineData data;
         if (values.size() < 2) {
@@ -356,15 +352,15 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     }
 
     private DateFormat getDateFormat(List<Pair<Integer, DateTime>> values) {
-        Optional<DateTime> firstDate = Stream.of(values).map(Pair::getSecond)
+        Optional<DateTime> firstDate = Stream.of(values).map(p->p.second)
                 .min(DateTimeComparator.getDateOnlyInstance());
-        Optional<DateTime> lastDate = Stream.of(values).map(Pair::getSecond)
+        Optional<DateTime> lastDate = Stream.of(values).map(p->p.second)
                 .max(DateTimeComparator.getDateOnlyInstance());
 
         if (firstDate.equals(lastDate)) {
             return DateFormat.getTimeInstance(DateFormat.SHORT);
         } else {
-            return DateFormat.getDateInstance();
+            return DateFormat.getDateInstance(DateFormat.SHORT);
         }
     }
 
@@ -380,14 +376,14 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     private LineDataSet convertToLineData(List<Pair<Integer, DateTime>> values) {
         List<Entry> seriesEntries = new ArrayList<>();
         for (int i = 0; i < values.size(); i++) {
-            seriesEntries.add(new Entry(values.get(i).getSecond().toDate().getTime(),
-                    values.get(i).getFirst()));
+            seriesEntries.add(new Entry(values.get(i).second.toDate().getTime(),
+                    values.get(i).first));
         }
 
         LineDataSet series = new LineDataSet(seriesEntries, "");
         final int color = ApplicationInstance.getContext().getResources()
                 .getColor(R.color.colorPrimary);
-        series.setColors(new int[]{color});
+        series.setColors(color);
         series.setLineWidth(2);
         series.setCircleColor(color);
         series.setCircleRadius(5);
@@ -412,15 +408,15 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         long minX = Long.MAX_VALUE;
         long maxX = Long.MIN_VALUE;
         for (int i = 0; i < dataSetSize; i++) {
-            x[n] = values.get(i).getSecond().getMillis();
-            y[n] = values.get(i).getFirst();
+            x[n] = values.get(i).second.getMillis();
+            y[n] = values.get(i).first;
             sumX += x[n];
             sumY += y[n];
             if (x[n] < minX) {
-                minX = values.get(i).getSecond().getMillis();
+                minX = values.get(i).second.getMillis();
             }
             if (x[n] > maxX) {
-                maxX = values.get(i).getSecond().getMillis();
+                maxX = values.get(i).second.getMillis();
             }
             n++;
         }
@@ -439,13 +435,13 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         }
         double beta1 = xyBar / xxBar;
         double beta0 = yBar - beta1 * xBar;
-        float y0 = (float) (beta1 * values.get(0).getSecond().getMillis() + beta0);
-        float y1 = (float) (beta1 * values.get(dataSetSize - 1).getSecond().getMillis() + beta0);
+        float y0 = (float) (beta1 * values.get(0).second.getMillis() + beta0);
+        float y1 = (float) (beta1 * values.get(dataSetSize - 1).second.getMillis() + beta0);
         Entry first = new Entry(minX, y0);
         Entry last = new Entry(maxX, y1);
         List<Entry> yValues = Arrays.asList(first, last);
         LineDataSet lineDataSet = new LineDataSet(yValues, "");
-        lineDataSet.setColors(new int[]{0xffff9100});
+        lineDataSet.setColors(0xffff9100);
         lineDataSet.setDrawCircles(false);
         lineDataSet.setDrawValues(false);
         lineDataSet.setLineWidth(1);
