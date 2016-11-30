@@ -66,6 +66,9 @@ allprojects {
         jcenter()
         maven { url 'https://jitpack.io' }
         maven { url 'https://clojars.org/repo/' }
+        flatDir {
+            dirs 'libs'
+        }
     }
 }
 
