@@ -329,6 +329,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         List<Pair<Integer, DateTime>> values = Stream.of(Utils.toList(roundIds))
                 .flatMap(roundId -> Stream.of(new PasseDataSource().getAllByRound(roundId)))
                 .map(passe -> getPairEndSummary(target, passe))
+                .sortBy(pair -> pair.second.toDate().getTime())
                 .collect(Collectors.toList());
         if (values.isEmpty()) {
             return null;
