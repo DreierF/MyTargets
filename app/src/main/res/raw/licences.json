@@ -74,7 +74,7 @@
     },
     {
       "name": "MPAndroidChart",
-      "version": "2.2.4",
+      "version": "3.0.0 beta1",
       "year": "2016",
       "owner": "Philipp Jahoda",
       "description": "A powerful Android chart view / graph view library, supporting line- bar- pie- radar- bubble- and candlestick charts as well as scaling, dragging and animations.",

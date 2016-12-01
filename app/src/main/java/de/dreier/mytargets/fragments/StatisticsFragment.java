@@ -16,38 +16,44 @@
 package de.dreier.mytargets.fragments;
 
 import android.databinding.DataBindingUtil;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.annimon.stream.Collectors;
-import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.renderer.LineChartRenderer;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
+import org.joda.time.LocalDate;
 import org.parceler.Parcels;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -61,16 +67,17 @@ import de.dreier.mytargets.managers.dao.ArrowStatisticDataSource;
 import de.dreier.mytargets.managers.dao.DataSourceBase;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
+import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.models.ArrowStatistic;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.SelectableZone;
+import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.Color;
 import de.dreier.mytargets.utils.DataLoaderBase;
 import de.dreier.mytargets.utils.HtmlUtils;
-import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.RoundedTextDrawable;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
@@ -85,6 +92,12 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
             "<small>&nbsp;</small><br>" +
             "<font color='gray'>%s</font><br>" +
             "<big>%d</big>";
+    private static final Description EMPTY_DESCRIPTION;
+
+    static {
+        EMPTY_DESCRIPTION = new Description();
+        EMPTY_DESCRIPTION.setText("");
+    }
 
     private long[] roundIds;
     private List<Round> rounds;
@@ -161,13 +174,43 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         binding.chartView.getAxisRight().setEnabled(false);
         binding.chartView.getLegend().setEnabled(false);
         binding.chartView.setData(data);
-        binding.chartView.setDescription("");
-        binding.chartView.getAxisLeft().setAxisMinValue(0);
+        binding.chartView.setDescription(EMPTY_DESCRIPTION);
+        binding.chartView.getAxisLeft().setAxisMinimum(0);
         binding.chartView.getXAxis().setDrawGridLines(false);
         binding.chartView.setDoubleTapToZoomEnabled(false);
-        if(animate) {
+        if (animate) {
             binding.chartView.animateXY(2000, 2000);
         }
+        binding.chartView.setRenderer(
+                new LineChartRenderer(binding.chartView, binding.chartView.getAnimator(),
+                        binding.chartView.getViewPortHandler()) {
+                    @Override
+                    public void drawHighlighted(Canvas canvas, Highlight[] indices) {
+                        mRenderPaint.setStyle(Paint.Style.FILL);
+
+                        List<ILineDataSet> dataSets = mChart.getLineData().getDataSets();
+
+                        int colorIndex = 0;
+                        for (Highlight highlight : indices) {
+                            int i = highlight.getDataSetIndex();
+                            ILineDataSet dataSet = dataSets.get(i);
+
+                            mRenderPaint.setColor(dataSet.getCircleColor(colorIndex));
+
+                            float circleRadius = dataSet.getCircleRadius();
+
+                            canvas.drawCircle(
+                                    highlight.getDrawX(),
+                                    highlight.getDrawY(),
+                                    circleRadius,
+                                    mRenderPaint);
+                            colorIndex = colorIndex + 1 % dataSet.getCircleColorCount();
+                        }
+
+                        // draws highlight lines (if enabled)
+                        super.drawHighlighted(canvas, indices);
+                    }
+                });
     }
 
     private void showPieChart() {
@@ -175,7 +218,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         binding.distributionChart.setTransparentCircleRadius(15);
         binding.distributionChart.setHoleColor(0x00EEEEEE);
         binding.distributionChart.getLegend().setEnabled(false);
-        binding.distributionChart.setDescription("");
+        binding.distributionChart.setDescription(EMPTY_DESCRIPTION);
 
         // enable rotation of the chart by touch
         binding.distributionChart.setRotationAngle(0);
@@ -192,15 +235,13 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         List<Map.Entry<SelectableZone, Integer>> scores = new PasseDataSource()
                 .getSortedScoreDistribution(rounds);
 
-        ArrayList<String> xValues = new ArrayList<>();
-        ArrayList<Entry> yValues = new ArrayList<>();
+        ArrayList<PieEntry> yValues = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<>();
         ArrayList<Integer> textColors = new ArrayList<>();
 
         for (Map.Entry<SelectableZone, Integer> s : scores) {
             if (s.getValue() > 0) {
-                xValues.add(s.getKey().text);
-                yValues.add(new Entry(s.getValue(), xValues.size() - 1));
+                yValues.add(new PieEntry(s.getValue(), s.getKey()));
                 colors.add(s.getKey().zone.getFillColor());
                 textColors.add(s.getKey().zone.getTextColor());
             }
@@ -208,6 +249,8 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
         // create pie data set
         PieDataSet dataSet = new PieDataSet(yValues, "");
+        dataSet.setValueFormatter(
+                (value, entry, dsi, vph) -> ((SelectableZone) entry.getData()).text);
         dataSet.setSliceSpace(3);
         dataSet.setSelectionShift(5);
 
@@ -215,30 +258,31 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         dataSet.setColors(colors);
 
         // instantiate pie data object now
-        PieData data = new PieData(xValues, dataSet);
+        PieData data = new PieData(dataSet);
         data.setValueTextSize(13f);
         data.setValueTextColor(Color.GRAY);
-        data.setDrawValues(false);
+        data.setDrawValues(true);
         data.setValueTextColors(textColors);
 
         binding.distributionChart.setData(data);
-        final String text = getHitMissText();
-        binding.distributionChart.setCenterText(HtmlUtils.fromHtml(text));
+        final String hitMissText = getHitMissText();
+        binding.distributionChart.setCenterText(HtmlUtils.fromHtml(hitMissText));
 
         binding.distributionChart
                 .setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
                     @Override
-                    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+                    public void onValueSelected(Entry e, Highlight h) {
+                        final SelectableZone selectableZone = (SelectableZone) e.getData();
                         final String s = String.format(Locale.ENGLISH,
                                 PIE_CHART_CENTER_TEXT_FORMAT,
-                                getString(R.string.points), xValues.get(e.getXIndex()),
-                                getString(R.string.count), (int) e.getVal());
+                                getString(R.string.points), selectableZone.text,
+                                getString(R.string.count), (int) e.getY());
                         binding.distributionChart.setCenterText(HtmlUtils.fromHtml(s));
                     }
 
                     @Override
                     public void onNothingSelected() {
-                        binding.distributionChart.setCenterText(HtmlUtils.fromHtml(text));
+                        binding.distributionChart.setCenterText(HtmlUtils.fromHtml(hitMissText));
                     }
                 });
     }
@@ -251,8 +295,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         long missCount = Stream.of(shots).filter(s -> s.zone == Shot.MISS).count();
         long hitCount = shots.size() - missCount;
 
-        return String.format(Locale.ENGLISH,
-                PIE_CHART_CENTER_TEXT_FORMAT,
+        return String.format(Locale.ENGLISH, PIE_CHART_CENTER_TEXT_FORMAT,
                 getString(R.string.hits), String.valueOf(hitCount),
                 getString(R.string.misses), missCount);
     }
@@ -284,68 +327,104 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     }
 
     private LineData getLineChartDataSet() {
-        List<Pair<Integer, DateTime>> values = Stream.of(Utils.toList(roundIds))
-                .flatMap(roundId -> Stream.of(new PasseDataSource().getAllByRound(roundId)))
-                .map(passe -> getPairEndSummary(target, passe))
+        Map<Long, Training> trainingsMap = Stream.of(rounds)
+                .map(r -> r.trainingId)
+                .distinct()
+                .map(tid -> new TrainingDataSource().get(tid))
+                .collect(Collectors.toMap(Training::getId));
+
+        List<Pair<Integer, DateTime>> values = Stream.of(rounds)
+                .map(r -> new Pair<>(trainingsMap.get(r.trainingId).date, r.getId()))
+                .flatMap(roundIdPair -> Stream.of(new PasseDataSource()
+                        .getAllByRound(roundIdPair.second))
+                        .map(p -> new Pair<>(roundIdPair.first, p)))
+                .map(passePair -> getPairEndSummary(target, passePair.second, passePair.first))
+                .sortBy(pair -> pair.second.toDate().getTime())
                 .collect(Collectors.toList());
         if (values.isEmpty()) {
             return null;
         }
 
-        final DateFormat dateFormat = getDateFormat(values);
-        List<String> xValues = Stream.of(values)
-                .map(v -> dateFormat.format(v.getSecond().toDate()))
-                .collect(Collectors.toList());
+        Evaluator eval = getEntryEvaluator(values);
+        binding.chartView.getXAxis().setValueFormatter(
+                (value, axis) -> eval.getXValueFormatted(value));
 
         LineData data;
         if (values.size() < 2) {
             // Without regression line
-            data = new LineData(xValues, convertToLineData(values));
+            data = new LineData(convertToLineData(values, eval));
         } else {
-            data = new LineData(xValues, generateLinearRegressionLine(values));
-            data.addDataSet(convertToLineData(values));
+            data = new LineData(generateLinearRegressionLine(values, eval));
+            data.addDataSet(convertToLineData(values, eval));
         }
         data.setDrawValues(false);
         return data;
     }
 
-    private DateFormat getDateFormat(List<Pair<Integer, DateTime>> values) {
-        Optional<DateTime> firstDate = Stream.of(values).map(Pair::getSecond)
-                .min(DateTimeComparator.getDateOnlyInstance());
-        Optional<DateTime> lastDate = Stream.of(values).map(Pair::getSecond)
-                .max(DateTimeComparator.getDateOnlyInstance());
+    @NonNull
+    private Evaluator getEntryEvaluator(final List<Pair<Integer, DateTime>> values) {
+        boolean singleTraining = Stream.of(rounds)
+                .groupBy(r -> r.trainingId).count() == 1;
 
-        if (firstDate.equals(lastDate)) {
-            return DateFormat.getTimeInstance(DateFormat.SHORT);
+        Evaluator eval;
+        if (singleTraining) {
+            eval = new Evaluator() {
+                private DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+
+                @Override
+                public long getXValue(List<Pair<Integer, DateTime>> values, int i) {
+                    return values.get(i).second.getMillis() - values.get(0).second.getMillis();
+                }
+
+                @Override
+                public String getXValueFormatted(float value) {
+                    final long diffToFirst = (long) value;
+                    return dateFormat.format(new Date(values.get(0).second.getMillis() + diffToFirst));
+                }
+            };
         } else {
-            return DateFormat.getDateInstance();
+            eval = new Evaluator() {
+                private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+
+                @Override
+                public long getXValue(List<Pair<Integer, DateTime>> values, int i) {
+                    return i;
+                }
+
+                @Override
+                public String getXValueFormatted(float value) {
+                    return dateFormat.format(values.get((int) value).second.toDate());
+                }
+            };
         }
+        return eval;
     }
 
-    private Pair<Integer, DateTime> getPairEndSummary(Target target, Passe passe) {
+    private Pair<Integer, DateTime> getPairEndSummary(Target target, Passe passe, LocalDate trainingDate) {
         int actCounter = 0;
         for (Shot s : passe.shots) {
             actCounter += target.getPointsByZone(s.zone, s.index);
         }
-        return new Pair<>(actCounter, passe.saveDate);
+        return new Pair<>(actCounter, new DateTime(passe.saveDate).withDate(trainingDate));
     }
 
     @NonNull
-    private LineDataSet convertToLineData(List<Pair<Integer, DateTime>> values) {
+    private LineDataSet convertToLineData(List<Pair<Integer, DateTime>> values, Evaluator evaluator) {
         List<Entry> seriesEntries = new ArrayList<>();
         for (int i = 0; i < values.size(); i++) {
-            seriesEntries.add(new Entry(values.get(i).getFirst(), i));
+            seriesEntries.add(new Entry(evaluator.getXValue(values, i), values.get(i).first));
         }
 
         LineDataSet series = new LineDataSet(seriesEntries, "");
         final int color = ApplicationInstance.getContext().getResources()
                 .getColor(R.color.colorPrimary);
-        series.setColors(new int[]{color});
+        series.setColors(color);
         series.setLineWidth(2);
         series.setCircleColor(color);
         series.setCircleRadius(5);
         series.setCircleColorHole(color);
         series.setDrawValues(false);
+        series.setDrawCircles(false);
         series.setHighLightColor(0xff9c9c9c);
         series.setDrawHorizontalHighlightIndicator(false);
         series.setDrawVerticalHighlightIndicator(true);
@@ -353,7 +432,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         return series;
     }
 
-    private ILineDataSet generateLinearRegressionLine(List<Pair<Integer, DateTime>> values) {
+    private ILineDataSet generateLinearRegressionLine(List<Pair<Integer, DateTime>> values, Evaluator eval) {
         int dataSetSize = values.size();
         double[] x = new double[dataSetSize];
         double[] y = new double[dataSetSize];
@@ -361,11 +440,19 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         int n = 0;
         double sumX = 0.0f;
         double sumY = 0.0f;
+        long minX = Long.MAX_VALUE;
+        long maxX = Long.MIN_VALUE;
         for (int i = 0; i < dataSetSize; i++) {
-            x[n] = values.get(i).getSecond().getMillis();
-            y[n] = values.get(i).getFirst();
+            x[n] = eval.getXValue(values, i);
+            y[n] = values.get(i).first;
             sumX += x[n];
             sumY += y[n];
+            if (x[n] < minX) {
+                minX = eval.getXValue(values, i);
+            }
+            if (x[n] > maxX) {
+                maxX = eval.getXValue(values, i);
+            }
             n++;
         }
         if (n < 1) {
@@ -383,17 +470,24 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         }
         double beta1 = xyBar / xxBar;
         double beta0 = yBar - beta1 * xBar;
-        float y0 = (float) (beta1 * values.get(0).getSecond().getMillis() + beta0);
-        float y1 = (float) (beta1 * values.get(dataSetSize - 1).getSecond().getMillis() + beta0);
-        Entry first = new Entry(y0, 0);
-        Entry last = new Entry(y1, dataSetSize - 1);
+        float y0 = (float) (beta1 * eval.getXValue(values, 0) + beta0);
+        float y1 = (float) (beta1 * eval.getXValue(values, dataSetSize - 1) + beta0);
+        Entry first = new Entry(minX, y0);
+        Entry last = new Entry(maxX, y1);
         List<Entry> yValues = Arrays.asList(first, last);
         LineDataSet lineDataSet = new LineDataSet(yValues, "");
-        lineDataSet.setColors(new int[]{0xffff9100});
-        lineDataSet.setCircleRadius(0);
-        lineDataSet.setValueTextSize(0);
+        lineDataSet.setColors(0xffff9100);
+        lineDataSet.setDrawCircles(false);
+        lineDataSet.setDrawValues(false);
         lineDataSet.setLineWidth(1);
+        lineDataSet.setHighlightEnabled(false);
         return lineDataSet;
+    }
+
+    private interface Evaluator {
+        long getXValue(List<Pair<Integer, DateTime>> values, int i);
+
+        String getXValueFormatted(float value);
     }
 
     private class ArrowStatisticAdapter extends RecyclerView.Adapter<ViewHolder> {

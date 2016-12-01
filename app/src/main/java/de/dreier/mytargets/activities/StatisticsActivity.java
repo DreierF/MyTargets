@@ -27,6 +27,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.util.LongSparseArray;
+import android.support.v4.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,7 +51,6 @@ import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.IntentWrapper;
-import de.dreier.mytargets.utils.Pair;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.views.ChipGroup;
@@ -125,10 +125,10 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         List<Long> bowTags = Stream.of(binding.bowTags.getCheckedTags())
                 .map(t -> t.id).collect(Collectors.toList());
         List<Pair<Target, List<Round>>> filteredRounds = Stream.of(rounds)
-                .filter(pair -> distanceTags.contains(pair.getSecond().info.distance.toString())
-                        && arrowTags.contains(pair.getFirst().arrow)
-                        && bowTags.contains(pair.getFirst().bow))
-                .map(Pair::getSecond)
+                .filter(pair -> distanceTags.contains(pair.second.info.distance.toString())
+                        && arrowTags.contains(pair.first.arrow)
+                        && bowTags.contains(pair.first.bow))
+                .map(p -> p.second)
                 .groupBy(value -> new Pair<>(value.info.target.getId(),
                         value.info.target.scoringStyle))
                 .map(value1 -> new Pair<>(value1.getValue().get(0).info.target, value1.getValue()))
@@ -141,7 +141,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
 
     private List<ChipGroup.Tag> getBowTags() {
         return Stream.of(rounds)
-                .map(p -> p.getFirst().bow)
+                .map(p -> p.first.bow)
                 .distinct()
                 .map(bid -> {
                     if (bid > 0) {
@@ -159,7 +159,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
 
     private List<ChipGroup.Tag> getArrowTags() {
         return Stream.of(rounds)
-                .map(p -> p.getFirst().arrow)
+                .map(p -> p.first.arrow)
                 .distinct()
                 .map(aid -> {
                     if (aid > 0) {
@@ -177,7 +177,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
 
     private List<ChipGroup.Tag> getDistanceTags() {
         return Stream.of(rounds)
-                .map(p -> p.getSecond().info.distance)
+                .map(p -> p.second.info.distance)
                 .distinct()
                 .sorted()
                 .map(d -> new ChipGroup.Tag(d.getId(), d.toString(), true))
@@ -259,16 +259,16 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
             super(fm);
             targets = pairs;
             this.animate = animate;
-            Collections.sort(targets, (p1, p2) -> p2.getSecond().size() - p1.getSecond().size());
+            Collections.sort(targets, (p1, p2) -> p2.second.size() - p1.second.size());
         }
 
         @Override
         public Fragment getItem(int position) {
             final Pair<Target, List<Round>> item = targets.get(position);
-            final List<Long> roundIds = Stream.of(item.getSecond())
+            final List<Long> roundIds = Stream.of(item.second)
                     .map(Round::getId)
                     .collect(Collectors.toList());
-            return StatisticsFragment.newInstance(roundIds, item.getFirst(), animate);
+            return StatisticsFragment.newInstance(roundIds, item.first, animate);
         }
 
         @Override
@@ -278,7 +278,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return targets.get(position).getFirst().toString();
+            return targets.get(position).first.toString();
         }
     }
 }
