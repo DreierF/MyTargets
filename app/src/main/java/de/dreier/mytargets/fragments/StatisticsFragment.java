@@ -31,7 +31,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.annimon.stream.Collectors;
-import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.Entry;
@@ -47,7 +46,7 @@ import com.github.mikephil.charting.renderer.LineChartRenderer;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
+import org.joda.time.LocalDate;
 import org.parceler.Parcels;
 
 import java.text.DateFormat;
@@ -68,12 +67,14 @@ import de.dreier.mytargets.managers.dao.ArrowStatisticDataSource;
 import de.dreier.mytargets.managers.dao.DataSourceBase;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
+import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.models.ArrowStatistic;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.shared.utils.Color;
 import de.dreier.mytargets.utils.DataLoaderBase;
 import de.dreier.mytargets.utils.HtmlUtils;
@@ -177,7 +178,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         binding.chartView.getAxisLeft().setAxisMinimum(0);
         binding.chartView.getXAxis().setDrawGridLines(false);
         binding.chartView.setDoubleTapToZoomEnabled(false);
-        if(animate) {
+        if (animate) {
             binding.chartView.animateXY(2000, 2000);
         }
         binding.chartView.setRenderer(
@@ -326,59 +327,92 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     }
 
     private LineData getLineChartDataSet() {
-        List<Pair<Integer, DateTime>> values = Stream.of(Utils.toList(roundIds))
-                .flatMap(roundId -> Stream.of(new PasseDataSource().getAllByRound(roundId)))
-                .map(passe -> getPairEndSummary(target, passe))
+        Map<Long, Training> trainingsMap = Stream.of(rounds)
+                .map(r -> r.trainingId)
+                .distinct()
+                .map(tid -> new TrainingDataSource().get(tid))
+                .collect(Collectors.toMap(Training::getId));
+
+        List<Pair<Integer, DateTime>> values = Stream.of(rounds)
+                .map(r -> new Pair<>(trainingsMap.get(r.trainingId).date, r.getId()))
+                .flatMap(roundIdPair -> Stream.of(new PasseDataSource()
+                        .getAllByRound(roundIdPair.second))
+                        .map(p -> new Pair<>(roundIdPair.first, p)))
+                .map(passePair -> getPairEndSummary(target, passePair.second, passePair.first))
                 .sortBy(pair -> pair.second.toDate().getTime())
                 .collect(Collectors.toList());
         if (values.isEmpty()) {
             return null;
         }
 
-
-        final DateFormat dateFormat = getDateFormat(values);
+        Evaluator eval = getEntryEvaluator(values);
         binding.chartView.getXAxis().setValueFormatter(
-                (value, axis) -> dateFormat.format(new Date((long)value)));
+                (value, axis) -> eval.getXValueFormatted(value));
 
         LineData data;
         if (values.size() < 2) {
             // Without regression line
-            data = new LineData(convertToLineData(values));
+            data = new LineData(convertToLineData(values, eval));
         } else {
-            data = new LineData(generateLinearRegressionLine(values));
-            data.addDataSet(convertToLineData(values));
+            data = new LineData(generateLinearRegressionLine(values, eval));
+            data.addDataSet(convertToLineData(values, eval));
         }
         data.setDrawValues(false);
         return data;
     }
 
-    private DateFormat getDateFormat(List<Pair<Integer, DateTime>> values) {
-        Optional<DateTime> firstDate = Stream.of(values).map(p->p.second)
-                .min(DateTimeComparator.getDateOnlyInstance());
-        Optional<DateTime> lastDate = Stream.of(values).map(p->p.second)
-                .max(DateTimeComparator.getDateOnlyInstance());
+    @NonNull
+    private Evaluator getEntryEvaluator(final List<Pair<Integer, DateTime>> values) {
+        boolean singleTraining = Stream.of(rounds)
+                .groupBy(r -> r.trainingId).count() == 1;
 
-        if (firstDate.equals(lastDate)) {
-            return DateFormat.getTimeInstance(DateFormat.SHORT);
+        Evaluator eval;
+        if (singleTraining) {
+            eval = new Evaluator() {
+                private DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+
+                @Override
+                public long getXValue(List<Pair<Integer, DateTime>> values, int i) {
+                    return values.get(i).second.getMillis() - values.get(0).second.getMillis();
+                }
+
+                @Override
+                public String getXValueFormatted(float value) {
+                    final long diffToFirst = (long) value;
+                    return dateFormat.format(new Date(values.get(0).second.getMillis() + diffToFirst));
+                }
+            };
         } else {
-            return DateFormat.getDateInstance(DateFormat.SHORT);
+            eval = new Evaluator() {
+                private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+
+                @Override
+                public long getXValue(List<Pair<Integer, DateTime>> values, int i) {
+                    return i;
+                }
+
+                @Override
+                public String getXValueFormatted(float value) {
+                    return dateFormat.format(values.get((int) value).second.toDate());
+                }
+            };
         }
+        return eval;
     }
 
-    private Pair<Integer, DateTime> getPairEndSummary(Target target, Passe passe) {
+    private Pair<Integer, DateTime> getPairEndSummary(Target target, Passe passe, LocalDate trainingDate) {
         int actCounter = 0;
         for (Shot s : passe.shots) {
             actCounter += target.getPointsByZone(s.zone, s.index);
         }
-        return new Pair<>(actCounter, passe.saveDate);
+        return new Pair<>(actCounter, new DateTime(passe.saveDate).withDate(trainingDate));
     }
 
     @NonNull
-    private LineDataSet convertToLineData(List<Pair<Integer, DateTime>> values) {
+    private LineDataSet convertToLineData(List<Pair<Integer, DateTime>> values, Evaluator evaluator) {
         List<Entry> seriesEntries = new ArrayList<>();
         for (int i = 0; i < values.size(); i++) {
-            seriesEntries.add(new Entry(values.get(i).second.toDate().getTime(),
-                    values.get(i).first));
+            seriesEntries.add(new Entry(evaluator.getXValue(values, i), values.get(i).first));
         }
 
         LineDataSet series = new LineDataSet(seriesEntries, "");
@@ -398,7 +432,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         return series;
     }
 
-    private ILineDataSet generateLinearRegressionLine(List<Pair<Integer, DateTime>> values) {
+    private ILineDataSet generateLinearRegressionLine(List<Pair<Integer, DateTime>> values, Evaluator eval) {
         int dataSetSize = values.size();
         double[] x = new double[dataSetSize];
         double[] y = new double[dataSetSize];
@@ -409,15 +443,15 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         long minX = Long.MAX_VALUE;
         long maxX = Long.MIN_VALUE;
         for (int i = 0; i < dataSetSize; i++) {
-            x[n] = values.get(i).second.getMillis();
+            x[n] = eval.getXValue(values, i);
             y[n] = values.get(i).first;
             sumX += x[n];
             sumY += y[n];
             if (x[n] < minX) {
-                minX = values.get(i).second.getMillis();
+                minX = eval.getXValue(values, i);
             }
             if (x[n] > maxX) {
-                maxX = values.get(i).second.getMillis();
+                maxX = eval.getXValue(values, i);
             }
             n++;
         }
@@ -436,8 +470,8 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         }
         double beta1 = xyBar / xxBar;
         double beta0 = yBar - beta1 * xBar;
-        float y0 = (float) (beta1 * values.get(0).second.getMillis() + beta0);
-        float y1 = (float) (beta1 * values.get(dataSetSize - 1).second.getMillis() + beta0);
+        float y0 = (float) (beta1 * eval.getXValue(values, 0) + beta0);
+        float y1 = (float) (beta1 * eval.getXValue(values, dataSetSize - 1) + beta0);
         Entry first = new Entry(minX, y0);
         Entry last = new Entry(maxX, y1);
         List<Entry> yValues = Arrays.asList(first, last);
@@ -448,6 +482,12 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         lineDataSet.setLineWidth(1);
         lineDataSet.setHighlightEnabled(false);
         return lineDataSet;
+    }
+
+    private interface Evaluator {
+        long getXValue(List<Pair<Integer, DateTime>> values, int i);
+
+        String getXValueFormatted(float value);
     }
 
     private class ArrowStatisticAdapter extends RecyclerView.Adapter<ViewHolder> {
