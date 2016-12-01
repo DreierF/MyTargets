@@ -17,6 +17,7 @@ package de.dreier.mytargets.managers.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -34,7 +35,6 @@ import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.utils.Pair;
 
 public class PasseDataSource extends IdProviderDataSource<Passe> {
     private static final String TABLE = "PASSE";
@@ -143,46 +143,6 @@ public class PasseDataSource extends IdProviderDataSource<Passe> {
                 passe.roundId = round;
                 passe.exact = res.getInt(9) == 1;
                 passe.saveDate = new DateTime(res.getLong(10));
-                if (oldRoundId != passe.roundId) {
-                    pIndex = 0;
-                    oldRoundId = passe.roundId;
-                }
-                passe.index = pIndex++;
-                for (int i = 0; i < ppp; i++) {
-                    passe.shots.set(i, ShotDataSource.cursorToShot(res, i));
-                    res.moveToNext();
-                }
-                list.add(passe);
-            } while (!res.isAfterLast());
-        }
-        res.close();
-        return list;
-    }
-
-    public ArrayList<Passe> getAllByTraining(long training) {
-        Cursor res = database.rawQuery(
-                "SELECT s._id, s.passe, s.points, s.x, s.y, s.comment, s.arrow, s.arrow_index, r._id, " +
-                        "(SELECT COUNT(x._id) FROM SHOOT x WHERE x.passe=p._id), p.exact, p.save_time " +
-                        "FROM ROUND r " +
-                        "LEFT JOIN PASSE p ON r._id = p.round " +
-                        "LEFT JOIN SHOOT s ON p._id = s.passe " +
-                        "WHERE r.training = " + training + " " +
-                        "ORDER BY r._id ASC, p._id ASC, s.arrow_index ASC", null);
-        ArrayList<Passe> list = new ArrayList<>();
-        if (res.moveToFirst()) {
-            long oldRoundId = -1;
-            int pIndex = 0;
-            do {
-                int ppp = res.getInt(9);
-                if (ppp == 0) {
-                    res.moveToNext();
-                    continue;
-                }
-                Passe passe = new Passe(ppp);
-                passe.setId(res.getLong(1));
-                passe.roundId = res.getLong(8);
-                passe.exact = res.getInt(10) == 1;
-                passe.saveDate = new DateTime(res.getLong(11));
                 if (oldRoundId != passe.roundId) {
                     pIndex = 0;
                     oldRoundId = passe.roundId;

@@ -89,10 +89,6 @@ android {
     }
 }
 
-afterEvaluate {
-    // assembleRegularRelease.dependsOn(':crowdinDownload')
-}
-
 /*
  * Workaround for https://code.google.com/p/android/issues/detail?id=182715
  *
@@ -122,7 +118,9 @@ task renameFolders {
 def CROWDIN_API_KEY = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
 if (CROWDIN_API_KEY != null && !CROWDIN_API_KEY.isEmpty()) {
     tasks.whenTaskAdded { task ->
-        if (task.name.equals("generateRegularReleasePlayResources")) {
+        if (task.name.equals("assembleRegularRelease")) {
+            task.dependsOn(':crowdinDownload')
+        } else if (task.name.equals("generateRegularReleasePlayResources")) {
             task.dependsOn(':crowdinDownload')
             task.dependsOn renameFolders
             task.doLast {
@@ -185,7 +183,7 @@ dependencies {
 
     compile 'com.anjlab.android.iab.v3:library:1.0.34'
 
-    compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
 
     compile 'com.github.clans:fab:1.6.4'
 
@@ -201,8 +199,6 @@ dependencies {
     compile 'com.github.oriley-me.homage:homage-recyclerview:0.2.0'
 
     compile 'com.makeramen:roundedimageview:2.2.1'
-
-    compile 'me.mvdw.recyclerviewmergeadapter:recyclerviewmergeadapter:2.0.0'
 
     compile(name: 'dropbox-android-core-2-1-2', ext: 'aar')
     compile 'com.fasterxml.jackson.core:jackson-core:2.8.5'
