@@ -16,6 +16,7 @@
 package de.dreier.mytargets.utils;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -254,14 +255,14 @@ public class HtmlUtils {
 
         List<Pair<String, Integer>> topScores = Passe.getTopScoreDistribution(scoreDistribution);
         for (Pair<String, Integer> topScore : topScores) {
-            html += "<th>" + topScore.getFirst() + "</th>";
+            html += "<th>" + topScore.first + "</th>";
         }
         html += "<th>" + get(R.string.hits) + "</th>";
         html += "<th>" + get(R.string.average) + "</th>";
         html += "</tr><tr class=\"align_center\">";
 
         for (Pair<String, Integer> topScore : topScores) {
-            html += "<td>" + topScore.getSecond() + "</td>";
+            html += "<td>" + topScore.second + "</td>";
         }
         html += "<td>" + hits + "/" + total + "</td>";
         html += "<td>" + getAverageScore(scoreDistribution) + "</td>";

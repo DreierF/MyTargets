@@ -380,7 +380,9 @@ public class InputActivity extends ChildActivityBase
     public void onEndFinished(List<Shot> shots, boolean remote) {
         getCurrentEnd().shots = shots;
         getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING;
-        getCurrentEnd().saveDate = new DateTime();
+        if (getCurrentEnd().getId() == 0) {
+            getCurrentEnd().saveDate = new DateTime();
+        }
 
         // Change round template if end is out of range defined in template
         if (data.standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE && getTemplate().endCount - 1 == data.endIndex) {
@@ -389,15 +391,11 @@ public class InputActivity extends ChildActivityBase
 
         getCurrentEnd().save();
 
-        if (getCurrentEnd().getId() == 0 || remote) {
-            if (manager != null) {
-                manager.sendMessageUpdate(buildInfo());
-            }
-            if (remote) {
-                data.endIndex = getEnds().size();
-            }
-        } else if (data.endIndex + 1 == getEnds().size() && manager != null) {
+        if (manager != null) {
             manager.sendMessageUpdate(buildInfo());
+        }
+        if (remote) {
+            showEnd(getEnds().size());
         }
         updateNavigationButtons();
         supportInvalidateOptionsMenu();
