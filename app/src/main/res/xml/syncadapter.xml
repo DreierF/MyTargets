@@ -15,9 +15,9 @@
   -->
 
 <sync-adapter xmlns:android="http://schemas.android.com/apk/res/android"
-              android:accountType="com.example.android.network.sync.basicsyncadapter"
+              android:accountType="${applicationId}"
               android:allowParallelSyncs="false"
-              android:contentAuthority="com.example.android.network.sync.basicsyncadapter"
+              android:contentAuthority="${applicationId}"
               android:isAlwaysSyncable="true"
               android:supportsUploading="false"
               android:userVisible="false"/>

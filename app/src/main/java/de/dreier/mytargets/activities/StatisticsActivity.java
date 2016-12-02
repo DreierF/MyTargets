@@ -271,7 +271,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
             protected Uri doInBackground(Void... params) {
                 try {
                     return BackupUtils.export(getApplicationContext(), Stream.of(filteredRounds)
-                            .flatMap(p -> Stream.of(p.getSecond()))
+                            .flatMap(p -> Stream.of(p.second))
                             .map(Round::getId)
                             .collect(Collectors.toList()));
                 } catch (IOException e) {

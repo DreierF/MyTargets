@@ -1,10 +1,9 @@
 package de.dreier.mytargets.features.settings.backup;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -28,14 +27,12 @@ import java.util.List;
 
 import de.dreier.mytargets.BuildConfig;
 import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.managers.SettingsManager;
 
-import static de.dreier.mytargets.ApplicationInstance.getSharedPreferences;
-
-public class DropboxBackup implements Backup {
-
-    private static final String TAG = "DropboxBackup";
+public class DropboxBackup implements IBackup {
 
     private static final String SEPARATOR = "#!#";
+    private static final String APP_KEY = "cn8fltup424mmlr";
 
     private Activity activity;
     private OnLoadFinishedListener listener;
@@ -44,15 +41,14 @@ public class DropboxBackup implements Backup {
     public void start(Activity activity, OnLoadFinishedListener listener) {
         this.activity = activity;
         this.listener = listener;
-        SharedPreferences prefs = getSharedPreferences();
-        String accessToken = prefs.getString("access-token", null);
+        String accessToken = SettingsManager.getDropboxAccessToken();
         if (accessToken == null) {
             accessToken = Auth.getOAuth2Token();
             if (accessToken != null) {
-                prefs.edit().putString("access-token", accessToken).apply();
+                SettingsManager.setDropboxAccessToken(accessToken);
                 initAndLoadData(accessToken);
             } else {
-                Auth.startOAuth2Authentication(activity, "cn8fltup424mmlr");
+                Auth.startOAuth2Authentication(activity, APP_KEY);
             }
         } else {
             initAndLoadData(accessToken);
@@ -65,53 +61,39 @@ public class DropboxBackup implements Backup {
     }
 
     @Override
-    public void startBackup(BackupStatusListener listener) {
-        new AsyncTask<String, Void, FileMetadata>() {
-            private Exception mException;
-
-            @Override
-            protected FileMetadata doInBackground(String... params) {
-                String remoteFileName = "/" + BackupUtils.getBackupName();
-
-                InputStream inputStream = null;
-                File localFile = null;
-                try {
-                    localFile = File.createTempFile("backup_", ".zip");
-                    BackupUtils.zip(activity, new FileOutputStream(localFile));
-
-                    inputStream = new FileInputStream(localFile);
-                    return DropboxClientFactory.getClient().files()
-                            .uploadBuilder(remoteFileName)
-                            .withMode(WriteMode.OVERWRITE)
-                            .uploadAndFinish(inputStream);
-                } catch (DbxException | IOException e) {
-                    e.printStackTrace();
-                    mException = e;
-                } finally {
-                    BackupUtils.safeCloseClosable(inputStream);
-                    if (localFile != null) {
-                        //noinspection ResultOfMethodCallIgnored
-                        localFile.delete();
-                    }
-                }
-
-                return null;
+    public void doBackupBlocking(Context context) throws BackupException {
+        String accessToken = SettingsManager.getDropboxAccessToken();
+        if (accessToken == null) {
+            accessToken = Auth.getOAuth2Token();
+            if (accessToken == null) {
+                throw new BackupException("No access token");
             }
+            SettingsManager.setDropboxAccessToken(accessToken);
+        }
+        DropboxClientFactory.init(accessToken);
 
-            @Override
-            protected void onPostExecute(FileMetadata result) {
-                super.onPostExecute(result);
-                if (mException != null) {
-                    Log.e(TAG, "Failed to upload file.", mException);
-                    listener.onError(mException.getLocalizedMessage());
-                } else if (result == null) {
-                    Log.e(TAG, "Failed to upload file.");
-                    listener.onError("Failed to upload file.");
-                } else {
-                    listener.onFinished();
-                }
+        String remoteFileName = "/" + BackupUtils.getBackupName();
+
+        InputStream inputStream = null;
+        File localFile = null;
+        try {
+            localFile = File.createTempFile("backup_", ".zip");
+            BackupUtils.zip(context, new FileOutputStream(localFile));
+
+            inputStream = new FileInputStream(localFile);
+            DropboxClientFactory.getClient().files()
+                    .uploadBuilder(remoteFileName)
+                    .withMode(WriteMode.OVERWRITE)
+                    .uploadAndFinish(inputStream);
+        } catch (DbxException | IOException e) {
+            throw new BackupException("Failed to upload file.", e);
+        } finally {
+            BackupUtils.safeCloseClosable(inputStream);
+            if (localFile != null) {
+                //noinspection ResultOfMethodCallIgnored
+                localFile.delete();
             }
-        }.execute();
+        }
     }
 
     @Override

@@ -15,8 +15,10 @@
 
 package de.dreier.mytargets.features.settings.backup;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -38,6 +40,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import de.dreier.mytargets.ApplicationInstance;
+import de.dreier.mytargets.features.settings.backup.synchronization.GenericAccountService;
 import de.dreier.mytargets.managers.DatabaseManager;
 
 import static android.support.v4.content.FileProvider.getUriForFile;
@@ -197,4 +201,5 @@ public class BackupUtils {
         }
         return tmpDb;
     }
+
 }

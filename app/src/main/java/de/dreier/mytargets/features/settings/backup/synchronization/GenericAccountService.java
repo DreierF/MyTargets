@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings.backup.synchronization.accounts;
+package de.dreier.mytargets.features.settings.backup.synchronization;
 
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
@@ -26,27 +26,21 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import de.dreier.mytargets.ApplicationInstance;
+
 public class GenericAccountService extends Service {
     private static final String TAG = "GenericAccountService";
-    private static final String ACCOUNT_TYPE = "com.example.android.network.sync.basicsyncadapter";
-    public static final String ACCOUNT_NAME = "sync";
+    public static final String ACCOUNT_NAME = "MyTargets";
     private Authenticator mAuthenticator;
 
     /**
      * Obtain a handle to the {@link Account} used for sync in this application.
      *
-     * @return Handle to application's account (not guaranteed to resolve unless CreateSyncAccount()
+     * @return Handle to application's account (not guaranteed to resolve unless createSyncAccount()
      *         has been called)
      */
-    public static Account GetAccount() {
-        // Note: Normally the account name is set to the user's identity (username or email
-        // address). However, since we aren't actually using any user accounts, it makes more sense
-        // to use a generic string in this case.
-        //
-        // This string should *not* be localized. If the user switches locale, we would not be
-        // able to locate the old account, and may erroneously register multiple accounts.
-        final String accountName = ACCOUNT_NAME;
-        return new Account(accountName, ACCOUNT_TYPE);
+    public static Account getAccount() {
+        return new Account(ACCOUNT_NAME, ApplicationInstance.getContext().getPackageName());
     }
 
     @Override

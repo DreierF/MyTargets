@@ -15,7 +15,7 @@
   -->
 
 <account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
-                       android:accountType="com.example.android.network.sync.basicsyncadapter"
+                       android:accountType="${applicationId}"
                        android:icon="@mipmap/ic_launcher"
-                       android:label="@string/app_name"
+                       android:label="@string/my_targets"
                        android:smallIcon="@mipmap/ic_launcher"/>

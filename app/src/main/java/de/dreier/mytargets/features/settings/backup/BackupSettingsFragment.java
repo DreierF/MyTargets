@@ -1,7 +1,11 @@
 package de.dreier.mytargets.features.settings.backup;
 
 import android.Manifest;
+import android.accounts.Account;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SyncStatusObserver;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -29,6 +33,8 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.BackupAdapter;
 import de.dreier.mytargets.databinding.FragmentBackupBinding;
 import de.dreier.mytargets.features.settings.SettingsFragmentBase;
+import de.dreier.mytargets.features.settings.backup.synchronization.SyncUtils;
+import de.dreier.mytargets.features.settings.backup.synchronization.GenericAccountService;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.utils.HtmlUtils;
@@ -47,9 +53,49 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
 
     private static final int IMPORT_FROM_URI = 1234;
 
-    private Backup backup;
+    private IBackup backup;
     private BackupAdapter adapter;
     private FragmentBackupBinding binding;
+
+
+    /**
+     * Handle to a SyncObserver. The ProgressBar element is visible until the SyncObserver reports
+     * that the sync is complete.
+     * <p>
+     * <p>This allows us to delete our SyncObserver once the application is no longer in the
+     * foreground.
+     */
+    private Object mSyncObserverHandle;
+    /**
+     * Crfate a new anonymous SyncStatusObserver. It's attached to the app's ContentResolver in
+     * onResume(), and removed in onPause(). If status changes, it sets the state of the Refresh
+     * button. If a sync is active or pending, the Refresh button is replaced by an indeterminate
+     * ProgressBar; otherwise, the button itself is displayed.
+     */
+    private SyncStatusObserver mSyncStatusObserver = which -> getActivity().runOnUiThread(() -> {
+        // Create a handle to the account that was created by
+        // SyncService.createSyncAccount(). This will be used to query the system to
+        // see how the sync status has changed.
+        Account account = GenericAccountService.getAccount();
+        if (account == null) {
+            // getAccount() returned an invalid value. This shouldn't happen, but
+            // we'll set the status to "not refreshing".
+            binding.backupNowButton.setEnabled(false);
+            binding.backupProgressBar.setVisibility(GONE);
+            return;
+        }
+
+        // Test the ContentResolver to see if the sync adapter is active or pending.
+        // Set the state of the refresh button accordingly.
+        boolean syncActive = ContentResolver.isSyncActive(
+                account, getContext().getPackageName());
+        boolean syncPending = ContentResolver.isSyncPending(
+                account, getContext().getPackageName());
+        boolean refreshing = syncActive || syncPending;
+        binding.backupNowButton.setEnabled(!refreshing);
+        binding.backupProgressBar.setIndeterminate(true);
+        binding.backupProgressBar.setVisibility(refreshing ? VISIBLE : GONE);
+    });
 
     @Override
     public void onCreatePreferences() {
@@ -75,11 +121,32 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
         return binding.getRoot();
     }
 
+    /**
+     * Create SyncAccount at launch, if needed.
+     * <p>
+     * <p>This will create a new account with the system for our application, register our
+     * {@link de.dreier.mytargets.features.settings.backup.synchronization.SyncService} with it, and establish a sync schedule.
+     */
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // Create account, if needed
+        SyncUtils.createSyncAccount(context);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         EBackupLocation backupLocation = SettingsManager.getBackupLocation();
         binding.backupLocation.setItem(backupLocation);
+
+        mSyncStatusObserver.onStatusChanged(0);
+
+        // Watch for sync state changes
+        final int mask = ContentResolver.SYNC_OBSERVER_TYPE_PENDING |
+                ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE;
+        mSyncObserverHandle = ContentResolver.addStatusChangeListener(mask, mSyncStatusObserver);
     }
 
     @Override
@@ -105,6 +172,10 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
     public void onPause() {
         if (backup != null) {
             backup.stop();
+        }
+        if (mSyncObserverHandle != null) {
+            ContentResolver.removeStatusChangeListener(mSyncObserverHandle);
+            mSyncObserverHandle = null;
         }
         super.onPause();
     }
@@ -137,7 +208,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
         backup = item.createBackup();
         adapter = new BackupAdapter(getContext(), this::showBackupDetails, this::deleteBackup);
         binding.recentBackupsList.setAdapter(adapter);
-        backup.start(getActivity(), new Backup.OnLoadFinishedListener() {
+        backup.start(getActivity(), new IBackup.OnLoadFinishedListener() {
             @Override
             public void onLoadFinished(List<BackupEntry> backupEntries) {
                 onBackupsLoaded(backupEntries);
@@ -160,20 +231,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
     }
 
     private void backupNow() {
-        MaterialDialog progress = showProgressDialog(R.string.creating_backup);
-        backup.startBackup(new Backup.BackupStatusListener() {
-            @Override
-            public void onFinished() {
-                progress.dismiss();
-                backup.getBackups();
-            }
-
-            @Override
-            public void onError(String message) {
-                progress.dismiss();
-                showError(R.string.backup_failed, message);
-            }
-        });
+        SyncUtils.triggerBackup();
     }
 
     private void showError(@StringRes int title, String message) {
@@ -214,7 +272,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
     private void restoreBackup(BackupEntry item) {
         MaterialDialog progress = showProgressDialog(R.string.restoring);
         backup.restoreBackup(item,
-                new Backup.BackupStatusListener() {
+                new IBackup.BackupStatusListener() {
                     @Override
                     public void onFinished() {
                         progress.dismiss();
@@ -230,7 +288,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
     }
 
     private void deleteBackup(BackupEntry backupEntry) {
-        backup.deleteBackup(backupEntry, new Backup.BackupStatusListener() {
+        backup.deleteBackup(backupEntry, new IBackup.BackupStatusListener() {
             @Override
             public void onFinished() {
                 adapter.remove(backupEntry);

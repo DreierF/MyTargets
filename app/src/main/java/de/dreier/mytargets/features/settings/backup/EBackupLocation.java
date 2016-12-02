@@ -45,7 +45,7 @@ public enum EBackupLocation implements IIdProvider, IImageProvider {
         return id;
     }
 
-    public Backup createBackup() {
+    public IBackup createBackup() {
         switch (this) {
             case INTERNAL_STORAGE:
                 return new InternalStorageBackup();

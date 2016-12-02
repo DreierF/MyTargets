@@ -13,19 +13,22 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings.backup.synchronization;
+package de.dreier.mytargets.features.settings.backup;
 
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+public class BackupException extends Exception {
+    private final String message;
 
-/**
- * Activity for holding EntryListFragment.
- */
-public class EntryListActivity extends FragmentActivity {
+    public BackupException(String message) {
+        this.message = message;
+    }
+
+    public BackupException(String message, Exception e) {
+        super(e);
+        this.message = message;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_entry_list);
+    public String getMessage() {
+        return message;
     }
 }

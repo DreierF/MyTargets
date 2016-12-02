@@ -45,6 +45,7 @@ public class SettingsManager {
     public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
     public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
     public static final String KEY_BACKUP_INTERVAL = "backup_interval";
+    public static final String KEY_INPUT_KEYBOARD_TYPE = "input_keyboard_type";
     private static final String KEY_DONATED = "donated";
     private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
     private static final String KEY_TIMER_SOUND = "timer_sound";
@@ -71,7 +72,7 @@ public class SettingsManager {
             .getSharedPreferences();
     private static final String KEY_BACKUP_LOCATION = "backup_location";
     private static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
-    public static final String KEY_INPUT_KEYBOARD_TYPE = "input_keyboard_type";
+    private static final String KEY_DROPBOX_ACCESS_TOKEN = "access-token";
 
     public static int getStandardRound() {
         return lastUsed.getInt(KEY_STANDARD_ROUND, 32);
@@ -341,15 +342,15 @@ public class SettingsManager {
                 .getString(KEY_INPUT_TARGET_ZOOM, "3.0"));
     }
 
-    public static EKeyboardType getInputKeyboardType() {
-        return EKeyboardType.valueOf(ApplicationInstance.getSharedPreferences()
-                .getString(KEY_INPUT_KEYBOARD_TYPE, EKeyboardType.RIGHT.toString()));
-    }
-
     public static void setInputTargetZoom(float targetZoom) {
         preferences.edit()
                 .putString(KEY_INPUT_TARGET_ZOOM, String.valueOf(targetZoom))
                 .apply();
+    }
+
+    public static EKeyboardType getInputKeyboardType() {
+        return EKeyboardType.valueOf(ApplicationInstance.getSharedPreferences()
+                .getString(KEY_INPUT_KEYBOARD_TYPE, EKeyboardType.RIGHT.toString()));
     }
 
     public static EBackupLocation getBackupLocation() {
@@ -384,5 +385,15 @@ public class SettingsManager {
             default:
                 return get(R.string.monthly);
         }
+    }
+
+    public static String getDropboxAccessToken() {
+        return preferences.getString(KEY_DROPBOX_ACCESS_TOKEN, null);
+    }
+
+    public static void setDropboxAccessToken(String accessToken) {
+        preferences.edit()
+                .putString(KEY_DROPBOX_ACCESS_TOKEN, accessToken)
+                .apply();
     }
 }

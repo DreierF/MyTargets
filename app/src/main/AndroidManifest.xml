@@ -305,6 +305,11 @@
                 android:resource="@xml/file_paths"
                 tools:replace="android:resource"/>
         </provider>
+        <provider
+            android:name=".features.settings.backup.synchronization.StubProvider"
+            android:authorities="${applicationId}"
+            android:exported="false"
+            android:syncable="true"/>
 
         <service android:name=".features.settings.backup.synchronization.SyncService"
                  android:exported="true">
@@ -318,7 +323,7 @@
                        android:resource="@xml/syncadapter" />
         </service>
 
-        <service android:name=".features.settings.backup.synchronization.accounts.GenericAccountService">
+        <service android:name=".features.settings.backup.synchronization.GenericAccountService">
             <!-- Required filter used by the system to launch our account service. -->
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />

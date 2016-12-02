@@ -30,80 +30,91 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="16dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text="@string/automatic_backup"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
-
-                        <Switch
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="end"/>
-
-                    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp"
-                        android:text="@string/backup_drive_desc"/>
-
-                    <Button
-                        android:id="@+id/backup_now_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:background="@color/colorAccent"
-                        android:padding="16dp"
-                        android:text="@string/backup_now"
-                        android:textColor="#80000000"/>
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/automatic_backup"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
 
-                    <TextView
-                        android:id="@+id/last_backup_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:text="@string/last_backup"
-                        android:textStyle="italic"
-                        android:visibility="gone"
-                        tools:visibility="visible"/>
-
-                    <include layout="@layout/partial_divider_full"/>
-
-                    <de.dreier.mytargets.features.settings.backup.BackupLocationSelector
-                        android:id="@+id/backup_location"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-
-                    <include layout="@layout/partial_divider_full"/>
-
-                    <TextView
-                        style="@style/Label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:text="@string/recent_backups"/>
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recent_backups_list"
+                    <Switch
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layoutManager="LinearLayoutManager"
-                        tools:listitem="@layout/item_details_secondary_action"/>
+                        android:gravity="end"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:text="@string/backup_drive_desc"/>
+
+                <Button
+                    android:id="@+id/backupNowButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:background="@color/colorAccent"
+                    android:padding="16dp"
+                    android:text="@string/backup_now"
+                    android:textColor="#80000000"/>
+
+                <TextView
+                    android:id="@+id/lastBackupLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:text="@string/last_backup"
+                    android:textStyle="italic"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+
+                <ProgressBar
+                    android:id="@+id/backupProgressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+
+                <include layout="@layout/partial_divider_full"/>
+
+                <de.dreier.mytargets.features.settings.backup.BackupLocationSelector
+                    android:id="@+id/backup_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <include layout="@layout/partial_divider_full"/>
+
+                <TextView
+                    style="@style/Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:layout_marginBottom="0dp"
+                    android:text="@string/recent_backups"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recentBackupsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="LinearLayoutManager"
+                    tools:listitem="@layout/item_details_secondary_action"/>
 
             </LinearLayout>
 

@@ -1,6 +1,7 @@
 package de.dreier.mytargets.features.settings.backup;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
@@ -20,7 +21,7 @@ import de.dreier.mytargets.managers.DatabaseManager;
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 import static de.dreier.mytargets.features.settings.backup.BackupUtils.getBackupName;
 
-public class ExternalStorageBackup implements Backup {
+public class ExternalStorageBackup implements IBackup {
     private static final String FOLDER_NAME = "MyTargets";
 
     private Activity activity;
@@ -67,16 +68,14 @@ public class ExternalStorageBackup implements Backup {
     }
 
     @Override
-    public void startBackup(BackupStatusListener listener) {
+    public void doBackupBlocking(Context context) throws BackupException {
         try {
             File backupDir = new File(Environment.getExternalStorageDirectory(), FOLDER_NAME);
             createDirectory(backupDir);
             final File zipFile = new File(backupDir, getBackupName());
-            BackupUtils.zip(activity, new FileOutputStream(zipFile));
-            listener.onFinished();
+            BackupUtils.zip(context, new FileOutputStream(zipFile));
         } catch (IOException e) {
-            listener.onError(e.getLocalizedMessage());
-            e.printStackTrace();
+            throw new BackupException(e.getLocalizedMessage(), e);
         }
     }
 

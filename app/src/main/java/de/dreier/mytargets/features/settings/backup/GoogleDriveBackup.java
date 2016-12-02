@@ -1,6 +1,7 @@
 package de.dreier.mytargets.features.settings.backup;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
@@ -13,8 +14,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi;
+import com.google.android.gms.drive.DriveApi.DriveContentsResult;
 import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
+import com.google.android.gms.drive.DriveFolder.DriveFileResult;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataBuffer;
@@ -34,7 +37,7 @@ import de.dreier.mytargets.managers.DatabaseManager;
 
 import static android.app.Activity.RESULT_OK;
 
-public class GoogleDriveBackup implements Backup,
+public class GoogleDriveBackup implements IBackup,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -56,7 +59,7 @@ public class GoogleDriveBackup implements Backup,
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(activity)
                     .addApi(Drive.API)
-                    .addScope(Drive.SCOPE_APPFOLDER) // required for App Folder sample
+                    .addScope(Drive.SCOPE_APPFOLDER)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .build();
@@ -65,50 +68,41 @@ public class GoogleDriveBackup implements Backup,
     }
 
     @Override
-    public void startBackup(BackupStatusListener listener) {
-        Drive.DriveApi.newDriveContents(googleApiClient)
-                .setResultCallback(result -> {
-                    if (!result.getStatus().isSuccess()) {
-                        listener.onError(result.getStatus().getStatusMessage());
-                        return;
-                    }
-                    final DriveContents driveContents = result.getDriveContents();
+    public void doBackupBlocking(Context context) throws BackupException {
+        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
+                .addApi(Drive.API)
+                .addScope(Drive.SCOPE_APPFOLDER)
+                .build();
+        ConnectionResult connectionResult = googleApiClient.blockingConnect();
+        if(!connectionResult.isSuccess()) {
+            throw new BackupException(connectionResult.getErrorMessage());
+        }
 
-                    // Perform I/O off the UI thread.
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            // write content to DriveContents
-                            OutputStream outputStream = driveContents.getOutputStream();
+        DriveContentsResult result = Drive.DriveApi.newDriveContents(googleApiClient).await();
+        if (!result.getStatus().isSuccess()) {
+            throw new BackupException(result.getStatus().getStatusMessage());
+        }
 
-                            try {
-                                BackupUtils.zip(activity, outputStream);
-                            } catch (IOException e) {
-                                listener.onError(e.getLocalizedMessage());
-                                e.printStackTrace();
-                                return;
-                            }
+        final DriveContents driveContents = result.getDriveContents();
+        OutputStream outputStream = driveContents.getOutputStream();
 
-                            MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                                    .setTitle(BackupUtils.getBackupName())
-                                    .setMimeType("mytargets/zip")
-                                    .build();
+        try {
+            BackupUtils.zip(context, outputStream);
+        } catch (IOException e) {
+            throw new BackupException(e.getLocalizedMessage(), e);
+        }
 
-                            // create a file in selected folder
-                            Drive.DriveApi.getAppFolder(googleApiClient)
-                                    .createFile(googleApiClient, changeSet, driveContents)
-                                    .setResultCallback(
-                                            result1 -> {
-                                                if (!result1.getStatus().isSuccess()) {
-                                                    Log.d(TAG, "Error while trying to create the file");
-                                                    listener.onError(result1.getStatus().getStatusMessage());
-                                                    return;
-                                                }
-                                                listener.onFinished();
-                                            });
-                        }
-                    }.start();
-                });
+        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                .setTitle(BackupUtils.getBackupName())
+                .setMimeType("mytargets/zip")
+                .build();
+
+        // create a file in selected folder
+        DriveFileResult result1 = Drive.DriveApi.getAppFolder(googleApiClient)
+                .createFile(googleApiClient, changeSet, driveContents).await();
+        if (!result1.getStatus().isSuccess()) {
+            throw new BackupException(result1.getStatus().getStatusMessage());
+        }
     }
 
     /**
@@ -194,7 +188,7 @@ public class GoogleDriveBackup implements Backup,
 
     /**
      * Restores the given backup and restarts the app if the restore was successful.
-     * */
+     */
     @Override
     public void restoreBackup(BackupEntry backup, BackupStatusListener listener) {
         DriveId.decodeFromString(backup.getFileId())
