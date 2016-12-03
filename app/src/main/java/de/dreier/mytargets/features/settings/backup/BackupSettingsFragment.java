@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,15 +27,19 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import de.dreier.mytargets.BuildConfig;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.BackupAdapter;
 import de.dreier.mytargets.databinding.FragmentBackupBinding;
 import de.dreier.mytargets.features.settings.SettingsFragmentBase;
-import de.dreier.mytargets.features.settings.backup.synchronization.SyncUtils;
+import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
+import de.dreier.mytargets.features.settings.backup.provider.IAsyncBackupRestore;
 import de.dreier.mytargets.features.settings.backup.synchronization.GenericAccountService;
+import de.dreier.mytargets.features.settings.backup.synchronization.SyncUtils;
 import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.utils.HtmlUtils;
@@ -43,21 +48,22 @@ import de.dreier.mytargets.utils.Utils;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
+import static android.content.ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE;
+import static android.content.ContentResolver.SYNC_OBSERVER_TYPE_PENDING;
+import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static de.dreier.mytargets.features.settings.backup.BackupSettingsFragmentPermissionsDispatcher.applyBackupLocationWithCheck;
 import static de.dreier.mytargets.features.settings.backup.BackupSettingsFragmentPermissionsDispatcher.showFilePickerWithCheck;
 
 @RuntimePermissions
-public class BackupSettingsFragment extends SettingsFragmentBase {
+public class BackupSettingsFragment extends SettingsFragmentBase implements IAsyncBackupRestore.OnLoadFinishedListener {
 
     private static final int IMPORT_FROM_URI = 1234;
 
-    private IBackup backup;
+    private IAsyncBackupRestore backup;
     private BackupAdapter adapter;
     private FragmentBackupBinding binding;
-
-
     /**
      * Handle to a SyncObserver. The ProgressBar element is visible until the SyncObserver reports
      * that the sync is complete.
@@ -66,39 +72,37 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
      * foreground.
      */
     private Object mSyncObserverHandle;
+    private boolean isRefreshing = false;
+
     /**
-     * Crfate a new anonymous SyncStatusObserver. It's attached to the app's ContentResolver in
-     * onResume(), and removed in onPause(). If status changes, it sets the state of the Refresh
-     * button. If a sync is active or pending, the Refresh button is replaced by an indeterminate
-     * ProgressBar; otherwise, the button itself is displayed.
+     * Create a new anonymous SyncStatusObserver. It's attached to the app's ContentResolver in
+     * onResume(), and removed in onPause(). If status changes, it sets the state of the Progress
+     * bar. If a sync is active or pending, the progress is shown.
      */
     private SyncStatusObserver mSyncStatusObserver = which -> getActivity().runOnUiThread(() -> {
         // Create a handle to the account that was created by
         // SyncService.createSyncAccount(). This will be used to query the system to
         // see how the sync status has changed.
         Account account = GenericAccountService.getAccount();
-        if (account == null) {
-            // getAccount() returned an invalid value. This shouldn't happen, but
-            // we'll set the status to "not refreshing".
-            binding.backupNowButton.setEnabled(false);
-            binding.backupProgressBar.setVisibility(GONE);
-            return;
-        }
 
         // Test the ContentResolver to see if the sync adapter is active or pending.
         // Set the state of the refresh button accordingly.
-        boolean syncActive = ContentResolver.isSyncActive(
-                account, getContext().getPackageName());
-        boolean syncPending = ContentResolver.isSyncPending(
-                account, getContext().getPackageName());
-        boolean refreshing = syncActive || syncPending;
-        binding.backupNowButton.setEnabled(!refreshing);
+        boolean syncActive = ContentResolver.isSyncActive(account, BuildConfig.CONTENT_AUTHORITY);
+        boolean syncPending = ContentResolver.isSyncPending(account, BuildConfig.CONTENT_AUTHORITY);
+        boolean wasRefreshing = isRefreshing;
+        isRefreshing = syncActive || syncPending;
+        binding.backupNowButton.setEnabled(!isRefreshing);
         binding.backupProgressBar.setIndeterminate(true);
-        binding.backupProgressBar.setVisibility(refreshing ? VISIBLE : GONE);
+        binding.backupProgressBar.setVisibility(isRefreshing ? VISIBLE : GONE);
+        if (wasRefreshing && !isRefreshing && backup != null) {
+            backup.getBackups(this);
+        }
     });
 
     @Override
     public void onCreatePreferences() {
+        /* Overridden to no do anything. Normally this would try to inflate the preferences,
+        * but in this case we want to show our own UI. */
     }
 
     @Override
@@ -107,6 +111,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
         ToolbarUtils.showHomeAsUp(this);
 
         binding.recentBackupsList.setNestedScrollingEnabled(false);
+        binding.recentBackupsList.addItemDecoration(new DividerItemDecoration(getContext(), VERTICAL));
         binding.backupLocation.setOnActivityResultContext(this);
         binding.backupLocation.setOnUpdateListener(item -> {
             SettingsManager.setBackupLocation(item);
@@ -115,17 +120,53 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
             }
             setBackupLocation(item);
         });
-
+        binding.backupIntervalPreference.name.setText(R.string.backup_interval);
+        binding.automaticBackupSwitch.setOnClickListener(v -> onAutomaticBackupChanged());
         binding.backupNowButton.setOnClickListener(v -> backupNow());
+
+        boolean autoBackupEnabled = SettingsManager.isBackupAutomaticallyEnabled();
+        binding.automaticBackupSwitch.setChecked(autoBackupEnabled);
+        binding.backupIntervalLayout.setVisibility(autoBackupEnabled ? VISIBLE : GONE);
+        onAutomaticBackupChanged();
+        updateInterval();
+        binding.backupIntervalLayout.setOnClickListener(view -> onBackupIntervalClicked());
         setHasOptionsMenu(true);
         return binding.getRoot();
+    }
+
+    private void onBackupIntervalClicked() {
+        final List<EBackupInterval> backupIntervals = Arrays.asList(EBackupInterval.values());
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.backup_interval)
+                .items(backupIntervals)
+                .itemsCallbackSingleChoice(
+                        backupIntervals.indexOf(SettingsManager.getBackupInterval()),
+                        (dialog, v, index, text) -> {
+                            SettingsManager.setBackupInterval(EBackupInterval.values()[index]);
+                            updateInterval();
+                            return true;
+                        })
+                .show();
+    }
+
+    private void onAutomaticBackupChanged() {
+        boolean autoBackupEnabled = binding.automaticBackupSwitch.isChecked();
+        binding.backupIntervalLayout.setVisibility(autoBackupEnabled ? VISIBLE : GONE);
+        SettingsManager.setBackupAutomaticallyEnabled(autoBackupEnabled);
+        SyncUtils.setSyncAccountPeriodicSync(
+                autoBackupEnabled ? SettingsManager.getBackupInterval() : null);
+    }
+
+    private void updateInterval() {
+        binding.backupIntervalPreference.summary.setText(SettingsManager.getBackupInterval().toString());
     }
 
     /**
      * Create SyncAccount at launch, if needed.
      * <p>
      * <p>This will create a new account with the system for our application, register our
-     * {@link de.dreier.mytargets.features.settings.backup.synchronization.SyncService} with it, and establish a sync schedule.
+     * {@link de.dreier.mytargets.features.settings.backup.synchronization.SyncService} with it,
+     * and establish a sync schedule.
      */
     @Override
     public void onAttach(Context context) {
@@ -144,8 +185,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
         mSyncStatusObserver.onStatusChanged(0);
 
         // Watch for sync state changes
-        final int mask = ContentResolver.SYNC_OBSERVER_TYPE_PENDING |
-                ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE;
+        final int mask = SYNC_OBSERVER_TYPE_PENDING | SYNC_OBSERVER_TYPE_ACTIVE;
         mSyncObserverHandle = ContentResolver.addStatusChangeListener(mask, mSyncStatusObserver);
     }
 
@@ -205,18 +245,18 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void applyBackupLocation(EBackupLocation item) {
-        backup = item.createBackup();
+        backup = item.createAsyncRestore();
         adapter = new BackupAdapter(getContext(), this::showBackupDetails, this::deleteBackup);
         binding.recentBackupsList.setAdapter(adapter);
-        backup.start(getActivity(), new IBackup.OnLoadFinishedListener() {
+        backup.connect(getActivity(), new IAsyncBackupRestore.ConnectionListener() {
             @Override
-            public void onLoadFinished(List<BackupEntry> backupEntries) {
-                onBackupsLoaded(backupEntries);
+            public void onConnected() {
+                backup.getBackups(BackupSettingsFragment.this);
             }
 
             @Override
-            public void onError(String message) {
-                showError(R.string.loading_backups_failed, message);
+            public void onConnectionSuspended() {
+                showError(R.string.loading_backups_failed, getString(R.string.connection_failed));
             }
         });
     }
@@ -272,7 +312,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
     private void restoreBackup(BackupEntry item) {
         MaterialDialog progress = showProgressDialog(R.string.restoring);
         backup.restoreBackup(item,
-                new IBackup.BackupStatusListener() {
+                new IAsyncBackupRestore.BackupStatusListener() {
                     @Override
                     public void onFinished() {
                         progress.dismiss();
@@ -288,11 +328,11 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
     }
 
     private void deleteBackup(BackupEntry backupEntry) {
-        backup.deleteBackup(backupEntry, new IBackup.BackupStatusListener() {
+        backup.deleteBackup(backupEntry, new IAsyncBackupRestore.BackupStatusListener() {
             @Override
             public void onFinished() {
                 adapter.remove(backupEntry);
-                backup.getBackups();
+                backup.getBackups(BackupSettingsFragment.this);
             }
 
             @Override
@@ -346,5 +386,15 @@ public class BackupSettingsFragment extends SettingsFragmentBase {
                 }
             }
         }.execute();
+    }
+
+    @Override
+    public void onLoadFinished(List<BackupEntry> backupEntries) {
+        onBackupsLoaded(backupEntries);
+    }
+
+    @Override
+    public void onError(String message) {
+        showError(R.string.loading_backups_failed, message);
     }
 }

@@ -1,4 +1,19 @@
-package de.dreier.mytargets.features.settings.backup;
+/*
+ * Copyright (C) 2016 Florian Dreier
+ *
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+package de.dreier.mytargets.features.settings.backup.provider;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -45,16 +60,29 @@ public enum EBackupLocation implements IIdProvider, IImageProvider {
         return id;
     }
 
-    public IBackup createBackup() {
+    public IAsyncBackupRestore createAsyncRestore() {
         switch (this) {
             case INTERNAL_STORAGE:
-                return new InternalStorageBackup();
+                return new InternalStorageBackup.AsyncRestore();
             case EXTERNAL_STORAGE:
-                return new ExternalStorageBackup();
+                return new ExternalStorageBackup.AsyncRestore();
             case GOOGLE_DRIVE:
-                return new GoogleDriveBackup();
+                return new GoogleDriveBackup.AsyncRestore();
             default:
-                return new DropboxBackup();
+                return new DropboxBackup.AsyncRestore();
+        }
+    }
+
+    public IBlockingBackup createBackup() {
+        switch (this) {
+            case INTERNAL_STORAGE:
+                return new InternalStorageBackup.Backup();
+            case EXTERNAL_STORAGE:
+                return new ExternalStorageBackup.Backup();
+            case GOOGLE_DRIVE:
+                return new GoogleDriveBackup.Backup();
+            default:
+                return new DropboxBackup.Backup();
         }
     }
 

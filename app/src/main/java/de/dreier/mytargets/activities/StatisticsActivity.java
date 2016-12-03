@@ -57,7 +57,7 @@ import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
-import de.dreier.mytargets.features.settings.backup.BackupUtils;
+import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
 import de.dreier.mytargets.views.ChipGroup;
 import icepick.Icepick;
 import icepick.State;

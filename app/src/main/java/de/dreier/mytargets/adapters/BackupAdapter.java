@@ -29,6 +29,7 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.BackupView
         this.primaryActionListener = primaryActionListener;
         this.secondaryActionListener = secondaryActionListener;
         this.formatDateTime = SimpleDateFormat.getDateTimeInstance();
+        setHasStableIds(true);
     }
 
     @Override
@@ -47,6 +48,11 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.BackupView
                 .setOnClickListener(view -> primaryActionListener.onItemClicked(p));
         holder.binding.secondaryAction
                 .setOnClickListener(view -> secondaryActionListener.onItemClicked(p));
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return backupEntries.get(position).getModifiedDate().getTime();
     }
 
     @Override

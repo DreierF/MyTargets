@@ -16,29 +16,42 @@
 package de.dreier.mytargets.features.settings.backup;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.util.AttributeSet;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
-import de.dreier.mytargets.views.selector.ImageSelectorBase;
+import de.dreier.mytargets.databinding.PreferenceImageDetailsBinding;
+import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
+import de.dreier.mytargets.views.selector.SelectorBase;
 
-public class BackupLocationSelector extends ImageSelectorBase<EBackupLocation> {
+public class BackupLocationSelector extends SelectorBase<EBackupLocation> {
 
     public static final int BACKUP_REQUEST_CODE = 5;
+
+    protected PreferenceImageDetailsBinding binding;
 
     public BackupLocationSelector(Context context) {
         this(context, null);
     }
 
     public BackupLocationSelector(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        super(context, attrs, R.layout.preference_image_details);
         defaultActivity = ItemSelectActivity.BackupLocationActivity.class;
         requestCode = BACKUP_REQUEST_CODE;
     }
 
     @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        binding = DataBindingUtil.bind(view);
+    }
+
+    @Override
     protected void bindView() {
-        super.bindView();
-        setTitle(R.string.backup_location);
+        binding.name.setText(R.string.backup_location);
+        binding.summary.setText(item.getName());
+        binding.image.setImageDrawable(item.getDrawable(getContext()));
+        invalidate();
     }
 }

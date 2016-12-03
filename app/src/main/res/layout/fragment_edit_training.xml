@@ -111,7 +111,7 @@
 
                         <Button
                             android:id="@+id/change_target_face"
-                            style="@style/primary_text"
+                            style="@style/primaryText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
@@ -204,7 +204,7 @@
                         android:layout_height="wrap_content">
 
                         <Button
-                            style="@style/primary_text"
+                            style="@style/primaryText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?android:attr/selectableItemBackground"
@@ -223,7 +223,7 @@
                         android:layout_height="wrap_content">
 
                         <Button
-                            style="@style/primary_text"
+                            style="@style/primaryText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?android:attr/selectableItemBackground"

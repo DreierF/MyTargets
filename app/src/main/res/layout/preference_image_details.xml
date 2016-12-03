@@ -20,25 +20,42 @@
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:background="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
-        <TextView
-            android:id="@+id/passe"
-            style="@style/primaryText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="5dp"
-            android:clickable="false" />
+        <LinearLayout
+            android:layout_width="60dp"
+            android:layout_height="32dp">
 
-        <de.dreier.mytargets.views.PasseView
-            android:id="@+id/shoots"
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:clickable="false" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/name"
+                style="@style/primaryText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/summary"
+                style="@style/secondaryText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -307,30 +307,28 @@
         </provider>
         <provider
             android:name=".features.settings.backup.synchronization.StubProvider"
-            android:authorities="${applicationId}"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:syncable="true"/>
 
-        <service android:name=".features.settings.backup.synchronization.SyncService"
-                 android:exported="true">
-            <!-- This intent filter is required. It allows the system to launch our sync service
-            as needed. -->
+        <service
+            android:name=".features.settings.backup.synchronization.SyncService"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.content.SyncAdapter" />
+                <action android:name="android.content.SyncAdapter"/>
             </intent-filter>
-            <!-- This points to a required XML file which describes our SyncAdapter. -->
-            <meta-data android:name="android.content.SyncAdapter"
-                       android:resource="@xml/syncadapter" />
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter"/>
         </service>
 
         <service android:name=".features.settings.backup.synchronization.GenericAccountService">
-            <!-- Required filter used by the system to launch our account service. -->
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator" />
+                <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
-            <!-- This points to an XMLf ile which describes our account service. -->
-            <meta-data android:name="android.accounts.AccountAuthenticator"
-                       android:resource="@xml/authenticator" />
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator"/>
         </service>
 
     </application>

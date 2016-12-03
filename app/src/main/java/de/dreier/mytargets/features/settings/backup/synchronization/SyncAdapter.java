@@ -23,9 +23,8 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
-import de.dreier.mytargets.features.settings.backup.IBackup;
 import de.dreier.mytargets.features.settings.backup.BackupException;
-import de.dreier.mytargets.features.settings.backup.EBackupLocation;
+import de.dreier.mytargets.features.settings.backup.provider.IBlockingBackup;
 import de.dreier.mytargets.managers.SettingsManager;
 
 /**
@@ -64,15 +63,14 @@ class SyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
-        Log.i("SyncAdapter", "Beginning network synchronization");
-        EBackupLocation backupLocation = SettingsManager.getBackupLocation();
-        IBackup backup = backupLocation.createBackup();
+        Log.e("SyncAdapter", "Beginning network synchronization");
+        IBlockingBackup backup = SettingsManager.getBackupLocation().createBackup();
         try {
-            backup.doBackupBlocking(getContext());
+            backup.performBackup(getContext());
         } catch (BackupException e) {
             e.printStackTrace();
             syncResult.stats.numIoExceptions++;
         }
-        Log.i("SyncAdapter", "Network synchronization complete");
+        Log.e("SyncAdapter", "Network synchronization complete");
     }
 }

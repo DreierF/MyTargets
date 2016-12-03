@@ -303,7 +303,7 @@
     <string name="keyboard">Keyboard</string>
     <string name="backup_drive_desc">Backing up your data allows you to restore all your trainings in case you lost or change your phone.</string>
     <string name="backup_now">Backup now</string>
-    <string name="last_backup">Backed up %s</string>
+    <string name="last_backup">Last backup: %s</string>
     <string name="backup_folder">Backup folder</string>
     <string name="recent_backups">Recent backups</string>
     <string name="open_drive">Open drive</string>
@@ -329,4 +329,6 @@
     <string name="daily">Daily</string>
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
+    <string name="connection_failed">Connection failed!</string>
+    <string name="connecting">Connecting</string>
 </resources>

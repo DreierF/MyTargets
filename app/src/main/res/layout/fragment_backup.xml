@@ -31,33 +31,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
                 android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="@string/automatic_backup"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
-
-                    <Switch
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"/>
-
-                </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
+                    android:paddingTop="16dp"
                     android:text="@string/backup_drive_desc"/>
 
                 <Button
@@ -94,12 +76,50 @@
 
                 <include layout="@layout/partial_divider_full"/>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/automatic_backup"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
+
+                    <Switch
+                        android:id="@+id/automaticBackupSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"/>
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/backupIntervalLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/partial_divider_full"/>
+
+                    <include
+                        android:id="@+id/backupIntervalPreference"
+                        layout="@layout/preference_image_details"/>
+
+                </LinearLayout>
+
+                <include layout="@layout/partial_divider_full"/>
+
                 <de.dreier.mytargets.features.settings.backup.BackupLocationSelector
                     android:id="@+id/backup_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
-
-                <include layout="@layout/partial_divider_full"/>
 
                 <TextView
                     style="@style/Label"
@@ -107,7 +127,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
                     android:layout_marginBottom="0dp"
-                    android:text="@string/recent_backups"/>
+                    android:text="@string/recent_backups"
+                    android:textColor="@color/colorAccent"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recentBackupsList"

@@ -21,7 +21,7 @@ import android.preference.PreferenceManager;
 import org.parceler.ParcelClass;
 import org.parceler.ParcelClasses;
 
-import de.dreier.mytargets.features.settings.backup.EBackupLocation;
+import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.ArrowNumber;

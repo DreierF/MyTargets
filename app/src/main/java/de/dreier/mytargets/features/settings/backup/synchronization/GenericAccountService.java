@@ -26,11 +26,10 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import de.dreier.mytargets.ApplicationInstance;
-
 public class GenericAccountService extends Service {
     private static final String TAG = "GenericAccountService";
     public static final String ACCOUNT_NAME = "MyTargets";
+    private static final String ACCOUNT_TYPE = "mytargets.dreier.de";
     private Authenticator mAuthenticator;
 
     /**
@@ -40,7 +39,7 @@ public class GenericAccountService extends Service {
      *         has been called)
      */
     public static Account getAccount() {
-        return new Account(ACCOUNT_NAME, ApplicationInstance.getContext().getPackageName());
+        return new Account(ACCOUNT_NAME, ACCOUNT_TYPE);
     }
 
     @Override

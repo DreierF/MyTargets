@@ -22,8 +22,8 @@ import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
 
 import de.dreier.mytargets.ApplicationInstance;
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.settings.backup.EBackupLocation;
+import de.dreier.mytargets.features.settings.backup.EBackupInterval;
+import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.models.EShowMode;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
@@ -31,7 +31,6 @@ import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.views.TargetView.EKeyboardType;
 
-import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 
 public class SettingsManager {
@@ -44,8 +43,8 @@ public class SettingsManager {
     public static final String KEY_PROFILE_CLUB = "profile_club";
     public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
     public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
-    public static final String KEY_BACKUP_INTERVAL = "backup_interval";
     public static final String KEY_INPUT_KEYBOARD_TYPE = "input_keyboard_type";
+    private static final String KEY_BACKUP_INTERVAL = "backup_interval";
     private static final String KEY_DONATED = "donated";
     private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
     private static final String KEY_TIMER_SOUND = "timer_sound";
@@ -72,7 +71,8 @@ public class SettingsManager {
             .getSharedPreferences();
     private static final String KEY_BACKUP_LOCATION = "backup_location";
     private static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
-    private static final String KEY_DROPBOX_ACCESS_TOKEN = "access-token";
+    private static final String KEY_DROPBOX_ACCESS_TOKEN = "access_token";
+    private static final String KEY_BACKUP_AUTOMATICALLY = "backup_automatically";
 
     public static int getStandardRound() {
         return lastUsed.getInt(KEY_STANDARD_ROUND, 32);
@@ -304,8 +304,7 @@ public class SettingsManager {
     }
 
     public static void setProfileBirthDay(LocalDate birthDay) {
-        preferences
-                .edit()
+        preferences.edit()
                 .putString(KEY_PROFILE_BIRTHDAY, birthDay.toString())
                 .apply();
     }
@@ -366,25 +365,14 @@ public class SettingsManager {
                 .apply();
     }
 
-    public static int getBackupInterval() {
-        return Integer.parseInt(preferences.getString(KEY_BACKUP_INTERVAL, "7"));
+    public static EBackupInterval getBackupInterval() {
+        return EBackupInterval.valueOf(preferences.getString(KEY_BACKUP_INTERVAL, "WEEKLY"));
     }
 
-    public static void setBackupInterval(int interval) {
+    public static void setBackupInterval(EBackupInterval interval) {
         preferences.edit()
-                .putString(KEY_BACKUP_INTERVAL, String.valueOf(interval))
+                .putString(KEY_BACKUP_INTERVAL, interval.name())
                 .apply();
-    }
-
-    public static String getBackupIntervalString() {
-        switch (getBackupInterval()) {
-            case 1:
-                return get(R.string.daily);
-            case 7:
-                return get(R.string.weekly);
-            default:
-                return get(R.string.monthly);
-        }
     }
 
     public static String getDropboxAccessToken() {
@@ -394,6 +382,16 @@ public class SettingsManager {
     public static void setDropboxAccessToken(String accessToken) {
         preferences.edit()
                 .putString(KEY_DROPBOX_ACCESS_TOKEN, accessToken)
+                .apply();
+    }
+
+    public static boolean isBackupAutomaticallyEnabled() {
+        return preferences.getBoolean(KEY_BACKUP_AUTOMATICALLY, false);
+    }
+
+    public static void setBackupAutomaticallyEnabled(boolean enabled) {
+        preferences.edit()
+                .putBoolean(KEY_BACKUP_AUTOMATICALLY, enabled)
                 .apply();
     }
 }
