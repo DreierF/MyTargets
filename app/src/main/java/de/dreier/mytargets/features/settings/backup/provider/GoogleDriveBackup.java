@@ -89,10 +89,10 @@ public class GoogleDriveBackup {
                         .addOnConnectionFailedListener(result -> {
                             Log.i(TAG, "GoogleApiClient connection failed: " + result.toString());
                             if (!result.hasResolution()) {
-                                // show the localized error dialog.
                                 GoogleApiAvailability.getInstance()
                                         .getErrorDialog(activity, result.getErrorCode(), 0)
                                         .show();
+                                listener.onConnectionSuspended();
                                 return;
                             }
                             try {
@@ -210,8 +210,7 @@ public class GoogleDriveBackup {
                 throw new BackupException(connectionResult.getErrorMessage());
             }
 
-            DriveContentsResult result = Drive.DriveApi.newDriveContents(googleApiClient)
-                    .await();
+            DriveContentsResult result = Drive.DriveApi.newDriveContents(googleApiClient).await();
             if (!result.getStatus().isSuccess()) {
                 throw new BackupException(result.getStatus().getStatusMessage());
             }

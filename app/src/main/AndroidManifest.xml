@@ -277,10 +277,6 @@
         </activity>
         <activity android:name=".activities.DispersionPatternActivity"/>
         <activity
-            android:name=".activities.ItemSelectActivity$BackupLocationActivity"
-            android:label="@string/backup_location"
-            android:launchMode="singleTop"/>
-        <activity
             android:name="com.dropbox.core.android.AuthActivity"
             android:configChanges="orientation|keyboard"
             android:launchMode="singleTask">

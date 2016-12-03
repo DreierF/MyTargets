@@ -15,6 +15,7 @@ import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -80,13 +81,8 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
      * bar. If a sync is active or pending, the progress is shown.
      */
     private SyncStatusObserver mSyncStatusObserver = which -> getActivity().runOnUiThread(() -> {
-        // Create a handle to the account that was created by
-        // SyncService.createSyncAccount(). This will be used to query the system to
-        // see how the sync status has changed.
         Account account = GenericAccountService.getAccount();
 
-        // Test the ContentResolver to see if the sync adapter is active or pending.
-        // Set the state of the refresh button accordingly.
         boolean syncActive = ContentResolver.isSyncActive(account, BuildConfig.CONTENT_AUTHORITY);
         boolean syncPending = ContentResolver.isSyncPending(account, BuildConfig.CONTENT_AUTHORITY);
         boolean wasRefreshing = isRefreshing;
@@ -99,6 +95,20 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         }
     });
 
+    /**
+     * Create SyncAccount at launch, if needed.
+     * <p>
+     * <p>This will create a new account with the system for our application and register our
+     * {@link de.dreier.mytargets.features.settings.backup.synchronization.SyncService} with it.
+     */
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // Create account, if needed
+        SyncUtils.createSyncAccount(context);
+    }
+
     @Override
     public void onCreatePreferences() {
         /* Overridden to no do anything. Normally this would try to inflate the preferences,
@@ -110,28 +120,37 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_backup, container, false);
         ToolbarUtils.showHomeAsUp(this);
 
+        binding.backupNowButton.setOnClickListener(v -> SyncUtils.triggerBackup());
+
+        binding.automaticBackupSwitch.setOnClickListener(v -> onAutomaticBackupChanged());
+        updateAutomaticBackupSwitch();
+
+        binding.backupIntervalPreference.getRoot().setOnClickListener(view -> onBackupIntervalClicked());
+        binding.backupIntervalPreference.image.setImageResource(R.drawable.ic_query_builder_black_24dp);
+        binding.backupIntervalPreference.name.setText(R.string.backup_interval);
+        updateInterval();
+
+        binding.backupLocation.getRoot().setOnClickListener(v -> onBackupLocationClicked());
+        updateBackupLocation();
+
         binding.recentBackupsList.setNestedScrollingEnabled(false);
         binding.recentBackupsList.addItemDecoration(new DividerItemDecoration(getContext(), VERTICAL));
-        binding.backupLocation.setOnActivityResultContext(this);
-        binding.backupLocation.setOnUpdateListener(item -> {
-            SettingsManager.setBackupLocation(item);
-            if (backup != null) {
-                backup.stop();
-            }
-            setBackupLocation(item);
-        });
-        binding.backupIntervalPreference.name.setText(R.string.backup_interval);
-        binding.automaticBackupSwitch.setOnClickListener(v -> onAutomaticBackupChanged());
-        binding.backupNowButton.setOnClickListener(v -> backupNow());
 
-        boolean autoBackupEnabled = SettingsManager.isBackupAutomaticallyEnabled();
-        binding.automaticBackupSwitch.setChecked(autoBackupEnabled);
-        binding.backupIntervalLayout.setVisibility(autoBackupEnabled ? VISIBLE : GONE);
-        onAutomaticBackupChanged();
-        updateInterval();
-        binding.backupIntervalLayout.setOnClickListener(view -> onBackupIntervalClicked());
         setHasOptionsMenu(true);
         return binding.getRoot();
+    }
+
+    private void onAutomaticBackupChanged() {
+        boolean autoBackupEnabled = binding.automaticBackupSwitch.isChecked();
+        SettingsManager.setBackupAutomaticallyEnabled(autoBackupEnabled);
+        binding.backupIntervalLayout.setVisibility(autoBackupEnabled ? VISIBLE : GONE);
+        SyncUtils.setSyncAccountPeriodicSync(
+                autoBackupEnabled ? SettingsManager.getBackupInterval() : null);
+    }
+
+    private void updateAutomaticBackupSwitch() {
+        boolean autoBackupEnabled = SettingsManager.isBackupAutomaticallyEnabled();
+        binding.automaticBackupSwitch.setChecked(autoBackupEnabled);
     }
 
     private void onBackupIntervalClicked() {
@@ -149,49 +168,88 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
                 .show();
     }
 
-    private void onAutomaticBackupChanged() {
-        boolean autoBackupEnabled = binding.automaticBackupSwitch.isChecked();
-        binding.backupIntervalLayout.setVisibility(autoBackupEnabled ? VISIBLE : GONE);
-        SettingsManager.setBackupAutomaticallyEnabled(autoBackupEnabled);
-        SyncUtils.setSyncAccountPeriodicSync(
-                autoBackupEnabled ? SettingsManager.getBackupInterval() : null);
-    }
-
     private void updateInterval() {
+        boolean autoBackupEnabled = SettingsManager.isBackupAutomaticallyEnabled();
+        binding.backupIntervalLayout.setVisibility(autoBackupEnabled ? VISIBLE : GONE);
         binding.backupIntervalPreference.summary.setText(SettingsManager.getBackupInterval().toString());
     }
 
-    /**
-     * Create SyncAccount at launch, if needed.
-     * <p>
-     * <p>This will create a new account with the system for our application, register our
-     * {@link de.dreier.mytargets.features.settings.backup.synchronization.SyncService} with it,
-     * and establish a sync schedule.
-     */
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    private void onBackupLocationClicked() {
+        EBackupLocation item = SettingsManager.getBackupLocation();
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.backup_location)
+                .items(EBackupLocation.getList())
+                .itemsCallbackSingleChoice(EBackupLocation.getList().indexOf(item),
+                        (dialog, itemView, index, text) -> {
+                            EBackupLocation location = EBackupLocation.getList().get(index);
+                            if (backup != null) {
+                                backup.stop();
+                            }
+                            updateBackupLocation(location);
+                            return true;
+                        })
+                .show();
+    }
 
-        // Create account, if needed
-        SyncUtils.createSyncAccount(context);
+    private void updateBackupLocation(EBackupLocation item) {
+        if (item.needsStoragePermissions()) {
+            applyBackupLocationWithCheck(this, item);
+        } else {
+            applyBackupLocation(item);
+        }
+    }
+
+    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void applyBackupLocation(EBackupLocation item) {
+        backup = item.createAsyncRestore();
+        binding.recentBackupsProgress.setVisibility(VISIBLE);
+        binding.recentBackupsList.setVisibility(GONE);
+        adapter = new BackupAdapter(getContext(), this::showBackupDetails, this::deleteBackup);
+        binding.recentBackupsList.setAdapter(adapter);
+        backup.connect(getActivity(), new IAsyncBackupRestore.ConnectionListener() {
+            @Override
+            public void onConnected() {
+                Log.d(TAG, "onConnected: ");
+                SettingsManager.setBackupLocation(item);
+                updateBackupLocation();
+                backup.getBackups(BackupSettingsFragment.this);
+            }
+
+            @Override
+            public void onConnectionSuspended() {
+                showError(R.string.loading_backups_failed, getString(R.string.connection_failed));
+            }
+        });
+    }
+
+    private void updateBackupLocation() {
+        EBackupLocation backupLocation = SettingsManager.getBackupLocation();
+        binding.backupLocation.image.setImageResource(backupLocation.getDrawableRes());
+        binding.backupLocation.name.setText(R.string.backup_location);
+        binding.backupLocation.summary.setText(backupLocation.toString());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        EBackupLocation backupLocation = SettingsManager.getBackupLocation();
-        binding.backupLocation.setItem(backupLocation);
+        updateBackupLocation(SettingsManager.getBackupLocation());
 
         mSyncStatusObserver.onStatusChanged(0);
-
-        // Watch for sync state changes
-        final int mask = SYNC_OBSERVER_TYPE_PENDING | SYNC_OBSERVER_TYPE_ACTIVE;
-        mSyncObserverHandle = ContentResolver.addStatusChangeListener(mask, mSyncStatusObserver);
+        mSyncObserverHandle = ContentResolver.addStatusChangeListener(
+                SYNC_OBSERVER_TYPE_PENDING | SYNC_OBSERVER_TYPE_ACTIVE, mSyncStatusObserver);
     }
 
     @Override
-    protected void updateItemSummaries() {
-//        setSummary(SettingsManager.KEY_BACKUP_INTERVAL, SettingsManager.getBackupIntervalString());
+    public void onPause() {
+        Log.d(TAG, "onPause: ");
+        if (backup != null) {
+            backup.stop();
+        }
+        if (mSyncObserverHandle != null) {
+            ContentResolver.removeStatusChangeListener(mSyncObserverHandle);
+            mSyncObserverHandle = null;
+        }
+        super.onPause();
     }
 
     @Override
@@ -208,34 +266,15 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onPause() {
-        if (backup != null) {
-            backup.stop();
-        }
-        if (mSyncObserverHandle != null) {
-            ContentResolver.removeStatusChangeListener(mSyncObserverHandle);
-            mSyncObserverHandle = null;
-        }
-        super.onPause();
-    }
+    private static final String TAG = "BackupSettingsFragment";
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         backup.onActivityResult(requestCode, resultCode, data);
-        binding.backupLocation.onActivityResult(requestCode, resultCode, data);
         if (requestCode == IMPORT_FROM_URI && resultCode == AppCompatActivity.RESULT_OK) {
             importFromUri(data.getData());
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void setBackupLocation(EBackupLocation item) {
-        if (item.needsStoragePermissions()) {
-            applyBackupLocationWithCheck(this, item);
-        } else {
-            applyBackupLocation(item);
-        }
     }
 
     @Override
@@ -243,35 +282,15 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         getActivity().setTitle(R.string.backup_action);
     }
 
-    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void applyBackupLocation(EBackupLocation item) {
-        backup = item.createAsyncRestore();
-        adapter = new BackupAdapter(getContext(), this::showBackupDetails, this::deleteBackup);
-        binding.recentBackupsList.setAdapter(adapter);
-        backup.connect(getActivity(), new IAsyncBackupRestore.ConnectionListener() {
-            @Override
-            public void onConnected() {
-                backup.getBackups(BackupSettingsFragment.this);
-            }
-
-            @Override
-            public void onConnectionSuspended() {
-                showError(R.string.loading_backups_failed, getString(R.string.connection_failed));
-            }
-        });
-    }
-
     private void onBackupsLoaded(List<BackupEntry> list) {
+        binding.recentBackupsProgress.setVisibility(GONE);
+        binding.recentBackupsList.setVisibility(VISIBLE);
         adapter.setList(list);
         binding.lastBackupLabel.setVisibility(list.size() > 0 ? VISIBLE : GONE);
         if (list.size() > 0) {
             binding.lastBackupLabel.setText(getString(R.string.last_backup, DateUtils
                     .getRelativeTimeSpanString(list.get(0).getModifiedDate().getTime())));
         }
-    }
-
-    private void backupNow() {
-        SyncUtils.triggerBackup();
     }
 
     private void showError(@StringRes int title, String message) {

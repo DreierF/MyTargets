@@ -87,7 +87,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
-                        android:layout_gravity="center_vertical"
+                        android:layout_centerVertical="true"
                         android:text="@string/automatic_backup"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
 
@@ -116,10 +116,9 @@
 
                 <include layout="@layout/partial_divider_full"/>
 
-                <de.dreier.mytargets.features.settings.backup.BackupLocationSelector
-                    android:id="@+id/backup_location"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                <include
+                    android:id="@+id/backupLocation"
+                    layout="@layout/preference_image_details"/>
 
                 <TextView
                     style="@style/Label"
@@ -130,10 +129,19 @@
                     android:text="@string/recent_backups"
                     android:textColor="@color/colorAccent"/>
 
+                <ProgressBar
+                    android:id="@+id/recentBackupsProgress"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="16dp"/>
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recentBackupsList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     app:layoutManager="LinearLayoutManager"
                     tools:listitem="@layout/item_details_secondary_action"/>
 

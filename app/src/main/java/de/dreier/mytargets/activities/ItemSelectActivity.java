@@ -18,7 +18,6 @@ import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 
-import de.dreier.mytargets.features.settings.backup.BackupLocationListFragment;
 import de.dreier.mytargets.fragments.ArrowListFragment;
 import de.dreier.mytargets.fragments.BowListFragment;
 import de.dreier.mytargets.fragments.DistanceFragment;
@@ -91,13 +90,6 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivityBase
         @Override
         protected Fragment instantiateFragment() {
             return new WindSpeedListFragment();
-        }
-    }
-
-    public static class BackupLocationActivity extends ItemSelectActivity {
-        @Override
-        protected Fragment instantiateFragment() {
-            return new BackupLocationListFragment();
         }
     }
 }
