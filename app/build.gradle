@@ -38,7 +38,6 @@ android {
         versionName appVersionName
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary = true
-        multiDexEnabled true
     }
 
     dataBinding {
@@ -74,14 +73,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../proguard-rules.pro'
         }
     }
-
-    lintOptions {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
-    }
-
 
     productFlavors {
         regular {}

@@ -50,7 +50,8 @@ after_failure:
 - chmod +x dropbox_uploader.sh
 - cd app/build/reports/androidTests/connected/flavors/REGULAR/
 - zip -r reports.zip .
-- ./dropbox_uploader.sh upload reports.zip /Reports/$TRAVIS_JOB_NUMBER.zip
+- cd ../../../../../../..
+- ./dropbox_uploader.sh upload app/build/reports/androidTests/connected/flavors/REGULAR/reports.zip /Reports/$TRAVIS_JOB_NUMBER.zip
 deploy:
   provider: releases
   skip_cleanup: true
