@@ -34,7 +34,7 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/summary"
+            android:id="@+id/details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar"
