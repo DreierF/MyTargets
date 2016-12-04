@@ -42,6 +42,7 @@ public class SettingsActivityTest extends UITestBase {
         SettingsManager.setInputTargetZoom(3.0f);
         SettingsManager.setInputArrowDiameterScale(1.0f);
         //TODO reset settings
+        setLocale("en", "EN");
     }
 
     @Test
@@ -82,7 +83,7 @@ public class SettingsActivityTest extends UITestBase {
 
         clickOnPreference(3);
         enterDate(1990, 2, 11);
-        matchPreferenceSummary(3, "11.02.1990");
+        matchPreferenceSummary(3, "11 Feb 1990");
 
         clickOnPreference(4);
         enterText("Archery Club");
