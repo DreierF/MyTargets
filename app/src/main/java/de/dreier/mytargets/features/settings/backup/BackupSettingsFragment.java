@@ -34,7 +34,6 @@ import java.util.Locale;
 
 import de.dreier.mytargets.BuildConfig;
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.BackupAdapter;
 import de.dreier.mytargets.databinding.FragmentBackupBinding;
 import de.dreier.mytargets.features.settings.SettingsFragmentBase;
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;

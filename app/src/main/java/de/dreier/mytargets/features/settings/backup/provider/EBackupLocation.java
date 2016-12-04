@@ -28,9 +28,9 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.IIdProvider;
 
 public enum EBackupLocation implements IIdProvider {
-    INTERNAL_STORAGE(1, R.string.internal_storage, R.drawable.ic_phone_android_black_24dp),
+    INTERNAL_STORAGE(1, R.string.internal_storage, R.drawable.ic_phone_android_black_32dp),
     EXTERNAL_STORAGE(2, R.string.external_storage, R.drawable.ic_micro_sd_card_24dp),
-    GOOGLE_DRIVE(3, R.string.google_drive, R.drawable.ic_google_drive_24dp);
+    GOOGLE_DRIVE(3, R.string.google_drive, R.drawable.ic_google_drive_black_24dp);
 
     int id;
     int drawable;

@@ -217,10 +217,6 @@ dependencies {
 
     compile 'com.makeramen:roundedimageview:2.2.1'
 
-    compile(name: 'dropbox-android-core-2-1-2', ext: 'aar')
-    compile 'com.fasterxml.jackson.core:jackson-core:2.8.5'
-    compile 'javax.servlet:servlet-api:2.5'
-
     compile project(':shared')
     wearApp project(':wearable')
 
