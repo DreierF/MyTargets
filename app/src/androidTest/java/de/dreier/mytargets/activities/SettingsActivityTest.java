@@ -87,7 +87,7 @@ public class SettingsActivityTest extends UITestBase {
         clickOnPreference(3);
         enterDate(1990, 2, 11);
         matchPreferenceSummary(3, DateFormat.getDateFormat(
-                InstrumentationRegistry.getTargetContext()).format(new Date(90, 2, 11)));
+                InstrumentationRegistry.getTargetContext()).format(new Date(90, 1, 11)));
 
         clickOnPreference(4);
         enterText("Archery Club");
