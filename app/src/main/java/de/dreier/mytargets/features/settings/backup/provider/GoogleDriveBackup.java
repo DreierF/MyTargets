@@ -108,12 +108,8 @@ public class GoogleDriveBackup {
 
         @Override
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            switch (requestCode) {
-                case REQUEST_CODE_RESOLUTION:
-                    if (resultCode == RESULT_OK) {
-                        googleApiClient.connect();
-                    }
-                    break;
+            if (requestCode == REQUEST_CODE_RESOLUTION && resultCode == RESULT_OK) {
+                googleApiClient.connect();
             }
         }
 

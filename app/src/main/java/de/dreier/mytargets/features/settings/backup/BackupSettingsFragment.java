@@ -15,7 +15,6 @@ import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -208,7 +207,6 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         backup.connect(getActivity(), new IAsyncBackupRestore.ConnectionListener() {
             @Override
             public void onConnected() {
-                Log.d(TAG, "onConnected: ");
                 SettingsManager.setBackupLocation(item);
                 updateBackupLocation();
                 backup.getBackups(BackupSettingsFragment.this);
@@ -240,7 +238,6 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
 
     @Override
     public void onPause() {
-        Log.d(TAG, "onPause: ");
         if (backup != null) {
             backup.stop();
         }
@@ -264,8 +261,6 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         }
         return super.onOptionsItemSelected(item);
     }
-
-    private static final String TAG = "BackupSettingsFragment";
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
