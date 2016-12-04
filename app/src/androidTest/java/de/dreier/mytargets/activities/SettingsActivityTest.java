@@ -1,13 +1,17 @@
 package de.dreier.mytargets.activities;
 
 
+import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.text.format.DateFormat;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.Date;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
@@ -42,7 +46,6 @@ public class SettingsActivityTest extends UITestBase {
         SettingsManager.setInputTargetZoom(3.0f);
         SettingsManager.setInputArrowDiameterScale(1.0f);
         //TODO reset settings
-        setLocale("en", "EN");
     }
 
     @Test
@@ -83,7 +86,8 @@ public class SettingsActivityTest extends UITestBase {
 
         clickOnPreference(3);
         enterDate(1990, 2, 11);
-        matchPreferenceSummary(3, "11 Feb 1990");
+        matchPreferenceSummary(3, DateFormat.getDateFormat(
+                InstrumentationRegistry.getTargetContext()).format(new Date(1990, 2, 11)));
 
         clickOnPreference(4);
         enterText("Archery Club");
