@@ -45,7 +45,6 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.Espresso.openContextualActionModeOverflowMenu;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -170,6 +169,6 @@ public class UITestBase extends InstrumentedTestBase {
     protected void enterDate(int year, int monthOfYear, int dayOfMonth) {
         onView(withClassName(equalTo(DatePicker.class.getName())))
                 .perform(PickerActions.setDate(year, monthOfYear, dayOfMonth));
-        onView(withId(android.R.id.button1)).perform(nestedScrollTo(), click());
+        onView(withId(android.R.id.button1)).perform(click());
     }
 }
