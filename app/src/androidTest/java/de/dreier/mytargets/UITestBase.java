@@ -170,6 +170,6 @@ public class UITestBase extends InstrumentedTestBase {
     protected void enterDate(int year, int monthOfYear, int dayOfMonth) {
         onView(withClassName(equalTo(DatePicker.class.getName())))
                 .perform(PickerActions.setDate(year, monthOfYear, dayOfMonth));
-        onView(withId(android.R.id.button1)).perform(scrollTo(), click());
+        onView(withId(android.R.id.button1)).perform(nestedScrollTo(), click());
     }
 }
