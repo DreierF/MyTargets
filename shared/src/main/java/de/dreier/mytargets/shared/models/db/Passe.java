@@ -27,7 +27,6 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.utils.DateTimeConverter;
-import de.dreier.mytargets.shared.utils.Pair;
 
 @Parcel
 @Table(database = AppDatabase.class, name = "PASSE")

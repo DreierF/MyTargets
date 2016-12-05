@@ -22,6 +22,8 @@ import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
 
 import de.dreier.mytargets.ApplicationInstance;
+import de.dreier.mytargets.features.settings.backup.EBackupInterval;
+import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.models.EShowMode;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
@@ -41,6 +43,8 @@ public class SettingsManager {
     public static final String KEY_PROFILE_CLUB = "profile_club";
     public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
     public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
+    public static final String KEY_INPUT_KEYBOARD_TYPE = "input_keyboard_type";
+    private static final String KEY_BACKUP_INTERVAL = "backup_interval";
     private static final String KEY_DONATED = "donated";
     private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
     private static final String KEY_TIMER_SOUND = "timer_sound";
@@ -61,77 +65,81 @@ public class SettingsManager {
     private static final String KEY_TRANSLATION_DIALOG_SHOWN = "translation_dialog_shown";
     private static final String KEY_INPUT_MODE = "target_mode";
     private static final String KEY_SHOW_MODE = "show_mode";
-    private static final SharedPreferences preferences = ApplicationInstance
+    private static final SharedPreferences lastUsed = ApplicationInstance
             .getLastSharedPreferences();
+    private static final SharedPreferences preferences = ApplicationInstance
+            .getSharedPreferences();
+    private static final String KEY_BACKUP_LOCATION = "backup_location";
     private static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
-    public static final String KEY_INPUT_KEYBOARD_TYPE = "input_keyboard_type";
+    private static final String KEY_DROPBOX_ACCESS_TOKEN = "access_token";
+    private static final String KEY_BACKUP_AUTOMATICALLY = "backup_automatically";
 
     public static int getStandardRound() {
-        return preferences.getInt(KEY_STANDARD_ROUND, 32);
+        return lastUsed.getInt(KEY_STANDARD_ROUND, 32);
     }
 
     public static void setStandardRound(long id) {
-        preferences.edit()
+        lastUsed.edit()
                 .putInt(KEY_STANDARD_ROUND, (int) id)
                 .apply();
     }
 
     public static int getArrow() {
-        return preferences.getInt(KEY_ARROW, -1);
+        return lastUsed.getInt(KEY_ARROW, -1);
     }
 
     public static void setArrow(long id) {
-        preferences.edit()
+        lastUsed.edit()
                 .putInt(KEY_ARROW, (int) id)
                 .apply();
     }
 
     public static int getBow() {
-        return preferences.getInt(KEY_BOW, -1);
+        return lastUsed.getInt(KEY_BOW, -1);
     }
 
     public static void setBow(long id) {
-        preferences.edit()
+        lastUsed.edit()
                 .putInt(KEY_BOW, (int) id)
                 .apply();
     }
 
     public static Dimension getDistance() {
-        int distance = preferences.getInt(KEY_DISTANCE_VALUE, 10);
-        String unit = preferences.getString(KEY_DISTANCE_UNIT, "m");
+        int distance = lastUsed.getInt(KEY_DISTANCE_VALUE, 10);
+        String unit = lastUsed.getString(KEY_DISTANCE_UNIT, "m");
         return new Dimension(distance, unit);
     }
 
     public static void setDistance(Dimension distance) {
-        preferences.edit()
+        lastUsed.edit()
                 .putInt(KEY_DISTANCE_VALUE, (int) distance.value)
                 .putString(KEY_DISTANCE_UNIT, Dimension.Unit.toStringHandleNull(distance.unit))
                 .apply();
     }
 
     public static int getArrowsPerPasse() {
-        return preferences.getInt(KEY_ARROWS_PER_PASSE, 3);
+        return lastUsed.getInt(KEY_ARROWS_PER_PASSE, 3);
     }
 
     public static void setArrowsPerEnd(int arrowsPerPasse) {
-        preferences.edit()
+        lastUsed.edit()
                 .putInt(KEY_ARROWS_PER_PASSE, arrowsPerPasse)
                 .apply();
     }
 
     public static Target getTarget() {
-        final int targetId = preferences.getInt(KEY_TARGET, 0);
-        final int scoringStyle = preferences.getInt(KEY_SCORING_STYLE, 0);
-        final int diameterValue = preferences.getInt(KEY_TARGET_DIAMETER_VALUE, 60);
-        final String diameterUnit = preferences
+        final int targetId = lastUsed.getInt(KEY_TARGET, 0);
+        final int scoringStyle = lastUsed.getInt(KEY_SCORING_STYLE, 0);
+        final int diameterValue = lastUsed.getInt(KEY_TARGET_DIAMETER_VALUE, 60);
+        final String diameterUnit = lastUsed
                 .getString(KEY_TARGET_DIAMETER_UNIT, CENTIMETER.toString());
         final Dimension diameter = new Dimension(diameterValue, diameterUnit);
         return new Target(targetId, scoringStyle, diameter);
     }
 
     public static void setTarget(Target target) {
-        preferences.edit()
-                .putInt(KEY_TARGET, (int)(long)target.getId())
+        lastUsed.edit()
+                .putInt(KEY_TARGET, (long) target.getId())
                 .putInt(KEY_SCORING_STYLE, target.scoringStyle)
                 .putInt(KEY_TARGET_DIAMETER_VALUE, (int) target.size.value)
                 .putString(KEY_TARGET_DIAMETER_UNIT,
@@ -140,85 +148,85 @@ public class SettingsManager {
     }
 
     public static boolean getTimerEnabled() {
-        return preferences.getBoolean(KEY_TIMER, false);
+        return lastUsed.getBoolean(KEY_TIMER, false);
     }
 
     public static void setTimerEnabled(boolean enabled) {
-        preferences.edit()
+        lastUsed.edit()
                 .putBoolean(KEY_TIMER, enabled)
                 .apply();
     }
 
     public static boolean getArrowNumbersEnabled() {
-        return preferences.getBoolean(KEY_NUMBERING_ENABLED, true);
+        return lastUsed.getBoolean(KEY_NUMBERING_ENABLED, true);
     }
 
     public static void setArrowNumbersEnabled(boolean enabled) {
-        preferences.edit()
+        lastUsed.edit()
                 .putBoolean(KEY_NUMBERING_ENABLED, enabled)
                 .apply();
     }
 
     public static boolean getIndoor() {
-        return preferences.getBoolean(KEY_INDOOR, false);
+        return lastUsed.getBoolean(KEY_INDOOR, false);
     }
 
     public static void setIndoor(boolean indoor) {
-        preferences.edit()
+        lastUsed.edit()
                 .putBoolean(KEY_INDOOR, indoor)
                 .apply();
     }
 
     public static int getPasses() {
-        return preferences.getInt(KEY_PASSES, 10);
+        return lastUsed.getInt(KEY_PASSES, 10);
     }
 
     public static void setPasses(int passes) {
-        preferences.edit()
+        lastUsed.edit()
                 .putInt(KEY_PASSES, passes)
                 .apply();
     }
 
     public static boolean getTranslationDialogWasShown() {
-        SharedPreferences prefs = ApplicationInstance.getSharedPreferences();
+        SharedPreferences prefs = preferences;
         return prefs.getBoolean(KEY_TRANSLATION_DIALOG_SHOWN, false);
     }
 
     public static void setTranslationDialogWasShown(boolean shown) {
-        ApplicationInstance.getSharedPreferences()
+        preferences
                 .edit()
                 .putBoolean(KEY_TRANSLATION_DIALOG_SHOWN, shown)
                 .apply();
     }
 
     public static TargetViewBase.EInputMethod getInputMethod() {
-        return ApplicationInstance.getSharedPreferences()
+        return preferences
                 .getBoolean(KEY_INPUT_MODE, false)
                 ? TargetViewBase.EInputMethod.KEYBOARD
                 : TargetViewBase.EInputMethod.PLOTTING;
     }
 
     public static void setInputMethod(TargetViewBase.EInputMethod inputMethod) {
-        ApplicationInstance.getSharedPreferences()
+        preferences
                 .edit()
                 .putBoolean(KEY_INPUT_MODE, inputMethod == TargetViewBase.EInputMethod.KEYBOARD)
                 .apply();
     }
 
     public static void setDonated(boolean donated) {
-        ApplicationInstance.getSharedPreferences()
+        preferences
                 .edit()
                 .putBoolean(KEY_DONATED, donated)
                 .apply();
     }
 
     public static EShowMode getShowMode() {
-        return EShowMode.valueOf(ApplicationInstance.getSharedPreferences()
+        return EShowMode.valueOf(preferences
                 .getString(KEY_SHOW_MODE, EShowMode.END.toString()));
     }
 
     public static void setShowMode(EShowMode showMode) {
-        ApplicationInstance.getSharedPreferences()
+        preferences
                 .edit()
                 .putString(KEY_SHOW_MODE, showMode.toString())
                 .apply();
@@ -237,12 +245,12 @@ public class SettingsManager {
     }
 
     public static boolean getTimerVibrate() {
-        return ApplicationInstance.getSharedPreferences()
+        return preferences
                 .getBoolean(KEY_TIMER_VIBRATE, false);
     }
 
     public static boolean getTimerSoundEnabled() {
-        return ApplicationInstance.getSharedPreferences()
+        return preferences
                 .getBoolean(KEY_TIMER_SOUND, true);
     }
 
@@ -259,7 +267,7 @@ public class SettingsManager {
     }
 
     private static int getPrefTime(String key, int def) {
-        SharedPreferences prefs = ApplicationInstance.getSharedPreferences();
+        SharedPreferences prefs = preferences;
         try {
             return Integer.parseInt(prefs.getString(key, String.valueOf(def)));
         } catch (NumberFormatException e) {
@@ -268,12 +276,12 @@ public class SettingsManager {
     }
 
     public static String getProfileFirstName() {
-        return ApplicationInstance.getSharedPreferences()
+        return preferences
                 .getString(KEY_PROFILE_FIRST_NAME, "");
     }
 
     public static String getProfileLastName() {
-        return ApplicationInstance.getSharedPreferences()
+        return preferences
                 .getString(KEY_PROFILE_LAST_NAME, "");
     }
 
@@ -282,12 +290,12 @@ public class SettingsManager {
     }
 
     public static String getProfileClub() {
-        return ApplicationInstance.getSharedPreferences()
+        return preferences
                 .getString(KEY_PROFILE_CLUB, "");
     }
 
     private static LocalDate getProfileBirthDay() {
-        String date = ApplicationInstance.getSharedPreferences()
+        String date = preferences
                 .getString(KEY_PROFILE_BIRTHDAY, "");
         if (date.isEmpty()) {
             return null;
@@ -296,8 +304,7 @@ public class SettingsManager {
     }
 
     public static void setProfileBirthDay(LocalDate birthDay) {
-        ApplicationInstance.getSharedPreferences()
-                .edit()
+        preferences.edit()
                 .putString(KEY_PROFILE_BIRTHDAY, birthDay.toString())
                 .apply();
     }
@@ -319,17 +326,72 @@ public class SettingsManager {
     }
 
     public static float getInputArrowDiameterScale() {
-        return Float.parseFloat(ApplicationInstance.getSharedPreferences()
+        return Float.parseFloat(preferences
                 .getString(KEY_INPUT_ARROW_DIAMETER_SCALE, "1.0"));
     }
 
+    public static void setInputArrowDiameterScale(float diameterScale) {
+        preferences.edit()
+                .putString(KEY_INPUT_ARROW_DIAMETER_SCALE, String.valueOf(diameterScale))
+                .apply();
+    }
+
     public static float getInputTargetZoom() {
-        return Float.parseFloat(ApplicationInstance.getSharedPreferences()
+        return Float.parseFloat(preferences
                 .getString(KEY_INPUT_TARGET_ZOOM, "3.0"));
+    }
+
+    public static void setInputTargetZoom(float targetZoom) {
+        preferences.edit()
+                .putString(KEY_INPUT_TARGET_ZOOM, String.valueOf(targetZoom))
+                .apply();
     }
 
     public static EKeyboardType getInputKeyboardType() {
         return EKeyboardType.valueOf(ApplicationInstance.getSharedPreferences()
                 .getString(KEY_INPUT_KEYBOARD_TYPE, EKeyboardType.RIGHT.toString()));
+    }
+
+    public static EBackupLocation getBackupLocation() {
+        final String defaultLocation = EBackupLocation.INTERNAL_STORAGE.name();
+        String location = preferences.getString(KEY_BACKUP_LOCATION, defaultLocation);
+        return EBackupLocation.valueOf(location);
+    }
+
+    public static void setBackupLocation(EBackupLocation location) {
+        preferences
+                .edit()
+                .putString(KEY_BACKUP_LOCATION, location.name())
+                .apply();
+    }
+
+    public static EBackupInterval getBackupInterval() {
+        return EBackupInterval.valueOf(preferences.getString(KEY_BACKUP_INTERVAL, "WEEKLY"));
+    }
+
+    public static void setBackupInterval(EBackupInterval interval) {
+        preferences.edit()
+                .putString(KEY_BACKUP_INTERVAL, interval.name())
+                .apply();
+    }
+
+    public static String getDropboxAccessToken() {
+        return preferences.getString(KEY_DROPBOX_ACCESS_TOKEN, null);
+    }
+
+    public static void setDropboxAccessToken(String accessToken) {
+        preferences.edit()
+                .putString(KEY_DROPBOX_ACCESS_TOKEN, accessToken)
+                .apply();
+    }
+
+    public static boolean isBackupAutomaticallyEnabled() {
+        return preferences.getBoolean(KEY_BACKUP_AUTOMATICALLY, false);
+    }
+
+    public static void setBackupAutomaticallyEnabled(boolean enabled) {
+        preferences.edit()
+                .putBoolean(KEY_BACKUP_AUTOMATICALLY, enabled)
+                .apply();
     }
 }

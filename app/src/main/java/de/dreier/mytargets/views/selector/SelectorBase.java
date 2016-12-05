@@ -37,21 +37,23 @@ import de.dreier.mytargets.utils.IntentWrapper;
 import icepick.Icepick;
 import icepick.State;
 
+import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
+
 public abstract class SelectorBase<T> extends LinearLayout {
 
     public static final String INDEX = "index";
     private final int layout;
     protected View view;
-    protected Fragment fragment;
+    protected int requestCode;
+    protected Class<?> defaultActivity;
     @State(ParcelsBundler.class)
+    protected
     T item = null;
-    int requestCode;
-    Class<?> defaultActivity;
-    Class<?> addActivity;
     private Button addButton;
     private View progress;
     private OnUpdateListener<T> updateListener;
     private int index = -1;
+    private IntentWrapper addIntent;
 
     public SelectorBase(Context context, AttributeSet attrs, @LayoutRes int layout) {
         super(context, attrs);
@@ -63,7 +65,7 @@ public abstract class SelectorBase<T> extends LinearLayout {
         super.onFinishInflate();
         addButton = (Button) getChildAt(0);
         if (addButton != null) {
-            addButton.setOnClickListener(v -> onAddButtonClicked());
+            addButton.setOnClickListener(v -> addIntent.start());
         }
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -72,9 +74,6 @@ public abstract class SelectorBase<T> extends LinearLayout {
         addView(progress);
         addView(view);
         updateView();
-    }
-
-    protected void onAddButtonClicked() {
     }
 
     private void updateView() {
@@ -93,17 +92,17 @@ public abstract class SelectorBase<T> extends LinearLayout {
         this.index = index;
     }
 
-    Intent getDefaultIntent() {
-        Intent i = new Intent(getContext(), defaultActivity);
-        i.putExtra(ItemSelectActivity.ITEM, Parcels.wrap(getSelectedItem()));
+    protected IntentWrapper getDefaultIntent() {
+        IntentWrapper i = new IntentWrapper(defaultActivity)
+                .with(ITEM, Parcels.wrap(getSelectedItem()));
         if (index != -1) {
-            i.putExtra(INDEX, index);
+            i.with(INDEX, index);
         }
         return i;
     }
 
-    Intent getAddIntent() {
-        return new Intent(getContext(), addActivity);
+    protected IntentWrapper getAddIntent() {
+        return null;
     }
 
     protected abstract void bindView();
@@ -124,17 +123,31 @@ public abstract class SelectorBase<T> extends LinearLayout {
         this.updateListener = updateListener;
     }
 
-    public void setOnActivityResultContext(Fragment fragment) {
-        this.fragment = fragment;
-        setOnClickListener(v -> new IntentWrapper(fragment, getDefaultIntent())
-                .startForResult(requestCode));
+    public final void setOnActivityResultContext(Fragment fragment) {
+        if (addButton != null) {
+            addIntent = getAddIntent().withContext(fragment);
+        }
+        setOnClickListener(v -> getDefaultIntent()
+                .withContext(fragment)
+                .forResult(requestCode)
+                .start());
+    }
+
+    public final void setOnActivityResultContext(Activity activity) {
+        if (addButton != null) {
+            addIntent = getAddIntent().withContext(activity);
+        }
+        setOnClickListener(v -> getDefaultIntent()
+                .withContext(activity)
+                .forResult(requestCode)
+                .start());
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode == this.requestCode) {
             Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
             if (index == -1 || (intentData != null && intentData.getInt(INDEX) == index)) {
-                final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
+                final Parcelable parcelable = data.getParcelableExtra(ITEM);
                 setItem(Parcels.unwrap(parcelable));
             }
         }

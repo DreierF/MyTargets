@@ -37,19 +37,18 @@ import de.dreier.mytargets.databinding.ItemDistanceBinding;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Dimension.Unit;
 import de.dreier.mytargets.utils.DistanceInputDialog;
-import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import de.dreier.mytargets.views.CardItemDecorator;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class DistanceGridFragment extends SelectItemFragment<Dimension> implements DistanceInputDialog.OnClickListener {
+public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> implements DistanceInputDialog.OnClickListener {
 
     private static final String DISTANCE_UNIT = "distance_unit";
     protected FragmentListBinding binding;
     private Dimension distance;
     private Unit unit;
-    private SelectItemFragment.OnItemSelectedListener listener;
 
     public static DistanceGridFragment newInstance(Dimension distance, Unit unit) {
         DistanceGridFragment fragment = new DistanceGridFragment();
@@ -98,11 +97,12 @@ public class DistanceGridFragment extends SelectItemFragment<Dimension> implemen
             this.listener = (SelectItemFragment.OnItemSelectedListener) activity;
         }
         Assert.assertNotNull(listener);
+// TODO check if this works or is necessary
     }
 
     @Override
-    public void onLongClick(SelectableViewHolder holder) {
-        onClick(holder, (Dimension) holder.getItem());
+    public void onLongClick(SelectableViewHolder<Dimension> holder) {
+        onClick(holder, holder.getItem());
     }
 
     @NonNull

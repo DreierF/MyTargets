@@ -18,6 +18,9 @@ package de.dreier.mytargets.managers;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,8 +28,11 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.List;
 
 import de.dreier.mytargets.InstrumentedTestBase;
+import de.dreier.mytargets.managers.dao.RoundDataSource;
+import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.utils.rules.MiniDbTestRule;
 
 @SmallTest
@@ -34,18 +40,6 @@ import de.dreier.mytargets.utils.rules.MiniDbTestRule;
 public class ExportTest extends InstrumentedTestBase {
 
     private static final String EXPECTED = "\"Title\";\"Date\";\"Standard round\";\"Indoor\";\"Bow\";\"Arrow\";\"Round\";\"Distance\";\"Target\";\"End\";\"Timestamp\";\"Points\";\"x\";\"y\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"1\";\"14:09:48\";\"8\";\"0.0\";\"0.0\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"1\";\"14:09:48\";\"8\";\"0.0\";\"0.0\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"1\";\"14:09:48\";\"8\";\"0.0\";\"0.0\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"1\";\"14:09:48\";\"7\";\"0.0\";\"0.0\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"1\";\"14:09:48\";\"8\";\"0.0\";\"0.0\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"1\";\"14:09:48\";\"X\";\"0.0\";\"0.0\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"2\";\"14:47:31\";\"8\";\"0.0\";\"0.0\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"2\";\"14:47:31\";\"9\";\"0.0\";\"0.0\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"2\";\"14:47:31\";\"7\";\"0.0\";\"0.0\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"2\";\"14:47:31\";\"10\";\"0.0\";\"0.0\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"2\";\"14:47:31\";\"X\";\"0.0\";\"0.0\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"2\";\"14:47:31\";\"8\";\"0.0\";\"0.0\"\n" +
             "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"2\";\"30m\";\"WA Full (122cm)\";\"1\";\"14:07:13\";\"7\";\"0.0\";\"0.0\"\n" +
             "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"2\";\"30m\";\"WA Full (122cm)\";\"1\";\"14:07:13\";\"7\";\"0.0\";\"0.0\"\n" +
             "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"2\";\"30m\";\"WA Full (122cm)\";\"1\";\"14:07:13\";\"10\";\"0.0\";\"0.0\"\n" +
@@ -89,7 +83,12 @@ public class ExportTest extends InstrumentedTestBase {
     public void testDataExport() throws IOException {
         setLocale("en", "EN");
         final StringWriter writer = new StringWriter();
-        CsvExporter.writeExportData(writer);
+        List<Long> roundIds = Stream.of(Round.getAll())
+                .map(Round::getId)
+                .sorted()
+                .collect(Collectors.toList());
+        roundIds.remove(0);
+        CsvExporter.writeExportData(writer, roundIds);
         Assert.assertEquals(EXPECTED, writer.toString());
     }
 }

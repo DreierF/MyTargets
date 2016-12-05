@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -61,16 +60,14 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     }
 
     @NonNull
-    protected static IntentWrapper createIntent(Fragment fragment) {
-        return new IntentWrapper(fragment, SimpleFragmentActivityBase.EditArrowActivity.class);
+    public static IntentWrapper createIntent() {
+        return new IntentWrapper(SimpleFragmentActivityBase.EditArrowActivity.class);
     }
 
     @NonNull
-    static IntentWrapper editIntent(Fragment fragment, Arrow arrow) {
-        Intent i = new Intent(fragment.getContext(),
-                SimpleFragmentActivityBase.EditArrowActivity.class);
-        i.putExtra(ARROW_ID, arrow.getId());
-        return new IntentWrapper(fragment, i);
+    public static IntentWrapper editIntent(Arrow arrow) {
+        return new IntentWrapper(SimpleFragmentActivityBase.EditArrowActivity.class)
+                .with(ARROW_ID, arrow.getId());
     }
 
     @Override

@@ -15,6 +15,7 @@
 package de.dreier.mytargets.fragments;
 
 import android.support.annotation.PluralsRes;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -31,19 +32,47 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.interfaces.ItemAdapter;
 import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.utils.OnItemClickListener;
 import de.dreier.mytargets.utils.SelectorBundler;
 import de.dreier.mytargets.utils.multiselector.MultiSelector;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import icepick.State;
+/**
+ *
+ *
+ * @param <T> Model of the item which is managed within the fragment.*/
+public abstract class EditableListFragmentBase<T extends IIdSettable & Model> extends ListFragmentBase<T> {
 
-abstract class EditableListFragmentBase<T extends IIdSettable & Model> extends ListFragmentBase<T> {
+    protected static final String ITEM_ID = "id";
 
     protected boolean supportsStatistics = false;
     protected boolean supportsDeletion = true;
     @State(SelectorBundler.class)
     MultiSelector mSelector = new MultiSelector();
+
+    /**
+     * Resource describing FAB action
+     */
+    @StringRes
+    int newStringRes;
+
+    /**
+     * Resource used to set title when items are selected.
+     */
+    @PluralsRes
+    int itemTypeSelRes;
+
+    /**
+     * Resource used to set title when items are deleted.
+     */
     @PluralsRes
     int itemTypeDelRes;
+
+    /**
+     * Action mode manager
+     */
+    ActionMode actionMode = null;
+    IdProviderDataSource<T> dataSource;
 
     private final ActionMode.Callback mDeleteMode = new ActionMode.Callback() {
 

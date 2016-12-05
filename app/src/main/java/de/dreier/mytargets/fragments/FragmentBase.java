@@ -16,6 +16,7 @@
 package de.dreier.mytargets.fragments;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
@@ -29,6 +30,11 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.utils.Utils;
 import icepick.Icepick;
 
+/**
+ * Generic fragment class used as base for most fragments.
+ * Has Icepick build in to save state on orientation change
+ * and animates activity when #finish gets called.
+ */
 public abstract class FragmentBase extends Fragment implements LoaderManager.LoaderCallbacks<FragmentBase.LoaderUICallback> {
 
     @Override

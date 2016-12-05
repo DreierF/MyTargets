@@ -49,7 +49,8 @@ public class ArrowListFragment extends EditableListFragment<Arrow> {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.fab.setOnClickListener(
-                view1 -> EditArrowFragment.createIntent(this)
+                view1 -> EditArrowFragment.createIntent()
+                        .withContext(this)
                         .fromFab(binding.fab)
                         .start());
     }
@@ -76,13 +77,15 @@ public class ArrowListFragment extends EditableListFragment<Arrow> {
 
     @Override
     protected void onEdit(Arrow item) {
-        EditArrowFragment.editIntent(this, item)
+        EditArrowFragment.editIntent(item)
+                .withContext(this)
                 .start();
     }
 
     @Override
     protected void onItemSelected(Arrow item) {
-        EditArrowFragment.editIntent(this, item)
+        EditArrowFragment.editIntent(item)
+                .withContext(this)
                 .start();
     }
 

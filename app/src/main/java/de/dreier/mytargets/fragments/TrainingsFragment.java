@@ -43,7 +43,8 @@ import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.multiselector.HeaderBindingHolder;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
-import static de.dreier.mytargets.models.ETrainingType.TRAINING_WITH_STANDARD_ROUND;
+import static de.dreier.mytargets.fragments.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION;
+import static de.dreier.mytargets.fragments.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION;
 
 
 /**
@@ -73,12 +74,14 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         mAdapter = new TrainingAdapter();
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
-        binding.fab1.setOnClickListener(
-                view -> EditTrainingFragment.createIntent(this, ETrainingType.FREE_TRAINING)
-                        .fromFab(binding.fab1, 0xFF4CAF50, R.drawable.fab_trending_up_white_24dp)
-                        .start());
-        binding.fab2.setOnClickListener(view -> EditTrainingFragment.createIntent(
-                this, TRAINING_WITH_STANDARD_ROUND)
+        binding.fab1.setOnClickListener(view -> EditTrainingFragment
+                .createIntent(CREATE_FREE_TRAINING_ACTION)
+                .withContext(this)
+                .fromFab(binding.fab1, 0xFF4CAF50, R.drawable.fab_trending_up_white_24dp)
+                .start());
+        binding.fab2.setOnClickListener(view -> EditTrainingFragment
+                .createIntent(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
+                .withContext(this)
                 .fromFab(binding.fab2, 0xFF2196F3, R.drawable.fab_album_24dp)
                 .start());
         return binding.getRoot();
@@ -86,7 +89,8 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
 
     @Override
     public void onSelected(Training item) {
-        TrainingFragment.getIntent(this, item)
+        TrainingFragment.getIntent(item)
+                .withContext(this)
                 .start();
     }
 
@@ -95,12 +99,15 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         StatisticsActivity.getIntent(this, Stream.of(trainings)
                 .flatMap(t -> Stream.of(t.getRounds()))
                 .map(Round::getId)
-                .collect(Collectors.toList())).start();
+                .collect(Collectors.toList()))
+                .withContext(this)
+                .start();
     }
 
     @Override
     protected void onEdit(final Training item) {
-        EditTrainingFragment.editIntent(this, item)
+        EditTrainingFragment.editIntent(item)
+                .withContext(this)
                 .start();
     }
 

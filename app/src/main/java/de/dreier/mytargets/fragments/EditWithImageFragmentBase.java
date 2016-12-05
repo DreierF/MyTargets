@@ -40,6 +40,7 @@ import java.io.IOException;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentEditImageBinding;
 import de.dreier.mytargets.shared.models.Thumbnail;
+import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
 import de.dreier.mytargets.shared.utils.FileUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;

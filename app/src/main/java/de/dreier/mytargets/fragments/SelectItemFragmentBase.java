@@ -35,25 +35,27 @@ import de.dreier.mytargets.utils.multiselector.SingleSelector;
 /**
  * Base class for handling single item selection
  * <p>
- * Parent activity must implement {@link ListFragmentBase.OnItemSelectedListener}.
+ * Parent activity must implement {@link OnItemSelectedListener}.
+ *
+ * @param <T> Model of the item which is managed within the fragment.
  */
-public abstract class SelectItemFragment<T extends IIdProvider & Comparable<T>> extends ListFragmentBase<T> {
+public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<T>> extends ListFragmentBase<T> {
 
     /**
      * Selector which manages the item selection
      */
-    final SingleSelector mSelector = new SingleSelector();
+    protected final SingleSelector mSelector = new SingleSelector();
 
     /**
      * Adapter for the fragment's RecyclerView
      */
-    ListAdapterBase<T> mAdapter;
+    protected ListAdapterBase<T> mAdapter;
 
     /**
-     * Listener which gets called when item gets selected
-     */
-    private OnItemSelectedListener listener;
-    boolean usesDoubleClickSelection;
+     * Set to true when items are expanded when they are clicked and
+     * selected only after hitting them the second time.
+     * */
+    protected boolean useDoubleClickSelection = false;
 
     /**
      * {@inheritDoc}
@@ -70,9 +72,6 @@ public abstract class SelectItemFragment<T extends IIdProvider & Comparable<T>> 
     @Override
     public void onAttach(Context activity) {
         super.onAttach(activity);
-        if (activity instanceof OnItemSelectedListener) {
-            this.listener = (OnItemSelectedListener) activity;
-        }
         Assert.assertNotNull(listener);
     }
 
@@ -100,7 +99,7 @@ public abstract class SelectItemFragment<T extends IIdProvider & Comparable<T>> 
      * {@inheritDoc}
      */
     @Override
-    public void onClick(SelectableViewHolder holder, T mItem) {
+    public void onClick(SelectableViewHolder<T> holder, T mItem) {
         if (mItem == null) {
             return;
         }

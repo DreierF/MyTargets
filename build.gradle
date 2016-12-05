@@ -22,12 +22,13 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.2'
-        classpath 'me.tatarka:gradle-retrolambda:3.3.1'
+        classpath 'me.tatarka:gradle-retrolambda:3.4.0'
         classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.0.9'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
-        classpath 'org.ajoberstar:grgit:1.7.0'
+        classpath 'org.ajoberstar:grgit:1.7.1'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
     }
 
     configurations.classpath.exclude group: 'com.android.tools.external.lombok'
@@ -35,11 +36,7 @@ buildscript {
 
 plugins {
     id 'com.mendhak.gradlecrowdin' version '0.0.9'
-    id 'org.standardout.versioneye' version '1.4.0'
-}
-
-versioneye {
-    includeSubProjects = true
+    id 'com.github.ben-manes.versions' version '0.13.0'
 }
 
 ext {

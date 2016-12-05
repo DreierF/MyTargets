@@ -16,12 +16,10 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +52,7 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class TargetListFragment extends SelectItemFragment<Target>
+public class TargetListFragment extends SelectItemFragmentBase<Target>
         implements SeekBar.OnSeekBarChangeListener {
 
     private static final String TYPE_FIXED = "type_fixed";
@@ -62,11 +60,10 @@ public class TargetListFragment extends SelectItemFragment<Target>
     private boolean typeFixed = false;
 
     @NonNull
-    public static IntentWrapper getIntent(Fragment fragment, Target target) {
-        Intent i = new Intent(fragment.getContext(), ItemSelectActivity.TargetActivity.class);
-        i.putExtra(ITEM, Parcels.wrap(target));
-        i.putExtra(TYPE_FIXED, true);
-        return new IntentWrapper(fragment, i);
+    public static IntentWrapper getIntent(Target target) {
+        return new IntentWrapper(ItemSelectActivity.TargetActivity.class)
+                .with(ITEM, Parcels.wrap(target))
+                .with(TYPE_FIXED, true);
     }
 
     @Override
@@ -122,7 +119,7 @@ public class TargetListFragment extends SelectItemFragment<Target>
     }
 
     @Override
-    public void onClick(SelectableViewHolder holder, Target mItem) {
+    public void onClick(SelectableViewHolder<Target> holder, Target mItem) {
         super.onClick(holder, mItem);
         if (mItem == null) {
             return;

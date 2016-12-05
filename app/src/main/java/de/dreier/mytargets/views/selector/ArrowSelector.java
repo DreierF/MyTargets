@@ -23,7 +23,8 @@ import android.util.AttributeSet;
 import java.util.List;
 
 import de.dreier.mytargets.activities.ItemSelectActivity;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.fragments.EditArrowFragment;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.shared.models.db.Arrow;
 
 public class ArrowSelector extends ImageSelectorBase<Arrow> {
@@ -38,13 +39,13 @@ public class ArrowSelector extends ImageSelectorBase<Arrow> {
     public ArrowSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
         defaultActivity = ItemSelectActivity.ArrowActivity.class;
-        addActivity = SimpleFragmentActivityBase.EditArrowActivity.class;
         requestCode = ARROW_REQUEST_CODE;
     }
 
     @Override
-    protected void onAddButtonClicked() {
-        fragment.startActivityForResult(getAddIntent(), ARROW_ADD_REQUEST_CODE);
+    protected IntentWrapper getAddIntent() {
+        return EditArrowFragment.createIntent()
+                .forResult(ARROW_ADD_REQUEST_CODE);
     }
 
     @Override

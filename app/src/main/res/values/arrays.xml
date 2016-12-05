@@ -65,4 +65,14 @@
         <item>LEFT</item>
         <item>RIGHT</item>
     </string-array>
+    <string-array name="backup_interval_entries">
+        <item>@string/daily</item>
+        <item>@string/weekly</item>
+        <item>@string/monthly</item>
+    </string-array>
+    <string-array name="backup_interval_values" translatable="false">
+        <item>1</item>
+        <item>7</item>
+        <item>30</item>
+    </string-array>
 </resources>

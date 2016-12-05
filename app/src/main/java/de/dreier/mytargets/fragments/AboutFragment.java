@@ -16,7 +16,6 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,9 +25,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import de.dreier.mytargets.BuildConfig;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.DonateActivity;
-import de.dreier.mytargets.utils.Utils;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.utils.IntentWrapper;
 import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
 
@@ -38,6 +39,10 @@ public class AboutFragment extends Fragment {
     private static final String URL_PAYPAL = "https://www.paypal.me/floriandreier";
     private static final String URL_CROWDIN = "https://crowdin.com/project/mytargets";
     private static final String URL_LINKEDIN = "https://de.linkedin.com/in/florian-dreier-b056a1113";
+
+    public static IntentWrapper getIntent() {
+        return new IntentWrapper(SimpleFragmentActivityBase.AboutActivity.class);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +67,11 @@ public class AboutFragment extends Fragment {
                 .addItem(new Element("translators", getString(R.string.all_translators)
                         + "\n" + getString(R.string.translators), null))
                 .create();
+    }
+
+    @NonNull
+    private String getVersion() {
+        return getString(R.string.version, BuildConfig.VERSION_NAME) + " (" + BuildConfig.VERSION_CODE + ")";
     }
 
     private Element getCrowdinElement() {
@@ -103,18 +113,6 @@ public class AboutFragment extends Fragment {
                 R.drawable.about_icon_donate);
         donateElement.setIntent(new Intent(getContext(), DonateActivity.class));
         return donateElement;
-    }
-
-    @NonNull
-    private String getVersion() {
-        PackageInfo appVersionInfo = Utils.getAppVersionInfo(getContext());
-        if (appVersionInfo != null) {
-            String versionName = appVersionInfo.versionName;
-            return getString(R.string.version,
-                    versionName) + " (" + appVersionInfo.versionCode + ")";
-        } else {
-            return getString(R.string.version, "unknown");
-        }
     }
 
     private class WebElement extends Element {

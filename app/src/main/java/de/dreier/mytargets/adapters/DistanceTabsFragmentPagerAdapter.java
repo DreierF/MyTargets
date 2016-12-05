@@ -25,7 +25,6 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.DistanceGridFragment;
-import de.dreier.mytargets.fragments.ListFragmentBase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Dimension.Unit;
 
@@ -38,7 +37,7 @@ public class DistanceTabsFragmentPagerAdapter extends FragmentPagerAdapter {
     public static final List<Unit> UNITS = Arrays.asList(METER, YARDS, FEET);
 
     private final Context context;
-    private final ListFragmentBase[] fragments = new ListFragmentBase[3];
+    private final DistanceGridFragment[] fragments = new DistanceGridFragment[3];
 
     public DistanceTabsFragmentPagerAdapter(FragmentActivity context, Dimension distance) {
         super(context.getSupportFragmentManager());
