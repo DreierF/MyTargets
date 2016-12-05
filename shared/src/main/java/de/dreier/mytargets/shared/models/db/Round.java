@@ -22,7 +22,6 @@ import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.DimensionConverter;
-import de.dreier.mytargets.shared.utils.LongUtils;
 
 @Parcel
 @Table(database = AppDatabase.class, name = "ROUND")
@@ -57,7 +56,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
     public static Round get(Long id) {
         return SQLite.select()
                 .from(Round.class)
-                .where(Round_Table._id.eq(id))
+                //.where(Round_Table._id.eq(id))
                 .querySingle();
     }
 
@@ -78,7 +77,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
     public static List<Round> getAll(long[] roundIds) {
         return SQLite.select()
                 .from(Round.class)
-                .where(Round_Table._id.in(LongUtils.toList(roundIds)))
+                //.where(Round_Table._id.in(LongUtils.toList(roundIds)))
                 .queryList();
     }
 
@@ -102,7 +101,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
         if (passes == null || passes.isEmpty()) {
             passes = SQLite.select()
                     .from(Passe.class)
-                    .where(Passe_Table.round.eq(id))
+                   // .where(Passe_Table.round.eq(id))
                     .queryList();
         }
         return passes;

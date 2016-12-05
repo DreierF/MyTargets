@@ -45,6 +45,7 @@ import java.util.zip.ZipOutputStream;
 
 import de.dreier.mytargets.managers.CsvExporter;
 import de.dreier.mytargets.shared.AppDatabase;
+import de.dreier.mytargets.shared.utils.FileUtils;
 
 import static android.support.v4.content.FileProvider.getUriForFile;
 
@@ -94,6 +95,16 @@ public class BackupUtils {
     static String getBackupName() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
         return "backup_" + format.format(new Date()) + ".zip";
+    }
+
+    public static void importZip(Context context, InputStream in) throws IOException {
+            // Unzip all images and database
+            File file = unzip(context, in);
+
+            // Replace database file
+            File db_file = context.getDatabasePath(AppDatabase.NAME);
+            //TODO copy to special location and exchange dbs on restart
+            FileUtils.copy(file, db_file);
     }
 
     public static String[] getImages() {
@@ -221,5 +232,4 @@ public class BackupUtils {
         }
         return tmpDb;
     }
-
 }

@@ -91,7 +91,7 @@ public class InternalStorageBackup {
         public void restoreBackup(BackupEntry backup, BackupStatusListener listener) {
             File file = new File(backup.getFileId());
             try {
-                DatabaseManager.Import(activity, new FileInputStream(file));
+                BackupUtils.importZip(activity, new FileInputStream(file));
                 listener.onFinished();
             } catch (IOException e) {
                 listener.onError(e.getLocalizedMessage());

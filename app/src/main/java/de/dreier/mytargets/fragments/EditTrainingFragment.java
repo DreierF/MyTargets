@@ -162,12 +162,10 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         }
         binding.standardRound.setOnActivityResultContext(this);
         binding.standardRound.setOnUpdateListener(this::updateChangeTargetFaceVisibility);
-        binding.changeTargetFace.setOnClickListener(v -> {
-            TargetListFragment.getIntent(target)
-                    .withContext(this)
-                    .forResult(SR_TARGET_REQUEST_CODE)
-                    .start();
-        });
+        binding.changeTargetFace.setOnClickListener(v -> TargetListFragment.getIntent(roundTarget)
+                .withContext(this)
+                .forResult(SR_TARGET_REQUEST_CODE)
+                .start());
         updateChangeTargetFaceVisibility(binding.standardRound.getSelectedItem());
         binding.arrow.setOnActivityResultContext(this);
         binding.bow.setOnActivityResultContext(this);

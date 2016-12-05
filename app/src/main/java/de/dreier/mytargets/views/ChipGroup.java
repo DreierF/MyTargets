@@ -258,11 +258,11 @@ public class ChipGroup extends ViewGroup {
         }
 
         @ParcelConstructor
-        public Tag(long id, String text, Thumbnail image, boolean isChecked) {
+        public Tag(long id, String text, byte[] image, boolean isChecked) {
             this.id = id;
             this.text = text;
             this.isChecked = isChecked;
-            this.image = image.getBlob().getBlob();
+            this.image = image;
         }
 
         public ViewChipsBinding getView(Context context, ViewGroup parent) {

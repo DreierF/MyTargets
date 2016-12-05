@@ -32,7 +32,6 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.settings.backup.BackupEntry;
 import de.dreier.mytargets.features.settings.backup.BackupException;
-import de.dreier.mytargets.managers.DatabaseManager;
 
 import static de.dreier.mytargets.features.settings.backup.provider.BackupUtils.getBackupName;
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
@@ -114,7 +113,7 @@ public class ExternalStorageBackup {
         public void restoreBackup(BackupEntry backup, BackupStatusListener listener) {
             File file = new File(backup.getFileId());
             try {
-                DatabaseManager.Import(activity, new FileInputStream(file));
+                BackupUtils.importZip(activity, new FileInputStream(file));
                 listener.onFinished();
             } catch (IOException e) {
                 listener.onError(e.getLocalizedMessage());

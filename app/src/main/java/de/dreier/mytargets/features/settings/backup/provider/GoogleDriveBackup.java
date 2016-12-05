@@ -161,7 +161,7 @@ public class GoogleDriveBackup {
                         DriveContents contents = result.getDriveContents();
                         InputStream input = contents.getInputStream();
                         try {
-                            DatabaseManager.Import(activity, input);
+                            BackupUtils.importZip(activity, input);
                             listener.onFinished();
                         } catch (IOException e) {
                             e.printStackTrace();

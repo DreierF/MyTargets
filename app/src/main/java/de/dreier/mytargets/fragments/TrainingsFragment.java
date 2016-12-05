@@ -34,7 +34,6 @@ import de.dreier.mytargets.adapters.ExpandableListAdapter;
 import de.dreier.mytargets.databinding.FragmentTrainingsBinding;
 import de.dreier.mytargets.databinding.ItemHeaderMonthBinding;
 import de.dreier.mytargets.databinding.ItemTrainingBinding;
-import de.dreier.mytargets.models.ETrainingType;
 import de.dreier.mytargets.models.Month;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
@@ -96,7 +95,7 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
 
     @Override
     protected void onStatistics(List<Training> trainings) {
-        StatisticsActivity.getIntent(this, Stream.of(trainings)
+        StatisticsActivity.getIntent(Stream.of(trainings)
                 .flatMap(t -> Stream.of(t.getRounds()))
                 .map(Round::getId)
                 .collect(Collectors.toList()))

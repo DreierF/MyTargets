@@ -209,7 +209,8 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                         if (bow == null) {
                             return new ChipGroup.Tag(bid, "Deleted " + bid, true);
                         }
-                        return new ChipGroup.Tag(bow.getId(), bow.getName(), bow.thumbnail, true);
+                        return new ChipGroup.Tag(bow.getId(), bow.getName(),
+                                bow.thumbnail.getBlob().getBlob(), true);
                     } else {
                         return new ChipGroup.Tag(bid, getString(R.string.unknown), true);
                     }
@@ -227,7 +228,8 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                         if (arrow == null) {
                             return new ChipGroup.Tag(aid, "Deleted " + aid, true);
                         }
-                        return new ChipGroup.Tag(arrow.getId(), arrow.getName(), arrow.thumbnail, true);
+                        return new ChipGroup.Tag(arrow.getId(), arrow.getName(),
+                                arrow.thumbnail.getBlob().getBlob(), true);
                     } else {
                         return new ChipGroup.Tag(aid, getString(R.string.unknown), true);
                     }

@@ -59,11 +59,6 @@ public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> 
     public Passe() {
     }
 
-    @ParcelConstructor
-    public Passe(Long id) {
-        this.id = id;
-    }
-
     public Passe(int ppp) {
         for (int i = 0; i < ppp; i++) {
             shots.add(new Shot(i));
@@ -84,7 +79,7 @@ public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> 
         if (shots == null || shots.isEmpty()) {
             shots = SQLite.select()
                     .from(Shot.class)
-                    .where(Shot_Table.passe.eq(id))
+                   // .where(Shot_Table.passe.eq(id))
                     .queryList();
         }
         return shots;

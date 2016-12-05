@@ -139,7 +139,7 @@ public class SettingsManager {
 
     public static void setTarget(Target target) {
         lastUsed.edit()
-                .putInt(KEY_TARGET, (long) target.getId())
+                .putInt(KEY_TARGET, (int)(long) target.getId())
                 .putInt(KEY_SCORING_STYLE, target.scoringStyle)
                 .putInt(KEY_TARGET_DIAMETER_VALUE, (int) target.size.value)
                 .putString(KEY_TARGET_DIAMETER_UNIT,
@@ -372,16 +372,6 @@ public class SettingsManager {
     public static void setBackupInterval(EBackupInterval interval) {
         preferences.edit()
                 .putString(KEY_BACKUP_INTERVAL, interval.name())
-                .apply();
-    }
-
-    public static String getDropboxAccessToken() {
-        return preferences.getString(KEY_DROPBOX_ACCESS_TOKEN, null);
-    }
-
-    public static void setDropboxAccessToken(String accessToken) {
-        preferences.edit()
-                .putString(KEY_DROPBOX_ACCESS_TOKEN, accessToken)
                 .apply();
     }
 
