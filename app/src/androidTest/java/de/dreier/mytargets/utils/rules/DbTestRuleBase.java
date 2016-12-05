@@ -94,12 +94,12 @@ public abstract class DbTestRuleBase implements TestRule {
         p.roundId = round.getId();
         p.exact = true;
         for (int i = 0; i < arrowsPerEnd; i++) {
-            p.shot[i].index = i;
-            p.shot[i].x = gaussianRand(gen);
-            p.shot[i].y = gaussianRand(gen);
-            p.shot[i].zone = round.info.target.getModel()
-                    .getZoneFromPoint((p.shot[i].x) * 500 + 500,
-                            (p.shot[i].y) * 500 + 500, 0.05f * 500f);
+            p.shots.get(i).index = i;
+            p.shots.get(i).x = gaussianRand(gen);
+            p.shots.get(i).y = gaussianRand(gen);
+            p.shots.get(i).zone = round.info.target.getModel()
+                    .getZoneFromPoint(p.shots.get(i).x,
+                            p.shots.get(i).y, 0.05f);
         }
         p.saveDate = new DateTime().withDate(training.date)
                 .withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
