@@ -27,6 +27,7 @@ import de.dreier.mytargets.shared.models.db.Training;
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 
 public class CsvExporter {
+    private static final DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD", Locale.US);
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void exportAll(File file, List<Long> roundIds) throws IOException {
@@ -37,7 +38,6 @@ public class CsvExporter {
     }
 
     public static void writeExportData(Writer writer, List<Long> roundIds) throws IOException {
-        DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD", Locale.US);
         CsvBuilder csv = new CsvBuilder(writer);
         csv.enterScope();
         csv.add(get(R.string.title));
@@ -57,30 +57,34 @@ public class CsvExporter {
         csv.newLine();
         csv.exitScope();
         for (Training t : Training.getAll()) {
-            csv.enterScope();
-            // Title
-            csv.add(t.title);
-            // Date
-            csv.add(dateFormat.format(t.date.toDate()));
-            // StandardRound
-            csv.add(t.getStandardRound().getName());
-            // Indoor
-            csv.add(t.getStandardRound().indoor ? get(R.string.indoor) : get(R.string.outdoor));
-            // Bow
-            csv.add(t.getBow() == null ? "" : t.getBow().getName());
-            // Arrow
-            csv.add(t.getArrow() == null ? "" : t.getArrow().getName());
-            for (Round r : t.getRounds()) {
-                if (!roundIds.contains(r.getId())) {
-                    continue;
-                }
-                addRound(csv, r);
-            }
-            csv.exitScope();
+            addTraining(csv, t, roundIds);
         }
 
         writer.flush();
         writer.close();
+    }
+
+    private static void addTraining(CsvBuilder csv, Training t, List<Long> roundIds) throws IOException {
+        csv.enterScope();
+        // Title
+        csv.add(t.title);
+        // Date
+        csv.add(dateFormat.format(t.date.toDate()));
+        // StandardRound
+        csv.add(t.getStandardRound().getName());
+        // Indoor
+        csv.add(t.getStandardRound().indoor ? get(R.string.indoor) : get(R.string.outdoor));
+        // Bow
+        csv.add(t.getBow() == null ? "" : t.getBow().getName());
+        // Arrow
+        csv.add(t.getArrow() == null ? "" : t.getArrow().getName());
+        for (Round r : t.getRounds()) {
+            if (!roundIds.contains(r.getId())) {
+                continue;
+            }
+            addRound(csv, r);
+        }
+        csv.exitScope();
     }
 
     private static void addRound(CsvBuilder csv, Round r) throws IOException {

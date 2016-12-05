@@ -36,8 +36,8 @@ import java.util.Set;
 
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.SelectableZone;
-import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.db.Shot;
 
 import static de.dreier.mytargets.shared.utils.Color.WHITE;
 

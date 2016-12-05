@@ -27,8 +27,8 @@ import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.IDetailProvider;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
-import de.dreier.mytargets.shared.targets.models.CombinedSpot;
 import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
+import de.dreier.mytargets.shared.targets.models.CombinedSpot;
 
 @Parcel
 @Table(database = AppDatabase.class, name="STANDARD_ROUND_TEMPLATE")

@@ -51,7 +51,6 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.features.settings.backup.BackupEntry;
 import de.dreier.mytargets.features.settings.backup.BackupException;
-import de.dreier.mytargets.managers.DatabaseManager;
 
 import static android.app.Activity.RESULT_OK;
 

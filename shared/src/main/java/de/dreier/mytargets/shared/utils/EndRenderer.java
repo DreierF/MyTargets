@@ -33,8 +33,8 @@ import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.db.Shot;
 
 @Parcel
 public class EndRenderer {

@@ -19,8 +19,6 @@ import android.support.annotation.IdRes;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-import de.dreier.mytargets.utils.multiselector.ItemBindingHolder;
-
 public abstract class HeaderBindingHolder<T> extends ItemBindingHolder<T> {
 
     private View expandCollapseView = null;

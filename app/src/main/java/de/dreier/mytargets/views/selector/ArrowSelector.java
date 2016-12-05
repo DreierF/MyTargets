@@ -24,8 +24,8 @@ import java.util.List;
 
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.fragments.EditArrowFragment;
-import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.shared.models.db.Arrow;
+import de.dreier.mytargets.utils.IntentWrapper;
 
 public class ArrowSelector extends ImageSelectorBase<Arrow> {
 

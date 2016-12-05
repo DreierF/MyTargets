@@ -28,8 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.AppDatabase;
-import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.db.Shot;
 
 @Parcel
 public class ArrowStatistic implements Comparable<ArrowStatistic> {

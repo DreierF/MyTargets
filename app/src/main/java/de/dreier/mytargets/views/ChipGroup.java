@@ -38,7 +38,6 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ViewChipsBinding;
-import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
 
 public class ChipGroup extends ViewGroup {
@@ -266,11 +265,14 @@ public class ChipGroup extends ViewGroup {
         }
 
         public ViewChipsBinding getView(Context context, ViewGroup parent) {
-            ViewChipsBinding binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.view_chips, parent, false);
+            ViewChipsBinding binding = DataBindingUtil
+                    .inflate(LayoutInflater.from(context), R.layout.view_chips, parent, false);
             binding.setTag(this);
             binding.getRoot().setActivated(!isChecked);
             float mDensity = context.getResources().getDisplayMetrics().density;
-            binding.getRoot().setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (CHIP_HEIGHT * mDensity)));
+            binding.getRoot().setLayoutParams(
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            (int) (CHIP_HEIGHT * mDensity)));
             return binding;
         }
 

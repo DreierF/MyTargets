@@ -25,8 +25,8 @@ import android.view.View;
 
 import java.util.List;
 
-import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
 
 public class ArrowDispersionView extends View implements View.OnTouchListener {

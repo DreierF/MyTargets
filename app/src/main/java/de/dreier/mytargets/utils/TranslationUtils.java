@@ -17,7 +17,6 @@ package de.dreier.mytargets.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;

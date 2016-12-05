@@ -32,7 +32,6 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.settings.backup.BackupEntry;
 import de.dreier.mytargets.features.settings.backup.BackupException;
-import de.dreier.mytargets.managers.DatabaseManager;
 
 import static de.dreier.mytargets.features.settings.backup.provider.BackupUtils.getBackupName;
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;

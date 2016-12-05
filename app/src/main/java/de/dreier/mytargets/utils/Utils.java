@@ -22,8 +22,6 @@ import android.os.Process;
 
 import org.joda.time.LocalDate;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import de.dreier.mytargets.activities.MainActivity;

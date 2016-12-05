@@ -15,8 +15,6 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.content.Context;
-
 import com.raizlabs.android.dbflow.structure.Model;
 
 import org.parceler.Parcels;

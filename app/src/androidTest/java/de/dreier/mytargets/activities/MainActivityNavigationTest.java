@@ -52,7 +52,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.OrientationChangeAction.orientationLandscape;
 import static de.dreier.mytargets.OrientationChangeAction.orientationPortrait;
 import static de.dreier.mytargets.PermissionGranter.allowPermissionsIfNeeded;
-import static de.dreier.mytargets.models.ETrainingType.TRAINING_WITH_STANDARD_ROUND;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.endsWith;
 
