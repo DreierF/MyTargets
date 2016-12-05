@@ -16,7 +16,6 @@
 package de.dreier.mytargets.activities;
 
 
-import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -34,7 +33,6 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.rules.SimpleDbTestRule;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -57,13 +55,11 @@ public class StatisticsActivityTest extends UITestBase {
     @Test
     public void navigationTest() {
         // Add round ids
-        Intent intent = new Intent();
         final List<Round> rounds = new RoundDataSource().getAll();
         final List<Long> roundIds = Stream.of(rounds)
                 .map(Round::getId)
                 .collect(Collectors.toList());
-        intent.putExtra(StatisticsActivity.ROUND_IDS, Utils.toArray(roundIds));
-        activityTestRule.launchActivity(intent);
+        activityTestRule.launchActivity(StatisticsActivity.getIntent(roundIds).build());
 
         onView(allOf(withId(R.id.dispersionViewOverlay),
                 withParent(withId(R.id.dispersionPatternLayout)))).perform(nestedScrollTo(), click());

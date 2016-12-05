@@ -64,8 +64,7 @@ import icepick.State;
 
 public class StatisticsActivity extends ChildActivityBase implements LoaderManager.LoaderCallbacks<List<Pair<Training, Round>>> {
 
-    @VisibleForTesting(otherwise = MODE_PRIVATE)
-    static final String ROUND_IDS = "round_ids";
+    private static final String ROUND_IDS = "round_ids";
 
     @State
     boolean showFilter = false;
