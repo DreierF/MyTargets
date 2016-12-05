@@ -31,9 +31,9 @@ import java.util.Random;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
 import de.dreier.mytargets.managers.SettingsManager;
-import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.StandardRound;
+import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.utils.rules.DbTestRuleBase;
 
@@ -54,23 +54,23 @@ public class InputActivityTest extends UITestBase {
         @Override
         protected void addDatabaseContent() {
             Random generator = new Random(3435);
-            StandardRound standardRound = standardRoundDataSource.get(32);
+            StandardRound standardRound = StandardRound.get(32L);
 
             Training training = insertDefaultTraining(standardRound, generator);
 
             round1 = new Round();
             round1.trainingId = training.getId();
-            round1.info = standardRound.rounds.get(0);
-            round1.info.target = round1.info.targetTemplate;
+            round1.info = standardRound.getRounds().get(0);
+            round1.setTarget( round1.info.getTargetTemplate());
             round1.comment = "";
-            roundDataSource.update(round1);
+            round1.save();
 
             Round round2 = new Round();
             round2.trainingId = training.getId();
-            round2.info = standardRound.rounds.get(1);
-            round2.info.target = round2.info.targetTemplate;
+            round2.info = standardRound.getRounds().get(1);
+            round2.setTarget(round2.info.getTargetTemplate());
             round2.comment = "";
-            roundDataSource.update(round2);
+            round2.save();
         }
     }).around(activityTestRule);
     private Round round1;

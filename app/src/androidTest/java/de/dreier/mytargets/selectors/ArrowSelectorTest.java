@@ -67,7 +67,7 @@ public class ArrowSelectorTest extends UITestBase {
         arrowSelectionTest(EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION);
     }
 
-    private void arrowSelectionTest(ETrainingType type) {
+    private void arrowSelectionTest(String type) {
         Intent intent = new Intent();
         intent.setAction(type);
         activityTestRule.launchActivity(intent);

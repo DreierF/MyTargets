@@ -246,18 +246,18 @@ public class ChipGroup extends ViewGroup {
 
         private static final int CHIP_HEIGHT = 32; // dp
 
-        public long id;
+        public Long id;
         public String text;
         public byte[] image;
         public boolean isChecked = false;
         private transient Bitmap thumbnail;
 
-        public Tag(long id, String text, boolean isChecked) {
+        public Tag(Long id, String text, boolean isChecked) {
             this(id, text, null, isChecked);
         }
 
         @ParcelConstructor
-        public Tag(long id, String text, byte[] image, boolean isChecked) {
+        public Tag(Long id, String text, byte[] image, boolean isChecked) {
             this.id = id;
             this.text = text;
             this.isChecked = isChecked;

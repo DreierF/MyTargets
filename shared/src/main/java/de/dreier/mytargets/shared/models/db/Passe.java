@@ -78,7 +78,7 @@ public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> 
         if (shots == null || shots.isEmpty()) {
             shots = SQLite.select()
                     .from(Shot.class)
-                   // .where(Shot_Table.passe.eq(id))
+                    .where(Shot_Table.passe.eq(id))
                     .queryList();
         }
         return shots;

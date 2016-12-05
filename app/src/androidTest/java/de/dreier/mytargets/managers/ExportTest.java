@@ -31,7 +31,8 @@ import java.io.StringWriter;
 import java.util.List;
 
 import de.dreier.mytargets.InstrumentedTestBase;
-import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.utils.rules.MiniDbTestRule;
 
 @SmallTest
@@ -82,7 +83,8 @@ public class ExportTest extends InstrumentedTestBase {
     public void testDataExport() throws IOException {
         setLocale("en", "EN");
         final StringWriter writer = new StringWriter();
-        List<Long> roundIds = Stream.of(Round.getAll())
+        List<Long> roundIds = Stream.of(Training.getAll())
+                .flatMap(t -> Stream.of(t.getRounds()))
                 .map(Round::getId)
                 .sorted()
                 .collect(Collectors.toList());

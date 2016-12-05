@@ -204,7 +204,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 .map(p -> p.first.bow)
                 .distinct()
                 .map(bid -> {
-                    if (bid > 0) {
+                    if (bid != null) {
                         Bow bow = Bow.get(bid);
                         if (bow == null) {
                             return new ChipGroup.Tag(bid, "Deleted " + bid, true);
@@ -223,7 +223,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 .map(p -> p.first.arrow)
                 .distinct()
                 .map(aid -> {
-                    if (aid > 0) {
+                    if (aid != null) {
                         Arrow arrow = Arrow.get(aid);
                         if (arrow == null) {
                             return new ChipGroup.Tag(aid, "Deleted " + aid, true);
