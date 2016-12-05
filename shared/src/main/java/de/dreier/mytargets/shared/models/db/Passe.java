@@ -1,6 +1,7 @@
 package de.dreier.mytargets.shared.models.db;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -15,6 +16,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.joda.time.DateTime;
 import org.parceler.Parcel;
+import org.parceler.ParcelConstructor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,8 +26,8 @@ import java.util.Map;
 
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.SelectableZone;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.DateTimeConverter;
 
 @Parcel
@@ -57,10 +59,14 @@ public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> 
     public Passe() {
     }
 
+    @ParcelConstructor
+    public Passe(Long id) {
+        this.id = id;
+    }
+
     public Passe(int ppp) {
         for (int i = 0; i < ppp; i++) {
             shots.add(new Shot(i));
-            shots.get(i).index = i;
         }
     }
 
@@ -164,7 +170,6 @@ public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> 
         }
         return result;
     }
-
 
     /**
      * Compound 9ers are already collapsed to one SelectableZone.

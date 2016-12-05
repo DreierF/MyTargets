@@ -93,8 +93,8 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> impl
     @Override
     public void onAttach(Context activity) {
         super.onAttach(activity);
-        if (activity instanceof SelectItemFragment.OnItemSelectedListener) {
-            this.listener = (SelectItemFragment.OnItemSelectedListener) activity;
+        if (activity instanceof OnItemSelectedListener) {
+            this.listener = (OnItemSelectedListener) activity;
         }
         Assert.assertNotNull(listener);
 // TODO check if this works or is necessary

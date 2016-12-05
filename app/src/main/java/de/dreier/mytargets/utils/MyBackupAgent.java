@@ -19,6 +19,8 @@ import android.app.backup.BackupAgentHelper;
 import android.app.backup.FileBackupHelper;
 import android.app.backup.SharedPreferencesBackupHelper;
 
+import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
+
 public class MyBackupAgent extends BackupAgentHelper {
     // The name of the SharedPreferences file
     public static final String PREFS = "user_preferences";

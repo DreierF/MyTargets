@@ -74,7 +74,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target>
         mAdapter = new TargetAdapter(getContext());
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
-        usesDoubleClickSelection = true;
+        useDoubleClickSelection = true;
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
         ToolbarUtils.showHomeAsUp(this);
         ToolbarUtils.showUpAsX(this);

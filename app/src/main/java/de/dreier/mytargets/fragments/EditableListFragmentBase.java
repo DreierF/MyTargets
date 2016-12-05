@@ -32,7 +32,6 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.interfaces.ItemAdapter;
 import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.utils.OnItemClickListener;
 import de.dreier.mytargets.utils.SelectorBundler;
 import de.dreier.mytargets.utils.multiselector.MultiSelector;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
@@ -72,7 +71,6 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model> ex
      * Action mode manager
      */
     ActionMode actionMode = null;
-    IdProviderDataSource<T> dataSource;
 
     private final ActionMode.Callback mDeleteMode = new ActionMode.Callback() {
 

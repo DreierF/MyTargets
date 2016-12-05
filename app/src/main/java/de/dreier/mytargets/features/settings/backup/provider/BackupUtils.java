@@ -16,9 +16,13 @@
 package de.dreier.mytargets.features.settings.backup.provider;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -31,6 +35,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -38,7 +43,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.managers.CsvExporter;
+import de.dreier.mytargets.shared.AppDatabase;
 
 import static android.support.v4.content.FileProvider.getUriForFile;
 
@@ -73,9 +79,8 @@ public class BackupUtils {
         String packageName = context.getPackageName();
         String authority = packageName + ".easyphotopicker.fileprovider";
 
-        DatabaseManager db = DatabaseManager.getInstance(context);
         final File f = new File(context.getCacheDir(), getExportFileName());
-        db.exportAll(f, roundIds);
+        CsvExporter.exportAll(f, roundIds);
         return getUriForFile(context, authority, f);
     }
 
@@ -91,13 +96,32 @@ public class BackupUtils {
         return "backup_" + format.format(new Date()) + ".zip";
     }
 
+    public static String[] getImages() {
+        ArrayList<String> list = new ArrayList<>();
+        DatabaseWrapper db = FlowManager.getWritableDatabase(AppDatabase.class);
+        Cursor cur = db.rawQuery("SELECT image FROM BOW WHERE image IS NOT NULL", null);
+        if (cur.moveToFirst()) {
+            list.add(cur.getString(0));
+        }
+        cur.close();
+
+        // Migrate all arrow images
+        cur = db.rawQuery("SELECT image FROM ARROW WHERE image IS NOT NULL", null);
+        if (cur.moveToFirst()) {
+            list.add(cur.getString(0));
+        }
+        cur.close();
+        return list.toArray(new String[list.size()]);
+    }
+
+
     public static void zip(Context context, OutputStream dest) throws IOException {
         ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
         try {
             BufferedInputStream origin;
             byte data[] = new byte[BUFFER];
 
-            File db = context.getDatabasePath(DatabaseManager.DATABASE_NAME);
+            File db = context.getDatabasePath(AppDatabase.NAME);
             FileInputStream fi = new FileInputStream(db);
             origin = new BufferedInputStream(fi, BUFFER);
 
@@ -109,7 +133,7 @@ public class BackupUtils {
             }
             origin.close();
 
-            String[] files = DatabaseManager.getInstance(context).getImages();
+            String[] files = getImages();
             for (String file : files) {
                 fi = new FileInputStream(new File(context.getFilesDir(), file));
                 origin = new BufferedInputStream(fi, BUFFER);

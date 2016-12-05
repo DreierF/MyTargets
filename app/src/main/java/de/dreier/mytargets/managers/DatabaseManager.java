@@ -17,51 +17,31 @@ package de.dreier.mytargets.managers;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.preference.PreferenceManager;
-
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
-
-import org.joda.time.DateTime;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
-
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.utils.FileUtils;
-import de.dreier.mytargets.utils.BackupUtils;
 
 public class DatabaseManager {
 
     public static boolean importZip(Context context, InputStream in) {
-        // Unzip all images and database
-        File file = BackupUtils.unzip(context, in);
+        try {
+            // Unzip all images and database
+            File file = BackupUtils.unzip(context, in);
 
             // Replace database file
             File db_file = context.getDatabasePath(AppDatabase.NAME);
             //TODO close all open handles to the database
             FileUtils.copy(file, db_file);
-        sInstance = null;
-        if (tmp != null) {
-            tmp.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        BackupUtils.copy(file, db_file);
+        return false;
     }
 
     public static void cleanup(SQLiteDatabase db) {

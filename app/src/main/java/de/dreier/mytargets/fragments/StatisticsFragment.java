@@ -21,9 +21,6 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -63,17 +60,15 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.DispersionPatternActivity;
 import de.dreier.mytargets.databinding.FragmentStatisticsBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
-import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.models.ArrowStatistic;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Passe;
-import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
+import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.Color;
 import de.dreier.mytargets.shared.utils.LongUtils;
-import de.dreier.mytargets.shared.utils.Pair;
 import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.RoundedTextDrawable;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -324,7 +319,7 @@ public class StatisticsFragment extends FragmentBase {
 
         List<Pair<Integer, DateTime>> values = Stream.of(rounds)
                 .map(r -> new Pair<>(trainingsMap.get(r.trainingId).date, r.getId()))
-                .flatMap(roundIdPair -> Stream.of(Round.get(roundIdPair.second).getPasses()))
+                .flatMap(roundIdPair -> Stream.of(Round.get(roundIdPair.second).getPasses())
                         .map(p -> new Pair<>(roundIdPair.first, p)))
                 .map(passePair -> getPairEndSummary(target, passePair.second, passePair.first))
                 .sortBy(pair -> pair.second.toDate().getTime())

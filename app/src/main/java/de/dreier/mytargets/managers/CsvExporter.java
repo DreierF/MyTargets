@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
 
@@ -28,14 +29,14 @@ import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 public class CsvExporter {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void exportAll(File file) throws IOException {
+    public static void exportAll(File file, List<Long> roundIds) throws IOException {
         file.getParentFile().mkdirs();
         file.createNewFile();
         FileWriter writer = new FileWriter(file);
-        writeExportData(writer);
+        writeExportData(writer, roundIds);
     }
 
-    public static void writeExportData(Writer writer) throws IOException {
+    public static void writeExportData(Writer writer, List<Long> roundIds) throws IOException {
         DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD", Locale.US);
         CsvBuilder csv = new CsvBuilder(writer);
         csv.enterScope();
@@ -70,6 +71,9 @@ public class CsvExporter {
             // Arrow
             csv.add(t.getArrow() == null ? "" : t.getArrow().getName());
             for (Round r : t.getRounds()) {
+                if (!roundIds.contains(r.getId())) {
+                    continue;
+                }
                 addRound(csv, r);
             }
             csv.exitScope();

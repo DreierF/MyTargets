@@ -44,20 +44,16 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityStatisticsBinding;
+import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
 import de.dreier.mytargets.fragments.StatisticsFragment;
-import de.dreier.mytargets.managers.dao.ArrowDataSource;
-import de.dreier.mytargets.managers.dao.BowDataSource;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
-import de.dreier.mytargets.managers.dao.TrainingDataSource;
-import de.dreier.mytargets.shared.models.Arrow;
-import de.dreier.mytargets.shared.models.Bow;
-import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.models.db.Arrow;
+import de.dreier.mytargets.shared.models.db.Bow;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.utils.LongUtils;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.Utils;
-import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
 import de.dreier.mytargets.views.ChipGroup;
 import icepick.Icepick;
 import icepick.State;
@@ -75,7 +71,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     @NonNull
     public static IntentWrapper getIntent(List<Long> roundIds) {
         return new IntentWrapper(StatisticsActivity.class)
-                .with(ROUND_IDS, Utils.toArray(roundIds));
+                .with(ROUND_IDS, LongUtils.toArray(roundIds));
     }
 
     @Override
@@ -98,12 +94,11 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         return new AsyncTaskLoader<List<Pair<Training, Round>>>(this) {
             @Override
             public List<Pair<Training, Round>> loadInBackground() {
-                final TrainingDataSource trainingDataSource = new TrainingDataSource();
-                final List<Round> rounds = new RoundDataSource().getAll(roundIds);
+                final List<Round> rounds = Round.getAll(roundIds);
                 LongSparseArray<Training> trainingsMap = new LongSparseArray<>();
                 Stream.of(rounds).map(round -> round.trainingId)
                         .distinct()
-                        .map(trainingDataSource::get)
+                        .map(Training::get)
                         .forEach(training -> trainingsMap.append(training.getId(), training));
                 return Stream.of(rounds)
                         .map(round -> new Pair<>(trainingsMap.get(round.trainingId), round))
@@ -194,9 +189,9 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                         && arrowTags.contains(pair.first.arrow)
                         && bowTags.contains(pair.first.bow))
                 .map(p -> p.second)
-                .groupBy(value -> new Pair<>(value.info.target.getId(),
-                        value.info.target.scoringStyle))
-                .map(value1 -> new Pair<>(value1.getValue().get(0).info.target, value1.getValue()))
+                .groupBy(value -> new Pair<>(value.getTarget().getId(),
+                        value.getTarget().scoringStyle))
+                .map(value1 -> new Pair<>(value1.getValue().get(0).getTarget(), value1.getValue()))
                 .collect(Collectors.toList());
         boolean animate = binding.viewPager.getAdapter() == null;
         final StatisticsPagerAdapter adapter = new StatisticsPagerAdapter(
@@ -210,11 +205,11 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 .distinct()
                 .map(bid -> {
                     if (bid > 0) {
-                        Bow bow = new BowDataSource().get(bid);
+                        Bow bow = Bow.get(bid);
                         if (bow == null) {
                             return new ChipGroup.Tag(bid, "Deleted " + bid, true);
                         }
-                        return new ChipGroup.Tag(bow.getId(), bow.getName(), bow.thumb, true);
+                        return new ChipGroup.Tag(bow.getId(), bow.getName(), bow.thumbnail, true);
                     } else {
                         return new ChipGroup.Tag(bid, getString(R.string.unknown), true);
                     }
@@ -228,11 +223,11 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 .distinct()
                 .map(aid -> {
                     if (aid > 0) {
-                        Arrow arrow = new ArrowDataSource().get(aid);
+                        Arrow arrow = Arrow.get(aid);
                         if (arrow == null) {
                             return new ChipGroup.Tag(aid, "Deleted " + aid, true);
                         }
-                        return new ChipGroup.Tag(arrow.getId(), arrow.getName(), arrow.thumb, true);
+                        return new ChipGroup.Tag(arrow.getId(), arrow.getName(), arrow.thumbnail, true);
                     } else {
                         return new ChipGroup.Tag(aid, getString(R.string.unknown), true);
                     }

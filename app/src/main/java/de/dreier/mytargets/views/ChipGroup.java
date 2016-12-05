@@ -38,6 +38,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ViewChipsBinding;
+import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
 
 public class ChipGroup extends ViewGroup {
@@ -257,11 +258,11 @@ public class ChipGroup extends ViewGroup {
         }
 
         @ParcelConstructor
-        public Tag(long id, String text, byte[] image, boolean isChecked) {
+        public Tag(long id, String text, Thumbnail image, boolean isChecked) {
             this.id = id;
             this.text = text;
             this.isChecked = isChecked;
-            this.image = image;
+            this.image = image.getBlob().getBlob();
         }
 
         public ViewChipsBinding getView(Context context, ViewGroup parent) {

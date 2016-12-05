@@ -21,8 +21,6 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.Loader;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -74,7 +72,6 @@ public class TrainingFragment extends EditableListFragment<Round> {
     @NonNull
     public static IntentWrapper getIntent(Training training) {
         return new IntentWrapper(SimpleFragmentActivityBase.TrainingActivity.class)
-                SimpleFragmentActivityBase.TrainingActivity.class);
                 .with(ITEM_ID, training.getId());
     }
 
@@ -163,7 +160,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
                 StatisticsActivity.getIntent(
                         Stream.of(training.getRounds())
                                 .map(Round::getId)
-.collect(Collectors.toList()))
+                                .collect(Collectors.toList()))
                         .withContext(this)
                         .start();
                 return true;
@@ -188,7 +185,8 @@ public class TrainingFragment extends EditableListFragment<Round> {
 
     @Override
     protected void onStatistics(List<Round> rounds) {
-        StatisticsActivity.getIntent(this, Stream.of(rounds).map(Round::getId).collect(Collectors.toList())).start();
+        StatisticsActivity
+                .getIntent(Stream.of(rounds).map(Round::getId).collect(Collectors.toList()))
                 .withContext(this)
                 .start();
     }

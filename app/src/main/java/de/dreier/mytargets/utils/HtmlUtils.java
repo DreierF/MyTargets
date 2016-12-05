@@ -37,7 +37,6 @@ import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.utils.Pair;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 

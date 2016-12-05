@@ -106,7 +106,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
         int oldSelectedPosition = mSelector.getSelectedPosition();
         boolean alreadySelected = oldSelectedPosition == holder.getAdapterPosition();
         mSelector.setSelected(holder, true);
-        if (alreadySelected || !usesDoubleClickSelection) {
+        if (alreadySelected || !useDoubleClickSelection) {
             onSaveItem();
         }
     }

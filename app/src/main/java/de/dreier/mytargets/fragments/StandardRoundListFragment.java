@@ -43,17 +43,12 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.utils.DataLoader;
-import de.dreier.mytargets.utils.DataLoaderBase.BackgroundAction;
-import de.dreier.mytargets.utils.SlideInItemAnimator;
-import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 public class StandardRoundListFragment extends SelectPureListItemFragmentBase<StandardRound>
-        implements View.OnClickListener, SearchView.OnQueryTextListener,
-        LoaderManager.LoaderCallbacks<List<StandardRound>> {
+        implements View.OnClickListener, SearchView.OnQueryTextListener {
 
     private static final int NEW_STANDARD_ROUND = 1;
     private static final String KEY_QUERY = "query";
@@ -66,7 +61,7 @@ public class StandardRoundListFragment extends SelectPureListItemFragmentBase<St
         super.onCreateView(inflater, container, savedInstanceState);
         binding.recyclerView.setHasFixedSize(false);
         binding.fab.setOnClickListener(this);
-        usesDoubleClickSelection = true;
+        useDoubleClickSelection = true;
         setHasOptionsMenu(true);
         return binding.getRoot();
     }
@@ -142,7 +137,7 @@ public class StandardRoundListFragment extends SelectPureListItemFragmentBase<St
     @Override
     public void onLongClick(SelectableViewHolder<StandardRound> holder) {
         StandardRound item = holder.getItem();
-        if (item.club == StandardRoundFactory.CUSTOM && item.usages == 0) {
+        if (item.club == StandardRoundFactory.CUSTOM /*&& item.usages == 0*/) {
             EditStandardRoundFragment.editIntent(item)
                     .withContext(this).forResult(NEW_STANDARD_ROUND)
                     .start();
