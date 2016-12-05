@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
+import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.managers.SettingsManager;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -43,7 +44,10 @@ public class SettingsActivityTest extends UITestBase {
     public void setUp() {
         SettingsManager.setInputTargetZoom(3.0f);
         SettingsManager.setInputArrowDiameterScale(1.0f);
+        SettingsManager.setBackupLocation(EBackupLocation.INTERNAL_STORAGE);
+        SettingsManager.setBackupAutomaticallyEnabled(false);
         //TODO reset settings
+        //TODO move really old backup to internal storage and try to restore it
     }
 
     @Test
@@ -120,6 +124,10 @@ public class SettingsActivityTest extends UITestBase {
         matchPreferenceSummary(2, getActivity()
                 .getResources().getQuantityString(R.plurals.second, 30, 30));
 
+        pressBack();
+
+        clickOnPreference(5);
+        matchToolbarTitle(getActivity().getString(R.string.backup_action));
         pressBack();
 
         clickOnPreference(7);
