@@ -20,9 +20,11 @@ import android.content.AsyncTaskLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -32,9 +34,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,6 +57,7 @@ import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
+import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
 import de.dreier.mytargets.views.ChipGroup;
 import icepick.Icepick;
 import icepick.State;
@@ -66,12 +71,12 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     boolean showFilter = false;
     private ActivityStatisticsBinding binding;
     private List<Pair<Training, Round>> rounds;
+    private List<Pair<Target, List<Round>>> filteredRounds;
 
     @NonNull
-    public static IntentWrapper getIntent(Fragment fragment, List<Long> roundIds) {
-        Intent i = new Intent(fragment.getContext(), StatisticsActivity.class);
-        i.putExtra(ROUND_IDS, Utils.toArray(roundIds));
-        return new IntentWrapper(fragment, i);
+    public static IntentWrapper getIntent(List<Long> roundIds) {
+        return new IntentWrapper(StatisticsActivity.class)
+                .with(ROUND_IDS, Utils.toArray(roundIds));
     }
 
     @Override
@@ -89,6 +94,41 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     }
 
     @Override
+    public Loader<List<Pair<Training, Round>>> onCreateLoader(int i, Bundle bundle) {
+        final long[] roundIds = getIntent().getLongArrayExtra(ROUND_IDS);
+        return new AsyncTaskLoader<List<Pair<Training, Round>>>(this) {
+            @Override
+            public List<Pair<Training, Round>> loadInBackground() {
+                final TrainingDataSource trainingDataSource = new TrainingDataSource();
+                final List<Round> rounds = new RoundDataSource().getAll(roundIds);
+                LongSparseArray<Training> trainingsMap = new LongSparseArray<>();
+                Stream.of(rounds).map(round -> round.trainingId)
+                        .distinct()
+                        .map(trainingDataSource::get)
+                        .forEach(training -> trainingsMap.append(training.getId(), training));
+                return Stream.of(rounds)
+                        .map(round -> new Pair<>(trainingsMap.get(round.trainingId), round))
+                        .collect(Collectors.toList());
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Pair<Training, Round>>> loader, List<Pair<Training, Round>> data) {
+        rounds = data;
+        binding.progressBar.hide();
+        binding.distanceTags.setTags(getDistanceTags());
+        binding.distanceTags.setOnTagClickListener(t -> applyFilter());
+        binding.arrowTags.setTags(getArrowTags());
+        binding.arrowTags.setOnTagClickListener(t -> applyFilter());
+        binding.bowTags.setTags(getBowTags());
+        binding.bowTags.setOnTagClickListener(t -> applyFilter());
+        //TODO save filter on rotation
+
+        updateFilter();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.filter, menu);
         return true;
@@ -98,16 +138,21 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         final MenuItem filter = menu.findItem(R.id.action_filter);
+        final MenuItem export = menu.findItem(R.id.action_export);
         filter.setIcon(showFilter ?
                 R.drawable.ic_clear_filter_white_24dp :
                 R.drawable.ic_filter_white_24dp);
         filter.setVisible(rounds != null);
+        export.setVisible(rounds != null);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_export:
+                export();
+                return true;
             case R.id.action_filter:
                 showFilter = !showFilter;
                 updateFilter();
@@ -117,6 +162,27 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         }
     }
 
+    protected void updateFilter() {
+        if (!showFilter) {
+            resetFilter();
+        }
+        binding.filterView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
+        applyFilter();
+        invalidateOptionsMenu();
+    }
+
+    private void resetFilter() {
+        Stream.of(binding.distanceTags.getTags())
+                .forEach(tag -> tag.isChecked = true);
+        Stream.of(binding.arrowTags.getTags())
+                .forEach(tag -> tag.isChecked = true);
+        Stream.of(binding.bowTags.getTags())
+                .forEach(tag -> tag.isChecked = true);
+        binding.distanceTags.setTags(binding.distanceTags.getTags());
+        binding.arrowTags.setTags(binding.arrowTags.getTags());
+        binding.bowTags.setTags(binding.bowTags.getTags());
+    }
+
     private void applyFilter() {
         List<String> distanceTags = Stream.of(binding.distanceTags.getCheckedTags())
                 .map(t -> t.text).collect(Collectors.toList());
@@ -124,7 +190,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 .map(t -> t.id).collect(Collectors.toList());
         List<Long> bowTags = Stream.of(binding.bowTags.getCheckedTags())
                 .map(t -> t.id).collect(Collectors.toList());
-        List<Pair<Target, List<Round>>> filteredRounds = Stream.of(rounds)
+        filteredRounds = Stream.of(rounds)
                 .filter(pair -> distanceTags.contains(pair.second.info.distance.toString())
                         && arrowTags.contains(pair.first.arrow)
                         && bowTags.contains(pair.first.bow))
@@ -184,27 +250,6 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 .collect(Collectors.toList());
     }
 
-    protected void updateFilter() {
-        if (!showFilter) {
-            resetFilter();
-        }
-        binding.filterView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
-        applyFilter();
-        invalidateOptionsMenu();
-    }
-
-    private void resetFilter() {
-        Stream.of(binding.distanceTags.getTags())
-                .forEach(tag -> tag.isChecked = true);
-        Stream.of(binding.arrowTags.getTags())
-                .forEach(tag -> tag.isChecked = true);
-        Stream.of(binding.bowTags.getTags())
-                .forEach(tag -> tag.isChecked = true);
-        binding.distanceTags.setTags(binding.distanceTags.getTags());
-        binding.arrowTags.setTags(binding.arrowTags.getTags());
-        binding.bowTags.setTags(binding.bowTags.getTags());
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -212,43 +257,45 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     }
 
     @Override
-    public Loader<List<Pair<Training, Round>>> onCreateLoader(int i, Bundle bundle) {
-        final long[] roundIds = getIntent().getLongArrayExtra(ROUND_IDS);
-        return new AsyncTaskLoader<List<Pair<Training, Round>>>(this) {
-            @Override
-            public List<Pair<Training, Round>> loadInBackground() {
-                final TrainingDataSource trainingDataSource = new TrainingDataSource();
-                final List<Round> rounds = new RoundDataSource().getAll(roundIds);
-                LongSparseArray<Training> trainingsMap = new LongSparseArray<>();
-                Stream.of(rounds).map(round -> round.trainingId)
-                        .distinct()
-                        .map(trainingDataSource::get)
-                        .forEach(training -> trainingsMap.append(training.getId(), training));
-                return Stream.of(rounds)
-                        .map(round -> new Pair<>(trainingsMap.get(round.trainingId), round))
-                        .collect(Collectors.toList());
-            }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Pair<Training, Round>>> loader, List<Pair<Training, Round>> data) {
-        rounds = data;
-        binding.progressBar.hide();
-        binding.distanceTags.setTags(getDistanceTags());
-        binding.distanceTags.setOnTagClickListener(t -> applyFilter());
-        binding.arrowTags.setTags(getArrowTags());
-        binding.arrowTags.setOnTagClickListener(t -> applyFilter());
-        binding.bowTags.setTags(getBowTags());
-        binding.bowTags.setOnTagClickListener(t -> applyFilter());
-        //TODO save filter on rotation
-
-        updateFilter();
-    }
-
-    @Override
     public void onLoaderReset(Loader<List<Pair<Training, Round>>> loader) {
 
+    }
+
+    void export() {
+        MaterialDialog progress = new MaterialDialog.Builder(this)
+                .content(R.string.exporting)
+                .progress(true, 0)
+                .show();
+        new AsyncTask<Void, Void, Uri>() {
+
+            @Override
+            protected Uri doInBackground(Void... params) {
+                try {
+                    return BackupUtils.export(getApplicationContext(), Stream.of(filteredRounds)
+                            .flatMap(p -> Stream.of(p.second))
+                            .map(Round::getId)
+                            .collect(Collectors.toList()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(Uri uri) {
+                super.onPostExecute(uri);
+                progress.dismiss();
+                if (uri != null) {
+                    Intent email = new Intent(Intent.ACTION_SEND);
+                    email.putExtra(Intent.EXTRA_STREAM, uri);
+                    email.setType("text/csv");
+                    startActivity(Intent.createChooser(email, getString(R.string.send_exported)));
+                } else {
+                    Snackbar.make(binding.getRoot(), R.string.exporting_failed,
+                            Snackbar.LENGTH_LONG).show();
+                }
+            }
+        }.execute();
     }
 
     private class StatisticsPagerAdapter extends FragmentStatePagerAdapter {

@@ -16,13 +16,11 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -77,10 +75,9 @@ public class TrainingFragment extends EditableListFragment<Round> {
     }
 
     @NonNull
-    public static IntentWrapper getIntent(Fragment fragment, Training training) {
-        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.TrainingActivity.class);
-        i.putExtra(ITEM_ID, training.getId());
-        return new IntentWrapper(fragment, i);
+    public static IntentWrapper getIntent(Training training) {
+        return new IntentWrapper(SimpleFragmentActivityBase.TrainingActivity.class)
+                .with(ITEM_ID, training.getId());
     }
 
     @Override
@@ -102,7 +99,8 @@ public class TrainingFragment extends EditableListFragment<Round> {
         binding.fab.setVisibility(View.GONE);
         binding.fab.setOnClickListener(view -> {
             // New round to free training
-            EditRoundFragment.createIntent(this, trainingId)
+            EditRoundFragment.createIntent(training)
+                    .withContext(this)
                     .fromFab(binding.fab)
                     .start();
         });
@@ -156,14 +154,17 @@ public class TrainingFragment extends EditableListFragment<Round> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_scoreboard:
-                ScoreboardActivity.getIntent(this, trainingId)
+                ScoreboardActivity.getIntent(trainingId)
+                        .withContext(this)
                         .start();
                 return true;
             case R.id.action_statistics:
-                StatisticsActivity.getIntent(this,
+                StatisticsActivity.getIntent(
                         Stream.of(new RoundDataSource().getAll(training.getId()))
-                                        .map(Round::getId)
-                                        .collect(Collectors.toList())).start();
+                                .map(Round::getId)
+                                .collect(Collectors.toList()))
+                        .withContext(this)
+                        .start();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -172,18 +173,23 @@ public class TrainingFragment extends EditableListFragment<Round> {
 
     @Override
     protected void onItemSelected(Round item) {
-        RoundFragment.getIntent(this, item).start();
+        RoundFragment.getIntent(item)
+                .withContext(this)
+                .start();
     }
 
     @Override
     protected void onEdit(Round item) {
-        EditRoundFragment.editIntent(this, trainingId, item)
+        EditRoundFragment.editIntent(training, item)
+                .withContext(this)
                 .start();
     }
 
     @Override
     protected void onStatistics(List<Long> roundIds) {
-        StatisticsActivity.getIntent(this, roundIds).start();
+        StatisticsActivity.getIntent(roundIds)
+                .withContext(this)
+                .start();
     }
 
     private class RoundAdapter extends ListAdapterBase<Round> {

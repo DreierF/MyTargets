@@ -31,6 +31,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.fragments.EditTrainingFragment;
 import de.dreier.mytargets.utils.rules.EmptyDbTestRule;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -44,9 +45,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.PermissionGranter.allowPermissionsIfNeeded;
-import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
-import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_TYPE;
-import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND;
 import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
@@ -61,17 +59,17 @@ public class ArrowSelectorTest extends UITestBase {
 
     @Test
     public void freeTrainingArrowSelectionTest() {
-        arrowSelectionTest(FREE_TRAINING);
+        arrowSelectionTest(EditTrainingFragment.CREATE_FREE_TRAINING_ACTION);
     }
 
     @Test
     public void standardRoundArrowSelectionTest() {
-        arrowSelectionTest(TRAINING_WITH_STANDARD_ROUND);
+        arrowSelectionTest(EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION);
     }
 
-    private void arrowSelectionTest(int type) {
+    private void arrowSelectionTest(String type) {
         Intent intent = new Intent();
-        intent.putExtra(TRAINING_TYPE, type);
+        intent.setAction(type);
         activityTestRule.launchActivity(intent);
         allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
 

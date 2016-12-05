@@ -19,7 +19,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,7 @@ import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 
-import static de.dreier.mytargets.fragments.ListFragmentBase.ITEM_ID;
+import static de.dreier.mytargets.fragments.EditableListFragmentBase.ITEM_ID;
 
 public class EditRoundFragment extends EditFragmentBase {
     private static final String ROUND_ID = "round_id";
@@ -53,18 +52,16 @@ public class EditRoundFragment extends EditFragmentBase {
     private FragmentEditRoundBinding binding;
 
     @NonNull
-    protected static IntentWrapper createIntent(Fragment fragment, long trainingId) {
-        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditRoundActivity.class);
-        i.putExtra(ITEM_ID, trainingId);
-        return new IntentWrapper(fragment, i);
+    protected static IntentWrapper createIntent(Training training) {
+        return new IntentWrapper(SimpleFragmentActivityBase.EditRoundActivity.class)
+                .with(ITEM_ID, training.getId());
     }
 
     @NonNull
-    protected static IntentWrapper editIntent(Fragment fragment, long trainingId, Round round) {
-        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.EditRoundActivity.class);
-        i.putExtra(ITEM_ID, trainingId);
-        i.putExtra(ROUND_ID, round.getId());
-        return new IntentWrapper(fragment, i);
+    protected static IntentWrapper editIntent(Training training, Round round) {
+        return new IntentWrapper(SimpleFragmentActivityBase.EditRoundActivity.class)
+                .with(ITEM_ID, training.getId())
+                .with(ROUND_ID, round.getId());
     }
 
     @Nullable
@@ -140,8 +137,13 @@ public class EditRoundFragment extends EditFragmentBase {
         finish();
         if (roundId == -1) {
             Round round = onSaveRound();
-            RoundFragment.getIntent(this, round).startWithoutAnimation();
-            InputActivity.createIntent(this, round).start();
+            RoundFragment.getIntent(round)
+                    .withContext(this)
+                    .noAnimation()
+                    .start();
+            InputActivity.createIntent(round)
+                    .withContext(this)
+                    .start();
         } else {
             onSaveRound();
             getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);

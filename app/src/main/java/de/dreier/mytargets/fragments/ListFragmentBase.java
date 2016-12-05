@@ -14,40 +14,28 @@
  */
 package de.dreier.mytargets.fragments;
 
+import android.content.Context;
 import android.os.Parcelable;
-import android.support.annotation.PluralsRes;
-import android.support.annotation.StringRes;
-import android.support.v7.view.ActionMode;
 
-import de.dreier.mytargets.shared.models.IIdProvider;
-import de.dreier.mytargets.utils.OnCardClickListener;
+import de.dreier.mytargets.utils.OnItemClickListener;
 
-/**
- * Generic fragment class used as base for most fragments.
- *
- * @param <T> Model of the item which is managed within the fragment
- */
-public abstract class ListFragmentBase<T extends IIdProvider> extends FragmentBase
-        implements OnCardClickListener<T> {
-
-    protected static final String ITEM_ID = "id";
+public abstract class ListFragmentBase<T> extends FragmentBase implements OnItemClickListener<T> {
 
     /**
-     * Resource used to set title when items are selected
+     * Listener which gets called when item gets selected
      */
-    @PluralsRes
-    int itemTypeSelRes;
+    protected OnItemSelectedListener listener;
 
-    /**
-     * Resource describing FAB action
-     */
-    @StringRes
-    int newStringRes;
-
-    /**
-     * Action mode manager
-     */
-    ActionMode actionMode = null;
+    @Override
+    public void onAttach(Context activity) {
+        super.onAttach(activity);
+        if (activity instanceof OnItemSelectedListener) {
+            listener = (OnItemSelectedListener) activity;
+        }
+        if (getParentFragment() instanceof OnItemSelectedListener) {
+            listener = (OnItemSelectedListener) getParentFragment();
+        }
+    }
 
     /**
      * Used for communicating item selection

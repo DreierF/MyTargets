@@ -27,6 +27,7 @@ import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
+import de.dreier.mytargets.fragments.EditTrainingFragment;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
@@ -40,8 +41,8 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.matcher.ViewMatchers.Visibility.INVISIBLE;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
@@ -53,9 +54,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.OrientationChangeAction.orientationLandscape;
 import static de.dreier.mytargets.OrientationChangeAction.orientationPortrait;
 import static de.dreier.mytargets.PermissionGranter.allowPermissionsIfNeeded;
-import static de.dreier.mytargets.fragments.EditTrainingFragment.FREE_TRAINING;
-import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_TYPE;
-import static de.dreier.mytargets.fragments.EditTrainingFragment.TRAINING_WITH_STANDARD_ROUND;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.endsWith;
 
@@ -88,7 +86,7 @@ public class MainActivityNavigationTest extends UITestBase {
     public void navigationTest() {
         // Do settings work
         clickActionBarItem(R.id.action_preferences, R.string.preferences);
-        intended(hasComponent(SimpleFragmentActivityBase.SettingsActivity.class.getName()));
+        intended(hasComponent(SettingsActivity.class.getName()));
         pressBack();
 
         clickActionBarItem(R.id.action_statistics, R.string.statistic);
@@ -99,7 +97,7 @@ public class MainActivityNavigationTest extends UITestBase {
         onView(matchFab()).perform(click());
         onView(allOf(withId(R.id.fab1), withParent(withId(R.id.fab)))).perform(click());
         intended(allOf(hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
-                hasExtra(TRAINING_TYPE, FREE_TRAINING)));
+                hasAction(EditTrainingFragment.CREATE_FREE_TRAINING_ACTION)));
         allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
         pressBack();
 
@@ -108,7 +106,7 @@ public class MainActivityNavigationTest extends UITestBase {
         onView(allOf(withId(R.id.fab2), withParent(withId(R.id.fab)))).perform(click());
         intended(allOf(
                 hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
-                hasExtra(TRAINING_TYPE, TRAINING_WITH_STANDARD_ROUND)));
+                hasAction(EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)));
         pressBack();
 
         // TODO test with existing trainings, bows and arrows

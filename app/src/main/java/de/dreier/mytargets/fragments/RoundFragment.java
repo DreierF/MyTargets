@@ -16,12 +16,10 @@
 package de.dreier.mytargets.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -76,33 +74,36 @@ public class RoundFragment extends EditableListFragment<Passe> {
     }
 
     @NonNull
-    public static IntentWrapper getIntent(Fragment fragment, Round round) {
-        Intent i = new Intent(fragment.getContext(), SimpleFragmentActivityBase.RoundActivity.class);
-        i.putExtra(ROUND_ID, round.getId());
-        return new IntentWrapper(fragment, i);
+    public static IntentWrapper getIntent(Round round) {
+        return new IntentWrapper(SimpleFragmentActivityBase.RoundActivity.class)
+                .with(ROUND_ID, round.getId());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
-        binding.recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), R.drawable.full_divider));
+        binding.recyclerView.addItemDecoration(
+                new DividerItemDecoration(getContext(), R.drawable.full_divider));
         mAdapter = new EndAdapter(getContext());
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
         binding.fab.setVisibility(View.GONE);
         binding.fab.setOnClickListener(
-                v -> InputActivity.getIntent(this, round,
-                        binding.recyclerView.getAdapter().getItemCount())
-                                .fromFab(binding.fab)
-                                .start());
+                v -> InputActivity
+                        .getIntent(round, binding.recyclerView.getAdapter().getItemCount())
+                        .withContext(this)
+                        .fromFab(binding.fab)
+                        .start());
         // Get round
         if (getArguments() != null) {
             mRound = getArguments().getLong(ROUND_ID, -1);
         }
 
         round = new RoundDataSource().get(mRound);
-        ToolbarUtils.setTitle(this, String.format(Locale.ENGLISH, "%s %d", getString(R.string.round), round.info.index + 1));
+        ToolbarUtils.setTitle(this,
+                String.format(Locale.ENGLISH, "%s %d", getString(R.string.round),
+                        round.info.index + 1));
         ToolbarUtils.setSubtitle(this, round.getReachedPointsFormatted());
         setHasOptionsMenu(true);
 
@@ -130,7 +131,8 @@ public class RoundFragment extends EditableListFragment<Passe> {
 
         StandardRound standardRound = new StandardRoundDataSource()
                 .get(new TrainingDataSource().get(round.trainingId).standardRoundId);
-        boolean showFab = data.size() < round.info.endCount || standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
+        boolean showFab = data
+                .size() < round.info.endCount || standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
         binding.fab.setVisibility(showFab ? View.VISIBLE : View.GONE);
 
     }
@@ -145,13 +147,15 @@ public class RoundFragment extends EditableListFragment<Passe> {
         switch (item.getItemId()) {
             case R.id.action_scoreboard:
                 ScoreboardActivity
-                        .getIntent(this, round.trainingId, round.getId())
+                        .getIntent(round.trainingId, round.getId())
+                        .withContext(this)
                         .start();
                 return true;
             case R.id.action_statistics:
                 StatisticsActivity
-                        .getIntent(this,
-                        Collections.singletonList(round.getId())).start();
+                        .getIntent(Collections.singletonList(round.getId()))
+                        .withContext(this)
+                        .start();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -160,13 +164,15 @@ public class RoundFragment extends EditableListFragment<Passe> {
 
     @Override
     protected void onItemSelected(Passe item) {
-        InputActivity.getIntent(this, round, item.index)
+        InputActivity.getIntent(round, item.index)
+                .withContext(this)
                 .start();
     }
 
     @Override
     protected void onEdit(Passe item) {
-        InputActivity.getIntent(this, round, item.index)
+        InputActivity.getIntent(round, item.index)
+                .withContext(this)
                 .start();
     }
 

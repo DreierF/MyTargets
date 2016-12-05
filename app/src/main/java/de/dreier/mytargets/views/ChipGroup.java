@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.databinding.ChipsViewBinding;
+import de.dreier.mytargets.databinding.ViewChipsBinding;
 import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
 
 public class ChipGroup extends ViewGroup {
@@ -190,7 +190,7 @@ public class ChipGroup extends ViewGroup {
      * @param tag the tag to append.
      */
     protected void appendTag(Tag tag) {
-        ChipsViewBinding binding = tag.getView(getContext(), this);
+        ViewChipsBinding binding = tag.getView(getContext(), this);
         binding.getRoot().setOnClickListener(v -> {
             tag.isChecked = !tag.isChecked;
             binding.getRoot().setActivated(!tag.isChecked);
@@ -264,8 +264,8 @@ public class ChipGroup extends ViewGroup {
             this.image = image;
         }
 
-        public ChipsViewBinding getView(Context context, ViewGroup parent) {
-            ChipsViewBinding binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.chips_view, parent, false);
+        public ViewChipsBinding getView(Context context, ViewGroup parent) {
+            ViewChipsBinding binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.view_chips, parent, false);
             binding.setTag(this);
             binding.getRoot().setActivated(!isChecked);
             float mDensity = context.getResources().getDisplayMetrics().density;

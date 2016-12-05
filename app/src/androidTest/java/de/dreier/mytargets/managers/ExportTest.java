@@ -20,6 +20,9 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,8 +30,11 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.List;
 
 import de.dreier.mytargets.InstrumentedTestBase;
+import de.dreier.mytargets.managers.dao.RoundDataSource;
+import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.utils.rules.MiniDbTestRule;
 
 @SmallTest
@@ -36,18 +42,6 @@ import de.dreier.mytargets.utils.rules.MiniDbTestRule;
 public class ExportTest extends InstrumentedTestBase {
 
     private static final String EXPECTED = "\"Title\";\"Date\";\"Standard round\";\"Indoor\";\"Bow\";\"Arrow\";\"Round\";\"Distance\";\"Target\";\"End\";\"Timestamp\";\"Points\";\"x\";\"y\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"1\";\"14:11:30\";\"6\";\"-0.09704613\";\"0.48751888\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"1\";\"14:11:30\";\"8\";\"0.2544537\";\"0.18759277\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"1\";\"14:11:30\";\"8\";\"0.22305901\";\"0.24469331\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"1\";\"14:11:30\";\"4\";\"-0.7274932\";\"-0.101296484\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"1\";\"14:11:30\";\"6\";\"0.031262573\";\"0.4623869\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"1\";\"14:11:30\";\"8\";\"-0.08347331\";\"0.27355132\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"2\";\"14:23:38\";\"1\";\"-0.71199644\";\"-0.72292596\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"2\";\"14:23:38\";\"3\";\"0.7745199\";\"-0.24011837\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"2\";\"14:23:38\";\"9\";\"-0.1675149\";\"-0.095472515\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"2\";\"14:23:38\";\"3\";\"0.0035093275\";\"-0.83239406\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"2\";\"14:23:38\";\"7\";\"0.25423\";\"0.3326286\"\n" +
-            "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"1\";\"50m\";\"WA Full (122cm)\";\"2\";\"14:23:38\";\"9\";\"0.08042156\";\"0.17108005\"\n" +
             "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"2\";\"30m\";\"WA Full (122cm)\";\"1\";\"14:18:42\";\"9\";\"-0.19679837\";\"-0.054444958\"\n" +
             "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"2\";\"30m\";\"WA Full (122cm)\";\"1\";\"14:18:42\";\"7\";\"-0.35070917\";\"0.21802907\"\n" +
             "\"Training\";\"2016-07-03\";\"WA Standard\";\"Outdoor\";\"\";\"\";\"2\";\"30m\";\"WA Full (122cm)\";\"1\";\"14:18:42\";\"5\";\"0.1591012\";\"-0.6074063\"\n" +
@@ -93,7 +87,12 @@ public class ExportTest extends InstrumentedTestBase {
         Context context = InstrumentationRegistry.getTargetContext();
         DatabaseManager database = DatabaseManager.getInstance(context);
         final StringWriter writer = new StringWriter();
-        database.writeExportData(writer);
+        List<Long> roundIds = Stream.of(new RoundDataSource().getAll())
+                .map(Round::getId)
+                .sorted()
+                .collect(Collectors.toList());
+        roundIds.remove(0);
+        database.writeExportData(writer, roundIds);
         Assert.assertEquals(EXPECTED, writer.toString());
     }
 }

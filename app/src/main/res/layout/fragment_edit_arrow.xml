@@ -61,7 +61,7 @@
 
         </FrameLayout>
 
-        <include layout="@layout/divider_inset" />
+        <include layout="@layout/partial_divider_inset" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -93,7 +93,7 @@
 
         </FrameLayout>
 
-        <include layout="@layout/divider_inset" />
+        <include layout="@layout/partial_divider_inset" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -125,7 +125,7 @@
 
         </FrameLayout>
 
-        <include layout="@layout/divider_inset" />
+        <include layout="@layout/partial_divider_inset" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -157,7 +157,7 @@
 
         </FrameLayout>
 
-        <include layout="@layout/divider_inset" />
+        <include layout="@layout/partial_divider_inset" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -208,7 +208,7 @@
 
         </FrameLayout>
 
-        <include layout="@layout/divider_inset" />
+        <include layout="@layout/partial_divider_inset" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -240,7 +240,7 @@
 
         </FrameLayout>
 
-        <include layout="@layout/divider_inset" />
+        <include layout="@layout/partial_divider_inset" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -272,7 +272,7 @@
 
         </FrameLayout>
 
-        <include layout="@layout/divider_inset" />
+        <include layout="@layout/partial_divider_inset" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -304,7 +304,7 @@
 
         </FrameLayout>
 
-        <include layout="@layout/divider_inset" />
+        <include layout="@layout/partial_divider_inset" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -336,7 +336,7 @@
 
         </FrameLayout>
 
-        <include layout="@layout/divider_inset" />
+        <include layout="@layout/partial_divider_inset" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -368,7 +368,7 @@
 
         </FrameLayout>
 
-        <include layout="@layout/divider_inset" />
+        <include layout="@layout/partial_divider_inset" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -30,7 +30,7 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.activities.SettingsActivity;
 import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
 import de.dreier.mytargets.databinding.FragmentMainBinding;
@@ -81,12 +81,14 @@ public class MainFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_statistics:
                 StatisticsActivity
-                        .getIntent(this, Stream.of(new RoundDataSource().getAll())
+                        .getIntent(Stream.of(new RoundDataSource().getAll())
                                         .map(Round::getId)
-                                        .collect(Collectors.toList())).start();
+                                        .collect(Collectors.toList()))
+                        .withContext(this)
+                        .start();
                 return true;
             case R.id.action_preferences:
-                startActivity(new Intent(getContext(), SimpleFragmentActivityBase.SettingsActivity.class));
+                startActivity(new Intent(getContext(), SettingsActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

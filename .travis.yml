@@ -38,8 +38,8 @@ after_success:
 - |
   if [[ "$TRAVIS_TAG" ]]; then
     ./gradlew publishRegularRelease
-    sudo ./dropbox_uploader.sh upload app/build/outputs/apk/app-regular-release.apk /$TRAVIS_TAG/MyTargets.apk
-    sudo ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /$TRAVIS_TAG/mapping.txt
+    sudo ./dropbox_uploader.sh upload app/build/outputs/apk/app-regular-release.apk /Release/$TRAVIS_TAG/MyTargets.apk
+    sudo ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /Release/$TRAVIS_TAG/mapping.txt
   fi
 - ./gradlew -Pversioneye.projectid=5808adf4e1e050004075dc1d versionEyeUpdate
 - bash <(curl -s https://codecov.io/bash)
@@ -50,7 +50,8 @@ after_failure:
 - chmod +x dropbox_uploader.sh
 - cd app/build/reports/androidTests/connected/flavors/REGULAR/
 - zip -r reports.zip .
-- ./dropbox_uploader.sh upload reports.zip /Reports/$TRAVIS_JOB_NUMBER.zip
+- cd ../../../../../../..
+- ./dropbox_uploader.sh upload app/build/reports/androidTests/connected/flavors/REGULAR/reports.zip /Reports/$TRAVIS_JOB_NUMBER.zip
 deploy:
   provider: releases
   skip_cleanup: true
