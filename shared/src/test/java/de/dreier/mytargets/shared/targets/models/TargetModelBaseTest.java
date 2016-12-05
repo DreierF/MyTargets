@@ -13,22 +13,23 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.targets;
+package de.dreier.mytargets.shared.targets.models;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.targets.TargetFactory;
 
 public class TargetModelBaseTest {
     @Test
     public void trivialTargetRealSize() throws Exception {
-        for(int id = NFAAField.ID; id<=WAField3Spot.ID;id++) {
+        for (int id = NFAAField.ID; id <= WAField3Spot.ID; id++) {
             TargetModelBase target = TargetFactory.getTarget(id);
             final Dimension diameter = new Dimension(40, Dimension.Unit.CENTIMETER);
             Dimension realSize = target.getRealSize(diameter);
-            Assert.assertEquals("Real size "+realSize.toString()+" for target id "+
-                    id+" does not match with expected value 40cm",
+            Assert.assertEquals("Real size " + realSize.toString() + " for target id " +
+                            id + " does not match with expected value 40cm",
                     realSize, new Dimension(40, Dimension.Unit.CENTIMETER));
         }
     }

@@ -18,7 +18,7 @@
 
     <TextView
         android:id="@+id/distance"
-        style="@style/primary_text"
+        style="@style/primaryText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"

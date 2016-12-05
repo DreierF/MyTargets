@@ -13,12 +13,22 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.features.settings.backup;
 
-import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+public class BackupException extends Exception {
+    private final String message;
 
-public interface OnCardClickListener<T> {
-    void onClick(SelectableViewHolder holder, T item);
+    public BackupException(String message) {
+        this.message = message;
+    }
 
-    void onLongClick(SelectableViewHolder holder);
+    public BackupException(String message, Exception e) {
+        super(e);
+        this.message = message;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
 }

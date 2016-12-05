@@ -54,7 +54,7 @@ public abstract class ImageSelectorBase<T extends IImageProvider> extends Select
         invalidate();
     }
 
-    void setTitle(@StringRes int title) {
+    protected void setTitle(@StringRes int title) {
         binding.title.setVisibility(VISIBLE);
         binding.title.setText(title);
     }

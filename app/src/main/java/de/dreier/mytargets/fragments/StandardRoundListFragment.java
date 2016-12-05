@@ -16,10 +16,10 @@
 package de.dreier.mytargets.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -42,41 +42,32 @@ import org.parceler.Parcels;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.ListAdapterBase;
-import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
 import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DataLoaderBase.BackgroundAction;
-import de.dreier.mytargets.utils.SlideInItemAnimator;
-import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
+public class StandardRoundListFragment extends SelectPureListItemFragmentBase<StandardRound>
         implements View.OnClickListener, SearchView.OnQueryTextListener,
         LoaderManager.LoaderCallbacks<List<StandardRound>> {
 
     private static final int NEW_STANDARD_ROUND = 1;
     private static final String KEY_QUERY = "query";
-    private FragmentListBinding binding;
 
     private StandardRound currentSelection;
     private SearchView searchView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
-        binding.recyclerView.setHasFixedSize(true);
-        mAdapter = new StandardRoundAdapter(getContext());
-        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
-        binding.recyclerView.setAdapter(mAdapter);
+        super.onCreateView(inflater, container, savedInstanceState);
+        binding.recyclerView.setHasFixedSize(false);
         binding.fab.setOnClickListener(this);
         useDoubleClickSelection = true;
-        ToolbarUtils.showUpAsX(this);
         setHasOptionsMenu(true);
         return binding.getRoot();
     }
@@ -146,7 +137,7 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
     }
 
     @Override
-    public void onClick(SelectableViewHolder holder, StandardRound mItem) {
+    public void onClick(SelectableViewHolder<StandardRound> holder, StandardRound mItem) {
         if (mItem == null) {
             return;
         }
@@ -155,12 +146,12 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
     }
 
     @Override
-    public void onLongClick(SelectableViewHolder holder) {
-        StandardRound item = (StandardRound) holder.getItem();
+    public void onLongClick(SelectableViewHolder<StandardRound> holder) {
+        StandardRound item = holder.getItem();
         if (item.club == StandardRoundFactory.CUSTOM && item.usages == 0) {
-            EditStandardRoundFragment
-                    .editIntent(this, item)
-                    .startForResult(NEW_STANDARD_ROUND);
+            EditStandardRoundFragment.editIntent(item)
+                    .withContext(this).forResult(NEW_STANDARD_ROUND)
+                    .start();
         } else {
             new MaterialDialog.Builder(getContext())
                     .title(R.string.use_as_template)
@@ -168,8 +159,10 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
                     .positiveText(android.R.string.yes)
                     .negativeText(android.R.string.cancel)
                     .onPositive((dialog1, which1) -> EditStandardRoundFragment
-                                    .editIntent(this, item)
-                                    .startForResult(NEW_STANDARD_ROUND))
+                            .editIntent(item)
+                            .withContext(this)
+                            .forResult(NEW_STANDARD_ROUND)
+                            .start())
                     .show();
         }
     }
@@ -193,9 +186,10 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
 
     @Override
     public void onClick(View v) {
-        EditStandardRoundFragment.createIntent(this)
-                .fromFab(binding.fab)
-                .startForResult(NEW_STANDARD_ROUND);
+        EditStandardRoundFragment.createIntent()
+                .withContext(this)
+                .fromFab(binding.fab).forResult(NEW_STANDARD_ROUND)
+                .start();
     }
 
     @Override
@@ -225,16 +219,11 @@ public class StandardRoundListFragment extends SelectItemFragment<StandardRound>
         return false;
     }
 
-    private class StandardRoundAdapter extends ListAdapterBase<StandardRound> {
-        StandardRoundAdapter(Context context) {
-            super(context);
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent) {
-            return new ViewHolder(
-                    DataBindingUtil.inflate(inflater, R.layout.item_standard_round, parent, false));
-        }
+    @NonNull
+    @Override
+    protected ViewHolder onCreateViewHolder(LayoutInflater inflater, ViewGroup parent) {
+        return new ViewHolder(
+                DataBindingUtil.inflate(inflater, R.layout.item_standard_round, parent, false));
     }
 
     public class ViewHolder extends SelectableViewHolder<StandardRound> {

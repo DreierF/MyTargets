@@ -41,12 +41,13 @@ public class ChildActivityBase extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        if (Utils.isLollipop()) {
-            finishAfterTransition();
-        } else {
-            finish();
-            overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        if (!getSupportFragmentManager().popBackStackImmediate()) {
+            if (Utils.isLollipop()) {
+                finishAfterTransition();
+            } else {
+                finish();
+                overridePendingTransition(R.anim.left_in, R.anim.right_out);
+            }
         }
     }
 }

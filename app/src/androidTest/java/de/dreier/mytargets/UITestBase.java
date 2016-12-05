@@ -18,26 +18,27 @@ package de.dreier.mytargets;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.test.espresso.FailureHandler;
-import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewAssertion;
-import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Tap;
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.uiautomator.UiDevice;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.DatePicker;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
+
+import de.dreier.mytargets.utils.matchers.MatcherUtils;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
@@ -53,6 +54,7 @@ import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 public class UITestBase extends InstrumentedTestBase {
@@ -75,12 +77,7 @@ public class UITestBase extends InstrumentedTestBase {
     protected static ViewAction clickTarget(final float x, final float y) {
         return new GeneralClickAction(
                 Tap.SINGLE,
-                new CoordinatesProvider() {
-                    @Override
-                    public float[] calculateCoordinates(View view) {
-                        return LowLevelActions.getTargetCoordinates(view, new float[]{x, y});
-                    }
-                },
+                view -> LowLevelActions.getTargetCoordinates(view, new float[]{x, y}),
                 Press.FINGER);
     }
 
@@ -103,37 +100,15 @@ public class UITestBase extends InstrumentedTestBase {
     }
 
     public static ViewAssertion assertItemCount(int expectedCount) {
-        return new ViewAssertion() {
-            public void check(View view, NoMatchingViewException noViewFoundException) {
-                if (noViewFoundException != null) {
-                    throw noViewFoundException;
-                }
-
-                RecyclerView recyclerView = (RecyclerView) view;
-                RecyclerView.Adapter adapter = recyclerView.getAdapter();
-                assertThat(adapter.getItemCount(), is(expectedCount));
+        return (view, noViewFoundException) -> {
+            if (noViewFoundException != null) {
+                throw noViewFoundException;
             }
+
+            RecyclerView recyclerView = (RecyclerView) view;
+            RecyclerView.Adapter adapter = recyclerView.getAdapter();
+            assertThat(adapter.getItemCount(), is(expectedCount));
         };
-    }
-
-    protected void clickActionBarItem(@IdRes int menuItem, @StringRes int title) {
-        onView(withId(menuItem)).withFailureHandler(new FailureHandler() {
-            @Override
-            public void handle(Throwable error, Matcher<View> viewMatcher) {
-                openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-                onView(withText(title)).perform(click());
-            }
-        }).perform(click());
-    }
-
-    protected void clickContextualActionBarItem(@IdRes int menuItem, @StringRes int title) {
-        onView(withId(menuItem)).withFailureHandler(new FailureHandler() {
-            @Override
-            public void handle(Throwable error, Matcher<View> viewMatcher) {
-                openContextualActionModeOverflowMenu();
-                onView(withText(title)).perform(click());
-            }
-        }).perform(click());
     }
 
     protected static Matcher<View> childAtPosition(
@@ -153,5 +128,47 @@ public class UITestBase extends InstrumentedTestBase {
                         && view.equals(((ViewGroup) parent).getChildAt(position));
             }
         };
+    }
+
+    protected static Matcher<View> isOnForegroundFragment() {
+
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("is on foreground fragment");
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                View content = MatcherUtils.getParentViewById(view, android.R.id.content);
+                if (content != null && content instanceof ViewGroup) {
+                    final View currentFragment = ((ViewGroup) content)
+                            .getChildAt(((ViewGroup) content).getChildCount() - 1);
+                    return MatcherUtils.isInViewHierarchy(view, currentFragment);
+                }
+                return false;
+            }
+
+        };
+    }
+
+    protected void clickActionBarItem(@IdRes int menuItem, @StringRes int title) {
+        onView(withId(menuItem)).withFailureHandler((error, viewMatcher) -> {
+            openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+            onView(withText(title)).perform(click());
+        }).perform(click());
+    }
+
+    protected void clickContextualActionBarItem(@IdRes int menuItem, @StringRes int title) {
+        onView(withId(menuItem)).withFailureHandler((error, viewMatcher) -> {
+            openContextualActionModeOverflowMenu();
+            onView(withText(title)).perform(click());
+        }).perform(click());
+    }
+
+    protected void enterDate(int year, int monthOfYear, int dayOfMonth) {
+        onView(withClassName(equalTo(DatePicker.class.getName())))
+                .perform(PickerActions.setDate(year, monthOfYear, dayOfMonth));
+        onView(withId(android.R.id.button1)).perform(click());
     }
 }

@@ -17,7 +17,7 @@ package de.dreier.mytargets.utils.multiselector;
 
 import android.view.View;
 
-import de.dreier.mytargets.utils.OnCardClickListener;
+import de.dreier.mytargets.utils.OnItemClickListener;
 
 /**
  * A holder extended to support having a selectable mode with a different
@@ -44,7 +44,7 @@ import de.dreier.mytargets.utils.OnCardClickListener;
 public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
         implements View.OnClickListener, View.OnLongClickListener {
     private final MultiSelector mMultiSelector;
-    private OnCardClickListener<T> mListener;
+    private OnItemClickListener<T> mListener;
     private boolean mIsSelectable = false;
 
     /**
@@ -60,7 +60,7 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
      * @param itemView      Item view for this ViewHolder
      * @param multiSelector A selector set to bind this holder to
      */
-    public SelectableViewHolder(View itemView, MultiSelector multiSelector, OnCardClickListener<T> listener) {
+    public SelectableViewHolder(View itemView, MultiSelector multiSelector, OnItemClickListener<T> listener) {
         super(itemView);
         this.mMultiSelector = multiSelector;
         itemView.setOnClickListener(this);

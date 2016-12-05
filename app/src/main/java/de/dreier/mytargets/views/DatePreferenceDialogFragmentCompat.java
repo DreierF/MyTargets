@@ -19,6 +19,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
@@ -27,6 +28,15 @@ import android.widget.DatePicker;
 import org.joda.time.LocalDate;
 
 public class DatePreferenceDialogFragmentCompat extends PreferenceDialogFragmentCompat implements DialogPreference.TargetFragment, DatePickerDialog.OnDateSetListener {
+
+    @NonNull
+    public static DialogFragment newInstance(String key) {
+        DialogFragment dialogFragment = new DatePreferenceDialogFragmentCompat();
+        Bundle bundle = new Bundle(1);
+        bundle.putString("key", key);
+        dialogFragment.setArguments(bundle);
+        return dialogFragment;
+    }
 
     @NonNull
     @Override

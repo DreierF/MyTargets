@@ -59,7 +59,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"/>
 
-                        <include layout="@layout/divider_full"/>
+                        <include layout="@layout/partial_divider_full"/>
 
                     </LinearLayout>
 
@@ -77,7 +77,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"/>
 
-                        <include layout="@layout/divider_full"/>
+                        <include layout="@layout/partial_divider_full"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"

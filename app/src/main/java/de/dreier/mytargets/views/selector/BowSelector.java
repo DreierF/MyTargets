@@ -23,9 +23,10 @@ import android.util.AttributeSet;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.activities.ItemSelectActivity;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.fragments.EditBowFragment;
 import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.utils.IntentWrapper;
 
 public class BowSelector extends ImageSelectorBase<Bow> {
 
@@ -39,13 +40,13 @@ public class BowSelector extends ImageSelectorBase<Bow> {
     public BowSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
         defaultActivity = ItemSelectActivity.BowActivity.class;
-        addActivity = SimpleFragmentActivityBase.EditBowActivity.class;
         requestCode = BOW_REQUEST_CODE;
     }
 
     @Override
-    protected void onAddButtonClicked() {
-        fragment.startActivityForResult(getAddIntent(), BOW_ADD_REQUEST_CODE);
+    protected IntentWrapper getAddIntent() {
+        return EditBowFragment.createIntent()
+                .forResult(BOW_ADD_REQUEST_CODE);
     }
 
     @Override

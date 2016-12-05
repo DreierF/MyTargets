@@ -37,7 +37,7 @@
 
                 <TextView
                     android:id="@+id/title"
-                    style="@style/primary_text"
+                    style="@style/primaryText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="false"
@@ -45,7 +45,7 @@
 
                 <TextView
                     android:id="@+id/subtitle"
-                    style="@style/secondary_text"
+                    style="@style/secondaryText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -55,7 +55,7 @@
 
             <TextView
                 android:id="@+id/points"
-                style="@style/secondary_text"
+                style="@style/secondaryText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="false"

@@ -15,9 +15,7 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -60,10 +58,9 @@ public class TimerFragment extends FragmentBase implements View.OnClickListener 
     private FragmentTimerBinding binding;
 
     @NonNull
-    public static IntentWrapper getIntent(Activity activity, int timePerPasse) {
-        Intent intent = new Intent(activity, SimpleFragmentActivityBase.TimerActivity.class);
-        intent.putExtra(SHOOTING_TIME, timePerPasse);
-        return new IntentWrapper(activity, intent);
+    public static IntentWrapper getIntent(int timePerPasse) {
+        return new IntentWrapper(SimpleFragmentActivityBase.TimerActivity.class)
+                .with(SHOOTING_TIME, timePerPasse);
     }
 
     @Override

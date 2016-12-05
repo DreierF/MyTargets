@@ -21,6 +21,7 @@ import android.preference.PreferenceManager;
 import org.parceler.ParcelClass;
 import org.parceler.ParcelClasses;
 
+import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.models.Arrow;
 import de.dreier.mytargets.shared.models.ArrowNumber;
@@ -54,6 +55,7 @@ import de.dreier.mytargets.utils.MyBackupAgent;
         @ParcelClass(Coordinate.class),
         @ParcelClass(Dimension.class),
         @ParcelClass(Environment.class),
+        @ParcelClass(EBackupLocation.class),
         @ParcelClass(Passe.class),
         @ParcelClass(EndRenderer.class),
         @ParcelClass(Round.class),

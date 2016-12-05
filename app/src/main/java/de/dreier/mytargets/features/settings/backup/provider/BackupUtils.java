@@ -13,24 +13,18 @@
  * GNU General Public License for more details.
  */
 
+package de.dreier.mytargets.features.settings.backup.provider;
 
-
-package de.dreier.mytargets.utils;
-
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Environment;
-import android.util.Log;
-import android.widget.Toast;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,42 +32,20 @@ import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.DatabaseManager;
+
+import static android.support.v4.content.FileProvider.getUriForFile;
 
 
 public class BackupUtils {
 
-    private static final String FOLDER_NAME = "MyTargets";
     private static final int BUFFER = 1024;
-
-    public static boolean Import(Activity a, Uri uri) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(a);
-        try {
-            InputStream st = a.getContentResolver().openInputStream(uri);
-            if (!DatabaseManager.Import(a, st)) {
-                throw new IllegalStateException();
-            }
-
-            Toast.makeText(a, R.string.import_successful, Toast.LENGTH_SHORT).show();
-            return true;
-        } catch (FileNotFoundException ioe) {
-            ioe.printStackTrace();
-            builder.setTitle(R.string.import_failed);
-            builder.setMessage(a.getString(R.string.file_not_found));
-        } catch (Exception e) {
-            e.printStackTrace();
-            builder.setTitle(R.string.import_failed);
-            builder.setMessage(a.getString(R.string.failed_reading_file));
-        }
-        builder.setNegativeButton("", null);
-        builder.setPositiveButton(android.R.string.ok, null).show();
-        return false;
-    }
 
     public static void copy(File src, File dst) throws IOException {
         FileInputStream inStream = new FileInputStream(src);
@@ -82,59 +54,47 @@ public class BackupUtils {
         FileChannel outChannel = outStream.getChannel();
         inChannel.transferTo(0, inChannel.size(), outChannel);
         inStream.close();
+        outStream.flush();
         outStream.close();
     }
 
-    public static void copy(InputStream in, File dst) throws IOException {
-        OutputStream out = new FileOutputStream(dst);
+    public static void copy(InputStream in, OutputStream out) throws IOException {
         byte[] buf = new byte[1024];
         int len;
         while ((len = in.read(buf)) > 0) {
             out.write(buf, 0, len);
         }
+        out.flush();
         in.close();
         out.close();
     }
 
-    public static Uri export(Context context) throws IOException {
+    public static Uri export(Context context, List<Long> roundIds) throws IOException {
+        String packageName = context.getPackageName();
+        String authority = packageName + ".easyphotopicker.fileprovider";
+
         DatabaseManager db = DatabaseManager.getInstance(context);
-        String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");
-        String fileName =
-                "/" + FOLDER_NAME + "/exported_data_" + format.format(new Date()) + ".csv";
-        File f = new File(baseDir);
-        f.mkdir();
-        if (!f.exists() || !f.isDirectory()) {
-            throw new IOException(context.getString(R.string.dir_not_created));
-        }
-        File file = new File(baseDir + fileName);
-        db.exportAll(file);
-        return Uri.fromFile(file);
+        final File f = new File(context.getCacheDir(), getExportFileName());
+        db.exportAll(f, roundIds);
+        return getUriForFile(context, authority, f);
     }
 
-    public static Uri backup(Context context) throws IOException {
-        String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd");
-        String fileName = baseDir + "/" + FOLDER_NAME + "/backup_" + format
-                .format(new Date()) + ".zip";
-        File f = new File(baseDir + "/" + FOLDER_NAME);
-        f.mkdir();
-        if (!f.exists() || !f.isDirectory()) {
-            throw new IOException(context.getString(R.string.dir_not_created));
-        }
-
-        zip(context, fileName);
-
-        return Uri.fromFile(new File(fileName));
+    @NonNull
+    private static String getExportFileName() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
+        return "exported_data_" + format.format(new Date()) + ".csv";
     }
 
-    private static void zip(Context context, String zipFileName) {
+    @NonNull
+    static String getBackupName() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
+        return "backup_" + format.format(new Date()) + ".zip";
+    }
+
+    public static void zip(Context context, OutputStream dest) throws IOException {
+        ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
         try {
             BufferedInputStream origin;
-            FileOutputStream dest = new FileOutputStream(zipFileName);
-            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
             byte data[] = new byte[BUFFER];
 
             File db = context.getDatabasePath(DatabaseManager.DATABASE_NAME);
@@ -164,6 +124,16 @@ public class BackupUtils {
             }
 
             out.close();
+        } finally {
+            safeCloseClosable(out);
+        }
+    }
+
+    static void safeCloseClosable(@Nullable Closeable closeable) {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -199,7 +169,6 @@ public class BackupUtils {
                     // Write all other files(images) to files dir in apps data
                     int start = sourceEntry.getName().lastIndexOf("/") + 1;
                     String name = sourceEntry.getName().substring(start);
-                    Log.d("", name);
                     fOut = context.openFileOutput(name, Context.MODE_PRIVATE);
                 }
 
@@ -216,16 +185,17 @@ public class BackupUtils {
                     }
                     targetStream.flush();
                 } finally {
-                    targetStream.close();
+                    safeCloseClosable(targetStream);
                 }
                 zin.closeEntry();
             }
         } finally {
-            in.close();
+            safeCloseClosable(in);
         }
         if (dbFiles != 1) {
             throw new IllegalStateException("Input file is not a valid backup");
         }
         return tmpDb;
     }
+
 }

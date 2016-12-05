@@ -14,10 +14,8 @@
   ~ GNU General Public License for more details.
   -->
 
-<View
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:background="@color/dividerColor"
-    tools:showIn="@layout/fragment_edit_training"/>
+<account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
+                       android:accountType="mytargets.dreier.de"
+                       android:icon="@mipmap/ic_launcher"
+                       android:label="@string/my_targets"
+                       android:smallIcon="@mipmap/ic_launcher"/>

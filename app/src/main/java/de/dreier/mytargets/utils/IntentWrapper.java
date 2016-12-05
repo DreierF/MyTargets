@@ -18,9 +18,10 @@ package de.dreier.mytargets.utils;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -29,89 +30,141 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.utils.transitions.FabTransform;
 
 public class IntentWrapper {
-    @Nullable
-    private final Fragment fragment;
-    private final Activity activity;
+
     private final Intent intent;
+    private final Class<?> intentTargetClass;
     private Bundle options = null;
+    private Integer requestCode;
+    private boolean animate = true;
+    private Fragment fragment;
+    private Activity activity;
 
-    public IntentWrapper(Activity activity, Class<?> cls) {
-        this(activity, new Intent(activity, cls));
+    public IntentWrapper(Class<?> cls) {
+        intentTargetClass = cls;
+        intent = new Intent();
     }
 
-    public IntentWrapper(Fragment fragment, Class<?> cls) {
-        this(fragment, new Intent(fragment.getContext(), cls));
-    }
-
-    public IntentWrapper(Activity activity, Intent intent) {
-        this.activity = activity;
-        this.fragment = null;
-        this.intent = intent;
-    }
-
-    public IntentWrapper(Fragment fragment, Intent intent) {
+    public IntentWrapper withContext(Fragment fragment) {
         this.fragment = fragment;
-        this.activity = fragment.getActivity();
-        this.intent = intent;
+        activity = fragment.getActivity();
+        intent.setClass(fragment.getContext(), intentTargetClass);
+        return this;
+    }
+
+    public IntentWrapper withContext(Activity activity) {
+        this.activity = activity;
+        intent.setClass(activity, intentTargetClass);
+        return this;
+    }
+
+    public IntentWrapper with(String key, long value) {
+        intent.putExtra(key, value);
+        return this;
+    }
+
+    public IntentWrapper with(String key, int value) {
+        intent.putExtra(key, value);
+        return this;
+    }
+
+    public IntentWrapper with(String key, boolean value) {
+        intent.putExtra(key, value);
+        return this;
+    }
+
+    public IntentWrapper with(String key, String value) {
+        intent.putExtra(key, value);
+        return this;
+    }
+
+    public IntentWrapper with(String key, Parcelable value) {
+        intent.putExtra(key, value);
+        return this;
+    }
+
+    public IntentWrapper with(String key, long[] values) {
+        intent.putExtra(key, values);
+        return this;
+    }
+
+    public IntentWrapper action(String action) {
+        intent.setAction(action);
+        return this;
     }
 
     public IntentWrapper fromFab(View fab) {
-        return fromFab(fab, ContextCompat.getColor(getContext(), R.color.colorAccent),
+        return fromFab(fab, ContextCompat.getColor(fab.getContext(), R.color.colorAccent),
                 R.drawable.ic_add_white_24dp);
-    }
-
-    private Context getContext() {
-        return fragment == null ? activity : fragment.getContext();
     }
 
     public IntentWrapper fromFab(View fab, int color, int icon) {
         if (Utils.isLollipop()) {
             FabTransform.addExtras(intent, color, icon);
             ActivityOptions options = ActivityOptions
-                    .makeSceneTransitionAnimation(activity, fab,
-                            getContext().getString(R.string.transition_root_view));
+                    .makeSceneTransitionAnimation(getActivity(fab), fab,
+                            fab.getContext().getString(R.string.transition_root_view));
             this.options = options.toBundle();
         }
         return this;
     }
 
-    public void startWithoutAnimation() {
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        if (fragment != null) {
-            fragment.startActivity(intent);
-        } else {
-            activity.startActivity(intent);
+    private Activity getActivity(View view) {
+        Context context = view.getContext();
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity) context;
+            }
+            context = ((ContextWrapper) context).getBaseContext();
         }
+        return null;
+    }
+
+    public IntentWrapper forResult(int requestCode) {
+        this.requestCode = requestCode;
+        return this;
+    }
+
+    public IntentWrapper noAnimation() {
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        animate = false;
+        return this;
     }
 
     public void start() {
-        if(fragment!=null) {
-            fragment.startActivity(intent, options);
+        if (fragment == null) {
+            start(activity);
         } else {
-            if (Utils.isLollipop()) {
-                activity.startActivity(intent, options);
-            } else {
-                activity.startActivity(intent);
-            }
+            start(fragment);
         }
-        animate();
+        animate(activity);
     }
 
-    public void startForResult(int requestCode) {
-        if(fragment!=null) {
-            fragment.startActivityForResult(intent, requestCode, options);
+    private void start(Fragment fragment) {
+        if (requestCode == null) {
+            fragment.startActivity(intent, options);
         } else {
-            if (Utils.isLollipop()) {
+            fragment.startActivityForResult(intent, requestCode, options);
+        }
+    }
+
+    private void start(Activity activity) {
+        if (Utils.isLollipop()) {
+            if (requestCode == null) {
+                activity.startActivity(intent, options);
+            } else {
                 activity.startActivityForResult(intent, requestCode, options);
+            }
+        } else {
+            if (requestCode == null) {
+                activity.startActivity(intent);
             } else {
                 activity.startActivityForResult(intent, requestCode);
             }
         }
-        animate();
     }
 
-    private void animate() {
-        if (!Utils.isLollipop()) {
+    private void animate(Activity activity) {
+        if (!Utils.isLollipop() && animate) {
             activity.overridePendingTransition(R.anim.right_in, R.anim.left_out);
         }
     }
