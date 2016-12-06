@@ -36,7 +36,6 @@ import org.joda.time.DateTime;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.R;
@@ -49,7 +48,6 @@ import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.db.Arrow;
-import de.dreier.mytargets.shared.models.db.ArrowNumber;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Passe;
 import de.dreier.mytargets.shared.models.db.Round;
@@ -240,7 +238,7 @@ public class InputActivity extends ChildActivityBase
         }
         targetView = (TargetView) binding.targetViewStub.getBinding().getRoot();
         targetView.setTarget(getCurrentRound().getTarget());
-        targetView.setArrow(data.arrowDiameter, data.arrowNumbers);
+        targetView.setArrow(data.arrowDiameter, data.training.arrowNumbering);
         targetView.setOnTargetSetListener(InputActivity.this);
         targetView.setUpdateListener(InputActivity.this);
         targetView.reloadSettings();
@@ -530,7 +528,6 @@ public class InputActivity extends ChildActivityBase
         StandardRound standardRound;
         int roundIndex;
         Dimension arrowDiameter;
-        List<ArrowNumber> arrowNumbers;
         int endIndex;
     }
 }

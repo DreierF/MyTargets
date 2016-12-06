@@ -28,7 +28,6 @@ import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.models.WindDirection;
 import de.dreier.mytargets.shared.models.WindSpeed;
 import de.dreier.mytargets.shared.models.db.Arrow;
-import de.dreier.mytargets.shared.models.db.ArrowNumber;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Passe;
 import de.dreier.mytargets.shared.models.db.Round;

@@ -68,8 +68,6 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
     @Column(name = "image")
     public String imageFile;
 
-    public List<ArrowNumber> numbers = new ArrayList<>();
-
     public static List<Arrow> getAll() {
         return SQLite.select().from(Arrow.class).queryList();
     }

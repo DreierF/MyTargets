@@ -126,7 +126,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         binding.distance.setOnActivityResultContext(this);
 
         binding.bow.setOnUpdateListener(this::setScoringStyleForCompoundBow);
-        binding.arrow.setOnUpdateListener(this::updateArrowNumbers);
 
         if (trainingId == -1) {
             ToolbarUtils.setTitle(this, R.string.new_training);
@@ -173,7 +172,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         binding.trainingDate.setOnClickListener(view -> onDateClick());
         applyTrainingType();
         updateArrowsLabel();
-        updateArrowNumbers(binding.arrow.getSelectedItem());
 
         return binding.getRoot();
     }
@@ -228,14 +226,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         datePickerDialog.setTargetFragment(EditTrainingFragment.this, REQ_SELECTED_DATE);
         datePickerDialog.setArguments(bundle);
         datePickerDialog.show(getActivity().getSupportFragmentManager(), "date_picker");
-    }
-
-    private void updateArrowNumbers(Arrow item) {
-        if (item == null || item.getArrowNumbers().isEmpty()) {
-            binding.numberArrows.setVisibility(View.GONE);
-        } else {
-            binding.numberArrows.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
@@ -310,9 +300,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                 .getSelectedItem().getId();
         training.timePerPasse = binding.timer.isChecked() ? SettingsManager
                 .getTimerShootTime() : -1;
-        Arrow selectedItem = binding.arrow.getSelectedItem();
-        training.arrowNumbering = !(selectedItem == null || selectedItem.getArrowNumbers().isEmpty()) &&
-                binding.numberArrows.isChecked();
+        training.arrowNumbering = binding.numberArrows.isChecked();
 
         SettingsManager.setBow(training.bow);
         SettingsManager.setArrow(training.arrow);

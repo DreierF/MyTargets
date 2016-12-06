@@ -55,11 +55,6 @@ public class AppDatabase {
         db.execSQL("DELETE FROM SHOOT WHERE _id IN (SELECT s._id " +
                 "FROM SHOOT s LEFT JOIN PASSE p ON p._id=s.passe " +
                 "WHERE p._id IS NULL)");
-
-        // Clean up arrow numbers
-        db.execSQL("DELETE FROM NUMBER WHERE _id IN (SELECT s._id " +
-                "FROM NUMBER s LEFT JOIN ARROW a ON a._id=s.arrow " +
-                "WHERE a._id IS NULL)");
     }
 
     private static void fillStandardRound(DatabaseWrapper db) {
