@@ -36,7 +36,6 @@ import org.joda.time.DateTime;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.R;
@@ -45,7 +44,6 @@ import de.dreier.mytargets.fragments.TimerFragment;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.managers.WearMessageManager;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
-import de.dreier.mytargets.managers.dao.ArrowNumberDataSource;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.managers.dao.RoundTemplateDataSource;
@@ -55,7 +53,6 @@ import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.models.EShowMode;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Arrow;
-import de.dreier.mytargets.shared.models.ArrowNumber;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.Passe;
@@ -247,7 +244,7 @@ public class InputActivity extends ChildActivityBase
         }
         targetView = (TargetView) binding.targetViewStub.getBinding().getRoot();
         targetView.setTarget(getTemplate().target);
-        targetView.setArrow(data.arrowDiameter, data.arrowNumbers);
+        targetView.setArrow(data.arrowDiameter, data.training.arrowNumbering);
         targetView.setOnTargetSetListener(InputActivity.this);
         targetView.setUpdateListener(InputActivity.this);
         targetView.reloadSettings();
@@ -519,10 +516,6 @@ public class InputActivity extends ChildActivityBase
                 }
             }
 
-            result.arrowNumbers = result.training.arrowNumbering
-                    ? new ArrowNumberDataSource().getAll(result.training.arrow)
-                    : Collections.emptyList();
-
             return result;
         }
     }
@@ -535,7 +528,6 @@ public class InputActivity extends ChildActivityBase
         StandardRound standardRound;
         int roundIndex;
         Dimension arrowDiameter;
-        List<ArrowNumber> arrowNumbers;
         int endIndex;
     }
 }

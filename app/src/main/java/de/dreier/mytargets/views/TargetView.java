@@ -51,7 +51,6 @@ import java.util.TimerTask;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
-import de.dreier.mytargets.shared.models.ArrowNumber;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Passe;
@@ -114,7 +113,7 @@ public class TargetView extends TargetViewBase {
     private static final int KEYBOARD_INNER_PADDING_DP = 40;
 
     private Matrix[] spotMatrices;
-    private List<ArrowNumber> arrowNumbers = new ArrayList<>();
+    private boolean arrowNumbering;
     private Dimension arrowDiameter;
     private float targetZoomFactor;
     private OnEndUpdatedListener updateListener;
@@ -213,8 +212,8 @@ public class TargetView extends TargetViewBase {
         notifyTargetShotsChanged();
     }
 
-    public void setArrow(Dimension diameter, List<ArrowNumber> numbers) {
-        this.arrowNumbers = numbers;
+    public void setArrow(Dimension diameter, boolean numbers) {
+        this.arrowNumbering = numbers;
         this.arrowDiameter = diameter;
         targetDrawable.setArrowDiameter(diameter, SettingsManager.getInputArrowDiameterScale());
     }
@@ -487,23 +486,13 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void onArrowChanged() {
-        if (arrowNumbers.isEmpty() || getCurrentShotIndex() != EndRenderer.NO_SELECTION
+        if (!arrowNumbering || getCurrentShotIndex() != EndRenderer.NO_SELECTION
                 && shots.get(getCurrentShotIndex()).arrow != null) {
             super.onArrowChanged();
         } else {
-            List<String> numbersLeft = Stream.of(arrowNumbers).map(an -> an.number)
+            List<String> numbers = Stream.rangeClosed(1, 12)
+                    .map(String::valueOf)
                     .collect(Collectors.toList());
-            for (Shot s : shots) {
-                numbersLeft.remove(s.arrow);
-            }
-            if (numbersLeft.size() == 0 || getCurrentShotIndex() == EndRenderer.NO_SELECTION) {
-                super.onArrowChanged();
-                return;
-            } else if (numbersLeft.size() == 1) {
-                shots.get(getCurrentShotIndex()).arrow = numbersLeft.get(0);
-                super.onArrowChanged();
-                return;
-            }
 
             // Prepare grid view
             GridView gridView = new GridView(getContext());
@@ -512,16 +501,16 @@ public class TargetView extends TargetViewBase {
             AlertDialog dialog = new AlertDialog.Builder(getContext())
                     .setView(gridView)
                     .setCancelable(false)
-                    .setTitle(R.string.arrow_numbers).create();
+                    .setTitle(R.string.arrow_numbers)
+                    .create();
             gridView.setAdapter(
-                    new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,
-                            numbersLeft));
-            int cols = Math.min(5, numbersLeft.size());
+                    new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, numbers));
+            int cols = Math.min(5, numbers.size());
             gridView.setNumColumns(cols);
             gridView.setOnItemClickListener((parent, view, position, id) ->
             {
                 if (getCurrentShotIndex() < shots.size()) {
-                    shots.get(getCurrentShotIndex()).arrow = numbersLeft.get(position);
+                    shots.get(getCurrentShotIndex()).arrow = numbers.get(position);
                 }
                 dialog.dismiss();
                 super.onArrowChanged();
