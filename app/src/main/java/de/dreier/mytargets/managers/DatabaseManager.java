@@ -42,8 +42,8 @@ import java.util.List;
 import java.util.Locale;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
-import de.dreier.mytargets.managers.dao.ArrowNumberDataSource;
 import de.dreier.mytargets.managers.dao.BowDataSource;
 import de.dreier.mytargets.managers.dao.PasseDataSource;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
@@ -57,11 +57,10 @@ import de.dreier.mytargets.shared.models.RoundTemplate;
 import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "database";
-    private static final int DATABASE_VERSION = 17;
+    private static final int DATABASE_VERSION = 18;
     private static DatabaseManager sInstance;
     private final Context mContext;
 
@@ -106,18 +105,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM SHOOT WHERE _id IN (SELECT s._id " +
                 "FROM SHOOT s LEFT JOIN PASSE p ON p._id=s.passe " +
                 "WHERE p._id IS NULL)");
-
-        // Clean up arrow numbers
-        db.execSQL("DELETE FROM NUMBER WHERE _id IN (SELECT s._id " +
-                "FROM NUMBER s LEFT JOIN ARROW a ON a._id=s.arrow " +
-                "WHERE a._id IS NULL)");
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(BowDataSource.CREATE_TABLE_BOW);
         db.execSQL(SightSettingDataSource.CREATE_TABLE_VISIER);
-        db.execSQL(ArrowNumberDataSource.CREATE_TABLE_NUMBER);
         db.execSQL(ArrowDataSource.CREATE_TABLE);
         db.execSQL(TrainingDataSource.CREATE_TABLE);
         db.execSQL(RoundTemplateDataSource.CREATE_TABLE);
@@ -431,6 +424,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE DAIR_TRANSLATION");
             db.execSQL("DROP TABLE SR_TRANSLATION");
             db.execSQL("DROP TABLE R_TRANSLATION");
+        }
+        if (oldVersion < 18) {
+            db.execSQL("DROP TABLE NUMBER");
         }
         onCreate(db);
     }

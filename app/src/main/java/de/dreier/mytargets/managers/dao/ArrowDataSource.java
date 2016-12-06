@@ -60,12 +60,6 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
     }
 
     @Override
-    public void update(Arrow item) {
-        super.update(item);
-        new ArrowNumberDataSource().update(item.getId(), item.numbers);
-    }
-
-    @Override
     public ContentValues getContentValues(Arrow arrow) {
         ContentValues values = new ContentValues();
         values.put(NAME, arrow.name);
@@ -112,7 +106,6 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
         Arrow a = null;
         if (cursor.moveToFirst()) {
             a = cursorToArrow(cursor, 0);
-            a.numbers = new ArrowNumberDataSource().getAll(a.getId());
         }
         cursor.close();
         return a;
@@ -125,11 +118,8 @@ public class ArrowDataSource extends IdProviderDataSource<Arrow> {
                         "FROM ARROW ORDER BY _id ASC", null);
         ArrayList<Arrow> list = new ArrayList<>(res.getCount());
         if (res.moveToFirst()) {
-            ArrowNumberDataSource arrowNumberDataSource = new ArrowNumberDataSource();
             do {
-                Arrow arrow = cursorToArrow(res, 0);
-                arrow.numbers = arrowNumberDataSource.getAll(arrow.getId());
-                list.add(arrow);
+                list.add(cursorToArrow(res, 0));
             } while (res.moveToNext());
         }
         res.close();
