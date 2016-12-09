@@ -63,7 +63,7 @@ import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
 import de.dreier.mytargets.models.ArrowStatistic;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.Training;
@@ -222,7 +222,7 @@ public class StatisticsFragment extends FragmentBase {
     }
 
     private void addPieData() {
-        List<Map.Entry<SelectableZone, Integer>> scores = Passe
+        List<Map.Entry<SelectableZone, Integer>> scores = End
                 .getSortedScoreDistribution(rounds);
 
         ArrayList<PieEntry> yValues = new ArrayList<>();
@@ -383,12 +383,12 @@ public class StatisticsFragment extends FragmentBase {
         return eval;
     }
 
-    private Pair<Integer, DateTime> getPairEndSummary(Target target, Passe passe, LocalDate trainingDate) {
+    private Pair<Integer, DateTime> getPairEndSummary(Target target, End end, LocalDate trainingDate) {
         int actCounter = 0;
-        for (Shot s : passe.getShots()) {
+        for (Shot s : end.getShots()) {
             actCounter += target.getPointsByZone(s.zone, s.index);
         }
-        return new Pair<>(actCounter, new DateTime(passe.saveDate).withDate(trainingDate));
+        return new Pair<>(actCounter, new DateTime(end.saveDate).withDate(trainingDate));
     }
 
     @NonNull

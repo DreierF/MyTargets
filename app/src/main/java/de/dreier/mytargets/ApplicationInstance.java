@@ -25,6 +25,7 @@ import org.parceler.ParcelClasses;
 
 import java.io.File;
 
+import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
@@ -36,7 +37,7 @@ import de.dreier.mytargets.shared.models.WindDirection;
 import de.dreier.mytargets.shared.models.WindSpeed;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.Shot;
@@ -53,12 +54,11 @@ import de.dreier.mytargets.utils.MyBackupAgent;
  */
 @ParcelClasses({
         @ParcelClass(Arrow.class),
-        @ParcelClass(ArrowNumber.class),
         @ParcelClass(Bow.class),
         @ParcelClass(Coordinate.class),
         @ParcelClass(Dimension.class),
         @ParcelClass(Environment.class),
-        @ParcelClass(Passe.class),
+        @ParcelClass(End.class),
         @ParcelClass(EndRenderer.class),
         @ParcelClass(Round.class),
         @ParcelClass(RoundTemplate.class),
@@ -81,8 +81,8 @@ public class ApplicationInstance extends SharedApplicationInstance {
     @Override
     public void onCreate() {
         super.onCreate();
-        final File newDatabasePath = getDatabasePath("database.db");
-        final File oldDatabasePath = getDatabasePath("database");
+        final File newDatabasePath = getDatabasePath(AppDatabase.DATABASE_FILE);
+        final File oldDatabasePath = getDatabasePath(AppDatabase.DATABASE_FILE_IMPORT);
         if(oldDatabasePath.exists()) {
             if(newDatabasePath.exists()) {
                 newDatabasePath.delete();

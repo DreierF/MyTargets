@@ -24,7 +24,7 @@ import org.parceler.Parcel;
 import java.util.List;
 import java.util.Set;
 
-import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
@@ -126,8 +126,8 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         return getScoringStyle().getEndMaxPoints(arrowsPerPasse);
     }
 
-    public int getReachedPoints(Passe passe) {
-        return getScoringStyle().getReachedPoints(passe);
+    public int getReachedPoints(End end) {
+        return getScoringStyle().getReachedPoints(end);
     }
 
     @Override

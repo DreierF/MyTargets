@@ -18,7 +18,7 @@ package de.dreier.mytargets.shared.targets.scoringstyle;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
-import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.End;
 
 public class ColorScoringStyle extends ScoringStyle {
 
@@ -37,8 +37,8 @@ public class ColorScoringStyle extends ScoringStyle {
     }
 
     @Override
-    public int getReachedPoints(Passe passe) {
-        return Stream.of(passe.shots)
+    public int getReachedPoints(End end) {
+        return Stream.of(end.getShots())
                 .map(s -> getPoints(s.zone, s.index))
                 .distinct()
                 .collect(Collectors.reducing(0, (a, b) -> a + b));

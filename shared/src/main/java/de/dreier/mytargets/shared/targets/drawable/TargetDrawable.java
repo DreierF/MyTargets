@@ -73,16 +73,22 @@ public class TargetDrawable extends Drawable {
     @Override
     public void setBounds(int left, int top, int right, int bottom) {
         super.setBounds(left, top, right, bottom);
-        matrix.setRectToRect(SRC_RECT,
-                new RectF(left, top, right, bottom),
-                Matrix.ScaleToFit.CENTER);
+        setBoundsRespectingStroke(new RectF(left, top, right, bottom));
     }
 
     @Override
     public void setBounds(@NonNull Rect bounds) {
         super.setBounds(bounds);
-        matrix.setRectToRect(SRC_RECT,
-                new RectF(bounds),
+        setBoundsRespectingStroke(new RectF(bounds));
+    }
+
+    private void setBoundsRespectingStroke(RectF bounds) {
+        RectF srcRectWithStroke = new RectF(SRC_RECT);
+        final ZoneBase outerZone = model.getZone(model.getZoneCount() - 1);
+        final float inset = -outerZone.getStrokeWidth() * 0.5f;
+        srcRectWithStroke.inset(inset, inset);
+        matrix.setRectToRect(srcRectWithStroke,
+                bounds,
                 Matrix.ScaleToFit.CENTER);
     }
 

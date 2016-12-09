@@ -23,11 +23,11 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.End;
 
 public class TargetPasseView extends View {
 
-    private Passe passe = new Passe(3);
+    private End end = new End(3);
     private float density;
     private Paint drawColorP;
     private Target target;
@@ -55,8 +55,8 @@ public class TargetPasseView extends View {
         density = getResources().getDisplayMetrics().density;
     }
 
-    public void setPasse(Passe p, Target tar) {
-        passe = p;
+    public void setPasse(End p, Target tar) {
+        end = p;
         target = tar;
         mZoneCount = tar.getModel().getZoneCount();
         invalidate();
@@ -79,13 +79,14 @@ public class TargetPasseView extends View {
         float count = 0;
         float sumX = 0;
         float sumY = 0;
-        for (int i = 0; i < passe.getShots().size(); i++) {
+        for (int i = 0; i < end.getShots().size(); i++) {
             // For yellow and white background use black font color
-            int color = i == mZoneCount || passe.getShots().get(i).zone < 0 ? 0xFF000000 : target.getModel().getZone(passe.getShots().get(i).zone).getFillColor();
+            int color = i == mZoneCount || end.getShots().get(i).zone < 0 ? 0xFF000000 : target.getModel().getZone(
+                    end.getShots().get(i).zone).getFillColor();
             //noinspection ResourceAsColor
             drawColorP.setColor(color);
-            float selX = passe.getShots().get(i).x;
-            float selY = passe.getShots().get(i).y;
+            float selX = end.getShots().get(i).x;
+            float selY = end.getShots().get(i).y;
             sumX += selX;
             sumY += selY;
             count++;

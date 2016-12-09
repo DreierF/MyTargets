@@ -33,7 +33,7 @@ import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.StandardRound;
@@ -41,7 +41,7 @@ import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
-import static de.dreier.mytargets.shared.models.db.Passe.getSortedScoreDistribution;
+import static de.dreier.mytargets.shared.models.db.End.getSortedScoreDistribution;
 import static de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle.MISS_SYMBOL;
 
 public class HtmlUtils {
@@ -112,11 +112,11 @@ public class HtmlUtils {
         String html = "<table class=\"myTable\">";
         html += getTableHeader(round.info.arrowsPerEnd);
         int carry = 0;
-        for (Passe passe : round.getPasses()) {
+        for (End end : round.getPasses()) {
             html += "<tr class=\"align_center\">";
-            html += "<td>" + (passe.index + 1) + "</td>";
+            html += "<td>" + (end.index + 1) + "</td>";
             int sum = 0;
-            for (Shot shot : passe.getSortedShotList()) {
+            for (Shot shot : end.getSortedShotList()) {
                 html += "<td>";
                 html += getPoints(configuration, shot, round.getTarget());
                 html += "</td>";
@@ -175,10 +175,10 @@ public class HtmlUtils {
         int j = 0;
         for (Round round : rounds) {
             int i = 1;
-            List<Passe> passes = round.getPasses();
-            for (Passe passe : passes) {
-                for (int s = 0; s < passe.getShots().size(); s++) {
-                    Shot shot = passe.getShots().get(s);
+            List<End> passes = round.getPasses();
+            for (End end : passes) {
+                for (int s = 0; s < end.getShots().size(); s++) {
+                    Shot shot = end.getShots().get(s);
                     if (!TextUtils.isEmpty(shot.comment)) {
                         comments += "<tr class=\"align_center\"><td>" + j + "</td>" +
                                 "<td>" + i + "</td>" +
@@ -252,7 +252,7 @@ public class HtmlUtils {
             total += score.getValue();
         }
 
-        List<Pair<String, Integer>> topScores = Passe.getTopScoreDistribution(scoreDistribution);
+        List<Pair<String, Integer>> topScores = End.getTopScoreDistribution(scoreDistribution);
         for (Pair<String, Integer> topScore : topScores) {
             html += "<th>" + topScore.first + "</th>";
         }

@@ -61,11 +61,11 @@ public class MiniDbTestRule extends DbTestRuleBase {
         round2.comment = "";
         round2.insert();
 
-        randomPasse(training, round1, 6, generator).insert();
-        randomPasse(training, round1, 6, generator).insert();
+        randomPasse(training, round1, 6, generator, 0).insert();
+        randomPasse(training, round1, 6, generator, 1).insert();
 
-        randomPasse(training, round2, 6, generator).insert();
-        randomPasse(training, round2, 6, generator).insert();
+        randomPasse(training, round2, 6, generator, 0).insert();
+        randomPasse(training, round2, 6, generator, 1).insert();
     }
 
 }

@@ -18,7 +18,7 @@ package de.dreier.mytargets.shared.targets.scoringstyle;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
-import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.End;
 
 public class ScoringStyle {
 
@@ -99,8 +99,8 @@ public class ScoringStyle {
         return getMaxPoints() * arrowsPerPasse;
     }
 
-    public int getReachedPoints(Passe passe) {
-        return Stream.of(passe.shots)
+    public int getReachedPoints(End end) {
+        return Stream.of(end.getShots())
                 .map(s -> getPointsByZone(s.zone, s.index))
                 .collect(Collectors.reducing(0, (a, b) -> a + b));
     }

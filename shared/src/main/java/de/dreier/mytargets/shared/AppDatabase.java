@@ -28,6 +28,8 @@ import static android.database.sqlite.SQLiteDatabase.CONFLICT_IGNORE;
 public class AppDatabase {
 
     public static final String NAME = "database";
+    public static final String DATABASE_FILE = "database.db";
+    public static final String DATABASE_FILE_IMPORT = "database";
 
     public static final int VERSION = 18;
 

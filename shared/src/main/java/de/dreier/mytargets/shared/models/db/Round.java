@@ -52,7 +52,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
     @Column(typeConverter = DimensionConverter.class, name = "size")
     Dimension targetSize;
 
-    public List<Passe> passes = new ArrayList<>();
+    public List<End> passes = new ArrayList<>();
 
     public static Round get(Long id) {
         return SQLite.select()
@@ -98,10 +98,10 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
     }
 
     @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "passes")
-    public List<Passe> getPasses() {
+    public List<End> getPasses() {
         if (passes == null || passes.isEmpty()) {
             passes = SQLite.select()
-                    .from(Passe.class)
+                    .from(End.class)
                     .where(Passe_Table.round.eq(id))
                     .queryList();
         }

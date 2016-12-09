@@ -29,7 +29,7 @@ import de.dreier.mytargets.shared.models.WindDirection;
 import de.dreier.mytargets.shared.models.WindSpeed;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.Shot;
@@ -50,7 +50,7 @@ import de.dreier.mytargets.shared.utils.EndRenderer;
         @ParcelClass(Coordinate.class),
         @ParcelClass(Dimension.class),
         @ParcelClass(Environment.class),
-        @ParcelClass(Passe.class),
+        @ParcelClass(End.class),
         @ParcelClass(EndRenderer.class),
         @ParcelClass(Round.class),
         @ParcelClass(RoundTemplate.class),

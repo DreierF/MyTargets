@@ -31,13 +31,13 @@ import de.dreier.mytargets.shared.utils.DateTimeConverter;
 
 @Parcel
 @Table(database = AppDatabase.class, name = "PASSE")
-public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> {
+public class End extends BaseModel implements IIdSettable,  Comparable<End> {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     Long id;
 
-    @Column(name = "index")
+    @Column(name = "endIndex")
     public int index;
 
     @Column(name = "image")
@@ -50,27 +50,27 @@ public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> 
     @Column(name = "exact")
     public boolean exact;
 
-    public List<Shot> shots = new ArrayList<>();
+    List<Shot> shots = new ArrayList<>();
 
     @Column(typeConverter = DateTimeConverter.class, name = "save_time")
     public DateTime saveDate = new DateTime();
 
-    public Passe() {
+    public End() {
     }
 
-    public Passe(int ppp) {
-        for (int i = 0; i < ppp; i++) {
+    public End(int shotCount) {
+        for (int i = 0; i < shotCount; i++) {
             shots.add(new Shot(i));
         }
     }
 
-    public Passe(Passe p) {
-        id = p.id;
-        roundId = p.roundId;
-        index = p.index;
-        exact = p.exact;
-        shots = p.shots;
-        shots = new ArrayList<>(p.shots);
+    public End(End end) {
+        id = end.id;
+        roundId = end.roundId;
+        index = end.index;
+        exact = end.exact;
+        shots = end.shots;
+        shots = new ArrayList<>(end.shots);
     }
 
     @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "shots")
@@ -103,9 +103,9 @@ public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> 
 
     @Override
     public boolean equals(Object another) {
-        return another instanceof Passe &&
+        return another instanceof End &&
                 getClass().equals(another.getClass()) &&
-                id.equals(((Passe) another).id);
+                id.equals(((End) another).id);
     }
 
     public int getReachedPoints(Target target) {
@@ -117,7 +117,7 @@ public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> 
         final Target t = rounds.get(0).getTarget();
         Map<SelectableZone, Integer> scoreCount = getAllPossibleZones(t);
         for (Round round : rounds) {
-            for (Passe p : round.getPasses()) {
+            for (End p : round.getPasses()) {
                 for (Shot s : p.shots) {
                     SelectableZone tuple = new SelectableZone(s.zone, t.getModel().getZone(s.zone),
                             t.zoneToString(s.zone, s.index), t.getPointsByZone(s.zone, s.index));
@@ -176,11 +176,15 @@ public class Passe extends BaseModel implements IIdSettable,  Comparable<Passe> 
     }
 
     public static void deleteAll() {
-        SQLite.delete(Passe.class).execute();
+        SQLite.delete(End.class).execute();
     }
 
     @Override
-    public int compareTo(@NonNull Passe passe) {
-        return index - passe.index;
+    public int compareTo(@NonNull End end) {
+        return index - end.index;
+    }
+
+    public void setShots(List<Shot> shots) {
+        this.shots = shots;
     }
 }

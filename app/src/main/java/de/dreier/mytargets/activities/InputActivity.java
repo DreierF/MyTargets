@@ -24,18 +24,15 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.util.Pair;
 import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
 import org.joda.time.DateTime;
 import org.parceler.Parcel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.R;
@@ -49,7 +46,7 @@ import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.Shot;
@@ -96,6 +93,10 @@ public class InputActivity extends ChildActivityBase
                 .with(TRAINING_ID, round.trainingId)
                 .with(ROUND_ID, round.getId())
                 .with(END_INDEX, endIndex);
+    }
+
+    private static <T> T lastItem(List<T> list) {
+        return list.isEmpty() ? null : list.get(list.size() - 1);
     }
 
     @Override
@@ -159,7 +160,8 @@ public class InputActivity extends ChildActivityBase
             grouping.setVisible(plotting);
             showSidebar.setIcon(
                     plotting ? R.drawable.ic_keyboard_white_24dp : R.drawable.ic_keyboard_white_off_24dp);
-            showSidebar.setVisible(getCurrentEnd() != null ? getCurrentEnd().getId() == 0 : false);
+            showSidebar
+                    .setVisible(getCurrentEnd().getId() == null);
         }
 
         menu.findItem(SettingsManager.getShowMode().actionItemId).setChecked(true);
@@ -274,7 +276,7 @@ public class InputActivity extends ChildActivityBase
     private void showEnd(int endIndex) {
         // Create a new end
         if (endIndex == getEnds().size()) {
-            Passe end = new Passe(getTemplate().arrowsPerEnd);
+            End end = new End(getTemplate().arrowsPerEnd);
             end.roundId = getCurrentRound().getId();
             getEnds().add(end);
             updateOldShoots();
@@ -283,7 +285,7 @@ public class InputActivity extends ChildActivityBase
         data.endIndex = endIndex;
 
         // Open timer if end has not been saved yet
-        if (getCurrentEnd().getId() == 0 && data.training.timePerPasse > 0) {
+        if (getCurrentEnd().getId() == null && data.training.timePerPasse > 0) {
             openTimer();
         }
         updateEnd();
@@ -292,22 +294,21 @@ public class InputActivity extends ChildActivityBase
 
     public void updateOldShoots() {
         final LoaderResult data = this.data;
-        final Stream<Shot> shotStream = Stream
-                .zip(data.rounds.iterator(), data.ends.iterator(), Pair::new)
-                .filter(p -> shouldShowRound(p.first))
-                .flatMap(p -> Stream.of(p.second))
+        final Stream<Shot> shotStream = Stream.of(data.training.getRounds())
+                .filter(this::shouldShowRound)
+                .flatMap(r -> Stream.of(r.getPasses()))
                 .filter(this::shouldShowEnd)
-                .flatMap(p -> Stream.of(p.shots));
+                .flatMap(p -> Stream.of(p.getShots()));
         targetView.setTransparentShots(shotStream);
     }
 
     private boolean shouldShowRound(Round r) {
         return showMode != EShowMode.END
-                && (showMode == EShowMode.TRAINING || r.getId() == getCurrentEnd().roundId);
+                && (showMode == EShowMode.TRAINING || r.getId().equals(getCurrentEnd().roundId));
     }
 
-    private boolean shouldShowEnd(Passe p) {
-        return p.getId() != getCurrentEnd().getId() && p.exact;
+    private boolean shouldShowEnd(End p) {
+        return !p.getId().equals(getCurrentEnd().getId()) && p.exact;
     }
 
     private void updateEnd() {
@@ -319,7 +320,7 @@ public class InputActivity extends ChildActivityBase
 
     private void updateNavigationButtons() {
         binding.prev.setEnabled(data.endIndex > 0);
-        binding.next.setEnabled(getCurrentEnd().getId() != 0 &&
+        binding.next.setEnabled(getCurrentEnd().getId() != null &&
                 (data.endIndex + 1 < getTemplate().endCount || // The current round is not finished
                         data.standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE)); // or we don't have an exit condition
     }
@@ -361,11 +362,12 @@ public class InputActivity extends ChildActivityBase
 
     @Override
     public void onEndUpdated(List<Shot> changedEnd) {
-        getCurrentEnd().shots = changedEnd;
+        getCurrentEnd().setShots(changedEnd);
 
         // Set current end score
         int reachedEndPoints = getCurrentEnd().getReachedPoints(getCurrentRound().getTarget());
-        int maxEndPoints = getCurrentRound().getTarget().getEndMaxPoints(getTemplate().arrowsPerEnd);
+        int maxEndPoints = getCurrentRound().getTarget()
+                .getEndMaxPoints(getTemplate().arrowsPerEnd);
         binding.scoreEnd.setText(reachedEndPoints + "/" + maxEndPoints);
 
         // Set current round score
@@ -377,9 +379,9 @@ public class InputActivity extends ChildActivityBase
 
     @Override
     public void onEndFinished(List<Shot> shots, boolean remote) {
-        getCurrentEnd().shots = shots;
+        getCurrentEnd().setShots(shots);
         getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING;
-        if (getCurrentEnd().getId() == 0) {
+        if (getCurrentEnd().getId() == null) {
             getCurrentEnd().saveDate = new DateTime();
         }
 
@@ -406,8 +408,8 @@ public class InputActivity extends ChildActivityBase
 
         // Initialize message text
         if (getEnds().size() > 0) {
-            Passe lastEnd = lastItem(getEnds());
-            for (Shot shot : lastEnd.shots) {
+            End lastEnd = lastItem(getEnds());
+            for (Shot shot : lastEnd.getShots()) {
                 text += getCurrentRound().getTarget().zoneToString(shot.zone, shot.index) + " ";
             }
             text += "\n";
@@ -417,7 +419,8 @@ public class InputActivity extends ChildActivityBase
 
         // Load bow settings
         if (data.training.bow > 0) {
-            final SightSetting sightSetting = Bow.get(data.training.bow).getSightSetting(getTemplate().distance);
+            final SightSetting sightSetting = Bow.get(data.training.bow)
+                    .getSightSetting(getTemplate().distance);
             if (sightSetting != null) {
                 text += String.format("%s: %s", getTemplate().distance, sightSetting.value);
             }
@@ -425,31 +428,20 @@ public class InputActivity extends ChildActivityBase
         return new NotificationInfo(getCurrentRound(), title, text);
     }
 
-    private List<Passe> getEnds() {
-        if (data.ends == null) {
-            return null;
-        }
-        return data.ends.get(data.roundIndex);
+    private List<End> getEnds() {
+        return getCurrentRound().getPasses();
     }
 
     private Round getCurrentRound() {
-        return data.rounds.get(data.roundIndex);
+        return data.training.getRounds().get(data.roundIndex);
     }
 
     private RoundTemplate getTemplate() {
         return getCurrentRound().info;
     }
 
-    private Passe getCurrentEnd() {
-        final List<Passe> ends = getEnds();
-        if (ends == null) {
-            return null;
-        }
-        return ends.get(data.endIndex);
-    }
-
-    private static <T> T lastItem(List<T> list) {
-        return list.isEmpty() ? null : list.get(list.size() - 1);
+    private End getCurrentEnd() {
+        return getEnds().get(data.endIndex);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -492,16 +484,14 @@ public class InputActivity extends ChildActivityBase
             LoaderResult result = new LoaderResult();
             result.endIndex = endIndex;
             result.training = Training.get(trainingId);
-            result.rounds = new ArrayList<>(result.training.getRounds());
+            List<Round> rounds = result.training.getRounds();
             result.roundIndex = 0;
-            for (int i = 0; i < result.rounds.size(); i++) {
-                if (result.rounds.get(i).getId() == roundId) {
+            for (int i = 0; i < rounds.size(); i++) {
+                if (rounds.get(i).getId() == roundId) {
                     result.roundIndex = i;
                 }
+                rounds.get(i).getPasses();
             }
-            result.ends = new ArrayList<>(Stream.of(result.rounds)
-                    .map(r -> new ArrayList<>(r.getPasses()))
-                    .collect(Collectors.toList()));
 
             result.standardRound = result.training.getStandardRound();
             result.arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
@@ -512,10 +502,6 @@ public class InputActivity extends ChildActivityBase
                 }
             }
 
-            result.arrowNumbers = result.training.arrowNumbering
-                    ? result.training.getArrow().getArrowNumbers()
-                    : Collections.emptyList();
-
             return result;
         }
     }
@@ -523,8 +509,6 @@ public class InputActivity extends ChildActivityBase
     @Parcel
     static class LoaderResult {
         Training training;
-        ArrayList<Round> rounds;
-        ArrayList<ArrayList<Passe>> ends;
         StandardRound standardRound;
         int roundIndex;
         Dimension arrowDiameter;

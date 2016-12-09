@@ -98,13 +98,12 @@ public class BackupUtils {
     }
 
     public static void importZip(Context context, InputStream in) throws IOException {
-            // Unzip all images and database
-            File file = unzip(context, in);
+        // Unzip all images and database
+        File file = unzip(context, in);
 
-            // Replace database file
-            File db_file = context.getDatabasePath(AppDatabase.NAME);
-            //TODO copy to special location and exchange dbs on restart
-            FileUtils.copy(file, db_file);
+        // Replace database file
+        File db_file = context.getDatabasePath(AppDatabase.DATABASE_FILE_IMPORT);
+        FileUtils.copy(file, db_file);
     }
 
     public static String[] getImages() {
@@ -164,7 +163,7 @@ public class BackupUtils {
         }
     }
 
-    static void safeCloseClosable(@Nullable Closeable closeable) {
+    private static void safeCloseClosable(@Nullable Closeable closeable) {
         try {
             if (closeable != null) {
                 closeable.close();
@@ -174,7 +173,7 @@ public class BackupUtils {
         }
     }
 
-    public static File unzip(Context context, InputStream in) throws IOException {
+    private static File unzip(Context context, InputStream in) throws IOException {
         File tmpDb = null;
         int dbFiles = 0;
         try {

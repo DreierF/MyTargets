@@ -23,7 +23,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import icepick.Icepick;
@@ -31,7 +31,7 @@ import icepick.State;
 
 public class PasseView extends View {
 
-    private Passe passe = new Passe(3);
+    private End end = new End(3);
     private float density;
     @State(ParcelsBundler.class)
     EndRenderer mEndRenderer = new EndRenderer();
@@ -49,8 +49,8 @@ public class PasseView extends View {
         super(context, attrs, defStyle);
     }
 
-    public void setPoints(Passe p, Target target) {
-        passe = p;
+    public void setPoints(End p, Target target) {
+        end = p;
         density = getResources().getDisplayMetrics().density;
         mEndRenderer.init(this, density, target);
         mEndRenderer.setShots(p.getShots());
@@ -75,7 +75,7 @@ public class PasseView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int desiredWidth = (int) (60 * passe.getShots().size() * density);
+        int desiredWidth = (int) (60 * end.getShots().size() * density);
         int desiredHeight = (int) (50 * density);
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);

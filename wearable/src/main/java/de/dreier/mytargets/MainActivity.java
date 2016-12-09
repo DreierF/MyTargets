@@ -41,7 +41,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.utils.OnTargetSetListener;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
@@ -120,7 +120,7 @@ public class MainActivity extends Activity implements TargetViewBase.OnEndFinish
     private void setUpTargetView() {
         if (round != null && mTarget != null) {
             mTarget.setTarget(round.info.target);
-            mTarget.setEnd(new Passe(round.info.arrowsPerEnd));
+            mTarget.setEnd(new End(round.info.arrowsPerEnd));
             mTarget.setOnTargetSetListener(MainActivity.this);
             stub.setVisibility(View.VISIBLE);
             startTrainingHint.setVisibility(View.GONE);
@@ -135,7 +135,7 @@ public class MainActivity extends Activity implements TargetViewBase.OnEndFinish
         confirm.setListener(new DelayedConfirmationView.DelayedConfirmationListener() {
             @Override
             public void onTimerSelected(View view) {
-                mTarget.setEnd(new Passe(round.info.arrowsPerEnd));
+                mTarget.setEnd(new End(round.info.arrowsPerEnd));
                 confirm.setVisibility(View.INVISIBLE);
                 confirm.reset();
             }

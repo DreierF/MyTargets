@@ -79,19 +79,19 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         round2.comment = "";
         round2.insert();
 
-        randomPasse(training, round1, 6, generator).insert();
-        randomPasse(training, round1, 6, generator).insert();
-        randomPasse(training, round1, 6, generator).insert();
-        randomPasse(training, round1, 6, generator).insert();
-        randomPasse(training, round1, 6, generator).insert();
-        randomPasse(training, round1, 6, generator).insert();
+        randomPasse(training, round1, 6, generator, 0).insert();
+        randomPasse(training, round1, 6, generator, 1).insert();
+        randomPasse(training, round1, 6, generator, 2).insert();
+        randomPasse(training, round1, 6, generator, 3).insert();
+        randomPasse(training, round1, 6, generator, 4).insert();
+        randomPasse(training, round1, 6, generator, 5).insert();
 
-        randomPasse(training, round2, 6, generator).insert();
-        randomPasse(training, round2, 6, generator).insert();
-        randomPasse(training, round2, 6, generator).insert();
-        randomPasse(training, round2, 6, generator).insert();
-        randomPasse(training, round2, 6, generator).insert();
-        randomPasse(training, round2, 6, generator).insert();
+        randomPasse(training, round2, 6, generator, 0).insert();
+        randomPasse(training, round2, 6, generator, 1).insert();
+        randomPasse(training, round2, 6, generator, 2).insert();
+        randomPasse(training, round2, 6, generator, 3).insert();
+        randomPasse(training, round2, 6, generator, 4).insert();
+        randomPasse(training, round2, 6, generator, 5).insert();
     }
 
     @NonNull
@@ -137,19 +137,19 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         round2.comment = "";
         round2.insert();
 
-        randomPasse(training, round1, 6, generator).insert();
-        randomPasse(training, round1, 6, generator).insert();
-        randomPasse(training, round1, 6, generator).insert();
-        randomPasse(training, round1, 6, generator).insert();
-        randomPasse(training, round1, 6, generator).insert();
-        randomPasse(training, round1, 6, generator).insert();
+        randomPasse(training, round1, 6, generator, 0).insert();
+        randomPasse(training, round1, 6, generator, 1).insert();
+        randomPasse(training, round1, 6, generator, 2).insert();
+        randomPasse(training, round1, 6, generator, 3).insert();
+        randomPasse(training, round1, 6, generator, 4).insert();
+        randomPasse(training, round1, 6, generator, 5).insert();
 
-        randomPasse(training, round2, 6, generator).insert();
-        randomPasse(training, round2, 6, generator).insert();
-        randomPasse(training, round2, 6, generator).insert();
-        randomPasse(training, round2, 6, generator).insert();
-        randomPasse(training, round2, 6, generator).insert();
-        randomPasse(training, round2, 6, generator).insert();
+        randomPasse(training, round2, 6, generator, 0).insert();
+        randomPasse(training, round2, 6, generator, 1).insert();
+        randomPasse(training, round2, 6, generator, 2).insert();
+        randomPasse(training, round2, 6, generator, 3).insert();
+        randomPasse(training, round2, 6, generator, 4).insert();
+        randomPasse(training, round2, 6, generator, 5).insert();
     }
 
     private void addFullTraining(Bow bow) {

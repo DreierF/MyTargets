@@ -35,7 +35,7 @@ import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
@@ -59,22 +59,23 @@ public abstract class DbTestRuleBase implements TestRule {
         };
     }
 
-    protected Passe passe(Round round, int... shots) {
-        Passe p = new Passe(shots.length);
+    protected End passe(Round round, int... shots) {
+        End p = new End(shots.length);
         p.roundId = round.getId();
         for (int i = 0; i < shots.length; i++) {
-            p.shots.get(i).index = i;
-            p.shots.get(i).zone = shots[i];
+            p.getShots().get(i).index = i;
+            p.getShots().get(i).zone = shots[i];
         }
         return p;
     }
 
-    protected Passe randomPasse(Training training, Round round, int arrowsPerEnd, Random gen) {
-        Passe p = new Passe(arrowsPerEnd);
+    protected End randomPasse(Training training, Round round, int arrowsPerEnd, Random gen, int index) {
+        End p = new End(arrowsPerEnd);
+        p.index = index;
         p.roundId = round.getId();
         for (int i = 0; i < arrowsPerEnd; i++) {
-            p.shots.get(i).index = i;
-            p.shots.get(i).zone = gen.nextInt(5);
+            p.getShots().get(i).index = i;
+            p.getShots().get(i).zone = gen.nextInt(5);
         }
         p.saveDate = new DateTime().withDate(training.date)
                 .withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
@@ -87,7 +88,7 @@ public abstract class DbTestRuleBase implements TestRule {
         Training.deleteAll();
         Round.deleteAll();
         Bow.deleteAll();
-        Passe.deleteAll();
+        End.deleteAll();
         Arrow.deleteAll();
     }
 

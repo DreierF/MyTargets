@@ -19,7 +19,7 @@ import java.util.Stack;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.Training;
@@ -97,7 +97,7 @@ public class CsvExporter {
         final Target target = r.getTarget();
         csv.add(target.getModel().toString() + " (" + target.size
                 .toString() + ")");
-        for (Passe e : r.getPasses()) {
+        for (End e : r.getPasses()) {
             csv.enterScope();
             // End
             csv.add(String.valueOf(e.index + 1));

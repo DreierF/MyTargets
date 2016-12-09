@@ -55,7 +55,7 @@ import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
 import de.dreier.mytargets.shared.utils.EndRenderer;
@@ -196,13 +196,13 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    public void setEnd(Passe end) {
-        shots = end.shots;
+    public void setEnd(End end) {
+        shots = end.getShots();
         setCurrentShotIndex(getNextShotIndex(-1));
         endRenderer.setShots(shots);
         endRenderer.setSelection(getCurrentShotIndex(), null, EndRenderer.MAX_CIRCLE_SIZE);
         EInputMethod inputMethod;
-        if (end.getId() != 0) {
+        if (end.getId() != null) {
             inputMethod = end.exact ? PLOTTING : KEYBOARD;
         } else {
             inputMethod = SettingsManager.getInputMethod();
@@ -505,8 +505,7 @@ public class TargetView extends TargetViewBase {
                     .create();
             gridView.setAdapter(
                     new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, numbers));
-            int cols = Math.min(5, numbers.size());
-            gridView.setNumColumns(cols);
+            gridView.setNumColumns(4);
             gridView.setOnItemClickListener((parent, view, position, id) ->
             {
                 if (getCurrentShotIndex() < shots.size()) {

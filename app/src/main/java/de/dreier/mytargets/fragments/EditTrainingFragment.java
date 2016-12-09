@@ -43,7 +43,6 @@ import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.models.ETrainingType;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
@@ -93,8 +92,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                 .inflate(inflater, R.layout.fragment_edit_training, container, false);
 
         Bundle arguments = getArguments();
-        if (arguments != null) {
-            trainingId = arguments.getLong(ITEM_ID, -1);
+        if (arguments != null && arguments.containsKey(ITEM_ID)) {
+            trainingId = arguments.getLong(ITEM_ID);
         }
         Intent i = getActivity().getIntent();
         if (i != null && CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION.equals(i.getAction())) {
@@ -127,7 +126,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
         binding.bow.setOnUpdateListener(this::setScoringStyleForCompoundBow);
 
-        if (trainingId == -1) {
+        if (trainingId == null) {
             ToolbarUtils.setTitle(this, R.string.new_training);
             binding.training.setText(getString(
                     trainingType == ETrainingType.COMPETITION ? R.string.competition : R.string.training));
@@ -251,7 +250,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
         finish();
 
-        if (trainingId == -1) {
+        if (trainingId == null) {
             StandardRound standardRound;
             if (trainingType == FREE_TRAINING) {
                 standardRound = getCustomRound();
@@ -286,7 +285,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     @NonNull
     private Training getTraining() {
         Training training;
-        if (trainingId == -1) {
+        if (trainingId == null) {
             training = new Training();
         } else {
             training = Training.get(trainingId);

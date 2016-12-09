@@ -79,17 +79,6 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
                 .querySingle();
     }
 
-    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "numbers")
-    public List<ArrowNumber> getArrowNumbers() {
-        if (numbers == null || numbers.isEmpty()) {
-            numbers = SQLite.select()
-                    .from(ArrowNumber.class)
-                    .where(ArrowNumber_Table.arrow.eq(id))
-                    .queryList();
-        }
-        return numbers;
-    }
-
     public Long getId() {
         return id;
     }

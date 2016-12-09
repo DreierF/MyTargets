@@ -39,7 +39,7 @@ import java.util.List;
 import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
@@ -123,8 +123,8 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         updateSelectableZones();
     }
 
-    public void setEnd(Passe end) {
-        shots = end.shots;
+    public void setEnd(End end) {
+        shots = end.getShots();
         setCurrentShotIndex(getNextShotIndex(-1));
         endRenderer.setShots(shots);
         endRenderer.setSelection(getCurrentShotIndex(), null, EndRenderer.MAX_CIRCLE_SIZE);

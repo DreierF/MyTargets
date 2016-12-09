@@ -39,7 +39,7 @@ import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemEndBinding;
-import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
@@ -53,7 +53,7 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 /**
  * Shows all passes of one round
  */
-public class RoundFragment extends EditableListFragment<Passe> {
+public class RoundFragment extends EditableListFragment<End> {
 
     private static final String ROUND_ID = "round_id";
 
@@ -112,7 +112,7 @@ public class RoundFragment extends EditableListFragment<Passe> {
     @NonNull
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
-        final List<Passe> passes = round.getPasses();
+        final List<End> passes = round.getPasses();
         StandardRound standardRound = StandardRound
                 .get(Training.get(round.trainingId).standardRoundId);
         final boolean showFab = passes.size() < round.info.endCount || standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
@@ -153,34 +153,34 @@ public class RoundFragment extends EditableListFragment<Passe> {
     }
 
     @Override
-    protected void onItemSelected(Passe item) {
+    protected void onItemSelected(End item) {
         InputActivity.getIntent(round, item.index)
                 .withContext(this)
                 .start();
     }
 
     @Override
-    protected void onEdit(Passe item) {
+    protected void onEdit(End item) {
         InputActivity.getIntent(round, item.index)
                 .withContext(this)
                 .start();
     }
 
-    private class EndAdapter extends ListAdapterBase<Passe> {
+    private class EndAdapter extends ListAdapterBase<End> {
 
         EndAdapter(Context context) {
             super(context);
         }
 
         @Override
-        protected SelectableViewHolder<Passe> onCreateViewHolder(ViewGroup parent) {
+        protected SelectableViewHolder<End> onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_end, parent, false);
             return new EndViewHolder(itemView);
         }
     }
 
-    private class EndViewHolder extends SelectableViewHolder<Passe> {
+    private class EndViewHolder extends SelectableViewHolder<End> {
 
         private final ItemEndBinding binding;
 

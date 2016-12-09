@@ -34,7 +34,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import de.dreier.mytargets.shared.models.NotificationInfo;
-import de.dreier.mytargets.shared.models.db.Passe;
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Passe$$Parcelable;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.WearableUtils;
@@ -118,10 +118,10 @@ public class WearMessageManager
     public void onMessageReceived(MessageEvent messageEvent) {
         // Transform byte[] to Bundle
         byte[] data = messageEvent.getData();
-        Passe p = Parcels.unwrap(ParcelableUtil.unmarshall(data, Passe$$Parcelable.CREATOR));
+        End p = Parcels.unwrap(ParcelableUtil.unmarshall(data, Passe$$Parcelable.CREATOR));
 
         if (messageEvent.getPath().equals(WearableUtils.FINISHED_INPUT)) {
-            mListener.onEndFinished(p.shots, true);
+            mListener.onEndFinished(p.getShots(), true);
         }
     }
 
