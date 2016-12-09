@@ -53,7 +53,7 @@ import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 /**
- * Shows all passes of one training
+ * Shows all rounds of one training.
  */
 public class TrainingFragment extends EditableListFragment<Round> {
 

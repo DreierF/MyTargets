@@ -26,7 +26,7 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
 
     @ForeignKey(tableClass = End.class, references = {
             @ForeignKeyReference(columnName = "passe", columnType = Long.class, foreignKeyColumnName = "_id")})
-    public Long passe;
+    public Long endId;
     @Column(name = "x")
     public float x;
     @Column(name = "y")

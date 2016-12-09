@@ -53,7 +53,7 @@ public class SettingsManager {
     private static final String KEY_BOW = "bow";
     private static final String KEY_DISTANCE_VALUE = "distance";
     private static final String KEY_DISTANCE_UNIT = "unit";
-    private static final String KEY_ARROWS_PER_PASSE = "ppp";
+    private static final String KEY_ARROWS_PER_END = "ppp";
     private static final String KEY_TARGET = "target";
     private static final String KEY_SCORING_STYLE = "scoring_style";
     private static final String KEY_TARGET_DIAMETER_VALUE = "size_target";
@@ -61,7 +61,7 @@ public class SettingsManager {
     private static final String KEY_TIMER = "timer";
     private static final String KEY_NUMBERING_ENABLED = "numbering";
     private static final String KEY_INDOOR = "indoor";
-    private static final String KEY_PASSES = "rounds";
+    private static final String KEY_END_COUNT = "rounds";
     private static final String KEY_TRANSLATION_DIALOG_SHOWN = "translation_dialog_shown";
     private static final String KEY_INPUT_MODE = "target_mode";
     private static final String KEY_SHOW_MODE = "show_mode";
@@ -117,13 +117,13 @@ public class SettingsManager {
                 .apply();
     }
 
-    public static int getArrowsPerPasse() {
-        return lastUsed.getInt(KEY_ARROWS_PER_PASSE, 3);
+    public static int getArrowsPerEnd() {
+        return lastUsed.getInt(KEY_ARROWS_PER_END, 3);
     }
 
-    public static void setArrowsPerEnd(int arrowsPerPasse) {
+    public static void setShotsPerEnd(int shotsPerEnd) {
         lastUsed.edit()
-                .putInt(KEY_ARROWS_PER_PASSE, arrowsPerPasse)
+                .putInt(KEY_ARROWS_PER_END, shotsPerEnd)
                 .apply();
     }
 
@@ -177,13 +177,13 @@ public class SettingsManager {
                 .apply();
     }
 
-    public static int getPasses() {
-        return lastUsed.getInt(KEY_PASSES, 10);
+    public static int getEndCount() {
+        return lastUsed.getInt(KEY_END_COUNT, 10);
     }
 
-    public static void setPasses(int passes) {
+    public static void setEndCount(int endCount) {
         lastUsed.edit()
-                .putInt(KEY_PASSES, passes)
+                .putInt(KEY_END_COUNT, endCount)
                 .apply();
     }
 

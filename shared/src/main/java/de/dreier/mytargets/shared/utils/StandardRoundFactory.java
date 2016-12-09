@@ -739,7 +739,7 @@ public class StandardRoundFactory {
             roundCounter++;
             RoundTemplate roundTemplate = new RoundTemplate();
             roundTemplate.setId(roundCounter);
-            roundTemplate.arrowsPerEnd = arrowsPerPasse;
+            roundTemplate.shotsPerEnd = arrowsPerPasse;
             roundTemplate.distance = new Dimension(roundDetails[i], distanceUnit);
             roundTemplate.setTargetTemplate(
                     new Target(target, scoringStyle, new Dimension(roundDetails[i + 1], targetUnit)));

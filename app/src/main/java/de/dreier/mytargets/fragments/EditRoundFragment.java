@@ -179,7 +179,7 @@ public class EditRoundFragment extends EditFragmentBase {
 
     private void loadRoundDefaultValues() {
         binding.distance.setItem(SettingsManager.getDistance());
-        binding.arrows.setProgress(SettingsManager.getArrowsPerPasse());
+        binding.arrows.setProgress(SettingsManager.getArrowsPerEnd());
         binding.target.setItem(SettingsManager.getTarget());
     }
 
@@ -187,13 +187,13 @@ public class EditRoundFragment extends EditFragmentBase {
     private RoundTemplate getRoundTemplate() {
         RoundTemplate roundTemplate = new RoundTemplate();
         roundTemplate.setTargetTemplate(binding.target.getSelectedItem());
-        roundTemplate.arrowsPerEnd = binding.arrows.getProgress();
+        roundTemplate.shotsPerEnd = binding.arrows.getProgress();
         roundTemplate.endCount = 1;
         roundTemplate.distance = binding.distance.getSelectedItem();
 
         SettingsManager.setTarget(binding.target.getSelectedItem());
         SettingsManager.setDistance(roundTemplate.distance);
-        SettingsManager.setArrowsPerEnd(roundTemplate.arrowsPerEnd);
+        SettingsManager.setShotsPerEnd(roundTemplate.shotsPerEnd);
         return roundTemplate;
     }
 

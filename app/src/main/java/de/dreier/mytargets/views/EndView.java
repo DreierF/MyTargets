@@ -29,38 +29,38 @@ import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import icepick.Icepick;
 import icepick.State;
 
-public class PasseView extends View {
+public class EndView extends View {
 
     private End end = new End(3);
     private float density;
     @State(ParcelsBundler.class)
-    EndRenderer mEndRenderer = new EndRenderer();
+    EndRenderer endRenderer = new EndRenderer();
     private final RectF rect = new RectF();
 
-    public PasseView(Context context) {
+    public EndView(Context context) {
         super(context);
     }
 
-    public PasseView(Context context, AttributeSet attrs) {
+    public EndView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public PasseView(Context context, AttributeSet attrs, int defStyle) {
+    public EndView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
     public void setPoints(End p, Target target) {
         end = p;
         density = getResources().getDisplayMetrics().density;
-        mEndRenderer.init(this, density, target);
-        mEndRenderer.setShots(p.getShots());
+        endRenderer.init(this, density, target);
+        endRenderer.setShots(p.getShots());
         invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mEndRenderer.draw(canvas);
+        endRenderer.draw(canvas);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class PasseView extends View {
         rect.right = getWidth();
         rect.top = 0;
         rect.bottom = getHeight();
-        mEndRenderer.setRect(rect);
+        endRenderer.setRect(rect);
     }
 
     @Override

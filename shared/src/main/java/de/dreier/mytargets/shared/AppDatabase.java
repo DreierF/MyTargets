@@ -266,7 +266,7 @@ public class AppDatabase {
                 sr.indoor = res.getInt(5) == 1;
                 do {
                     RoundTemplate template = new RoundTemplate();
-                    template.arrowsPerEnd = res.getInt(0);
+                    template.shotsPerEnd = res.getInt(0);
                     int target = res.getInt(1);
                     template.setTargetTemplate(new Target(target == 4 ? 5 : target, target == 5 ? 1 : 0));
                     template.distance = new Dimension(res.getInt(2), res.getString(3));
@@ -279,7 +279,7 @@ public class AppDatabase {
                             "WHERE r_index=" + index + " " +
                             "AND distance=" + template.distance.value + " " +
                             "AND unit=\"" + template.distance.unit + "\" " +
-                            "AND arrows=" + template.arrowsPerEnd + " " +
+                            "AND arrows=" + template.shotsPerEnd + " " +
                             "AND passes=" + template.endCount + " " +
                             "AND target=" + tid + " " +
                             "AND (SELECT COUNT(r._id) FROM ROUND_TEMPLATE r WHERE r.sid=ROUND_TEMPLATE.sid)=" +

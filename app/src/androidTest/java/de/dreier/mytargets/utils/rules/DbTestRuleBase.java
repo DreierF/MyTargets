@@ -59,7 +59,7 @@ public abstract class DbTestRuleBase implements TestRule {
         };
     }
 
-    protected End passe(Round round, int... shots) {
+    protected End buildEnd(Round round, int... shots) {
         End p = new End(shots.length);
         p.roundId = round.getId();
         for (int i = 0; i < shots.length; i++) {
@@ -69,7 +69,7 @@ public abstract class DbTestRuleBase implements TestRule {
         return p;
     }
 
-    protected End randomPasse(Training training, Round round, int arrowsPerEnd, Random gen, int index) {
+    protected End randomEnd(Training training, Round round, int arrowsPerEnd, Random gen, int index) {
         End p = new End(arrowsPerEnd);
         p.index = index;
         p.roundId = round.getId();
@@ -121,7 +121,7 @@ public abstract class DbTestRuleBase implements TestRule {
         training.bow = null;
         training.arrow = null;
         training.arrowNumbering = false;
-        training.timePerPasse = 0;
+        training.timePerEnd = 0;
         training.insert();
         return training;
     }

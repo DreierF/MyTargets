@@ -29,7 +29,7 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
     @Column(name = "r_index")
     public int index;
     @Column(name = "arrows")
-    public int arrowsPerEnd;
+    public int shotsPerEnd;
     @Column(name = "passes")
     public int endCount;
     @Column(typeConverter = DimensionConverter.class, name = "distance")

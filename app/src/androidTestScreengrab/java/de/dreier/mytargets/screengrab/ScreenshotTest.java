@@ -78,7 +78,7 @@ public class ScreenshotTest extends UITestBase {
                 clickTarget(-0.45f, 0.5f),
                 clickTarget(-0.5f, -0.6f),
                 holdTapTarget(0.5f, 0.4f));
-        SystemScreengrab.screenshot("1_enter_passe");
+        SystemScreengrab.screenshot("1_enter_end");
         SystemClock.sleep(1000);
         onView(withId(R.id.targetView)).perform(releaseTapTarget(0.5f, 0.4f));
     }

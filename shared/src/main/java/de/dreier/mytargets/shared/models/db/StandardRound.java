@@ -100,7 +100,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
                 desc += "\n";
             }
             desc += context.getString(R.string.round_desc, r.distance, r.endCount,
-                    r.arrowsPerEnd, r.getTargetTemplate().size);
+                    r.shotsPerEnd, r.getTargetTemplate().size);
         }
         return desc;
     }

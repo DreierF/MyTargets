@@ -51,7 +51,7 @@ import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 /**
- * Shows all passes of one round
+ * Shows all ends of one round
  */
 public class RoundFragment extends EditableListFragment<End> {
 
@@ -112,16 +112,16 @@ public class RoundFragment extends EditableListFragment<End> {
     @NonNull
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
-        final List<End> passes = round.getPasses();
+        final List<End> ends = round.getEnds();
         StandardRound standardRound = StandardRound
                 .get(Training.get(round.trainingId).standardRoundId);
-        final boolean showFab = passes.size() < round.info.endCount || standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
+        final boolean showFab = ends.size() < round.info.endCount || standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
 
         return new LoaderUICallback() {
             @Override
             public void applyData() {
                 // Set round info
-                mAdapter.setList(passes);
+                mAdapter.setList(ends);
                 binding.fab.setVisibility(showFab ? View.VISIBLE : View.GONE);
             }
         };
@@ -192,7 +192,7 @@ public class RoundFragment extends EditableListFragment<End> {
         @Override
         public void bindItem() {
             binding.shoots.setPoints(mItem, round.getTarget());
-            binding.passe.setText(getString(R.string.passe_n, (mItem.index + 1)));
+            binding.end.setText(getString(R.string.passe_n, (mItem.index + 1)));
         }
     }
 }

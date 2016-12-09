@@ -66,7 +66,7 @@ public class EditTrainingActivityTest extends UITestBase {
         SettingsManager.setIndoor(false);
         SettingsManager.setInputMethod(EInputMethod.PLOTTING);
         SettingsManager.setTimerEnabled(false);
-        SettingsManager.setArrowsPerEnd(3);
+        SettingsManager.setShotsPerEnd(3);
         SettingsManager.setDistance(new Dimension(10, METER));
     }
 

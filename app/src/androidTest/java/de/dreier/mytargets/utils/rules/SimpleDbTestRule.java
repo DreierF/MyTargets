@@ -47,7 +47,7 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         SettingsManager.setIndoor(false);
         SettingsManager.setInputMethod(TargetViewBase.EInputMethod.PLOTTING);
         SettingsManager.setTimerEnabled(true);
-        SettingsManager.setArrowsPerEnd(6);
+        SettingsManager.setShotsPerEnd(6);
         Bow bow = addBow();
         addRandomTraining(578459341);
         addRandomTraining(454459456);
@@ -79,19 +79,19 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         round2.comment = "";
         round2.insert();
 
-        randomPasse(training, round1, 6, generator, 0).insert();
-        randomPasse(training, round1, 6, generator, 1).insert();
-        randomPasse(training, round1, 6, generator, 2).insert();
-        randomPasse(training, round1, 6, generator, 3).insert();
-        randomPasse(training, round1, 6, generator, 4).insert();
-        randomPasse(training, round1, 6, generator, 5).insert();
+        randomEnd(training, round1, 6, generator, 0).insert();
+        randomEnd(training, round1, 6, generator, 1).insert();
+        randomEnd(training, round1, 6, generator, 2).insert();
+        randomEnd(training, round1, 6, generator, 3).insert();
+        randomEnd(training, round1, 6, generator, 4).insert();
+        randomEnd(training, round1, 6, generator, 5).insert();
 
-        randomPasse(training, round2, 6, generator, 0).insert();
-        randomPasse(training, round2, 6, generator, 1).insert();
-        randomPasse(training, round2, 6, generator, 2).insert();
-        randomPasse(training, round2, 6, generator, 3).insert();
-        randomPasse(training, round2, 6, generator, 4).insert();
-        randomPasse(training, round2, 6, generator, 5).insert();
+        randomEnd(training, round2, 6, generator, 0).insert();
+        randomEnd(training, round2, 6, generator, 1).insert();
+        randomEnd(training, round2, 6, generator, 2).insert();
+        randomEnd(training, round2, 6, generator, 3).insert();
+        randomEnd(training, round2, 6, generator, 4).insert();
+        randomEnd(training, round2, 6, generator, 5).insert();
     }
 
     @NonNull
@@ -111,7 +111,7 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         RoundTemplate roundTemplate = new RoundTemplate();
         roundTemplate.index = index;
         roundTemplate.setTargetTemplate(new Target(WAFull.ID, 0, new Dimension(60, Dimension.Unit.CENTIMETER)));
-        roundTemplate.arrowsPerEnd = 6;
+        roundTemplate.shotsPerEnd = 6;
         roundTemplate.endCount = 6;
         roundTemplate.distance = new Dimension(distance, Dimension.Unit.METER);
         return roundTemplate;
@@ -137,19 +137,19 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         round2.comment = "";
         round2.insert();
 
-        randomPasse(training, round1, 6, generator, 0).insert();
-        randomPasse(training, round1, 6, generator, 1).insert();
-        randomPasse(training, round1, 6, generator, 2).insert();
-        randomPasse(training, round1, 6, generator, 3).insert();
-        randomPasse(training, round1, 6, generator, 4).insert();
-        randomPasse(training, round1, 6, generator, 5).insert();
+        randomEnd(training, round1, 6, generator, 0).insert();
+        randomEnd(training, round1, 6, generator, 1).insert();
+        randomEnd(training, round1, 6, generator, 2).insert();
+        randomEnd(training, round1, 6, generator, 3).insert();
+        randomEnd(training, round1, 6, generator, 4).insert();
+        randomEnd(training, round1, 6, generator, 5).insert();
 
-        randomPasse(training, round2, 6, generator, 0).insert();
-        randomPasse(training, round2, 6, generator, 1).insert();
-        randomPasse(training, round2, 6, generator, 2).insert();
-        randomPasse(training, round2, 6, generator, 3).insert();
-        randomPasse(training, round2, 6, generator, 4).insert();
-        randomPasse(training, round2, 6, generator, 5).insert();
+        randomEnd(training, round2, 6, generator, 0).insert();
+        randomEnd(training, round2, 6, generator, 1).insert();
+        randomEnd(training, round2, 6, generator, 2).insert();
+        randomEnd(training, round2, 6, generator, 3).insert();
+        randomEnd(training, round2, 6, generator, 4).insert();
+        randomEnd(training, round2, 6, generator, 5).insert();
     }
 
     private void addFullTraining(Bow bow) {
@@ -166,7 +166,7 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         training.bow = bow.id;
         training.arrow = null;
         training.arrowNumbering = false;
-        training.timePerPasse = 0;
+        training.timePerEnd = 0;
         training.insert();
 
         Round round1 = new Round();
@@ -183,18 +183,18 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         round2.comment = "";
         round2.insert();
 
-        passe(round1, 1, 1, 2, 3, 3, 4).insert();
-        passe(round1, 0, 0, 1, 2, 2, 3).insert();
-        passe(round1, 1, 1, 1, 3, 4, 4).insert();
-        passe(round1, 0, 1, 1, 1, 2, 3).insert();
-        passe(round1, 1, 2, 3, 3, 4, 5).insert();
-        passe(round1, 1, 2, 2, 3, 3, 3).insert();
+        buildEnd(round1, 1, 1, 2, 3, 3, 4).insert();
+        buildEnd(round1, 0, 0, 1, 2, 2, 3).insert();
+        buildEnd(round1, 1, 1, 1, 3, 4, 4).insert();
+        buildEnd(round1, 0, 1, 1, 1, 2, 3).insert();
+        buildEnd(round1, 1, 2, 3, 3, 4, 5).insert();
+        buildEnd(round1, 1, 2, 2, 3, 3, 3).insert();
 
-        passe(round2, 1, 2, 2, 3, 4, 5).insert();
-        passe(round2, 0, 0, 1, 2, 2, 3).insert();
-        passe(round2, 0, 1, 2, 2, 2, 3).insert();
-        passe(round2, 1, 1, 2, 3, 4, 4).insert();
-        passe(round2, 1, 2, 2, 3, 3, 3).insert();
-        passe(round2, 1, 2, 2, 3, 3, 4).insert();
+        buildEnd(round2, 1, 2, 2, 3, 4, 5).insert();
+        buildEnd(round2, 0, 0, 1, 2, 2, 3).insert();
+        buildEnd(round2, 0, 1, 2, 2, 2, 3).insert();
+        buildEnd(round2, 1, 1, 2, 3, 4, 4).insert();
+        buildEnd(round2, 1, 2, 2, 3, 3, 3).insert();
+        buildEnd(round2, 1, 2, 2, 3, 3, 4).insert();
     }
 }

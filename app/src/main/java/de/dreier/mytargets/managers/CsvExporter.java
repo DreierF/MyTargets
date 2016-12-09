@@ -97,7 +97,7 @@ public class CsvExporter {
         final Target target = r.getTarget();
         csv.add(target.getModel().toString() + " (" + target.size
                 .toString() + ")");
-        for (End e : r.getPasses()) {
+        for (End e : r.getEnds()) {
             csv.enterScope();
             // End
             csv.add(String.valueOf(e.index + 1));

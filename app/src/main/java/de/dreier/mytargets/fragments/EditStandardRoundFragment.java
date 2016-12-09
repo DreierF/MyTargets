@@ -94,8 +94,8 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                 binding.outdoor.setChecked(!SettingsManager.getIndoor());
 
                 RoundTemplate round = new RoundTemplate();
-                round.arrowsPerEnd = SettingsManager.getArrowsPerPasse();
-                round.endCount = SettingsManager.getPasses();
+                round.shotsPerEnd = SettingsManager.getArrowsPerEnd();
+                round.endCount = SettingsManager.getEndCount();
                 round.setTargetTemplate(SettingsManager.getTarget());
                 round.distance = SettingsManager.getDistance();
                 roundTemplateList.add(round);
@@ -135,7 +135,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         RoundTemplate r = roundTemplateList.get(roundTemplateList.size() - 1);
         RoundTemplate roundTemplate = new RoundTemplate();
         roundTemplate.endCount = r.endCount;
-        roundTemplate.arrowsPerEnd = r.arrowsPerEnd;
+        roundTemplate.shotsPerEnd = r.shotsPerEnd;
         roundTemplate.distance = r.distance;
         roundTemplate.setTargetTemplate(r.getTargetTemplate());
         roundTemplateList.add(roundTemplate);
@@ -158,8 +158,8 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         SettingsManager.setIndoor(standardRound.indoor);
 
         RoundTemplate round = roundTemplateList.get(0);
-        SettingsManager.setArrowsPerEnd(round.arrowsPerEnd);
-        SettingsManager.setPasses(round.endCount);
+        SettingsManager.setShotsPerEnd(round.shotsPerEnd);
+        SettingsManager.setEndCount(round.endCount);
         SettingsManager.setTarget(round.getTargetTemplate());
         SettingsManager.setDistance(round.distance);
 
@@ -217,17 +217,17 @@ public class EditStandardRoundFragment extends EditFragmentBase {
             binding.target.setItemIndex(position);
             binding.target.setItem(item.getTargetTemplate());
 
-            // Passes
-            binding.passes.setTextPattern(R.plurals.passe);
-            binding.passes.setOnValueChangedListener(val -> item.endCount = val);
-            binding.passes.setValue(item.endCount);
+            // Ends
+            binding.endCount.setTextPattern(R.plurals.passe);
+            binding.endCount.setOnValueChangedListener(val -> item.endCount = val);
+            binding.endCount.setValue(item.endCount);
 
-            // Arrows per end
-            binding.arrows.setTextPattern(R.plurals.arrow);
-            binding.arrows.setMinimum(1);
-            binding.arrows.setMaximum(12);
-            binding.arrows.setOnValueChangedListener(val -> item.arrowsPerEnd = val);
-            binding.arrows.setValue(item.arrowsPerEnd);
+            // Shots per end
+            binding.shotCount.setTextPattern(R.plurals.arrow);
+            binding.shotCount.setMinimum(1);
+            binding.shotCount.setMaximum(12);
+            binding.shotCount.setOnValueChangedListener(val -> item.shotsPerEnd = val);
+            binding.shotCount.setValue(item.shotsPerEnd);
 
             if (position == 0) {
                 binding.remove.setVisibility(View.GONE);

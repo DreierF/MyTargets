@@ -110,9 +110,9 @@ public class HtmlUtils {
 
     private static String getRoundTable(ScoreboardConfiguration configuration, Round round) {
         String html = "<table class=\"myTable\">";
-        html += getTableHeader(round.info.arrowsPerEnd);
+        html += getTableHeader(round.info.shotsPerEnd);
         int carry = 0;
-        for (End end : round.getPasses()) {
+        for (End end : round.getEnds()) {
             html += "<tr class=\"align_center\">";
             html += "<td>" + (end.index + 1) + "</td>";
             int sum = 0;
@@ -175,8 +175,8 @@ public class HtmlUtils {
         int j = 0;
         for (Round round : rounds) {
             int i = 1;
-            List<End> passes = round.getPasses();
-            for (End end : passes) {
+            List<End> ends = round.getEnds();
+            for (End end : ends) {
                 for (int s = 0; s < end.getShots().size(); s++) {
                     Shot shot = end.getShots().get(s);
                     if (!TextUtils.isEmpty(shot.comment)) {

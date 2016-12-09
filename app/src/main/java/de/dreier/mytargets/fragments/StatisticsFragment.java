@@ -134,7 +134,7 @@ public class StatisticsFragment extends FragmentBase {
 
     private void showDispersionView() {
         final List<Shot> exactShots = Stream.of(rounds)
-                .flatMap(r -> Stream.of(r.getPasses()))
+                .flatMap(r -> Stream.of(r.getEnds()))
                 .filter(p -> p.exact)
                 .flatMap(p -> Stream.of(p.getShots()))
                 .collect(Collectors.toList());
@@ -279,7 +279,7 @@ public class StatisticsFragment extends FragmentBase {
 
     private String getHitMissText() {
         final List<Shot> shots = Stream.of(rounds)
-                .flatMap(r -> Stream.of(r.getPasses()))
+                .flatMap(r -> Stream.of(r.getEnds()))
                 .flatMap(p -> Stream.of(p.getShots()))
                 .collect(Collectors.toList());
         long missCount = Stream.of(shots).filter(s -> s.zone == Shot.MISS).count();
@@ -314,14 +314,14 @@ public class StatisticsFragment extends FragmentBase {
         Map<Long, Training> trainingsMap = Stream.of(rounds)
                 .map(r -> r.trainingId)
                 .distinct()
-                .map(tid -> Training.get(tid))
+                .map(Training::get)
                 .collect(Collectors.toMap(Training::getId));
 
         List<Pair<Integer, DateTime>> values = Stream.of(rounds)
-                .map(r -> new Pair<>(trainingsMap.get(r.trainingId).date, r.getId()))
-                .flatMap(roundIdPair -> Stream.of(Round.get(roundIdPair.second).getPasses())
-                        .map(p -> new Pair<>(roundIdPair.first, p)))
-                .map(passePair -> getPairEndSummary(target, passePair.second, passePair.first))
+                .map(r -> new Pair<>(trainingsMap.get(r.trainingId).date, r))
+                .flatMap(roundIdPair -> Stream.of(roundIdPair.second.getEnds())
+                        .map(end -> new Pair<>(roundIdPair.first, end)))
+                .map(endPair -> getPairEndSummary(target, endPair.second, endPair.first))
                 .sortBy(pair -> pair.second.toDate().getTime())
                 .collect(Collectors.toList());
         if (values.isEmpty()) {
@@ -362,7 +362,8 @@ public class StatisticsFragment extends FragmentBase {
                 @Override
                 public String getXValueFormatted(float value) {
                     final long diffToFirst = (long) value;
-                    return dateFormat.format(new Date(values.get(0).second.getMillis() + diffToFirst));
+                    return dateFormat
+                            .format(new Date(values.get(0).second.getMillis() + diffToFirst));
                 }
             };
         } else {

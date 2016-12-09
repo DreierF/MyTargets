@@ -156,7 +156,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.environment.setItem(train.getEnvironment());
             setTrainingDate();
             binding.notEditable.setVisibility(View.GONE);
-            binding.timer.setChecked(train.timePerPasse != -1);
+            binding.timer.setChecked(train.timePerEnd != -1);
         }
         binding.standardRound.setOnActivityResultContext(this);
         binding.standardRound.setOnUpdateListener(this::updateChangeTargetFaceVisibility);
@@ -297,7 +297,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                 .getId();
         training.arrow = binding.arrow.getSelectedItem() == null ? 0 : binding.arrow
                 .getSelectedItem().getId();
-        training.timePerPasse = binding.timer.isChecked() ? SettingsManager
+        training.timePerEnd = binding.timer.isChecked() ? SettingsManager
                 .getTimerShootTime() : -1;
         training.arrowNumbering = binding.numberArrows.isChecked();
 
@@ -365,7 +365,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
     private void loadRoundDefaultValues() {
         binding.distance.setItem(SettingsManager.getDistance());
-        binding.arrows.setProgress(SettingsManager.getArrowsPerPasse());
+        binding.arrows.setProgress(SettingsManager.getArrowsPerEnd());
         binding.target.setItem(SettingsManager.getTarget());
     }
 
@@ -373,13 +373,13 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private RoundTemplate getRoundTemplate() {
         RoundTemplate roundTemplate = new RoundTemplate();
         roundTemplate.setTargetTemplate(binding.target.getSelectedItem());
-        roundTemplate.arrowsPerEnd = binding.arrows.getProgress();
+        roundTemplate.shotsPerEnd = binding.arrows.getProgress();
         roundTemplate.endCount = 1;
         roundTemplate.distance = binding.distance.getSelectedItem();
 
         SettingsManager.setTarget(binding.target.getSelectedItem());
         SettingsManager.setDistance(roundTemplate.distance);
-        SettingsManager.setArrowsPerEnd(roundTemplate.arrowsPerEnd);
+        SettingsManager.setShotsPerEnd(roundTemplate.shotsPerEnd);
         return roundTemplate;
     }
 }

@@ -56,7 +56,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     public boolean arrowNumbering;
 
     @Column(name = "time")
-    public int timePerPasse;
+    public int timePerEnd;
 
     @Column(typeConverter = EWeatherConverter.class, name = "weather")
     public EWeather weather;

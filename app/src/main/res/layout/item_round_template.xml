@@ -83,7 +83,7 @@
                 android:orientation="horizontal">
 
                 <de.dreier.mytargets.views.NumberPicker
-                    android:id="@+id/passes"
+                    android:id="@+id/endCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -97,7 +97,7 @@
                     android:text="@string/with"/>
 
                 <de.dreier.mytargets.views.NumberPicker
-                    android:id="@+id/arrows"
+                    android:id="@+id/shotCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 

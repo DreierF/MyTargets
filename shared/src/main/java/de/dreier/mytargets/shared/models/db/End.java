@@ -97,7 +97,7 @@ public class End extends BaseModel implements IIdSettable,  Comparable<End> {
     public void setId(Long id) {
         this.id = id;
         for (Shot s : shots) {
-            s.passe = id;
+            s.endId = id;
         }
     }
 
@@ -117,7 +117,7 @@ public class End extends BaseModel implements IIdSettable,  Comparable<End> {
         final Target t = rounds.get(0).getTarget();
         Map<SelectableZone, Integer> scoreCount = getAllPossibleZones(t);
         for (Round round : rounds) {
-            for (End p : round.getPasses()) {
+            for (End p : round.getEnds()) {
                 for (Shot s : p.shots) {
                     SelectableZone tuple = new SelectableZone(s.zone, t.getModel().getZone(s.zone),
                             t.zoneToString(s.zone, s.index), t.getPointsByZone(s.zone, s.index));

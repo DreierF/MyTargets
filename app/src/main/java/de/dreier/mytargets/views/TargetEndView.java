@@ -25,7 +25,7 @@ import android.view.View;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.End;
 
-public class TargetPasseView extends View {
+public class TargetEndView extends View {
 
     private End end = new End(3);
     private float density;
@@ -34,17 +34,17 @@ public class TargetPasseView extends View {
     private int mZoneCount;
     private int radius;
 
-    public TargetPasseView(Context context) {
+    public TargetEndView(Context context) {
         super(context);
         init();
     }
 
-    public TargetPasseView(Context context, AttributeSet attrs) {
+    public TargetEndView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public TargetPasseView(Context context, AttributeSet attrs, int defStyle) {
+    public TargetEndView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }
@@ -55,7 +55,7 @@ public class TargetPasseView extends View {
         density = getResources().getDisplayMetrics().density;
     }
 
-    public void setPasse(End p, Target tar) {
+    public void setEnd(End p, Target tar) {
         end = p;
         target = tar;
         mZoneCount = tar.getModel().getZoneCount();

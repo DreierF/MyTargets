@@ -82,7 +82,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
                 shot.zone = res.getInt(4);
                 shot.x = res.getFloat(2);
                 shot.y = res.getFloat(3);
-                shot.passe = res.getLong(9);
+                shot.endId = res.getLong(9);
                 statistic.addShot(shot);
                 lastArrowId = arrowId;
                 lastArrowNumber = arrowNumber;

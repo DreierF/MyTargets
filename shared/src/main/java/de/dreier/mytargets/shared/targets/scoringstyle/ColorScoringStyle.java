@@ -32,7 +32,7 @@ public class ColorScoringStyle extends ScoringStyle {
     }
 
     @Override
-    public int getEndMaxPoints(int arrowsPerPasse) {
+    public int getEndMaxPoints(int shotsPerEnd) {
         return maxEndPoints;
     }
 

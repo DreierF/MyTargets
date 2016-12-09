@@ -276,7 +276,7 @@ public class InputActivity extends ChildActivityBase
     private void showEnd(int endIndex) {
         // Create a new end
         if (endIndex == getEnds().size()) {
-            End end = new End(getTemplate().arrowsPerEnd);
+            End end = new End(getTemplate().shotsPerEnd);
             end.roundId = getCurrentRound().getId();
             getEnds().add(end);
             updateOldShoots();
@@ -285,7 +285,7 @@ public class InputActivity extends ChildActivityBase
         data.endIndex = endIndex;
 
         // Open timer if end has not been saved yet
-        if (getCurrentEnd().getId() == null && data.training.timePerPasse > 0) {
+        if (getCurrentEnd().getId() == null && data.training.timePerEnd > 0) {
             openTimer();
         }
         updateEnd();
@@ -296,7 +296,7 @@ public class InputActivity extends ChildActivityBase
         final LoaderResult data = this.data;
         final Stream<Shot> shotStream = Stream.of(data.training.getRounds())
                 .filter(this::shouldShowRound)
-                .flatMap(r -> Stream.of(r.getPasses()))
+                .flatMap(r -> Stream.of(r.getEnds()))
                 .filter(this::shouldShowEnd)
                 .flatMap(p -> Stream.of(p.getShots()));
         targetView.setTransparentShots(shotStream);
@@ -333,7 +333,7 @@ public class InputActivity extends ChildActivityBase
 
     private void openTimer() {
         if (transitionFinished) {
-            TimerFragment.getIntent(data.training.timePerPasse)
+            TimerFragment.getIntent(data.training.timePerEnd)
                     .withContext(this)
                     .start();
         } else if (Utils.isLollipop()) {
@@ -346,7 +346,7 @@ public class InputActivity extends ChildActivityBase
         getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
             @Override
             public void onTransitionEnd(Transition transition) {
-                TimerFragment.getIntent(data.training.timePerPasse)
+                TimerFragment.getIntent(data.training.timePerEnd)
                         .withContext(InputActivity.this)
                         .start();
                 getWindow().getSharedElementEnterTransition().removeListener(this);
@@ -367,7 +367,7 @@ public class InputActivity extends ChildActivityBase
         // Set current end score
         int reachedEndPoints = getCurrentEnd().getReachedPoints(getCurrentRound().getTarget());
         int maxEndPoints = getCurrentRound().getTarget()
-                .getEndMaxPoints(getTemplate().arrowsPerEnd);
+                .getEndMaxPoints(getTemplate().shotsPerEnd);
         binding.scoreEnd.setText(reachedEndPoints + "/" + maxEndPoints);
 
         // Set current round score
@@ -429,7 +429,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     private List<End> getEnds() {
-        return getCurrentRound().getPasses();
+        return getCurrentRound().getEnds();
     }
 
     private Round getCurrentRound() {
@@ -490,7 +490,7 @@ public class InputActivity extends ChildActivityBase
                 if (rounds.get(i).getId() == roundId) {
                     result.roundIndex = i;
                 }
-                rounds.get(i).getPasses();
+                rounds.get(i).getEnds();
             }
 
             result.standardRound = result.training.getStandardRound();

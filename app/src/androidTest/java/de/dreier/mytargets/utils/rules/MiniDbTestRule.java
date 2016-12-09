@@ -36,7 +36,7 @@ public class MiniDbTestRule extends DbTestRuleBase {
         SettingsManager.setIndoor(false);
         SettingsManager.setInputMethod(TargetViewBase.EInputMethod.PLOTTING);
         SettingsManager.setTimerEnabled(true);
-        SettingsManager.setArrowsPerEnd(6);
+        SettingsManager.setShotsPerEnd(6);
         addRandomTraining(578459341);
         addRandomTraining(454459456);
     }
@@ -61,11 +61,11 @@ public class MiniDbTestRule extends DbTestRuleBase {
         round2.comment = "";
         round2.insert();
 
-        randomPasse(training, round1, 6, generator, 0).insert();
-        randomPasse(training, round1, 6, generator, 1).insert();
+        randomEnd(training, round1, 6, generator, 0).insert();
+        randomEnd(training, round1, 6, generator, 1).insert();
 
-        randomPasse(training, round2, 6, generator, 0).insert();
-        randomPasse(training, round2, 6, generator, 1).insert();
+        randomEnd(training, round2, 6, generator, 0).insert();
+        randomEnd(training, round2, 6, generator, 1).insert();
     }
 
 }

@@ -98,18 +98,18 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
     }
 
     @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "passes")
-    public List<End> getPasses() {
+    public List<End> getEnds() {
         if (passes == null || passes.isEmpty()) {
             passes = SQLite.select()
                     .from(End.class)
-                    .where(Passe_Table.round.eq(id))
+                    .where(End_Table.round.eq(id))
                     .queryList();
         }
         return passes;
     }
 
     public int getMaxPoints() {
-        return getTarget().getEndMaxPoints(info.arrowsPerEnd) * info.endCount;
+        return getTarget().getEndMaxPoints(info.shotsPerEnd) * info.endCount;
     }
 
     public String getReachedPointsFormatted() {
@@ -118,7 +118,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
 
     public int getReachedPoints() {
         final Target target = getTarget();
-        return Stream.of(getPasses())
+        return Stream.of(getEnds())
                 .map(p -> p.getReachedPoints(target))
                 .reduce(0, (value1, value2) -> value1+value2);
     }
