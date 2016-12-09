@@ -175,7 +175,6 @@
   <string name="standard_round">Partida padrão</string>
   <string name="use_as_template">Usar como modelo?</string>
   <string name="create_copy">Esse é um round padrão!\n Deseja criar uma cópia para editar?</string>
-  <string name="arrow_numbers_desc">Insira os números das flechas utilizadas ex: 1,2,5,6,7</string>
   <string name="practice">Treinar</string>
   <string name="edit_training">Editar o treino</string>
   <string name="edit_standard_round">Editar Partida Padrão</string>

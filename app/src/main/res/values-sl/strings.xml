@@ -189,7 +189,6 @@
   <string name="standard_round">Standard round</string>
   <string name="use_as_template">Use as template?</string>
   <string name="create_copy">This is a standard round!\nDo you want to create a copy in order to edit it?</string>
-  <string name="arrow_numbers_desc">Enter all arrow number that you use for shooting e.g. 1,2,5,6,7</string>
   <string name="practice">Practice</string>
   <string name="edit_training">Edit Training</string>
   <string name="edit_standard_round">Edit Standard Round</string>

@@ -182,7 +182,6 @@
   <string name="standard_round">Runda standardowa</string>
   <string name="use_as_template">Użyć jako szablon?</string>
   <string name="create_copy">To jest runda standardowa! \nCzy chcesz utworzyć kopię, aby ją edytować?</string>
-  <string name="arrow_numbers_desc">Wprowadź wszystkie numery strzał jakie zostały użyte np.: 1,2,5,6,7</string>
   <string name="practice">Ćwiczenia</string>
   <string name="edit_training">Edytuj trening</string>
   <string name="edit_standard_round">Edytuj rundę standardową</string>

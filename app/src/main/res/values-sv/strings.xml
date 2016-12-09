@@ -175,7 +175,6 @@
   <string name="standard_round">Standard runda</string>
   <string name="use_as_template">Använd en mall?</string>
   <string name="create_copy">Detta är en standard runda! \nVill du skapa en kopia för att redigera den?</string>
-  <string name="arrow_numbers_desc">Ange alla pilars nummer som du använder för att skjuta e.g. 1,2,5,6,7</string>
   <string name="practice">Öva</string>
   <string name="edit_training">Redigera träning</string>
   <string name="edit_standard_round">Redigera Standard Runda</string>

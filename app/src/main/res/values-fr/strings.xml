@@ -175,7 +175,6 @@
   <string name="standard_round">Épreuve standard</string>
   <string name="use_as_template">Utiliser comme modèle?</string>
   <string name="create_copy">Ceci est une manche standard\nVoulez-vous en créer une copie afin de l\'éditée?</string>
-  <string name="arrow_numbers_desc">Entrez tous les numéros de flèche que vous utilisez pour le tir, par exemple 1,2,5,6,7</string>
   <string name="practice">Entraînement</string>
   <string name="edit_training">Modifier la séance</string>
   <string name="edit_standard_round">Modifier l\'épreuve standard</string>

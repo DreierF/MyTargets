@@ -182,7 +182,6 @@
   <string name="standard_round">Štandardné kolo</string>
   <string name="use_as_template">Použiť ako šablónu?</string>
   <string name="create_copy">Jedná sa o štandardné kolo! \nChcete vytvoriť kópiu, aby ste ho mohli upraviť?</string>
-  <string name="arrow_numbers_desc">Zadajte všetky čísla šípov, ktoré používate pre streľbu napr 1,2,5,6,7</string>
   <string name="practice">Tréning</string>
   <string name="edit_training">Upraviť tréning</string>
   <string name="edit_standard_round">Úprava štandardného kola</string>

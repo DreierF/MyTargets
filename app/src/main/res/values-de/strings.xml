@@ -175,7 +175,6 @@
   <string name="standard_round">Standardrunde</string>
   <string name="use_as_template">Als Vorlage verwenden?</string>
   <string name="create_copy">Das ist eine Standardrunde!\nWillst du eine Kopie erzeugen um sie bearbeiten zu können?</string>
-  <string name="arrow_numbers_desc">Gib hier alle Pfeil Nummern ein die du zum Schießen verwendest z.B. 1,2,5,6,7</string>
   <string name="practice">Übung</string>
   <string name="edit_training">Training bearbeiten</string>
   <string name="edit_standard_round">Standardrunde bearbeiten</string>

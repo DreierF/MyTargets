@@ -45,7 +45,6 @@ import de.dreier.mytargets.shared.utils.EndRenderer;
  */
 @ParcelClasses({
         @ParcelClass(Arrow.class),
-        @ParcelClass(ArrowNumber.class),
         @ParcelClass(Bow.class),
         @ParcelClass(Coordinate.class),
         @ParcelClass(Dimension.class),

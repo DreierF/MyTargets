@@ -168,7 +168,6 @@
   <string name="standard_round">标准回合</string>
   <string name="use_as_template">作为模板使用？</string>
   <string name="create_copy">这是一个标准回合！ \nDo 您想要创建一个副本，以便对其进行编辑吗？</string>
-  <string name="arrow_numbers_desc">输入所有你用来射击的箭支数，格式1,2,5,6,7</string>
   <string name="practice">练习</string>
   <string name="edit_training">编辑训练</string>
   <string name="edit_standard_round">编辑标准回合</string>

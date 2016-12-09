@@ -175,7 +175,6 @@
   <string name="standard_round">Standart tur</string>
   <string name="use_as_template">Şablon olarak kullan?</string>
   <string name="create_copy">Bu standart bir turdur. Düzenlemek üzere kopyasını kaydetmek ister misin \n?</string>
-  <string name="arrow_numbers_desc">Atış için kullandığın tüm ok numaralarını gir ör. 1.2.5.6.7</string>
   <string name="practice">İdman</string>
   <string name="edit_training">Antrenmanı Düzenle</string>
   <string name="edit_standard_round">Standart turu düzenle</string>

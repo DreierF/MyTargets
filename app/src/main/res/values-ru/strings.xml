@@ -182,7 +182,6 @@
   <string name="standard_round">Стандартный раунд</string>
   <string name="use_as_template">Использовать шаблон?</string>
   <string name="create_copy">Это стандартный раунд! Вы хотите создать копию, чтобы изменить его?</string>
-  <string name="arrow_numbers_desc">Введите все номера стрел, которые вы используете для стрельбы. Например 1,2,5,6,7</string>
   <string name="practice">Тренировка</string>
   <string name="edit_training">Изменить тренировку</string>
   <string name="edit_standard_round">Изменить стандартный раунд</string>

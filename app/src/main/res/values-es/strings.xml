@@ -175,7 +175,6 @@
   <string name="standard_round">Serie Estandar</string>
   <string name="use_as_template">¿Utilizar como plantilla?</string>
   <string name="create_copy">Esto es una Serie estándar! \nDo ¿desea crear una copia para poder editarlo?</string>
-  <string name="arrow_numbers_desc">Introduzca todos los números de flechas que usas para disparar por ejemplo 1,2,5,6,7</string>
   <string name="practice">Practicar</string>
   <string name="edit_training">Editar Entrenamiento</string>
   <string name="edit_standard_round">Editar Serie Estandar</string>

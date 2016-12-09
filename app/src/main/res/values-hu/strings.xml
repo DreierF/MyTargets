@@ -175,7 +175,6 @@
   <string name="standard_round">Standard forduló</string>
   <string name="use_as_template">Használja sablonként?</string>
   <string name="create_copy">Ez a standard forduló! \nMásolat létrehozása és szerkeztése?</string>
-  <string name="arrow_numbers_desc">Adja meg minden felhasznált vessző sorszámát pl. 1,2,5,6,7</string>
   <string name="practice">Gyakorlás</string>
   <string name="edit_training">Edzés szerkesztése</string>
   <string name="edit_standard_round">Szabványos forduló szerkesztése</string>
