@@ -125,7 +125,7 @@ public class EndRenderer {
 
                 // Draw circle
                 circle.draw(canvas, coordinate.x, coordinate.y, shot.zone, radius,
-                        !TextUtils.isEmpty(shot.comment) && i != selected, shot.index, shot.arrow);
+                        !TextUtils.isEmpty(shot.comment) && i != selected, shot.index, shot.arrowNumber);
             }
         }
     }

@@ -276,9 +276,7 @@ public class InputActivity extends ChildActivityBase
     private void showEnd(int endIndex) {
         // Create a new end
         if (endIndex == getEnds().size()) {
-            End end = new End(getTemplate().shotsPerEnd);
-            end.roundId = getCurrentRound().getId();
-            getEnds().add(end);
+            getCurrentRound().addEnd(getTemplate().shotsPerEnd);
             updateOldShoots();
         }
 

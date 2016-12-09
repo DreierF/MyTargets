@@ -48,7 +48,7 @@ public class AppDatabase {
                 "FROM ROUND r LEFT JOIN TRAINING t ON t._id=r.training " +
                 "WHERE t._id IS NULL)");
 
-        // Clean up passes
+        // Clean up ends
         db.execSQL("DELETE FROM PASSE WHERE _id IN (SELECT p._id " +
                 "FROM PASSE p LEFT JOIN ROUND r ON r._id=p.round " +
                 "WHERE r._id IS NULL)");

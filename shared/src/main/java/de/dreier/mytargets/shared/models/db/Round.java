@@ -52,7 +52,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
     @Column(typeConverter = DimensionConverter.class, name = "size")
     Dimension targetSize;
 
-    public List<End> passes = new ArrayList<>();
+    public List<End> ends = new ArrayList<>();
 
     public static Round get(Long id) {
         return SQLite.select()
@@ -97,15 +97,15 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
                 id.equals(((Round) another).id);
     }
 
-    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "passes")
+    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "ends")
     public List<End> getEnds() {
-        if (passes == null || passes.isEmpty()) {
-            passes = SQLite.select()
+        if (ends == null || ends.isEmpty()) {
+            ends = SQLite.select()
                     .from(End.class)
                     .where(End_Table.round.eq(id))
                     .queryList();
         }
-        return passes;
+        return ends;
     }
 
     public int getMaxPoints() {
@@ -126,5 +126,16 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
     @Override
     public int compareTo(@NonNull Round round) {
         return info.index - round.info.index;
+    }
+
+    /**
+     * Adds a new end to the internal list of ends, but does not yet save it.
+     * @param shotsPerEnd Number of shots used to initialize the end.
+     */
+    public void addEnd(int shotsPerEnd) {
+        End end = new End(shotsPerEnd);
+        end.index = getEnds().size();
+        end.roundId = id;
+        getEnds().add(end);
     }
 }

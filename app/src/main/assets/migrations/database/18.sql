@@ -1,6 +1,6 @@
-ALTER TABLE PASSE ADD COLUMN `index` INTEGER;
+ALTER TABLE PASSE ADD COLUMN `endIndex` INTEGER;
 UPDATE PASSE
-SET `index` = (SELECT COUNT(*)
+SET `endIndex` = (SELECT COUNT(*)
   FROM PASSE p
   WHERE PASSE.round = p.round
   AND PASSE._id > p._id);

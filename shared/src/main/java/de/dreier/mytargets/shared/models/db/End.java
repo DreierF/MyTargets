@@ -64,15 +64,6 @@ public class End extends BaseModel implements IIdSettable,  Comparable<End> {
         }
     }
 
-    public End(End end) {
-        id = end.id;
-        roundId = end.roundId;
-        index = end.index;
-        exact = end.exact;
-        shots = end.shots;
-        shots = new ArrayList<>(end.shots);
-    }
-
     @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "shots")
     public List<Shot> getShots() {
         if (shots == null || shots.isEmpty()) {

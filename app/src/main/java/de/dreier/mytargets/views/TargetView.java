@@ -487,7 +487,7 @@ public class TargetView extends TargetViewBase {
     @Override
     protected void onArrowChanged() {
         if (!arrowNumbering || getCurrentShotIndex() != EndRenderer.NO_SELECTION
-                && shots.get(getCurrentShotIndex()).arrow != null) {
+                && shots.get(getCurrentShotIndex()).arrowNumber != null) {
             super.onArrowChanged();
         } else {
             List<String> numbers = Stream.rangeClosed(1, 12)
@@ -509,7 +509,7 @@ public class TargetView extends TargetViewBase {
             gridView.setOnItemClickListener((parent, view, position, id) ->
             {
                 if (getCurrentShotIndex() < shots.size()) {
-                    shots.get(getCurrentShotIndex()).arrow = numbers.get(position);
+                    shots.get(getCurrentShotIndex()).arrowNumber = numbers.get(position);
                 }
                 dialog.dismiss();
                 super.onArrowChanged();

@@ -141,8 +141,8 @@ public class HtmlUtils {
             final String pointsDiv = String.format(
                     "<div class=\"circle\" style='background: #%06X; color: #%06X'>%s",
                     fillColor & 0xFFFFFF, color & 0xFFFFFF, points);
-            final String arrowDiv = shot.arrow == null ? "" : String.format(
-                    "<div class=\"circle_arrow\">%s</div>", shot.arrow);
+            final String arrowDiv = shot.arrowNumber == null ? "" : String.format(
+                    "<div class=\"circle_arrow\">%s</div>", shot.arrowNumber);
             return pointsDiv + arrowDiv + "</div>";
         } else {
             return points;

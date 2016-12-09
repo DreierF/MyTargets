@@ -60,13 +60,13 @@ public abstract class DbTestRuleBase implements TestRule {
     }
 
     protected End buildEnd(Round round, int... shots) {
-        End p = new End(shots.length);
-        p.roundId = round.getId();
+        End end = new End(shots.length);
+        end.roundId = round.getId();
         for (int i = 0; i < shots.length; i++) {
-            p.getShots().get(i).index = i;
-            p.getShots().get(i).zone = shots[i];
+            end.getShots().get(i).index = i;
+            end.getShots().get(i).zone = shots[i];
         }
-        return p;
+        return end;
     }
 
     protected End randomEnd(Training training, Round round, int arrowsPerEnd, Random gen, int index) {

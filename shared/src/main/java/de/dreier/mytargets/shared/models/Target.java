@@ -122,8 +122,8 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         return getScoringStyle().getMaxPoints();
     }
 
-    public int getEndMaxPoints(int arrowsPerPasse) {
-        return getScoringStyle().getEndMaxPoints(arrowsPerPasse);
+    public int getEndMaxPoints(int shotsPerEnd) {
+        return getScoringStyle().getEndMaxPoints(shotsPerEnd);
     }
 
     public int getReachedPoints(End end) {

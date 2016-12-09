@@ -37,8 +37,8 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
     public String comment = "";
     // Is the actual number of the arrow not its index, arrow id or something else
     @Column(name = "arrow")
-    public String arrow = null;
-    // The index of the shot in the containing passe
+    public String arrowNumber = null;
+    // The index of the shot in the containing end
     @Column(name = "arrow_index")
     public int index;
 

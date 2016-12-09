@@ -95,8 +95,8 @@ public class ScoringStyle {
         return max;
     }
 
-    public int getEndMaxPoints(int arrowsPerPasse) {
-        return getMaxPoints() * arrowsPerPasse;
+    public int getEndMaxPoints(int shotsPerEnd) {
+        return getMaxPoints() * shotsPerEnd;
     }
 
     public int getReachedPoints(End end) {

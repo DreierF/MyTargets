@@ -724,11 +724,11 @@ public class StandardRoundFactory {
      * @param distanceUnit   Unit of the distance specified in round Details
      * @param targetUnit     Unit of the target size specified in roundDetails
      * @param target         Index of the target that is used for shooting
-     * @param arrowsPerPasse Number of arrows that are shot per end
-     * @param roundDetails   Per round distance, targetSize and number of passes are expected
+     * @param shotsPerEnd    Number of arrows that are shot per end
+     * @param roundDetails   Per round distance, targetSize and number of ends are expected
      * @return The standard round with the specified properties
      */
-    private static StandardRound build(int institution, int name, boolean indoor, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, int target, int scoringStyle, int arrowsPerPasse, int... roundDetails) {
+    private static StandardRound build(int institution, int name, boolean indoor, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, int target, int scoringStyle, int shotsPerEnd, int... roundDetails) {
         StandardRound standardRound = new StandardRound();
         idCounter++;
         standardRound.setId(idCounter);
@@ -739,7 +739,7 @@ public class StandardRoundFactory {
             roundCounter++;
             RoundTemplate roundTemplate = new RoundTemplate();
             roundTemplate.setId(roundCounter);
-            roundTemplate.shotsPerEnd = arrowsPerPasse;
+            roundTemplate.shotsPerEnd = shotsPerEnd;
             roundTemplate.distance = new Dimension(roundDetails[i], distanceUnit);
             roundTemplate.setTargetTemplate(
                     new Target(target, scoringStyle, new Dimension(roundDetails[i + 1], targetUnit)));
@@ -749,9 +749,9 @@ public class StandardRoundFactory {
         return standardRound;
     }
 
-    private static StandardRound build(int institution, int name, boolean indoor, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, int target, int scoringStyle, Target target2, int arrowsPerPasse, int... roundDetails) {
+    private static StandardRound build(int institution, int name, boolean indoor, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, int target, int scoringStyle, Target target2, int shotsPerEnd, int... roundDetails) {
         StandardRound standardRound = build(institution, name, indoor, distanceUnit,
-                targetUnit, target, scoringStyle, arrowsPerPasse, roundDetails);
+                targetUnit, target, scoringStyle, shotsPerEnd, roundDetails);
         RoundTemplate round2 = standardRound.getRounds().get(1);
         target2.size = round2.getTargetTemplate().size;
         round2.setTargetTemplate(target2);
