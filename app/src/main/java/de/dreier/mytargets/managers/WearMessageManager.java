@@ -118,10 +118,10 @@ public class WearMessageManager
     public void onMessageReceived(MessageEvent messageEvent) {
         // Transform byte[] to Bundle
         byte[] data = messageEvent.getData();
-        End p = Parcels.unwrap(ParcelableUtil.unmarshall(data, End$$Parcelable.CREATOR));
+        End end = Parcels.unwrap(ParcelableUtil.unmarshall(data, End$$Parcelable.CREATOR));
 
         if (messageEvent.getPath().equals(WearableUtils.FINISHED_INPUT)) {
-            mListener.onEndFinished(p.getShots(), true);
+            mListener.onEndFinished(end.getShots(), true);
         }
     }
 

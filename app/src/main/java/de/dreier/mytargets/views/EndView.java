@@ -49,11 +49,11 @@ public class EndView extends View {
         super(context, attrs, defStyle);
     }
 
-    public void setPoints(End p, Target target) {
-        end = p;
+    public void setPoints(End end, Target target) {
+        this.end = end;
         density = getResources().getDisplayMetrics().density;
         endRenderer.init(this, density, target);
-        endRenderer.setShots(p.getShots());
+        endRenderer.setShots(end.getShots());
         invalidate();
     }
 

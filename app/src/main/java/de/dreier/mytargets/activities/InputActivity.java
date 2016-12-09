@@ -305,8 +305,8 @@ public class InputActivity extends ChildActivityBase
                 && (showMode == EShowMode.TRAINING || r.getId().equals(getCurrentEnd().roundId));
     }
 
-    private boolean shouldShowEnd(End p) {
-        return !p.getId().equals(getCurrentEnd().getId()) && p.exact;
+    private boolean shouldShowEnd(End end) {
+        return !end.getId().equals(getCurrentEnd().getId()) && end.exact;
     }
 
     private void updateEnd() {

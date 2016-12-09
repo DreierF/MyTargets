@@ -70,16 +70,16 @@ public abstract class DbTestRuleBase implements TestRule {
     }
 
     protected End randomEnd(Training training, Round round, int arrowsPerEnd, Random gen, int index) {
-        End p = new End(arrowsPerEnd);
-        p.index = index;
-        p.roundId = round.getId();
+        End end = new End(arrowsPerEnd);
+        end.index = index;
+        end.roundId = round.getId();
         for (int i = 0; i < arrowsPerEnd; i++) {
-            p.getShots().get(i).index = i;
-            p.getShots().get(i).zone = gen.nextInt(5);
+            end.getShots().get(i).index = i;
+            end.getShots().get(i).zone = gen.nextInt(5);
         }
-        p.saveDate = new DateTime().withDate(training.date)
+        end.saveDate = new DateTime().withDate(training.date)
                 .withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
-        return p;
+        return end;
     }
 
     protected abstract void addDatabaseContent();
