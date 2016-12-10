@@ -28,7 +28,8 @@ import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.utils.DateTimeConverter;
+import de.dreier.mytargets.shared.utils.typeconverters.DateTimeConverter;
+import de.dreier.mytargets.shared.utils.typeconverters.StringListConverter;
 
 @Parcel
 @Table(database = AppDatabase.class)
@@ -41,9 +42,8 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     @Column
     public int index;
 
-    //TODO prepare for multiple images
-    @Column(name = "image")
-    public String image;
+    @Column(typeConverter = StringListConverter.class)
+    public List<String> images;
 
     @ForeignKey(tableClass = Round.class, references = {
             @ForeignKeyReference(columnName = "round", columnType = Long.class, foreignKeyColumnName = "_id")},

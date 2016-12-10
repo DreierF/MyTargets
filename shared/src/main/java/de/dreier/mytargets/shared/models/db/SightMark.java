@@ -19,7 +19,7 @@ import org.parceler.Parcel;
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.shared.utils.DimensionConverter;
+import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
 
 import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
 

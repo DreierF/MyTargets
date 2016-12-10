@@ -23,7 +23,7 @@ import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
 import de.dreier.mytargets.shared.models.Thumbnail;
-import de.dreier.mytargets.shared.utils.EBowTypeConverter;
+import de.dreier.mytargets.shared.utils.typeconverters.EBowTypeConverter;
 import de.dreier.mytargets.shared.utils.ThumbnailConverter;
 
 @Parcel

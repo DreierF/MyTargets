@@ -15,7 +15,7 @@ import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.utils.DimensionConverter;
+import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
 
 @Parcel
 @Table(database = AppDatabase.class)

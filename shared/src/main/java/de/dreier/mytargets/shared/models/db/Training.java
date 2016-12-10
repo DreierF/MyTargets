@@ -24,8 +24,8 @@ import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.shared.utils.EWeatherConverter;
-import de.dreier.mytargets.shared.utils.LocalDateConverter;
+import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter;
+import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter;
 
 @Parcel
 @Table(database = AppDatabase.class)
