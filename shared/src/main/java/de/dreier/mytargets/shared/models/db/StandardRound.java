@@ -31,7 +31,7 @@ import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
 import de.dreier.mytargets.shared.targets.models.CombinedSpot;
 
 @Parcel
-@Table(database = AppDatabase.class, name="STANDARD_ROUND_TEMPLATE")
+@Table(database = AppDatabase.class)
 public class StandardRound extends BaseModel implements IIdSettable, IImageProvider, IDetailProvider, Comparable<StandardRound> {
 
     @Column(name = "_id")
@@ -43,9 +43,6 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
 
     @Column
     public String name;
-
-    @Column
-    public boolean indoor;
 
     List<RoundTemplate> rounds = new ArrayList<>();
 

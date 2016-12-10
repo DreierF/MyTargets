@@ -73,7 +73,7 @@ public class CsvExporter {
         // StandardRound
         csv.add(t.getStandardRound().getName());
         // Indoor
-        csv.add(t.getStandardRound().indoor ? get(R.string.indoor) : get(R.string.outdoor));
+        csv.add(t.indoor ? get(R.string.indoor) : get(R.string.outdoor));
         // Bow
         csv.add(t.getBow() == null ? "" : t.getBow().getName());
         // Arrow

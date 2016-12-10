@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared.targets.zone;
 
 import android.graphics.Canvas;
+import android.graphics.PointF;
 
 public class CircularZone extends ZoneBase {
 

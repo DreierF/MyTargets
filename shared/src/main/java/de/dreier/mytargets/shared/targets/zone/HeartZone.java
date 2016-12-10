@@ -17,6 +17,7 @@ package de.dreier.mytargets.shared.targets.zone;
 
 import android.graphics.Canvas;
 import android.graphics.Path;
+import android.graphics.PointF;
 import android.graphics.Region;
 
 import de.dreier.mytargets.shared.utils.PathUtils;

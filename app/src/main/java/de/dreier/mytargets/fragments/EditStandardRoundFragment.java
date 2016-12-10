@@ -90,9 +90,6 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                 ToolbarUtils.setTitle(this, R.string.new_round_template);
                 binding.name.setText(R.string.custom_round);
                 // Initialize with default values
-                binding.indoor.setChecked(SettingsManager.getIndoor());
-                binding.outdoor.setChecked(!SettingsManager.getIndoor());
-
                 RoundTemplate round = new RoundTemplate();
                 round.shotsPerEnd = SettingsManager.getArrowsPerEnd();
                 round.endCount = SettingsManager.getEndCount();
@@ -102,8 +99,6 @@ public class EditStandardRoundFragment extends EditFragmentBase {
             } else {
                 ToolbarUtils.setTitle(this, R.string.edit_standard_round);
                 // Load saved values
-                binding.indoor.setChecked(standardRound.indoor);
-                binding.outdoor.setChecked(!standardRound.indoor);
                 roundTemplateList = standardRound.getRounds();
                 if (standardRound.club == StandardRoundFactory.CUSTOM) {
                     binding.name.setText(standardRound.name);
@@ -151,11 +146,8 @@ public class EditStandardRoundFragment extends EditFragmentBase {
     protected void onSave() {
         standardRound.club = StandardRoundFactory.CUSTOM;
         standardRound.name = binding.name.getText().toString();
-        standardRound.indoor = binding.indoor.isChecked();
         standardRound.setRounds(roundTemplateList);
         standardRound.save();
-
-        SettingsManager.setIndoor(standardRound.indoor);
 
         RoundTemplate round = roundTemplateList.get(0);
         SettingsManager.setShotsPerEnd(round.shotsPerEnd);

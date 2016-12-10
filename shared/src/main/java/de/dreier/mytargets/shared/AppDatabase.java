@@ -248,7 +248,7 @@ public class AppDatabase {
             sr.name = "Practice";
             sr.club = 512;
             if (res.moveToFirst()) {
-                sr.indoor = res.getInt(5) == 1;
+                //FIXME sr.indoor = res.getInt(5) == 1;
                 do {
                     RoundTemplate template = new RoundTemplate();
                     template.shotsPerEnd = res.getInt(0);
