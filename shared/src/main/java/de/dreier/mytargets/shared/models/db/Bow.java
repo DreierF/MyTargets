@@ -89,10 +89,6 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
                 .querySingle();
     }
 
-    public static void deleteAll() {
-        SQLite.delete(Bow.class).execute();
-    }
-
     @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "sightMarks")
     public List<SightMark> getSightMarks() {
         if (sightMarks == null || sightMarks.isEmpty()) {

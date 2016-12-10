@@ -21,6 +21,8 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.rules.TestRule;
@@ -84,11 +86,11 @@ public abstract class DbTestRuleBase implements TestRule {
     protected abstract void addDatabaseContent();
 
     private void deleteAll() {
-        Training.deleteAll();
-        Round.deleteAll();
-        Bow.deleteAll();
-        End.deleteAll();
-        Arrow.deleteAll();
+        SQLite.delete(Training.class).execute();
+        SQLite.delete(Round.class).execute();
+        SQLite.delete(Bow.class).execute();
+        SQLite.delete(End.class).execute();
+        SQLite.delete(Arrow.class).execute();
     }
 
     @NonNull

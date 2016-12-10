@@ -112,7 +112,4 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
         return result == 0 ? (int) (id - another.id) : result;
     }
 
-    public static void deleteAll() {
-        SQLite.delete(Arrow.class).execute();
-    }
 }

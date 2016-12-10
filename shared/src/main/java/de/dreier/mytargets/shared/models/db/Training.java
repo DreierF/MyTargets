@@ -89,10 +89,6 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         return SQLite.select().from(Training.class).queryList();
     }
 
-    public static void deleteAll() {
-        SQLite.delete(Training.class).execute();
-    }
-
     public Long getId() {
         return id;
     }

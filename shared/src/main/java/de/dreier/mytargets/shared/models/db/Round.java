@@ -83,10 +83,6 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
                 .querySingle();
     }
 
-    public static void deleteAll() {
-        SQLite.delete(Round.class).execute();
-    }
-
     public static List<Round> getAll(long[] roundIds) {
         return SQLite.select()
                 .from(Round.class)

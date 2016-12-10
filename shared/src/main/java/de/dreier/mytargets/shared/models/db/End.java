@@ -133,10 +133,6 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
                 .collect(Collectors.toList());
     }
 
-    public static void deleteAll() {
-        SQLite.delete(End.class).execute();
-    }
-
     @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "shots")
     public List<Shot> getShots() {
         if (shots == null || shots.isEmpty()) {
