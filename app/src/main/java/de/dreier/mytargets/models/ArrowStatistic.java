@@ -29,6 +29,7 @@ import java.util.List;
 
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Shot;
 
 @Parcel
@@ -78,11 +79,12 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
                     statistic.target = target;
                     list.add(statistic);
                 }
+                End end = new End();
+                end.setId(res.getLong(9));
                 Shot shot = new Shot(res.getInt(7));
                 shot.zone = res.getInt(4);
                 shot.x = res.getFloat(2);
                 shot.y = res.getFloat(3);
-                shot.endId = res.getLong(9);
                 statistic.addShot(shot);
                 lastArrowId = arrowId;
                 lastArrowNumber = arrowNumber;
@@ -90,14 +92,6 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
         }
         res.close();
         return list;
-    }
-
-    public float avgX() {
-        return xSum / count;
-    }
-
-    public float avgY() {
-        return ySum / count;
     }
 
     public float avgPoints() {
@@ -119,7 +113,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
         return Float.compare(another.avgPoints(), avgPoints());
     }
 
-    public void addShot(Shot shot) {
+    private void addShot(Shot shot) {
         reachedPointsSum += target.getPointsByZone(shot.zone, shot.index);
         maxPointsSum += target.getMaxPoints();
         xSum += shot.x;

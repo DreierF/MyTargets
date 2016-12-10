@@ -36,10 +36,10 @@ import de.dreier.mytargets.utils.SelectorBundler;
 import de.dreier.mytargets.utils.multiselector.MultiSelector;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import icepick.State;
+
 /**
- *
- *
- * @param <T> Model of the item which is managed within the fragment.*/
+ * @param <T> Model of the item which is managed within the fragment.
+ */
 public abstract class EditableListFragmentBase<T extends IIdSettable & Model> extends ListFragmentBase<T> {
 
     protected static final String ITEM_ID = "id";
@@ -141,7 +141,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model> ex
         getAdapter().notifyDataSetChanged();
         String message = getResources()
                 .getQuantityString(itemTypeDelRes, deleted.size(), deleted.size());
-        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG)
+        Snackbar.make(getView().findViewById(R.id.coordinatorLayout), message, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, v -> {
                     for (T item : deleted) {
                         getAdapter().addItem(item);

@@ -58,7 +58,8 @@ public class End extends BaseModel implements IIdSettable,  Comparable<End> {
     public End() {
     }
 
-    public End(int shotCount) {
+    public End(int shotCount, int index) {
+        this.index = index;
         for (int i = 0; i < shotCount; i++) {
             shots.add(new Shot(i));
         }
@@ -87,8 +88,8 @@ public class End extends BaseModel implements IIdSettable,  Comparable<End> {
 
     public void setId(Long id) {
         this.id = id;
-        for (Shot s : shots) {
-            s.endId = id;
+        for(Shot s : getShots()) {
+            s.setId(id);
         }
     }
 

@@ -3,7 +3,6 @@ package de.dreier.mytargets.shared;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.raizlabs.android.dbflow.annotation.Database;
 import com.raizlabs.android.dbflow.annotation.Migration;
@@ -40,23 +39,6 @@ public class AppDatabase {
         public void migrate(DatabaseWrapper database) {
             fillStandardRound(database);
         }
-    }
-
-    public static void cleanup(SQLiteDatabase db) {
-        // Clean up rounds
-        db.execSQL("DELETE FROM ROUND WHERE _id IN (SELECT r._id " +
-                "FROM ROUND r LEFT JOIN TRAINING t ON t._id=r.training " +
-                "WHERE t._id IS NULL)");
-
-        // Clean up ends
-        db.execSQL("DELETE FROM PASSE WHERE _id IN (SELECT p._id " +
-                "FROM PASSE p LEFT JOIN ROUND r ON r._id=p.round " +
-                "WHERE r._id IS NULL)");
-
-        // Clean up shots
-        db.execSQL("DELETE FROM SHOOT WHERE _id IN (SELECT s._id " +
-                "FROM SHOOT s LEFT JOIN PASSE p ON p._id=s.passe " +
-                "WHERE p._id IS NULL)");
     }
 
     private static void fillStandardRound(DatabaseWrapper db) {

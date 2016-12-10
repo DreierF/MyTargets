@@ -28,47 +28,30 @@ import de.dreier.mytargets.shared.utils.LongUtils;
 @Table(database = AppDatabase.class, name = "ROUND")
 public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
 
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    Long id;
-
     @ForeignKey(tableClass = Training.class, references = {
             @ForeignKeyReference(columnName = "training", columnType = Long.class, foreignKeyColumnName = "_id")})
     public Long trainingId;
-
     @ForeignKey(tableClass = RoundTemplate.class, references = {
             @ForeignKeyReference(columnName = "template", columnType = Long.class, foreignKeyColumnName = "_id", referencedGetterName = "getId", referencedSetterName = "setId")})
     public RoundTemplate info;
-
     @Column(name = "comment")
     public String comment;
-
+    public List<End> ends = new ArrayList<>();
+    @Column(name = "_id")
+    @PrimaryKey(autoincrement = true)
+    Long id;
     @Column(name = "target")
     int targetId;
-
     @Column(name = "scoring_style")
     int targetScoringStyle;
-
     @Column(typeConverter = DimensionConverter.class, name = "size")
     Dimension targetSize;
-
-    public List<End> ends = new ArrayList<>();
 
     public static Round get(Long id) {
         return SQLite.select()
                 .from(Round.class)
                 .where(Round_Table._id.eq(id))
                 .querySingle();
-    }
-
-    public Target getTarget() {
-        return new Target(targetId, targetScoringStyle, targetSize);
-    }
-
-    public void setTarget(Target targetTemplate) {
-        targetId = targetTemplate.id;
-        targetScoringStyle = targetTemplate.scoringStyle;
-        targetSize = targetTemplate.size;
     }
 
     public static void deleteAll() {
@@ -80,6 +63,28 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
                 .from(Round.class)
                 .where(Round_Table._id.in(LongUtils.toList(roundIds)))
                 .queryList();
+    }
+
+    @Override
+    public void delete() {
+        super.delete();
+        updateRoundIndicesForTraining(trainingId);
+    }
+
+    private void updateRoundIndicesForTraining(Long trainingId) {
+        // TODO change template
+        //SQLite.update(Round.class)
+         //       .set(Round_Table.)
+    }
+
+    public Target getTarget() {
+        return new Target(targetId, targetScoringStyle, targetSize);
+    }
+
+    public void setTarget(Target targetTemplate) {
+        targetId = targetTemplate.id;
+        targetScoringStyle = targetTemplate.scoringStyle;
+        targetSize = targetTemplate.size;
     }
 
     public Long getId() {
@@ -120,7 +125,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
         final Target target = getTarget();
         return Stream.of(getEnds())
                 .map(p -> p.getReachedPoints(target))
-                .reduce(0, (value1, value2) -> value1+value2);
+                .reduce(0, (value1, value2) -> value1 + value2);
     }
 
     @Override
@@ -130,12 +135,14 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
 
     /**
      * Adds a new end to the internal list of ends, but does not yet save it.
+     *
      * @param shotsPerEnd Number of shots used to initialize the end.
+     * @return Returns the newly created end
      */
-    public void addEnd(int shotsPerEnd) {
-        End end = new End(shotsPerEnd);
-        end.index = getEnds().size();
+    public End addEnd(int shotsPerEnd) {
+        End end = new End(shotsPerEnd, getEnds().size());
         end.roundId = id;
         getEnds().add(end);
+        return end;
     }
 }

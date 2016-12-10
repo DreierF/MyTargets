@@ -120,7 +120,7 @@ public class MainActivity extends Activity implements TargetViewBase.OnEndFinish
     private void setUpTargetView() {
         if (round != null && mTarget != null) {
             mTarget.setTarget(round.getTarget());
-            mTarget.setEnd(new End(round.info.shotsPerEnd));
+            mTarget.setEnd(new End(round.info.shotsPerEnd, 0));
             mTarget.setOnTargetSetListener(MainActivity.this);
             stub.setVisibility(View.VISIBLE);
             startTrainingHint.setVisibility(View.GONE);
@@ -135,7 +135,7 @@ public class MainActivity extends Activity implements TargetViewBase.OnEndFinish
         confirm.setListener(new DelayedConfirmationView.DelayedConfirmationListener() {
             @Override
             public void onTimerSelected(View view) {
-                mTarget.setEnd(new End(round.info.shotsPerEnd));
+                mTarget.setEnd(new End(round.info.shotsPerEnd, 0));
                 confirm.setVisibility(View.INVISIBLE);
                 confirm.reset();
             }

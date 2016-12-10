@@ -22,8 +22,10 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.List;
+
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.End;
+import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import icepick.Icepick;
@@ -31,7 +33,7 @@ import icepick.State;
 
 public class EndView extends View {
 
-    private End end = new End(3);
+    private int shotCount;
     private float density;
     @State(ParcelsBundler.class)
     EndRenderer endRenderer = new EndRenderer();
@@ -49,11 +51,11 @@ public class EndView extends View {
         super(context, attrs, defStyle);
     }
 
-    public void setPoints(End end, Target target) {
-        this.end = end;
+    public void setShots(Target target, List<Shot> shots) {
+        shotCount = shots.size();
         density = getResources().getDisplayMetrics().density;
         endRenderer.init(this, density, target);
-        endRenderer.setShots(end.getShots());
+        endRenderer.setShots(shots);
         invalidate();
     }
 
@@ -75,7 +77,7 @@ public class EndView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int desiredWidth = (int) (60 * end.getShots().size() * density);
+        int desiredWidth = (int) (60 * shotCount * density);
         int desiredHeight = (int) (50 * density);
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);

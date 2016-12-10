@@ -390,7 +390,7 @@ public class TargetView extends TargetViewBase {
     @Override
     protected Shot getShotFromPos(float x, float y) {
         // Create Shot object
-        Shot s = new Shot(getCurrentShotIndex());
+        Shot s = new Shot();
         if (inputMethod == KEYBOARD) {
             if (keyboardRect.contains(x, y)) {
                 int index = (int) (y * selectableZones.size() / keyboardRect.height());

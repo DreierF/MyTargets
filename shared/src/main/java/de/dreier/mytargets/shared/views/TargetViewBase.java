@@ -95,7 +95,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         if (isInEditMode()) {
             shots = new ArrayList<>();
             for (int i = 0; i < 3; i++) {
-                shots.add(new Shot());
+                shots.add(new Shot(i));
             }
             shots.get(0).zone = 0;
             shots.get(0).x = 0.01f;

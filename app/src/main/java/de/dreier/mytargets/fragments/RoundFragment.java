@@ -191,7 +191,7 @@ public class RoundFragment extends EditableListFragment<End> {
 
         @Override
         public void bindItem() {
-            binding.shoots.setPoints(mItem, round.getTarget());
+            binding.shoots.setShots(round.getTarget(), mItem.getShots());
             binding.end.setText(getString(R.string.passe_n, (mItem.index + 1)));
         }
     }

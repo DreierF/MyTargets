@@ -19,13 +19,8 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
     public static final int NOTHING_SELECTED = -2;
     public static final int MISS = -1;
-
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    Long id;
-
     @ForeignKey(tableClass = End.class, references = {
-            @ForeignKeyReference(columnName = "passe", columnType = Long.class, foreignKeyColumnName = "_id")})
+            @ForeignKeyReference(columnName = "passe", columnType = Long.class, foreignKeyColumnName = "id", referencedGetterName = "getId", referencedSetterName = "setId")})
     public Long endId;
     @Column(name = "x")
     public float x;
@@ -41,12 +36,15 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
     // The index of the shot in the containing end
     @Column(name = "arrow_index")
     public int index;
+    @Column(name = "_id")
+    @PrimaryKey(autoincrement = true)
+    private Long id;
 
     public Shot() {
     }
 
     public Shot(int i) {
-        index = i;
+        this.index = i;
     }
 
     @Override

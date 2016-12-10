@@ -60,7 +60,7 @@ public abstract class DbTestRuleBase implements TestRule {
     }
 
     protected End buildEnd(Round round, int... shots) {
-        End end = new End(shots.length);
+        End end = round.addEnd(shots.length);
         end.roundId = round.getId();
         for (int i = 0; i < shots.length; i++) {
             end.getShots().get(i).index = i;
@@ -70,8 +70,7 @@ public abstract class DbTestRuleBase implements TestRule {
     }
 
     protected End randomEnd(Training training, Round round, int arrowsPerEnd, Random gen, int index) {
-        End end = new End(arrowsPerEnd);
-        end.index = index;
+        End end = new End(arrowsPerEnd, index);
         end.roundId = round.getId();
         for (int i = 0; i < arrowsPerEnd; i++) {
             end.getShots().get(i).index = i;
