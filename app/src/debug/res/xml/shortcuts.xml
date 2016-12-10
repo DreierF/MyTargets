@@ -6,11 +6,11 @@
         android:shortcutShortLabel="@string/free_training">
         <intent
             android:action="android.intent.action.MAIN"
-            android:targetPackage="de.dreier.mytargets"
+            android:targetPackage="de.dreier.mytargets.debug"
             android:targetClass="de.dreier.mytargets.activities.MainActivity" />
         <intent
             android:action="de.dreier.mytargets.fragments.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION"
-            android:targetPackage="de.dreier.mytargets"
+            android:targetPackage="de.dreier.mytargets.debug"
             android:targetClass="de.dreier.mytargets.activities.SimpleFragmentActivityBase$EditTrainingActivity" />
     </shortcut>
     <shortcut
@@ -20,11 +20,11 @@
         android:shortcutShortLabel="@string/training_with_standard_round">
         <intent
             android:action="android.intent.action.MAIN"
-            android:targetPackage="de.dreier.mytargets"
+            android:targetPackage="de.dreier.mytargets.debug"
             android:targetClass="de.dreier.mytargets.activities.MainActivity" />
         <intent
             android:action="de.dreier.mytargets.fragments.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION"
-            android:targetPackage="de.dreier.mytargets"
+            android:targetPackage="de.dreier.mytargets.debug"
             android:targetClass="de.dreier.mytargets.activities.SimpleFragmentActivityBase$EditTrainingActivity" />
     </shortcut>
 </shortcuts>
