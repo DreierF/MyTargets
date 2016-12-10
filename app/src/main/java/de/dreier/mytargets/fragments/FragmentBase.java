@@ -36,6 +36,8 @@ import icepick.Icepick;
  */
 public abstract class FragmentBase extends Fragment implements LoaderManager.LoaderCallbacks<FragmentBase.LoaderUICallback> {
 
+    private static final int LOADER_ID = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +62,7 @@ public abstract class FragmentBase extends Fragment implements LoaderManager.Loa
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(0, null, this).forceLoad();
+        reloadData();
     }
 
     @Override
@@ -90,11 +92,19 @@ public abstract class FragmentBase extends Fragment implements LoaderManager.Loa
     }
 
     protected void reloadData() {
-        getLoaderManager().restartLoader(0, null, this).forceLoad();
+        if (getLoaderManager().getLoader(LOADER_ID) == null) {
+            getLoaderManager().initLoader(LOADER_ID, null, this).forceLoad();
+        } else {
+            getLoaderManager().restartLoader(LOADER_ID, null, this).forceLoad();
+        }
     }
 
     protected void reloadData(Bundle args) {
-        getLoaderManager().restartLoader(0, args, this).forceLoad();
+        if (getLoaderManager().getLoader(LOADER_ID) == null) {
+            getLoaderManager().initLoader(LOADER_ID, args, this);
+        } else {
+            getLoaderManager().restartLoader(LOADER_ID, args, this);
+        }
     }
 
     public interface LoaderUICallback {

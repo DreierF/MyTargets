@@ -103,7 +103,7 @@ public class EndRenderer {
     }
 
     public void draw(Canvas canvas) {
-        if (rect == null) {
+        if (rect == null || shotsPerRow == 0) {
             return;
         }
 
@@ -125,7 +125,8 @@ public class EndRenderer {
 
                 // Draw circle
                 circle.draw(canvas, coordinate.x, coordinate.y, shot.zone, radius,
-                        !TextUtils.isEmpty(shot.comment) && i != selected, shot.index, shot.arrowNumber);
+                        !TextUtils.isEmpty(shot.comment) && i != selected, shot.index,
+                        shot.arrowNumber);
             }
         }
     }
@@ -171,7 +172,7 @@ public class EndRenderer {
     }
 
     public Animator getAnimationToSelection(int selectedShot, Coordinate c, int radius, RectF rect) {
-        if(rect == null) {
+        if (rect == null) {
             setSelection(selectedShot, c, radius);
             return null;
         }

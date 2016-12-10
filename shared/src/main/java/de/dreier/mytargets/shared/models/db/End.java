@@ -88,9 +88,16 @@ public class End extends BaseModel implements IIdSettable,  Comparable<End> {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public void save() {
+        super.save();
+        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
         for(Shot s : getShots()) {
-            s.setId(id);
+            s.endId = id;
         }
+        super.save();
     }
 
     @Override

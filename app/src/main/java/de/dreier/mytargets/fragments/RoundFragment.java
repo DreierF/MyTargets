@@ -94,11 +94,6 @@ public class RoundFragment extends EditableListFragment<End> {
             mRound = getArguments().getLong(ROUND_ID, -1);
         }
 
-        round = Round.get(mRound);
-        ToolbarUtils.setTitle(this,
-                String.format(Locale.ENGLISH, "%s %d", getString(R.string.round),
-                        round.info.index + 1));
-        ToolbarUtils.setSubtitle(this, round.getReachedPointsFormatted());
         setHasOptionsMenu(true);
         return binding.getRoot();
     }
@@ -112,10 +107,12 @@ public class RoundFragment extends EditableListFragment<End> {
     @NonNull
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
+        round = Round.get(mRound);
         final List<End> ends = round.getEnds();
         StandardRound standardRound = StandardRound
                 .get(Training.get(round.trainingId).standardRoundId);
-        final boolean showFab = ends.size() < round.info.endCount || standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
+        final boolean showFab = ends
+                .size() < round.info.endCount || standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
 
         return new LoaderUICallback() {
             @Override
@@ -123,6 +120,11 @@ public class RoundFragment extends EditableListFragment<End> {
                 // Set round info
                 mAdapter.setList(ends);
                 binding.fab.setVisibility(showFab ? View.VISIBLE : View.GONE);
+
+                ToolbarUtils.setTitle(RoundFragment.this,
+                        String.format(Locale.ENGLISH, "%s %d", getString(R.string.round),
+                                round.info.index + 1));
+                ToolbarUtils.setSubtitle(RoundFragment.this, round.getReachedPointsFormatted());
             }
         };
     }
