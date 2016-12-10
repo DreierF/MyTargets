@@ -47,7 +47,6 @@ import static de.dreier.mytargets.shared.models.Dimension.Unit.YARDS;
 public class StandardRoundFactory {
     public static final int IFAA = 8;
     public static final int CUSTOM = 256;
-    public static final int CUSTOM_PRACTICE = 512;
     private static final int ASA = 1;
     private static final int AUSTRALIAN = 2;
     private static final int ARCHERY_GB = 4;

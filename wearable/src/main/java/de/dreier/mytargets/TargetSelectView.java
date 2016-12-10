@@ -17,14 +17,13 @@ package de.dreier.mytargets;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.Circle;
@@ -67,7 +66,7 @@ public class TargetSelectView extends TargetViewBase {
         // Draw all possible points in a circular
         int curZone = getCurrentlySelectedZone();
         for (int i = 0; i < selectableZones.size(); i++) {
-            Coordinate coordinate = getCircularCoordinates(i);
+            PointF coordinate = getCircularCoordinates(i);
             circle.draw(canvas, coordinate.x, coordinate.y, selectableZones.get(i).index,
                     i == curZone ? 23 : 17, false, getCurrentShotIndex(), null);
         }
@@ -78,15 +77,15 @@ public class TargetSelectView extends TargetViewBase {
 
     private int getCurrentlySelectedZone() {
         if (getCurrentShotIndex() != EndRenderer.NO_SELECTION) {
-            return shots.get(getCurrentShotIndex()).zone;
+            return shots.get(getCurrentShotIndex()).scoringRing;
         } else {
             return Shot.NOTHING_SELECTED;
         }
     }
 
-    private Coordinate getCircularCoordinates(int zone) {
+    private PointF getCircularCoordinates(int zone) {
         double degree = Math.toRadians(zone * 360.0 / (double) selectableZones.size());
-        Coordinate coordinate = new Coordinate();
+        PointF coordinate = new PointF();
         coordinate.x = (float) (radius + (Math.cos(degree) * circleRadius));
         coordinate.y = (float) (radius + (Math.sin(degree) * circleRadius));
         if (coordinate.y > chinBound) {
@@ -96,7 +95,7 @@ public class TargetSelectView extends TargetViewBase {
     }
 
     @Override
-    protected Coordinate initAnimationPositions(int i) {
+    protected PointF initAnimationPositions(int i) {
         return getCircularCoordinates(getSelectableZoneIndexFromShot(shots.get(i)));
     }
 
@@ -120,7 +119,7 @@ public class TargetSelectView extends TargetViewBase {
     @NonNull
     @Override
     protected Rect getSelectableZonePosition(int i) {
-        Coordinate coordinate = getCircularCoordinates(i);
+        PointF coordinate = getCircularCoordinates(i);
         final int rad = i == getCurrentlySelectedZone() ? 23 : 17;
         final Rect rect = new Rect();
         rect.left = (int) (coordinate.x - rad);
@@ -146,10 +145,10 @@ public class TargetSelectView extends TargetViewBase {
                 degree += 360.0;
             }
             int index = (int) (zones * ((360.0 - degree) / 360.0));
-            s.zone = selectableZones.get(index).index;
+            s.scoringRing = selectableZones.get(index).index;
         }
 
-        if (s.zone == Shot.NOTHING_SELECTED) {
+        if (s.scoringRing == Shot.NOTHING_SELECTED) {
             // When nothing is selected do nothing
             return null;
         }

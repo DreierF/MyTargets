@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -27,48 +28,53 @@ import de.dreier.mytargets.shared.utils.EWeatherConverter;
 import de.dreier.mytargets.shared.utils.LocalDateConverter;
 
 @Parcel
-@Table(database = AppDatabase.class, name = "TRAINING")
+@Table(database = AppDatabase.class)
 public class Training extends BaseModel implements IIdSettable, Comparable<Training> {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     Long id;
 
-    @Column(name = "title")
+    @Column
     public String title = "";
 
-    @Column(typeConverter = LocalDateConverter.class, name = "datum")
+    @Column(typeConverter = LocalDateConverter.class)
     public LocalDate date = new LocalDate();
 
     @ForeignKey(tableClass = StandardRound.class, references = {
-            @ForeignKeyReference(columnName = "standard_round", columnType = Long.class, foreignKeyColumnName = "_id")})
+            @ForeignKeyReference(columnName = "standardRound", columnType = Long.class, foreignKeyColumnName = "_id")})
     public Long standardRoundId;
 
     @ForeignKey(tableClass = Bow.class, references = {
-            @ForeignKeyReference(columnName = "bow", columnType = Long.class, foreignKeyColumnName = "_id")})
+            @ForeignKeyReference(columnName = "bow", columnType = Long.class, foreignKeyColumnName = "_id")},
+            onDelete = ForeignKeyAction.SET_NULL)
     public Long bow;
 
     @ForeignKey(tableClass = Arrow.class, references = {
-            @ForeignKeyReference(columnName = "arrow", columnType = Long.class, foreignKeyColumnName = "_id")})
+            @ForeignKeyReference(columnName = "arrow", columnType = Long.class, foreignKeyColumnName = "_id")},
+            onDelete = ForeignKeyAction.SET_NULL)
     public Long arrow;
 
-    @Column(name = "arrow_numbering")
+    @Column
     public boolean arrowNumbering;
 
-    @Column(name = "time")
+    @Column
     public int timePerEnd;
 
-    @Column(typeConverter = EWeatherConverter.class, name = "weather")
+    @Column
+    public boolean indoor;
+
+    @Column(typeConverter = EWeatherConverter.class)
     public EWeather weather;
 
-    @Column(name = "wind_direction")
+    @Column
     public int windDirection;
 
-    @Column(name = "wind_speed")
+    @Column
     public int windSpeed;
 
-    @Column(name = "location")
-    public String location;
+    @Column
+    public String location = "";
 
     public List<Round> rounds = new ArrayList<>();
 

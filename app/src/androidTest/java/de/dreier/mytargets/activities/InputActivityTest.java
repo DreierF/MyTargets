@@ -58,17 +58,13 @@ public class InputActivityTest extends UITestBase {
 
             Training training = insertDefaultTraining(standardRound, generator);
 
-            round1 = new Round();
+            round1 = new Round(standardRound.getRounds().get(0));
             round1.trainingId = training.getId();
-            round1.info = standardRound.getRounds().get(0);
-            round1.setTarget( round1.info.getTargetTemplate());
             round1.comment = "";
             round1.save();
 
-            Round round2 = new Round();
+            Round round2 = new Round(standardRound.getRounds().get(1));
             round2.trainingId = training.getId();
-            round2.info = standardRound.getRounds().get(1);
-            round2.setTarget(round2.info.getTargetTemplate());
             round2.comment = "";
             round2.save();
         }

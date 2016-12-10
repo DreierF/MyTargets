@@ -19,6 +19,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.content.Context;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -36,7 +37,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.End;
@@ -97,7 +97,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             for (int i = 0; i < 3; i++) {
                 shots.add(new Shot(i));
             }
-            shots.get(0).zone = 0;
+            shots.get(0).scoringRing = 0;
             shots.get(0).x = 0.01f;
             shots.get(0).y = 0.05f;
             target = new Target(WAFull.ID, 0);
@@ -176,7 +176,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected int getSelectableZoneIndexFromShot(Shot shot) {
         int i = 0;
         for (SelectableZone selectableZone : selectableZones) {
-            if (shot.zone == selectableZone.index) {
+            if (shot.scoringRing == selectableZone.index) {
                 return i;
             }
             i++;
@@ -206,9 +206,9 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
         // If a valid selection was made save it in the end
         if (getCurrentShotIndex() != EndRenderer.NO_SELECTION
-                && (shots.get(getCurrentShotIndex()).zone != shot.zone
+                && (shots.get(getCurrentShotIndex()).scoringRing != shot.scoringRing
                 || inputMethod == EInputMethod.PLOTTING)) {
-            shots.get(getCurrentShotIndex()).zone = shot.zone;
+            shots.get(getCurrentShotIndex()).scoringRing = shot.scoringRing;
             shots.get(getCurrentShotIndex()).x = shot.x;
             shots.get(getCurrentShotIndex()).y = shot.y;
             endRenderer.setSelection(
@@ -227,7 +227,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     protected boolean isCurrentlySelecting() {
         return getCurrentShotIndex() != EndRenderer.NO_SELECTION
-                && shots.get(getCurrentShotIndex()).zone != Shot.NOTHING_SELECTED;
+                && shots.get(getCurrentShotIndex()).scoringRing != Shot.NOTHING_SELECTED;
     }
 
     protected void onArrowChanged() {
@@ -246,7 +246,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected int getNextShotIndex(int currentShotIndex) {
         int nextShotIndex = currentShotIndex + 1;
         while (nextShotIndex < shots.size() && shots
-                .get(nextShotIndex).zone != Shot.NOTHING_SELECTED) {
+                .get(nextShotIndex).scoringRing != Shot.NOTHING_SELECTED) {
             nextShotIndex++;
         }
         if (nextShotIndex == shots.size()) {
@@ -263,7 +263,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     protected Animator getCircleAnimation() {
-        Coordinate pos = null;
+        PointF pos = null;
         if (isCurrentlySelecting()) {
             pos = initAnimationPositions(getCurrentShotIndex());
         }
@@ -272,7 +272,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
                 .getAnimationToSelection(getCurrentShotIndex(), pos, initialSize, endRect);
     }
 
-    protected abstract Coordinate initAnimationPositions(int i);
+    protected abstract PointF initAnimationPositions(int i);
 
     protected void animateToNewState() {
         if (endRect == null) {

@@ -8,6 +8,7 @@ package de.dreier.mytargets.shared.models.db;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -23,21 +24,22 @@ import de.dreier.mytargets.shared.utils.DimensionConverter;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
 
 @Parcel
-@Table(database = AppDatabase.class, name = "VISIER")
-public class SightSetting extends BaseModel implements IIdSettable {
+@Table(database = AppDatabase.class)
+public class SightMark extends BaseModel implements IIdSettable {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     Long id;
 
     @ForeignKey(tableClass = Bow.class, references = {
-            @ForeignKeyReference(columnName = "bow", columnType = Long.class, foreignKeyColumnName = "_id")})
+            @ForeignKeyReference(columnName = "bow", columnType = Long.class, foreignKeyColumnName = "_id")},
+            onDelete = ForeignKeyAction.CASCADE)
     public Long bowId;
 
-    @Column(typeConverter = DimensionConverter.class, name = "distance")
+    @Column(typeConverter = DimensionConverter.class)
     public Dimension distance = new Dimension(18, METER);
 
-    @Column(name = "setting")
+    @Column
     public String value = "";
 
     public Long getId() {
@@ -50,8 +52,8 @@ public class SightSetting extends BaseModel implements IIdSettable {
 
     @Override
     public boolean equals(Object another) {
-        return another instanceof SightSetting &&
+        return another instanceof SightMark &&
                 getClass().equals(another.getClass()) &&
-                id.equals(((SightSetting) another).id);
+                id.equals(((SightMark) another).id);
     }
 }

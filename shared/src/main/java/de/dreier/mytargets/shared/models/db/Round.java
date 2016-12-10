@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.annimon.stream.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -25,27 +26,55 @@ import de.dreier.mytargets.shared.utils.DimensionConverter;
 import de.dreier.mytargets.shared.utils.LongUtils;
 
 @Parcel
-@Table(database = AppDatabase.class, name = "ROUND")
+@Table(database = AppDatabase.class)
 public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
 
-    @ForeignKey(tableClass = Training.class, references = {
-            @ForeignKeyReference(columnName = "training", columnType = Long.class, foreignKeyColumnName = "_id")})
-    public Long trainingId;
-    @ForeignKey(tableClass = RoundTemplate.class, references = {
-            @ForeignKeyReference(columnName = "template", columnType = Long.class, foreignKeyColumnName = "_id", referencedGetterName = "getId", referencedSetterName = "setId")})
-    public RoundTemplate info;
-    @Column(name = "comment")
-    public String comment;
-    public List<End> ends = new ArrayList<>();
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     Long id;
-    @Column(name = "target")
+
+    @ForeignKey(tableClass = Training.class, references = {
+            @ForeignKeyReference(columnName = "training", columnType = Long.class, foreignKeyColumnName = "_id")},
+            onDelete = ForeignKeyAction.CASCADE)
+    public Long trainingId;
+
+    @Column
+    public int index;
+
+    @Column
+    public int shotsPerEnd;
+
+    @Column
+    public Integer maxEndCount;
+
+    @Column(typeConverter = DimensionConverter.class)
+    public Dimension distance;
+
+    @Column
+    public String comment = "";
+
+    @Column
     int targetId;
-    @Column(name = "scoring_style")
+
+    @Column
     int targetScoringStyle;
-    @Column(typeConverter = DimensionConverter.class, name = "size")
-    Dimension targetSize;
+
+    @Column(typeConverter = DimensionConverter.class)
+    Dimension targetDiameter;
+
+    public List<End> ends = new ArrayList<>();
+
+    public Round() {
+
+    }
+
+    public Round(RoundTemplate info) {
+        distance = info.distance;
+        shotsPerEnd = info.shotsPerEnd;
+        maxEndCount = info.endCount;
+        index = info.index;
+        setTarget(info.getTargetTemplate());
+    }
 
     public static Round get(Long id) {
         return SQLite.select()
@@ -68,23 +97,27 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
     @Override
     public void delete() {
         super.delete();
-        updateRoundIndicesForTraining(trainingId);
+        updateRoundIndicesForTraining();
     }
 
-    private void updateRoundIndicesForTraining(Long trainingId) {
-        // TODO change template
-        //SQLite.update(Round.class)
-         //       .set(Round_Table.)
+    private void updateRoundIndicesForTraining() {
+        // TODO very inefficient
+        int i = 0;
+        for (Round r : Training.get(trainingId).getRounds()) {
+            r.index = i;
+            r.save();
+            i++;
+        }
     }
 
     public Target getTarget() {
-        return new Target(targetId, targetScoringStyle, targetSize);
+        return new Target(targetId, targetScoringStyle, targetDiameter);
     }
 
     public void setTarget(Target targetTemplate) {
         targetId = targetTemplate.id;
         targetScoringStyle = targetTemplate.scoringStyle;
-        targetSize = targetTemplate.size;
+        targetDiameter = targetTemplate.size;
     }
 
     public Long getId() {
@@ -114,7 +147,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
     }
 
     public int getMaxPoints() {
-        return getTarget().getEndMaxPoints(info.shotsPerEnd) * info.endCount;
+        return getTarget().getEndMaxPoints(shotsPerEnd) * maxEndCount;
     }
 
     public String getReachedPointsFormatted() {
@@ -130,19 +163,22 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
 
     @Override
     public int compareTo(@NonNull Round round) {
-        return info.index - round.info.index;
+        return index - round.index;
     }
 
     /**
      * Adds a new end to the internal list of ends, but does not yet save it.
      *
-     * @param shotsPerEnd Number of shots used to initialize the end.
      * @return Returns the newly created end
      */
-    public End addEnd(int shotsPerEnd) {
+    public End addEnd() {
         End end = new End(shotsPerEnd, getEnds().size());
         end.roundId = id;
         getEnds().add(end);
         return end;
+    }
+
+    public Training getTraining() {
+        return Training.get(trainingId);
     }
 }

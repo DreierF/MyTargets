@@ -49,7 +49,6 @@ import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.targets.models.WA3Ring3Spot;
-import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
@@ -247,22 +246,22 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     @Override
     protected void onSave() {
         Training training = getTraining();
-
         finish();
 
         if (trainingId == null) {
-            StandardRound standardRound;
             if (trainingType == FREE_TRAINING) {
-                standardRound = getCustomRound();
+                training.standardRoundId = null;
+                training.rounds.add(getRound());
             } else {
-                standardRound = binding.standardRound.getSelectedItem();
+                StandardRound standardRound = binding.standardRound.getSelectedItem();
                 SettingsManager.setStandardRound(standardRound.getId());
+                standardRound.save();
+                training.standardRoundId = standardRound.getId();
+                training.rounds.addAll(createRoundsFromTemplate(standardRound, training));
             }
-            standardRound.save();
-            training.standardRoundId = standardRound.getId();
-
             training.save();
-            Round round = createRoundsFromTemplate(standardRound, training).get(0);
+
+            Round round = training.getRounds().get(0);
 
             TrainingFragment.getIntent(training)
                     .withContext(this)
@@ -300,11 +299,13 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         training.timePerEnd = binding.timer.isChecked() ? SettingsManager
                 .getTimerShootTime() : -1;
         training.arrowNumbering = binding.numberArrows.isChecked();
+        training.indoor = binding.indoor.isChecked();
 
         SettingsManager.setBow(training.bow);
         SettingsManager.setArrow(training.arrow);
         SettingsManager.setTimerEnabled(binding.timer.isChecked());
         SettingsManager.setArrowNumbersEnabled(training.arrowNumbering);
+        SettingsManager.setIndoor(training.indoor);
         return training;
     }
 
@@ -312,9 +313,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private ArrayList<Round> createRoundsFromTemplate(StandardRound standardRound, Training training) {
         ArrayList<Round> rounds = new ArrayList<>();
         for (RoundTemplate template : standardRound.getRounds()) {
-            Round round = new Round();
+            Round round = new Round(template);
             round.trainingId = training.getId();
-            round.info = template;
             if(trainingType == FREE_TRAINING) {
                 round.setTarget(binding.target.getSelectedItem());
             } else {
@@ -325,21 +325,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             rounds.add(round);
         }
         return rounds;
-    }
-
-    @NonNull
-    private StandardRound getCustomRound() {
-        StandardRound standardRound; // Generate and save standard round template for practice
-        standardRound = new StandardRound();
-        standardRound.club = StandardRoundFactory.CUSTOM_PRACTICE;
-        standardRound.name = getString(R.string.practice);
-        standardRound.indoor = binding.indoor.isChecked();
-        ArrayList<RoundTemplate> rounds = new ArrayList<>();
-        rounds.add(getRoundTemplate());
-        standardRound.setRounds(rounds);
-
-        SettingsManager.setIndoor(standardRound.indoor);
-        return standardRound;
     }
 
     @Override
@@ -370,16 +355,16 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     }
 
     @NonNull
-    private RoundTemplate getRoundTemplate() {
-        RoundTemplate roundTemplate = new RoundTemplate();
-        roundTemplate.setTargetTemplate(binding.target.getSelectedItem());
-        roundTemplate.shotsPerEnd = binding.arrows.getProgress();
-        roundTemplate.endCount = 1;
-        roundTemplate.distance = binding.distance.getSelectedItem();
+    private Round getRound() {
+        Round round = new Round();
+        round.setTarget(binding.target.getSelectedItem());
+        round.shotsPerEnd = binding.arrows.getProgress();
+        round.maxEndCount = null;
+        round.distance = binding.distance.getSelectedItem();
 
         SettingsManager.setTarget(binding.target.getSelectedItem());
-        SettingsManager.setDistance(roundTemplate.distance);
-        SettingsManager.setShotsPerEnd(roundTemplate.shotsPerEnd);
-        return roundTemplate;
+        SettingsManager.setDistance(round.distance);
+        SettingsManager.setShotsPerEnd(round.shotsPerEnd);
+        return round;
     }
 }

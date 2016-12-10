@@ -32,8 +32,8 @@ import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.RoundTemplate_Table;
-import de.dreier.mytargets.shared.models.db.SightSetting;
-import de.dreier.mytargets.shared.models.db.SightSetting_Table;
+import de.dreier.mytargets.shared.models.db.SightMark;
+import de.dreier.mytargets.shared.models.db.SightMark_Table;
 
 @Parcel
 public class Dimension implements IIdProvider, Comparable<Dimension> {
@@ -83,8 +83,8 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
 
         // Get all distances used in ROUND or VISIER table
         distances.addAll(Stream.of(SQLite
-                .select(SightSetting_Table.distance)
-                .from(SightSetting.class)
+                .select(SightMark_Table.distance)
+                .from(SightMark.class)
                 .queryList())
                 .map(sightSetting -> sightSetting.distance)
                 .filter(d -> d.unit == unit)

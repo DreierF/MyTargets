@@ -282,7 +282,7 @@ public class StatisticsFragment extends FragmentBase {
                 .flatMap(r -> Stream.of(r.getEnds()))
                 .flatMap(p -> Stream.of(p.getShots()))
                 .collect(Collectors.toList());
-        long missCount = Stream.of(shots).filter(s -> s.zone == Shot.MISS).count();
+        long missCount = Stream.of(shots).filter(s -> s.scoringRing == Shot.MISS).count();
         long hitCount = shots.size() - missCount;
 
         return String.format(Locale.ENGLISH, PIE_CHART_CENTER_TEXT_FORMAT,
@@ -387,9 +387,9 @@ public class StatisticsFragment extends FragmentBase {
     private Pair<Integer, DateTime> getPairEndSummary(Target target, End end, LocalDate trainingDate) {
         int actCounter = 0;
         for (Shot s : end.getShots()) {
-            actCounter += target.getPointsByZone(s.zone, s.index);
+            actCounter += target.getPointsByZone(s.scoringRing, s.index);
         }
-        return new Pair<>(actCounter, new DateTime(end.saveDate).withDate(trainingDate));
+        return new Pair<>(actCounter, new DateTime(end.saveTime).withDate(trainingDate));
     }
 
     @NonNull

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -15,30 +16,39 @@ import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.IIdSettable;
 
 @Parcel
-@Table(database = AppDatabase.class, name = "SHOOT")
+@Table(database = AppDatabase.class)
 public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
     public static final int NOTHING_SELECTED = -2;
     public static final int MISS = -1;
-    @ForeignKey(tableClass = End.class, references = {
-            @ForeignKeyReference(columnName = "passe", columnType = Long.class, foreignKeyColumnName = "id", referencedGetterName = "getId", referencedSetterName = "setId")})
-    public Long endId;
-    @Column(name = "x")
-    public float x;
-    @Column(name = "y")
-    public float y;
-    @Column(name = "points")
-    public int zone = NOTHING_SELECTED;
-    @Column(name = "comment")
-    public String comment = "";
-    // Is the actual number of the arrow not its index, arrow id or something else
-    @Column(name = "arrow")
-    public String arrowNumber = null;
-    // The index of the shot in the containing end
-    @Column(name = "arrow_index")
-    public int index;
+
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
-    private Long id;
+    Long id;
+
+    // The index of the shot in the containing end
+    @Column
+    public int index;
+
+    @ForeignKey(tableClass = End.class, references = {
+            @ForeignKeyReference(columnName = "end", columnType = Long.class, foreignKeyColumnName = "id", referencedGetterName = "getId", referencedSetterName = "setId")},
+            onDelete = ForeignKeyAction.CASCADE)
+    public Long endId;
+
+    @Column
+    public float x;
+
+    @Column
+    public float y;
+
+    @Column
+    public int scoringRing = NOTHING_SELECTED;
+
+    @Column
+    public String comment = "";
+
+    // Is the actual number of the arrow not its index, arrow id or something else
+    @Column
+    public String arrowNumber = null;
 
     public Shot() {
     }
@@ -47,23 +57,23 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
         this.index = i;
     }
 
-    @Override
-    public int compareTo(@NonNull Shot another) {
-        if (another.zone == zone) {
-            return 0;
-        } else if (another.zone >= 0 && zone >= 0) {
-            return zone - another.zone;
-        } else {
-            return another.zone - zone;
-        }
-    }
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public int compareTo(@NonNull Shot another) {
+        if (another.scoringRing == scoringRing) {
+            return 0;
+        } else if (another.scoringRing >= 0 && scoringRing >= 0) {
+            return scoringRing - another.scoringRing;
+        } else {
+            return another.scoringRing - scoringRing;
+        }
     }
 
     @Override

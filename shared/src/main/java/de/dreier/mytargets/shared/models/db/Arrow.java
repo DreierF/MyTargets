@@ -25,47 +25,47 @@ import de.dreier.mytargets.shared.utils.DimensionConverter;
 import de.dreier.mytargets.shared.utils.ThumbnailConverter;
 
 @Parcel
-@Table(database = AppDatabase.class, name = "ARROW")
+@Table(database = AppDatabase.class)
 public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Comparable<Arrow> {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     public Long id = -1L;
 
-    @Column(name = "name")
+    @Column
     public String name = "";
 
-    @Column(name = "length")
+    @Column
     public String length = "";
 
-    @Column(name = "material")
+    @Column
     public String material = "";
 
-    @Column(name = "spine")
+    @Column
     public String spine = "";
 
-    @Column(name = "weight")
+    @Column
     public String weight = "";
 
-    @Column(name = "tip_weight")
+    @Column
     public String tipWeight = "";
 
-    @Column(name = "vanes")
+    @Column
     public String vanes = "";
 
-    @Column(name = "nock")
+    @Column
     public String nock = "";
 
-    @Column(name = "comment")
+    @Column
     public String comment = "";
 
-    @Column(typeConverter = DimensionConverter.class, name = "diameter")
+    @Column(typeConverter = DimensionConverter.class)
     public Dimension diameter = new Dimension(5, Dimension.Unit.MILLIMETER);
 
-    @Column(name = "thumbnail", typeConverter = ThumbnailConverter.class)
+    @Column(typeConverter = ThumbnailConverter.class)
     public Thumbnail thumbnail;
 
-    @Column(name = "image")
+    @Column
     public String imageFile;
 
     public static List<Arrow> getAll() {

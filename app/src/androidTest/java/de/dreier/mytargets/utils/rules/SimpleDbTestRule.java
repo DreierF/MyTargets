@@ -65,18 +65,12 @@ public class SimpleDbTestRule extends DbTestRuleBase {
 
         Training training = insertDefaultTraining(standardRound, generator);
 
-        Round round1 = new Round();
+        Round round1 = new Round(standardRound.getRounds().get(0));
         round1.trainingId = training.getId();
-        round1.info = standardRound.getRounds().get(0);
-        round1.setTarget(round1.info.getTargetTemplate());
-        round1.comment = "";
         round1.insert();
 
-        Round round2 = new Round();
+        Round round2 = new Round(standardRound.getRounds().get(1));
         round2.trainingId = training.getId();
-        round2.info = standardRound.getRounds().get(1);
-        round2.setTarget(round2.info.getTargetTemplate());
-        round2.comment = "";
         round2.insert();
 
         randomEnd(training, round1, 6, generator, 0).insert();
@@ -123,18 +117,12 @@ public class SimpleDbTestRule extends DbTestRuleBase {
 
         Training training = insertDefaultTraining(standardRound, generator);
 
-        Round round1 = new Round();
+        Round round1 = new Round(standardRound.getRounds().get(0));
         round1.trainingId = training.getId();
-        round1.info = standardRound.getRounds().get(0);
-        round1.setTarget(round1.info.getTargetTemplate());
-        round1.comment = "";
         round1.insert();
 
-        Round round2 = new Round();
+        Round round2 = new Round(standardRound.getRounds().get(1));
         round2.trainingId = training.getId();
-        round2.info = standardRound.getRounds().get(1);
-        round2.setTarget(round2.info.getTargetTemplate());
-        round2.comment = "";
         round2.insert();
 
         randomEnd(training, round1, 6, generator, 0).insert();
@@ -158,7 +146,6 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         Training training = new Training();
         training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training);
         training.date = new LocalDate(2016, 7, 15);
-        training.location = "";
         training.weather = EWeather.SUNNY;
         training.windSpeed = 1;
         training.windDirection = 0;
@@ -169,18 +156,12 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         training.timePerEnd = 0;
         training.insert();
 
-        Round round1 = new Round();
+        Round round1 = new Round(standardRound.getRounds().get(0));
         round1.trainingId = training.getId();
-        round1.info = standardRound.getRounds().get(0);
-        round1.setTarget(round1.info.getTargetTemplate());
-        round1.comment = "";
         round1.insert();
 
-        Round round2 = new Round();
+        Round round2 = new Round(standardRound.getRounds().get(1));
         round2.trainingId = training.getId();
-        round2.info = standardRound.getRounds().get(1);
-        round2.setTarget(round2.info.getTargetTemplate());
-        round2.comment = "";
         round2.insert();
 
         buildEnd(round1, 1, 1, 2, 3, 3, 4).insert();

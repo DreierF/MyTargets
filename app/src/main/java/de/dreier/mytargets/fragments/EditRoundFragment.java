@@ -31,10 +31,7 @@ import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.databinding.FragmentEditRoundBinding;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.RoundTemplate;
-import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
@@ -43,8 +40,8 @@ import static de.dreier.mytargets.fragments.EditableListFragmentBase.ITEM_ID;
 
 public class EditRoundFragment extends EditFragmentBase {
     private static final String ROUND_ID = "round_id";
-    private long trainingId = -1;
-    private long roundId = -1;
+    private Long trainingId = null;
+    private Long roundId = null;
     private FragmentEditRoundBinding binding;
 
     @NonNull
@@ -67,9 +64,9 @@ public class EditRoundFragment extends EditFragmentBase {
                 .inflate(inflater, R.layout.fragment_edit_round, container, false);
 
         Bundle arguments = getArguments();
-        if (arguments != null) {
-            trainingId = arguments.getLong(ITEM_ID, -1);
-            roundId = arguments.getLong(ROUND_ID, -1);
+        trainingId = arguments.getLong(ITEM_ID);
+        if (arguments.containsKey(ROUND_ID)) {
+            roundId = arguments.getLong(ROUND_ID);
         }
 
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
@@ -94,7 +91,7 @@ public class EditRoundFragment extends EditFragmentBase {
         binding.target.setOnActivityResultContext(this);
         binding.distance.setOnActivityResultContext(this);
 
-        if (roundId == -1) {
+        if (roundId == null) {
             ToolbarUtils.setTitle(this, R.string.new_round);
             loadRoundDefaultValues();
             binding.comment.setText("");
@@ -102,19 +99,16 @@ public class EditRoundFragment extends EditFragmentBase {
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_round);
             Round round = Round.get(roundId);
-            binding.distance.setItem(round.info.distance);
+            binding.distance.setItem(round.distance);
             binding.comment.setText(round.comment);
             binding.notEditable.setVisibility(View.GONE);
-            StandardRound standardRound = StandardRound.get(round.info.standardRound);
-            if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
+            if (round.getTraining().standardRoundId != null) {
                 binding.distanceLayout.setVisibility(View.GONE);
-            } else if (standardRound.getRounds().size() > 1) {
+            } else {
                 binding.removeButton.setOnClickListener(v -> {
                     round.delete();
                     finish();
                 });
-            } else {
-                binding.removeButton.setVisibility(View.GONE);
             }
         }
         return binding.getRoot();
@@ -129,7 +123,7 @@ public class EditRoundFragment extends EditFragmentBase {
     @Override
     protected void onSave() {
         finish();
-        if (roundId == -1) {
+        if (roundId == null) {
             Round round = onSaveRound();
             RoundFragment.getIntent(round)
                     .withContext(this)
@@ -146,25 +140,22 @@ public class EditRoundFragment extends EditFragmentBase {
 
     private Round onSaveRound() {
         Training training = Training.get(trainingId);
-        StandardRound standardRound = StandardRound.get(training.standardRoundId);
 
         Round round;
-        if (roundId != -1) {
+        if (roundId != null) {
             round = Round.get(roundId);
         } else {
             round = new Round();
             round.trainingId = trainingId;
             round.setTarget(binding.target.getSelectedItem());
-            round.info = getRoundTemplate();
-            round.info.standardRound = standardRound.getId();
         }
 
         round.comment = binding.comment.getText().toString();
 
-        if (standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE) {
-            round.info.distance = binding.distance.getSelectedItem();
-            round.info.index = standardRound.getRounds().size();
-            round.info.save();
+        if (training.standardRoundId == null) {
+            round.distance = binding.distance.getSelectedItem();
+            round.index = training.getRounds().size();
+            round.save();
         }
         round.save();
 
@@ -181,20 +172,6 @@ public class EditRoundFragment extends EditFragmentBase {
         binding.distance.setItem(SettingsManager.getDistance());
         binding.arrows.setProgress(SettingsManager.getArrowsPerEnd());
         binding.target.setItem(SettingsManager.getTarget());
-    }
-
-    @NonNull
-    private RoundTemplate getRoundTemplate() {
-        RoundTemplate roundTemplate = new RoundTemplate();
-        roundTemplate.setTargetTemplate(binding.target.getSelectedItem());
-        roundTemplate.shotsPerEnd = binding.arrows.getProgress();
-        roundTemplate.endCount = 1;
-        roundTemplate.distance = binding.distance.getSelectedItem();
-
-        SettingsManager.setTarget(binding.target.getSelectedItem());
-        SettingsManager.setDistance(roundTemplate.distance);
-        SettingsManager.setShotsPerEnd(roundTemplate.shotsPerEnd);
-        return roundTemplate;
     }
 
     @Override

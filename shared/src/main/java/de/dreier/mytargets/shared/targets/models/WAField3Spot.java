@@ -14,8 +14,9 @@
  */
 package de.dreier.mytargets.shared.targets.models;
 
+import android.graphics.PointF;
+
 import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.Coordinate;
 
 public class WAField3Spot extends WAField {
     public static final int ID = 25;
@@ -23,10 +24,10 @@ public class WAField3Spot extends WAField {
     public WAField3Spot() {
         super(ID, R.string.wa_field_3_spot);
         faceRadius = 0.32f;
-        facePositions = new Coordinate[]{
-                new Coordinate(0.0f, -0.68f),
-                new Coordinate(0.0f, 0.0f),
-                new Coordinate(0.0f, 0.68f)
+        facePositions = new PointF[]{
+                new PointF(0.0f, -0.68f),
+                new PointF(0.0f, 0.0f),
+                new PointF(0.0f, 0.68f)
         };
     }
 }

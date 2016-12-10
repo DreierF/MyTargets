@@ -60,11 +60,11 @@ public abstract class DbTestRuleBase implements TestRule {
     }
 
     protected End buildEnd(Round round, int... shots) {
-        End end = round.addEnd(shots.length);
+        End end = round.addEnd();
         end.roundId = round.getId();
         for (int i = 0; i < shots.length; i++) {
             end.getShots().get(i).index = i;
-            end.getShots().get(i).zone = shots[i];
+            end.getShots().get(i).scoringRing = shots[i];
         }
         return end;
     }
@@ -74,9 +74,9 @@ public abstract class DbTestRuleBase implements TestRule {
         end.roundId = round.getId();
         for (int i = 0; i < arrowsPerEnd; i++) {
             end.getShots().get(i).index = i;
-            end.getShots().get(i).zone = gen.nextInt(5);
+            end.getShots().get(i).scoringRing = gen.nextInt(5);
         }
-        end.saveDate = new DateTime().withDate(training.date)
+        end.saveTime = new DateTime().withDate(training.date)
                 .withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
         return end;
     }

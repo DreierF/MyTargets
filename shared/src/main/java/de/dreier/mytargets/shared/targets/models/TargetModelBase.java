@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.shared.targets.models;
 
+import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
@@ -27,7 +28,6 @@ import java.util.List;
 import java.util.Set;
 
 import de.dreier.mytargets.shared.SharedApplicationInstance;
-import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.shared.models.SelectableZone;
@@ -44,7 +44,7 @@ public class TargetModelBase implements IIdProvider {
     private long id;
     private final int nameRes;
     public float faceRadius;
-    public Coordinate[] facePositions;
+    public PointF[] facePositions;
     protected ZoneBase[] zones;
     protected Dimension[] diameters;
     protected ScoringStyle[] scoringStyles;
@@ -63,7 +63,7 @@ public class TargetModelBase implements IIdProvider {
         this.id = id;
         this.nameRes = nameRes;
         this.faceRadius = 1f;
-        this.facePositions = new Coordinate[]{new Coordinate(0f, 0f)};
+        this.facePositions = new PointF[]{new PointF(0f, 0f)};
     }
 
     @Override

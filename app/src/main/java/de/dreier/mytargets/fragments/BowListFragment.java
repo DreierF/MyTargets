@@ -31,7 +31,7 @@ import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
 import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.shared.models.db.SightSetting;
+import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.HtmlInfoBuilder;
 import de.dreier.mytargets.utils.HtmlUtils;
@@ -107,19 +107,19 @@ public class BowListFragment extends EditableListFragment<Bow> {
 
         @Override
         public void bindItem() {
-            binding.name.setText(mItem.name);
-            binding.image.setImageDrawable(mItem.getDrawable());
+            binding.name.setText(item.name);
+            binding.image.setImageDrawable(item.getDrawable());
             binding.details.setVisibility(View.VISIBLE);
 
             HtmlInfoBuilder info = new HtmlInfoBuilder();
-            info.addLine(R.string.bow_type, mItem.type);
-            if (!mItem.brand.trim().isEmpty()) {
-                info.addLine(R.string.brand, mItem.brand);
+            info.addLine(R.string.bow_type, item.type);
+            if (!item.brand.trim().isEmpty()) {
+                info.addLine(R.string.brand, item.brand);
             }
-            if (!mItem.size.trim().isEmpty()) {
-                info.addLine(R.string.size, mItem.size);
+            if (!item.size.trim().isEmpty()) {
+                info.addLine(R.string.size, item.size);
             }
-            for (SightSetting s : mItem.getSightSettings()) {
+            for (SightMark s : item.getSightMarks()) {
                 info.addLine(s.distance.toString(), s.value);
             }
             binding.details.setText(HtmlUtils.fromHtml(info.toString()));

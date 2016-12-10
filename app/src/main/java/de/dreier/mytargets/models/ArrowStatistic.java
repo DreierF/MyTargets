@@ -82,7 +82,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
                 End end = new End();
                 end.setId(res.getLong(9));
                 Shot shot = new Shot(res.getInt(7));
-                shot.zone = res.getInt(4);
+                shot.scoringRing = res.getInt(4);
                 shot.x = res.getFloat(2);
                 shot.y = res.getFloat(3);
                 statistic.addShot(shot);
@@ -114,7 +114,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
     }
 
     private void addShot(Shot shot) {
-        reachedPointsSum += target.getPointsByZone(shot.zone, shot.index);
+        reachedPointsSum += target.getPointsByZone(shot.scoringRing, shot.index);
         maxPointsSum += target.getMaxPoints();
         xSum += shot.x;
         ySum += shot.y;

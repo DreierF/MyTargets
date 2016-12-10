@@ -41,9 +41,6 @@ import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemEndBinding;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.StandardRound;
-import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
@@ -109,10 +106,7 @@ public class RoundFragment extends EditableListFragment<End> {
     protected LoaderUICallback onLoad(Bundle args) {
         round = Round.get(mRound);
         final List<End> ends = round.getEnds();
-        StandardRound standardRound = StandardRound
-                .get(Training.get(round.trainingId).standardRoundId);
-        final boolean showFab = ends
-                .size() < round.info.endCount || standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
+        final boolean showFab = round.maxEndCount == null || ends.size() < round.maxEndCount;
 
         return new LoaderUICallback() {
             @Override
@@ -123,7 +117,7 @@ public class RoundFragment extends EditableListFragment<End> {
 
                 ToolbarUtils.setTitle(RoundFragment.this,
                         String.format(Locale.ENGLISH, "%s %d", getString(R.string.round),
-                                round.info.index + 1));
+                                round.index + 1));
                 ToolbarUtils.setSubtitle(RoundFragment.this, round.getReachedPointsFormatted());
             }
         };
@@ -193,8 +187,8 @@ public class RoundFragment extends EditableListFragment<End> {
 
         @Override
         public void bindItem() {
-            binding.shoots.setShots(round.getTarget(), mItem.getShots());
-            binding.end.setText(getString(R.string.passe_n, (mItem.index + 1)));
+            binding.shoots.setShots(round.getTarget(), item.getShots());
+            binding.end.setText(getString(R.string.passe_n, (item.index + 1)));
         }
     }
 }

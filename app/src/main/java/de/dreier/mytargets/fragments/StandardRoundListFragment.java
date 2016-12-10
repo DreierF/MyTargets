@@ -225,13 +225,13 @@ public class StandardRoundListFragment extends SelectPureListItemFragmentBase<St
 
         @Override
         public void bindItem() {
-            binding.name.setText(mItem.name);
+            binding.name.setText(item.name);
 
-            if (mItem.equals(currentSelection)) {
+            if (item.equals(currentSelection)) {
                 binding.image.setVisibility(View.VISIBLE);
                 binding.details.setVisibility(View.VISIBLE);
-                binding.details.setText(mItem.getDescription(getActivity()));
-                binding.image.setImageDrawable(mItem.getTargetDrawable());
+                binding.details.setText(item.getDescription(getActivity()));
+                binding.image.setImageDrawable(item.getTargetDrawable());
             } else {
                 binding.image.setVisibility(View.GONE);
                 binding.details.setVisibility(View.GONE);

@@ -24,6 +24,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Handler;
@@ -51,7 +52,6 @@ import java.util.TimerTask;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
-import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
@@ -282,7 +282,7 @@ public class TargetView extends TargetViewBase {
     protected void notifyTargetShotsChanged() {
         List<Shot> displayedShots = new ArrayList<>();
         for (Shot shot : shots) {
-            if (shot.zone != Shot.NOTHING_SELECTED && shot.index != getCurrentShotIndex()) {
+            if (shot.scoringRing != Shot.NOTHING_SELECTED && shot.index != getCurrentShotIndex()) {
                 displayedShots.add(shot);
             }
         }
@@ -294,8 +294,8 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    protected Coordinate initAnimationPositions(int i) {
-        Coordinate coordinate = new Coordinate();
+    protected PointF initAnimationPositions(int i) {
+        PointF coordinate = new PointF();
         if (inputMethod == KEYBOARD) {
             coordinate.x = keyboardRect.left;
             if (keyboardType == LEFT) {
@@ -395,7 +395,7 @@ public class TargetView extends TargetViewBase {
             if (keyboardRect.contains(x, y)) {
                 int index = (int) (y * selectableZones.size() / keyboardRect.height());
                 index = Math.min(Math.max(0, index), selectableZones.size() - 1);
-                s.zone = selectableZones.get(index).index;
+                s.scoringRing = selectableZones.get(index).index;
             } else {
                 return null;
             }
@@ -405,7 +405,7 @@ public class TargetView extends TargetViewBase {
             fullExtendedMatrixInverse.mapPoints(pt);
             s.x = pt[0];
             s.y = pt[1];
-            s.zone = targetDrawable.getZoneFromPoint(s.x, s.y);
+            s.scoringRing = targetDrawable.getZoneFromPoint(s.x, s.y);
         }
         return s;
     }

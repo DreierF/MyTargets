@@ -7,6 +7,7 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -30,30 +31,32 @@ import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.DateTimeConverter;
 
 @Parcel
-@Table(database = AppDatabase.class, name = "PASSE")
-public class End extends BaseModel implements IIdSettable,  Comparable<End> {
+@Table(database = AppDatabase.class)
+public class End extends BaseModel implements IIdSettable, Comparable<End> {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     Long id;
 
-    @Column(name = "endIndex")
+    @Column
     public int index;
 
+    //TODO prepare for multiple images
     @Column(name = "image")
     public String image;
 
     @ForeignKey(tableClass = Round.class, references = {
-            @ForeignKeyReference(columnName = "round", columnType = Long.class, foreignKeyColumnName = "_id")})
+            @ForeignKeyReference(columnName = "round", columnType = Long.class, foreignKeyColumnName = "_id")},
+            onDelete = ForeignKeyAction.CASCADE)
     public Long roundId;
 
-    @Column(name = "exact")
+    @Column
     public boolean exact;
 
-    List<Shot> shots = new ArrayList<>();
+    @Column(typeConverter = DateTimeConverter.class)
+    public DateTime saveTime = new DateTime();
 
-    @Column(typeConverter = DateTimeConverter.class, name = "save_time")
-    public DateTime saveDate = new DateTime();
+    List<Shot> shots = new ArrayList<>();
 
     public End() {
     }
@@ -65,52 +68,6 @@ public class End extends BaseModel implements IIdSettable,  Comparable<End> {
         }
     }
 
-    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "shots")
-    public List<Shot> getShots() {
-        if (shots == null || shots.isEmpty()) {
-            shots = SQLite.select()
-                    .from(Shot.class)
-                    .where(Shot_Table.passe.eq(id))
-                    .queryList();
-        }
-        return shots;
-    }
-
-    public List<Shot> getSortedShotList() {
-        final List<Shot> shots = getShots();
-        Collections.sort(shots);
-        return shots;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public void save() {
-        super.save();
-        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-        for(Shot s : getShots()) {
-            s.endId = id;
-        }
-        super.save();
-    }
-
-    @Override
-    public boolean equals(Object another) {
-        return another instanceof End &&
-                getClass().equals(another.getClass()) &&
-                id.equals(((End) another).id);
-    }
-
-    public int getReachedPoints(Target target) {
-        return target.getReachedPoints(this);
-    }
-
     @NonNull
     private static Map<SelectableZone, Integer> getRoundScores(List<Round> rounds) {
         final Target t = rounds.get(0).getTarget();
@@ -118,8 +75,10 @@ public class End extends BaseModel implements IIdSettable,  Comparable<End> {
         for (Round round : rounds) {
             for (End end : round.getEnds()) {
                 for (Shot s : end.shots) {
-                    SelectableZone tuple = new SelectableZone(s.zone, t.getModel().getZone(s.zone),
-                            t.zoneToString(s.zone, s.index), t.getPointsByZone(s.zone, s.index));
+                    SelectableZone tuple = new SelectableZone(s.scoringRing,
+                            t.getModel().getZone(s.scoringRing),
+                            t.zoneToString(s.scoringRing, s.index),
+                            t.getPointsByZone(s.scoringRing, s.index));
                     final Integer integer = scoreCount.get(tuple);
                     if (integer != null) {
                         int count = integer + 1;
@@ -178,12 +137,59 @@ public class End extends BaseModel implements IIdSettable,  Comparable<End> {
         SQLite.delete(End.class).execute();
     }
 
-    @Override
-    public int compareTo(@NonNull End end) {
-        return index - end.index;
+    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "shots")
+    public List<Shot> getShots() {
+        if (shots == null || shots.isEmpty()) {
+            shots = SQLite.select()
+                    .from(Shot.class)
+                    .where(Shot_Table.end.eq(id))
+                    .queryList();
+        }
+        return shots;
     }
 
     public void setShots(List<Shot> shots) {
         this.shots = shots;
     }
+
+    public List<Shot> getSortedShotList() {
+        final List<Shot> shots = getShots();
+        Collections.sort(shots);
+        return shots;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public void save() {
+        super.save();
+        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
+        for (Shot s : getShots()) {
+            s.endId = id;
+        }
+        super.save();
+    }
+
+    @Override
+    public boolean equals(Object another) {
+        return another instanceof End &&
+                getClass().equals(another.getClass()) &&
+                id.equals(((End) another).id);
+    }
+
+    public int getReachedPoints(Target target) {
+        return target.getReachedPoints(this);
+    }
+
+    @Override
+    public int compareTo(@NonNull End end) {
+        return index - end.index;
+    }
+
 }

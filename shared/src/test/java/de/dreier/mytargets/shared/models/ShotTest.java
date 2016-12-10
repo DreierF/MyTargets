@@ -42,11 +42,11 @@ public class ShotTest {
         List<Shot> shots = new ArrayList<>(zones.length);
         for (int i = 0; i < zones.length; i++) {
             shots.add(new Shot(i));
-            shots.get(i).zone = zones[i];
+            shots.get(i).scoringRing = zones[i];
         }
         Collections.sort(shots);
         return Stream.of(shots)
-                .map(s -> String.valueOf(s.zone))
+                .map(s -> String.valueOf(s.scoringRing))
                 .collect(Collectors.joining(","));
     }
 }

@@ -20,7 +20,6 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Region;
 
-import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.utils.PathUtils;
 
 public class EllipseZone extends ZoneBase {
@@ -41,7 +40,7 @@ public class EllipseZone extends ZoneBase {
     }
 
     public EllipseZone(float radius, float midpointX, float midpointY, int fillColor, int strokeColor, int strokeWidth) {
-        super(radius, new Coordinate(midpointX, midpointY), fillColor, strokeColor, strokeWidth, true);
+        super(radius, new PointF(midpointX, midpointY), fillColor, strokeColor, strokeWidth, true);
     }
 
     @Override

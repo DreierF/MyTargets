@@ -27,7 +27,6 @@ import java.io.File;
 
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
-import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.NotificationInfo;
@@ -41,7 +40,7 @@ import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.Shot;
-import de.dreier.mytargets.shared.models.db.SightSetting;
+import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.EndRenderer;
@@ -55,7 +54,6 @@ import de.dreier.mytargets.utils.MyBackupAgent;
 @ParcelClasses({
         @ParcelClass(Arrow.class),
         @ParcelClass(Bow.class),
-        @ParcelClass(Coordinate.class),
         @ParcelClass(Dimension.class),
         @ParcelClass(Environment.class),
         @ParcelClass(End.class),
@@ -63,7 +61,7 @@ import de.dreier.mytargets.utils.MyBackupAgent;
         @ParcelClass(Round.class),
         @ParcelClass(RoundTemplate.class),
         @ParcelClass(Shot.class),
-        @ParcelClass(SightSetting.class),
+        @ParcelClass(SightMark.class),
         @ParcelClass(StandardRound.class),
         @ParcelClass(NotificationInfo.class),
         @ParcelClass(Target.class),

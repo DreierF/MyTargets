@@ -17,8 +17,8 @@ package de.dreier.mytargets.shared.targets.zone;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PointF;
 
-import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.utils.Color;
 
 public abstract class ZoneBase {
@@ -26,13 +26,13 @@ public abstract class ZoneBase {
     public final int fillColor;
     public final int strokeColor;
     public final float strokeWidth;
-    protected final Coordinate midpoint;
+    protected final PointF midpoint;
     protected final boolean scoresAsOutsideIn;
 
     Paint paintFill;
     Paint paintStroke;
 
-    public ZoneBase(float radius, Coordinate midpoint, int fillColor, int strokeColor, int strokeWidth, boolean scoresAsOutsideIn) {
+    public ZoneBase(float radius, PointF midpoint, int fillColor, int strokeColor, int strokeWidth, boolean scoresAsOutsideIn) {
         this.radius = radius;
         this.midpoint = midpoint;
         this.fillColor = fillColor;

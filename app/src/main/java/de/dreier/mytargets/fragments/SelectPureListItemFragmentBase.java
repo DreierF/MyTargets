@@ -68,8 +68,8 @@ public abstract class SelectPureListItemFragmentBase<T extends IIdProvider & IIm
 
         @Override
         public void bindItem() {
-            binding.name.setText(mItem.getName());
-            binding.image.setImageDrawable(mItem.getDrawable(getContext()));
+            binding.name.setText(item.getName());
+            binding.image.setImageDrawable(item.getDrawable(getContext()));
         }
     }
 }

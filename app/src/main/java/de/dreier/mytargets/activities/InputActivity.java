@@ -48,13 +48,11 @@ import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.Shot;
-import de.dreier.mytargets.shared.models.db.SightSetting;
+import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
-import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
 import de.dreier.mytargets.utils.IntentWrapper;
@@ -276,7 +274,7 @@ public class InputActivity extends ChildActivityBase
     private void showEnd(int endIndex) {
         // Create a new end
         if (endIndex == getEnds().size()) {
-            getCurrentRound().addEnd(getTemplate().shotsPerEnd);
+            getCurrentRound().addEnd();
             updateOldShoots();
         }
 
@@ -312,15 +310,14 @@ public class InputActivity extends ChildActivityBase
     private void updateEnd() {
         targetView.setEnd(getCurrentEnd());
         binding.endTitle.setText(getString(R.string.passe) + " " + (data.endIndex + 1));
-        binding.roundTitle.setText(getString(R.string.round) + " " + (getTemplate().index + 1));
+        binding.roundTitle.setText(getString(R.string.round) + " " + (getCurrentRound().index + 1));
         updateNavigationButtons();
     }
 
     private void updateNavigationButtons() {
         binding.prev.setEnabled(data.endIndex > 0);
         binding.next.setEnabled(getCurrentEnd().getId() != null &&
-                (data.endIndex + 1 < getTemplate().endCount || // The current round is not finished
-                        data.standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE)); // or we don't have an exit condition
+                (getCurrentRound().maxEndCount == null || data.endIndex + 1 < getCurrentRound().maxEndCount)); // or we don't have an exit condition
     }
 
     public void setShowMode(EShowMode showMode) {
@@ -365,7 +362,7 @@ public class InputActivity extends ChildActivityBase
         // Set current end score
         int reachedEndPoints = getCurrentEnd().getReachedPoints(getCurrentRound().getTarget());
         int maxEndPoints = getCurrentRound().getTarget()
-                .getEndMaxPoints(getTemplate().shotsPerEnd);
+                .getEndMaxPoints(getCurrentRound().shotsPerEnd);
         binding.scoreEnd.setText(reachedEndPoints + "/" + maxEndPoints);
 
         // Set current round score
@@ -380,12 +377,12 @@ public class InputActivity extends ChildActivityBase
         getCurrentEnd().setShots(shots);
         getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING;
         if (getCurrentEnd().getId() == null) {
-            getCurrentEnd().saveDate = new DateTime();
+            getCurrentEnd().saveTime = new DateTime();
         }
 
         // Change round template if end is out of range defined in template
-        if (data.standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE && getTemplate().endCount - 1 == data.endIndex) {
-            getTemplate().addEnd();
+        if (getCurrentRound().maxEndCount - 1 == data.endIndex) {
+            getCurrentRound().addEnd();
         }
 
         getCurrentEnd().save();
@@ -408,7 +405,7 @@ public class InputActivity extends ChildActivityBase
         if (getEnds().size() > 0) {
             End lastEnd = lastItem(getEnds());
             for (Shot shot : lastEnd.getShots()) {
-                text += getCurrentRound().getTarget().zoneToString(shot.zone, shot.index) + " ";
+                text += getCurrentRound().getTarget().zoneToString(shot.scoringRing, shot.index) + " ";
             }
             text += "\n";
         } else {
@@ -416,11 +413,11 @@ public class InputActivity extends ChildActivityBase
         }
 
         // Load bow settings
-        if (data.training.bow > 0) {
-            final SightSetting sightSetting = Bow.get(data.training.bow)
-                    .getSightSetting(getTemplate().distance);
-            if (sightSetting != null) {
-                text += String.format("%s: %s", getTemplate().distance, sightSetting.value);
+        if (data.training.bow != null) {
+            final SightMark sightMark = Bow.get(data.training.bow)
+                    .getSightSetting(getCurrentRound().distance);
+            if (sightMark != null) {
+                text += String.format("%s: %s", getCurrentRound().distance, sightMark.value);
             }
         }
         return new NotificationInfo(getCurrentRound(), title, text);
@@ -432,10 +429,6 @@ public class InputActivity extends ChildActivityBase
 
     private Round getCurrentRound() {
         return data.training.getRounds().get(data.roundIndex);
-    }
-
-    private RoundTemplate getTemplate() {
-        return getCurrentRound().info;
     }
 
     private End getCurrentEnd() {
@@ -493,7 +486,7 @@ public class InputActivity extends ChildActivityBase
 
             result.standardRound = result.training.getStandardRound();
             result.arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
-            if (result.training.arrow > 0) {
+            if (result.training.arrow != null) {
                 Arrow arrow = result.training.getArrow();
                 if (arrow != null) {
                     result.arrowDiameter = arrow.diameter;

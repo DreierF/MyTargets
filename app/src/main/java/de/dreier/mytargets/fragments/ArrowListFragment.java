@@ -112,8 +112,8 @@ public class ArrowListFragment extends EditableListFragment<Arrow> {
 
         @Override
         public void bindItem() {
-            binding.name.setText(mItem.name);
-            binding.image.setImageDrawable(mItem.getDrawable());
+            binding.name.setText(item.name);
+            binding.image.setImageDrawable(item.getDrawable());
         }
     }
 }

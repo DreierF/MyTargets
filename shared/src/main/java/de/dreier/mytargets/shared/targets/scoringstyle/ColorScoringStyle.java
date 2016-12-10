@@ -39,7 +39,7 @@ public class ColorScoringStyle extends ScoringStyle {
     @Override
     public int getReachedPoints(End end) {
         return Stream.of(end.getShots())
-                .map(s -> getPoints(s.zone, s.index))
+                .map(s -> getPoints(s.scoringRing, s.index))
                 .distinct()
                 .collect(Collectors.reducing(0, (a, b) -> a + b));
     }

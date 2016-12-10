@@ -116,18 +116,17 @@ public class TrainingFragment extends EditableListFragment<Round> {
     protected LoaderUICallback onLoad(Bundle args) {
         training = Training.get(trainingId);
         List<Round> rounds = training.getRounds();
-        StandardRound standardRound = StandardRound.get(training.standardRoundId);
         return new LoaderUICallback() {
             @Override
             public void applyData() {
 
                 // Hide fab for standard rounds
-                supportsDeletion = standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
+                supportsDeletion = training.standardRoundId == null;
                 binding.fab.setVisibility(supportsDeletion ? View.VISIBLE : View.GONE);
 
                 // Set round info
                 int weatherDrawable = R.drawable.ic_house_24dp;
-                if (!standardRound.indoor) {
+                if (!training.indoor) {
                     weatherDrawable = training.getEnvironment().weather.getColorDrawable();
                 }
                 binding.weatherIcon.setImageResource(weatherDrawable);
@@ -217,14 +216,14 @@ public class TrainingFragment extends EditableListFragment<Round> {
         public void bindItem() {
             binding.title.setText(String.format(Locale.ENGLISH, "%s %d",
                     getContext().getString(R.string.round),
-                    mItem.info.index + 1));
-            binding.subtitle.setText(HtmlUtils.fromHtml(HtmlUtils.getRoundInfo(mItem, equals)));
+                    item.index + 1));
+            binding.subtitle.setText(HtmlUtils.fromHtml(HtmlUtils.getRoundInfo(item, equals)));
             if (binding.subtitle.getText().toString().isEmpty()) {
                 binding.subtitle.setVisibility(View.GONE);
             } else {
                 binding.subtitle.setVisibility(View.VISIBLE);
             }
-            binding.points.setText(mItem.getReachedPointsFormatted());
+            binding.points.setText(item.getReachedPointsFormatted());
         }
     }
 }

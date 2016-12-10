@@ -101,7 +101,7 @@ public class ScoringStyle {
 
     public int getReachedPoints(End end) {
         return Stream.of(end.getShots())
-                .map(s -> getPointsByZone(s.zone, s.index))
+                .map(s -> getPointsByZone(s.scoringRing, s.index))
                 .collect(Collectors.reducing(0, (a, b) -> a + b));
     }
 }

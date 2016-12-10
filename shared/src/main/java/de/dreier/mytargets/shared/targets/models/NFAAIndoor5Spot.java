@@ -14,8 +14,9 @@
  */
 package de.dreier.mytargets.shared.targets.models;
 
+import android.graphics.PointF;
+
 import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.targets.decoration.CenterMarkDecorator;
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
@@ -45,12 +46,12 @@ public class NFAAIndoor5Spot extends TargetModelBase {
                 new Dimension(40, CENTIMETER)
         };
         decorator = new CenterMarkDecorator(DARK_GRAY, 25f, 9, true);
-        facePositions = new Coordinate[]{
-                new Coordinate(-0.6f, -0.6f),
-                new Coordinate(0.6f, -0.6f),
-                new Coordinate(0.0f, 0.0f),
-                new Coordinate(-0.6f, 0.6f),
-                new Coordinate(0.6f, 0.6f)
+        facePositions = new PointF[]{
+                new PointF(-0.6f, -0.6f),
+                new PointF(0.6f, -0.6f),
+                new PointF(0.0f, 0.0f),
+                new PointF(-0.6f, 0.6f),
+                new PointF(0.6f, 0.6f)
         };
         faceRadius = 0.4f;
     }

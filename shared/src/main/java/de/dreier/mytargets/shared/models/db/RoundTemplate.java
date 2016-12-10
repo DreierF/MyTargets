@@ -2,6 +2,7 @@ package de.dreier.mytargets.shared.models.db;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -17,70 +18,69 @@ import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.DimensionConverter;
 
 @Parcel
-@Table(database = AppDatabase.class, name = "ROUND_TEMPLATE")
+@Table(database = AppDatabase.class)
 public class RoundTemplate extends BaseModel implements IIdSettable {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
-    Long _id;
+    Long id;
+
     @ForeignKey(tableClass = StandardRound.class, references = {
-            @ForeignKeyReference(columnName = "sid", columnType = Long.class, foreignKeyColumnName = "_id")})
+            @ForeignKeyReference(columnName = "standardRound", columnType = Long.class, foreignKeyColumnName = "_id")},
+            onDelete = ForeignKeyAction.CASCADE)
     public Long standardRound;
-    @Column(name = "r_index")
+
+    @Column
     public int index;
-    @Column(name = "arrows")
+
+    @Column
     public int shotsPerEnd;
-    @Column(name = "passes")
+
+    @Column
     public int endCount;
-    @Column(typeConverter = DimensionConverter.class, name = "distance")
+
+    @Column(typeConverter = DimensionConverter.class)
     public Dimension distance;
-    @Column(name = "target")
-    int targetTemplateId;
-    @Column(name = "scoring_style")
-    int targetTemplateScoringStyle;
-    @Column(typeConverter = DimensionConverter.class, name = "size")
-    Dimension targetTemplateSize;
+
+    @Column
+    int targetId;
+
+    @Column
+    int targetScoringStyle;
+
+    @Column(typeConverter = DimensionConverter.class)
+    Dimension targetDiameter;
+
+    public static RoundTemplate get(long sid, int index) {
+        return SQLite.select()
+                .from(RoundTemplate.class)
+                .where(RoundTemplate_Table.standardRound.eq(sid))
+                .and(RoundTemplate_Table.index.eq(index))
+                .querySingle();
+    }
 
     public Long getId() {
-        return _id;
+        return id;
     }
 
     public void setId(Long id) {
-        this._id = id;
+        this.id = id;
     }
 
     @Override
     public boolean equals(Object another) {
         return another instanceof RoundTemplate &&
                 getClass().equals(another.getClass()) &&
-                _id.equals(((RoundTemplate) another)._id);
+                id.equals(((RoundTemplate) another).id);
     }
 
     public Target getTargetTemplate() {
-        return new Target(targetTemplateId, targetTemplateScoringStyle, targetTemplateSize);
+        return new Target(targetId, targetScoringStyle, targetDiameter);
     }
 
     public void setTargetTemplate(Target targetTemplate) {
-        targetTemplateId = targetTemplate.id;
-        targetTemplateScoringStyle = targetTemplate.scoringStyle;
-        targetTemplateSize = targetTemplate.size;
-    }
-
-    public static RoundTemplate get(long sid, int index) {
-        return SQLite.select()
-                .from(RoundTemplate.class)
-                .where(RoundTemplate_Table.sid.eq(sid))
-                .and(RoundTemplate_Table.r_index.eq(index))
-                .querySingle();
-    }
-
-    void deleteEnd() {
-        endCount--;
-        update();
-    }
-
-    public void addEnd() {
-        endCount++;
-        update();
+        targetId = targetTemplate.id;
+        targetScoringStyle = targetTemplate.scoringStyle;
+        targetDiameter = targetTemplate.size;
     }
 }

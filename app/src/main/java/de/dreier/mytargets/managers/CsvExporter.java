@@ -90,9 +90,9 @@ public class CsvExporter {
     private static void addRound(CsvBuilder csv, Round r) throws IOException {
         csv.enterScope();
         // Round
-        csv.add(String.valueOf(r.info.index + 1));
+        csv.add(String.valueOf(r.index + 1));
         // Distance
-        csv.add(r.info.distance.toString());
+        csv.add(r.distance.toString());
         // Target
         final Target target = r.getTarget();
         csv.add(target.getModel().toString() + " (" + target.size
@@ -103,11 +103,11 @@ public class CsvExporter {
             csv.add(String.valueOf(e.index + 1));
             // Timestamp
             csv.add(SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN)
-                    .format(e.saveDate.toDate()));
+                    .format(e.saveTime.toDate()));
             for (Shot s : e.getShots()) {
                 csv.enterScope();
                 // Score
-                csv.add(target.zoneToString(s.zone, s.index));
+                csv.add(target.zoneToString(s.scoringRing, s.index));
 
                 // Coordinates (X, Y)
                 csv.add(String.valueOf(s.x));

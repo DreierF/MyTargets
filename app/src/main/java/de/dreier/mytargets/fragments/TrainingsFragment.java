@@ -151,10 +151,10 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
 
         @Override
         public void bindItem() {
-            binding.training.setText(mItem.title);
-            binding.trainingDate.setText(mItem.getFormattedDate());
-            List<Round> rounds = mItem.getRounds();
-            binding.gesTraining.setText(mItem.getReachedPointsFormatted(rounds, false));
+            binding.training.setText(item.title);
+            binding.trainingDate.setText(item.getFormattedDate());
+            List<Round> rounds = item.getRounds();
+            binding.gesTraining.setText(item.getReachedPointsFormatted(rounds, false));
         }
     }
 
@@ -168,7 +168,7 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
 
         @Override
         public void bindItem() {
-            binding.month.setText(mItem.toString());
+            binding.month.setText(item.toString());
         }
     }
 }

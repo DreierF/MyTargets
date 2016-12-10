@@ -215,8 +215,8 @@ public class TargetListFragment extends SelectItemFragmentBase<Target>
 
         @Override
         public void bindItem() {
-            binding.name.setText(mItem.getModel().toString());
-            binding.image.setImageDrawable(mItem.getDrawable());
+            binding.name.setText(item.getModel().toString());
+            binding.image.setImageDrawable(item.getDrawable());
         }
     }
 }

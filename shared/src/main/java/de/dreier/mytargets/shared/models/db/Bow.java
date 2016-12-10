@@ -27,56 +27,56 @@ import de.dreier.mytargets.shared.utils.EBowTypeConverter;
 import de.dreier.mytargets.shared.utils.ThumbnailConverter;
 
 @Parcel
-@Table(database = AppDatabase.class, name = "BOW")
+@Table(database = AppDatabase.class)
 public class Bow extends BaseModel implements IImageProvider, IIdSettable, Comparable<Bow> {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     public Long id = -1L;
 
-    @Column(name = "name")
+    @Column
     public String name = "";
 
-    @Column(typeConverter = EBowTypeConverter.class, name = "type")
+    @Column(typeConverter = EBowTypeConverter.class)
     public EBowType type = EBowType.RECURVE_BOW;
 
-    @Column(name = "brand")
+    @Column
     public String brand = "";
 
-    @Column(name = "size")
+    @Column
     public String size = "";
 
-    @Column(name = "height")
+    @Column
     public String braceHeight = "";
 
-    @Column(name = "tiller")
+    @Column
     public String tiller = "";
 
-    @Column(name = "limbs")
+    @Column
     public String limbs = "";
 
-    @Column(name = "sight")
+    @Column
     public String sight = "";
 
-    @Column(name = "draw_weight")
+    @Column
     public String drawWeight = "";
 
-    @Column(name = "stabilizer")
+    @Column
     public String stabilizer = "";
 
-    @Column(name = "clicker")
+    @Column
     public String clicker = "";
 
-    @Column(name = "description")
+    @Column
     public String description = "";
 
-    @Column(typeConverter = ThumbnailConverter.class, name = "thumbnail")
+    @Column(typeConverter = ThumbnailConverter.class)
     public Thumbnail thumbnail;
 
-    @Column(name = "image")
+    @Column
     public String imageFile;
 
-    public List<SightSetting> sightSettings = new ArrayList<>();
+    public List<SightMark> sightMarks = new ArrayList<>();
 
     public static List<Bow> getAll() {
         return SQLite.select().from(Bow.class).queryList();
@@ -93,15 +93,15 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
         SQLite.delete(Bow.class).execute();
     }
 
-    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "sightSettings")
-    public List<SightSetting> getSightSettings() {
-        if (sightSettings == null || sightSettings.isEmpty()) {
-            sightSettings = SQLite.select()
-                    .from(SightSetting.class)
-                    .where(SightSetting_Table.bow.eq(id))
+    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "sightMarks")
+    public List<SightMark> getSightMarks() {
+        if (sightMarks == null || sightMarks.isEmpty()) {
+            sightMarks = SQLite.select()
+                    .from(SightMark.class)
+                    .where(SightMark_Table.bow.eq(id))
                     .queryList();
         }
-        return sightSettings;
+        return sightMarks;
     }
 
     public Long getId() {
@@ -133,8 +133,8 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
                 id.equals(((Bow) another).id);
     }
 
-    public SightSetting getSightSetting(Dimension distance) {
-        return Stream.of(getSightSettings())
+    public SightMark getSightSetting(Dimension distance) {
+        return Stream.of(getSightMarks())
                 .filter(s -> s.distance.equals(distance))
                 .findFirst()
                 .orElse(null);

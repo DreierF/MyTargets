@@ -19,18 +19,18 @@ import android.support.v7.widget.RebindReportingHolder;
 import android.view.View;
 
 public abstract class ItemBindingHolder<T> extends RebindReportingHolder implements SelectableHolder, View.OnClickListener, View.OnLongClickListener {
-    protected T mItem;
+    protected T item;
 
     ItemBindingHolder(View itemView) {
         super(itemView);
     }
 
     public T getItem() {
-        return mItem;
+        return item;
     }
 
     void setItem(T mItem) {
-        this.mItem = mItem;
+        this.item = mItem;
     }
 
     @Override

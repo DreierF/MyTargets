@@ -111,7 +111,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
         if (rounds == null || rounds.isEmpty()) {
             rounds = SQLite.select()
                     .from(RoundTemplate.class)
-                     .where(RoundTemplate_Table.sid.eq(id))
+                     .where(RoundTemplate_Table.standardRound.eq(id))
                     .queryList();
         }
         return rounds;

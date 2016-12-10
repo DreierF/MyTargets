@@ -185,7 +185,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         List<Long> bowTags = Stream.of(binding.bowTags.getCheckedTags())
                 .map(t -> t.id).collect(Collectors.toList());
         filteredRounds = Stream.of(rounds)
-                .filter(pair -> distanceTags.contains(pair.second.info.distance.toString())
+                .filter(pair -> distanceTags.contains(pair.second.distance.toString())
                         && arrowTags.contains(pair.first.arrow)
                         && bowTags.contains(pair.first.bow))
                 .map(p -> p.second)
@@ -239,7 +239,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
 
     private List<ChipGroup.Tag> getDistanceTags() {
         return Stream.of(rounds)
-                .map(p -> p.second.info.distance)
+                .map(p -> p.second.distance)
                 .distinct()
                 .sorted()
                 .map(d -> new ChipGroup.Tag(d.getId(), d.toString(), true))

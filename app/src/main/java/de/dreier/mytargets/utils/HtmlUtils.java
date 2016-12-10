@@ -38,7 +38,6 @@ import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 import static de.dreier.mytargets.shared.models.db.End.getSortedScoreDistribution;
@@ -84,7 +83,7 @@ public class HtmlUtils {
 
         if (configuration.showTable) {
             for (Round round : rounds) {
-                html += BR + bold(get(R.string.round) + " " + (round.info.index + 1));
+                html += BR + bold(get(R.string.round) + " " + (round.index + 1));
                 if (configuration.showProperties) {
                     html += BR + getRoundInfo(round, equals);
                 }
@@ -110,7 +109,7 @@ public class HtmlUtils {
 
     private static String getRoundTable(ScoreboardConfiguration configuration, Round round) {
         String html = "<table class=\"myTable\">";
-        html += getTableHeader(round.info.shotsPerEnd);
+        html += getTableHeader(round.shotsPerEnd);
         int carry = 0;
         for (End end : round.getEnds()) {
             html += "<tr class=\"align_center\">";
@@ -120,7 +119,7 @@ public class HtmlUtils {
                 html += "<td>";
                 html += getPoints(configuration, shot, round.getTarget());
                 html += "</td>";
-                int points = round.getTarget().getPointsByZone(shot.zone, shot.index);
+                int points = round.getTarget().getPointsByZone(shot.scoringRing, shot.index);
                 sum += points;
                 carry += points;
             }
@@ -134,10 +133,10 @@ public class HtmlUtils {
 
     @NonNull
     private static String getPoints(ScoreboardConfiguration configuration, Shot shot, Target target) {
-        final String points = target.zoneToString(shot.zone, shot.index);
+        final String points = target.zoneToString(shot.scoringRing, shot.index);
         if (configuration.showPointsColored) {
-            int fillColor = target.getModel().getZone(shot.zone).getFillColor();
-            int color = target.getModel().getZone(shot.zone).getTextColor();
+            int fillColor = target.getModel().getZone(shot.scoringRing).getFillColor();
+            int color = target.getModel().getZone(shot.scoringRing).getTextColor();
             final String pointsDiv = String.format(
                     "<div class=\"circle\" style='background: #%06X; color: #%06X'>%s",
                     fillColor & 0xFFFFFF, color & 0xFFFFFF, points);
@@ -182,7 +181,7 @@ public class HtmlUtils {
                     if (!TextUtils.isEmpty(shot.comment)) {
                         comments += "<tr class=\"align_center\"><td>" + j + "</td>" +
                                 "<td>" + i + "</td>" +
-                                "<td>" + round.getTarget().zoneToString(shot.zone, s) +
+                                "<td>" + round.getTarget().zoneToString(shot.scoringRing, s) +
                                 "</td>" +
                                 "<td>" +
                                 TextUtils.htmlEncode(shot.comment).replace("\n", "<br />") +
@@ -206,7 +205,7 @@ public class HtmlUtils {
     public static String getRoundInfo(Round round, boolean[] equals) {
         HtmlInfoBuilder info = new HtmlInfoBuilder();
         if (!equals[0]) {
-            info.addLine(R.string.distance, round.info.distance);
+            info.addLine(R.string.distance, round.distance);
         }
         if (!equals[1]) {
             info.addLine(R.string.target_face, round.getTarget());
@@ -226,7 +225,7 @@ public class HtmlUtils {
         } else {
             String html = "";
             for (Round round : rounds) {
-                html += BR + bold(get(R.string.round) + " " + (round.info.index + 1));
+                html += BR + bold(get(R.string.round) + " " + (round.index + 1));
                 html += getStatisticsForRound(Collections.singletonList(round));
             }
             html += BR + bold(get(R.string.training));
@@ -289,14 +288,12 @@ public class HtmlUtils {
         return info.toString();
     }
 
-    @NonNull
-    private static StandardRound addStaticTrainingHeaderInfo(HtmlInfoBuilder info, Training training, List<Round> rounds, boolean scoreboard) {
+    private static void addStaticTrainingHeaderInfo(HtmlInfoBuilder info, Training training, List<Round> rounds, boolean scoreboard) {
         if (scoreboard) {
             getScoreboardOnlyHeaderInfo(info, training, rounds);
         }
 
-        StandardRound standardRound = StandardRound.get(training.standardRoundId);
-        if (standardRound.indoor) {
+        if (training.indoor) {
             info.addLine(R.string.environment, get(R.string.indoor));
         } else {
             info.addLine(R.string.weather, training.getEnvironment().weather.getName());
@@ -320,10 +317,10 @@ public class HtmlUtils {
             info.addLine(R.string.arrow, arrow.name);
         }
 
-        if (standardRound.club != StandardRoundFactory.CUSTOM_PRACTICE) {
+        if (training.standardRoundId != null) {
+            StandardRound standardRound = StandardRound.get(training.standardRoundId);
             info.addLine(R.string.standard_round, standardRound.name);
         }
-        return standardRound;
     }
 
     private static void addDynamicTrainingHeaderInfo(List<Round> rounds, boolean[] equals, HtmlInfoBuilder info) {
@@ -331,7 +328,7 @@ public class HtmlUtils {
             getEqualValues(rounds, equals);
             Round round = rounds.get(0);
             if (equals[0]) {
-                info.addLine(R.string.distance, round.info.distance);
+                info.addLine(R.string.distance, round.distance);
             }
             if (equals[1]) {
                 info.addLine(R.string.target_face, round.getTarget());
@@ -345,7 +342,7 @@ public class HtmlUtils {
         equals[1] = true;
         Round round = rounds.get(0);
         for (Round r : rounds) {
-            equals[0] = r.info.distance.equals(round.info.distance) && equals[0];
+            equals[0] = r.distance.equals(round.distance) && equals[0];
             equals[1] = r.getTarget().equals(round.getTarget()) && equals[1];
         }
     }

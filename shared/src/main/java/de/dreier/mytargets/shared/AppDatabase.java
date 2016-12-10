@@ -42,10 +42,13 @@ public class AppDatabase {
     }
 
     private static void fillStandardRound(DatabaseWrapper db) {
+        db.beginTransaction();
         List<StandardRound> rounds = StandardRoundFactory.initTable();
         for (StandardRound round : rounds) {
             round.insert(db);
         }
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     @Migration(version = 3, database = AppDatabase.class)
@@ -243,7 +246,7 @@ public class AppDatabase {
             HashSet<Long> sid = new HashSet<>();
             StandardRound sr = new StandardRound();
             sr.name = "Practice";
-            sr.club = StandardRoundFactory.CUSTOM_PRACTICE;
+            sr.club = 512;
             if (res.moveToFirst()) {
                 sr.indoor = res.getInt(5) == 1;
                 do {
