@@ -132,35 +132,14 @@ CREATE TABLE IF NOT EXISTS `Round`(
     `targetDiameter` TEXT,
     FOREIGN KEY(`training`) REFERENCES Training(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE
 );
--- TODO
-
-`_id`,`training`,`comment`,`template`,`target`,`scoring_style`
-
-ALTER TABLE ROUND ADD COLUMN `size`;
-UPDATE ROUND
-SET `size` = (SELECT t.size || ' ' || t.target_unit
-  FROM ROUND_TEMPLATE t
-  WHERE template = t._id);
-  ALTER TABLE ROUND ADD COLUMN `roundIndex` INTEGER;
-  ALTER TABLE ROUND ADD COLUMN `shotsPerEnd` INTEGER;
-  ALTER TABLE ROUND ADD COLUMN `endCount` INTEGER;
-  ALTER TABLE ROUND ADD COLUMN `distance` TEXT;
-  UPDATE ROUND
-  SET `roundIndex` = (SELECT t.r_index
-    FROM ROUND_TEMPLATE t
-    WHERE template = t._id);
-  UPDATE ROUND
-  SET `shotsPerEnd` = (SELECT t.passes
-    FROM ROUND_TEMPLATE t
-    WHERE template = t._id);
-  UPDATE ROUND
-  SET `endCount` = (SELECT t.arrows
-    FROM ROUND_TEMPLATE t
-    WHERE template = t._id);
-  UPDATE ROUND
-  SET `distance` = (SELECT t.distance
-    FROM ROUND_TEMPLATE t
-    WHERE template = t._id);
+INSERT INTO `Round`
+    SELECT r.`_id`,r.`training`,t.`r_index`,t.`passes`,
+    CASE WHEN s.club = 512 THEN NULL ELSE t.`arrows` END,
+    t.`distance` || ' ' || t.`unit`, r.`comment`,r.`target`,r.`scoring_style`,
+    t.`size` || ' ' || t.`target_unit`
+    FROM ROUND_OLD r, ROUND_TEMPLATE_OLD t, STANDARD_ROUND_TEMPLATE_OLD s
+    WHERE r.template=t._id
+    AND s._id=t.sid;
 
 -- End migration
 CREATE TABLE IF NOT EXISTS `End`(
