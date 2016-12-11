@@ -35,7 +35,7 @@ public class TranslationUtils {
         ArrayList<String> supportedLanguages = new ArrayList<>();
         Collections.addAll(supportedLanguages, "ca", "cs", "de", "en", "es", "fr", "hu", "it", "iw",
                 "ja", "nl", "no", "pl", "pt", "ru", "sk", "sl", "sv", "tr", "zh");
-        boolean shown = SettingsManager.getTranslationDialogWasShown();
+        boolean shown = SettingsManager.isTranslationDialogShown();
         String longLang = Locale.getDefault().getDisplayLanguage();
         String shortLocale = Locale.getDefault().getLanguage();
         if (!supportedLanguages.contains(shortLocale) && !shown && !shownThisTime) {
@@ -50,7 +50,7 @@ public class TranslationUtils {
                     .setTitle("App translation")
                     .setMessage(s)
                     .setPositiveButton("OK", (dialog, which) -> {
-                        SettingsManager.setTranslationDialogWasShown(true);
+                        SettingsManager.setTranslationDialogShown(true);
                         dialog.dismiss();
                     })
                     .setNegativeButton("Remind me later", (dialog, which) -> {

@@ -30,8 +30,8 @@ import java.util.List;
 
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
-import de.dreier.mytargets.shared.models.db.RoundTemplate;
-import de.dreier.mytargets.shared.models.db.RoundTemplate_Table;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Round_Table;
 import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.SightMark_Table;
 
@@ -54,7 +54,11 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
     @ParcelConstructor
     public Dimension(float value, Unit unit) {
         this.value = value;
-        this.unit = unit;
+        if (value < 0) {
+            this.unit = null;
+        } else {
+            this.unit = unit;
+        }
     }
 
     public Dimension(float value, String unit) {
@@ -81,7 +85,7 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
             distances.add(distance);
         }
 
-        // Get all distances used in ROUND or VISIER table
+        // Get all distances used in Round or SightMark table
         distances.addAll(Stream.of(SQLite
                 .select(SightMark_Table.distance)
                 .from(SightMark.class)
@@ -91,10 +95,10 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
                 .collect(Collectors.toSet()));
 
         distances.addAll(Stream.of(SQLite
-                .select(RoundTemplate_Table.distance)
-                .from(RoundTemplate.class)
+                .select(Round_Table.distance)
+                .from(Round.class)
                 .queryList())
-                .map(roundTemplate -> roundTemplate.distance)
+                .map(round -> round.distance)
                 .filter(d -> d.unit == unit)
                 .collect(Collectors.toSet()));
 

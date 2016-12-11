@@ -54,8 +54,6 @@ public class StandardRoundFactory {
     private static final int NFAA = 32;
     private static final int NFAS = 64;
     private static final int WA = 128;
-    private static final boolean CAT_INDOOR = true;
-    private static final boolean CAT_OUTDOOR = false;
     private static long idCounter;
     private static long roundCounter;
 

@@ -52,13 +52,13 @@ public class BowSelector extends ImageSelectorBase<Bow> {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == BOW_ADD_REQUEST_CODE) {
-            setItemId(0);
+            setItemId(null);
         }
     }
 
-    public void setItemId(long bow) {
+    public void setItemId(Long bow) {
         Bow item = null;
-        if (bow > 0) {
+        if (bow != null) {
             item = Bow.get(bow);
         }
         if (item == null) {

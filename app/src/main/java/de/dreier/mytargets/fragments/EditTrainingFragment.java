@@ -350,7 +350,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
     private void loadRoundDefaultValues() {
         binding.distance.setItem(SettingsManager.getDistance());
-        binding.arrows.setProgress(SettingsManager.getArrowsPerEnd());
+        binding.arrows.setProgress(SettingsManager.getShotsPerEnd());
         binding.target.setItem(SettingsManager.getTarget());
     }
 

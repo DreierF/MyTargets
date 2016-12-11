@@ -91,7 +91,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                 binding.name.setText(R.string.custom_round);
                 // Initialize with default values
                 RoundTemplate round = new RoundTemplate();
-                round.shotsPerEnd = SettingsManager.getArrowsPerEnd();
+                round.shotsPerEnd = SettingsManager.getShotsPerEnd();
                 round.endCount = SettingsManager.getEndCount();
                 round.setTargetTemplate(SettingsManager.getTarget());
                 round.distance = SettingsManager.getDistance();

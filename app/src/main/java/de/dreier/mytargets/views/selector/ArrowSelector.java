@@ -52,13 +52,13 @@ public class ArrowSelector extends ImageSelectorBase<Arrow> {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == ARROW_ADD_REQUEST_CODE) {
-            setItemId(0);
+            setItemId(null);
         }
     }
 
-    public void setItemId(long arrowId) {
+    public void setItemId(Long arrowId) {
         Arrow item = null;
-        if (arrowId > 0) {
+        if (arrowId != null) {
             item = Arrow.get(arrowId);
         }
         if (item == null) {
