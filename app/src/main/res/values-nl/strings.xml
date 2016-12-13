@@ -215,7 +215,7 @@
   <string name="my_arrow">Mijn pijl</string>
   <string name="tip_weight">Tip gewicht</string>
   <string name="arrow_ranking">Pijl ranking</string>
-  <string name="arrow_x_of_set_of_arrows">Pijl %1$d van %2$s</string>
+  <string name="arrow_x_of_set_of_arrows">Arrow %1$s of %2$s</string>
   <string name="display">Beeld</string>
   <string name="print">Afdrukken</string>
   <string name="table">Tabel</string>
@@ -223,7 +223,7 @@
   <string name="show_points_colored">Toon punten gekleurd</string>
   <string name="stabilizer">Stabilisator</string>
   <string name="clicker">Clicker</string>
-  <string name="arrow_number_x">Pijl nummer %d</string>
+  <string name="arrow_number_x">Arrow number %s</string>
   <string name="training_with_standard_round">Training met standaard ronde</string>
   <string name="free_training">Vrije training</string>
   <string name="competition">Competitie</string>
@@ -279,9 +279,8 @@
   <string name="last_backup">Last backup: %s</string>
   <string name="backup_folder">Backup folder</string>
   <string name="recent_backups">Recent backups</string>
-  <string name="open_drive">Open drive</string>
   <string name="dialog_restore_title">Revert to previous version</string>
-  <string name="restore_desc">Restoring the data will override all the existing data with the backup.</string>
+  <string name="restore_desc">Restoring the data will overwrite all the existing data with the backup.</string>
   <string name="backup_details">Backup details</string>
   <string name="restore">Restore</string>
   <string name="backup_location">Backup location</string>

@@ -215,7 +215,7 @@
   <string name="my_arrow">Mi Flecha</string>
   <string name="tip_weight">Peso de punta</string>
   <string name="arrow_ranking">Puntuación de Flechas</string>
-  <string name="arrow_x_of_set_of_arrows">Flecha %1$d de %2$s</string>
+  <string name="arrow_x_of_set_of_arrows">Arrow %1$s of %2$s</string>
   <string name="display">Pantalla</string>
   <string name="print">Imprimir</string>
   <string name="table">Tabla</string>
@@ -223,7 +223,7 @@
   <string name="show_points_colored">Ver puntos de coloreados</string>
   <string name="stabilizer">Estabilizador</string>
   <string name="clicker">Clicker</string>
-  <string name="arrow_number_x">%d número de flecha</string>
+  <string name="arrow_number_x">Arrow number %s</string>
   <string name="training_with_standard_round">Entrenamiento Serie Estándar</string>
   <string name="free_training">Free Training</string>
   <string name="competition">Competición</string>
@@ -279,9 +279,8 @@
   <string name="last_backup">Last backup: %s</string>
   <string name="backup_folder">Backup folder</string>
   <string name="recent_backups">Recent backups</string>
-  <string name="open_drive">Open drive</string>
   <string name="dialog_restore_title">Revert to previous version</string>
-  <string name="restore_desc">Restoring the data will override all the existing data with the backup.</string>
+  <string name="restore_desc">Restoring the data will overwrite all the existing data with the backup.</string>
   <string name="backup_details">Backup details</string>
   <string name="restore">Restore</string>
   <string name="backup_location">Backup location</string>

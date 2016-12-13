@@ -16,13 +16,13 @@
 package de.dreier.mytargets.features.settings.backup.provider;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -45,6 +45,10 @@ import java.util.zip.ZipOutputStream;
 
 import de.dreier.mytargets.managers.CsvExporter;
 import de.dreier.mytargets.shared.AppDatabase;
+import de.dreier.mytargets.shared.models.db.Arrow;
+import de.dreier.mytargets.shared.models.db.Arrow_Table;
+import de.dreier.mytargets.shared.models.db.Bow;
+import de.dreier.mytargets.shared.models.db.Bow_Table;
 import de.dreier.mytargets.shared.utils.FileUtils;
 
 import static android.support.v4.content.FileProvider.getUriForFile;
@@ -102,25 +106,25 @@ public class BackupUtils {
         File file = unzip(context, in);
 
         // Replace database file
-        File db_file = context.getDatabasePath(AppDatabase.DATABASE_FILE_IMPORT);
+        File db_file = context.getDatabasePath(AppDatabase.DATABASE_IMPORT_FILE_NAME);
         FileUtils.copy(file, db_file);
     }
 
     public static String[] getImages() {
         ArrayList<String> list = new ArrayList<>();
-        DatabaseWrapper db = FlowManager.getWritableDatabase(AppDatabase.class);
-        Cursor cur = db.rawQuery("SELECT image FROM BOW WHERE image IS NOT NULL", null);
-        if (cur.moveToFirst()) {
-            list.add(cur.getString(0));
-        }
-        cur.close();
+        list.addAll(Stream.of(SQLite.select(Bow_Table.imageFile)
+                .from(Bow.class)
+                .where(Bow_Table.imageFile.notEq((String) null))
+                .queryList())
+                .map(bow -> bow.imageFile)
+                .collect(Collectors.toList()));
 
-        // Migrate all arrow images
-        cur = db.rawQuery("SELECT image FROM ARROW WHERE image IS NOT NULL", null);
-        if (cur.moveToFirst()) {
-            list.add(cur.getString(0));
-        }
-        cur.close();
+        list.addAll(Stream.of(SQLite.select(Arrow_Table.imageFile)
+                .from(Arrow.class)
+                .where(Arrow_Table.imageFile.notEq((String) null))
+                .queryList())
+                .map(arrow -> arrow.imageFile)
+                .collect(Collectors.toList()));
         return list.toArray(new String[list.size()]);
     }
 
@@ -131,7 +135,7 @@ public class BackupUtils {
             BufferedInputStream origin;
             byte data[] = new byte[BUFFER];
 
-            File db = context.getDatabasePath(AppDatabase.NAME);
+            File db = context.getDatabasePath(AppDatabase.DATABASE_FILE_NAME);
             FileInputStream fi = new FileInputStream(db);
             origin = new BufferedInputStream(fi, BUFFER);
 

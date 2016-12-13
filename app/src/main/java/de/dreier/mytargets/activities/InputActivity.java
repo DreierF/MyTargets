@@ -44,6 +44,7 @@ import de.dreier.mytargets.models.EShowMode;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.NotificationInfo;
+import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.End;
@@ -317,7 +318,7 @@ public class InputActivity extends ChildActivityBase
     private void updateNavigationButtons() {
         binding.prev.setEnabled(data.endIndex > 0);
         binding.next.setEnabled(getCurrentEnd().getId() != null &&
-                (getCurrentRound().maxEndCount == null || data.endIndex + 1 < getCurrentRound().maxEndCount)); // or we don't have an exit condition
+                (getCurrentRound().maxEndCount == null || data.endIndex + 1 < getCurrentRound().maxEndCount));
     }
 
     public void setShowMode(EShowMode showMode) {
@@ -360,16 +361,14 @@ public class InputActivity extends ChildActivityBase
         getCurrentEnd().setShots(changedEnd);
 
         // Set current end score
-        int reachedEndPoints = getCurrentEnd().getReachedPoints(getCurrentRound().getTarget());
-        int maxEndPoints = getCurrentRound().getTarget()
-                .getEndMaxPoints(getCurrentRound().shotsPerEnd);
-        binding.scoreEnd.setText(reachedEndPoints + "/" + maxEndPoints);
+        Score score = getCurrentRound().getTarget().getReachedScore(getCurrentEnd());
+        binding.scoreEnd.setText(score.toString());
 
         // Set current round score
-        int reachedRoundPoints = Stream.of(getEnds())
-                .reduce(0, (sum, end) -> sum + end.getReachedPoints(getCurrentRound().getTarget()));
-        int maxRoundPoints = maxEndPoints * getEnds().size();
-        binding.scoreRound.setText(reachedRoundPoints + "/" + maxRoundPoints);
+        Score reachedRoundScore = Stream.of(getEnds())
+                .map(end -> getCurrentRound().getTarget().getReachedScore(end))
+                .reduce(new Score(), Score::add);
+        binding.scoreRound.setText(reachedRoundScore.toString());
     }
 
     @Override
@@ -381,7 +380,7 @@ public class InputActivity extends ChildActivityBase
         }
 
         // Change round template if end is out of range defined in template
-        if (getCurrentRound().maxEndCount - 1 == data.endIndex) {
+        if (getCurrentRound().getEnds().size() - 1 == data.endIndex) {
             getCurrentRound().addEnd();
         }
 
@@ -405,7 +404,8 @@ public class InputActivity extends ChildActivityBase
         if (getEnds().size() > 0) {
             End lastEnd = lastItem(getEnds());
             for (Shot shot : lastEnd.getShots()) {
-                text += getCurrentRound().getTarget().zoneToString(shot.scoringRing, shot.index) + " ";
+                text += getCurrentRound().getTarget()
+                        .zoneToString(shot.scoringRing, shot.index) + " ";
             }
             text += "\n";
         } else {
@@ -486,8 +486,8 @@ public class InputActivity extends ChildActivityBase
 
             result.standardRound = result.training.getStandardRound();
             result.arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
-            if (result.training.arrow != null) {
-                Arrow arrow = result.training.getArrow();
+            if (result.training.arrowId != null) {
+                Arrow arrow = result.training.getArrowId();
                 if (arrow != null) {
                     result.arrowDiameter = arrow.diameter;
                 }

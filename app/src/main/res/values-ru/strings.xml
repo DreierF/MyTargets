@@ -229,7 +229,7 @@
   <string name="my_arrow">Моя стрела</string>
   <string name="tip_weight">Вес наконечника</string>
   <string name="arrow_ranking">Рейтинг стрел</string>
-  <string name="arrow_x_of_set_of_arrows">Стрела %1$d из %2$s</string>
+  <string name="arrow_x_of_set_of_arrows">Arrow %1$s of %2$s</string>
   <string name="display">Экран</string>
   <string name="print">Распечатать</string>
   <string name="table">Таблица</string>
@@ -237,7 +237,7 @@
   <string name="show_points_colored">Показать окрашенные точки</string>
   <string name="stabilizer">Стабилизатор</string>
   <string name="clicker">Кликер</string>
-  <string name="arrow_number_x">Стрела номер %d</string>
+  <string name="arrow_number_x">Arrow number %s</string>
   <string name="training_with_standard_round">Тренировка со стандартным раундом</string>
   <string name="free_training">Свободная тренировка</string>
   <string name="competition">Соревнование</string>
@@ -293,9 +293,8 @@
   <string name="last_backup">Last backup: %s</string>
   <string name="backup_folder">Backup folder</string>
   <string name="recent_backups">Recent backups</string>
-  <string name="open_drive">Open drive</string>
   <string name="dialog_restore_title">Revert to previous version</string>
-  <string name="restore_desc">Restoring the data will override all the existing data with the backup.</string>
+  <string name="restore_desc">Restoring the data will overwrite all the existing data with the backup.</string>
   <string name="backup_details">Backup details</string>
   <string name="restore">Restore</string>
   <string name="backup_location">Backup location</string>

@@ -78,7 +78,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
                     SelectableZone tuple = new SelectableZone(s.scoringRing,
                             t.getModel().getZone(s.scoringRing),
                             t.zoneToString(s.scoringRing, s.index),
-                            t.getPointsByZone(s.scoringRing, s.index));
+                            t.getScoreByZone(s.scoringRing, s.index));
                     final Integer integer = scoreCount.get(tuple);
                     if (integer != null) {
                         int count = integer + 1;
@@ -177,10 +177,6 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
         return another instanceof End &&
                 getClass().equals(another.getClass()) &&
                 id.equals(((End) another).id);
-    }
-
-    public int getReachedPoints(Target target) {
-        return target.getReachedPoints(this);
     }
 
     @Override

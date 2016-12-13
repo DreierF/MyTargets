@@ -150,7 +150,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.training.setText(train.title);
             date = train.date;
             binding.bow.setItemId(train.bow);
-            binding.arrow.setItemId(train.arrow);
+            binding.arrow.setItemId(train.arrowId);
             binding.standardRound.setItemId(train.standardRoundId);
             binding.environment.setItem(train.getEnvironment());
             setTrainingDate();
@@ -262,6 +262,11 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             training.save();
 
             Round round = training.getRounds().get(0);
+            //TODO remove when using method stubs
+            for (Round r : training.getRounds()) {
+                r.trainingId = training.getId();
+            }
+            training.save();
 
             TrainingFragment.getIntent(training)
                     .withContext(this)
@@ -294,7 +299,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         training.setEnvironment(binding.environment.getSelectedItem());
         training.bow = binding.bow.getSelectedItem() == null ? 0 : binding.bow.getSelectedItem()
                 .getId();
-        training.arrow = binding.arrow.getSelectedItem() == null ? 0 : binding.arrow
+        training.arrowId = binding.arrow.getSelectedItem() == null ? 0 : binding.arrow
                 .getSelectedItem().getId();
         training.timePerEnd = binding.timer.isChecked() ? SettingsManager
                 .getTimerShootTime() : -1;
@@ -302,7 +307,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         training.indoor = binding.indoor.isChecked();
 
         SettingsManager.setBow(training.bow);
-        SettingsManager.setArrow(training.arrow);
+        SettingsManager.setArrow(training.arrowId);
         SettingsManager.setTimerEnabled(binding.timer.isChecked());
         SettingsManager.setArrowNumbersEnabled(training.arrowNumbering);
         SettingsManager.setIndoor(training.indoor);

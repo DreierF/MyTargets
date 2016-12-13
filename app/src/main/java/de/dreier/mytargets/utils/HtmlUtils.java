@@ -119,7 +119,7 @@ public class HtmlUtils {
                 html += "<td>";
                 html += getPoints(configuration, shot, round.getTarget());
                 html += "</td>";
-                int points = round.getTarget().getPointsByZone(shot.scoringRing, shot.index);
+                int points = round.getTarget().getScoreByZone(shot.scoringRing, shot.index);
                 sum += points;
                 carry += points;
             }
@@ -312,7 +312,7 @@ public class HtmlUtils {
             }
         }
 
-        Arrow arrow = Arrow.get(training.arrow);
+        Arrow arrow = Arrow.get(training.arrowId);
         if (arrow != null) {
             info.addLine(R.string.arrow, arrow.name);
         }
@@ -361,7 +361,7 @@ public class HtmlUtils {
             info.addLine(R.string.club, club);
         }
         if (rounds.size() > 1) {
-            info.addLine(R.string.points, training.getReachedPointsFormatted(rounds, true));
+            info.addLine(R.string.points, training.getReachedScore().format(true));
         }
         info.addLine(R.string.date, training.getFormattedDate());
     }

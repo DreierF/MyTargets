@@ -21,9 +21,10 @@ import java.util.List;
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
 import de.dreier.mytargets.shared.utils.LongUtils;
+import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
 
 @Parcel
 @Table(database = AppDatabase.class)
@@ -142,19 +143,11 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
         return ends;
     }
 
-    public int getMaxPoints() {
-        return getTarget().getEndMaxPoints(shotsPerEnd) * maxEndCount;
-    }
-
-    public String getReachedPointsFormatted() {
-        return getReachedPoints() + "/" + getMaxPoints();
-    }
-
-    public int getReachedPoints() {
+    public Score getReachedScore() {
         final Target target = getTarget();
         return Stream.of(getEnds())
-                .map(p -> p.getReachedPoints(target))
-                .reduce(0, (value1, value2) -> value1 + value2);
+                .map(target::getReachedScore)
+                .reduce(new Score(), Score::add);
     }
 
     @Override

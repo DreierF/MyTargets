@@ -39,7 +39,6 @@ import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 
 public abstract class DbTestRuleBase implements TestRule {
@@ -110,7 +109,7 @@ public abstract class DbTestRuleBase implements TestRule {
     }
 
     @NonNull
-    protected Training insertDefaultTraining(StandardRound standardRound, Random generator) {
+    protected Training insertDefaultTraining(Long standardRoundId, Random generator) {
         Training training = new Training();
         training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training);
         training.date = new LocalDate(2016, 4 + generator.nextInt(5), generator.nextInt(29));
@@ -118,9 +117,9 @@ public abstract class DbTestRuleBase implements TestRule {
         training.weather = EWeather.SUNNY;
         training.windSpeed = 1;
         training.windDirection = 0;
-        training.standardRoundId = standardRound.getId();
+        training.standardRoundId = standardRoundId;
         training.bow = null;
-        training.arrow = null;
+        training.arrowId = null;
         training.arrowNumbering = false;
         training.timePerEnd = 0;
         training.insert();

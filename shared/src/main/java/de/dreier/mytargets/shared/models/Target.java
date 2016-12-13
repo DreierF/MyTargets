@@ -91,8 +91,8 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         return model;
     }
 
-    public int getPointsByZone(int zone, int arrow) {
-        return getScoringStyle().getPointsByZone(zone, arrow);
+    public int getScoreByZone(int zone, int arrow) {
+        return getScoringStyle().getScoreByScoringRing(zone, arrow);
     }
 
     @Override
@@ -118,16 +118,8 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         return getModel().getScoringStyle(scoringStyle);
     }
 
-    public int getMaxPoints() {
-        return getScoringStyle().getMaxPoints();
-    }
-
-    public int getEndMaxPoints(int shotsPerEnd) {
-        return getScoringStyle().getEndMaxPoints(shotsPerEnd);
-    }
-
-    public int getReachedPoints(End end) {
-        return getScoringStyle().getReachedPoints(end);
+    public Score getReachedScore(End end) {
+        return getScoringStyle().getReachedScore(end);
     }
 
     @Override

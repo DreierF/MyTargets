@@ -115,13 +115,6 @@ public class StatisticsFragment extends FragmentBase {
         target = Parcels.unwrap(getArguments().getParcelable(ARG_TARGET));
         roundIds = getArguments().getLongArray(ARG_ROUND_IDS);
         animate = getArguments().getBoolean(ARG_ANIMATE);
-        rounds = Stream.of(LongUtils.toList(roundIds))
-                .map(Round::get)
-                .collect(Collectors.toList());
-
-        showLineChart();
-        showPieChart();
-        showDispersionView();
 
         binding.arrows.setHasFixedSize(true);
         adapter = new ArrowStatisticAdapter();
@@ -130,6 +123,31 @@ public class StatisticsFragment extends FragmentBase {
 
         ToolbarUtils.showHomeAsUp(this);
         return binding.getRoot();
+    }
+
+    @NonNull
+    @Override
+    protected LoaderUICallback onLoad(Bundle args) {
+        rounds = Stream.of(LongUtils.toList(roundIds))
+                .map(Round::get)
+                .collect(Collectors.toList());
+
+        List<ArrowStatistic> data = ArrowStatistic.getAll(target, rounds);
+
+        return new LoaderUICallback() {
+            @Override
+            public void applyData() {
+                showLineChart();
+                showPieChart();
+                showDispersionView();
+                binding.distributionChart.invalidate();
+                binding.chartView.invalidate();
+
+                binding.arrowRankingLabel.setVisibility(data.isEmpty() ? View.GONE : View.VISIBLE);
+                Collections.sort(data);
+                adapter.setData(data);
+            }
+        };
     }
 
     private void showDispersionView() {
@@ -145,9 +163,7 @@ public class StatisticsFragment extends FragmentBase {
         binding.dispersionView.setShots(target.getImpactAggregationDrawable(), exactShots);
         binding.dispersionView.setEnabled(false);
         binding.dispersionViewOverlay.setOnClickListener(view -> {
-            ArrowStatistic statistics = new ArrowStatistic();
-            statistics.target = target;
-            statistics.addShots(exactShots);
+            ArrowStatistic statistics = new ArrowStatistic(target, exactShots);
             DispersionPatternActivity.getIntent(statistics)
                     .withContext(this)
                     .start();
@@ -290,20 +306,6 @@ public class StatisticsFragment extends FragmentBase {
                 getString(R.string.misses), missCount);
     }
 
-    @NonNull
-    @Override
-    protected LoaderUICallback onLoad(Bundle args) {
-        List<ArrowStatistic> data = ArrowStatistic.getAll(LongUtils.toList(roundIds));
-        return new LoaderUICallback() {
-            @Override
-            public void applyData() {
-                binding.arrowRankingLabel.setVisibility(data.isEmpty() ? View.GONE : View.VISIBLE);
-                Collections.sort(data);
-                adapter.setData(data);
-            }
-        };
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -387,7 +389,7 @@ public class StatisticsFragment extends FragmentBase {
     private Pair<Integer, DateTime> getPairEndSummary(Target target, End end, LocalDate trainingDate) {
         int actCounter = 0;
         for (Shot s : end.getShots()) {
-            actCounter += target.getPointsByZone(s.scoringRing, s.index);
+            actCounter += target.getScoreByZone(s.scoringRing, s.index);
         }
         return new Pair<>(actCounter, new DateTime(end.saveTime).withDate(trainingDate));
     }

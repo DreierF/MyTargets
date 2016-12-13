@@ -21,6 +21,7 @@ import android.support.test.InstrumentationRegistry;
 import org.joda.time.LocalDate;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import de.dreier.mytargets.R;
@@ -34,7 +35,6 @@ import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.targets.models.WAFull;
-import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
 public class SimpleDbTestRule extends DbTestRuleBase {
@@ -61,15 +61,15 @@ public class SimpleDbTestRule extends DbTestRuleBase {
 
     private void addPracticeTraining(int seed) {
         Random generator = new Random(seed);
-        StandardRound standardRound = getCustomRound();
+        List<RoundTemplate> rounds = getCustomRounds();
 
-        Training training = insertDefaultTraining(standardRound, generator);
+        Training training = insertDefaultTraining(null, generator);
 
-        Round round1 = new Round(standardRound.getRounds().get(0));
+        Round round1 = new Round(rounds.get(0));
         round1.trainingId = training.getId();
         round1.insert();
 
-        Round round2 = new Round(standardRound.getRounds().get(1));
+        Round round2 = new Round(rounds.get(1));
         round2.trainingId = training.getId();
         round2.insert();
 
@@ -89,15 +89,8 @@ public class SimpleDbTestRule extends DbTestRuleBase {
     }
 
     @NonNull
-    private StandardRound getCustomRound() {
-        StandardRound standardRound;
-        standardRound = new StandardRound();
-        standardRound.club = StandardRoundFactory.CUSTOM_PRACTICE;
-        standardRound.name = "Practice";
-        standardRound.indoor = true;
-        standardRound.setRounds(Arrays.asList(getRoundTemplate(0, 50), getRoundTemplate(1, 30)));
-        standardRound.insert();
-        return standardRound;
+    private List<RoundTemplate> getCustomRounds() {
+        return Arrays.asList(getRoundTemplate(0, 50), getRoundTemplate(1, 30));
     }
 
     @NonNull
@@ -115,7 +108,7 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         Random generator = new Random(seed);
         StandardRound standardRound = StandardRound.get(32L);
 
-        Training training = insertDefaultTraining(standardRound, generator);
+        Training training = insertDefaultTraining(standardRound.getId(), generator);
 
         Round round1 = new Round(standardRound.getRounds().get(0));
         round1.trainingId = training.getId();
@@ -151,7 +144,7 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         training.windDirection = 0;
         training.standardRoundId = standardRound.getId();
         training.bow = bow.id;
-        training.arrow = null;
+        training.arrowId = null;
         training.arrowNumbering = false;
         training.timePerEnd = 0;
         training.insert();

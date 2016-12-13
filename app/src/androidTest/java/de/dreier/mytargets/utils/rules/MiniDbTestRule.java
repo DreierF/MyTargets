@@ -45,7 +45,7 @@ public class MiniDbTestRule extends DbTestRuleBase {
         Random generator = new Random(seed);
         StandardRound standardRound = StandardRound.get(32L);
 
-        Training training = insertDefaultTraining(standardRound, generator);
+        Training training = insertDefaultTraining(standardRound.getId(), generator);
 
         Round round1 = new Round(standardRound.getRounds().get(0));
         round1.trainingId = training.getId();

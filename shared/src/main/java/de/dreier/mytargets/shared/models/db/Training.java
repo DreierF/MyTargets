@@ -2,6 +2,7 @@ package de.dreier.mytargets.shared.models.db;
 
 import android.support.annotation.NonNull;
 
+import com.annimon.stream.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
@@ -18,12 +19,12 @@ import org.parceler.Parcel;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter;
 
@@ -53,7 +54,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     @ForeignKey(tableClass = Arrow.class, references = {
             @ForeignKeyReference(columnName = "arrow", columnType = Long.class, foreignKeyColumnName = "_id")},
             onDelete = ForeignKeyAction.SET_NULL)
-    public Long arrow;
+    public Long arrowId;
 
     @Column
     public boolean arrowNumbering;
@@ -140,10 +141,10 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
                 .querySingle();
     }
 
-    public Arrow getArrow() {
+    public Arrow getArrowId() {
         return SQLite.select()
                 .from(Arrow.class)
-                .where(Arrow_Table._id.eq(arrow))
+                .where(Arrow_Table._id.eq(arrowId))
                 .querySingle();
     }
 
@@ -151,19 +152,10 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         return DateFormat.getDateInstance().format(date.toDate());
     }
 
-    public String getReachedPointsFormatted(List<Round> rounds, boolean appendPercent) {
-        int maxPoints = 0;
-        int reachedPoints = 0;
-        for (Round r : rounds) {
-            maxPoints += r.getMaxPoints();
-            reachedPoints += r.getReachedPoints();
-        }
-        if (appendPercent && maxPoints > 0) {
-            return String.format(Locale.ENGLISH, "%d/%d (%d)", reachedPoints, maxPoints,
-                    (reachedPoints * 100 / maxPoints));
-        } else {
-            return String.format(Locale.ENGLISH, "%d/%d", reachedPoints, maxPoints);
-        }
+    public Score getReachedScore() {
+        return Stream.of(getRounds())
+                    .map(Round::getReachedScore)
+                    .reduce(new Score(), Score::add);
     }
 
     @Override

@@ -79,6 +79,12 @@ android {
         regular {}
         screengrab {}
     }
+
+    sourceSets {
+        test {
+            assets.srcDirs = ['src/main/assets']
+        }
+    }
 }
 
 /*

@@ -19,19 +19,19 @@
   <string name="compound_bow">Kladkový luk</string>
   <string name="bare_bow">Holý luk</string>
   <string name="long_bow">Dlouhý luk</string>
-  <string name="horse_bow">Koňský luk</string>
+  <string name="horse_bow">Jezdecký luk</string>
   <string name="yumi">Yumi</string>
   <string name="sunny">Slunečno</string>
   <string name="partly_cloudy">Polojasno</string>
   <string name="cloudy">Zataženo</string>
   <string name="light_rain">Slabý déšť</string>
   <string name="rain">Deštivé</string>
-  <string name="round_desc">%1$s: %2$d × %3$d šipy (%4$s face)</string>
+  <string name="round_desc">%1$s: %2$d × %3$d šípy (%4$s terč)</string>
   <string name="mini">Mini</string>
   <string name="small">Malé</string>
   <string name="medium">Střední</string>
   <string name="large">Velký</string>
-  <string name="xlarge">XLarge</string>
+  <string name="xlarge">Extra Velký</string>
   <string name="unknown">Neznámý</string>
   <string name="wind">Vítr</string>
   <string name="location">Umístění</string>
@@ -49,8 +49,8 @@
   <string name="back">zezadu</string>
   <string name="left">zleva</string>
   <string name="right">zprava</string>
-  <string name="left_front">od přední levý</string>
-  <string name="right_front">od přední pravý</string>
-  <string name="left_back">od zadní levý</string>
-  <string name="right_back">od zadní pravý</string>
+  <string name="left_front">přední levý</string>
+  <string name="right_front">přední pravý</string>
+  <string name="left_back">zadní levý</string>
+  <string name="right_back">zadní pravý</string>
 </resources>

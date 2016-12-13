@@ -157,7 +157,7 @@ public class TargetModelBase implements IIdProvider {
             String zoneText = scoringStyle.zoneToString(i, arrow);
             if (!last.equals(zoneText)) {
                 final int index = i == zones.length ? -1 : i;
-                final int score = scoringStyle.getPointsByZone(i, arrow);
+                final int score = scoringStyle.getScoreByScoringRing(i, arrow);
                 list.add(new SelectableZone(index, getZone(i), zoneText, score));
                 last = zoneText;
             }

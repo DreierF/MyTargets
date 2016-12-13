@@ -215,7 +215,7 @@
   <string name="my_arrow">Min pil</string>
   <string name="tip_weight">Spetsens vikt</string>
   <string name="arrow_ranking">Pil rankning</string>
-  <string name="arrow_x_of_set_of_arrows">Pil %1$d av %2$s</string>
+  <string name="arrow_x_of_set_of_arrows">Arrow %1$s of %2$s</string>
   <string name="display">Skärm</string>
   <string name="print">Skriv ut</string>
   <string name="table">Tabell</string>
@@ -223,7 +223,7 @@
   <string name="show_points_colored">Visa färgade punkter</string>
   <string name="stabilizer">Stablilisator</string>
   <string name="clicker">Klicker</string>
-  <string name="arrow_number_x">Pil nummer %d</string>
+  <string name="arrow_number_x">Arrow number %s</string>
   <string name="training_with_standard_round">Träning med standard runda</string>
   <string name="free_training">Fri träning</string>
   <string name="competition">Tävlande</string>
@@ -279,9 +279,8 @@
   <string name="last_backup">Last backup: %s</string>
   <string name="backup_folder">Backup folder</string>
   <string name="recent_backups">Recent backups</string>
-  <string name="open_drive">Open drive</string>
   <string name="dialog_restore_title">Revert to previous version</string>
-  <string name="restore_desc">Restoring the data will override all the existing data with the backup.</string>
+  <string name="restore_desc">Restoring the data will overwrite all the existing data with the backup.</string>
   <string name="backup_details">Backup details</string>
   <string name="restore">Restore</string>
   <string name="backup_location">Backup location</string>

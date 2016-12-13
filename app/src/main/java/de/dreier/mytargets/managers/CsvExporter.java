@@ -71,13 +71,14 @@ public class CsvExporter {
         // Date
         csv.add(dateFormat.format(t.date.toDate()));
         // StandardRound
-        csv.add(t.getStandardRound().getName());
+        csv.add(t.standardRoundId == null ? get(R.string.practice) : t.getStandardRound()
+                .getName());
         // Indoor
         csv.add(t.indoor ? get(R.string.indoor) : get(R.string.outdoor));
         // Bow
         csv.add(t.getBow() == null ? "" : t.getBow().getName());
         // Arrow
-        csv.add(t.getArrow() == null ? "" : t.getArrow().getName());
+        csv.add(t.getArrowId() == null ? "" : t.getArrowId().getName());
         for (Round r : t.getRounds()) {
             if (!roundIds.contains(r.getId())) {
                 continue;
