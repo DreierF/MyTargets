@@ -25,7 +25,6 @@ import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Tap;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.PickerActions;
-import android.support.test.uiautomator.UiDevice;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -70,10 +69,6 @@ public class UITestBase extends InstrumentedTestBase {
         onView(androidHomeMatcher()).perform(click());
     }
 
-    protected static UiDevice getUiDevice() {
-        return UiDevice.getInstance(getInstrumentation());
-    }
-
     protected static ViewAction clickTarget(final float x, final float y) {
         return new GeneralClickAction(
                 Tap.SINGLE,
@@ -95,11 +90,11 @@ public class UITestBase extends InstrumentedTestBase {
                 isDisplayed());
     }
 
-    public static ViewAction nestedScrollTo() {
+    protected static ViewAction nestedScrollTo() {
         return ViewActions.actionWithAssertions(new NestedScrollToAction());
     }
 
-    public static ViewAssertion assertItemCount(int expectedCount) {
+    protected static ViewAssertion assertItemCount(int expectedCount) {
         return (view, noViewFoundException) -> {
             if (noViewFoundException != null) {
                 throw noViewFoundException;

@@ -71,6 +71,7 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> impl
         mAdapter = new DistanceAdapter(getContext());
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
+
         binding.fab.setOnClickListener(view -> new DistanceInputDialog.Builder(getContext())
                 .setUnit(unit.toString())
                 .setOnClickListener(DistanceGridFragment.this)
@@ -109,7 +110,13 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> impl
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
         final List<Dimension> distances = Dimension.getAll(distance, unit);
-        return () -> mAdapter.setList(distances);
+        return new LoaderUICallback() {
+            @Override
+            public void applyData() {
+                mAdapter.setList(distances);
+                selectItem(binding.recyclerView, distance);
+            }
+        };
     }
 
     private class DistanceAdapter extends ListAdapterBase<Dimension> {

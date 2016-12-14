@@ -148,7 +148,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model> ex
                     }
                     deleted.clear();
                 })
-                .setCallback(
+                .addCallback(
                         new Snackbar.Callback() {
                             @Override
                             public void onDismissed(Snackbar snackbar, int event) {

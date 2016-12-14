@@ -262,11 +262,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             training.save();
 
             Round round = training.getRounds().get(0);
-            //TODO remove when using method stubs
-            for (Round r : training.getRounds()) {
-                r.trainingId = training.getId();
-            }
-            training.save();
 
             TrainingFragment.getIntent(training)
                     .withContext(this)

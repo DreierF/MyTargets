@@ -47,7 +47,7 @@ public class TargetImpactDrawable extends TargetDrawable {
     private Paint paintFill;
     private Map<String, Bitmap> scoresTextCache = new HashMap<>();
     private RectF textRect;
-    private float arrowRadius = 8;
+    private float arrowRadius;
     private boolean shouldDrawArrows = true;
 
     public TargetImpactDrawable(Target target) {

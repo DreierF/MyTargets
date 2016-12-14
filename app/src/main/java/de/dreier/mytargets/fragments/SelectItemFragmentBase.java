@@ -18,6 +18,8 @@ package de.dreier.mytargets.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -54,7 +56,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
     /**
      * Set to true when items are expanded when they are clicked and
      * selected only after hitting them the second time.
-     * */
+     */
     protected boolean useDoubleClickSelection = false;
 
     /**
@@ -64,6 +66,24 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mSelector.setSelectable(true);
+    }
+
+    /**
+     * Searches the recyclerView's adapter for the given item and sets it as selected.
+     * If the position is not visible on the screen it is scrolled into view.
+     *
+     * @param recyclerView RecyclerView instance
+     * @param item Currently selected item
+     */
+    protected void selectItem(RecyclerView recyclerView, T item) { //TODO test if we need to wrap into recyclerView.post {...}
+        int position = mAdapter.getItemPosition(item);
+        mSelector.setSelected(position, item.getId(), true);
+        LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        int first = manager.findFirstCompletelyVisibleItemPosition();
+        int last = manager.findLastCompletelyVisibleItemPosition();
+        if (first > position || last < position) {
+            recyclerView.scrollToPosition(position);
+        }
     }
 
     /**

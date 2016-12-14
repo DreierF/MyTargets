@@ -20,10 +20,9 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,12 +44,14 @@ import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
+import static android.app.Activity.RESULT_OK;
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 public class StandardRoundListFragment extends SelectPureListItemFragmentBase<StandardRound>
         implements View.OnClickListener, SearchView.OnQueryTextListener {
 
     private static final int NEW_STANDARD_ROUND = 1;
+    private static final int EDIT_STANDARD_ROUND = 2;
     private static final String KEY_QUERY = "query";
 
     private StandardRound currentSelection;
@@ -60,16 +61,12 @@ public class StandardRoundListFragment extends SelectPureListItemFragmentBase<St
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         binding.recyclerView.setHasFixedSize(false);
+        binding.fab.setVisibility(View.VISIBLE);
         binding.fab.setOnClickListener(this);
         useDoubleClickSelection = true;
         setHasOptionsMenu(true);
-        return binding.getRoot();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         currentSelection = Parcels.unwrap(getArguments().getParcelable(ITEM));
+        return binding.getRoot();
     }
 
     @NonNull
@@ -77,39 +74,14 @@ public class StandardRoundListFragment extends SelectPureListItemFragmentBase<St
     protected LoaderUICallback onLoad(Bundle args) {
         List<StandardRound> data;
         if (args != null && args.containsKey(KEY_QUERY)) {
-            data = StandardRound.getAll();
-        } else {
             String query = args.getString(KEY_QUERY);
             data = StandardRound.getAllSearch(query);
+        } else {
+            data = StandardRound.getAll();
         }
-        return new LoaderUICallback() {
-            @Override
-            public void applyData() {
-                mAdapter.setList(data);
-                int position = data.indexOf(currentSelection);
-                // Test if our currentSelection has been deleted
-                if (position == -1 && StandardRound.get(currentSelection.getId()) == null) {
-                    currentSelection = data.size() > 0 ? data.get(0) : StandardRound.get(32L);
-                    Intent dataIntent = new Intent();
-                    dataIntent.putExtra(ITEM, Parcels.wrap(currentSelection));
-                    getActivity().setResult(Activity.RESULT_OK, dataIntent);
-                }
-                if (position > -1) {
-                    binding.recyclerView.post(() -> {
-                        mSelector.setSelected(position, currentSelection.getId(), true);
-                        LinearLayoutManager manager = (LinearLayoutManager) binding.recyclerView
-                                .getLayoutManager();
-                        int first = manager.findFirstCompletelyVisibleItemPosition();
-                        int last = manager.findLastCompletelyVisibleItemPosition();
-                        if (first > position || last < position) {
-                            binding.recyclerView.scrollToPosition(position);
-                        }
-                    });
-                } else {
-                    mSelector.clearSelections();
-                }
-
-            }
+        return () -> {
+            mAdapter.setList(data);
+            selectItem(binding.recyclerView, currentSelection);
         };
     }
 
@@ -137,9 +109,10 @@ public class StandardRoundListFragment extends SelectPureListItemFragmentBase<St
     @Override
     public void onLongClick(SelectableViewHolder<StandardRound> holder) {
         StandardRound item = holder.getItem();
-        if (item.club == StandardRoundFactory.CUSTOM /*&& item.usages == 0*/) {
+        if (item.club == StandardRoundFactory.CUSTOM) {
             EditStandardRoundFragment.editIntent(item)
-                    .withContext(this).forResult(NEW_STANDARD_ROUND)
+                    .withContext(this)
+                    .forResult(EDIT_STANDARD_ROUND)
                     .start();
         } else {
             new MaterialDialog.Builder(getContext())
@@ -186,7 +159,15 @@ public class StandardRoundListFragment extends SelectPureListItemFragmentBase<St
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == NEW_STANDARD_ROUND) {
             getActivity().setResult(resultCode, data);
-            getActivity().onBackPressed();
+            finish();
+        } else if (requestCode == EDIT_STANDARD_ROUND) {
+            if (resultCode == RESULT_OK) {
+                currentSelection = Parcels.unwrap(data.getParcelableExtra(ITEM));
+                reloadData();
+            } else if (resultCode == EditStandardRoundFragment.RESULT_STANDARD_ROUND_DELETED) {
+                currentSelection = StandardRound.get(32L);
+                reloadData();
+            }
         }
     }
 

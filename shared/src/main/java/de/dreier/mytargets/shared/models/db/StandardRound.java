@@ -61,7 +61,8 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
         query = "%" + query.replace(' ', '%') + "%";
         return SQLite.select()
                 .from(StandardRound.class)
-                .where(StandardRound_Table.name.like(query)).and(StandardRound_Table.club.notEq(512))
+                .where(StandardRound_Table.name.like(query))
+                .and(StandardRound_Table.club.notEq(512))
                 .queryList();
     }
 
@@ -147,5 +148,25 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
 
     public void setRounds(List<RoundTemplate> rounds) {
         this.rounds = rounds;
+    }
+
+    @Override
+    public void save() {
+        super.save();
+        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
+        for (RoundTemplate s : getRounds()) {
+            s.standardRound = id;
+        }
+        super.save();
+    }
+
+    @Override
+    public void insert() {
+        super.insert();
+        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
+        for (RoundTemplate s : getRounds()) {
+            s.standardRound = id;
+        }
+        super.insert();
     }
 }

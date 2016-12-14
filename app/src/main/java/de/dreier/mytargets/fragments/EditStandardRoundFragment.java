@@ -54,6 +54,8 @@ import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 public class EditStandardRoundFragment extends EditFragmentBase {
 
+    public static final int RESULT_STANDARD_ROUND_DELETED = Activity.RESULT_FIRST_USER;
+
     @State(ParcelsBundler.class)
     List<RoundTemplate> roundTemplateList = new ArrayList<>();
     private StandardRound standardRound;
@@ -87,6 +89,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
         if (savedInstanceState == null) {
             if (standardRound == null) {
+                standardRound = new StandardRound();
                 ToolbarUtils.setTitle(this, R.string.new_round_template);
                 binding.name.setText(R.string.custom_round);
                 // Initialize with default values
@@ -139,6 +142,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
     private void onDeleteStandardRound() {
         standardRound.delete();
+        getActivity().setResult(RESULT_STANDARD_ROUND_DELETED, null);
         finish();
     }
 
@@ -168,7 +172,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         if (resultCode == Activity.RESULT_OK) {
             Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
             final int index = intentData.getInt(SelectorBase.INDEX);
-            final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
+            final Parcelable parcelable = data.getParcelableExtra(ITEM);
             switch (requestCode) {
                 case DistanceSelector.DISTANCE_REQUEST_CODE:
                     roundTemplateList.get(index).distance = Parcels.unwrap(parcelable);

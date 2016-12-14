@@ -92,19 +92,17 @@ public abstract class FragmentBase extends Fragment implements LoaderManager.Loa
     }
 
     protected void reloadData() {
-        if (getLoaderManager().getLoader(LOADER_ID) == null) {
-            getLoaderManager().initLoader(LOADER_ID, null, this).forceLoad();
-        } else {
-            getLoaderManager().restartLoader(LOADER_ID, null, this).forceLoad();
+        if (getLoaderManager().getLoader(LOADER_ID) != null) {
+            getLoaderManager().destroyLoader(LOADER_ID);
         }
+        getLoaderManager().restartLoader(LOADER_ID, null, this).forceLoad();
     }
 
     protected void reloadData(Bundle args) {
-        if (getLoaderManager().getLoader(LOADER_ID) == null) {
-            getLoaderManager().initLoader(LOADER_ID, args, this);
-        } else {
-            getLoaderManager().restartLoader(LOADER_ID, args, this);
+        if (getLoaderManager().getLoader(LOADER_ID) != null) {
+            getLoaderManager().destroyLoader(LOADER_ID);
         }
+        getLoaderManager().restartLoader(LOADER_ID, args, this).forceLoad();
     }
 
     public interface LoaderUICallback {

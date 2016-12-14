@@ -43,7 +43,8 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     public LocalDate date = new LocalDate();
 
     @ForeignKey(tableClass = StandardRound.class, references = {
-            @ForeignKeyReference(columnName = "standardRound", columnType = Long.class, foreignKeyColumnName = "_id")})
+            @ForeignKeyReference(columnName = "standardRound", columnType = Long.class, foreignKeyColumnName = "_id")},
+            onDelete = ForeignKeyAction.SET_NULL)
     public Long standardRoundId;
 
     @ForeignKey(tableClass = Bow.class, references = {
@@ -154,8 +155,8 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
 
     public Score getReachedScore() {
         return Stream.of(getRounds())
-                    .map(Round::getReachedScore)
-                    .reduce(new Score(), Score::add);
+                .map(Round::getReachedScore)
+                .reduce(new Score(), Score::add);
     }
 
     @Override
@@ -164,5 +165,26 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
             return (int) (id - training.id);
         }
         return date.compareTo(training.date);
+    }
+
+
+    @Override
+    public void save() {
+        super.save();
+        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
+        for (Round s : getRounds()) {
+            s.trainingId = id;
+        }
+        super.save();
+    }
+
+    @Override
+    public void insert() {
+        super.insert();
+        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
+        for (Round s : getRounds()) {
+            s.trainingId = id;
+        }
+        super.insert();
     }
 }
