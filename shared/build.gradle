@@ -55,6 +55,6 @@ dependencies {
     provided 'frankiesardo:icepick-processor:3.2.0'
 
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.2.26'
+    testCompile 'org.mockito:mockito-core:2.3.3'
     androidTestCompile "com.android.support.test:runner:$testSupportLibVersion"
 }
