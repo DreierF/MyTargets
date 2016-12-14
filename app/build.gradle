@@ -241,5 +241,5 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso:espresso-core:$espressoVersion"
     androidTestCompile "com.android.support.test.espresso:espresso-contrib:$espressoVersion"
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$espressoVersion"
-    androidTestScreengrabCompile 'tools.fastlane:screengrab:0.3.2'
+    androidTestScreengrabCompile 'tools.fastlane:screengrab:0.5.6'
 }

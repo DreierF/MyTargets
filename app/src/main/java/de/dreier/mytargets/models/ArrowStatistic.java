@@ -62,6 +62,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
 
     public static List<ArrowStatistic> getAll(Target target, List<Round> rounds) {
         return Stream.of(rounds)
+                .filter(r -> r.getTraining().arrowId != null)
                 .groupBy(r -> r.getTraining().arrowId)
                 .flatMap(t -> {
                     Arrow arrow = Arrow.get(t.getKey());

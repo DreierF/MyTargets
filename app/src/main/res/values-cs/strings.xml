@@ -229,7 +229,7 @@
   <string name="my_arrow">Moje šípy</string>
   <string name="tip_weight">Váha hrotu</string>
   <string name="arrow_ranking">Hodnocení šípu</string>
-  <string name="arrow_x_of_set_of_arrows">Arrow %1$s of %2$s</string>
+  <string name="arrow_x_of_set_of_arrows">Šíp %1$s z %2$s</string>
   <string name="display">Zobrazit</string>
   <string name="print">Tisk</string>
   <string name="table">Tabulka</string>
@@ -237,7 +237,7 @@
   <string name="show_points_colored">Zobrazit body barevně</string>
   <string name="stabilizer">Stabilizátor</string>
   <string name="clicker">Klapačka</string>
-  <string name="arrow_number_x">Arrow number %s</string>
+  <string name="arrow_number_x">Šíp číslo %s</string>
   <string name="training_with_standard_round">Trénink - standardní kolo</string>
   <string name="free_training">Volný trénink</string>
   <string name="competition">Soutěž</string>
@@ -294,7 +294,7 @@
   <string name="backup_folder">Složka se zálohou</string>
   <string name="recent_backups">Poslední zálohy</string>
   <string name="dialog_restore_title">Návrat k předchozí verzi</string>
-  <string name="restore_desc">Restoring the data will overwrite all the existing data with the backup.</string>
+  <string name="restore_desc">Obnovení dat ze zálohy přepíše všechna existující data.</string>
   <string name="backup_details">Podrobnosti zálohy</string>
   <string name="restore">Obnovit</string>
   <string name="backup_location">Umístění záloh</string>
