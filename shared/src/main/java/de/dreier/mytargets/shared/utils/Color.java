@@ -52,6 +52,12 @@ public class Color {
     public static final int BLACK = 0xFF000000;
     @ColorInt
     public static final int WHITE = 0xFFFFFFFF;
+    @ColorInt
+    public static final int DBSC_RED = 0xFFDA251C;
+    @ColorInt
+    public static final int DBSC_YELLOW = 0xFFFFF500;
+    @ColorInt
+    public static final int DBSC_BLUE = 0xFF75C5F0;
 
     public static int getStrokeColor(@ColorInt int fillColor) {
         switch (fillColor) {
@@ -70,6 +76,9 @@ public class Color {
             case RED:
             case TURBO_YELLOW:
             case LEMON_YELLOW:
+            case DBSC_BLUE:
+            case DBSC_RED:
+            case DBSC_YELLOW:
                 return fillColor;
             default:
                 return DARK_GRAY;
@@ -84,6 +93,7 @@ public class Color {
             case TURBO_YELLOW:
             case LEMON_YELLOW:
             case YELLOW:
+            case DBSC_YELLOW:
                 return BLACK;
             case ORANGE:
                 return BLACK;

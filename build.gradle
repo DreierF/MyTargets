@@ -21,7 +21,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.2.3'
         classpath 'me.tatarka:gradle-retrolambda:3.4.0'
         classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.0.9'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
@@ -36,12 +36,7 @@ buildscript {
 
 plugins {
     id 'com.mendhak.gradlecrowdin' version '0.0.9'
-    id 'org.standardout.versioneye' version '1.4.0'
     id 'com.github.ben-manes.versions' version '0.13.0'
-}
-
-versioneye {
-    includeSubProjects = true
 }
 
 ext {
