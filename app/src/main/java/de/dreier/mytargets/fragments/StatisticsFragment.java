@@ -69,6 +69,7 @@ import de.dreier.mytargets.managers.dao.PasseDataSource;
 import de.dreier.mytargets.managers.dao.RoundDataSource;
 import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.models.ArrowStatistic;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.SelectableZone;
@@ -152,7 +153,11 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
             binding.dispersionPatternLayout.setVisibility(View.GONE);
             return;
         }
-        binding.dispersionView.setShots(target.getImpactAggregationDrawable(), exactShots);
+        ArrowStatistic stats = new ArrowStatistic();
+        stats.target = target;
+        stats.addShots(exactShots);
+        stats.arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
+        binding.dispersionView.setShots(stats);
         binding.dispersionView.setEnabled(false);
         binding.dispersionViewOverlay.setOnClickListener(view -> {
             ArrowStatistic statistics = new ArrowStatistic();

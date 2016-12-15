@@ -60,7 +60,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
                 .setContentView(this, R.layout.activity_arrow_ranking_details);
 
         statistic = Parcels.unwrap(getIntent().getParcelableExtra(ITEM));
-        binding.dispersionView.setShots(statistic.target.getImpactAggregationDrawable(), statistic.shots);
+        binding.dispersionView.setShots(statistic);
 
         ToolbarUtils.showHomeAsUp(this);
         if (statistic.arrowName != null) {
@@ -103,7 +103,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
 
                 // Build and fire intent to ask for share provider
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("*/*");
+                shareIntent.setType("image/png");
                 String packageName = getApplicationContext().getPackageName();
                 String authority = packageName + ".easyphotopicker.fileprovider";
                 shareIntent.putExtra(Intent.EXTRA_STREAM, getUriForFile(DispersionPatternActivity.this, authority, f));

@@ -22,6 +22,7 @@ import org.parceler.Parcel;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
 
@@ -39,6 +40,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
     public float maxPointsSum = 0;
     public Target target;
     public ArrayList<Shot> shots = new ArrayList<>();
+    public Dimension arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
 
     public float avgX() {
         return xSum / count;
