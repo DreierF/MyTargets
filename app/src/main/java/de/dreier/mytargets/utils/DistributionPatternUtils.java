@@ -17,7 +17,7 @@ package de.dreier.mytargets.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.PorterDuff;
+import android.graphics.Color;
 import android.graphics.Rect;
 
 import java.io.File;
@@ -25,7 +25,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.models.ArrowStatistic;
+import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactDrawable;
 
 public class DistributionPatternUtils {
@@ -55,10 +57,12 @@ public class DistributionPatternUtils {
     public static Bitmap getDistributionPatternBitmap(int size, ArrowStatistic statistic) {
         Bitmap b = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(b);
-        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+        canvas.drawColor(Color.WHITE);
 
-        TargetImpactDrawable target = statistic.target.getImpactAggregationDrawable();
+        TargetImpactDrawable target = new TargetImpactAggregationDrawable(statistic.target);
         target.setShots(statistic.shots);
+        target.setArrowDiameter(statistic.arrowDiameter,
+                SettingsManager.getInputArrowDiameterScale());
         target.setBounds(new Rect(0, 0, size, size));
         target.draw(canvas);
         return b;
