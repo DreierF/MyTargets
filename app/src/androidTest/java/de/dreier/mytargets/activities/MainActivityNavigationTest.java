@@ -44,9 +44,9 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.Visibility.INVISIBLE;
+import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
@@ -55,7 +55,6 @@ import static de.dreier.mytargets.OrientationChangeAction.orientationLandscape;
 import static de.dreier.mytargets.OrientationChangeAction.orientationPortrait;
 import static de.dreier.mytargets.PermissionGranter.allowPermissionsIfNeeded;
 import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.endsWith;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityNavigationTest extends UITestBase {
@@ -96,8 +95,9 @@ public class MainActivityNavigationTest extends UITestBase {
         // Does new free training work
         onView(matchFab()).perform(click());
         onView(allOf(withId(R.id.fab1), withParent(withId(R.id.fab)))).perform(click());
-        intended(allOf(hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
-                hasAction(EditTrainingFragment.CREATE_FREE_TRAINING_ACTION)));
+        intended(
+                allOf(hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
+                        hasAction(EditTrainingFragment.CREATE_FREE_TRAINING_ACTION)));
         allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
         pressBack();
 
@@ -121,16 +121,13 @@ public class MainActivityNavigationTest extends UITestBase {
         onView(allOf(withText(R.string.arrow), isDisplayed())).perform(click());
         onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
         intended(hasComponent(SimpleFragmentActivityBase.EditArrowActivity.class.getName()));
-        pressBack();
     }
 
     @Test
     public void addTraining() throws InterruptedException {
         onView(withId(R.id.fab1)).check(matches(withEffectiveVisibility(INVISIBLE)));
-        onView(allOf(withParent(withId(R.id.fab)), withClassName(endsWith("ImageView")),
-                isDisplayed()))
-                .perform(click());
-        onView(withId(R.id.fab1)).perform(click());
+        onView(matchFab()).perform(click());
+        onView(allOf(withId(R.id.fab1), hasSibling(matchFab()))).perform(click());
         allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
         clickActionBarItem(R.id.action_save, R.string.save);
         onView(isRoot()).perform(orientationLandscape(activityTestRule));

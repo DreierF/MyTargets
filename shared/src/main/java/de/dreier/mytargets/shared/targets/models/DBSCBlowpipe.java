@@ -41,8 +41,7 @@ public class DBSCBlowpipe extends TargetModelBase {
                 new ScoringStyle(false, 7, 5, 3)
         };
         diameters = new Dimension[]{
-                new Dimension(10, CENTIMETER),
-                new Dimension(20, CENTIMETER)
+                new Dimension(18, CENTIMETER)
         };
     }
 }
