@@ -11,11 +11,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.managers.SettingsManager;
 
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -28,6 +30,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static de.dreier.mytargets.PermissionGranter.allowPermissionsIfNeeded;
 import static de.dreier.mytargets.utils.matchers.MatcherUtils.matchToolbarTitle;
 import static de.dreier.mytargets.utils.matchers.MatcherUtils.withRecyclerView;
 import static junit.framework.Assert.assertEquals;
@@ -42,12 +45,14 @@ public class SettingsActivityTest extends UITestBase {
 
     @Before
     public void setUp() {
+        ApplicationInstance.getSharedPreferences()
+                .edit()
+                .clear()
+                .apply();
         SettingsManager.setInputTargetZoom(3.0f);
         SettingsManager.setInputArrowDiameterScale(1.0f);
         SettingsManager.setBackupLocation(EBackupLocation.INTERNAL_STORAGE);
         SettingsManager.setBackupAutomaticallyEnabled(false);
-        //TODO reset settings
-        //TODO move really old backup to internal storage and try to restore it
     }
 
     @Test
@@ -127,6 +132,7 @@ public class SettingsActivityTest extends UITestBase {
         pressBack();
 
         clickOnPreference(5);
+        allowPermissionsIfNeeded(getActivity(), WRITE_EXTERNAL_STORAGE);
         matchToolbarTitle(getActivity().getString(R.string.backup_action));
         pressBack();
 
@@ -148,8 +154,6 @@ public class SettingsActivityTest extends UITestBase {
                 .perform(scrollTo(), replaceText(text), closeSoftKeyboard());
 
         onView(allOf(withId(android.R.id.button1), withText(android.R.string.ok),
-                withParent(allOf(withId(R.id.buttonPanel),
-                        withParent(withId(R.id.parentPanel)))),
                 isDisplayed())).perform(click());
     }
 
