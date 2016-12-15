@@ -22,6 +22,7 @@ import de.dreier.mytargets.shared.targets.models.ASA3D;
 import de.dreier.mytargets.shared.targets.models.ASA3D14;
 import de.dreier.mytargets.shared.targets.models.Beursault;
 import de.dreier.mytargets.shared.targets.models.DAIR3D;
+import de.dreier.mytargets.shared.targets.models.DBSCBlowpipe;
 import de.dreier.mytargets.shared.targets.models.HitOrMiss;
 import de.dreier.mytargets.shared.targets.models.IBO3D;
 import de.dreier.mytargets.shared.targets.models.IFAAAnimal;
@@ -82,6 +83,7 @@ public class TargetFactory {
         list.add(new WAField3Spot());
         list.add(new WADanage3Spot());
         list.add(new WADanage6Spot());
+        list.add(new DBSCBlowpipe());
     }
 
     public static List<TargetModelBase> getList() {
