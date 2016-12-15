@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.analysis.aggregation.average.Average;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Round;
@@ -42,6 +43,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
     public Target target;
     public ArrayList<Shot> shots = new ArrayList<>();
     public Integer reachedScore;
+    public Dimension arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
 
     public ArrowStatistic() {
     }

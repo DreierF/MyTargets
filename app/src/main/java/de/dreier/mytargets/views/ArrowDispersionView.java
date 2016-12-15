@@ -23,10 +23,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.util.List;
-
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.db.Shot;
+import de.dreier.mytargets.models.ArrowStatistic;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
 
 public class ArrowDispersionView extends View implements View.OnTouchListener {
@@ -78,10 +77,12 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         return true;
     }
 
-    public void setShots(TargetImpactAggregationDrawable target, List<Shot> shots) {
-        this.target = target;
+    public void setShots(ArrowStatistic statistic) {
+        this.target = statistic.target.getImpactAggregationDrawable();
+        // TODO merge all these setters into a single setArrowStatistic(stats)
         this.target.setAggregationStrategy(SettingsManager.getAggregationStrategy());
-        this.target.setShots(shots);
+        this.target.setShots(statistic.shots);
+        this.target.setArrowDiameter(statistic.arrowDiameter, SettingsManager.getInputArrowDiameterScale());
         this.target.setCallback(this);
         invalidate();
     }
@@ -89,7 +90,7 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
     @Override
     public void invalidateDrawable(@NonNull Drawable drawable) {
         super.invalidateDrawable(drawable);
-        invalidate();
+        post(this::invalidate);
     }
 
     @Override

@@ -61,6 +61,7 @@ import de.dreier.mytargets.activities.DispersionPatternActivity;
 import de.dreier.mytargets.databinding.FragmentStatisticsBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
 import de.dreier.mytargets.models.ArrowStatistic;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.End;
@@ -160,7 +161,11 @@ public class StatisticsFragment extends FragmentBase {
             binding.dispersionPatternLayout.setVisibility(View.GONE);
             return;
         }
-        binding.dispersionView.setShots(target.getImpactAggregationDrawable(), exactShots);
+        ArrowStatistic stats = new ArrowStatistic();
+        stats.target = target;
+        stats.addShots(exactShots);
+        stats.arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
+        binding.dispersionView.setShots(stats);
         binding.dispersionView.setEnabled(false);
         binding.dispersionViewOverlay.setOnClickListener(view -> {
             ArrowStatistic statistics = new ArrowStatistic(target, exactShots);
