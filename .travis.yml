@@ -30,8 +30,12 @@ before_script:
 - adb shell settings put global window_animation_scale 0
 - adb shell settings put global transition_animation_scale 0
 - adb shell settings put global animator_duration_scale 0
+- ./gradlew clean
+- mkdir -p app/build/reports/androidTests/connected/flavors/REGULAR/
+- adb logcat -c
+- adb logcat > app/build/reports/androidTests/connected/flavors/REGULAR/logcat.log
 script:
-- ./gradlew clean assembleRegularRelease
+- ./gradlew assembleRegularRelease
 - adb shell input keyevent 82 &
 - ./gradlew createRegularDebugCoverageReport
 after_success:
