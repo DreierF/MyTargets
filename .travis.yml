@@ -33,7 +33,7 @@ before_script:
 - ./gradlew clean
 - mkdir -p app/build/reports/androidTests/connected/flavors/REGULAR/
 - adb logcat -c
-- adb logcat > app/build/reports/androidTests/connected/flavors/REGULAR/logcat.log
+- adb logcat > app/build/reports/androidTests/connected/flavors/REGULAR/logcat.log &
 script:
 - ./gradlew assembleRegularRelease
 - adb shell input keyevent 82 &
