@@ -30,6 +30,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.util.LongSparseArray;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -92,6 +93,8 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         getLoaderManager().initLoader(0, getIntent().getExtras(), this).forceLoad();
     }
 
+    private static final String TAG = "StatisticsActivity";
+
     @Override
     public Loader<List<Pair<Training, Round>>> onCreateLoader(int i, Bundle bundle) {
         final long[] roundIds = getIntent().getLongArrayExtra(ROUND_IDS);
@@ -99,7 +102,12 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
             @Override
             public List<Pair<Training, Round>> loadInBackground() {
                 final TrainingDataSource trainingDataSource = new TrainingDataSource();
+                Log.d(TAG, "loadInBackground: ids "+ Utils.toList(roundIds));
                 final List<Round> rounds = new RoundDataSource().getAll(roundIds);
+                Log.d(TAG, "loadInBackground: rounds "+ rounds);
+                Log.d(TAG, "loadInBackground: trainingId "+ Stream.of(rounds)
+                        .map(round -> round.trainingId)
+                        .collect(Collectors.toList()));
                 LongSparseArray<Training> trainingsMap = new LongSparseArray<>();
                 Stream.of(rounds).map(round -> round.trainingId)
                         .distinct()
