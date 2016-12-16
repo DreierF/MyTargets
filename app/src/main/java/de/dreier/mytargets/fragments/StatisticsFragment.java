@@ -161,9 +161,7 @@ public class StatisticsFragment extends FragmentBase {
             binding.dispersionPatternLayout.setVisibility(View.GONE);
             return;
         }
-        ArrowStatistic stats = new ArrowStatistic();
-        stats.target = target;
-        stats.addShots(exactShots);
+        ArrowStatistic stats = new ArrowStatistic(target, exactShots);
         stats.arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
         binding.dispersionView.setShots(stats);
         binding.dispersionView.setEnabled(false);
