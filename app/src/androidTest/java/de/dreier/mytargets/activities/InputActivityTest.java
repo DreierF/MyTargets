@@ -56,7 +56,7 @@ public class InputActivityTest extends UITestBase {
             Random generator = new Random(3435);
             StandardRound standardRound = StandardRound.get(32L);
 
-            Training training = insertDefaultTraining(standardRound.getId(), generator);
+            Training training = saveDefaultTraining(standardRound.getId(), generator);
 
             round1 = new Round(standardRound.getRounds().get(0));
             round1.trainingId = training.getId();

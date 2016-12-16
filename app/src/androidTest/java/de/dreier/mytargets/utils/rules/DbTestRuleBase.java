@@ -21,7 +21,7 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 
-import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.config.FlowManager;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -31,11 +31,11 @@ import org.junit.runners.model.Statement;
 
 import java.util.Random;
 
+import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Thumbnail;
-import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
@@ -53,7 +53,8 @@ public abstract class DbTestRuleBase implements TestRule {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                deleteAll();
+                FlowManager.reset();
+                ApplicationInstance.initFlowManager(context);
                 addDatabaseContent();
                 base.evaluate();
             }
@@ -84,14 +85,6 @@ public abstract class DbTestRuleBase implements TestRule {
 
     protected abstract void addDatabaseContent();
 
-    private void deleteAll() {
-        SQLite.delete(Training.class).execute();
-        SQLite.delete(Round.class).execute();
-        SQLite.delete(Bow.class).execute();
-        SQLite.delete(End.class).execute();
-        SQLite.delete(Arrow.class).execute();
-    }
-
     @NonNull
     protected Bow addBow() {
         Bow bow = new Bow();
@@ -104,12 +97,12 @@ public abstract class DbTestRuleBase implements TestRule {
         Bitmap bitmap = BitmapFactory
                 .decodeResource(context.getResources(), R.drawable.recurve_bow);
         bow.thumbnail = new Thumbnail(bitmap);
-        bow.insert();
+        bow.save();
         return bow;
     }
 
     @NonNull
-    protected Training insertDefaultTraining(Long standardRoundId, Random generator) {
+    protected Training saveDefaultTraining(Long standardRoundId, Random generator) {
         Training training = new Training();
         training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training);
         training.date = new LocalDate(2016, 4 + generator.nextInt(5), generator.nextInt(29));
@@ -122,7 +115,7 @@ public abstract class DbTestRuleBase implements TestRule {
         training.arrowId = null;
         training.arrowNumbering = false;
         training.timePerEnd = 0;
-        training.insert();
+        training.save();
         return training;
     }
 }

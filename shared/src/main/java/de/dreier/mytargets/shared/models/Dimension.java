@@ -80,6 +80,8 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
     public static List<Dimension> getAll(Dimension distance, Unit unit) {
         HashSet<Dimension> distances = new HashSet<>();
 
+        distances.add(new Dimension(-1, (Unit) null));
+
         // Add currently selected distance to list
         if (distance.unit == unit) {
             distances.add(distance);

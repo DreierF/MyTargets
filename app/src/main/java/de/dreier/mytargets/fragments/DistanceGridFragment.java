@@ -98,7 +98,7 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> impl
             this.listener = (OnItemSelectedListener) activity;
         }
         Assert.assertNotNull(listener);
-// TODO check if this works or is necessary
+        // TODO check if this works or is necessary
     }
 
     @Override

@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.raizlabs.android.dbflow.config.FlowConfig;
@@ -89,7 +90,12 @@ public class ApplicationInstance extends SharedApplicationInstance {
             }
             oldDatabasePath.renameTo(newDatabasePath);
         }
-        FlowManager.init(new FlowConfig.Builder(this)
+        final ApplicationInstance context = this;
+        initFlowManager(context);
+    }
+
+    public static void initFlowManager(Context context) {
+        FlowManager.init(new FlowConfig.Builder(context)
                 .openDatabasesOnInit(true)
                 .build());
     }

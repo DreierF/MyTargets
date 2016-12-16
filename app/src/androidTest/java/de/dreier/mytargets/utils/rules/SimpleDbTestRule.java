@@ -63,29 +63,29 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         Random generator = new Random(seed);
         List<RoundTemplate> rounds = getCustomRounds();
 
-        Training training = insertDefaultTraining(null, generator);
+        Training training = saveDefaultTraining(null, generator);
 
         Round round1 = new Round(rounds.get(0));
         round1.trainingId = training.getId();
-        round1.insert();
+        round1.save();
 
         Round round2 = new Round(rounds.get(1));
         round2.trainingId = training.getId();
-        round2.insert();
+        round2.save();
 
-        randomEnd(training, round1, 6, generator, 0).insert();
-        randomEnd(training, round1, 6, generator, 1).insert();
-        randomEnd(training, round1, 6, generator, 2).insert();
-        randomEnd(training, round1, 6, generator, 3).insert();
-        randomEnd(training, round1, 6, generator, 4).insert();
-        randomEnd(training, round1, 6, generator, 5).insert();
+        randomEnd(training, round1, 6, generator, 0).save();
+        randomEnd(training, round1, 6, generator, 1).save();
+        randomEnd(training, round1, 6, generator, 2).save();
+        randomEnd(training, round1, 6, generator, 3).save();
+        randomEnd(training, round1, 6, generator, 4).save();
+        randomEnd(training, round1, 6, generator, 5).save();
 
-        randomEnd(training, round2, 6, generator, 0).insert();
-        randomEnd(training, round2, 6, generator, 1).insert();
-        randomEnd(training, round2, 6, generator, 2).insert();
-        randomEnd(training, round2, 6, generator, 3).insert();
-        randomEnd(training, round2, 6, generator, 4).insert();
-        randomEnd(training, round2, 6, generator, 5).insert();
+        randomEnd(training, round2, 6, generator, 0).save();
+        randomEnd(training, round2, 6, generator, 1).save();
+        randomEnd(training, round2, 6, generator, 2).save();
+        randomEnd(training, round2, 6, generator, 3).save();
+        randomEnd(training, round2, 6, generator, 4).save();
+        randomEnd(training, round2, 6, generator, 5).save();
     }
 
     @NonNull
@@ -108,29 +108,29 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         Random generator = new Random(seed);
         StandardRound standardRound = StandardRound.get(32L);
 
-        Training training = insertDefaultTraining(standardRound.getId(), generator);
+        Training training = saveDefaultTraining(standardRound.getId(), generator);
 
         Round round1 = new Round(standardRound.getRounds().get(0));
         round1.trainingId = training.getId();
-        round1.insert();
+        round1.save();
 
         Round round2 = new Round(standardRound.getRounds().get(1));
         round2.trainingId = training.getId();
-        round2.insert();
+        round2.save();
 
-        randomEnd(training, round1, 6, generator, 0).insert();
-        randomEnd(training, round1, 6, generator, 1).insert();
-        randomEnd(training, round1, 6, generator, 2).insert();
-        randomEnd(training, round1, 6, generator, 3).insert();
-        randomEnd(training, round1, 6, generator, 4).insert();
-        randomEnd(training, round1, 6, generator, 5).insert();
+        randomEnd(training, round1, 6, generator, 0).save();
+        randomEnd(training, round1, 6, generator, 1).save();
+        randomEnd(training, round1, 6, generator, 2).save();
+        randomEnd(training, round1, 6, generator, 3).save();
+        randomEnd(training, round1, 6, generator, 4).save();
+        randomEnd(training, round1, 6, generator, 5).save();
 
-        randomEnd(training, round2, 6, generator, 0).insert();
-        randomEnd(training, round2, 6, generator, 1).insert();
-        randomEnd(training, round2, 6, generator, 2).insert();
-        randomEnd(training, round2, 6, generator, 3).insert();
-        randomEnd(training, round2, 6, generator, 4).insert();
-        randomEnd(training, round2, 6, generator, 5).insert();
+        randomEnd(training, round2, 6, generator, 0).save();
+        randomEnd(training, round2, 6, generator, 1).save();
+        randomEnd(training, round2, 6, generator, 2).save();
+        randomEnd(training, round2, 6, generator, 3).save();
+        randomEnd(training, round2, 6, generator, 4).save();
+        randomEnd(training, round2, 6, generator, 5).save();
     }
 
     private void addFullTraining(Bow bow) {
@@ -147,28 +147,28 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         training.arrowId = null;
         training.arrowNumbering = false;
         training.timePerEnd = 0;
-        training.insert();
+        training.save();
 
         Round round1 = new Round(standardRound.getRounds().get(0));
         round1.trainingId = training.getId();
-        round1.insert();
+        round1.save();
 
         Round round2 = new Round(standardRound.getRounds().get(1));
         round2.trainingId = training.getId();
-        round2.insert();
+        round2.save();
 
-        buildEnd(round1, 1, 1, 2, 3, 3, 4).insert();
-        buildEnd(round1, 0, 0, 1, 2, 2, 3).insert();
-        buildEnd(round1, 1, 1, 1, 3, 4, 4).insert();
-        buildEnd(round1, 0, 1, 1, 1, 2, 3).insert();
-        buildEnd(round1, 1, 2, 3, 3, 4, 5).insert();
-        buildEnd(round1, 1, 2, 2, 3, 3, 3).insert();
+        buildEnd(round1, 1, 1, 2, 3, 3, 4).save();
+        buildEnd(round1, 0, 0, 1, 2, 2, 3).save();
+        buildEnd(round1, 1, 1, 1, 3, 4, 4).save();
+        buildEnd(round1, 0, 1, 1, 1, 2, 3).save();
+        buildEnd(round1, 1, 2, 3, 3, 4, 5).save();
+        buildEnd(round1, 1, 2, 2, 3, 3, 3).save();
 
-        buildEnd(round2, 1, 2, 2, 3, 4, 5).insert();
-        buildEnd(round2, 0, 0, 1, 2, 2, 3).insert();
-        buildEnd(round2, 0, 1, 2, 2, 2, 3).insert();
-        buildEnd(round2, 1, 1, 2, 3, 4, 4).insert();
-        buildEnd(round2, 1, 2, 2, 3, 3, 3).insert();
-        buildEnd(round2, 1, 2, 2, 3, 3, 4).insert();
+        buildEnd(round2, 1, 2, 2, 3, 4, 5).save();
+        buildEnd(round2, 0, 0, 1, 2, 2, 3).save();
+        buildEnd(round2, 0, 1, 2, 2, 2, 3).save();
+        buildEnd(round2, 1, 1, 2, 3, 4, 4).save();
+        buildEnd(round2, 1, 2, 2, 3, 3, 3).save();
+        buildEnd(round2, 1, 2, 2, 3, 3, 4).save();
     }
 }

@@ -27,7 +27,7 @@ import de.dreier.mytargets.shared.models.db.Training;
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 
 public class CsvExporter {
-    private static final DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD", Locale.US);
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void exportAll(File file, List<Long> roundIds) throws IOException {

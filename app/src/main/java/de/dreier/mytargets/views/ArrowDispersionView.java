@@ -24,7 +24,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import de.dreier.mytargets.managers.SettingsManager;
-import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.models.ArrowStatistic;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
 
