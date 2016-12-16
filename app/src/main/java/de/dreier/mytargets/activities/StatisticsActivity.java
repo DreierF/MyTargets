@@ -65,6 +65,7 @@ import icepick.State;
 
 public class StatisticsActivity extends ChildActivityBase implements LoaderManager.LoaderCallbacks<List<Pair<Training, Round>>> {
 
+    private static final String TAG = "StatisticsActivity";
     private static final String ROUND_IDS = "round_ids";
 
     @State
@@ -93,8 +94,6 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         getLoaderManager().initLoader(0, getIntent().getExtras(), this).forceLoad();
     }
 
-    private static final String TAG = "StatisticsActivity";
-
     @Override
     public Loader<List<Pair<Training, Round>>> onCreateLoader(int i, Bundle bundle) {
         final long[] roundIds = getIntent().getLongArrayExtra(ROUND_IDS);
@@ -102,12 +101,13 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
             @Override
             public List<Pair<Training, Round>> loadInBackground() {
                 final TrainingDataSource trainingDataSource = new TrainingDataSource();
-                Log.d(TAG, "loadInBackground: ids "+ Utils.toList(roundIds));
+                Log.d(TAG, "loadInBackground: ids " + Utils.toList(roundIds));
                 final List<Round> rounds = new RoundDataSource().getAll(roundIds);
-                Log.d(TAG, "loadInBackground: rounds "+ rounds);
-                Log.d(TAG, "loadInBackground: trainingId "+ Stream.of(rounds)
+                Log.d(TAG, "loadInBackground: rounds " + rounds);
+                final List<Long> collect = Stream.of(rounds)
                         .map(round -> round.trainingId)
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList());
+                Log.d(TAG, "loadInBackground: trainingId " + collect);
                 LongSparseArray<Training> trainingsMap = new LongSparseArray<>();
                 Stream.of(rounds).map(round -> round.trainingId)
                         .distinct()
