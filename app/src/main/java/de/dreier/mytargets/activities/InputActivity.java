@@ -149,7 +149,7 @@ public class InputActivity extends ChildActivityBase
         final MenuItem eye = menu.findItem(R.id.action_show);
         final MenuItem showSidebar = menu.findItem(R.id.action_show_sidebar);
         final MenuItem grouping = menu.findItem(R.id.action_grouping);
-        if (targetView == null) {
+        if (targetView == null || getEnds().size() == 0) {
             eye.setVisible(false);
             showSidebar.setVisible(false);
             grouping.setVisible(false);
