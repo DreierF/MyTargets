@@ -12,6 +12,11 @@ android:
   - extra-google-m2repository
   licenses:
   - .+
+sudo: false
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
 env:
   global:
   - ADB_INSTALL_TIMEOUT=8
