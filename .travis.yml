@@ -12,11 +12,8 @@ android:
   - extra-google-m2repository
   licenses:
   - .+
-sudo: false
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
+# Needed to get java 8u51 because 8u31, which is available from sudo: false causes compile errors
+sudo: required
 env:
   global:
   - ADB_INSTALL_TIMEOUT=8
