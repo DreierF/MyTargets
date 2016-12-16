@@ -30,8 +30,10 @@ before_script:
 - adb shell settings put global window_animation_scale 0
 - adb shell settings put global transition_animation_scale 0
 - adb shell settings put global animator_duration_scale 0
+- ./gradlew clean
+- adb logcat -c
 script:
-- ./gradlew clean assembleRegularRelease
+- ./gradlew assembleRegularRelease
 - adb shell input keyevent 82 &
 - ./gradlew createRegularDebugCoverageReport
 after_success:
@@ -48,6 +50,7 @@ after_success:
 after_failure:
 - chmod +x dropbox_uploader.sh
 - cd app/build/reports/androidTests/connected/flavors/REGULAR/
+- adb logcat -d 2>&1 | tee logcat.log
 - zip -r reports.zip .
 - cd ../../../../../../..
 - ./dropbox_uploader.sh upload app/build/reports/androidTests/connected/flavors/REGULAR/reports.zip /Reports/$TRAVIS_JOB_NUMBER.zip
