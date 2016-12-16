@@ -44,6 +44,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityStatisticsBinding;
+import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
 import de.dreier.mytargets.fragments.StatisticsFragment;
 import de.dreier.mytargets.managers.dao.ArrowDataSource;
 import de.dreier.mytargets.managers.dao.BowDataSource;
@@ -57,7 +58,6 @@ import de.dreier.mytargets.shared.models.Training;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
-import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
 import de.dreier.mytargets.views.ChipGroup;
 import icepick.Icepick;
 import icepick.State;

@@ -35,7 +35,7 @@ import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.SightSetting;
 import de.dreier.mytargets.utils.DataLoader;
 import de.dreier.mytargets.utils.DividerItemDecoration;
-import de.dreier.mytargets.utils.HTMLInfoBuilder;
+import de.dreier.mytargets.utils.HtmlInfoBuilder;
 import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
@@ -119,7 +119,7 @@ public class BowListFragment extends EditableListFragment<Bow> {
             binding.image.setImageDrawable(mItem.getDrawable());
             binding.details.setVisibility(View.VISIBLE);
 
-            HTMLInfoBuilder info = new HTMLInfoBuilder();
+            HtmlInfoBuilder info = new HtmlInfoBuilder();
             info.addLine(R.string.bow_type, mItem.type);
             if (!mItem.brand.trim().isEmpty()) {
                 info.addLine(R.string.brand, mItem.brand);

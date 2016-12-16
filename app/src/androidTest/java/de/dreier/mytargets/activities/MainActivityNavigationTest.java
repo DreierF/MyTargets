@@ -81,18 +81,24 @@ public class MainActivityNavigationTest extends UITestBase {
         onView(withText(R.string.my_targets)).check(matches(isDisplayed()));
     }
 
+    // TODO test with existing trainings, bows and arrows
+
     @Test
-    public void navigationTest() {
-        // Do settings work
+    public void openSettings() {
         clickActionBarItem(R.id.action_preferences, R.string.preferences);
         intended(hasComponent(SettingsActivity.class.getName()));
         pressBack();
+    }
 
+    @Test
+    public void openStatistics() {
         clickActionBarItem(R.id.action_statistics, R.string.statistic);
         intended(hasComponent(StatisticsActivity.class.getName()));
         pressBack();
+    }
 
-        // Does new free training work
+    @Test
+    public void openFreeTraining() {
         onView(matchFab()).perform(click());
         onView(allOf(withId(R.id.fab1), withParent(withId(R.id.fab)))).perform(click());
         intended(
@@ -100,27 +106,31 @@ public class MainActivityNavigationTest extends UITestBase {
                         hasAction(EditTrainingFragment.CREATE_FREE_TRAINING_ACTION)));
         allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
         pressBack();
+    }
 
-        // Does new training with standard round work
+    @Test
+    public void openTrainingWithStandardRound() {
         onView(matchFab()).perform(click());
         onView(allOf(withId(R.id.fab2), withParent(withId(R.id.fab)))).perform(click());
         intended(allOf(
                 hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
                 hasAction(EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)));
         pressBack();
+    }
 
-        // TODO test with existing trainings, bows and arrows
+    @Test
+    public void openNewArrowScreen() {
+        onView(allOf(withText(R.string.arrow), isDisplayed())).perform(click());
+        onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
+        intended(hasComponent(SimpleFragmentActivityBase.EditArrowActivity.class.getName()));
+    }
 
-        // Does new bow work
+    @Test
+    public void openNewBowScreen() {
         onView(allOf(withText(R.string.bow), isDisplayed())).perform(click());
         onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
         intended(hasComponent(SimpleFragmentActivityBase.EditBowActivity.class.getName()));
         pressBack();
-
-        // Does new arrow work
-        onView(allOf(withText(R.string.arrow), isDisplayed())).perform(click());
-        onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
-        intended(hasComponent(SimpleFragmentActivityBase.EditArrowActivity.class.getName()));
     }
 
     @Test

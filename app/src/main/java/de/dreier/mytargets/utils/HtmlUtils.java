@@ -212,7 +212,7 @@ public class HtmlUtils {
     }
 
     public static String getRoundInfo(Round round, boolean[] equals) {
-        HTMLInfoBuilder info = new HTMLInfoBuilder();
+        HtmlInfoBuilder info = new HtmlInfoBuilder();
         if (!equals[0]) {
             info.addLine(R.string.distance, round.info.distance);
         }
@@ -306,14 +306,14 @@ public class HtmlUtils {
     }
 
     public static String getTrainingInfoHTML(Training training, List<Round> rounds, boolean[] equals, boolean scoreboard) {
-        HTMLInfoBuilder info = new HTMLInfoBuilder();
+        HtmlInfoBuilder info = new HtmlInfoBuilder();
         addStaticTrainingHeaderInfo(info, training, rounds, scoreboard);
         addDynamicTrainingHeaderInfo(rounds, equals, info);
         return info.toString();
     }
 
     @NonNull
-    private static StandardRound addStaticTrainingHeaderInfo(HTMLInfoBuilder info, Training training, List<Round> rounds, boolean scoreboard) {
+    private static StandardRound addStaticTrainingHeaderInfo(HtmlInfoBuilder info, Training training, List<Round> rounds, boolean scoreboard) {
         if (scoreboard) {
             getScoreboardOnlyHeaderInfo(info, training, rounds);
         }
@@ -349,7 +349,7 @@ public class HtmlUtils {
         return standardRound;
     }
 
-    private static void addDynamicTrainingHeaderInfo(List<Round> rounds, boolean[] equals, HTMLInfoBuilder info) {
+    private static void addDynamicTrainingHeaderInfo(List<Round> rounds, boolean[] equals, HtmlInfoBuilder info) {
         if (rounds.size() > 0) {
             getEqualValues(rounds, equals);
             Round round = rounds.get(0);
@@ -373,7 +373,7 @@ public class HtmlUtils {
         }
     }
 
-    private static void getScoreboardOnlyHeaderInfo(HTMLInfoBuilder info, Training training, List<Round> rounds) {
+    private static void getScoreboardOnlyHeaderInfo(HtmlInfoBuilder info, Training training, List<Round> rounds) {
         final String fullName = SettingsManager.getProfileFullName();
         if (!fullName.trim().isEmpty()) {
             info.addLine(R.string.name, fullName);
