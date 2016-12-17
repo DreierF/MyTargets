@@ -23,10 +23,9 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
         classpath 'me.tatarka:gradle-retrolambda:3.4.0'
-        classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.0.9'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
-        classpath 'org.ajoberstar:grgit:1.7.1'
+        classpath 'org.ajoberstar:grgit:1.7.2'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
     }
@@ -74,14 +73,14 @@ ext {
         aboutPage : '1.1.1',
         homage : '0.2.0',
         roundedImageView : '2.2.1',
-        truth : '0.30',
+        truth : '0.31',
         robolectric : '3.1.4',
         findbugs : '3.0.1',
         uiAutomator : '2.1.2',
         screengrab : '0.5.6',
         annimonStream : '1.1.4',
         jUnit : '4.12',
-        mockito : '2.3.3'
+        mockito : '2.3.5'
     ]
 }
 
