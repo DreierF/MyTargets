@@ -97,7 +97,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
             @Override
             public List<Pair<Training, Round>> loadInBackground() {
                 final List<Round> rounds = Round.getAll(roundIds);
-                Log.d(TAG, "loadInBackground: ids " + Utils.toList(roundIds));
+                Log.d(TAG, "loadInBackground: ids " + LongUtils.toList(roundIds));
                 Log.d(TAG, "loadInBackground: rounds " + rounds);
                 final List<Long> collect = Stream.of(rounds)
                         .map(round -> round.trainingId)
