@@ -132,6 +132,7 @@ public class EnvironmentFragment extends FragmentBase {
 
     private void onSave() {
         Environment e = new Environment();
+        e.indoor = switchView.isChecked();
         e.weather = weather;
         e.windSpeed = (int) (long) binding.windSpeed.getSelectedItem().getId();
         e.windDirection = (int) (long) binding.windDirection.getSelectedItem().getId();

@@ -138,8 +138,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                     item -> roundTarget = item.getRounds().get(0).getTargetTemplate());
             binding.numberArrows.setChecked(SettingsManager.getArrowNumbersEnabled());
             binding.timer.setChecked(SettingsManager.getTimerEnabled());
-            //binding.indoor.setChecked(SettingsManager.getIndoor());
-            //binding.outdoor.setChecked(!SettingsManager.getIndoor());
             binding.environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
 
             final StandardRound item = binding.standardRound.getSelectedItem();
@@ -159,14 +157,11 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         }
         binding.standardRound.setOnActivityResultContext(this);
         binding.standardRound.setOnUpdateListener(this::updateChangeTargetFaceVisibility);
-        binding.changeTargetFace.setOnClickListener(v -> {
-            final StandardRound item = binding.standardRound.getSelectedItem();
-            Target target = item.rounds.get(0).targetTemplate;
-TargetListFragment.getIntent(target)
-                .withContext(this)
-                .forResult(SR_TARGET_REQUEST_CODE)
-                .start());
-        });
+        binding.changeTargetFace.setOnClickListener(v ->
+                TargetListFragment.getIntent(roundTarget)
+                        .withContext(this)
+                        .forResult(SR_TARGET_REQUEST_CODE)
+                        .start());
         updateChangeTargetFaceVisibility(binding.standardRound.getSelectedItem());
         binding.arrow.setOnActivityResultContext(this);
         binding.bow.setOnActivityResultContext(this);
@@ -296,14 +291,14 @@ TargetListFragment.getIntent(target)
         training.title = binding.training.getText().toString();
         training.date = date;
         training.setEnvironment(binding.environment.getSelectedItem());
-        training.bowId = binding.bow.getSelectedItem() == null ? null : binding.bow.getSelectedItem()
+        training.bowId = binding.bow.getSelectedItem() == null ? null : binding.bow
+                .getSelectedItem()
                 .getId();
         training.arrowId = binding.arrow.getSelectedItem() == null ? null : binding.arrow
                 .getSelectedItem().getId();
         training.timePerEnd = binding.timer.isChecked() ? SettingsManager
                 .getTimerShootTime() : -1;
         training.arrowNumbering = binding.numberArrows.isChecked();
-        training.indoor = binding.indoor.isChecked();
 
         SettingsManager.setBow(training.bowId);
         SettingsManager.setArrow(training.arrowId);
@@ -319,7 +314,7 @@ TargetListFragment.getIntent(target)
         for (RoundTemplate template : standardRound.getRounds()) {
             Round round = new Round(template);
             round.trainingId = training.getId();
-            if(trainingType == FREE_TRAINING) {
+            if (trainingType == FREE_TRAINING) {
                 round.setTarget(binding.target.getSelectedItem());
             } else {
                 round.setTarget(roundTarget);
@@ -329,21 +324,6 @@ TargetListFragment.getIntent(target)
             rounds.add(round);
         }
         return rounds;
-    }
-
-    @NonNull
-    private StandardRound getCustomRound() {
-        StandardRound standardRound; // Generate and save standard round template for practice
-        standardRound = new StandardRound();
-        standardRound.club = StandardRoundFactory.CUSTOM_PRACTICE;
-        standardRound.name = getString(R.string.practice);
-        //standardRound.indoor = binding.indoor.isChecked();
-        ArrayList<RoundTemplate> rounds = new ArrayList<>();
-        rounds.add(getRoundTemplate());
-        standardRound.rounds = rounds;
-
-        SettingsManager.setIndoor(standardRound.indoor);
-        return standardRound;
     }
 
     @Override

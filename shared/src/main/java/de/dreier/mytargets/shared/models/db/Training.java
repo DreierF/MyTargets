@@ -107,10 +107,11 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     }
 
     public Environment getEnvironment() {
-        return new Environment(weather, windSpeed, windDirection, location);
+        return new Environment(indoor, weather, windSpeed, windDirection, location);
     }
 
     public void setEnvironment(Environment env) {
+        indoor = env.indoor;
         weather = env.weather;
         windDirection = env.windDirection;
         windSpeed = env.windSpeed;

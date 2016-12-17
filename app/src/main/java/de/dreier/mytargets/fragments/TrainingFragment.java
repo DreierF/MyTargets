@@ -123,11 +123,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
                 binding.fab.setVisibility(supportsDeletion ? View.VISIBLE : View.GONE);
 
                 // Set round info
-                int weatherDrawable = R.drawable.ic_house_24dp;
-                if (!training.indoor) {
-                    weatherDrawable = training.getEnvironment().weather.getColorDrawable();
-                }
-                binding.weatherIcon.setImageResource(weatherDrawable);
+                binding.weatherIcon.setImageResource(training.getEnvironment().getColorDrawable());
                 binding.detailRoundInfo.setText(HtmlUtils
                         .fromHtml(HtmlUtils.getTrainingInfoHTML(training, rounds, equals, false)));
                 mAdapter.setList(rounds);
