@@ -17,8 +17,8 @@ package de.dreier.mytargets.shared.models;
 
 import android.support.annotation.StringRes;
 
-import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.SharedApplicationInstance;
 
 public enum EBowType {
     RECURVE_BOW(0, R.string.recurve_bow),

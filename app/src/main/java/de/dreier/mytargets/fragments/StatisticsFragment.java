@@ -21,9 +21,6 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -63,27 +60,21 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.DispersionPatternActivity;
 import de.dreier.mytargets.databinding.FragmentStatisticsBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
-import de.dreier.mytargets.managers.dao.ArrowStatisticDataSource;
-import de.dreier.mytargets.managers.dao.DataSourceBase;
-import de.dreier.mytargets.managers.dao.PasseDataSource;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
-import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.models.ArrowStatistic;
 import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.Round;
 import de.dreier.mytargets.shared.models.SelectableZone;
-import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.models.db.End;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Shot;
+import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.Color;
-import de.dreier.mytargets.utils.DataLoaderBase;
+import de.dreier.mytargets.shared.utils.LongUtils;
 import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.RoundedTextDrawable;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.Utils;
 
-public class StatisticsFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<ArrowStatistic>> {
+public class StatisticsFragment extends FragmentBase {
 
     private static final String ARG_TARGET = "target";
     private static final String ARG_ROUND_IDS = "round_ids";
@@ -102,7 +93,6 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
     private long[] roundIds;
     private List<Round> rounds;
-    private ArrowStatisticDataSource arrowStatisticDataSource;
     private ArrowStatisticAdapter adapter;
     private FragmentStatisticsBinding binding;
     private Target target;
@@ -112,7 +102,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         StatisticsFragment fragment = new StatisticsFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(StatisticsFragment.ARG_TARGET, Parcels.wrap(item));
-        bundle.putLongArray(StatisticsFragment.ARG_ROUND_IDS, Utils.toArray(roundIds));
+        bundle.putLongArray(StatisticsFragment.ARG_ROUND_IDS, LongUtils.toArray(roundIds));
         bundle.putBoolean(StatisticsFragment.ARG_ANIMATE, animate);
         fragment.setArguments(bundle);
         return fragment;
@@ -126,13 +116,6 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         target = Parcels.unwrap(getArguments().getParcelable(ARG_TARGET));
         roundIds = getArguments().getLongArray(ARG_ROUND_IDS);
         animate = getArguments().getBoolean(ARG_ANIMATE);
-        rounds = Stream.of(Utils.toList(roundIds))
-                .map(id -> new RoundDataSource().get(id))
-                .collect(Collectors.toList());
-
-        showLineChart();
-        showPieChart();
-        showDispersionView();
 
         binding.arrows.setHasFixedSize(true);
         adapter = new ArrowStatisticAdapter();
@@ -143,26 +126,47 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         return binding.getRoot();
     }
 
+    @NonNull
+    @Override
+    protected LoaderUICallback onLoad(Bundle args) {
+        rounds = Stream.of(LongUtils.toList(roundIds))
+                .map(Round::get)
+                .collect(Collectors.toList());
+
+        List<ArrowStatistic> data = ArrowStatistic.getAll(target, rounds);
+
+        return new LoaderUICallback() {
+            @Override
+            public void applyData() {
+                showLineChart();
+                showPieChart();
+                showDispersionView();
+                binding.distributionChart.invalidate();
+                binding.chartView.invalidate();
+
+                binding.arrowRankingLabel.setVisibility(data.isEmpty() ? View.GONE : View.VISIBLE);
+                Collections.sort(data);
+                adapter.setData(data);
+            }
+        };
+    }
+
     private void showDispersionView() {
         final List<Shot> exactShots = Stream.of(rounds)
-                .flatMap(r -> Stream.of(new PasseDataSource().getAllByRound(r.getId())))
+                .flatMap(r -> Stream.of(r.getEnds()))
                 .filter(p -> p.exact)
-                .flatMap(p -> Stream.of(p.shots))
+                .flatMap(p -> Stream.of(p.getShots()))
                 .collect(Collectors.toList());
         if (exactShots.isEmpty()) {
             binding.dispersionPatternLayout.setVisibility(View.GONE);
             return;
         }
-        ArrowStatistic stats = new ArrowStatistic();
-        stats.target = target;
-        stats.addShots(exactShots);
+        ArrowStatistic stats = new ArrowStatistic(target, exactShots);
         stats.arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
         binding.dispersionView.setShots(stats);
         binding.dispersionView.setEnabled(false);
         binding.dispersionViewOverlay.setOnClickListener(view -> {
-            ArrowStatistic statistics = new ArrowStatistic();
-            statistics.target = target;
-            statistics.addShots(exactShots);
+            ArrowStatistic statistics = new ArrowStatistic(target, exactShots);
             DispersionPatternActivity.getIntent(statistics)
                     .withContext(this)
                     .start();
@@ -237,7 +241,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     }
 
     private void addPieData() {
-        List<Map.Entry<SelectableZone, Integer>> scores = new PasseDataSource()
+        List<Map.Entry<SelectableZone, Integer>> scores = End
                 .getSortedScoreDistribution(rounds);
 
         ArrayList<PieEntry> yValues = new ArrayList<>();
@@ -294,10 +298,10 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
     private String getHitMissText() {
         final List<Shot> shots = Stream.of(rounds)
-                .flatMap(r -> Stream.of(new PasseDataSource().getAllByRound(r.getId())))
-                .flatMap(p -> Stream.of(p.shots))
+                .flatMap(r -> Stream.of(r.getEnds()))
+                .flatMap(p -> Stream.of(p.getShots()))
                 .collect(Collectors.toList());
-        long missCount = Stream.of(shots).filter(s -> s.zone == Shot.MISS).count();
+        long missCount = Stream.of(shots).filter(s -> s.scoringRing == Shot.MISS).count();
         long hitCount = shots.size() - missCount;
 
         return String.format(Locale.ENGLISH, PIE_CHART_CENTER_TEXT_FORMAT,
@@ -306,44 +310,23 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
     }
 
     @Override
-    public Loader<List<ArrowStatistic>> onCreateLoader(int id, Bundle args) {
-        arrowStatisticDataSource = new ArrowStatisticDataSource();
-        return new DataLoaderBase<ArrowStatistic, DataSourceBase>(getContext(),
-                arrowStatisticDataSource,
-                () -> arrowStatisticDataSource.getAll(Utils.toList(roundIds)));
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<ArrowStatistic>> loader, List<ArrowStatistic> data) {
-        binding.arrowRankingLabel.setVisibility(data.isEmpty() ? View.GONE : View.VISIBLE);
-        Collections.sort(data);
-        adapter.setData(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<ArrowStatistic>> loader) {
-
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        getLoaderManager().restartLoader(0, null, this);
+        reloadData();
     }
 
     private LineData getLineChartDataSet() {
         Map<Long, Training> trainingsMap = Stream.of(rounds)
                 .map(r -> r.trainingId)
                 .distinct()
-                .map(tid -> new TrainingDataSource().get(tid))
+                .map(Training::get)
                 .collect(Collectors.toMap(Training::getId));
 
         List<Pair<Integer, DateTime>> values = Stream.of(rounds)
-                .map(r -> new Pair<>(trainingsMap.get(r.trainingId).date, r.getId()))
-                .flatMap(roundIdPair -> Stream.of(new PasseDataSource()
-                        .getAllByRound(roundIdPair.second))
-                        .map(p -> new Pair<>(roundIdPair.first, p)))
-                .map(passePair -> getPairEndSummary(target, passePair.second, passePair.first))
+                .map(r -> new Pair<>(trainingsMap.get(r.trainingId).date, r))
+                .flatMap(roundIdPair -> Stream.of(roundIdPair.second.getEnds())
+                        .map(end -> new Pair<>(roundIdPair.first, end)))
+                .map(endPair -> getPairEndSummary(target, endPair.second, endPair.first))
                 .sortBy(pair -> pair.second.toDate().getTime())
                 .collect(Collectors.toList());
         if (values.isEmpty()) {
@@ -384,7 +367,8 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
                 @Override
                 public String getXValueFormatted(float value) {
                     final long diffToFirst = (long) value;
-                    return dateFormat.format(new Date(values.get(0).second.getMillis() + diffToFirst));
+                    return dateFormat
+                            .format(new Date(values.get(0).second.getMillis() + diffToFirst));
                 }
             };
         } else {
@@ -405,12 +389,12 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
         return eval;
     }
 
-    private Pair<Integer, DateTime> getPairEndSummary(Target target, Passe passe, LocalDate trainingDate) {
+    private Pair<Integer, DateTime> getPairEndSummary(Target target, End end, LocalDate trainingDate) {
         int actCounter = 0;
-        for (Shot s : passe.shots) {
-            actCounter += target.getPointsByZone(s.zone, s.index);
+        for (Shot s : end.getShots()) {
+            actCounter += target.getScoreByZone(s.scoringRing, s.index);
         }
-        return new Pair<>(actCounter, new DateTime(passe.saveDate).withDate(trainingDate));
+        return new Pair<>(actCounter, new DateTime(end.saveTime).withDate(trainingDate));
     }
 
     @NonNull

@@ -16,6 +16,7 @@
 package de.dreier.mytargets.managers;
 
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
@@ -53,7 +54,7 @@ public class SettingsManager {
     private static final String KEY_BOW = "bow";
     private static final String KEY_DISTANCE_VALUE = "distance";
     private static final String KEY_DISTANCE_UNIT = "unit";
-    private static final String KEY_ARROWS_PER_PASSE = "ppp";
+    private static final String KEY_ARROWS_PER_END = "ppp";
     private static final String KEY_TARGET = "target";
     private static final String KEY_SCORING_STYLE = "scoring_style";
     private static final String KEY_TARGET_DIAMETER_VALUE = "size_target";
@@ -61,7 +62,7 @@ public class SettingsManager {
     private static final String KEY_TIMER = "timer";
     private static final String KEY_NUMBERING_ENABLED = "numbering";
     private static final String KEY_INDOOR = "indoor";
-    private static final String KEY_PASSES = "rounds";
+    private static final String KEY_END_COUNT = "rounds";
     private static final String KEY_TRANSLATION_DIALOG_SHOWN = "translation_dialog_shown";
     private static final String KEY_INPUT_MODE = "target_mode";
     private static final String KEY_SHOW_MODE = "show_mode";
@@ -71,7 +72,6 @@ public class SettingsManager {
             .getSharedPreferences();
     private static final String KEY_BACKUP_LOCATION = "backup_location";
     private static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
-    private static final String KEY_DROPBOX_ACCESS_TOKEN = "access_token";
     private static final String KEY_BACKUP_AUTOMATICALLY = "backup_automatically";
 
     public static int getStandardRound() {
@@ -84,23 +84,27 @@ public class SettingsManager {
                 .apply();
     }
 
-    public static int getArrow() {
-        return lastUsed.getInt(KEY_ARROW, -1);
+    @Nullable
+    public static Long getArrow() {
+        final int arrow = lastUsed.getInt(KEY_ARROW, -1);
+        return arrow <= 0 ? null : (long) arrow;
     }
 
-    public static void setArrow(long id) {
+    public static void setArrow(@Nullable Long id) {
         lastUsed.edit()
-                .putInt(KEY_ARROW, (int) id)
+                .putInt(KEY_ARROW, id == null ? -1 : (int) (long) id)
                 .apply();
     }
 
-    public static int getBow() {
-        return lastUsed.getInt(KEY_BOW, -1);
+    @Nullable
+    public static Long getBow() {
+        final int bow = lastUsed.getInt(KEY_BOW, -1);
+        return bow <= 0 ? null : (long) bow;
     }
 
-    public static void setBow(long id) {
+    public static void setBow(@Nullable Long id) {
         lastUsed.edit()
-                .putInt(KEY_BOW, (int) id)
+                .putInt(KEY_BOW, id == null ? -1 : (int) (long) id)
                 .apply();
     }
 
@@ -117,13 +121,13 @@ public class SettingsManager {
                 .apply();
     }
 
-    public static int getArrowsPerPasse() {
-        return lastUsed.getInt(KEY_ARROWS_PER_PASSE, 3);
+    public static int getShotsPerEnd() {
+        return lastUsed.getInt(KEY_ARROWS_PER_END, 3);
     }
 
-    public static void setArrowsPerEnd(int arrowsPerPasse) {
+    public static void setShotsPerEnd(int shotsPerEnd) {
         lastUsed.edit()
-                .putInt(KEY_ARROWS_PER_PASSE, arrowsPerPasse)
+                .putInt(KEY_ARROWS_PER_END, shotsPerEnd)
                 .apply();
     }
 
@@ -139,7 +143,7 @@ public class SettingsManager {
 
     public static void setTarget(Target target) {
         lastUsed.edit()
-                .putInt(KEY_TARGET, (int) target.getId())
+                .putInt(KEY_TARGET, (int) (long) target.getId())
                 .putInt(KEY_SCORING_STYLE, target.scoringStyle)
                 .putInt(KEY_TARGET_DIAMETER_VALUE, (int) target.size.value)
                 .putString(KEY_TARGET_DIAMETER_UNIT,
@@ -177,22 +181,22 @@ public class SettingsManager {
                 .apply();
     }
 
-    public static int getPasses() {
-        return lastUsed.getInt(KEY_PASSES, 10);
+    public static int getEndCount() {
+        return lastUsed.getInt(KEY_END_COUNT, 10);
     }
 
-    public static void setPasses(int passes) {
+    public static void setEndCount(int endCount) {
         lastUsed.edit()
-                .putInt(KEY_PASSES, passes)
+                .putInt(KEY_END_COUNT, endCount)
                 .apply();
     }
 
-    public static boolean getTranslationDialogWasShown() {
+    public static boolean isTranslationDialogShown() {
         SharedPreferences prefs = preferences;
         return prefs.getBoolean(KEY_TRANSLATION_DIALOG_SHOWN, false);
     }
 
-    public static void setTranslationDialogWasShown(boolean shown) {
+    public static void setTranslationDialogShown(boolean shown) {
         preferences
                 .edit()
                 .putBoolean(KEY_TRANSLATION_DIALOG_SHOWN, shown)
@@ -211,6 +215,11 @@ public class SettingsManager {
                 .edit()
                 .putBoolean(KEY_INPUT_MODE, inputMethod == TargetViewBase.EInputMethod.KEYBOARD)
                 .apply();
+    }
+
+    public static boolean hasDonated() {
+        return preferences
+                .getBoolean(KEY_DONATED, false);
     }
 
     public static void setDonated(boolean donated) {
@@ -233,12 +242,12 @@ public class SettingsManager {
     }
 
     public static EAggregationStrategy getAggregationStrategy() {
-        return EAggregationStrategy.valueOf(ApplicationInstance.getSharedPreferences()
+        return EAggregationStrategy.valueOf(preferences
                 .getString(KEY_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString()));
     }
 
     public static void setAggregationStrategy(EAggregationStrategy aggregationStrategy) {
-        ApplicationInstance.getSharedPreferences()
+        preferences
                 .edit()
                 .putString(KEY_AGGREGATION_STRATEGY, aggregationStrategy.toString())
                 .apply();
@@ -249,27 +258,61 @@ public class SettingsManager {
                 .getBoolean(KEY_TIMER_VIBRATE, false);
     }
 
+    public static void setTimerVibrate(boolean vibrate) {
+        preferences
+                .edit()
+                .putBoolean(KEY_TIMER_VIBRATE, vibrate)
+                .apply();
+    }
+
     public static boolean getTimerSoundEnabled() {
         return preferences
                 .getBoolean(KEY_TIMER_SOUND, true);
+    }
+
+    public static void setTimerSoundEnabled(boolean soundEnabled) {
+        preferences
+                .edit()
+                .putBoolean(KEY_TIMER_SOUND, soundEnabled)
+                .apply();
     }
 
     public static int getTimerWaitTime() {
         return getPrefTime(KEY_TIMER_WAIT_TIME, 10);
     }
 
+    public static void setTimerWaitTime(int waitTime) {
+        preferences
+                .edit()
+                .putString(KEY_TIMER_WAIT_TIME, String.valueOf(waitTime))
+                .apply();
+    }
+
     public static int getTimerShootTime() {
         return getPrefTime(KEY_TIMER_SHOOT_TIME, 120);
+    }
+
+    public static void setTimerShootTime(int shootTime) {
+        preferences
+                .edit()
+                .putString(KEY_TIMER_SHOOT_TIME, String.valueOf(shootTime))
+                .apply();
     }
 
     public static int getTimerWarnTime() {
         return getPrefTime(KEY_TIMER_WARN_TIME, 30);
     }
 
+    public static void setTimerWarnTime(int warnTime) {
+        preferences
+                .edit()
+                .putString(KEY_TIMER_WARN_TIME, String.valueOf(warnTime))
+                .apply();
+    }
+
     private static int getPrefTime(String key, int def) {
-        SharedPreferences prefs = preferences;
         try {
-            return Integer.parseInt(prefs.getString(key, String.valueOf(def)));
+            return Integer.parseInt(preferences.getString(key, String.valueOf(def)));
         } catch (NumberFormatException e) {
             return def;
         }
@@ -280,9 +323,23 @@ public class SettingsManager {
                 .getString(KEY_PROFILE_FIRST_NAME, "");
     }
 
+    public static void setProfileFirstName(String firstName) {
+        preferences
+                .edit()
+                .putString(KEY_PROFILE_FIRST_NAME, firstName)
+                .apply();
+    }
+
     public static String getProfileLastName() {
         return preferences
                 .getString(KEY_PROFILE_LAST_NAME, "");
+    }
+
+    public static void setProfileLastName(String lastName) {
+        preferences
+                .edit()
+                .putString(KEY_PROFILE_LAST_NAME, lastName)
+                .apply();
     }
 
     public static String getProfileFullName() {
@@ -294,7 +351,14 @@ public class SettingsManager {
                 .getString(KEY_PROFILE_CLUB, "");
     }
 
-    private static LocalDate getProfileBirthDay() {
+    public static void setProfileClub(String club) {
+        preferences
+                .edit()
+                .putString(KEY_PROFILE_CLUB, club)
+                .apply();
+    }
+
+    public static LocalDate getProfileBirthDay() {
         String date = preferences
                 .getString(KEY_PROFILE_BIRTHDAY, "");
         if (date.isEmpty()) {
@@ -348,8 +412,15 @@ public class SettingsManager {
     }
 
     public static EKeyboardType getInputKeyboardType() {
-        return EKeyboardType.valueOf(ApplicationInstance.getSharedPreferences()
-                .getString(KEY_INPUT_KEYBOARD_TYPE, EKeyboardType.RIGHT.toString()));
+        return EKeyboardType.valueOf(preferences
+                .getString(KEY_INPUT_KEYBOARD_TYPE, EKeyboardType.RIGHT.name()));
+    }
+
+    public static void setInputKeyboardType(EKeyboardType type) {
+        preferences
+                .edit()
+                .putString(KEY_INPUT_KEYBOARD_TYPE, type.name())
+                .apply();
     }
 
     public static EBackupLocation getBackupLocation() {
@@ -372,16 +443,6 @@ public class SettingsManager {
     public static void setBackupInterval(EBackupInterval interval) {
         preferences.edit()
                 .putString(KEY_BACKUP_INTERVAL, interval.name())
-                .apply();
-    }
-
-    public static String getDropboxAccessToken() {
-        return preferences.getString(KEY_DROPBOX_ACCESS_TOKEN, null);
-    }
-
-    public static void setDropboxAccessToken(String accessToken) {
-        preferences.edit()
-                .putString(KEY_DROPBOX_ACCESS_TOKEN, accessToken)
                 .apply();
     }
 

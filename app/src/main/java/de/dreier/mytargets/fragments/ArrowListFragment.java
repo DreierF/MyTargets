@@ -19,8 +19,8 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +31,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
-import de.dreier.mytargets.managers.dao.ArrowDataSource;
-import de.dreier.mytargets.shared.models.Arrow;
-import de.dreier.mytargets.utils.DataLoader;
+import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
@@ -41,8 +39,6 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 public class ArrowListFragment extends EditableListFragment<Arrow> {
 
     protected FragmentListBinding binding;
-    private ArrowDataSource arrowDataSource;
-
     public ArrowListFragment() {
         itemTypeSelRes = R.plurals.arrow_selected;
         itemTypeDelRes = R.plurals.arrow_deleted;
@@ -72,16 +68,11 @@ public class ArrowListFragment extends EditableListFragment<Arrow> {
         return binding.getRoot();
     }
 
+    @NonNull
     @Override
-    public Loader<List<Arrow>> onCreateLoader(int id, Bundle args) {
-        arrowDataSource = new ArrowDataSource();
-        return new DataLoader<>(getContext(), arrowDataSource, arrowDataSource::getAll);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Arrow>> loader, List<Arrow> data) {
-        this.dataSource = arrowDataSource;
-        mAdapter.setList(data);
+    protected LoaderUICallback onLoad(Bundle args) {
+        List<Arrow> arrows = Arrow.getAll();
+        return () -> mAdapter.setList(arrows);
     }
 
     @Override
@@ -121,8 +112,8 @@ public class ArrowListFragment extends EditableListFragment<Arrow> {
 
         @Override
         public void bindItem() {
-            binding.name.setText(mItem.name);
-            binding.image.setImageDrawable(mItem.getDrawable());
+            binding.name.setText(item.name);
+            binding.image.setImageDrawable(item.getDrawable());
         }
     }
 }

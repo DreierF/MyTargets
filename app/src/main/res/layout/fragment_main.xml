@@ -40,7 +40,8 @@
                 android:id="@+id/slidingTabs"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:textColor="@color/tab_layout_text" />
+                android:textColor="@color/tab_layout_text"
+                app:tabIndicatorColor="@android:color/white"/>
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.view.ViewPager

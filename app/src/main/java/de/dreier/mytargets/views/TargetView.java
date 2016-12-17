@@ -24,6 +24,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Handler;
@@ -51,12 +52,11 @@ import java.util.TimerTask;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
-import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.Passe;
 import de.dreier.mytargets.shared.models.SelectableZone;
-import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.db.End;
+import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.utils.MatrixEvaluator;
@@ -196,13 +196,13 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    public void setEnd(Passe end) {
-        shots = end.shots;
+    public void setEnd(End end) {
+        shots = end.getShots();
         setCurrentShotIndex(getNextShotIndex(-1));
         endRenderer.setShots(shots);
         endRenderer.setSelection(getCurrentShotIndex(), null, EndRenderer.MAX_CIRCLE_SIZE);
         EInputMethod inputMethod;
-        if (end.getId() != 0) {
+        if (end.getId() != null) {
             inputMethod = end.exact ? PLOTTING : KEYBOARD;
         } else {
             inputMethod = SettingsManager.getInputMethod();
@@ -282,7 +282,7 @@ public class TargetView extends TargetViewBase {
     protected void notifyTargetShotsChanged() {
         List<Shot> displayedShots = new ArrayList<>();
         for (Shot shot : shots) {
-            if (shot.zone != Shot.NOTHING_SELECTED && shot.index != getCurrentShotIndex()) {
+            if (shot.scoringRing != Shot.NOTHING_SELECTED && shot.index != getCurrentShotIndex()) {
                 displayedShots.add(shot);
             }
         }
@@ -294,8 +294,8 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    protected Coordinate initAnimationPositions(int i) {
-        Coordinate coordinate = new Coordinate();
+    protected PointF initAnimationPositions(int i) {
+        PointF coordinate = new PointF();
         if (inputMethod == KEYBOARD) {
             coordinate.x = keyboardRect.left;
             if (keyboardType == LEFT) {
@@ -390,12 +390,12 @@ public class TargetView extends TargetViewBase {
     @Override
     protected Shot getShotFromPos(float x, float y) {
         // Create Shot object
-        Shot s = new Shot(getCurrentShotIndex());
+        Shot s = new Shot();
         if (inputMethod == KEYBOARD) {
             if (keyboardRect.contains(x, y)) {
                 int index = (int) (y * selectableZones.size() / keyboardRect.height());
                 index = Math.min(Math.max(0, index), selectableZones.size() - 1);
-                s.zone = selectableZones.get(index).index;
+                s.scoringRing = selectableZones.get(index).index;
             } else {
                 return null;
             }
@@ -405,7 +405,7 @@ public class TargetView extends TargetViewBase {
             fullExtendedMatrixInverse.mapPoints(pt);
             s.x = pt[0];
             s.y = pt[1];
-            s.zone = targetDrawable.getZoneFromPoint(s.x, s.y);
+            s.scoringRing = targetDrawable.getZoneFromPoint(s.x, s.y);
         }
         return s;
     }
@@ -487,7 +487,7 @@ public class TargetView extends TargetViewBase {
     @Override
     protected void onArrowChanged() {
         if (!arrowNumbering || getCurrentShotIndex() != EndRenderer.NO_SELECTION
-                && shots.get(getCurrentShotIndex()).arrow != null) {
+                && shots.get(getCurrentShotIndex()).arrowNumber != null) {
             super.onArrowChanged();
         } else {
             List<String> numbers = Stream.rangeClosed(1, 12)
@@ -505,12 +505,11 @@ public class TargetView extends TargetViewBase {
                     .create();
             gridView.setAdapter(
                     new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, numbers));
-            int cols = Math.min(5, numbers.size());
-            gridView.setNumColumns(cols);
+            gridView.setNumColumns(4);
             gridView.setOnItemClickListener((parent, view, position, id) ->
             {
                 if (getCurrentShotIndex() < shots.size()) {
-                    shots.get(getCurrentShotIndex()).arrow = numbers.get(position);
+                    shots.get(getCurrentShotIndex()).arrowNumber = numbers.get(position);
                 }
                 dialog.dismiss();
                 super.onArrowChanged();

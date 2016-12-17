@@ -14,13 +14,9 @@
  */
 package de.dreier.mytargets.fragments;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.view.Menu;
@@ -29,24 +25,22 @@ import android.view.MenuItem;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
+import com.raizlabs.android.dbflow.structure.Model;
 
 import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.interfaces.ItemAdapter;
-import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.utils.OnItemClickListener;
 import de.dreier.mytargets.utils.SelectorBundler;
 import de.dreier.mytargets.utils.multiselector.MultiSelector;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import icepick.State;
+
 /**
- *
- *
- * @param <T> Model of the item which is managed within the fragment.*/
-public abstract class EditableListFragmentBase<T extends IIdSettable> extends ListFragmentBase<T>
-        implements OnItemClickListener<T>, LoaderManager.LoaderCallbacks<List<T>> {
+ * @param <T> Model of the item which is managed within the fragment.
+ */
+public abstract class EditableListFragmentBase<T extends IIdSettable & Model> extends ListFragmentBase<T> {
 
     protected static final String ITEM_ID = "id";
 
@@ -77,7 +71,6 @@ public abstract class EditableListFragmentBase<T extends IIdSettable> extends Li
      * Action mode manager
      */
     ActionMode actionMode = null;
-    IdProviderDataSource<T> dataSource;
 
     private final ActionMode.Callback mDeleteMode = new ActionMode.Callback() {
 
@@ -107,7 +100,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable> extends Li
                     mode.finish();
                     return true;
                 case R.id.action_statistics:
-                    onStatistics(mSelector.getSelectedIds());
+                    onStatistics(getSelectedItems());
                     mode.finish();
                     return true;
                 case R.id.action_delete:
@@ -136,22 +129,9 @@ public abstract class EditableListFragmentBase<T extends IIdSettable> extends Li
     };
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        getLoaderManager().restartLoader(0, null, this);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<T>> loader) {
-        // Called when the loader is restarted, but we
-        // don't want to remove all elements from the
-        // screen on resume just in case something changed
+        reloadData();
     }
 
     private void remove(List<T> deleted) {
@@ -161,23 +141,22 @@ public abstract class EditableListFragmentBase<T extends IIdSettable> extends Li
         getAdapter().notifyDataSetChanged();
         String message = getResources()
                 .getQuantityString(itemTypeDelRes, deleted.size(), deleted.size());
-        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG)
+        Snackbar.make(getView().findViewById(R.id.coordinatorLayout), message, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, v -> {
                     for (T item : deleted) {
                         getAdapter().addItem(item);
                     }
                     deleted.clear();
                 })
-                .setCallback(
+                .addCallback(
                         new Snackbar.Callback() {
                             @Override
                             public void onDismissed(Snackbar snackbar, int event) {
                                 for (T item : deleted) {
-                                    dataSource.delete(item);
+                                    item.delete();
                                 }
                                 if (isAdded()) {
-                                    getLoaderManager()
-                                            .restartLoader(0, null, EditableListFragmentBase.this);
+                                    reloadData();
                                 }
                             }
 
@@ -233,8 +212,8 @@ public abstract class EditableListFragmentBase<T extends IIdSettable> extends Li
     protected abstract void onSelected(T item);
 
     /**
-     * @param itemIds Items that have been selected
+     * @param items Items that have been selected
      */
-    protected void onStatistics(List<Long> itemIds) {
+    protected void onStatistics(List<T> items) {
     }
 }

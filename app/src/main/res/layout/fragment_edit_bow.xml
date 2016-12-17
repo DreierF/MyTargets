@@ -20,7 +20,7 @@
 
         <variable
             name="bow"
-            type="de.dreier.mytargets.shared.models.Bow"/>
+            type="de.dreier.mytargets.shared.models.db.Bow"/>
 
     </data>
 

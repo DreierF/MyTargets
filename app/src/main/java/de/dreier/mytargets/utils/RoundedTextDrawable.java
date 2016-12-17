@@ -23,6 +23,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.text.TextPaint;
 
 import java.util.Locale;
@@ -50,12 +51,12 @@ public class RoundedTextDrawable extends Drawable {
     }
 
     public RoundedTextDrawable(ArrowStatistic item) {
-        this(String.format(Locale.ENGLISH, "%.1f", item.avgPoints()), item.getAppropriateBgColor(),
+        this(String.format(Locale.ENGLISH, "%.3f", item.average.getStdDev()), item.getAppropriateBgColor(),
                 item.getAppropriateTextColor());
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         canvas.drawOval(mRectF, mPaint);
         canvas.drawText(mText, mRectF.centerX() - mTextBounds.width() / 2,
                 mRectF.centerY() + mTextBounds.height() / 2, mTextPaint);

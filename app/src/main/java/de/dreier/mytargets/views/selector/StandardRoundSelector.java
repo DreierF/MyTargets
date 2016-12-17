@@ -19,8 +19,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import de.dreier.mytargets.activities.StandardRoundActivity;
-import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
-import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.db.StandardRound;
 
 public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
 
@@ -37,10 +36,10 @@ public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
     }
 
     public void setItemId(long standardRoundId) {
-        StandardRound standardRound = new StandardRoundDataSource().get(standardRoundId);
+        StandardRound standardRound = StandardRound.get(standardRoundId);
         // If the round has been removed, choose default one
         if (standardRound == null) {
-            standardRound = new StandardRoundDataSource().get(32);
+            standardRound = StandardRound.get(32L);
         }
         setItem(standardRound);
     }

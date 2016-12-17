@@ -1,0 +1,3 @@
+UPDATE ROUND SET target=4 WHERE target=8;
+UPDATE ROUND SET target=5 WHERE target=9;
+UPDATE ROUND SET target=6 WHERE target=10;

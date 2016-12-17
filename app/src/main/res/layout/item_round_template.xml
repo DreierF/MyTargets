@@ -32,6 +32,8 @@
                 style="@style/primaryText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_toLeftOf="@+id/remove"
                 android:layout_toStartOf="@+id/remove"
                 android:padding="16dp"
@@ -83,7 +85,7 @@
                 android:orientation="horizontal">
 
                 <de.dreier.mytargets.views.NumberPicker
-                    android:id="@+id/passes"
+                    android:id="@+id/endCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -97,7 +99,7 @@
                     android:text="@string/with"/>
 
                 <de.dreier.mytargets.views.NumberPicker
-                    android:id="@+id/arrows"
+                    android:id="@+id/shotCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 

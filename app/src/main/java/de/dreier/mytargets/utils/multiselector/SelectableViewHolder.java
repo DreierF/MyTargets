@@ -96,17 +96,17 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
     }
 
     public T getItem() {
-        return mItem;
+        return item;
     }
 
     void setItem(T mItem) {
-        this.mItem = mItem;
+        this.item = mItem;
     }
 
     @Override
     public void onClick(View v) {
         if (mListener != null) {
-            mListener.onClick(this, mItem);
+            mListener.onClick(this, item);
         }
     }
 

@@ -17,11 +17,25 @@ package de.dreier.mytargets.shared.models;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+
+import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
+import de.dreier.mytargets.shared.models.db.RoundTemplate;
+import de.dreier.mytargets.shared.models.db.RoundTemplate_Table;
+import de.dreier.mytargets.shared.models.db.SightMark;
+import de.dreier.mytargets.shared.models.db.SightMark_Table;
 
+@Parcel
 public class Dimension implements IIdProvider, Comparable<Dimension> {
     private static final int MINI_VALUE = -6;
     public static final Dimension MINI = new Dimension(MINI_VALUE, (Unit) null);
@@ -40,7 +54,11 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
     @ParcelConstructor
     public Dimension(float value, Unit unit) {
         this.value = value;
-        this.unit = unit;
+        if (value < 0) {
+            this.unit = null;
+        } else {
+            this.unit = unit;
+        }
     }
 
     public Dimension(float value, String unit) {
@@ -50,6 +68,43 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
         } else {
             this.unit = Unit.from(unit);
         }
+    }
+
+    /**
+     * Returns a list of all distances that are either default values or used somewhere in the app
+     *
+     * @param distance Distance to add to the list (current selected value)
+     * @param unit     Distances are only returned which match the specified unit
+     * @return List of distances
+     */
+    public static List<Dimension> getAll(Dimension distance, Unit unit) {
+        HashSet<Dimension> distances = new HashSet<>();
+
+        distances.add(new Dimension(-1, (Unit) null));
+
+        // Add currently selected distance to list
+        if (distance.unit == unit) {
+            distances.add(distance);
+        }
+
+        // Get all distances used in Round or SightMark table
+        distances.addAll(Stream.of(SQLite
+                .select(SightMark_Table.distance)
+                .from(SightMark.class)
+                .queryList())
+                .map(sightSetting -> sightSetting.distance)
+                .filter(d -> d.unit == unit)
+                .collect(Collectors.toSet()));
+
+        distances.addAll(Stream.of(SQLite
+                .select(RoundTemplate_Table.distance)
+                .from(RoundTemplate.class)
+                .queryList())
+                .map(round -> round.distance)
+                .filter(d -> d.unit == unit)
+                .collect(Collectors.toSet()));
+
+        return new ArrayList<>(distances);
     }
 
     @Override
@@ -89,8 +144,8 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
         return Integer.toString((int) value) + unit.toString();
     }
 
-    public long getId() {
-        return hashCode();
+    public Long getId() {
+        return (long) hashCode();
     }
 
     @Override

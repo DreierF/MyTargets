@@ -15,6 +15,6 @@
 package de.dreier.mytargets.shared.models;
 
 public interface IIdProvider {
-    long getId();
+    Long getId();
 }
 

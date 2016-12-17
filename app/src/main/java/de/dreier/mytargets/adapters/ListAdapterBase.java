@@ -91,6 +91,15 @@ public abstract class ListAdapterBase<T extends IIdProvider & Comparable<T>>
         }
     }
 
+    public int getItemPosition(T item) {
+        int pos = Collections.binarySearch(list, item);
+        if (pos >= 0) {
+            return pos;
+        } else {
+            return -1;
+        }
+    }
+
     @Override
     public void removeItem(T item) {
         int pos = Collections.binarySearch(list, item);

@@ -19,7 +19,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
-import android.support.v4.content.Loader;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,12 +30,10 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
-import de.dreier.mytargets.managers.dao.BowDataSource;
-import de.dreier.mytargets.shared.models.Bow;
-import de.dreier.mytargets.shared.models.SightSetting;
-import de.dreier.mytargets.utils.DataLoader;
+import de.dreier.mytargets.shared.models.db.Bow;
+import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.utils.DividerItemDecoration;
-import de.dreier.mytargets.utils.HTMLInfoBuilder;
+import de.dreier.mytargets.utils.HtmlInfoBuilder;
 import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
@@ -43,7 +41,6 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 public class BowListFragment extends EditableListFragment<Bow> {
 
     protected FragmentListBinding binding;
-    private BowDataSource bowDataSource;
 
     public BowListFragment() {
         itemTypeSelRes = R.plurals.bow_selected;
@@ -69,16 +66,11 @@ public class BowListFragment extends EditableListFragment<Bow> {
         return binding.getRoot();
     }
 
+    @NonNull
     @Override
-    public Loader<List<Bow>> onCreateLoader(int id, Bundle args) {
-        bowDataSource = new BowDataSource();
-        return new DataLoader<>(getContext(), bowDataSource, bowDataSource::getAll);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Bow>> loader, List<Bow> data) {
-        this.dataSource = bowDataSource;
-        mAdapter.setList(data);
+    protected LoaderUICallback onLoad(Bundle args) {
+        List<Bow> bows = Bow.getAll();
+        return () -> mAdapter.setList(bows);
     }
 
     @Override
@@ -115,19 +107,19 @@ public class BowListFragment extends EditableListFragment<Bow> {
 
         @Override
         public void bindItem() {
-            binding.name.setText(mItem.name);
-            binding.image.setImageDrawable(mItem.getDrawable());
+            binding.name.setText(item.name);
+            binding.image.setImageDrawable(item.getDrawable());
             binding.details.setVisibility(View.VISIBLE);
 
-            HTMLInfoBuilder info = new HTMLInfoBuilder();
-            info.addLine(R.string.bow_type, mItem.type);
-            if (!mItem.brand.trim().isEmpty()) {
-                info.addLine(R.string.brand, mItem.brand);
+            HtmlInfoBuilder info = new HtmlInfoBuilder();
+            info.addLine(R.string.bow_type, item.type);
+            if (!item.brand.trim().isEmpty()) {
+                info.addLine(R.string.brand, item.brand);
             }
-            if (!mItem.size.trim().isEmpty()) {
-                info.addLine(R.string.size, mItem.size);
+            if (!item.size.trim().isEmpty()) {
+                info.addLine(R.string.size, item.size);
             }
-            for (SightSetting s : mItem.sightSettings) {
+            for (SightMark s : item.getSightMarks()) {
                 info.addLine(s.distance.toString(), s.value);
             }
             binding.details.setText(HtmlUtils.fromHtml(info.toString()));

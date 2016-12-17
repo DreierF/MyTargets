@@ -20,7 +20,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,15 +39,8 @@ import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemEndBinding;
-import de.dreier.mytargets.managers.dao.PasseDataSource;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
-import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
-import de.dreier.mytargets.managers.dao.TrainingDataSource;
-import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.utils.DataLoader;
+import de.dreier.mytargets.shared.models.db.End;
+import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
@@ -56,14 +48,13 @@ import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 /**
- * Shows all passes of one round
+ * Shows all ends of one round
  */
-public class RoundFragment extends EditableListFragment<Passe> {
+public class RoundFragment extends EditableListFragment<End> {
 
     private static final String ROUND_ID = "round_id";
 
     private long mRound;
-    private PasseDataSource passeDataSource;
     private FragmentListBinding binding;
     private Round round;
 
@@ -100,14 +91,7 @@ public class RoundFragment extends EditableListFragment<Passe> {
             mRound = getArguments().getLong(ROUND_ID, -1);
         }
 
-        round = new RoundDataSource().get(mRound);
-        ToolbarUtils.setTitle(this,
-                String.format(Locale.ENGLISH, "%s %d", getString(R.string.round),
-                        round.info.index + 1));
-        ToolbarUtils.setSubtitle(this, round.getReachedPointsFormatted());
         setHasOptionsMenu(true);
-
-        passeDataSource = new PasseDataSource();
         return binding.getRoot();
     }
 
@@ -117,24 +101,26 @@ public class RoundFragment extends EditableListFragment<Passe> {
         ToolbarUtils.showHomeAsUp(this);
     }
 
+    @NonNull
     @Override
-    public Loader<List<Passe>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader<>(getContext(), new PasseDataSource(),
-                () -> passeDataSource.getAllByRound(mRound));
-    }
+    protected LoaderUICallback onLoad(Bundle args) {
+        round = Round.get(mRound);
+        final List<End> ends = round.getEnds();
+        final boolean showFab = round.maxEndCount == null || ends.size() < round.maxEndCount;
 
-    @Override
-    public void onLoadFinished(Loader<List<Passe>> loader, List<Passe> data) {
-        // Set round info
-        mAdapter.setList(data);
-        dataSource = new PasseDataSource();
+        return new LoaderUICallback() {
+            @Override
+            public void applyData() {
+                // Set round info
+                mAdapter.setList(ends);
+                binding.fab.setVisibility(showFab ? View.VISIBLE : View.GONE);
 
-        StandardRound standardRound = new StandardRoundDataSource()
-                .get(new TrainingDataSource().get(round.trainingId).standardRoundId);
-        boolean showFab = data
-                .size() < round.info.endCount || standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
-        binding.fab.setVisibility(showFab ? View.VISIBLE : View.GONE);
-
+                ToolbarUtils.setTitle(RoundFragment.this,
+                        String.format(Locale.ENGLISH, "%s %d", getString(R.string.round),
+                                round.index + 1));
+                ToolbarUtils.setSubtitle(RoundFragment.this, round.getReachedScore().toString());
+            }
+        };
     }
 
     @Override
@@ -163,34 +149,34 @@ public class RoundFragment extends EditableListFragment<Passe> {
     }
 
     @Override
-    protected void onItemSelected(Passe item) {
+    protected void onItemSelected(End item) {
         InputActivity.getIntent(round, item.index)
                 .withContext(this)
                 .start();
     }
 
     @Override
-    protected void onEdit(Passe item) {
+    protected void onEdit(End item) {
         InputActivity.getIntent(round, item.index)
                 .withContext(this)
                 .start();
     }
 
-    private class EndAdapter extends ListAdapterBase<Passe> {
+    private class EndAdapter extends ListAdapterBase<End> {
 
         EndAdapter(Context context) {
             super(context);
         }
 
         @Override
-        protected SelectableViewHolder<Passe> onCreateViewHolder(ViewGroup parent) {
+        protected SelectableViewHolder<End> onCreateViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_end, parent, false);
             return new EndViewHolder(itemView);
         }
     }
 
-    private class EndViewHolder extends SelectableViewHolder<Passe> {
+    private class EndViewHolder extends SelectableViewHolder<End> {
 
         private final ItemEndBinding binding;
 
@@ -201,8 +187,8 @@ public class RoundFragment extends EditableListFragment<Passe> {
 
         @Override
         public void bindItem() {
-            binding.shoots.setPoints(mItem, round.info.target);
-            binding.passe.setText(getString(R.string.passe_n, (mItem.index + 1)));
+            binding.shoots.setShots(round.getTarget(), item.getShots());
+            binding.end.setText(getString(R.string.passe_n, (item.index + 1)));
         }
     }
 }

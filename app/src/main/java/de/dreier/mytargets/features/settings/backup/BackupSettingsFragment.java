@@ -35,11 +35,11 @@ import de.dreier.mytargets.BuildConfig;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentBackupBinding;
 import de.dreier.mytargets.features.settings.SettingsFragmentBase;
+import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.features.settings.backup.provider.IAsyncBackupRestore;
 import de.dreier.mytargets.features.settings.backup.synchronization.GenericAccountService;
 import de.dreier.mytargets.features.settings.backup.synchronization.SyncUtils;
-import de.dreier.mytargets.managers.DatabaseManager;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -378,7 +378,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
             protected String doInBackground(Void... params) {
                 try {
                     InputStream st = getContext().getContentResolver().openInputStream(uri);
-                    DatabaseManager.Import(getContext(), st);
+                    BackupUtils.importZip(getContext(), st);
                     return null;
                 } catch (FileNotFoundException ioe) {
                     ioe.printStackTrace();

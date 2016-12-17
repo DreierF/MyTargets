@@ -20,7 +20,7 @@
 
         <variable
             name="arrow"
-            type="de.dreier.mytargets.shared.models.Arrow" />
+            type="de.dreier.mytargets.shared.models.db.Arrow"/>
 
     </data>
 

@@ -20,12 +20,9 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,20 +40,18 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
-import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
-import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.utils.DataLoader;
-import de.dreier.mytargets.utils.DataLoaderBase.BackgroundAction;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
+import static android.app.Activity.RESULT_OK;
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 public class StandardRoundListFragment extends SelectPureListItemFragmentBase<StandardRound>
-        implements View.OnClickListener, SearchView.OnQueryTextListener,
-        LoaderManager.LoaderCallbacks<List<StandardRound>> {
+        implements View.OnClickListener, SearchView.OnQueryTextListener {
 
     private static final int NEW_STANDARD_ROUND = 1;
+    private static final int EDIT_STANDARD_ROUND = 2;
     private static final String KEY_QUERY = "query";
 
     private StandardRound currentSelection;
@@ -66,29 +61,28 @@ public class StandardRoundListFragment extends SelectPureListItemFragmentBase<St
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         binding.recyclerView.setHasFixedSize(false);
+        binding.fab.setVisibility(View.VISIBLE);
         binding.fab.setOnClickListener(this);
         useDoubleClickSelection = true;
         setHasOptionsMenu(true);
+        currentSelection = Parcels.unwrap(getArguments().getParcelable(ITEM));
         return binding.getRoot();
     }
 
+    @NonNull
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        currentSelection = Parcels.unwrap(getArguments().getParcelable(ITEM));
-    }
-
-    @Override
-    public Loader<List<StandardRound>> onCreateLoader(int id, Bundle args) {
-        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource();
-        final BackgroundAction<StandardRound> action;
+    protected LoaderUICallback onLoad(Bundle args) {
+        List<StandardRound> data;
         if (args != null && args.containsKey(KEY_QUERY)) {
             String query = args.getString(KEY_QUERY);
-            action = () -> standardRoundDataSource.getAllSearch(query);
+            data = StandardRound.getAllSearch(query);
         } else {
-            action = standardRoundDataSource::getAll;
+            data = StandardRound.getAll();
         }
-        return new DataLoader<>(getContext(), standardRoundDataSource, action);
+        return () -> {
+            mAdapter.setList(data);
+            selectItem(binding.recyclerView, currentSelection);
+        };
     }
 
     @Override
@@ -97,43 +91,10 @@ public class StandardRoundListFragment extends SelectPureListItemFragmentBase<St
         if (searchView != null) {
             Bundle args = new Bundle();
             args.putString(KEY_QUERY, searchView.getQuery().toString());
-            getLoaderManager().restartLoader(0, args, this);
+            reloadData(args);
         } else {
-            getLoaderManager().restartLoader(0, null, this);
+            reloadData();
         }
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<StandardRound>> loader, List<StandardRound> data) {
-        mAdapter.setList(data);
-        int position = data.indexOf(currentSelection);
-        // Test if our currentSelection has been deleted
-        if (position == -1 && new StandardRoundDataSource().get(currentSelection.getId()) == null) {
-            currentSelection = data.size() > 0 ? data.get(0) : new StandardRoundDataSource()
-                    .get(32);
-            Intent dataIntent = new Intent();
-            dataIntent.putExtra(ITEM, Parcels.wrap(currentSelection));
-            getActivity().setResult(Activity.RESULT_OK, dataIntent);
-        }
-        if (position > -1) {
-            binding.recyclerView.post(() -> {
-                mSelector.setSelected(position, currentSelection.getId(), true);
-                LinearLayoutManager manager = (LinearLayoutManager) binding.recyclerView
-                        .getLayoutManager();
-                int first = manager.findFirstCompletelyVisibleItemPosition();
-                int last = manager.findLastCompletelyVisibleItemPosition();
-                if (first > position || last < position) {
-                    binding.recyclerView.scrollToPosition(position);
-                }
-            });
-        } else {
-            mSelector.clearSelections();
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<StandardRound>> loader) {
-
     }
 
     @Override
@@ -148,9 +109,10 @@ public class StandardRoundListFragment extends SelectPureListItemFragmentBase<St
     @Override
     public void onLongClick(SelectableViewHolder<StandardRound> holder) {
         StandardRound item = holder.getItem();
-        if (item.club == StandardRoundFactory.CUSTOM && item.usages == 0) {
+        if (item.club == StandardRoundFactory.CUSTOM) {
             EditStandardRoundFragment.editIntent(item)
-                    .withContext(this).forResult(NEW_STANDARD_ROUND)
+                    .withContext(this)
+                    .forResult(EDIT_STANDARD_ROUND)
                     .start();
         } else {
             new MaterialDialog.Builder(getContext())
@@ -197,7 +159,15 @@ public class StandardRoundListFragment extends SelectPureListItemFragmentBase<St
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == NEW_STANDARD_ROUND) {
             getActivity().setResult(resultCode, data);
-            getActivity().onBackPressed();
+            finish();
+        } else if (requestCode == EDIT_STANDARD_ROUND) {
+            if (resultCode == RESULT_OK) {
+                currentSelection = Parcels.unwrap(data.getParcelableExtra(ITEM));
+                reloadData();
+            } else if (resultCode == EditStandardRoundFragment.RESULT_STANDARD_ROUND_DELETED) {
+                currentSelection = StandardRound.get(32L);
+                reloadData();
+            }
         }
     }
 
@@ -236,13 +206,13 @@ public class StandardRoundListFragment extends SelectPureListItemFragmentBase<St
 
         @Override
         public void bindItem() {
-            binding.name.setText(mItem.name);
+            binding.name.setText(item.name);
 
-            if (mItem.equals(currentSelection)) {
+            if (item.equals(currentSelection)) {
                 binding.image.setVisibility(View.VISIBLE);
                 binding.details.setVisibility(View.VISIBLE);
-                binding.details.setText(mItem.getDescription(getActivity()));
-                binding.image.setImageDrawable(mItem.getTargetDrawable());
+                binding.details.setText(item.getDescription(getActivity()));
+                binding.image.setImageDrawable(item.getTargetDrawable());
             } else {
                 binding.image.setVisibility(View.GONE);
                 binding.details.setVisibility(View.GONE);

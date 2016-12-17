@@ -20,6 +20,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -32,9 +33,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.dreier.mytargets.shared.models.Coordinate;
-import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.db.Shot;
 
 @Parcel
 public class EndRenderer {
@@ -45,10 +45,10 @@ public class EndRenderer {
     List<Shot> shotList;
     int pressed = NO_SELECTION;
     int selected = NO_SELECTION;
-    Coordinate selectedPosition;
+    PointF selectedPosition;
     int selectedRadius;
     // Animation
-    Coordinate[] oldCoordinate;
+    PointF[] oldCoordinate;
     float currentAnimationProgress = -1;
     private transient Circle circle;
     private transient View parent;
@@ -95,7 +95,7 @@ public class EndRenderer {
     public void setShots(List<Shot> shots) {
         boolean calcLayout = rect != null && shotList == null;
         shotList = new ArrayList<>(shots);
-        oldCoordinate = new Coordinate[shotList.size()];
+        oldCoordinate = new PointF[shotList.size()];
         Collections.sort(shotList);
         if (calcLayout) {
             setRect(rect);
@@ -103,19 +103,19 @@ public class EndRenderer {
     }
 
     public void draw(Canvas canvas) {
-        if (rect == null) {
+        if (rect == null || shotsPerRow == 0) {
             return;
         }
 
         // Draw all points of this end into the given rect
         for (int i = 0; i < shotList.size(); i++) {
             Shot shot = shotList.get(i);
-            if (shot.zone == Shot.NOTHING_SELECTED) {
+            if (shot.scoringRing == Shot.NOTHING_SELECTED) {
                 break;
             }
 
             int radius = getRadius(shot);
-            Coordinate coordinate = getAnimatedPosition(i, shot);
+            PointF coordinate = getAnimatedPosition(i, shot);
             if (radius > 0) {
                 // Draw touch feedback if arrow is pressed
                 if (pressed == shot.index) {
@@ -124,18 +124,19 @@ public class EndRenderer {
                 }
 
                 // Draw circle
-                circle.draw(canvas, coordinate.x, coordinate.y, shot.zone, radius,
-                        !TextUtils.isEmpty(shot.comment) && i != selected, shot.index, shot.arrow);
+                circle.draw(canvas, coordinate.x, coordinate.y, shot.scoringRing, radius,
+                        !TextUtils.isEmpty(shot.comment) && i != selected, shot.index,
+                        shot.arrowNumber);
             }
         }
     }
 
     @NonNull
-    private Coordinate getPosition(int i, Shot shot) {
+    private PointF getPosition(int i, Shot shot) {
         if (selected == shot.index && selectedPosition != null) {
-            return new Coordinate(selectedPosition.x, selectedPosition.y);
+            return new PointF(selectedPosition.x, selectedPosition.y);
         } else {
-            Coordinate coordinate = new Coordinate();
+            PointF coordinate = new PointF();
             float column = i % shotsPerRow + 0.5f;
             coordinate.x = rect.left + column * columnWidth;
             float row = (float) (Math.ceil(i / shotsPerRow) + 0.5);
@@ -144,8 +145,8 @@ public class EndRenderer {
         }
     }
 
-    private Coordinate getAnimatedPosition(int i, Shot shot) {
-        Coordinate coordinate = getPosition(i, shot);
+    private PointF getAnimatedPosition(int i, Shot shot) {
+        PointF coordinate = getPosition(i, shot);
         if (currentAnimationProgress != -1 && oldCoordinate[shot.index] != null) {
             float oldX = oldCoordinate[shot.index].x;
             float oldY = oldCoordinate[shot.index].y;
@@ -170,8 +171,8 @@ public class EndRenderer {
         }
     }
 
-    public Animator getAnimationToSelection(int selectedShot, Coordinate c, int radius, RectF rect) {
-        if(rect == null) {
+    public Animator getAnimationToSelection(int selectedShot, PointF c, int radius, RectF rect) {
+        if (rect == null) {
             setSelection(selectedShot, c, radius);
             return null;
         }
@@ -185,7 +186,7 @@ public class EndRenderer {
         return getAnimator();
     }
 
-    public void setSelection(int selectedShot, Coordinate c, int radius) {
+    public void setSelection(int selectedShot, PointF c, int radius) {
         selected = selectedShot;
         selectedPosition = c;
         selectedRadius = radius;
@@ -221,7 +222,7 @@ public class EndRenderer {
             int col = (int) Math.floor((x - rect.left) / columnWidth);
             int row = (int) Math.floor((y - rect.top) / rowHeight);
             final int arrow = row * shotsPerRow + col;
-            if (arrow < shotList.size() && shotList.get(arrow).zone != Shot.NOTHING_SELECTED) {
+            if (arrow < shotList.size() && shotList.get(arrow).scoringRing != Shot.NOTHING_SELECTED) {
                 return shotList.get(arrow).index == selected ? -1 : shotList.get(arrow).index;
             }
         }

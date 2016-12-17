@@ -101,3 +101,6 @@
 -keep class * implements com.google.gson.TypeAdapterFactory
 -keep class * implements com.google.gson.JsonSerializer
 -keep class * implements com.google.gson.JsonDeserializer
+
+#DBFlow
+-keep class * extends com.raizlabs.android.dbflow.config.DatabaseHolder { *; }

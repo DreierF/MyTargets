@@ -20,12 +20,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.fragments.EditBowFragment;
-import de.dreier.mytargets.managers.dao.BowDataSource;
-import de.dreier.mytargets.shared.models.Bow;
+import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.utils.IntentWrapper;
 
 public class BowSelector extends ImageSelectorBase<Bow> {
@@ -53,18 +52,17 @@ public class BowSelector extends ImageSelectorBase<Bow> {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == BOW_ADD_REQUEST_CODE) {
-            setItemId(0);
+            setItemId(null);
         }
     }
 
-    public void setItemId(long bow) {
+    public void setItemId(Long bow) {
         Bow item = null;
-        BowDataSource bowDataSource = new BowDataSource();
-        if (bow > 0) {
-            item = bowDataSource.get(bow);
+        if (bow != null) {
+            item = Bow.get(bow);
         }
         if (item == null) {
-            ArrayList<Bow> all = bowDataSource.getAll();
+            List<Bow> all = Bow.getAll();
             if (all.size() > 0) {
                 item = all.get(0);
             }

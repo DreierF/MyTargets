@@ -15,8 +15,6 @@
 
 package de.dreier.mytargets.managers;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -33,8 +31,8 @@ import java.io.StringWriter;
 import java.util.List;
 
 import de.dreier.mytargets.InstrumentedTestBase;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
-import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.utils.rules.MiniDbTestRule;
 
 @SmallTest
@@ -84,15 +82,14 @@ public class ExportTest extends InstrumentedTestBase {
     @Test
     public void testDataExport() throws IOException {
         setLocale("en", "EN");
-        Context context = InstrumentationRegistry.getTargetContext();
-        DatabaseManager database = DatabaseManager.getInstance(context);
         final StringWriter writer = new StringWriter();
-        List<Long> roundIds = Stream.of(new RoundDataSource().getAll())
+        List<Long> roundIds = Stream.of(Training.getAll())
+                .flatMap(t -> Stream.of(t.getRounds()))
                 .map(Round::getId)
                 .sorted()
                 .collect(Collectors.toList());
         roundIds.remove(0);
-        database.writeExportData(writer, roundIds);
+        CsvExporter.writeExportData(writer, roundIds);
         Assert.assertEquals(EXPECTED, writer.toString());
     }
 }

@@ -27,7 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import de.dreier.mytargets.utils.Utils;
+import de.dreier.mytargets.shared.utils.LongUtils;
 
 public class MultiSelector {
     private static final String SELECTION_IDS = "ids";
@@ -107,14 +107,14 @@ public class MultiSelector {
 
     public Bundle saveSelectionStates() {
         Bundle information = new Bundle();
-        information.putLongArray(SELECTION_IDS, Utils.toArray(getSelectedIds()));
+        information.putLongArray(SELECTION_IDS, LongUtils.toArray(getSelectedIds()));
         information.putBoolean(SELECTIONS_STATE, this.mIsSelectable);
         return information;
     }
 
     public void restoreSelectionStates(Bundle savedStates) {
         long[] selectedPositions = savedStates.getLongArray(SELECTION_IDS);
-        restoreSelections(Utils.toList(selectedPositions));
+        restoreSelections(LongUtils.toList(selectedPositions));
         this.mIsSelectable = savedStates.getBoolean(SELECTIONS_STATE);
     }
 

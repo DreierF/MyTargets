@@ -15,10 +15,11 @@
 
 package de.dreier.mytargets.shared.targets.scoringstyle;
 
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
-import de.dreier.mytargets.shared.models.Passe;
+import de.dreier.mytargets.shared.models.Score;
+import de.dreier.mytargets.shared.models.db.End;
+import de.dreier.mytargets.shared.models.db.Shot;
 
 public class ScoringStyle {
 
@@ -26,10 +27,24 @@ public class ScoringStyle {
     private static final String X_SYMBOL = "X";
     private final boolean showAsX;
     protected final int[][] points;
+    private int maxScorePerShot;
 
     ScoringStyle(boolean showAsX, int[][] points) {
         this.showAsX = showAsX;
         this.points = points;
+        getMaxPoints();
+    }
+
+    private int getMaxPoints() {
+        maxScorePerShot = 0;
+        for (int[] arrowPoints : points) {
+            for (int point : arrowPoints) {
+                if (point > maxScorePerShot) {
+                    maxScorePerShot = point;
+                }
+            }
+        }
+        return maxScorePerShot;
     }
 
     public ScoringStyle(boolean showAsX, int... points) {
@@ -60,7 +75,7 @@ public class ScoringStyle {
         } else if (zone == 0 && showAsX) {
             return X_SYMBOL;
         } else {
-            int value = getPointsByZone(zone, arrow);
+            int value = getScoreByScoringRing(zone, arrow);
             if (value == 0) {
                 return MISS_SYMBOL;
             }
@@ -68,14 +83,14 @@ public class ScoringStyle {
         }
     }
 
-    public int getPointsByZone(int zone, int arrow) {
+    public int getScoreByScoringRing(int zone, int arrow) {
         if (isOutOfRange(zone)) {
             return 0;
         }
         return getPoints(zone, arrow);
     }
 
-    int getPoints(int zone, int arrow) {
+    protected int getPoints(int zone, int arrow) {
         return points[0][zone];
     }
 
@@ -83,25 +98,16 @@ public class ScoringStyle {
         return zone < 0 || zone >= points[0].length;
     }
 
-    public int getMaxPoints() {
-        int max = 0;
-        for (int[] arrowPoints : points) {
-            for (int point : arrowPoints) {
-                if (point > max) {
-                    max = point;
-                }
-            }
-        }
-        return max;
+    public Score getReachedScore(Shot shot) {
+        Score score = new Score();
+        score.reachedScore = getScoreByScoringRing(shot.scoringRing, shot.index);
+        score.totalScore = maxScorePerShot;
+        return score;
     }
 
-    public int getEndMaxPoints(int arrowsPerPasse) {
-        return getMaxPoints() * arrowsPerPasse;
-    }
-
-    public int getReachedPoints(Passe passe) {
-        return Stream.of(passe.shots)
-                .map(s -> getPointsByZone(s.zone, s.index))
-                .collect(Collectors.reducing(0, (a, b) -> a + b));
+    public Score getReachedScore(End end) {
+        return Stream.of(end.getShots())
+                .map(this::getReachedScore)
+                .reduce(new Score(), Score::add);
     }
 }

@@ -18,18 +18,22 @@ package de.dreier.mytargets.fragments;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import junit.framework.Assert;
+
 import org.parceler.Parcels;
+
+import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemDistanceBinding;
-import de.dreier.mytargets.managers.dao.DistanceDataSource;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Dimension.Unit;
 import de.dreier.mytargets.utils.DistanceInputDialog;
@@ -67,6 +71,7 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> impl
         mAdapter = new DistanceAdapter(getContext());
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
+
         binding.fab.setOnClickListener(view -> new DistanceInputDialog.Builder(getContext())
                 .setUnit(unit.toString())
                 .setOnClickListener(DistanceGridFragment.this)
@@ -87,14 +92,31 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> impl
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mAdapter.setList(new DistanceDataSource().getAll(distance, unit));
+    public void onAttach(Context activity) {
+        super.onAttach(activity);
+        if (activity instanceof OnItemSelectedListener) {
+            this.listener = (OnItemSelectedListener) activity;
+        }
+        Assert.assertNotNull(listener);
+        // TODO check if this works or is necessary
     }
 
     @Override
     public void onLongClick(SelectableViewHolder<Dimension> holder) {
         onClick(holder, holder.getItem());
+    }
+
+    @NonNull
+    @Override
+    protected LoaderUICallback onLoad(Bundle args) {
+        final List<Dimension> distances = Dimension.getAll(distance, unit);
+        return new LoaderUICallback() {
+            @Override
+            public void applyData() {
+                mAdapter.setList(distances);
+                selectItem(binding.recyclerView, distance);
+            }
+        };
     }
 
     private class DistanceAdapter extends ListAdapterBase<Dimension> {
@@ -121,7 +143,7 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> impl
 
         @Override
         public void bindItem() {
-            binding.distance.setText(mItem.toString());
+            binding.distance.setText(item.toString());
         }
     }
 
