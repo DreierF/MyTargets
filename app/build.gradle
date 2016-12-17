@@ -15,7 +15,6 @@
 
 import com.android.build.gradle.internal.tasks.databinding.DataBindingExportBuildInfoTask
 
-apply plugin: 'idea'
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.triplet.play'

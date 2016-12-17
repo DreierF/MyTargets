@@ -73,7 +73,7 @@ ext {
         aboutPage : '1.1.1',
         homage : '0.2.0',
         roundedImageView : '2.2.1',
-        truth : '0.31',
+        truth : '0.30',
         robolectric : '3.1.4',
         findbugs : '3.0.1',
         uiAutomator : '2.1.2',

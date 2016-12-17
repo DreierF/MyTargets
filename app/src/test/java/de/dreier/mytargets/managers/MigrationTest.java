@@ -140,6 +140,8 @@ public final class MigrationTest {
         assertThat(ends.get(0).roundId).isEqualTo(1L);
         assertThat(ends.get(0).index).isEqualTo(0);
         assertThat(ends.get(0).images).isEqualTo(null);
+        assertThat(ends.get(0).exact).isEqualTo(true);
+        assertThat(ends.get(2).exact).isEqualTo(false);
         final List<Shot> shots = ends.get(0).getShots();
         assertThat(shots).hasSize(4);
         assertThat(shots.get(0).index).isEqualTo(0);
