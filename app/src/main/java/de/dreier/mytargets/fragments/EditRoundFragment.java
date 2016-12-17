@@ -142,23 +142,18 @@ public class EditRoundFragment extends EditFragmentBase {
         Training training = Training.get(trainingId);
 
         Round round;
-        if (roundId != null) {
-            round = Round.get(roundId);
-        } else {
+        if (roundId == null) {
             round = new Round();
             round.trainingId = trainingId;
             round.setTarget(binding.target.getSelectedItem());
-        }
-
-        round.comment = binding.comment.getText().toString();
-
-        if (training.standardRoundId == null) {
+            round.comment = binding.comment.getText().toString();
             round.distance = binding.distance.getSelectedItem();
             round.index = training.getRounds().size();
-            round.save();
+        } else {
+            round = Round.get(roundId);
+            round.comment = binding.comment.getText().toString();
         }
         round.save();
-
         return round;
     }
 
