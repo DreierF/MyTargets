@@ -42,19 +42,47 @@ plugins {
 ext {
     compileSdkVersionCode = 25
     buildToolsVersionCode = '25.0.2'
-    supportLibVersion = '25.1.0'
-    testSupportLibVersion = '0.5'
-    playServiceVersion = '10.0.1'
-    espressoVersion = '2.2.2'
-    parcelerVersion = '1.1.6'
-    jodaTimeVersion = '2.9.6'
-    dbFlowVersion = '3.1.1'
+
     git = Grgit.open()
     appVersionCode = Integer.parseInt("${git.tag.list().size()}")
     appVersionName = "${git.describe()}"
             .replace("v", "")
             .replace("_b", "-Beta")
             .replace("_rc", "-RC")
+
+    libraryVersion = [
+        support : '25.1.0',
+        testSupport : '0.5',
+        supportWearable : '1.4.0',
+        playService : '10.0.1',
+        espresso : '2.2.2',
+        parceler : '1.1.6',
+        jodaTime : '2.9.6',
+        dbFlow : '3.1.1',
+        gson : '2.8.0',
+        okhttp : '3.5.0',
+        retrofit : '2.1.0',
+        picasso : '2.5.2',
+        icepick : '3.2.0',
+        permissionsdispatcher : '2.3.0',
+        iab : '1.0.36',
+        mpAndroidChart : 'v3.0.1',
+        clansFab : '1.6.4',
+        discreteSeekbar : '1.0.1',
+        easyImage : '1.3.1', // 1.4.+ dropped support for API 14 and 15
+        materialDialogs : '0.9.1.0',
+        aboutPage : '1.1.1',
+        homage : '0.2.0',
+        roundedImageView : '2.2.1',
+        truth : '0.30',
+        robolectric : '3.1.4',
+        findbugs : '3.0.1',
+        uiAutomator : '2.1.2',
+        screengrab : '0.5.6',
+        annimonStream : '1.1.4',
+        jUnit : '4.12',
+        mockito : '2.3.3'
+    ]
 }
 
 allprojects {
