@@ -249,9 +249,6 @@ public class InputActivity extends ChildActivityBase
 
         binding.next.setOnClickListener(view -> showEnd(data.endIndex + 1));
         binding.prev.setOnClickListener(view -> showEnd(data.endIndex - 1));
-
-        // Send message to wearable app, that we are starting an end
-        new Thread(InputActivity.this::startWearNotification).start();
     }
 
     @Override
@@ -313,6 +310,9 @@ public class InputActivity extends ChildActivityBase
         binding.endTitle.setText(getString(R.string.passe) + " " + (data.endIndex + 1));
         binding.roundTitle.setText(getString(R.string.round) + " " + (getCurrentRound().index + 1));
         updateNavigationButtons();
+
+        // Send message to wearable app, that we are starting an end
+        new Thread(InputActivity.this::startWearNotification).start();
     }
 
     private void updateNavigationButtons() {
@@ -413,12 +413,8 @@ public class InputActivity extends ChildActivityBase
         }
 
         // Load bow settings
-        if (data.training.bowId != null) {
-            final SightMark sightMark = Bow.get(data.training.bowId)
-                    .getSightSetting(getCurrentRound().distance);
-            if (sightMark != null) {
-                text += String.format("%s: %s", getCurrentRound().distance, sightMark.value);
-            }
+        if (data.sightMark != null) {
+            text += String.format("%s: %s", getCurrentRound().distance, data.sightMark.value);
         }
         return new NotificationInfo(getCurrentRound(), title, text);
     }
@@ -493,6 +489,11 @@ public class InputActivity extends ChildActivityBase
                 }
             }
 
+            final Bow bow = result.training.getBow();
+            if (bow != null) {
+                result.sightMark = bow.getSightSetting(rounds.get(result.roundIndex).distance);
+            }
+
             return result;
         }
     }
@@ -504,5 +505,6 @@ public class InputActivity extends ChildActivityBase
         int roundIndex;
         Dimension arrowDiameter;
         int endIndex;
+        SightMark sightMark;
     }
 }
