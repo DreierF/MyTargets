@@ -96,7 +96,7 @@ public final class MigrationTest {
         assertThat(training.getId()).isEqualTo(1);
         assertThat(training.title).isEqualTo("Training im Dez");
         assertThat(training.standardRoundId).isEqualTo(null);
-        assertThat(training.bow).isEqualTo(null);
+        assertThat(training.bowId).isEqualTo(null);
         assertThat(training.arrowId).isEqualTo(null);
         assertThat(training.arrowNumbering).isEqualTo(false);
         assertThat(training.timePerEnd).isEqualTo(-1);
@@ -159,7 +159,7 @@ public final class MigrationTest {
         assertThat(training.getId()).isEqualTo(2);
         assertThat(training.title).isEqualTo("Training");
         assertThat(training.standardRoundId).isEqualTo(32L);
-        assertThat(training.bow).isEqualTo(1);
+        assertThat(training.bowId).isEqualTo(1);
         assertThat(training.arrowId).isEqualTo(1);
         assertThat(training.arrowNumbering).isEqualTo(false);
         assertThat(training.timePerEnd).isEqualTo(-1);

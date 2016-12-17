@@ -304,7 +304,7 @@ public class HtmlUtils {
             }
         }
 
-        Bow bow = Bow.get(training.bow);
+        Bow bow = Bow.get(training.bowId);
         if (bow != null) {
             info.addLine(R.string.bow, bow.name);
             if (scoreboard) {

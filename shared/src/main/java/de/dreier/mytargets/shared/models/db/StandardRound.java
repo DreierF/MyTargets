@@ -159,14 +159,4 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
         }
         super.save();
     }
-
-    @Override
-    public void insert() {
-        super.insert();
-        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-        for (RoundTemplate s : getRounds()) {
-            s.standardRound = id;
-        }
-        super.insert();
-    }
 }

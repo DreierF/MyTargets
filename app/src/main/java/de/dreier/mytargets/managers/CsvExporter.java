@@ -78,7 +78,7 @@ public class CsvExporter {
         // Bow
         csv.add(t.getBow() == null ? "" : t.getBow().getName());
         // Arrow
-        csv.add(t.getArrowId() == null ? "" : t.getArrowId().getName());
+        csv.add(t.getArrow() == null ? "" : t.getArrow().getName());
         for (Round r : t.getRounds()) {
             if (!roundIds.contains(r.getId())) {
                 continue;

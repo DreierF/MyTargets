@@ -149,7 +149,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             Training train = Training.get(trainingId);
             binding.training.setText(train.title);
             date = train.date;
-            binding.bow.setItemId(train.bow);
+            binding.bow.setItemId(train.bowId);
             binding.arrow.setItemId(train.arrowId);
             binding.standardRound.setItemId(train.standardRoundId);
             binding.environment.setItem(train.getEnvironment());
@@ -292,16 +292,16 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         training.title = binding.training.getText().toString();
         training.date = date;
         training.setEnvironment(binding.environment.getSelectedItem());
-        training.bow = binding.bow.getSelectedItem() == null ? 0 : binding.bow.getSelectedItem()
+        training.bowId = binding.bow.getSelectedItem() == null ? null : binding.bow.getSelectedItem()
                 .getId();
-        training.arrowId = binding.arrow.getSelectedItem() == null ? 0 : binding.arrow
+        training.arrowId = binding.arrow.getSelectedItem() == null ? null : binding.arrow
                 .getSelectedItem().getId();
         training.timePerEnd = binding.timer.isChecked() ? SettingsManager
                 .getTimerShootTime() : -1;
         training.arrowNumbering = binding.numberArrows.isChecked();
         training.indoor = binding.indoor.isChecked();
 
-        SettingsManager.setBow(training.bow);
+        SettingsManager.setBow(training.bowId);
         SettingsManager.setArrow(training.arrowId);
         SettingsManager.setTimerEnabled(binding.timer.isChecked());
         SettingsManager.setArrowNumbersEnabled(training.arrowNumbering);

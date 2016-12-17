@@ -50,7 +50,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     @ForeignKey(tableClass = Bow.class, references = {
             @ForeignKeyReference(columnName = "bow", columnType = Long.class, foreignKeyColumnName = "_id")},
             onDelete = ForeignKeyAction.SET_NULL)
-    public Long bow;
+    public Long bowId;
 
     @ForeignKey(tableClass = Arrow.class, references = {
             @ForeignKeyReference(columnName = "arrow", columnType = Long.class, foreignKeyColumnName = "_id")},
@@ -138,11 +138,11 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     public Bow getBow() {
         return SQLite.select()
                 .from(Bow.class)
-                .where(Bow_Table._id.eq(bow))
+                .where(Bow_Table._id.eq(bowId))
                 .querySingle();
     }
 
-    public Arrow getArrowId() {
+    public Arrow getArrow() {
         return SQLite.select()
                 .from(Arrow.class)
                 .where(Arrow_Table._id.eq(arrowId))
@@ -176,15 +176,5 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
             s.trainingId = id;
         }
         super.save();
-    }
-
-    @Override
-    public void insert() {
-        super.insert();
-        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-        for (Round s : getRounds()) {
-            s.trainingId = id;
-        }
-        super.insert();
     }
 }

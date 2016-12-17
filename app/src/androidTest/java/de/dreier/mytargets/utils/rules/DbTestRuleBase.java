@@ -111,7 +111,7 @@ public abstract class DbTestRuleBase implements TestRule {
         training.windSpeed = 1;
         training.windDirection = 0;
         training.standardRoundId = standardRoundId;
-        training.bow = null;
+        training.bowId = null;
         training.arrowId = null;
         training.arrowNumbering = false;
         training.timePerEnd = 0;

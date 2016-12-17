@@ -173,16 +173,6 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     }
 
     @Override
-    public void insert() {
-        super.insert();
-        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-        for (Shot s : getShots()) {
-            s.endId = id;
-        }
-        super.insert();
-    }
-
-    @Override
     public boolean equals(Object another) {
         return another instanceof End &&
                 getClass().equals(another.getClass()) &&

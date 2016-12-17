@@ -413,8 +413,8 @@ public class InputActivity extends ChildActivityBase
         }
 
         // Load bow settings
-        if (data.training.bow != null) {
-            final SightMark sightMark = Bow.get(data.training.bow)
+        if (data.training.bowId != null) {
+            final SightMark sightMark = Bow.get(data.training.bowId)
                     .getSightSetting(getCurrentRound().distance);
             if (sightMark != null) {
                 text += String.format("%s: %s", getCurrentRound().distance, sightMark.value);
@@ -487,7 +487,7 @@ public class InputActivity extends ChildActivityBase
             result.standardRound = result.training.getStandardRound();
             result.arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
             if (result.training.arrowId != null) {
-                Arrow arrow = result.training.getArrowId();
+                Arrow arrow = result.training.getArrow();
                 if (arrow != null) {
                     result.arrowDiameter = arrow.diameter;
                 }

@@ -187,7 +187,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         filteredRounds = Stream.of(rounds)
                 .filter(pair -> distanceTags.contains(pair.second.distance.toString())
                         && arrowTags.contains(pair.first.arrowId)
-                        && bowTags.contains(pair.first.bow))
+                        && bowTags.contains(pair.first.bowId))
                 .map(p -> p.second)
                 .groupBy(value -> new Pair<>(value.getTarget().getId(),
                         value.getTarget().scoringStyle))
@@ -201,7 +201,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
 
     private List<ChipGroup.Tag> getBowTags() {
         return Stream.of(rounds)
-                .map(p -> p.first.bow)
+                .map(p -> p.first.bowId)
                 .distinct()
                 .map(bid -> {
                     if (bid != null) {
