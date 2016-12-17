@@ -87,34 +87,32 @@ public class TargetListFragment extends SelectItemFragmentBase<Target>
         super.onActivityCreated(savedInstanceState);
 
         // Process passed arguments
-        Target t = Parcels.unwrap(getArguments().getParcelable(ITEM));
+        Target target = Parcels.unwrap(getArguments().getParcelable(ITEM));
         typeFixed = getArguments().getBoolean(TYPE_FIXED);
         List<TargetModelBase> list;
         if (typeFixed) {
-            list = TargetFactory.getList(t);
+            list = TargetFactory.getList(target);
         } else {
             list = TargetFactory.getList();
         }
         List<Target> targets = Stream.of(list)
-                .map(value -> new Target((int) value.getId(), 0))
+                .map(value -> new Target((int) (long) value.getId(), 0))
                 .collect(Collectors.toList());
         mAdapter.setList(targets);
+        selectItem(binding.recyclerView, target);
 
-        int position = targets.indexOf(t);
-        mSelector.setSelected(position, t.getId(), true);
-        binding.recyclerView.scrollToPosition(position);
         updateSettings();
 
         // Set initial target size
         int diameterIndex = -1;
-        Dimension[] diameters = t.getModel().getDiameters();
+        Dimension[] diameters = target.getModel().getDiameters();
         for (int i = 0; i < diameters.length; i++) {
-            if (diameters[i].equals(t.size)) {
+            if (diameters[i].equals(target.size)) {
                 diameterIndex = i;
                 break;
             }
         }
-        binding.scoringStyle.setSelection(t.scoringStyle);
+        binding.scoringStyle.setSelection(target.scoringStyle);
         binding.targetSize.setSelection(diameterIndex);
     }
 
@@ -215,8 +213,8 @@ public class TargetListFragment extends SelectItemFragmentBase<Target>
 
         @Override
         public void bindItem() {
-            binding.name.setText(mItem.getModel().toString());
-            binding.image.setImageDrawable(mItem.getDrawable());
+            binding.name.setText(item.getModel().toString());
+            binding.image.setImageDrawable(item.getDrawable());
         }
     }
 }

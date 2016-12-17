@@ -25,7 +25,7 @@ import java.util.List;
 
 import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer;
 import de.dreier.mytargets.shared.analysis.aggregation.IAggregationStrategy;
-import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.db.Shot;
 
 public abstract class AggregationStrategyBase<R extends IAggregationResultRenderer> implements IAggregationStrategy<R> {
     protected final ArrayList<Shot> data;

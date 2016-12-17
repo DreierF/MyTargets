@@ -18,7 +18,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -44,6 +45,6 @@
             app:fab_colorNormal="@color/colorAccent"
             tools:targetApi="lollipop"/>
 
-    </FrameLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
 </layout>

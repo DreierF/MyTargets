@@ -36,8 +36,8 @@ import java.util.Set;
 
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.SelectableZone;
-import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.db.Shot;
 
 import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
@@ -47,7 +47,7 @@ public class TargetImpactDrawable extends TargetDrawable {
     private Paint paintFill;
     private Map<String, Bitmap> scoresTextCache = new HashMap<>();
     private RectF textRect;
-    private float arrowRadius = 8;
+    private float arrowRadius;
     private boolean shouldDrawArrows = true;
 
     public TargetImpactDrawable(Target target) {
@@ -134,7 +134,7 @@ public class TargetImpactDrawable extends TargetDrawable {
     }
 
     private void drawArrow(Canvas canvas, Shot shot, boolean transparent) {
-        int color = model.getContrastColor(shot.zone);
+        int color = model.getContrastColor(shot.scoringRing);
         if (transparent) {
             color = 0x55000000 | color & 0xFFFFFF;
         }
@@ -157,7 +157,7 @@ public class TargetImpactDrawable extends TargetDrawable {
         canvas.drawLine(shot.x, shot.y - lineLen, shot.x, shot.y + lineLen, paintFill);
 
         // Draw zone points
-        String zoneString = target.zoneToString(shot.zone, shot.index);
+        String zoneString = target.zoneToString(shot.scoringRing, shot.index);
         RectF srcRect = new RectF(shot.x - arrowRadius, shot.y - arrowRadius,
                 shot.x + arrowRadius, shot.y + arrowRadius);
         Matrix m = new Matrix();

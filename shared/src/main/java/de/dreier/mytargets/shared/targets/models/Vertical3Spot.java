@@ -14,8 +14,9 @@
  */
 package de.dreier.mytargets.shared.targets.models;
 
+import android.graphics.PointF;
+
 import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.models.Dimension;
 
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
@@ -26,10 +27,10 @@ public class Vertical3Spot extends WA5Ring {
     public Vertical3Spot() {
         super(ID, R.string.vertical_3_spot);
         faceRadius = 0.32f;
-        facePositions = new Coordinate[]{
-                new Coordinate(0.0f, -0.68f),
-                new Coordinate(0.0f, 0.0f),
-                new Coordinate(0.0f, 0.68f)
+        facePositions = new PointF[]{
+                new PointF(0.0f, -0.68f),
+                new PointF(0.0f, 0.0f),
+                new PointF(0.0f, 0.68f)
         };
         diameters = new Dimension[]{new Dimension(40, CENTIMETER),
                 new Dimension(60, CENTIMETER)};

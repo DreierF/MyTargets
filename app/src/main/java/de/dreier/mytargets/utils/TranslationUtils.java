@@ -17,7 +17,6 @@ package de.dreier.mytargets.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -36,12 +35,12 @@ public class TranslationUtils {
         ArrayList<String> supportedLanguages = new ArrayList<>();
         Collections.addAll(supportedLanguages, "ca", "cs", "de", "en", "es", "fr", "hu", "it", "iw",
                 "ja", "nl", "no", "pl", "pt", "ru", "sk", "sl", "sv", "tr", "zh");
-        boolean shown = SettingsManager.getTranslationDialogWasShown();
+        boolean shown = SettingsManager.isTranslationDialogShown();
         String longLang = Locale.getDefault().getDisplayLanguage();
         String shortLocale = Locale.getDefault().getLanguage();
         if (!supportedLanguages.contains(shortLocale) && !shown && !shownThisTime) {
             // Link the e-mail address in the message
-            final SpannableString s = new SpannableString(Html.fromHtml("If you would like " +
+            final SpannableString s = new SpannableString(HtmlUtils.fromHtml("If you would like " +
                     "to help make MyTargets even better by translating the app to " +
                     longLang +
                     " visit <a href=\"https://crowdin.com/project/mytargets\">crowdin</a>!<br /><br />" +
@@ -51,7 +50,7 @@ public class TranslationUtils {
                     .setTitle("App translation")
                     .setMessage(s)
                     .setPositiveButton("OK", (dialog, which) -> {
-                        SettingsManager.setTranslationDialogWasShown(true);
+                        SettingsManager.setTranslationDialogShown(true);
                         dialog.dismiss();
                     })
                     .setNegativeButton("Remind me later", (dialog, which) -> {

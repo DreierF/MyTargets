@@ -30,10 +30,11 @@ public class Environment implements IImageProvider, IDetailProvider {
     public Environment() {
     }
 
-    public Environment(EWeather weather, int windSpeed, int windDirection) {
+    public Environment(EWeather weather, int windSpeed, int windDirection, String location) {
         this.weather = weather;
         this.windSpeed = windSpeed;
         this.windDirection = windDirection;
+        this.location = location;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class Environment implements IImageProvider, IDetailProvider {
 
     @NonNull
     public String getWindSpeed(Context context) {
-        return windSpeed + " Btf " + WindDirection.getList(context).get(windDirection).getName();
+        return windSpeed + " Bft " + WindDirection.getList(context).get(windDirection).getName();
     }
 
     @Override

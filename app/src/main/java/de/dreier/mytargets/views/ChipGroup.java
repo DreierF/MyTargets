@@ -246,18 +246,18 @@ public class ChipGroup extends ViewGroup {
 
         private static final int CHIP_HEIGHT = 32; // dp
 
-        public long id;
+        public Long id;
         public String text;
         public byte[] image;
         public boolean isChecked = false;
         private transient Bitmap thumbnail;
 
-        public Tag(long id, String text, boolean isChecked) {
+        public Tag(Long id, String text, boolean isChecked) {
             this(id, text, null, isChecked);
         }
 
         @ParcelConstructor
-        public Tag(long id, String text, byte[] image, boolean isChecked) {
+        public Tag(Long id, String text, byte[] image, boolean isChecked) {
             this.id = id;
             this.text = text;
             this.isChecked = isChecked;
@@ -265,11 +265,14 @@ public class ChipGroup extends ViewGroup {
         }
 
         public ViewChipsBinding getView(Context context, ViewGroup parent) {
-            ViewChipsBinding binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.view_chips, parent, false);
+            ViewChipsBinding binding = DataBindingUtil
+                    .inflate(LayoutInflater.from(context), R.layout.view_chips, parent, false);
             binding.setTag(this);
             binding.getRoot().setActivated(!isChecked);
             float mDensity = context.getResources().getDisplayMetrics().density;
-            binding.getRoot().setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (CHIP_HEIGHT * mDensity)));
+            binding.getRoot().setLayoutParams(
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            (int) (CHIP_HEIGHT * mDensity)));
             return binding;
         }
 

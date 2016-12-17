@@ -20,7 +20,7 @@ import android.support.annotation.Nullable;
 import java.util.List;
 
 import de.dreier.mytargets.shared.analysis.aggregation.cluster.AggregationStrategyBase;
-import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.db.Shot;
 
 public class AverageStrategy extends AggregationStrategyBase<AverageResultRenderer> {
 

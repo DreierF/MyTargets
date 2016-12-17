@@ -18,6 +18,8 @@ import org.parceler.ParcelConstructor;
 
 import java.io.Serializable;
 
+import de.dreier.mytargets.shared.models.db.Round;
+
 public class NotificationInfo implements Serializable {
     public final String title;
     public final String text;

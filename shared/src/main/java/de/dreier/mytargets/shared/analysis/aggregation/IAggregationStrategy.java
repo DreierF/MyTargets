@@ -20,7 +20,7 @@ import android.support.annotation.UiThread;
 import java.util.List;
 
 import de.dreier.mytargets.shared.analysis.aggregation.cluster.ClusterStrategy;
-import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.db.Shot;
 
 public interface IAggregationStrategy<T extends IAggregationResultRenderer> {
     void setOnAggregationResultListener(final ClusterStrategy.OnAggregationResult onAggregationResult);

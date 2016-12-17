@@ -20,8 +20,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.parceler.Parcels;
+
 import de.dreier.mytargets.shared.models.WindSpeed;
-import de.dreier.mytargets.utils.ToolbarUtils;
+
+import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 public class WindSpeedListFragment extends SelectPureListItemFragmentBase<WindSpeed> {
 
@@ -29,7 +32,8 @@ public class WindSpeedListFragment extends SelectPureListItemFragmentBase<WindSp
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mAdapter.setList(WindSpeed.getList(getContext()));
-        ToolbarUtils.showUpAsX(this);
+        WindSpeed windSpeed = Parcels.unwrap(getArguments().getParcelable(ITEM));
+        selectItem(binding.recyclerView, windSpeed);
         return binding.getRoot();
     }
 }

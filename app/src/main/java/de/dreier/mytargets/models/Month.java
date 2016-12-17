@@ -42,7 +42,7 @@ public class Month implements IIdProvider, Comparable<Month> {
         return (int) ((getId() - another.getId()) / 1000L);
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

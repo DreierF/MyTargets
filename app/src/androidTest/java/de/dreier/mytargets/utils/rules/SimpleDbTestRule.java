@@ -21,21 +21,20 @@ import android.support.test.InstrumentationRegistry;
 import org.joda.time.LocalDate;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.managers.SettingsManager;
-import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.EWeather;
-import de.dreier.mytargets.shared.models.Environment;
-import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.RoundTemplate;
-import de.dreier.mytargets.shared.models.StandardRound;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.Training;
+import de.dreier.mytargets.shared.models.db.Bow;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.RoundTemplate;
+import de.dreier.mytargets.shared.models.db.StandardRound;
+import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.targets.models.WAFull;
-import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
 public class SimpleDbTestRule extends DbTestRuleBase {
@@ -48,7 +47,7 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         SettingsManager.setIndoor(false);
         SettingsManager.setInputMethod(TargetViewBase.EInputMethod.PLOTTING);
         SettingsManager.setTimerEnabled(true);
-        SettingsManager.setArrowsPerEnd(6);
+        SettingsManager.setShotsPerEnd(6);
         Bow bow = addBow();
         addRandomTraining(578459341);
         addRandomTraining(454459456);
@@ -62,59 +61,44 @@ public class SimpleDbTestRule extends DbTestRuleBase {
 
     private void addPracticeTraining(int seed) {
         Random generator = new Random(seed);
-        StandardRound standardRound = getCustomRound();
+        List<RoundTemplate> rounds = getCustomRounds();
 
-        Training training = insertDefaultTraining(standardRound, generator);
+        Training training = saveDefaultTraining(null, generator);
 
-        Round round1 = new Round();
+        Round round1 = new Round(rounds.get(0));
         round1.trainingId = training.getId();
-        round1.info = standardRound.rounds.get(0);
-        round1.info.target = round1.info.targetTemplate;
-        round1.comment = "";
-        roundDataSource.update(round1);
+        round1.save();
 
-        Round round2 = new Round();
+        Round round2 = new Round(rounds.get(1));
         round2.trainingId = training.getId();
-        round2.info = standardRound.rounds.get(1);
-        round2.info.target = round2.info.targetTemplate;
-        round2.comment = "";
-        roundDataSource.update(round2);
+        round2.save();
 
-        passeDataSource.update(randomPasse(training, round1, 6, generator));
-        passeDataSource.update(randomPasse(training, round1, 6, generator));
-        passeDataSource.update(randomPasse(training, round1, 6, generator));
-        passeDataSource.update(randomPasse(training, round1, 6, generator));
-        passeDataSource.update(randomPasse(training, round1, 6, generator));
-        passeDataSource.update(randomPasse(training, round1, 6, generator));
+        randomEnd(training, round1, 6, generator, 0).save();
+        randomEnd(training, round1, 6, generator, 1).save();
+        randomEnd(training, round1, 6, generator, 2).save();
+        randomEnd(training, round1, 6, generator, 3).save();
+        randomEnd(training, round1, 6, generator, 4).save();
+        randomEnd(training, round1, 6, generator, 5).save();
 
-        passeDataSource.update(randomPasse(training, round2, 6, generator));
-        passeDataSource.update(randomPasse(training, round2, 6, generator));
-        passeDataSource.update(randomPasse(training, round2, 6, generator));
-        passeDataSource.update(randomPasse(training, round2, 6, generator));
-        passeDataSource.update(randomPasse(training, round2, 6, generator));
-        passeDataSource.update(randomPasse(training, round2, 6, generator));
+        randomEnd(training, round2, 6, generator, 0).save();
+        randomEnd(training, round2, 6, generator, 1).save();
+        randomEnd(training, round2, 6, generator, 2).save();
+        randomEnd(training, round2, 6, generator, 3).save();
+        randomEnd(training, round2, 6, generator, 4).save();
+        randomEnd(training, round2, 6, generator, 5).save();
     }
 
     @NonNull
-    private StandardRound getCustomRound() {
-        StandardRound standardRound;
-        standardRound = new StandardRound();
-        standardRound.club = StandardRoundFactory.CUSTOM_PRACTICE;
-        standardRound.name = "Practice";
-        standardRound.indoor = true;
-        standardRound.rounds = Arrays.asList(getRoundTemplate(0, 50), getRoundTemplate(1, 30));
-        standardRoundDataSource.update(standardRound);
-        return standardRound;
+    private List<RoundTemplate> getCustomRounds() {
+        return Arrays.asList(getRoundTemplate(0, 50), getRoundTemplate(1, 30));
     }
 
     @NonNull
     private RoundTemplate getRoundTemplate(int index, int distance) {
         RoundTemplate roundTemplate = new RoundTemplate();
         roundTemplate.index = index;
-        roundTemplate.target = new Target(WAFull.ID, 0,
-                new Dimension(60, Dimension.Unit.CENTIMETER));
-        roundTemplate.targetTemplate = roundTemplate.target;
-        roundTemplate.arrowsPerEnd = 6;
+        roundTemplate.setTargetTemplate(new Target(WAFull.ID, 0, new Dimension(60, Dimension.Unit.CENTIMETER)));
+        roundTemplate.shotsPerEnd = 6;
         roundTemplate.endCount = 6;
         roundTemplate.distance = new Dimension(distance, Dimension.Unit.METER);
         return roundTemplate;
@@ -122,83 +106,69 @@ public class SimpleDbTestRule extends DbTestRuleBase {
 
     private void addRandomTraining(int seed) {
         Random generator = new Random(seed);
-        StandardRound standardRound = standardRoundDataSource.get(32);
+        StandardRound standardRound = StandardRound.get(32L);
 
-        Training training = insertDefaultTraining(standardRound, generator);
+        Training training = saveDefaultTraining(standardRound.getId(), generator);
 
-        Round round1 = new Round();
+        Round round1 = new Round(standardRound.getRounds().get(0));
         round1.trainingId = training.getId();
-        round1.info = standardRound.rounds.get(0);
-        round1.info.target = round1.info.targetTemplate;
-        round1.comment = "";
-        roundDataSource.update(round1);
+        round1.save();
 
-        Round round2 = new Round();
+        Round round2 = new Round(standardRound.getRounds().get(1));
         round2.trainingId = training.getId();
-        round2.info = standardRound.rounds.get(1);
-        round2.info.target = round2.info.targetTemplate;
-        round2.comment = "";
-        roundDataSource.update(round2);
+        round2.save();
 
-        passeDataSource.update(randomPasse(training, round1, 6, generator));
-        passeDataSource.update(randomPasse(training, round1, 6, generator));
-        passeDataSource.update(randomPasse(training, round1, 6, generator));
-        passeDataSource.update(randomPasse(training, round1, 6, generator));
-        passeDataSource.update(randomPasse(training, round1, 6, generator));
-        passeDataSource.update(randomPasse(training, round1, 6, generator));
+        randomEnd(training, round1, 6, generator, 0).save();
+        randomEnd(training, round1, 6, generator, 1).save();
+        randomEnd(training, round1, 6, generator, 2).save();
+        randomEnd(training, round1, 6, generator, 3).save();
+        randomEnd(training, round1, 6, generator, 4).save();
+        randomEnd(training, round1, 6, generator, 5).save();
 
-        passeDataSource.update(randomPasse(training, round2, 6, generator));
-        passeDataSource.update(randomPasse(training, round2, 6, generator));
-        passeDataSource.update(randomPasse(training, round2, 6, generator));
-        passeDataSource.update(randomPasse(training, round2, 6, generator));
-        passeDataSource.update(randomPasse(training, round2, 6, generator));
-        passeDataSource.update(randomPasse(training, round2, 6, generator));
+        randomEnd(training, round2, 6, generator, 0).save();
+        randomEnd(training, round2, 6, generator, 1).save();
+        randomEnd(training, round2, 6, generator, 2).save();
+        randomEnd(training, round2, 6, generator, 3).save();
+        randomEnd(training, round2, 6, generator, 4).save();
+        randomEnd(training, round2, 6, generator, 5).save();
     }
 
     private void addFullTraining(Bow bow) {
-        StandardRound standardRound = standardRoundDataSource.get(32);
+        StandardRound standardRound = StandardRound.get(32L);
 
         Training training = new Training();
         training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training);
         training.date = new LocalDate(2016, 7, 15);
-        training.environment = new Environment();
-        training.environment.location = "";
-        training.environment.weather = EWeather.SUNNY;
-        training.environment.windSpeed = 1;
-        training.environment.windDirection = 0;
-        training.standardRoundId = standardRound.id;
-        training.bow = bow.id;
-        training.arrow = 0;
+        training.weather = EWeather.SUNNY;
+        training.windSpeed = 1;
+        training.windDirection = 0;
+        training.standardRoundId = standardRound.getId();
+        training.bowId = bow.id;
+        training.arrowId = null;
         training.arrowNumbering = false;
-        training.timePerPasse = 0;
-        trainingDataSource.update(training);
+        training.timePerEnd = 0;
+        training.save();
 
-        Round round1 = new Round();
+        Round round1 = new Round(standardRound.getRounds().get(0));
         round1.trainingId = training.getId();
-        round1.info = standardRound.rounds.get(0);
-        round1.info.target = round1.info.targetTemplate;
-        round1.comment = "";
-        roundDataSource.update(round1);
+        round1.save();
 
-        Round round2 = new Round();
+        Round round2 = new Round(standardRound.getRounds().get(1));
         round2.trainingId = training.getId();
-        round2.info = standardRound.rounds.get(1);
-        round2.info.target = round2.info.targetTemplate;
-        round2.comment = "";
-        roundDataSource.update(round2);
+        round2.save();
 
-        passeDataSource.update(passe(round1, 1, 1, 2, 3, 3, 4));
-        passeDataSource.update(passe(round1, 0, 0, 1, 2, 2, 3));
-        passeDataSource.update(passe(round1, 1, 1, 1, 3, 4, 4));
-        passeDataSource.update(passe(round1, 0, 1, 1, 1, 2, 3));
-        passeDataSource.update(passe(round1, 1, 2, 3, 3, 4, 5));
-        passeDataSource.update(passe(round1, 1, 2, 2, 3, 3, 3));
+        buildEnd(round1, 1, 1, 2, 3, 3, 4).save();
+        buildEnd(round1, 0, 0, 1, 2, 2, 3).save();
+        buildEnd(round1, 1, 1, 1, 3, 4, 4).save();
+        buildEnd(round1, 0, 1, 1, 1, 2, 3).save();
+        buildEnd(round1, 1, 2, 3, 3, 4, 5).save();
+        buildEnd(round1, 1, 2, 2, 3, 3, 3).save();
 
-        passeDataSource.update(passe(round2, 1, 2, 2, 3, 4, 5));
-        passeDataSource.update(passe(round2, 0, 0, 1, 2, 2, 3));
-        passeDataSource.update(passe(round2, 0, 1, 2, 2, 2, 3));
-        passeDataSource.update(passe(round2, 1, 1, 2, 3, 4, 4));
-        passeDataSource.update(passe(round2, 1, 2, 2, 3, 3, 3));
-        passeDataSource.update(passe(round2, 1, 2, 2, 3, 3, 4));
+        buildEnd(round2, 1, 2, 2, 3, 4, 5).save();
+        buildEnd(round2, 0, 0, 1, 2, 2, 3).save();
+        buildEnd(round2, 0, 1, 2, 2, 2, 3).save();
+        buildEnd(round2, 1, 1, 2, 3, 4, 4).save();
+        buildEnd(round2, 1, 2, 2, 3, 3, 3).save();
+        buildEnd(round2, 1, 2, 2, 3, 3, 4).save();
     }
 }

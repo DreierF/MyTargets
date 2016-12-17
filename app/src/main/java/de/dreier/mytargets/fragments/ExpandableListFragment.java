@@ -19,32 +19,32 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.raizlabs.android.dbflow.structure.Model;
+
 import java.util.List;
 
 import de.dreier.mytargets.adapters.ExpandableListAdapter;
 import de.dreier.mytargets.interfaces.ItemAdapter;
-import de.dreier.mytargets.managers.dao.IdProviderDataSource;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.utils.Utils;
+import de.dreier.mytargets.shared.utils.LongUtils;
 
 /**
  * Shows all rounds of one training day
  */
-abstract class ExpandableListFragment<H extends IIdProvider, C extends IIdSettable> extends EditableListFragmentBase<C> {
+abstract class ExpandableListFragment<H extends IIdProvider, C extends IIdSettable & Model> extends EditableListFragmentBase<C> {
 
     private static final String KEY_EXPANDED = "expanded";
     ExpandableListAdapter<H, C> mAdapter;
     @Nullable
     private Bundle savedInstanceState;
 
-    void setList(IdProviderDataSource<C> dataSource, List<C> children, boolean opened) {
-        this.dataSource = dataSource;
+    void setList(List<C> children, boolean opened) {
         if (mAdapter.getItemCount() == 0) {
             mAdapter.setList(children, opened);
             if (savedInstanceState != null && savedInstanceState.containsKey(KEY_EXPANDED)) {
                 mAdapter.setExpandedIds(
-                        Utils.toList(savedInstanceState.getLongArray(KEY_EXPANDED)));
+                        LongUtils.toList(savedInstanceState.getLongArray(KEY_EXPANDED)));
             } else if (!opened && mAdapter.getItemCount() > 0) {
                 mAdapter.expandFirst();
             }
@@ -62,7 +62,7 @@ abstract class ExpandableListFragment<H extends IIdProvider, C extends IIdSettab
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mAdapter != null) {
-            outState.putLongArray(KEY_EXPANDED, Utils.toArray(mAdapter.getExpandedIds()));
+            outState.putLongArray(KEY_EXPANDED, LongUtils.toArray(mAdapter.getExpandedIds()));
         }
     }
 

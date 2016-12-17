@@ -34,9 +34,8 @@ import de.dreier.mytargets.activities.SettingsActivity;
 import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
 import de.dreier.mytargets.databinding.FragmentMainBinding;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
-import de.dreier.mytargets.managers.dao.TrainingDataSource;
-import de.dreier.mytargets.shared.models.Round;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Training;
 
 import static de.dreier.mytargets.utils.ToolbarUtils.setSupportActionBar;
 
@@ -45,7 +44,8 @@ public class MainFragment extends Fragment {
     private boolean showStatistics = false;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FragmentMainBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
+        FragmentMainBinding binding = DataBindingUtil
+                .inflate(inflater, R.layout.fragment_main, container, false);
 
         setSupportActionBar(this, binding.toolbar);
         setHasOptionsMenu(true);
@@ -72,8 +72,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        showStatistics = !new TrainingDataSource().getAll().isEmpty();
-        getActivity().invalidateOptionsMenu();
+        showStatistics = !Training.getAll().isEmpty();
     }
 
     @Override
@@ -81,11 +80,12 @@ public class MainFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_statistics:
                 StatisticsActivity
-                        .getIntent(Stream.of(new RoundDataSource().getAll())
-                                        .map(Round::getId)
-                                        .collect(Collectors.toList()))
-                        .withContext(this)
-                        .start();
+                        .getIntent(Stream.of(Training.getAll())
+                                .flatMap((training) -> Stream.of(training.getRounds()))
+                                .map(Round::getId)
+                        
+                                .collect(Collectors.toList())).withContext(this)
+.start();
                 return true;
             case R.id.action_preferences:
                 startActivity(new Intent(getContext(), SettingsActivity.class));

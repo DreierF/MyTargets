@@ -19,15 +19,19 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 
+import org.parceler.Parcel;
+
 import java.util.List;
 import java.util.Set;
 
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
 import de.dreier.mytargets.shared.targets.models.TargetModelBase;
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
 
+@Parcel
 public class Target implements IIdProvider, IImageProvider, IDetailProvider, Comparable<Target> {
     public int id;
     public int scoringStyle;
@@ -51,8 +55,8 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         this.size = diameter;
     }
 
-    public long getId() {
-        return id;
+    public Long getId() {
+        return (long) id;
     }
 
     public TargetDrawable getDrawable() {
@@ -87,8 +91,8 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         return model;
     }
 
-    public int getPointsByZone(int zone, int arrow) {
-        return getScoringStyle().getPointsByZone(zone, arrow);
+    public int getScoreByZone(int zone, int arrow) {
+        return getScoringStyle().getScoreByScoringRing(zone, arrow);
     }
 
     @Override
@@ -114,16 +118,8 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         return getModel().getScoringStyle(scoringStyle);
     }
 
-    public int getMaxPoints() {
-        return getScoringStyle().getMaxPoints();
-    }
-
-    public int getEndMaxPoints(int arrowsPerPasse) {
-        return getScoringStyle().getEndMaxPoints(arrowsPerPasse);
-    }
-
-    public int getReachedPoints(Passe passe) {
-        return getScoringStyle().getReachedPoints(passe);
+    public Score getReachedScore(End end) {
+        return getScoringStyle().getReachedScore(end);
     }
 
     @Override

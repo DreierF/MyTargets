@@ -18,7 +18,8 @@ package de.dreier.mytargets.shared.targets.scoringstyle;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
-import de.dreier.mytargets.shared.models.Passe;
+import de.dreier.mytargets.shared.models.Score;
+import de.dreier.mytargets.shared.models.db.End;
 
 public class ColorScoringStyle extends ScoringStyle {
 
@@ -32,16 +33,14 @@ public class ColorScoringStyle extends ScoringStyle {
     }
 
     @Override
-    public int getEndMaxPoints(int arrowsPerPasse) {
-        return maxEndPoints;
-    }
-
-    @Override
-    public int getReachedPoints(Passe passe) {
-        return Stream.of(passe.shots)
-                .map(s -> getPoints(s.zone, s.index))
+    public Score getReachedScore(End end) {
+        Score score = new Score();
+        score.reachedScore = Stream.of(end.getShots())
+                .map(s -> getScoreByScoringRing(s.scoringRing, s.index))
                 .distinct()
                 .collect(Collectors.reducing(0, (a, b) -> a + b));
+        score.totalScore = maxEndPoints;
+        return score;
     }
 
     @Override

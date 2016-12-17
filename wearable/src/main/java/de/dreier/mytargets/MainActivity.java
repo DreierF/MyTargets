@@ -41,9 +41,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import de.dreier.mytargets.shared.models.Passe;
-import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.db.End;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.WearableUtils;
 import de.dreier.mytargets.shared.views.TargetViewBase;
@@ -119,8 +119,8 @@ public class MainActivity extends Activity implements TargetViewBase.OnEndFinish
 
     private void setUpTargetView() {
         if (round != null && mTarget != null) {
-            mTarget.setTarget(round.info.target);
-            mTarget.setEnd(new Passe(round.info.arrowsPerEnd));
+            mTarget.setTarget(round.getTarget());
+            mTarget.setEnd(new End(round.shotsPerEnd, 0));
             mTarget.setOnTargetSetListener(MainActivity.this);
             stub.setVisibility(View.VISIBLE);
             startTrainingHint.setVisibility(View.GONE);
@@ -135,7 +135,7 @@ public class MainActivity extends Activity implements TargetViewBase.OnEndFinish
         confirm.setListener(new DelayedConfirmationView.DelayedConfirmationListener() {
             @Override
             public void onTimerSelected(View view) {
-                mTarget.setEnd(new Passe(round.info.arrowsPerEnd));
+                mTarget.setEnd(new End(round.shotsPerEnd, 0));
                 confirm.setVisibility(View.INVISIBLE);
                 confirm.reset();
             }

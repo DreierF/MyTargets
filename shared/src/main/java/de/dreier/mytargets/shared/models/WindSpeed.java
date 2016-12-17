@@ -63,7 +63,8 @@ public class WindSpeed implements IIdProvider, IImageProvider, Comparable<WindSp
         return list;
     }
 
-    public long getId() {
+    @Override
+    public Long getId() {
         return id;
     }
 

@@ -39,9 +39,8 @@ import java.io.IOException;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentEditImageBinding;
-import de.dreier.mytargets.shared.utils.BitmapUtils;
-import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
-import de.dreier.mytargets.utils.ThumbnailUtils;
+import de.dreier.mytargets.shared.models.Thumbnail;
+import de.dreier.mytargets.shared.utils.FileUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import icepick.State;
@@ -50,7 +49,6 @@ import permissions.dispatcher.RuntimePermissions;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
-import static android.provider.MediaStore.Images.Thumbnails.MICRO_KIND;
 import static de.dreier.mytargets.fragments.EditWithImageFragmentBasePermissionsDispatcher.onSelectImageWithCheck;
 import static de.dreier.mytargets.fragments.EditWithImageFragmentBasePermissionsDispatcher.onTakePictureWithCheck;
 
@@ -130,12 +128,12 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
     }
 
     @NeedsPermission(Manifest.permission.CAMERA)
-    public void onTakePicture() {
+    void onTakePicture() {
         EasyImage.openCamera(this, 0);
     }
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    public void onSelectImage() {
+    void onSelectImage() {
         EasyImage.openGallery(this, 0);
     }
 
@@ -198,7 +196,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
                 oldImageFile = imageFile;
                 imageFile = File
                         .createTempFile("img", oldImageFile.getName(), getContext().getFilesDir());
-                BackupUtils.copy(oldImageFile, imageFile);
+                FileUtils.copy(oldImageFile, imageFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -234,17 +232,11 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
         }
     }
 
-    byte[] getThumbnail() {
-        Bitmap thumbnail;
+    Thumbnail getThumbnail() {
         if (imageFile == null) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), defaultDrawable);
-            thumbnail = ThumbnailUtils.extractThumbnail(bitmap,
-                    ThumbnailUtils.TARGET_SIZE_MICRO_THUMBNAIL,
-                    ThumbnailUtils.TARGET_SIZE_MICRO_THUMBNAIL,
-                    ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
-        } else {
-            thumbnail = ThumbnailUtils.createImageThumbnail(imageFile.getPath(), MICRO_KIND);
+            return new Thumbnail(bitmap);
         }
-        return BitmapUtils.getBitmapAsByteArray(thumbnail);
+        return new Thumbnail(imageFile);
     }
 }

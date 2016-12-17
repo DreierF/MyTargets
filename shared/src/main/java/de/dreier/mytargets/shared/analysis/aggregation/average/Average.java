@@ -20,7 +20,7 @@ import android.graphics.RectF;
 
 import java.util.List;
 
-import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.db.Shot;
 
 public class Average {
     private int dataPointCount;

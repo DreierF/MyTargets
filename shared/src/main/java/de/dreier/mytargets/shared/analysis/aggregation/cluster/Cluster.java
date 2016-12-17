@@ -20,7 +20,7 @@ import android.graphics.PointF;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.shared.analysis.aggregation.average.Average;
-import de.dreier.mytargets.shared.models.Shot;
+import de.dreier.mytargets.shared.models.db.Shot;
 
 public class Cluster {
     public final ArrayList<Shot> points = new ArrayList<>();

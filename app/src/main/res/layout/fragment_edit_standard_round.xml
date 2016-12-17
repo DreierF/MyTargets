@@ -86,34 +86,6 @@
                     android:layout_height="1dp"
                     android:background="@color/dividerColor"/>
 
-                <RadioGroup
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:weightSum="1">
-
-                    <RadioButton
-                        android:id="@+id/outdoor"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".5"
-                        android:text="@string/outdoor"/>
-
-                    <RadioButton
-                        android:id="@+id/indoor"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".5"
-                        android:text="@string/indoor"/>
-
-                </RadioGroup>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/dividerColor"/>
-
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rounds"
                     android:layout_width="match_parent"

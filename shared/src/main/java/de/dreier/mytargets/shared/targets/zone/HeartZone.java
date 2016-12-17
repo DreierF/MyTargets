@@ -17,9 +17,9 @@ package de.dreier.mytargets.shared.targets.zone;
 
 import android.graphics.Canvas;
 import android.graphics.Path;
+import android.graphics.PointF;
 import android.graphics.Region;
 
-import de.dreier.mytargets.shared.models.Coordinate;
 import de.dreier.mytargets.shared.utils.PathUtils;
 
 public class HeartZone extends ZoneBase {
@@ -60,7 +60,7 @@ public class HeartZone extends ZoneBase {
     }
 
     public HeartZone(float radius, float midpointX, float midpointY, int fillColor, int strokeColor, int strokeWidth) {
-        super(radius, new Coordinate(midpointX, midpointY), fillColor, strokeColor, strokeWidth, true);
+        super(radius, new PointF(midpointX, midpointY), fillColor, strokeColor, strokeWidth, true);
     }
 
     @Override

@@ -24,9 +24,9 @@ import android.view.ViewGroup;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.databinding.EditArrowFragmentBinding;
-import de.dreier.mytargets.managers.dao.ArrowDataSource;
-import de.dreier.mytargets.shared.models.Arrow;
+
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -66,7 +66,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
             Bundle bundle = getArguments();
             if (bundle != null && bundle.containsKey(ARROW_ID)) {
                 long arrowId = bundle.getLong(ARROW_ID);
-                arrow = new ArrowDataSource().get(arrowId);
+                arrow = Arrow.get(arrowId);
                 setImageFile(arrow.imageFile);
             } else {
                 // Set to default values
@@ -95,7 +95,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     @Override
     public void onSave() {
         super.onSave();
-        new ArrowDataSource().update(buildArrow());
+        buildArrow().save();
         finish();
     }
 
@@ -110,7 +110,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         arrow.nock = contentBinding.nock.getText().toString();
         arrow.comment = contentBinding.comment.getText().toString();
         arrow.imageFile = getImageFile();
-        arrow.thumb = getThumbnail();
+        arrow.thumbnail = getThumbnail();
         float diameterValue;
         try {
             diameterValue = Float.parseFloat(contentBinding.diameter.getText().toString());

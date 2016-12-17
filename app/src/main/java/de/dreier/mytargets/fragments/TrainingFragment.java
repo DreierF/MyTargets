@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,14 +41,8 @@ import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentTrainingBinding;
 import de.dreier.mytargets.databinding.ItemRoundBinding;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
-import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
-import de.dreier.mytargets.managers.dao.TrainingDataSource;
-import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.StandardRound;
-import de.dreier.mytargets.shared.models.Training;
-import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.utils.DataLoader;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.IntentWrapper;
@@ -58,7 +51,7 @@ import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 /**
- * Shows all passes of one training
+ * Shows all rounds of one training.
  */
 public class TrainingFragment extends EditableListFragment<Round> {
 
@@ -96,6 +89,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
         if (getArguments() != null) {
             trainingId = getArguments().getLong(ITEM_ID);
         }
+
         binding.fab.setVisibility(View.GONE);
         binding.fab.setOnClickListener(view -> {
             // New round to free training
@@ -115,34 +109,35 @@ public class TrainingFragment extends EditableListFragment<Round> {
         setHasOptionsMenu(true);
     }
 
+    @NonNull
     @Override
-    public Loader<List<Round>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader<>(getContext(), new RoundDataSource(),
-                () -> new RoundDataSource().getAll(trainingId));
-    }
+    protected LoaderUICallback onLoad(Bundle args) {
+        training = Training.get(trainingId);
+        List<Round> rounds = training.getRounds();
+        return new LoaderUICallback() {
+            @Override
+            public void applyData() {
 
-    public void onLoadFinished(Loader<List<Round>> loader, List<Round> data) {
-        training = new TrainingDataSource().get(trainingId);
+                // Hide fab for standard rounds
+                supportsDeletion = training.standardRoundId == null;
+                binding.fab.setVisibility(supportsDeletion ? View.VISIBLE : View.GONE);
 
-        // Hide fab for standard rounds
-        StandardRound standardRound = new StandardRoundDataSource().get(training.standardRoundId);
-        supportsDeletion = standardRound.club == StandardRoundFactory.CUSTOM_PRACTICE;
-        binding.fab.setVisibility(supportsDeletion ? View.VISIBLE : View.GONE);
+                // Set round info
+                int weatherDrawable = R.drawable.ic_house_24dp;
+                if (!training.indoor) {
+                    weatherDrawable = training.getEnvironment().weather.getColorDrawable();
+                }
+                binding.weatherIcon.setImageResource(weatherDrawable);
+                binding.detailRoundInfo.setText(HtmlUtils
+                        .fromHtml(HtmlUtils.getTrainingInfoHTML(training, rounds, equals, false)));
+                mAdapter.setList(rounds);
 
-        // Set round info
-        int weatherDrawable = R.drawable.ic_house_24dp;
-        if (!standardRound.indoor) {
-            weatherDrawable = training.environment.weather.getColorDrawable();
-        }
-        binding.weatherIcon.setImageResource(weatherDrawable);
-        binding.detailRoundInfo.setText(
-                HtmlUtils.fromHtml(HtmlUtils.getTrainingInfoHTML(training, data, equals, false)));
-        mAdapter.setList(data);
-        dataSource = new RoundDataSource();
-        getActivity().supportInvalidateOptionsMenu();
+                getActivity().supportInvalidateOptionsMenu();
 
-        ToolbarUtils.setTitle(this, training.title);
-        ToolbarUtils.setSubtitle(this, training.getFormattedDate());
+                ToolbarUtils.setTitle(TrainingFragment.this, training.title);
+                ToolbarUtils.setSubtitle(TrainingFragment.this, training.getFormattedDate());
+            }
+        };
     }
 
     @Override
@@ -160,7 +155,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
                 return true;
             case R.id.action_statistics:
                 StatisticsActivity.getIntent(
-                        Stream.of(new RoundDataSource().getAll(training.getId()))
+                        Stream.of(training.getRounds())
                                 .map(Round::getId)
                                 .collect(Collectors.toList()))
                         .withContext(this)
@@ -186,8 +181,9 @@ public class TrainingFragment extends EditableListFragment<Round> {
     }
 
     @Override
-    protected void onStatistics(List<Long> roundIds) {
-        StatisticsActivity.getIntent(roundIds)
+    protected void onStatistics(List<Round> rounds) {
+        StatisticsActivity
+                .getIntent(Stream.of(rounds).map(Round::getId).collect(Collectors.toList()))
                 .withContext(this)
                 .start();
     }
@@ -218,14 +214,14 @@ public class TrainingFragment extends EditableListFragment<Round> {
         public void bindItem() {
             binding.title.setText(String.format(Locale.ENGLISH, "%s %d",
                     getContext().getString(R.string.round),
-                    mItem.info.index + 1));
-            binding.subtitle.setText(HtmlUtils.fromHtml(HtmlUtils.getRoundInfo(mItem, equals)));
+                    item.index + 1));
+            binding.subtitle.setText(HtmlUtils.fromHtml(HtmlUtils.getRoundInfo(item, equals)));
             if (binding.subtitle.getText().toString().isEmpty()) {
                 binding.subtitle.setVisibility(View.GONE);
             } else {
                 binding.subtitle.setVisibility(View.VISIBLE);
             }
-            binding.points.setText(mItem.getReachedPointsFormatted());
+            binding.points.setText(item.getReachedScore().toString());
         }
     }
 }

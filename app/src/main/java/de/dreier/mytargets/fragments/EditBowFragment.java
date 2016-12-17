@@ -38,10 +38,9 @@ import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
 import de.dreier.mytargets.databinding.EditBowFragmentBinding;
 import de.dreier.mytargets.databinding.ItemSightMarkBinding;
-import de.dreier.mytargets.managers.dao.BowDataSource;
-import de.dreier.mytargets.shared.models.Bow;
 import de.dreier.mytargets.shared.models.EBowType;
-import de.dreier.mytargets.shared.models.SightSetting;
+import de.dreier.mytargets.shared.models.db.Bow;
+import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -99,14 +98,14 @@ public class EditBowFragment extends EditWithImageFragmentBase {
             if (bundle != null && bundle.containsKey(BOW_ID)) {
                 // Load data from database
                 long bowId = bundle.getLong(BOW_ID);
-                bow = new BowDataSource().get(bowId);
+                bow = Bow.get(bowId);
                 setImageFile(bow.imageFile);
             } else {
                 // Set to default values
                 bow = new Bow();
                 bow.name = getString(R.string.my_bow);
                 bow.type = RECURVE_BOW;
-                bow.sightSettings.add(new SightSetting());
+                bow.getSightMarks().add(new SightMark());
                 setImageFile(null);
             }
 
@@ -118,7 +117,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         }
 
         loadImage(imageFile);
-        adapter = new SightSettingsAdapter(this, bow.sightSettings);
+        adapter = new SightSettingsAdapter(this, bow.getSightMarks());
         contentBinding.sightSettings.setAdapter(adapter);
         return rootView;
     }
@@ -130,8 +129,8 @@ public class EditBowFragment extends EditWithImageFragmentBase {
     }
 
     private void onAddSightSetting() {
-        bow.sightSettings.add(new SightSetting());
-        adapter.notifyItemInserted(bow.sightSettings.size() - 1);
+        bow.getSightMarks().add(new SightMark());
+        adapter.notifyItemInserted(bow.getSightMarks().size() - 1);
     }
 
     @Override
@@ -142,7 +141,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
             Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
             final int index = intentData.getInt(SelectorBase.INDEX);
             final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
-            bow.sightSettings.get(index).distance = Parcels.unwrap(parcelable);
+            bow.getSightMarks().get(index).distance = Parcels.unwrap(parcelable);
             adapter.notifyItemChanged(index);
         }
     }
@@ -150,7 +149,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
     @Override
     public void onSave() {
         super.onSave();
-        new BowDataSource().update(buildBow());
+        buildBow().save();
         finish();
     }
 
@@ -168,7 +167,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         bow.description = contentBinding.description.getText().toString();
         bow.type = getType();
         bow.imageFile = getImageFile();
-        bow.thumb = getThumbnail();
+        bow.thumbnail = getThumbnail();
         return bow;
     }
 
@@ -199,7 +198,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         }
     }
 
-    private static class SightSettingHolder extends DynamicItemHolder<SightSetting> {
+    private static class SightSettingHolder extends DynamicItemHolder<SightMark> {
 
         private final ItemSightMarkBinding binding;
 
@@ -225,23 +224,23 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         }
 
         @Override
-        public void onBind(SightSetting sightSetting, int position, Fragment fragment, View.OnClickListener removeListener) {
-            item = sightSetting;
+        public void onBind(SightMark sightMark, int position, Fragment fragment, View.OnClickListener removeListener) {
+            item = sightMark;
             binding.distance.setOnActivityResultContext(fragment);
             binding.distance.setItemIndex(position);
-            binding.distance.setItem(sightSetting.distance);
-            binding.sightSetting.setText(sightSetting.value);
+            binding.distance.setItem(sightMark.distance);
+            binding.sightSetting.setText(sightMark.value);
             binding.removeSightSetting.setOnClickListener(removeListener);
         }
     }
 
-    private class SightSettingsAdapter extends DynamicItemAdapter<SightSetting> {
-        SightSettingsAdapter(Fragment fragment, List<SightSetting> list) {
+    private class SightSettingsAdapter extends DynamicItemAdapter<SightMark> {
+        SightSettingsAdapter(Fragment fragment, List<SightMark> list) {
             super(fragment, list, R.string.sight_setting_removed);
         }
 
         @Override
-        public DynamicItemHolder<SightSetting> onCreateViewHolder(ViewGroup parent, int viewType) {
+        public DynamicItemHolder<SightMark> onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = inflater.inflate(R.layout.item_sight_mark, parent, false);
             return new SightSettingHolder(v);
         }

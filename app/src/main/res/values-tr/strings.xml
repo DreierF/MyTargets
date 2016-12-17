@@ -175,7 +175,6 @@
   <string name="standard_round">Standart tur</string>
   <string name="use_as_template">Şablon olarak kullan?</string>
   <string name="create_copy">Bu standart bir turdur. Düzenlemek üzere kopyasını kaydetmek ister misin \n?</string>
-  <string name="arrow_numbers_desc">Atış için kullandığın tüm ok numaralarını gir ör. 1.2.5.6.7</string>
   <string name="practice">İdman</string>
   <string name="edit_training">Antrenmanı Düzenle</string>
   <string name="edit_standard_round">Standart turu düzenle</string>
@@ -216,7 +215,7 @@
   <string name="my_arrow">Okum</string>
   <string name="tip_weight">Uç ağırlığı</string>
   <string name="arrow_ranking">Ok sıralaması</string>
-  <string name="arrow_x_of_set_of_arrows">%2$s oktan %2$s.</string>
+  <string name="arrow_x_of_set_of_arrows">Arrow %1$s of %2$s</string>
   <string name="display">Göster</string>
   <string name="print">Yazdır</string>
   <string name="table">Tablo</string>
@@ -224,7 +223,7 @@
   <string name="show_points_colored">Boyanmış noktaları göster</string>
   <string name="stabilizer">Stabilizatör</string>
   <string name="clicker">Kliker</string>
-  <string name="arrow_number_x">Ok numarası %d</string>
+  <string name="arrow_number_x">Arrow number %s</string>
   <string name="training_with_standard_round">Standart hedefle antrenman</string>
   <string name="free_training">Serbest Antrenman</string>
   <string name="competition">Yarışma</string>
@@ -280,9 +279,8 @@
   <string name="last_backup">Last backup: %s</string>
   <string name="backup_folder">Backup folder</string>
   <string name="recent_backups">Recent backups</string>
-  <string name="open_drive">Open drive</string>
   <string name="dialog_restore_title">Revert to previous version</string>
-  <string name="restore_desc">Restoring the data will override all the existing data with the backup.</string>
+  <string name="restore_desc">Restoring the data will overwrite all the existing data with the backup.</string>
   <string name="backup_details">Backup details</string>
   <string name="restore">Restore</string>
   <string name="backup_location">Backup location</string>

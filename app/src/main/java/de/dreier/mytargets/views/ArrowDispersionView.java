@@ -94,6 +94,9 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        if (target == null) {
+            return;
+        }
         if (zoomInX != -1 || zoomInY != -1) {
             drawZoomedInTarget(canvas);
         } else {

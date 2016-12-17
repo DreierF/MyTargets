@@ -20,6 +20,10 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.Closeable;
@@ -31,6 +35,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -38,7 +43,13 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import de.dreier.mytargets.managers.DatabaseManager;
+import de.dreier.mytargets.managers.CsvExporter;
+import de.dreier.mytargets.shared.AppDatabase;
+import de.dreier.mytargets.shared.models.db.Arrow;
+import de.dreier.mytargets.shared.models.db.Arrow_Table;
+import de.dreier.mytargets.shared.models.db.Bow;
+import de.dreier.mytargets.shared.models.db.Bow_Table;
+import de.dreier.mytargets.shared.utils.FileUtils;
 
 import static android.support.v4.content.FileProvider.getUriForFile;
 
@@ -73,9 +84,8 @@ public class BackupUtils {
         String packageName = context.getPackageName();
         String authority = packageName + ".easyphotopicker.fileprovider";
 
-        DatabaseManager db = DatabaseManager.getInstance(context);
         final File f = new File(context.getCacheDir(), getExportFileName());
-        db.exportAll(f, roundIds);
+        CsvExporter.exportAll(f, roundIds);
         return getUriForFile(context, authority, f);
     }
 
@@ -91,13 +101,41 @@ public class BackupUtils {
         return "backup_" + format.format(new Date()) + ".zip";
     }
 
+    public static void importZip(Context context, InputStream in) throws IOException {
+        // Unzip all images and database
+        File file = unzip(context, in);
+
+        // Replace database file
+        File db_file = context.getDatabasePath(AppDatabase.DATABASE_IMPORT_FILE_NAME);
+        FileUtils.copy(file, db_file);
+    }
+
+    public static String[] getImages() {
+        ArrayList<String> list = new ArrayList<>();
+        list.addAll(Stream.of(SQLite.select(Bow_Table.imageFile)
+                .from(Bow.class)
+                .where(Bow_Table.imageFile.notEq((String) null))
+                .queryList())
+                .map(bow -> bow.imageFile)
+                .collect(Collectors.toList()));
+
+        list.addAll(Stream.of(SQLite.select(Arrow_Table.imageFile)
+                .from(Arrow.class)
+                .where(Arrow_Table.imageFile.notEq((String) null))
+                .queryList())
+                .map(arrow -> arrow.imageFile)
+                .collect(Collectors.toList()));
+        return list.toArray(new String[list.size()]);
+    }
+
+
     public static void zip(Context context, OutputStream dest) throws IOException {
         ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
         try {
             BufferedInputStream origin;
             byte data[] = new byte[BUFFER];
 
-            File db = context.getDatabasePath(DatabaseManager.DATABASE_NAME);
+            File db = context.getDatabasePath(AppDatabase.DATABASE_FILE_NAME);
             FileInputStream fi = new FileInputStream(db);
             origin = new BufferedInputStream(fi, BUFFER);
 
@@ -109,7 +147,7 @@ public class BackupUtils {
             }
             origin.close();
 
-            String[] files = DatabaseManager.getInstance(context).getImages();
+            String[] files = getImages();
             for (String file : files) {
                 fi = new FileInputStream(new File(context.getFilesDir(), file));
                 origin = new BufferedInputStream(fi, BUFFER);
@@ -129,7 +167,7 @@ public class BackupUtils {
         }
     }
 
-    static void safeCloseClosable(@Nullable Closeable closeable) {
+    private static void safeCloseClosable(@Nullable Closeable closeable) {
         try {
             if (closeable != null) {
                 closeable.close();
@@ -139,7 +177,7 @@ public class BackupUtils {
         }
     }
 
-    public static File unzip(Context context, InputStream in) throws IOException {
+    private static File unzip(Context context, InputStream in) throws IOException {
         File tmpDb = null;
         int dbFiles = 0;
         try {
@@ -197,5 +235,4 @@ public class BackupUtils {
         }
         return tmpDb;
     }
-
 }

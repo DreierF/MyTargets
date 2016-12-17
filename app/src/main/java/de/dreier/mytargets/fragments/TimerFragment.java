@@ -45,7 +45,7 @@ import static de.dreier.mytargets.fragments.TimerFragment.TimerState.FINISHED;
 import static de.dreier.mytargets.fragments.TimerFragment.TimerState.WAIT_FOR_START;
 
 /**
- * Shows all passes of one round
+ * Shows the archery timer
  */
 public class TimerFragment extends FragmentBase implements View.OnClickListener {
 
@@ -58,9 +58,9 @@ public class TimerFragment extends FragmentBase implements View.OnClickListener 
     private FragmentTimerBinding binding;
 
     @NonNull
-    public static IntentWrapper getIntent(int timePerPasse) {
+    public static IntentWrapper getIntent(int timePerEnd) {
         return new IntentWrapper(SimpleFragmentActivityBase.TimerActivity.class)
-                .with(SHOOTING_TIME, timePerPasse);
+                .with(SHOOTING_TIME, timePerEnd);
     }
 
     @Override

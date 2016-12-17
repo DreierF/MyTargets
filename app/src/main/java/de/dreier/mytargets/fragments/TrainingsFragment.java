@@ -17,7 +17,7 @@ package de.dreier.mytargets.fragments;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.content.Loader;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,12 +34,9 @@ import de.dreier.mytargets.adapters.ExpandableListAdapter;
 import de.dreier.mytargets.databinding.FragmentTrainingsBinding;
 import de.dreier.mytargets.databinding.ItemHeaderMonthBinding;
 import de.dreier.mytargets.databinding.ItemTrainingBinding;
-import de.dreier.mytargets.managers.dao.RoundDataSource;
-import de.dreier.mytargets.managers.dao.TrainingDataSource;
 import de.dreier.mytargets.models.Month;
-import de.dreier.mytargets.shared.models.Round;
-import de.dreier.mytargets.shared.models.Training;
-import de.dreier.mytargets.utils.DataLoader;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.multiselector.HeaderBindingHolder;
@@ -48,13 +45,13 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION;
 
+
 /**
  * Shows an overview over all training days
  */
 public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
 
     protected FragmentTrainingsBinding binding;
-    private TrainingDataSource trainingDataSource;
 
     public TrainingsFragment() {
         itemTypeSelRes = R.plurals.training_selected;
@@ -97,9 +94,9 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
     }
 
     @Override
-    protected void onStatistics(List<Long> trainingIds) {
-        StatisticsActivity.getIntent(Stream.of(trainingIds)
-                .flatMap(tid -> Stream.of(new RoundDataSource().getAll(tid)))
+    protected void onStatistics(List<Training> trainings) {
+        StatisticsActivity.getIntent(Stream.of(trainings)
+                .flatMap(t -> Stream.of(t.getRounds()))
                 .map(Round::getId)
                 .collect(Collectors.toList()))
                 .withContext(this)
@@ -113,15 +110,12 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
                 .start();
     }
 
+    @NonNull
     @Override
-    public Loader<List<Training>> onCreateLoader(int id, Bundle args) {
-        trainingDataSource = new TrainingDataSource();
-        return new DataLoader<>(getContext(), trainingDataSource, trainingDataSource::getAll);
-    }
+    protected LoaderUICallback onLoad(Bundle args) {
+        final List<Training> trainings = Training.getAll();
 
-    @Override
-    public void onLoadFinished(Loader<List<Training>> loader, List<Training> data) {
-        setList(trainingDataSource, data, false);
+        return () -> setList(trainings, false);
     }
 
     private class TrainingAdapter extends ExpandableListAdapter<Month, Training> {
@@ -157,10 +151,9 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
 
         @Override
         public void bindItem() {
-            binding.training.setText(mItem.title);
-            binding.trainingDate.setText(mItem.getFormattedDate());
-            List<Round> rounds = new RoundDataSource().getAll(mItem.getId());
-            binding.gesTraining.setText(mItem.getReachedPoints(rounds));
+            binding.training.setText(item.title);
+            binding.trainingDate.setText(item.getFormattedDate());
+            binding.gesTraining.setText(item.getReachedScore().format(false));
         }
     }
 
@@ -174,7 +167,7 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
 
         @Override
         public void bindItem() {
-            binding.month.setText(mItem.toString());
+            binding.month.setText(item.toString());
         }
     }
 }

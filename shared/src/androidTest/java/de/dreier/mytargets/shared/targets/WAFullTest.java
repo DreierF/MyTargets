@@ -38,8 +38,8 @@ public class WAFullTest {
 
     @Test
     public void testScoringStyle() {
-        Assert.assertEquals(10, target.getScoringStyle(0).getPointsByZone(0, 0));
-        Assert.assertEquals(10, target.getScoringStyle(0).getPointsByZone(1, 0));
-        Assert.assertEquals(9, target.getScoringStyle(1).getPointsByZone(1, 0));
+        Assert.assertEquals(10, target.getScoringStyle(0).getScoreByScoringRing(0, 0));
+        Assert.assertEquals(10, target.getScoringStyle(0).getScoreByScoringRing(1, 0));
+        Assert.assertEquals(9, target.getScoringStyle(1).getScoreByScoringRing(1, 0));
     }
 }

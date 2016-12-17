@@ -66,7 +66,7 @@ public class EditTrainingActivityTest extends UITestBase {
         SettingsManager.setIndoor(false);
         SettingsManager.setInputMethod(EInputMethod.PLOTTING);
         SettingsManager.setTimerEnabled(false);
-        SettingsManager.setArrowsPerEnd(3);
+        SettingsManager.setShotsPerEnd(3);
         SettingsManager.setDistance(new Dimension(10, METER));
     }
 
@@ -123,7 +123,7 @@ public class EditTrainingActivityTest extends UITestBase {
                 .check(matches(withText(R.string.rain)));
         onView(allOf(withId(R.id.details),
                 withParent(withParent(withParent(withParent(withId(R.id.environment)))))))
-                .check(matches(withText(containsString("9 Btf"))))
+                .check(matches(withText(containsString("9 Bft"))))
                 .check(matches(withText(containsString("My location"))));
 
         onView(withId(R.id.trainingDate)).perform(click());

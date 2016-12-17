@@ -24,8 +24,8 @@ import java.util.List;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer;
 import de.dreier.mytargets.shared.analysis.aggregation.IAggregationStrategy;
-import de.dreier.mytargets.shared.models.Shot;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.db.Shot;
 
 import static de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy.NONE;
 

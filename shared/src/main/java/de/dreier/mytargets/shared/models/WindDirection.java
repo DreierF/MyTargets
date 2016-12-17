@@ -59,7 +59,8 @@ public class WindDirection implements IIdProvider, IImageProvider, Comparable<Wi
         return list;
     }
 
-    public long getId() {
+    @Override
+    public Long getId() {
         return id;
     }
 

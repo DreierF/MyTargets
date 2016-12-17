@@ -38,9 +38,8 @@ import de.dreier.mytargets.adapters.DynamicItemHolder;
 import de.dreier.mytargets.databinding.FragmentEditStandardRoundBinding;
 import de.dreier.mytargets.databinding.ItemRoundTemplateBinding;
 import de.dreier.mytargets.managers.SettingsManager;
-import de.dreier.mytargets.managers.dao.StandardRoundDataSource;
-import de.dreier.mytargets.shared.models.RoundTemplate;
-import de.dreier.mytargets.shared.models.StandardRound;
+import de.dreier.mytargets.shared.models.db.RoundTemplate;
+import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.IntentWrapper;
@@ -55,9 +54,11 @@ import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 public class EditStandardRoundFragment extends EditFragmentBase {
 
+    public static final int RESULT_STANDARD_ROUND_DELETED = Activity.RESULT_FIRST_USER;
+
     @State(ParcelsBundler.class)
     List<RoundTemplate> roundTemplateList = new ArrayList<>();
-    private long standardRoundId = -1;
+    private StandardRound standardRound;
     private RoundTemplateAdapter adapter;
     private FragmentEditStandardRoundBinding binding;
 
@@ -82,40 +83,33 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         ToolbarUtils.showUpAsX(this);
         setHasOptionsMenu(true);
 
-        StandardRound standardRound = null;
         if (getArguments() != null) {
             standardRound = Parcels.unwrap(getArguments().getParcelable(ITEM));
         }
 
         if (savedInstanceState == null) {
             if (standardRound == null) {
+                standardRound = new StandardRound();
                 ToolbarUtils.setTitle(this, R.string.new_round_template);
                 binding.name.setText(R.string.custom_round);
-                // Initialise with default values
-                binding.indoor.setChecked(SettingsManager.getIndoor());
-                binding.outdoor.setChecked(!SettingsManager.getIndoor());
-
+                // Initialize with default values
                 RoundTemplate round = new RoundTemplate();
-                round.arrowsPerEnd = SettingsManager.getArrowsPerPasse();
-                round.endCount = SettingsManager.getPasses();
-                round.target = SettingsManager.getTarget();
-                round.targetTemplate = round.target;
+                round.shotsPerEnd = SettingsManager.getShotsPerEnd();
+                round.endCount = SettingsManager.getEndCount();
+                round.setTargetTemplate(SettingsManager.getTarget());
                 round.distance = SettingsManager.getDistance();
                 roundTemplateList.add(round);
             } else {
                 ToolbarUtils.setTitle(this, R.string.edit_standard_round);
                 // Load saved values
-                binding.indoor.setChecked(standardRound.indoor);
-                binding.outdoor.setChecked(!standardRound.indoor);
-                roundTemplateList = standardRound.rounds;
+                roundTemplateList = standardRound.getRounds();
                 if (standardRound.club == StandardRoundFactory.CUSTOM) {
                     binding.name.setText(standardRound.name);
-                    standardRoundId = standardRound.getId();
                 } else {
                     binding.name.setText(
                             String.format("%s %s", getString(R.string.custom), standardRound.name));
                     for (RoundTemplate round : roundTemplateList) {
-                        round.setId(-1);
+                        round.setId(-1L);
                     }
                 }
             }
@@ -139,36 +133,30 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         RoundTemplate r = roundTemplateList.get(roundTemplateList.size() - 1);
         RoundTemplate roundTemplate = new RoundTemplate();
         roundTemplate.endCount = r.endCount;
-        roundTemplate.arrowsPerEnd = r.arrowsPerEnd;
+        roundTemplate.shotsPerEnd = r.shotsPerEnd;
         roundTemplate.distance = r.distance;
-        roundTemplate.target = r.target;
-        roundTemplate.target.size = r.target.size;
-        roundTemplate.targetTemplate = r.targetTemplate;
+        roundTemplate.setTargetTemplate(r.getTargetTemplate());
         roundTemplateList.add(roundTemplate);
         adapter.notifyItemInserted(roundTemplateList.size() - 1);
     }
 
     private void onDeleteStandardRound() {
-        new StandardRoundDataSource().delete(standardRoundId);
+        standardRound.delete();
+        getActivity().setResult(RESULT_STANDARD_ROUND_DELETED, null);
         finish();
     }
 
     @Override
     protected void onSave() {
-        StandardRound standardRound = new StandardRound();
-        standardRound.setId(standardRoundId);
         standardRound.club = StandardRoundFactory.CUSTOM;
         standardRound.name = binding.name.getText().toString();
-        standardRound.indoor = binding.indoor.isChecked();
-        standardRound.rounds = roundTemplateList;
-        new StandardRoundDataSource().update(standardRound);
-
-        SettingsManager.setIndoor(standardRound.indoor);
+        standardRound.setRounds(roundTemplateList);
+        standardRound.save();
 
         RoundTemplate round = roundTemplateList.get(0);
-        SettingsManager.setArrowsPerEnd(round.arrowsPerEnd);
-        SettingsManager.setPasses(round.endCount);
-        SettingsManager.setTarget(round.target);
+        SettingsManager.setShotsPerEnd(round.shotsPerEnd);
+        SettingsManager.setEndCount(round.endCount);
+        SettingsManager.setTarget(round.getTargetTemplate());
         SettingsManager.setDistance(round.distance);
 
         Intent data = new Intent();
@@ -184,15 +172,14 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         if (resultCode == Activity.RESULT_OK) {
             Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
             final int index = intentData.getInt(SelectorBase.INDEX);
-            final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
+            final Parcelable parcelable = data.getParcelableExtra(ITEM);
             switch (requestCode) {
                 case DistanceSelector.DISTANCE_REQUEST_CODE:
                     roundTemplateList.get(index).distance = Parcels.unwrap(parcelable);
                     adapter.notifyItemChanged(index);
                     break;
                 case TargetSelector.TARGET_REQUEST_CODE:
-                    roundTemplateList.get(index).target = Parcels.unwrap(parcelable);
-                    roundTemplateList.get(index).targetTemplate = Parcels.unwrap(parcelable);
+                    roundTemplateList.get(index).setTargetTemplate(Parcels.unwrap(parcelable));
                     adapter.notifyItemChanged(index);
                     break;
             }
@@ -224,19 +211,19 @@ public class EditStandardRoundFragment extends EditFragmentBase {
             // Target round
             binding.target.setOnActivityResultContext(fragment);
             binding.target.setItemIndex(position);
-            binding.target.setItem(item.target);
+            binding.target.setItem(item.getTargetTemplate());
 
-            // Passes
-            binding.passes.setTextPattern(R.plurals.passe);
-            binding.passes.setOnValueChangedListener(val -> item.endCount = val);
-            binding.passes.setValue(item.endCount);
+            // Ends
+            binding.endCount.setTextPattern(R.plurals.passe);
+            binding.endCount.setOnValueChangedListener(val -> item.endCount = val);
+            binding.endCount.setValue(item.endCount);
 
-            // Arrows per end
-            binding.arrows.setTextPattern(R.plurals.arrow);
-            binding.arrows.setMinimum(1);
-            binding.arrows.setMaximum(12);
-            binding.arrows.setOnValueChangedListener(val -> item.arrowsPerEnd = val);
-            binding.arrows.setValue(item.arrowsPerEnd);
+            // Shots per end
+            binding.shotCount.setTextPattern(R.plurals.arrow);
+            binding.shotCount.setMinimum(1);
+            binding.shotCount.setMaximum(12);
+            binding.shotCount.setOnValueChangedListener(val -> item.shotsPerEnd = val);
+            binding.shotCount.setValue(item.shotsPerEnd);
 
             if (position == 0) {
                 binding.remove.setVisibility(View.GONE);

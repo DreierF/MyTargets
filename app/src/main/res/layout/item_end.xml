@@ -25,7 +25,7 @@
         android:paddingRight="16dp">
 
         <TextView
-            android:id="@+id/passe"
+            android:id="@+id/end"
             style="@style/primaryText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
             android:layout_margin="5dp"
             android:clickable="false" />
 
-        <de.dreier.mytargets.views.PasseView
+        <de.dreier.mytargets.views.EndView
             android:id="@+id/shoots"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

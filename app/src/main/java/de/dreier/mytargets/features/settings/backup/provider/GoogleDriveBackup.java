@@ -51,7 +51,6 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.features.settings.backup.BackupEntry;
 import de.dreier.mytargets.features.settings.backup.BackupException;
-import de.dreier.mytargets.managers.DatabaseManager;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -161,7 +160,7 @@ public class GoogleDriveBackup {
                         DriveContents contents = result.getDriveContents();
                         InputStream input = contents.getInputStream();
                         try {
-                            DatabaseManager.Import(activity, input);
+                            BackupUtils.importZip(activity, input);
                             listener.onFinished();
                         } catch (IOException e) {
                             e.printStackTrace();

@@ -32,12 +32,12 @@ public enum EBackupLocation implements IIdProvider {
     EXTERNAL_STORAGE(2, R.string.external_storage, R.drawable.ic_micro_sd_card_24dp),
     GOOGLE_DRIVE(3, R.string.google_drive, R.drawable.ic_google_drive_black_24dp);
 
-    int id;
+    Long id;
     int drawable;
     int name;
 
     @ParcelConstructor
-    EBackupLocation(int id, @StringRes int name, @DrawableRes int drawable) {
+    EBackupLocation(long id, @StringRes int name, @DrawableRes int drawable) {
         this.id = id;
         this.name = name;
         this.drawable = drawable;
@@ -52,7 +52,7 @@ public enum EBackupLocation implements IIdProvider {
     }
 
     @Override
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
