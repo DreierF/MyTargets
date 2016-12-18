@@ -20,10 +20,13 @@ import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.text.SimpleDateFormat;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
@@ -116,8 +119,8 @@ public class EditTrainingActivityTest extends UITestBase {
         onView(withId(R.id.recyclerView)).perform(actionOnItemAtPosition(9, click()));
         onView(withId(R.id.windDirection)).perform(click());
         onView(withId(R.id.recyclerView)).perform(actionOnItemAtPosition(7, click()));
-        onView(withId(R.id.location)).perform(nestedScrollTo(), replaceText("My location"));
-        onView(withId(R.id.action_save)).perform(click());
+        onView(withId(R.id.location)).perform(replaceText("My location"));
+        navigateUp();
         onView(allOf(withId(R.id.name),
                 withParent(withParent(withParent(withParent(withId(R.id.environment)))))))
                 .check(matches(withText(R.string.rain)));
@@ -127,8 +130,10 @@ public class EditTrainingActivityTest extends UITestBase {
                 .check(matches(withText(containsString("My location"))));
 
         onView(withId(R.id.trainingDate)).perform(click());
-        //TODO change date
-        pressBack();
+        enterDate(2016, 8, 10);
+        final String formattedDate = SimpleDateFormat.getDateInstance()
+                .format(new LocalDate(2016, 8, 10).toDate());
+        onView(withId(R.id.trainingDate)).check(matches(withText(formattedDate)));
 
         onView(withId(R.id.action_save)).perform(click());
         pressBack();
