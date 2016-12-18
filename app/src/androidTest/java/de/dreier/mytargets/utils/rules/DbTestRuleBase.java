@@ -74,18 +74,18 @@ public abstract class DbTestRuleBase implements TestRule {
     protected End randomEnd(Training training, Round round, int arrowsPerEnd, Random gen, int index) {
         End end = new End(arrowsPerEnd, index);
         end.roundId = round.getId();
-        p.exact = true;
+        end.exact = true;
         for (int i = 0; i < arrowsPerEnd; i++) {
-            p.shots.get(i).index = i;
-            p.shots.get(i).x = gaussianRand(gen);
-            p.shots.get(i).y = gaussianRand(gen);
-            p.shots.get(i).zone = round.info.target.getModel()
-                    .getZoneFromPoint(p.shots.get(i).x,
-                            p.shots.get(i).y, 0.05f);
+            end.getShots().get(i).index = i;
+            end.getShots().get(i).x = gaussianRand(gen);
+            end.getShots().get(i).y = gaussianRand(gen);
+            end.getShots().get(i).scoringRing = round.getTarget().getModel()
+                    .getZoneFromPoint(end.getShots().get(i).x,
+                            end.getShots().get(i).y, 0.05f);
         }
-        p.saveDate = new DateTime().withDate(training.date)
+        end.saveTime = new DateTime().withDate(training.date)
                 .withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
-        return p;
+        return end;
     }
 
     private float gaussianRand(Random gen) {
@@ -93,19 +93,6 @@ public abstract class DbTestRuleBase implements TestRule {
         final float rand2 = gen.nextFloat();
         return (float) (Math.sqrt(-2 * Math.log(rand1) / Math.log(Math.E)) *
                 Math.cos(2 * Math.PI * rand2)) * 0.4f;
-    }
-
-    protected Passe randomPasseZone(Training training, Round round, int arrowsPerEnd, Random gen) {
-        Passe p = new Passe(arrowsPerEnd);
-        p.roundId = round.getId();
-        p.exact = false;
-        for (int i = 0; i < arrowsPerEnd; i++) {
-            end.getShots().get(i).index = i;
-            end.getShots().get(i).scoringRing = gen.nextInt(5);
-        }
-        end.saveTime = new DateTime().withDate(training.date)
-                .withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
-        return end;
     }
 
     protected abstract void addDatabaseContent();
