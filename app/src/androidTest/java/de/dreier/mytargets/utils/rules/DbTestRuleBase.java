@@ -33,6 +33,7 @@ import java.util.Random;
 
 import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Thumbnail;
@@ -53,7 +54,7 @@ public abstract class DbTestRuleBase implements TestRule {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                FlowManager.reset();
+                FlowManager.getDatabase(AppDatabase.class).reset(context);
                 ApplicationInstance.initFlowManager(context);
                 addDatabaseContent();
                 base.evaluate();

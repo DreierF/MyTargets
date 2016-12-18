@@ -132,7 +132,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
                 id.equals(((Round) another).id);
     }
 
-    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "ends")
+    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "ends")
     public List<End> getEnds() {
         if (ends == null || ends.isEmpty()) {
             ends = SQLite.select()

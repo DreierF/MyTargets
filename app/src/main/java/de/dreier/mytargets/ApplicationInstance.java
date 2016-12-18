@@ -108,8 +108,6 @@ public class ApplicationInstance extends SharedApplicationInstance {
     }
 
     public static void initFlowManager(Context context) {
-        FlowManager.init(new FlowConfig.Builder(context)
-                .openDatabasesOnInit(false)
-                .build());
+        FlowManager.init(new FlowConfig.Builder(context).build());
     }
 }

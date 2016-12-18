@@ -30,7 +30,7 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
     public int index;
 
     @ForeignKey(tableClass = End.class, references = {
-            @ForeignKeyReference(columnName = "end", columnType = Long.class, foreignKeyColumnName = "id", referencedGetterName = "getId", referencedSetterName = "setId")},
+            @ForeignKeyReference(columnName = "end", columnType = Long.class, foreignKeyColumnName = "_id", referencedGetterName = "getId", referencedSetterName = "setId")},
             onDelete = ForeignKeyAction.CASCADE)
     public Long endId;
 

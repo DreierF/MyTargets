@@ -23,7 +23,7 @@ import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
 import static android.database.sqlite.SQLiteDatabase.CONFLICT_IGNORE;
 
-@Database(name = AppDatabase.NAME, version = AppDatabase.VERSION)
+@Database(name = AppDatabase.NAME, version = AppDatabase.VERSION, foreignKeysSupported = true)
 public class AppDatabase {
 
     public static final String NAME = "database";
