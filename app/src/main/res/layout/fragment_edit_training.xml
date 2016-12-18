@@ -45,9 +45,9 @@
                 android:layout_height="66dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginLeft="56dp"
+                android:layout_marginLeft="72dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginStart="56dp">
+                android:layout_marginStart="72dp">
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/training_layout"
@@ -126,31 +126,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
-
-                            <RadioGroup
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="horizontal"
-                                android:padding="16dp"
-                                android:weightSum="1">
-
-                                <RadioButton
-                                    android:id="@+id/outdoor"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight=".5"
-                                    android:text="@string/outdoor"/>
-
-                                <RadioButton
-                                    android:id="@+id/indoor"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight=".5"
-                                    android:text="@string/indoor"/>
-
-                            </RadioGroup>
-
-                            <include layout="@layout/partial_divider_full"/>
 
                             <de.dreier.mytargets.views.selector.DistanceSelector
                                 android:id="@+id/distance"

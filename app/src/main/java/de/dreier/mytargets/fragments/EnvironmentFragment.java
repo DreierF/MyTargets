@@ -18,7 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,23 +37,29 @@ import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
 public class EnvironmentFragment extends FragmentBase {
 
     private ListFragmentBase.OnItemSelectedListener listener;
-    private Environment mEnvironment;
+    private Environment environment;
     private EWeather weather;
     private FragmentEnvironmentBinding binding;
+    private SwitchCompat switchView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_environment, container, false);
 
+        ToolbarUtils.setSupportActionBar(this, binding.toolbar);
+        ToolbarUtils.showHomeAsUp(this);
+
         Bundle i = getArguments();
         if (i != null) {
-            mEnvironment = Parcels.unwrap(i.getParcelable(ITEM));
+            environment = Parcels.unwrap(i.getParcelable(ITEM));
         }
 
         // Weather
@@ -63,21 +69,16 @@ public class EnvironmentFragment extends FragmentBase {
         setOnClickWeather(binding.lightRain, EWeather.LIGHT_RAIN);
         setOnClickWeather(binding.rain, EWeather.RAIN);
 
-        setWeather(mEnvironment.weather);
-        binding.windSpeed.setItemId(mEnvironment.windSpeed);
-        binding.windDirection.setItemId(mEnvironment.windDirection);
-        binding.location.setText(mEnvironment.location);
+        setWeather(environment.weather);
+        binding.windSpeed.setItemId(environment.windSpeed);
+        binding.windDirection.setItemId(environment.windDirection);
+        binding.location.setText(environment.location);
         setHasOptionsMenu(true);
 
         binding.windDirection.setOnActivityResultContext(this);
         binding.windSpeed.setOnActivityResultContext(this);
-        return binding.getRoot();
-    }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        ToolbarUtils.showUpAsX(this);
+        return binding.getRoot();
     }
 
     private void setOnClickWeather(ImageButton b, final EWeather w) {
@@ -95,17 +96,19 @@ public class EnvironmentFragment extends FragmentBase {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.save, menu);
+        inflater.inflate(R.menu.environment_switch, menu);
+
+        MenuItem item = menu.findItem(R.id.action_switch);
+        switchView = (SwitchCompat) item.getActionView().findViewById(R.id.action_switch_control);
+        switchView.setOnCheckedChangeListener((compoundButton, checked) -> setOutdoor(checked));
+        setOutdoor(!environment.indoor);
+        switchView.setChecked(!environment.indoor);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            onSave();
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    protected void setOutdoor(boolean checked) {
+        switchView.setText(checked ? R.string.outdoor : R.string.indoor);
+        binding.indoorPlaceholder.setVisibility(checked ? GONE : VISIBLE);
+        binding.weatherLayout.setVisibility(checked ? VISIBLE : GONE);
     }
 
     @Override
@@ -118,8 +121,9 @@ public class EnvironmentFragment extends FragmentBase {
         Assert.assertNotNull(listener);
     }
 
-    private void onSave() {
+    public void onSave() {
         Environment e = new Environment();
+        e.indoor = !switchView.isChecked();
         e.weather = weather;
         e.windSpeed = (int) (long) binding.windSpeed.getSelectedItem().getId();
         e.windDirection = (int) (long) binding.windDirection.getSelectedItem().getId();
