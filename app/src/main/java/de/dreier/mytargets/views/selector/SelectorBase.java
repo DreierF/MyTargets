@@ -133,16 +133,6 @@ public abstract class SelectorBase<T> extends LinearLayout {
                 .start());
     }
 
-    public final void setOnActivityResultContext(Activity activity) {
-        if (addButton != null) {
-            addIntent = getAddIntent().withContext(activity);
-        }
-        setOnClickListener(v -> getDefaultIntent()
-                .withContext(activity)
-                .forResult(requestCode)
-                .start());
-    }
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode == this.requestCode) {
             Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);

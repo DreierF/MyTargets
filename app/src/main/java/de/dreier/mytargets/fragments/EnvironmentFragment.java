@@ -44,7 +44,7 @@ import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 public class EnvironmentFragment extends FragmentBase {
 
     private ListFragmentBase.OnItemSelectedListener listener;
-    private Environment mEnvironment;
+    private Environment environment;
     private EWeather weather;
     private FragmentEnvironmentBinding binding;
     private SwitchCompat switchView;
@@ -59,7 +59,7 @@ public class EnvironmentFragment extends FragmentBase {
 
         Bundle i = getArguments();
         if (i != null) {
-            mEnvironment = Parcels.unwrap(i.getParcelable(ITEM));
+            environment = Parcels.unwrap(i.getParcelable(ITEM));
         }
 
         // Weather
@@ -69,10 +69,10 @@ public class EnvironmentFragment extends FragmentBase {
         setOnClickWeather(binding.lightRain, EWeather.LIGHT_RAIN);
         setOnClickWeather(binding.rain, EWeather.RAIN);
 
-        setWeather(mEnvironment.weather);
-        binding.windSpeed.setItemId(mEnvironment.windSpeed);
-        binding.windDirection.setItemId(mEnvironment.windDirection);
-        binding.location.setText(mEnvironment.location);
+        setWeather(environment.weather);
+        binding.windSpeed.setItemId(environment.windSpeed);
+        binding.windDirection.setItemId(environment.windDirection);
+        binding.location.setText(environment.location);
         setHasOptionsMenu(true);
 
         binding.windDirection.setOnActivityResultContext(this);
@@ -101,23 +101,14 @@ public class EnvironmentFragment extends FragmentBase {
         MenuItem item = menu.findItem(R.id.action_switch);
         switchView = (SwitchCompat) item.getActionView().findViewById(R.id.action_switch_control);
         switchView.setOnCheckedChangeListener((compoundButton, checked) -> setOutdoor(checked));
-        setOutdoor(true);
+        setOutdoor(!environment.indoor);
+        switchView.setChecked(!environment.indoor);
     }
 
     protected void setOutdoor(boolean checked) {
         switchView.setText(checked ? R.string.outdoor : R.string.indoor);
-        binding.indoorImageView.setVisibility(checked ? GONE : VISIBLE);
+        binding.indoorPlaceholder.setVisibility(checked ? GONE : VISIBLE);
         binding.weatherLayout.setVisibility(checked ? VISIBLE : GONE);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onSave();
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -130,9 +121,9 @@ public class EnvironmentFragment extends FragmentBase {
         Assert.assertNotNull(listener);
     }
 
-    private void onSave() {
+    public void onSave() {
         Environment e = new Environment();
-        e.indoor = switchView.isChecked();
+        e.indoor = !switchView.isChecked();
         e.weather = weather;
         e.windSpeed = (int) (long) binding.windSpeed.getSelectedItem().getId();
         e.windDirection = (int) (long) binding.windDirection.getSelectedItem().getId();

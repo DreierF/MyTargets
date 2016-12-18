@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.SharedApplicationInstance;
 
 public class Environment implements IImageProvider, IDetailProvider {
     public boolean indoor;
@@ -42,14 +43,22 @@ public class Environment implements IImageProvider, IDetailProvider {
 
     @Override
     public String getName() {
-        return weather.getName();
+        return indoor ? SharedApplicationInstance.get(R.string.indoor) : weather.getName();
     }
 
     @Override
     public String getDetails(Context context) {
-        String description = context.getString(R.string.wind) + ": " + getWindSpeed(context);
-        if (!TextUtils.isEmpty(location)) {
-            description += "\n" + context.getString(R.string.location) + ": " + location;
+        String description;
+        if(indoor) {
+            description = "";
+            if (!TextUtils.isEmpty(location)) {
+                description += context.getString(R.string.location) + ": " + location;
+            }
+        } else {
+            description = context.getString(R.string.wind) + ": " + getWindSpeed(context);
+            if (!TextUtils.isEmpty(location)) {
+                description += "\n" + context.getString(R.string.location) + ": " + location;
+            }
         }
         return description;
     }

@@ -329,4 +329,5 @@
     <string name="monthly">Monthly</string>
     <string name="connection_failed">Connection failed!</string>
     <string name="connecting">Connecting</string>
+    <string name="shooting_indoor">Shooting indoor</string>
 </resources>

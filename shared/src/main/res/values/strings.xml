@@ -36,6 +36,7 @@
     <string name="xlarge">XLarge</string>
     <string name="unknown">Unknown</string>
 
+    <string name="indoor">Indoor</string>
     <string name="wind">Wind</string>
     <string name="location">Location</string>
 
