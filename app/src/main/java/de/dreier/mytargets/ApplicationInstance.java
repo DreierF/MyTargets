@@ -17,6 +17,7 @@ package de.dreier.mytargets;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.StrictMode;
 
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -81,6 +82,18 @@ public class ApplicationInstance extends SharedApplicationInstance {
 
     @Override
     public void onCreate() {
+        if (BuildConfig.DEBUG) {
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build());
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectLeakedSqlLiteObjects()
+                    .detectLeakedClosableObjects()
+                    .penaltyLog()
+                    .penaltyDeath()
+                    .build());
+        }
         super.onCreate();
         final File newDatabasePath = getDatabasePath(AppDatabase.DATABASE_FILE_NAME);
         final File oldDatabasePath = getDatabasePath(AppDatabase.DATABASE_IMPORT_FILE_NAME);
@@ -96,7 +109,7 @@ public class ApplicationInstance extends SharedApplicationInstance {
 
     public static void initFlowManager(Context context) {
         FlowManager.init(new FlowConfig.Builder(context)
-                .openDatabasesOnInit(true)
+                .openDatabasesOnInit(false)
                 .build());
     }
 }

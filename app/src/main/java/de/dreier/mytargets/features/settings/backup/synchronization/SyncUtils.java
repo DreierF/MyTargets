@@ -47,7 +47,7 @@ public class SyncUtils {
             // Inform the system that this account supports sync
             ContentResolver.setIsSyncable(account, BuildConfig.CONTENT_AUTHORITY, 1);
             // Inform the system that this account is eligible for auto sync when the network is up
-            ContentResolver.setSyncAutomatically(account, BuildConfig.CONTENT_AUTHORITY, true);
+            ContentResolver.setSyncAutomatically(account, BuildConfig.CONTENT_AUTHORITY, false);
         }
     }
 
