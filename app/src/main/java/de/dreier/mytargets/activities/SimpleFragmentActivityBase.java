@@ -58,6 +58,10 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
         }
     }
 
+    public Fragment getChildFragment() {
+        return getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+    }
+
     public static class TimerActivity extends SimpleFragmentActivityBase {
 
         @Override
