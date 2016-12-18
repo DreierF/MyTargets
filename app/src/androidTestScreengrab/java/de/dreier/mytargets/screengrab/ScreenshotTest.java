@@ -49,14 +49,14 @@ public class ScreenshotTest extends UITestBase {
     @ClassRule
     public static final TestRule classRule = new LocaleTestRule();
 
-    private ActivityTestRule mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    private ActivityTestRule activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Rule
     public final RuleChain rule = RuleChain.outerRule(new SimpleDbTestRule())
-            .around(mActivityTestRule);
+            .around(activityTestRule);
 
     @Before
-    public void setup() {
+    public void setUp() {
         Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
         SettingsManager.setArrowNumbersEnabled(false);
         SettingsManager.setShotsPerEnd(6);
@@ -87,8 +87,9 @@ public class ScreenshotTest extends UITestBase {
         navigateUp();
         navigateUp();
         onView(matchFab()).perform(click());
-        onView(CoreMatchers.allOf(withId(R.id.fab1), withParent(withId(R.id.fab)))).perform(click());
-        allowPermissionsIfNeeded(mActivityTestRule.getActivity(), ACCESS_FINE_LOCATION);
+        onView(CoreMatchers.allOf(withId(R.id.fab1), withParent(withId(R.id.fab))))
+                .perform(click());
+        allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
         Screengrab.screenshot("2_enter_training");
         onView(withContentDescription(R.string.save)).perform(click());
         onView(isRoot()).perform(click());

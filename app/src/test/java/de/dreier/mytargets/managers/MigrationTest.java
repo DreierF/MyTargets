@@ -61,7 +61,7 @@ public final class MigrationTest {
     private DatabaseHelperDelegate helper;
 
     @Before
-    public void setup() throws IOException {
+    public void setUp() throws IOException {
         File baseDir = new File("build/tmp/migration");
         newFile = new File(baseDir, "new.db");
         File upgradedFile = RuntimeEnvironment.application
