@@ -124,7 +124,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         updateAutomaticBackupSwitch();
 
         binding.backupIntervalPreference.getRoot().setOnClickListener(view -> onBackupIntervalClicked());
-        binding.backupIntervalPreference.image.setImageResource(R.drawable.ic_query_builder_black_24dp);
+        binding.backupIntervalPreference.image.setImageResource(R.drawable.ic_query_builder_grey600_24dp);
         binding.backupIntervalPreference.name.setText(R.string.backup_interval);
         updateInterval();
 

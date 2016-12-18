@@ -13,9 +13,12 @@
   ~ GNU General Public License for more details.
   -->
 
-<vector android:height="24dp" android:viewportHeight="755.0"
-    android:viewportWidth="755.0" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="#FF000000" android:pathData="M497.8,470.6l245,0l-246.6,-420.6l-237.6,-0.8z"/>
-    <path android:fillColor="#FF000000" android:pathData="M115.2,705.8l247.4,-426.3l-117.6,-207l-245,422.2z"/>
-    <path android:fillColor="#FF000000" android:pathData="M142.1,705.8l489.2,-0.4l123.7,-211.5l-490,0z"/>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="24dp"
+        android:height="24dp"
+        android:viewportHeight="24.0"
+        android:viewportWidth="24.0">
+    <path
+        android:fillColor="#757575"
+        android:pathData="M18,2H8C6.9,2 6,2.9 6,4v7l-2,2v7c0,1.1 0.9,2 2,2h12c1.1,0 2,-0.9 2,-2V4C20,2.9 19.1,2 18,2zM15,4h2v4h-2V4zM12,4h2v4h-2V4zM9,4h2v4H9V4z"/>
 </vector>

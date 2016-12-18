@@ -69,6 +69,7 @@ public class InputActivityTest extends UITestBase {
             round2.save();
         }
     }).around(activityTestRule);
+
     private Round round1;
 
     @Before
