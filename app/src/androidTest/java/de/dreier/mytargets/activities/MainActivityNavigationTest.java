@@ -22,18 +22,17 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
+import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditTrainingActivity;
 import de.dreier.mytargets.fragments.EditTrainingFragment;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
-import de.dreier.mytargets.utils.rules.SimpleDbTestRule;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;
@@ -44,12 +43,10 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.Visibility.INVISIBLE;
-import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.OrientationChangeAction.orientationLandscape;
 import static de.dreier.mytargets.OrientationChangeAction.orientationPortrait;
@@ -59,11 +56,13 @@ import static org.hamcrest.CoreMatchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityNavigationTest extends UITestBase {
 
-    private IntentsTestRule activityTestRule = new IntentsTestRule<>(MainActivity.class);
+//    private IntentsTestRule activityTestRule = new IntentsTestRule<>(MainActivity.class);
 
     @Rule
-    public final RuleChain rule = RuleChain.outerRule(new SimpleDbTestRule()).around(
-            activityTestRule);
+//    public final RuleChain rule = RuleChain.outerRule(new SimpleDbTestRule()).around(
+//            activityTestRule);
+    public IntentsTestRule<MainActivity> activityTestRule = new IntentsTestRule<>(
+            MainActivity.class);
 
     @Before
     public void setUp() {
@@ -89,18 +88,16 @@ public class MainActivityNavigationTest extends UITestBase {
 
         // Does new free training work
         onView(matchFab()).perform(click());
-        onView(allOf(withId(R.id.fab1), withParent(withId(R.id.fab)))).perform(click());
-        intended(
-                allOf(hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
-                        hasAction(EditTrainingFragment.CREATE_FREE_TRAINING_ACTION)));
+        onView(withId(R.id.fab1)).perform(click());
+        intended(allOf(hasComponent(EditTrainingActivity.class.getName()),
+                hasAction(EditTrainingFragment.CREATE_FREE_TRAINING_ACTION)));
         allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
         pressBack();
 
         // Does new training with standard round work
         onView(matchFab()).perform(click());
-        onView(allOf(withId(R.id.fab2), withParent(withId(R.id.fab)))).perform(click());
-        intended(allOf(
-                hasComponent(SimpleFragmentActivityBase.EditTrainingActivity.class.getName()),
+        onView(withId(R.id.fab2)).perform(click());
+        intended(allOf(hasComponent(EditTrainingActivity.class.getName()),
                 hasAction(EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)));
         pressBack();
 
@@ -122,7 +119,7 @@ public class MainActivityNavigationTest extends UITestBase {
     public void addTraining() throws InterruptedException {
         onView(withId(R.id.fab1)).check(matches(withEffectiveVisibility(INVISIBLE)));
         onView(matchFab()).perform(click());
-        onView(allOf(withId(R.id.fab1), hasSibling(matchFab()))).perform(click());
+        onView(withId(R.id.fab1)).perform(click());
         allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
         clickActionBarItem(R.id.action_save, R.string.save);
         onView(isRoot()).perform(orientationLandscape(activityTestRule));

@@ -91,7 +91,7 @@ public class ApplicationInstance extends SharedApplicationInstance {
                     .detectLeakedSqlLiteObjects()
                     .detectLeakedClosableObjects()
                     .penaltyLog()
-                    .penaltyDeath()
+//                    .penaltyDeath()
                     .build());
         }
         super.onCreate();
@@ -109,5 +109,11 @@ public class ApplicationInstance extends SharedApplicationInstance {
 
     public static void initFlowManager(Context context) {
         FlowManager.init(new FlowConfig.Builder(context).build());
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        FlowManager.destroy();
     }
 }
