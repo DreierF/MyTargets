@@ -34,5 +34,6 @@
     <!-- Chips -->
     <color name="base10">#eaeaea</color>
     <color name="base30">#ff0000</color>
+    <color name="materialGrey600">#8a000000</color>
 
 </resources>
