@@ -28,6 +28,8 @@ buildscript {
         classpath 'org.ajoberstar:grgit:1.7.2'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
+        classpath 'com.google.gms:google-services:3.0.0'
+        classpath 'com.google.firebase:firebase-plugins:1.0.4'
     }
 
     configurations.classpath.exclude group: 'com.android.tools.external.lombok'
@@ -54,6 +56,7 @@ ext {
         testSupport : '0.5',
         supportWearable : '1.4.0',
         playService : '10.0.1',
+        firebase: '10.0.1',
         espresso : '2.2.2',
         parceler : '1.1.6',
         jodaTime : '2.9.6',
