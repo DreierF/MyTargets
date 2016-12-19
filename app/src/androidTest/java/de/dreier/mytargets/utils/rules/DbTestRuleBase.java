@@ -21,7 +21,6 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 
-import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.joda.time.DateTime;
@@ -58,11 +57,7 @@ public abstract class DbTestRuleBase implements TestRule {
                 SQLite.delete(Bow.class).execute();
                 SQLite.delete(Training.class).execute();
                 addDatabaseContent();
-                try {
-                    base.evaluate();
-                } finally {
-                    FlowManager.destroy();
-                }
+                base.evaluate();
             }
         };
     }

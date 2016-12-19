@@ -4,3 +4,8 @@
 *.iml
 googlePlayAndroidDeveloper.json
 app/src/main/play
+firebase-crashreporting.json
+services.tar
+app/google-services.json
+app/src/debug/google-services.json
+app/src/release/google-services.json

@@ -77,9 +77,8 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
     }
 
     @Override
-    public boolean equals(Object another) {
-        return another instanceof Shot &&
-                getClass().equals(another.getClass()) &&
-                id.equals(((Shot) another).id);
+    public boolean equals(Object o) {
+        return this == o || !(o == null || getClass() != o.getClass())
+                && (id != null ? id.equals(((Shot) o).id) : ((Shot) o).id == null);
     }
 }
