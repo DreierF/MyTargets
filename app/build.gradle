@@ -20,6 +20,7 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.triplet.play'
 apply plugin: 'jacoco-android'
 apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'com.google.firebase.firebase-crash'
 
 android {
     compileOptions {
@@ -166,6 +167,9 @@ dependencies {
     compile "com.google.android.gms:play-services-wearable:$libraryVersion.playService"
     compile "com.google.android.gms:play-services-drive:$libraryVersion.playService"
 
+    compile "com.google.firebase:firebase-core:$libraryVersion.firebase"
+    compile "com.google.firebase:firebase-crash:$libraryVersion.firebase"
+
     compile "com.google.code.gson:gson:$libraryVersion.gson"
 
     compile "joda-time:joda-time:$libraryVersion.jodaTime"
@@ -234,3 +238,6 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$libraryVersion.espresso"
     androidTestScreengrabCompile "tools.fastlane:screengrab:$libraryVersion.screengrab"
 }
+
+// Must be at the bottom
+apply plugin: 'com.google.gms.google-services'

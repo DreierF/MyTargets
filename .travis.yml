@@ -21,7 +21,8 @@ before_install:
 - export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
 - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
 - export JAVA_HOME=$JAVA8_HOME
-- openssl aes-256-cbc -K $encrypted_143bf53fc355_key -iv $encrypted_143bf53fc355_iv -in googlePlayAndroidDeveloper.json.enc -out googlePlayAndroidDeveloper.json -d
+- openssl aes-256-cbc -K $encrypted_143bf53fc355_key -iv $encrypted_143bf53fc355_iv -in services.tar.enc -out services.tar -d
+- tar xvf services.tar
 - curl -sL https://github.com/jpm4j/jpm4j.installers/raw/master/dist/biz.aQute.jpm.run.jar >jpm4j.jar
 - java -jar jpm4j.jar -u init
 - ~/jpm/bin/jpm install com.codacy:codacy-coverage-reporter:assembly
@@ -44,6 +45,7 @@ after_success:
 - |
   if [[ "$TRAVIS_TAG" ]]; then
     ./gradlew publishRegularRelease
+    ./gradlew -PFirebaseServiceAccountFilePath=app/src/main/google-services.json :app:firebaseUploadRegularReleaseProguardMapping
     ./dropbox_uploader.sh upload app/build/outputs/apk/app-regular-release.apk /Release/$TRAVIS_TAG/MyTargets.apk
     ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /Release/$TRAVIS_TAG/mapping.txt
   fi
