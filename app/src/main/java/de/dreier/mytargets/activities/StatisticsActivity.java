@@ -30,7 +30,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.util.LongSparseArray;
 import android.support.v4.util.Pair;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,7 +60,6 @@ import icepick.State;
 
 public class StatisticsActivity extends ChildActivityBase implements LoaderManager.LoaderCallbacks<List<Pair<Training, Round>>> {
 
-    private static final String TAG = "StatisticsActivity";
     private static final String ROUND_IDS = "round_ids";
 
     @State
@@ -97,12 +95,6 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
             @Override
             public List<Pair<Training, Round>> loadInBackground() {
                 final List<Round> rounds = Round.getAll(roundIds);
-                Log.d(TAG, "loadInBackground: ids " + LongUtils.toList(roundIds));
-                Log.d(TAG, "loadInBackground: rounds " + rounds);
-                final List<Long> collect = Stream.of(rounds)
-                        .map(round -> round.trainingId)
-                        .collect(Collectors.toList());
-                Log.d(TAG, "loadInBackground: trainingId " + collect);
                 LongSparseArray<Training> trainingsMap = new LongSparseArray<>();
                 Stream.of(rounds).map(round -> round.trainingId)
                         .distinct()
@@ -220,7 +212,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                         return new ChipGroup.Tag(bow.getId(), bow.getName(),
                                 bow.thumbnail.getBlob().getBlob(), true);
                     } else {
-                        return new ChipGroup.Tag(bid, getString(R.string.unknown), true);
+                        return new ChipGroup.Tag(null, getString(R.string.unknown), true);
                     }
                 })
                 .collect(Collectors.toList());
@@ -239,7 +231,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                         return new ChipGroup.Tag(arrow.getId(), arrow.getName(),
                                 arrow.thumbnail.getBlob().getBlob(), true);
                     } else {
-                        return new ChipGroup.Tag(aid, getString(R.string.unknown), true);
+                        return new ChipGroup.Tag(null, getString(R.string.unknown), true);
                     }
                 })
                 .collect(Collectors.toList());

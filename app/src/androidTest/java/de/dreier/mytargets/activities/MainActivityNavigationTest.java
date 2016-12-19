@@ -22,6 +22,7 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.R;
@@ -33,6 +34,7 @@ import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
+import de.dreier.mytargets.utils.rules.SimpleDbTestRule;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;
@@ -56,13 +58,12 @@ import static org.hamcrest.CoreMatchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityNavigationTest extends UITestBase {
 
-//    private IntentsTestRule activityTestRule = new IntentsTestRule<>(MainActivity.class);
+    private IntentsTestRule<MainActivity> activityTestRule = new IntentsTestRule<>(
+            MainActivity.class);
 
     @Rule
-//    public final RuleChain rule = RuleChain.outerRule(new SimpleDbTestRule()).around(
-//            activityTestRule);
-    public IntentsTestRule<MainActivity> activityTestRule = new IntentsTestRule<>(
-            MainActivity.class);
+    public final RuleChain rule = RuleChain.outerRule(new SimpleDbTestRule())
+            .around(activityTestRule);
 
     @Before
     public void setUp() {
