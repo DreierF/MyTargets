@@ -63,10 +63,24 @@
         <item name="menu_colorNormal">@color/colorAccent</item>
         <item name="menu_labels_margin">16dp</item>
         <item name="menu_backgroundColor">@color/dim_overlay</item>
-        <!--<item name="menu_colorPressed">@color/colorAccentDark</item>
-        <item name="menu_colorRipple">@color/colorAccentDark</item>
-        <item name="menu_icon">@drawable/ic_add_white_24dp</item>
-        <item name="menu_openDirection">up</item>-->
+    </style>
+
+    <style name="fabMenuLabelsStyle">
+        <item name="android:textColor">#757575</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:background">@drawable/fab_label_background</item>
+        <item name="android:paddingLeft">10dip</item>
+        <item name="android:paddingRight">10dip</item>
+        <item name="android:layout_width">0.0dip</item>
+        <item name="android:layout_height">30dip</item>
+        <item name="android:layout_marginRight">17dip</item>
+        <item name="android:layout_marginBottom">3.0dip</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_weight">1.0</item>
+        <item name="android:textIsSelectable">false</item>
     </style>
 
 </resources>

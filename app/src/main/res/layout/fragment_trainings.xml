@@ -39,7 +39,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="bottom|end"
             android:padding="16dp"
-            app:layout_behavior="de.dreier.mytargets.utils.FloatingActionMenuBehavior">
+            app:layout_behavior="de.dreier.mytargets.utils.FloatingActionMenuBehavior"
+            app:menu_labels_style="@style/fabMenuLabelsStyle">
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fab2"
@@ -47,6 +48,8 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/fab_album_24dp"
                 app:fab_colorNormal="#2196F3"
+                app:fab_colorPressed="#1d7dcc"
+                app:fab_colorRipple="#1d7dcc"
                 app:fab_label="@string/training_with_standard_round"
                 app:fab_size="mini"/>
 
@@ -56,6 +59,8 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/fab_trending_up_white_24dp"
                 app:fab_colorNormal="#4CAF50"
+                app:fab_colorPressed="#429945"
+                app:fab_colorRipple="#429945"
                 app:fab_label="@string/free_training"
                 app:fab_size="mini"/>
 
