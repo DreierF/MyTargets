@@ -83,9 +83,9 @@ public class MainFragment extends Fragment {
                         .getIntent(Stream.of(Training.getAll())
                                 .flatMap((training) -> Stream.of(training.getRounds()))
                                 .map(Round::getId)
-                        
+
                                 .collect(Collectors.toList())).withContext(this)
-.start();
+                        .start();
                 return true;
             case R.id.action_preferences:
                 startActivity(new Intent(getContext(), SettingsActivity.class));
