@@ -12,14 +12,6 @@
 -keep public class com.google.android.gms.* { public *; }
 -dontwarn com.google.android.gms.**
 
-# Dropbox
--dontwarn okio.**
--dontwarn okhttp3.**
--dontwarn com.squareup.okhttp.**
--dontwarn com.google.appengine.**
--dontwarn javax.servlet.**
--keep class hk.com.fgoproduction.getdroplets.Lib.OAuth.TokenResult { *; }
-
 # Ignore duplicate classes in legacy android's http stuff
 -dontnote org.apache.http.**
 -dontnote android.net.http.**

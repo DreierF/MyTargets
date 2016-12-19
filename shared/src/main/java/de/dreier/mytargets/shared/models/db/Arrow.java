@@ -20,7 +20,7 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
 import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
-import de.dreier.mytargets.shared.utils.ThumbnailConverter;
+import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter;
 
 @Parcel
 @Table(database = AppDatabase.class)

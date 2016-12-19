@@ -21,7 +21,7 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 
-import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -31,11 +31,11 @@ import org.junit.runners.model.Statement;
 
 import java.util.Random;
 
-import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Thumbnail;
+import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
@@ -53,8 +53,9 @@ public abstract class DbTestRuleBase implements TestRule {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                FlowManager.reset();
-                ApplicationInstance.initFlowManager(context);
+                SQLite.delete(Arrow.class).execute();
+                SQLite.delete(Bow.class).execute();
+                SQLite.delete(Training.class).execute();
                 addDatabaseContent();
                 base.evaluate();
             }
@@ -74,13 +75,25 @@ public abstract class DbTestRuleBase implements TestRule {
     protected End randomEnd(Training training, Round round, int arrowsPerEnd, Random gen, int index) {
         End end = new End(arrowsPerEnd, index);
         end.roundId = round.getId();
+        end.exact = true;
         for (int i = 0; i < arrowsPerEnd; i++) {
             end.getShots().get(i).index = i;
-            end.getShots().get(i).scoringRing = gen.nextInt(5);
+            end.getShots().get(i).x = gaussianRand(gen);
+            end.getShots().get(i).y = gaussianRand(gen);
+            end.getShots().get(i).scoringRing = round.getTarget().getModel()
+                    .getZoneFromPoint(end.getShots().get(i).x,
+                            end.getShots().get(i).y, 0.05f);
         }
         end.saveTime = new DateTime().withDate(training.date)
                 .withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
         return end;
+    }
+
+    private float gaussianRand(Random gen) {
+        final float rand1 = gen.nextFloat();
+        final float rand2 = gen.nextFloat();
+        return (float) (Math.sqrt(-2 * Math.log(rand1) / Math.log(Math.E)) *
+                Math.cos(2 * Math.PI * rand2)) * 0.4f;
     }
 
     protected abstract void addDatabaseContent();

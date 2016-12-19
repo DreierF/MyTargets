@@ -15,14 +15,12 @@
 
 package de.dreier.mytargets.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -157,7 +155,7 @@ public class StandardRoundListFragment extends SelectPureListItemFragmentBase<St
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK && requestCode == NEW_STANDARD_ROUND) {
+        if (resultCode == RESULT_OK && requestCode == NEW_STANDARD_ROUND) {
             getActivity().setResult(resultCode, data);
             finish();
         } else if (requestCode == EDIT_STANDARD_ROUND) {

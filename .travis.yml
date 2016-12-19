@@ -12,6 +12,7 @@ android:
   - extra-google-m2repository
   licenses:
   - .+
+# Needed to get java 8u51 because 8u31, which is available from sudo: false causes compile errors
 sudo: required
 env:
   global:
@@ -22,6 +23,9 @@ before_install:
 - export JAVA_HOME=$JAVA8_HOME
 - openssl aes-256-cbc -K $encrypted_143bf53fc355_key -iv $encrypted_143bf53fc355_iv -in services.tar.enc -out services.tar -d
 - tar xvf services.tar
+- curl -sL https://github.com/jpm4j/jpm4j.installers/raw/master/dist/biz.aQute.jpm.run.jar >jpm4j.jar
+- java -jar jpm4j.jar -u init
+- ~/jpm/bin/jpm install com.codacy:codacy-coverage-reporter:assembly
 install:
 - git fetch --unshallow --tags
 before_script:
@@ -46,9 +50,7 @@ after_success:
     ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /Release/$TRAVIS_TAG/mapping.txt
   fi
 - bash <(curl -s https://codecov.io/bash)
-- curl https://www.jpm4j.org/install/script -k | sudo sh
-- sudo jpm install com.codacy:codacy-coverage-reporter:assembly
-- codacy-coverage-reporter -l Java -r app/build/reports/coverage/regular/debug/report.xml
+- ~/jpm/bin/codacy-coverage-reporter -l Java -r app/build/reports/coverage/regular/debug/report.xml
 after_failure:
 - chmod +x dropbox_uploader.sh
 - cd app/build/reports/androidTests/connected/flavors/REGULAR/

@@ -68,6 +68,27 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
         }
     }
 
+    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "shots")
+    public List<Shot> getShots() {
+        if (shots == null || shots.isEmpty()) {
+            shots = SQLite.select()
+                    .from(Shot.class)
+                    .where(Shot_Table.end.eq(id))
+                    .queryList();
+        }
+        return shots;
+    }
+
+    public void setShots(List<Shot> shots) {
+        this.shots = shots;
+    }
+
+    public List<Shot> getSortedShotList() {
+        final List<Shot> shots = getShots();
+        Collections.sort(shots);
+        return shots;
+    }
+
     @NonNull
     private static Map<SelectableZone, Integer> getRoundScores(List<Round> rounds) {
         final Target t = rounds.get(0).getTarget();
@@ -133,27 +154,6 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
                 .collect(Collectors.toList());
     }
 
-    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "shots")
-    public List<Shot> getShots() {
-        if (shots == null || shots.isEmpty()) {
-            shots = SQLite.select()
-                    .from(Shot.class)
-                    .where(Shot_Table.end.eq(id))
-                    .queryList();
-        }
-        return shots;
-    }
-
-    public void setShots(List<Shot> shots) {
-        this.shots = shots;
-    }
-
-    public List<Shot> getSortedShotList() {
-        final List<Shot> shots = getShots();
-        Collections.sort(shots);
-        return shots;
-    }
-
     public Long getId() {
         return id;
     }
@@ -168,8 +168,8 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
         // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
         for (Shot s : getShots()) {
             s.endId = id;
+            s.save();
         }
-        super.save();
     }
 
     @Override

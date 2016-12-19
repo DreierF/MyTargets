@@ -32,12 +32,12 @@
     </style>
 
     <style name="primaryText">
-        <item name="android:textColor">@color/primary_text_default_material_light</item>
+        <item name="android:textColor">@color/primaryTextDefaultMaterialLight</item>
         <item name="android:textSize">16sp</item>
     </style>
 
     <style name="secondaryText">
-        <item name="android:textColor">@color/secondary_text_default_material_light</item>
+        <item name="android:textColor">@color/secondaryTextDefaultMaterialLight</item>
         <item name="android:textSize">14sp</item>
     </style>
 

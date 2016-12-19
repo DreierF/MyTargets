@@ -57,24 +57,21 @@ import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
 public final class MigrationTest {
 
     private File newFile;
-    private File upgradedFile;
     private DatabaseWrapper upgradedDb;
     private DatabaseHelperDelegate helper;
 
     @Before
-    public void setup() throws IOException {
+    public void setUp() throws IOException {
         File baseDir = new File("build/tmp/migration");
         newFile = new File(baseDir, "new.db");
-        upgradedFile = RuntimeEnvironment.application
+        File upgradedFile = RuntimeEnvironment.application
                 .getDatabasePath(AppDatabase.DATABASE_FILE_NAME);
         File firstDbFile = new File("src/test/resources/origin.db");
         upgradedFile.getParentFile().mkdirs();
         newFile.getParentFile().mkdirs();
         FileUtils.copyFile(firstDbFile, upgradedFile);
 
-        FlowManager.init(new FlowConfig.Builder(RuntimeEnvironment.application)
-                .openDatabasesOnInit(false)
-                .build());
+        FlowManager.init(new FlowConfig.Builder(RuntimeEnvironment.application).build());
         helper = FlowManager.getDatabase(AppDatabase.NAME).getHelper().getDelegate();
         upgradedDb = FlowManager.getDatabase(AppDatabase.NAME).getWritableDatabase();
         helper.onUpgrade(upgradedDb, 16, AppDatabase.VERSION);

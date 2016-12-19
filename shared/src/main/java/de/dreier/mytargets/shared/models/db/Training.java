@@ -118,7 +118,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         location = env.location;
     }
 
-    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "rounds")
+    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "rounds")
     public List<Round> getRounds() {
         if (rounds == null || rounds.isEmpty()) {
             rounds = SQLite.select()
@@ -175,7 +175,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
         for (Round s : getRounds()) {
             s.trainingId = id;
+            s.save();
         }
-        super.save();
     }
 }

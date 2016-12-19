@@ -149,6 +149,7 @@ public class UITestBase extends InstrumentedTestBase {
 
     protected void clickActionBarItem(@IdRes int menuItem, @StringRes int title) {
         onView(withId(menuItem)).withFailureHandler((error, viewMatcher) -> {
+            error.printStackTrace();
             openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
             onView(withText(title)).perform(click());
         }).perform(click());
@@ -156,6 +157,7 @@ public class UITestBase extends InstrumentedTestBase {
 
     protected void clickContextualActionBarItem(@IdRes int menuItem, @StringRes int title) {
         onView(withId(menuItem)).withFailureHandler((error, viewMatcher) -> {
+            error.printStackTrace();
             openContextualActionModeOverflowMenu();
             onView(withText(title)).perform(click());
         }).perform(click());

@@ -3,6 +3,7 @@ package de.dreier.mytargets.shared.models;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 
 import com.raizlabs.android.dbflow.data.Blob;
 
@@ -12,14 +13,16 @@ import java.io.File;
 
 import de.dreier.mytargets.shared.utils.BitmapUtils;
 import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
-import de.dreier.mytargets.shared.utils.ThumbnailUtils;
-
-import static android.provider.MediaStore.Images.Thumbnails.MICRO_KIND;
 
 @Parcel
 public class Thumbnail {
+    /**
+     * Constant used to indicate the dimension of micro thumbnail.
+     */
+    private static final int TARGET_SIZE_MICRO_THUMBNAIL = 96;
     private transient Drawable image;
     byte[] data;
+
 
     public Thumbnail() {
     }
@@ -30,14 +33,17 @@ public class Thumbnail {
 
     public Thumbnail(Bitmap bitmap) {
         Bitmap thumbnail = ThumbnailUtils.extractThumbnail(bitmap,
-                ThumbnailUtils.TARGET_SIZE_MICRO_THUMBNAIL,
-                ThumbnailUtils.TARGET_SIZE_MICRO_THUMBNAIL, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+                TARGET_SIZE_MICRO_THUMBNAIL,
+                TARGET_SIZE_MICRO_THUMBNAIL,
+                ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
         data = BitmapUtils.getBitmapAsByteArray(thumbnail);
         image = new RoundedAvatarDrawable(thumbnail);
     }
 
     public Thumbnail(File imageFile) {
-        Bitmap thumbnail = ThumbnailUtils.createImageThumbnail(imageFile.getPath(), MICRO_KIND);
+        Bitmap thumbnail = ThumbnailUtils
+                .extractThumbnail(BitmapFactory.decodeFile(imageFile.getPath()),
+                        TARGET_SIZE_MICRO_THUMBNAIL, TARGET_SIZE_MICRO_THUMBNAIL);
         data = BitmapUtils.getBitmapAsByteArray(thumbnail);
         image = new RoundedAvatarDrawable(thumbnail);
     }

@@ -212,7 +212,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                         return new ChipGroup.Tag(bow.getId(), bow.getName(),
                                 bow.thumbnail.getBlob().getBlob(), true);
                     } else {
-                        return new ChipGroup.Tag(bid, getString(R.string.unknown), true);
+                        return new ChipGroup.Tag(null, getString(R.string.unknown), true);
                     }
                 })
                 .collect(Collectors.toList());
@@ -231,7 +231,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                         return new ChipGroup.Tag(arrow.getId(), arrow.getName(),
                                 arrow.thumbnail.getBlob().getBlob(), true);
                     } else {
-                        return new ChipGroup.Tag(aid, getString(R.string.unknown), true);
+                        return new ChipGroup.Tag(null, getString(R.string.unknown), true);
                     }
                 })
                 .collect(Collectors.toList());
