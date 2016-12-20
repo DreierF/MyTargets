@@ -22,8 +22,8 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.ColorRes;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import de.dreier.mytargets.R;
@@ -93,11 +93,10 @@ public class IntentWrapper {
     }
 
     public IntentWrapper fromFab(View fab) {
-        return fromFab(fab, ContextCompat.getColor(fab.getContext(), R.color.colorAccent),
-                R.drawable.ic_add_white_24dp);
+        return fromFab(fab, R.color.colorAccent, R.drawable.ic_add_white_24dp);
     }
 
-    public IntentWrapper fromFab(View fab, int color, int icon) {
+    public IntentWrapper fromFab(View fab, @ColorRes int color, int icon) {
         if (Utils.isLollipop()) {
             FabTransform.addExtras(intent, color, icon);
             ActivityOptions options = ActivityOptions

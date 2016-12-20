@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (C) 2016 Florian Dreier
   ~
@@ -13,18 +14,5 @@
   ~ GNU General Public License for more details.
   -->
 
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:dither="true"
-    android:shape="rectangle">
-
-    <corners android:radius="3dp" />
-
-    <solid android:color="#FFFFFF" />
-
-    <padding
-        android:bottom="6dp"
-        android:left="8dp"
-        android:right="8dp"
-        android:top="4dp" />
-
-</shape>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_bow_bare_black_24dp" />

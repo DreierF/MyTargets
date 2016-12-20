@@ -76,12 +76,12 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         binding.fab1.setOnClickListener(view -> EditTrainingFragment
                 .createIntent(CREATE_FREE_TRAINING_ACTION)
                 .withContext(this)
-                .fromFab(binding.fab1, 0xFF4CAF50, R.drawable.fab_trending_up_white_24dp)
+                .fromFab(binding.fab1, R.color.fabFreeTraining, R.drawable.fab_trending_up_white_24dp)
                 .start());
         binding.fab2.setOnClickListener(view -> EditTrainingFragment
                 .createIntent(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
                 .withContext(this)
-                .fromFab(binding.fab2, 0xFF2196F3, R.drawable.fab_album_24dp)
+                .fromFab(binding.fab2, R.color.fabTrainingWithStandardRound, R.drawable.fab_album_24dp)
                 .start());
         return binding.getRoot();
     }

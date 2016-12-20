@@ -48,15 +48,9 @@ import de.dreier.mytargets.views.selector.SelectorBase;
 import de.dreier.mytargets.views.selector.SimpleDistanceSelector;
 import icepick.State;
 
-import static de.dreier.mytargets.shared.models.EBowType.BARE_BOW;
-import static de.dreier.mytargets.shared.models.EBowType.COMPOUND_BOW;
-import static de.dreier.mytargets.shared.models.EBowType.HORSE_BOW;
-import static de.dreier.mytargets.shared.models.EBowType.LONG_BOW;
-import static de.dreier.mytargets.shared.models.EBowType.RECURVE_BOW;
-import static de.dreier.mytargets.shared.models.EBowType.YUMI;
-
 public class EditBowFragment extends EditWithImageFragmentBase {
 
+    public static final String BOW_TYPE = "bow_type";
     private static final String BOW_ID = "bow_id";
     @State(ParcelsBundler.class)
     Bow bow;
@@ -68,8 +62,9 @@ public class EditBowFragment extends EditWithImageFragmentBase {
     }
 
     @NonNull
-    public static IntentWrapper createIntent() {
-        return new IntentWrapper(SimpleFragmentActivityBase.EditBowActivity.class);
+    public static IntentWrapper createIntent(EBowType bowType) {
+        return new IntentWrapper(SimpleFragmentActivityBase.EditBowActivity.class)
+                .with(EditBowFragment.BOW_TYPE, bowType.name());
     }
 
     @NonNull
@@ -85,13 +80,8 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         contentBinding = EditBowFragmentBinding.inflate(inflater, binding.content, true);
         contentBinding.addButton.setOnClickListener((view) -> onAddSightSetting());
 
-        // TODO make this a selector
-        contentBinding.recurveBow.setOnClickListener(v -> setBowType(RECURVE_BOW));
-        contentBinding.compoundBow.setOnClickListener(v -> setBowType(COMPOUND_BOW));
-        contentBinding.longBow.setOnClickListener(v -> setBowType(LONG_BOW));
-        contentBinding.blankBow.setOnClickListener(v -> setBowType(BARE_BOW));
-        contentBinding.horseBow.setOnClickListener(v -> setBowType(HORSE_BOW));
-        contentBinding.yumiBow.setOnClickListener(v -> setBowType(YUMI));
+        EBowType bowType = EBowType
+                .valueOf(getArguments().getString(BOW_TYPE, EBowType.RECURVE_BOW.name()));
 
         if (savedInstanceState == null) {
             Bundle bundle = getArguments();
@@ -104,14 +94,13 @@ public class EditBowFragment extends EditWithImageFragmentBase {
                 // Set to default values
                 bow = new Bow();
                 bow.name = getString(R.string.my_bow);
-                bow.type = RECURVE_BOW;
+                bow.type = bowType;
                 bow.getSightMarks().add(new SightMark());
                 setImageFile(null);
             }
 
             ToolbarUtils.setTitle(this, bow.name);
             contentBinding.setBow(bow);
-            setBowType(bow.type);
         } else {
             contentBinding.setBow(bow);
         }
@@ -165,37 +154,9 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         bow.stabilizer = contentBinding.stabilizer.getText().toString();
         bow.clicker = contentBinding.clicker.getText().toString();
         bow.description = contentBinding.description.getText().toString();
-        bow.type = getType();
         bow.imageFile = getImageFile();
         bow.thumbnail = getThumbnail();
         return bow;
-    }
-
-    private void setBowType(EBowType type) {
-        contentBinding.recurveBow.setChecked(type == RECURVE_BOW);
-        contentBinding.compoundBow.setChecked(type == COMPOUND_BOW);
-        contentBinding.longBow.setChecked(type == LONG_BOW);
-        contentBinding.blankBow.setChecked(type == BARE_BOW);
-        contentBinding.horseBow.setChecked(type == HORSE_BOW);
-        contentBinding.yumiBow.setChecked(type == YUMI);
-    }
-
-    private EBowType getType() {
-        if (contentBinding.recurveBow.isChecked()) {
-            return RECURVE_BOW;
-        } else if (contentBinding.compoundBow.isChecked()) {
-            return COMPOUND_BOW;
-        } else if (contentBinding.longBow.isChecked()) {
-            return LONG_BOW;
-        } else if (contentBinding.blankBow.isChecked()) {
-            return BARE_BOW;
-        } else if (contentBinding.horseBow.isChecked()) {
-            return HORSE_BOW;
-        } else if (contentBinding.yumiBow.isChecked()) {
-            return YUMI;
-        } else {
-            return RECURVE_BOW;
-        }
     }
 
     private static class SightSettingHolder extends DynamicItemHolder<SightMark> {

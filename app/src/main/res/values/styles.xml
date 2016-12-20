@@ -56,13 +56,14 @@
         <item name="android:padding">16dp</item>
         <item name="android:textColor">@android:color/secondary_text_light</item>
     </style>
-    
+
     <style name="fabMenu">
         <item name="menu_buttonSpacing">4dp</item>
         <item name="menu_animationDelayPerItem">50</item>
         <item name="menu_colorNormal">@color/colorAccent</item>
         <item name="menu_labels_margin">16dp</item>
         <item name="menu_backgroundColor">@color/dim_overlay</item>
+        <item name="menu_labels_showShadow">true</item>
     </style>
 
     <style name="fabMenuLabelsStyle">
@@ -81,6 +82,15 @@
         <item name="android:singleLine">true</item>
         <item name="android:layout_weight">1.0</item>
         <item name="android:textIsSelectable">false</item>
+    </style>
+
+    <style name="fabBow">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="fab_colorNormal">@color/fabBow</item>
+        <item name="fab_colorPressed">@color/materialGrey600</item>
+        <item name="fab_colorRipple">@color/materialGrey600</item>
+        <item name="fab_size">mini</item>
     </style>
 
 </resources>

@@ -1,31 +1,30 @@
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape
-            android:dither="true"
-            android:shape="rectangle">
+<!--
+  ~ Copyright (C) 2016 Florian Dreier
+  ~
+  ~ This file is part of MyTargets.
+  ~
+  ~ MyTargets is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License version 2
+  ~ as published by the Free Software Foundation.
+  ~
+  ~ MyTargets is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  -->
 
-            <corners android:radius="3dp"/>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:dither="true"
+    android:shape="rectangle">
 
-            <solid android:color="#88888888"/>
+    <corners android:radius="3dp" />
 
-        </shape>
-    </item>
+    <solid android:color="#EBEBEB" />
 
-    <item android:bottom="1dp">
-        <shape
-            android:dither="true"
-            android:shape="rectangle">
+    <padding
+        android:bottom="6dp"
+        android:left="8dp"
+        android:right="8dp"
+        android:top="4dp" />
 
-            <corners android:radius="3dp"/>
-
-            <solid android:color="#EBEBEB"/>
-
-            <padding
-                android:bottom="6dp"
-                android:left="8dp"
-                android:right="8dp"
-                android:top="4dp"/>
-
-        </shape>
-    </item>
-</layer-list>
+</shape>

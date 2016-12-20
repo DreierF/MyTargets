@@ -30,6 +30,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -62,7 +63,7 @@ import static android.view.View.MeasureSpec.makeMeasureSpec;
 @TargetApi(LOLLIPOP)
 public class FabTransform extends Transition {
 
-    private static final String EXTRA_FAB_COLOR = "EXTRA_FAB_COLOR";
+    private static final String EXTRA_FAB_COLOR_RES = "EXTRA_FAB_COLOR";
     private static final String EXTRA_FAB_ICON_RES_ID = "EXTRA_FAB_ICON_RES_ID";
     private static final long DEFAULT_DURATION = 240L;
     private static final String PROP_BOUNDS = "plaid:fabTransform:bounds";
@@ -70,6 +71,7 @@ public class FabTransform extends Transition {
             PROP_BOUNDS
     };
 
+    @ColorInt
     private final int color;
     private final int icon;
 
@@ -103,9 +105,9 @@ public class FabTransform extends Transition {
     /**
      * Configure {@code intent} with the extras needed to initialize this transition.
      */
-    public static void addExtras(@NonNull Intent intent, @ColorInt int fabColor,
+    public static void addExtras(@NonNull Intent intent, @ColorRes int fabColor,
                                  @DrawableRes int fabIconResId) {
-        intent.putExtra(EXTRA_FAB_COLOR, fabColor);
+        intent.putExtra(EXTRA_FAB_COLOR_RES, fabColor);
         intent.putExtra(EXTRA_FAB_ICON_RES_ID, fabIconResId);
     }
 
@@ -115,12 +117,13 @@ public class FabTransform extends Transition {
      */
     static boolean setup(@NonNull Activity activity, @Nullable View target) {
         final Intent intent = activity.getIntent();
-        if (!intent.hasExtra(EXTRA_FAB_COLOR) || !intent.hasExtra(EXTRA_FAB_ICON_RES_ID)) {
+        if (!intent.hasExtra(EXTRA_FAB_COLOR_RES) || !intent.hasExtra(EXTRA_FAB_ICON_RES_ID)) {
             return false;
         }
 
-        final int color = intent.getIntExtra(EXTRA_FAB_COLOR, Color.TRANSPARENT);
+        final int colorRes = intent.getIntExtra(EXTRA_FAB_COLOR_RES, R.color.colorAccent);
         final int icon = intent.getIntExtra(EXTRA_FAB_ICON_RES_ID, -1);
+        final int color = ContextCompat.getColor(activity, colorRes);
         final FabTransform sharedEnter = new FabTransform(color, icon);
         if (target != null) {
             sharedEnter.addTarget(target);

@@ -133,6 +133,16 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
             return new EditBowFragment();
         }
 
+        @Override
+        public void onBackPressed() {
+            // Workaround: When cancelling a new training don't animate
+            // back to the fab, because clans FAB breaks the transition
+            if (Utils.isLollipop()) {
+                getWindow().setSharedElementReturnTransition(null);
+                getWindow().setSharedElementReenterTransition(null);
+            }
+            finish();
+        }
     }
 
     public static class EditArrowActivity extends SimpleFragmentActivityBase {
