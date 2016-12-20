@@ -14,9 +14,9 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:context="de.dreier.mytargets.fragments.EditTrainingFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="de.dreier.mytargets.fragments.EditTrainingFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
@@ -61,7 +61,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/title"
-                        android:inputType="text"/>
+                        android:inputType="text" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -76,7 +76,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:textSize="14sp"
-                    android:textStyle="normal"/>
+                    android:textStyle="normal" />
 
 
             </RelativeLayout>
@@ -107,7 +107,7 @@
                         <de.dreier.mytargets.views.selector.StandardRoundSelector
                             android:id="@+id/standardRound"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content" />
 
                         <Button
                             android:id="@+id/change_target_face"
@@ -119,7 +119,7 @@
                             android:padding="16dp"
                             android:text="@string/change_target_face"
                             android:textStyle="normal"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
 
                         <LinearLayout
                             android:id="@+id/practiceLayout"
@@ -131,17 +131,17 @@
                                 android:id="@+id/distance"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical"/>
+                                android:orientation="vertical" />
 
-                            <include layout="@layout/partial_divider_full"/>
+                            <include layout="@layout/partial_divider_full" />
 
                             <de.dreier.mytargets.views.selector.TargetSelector
                                 android:id="@+id/target"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical"/>
+                                android:orientation="vertical" />
 
-                            <include layout="@layout/partial_divider_full"/>
+                            <include layout="@layout/partial_divider_full" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -154,7 +154,7 @@
                                     style="@style/Label"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/arrows"/>
+                                    android:text="@string/arrows" />
 
                                 <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
                                     android:id="@+id/arrows"
@@ -163,13 +163,13 @@
                                     app:dsb_indicatorColor="@color/colorPrimary"
                                     app:dsb_max="12"
                                     app:dsb_min="1"
-                                    app:dsb_progressColor="@color/colorPrimary"/>
+                                    app:dsb_progressColor="@color/colorPrimary" />
 
                             </LinearLayout>
 
                         </LinearLayout>
 
-                        <include layout="@layout/partial_divider_full"/>
+                        <include layout="@layout/partial_divider_full" />
 
                     </LinearLayout>
 
@@ -186,11 +186,11 @@
                             android:gravity="start"
                             android:padding="16dp"
                             android:text="@string/add_bow"
-                            android:textStyle="normal"/>
+                            android:textStyle="normal" />
 
                     </de.dreier.mytargets.views.selector.BowSelector>
 
-                    <include layout="@layout/partial_divider_full"/>
+                    <include layout="@layout/partial_divider_full" />
 
                     <de.dreier.mytargets.views.selector.ArrowSelector
                         android:id="@+id/arrow"
@@ -205,7 +205,7 @@
                             android:gravity="start"
                             android:padding="16dp"
                             android:text="@string/add_arrow"
-                            android:textStyle="normal"/>
+                            android:textStyle="normal" />
 
                     </de.dreier.mytargets.views.selector.ArrowSelector>
 
@@ -217,17 +217,17 @@
                         android:layout_marginStart="16dp"
                         android:button="@drawable/arrow_numbers"
                         android:padding="16dp"
-                        android:text="@string/arrow_numbers"/>
+                        android:text="@string/arrow_numbers" />
 
-                    <include layout="@layout/partial_divider_full"/>
+                    <include layout="@layout/partial_divider_full" />
 
                     <de.dreier.mytargets.views.selector.EnvironmentSelector
                         android:id="@+id/environment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
+                        android:orientation="vertical" />
 
-                    <include layout="@layout/partial_divider_full"/>
+                    <include layout="@layout/partial_divider_full" />
 
                     <CheckBox
                         android:id="@+id/timer"
@@ -239,7 +239,7 @@
                         android:padding="16dp"
                         android:paddingLeft="32dp"
                         android:paddingStart="32dp"
-                        android:text="@string/timer"/>
+                        android:text="@string/timer" />
 
                 </LinearLayout>
 
@@ -248,7 +248,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_drop_shadow_height"
-                android:background="@drawable/toolbar_drop_shadow"/>
+                android:background="@drawable/toolbar_drop_shadow" />
 
         </FrameLayout>
 

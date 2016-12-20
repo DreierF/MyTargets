@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 Florian Dreier
   ~
   ~ This file is part of MyTargets.
@@ -15,8 +14,8 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"
@@ -27,12 +26,12 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             style="@style/card_list"
-            app:layoutManager="LinearLayoutManager"/>
+            app:layoutManager="LinearLayoutManager" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_drop_shadow_height"
-            android:background="@drawable/toolbar_drop_shadow"/>
+            android:background="@drawable/toolbar_drop_shadow" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
@@ -43,7 +42,7 @@
             android:src="@drawable/fab_add_white_24dp"
             android:transitionName="@string/transition_root_view"
             app:fab_colorNormal="@color/colorAccent"
-            tools:targetApi="lollipop"/>
+            tools:targetApi="lollipop" />
 
     </android.support.design.widget.CoordinatorLayout>
 

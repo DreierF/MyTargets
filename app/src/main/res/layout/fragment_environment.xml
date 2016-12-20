@@ -14,7 +14,7 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
@@ -55,7 +55,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/location"
-                        android:inputType="text"/>
+                        android:inputType="text" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -77,14 +77,14 @@
                 android:layout_height="200dp"
                 android:contentDescription="@string/indoor"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_house"/>
+                app:srcCompat="@drawable/ic_house" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/shooting_indoor"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
         </LinearLayout>
 
         <android.support.v4.widget.NestedScrollView
@@ -108,7 +108,7 @@
                         style="@style/Label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/weather"/>
+                        android:text="@string/weather" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -123,7 +123,7 @@
                             android:layout_weight="1"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="@string/sunny"
-                            app:srcCompat="@drawable/ic_sun_outline_48dp"/>
+                            app:srcCompat="@drawable/ic_sun_outline_48dp" />
 
                         <ImageButton
                             android:id="@+id/partlyCloudy"
@@ -132,7 +132,7 @@
                             android:layout_weight="1"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="@string/partly_cloudy"
-                            app:srcCompat="@drawable/ic_partly_cloudy_outline_color_48dp"/>
+                            app:srcCompat="@drawable/ic_partly_cloudy_outline_color_48dp" />
 
                         <ImageButton
                             android:id="@+id/cloudy"
@@ -141,7 +141,7 @@
                             android:layout_weight="1"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="@string/cloudy"
-                            app:srcCompat="@drawable/ic_cloudy_outline_48dp"/>
+                            app:srcCompat="@drawable/ic_cloudy_outline_48dp" />
 
                         <ImageButton
                             android:id="@+id/lightRain"
@@ -150,7 +150,7 @@
                             android:layout_weight="1"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="@string/light_rain"
-                            app:srcCompat="@drawable/ic_light_rain_outline_48dp"/>
+                            app:srcCompat="@drawable/ic_light_rain_outline_48dp" />
 
                         <ImageButton
                             android:id="@+id/rain"
@@ -159,25 +159,25 @@
                             android:layout_weight="1"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="@string/rain"
-                            app:srcCompat="@drawable/ic_rain_outline_48dp"/>
+                            app:srcCompat="@drawable/ic_rain_outline_48dp" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <include layout="@layout/partial_divider_full"/>
+                <include layout="@layout/partial_divider_full" />
 
                 <de.dreier.mytargets.views.selector.WindSpeedSelector
                     android:id="@+id/windSpeed"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
-                <include layout="@layout/partial_divider_full"/>
+                <include layout="@layout/partial_divider_full" />
 
                 <de.dreier.mytargets.views.selector.WindDirectionSelector
                     android:id="@+id/windDirection"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 

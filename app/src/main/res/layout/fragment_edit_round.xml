@@ -14,9 +14,9 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:context="de.dreier.mytargets.fragments.EditRoundFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="de.dreier.mytargets.fragments.EditRoundFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -57,9 +57,9 @@
                             android:id="@+id/distance"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"/>
+                            android:orientation="vertical" />
 
-                        <include layout="@layout/partial_divider_full"/>
+                        <include layout="@layout/partial_divider_full" />
 
                     </LinearLayout>
 
@@ -75,9 +75,9 @@
                             android:id="@+id/target"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"/>
+                            android:orientation="vertical" />
 
-                        <include layout="@layout/partial_divider_full"/>
+                        <include layout="@layout/partial_divider_full" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -90,7 +90,7 @@
                                 style="@style/Label"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/arrows"/>
+                                android:text="@string/arrows" />
 
                             <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
                                 android:id="@+id/arrows"
@@ -99,14 +99,14 @@
                                 app:dsb_indicatorColor="@color/colorPrimary"
                                 app:dsb_max="12"
                                 app:dsb_min="1"
-                                app:dsb_progressColor="@color/colorPrimary"/>
+                                app:dsb_progressColor="@color/colorPrimary" />
 
                         </LinearLayout>
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:background="@color/dividerColor"/>
+                            android:background="@color/dividerColor" />
                     </LinearLayout>
 
                     <android.support.design.widget.TextInputLayout
@@ -120,7 +120,7 @@
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:hint="@string/comment"
-                            android:inputType="textMultiLine"/>
+                            android:inputType="textMultiLine" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -138,7 +138,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_gravity="bottom"
-                    android:background="?android:attr/listDivider"/>
+                    android:background="?android:attr/listDivider" />
 
                 <Button
                     android:id="@+id/remove_button"
@@ -147,14 +147,14 @@
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:minHeight="48dp"
-                    android:text="@string/delete"/>
+                    android:text="@string/delete" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_drop_shadow_height"
-                android:background="@drawable/toolbar_drop_shadow"/>
+                android:background="@drawable/toolbar_drop_shadow" />
         </FrameLayout>
 
     </LinearLayout>

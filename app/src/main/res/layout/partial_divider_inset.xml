@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 Florian Dreier
   ~
   ~ This file is part of MyTargets.
@@ -14,12 +13,11 @@
   ~ GNU General Public License for more details.
   -->
 
-<View
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<View xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="1dp"
     android:layout_marginLeft="72dp"
     android:layout_marginStart="72dp"
     android:background="@color/dividerColor"
-    tools:showIn="@layout/fragment_edit_training"/>
+    tools:showIn="@layout/fragment_edit_training" />

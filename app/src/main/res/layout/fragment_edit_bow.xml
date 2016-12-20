@@ -14,13 +14,13 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data class="EditBowFragmentBinding">
 
         <variable
             name="bow"
-            type="de.dreier.mytargets.shared.models.db.Bow"/>
+            type="de.dreier.mytargets.shared.models.db.Bow" />
 
     </data>
 
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:paddingBottom="8dp"
-                android:text="@string/bow_type"/>
+                android:text="@string/bow_type" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,14 +56,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/recurve_bow"/>
+                    android:text="@string/recurve_bow" />
 
                 <RadioButton
                     android:id="@+id/compoundBow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/compound_bow"/>
+                    android:text="@string/compound_bow" />
             </LinearLayout>
 
             <LinearLayout
@@ -77,14 +77,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/bare_bow"/>
+                    android:text="@string/bare_bow" />
 
                 <RadioButton
                     android:id="@+id/longBow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/long_bow"/>
+                    android:text="@string/long_bow" />
             </LinearLayout>
 
             <LinearLayout
@@ -98,19 +98,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/horse_bow"/>
+                    android:text="@string/horse_bow" />
 
                 <RadioButton
                     android:id="@+id/yumiBow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/yumi"/>
+                    android:text="@string/yumi" />
             </LinearLayout>
 
         </LinearLayout>
 
-        <include layout="@layout/partial_divider_full"/>
+        <include layout="@layout/partial_divider_full" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -123,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
-                android:text="@string/properties"/>
+                android:text="@string/properties" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -135,7 +135,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/name"
                     android:inputType="textNoSuggestions"
-                    android:text="@{bow.name}"/>
+                    android:text="@{bow.name}" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -148,7 +148,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/brand"
                     android:inputType="textNoSuggestions"
-                    android:text="@{bow.brand}"/>
+                    android:text="@{bow.brand}" />
             </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
@@ -168,7 +168,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/size"
                         android:inputType="textNoSuggestions"
-                        android:text="@{bow.size}"/>
+                        android:text="@{bow.size}" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -189,7 +189,7 @@
                             android:gravity="end"
                             android:hint="@string/draw_weight"
                             android:inputType="numberDecimal"
-                            android:text="@{bow.drawWeight}"/>
+                            android:text="@{bow.drawWeight}" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -199,7 +199,7 @@
                         android:gravity="bottom"
                         android:paddingBottom="12dp"
                         android:text="@string/unit_lbs"
-                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -222,7 +222,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/height"
                         android:inputType="textNoSuggestions"
-                        android:text="@{bow.braceHeight}"/>
+                        android:text="@{bow.braceHeight}" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -237,7 +237,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/tiller"
                         android:inputType="textNoSuggestions"
-                        android:text="@{bow.tiller}"/>
+                        android:text="@{bow.tiller}" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -261,7 +261,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/limbs"
                         android:inputType="textNoSuggestions"
-                        android:text="@{bow.limbs}"/>
+                        android:text="@{bow.limbs}" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -276,7 +276,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/sight"
                         android:inputType="textNoSuggestions"
-                        android:text="@{bow.sight}"/>
+                        android:text="@{bow.sight}" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -300,7 +300,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/stabilizer"
                         android:inputType="textNoSuggestions"
-                        android:text="@{bow.stabilizer}"/>
+                        android:text="@{bow.stabilizer}" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -315,7 +315,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/clicker"
                         android:inputType="textNoSuggestions"
-                        android:text="@{bow.clicker}"/>
+                        android:text="@{bow.clicker}" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -336,14 +336,14 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/description"
                         android:inputType="textMultiLine"
-                        android:text="@{bow.description}"/>
+                        android:text="@{bow.description}" />
 
                 </android.support.design.widget.TextInputLayout>
 
             </LinearLayout>
         </LinearLayout>
 
-        <include layout="@layout/partial_divider_full"/>
+        <include layout="@layout/partial_divider_full" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -355,21 +355,21 @@
                 style="@style/Label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/sight_settings"/>
+                android:text="@string/sight_settings" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/sightSettings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layoutManager="LinearLayoutManager"/>
+                app:layoutManager="LinearLayoutManager" />
 
             <Button
                 android:id="@+id/addButton"
                 style="@style/addButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/add"/>
+                android:text="@string/add" />
 
         </LinearLayout>
     </LinearLayout>
