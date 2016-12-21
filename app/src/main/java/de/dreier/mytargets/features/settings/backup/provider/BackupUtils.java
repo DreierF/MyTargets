@@ -45,14 +45,12 @@ import java.util.zip.ZipOutputStream;
 
 import de.dreier.mytargets.managers.CsvExporter;
 import de.dreier.mytargets.shared.AppDatabase;
-import de.dreier.mytargets.shared.models.db.Arrow;
-import de.dreier.mytargets.shared.models.db.Arrow_Table;
-import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.shared.models.db.Bow_Table;
+import de.dreier.mytargets.shared.models.db.ArrowImage;
+import de.dreier.mytargets.shared.models.db.BowImage;
+import de.dreier.mytargets.shared.models.db.EndImage;
 import de.dreier.mytargets.shared.utils.FileUtils;
 
 import static android.support.v4.content.FileProvider.getUriForFile;
-
 
 public class BackupUtils {
 
@@ -112,16 +110,20 @@ public class BackupUtils {
 
     public static String[] getImages() {
         ArrayList<String> list = new ArrayList<>();
-        list.addAll(Stream.of(SQLite.select(Bow_Table.images)
-                .from(Bow.class)
+        list.addAll(Stream.of(SQLite.select()
+                .from(BowImage.class)
                 .queryList())
-                .flatMap(bow -> Stream.of(bow.images))
+                .flatMap(bow -> Stream.of(bow.fileName))
                 .collect(Collectors.toList()));
-
-        list.addAll(Stream.of(SQLite.select(Arrow_Table.images)
-                .from(Arrow.class)
+        list.addAll(Stream.of(SQLite.select()
+                .from(EndImage.class)
                 .queryList())
-                .flatMap(arrow -> Stream.of(arrow.images))
+                .flatMap(end -> Stream.of(end.fileName))
+                .collect(Collectors.toList()));
+        list.addAll(Stream.of(SQLite.select()
+                .from(ArrowImage.class)
+                .queryList())
+                .flatMap(arrow -> Stream.of(arrow.fileName))
                 .collect(Collectors.toList()));
         return list.toArray(new String[list.size()]);
     }

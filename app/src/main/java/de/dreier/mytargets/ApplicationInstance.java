@@ -38,8 +38,11 @@ import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.models.WindDirection;
 import de.dreier.mytargets.shared.models.WindSpeed;
 import de.dreier.mytargets.shared.models.db.Arrow;
+import de.dreier.mytargets.shared.models.db.ArrowImage;
 import de.dreier.mytargets.shared.models.db.Bow;
+import de.dreier.mytargets.shared.models.db.BowImage;
 import de.dreier.mytargets.shared.models.db.End;
+import de.dreier.mytargets.shared.models.db.EndImage;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.Shot;
@@ -57,10 +60,13 @@ import de.dreier.mytargets.utils.MyBackupAgent;
 @ParcelClasses({
         @ParcelClass(Average.class),
         @ParcelClass(Arrow.class),
+        @ParcelClass(ArrowImage.class),
         @ParcelClass(Bow.class),
+        @ParcelClass(BowImage.class),
         @ParcelClass(Dimension.class),
         @ParcelClass(Environment.class),
         @ParcelClass(End.class),
+        @ParcelClass(EndImage.class),
         @ParcelClass(EndRenderer.class),
         @ParcelClass(Round.class),
         @ParcelClass(RoundTemplate.class),

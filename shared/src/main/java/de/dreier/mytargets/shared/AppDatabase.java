@@ -45,7 +45,7 @@ public class AppDatabase {
         db.beginTransaction();
         List<StandardRound> rounds = StandardRoundFactory.initTable();
         for (StandardRound round : rounds) {
-            round.insert(db);
+            round.save(db);
         }
         db.setTransactionSuccessful();
         db.endTransaction();

@@ -27,7 +27,7 @@ public class DataBindingAdapters {
         imageView.setImageResource(resource);
     }
 
-    @BindingAdapter({"bind:propertyShowAll", "bind:propertyShouldShow", "bind:propertyValue"})
+    @BindingAdapter({"propertyShowAll", "propertyShouldShow", "propertyValue"})
     public static void setPropertyVisibility(View view, boolean showAll, boolean shouldShow, String value) {
         boolean visible = shouldShow && (showAll || !TextUtils.isEmpty(value));
         view.setVisibility(visible ? View.VISIBLE : View.GONE);

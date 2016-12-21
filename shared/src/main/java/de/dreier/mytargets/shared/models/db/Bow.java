@@ -24,7 +24,6 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
 import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.utils.typeconverters.EBowTypeConverter;
-import de.dreier.mytargets.shared.utils.typeconverters.StringListConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter;
 
 @Parcel
@@ -104,8 +103,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
     @Column(typeConverter = ThumbnailConverter.class)
     public Thumbnail thumbnail;
 
-    @Column(typeConverter = StringListConverter.class)
-    public List<String> images = new ArrayList<>();
+    public List<BowImage> images = new ArrayList<>();
 
     public List<SightMark> sightMarks = new ArrayList<>();
 
@@ -120,7 +118,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
                 .querySingle();
     }
 
-    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "sightMarks")
+    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "sightMarks")
     public List<SightMark> getSightMarks() {
         if (sightMarks == null || sightMarks.isEmpty()) {
             sightMarks = SQLite.select()
@@ -129,6 +127,17 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
                     .queryList();
         }
         return sightMarks;
+    }
+
+    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "images")
+    public List<BowImage> getImages() {
+        if (images == null || images.isEmpty()) {
+            images = SQLite.select()
+                    .from(BowImage.class)
+                    .where(BowImage_Table.bow.eq(id))
+                    .queryList();
+        }
+        return images;
     }
 
     public Long getId() {
@@ -165,6 +174,20 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
                 .filter(s -> s.distance.equals(distance))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public void save() {
+        super.save();
+        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
+        for (SightMark sightMark : getSightMarks()) {
+            sightMark.bowId = id;
+            sightMark.save();
+        }
+        for (BowImage image : getImages()) {
+            image.bowId = id;
+            image.save();
+        }
     }
 
     @Override

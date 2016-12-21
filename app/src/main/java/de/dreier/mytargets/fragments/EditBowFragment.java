@@ -40,6 +40,7 @@ import de.dreier.mytargets.databinding.FragmentEditBowBinding;
 import de.dreier.mytargets.databinding.ItemSightMarkBinding;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.db.Bow;
+import de.dreier.mytargets.shared.models.db.BowImage;
 import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.IntentWrapper;
@@ -48,17 +49,18 @@ import de.dreier.mytargets.views.selector.SelectorBase;
 import de.dreier.mytargets.views.selector.SimpleDistanceSelector;
 import icepick.State;
 
-public class EditBowFragment extends EditWithImageFragmentBase {
+public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
 
     public static final String BOW_TYPE = "bow_type";
     private static final String BOW_ID = "bow_id";
+
     @State(ParcelsBundler.class)
     Bow bow;
     private FragmentEditBowBinding contentBinding;
-    private SightSettingsAdapter adapter;
+    private SightMarksAdapter adapter;
 
     public EditBowFragment() {
-        super(R.drawable.recurve_bow);
+        super(R.drawable.recurve_bow, BowImage.class);
     }
 
     @NonNull
@@ -96,13 +98,13 @@ public class EditBowFragment extends EditWithImageFragmentBase {
                 bow.type = bowType;
                 bow.getSightMarks().add(new SightMark());
             }
-            setImageFiles(bow.images);
+            setImageFiles(bow.getImages());
             ToolbarUtils.setTitle(this, bow.name);
         }
         contentBinding.setBow(bow);
 
         loadImage(imageFile);
-        adapter = new SightSettingsAdapter(this, bow.getSightMarks());
+        adapter = new SightMarksAdapter(this, bow.getSightMarks());
         contentBinding.sightMarks.setAdapter(adapter);
         contentBinding.sightMarks.setNestedScrollingEnabled(false);
         return rootView;
@@ -116,6 +118,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
 
     private void onAddSightSetting() {
         bow.getSightMarks().add(new SightMark());
+        adapter.setList(bow.getSightMarks());
         adapter.notifyItemInserted(bow.getSightMarks().size() - 1);
     }
 
@@ -202,8 +205,8 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         }
     }
 
-    private class SightSettingsAdapter extends DynamicItemAdapter<SightMark> {
-        SightSettingsAdapter(Fragment fragment, List<SightMark> list) {
+    private class SightMarksAdapter extends DynamicItemAdapter<SightMark> {
+        SightMarksAdapter(Fragment fragment, List<SightMark> list) {
             super(fragment, list, R.string.sight_setting_removed);
         }
 

@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -21,7 +22,6 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
 import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
-import de.dreier.mytargets.shared.utils.typeconverters.StringListConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter;
 
 @Parcel
@@ -65,8 +65,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
     @Column(typeConverter = ThumbnailConverter.class)
     public Thumbnail thumbnail;
 
-    @Column(typeConverter = StringListConverter.class)
-    public List<String> images = new ArrayList<>();
+    public List<ArrowImage> images = new ArrayList<>();
 
     public static List<Arrow> getAll() {
         return SQLite.select().from(Arrow.class).queryList();
@@ -77,6 +76,17 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
                 .from(Arrow.class)
                 .where(Arrow_Table._id.eq(id))
                 .querySingle();
+    }
+
+    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "images")
+    public List<ArrowImage> getImages() {
+        if (images == null || images.isEmpty()) {
+            images = SQLite.select()
+                    .from(ArrowImage.class)
+                    .where(ArrowImage_Table.arrow.eq(id))
+                    .queryList();
+        }
+        return images;
     }
 
     public Long getId() {
@@ -106,6 +116,16 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
         return another instanceof Arrow &&
                 getClass().equals(another.getClass()) &&
                 id.equals(((Arrow) another).id);
+    }
+
+    @Override
+    public void save() {
+        super.save();
+        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
+        for (ArrowImage image : getImages()) {
+            image.arrowId = id;
+            image.save();
+        }
     }
 
     @Override

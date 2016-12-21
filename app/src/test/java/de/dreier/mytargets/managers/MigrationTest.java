@@ -43,6 +43,7 @@ import de.dreier.mytargets.BuildConfig;
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.EWeather;
+import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
@@ -87,6 +88,10 @@ public final class MigrationTest {
         List<Training> trainings = Training.getAll();
         assertTraining1(trainings.get(0));
         assertTraining2(trainings.get(1));
+
+        final List<Bow> bows = Bow.getAll();
+        assertThat(bows.get(0).getImages().get(0).fileName)
+                .isEqualTo("img175420839671886584-0f61-43a6-bc1e-dbcd8526056c794370927.jpg");
     }
 
     private void assertTraining1(Training training) {
@@ -136,7 +141,7 @@ public final class MigrationTest {
         assertThat(ends.get(0).getId()).isEqualTo(1L);
         assertThat(ends.get(0).roundId).isEqualTo(1L);
         assertThat(ends.get(0).index).isEqualTo(0);
-        assertThat(ends.get(0).images).isEqualTo(null);
+        assertThat(ends.get(0).getImages()).isEmpty();
         assertThat(ends.get(0).exact).isEqualTo(true);
         assertThat(ends.get(2).exact).isEqualTo(false);
         final List<Shot> shots = ends.get(0).getShots();

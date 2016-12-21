@@ -29,7 +29,6 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.typeconverters.DateTimeConverter;
-import de.dreier.mytargets.shared.utils.typeconverters.StringListConverter;
 
 @Parcel
 @Table(database = AppDatabase.class)
@@ -42,8 +41,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     @Column
     public int index;
 
-    @Column(typeConverter = StringListConverter.class)
-    public List<String> images;
+    public List<EndImage> images = new ArrayList<>();
 
     @ForeignKey(tableClass = Round.class, references = {
             @ForeignKeyReference(columnName = "round", columnType = Long.class, foreignKeyColumnName = "_id")},
@@ -77,6 +75,17 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
                     .queryList();
         }
         return shots;
+    }
+
+    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "images")
+    public List<EndImage> getImages() {
+        if (images == null || images.isEmpty()) {
+            images = SQLite.select()
+                    .from(EndImage.class)
+                    .where(EndImage_Table.end.eq(id))
+                    .queryList();
+        }
+        return images;
     }
 
     public void setShots(List<Shot> shots) {
@@ -169,6 +178,10 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
         for (Shot s : getShots()) {
             s.endId = id;
             s.save();
+        }
+        for (EndImage image : getImages()) {
+            image.endId = id;
+            image.save();
         }
     }
 

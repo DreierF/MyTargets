@@ -26,6 +26,7 @@ import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.databinding.FragmentEditArrowBinding;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.db.Arrow;
+import de.dreier.mytargets.shared.models.db.ArrowImage;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -34,7 +35,7 @@ import icepick.State;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.INCH;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.MILLIMETER;
 
-public class EditArrowFragment extends EditWithImageFragmentBase {
+public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
 
     private static final String ARROW_ID = "arrow_id";
     @State(ParcelsBundler.class)
@@ -42,7 +43,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     private FragmentEditArrowBinding contentBinding;
 
     public EditArrowFragment() {
-        super(R.drawable.arrows);
+        super(R.drawable.arrows, ArrowImage.class);
     }
 
     @NonNull
@@ -71,7 +72,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
                 arrow.name = getString(R.string.my_arrow);
             }
 
-            setImageFiles(arrow.images);
+            setImageFiles(arrow.getImages());
             ToolbarUtils.setTitle(this, arrow.name);
             contentBinding.diameterUnit.setSelection(arrow.diameter.unit == MILLIMETER ? 0 : 1);
         }
