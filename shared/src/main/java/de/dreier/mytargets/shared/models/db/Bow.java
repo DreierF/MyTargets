@@ -105,7 +105,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
     public Thumbnail thumbnail;
 
     @Column(typeConverter = StringListConverter.class)
-    public List<String> images;
+    public List<String> images = new ArrayList<>();
 
     public List<SightMark> sightMarks = new ArrayList<>();
 

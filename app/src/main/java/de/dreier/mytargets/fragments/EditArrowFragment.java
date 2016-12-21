@@ -23,8 +23,7 @@ import android.view.ViewGroup;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
-import de.dreier.mytargets.databinding.EditArrowFragmentBinding;
-
+import de.dreier.mytargets.databinding.FragmentEditArrowBinding;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
@@ -40,7 +39,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     private static final String ARROW_ID = "arrow_id";
     @State(ParcelsBundler.class)
     Arrow arrow;
-    private EditArrowFragmentBinding contentBinding;
+    private FragmentEditArrowBinding contentBinding;
 
     public EditArrowFragment() {
         super(R.drawable.arrows);
@@ -60,28 +59,23 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        contentBinding = EditArrowFragmentBinding.inflate(inflater, binding.content, true);
+        contentBinding = FragmentEditArrowBinding.inflate(inflater, binding.content, true);
 
         if (savedInstanceState == null) {
             Bundle bundle = getArguments();
             if (bundle != null && bundle.containsKey(ARROW_ID)) {
-                long arrowId = bundle.getLong(ARROW_ID);
-                arrow = Arrow.get(arrowId);
-                setImageFile(arrow.imageFile);
+                arrow = Arrow.get(bundle.getLong(ARROW_ID));
             } else {
                 // Set to default values
                 arrow = new Arrow();
                 arrow.name = getString(R.string.my_arrow);
-                setImageFile(null);
             }
 
+            setImageFiles(arrow.images);
             ToolbarUtils.setTitle(this, arrow.name);
-            contentBinding.setArrow(arrow);
             contentBinding.diameterUnit.setSelection(arrow.diameter.unit == MILLIMETER ? 0 : 1);
-        } else {
-            contentBinding.setArrow(arrow);
         }
-
+        contentBinding.setArrow(arrow);
         loadImage(imageFile);
         return rootView;
     }
@@ -109,7 +103,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase {
         arrow.vanes = contentBinding.vanes.getText().toString();
         arrow.nock = contentBinding.nock.getText().toString();
         arrow.comment = contentBinding.comment.getText().toString();
-        arrow.imageFile = getImageFile();
+        arrow.images = getImageFiles();
         arrow.thumbnail = getThumbnail();
         float diameterValue;
         try {

@@ -135,7 +135,8 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout"
+            <FrameLayout
+                style="@style/propertyFrameLayout"
                 app:propertyShouldShow="@{bow.type.showDrawWeight || bow.type.showLetoffWeight}"
                 app:propertyShowAll="@{showAll}"
                 app:propertyValue="@{bow.drawWeight+bow.letoffWeight}">
@@ -187,7 +188,8 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout"
+            <FrameLayout
+                style="@style/propertyFrameLayout"
                 app:propertyShouldShow="@{bow.type.showArrowRest}"
                 app:propertyShowAll="@{showAll}"
                 app:propertyValue="@{bow.arrowRest+bow.restVerticalPosition+bow.restHorizontalPosition+bow.restStiffness}">
@@ -203,10 +205,10 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         app:propertyShouldShow="@{bow.type.showArrowRest}"
                         app:propertyShowAll="@{showAll}"
-                        app:propertyValue="@{bow.arrowRest}"
-                        android:layout_height="wrap_content">
+                        app:propertyValue="@{bow.arrowRest}">
 
                         <android.support.design.widget.TextInputEditText
                             android:id="@+id/rest"
@@ -220,10 +222,10 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         app:propertyShouldShow="@{bow.type.showArrowRest}"
                         app:propertyShowAll="@{showAll}"
-                        app:propertyValue="@{bow.restVerticalPosition}"
-                        android:layout_height="wrap_content">
+                        app:propertyValue="@{bow.restVerticalPosition}">
 
                         <android.support.design.widget.TextInputEditText
                             android:id="@+id/restVerticalPosition"
@@ -237,10 +239,10 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         app:propertyShouldShow="@{bow.type.showArrowRest}"
                         app:propertyShowAll="@{showAll}"
-                        app:propertyValue="@{bow.restHorizontalPosition}"
-                        android:layout_height="wrap_content">
+                        app:propertyValue="@{bow.restHorizontalPosition}">
 
                         <android.support.design.widget.TextInputEditText
                             android:id="@+id/restHorizontalPosition"
@@ -254,10 +256,10 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         app:propertyShouldShow="@{bow.type.showArrowRest}"
                         app:propertyShowAll="@{showAll}"
-                        app:propertyValue="@{bow.restStiffness}"
-                        android:layout_height="wrap_content">
+                        app:propertyValue="@{bow.restStiffness}">
 
                         <android.support.design.widget.TextInputEditText
                             android:id="@+id/restStiffness"
@@ -273,7 +275,8 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout"
+            <FrameLayout
+                style="@style/propertyFrameLayout"
                 app:propertyShouldShow="@{bow.type.showCamSetting}"
                 app:propertyShowAll="@{showAll}"
                 app:propertyValue="@{bow.camSetting}">
@@ -297,7 +300,8 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout"
+            <FrameLayout
+                style="@style/propertyFrameLayout"
                 app:propertyShouldShow="@{bow.type.showTiller}"
                 app:propertyShowAll="@{showAll}"
                 app:propertyValue="@{bow.tiller}">
@@ -321,7 +325,8 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout"
+            <FrameLayout
+                style="@style/propertyFrameLayout"
                 app:propertyShouldShow="@{bow.type.showBraceHeight}"
                 app:propertyShowAll="@{showAll}"
                 app:propertyValue="@{bow.braceHeight}">
@@ -345,7 +350,8 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout"
+            <FrameLayout
+                style="@style/propertyFrameLayout"
                 app:propertyShouldShow="@{bow.type.showLimbs}"
                 app:propertyShowAll="@{showAll}"
                 app:propertyValue="@{bow.limbs}">
@@ -369,7 +375,8 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout"
+            <FrameLayout
+                style="@style/propertyFrameLayout"
                 app:propertyShouldShow="@{bow.type.showSight}"
                 app:propertyShowAll="@{showAll}"
                 app:propertyValue="@{bow.sight}">
@@ -393,7 +400,8 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout"
+            <FrameLayout
+                style="@style/propertyFrameLayout"
                 app:propertyShouldShow="@{bow.type.showScopeMagnification}"
                 app:propertyShowAll="@{showAll}"
                 app:propertyValue="@{bow.scopeMagnification}">
@@ -417,7 +425,8 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout"
+            <FrameLayout
+                style="@style/propertyFrameLayout"
                 app:propertyShouldShow="@{bow.type.showStabilizer}"
                 app:propertyShowAll="@{showAll}"
                 app:propertyValue="@{bow.stabilizer}">
@@ -441,7 +450,8 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout"
+            <FrameLayout
+                style="@style/propertyFrameLayout"
                 app:propertyShouldShow="@{bow.type.showClicker}"
                 app:propertyShowAll="@{showAll}"
                 app:propertyValue="@{bow.clicker}">
@@ -465,7 +475,8 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout"
+            <FrameLayout
+                style="@style/propertyFrameLayout"
                 app:propertyShouldShow="@{bow.type.showNockingPoint}"
                 app:propertyShowAll="@{showAll}"
                 app:propertyValue="@{bow.nockingPoint}">
@@ -489,7 +500,8 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout"
+            <FrameLayout
+                style="@style/propertyFrameLayout"
                 app:propertyShouldShow="@{bow.type.showString}"
                 app:propertyShowAll="@{showAll}"
                 app:propertyValue="@{bow.string}">
@@ -513,7 +525,8 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout"
+            <FrameLayout
+                style="@style/propertyFrameLayout"
                 app:propertyShouldShow="@{bow.type.showButton}"
                 app:propertyShowAll="@{showAll}"
                 app:propertyValue="@{bow.button}">
@@ -537,7 +550,8 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout"
+            <FrameLayout
+                style="@style/propertyFrameLayout"
                 app:propertyShouldShow="@{true}"
                 app:propertyShowAll="@{showAll}"
                 app:propertyValue="@{bow.description}">

@@ -89,21 +89,17 @@ public class EditBowFragment extends EditWithImageFragmentBase {
             if (bundle != null && bundle.containsKey(BOW_ID)) {
                 // Load data from database
                 bow = Bow.get(bundle.getLong(BOW_ID));
-                setImageFile(bow.images.size() > 0 ? bow.images.get(0) : null);
             } else {
                 // Set to default values
                 bow = new Bow();
                 bow.name = getString(R.string.my_bow);
                 bow.type = bowType;
                 bow.getSightMarks().add(new SightMark());
-                setImageFile(null);
             }
-
+            setImageFiles(bow.images);
             ToolbarUtils.setTitle(this, bow.name);
-            contentBinding.setBow(bow);
-        } else {
-            contentBinding.setBow(bow);
         }
+        contentBinding.setBow(bow);
 
         loadImage(imageFile);
         adapter = new SightSettingsAdapter(this, bow.getSightMarks());

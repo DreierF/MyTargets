@@ -12,6 +12,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.AppDatabase;
@@ -20,6 +21,7 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
 import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
+import de.dreier.mytargets.shared.utils.typeconverters.StringListConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter;
 
 @Parcel
@@ -63,8 +65,8 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
     @Column(typeConverter = ThumbnailConverter.class)
     public Thumbnail thumbnail;
 
-    @Column
-    public String imageFile;
+    @Column(typeConverter = StringListConverter.class)
+    public List<String> images = new ArrayList<>();
 
     public static List<Arrow> getAll() {
         return SQLite.select().from(Arrow.class).queryList();

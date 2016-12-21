@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `Arrow`(
     `comment` TEXT,
     `diameter` TEXT,
     `thumbnail` BLOB,
-    `imageFile` TEXT
+    `images` TEXT
 );
 INSERT INTO `Arrow`
     SELECT `_id`,`name`,`length`,`material`,`spine`,

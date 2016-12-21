@@ -81,7 +81,7 @@ public enum EBowType {
     }
 
     public boolean showTiller() {
-        return this != COMPOUND_BOW;
+        return this == RECURVE_BOW || this == BARE_BOW;
     }
 
     public boolean showLimbs() {

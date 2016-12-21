@@ -205,28 +205,14 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
         }
     }
 
-    @Nullable
-    @Deprecated
-    String getImageFile() {
-        if (imageFile == null) {
-            return null;
-        } else {
-            if (imageFile.getParentFile().equals(getContext().getFilesDir())) {
-                return imageFile.getName();
-            } else {
-                return imageFile.getPath();
-            }
-        }
-    }
-
-    void setImageFile(String path) {
-        if (path == null) {
+    void setImageFiles(List<String> pathes) {
+        if (pathes.isEmpty()) {
             imageFile = null;
             binding.imageView.setImageResource(defaultDrawable);
         } else {
-            imageFile = new File(getContext().getFilesDir(), path);
+            imageFile = new File(getContext().getFilesDir(), pathes.get(0));
             if (!imageFile.exists()) {
-                imageFile = new File(path);
+                imageFile = new File(pathes.get(0));
                 if (!imageFile.exists()) {
                     imageFile = null;
                     binding.imageView.setImageResource(defaultDrawable);

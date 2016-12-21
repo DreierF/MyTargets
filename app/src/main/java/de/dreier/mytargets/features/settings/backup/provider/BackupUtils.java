@@ -118,11 +118,10 @@ public class BackupUtils {
                 .flatMap(bow -> Stream.of(bow.images))
                 .collect(Collectors.toList()));
 
-        list.addAll(Stream.of(SQLite.select(Arrow_Table.imageFile)
+        list.addAll(Stream.of(SQLite.select(Arrow_Table.images)
                 .from(Arrow.class)
-                .where(Arrow_Table.imageFile.notEq((String) null))
                 .queryList())
-                .map(arrow -> arrow.imageFile)
+                .flatMap(arrow -> Stream.of(arrow.images))
                 .collect(Collectors.toList()));
         return list.toArray(new String[list.size()]);
     }
