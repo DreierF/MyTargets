@@ -95,9 +95,7 @@
 
                 <Button
                     android:id="@+id/addButton"
-                    style="@style/addButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/propertyAddButton"
                     android:text="@string/add" />
 
             </LinearLayout>

@@ -69,6 +69,36 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
     public String clicker = "";
 
     @Column
+    public String button = "";
+
+    @Column
+    public String string = "";
+
+    @Column
+    public String nockingPoint = "";
+
+    @Column
+    public String letoffWeight = "";
+
+    @Column
+    public String arrowRest = "";
+
+    @Column
+    public String restHorizontalPosition = "";
+
+    @Column
+    public String restVerticalPosition = "";
+
+    @Column
+    public String restStiffness = "";
+
+    @Column
+    public String camSetting = "";
+
+    @Column
+    public String scopeMagnification = "";
+
+    @Column
     public String description = "";
 
     @Column(typeConverter = ThumbnailConverter.class)

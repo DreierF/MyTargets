@@ -36,6 +36,8 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentEditImageBinding;
@@ -204,6 +206,7 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
     }
 
     @Nullable
+    @Deprecated
     String getImageFile() {
         if (imageFile == null) {
             return null;
@@ -228,6 +231,18 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
                     imageFile = null;
                     binding.imageView.setImageResource(defaultDrawable);
                 }
+            }
+        }
+    }
+
+    List<String> getImageFiles() {
+        if (imageFile == null) {
+            return Collections.emptyList();
+        } else {
+            if (imageFile.getParentFile().equals(getContext().getFilesDir())) {
+                return Collections.singletonList(imageFile.getName());
+            } else {
+                return Collections.singletonList(imageFile.getPath());
             }
         }
     }

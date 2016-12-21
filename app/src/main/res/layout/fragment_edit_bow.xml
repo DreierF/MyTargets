@@ -14,13 +14,20 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <data class="EditBowFragmentBinding">
+    <data>
+
+        <import type="android.view.View" />
 
         <variable
             name="bow"
             type="de.dreier.mytargets.shared.models.db.Bow" />
+
+        <variable
+            name="showAll"
+            type="boolean" />
 
     </data>
 
@@ -34,28 +41,28 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:orientation="vertical"
-            android:paddingBottom="12dp"
-            android:paddingTop="12dp">
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp">
 
             <FrameLayout style="@style/propertyFrameLayout">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:paddingTop="20dp"
-                    app:srcCompat="@drawable/ic_bow_recurve_grey600_24dp" />
+                    style="@style/propertyImageView"
+                    android:contentDescription="@string/bow_type"
+                    android:src="@{bow.type.drawable}"
+                    tools:src="@drawable/ic_bow_recurve_grey600_24dp" />
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/type"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:enabled="false"
                         android:hint="@string/bow_type"
-                        android:text="@{bow.type.toString()}" />
+                        android:text="@{bow.type.toString()}"
+                        android:textColor="@color/primaryTextDefaultMaterialLight" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -64,11 +71,8 @@
             <FrameLayout style="@style/propertyFrameLayout">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
+                    style="@style/propertyImageView"
                     android:contentDescription="@string/name"
-                    android:paddingTop="20dp"
                     app:srcCompat="@drawable/ic_title_grey600_24dp" />
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
@@ -88,10 +92,8 @@
             <FrameLayout style="@style/propertyFrameLayout">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:paddingTop="20dp"
+                    style="@style/propertyImageView"
+                    android:contentDescription="@string/brand"
                     app:srcCompat="@drawable/ic_brand_grey600_24dp" />
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
@@ -108,37 +110,15 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout">
+            <FrameLayout
+                style="@style/propertyFrameLayout"
+                app:propertyShouldShow="@{bow.type.showSize}"
+                app:propertyShowAll="@{showAll}"
+                app:propertyValue="@{bow.size}">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:paddingTop="20dp"
-                    app:srcCompat="@drawable/ic_arrow_weight_grey600_24dp" />
-
-                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/drawWeight"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/draw_weight"
-                        android:inputType="numberDecimal"
-                        android:text="@{bow.drawWeight}" />
-
-                </android.support.design.widget.TextInputLayout>
-
-            </FrameLayout>
-
-            <FrameLayout style="@style/propertyFrameLayout">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
+                    style="@style/propertyImageView"
                     android:contentDescription="@string/size"
-                    android:paddingTop="20dp"
                     app:srcCompat="@drawable/ic_arrow_length_grey600_24dp" />
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
@@ -155,15 +135,15 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout">
+            <FrameLayout style="@style/propertyFrameLayout"
+                app:propertyShouldShow="@{bow.type.showDrawWeight || bow.type.showLetoffWeight}"
+                app:propertyShowAll="@{showAll}"
+                app:propertyValue="@{bow.drawWeight+bow.letoffWeight}">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:contentDescription="@string/size"
-                    android:paddingTop="20dp"
-                    app:srcCompat="@drawable/ic_width_grey600_24dp" />
+                    style="@style/propertyImageView"
+                    android:contentDescription="@string/draw_weight"
+                    app:srcCompat="@drawable/ic_arrow_weight_grey600_24dp" />
 
                 <LinearLayout
                     style="@style/propertyTextInputLayout"
@@ -171,29 +151,35 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        app:propertyShouldShow="@{bow.type.showDrawWeight}"
+                        app:propertyShowAll="@{showAll}"
+                        app:propertyValue="@{bow.drawWeight}">
 
                         <android.support.design.widget.TextInputEditText
-                            android:id="@+id/tiller"
+                            android:id="@+id/drawWeight"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/tiller"
-                            android:inputType="textNoSuggestions"
-                            android:text="@{bow.tiller}" />
+                            android:hint="@string/draw_weight"
+                            android:inputType="numberDecimal"
+                            android:text="@{bow.drawWeight}" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        app:propertyShouldShow="@{bow.type.showLetoffWeight}"
+                        app:propertyShowAll="@{showAll}"
+                        app:propertyValue="@{bow.letoffWeight}">
 
                         <android.support.design.widget.TextInputEditText
-                            android:id="@+id/braceHeight"
+                            android:id="@+id/letoffWeight"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/height"
-                            android:inputType="textNoSuggestions"
-                            android:text="@{bow.braceHeight}" />
+                            android:hint="@string/bow_letoff_weight"
+                            android:inputType="numberDecimal"
+                            android:text="@{bow.letoffWeight}" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -201,14 +187,172 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout">
+            <FrameLayout style="@style/propertyFrameLayout"
+                app:propertyShouldShow="@{bow.type.showArrowRest}"
+                app:propertyShowAll="@{showAll}"
+                app:propertyValue="@{bow.arrowRest+bow.restVerticalPosition+bow.restHorizontalPosition+bow.restStiffness}">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
+                    style="@style/propertyImageView"
+                    android:contentDescription="@string/bow_rest"
+                    app:srcCompat="@drawable/ic_bow_rest_grey600_24dp" />
+
+                <LinearLayout
+                    style="@style/propertyTextInputLayout"
+                    android:orientation="vertical">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        app:propertyShouldShow="@{bow.type.showArrowRest}"
+                        app:propertyShowAll="@{showAll}"
+                        app:propertyValue="@{bow.arrowRest}"
+                        android:layout_height="wrap_content">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/rest"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/bow_rest"
+                            android:inputType="textNoSuggestions"
+                            android:text="@{bow.arrowRest}" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        app:propertyShouldShow="@{bow.type.showArrowRest}"
+                        app:propertyShowAll="@{showAll}"
+                        app:propertyValue="@{bow.restVerticalPosition}"
+                        android:layout_height="wrap_content">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/restVerticalPosition"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/bow_rest_vertical_position"
+                            android:inputType="textNoSuggestions"
+                            android:text="@{bow.restVerticalPosition}" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        app:propertyShouldShow="@{bow.type.showArrowRest}"
+                        app:propertyShowAll="@{showAll}"
+                        app:propertyValue="@{bow.restHorizontalPosition}"
+                        android:layout_height="wrap_content">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/restHorizontalPosition"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/bow_rest_horizontal_position"
+                            android:inputType="textNoSuggestions"
+                            android:text="@{bow.restHorizontalPosition}" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        app:propertyShouldShow="@{bow.type.showArrowRest}"
+                        app:propertyShowAll="@{showAll}"
+                        app:propertyValue="@{bow.restStiffness}"
+                        android:layout_height="wrap_content">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/restStiffness"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/bow_rest_stiffness"
+                            android:inputType="textNoSuggestions"
+                            android:text="@{bow.restStiffness}" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <FrameLayout style="@style/propertyFrameLayout"
+                app:propertyShouldShow="@{bow.type.showCamSetting}"
+                app:propertyShowAll="@{showAll}"
+                app:propertyValue="@{bow.camSetting}">
+
+                <ImageView
+                    style="@style/propertyImageView"
+                    android:contentDescription="@string/bow_cam_settings"
+                    app:srcCompat="@drawable/ic_bow_cam_grey600_24dp" />
+
+                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/cam"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/bow_cam_settings"
+                        android:inputType="textNoSuggestions"
+                        android:text="@{bow.camSetting}" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </FrameLayout>
+
+            <FrameLayout style="@style/propertyFrameLayout"
+                app:propertyShouldShow="@{bow.type.showTiller}"
+                app:propertyShowAll="@{showAll}"
+                app:propertyValue="@{bow.tiller}">
+
+                <ImageView
+                    style="@style/propertyImageView"
+                    android:contentDescription="@string/tiller"
+                    app:srcCompat="@drawable/ic_bow_tiller_grey600_24dp" />
+
+                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/tiller"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/tiller"
+                        android:inputType="textNoSuggestions"
+                        android:text="@{bow.tiller}" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </FrameLayout>
+
+            <FrameLayout style="@style/propertyFrameLayout"
+                app:propertyShouldShow="@{bow.type.showBraceHeight}"
+                app:propertyShowAll="@{showAll}"
+                app:propertyValue="@{bow.braceHeight}">
+
+                <ImageView
+                    style="@style/propertyImageView"
+                    android:contentDescription="@string/height"
+                    app:srcCompat="@drawable/ic_bow_brace_height_grey600_24dp" />
+
+                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/braceHeight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/height"
+                        android:inputType="textNoSuggestions"
+                        android:text="@{bow.braceHeight}" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </FrameLayout>
+
+            <FrameLayout style="@style/propertyFrameLayout"
+                app:propertyShouldShow="@{bow.type.showLimbs}"
+                app:propertyShowAll="@{showAll}"
+                app:propertyValue="@{bow.limbs}">
+
+                <ImageView
+                    style="@style/propertyImageView"
                     android:contentDescription="@string/limbs"
-                    android:paddingTop="20dp"
                     app:srcCompat="@drawable/ic_bow_limb_grey600_24dp" />
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
@@ -225,14 +369,14 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout">
+            <FrameLayout style="@style/propertyFrameLayout"
+                app:propertyShouldShow="@{bow.type.showSight}"
+                app:propertyShowAll="@{showAll}"
+                app:propertyValue="@{bow.sight}">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
+                    style="@style/propertyImageView"
                     android:contentDescription="@string/sight"
-                    android:paddingTop="20dp"
                     app:srcCompat="@drawable/ic_bow_sight_grey600_24dp" />
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
@@ -249,14 +393,38 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout">
+            <FrameLayout style="@style/propertyFrameLayout"
+                app:propertyShouldShow="@{bow.type.showScopeMagnification}"
+                app:propertyShowAll="@{showAll}"
+                app:propertyValue="@{bow.scopeMagnification}">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
+                    style="@style/propertyImageView"
+                    android:contentDescription="@string/bow_scope_magnification"
+                    app:srcCompat="@drawable/ic_bow_scope_magnification_grey600_24dp" />
+
+                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/scopeMagnification"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/bow_scope_magnification"
+                        android:inputType="textNoSuggestions"
+                        android:text="@{bow.scopeMagnification}" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </FrameLayout>
+
+            <FrameLayout style="@style/propertyFrameLayout"
+                app:propertyShouldShow="@{bow.type.showStabilizer}"
+                app:propertyShowAll="@{showAll}"
+                app:propertyValue="@{bow.stabilizer}">
+
+                <ImageView
+                    style="@style/propertyImageView"
                     android:contentDescription="@string/stabilizer"
-                    android:paddingTop="20dp"
                     app:srcCompat="@drawable/ic_bow_stabilizer_grey600_24dp" />
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
@@ -273,7 +441,15 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout">
+            <FrameLayout style="@style/propertyFrameLayout"
+                app:propertyShouldShow="@{bow.type.showClicker}"
+                app:propertyShowAll="@{showAll}"
+                app:propertyValue="@{bow.clicker}">
+
+                <ImageView
+                    style="@style/propertyImageView"
+                    android:contentDescription="@string/clicker"
+                    app:srcCompat="@drawable/ic_bow_clicker_grey600_24dp" />
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
@@ -289,13 +465,86 @@
 
             </FrameLayout>
 
-            <FrameLayout style="@style/propertyFrameLayout">
+            <FrameLayout style="@style/propertyFrameLayout"
+                app:propertyShouldShow="@{bow.type.showNockingPoint}"
+                app:propertyShowAll="@{showAll}"
+                app:propertyValue="@{bow.nockingPoint}">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:paddingTop="20dp"
+                    style="@style/propertyImageView"
+                    android:contentDescription="@string/bow_nocking_point"
+                    app:srcCompat="@drawable/ic_bow_nocking_point_grey600_24dp" />
+
+                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/nockingPoint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/bow_nocking_point"
+                        android:inputType="textNoSuggestions"
+                        android:text="@{bow.nockingPoint}" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </FrameLayout>
+
+            <FrameLayout style="@style/propertyFrameLayout"
+                app:propertyShouldShow="@{bow.type.showString}"
+                app:propertyShowAll="@{showAll}"
+                app:propertyValue="@{bow.string}">
+
+                <ImageView
+                    style="@style/propertyImageView"
+                    android:contentDescription="@string/bow_string"
+                    app:srcCompat="@drawable/ic_bow_string_grey600_24dp" />
+
+                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/string"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/bow_string"
+                        android:inputType="textNoSuggestions"
+                        android:text="@{bow.string}" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </FrameLayout>
+
+            <FrameLayout style="@style/propertyFrameLayout"
+                app:propertyShouldShow="@{bow.type.showButton}"
+                app:propertyShowAll="@{showAll}"
+                app:propertyValue="@{bow.button}">
+
+                <ImageView
+                    style="@style/propertyImageView"
+                    android:contentDescription="@string/bow_button"
+                    app:srcCompat="@drawable/ic_bow_button_grey600_24dp" />
+
+                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/bow_button"
+                        android:inputType="textNoSuggestions"
+                        android:text="@{bow.button}" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </FrameLayout>
+
+            <FrameLayout style="@style/propertyFrameLayout"
+                app:propertyShouldShow="@{true}"
+                app:propertyShowAll="@{showAll}"
+                app:propertyValue="@{bow.description}">
+
+                <ImageView
+                    style="@style/propertyImageView"
+                    android:contentDescription="@string/description"
                     app:srcCompat="@drawable/ic_comment_grey600_24dp" />
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
@@ -312,6 +561,12 @@
 
             </FrameLayout>
 
+            <Button
+                android:id="@+id/moreFields"
+                style="@style/propertyAddButton"
+                android:text="@string/more_fields"
+                android:visibility="@{showAll ? View.GONE : View.VISIBLE}" />
+
         </LinearLayout>
 
         <include layout="@layout/partial_divider_full" />
@@ -320,12 +575,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingBottom="8dp">
 
             <TextView
                 style="@style/Label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="16dp"
                 android:text="@string/sight_settings" />
 
             <android.support.v7.widget.RecyclerView
@@ -337,9 +593,7 @@
 
             <Button
                 android:id="@+id/addButton"
-                style="@style/addButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/propertyAddButton"
                 android:text="@string/add" />
 
         </LinearLayout>

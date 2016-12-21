@@ -330,4 +330,15 @@
     <string name="connection_failed">Connection failed!</string>
     <string name="connecting">Connecting</string>
     <string name="shooting_indoor">Shooting indoor</string>
+    <string name="bow_rest_vertical_position">Vertical position</string>
+    <string name="bow_rest">Rest</string>
+    <string name="bow_rest_horizontal_position">Horizontal position</string>
+    <string name="bow_cam_settings">Cam settings</string>
+    <string name="bow_letoff_weight">Letoff weight</string>
+    <string name="bow_nocking_point">Nocking point</string>
+    <string name="bow_string">String</string>
+    <string name="bow_scope_magnification">Scope magnification</string>
+    <string name="bow_rest_stiffness">Stiffness</string>
+    <string name="bow_button">Button</string>
+    <string name="more_fields">More fields</string>
 </resources>

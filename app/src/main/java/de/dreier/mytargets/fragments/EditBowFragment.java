@@ -36,7 +36,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
-import de.dreier.mytargets.databinding.EditBowFragmentBinding;
+import de.dreier.mytargets.databinding.FragmentEditBowBinding;
 import de.dreier.mytargets.databinding.ItemSightMarkBinding;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.db.Bow;
@@ -54,7 +54,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
     private static final String BOW_ID = "bow_id";
     @State(ParcelsBundler.class)
     Bow bow;
-    private EditBowFragmentBinding contentBinding;
+    private FragmentEditBowBinding contentBinding;
     private SightSettingsAdapter adapter;
 
     public EditBowFragment() {
@@ -77,8 +77,9 @@ public class EditBowFragment extends EditWithImageFragmentBase {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        contentBinding = EditBowFragmentBinding.inflate(inflater, binding.content, true);
-        contentBinding.addButton.setOnClickListener((view) -> onAddSightSetting());
+        contentBinding = FragmentEditBowBinding.inflate(inflater, binding.content, true);
+        contentBinding.addButton.setOnClickListener(v -> onAddSightSetting());
+        contentBinding.moreFields.setOnClickListener(v -> contentBinding.setShowAll(true));
 
         EBowType bowType = EBowType
                 .valueOf(getArguments().getString(BOW_TYPE, EBowType.RECURVE_BOW.name()));
@@ -107,6 +108,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         loadImage(imageFile);
         adapter = new SightSettingsAdapter(this, bow.getSightMarks());
         contentBinding.sightMarks.setAdapter(adapter);
+        contentBinding.sightMarks.setNestedScrollingEnabled(false);
         return rootView;
     }
 
@@ -153,7 +155,17 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         bow.stabilizer = contentBinding.stabilizer.getText().toString();
         bow.clicker = contentBinding.clicker.getText().toString();
         bow.description = contentBinding.description.getText().toString();
-        bow.imageFile = getImageFile();
+        bow.button = contentBinding.button.getText().toString();
+        bow.string = contentBinding.string.getText().toString();
+        bow.nockingPoint = contentBinding.nockingPoint.getText().toString();
+        bow.letoffWeight = contentBinding.letoffWeight.getText().toString();
+        bow.arrowRest = contentBinding.rest.getText().toString();
+        bow.restHorizontalPosition = contentBinding.restHorizontalPosition.getText().toString();
+        bow.restVerticalPosition = contentBinding.restVerticalPosition.getText().toString();
+        bow.restStiffness = contentBinding.restStiffness.getText().toString();
+        bow.camSetting = contentBinding.cam.getText().toString();
+        bow.scopeMagnification = contentBinding.scopeMagnification.getText().toString();
+        bow.images = getImageFiles();
         bow.thumbnail = getThumbnail();
         return bow;
     }

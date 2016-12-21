@@ -40,15 +40,6 @@ public enum EBowType {
         this.drawable = drawable;
     }
 
-    @Override
-    public String toString() {
-        return SharedApplicationInstance.get(name);
-    }
-
-    public int getId() {
-        return id;
-    }
-
     public static EBowType fromId(int id) {
         switch (id) {
             case 0:
@@ -68,7 +59,76 @@ public enum EBowType {
         }
     }
 
+    @Override
+    public String toString() {
+        return SharedApplicationInstance.get(name);
+    }
+
+    public int getId() {
+        return id;
+    }
+
     public int getDrawable() {
         return drawable;
+    }
+
+    public boolean showSize() {
+        return true;
+    }
+
+    public boolean showBraceHeight() {
+        return this != COMPOUND_BOW;
+    }
+
+    public boolean showTiller() {
+        return this != COMPOUND_BOW;
+    }
+
+    public boolean showLimbs() {
+        return this == RECURVE_BOW || this == BARE_BOW;
+    }
+
+    public boolean showSight() {
+        return this == RECURVE_BOW || this == COMPOUND_BOW;
+    }
+
+    public boolean showDrawWeight() {
+        return true;
+    }
+
+    public boolean showStabilizer() {
+        return this == RECURVE_BOW || this == COMPOUND_BOW;
+    }
+
+    public boolean showClicker() {
+        return this == RECURVE_BOW;
+    }
+
+    public boolean showButton() {
+        return this == RECURVE_BOW;
+    }
+
+    public boolean showNockingPoint() {
+        return this == RECURVE_BOW || this == BARE_BOW;
+    }
+
+    public boolean showString() {
+        return true;
+    }
+
+    public boolean showLetoffWeight() {
+        return this == COMPOUND_BOW;
+    }
+
+    public boolean showArrowRest() {
+        return this == RECURVE_BOW || this == COMPOUND_BOW;
+    }
+
+    public boolean showCamSetting() {
+        return this == COMPOUND_BOW;
+    }
+
+    public boolean showScopeMagnification() {
+        return this == COMPOUND_BOW;
     }
 }

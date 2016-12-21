@@ -46,14 +46,26 @@ CREATE TABLE IF NOT EXISTS `Bow`(
     `drawWeight` TEXT,
     `stabilizer` TEXT,
     `clicker` TEXT,
+    `button` TEXT,
+    `string` TEXT,
+    `nockingPoint` TEXT,
+    `letoffWeight` TEXT,
+    `arrowRest` TEXT,
+    `restHorizontalPosition` TEXT,
+    `restVerticalPosition` TEXT,
+    `restStiffness` TEXT,
+    `camSetting` TEXT,
+    `scopeMagnification` TEXT,
     `description` TEXT,
     `thumbnail` BLOB,
-    `imageFile` TEXT
+    `images` TEXT
 );
 INSERT INTO `Bow`
     SELECT `_id`,`name`,`type`,`brand`,`size`,
            `height`,`tiller`,`limbs`,`sight`,
            `draw_weight`,`stabilizer`,`clicker`,
+           '', '', '', '', '',
+           '', '', '', '', '',
            `description`,`thumbnail`,`image`
     FROM BOW_OLD;
 
