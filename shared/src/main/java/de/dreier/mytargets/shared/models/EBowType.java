@@ -15,25 +15,29 @@
 
 package de.dreier.mytargets.shared.models;
 
+import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
 
 public enum EBowType {
-    RECURVE_BOW(0, R.string.recurve_bow),
-    COMPOUND_BOW(1, R.string.compound_bow),
-    LONG_BOW(2, R.string.long_bow),
-    BARE_BOW(3, R.string.bare_bow),
-    HORSE_BOW(4, R.string.horse_bow),
-    YUMI(5, R.string.yumi);
+    RECURVE_BOW(0, R.string.recurve_bow, R.drawable.ic_compat_bow_recurve_grey600_24dp),
+    COMPOUND_BOW(1, R.string.compound_bow, R.drawable.ic_compat_bow_compound_grey600_24dp),
+    LONG_BOW(2, R.string.long_bow, R.drawable.ic_compat_bow_long_grey600_24dp),
+    BARE_BOW(3, R.string.bare_bow, R.drawable.ic_compat_bow_bare_grey600_24dp),
+    HORSE_BOW(4, R.string.horse_bow, R.drawable.ic_compat_bow_horse_grey_600_24dp),
+    YUMI(5, R.string.yumi, R.drawable.ic_compat_bow_yumi_grey600_24dp);
 
     private final int id;
     private final int name;
+    @DrawableRes
+    private final int drawable;
 
-    EBowType(int id, @StringRes int name) {
+    EBowType(int id, @StringRes int name, @DrawableRes int drawable) {
         this.id = id;
         this.name = name;
+        this.drawable = drawable;
     }
 
     @Override
@@ -62,5 +66,9 @@ public enum EBowType {
             default:
                 return null;
         }
+    }
+
+    public int getDrawable() {
+        return drawable;
     }
 }

@@ -87,9 +87,8 @@ public class EditBowFragment extends EditWithImageFragmentBase {
             Bundle bundle = getArguments();
             if (bundle != null && bundle.containsKey(BOW_ID)) {
                 // Load data from database
-                long bowId = bundle.getLong(BOW_ID);
-                bow = Bow.get(bowId);
-                setImageFile(bow.imageFile);
+                bow = Bow.get(bundle.getLong(BOW_ID));
+                setImageFile(bow.images.size() > 0 ? bow.images.get(0) : null);
             } else {
                 // Set to default values
                 bow = new Bow();
@@ -107,7 +106,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
 
         loadImage(imageFile);
         adapter = new SightSettingsAdapter(this, bow.getSightMarks());
-        contentBinding.sightSettings.setAdapter(adapter);
+        contentBinding.sightMarks.setAdapter(adapter);
         return rootView;
     }
 

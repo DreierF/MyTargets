@@ -75,21 +75,21 @@ public class BowListFragment extends EditableListFragment<Bow> {
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
 
-        setFabClickListener(binding.fabBowRecurve, RECURVE_BOW, R.drawable.fab_bow_recurve_24dp);
-        setFabClickListener(binding.fabBowCompound, COMPOUND_BOW, R.drawable.fab_bow_compound_24dp);
-        setFabClickListener(binding.fabBowBare, BARE_BOW, R.drawable.fab_bow_bare_24dp);
-        setFabClickListener(binding.fabBowLong, LONG_BOW, R.drawable.fab_bow_long_24dp);
-        setFabClickListener(binding.fabBowHorse, HORSE_BOW, R.drawable.fab_bow_horse_24dp);
-        setFabClickListener(binding.fabBowYumi, YUMI, R.drawable.fab_bow_yumi_24dp);
+        setFabClickListener(binding.fabBowRecurve, RECURVE_BOW);
+        setFabClickListener(binding.fabBowCompound, COMPOUND_BOW);
+        setFabClickListener(binding.fabBowBare, BARE_BOW);
+        setFabClickListener(binding.fabBowLong, LONG_BOW);
+        setFabClickListener(binding.fabBowHorse, HORSE_BOW);
+        setFabClickListener(binding.fabBowYumi, YUMI);
 
         return binding.getRoot();
     }
 
-    public void setFabClickListener(FloatingActionButton fab, EBowType bowType, int icon) {
+    public void setFabClickListener(FloatingActionButton fab, EBowType bowType) {
         fab.setOnClickListener(view -> EditBowFragment
                 .createIntent(bowType)
                 .withContext(this)
-                .fromFab(fab, R.color.fabBow, icon)
+                .fromFab(fab, R.color.fabBow, bowType.getDrawable())
                 .start());
     }
 

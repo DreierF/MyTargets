@@ -24,6 +24,7 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
 import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.utils.typeconverters.EBowTypeConverter;
+import de.dreier.mytargets.shared.utils.typeconverters.StringListConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter;
 
 @Parcel
@@ -73,8 +74,8 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
     @Column(typeConverter = ThumbnailConverter.class)
     public Thumbnail thumbnail;
 
-    @Column
-    public String imageFile;
+    @Column(typeConverter = StringListConverter.class)
+    public List<String> images;
 
     public List<SightMark> sightMarks = new ArrayList<>();
 

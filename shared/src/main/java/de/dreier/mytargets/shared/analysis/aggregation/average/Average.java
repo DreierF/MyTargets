@@ -23,12 +23,12 @@ import java.util.List;
 import de.dreier.mytargets.shared.models.db.Shot;
 
 public class Average {
-    private int dataPointCount;
-    protected final PointF average = new PointF(0.0F, 0.0F);
-    protected final PointF weightedAverage = new PointF(0.0F, 0.0F);
-    private final RectF nonUniformStdDev = new RectF(-1.0F, -1.0F, -1.0F, -1.0F);
-    private double stdDevX = -1.0D;
-    private double stdDevY = -1.0D;
+    int dataPointCount;
+    PointF average = new PointF(0.0F, 0.0F);
+    PointF weightedAverage = new PointF(0.0F, 0.0F);
+    RectF nonUniformStdDev = new RectF(-1.0F, -1.0F, -1.0F, -1.0F);
+    double stdDevX = -1.0D;
+    double stdDevY = -1.0D;
 
     public void computeAll(List<Shot> shots) {
         dataPointCount = shots.size();
@@ -85,7 +85,8 @@ public class Average {
         }
 
         nonUniformStdDev.set((float) Math.sqrt(negSquaredXError / (double) negCountX),
-                (float) Math.sqrt(posSquaredYError / (double) posCountY), (float) Math.sqrt(posSquaredXError / (double) posCountX),
+                (float) Math.sqrt(posSquaredYError / (double) posCountY),
+                (float) Math.sqrt(posSquaredXError / (double) posCountX),
                 (float) Math.sqrt(negSquaredYError / (double) negCountY));
     }
 

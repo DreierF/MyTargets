@@ -112,11 +112,10 @@ public class BackupUtils {
 
     public static String[] getImages() {
         ArrayList<String> list = new ArrayList<>();
-        list.addAll(Stream.of(SQLite.select(Bow_Table.imageFile)
+        list.addAll(Stream.of(SQLite.select(Bow_Table.images)
                 .from(Bow.class)
-                .where(Bow_Table.imageFile.notEq((String) null))
                 .queryList())
-                .map(bow -> bow.imageFile)
+                .flatMap(bow -> Stream.of(bow.images))
                 .collect(Collectors.toList()));
 
         list.addAll(Stream.of(SQLite.select(Arrow_Table.imageFile)

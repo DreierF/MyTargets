@@ -45,37 +45,37 @@
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fabBowYumi"
                 style="@style/fabBow"
-                android:src="@drawable/fab_bow_yumi_24dp"
+                android:src="@drawable/ic_compat_bow_yumi_grey600_24dp"
                 app:fab_label="@string/yumi" />
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fabBowHorse"
                 style="@style/fabBow"
-                android:src="@drawable/fab_bow_horse_24dp"
+                android:src="@drawable/ic_compat_bow_horse_grey_600_24dp"
                 app:fab_label="@string/horse_bow" />
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fabBowLong"
                 style="@style/fabBow"
-                android:src="@drawable/fab_bow_long_24dp"
+                android:src="@drawable/ic_compat_bow_long_grey600_24dp"
                 app:fab_label="@string/long_bow" />
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fabBowBare"
                 style="@style/fabBow"
-                android:src="@drawable/fab_bow_bare_24dp"
+                android:src="@drawable/ic_compat_bow_bare_grey600_24dp"
                 app:fab_label="@string/bare_bow" />
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fabBowCompound"
                 style="@style/fabBow"
-                android:src="@drawable/fab_bow_compound_24dp"
+                android:src="@drawable/ic_compat_bow_compound_grey600_24dp"
                 app:fab_label="@string/compound_bow" />
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fabBowRecurve"
                 style="@style/fabBow"
-                android:src="@drawable/fab_bow_recurve_24dp"
+                android:src="@drawable/ic_compat_bow_recurve_grey600_24dp"
                 app:fab_label="@string/recurve_bow" />
 
         </com.github.clans.fab.FloatingActionMenu>

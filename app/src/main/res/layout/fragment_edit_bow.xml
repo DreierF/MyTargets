@@ -35,59 +35,113 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <FrameLayout style="@style/propertyFrameLayout">
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/type"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:enabled="false"
-                    android:hint="@string/bow_type"
-                    android:text="@{bow.type.toString()}" />
+                    android:layout_gravity="top"
+                    android:paddingTop="20dp"
+                    app:srcCompat="@drawable/ic_bow_recurve_grey600_24dp" />
 
-            </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/type"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:hint="@string/bow_type"
+                        android:text="@{bow.type.toString()}" />
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/name"
-                    android:layout_width="match_parent"
+                </android.support.design.widget.TextInputLayout>
+
+            </FrameLayout>
+
+            <FrameLayout style="@style/propertyFrameLayout">
+
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="@string/name"
-                    android:inputType="textNoSuggestions"
-                    android:text="@{bow.name}" />
+                    android:layout_gravity="top"
+                    android:contentDescription="@string/name"
+                    android:paddingTop="20dp"
+                    app:srcCompat="@drawable/ic_title_grey600_24dp" />
 
-            </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/name"
+                        android:inputType="textNoSuggestions"
+                        android:text="@{bow.name}" />
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/brand"
-                    android:layout_width="match_parent"
+                </android.support.design.widget.TextInputLayout>
+
+            </FrameLayout>
+
+            <FrameLayout style="@style/propertyFrameLayout">
+
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="@string/brand"
-                    android:inputType="textNoSuggestions"
-                    android:text="@{bow.brand}" />
-            </android.support.design.widget.TextInputLayout>
+                    android:layout_gravity="top"
+                    android:paddingTop="20dp"
+                    app:srcCompat="@drawable/ic_brand_grey600_24dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="0dp"
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/brand"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/brand"
+                        android:inputType="textNoSuggestions"
+                        android:text="@{bow.brand}" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </FrameLayout>
+
+            <FrameLayout style="@style/propertyFrameLayout">
+
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_gravity="top"
+                    android:paddingTop="20dp"
+                    app:srcCompat="@drawable/ic_arrow_weight_grey600_24dp" />
+
+                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/drawWeight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/draw_weight"
+                        android:inputType="numberDecimal"
+                        android:text="@{bow.drawWeight}" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </FrameLayout>
+
+            <FrameLayout style="@style/propertyFrameLayout">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:contentDescription="@string/size"
+                    android:paddingTop="20dp"
+                    app:srcCompat="@drawable/ic_arrow_length_grey600_24dp" />
+
+                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/size"
@@ -99,88 +153,65 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-                <LinearLayout
-                    android:layout_width="0dp"
+            </FrameLayout>
+
+            <FrameLayout style="@style/propertyFrameLayout">
+
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:layout_gravity="top"
+                    android:contentDescription="@string/size"
+                    android:paddingTop="20dp"
+                    app:srcCompat="@drawable/ic_width_grey600_24dp" />
+
+                <LinearLayout
+                    style="@style/propertyTextInputLayout"
+                    android:orientation="vertical">
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
                         <android.support.design.widget.TextInputEditText
-                            android:id="@+id/drawWeight"
+                            android:id="@+id/tiller"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:hint="@string/draw_weight"
-                            android:inputType="numberDecimal"
-                            android:text="@{bow.drawWeight}" />
+                            android:hint="@string/tiller"
+                            android:inputType="textNoSuggestions"
+                            android:text="@{bow.tiller}" />
 
                     </android.support.design.widget.TextInputLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="bottom"
-                        android:paddingBottom="12dp"
-                        android:text="@string/unit_lbs"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/braceHeight"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/height"
+                            android:inputType="textNoSuggestions"
+                            android:text="@{bow.braceHeight}" />
+
+                    </android.support.design.widget.TextInputLayout>
+
                 </LinearLayout>
 
-            </LinearLayout>
+            </FrameLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:baselineAligned="false"
-                android:orientation="horizontal"
-                android:weightSum="2">
+            <FrameLayout style="@style/propertyFrameLayout">
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_gravity="top"
+                    android:contentDescription="@string/limbs"
+                    android:paddingTop="20dp"
+                    app:srcCompat="@drawable/ic_bow_limb_grey600_24dp" />
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/braceHeight"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/height"
-                        android:inputType="textNoSuggestions"
-                        android:text="@{bow.braceHeight}" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/tiller"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/tiller"
-                        android:inputType="textNoSuggestions"
-                        android:text="@{bow.tiller}" />
-
-                </android.support.design.widget.TextInputLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:baselineAligned="false"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/limbs"
@@ -192,10 +223,19 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
+            </FrameLayout>
+
+            <FrameLayout style="@style/propertyFrameLayout">
+
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_gravity="top"
+                    android:contentDescription="@string/sight"
+                    android:paddingTop="20dp"
+                    app:srcCompat="@drawable/ic_bow_sight_grey600_24dp" />
+
+                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/sight"
@@ -207,19 +247,19 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-            </LinearLayout>
+            </FrameLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:baselineAligned="false"
-                android:orientation="horizontal"
-                android:weightSum="2">
+            <FrameLayout style="@style/propertyFrameLayout">
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_gravity="top"
+                    android:contentDescription="@string/stabilizer"
+                    android:paddingTop="20dp"
+                    app:srcCompat="@drawable/ic_bow_stabilizer_grey600_24dp" />
+
+                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/stabilizer"
@@ -231,10 +271,11 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
+            </FrameLayout>
+
+            <FrameLayout style="@style/propertyFrameLayout">
+
+                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/clicker"
@@ -246,16 +287,18 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-            </LinearLayout>
+            </FrameLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            <FrameLayout style="@style/propertyFrameLayout">
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:paddingTop="20dp"
+                    app:srcCompat="@drawable/ic_comment_grey600_24dp" />
+
+                <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/description"
@@ -267,7 +310,8 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-            </LinearLayout>
+            </FrameLayout>
+
         </LinearLayout>
 
         <include layout="@layout/partial_divider_full" />
@@ -285,7 +329,7 @@
                 android:text="@string/sight_settings" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/sightSettings"
+                android:id="@+id/sightMarks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
