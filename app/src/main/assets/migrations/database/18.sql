@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `ArrowImage`(
     `arrow` INTEGER,
     FOREIGN KEY(`arrow`) REFERENCES Arrow(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE
 );
-INSERT INTO `ArrowImage`(`fileName`,`end`)
+INSERT INTO `ArrowImage`(`fileName`,`arrow`)
     SELECT `image`, `_id`
     FROM ARROW_OLD;
 
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `BowImage`(
     `bow` INTEGER,
     FOREIGN KEY(`bow`) REFERENCES Bow(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE
 );
-INSERT INTO `BowImage`(`fileName`,`end`)
+INSERT INTO `BowImage`(`fileName`,`bow`)
     SELECT `image`, `_id`
     FROM BOW_OLD;
 

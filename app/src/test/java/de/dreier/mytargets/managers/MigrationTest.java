@@ -24,7 +24,6 @@ import com.raizlabs.android.dbflow.structure.database.AndroidDatabase;
 import com.raizlabs.android.dbflow.structure.database.DatabaseHelperDelegate;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +39,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import de.dreier.mytargets.BuildConfig;
+import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.EWeather;
@@ -54,23 +54,37 @@ import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 23)
+@Config(sdk = 23,
+        packageName = "de.dreier.mytargets",
+        constants = BuildConfig.class)
 public final class MigrationTest {
 
+    /**
+     * File path where to create a clean database based on the current database schema.
+     */
     private File newFile;
+
+    /**
+     * Handle to a database based on schema 16 is updated to the current schema during setUp.
+     */
     private DatabaseWrapper upgradedDb;
+
+    /**
+     * A sqlite open helper for the app's data layer.
+     */
     private DatabaseHelperDelegate helper;
 
     @Before
     public void setUp() throws IOException {
-        File baseDir = new File("build/tmp/migration");
-        newFile = new File(baseDir, "new.db");
+        String[] files = RuntimeEnvironment.application.getAssets().list("migrations/");
+        newFile = new File("build/tmp/migration/new.db");
+        newFile.getParentFile().mkdirs();
+
         File upgradedFile = RuntimeEnvironment.application
                 .getDatabasePath(AppDatabase.DATABASE_FILE_NAME);
-        File firstDbFile = new File("src/test/resources/origin.db");
         upgradedFile.getParentFile().mkdirs();
-        newFile.getParentFile().mkdirs();
-        FileUtils.copyFile(firstDbFile, upgradedFile);
+
+        BackupUtils.copy(new File("src/test/resources/origin.db"), upgradedFile);
 
         FlowManager.init(new FlowConfig.Builder(RuntimeEnvironment.application).build());
         helper = FlowManager.getDatabase(AppDatabase.NAME).getHelper().getDelegate();
