@@ -16,6 +16,7 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.parceler.Parcel;
 
@@ -157,6 +158,16 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
         for (RoundTemplate s : getRounds()) {
             s.standardRound = id;
             s.save();
+        }
+    }
+
+    @Override
+    public void save(DatabaseWrapper databaseWrapper) {
+        super.save(databaseWrapper);
+        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
+        for (RoundTemplate s : getRounds()) {
+            s.standardRound = id;
+            s.save(databaseWrapper);
         }
     }
 }
