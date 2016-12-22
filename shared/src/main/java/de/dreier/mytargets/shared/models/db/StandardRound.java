@@ -104,7 +104,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
     }
 
 
-    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "rounds")
+    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "rounds")
     public List<RoundTemplate> getRounds() {
         if (rounds == null || rounds.isEmpty()) {
             rounds = SQLite.select()
@@ -156,7 +156,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
         // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
         for (RoundTemplate s : getRounds()) {
             s.standardRound = id;
+            s.save();
         }
-        super.save();
     }
 }
