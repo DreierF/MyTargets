@@ -40,7 +40,8 @@ CREATE TABLE IF NOT EXISTS `ArrowImage`(
 );
 INSERT INTO `ArrowImage`(`fileName`,`arrow`)
     SELECT `image`, `_id`
-    FROM ARROW_OLD;
+    FROM ARROW_OLD
+    WHERE `image` <> '';
 
 -- Bow migration
 CREATE TABLE IF NOT EXISTS `Bow`(
@@ -87,7 +88,8 @@ CREATE TABLE IF NOT EXISTS `BowImage`(
 );
 INSERT INTO `BowImage`(`fileName`,`bow`)
     SELECT `image`, `_id`
-    FROM BOW_OLD;
+    FROM BOW_OLD
+    WHERE `image` <> '';
 
 -- StandardRound migration
 CREATE TABLE IF NOT EXISTS `StandardRound`(
@@ -198,7 +200,8 @@ CREATE TABLE IF NOT EXISTS `EndImage`(
 );
 INSERT INTO `EndImage`(`fileName`,`end`)
     SELECT `image`, `_id`
-    FROM PASSE_OLD;
+    FROM PASSE_OLD
+    WHERE `image` <> '';
 
 -- Shot migration
 CREATE TABLE IF NOT EXISTS `Shot`(
