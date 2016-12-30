@@ -26,6 +26,7 @@ before_install:
 - curl -sL https://github.com/jpm4j/jpm4j.installers/raw/master/dist/biz.aQute.jpm.run.jar >jpm4j.jar
 - java -jar jpm4j.jar -u init
 - ~/jpm/bin/jpm install com.codacy:codacy-coverage-reporter:assembly
+- wget https://raw.githubusercontent.com/JakeWharton/pidcat/master/pidcat.py
 install:
 - git fetch --unshallow --tags
 before_script:
@@ -41,10 +42,10 @@ script:
 - ./gradlew assembleRegularRelease
 - adb shell input keyevent 82 &
 - ./gradlew createRegularDebugCoverageReport
-- adb logcat *:W -d 2>&1 | tee app/build/reports/androidTests/connected/flavors/REGULAR/logcat.log
+- adb logcat -d | ~/pidcat.py de.dreier.mytargets.debug | tee app/build/reports/androidTests/connected/flavors/REGULAR/logcat.log
 - adb logcat -c
 - ./gradlew jacocoTestRegularDebugUnitTestReport
-- adb logcat *:W -d 2>&1 | tee app/build/reports/tests/connected/flavors/REGULAR/logcat.log
+- adb logcat -d | ~/pidcat.py de.dreier.mytargets.debug | tee app/build/reports/tests/connected/flavors/REGULAR/logcat.log
 after_success:
 - |
   if [[ "$TRAVIS_TAG" ]]; then
