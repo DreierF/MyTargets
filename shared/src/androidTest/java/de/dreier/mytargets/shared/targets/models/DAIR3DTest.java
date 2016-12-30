@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.targets;
+package de.dreier.mytargets.shared.targets.models;
 
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
@@ -22,8 +22,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import de.dreier.mytargets.shared.targets.models.DAIR3D;
 
 @SmallTest
 @RunWith(AndroidJUnit4.class)

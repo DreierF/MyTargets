@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models.db;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -25,8 +25,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import de.dreier.mytargets.shared.models.db.Shot;
 
 public class ShotTest {
 

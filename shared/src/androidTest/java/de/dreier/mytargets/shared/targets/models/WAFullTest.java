@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.targets;
+package de.dreier.mytargets.shared.targets.models;
 
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
