@@ -15,16 +15,17 @@
 
 package de.dreier.mytargets.managers;
 
+import android.support.test.filters.SmallTest;
+import android.support.test.runner.AndroidJUnit4;
+
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import de.dreier.mytargets.ApplicationInstance;
-import de.dreier.mytargets.BuildConfig;
+import de.dreier.mytargets.InstrumentedTestBase;
 import de.dreier.mytargets.features.settings.backup.EBackupInterval;
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.models.EShowMode;
@@ -38,9 +39,9 @@ import de.dreier.mytargets.views.TargetView;
 import static com.google.common.truth.Truth.assertThat;
 import static de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.KEYBOARD;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 23)
-public class SettingsManagerTest {
+@SmallTest
+@RunWith(AndroidJUnit4.class)
+public class SettingsManagerTest extends InstrumentedTestBase {
 
     @Test
     public void setStandardRound() {

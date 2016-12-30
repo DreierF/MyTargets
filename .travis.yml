@@ -40,7 +40,11 @@ before_script:
 script:
 - ./gradlew assembleRegularRelease
 - adb shell input keyevent 82 &
-- ./gradlew createRegularDebugCoverageReport jacocoTestRegularDebugUnitTestReport
+- ./gradlew createRegularDebugCoverageReport
+- adb logcat *:W -d 2>&1 | tee app/build/reports/androidTests/connected/flavors/REGULAR/logcat.log
+- adb logcat -c
+- ./gradlew jacocoTestRegularDebugUnitTestReport
+- adb logcat *:W -d 2>&1 | tee app/build/reports/tests/connected/flavors/REGULAR/logcat.log
 after_success:
 - |
   if [[ "$TRAVIS_TAG" ]]; then
@@ -53,11 +57,10 @@ after_success:
 - ~/jpm/bin/codacy-coverage-reporter -l Java -r app/build/reports/coverage/regular/debug/report.xml
 after_failure:
 - chmod +x dropbox_uploader.sh
-- cd app/build/reports/androidTests/connected/flavors/REGULAR/
-- adb logcat *:W -d 2>&1 | tee logcat.log
-- zip -r reports.zip .
-- cd ../../../../../../..
-- ./dropbox_uploader.sh upload app/build/reports/androidTests/connected/flavors/REGULAR/reports.zip /Reports/$TRAVIS_JOB_NUMBER.zip
+- ln -s app/build/reports/androidTests/connected/flavors/REGULAR androidTests
+- ln -s app/build/reports/tests/connected/flavors/REGULAR tests
+- zip -r reports.zip androidTests tests
+- ./dropbox_uploader.sh upload reports.zip /Reports/$TRAVIS_JOB_NUMBER.zip
 deploy:
   provider: releases
   skip_cleanup: true

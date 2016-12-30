@@ -216,9 +216,6 @@ dependencies {
     compile project(':shared')
     wearApp project(':wearable')
 
-    testCompile "com.google.truth:truth:$libraryVersion.truth"
-    testCompile "org.robolectric:robolectric:$libraryVersion.robolectric"
-
     androidTestCompile "com.google.truth:truth:$libraryVersion.truth"
     androidTestCompile "com.google.code.findbugs:jsr305:$libraryVersion.findbugs"
     androidTestCompile "com.android.support:support-annotations:$libraryVersion.support"
