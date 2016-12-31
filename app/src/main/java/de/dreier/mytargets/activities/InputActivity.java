@@ -25,7 +25,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.transition.Transition;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -302,16 +301,8 @@ public class InputActivity extends ChildActivityBase
                 && (showMode == EShowMode.TRAINING || r.getId().equals(getCurrentEnd().roundId));
     }
 
-    private static final String TAG = "InputActivity";
     private boolean shouldShowEnd(End end) {
-        Log.d(TAG, "shouldShowEnd: end " + end.toString());
-        final Long id = end.getId();
-        Log.d(TAG, "shouldShowEnd: id "+id);
-        final End currentEnd = getCurrentEnd();
-        Log.d(TAG, "shouldShowEnd: currentEnd "+currentEnd.toString());
-        final Long id1 = currentEnd.getId();
-        Log.d(TAG, "shouldShowEnd: id1 "+id1);
-        return !id.equals(id1) && end.exact;
+        return !Utils.equals(end.getId(), getCurrentEnd().getId()) && end.exact;
     }
 
     private void updateEnd() {
