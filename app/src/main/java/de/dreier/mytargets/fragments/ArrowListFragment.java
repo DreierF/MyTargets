@@ -61,7 +61,7 @@ public class ArrowListFragment extends EditableListFragment<Arrow> {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.addItemDecoration(
-                new DividerItemDecoration(getContext(), R.drawable.inset_divider));
+                new DividerItemDecoration(getContext(), R.drawable.full_divider));
         mAdapter = new ArrowAdapter(getContext());
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);

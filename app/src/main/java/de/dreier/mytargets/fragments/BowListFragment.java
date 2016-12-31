@@ -70,7 +70,7 @@ public class BowListFragment extends EditableListFragment<Bow> {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bows, container, false);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.addItemDecoration(
-                new DividerItemDecoration(getContext(), R.drawable.inset_divider));
+                new DividerItemDecoration(getContext(), R.drawable.full_divider));
         mAdapter = new BowAdapter(getContext());
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);

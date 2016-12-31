@@ -30,7 +30,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private final Drawable mDivider;
     private boolean mShowFirstDivider = false;
-    private boolean mShowLastDivider = false;
+    private boolean mShowLastDivider = true;
 
     private int mOrientation = -1;
 

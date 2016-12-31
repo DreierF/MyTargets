@@ -37,6 +37,7 @@ import de.dreier.mytargets.databinding.ItemTrainingBinding;
 import de.dreier.mytargets.models.Month;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.multiselector.HeaderBindingHolder;
@@ -73,6 +74,7 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         mAdapter = new TrainingAdapter();
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
+        binding.recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), R.drawable.full_divider));
         binding.fab1.setOnClickListener(view -> EditTrainingFragment
                 .createIntent(CREATE_FREE_TRAINING_ACTION)
                 .withContext(this)
@@ -114,7 +116,6 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
         final List<Training> trainings = Training.getAll();
-
         return () -> setList(trainings, false);
     }
 

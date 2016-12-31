@@ -27,11 +27,6 @@
             style="@style/card_list"
             app:layoutManager="LinearLayoutManager" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar_drop_shadow_height"
-            android:background="@drawable/toolbar_drop_shadow" />
-
         <com.github.clans.fab.FloatingActionMenu
             android:id="@+id/fab"
             style="@style/fabMenu"

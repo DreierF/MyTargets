@@ -57,7 +57,7 @@
                         android:id="@+id/detail_round_info"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
+                        android:textColor="@color/md_white_1000"
                         android:textSize="16sp" />
 
                     <ImageView
@@ -80,11 +80,6 @@
                     android:id="@+id/recyclerView"
                     style="@style/card_list"
                     app:layoutManager="LinearLayoutManager" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/toolbar_drop_shadow_height"
-                    android:background="@drawable/toolbar_drop_shadow" />
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab"
