@@ -80,12 +80,12 @@ public final class MigrationTest extends InstrumentedTestBase {
 
         helper = FlowManager.getDatabase(AppDatabase.NAME).getHelper().getDelegate();
         upgradedDb = FlowManager.getDatabase(AppDatabase.NAME).getWritableDatabase();
-        // helper.onUpgrade(upgradedDb, 16, AppDatabase.VERSION);
     }
 
     @After
     public void cleanup() {
         FlowManager.reset();
+        FlowManager.destroy();
     }
 
     @Test

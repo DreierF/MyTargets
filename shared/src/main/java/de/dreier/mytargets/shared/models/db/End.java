@@ -197,4 +197,16 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
         return index - end.index;
     }
 
+    @Override
+    public String toString() {
+        return "End{" +
+                "id=" + id +
+                ", index=" + index +
+                ", images=" + images +
+                ", roundId=" + roundId +
+                ", exact=" + exact +
+                ", saveTime=" + saveTime +
+                ", shots=" + shots +
+                '}';
+    }
 }

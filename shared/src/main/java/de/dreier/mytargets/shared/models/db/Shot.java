@@ -81,4 +81,18 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
         return this == o || !(o == null || getClass() != o.getClass())
                 && (id != null ? id.equals(((Shot) o).id) : ((Shot) o).id == null);
     }
+
+    @Override
+    public String toString() {
+        return "Shot{" +
+                "id=" + id +
+                ", index=" + index +
+                ", endId=" + endId +
+                ", x=" + x +
+                ", y=" + y +
+                ", scoringRing=" + scoringRing +
+                ", comment='" + comment + '\'' +
+                ", arrowNumber='" + arrowNumber + '\'' +
+                '}';
+    }
 }
