@@ -27,7 +27,7 @@ buildscript {
         classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
         classpath 'org.ajoberstar:grgit:1.7.2'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.2'
         classpath 'com.google.gms:google-services:3.0.0'
         classpath 'com.google.firebase:firebase-plugins:1.0.4'
     }
@@ -59,15 +59,15 @@ ext {
         firebase: '10.0.1',
         espresso : '2.2.2',
         parceler : '1.1.6',
-        jodaTime : '2.9.6',
+        jodaTime : '2.9.7',
         dbFlow : '3.1.1',
         gson : '2.8.0',
         okhttp : '3.5.0',
         retrofit : '2.1.0',
         picasso : '2.5.2',
         icepick : '3.2.0',
-        permissionsdispatcher : '2.3.0',
-        iab : '1.0.36',
+        permissionsdispatcher : '2.3.1',
+        iab : '1.0.37',
         mpAndroidChart : 'v3.0.1',
         clansFab : '1.6.4',
         discreteSeekbar : '1.0.1',
@@ -83,7 +83,7 @@ ext {
         screengrab : '0.5.6',
         annimonStream : '1.1.4',
         jUnit : '4.12',
-        mockito : '2.3.5'
+        mockito : '2.5.0'
     ]
 }
 

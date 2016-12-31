@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 Florian Dreier
   ~
   ~ This file is part of MyTargets.
@@ -15,7 +14,7 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -39,7 +38,7 @@
                 android:shadowDy="0"
                 android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
         </android.support.v7.widget.Toolbar>
 
@@ -55,7 +54,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/timer_text_size"
             android:textStyle="bold"
-            tools:text="STOP"/>
+            tools:text="STOP" />
 
     </FrameLayout>
 

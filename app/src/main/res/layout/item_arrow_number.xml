@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 Florian Dreier
   ~
   ~ This file is part of MyTargets.
@@ -15,7 +14,7 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -30,7 +29,7 @@
             android:layout_toLeftOf="@+id/removeArrowNumber"
             android:layout_toStartOf="@+id/removeArrowNumber"
             android:ems="10"
-            android:inputType="number"/>
+            android:inputType="number" />
 
         <ImageButton
             android:id="@+id/removeArrowNumber"
@@ -41,7 +40,7 @@
             android:layout_centerVertical="true"
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/delete"
-            app:srcCompat="@drawable/ic_cancel_grey600_24dp"/>
+            app:srcCompat="@drawable/ic_cancel_grey600_24dp" />
     </RelativeLayout>
 
 </layout>

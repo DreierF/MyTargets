@@ -302,7 +302,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     private boolean shouldShowEnd(End end) {
-        return !end.getId().equals(getCurrentEnd().getId()) && end.exact;
+        return !Utils.equals(end.getId(), getCurrentEnd().getId()) && end.exact;
     }
 
     private void updateEnd() {

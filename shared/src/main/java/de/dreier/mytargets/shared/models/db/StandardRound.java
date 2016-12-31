@@ -16,6 +16,7 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.parceler.Parcel;
 
@@ -104,7 +105,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
     }
 
 
-    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "rounds")
+    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "rounds")
     public List<RoundTemplate> getRounds() {
         if (rounds == null || rounds.isEmpty()) {
             rounds = SQLite.select()
@@ -156,7 +157,17 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
         // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
         for (RoundTemplate s : getRounds()) {
             s.standardRound = id;
+            s.save();
         }
-        super.save();
+    }
+
+    @Override
+    public void save(DatabaseWrapper databaseWrapper) {
+        super.save(databaseWrapper);
+        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
+        for (RoundTemplate s : getRounds()) {
+            s.standardRound = id;
+            s.save(databaseWrapper);
+        }
     }
 }

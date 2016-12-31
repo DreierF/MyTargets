@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 Florian Dreier
   ~
   ~ This file is part of MyTargets.
@@ -15,8 +14,8 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -35,7 +34,7 @@
                 android:background="?attr/colorPrimary"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:layout_collapseMode="none"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
             <android.support.v7.widget.Toolbar
                 android:layout_width="match_parent"
@@ -59,14 +58,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
 
                     <ImageView
                         android:id="@+id/weatherIcon"
                         android:layout_width="64dp"
                         android:layout_height="64dp"
                         android:layout_gravity="top|end"
-                        tools:src="@drawable/ic_sun_48dp"/>
+                        tools:src="@drawable/ic_sun_48dp" />
 
                 </FrameLayout>
 
@@ -80,12 +79,12 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerView"
                     style="@style/card_list"
-                    app:layoutManager="LinearLayoutManager"/>
+                    app:layoutManager="LinearLayoutManager" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/toolbar_drop_shadow_height"
-                    android:background="@drawable/toolbar_drop_shadow"/>
+                    android:background="@drawable/toolbar_drop_shadow" />
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab"
@@ -94,7 +93,7 @@
                     android:layout_gravity="bottom|end"
                     android:layout_margin="16dp"
                     android:src="@drawable/fab_add_white_24dp"
-                    app:fab_colorNormal="@color/colorAccent"/>
+                    app:fab_colorNormal="@color/colorAccent" />
 
             </android.support.design.widget.CoordinatorLayout>
 

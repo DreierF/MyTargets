@@ -28,9 +28,11 @@ import org.junit.runner.RunWith;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditTrainingActivity;
+import de.dreier.mytargets.fragments.EditBowFragment;
 import de.dreier.mytargets.fragments.EditTrainingFragment;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
@@ -44,6 +46,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.matcher.ViewMatchers.Visibility.INVISIBLE;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
@@ -106,8 +109,10 @@ public class MainActivityNavigationTest extends UITestBase {
 
         // Does new bow work
         onView(allOf(withText(R.string.bow), isDisplayed())).perform(click());
-        onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
-        intended(hasComponent(SimpleFragmentActivityBase.EditBowActivity.class.getName()));
+        onView(matchFab()).perform(click());
+        onView(withId(R.id.fabBowRecurve)).perform(click());
+        intended(allOf(hasComponent(SimpleFragmentActivityBase.EditBowActivity.class.getName()),
+                hasExtra(EditBowFragment.BOW_TYPE, EBowType.RECURVE_BOW.name())));
         pressBack();
 
         // Does new arrow work

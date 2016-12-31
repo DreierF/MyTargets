@@ -28,7 +28,7 @@ import de.dreier.mytargets.adapters.DynamicItemHolder;
 
 abstract class DynamicItemAdapter<T> extends RecyclerView.Adapter<DynamicItemHolder<T>> {
     private final Fragment fragment;
-    private final List<T> list;
+    private List<T> list;
     final LayoutInflater inflater;
     private final int undoString;
 
@@ -56,6 +56,10 @@ abstract class DynamicItemAdapter<T> extends RecyclerView.Adapter<DynamicItemHol
                         notifyItemInserted(position);
                     }).show();
         });
+    }
+
+    public void setList(List<T> list) {
+        this.list = list;
     }
 
     @Override

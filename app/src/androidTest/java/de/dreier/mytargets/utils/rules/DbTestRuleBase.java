@@ -29,8 +29,10 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
+import java.util.Collections;
 import java.util.Random;
 
+import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.EWeather;
@@ -53,6 +55,7 @@ public abstract class DbTestRuleBase implements TestRule {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
+                ApplicationInstance.initFlowManager(context);
                 SQLite.delete(Arrow.class).execute();
                 SQLite.delete(Bow.class).execute();
                 SQLite.delete(Training.class).execute();
@@ -106,7 +109,7 @@ public abstract class DbTestRuleBase implements TestRule {
         bow.size = "64\"";
         bow.braceHeight = "6 3/8\"";
         bow.type = EBowType.COMPOUND_BOW;
-        bow.imageFile = null;
+        bow.images = Collections.emptyList();
         Bitmap bitmap = BitmapFactory
                 .decodeResource(context.getResources(), R.drawable.recurve_bow);
         bow.thumbnail = new Thumbnail(bitmap);

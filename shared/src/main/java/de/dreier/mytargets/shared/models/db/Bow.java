@@ -68,13 +68,42 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
     public String clicker = "";
 
     @Column
+    public String button = "";
+
+    @Column
+    public String string = "";
+
+    @Column
+    public String nockingPoint = "";
+
+    @Column
+    public String letoffWeight = "";
+
+    @Column
+    public String arrowRest = "";
+
+    @Column
+    public String restHorizontalPosition = "";
+
+    @Column
+    public String restVerticalPosition = "";
+
+    @Column
+    public String restStiffness = "";
+
+    @Column
+    public String camSetting = "";
+
+    @Column
+    public String scopeMagnification = "";
+
+    @Column
     public String description = "";
 
     @Column(typeConverter = ThumbnailConverter.class)
     public Thumbnail thumbnail;
 
-    @Column
-    public String imageFile;
+    public List<BowImage> images = new ArrayList<>();
 
     public List<SightMark> sightMarks = new ArrayList<>();
 
@@ -89,7 +118,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
                 .querySingle();
     }
 
-    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "sightMarks")
+    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "sightMarks")
     public List<SightMark> getSightMarks() {
         if (sightMarks == null || sightMarks.isEmpty()) {
             sightMarks = SQLite.select()
@@ -98,6 +127,17 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
                     .queryList();
         }
         return sightMarks;
+    }
+
+    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "images")
+    public List<BowImage> getImages() {
+        if (images == null || images.isEmpty()) {
+            images = SQLite.select()
+                    .from(BowImage.class)
+                    .where(BowImage_Table.bow.eq(id))
+                    .queryList();
+        }
+        return images;
     }
 
     public Long getId() {
@@ -134,6 +174,20 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
                 .filter(s -> s.distance.equals(distance))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public void save() {
+        super.save();
+        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
+        for (SightMark sightMark : getSightMarks()) {
+            sightMark.bowId = id;
+            sightMark.save();
+        }
+        for (BowImage image : getImages()) {
+            image.bowId = id;
+            image.save();
+        }
     }
 
     @Override

@@ -1,4 +1,5 @@
 -- Rename existing tables
+DROP TABLE IF EXISTS ROUND_OLD;
 ALTER TABLE ARROW RENAME TO ARROW_OLD;
 ALTER TABLE BOW RENAME TO BOW_OLD;
 ALTER TABLE PASSE RENAME TO PASSE_OLD;
@@ -22,15 +23,26 @@ CREATE TABLE IF NOT EXISTS `Arrow`(
     `nock` TEXT,
     `comment` TEXT,
     `diameter` TEXT,
-    `thumbnail` BLOB,
-    `imageFile` TEXT
+    `thumbnail` BLOB
 );
 INSERT INTO `Arrow`
     SELECT `_id`,`name`,`length`,`material`,`spine`,
     `weight`,`tip_weight`,`vanes`,`nock`,
     `comment`,`diameter` || ' ' || `diameter_unit`,
-    `thumbnail`,`image`
+    `thumbnail`
     FROM ARROW_OLD;
+
+-- Arrow image migration
+CREATE TABLE IF NOT EXISTS `ArrowImage`(
+    `_id` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `fileName` TEXT,
+    `arrow` INTEGER,
+    FOREIGN KEY(`arrow`) REFERENCES Arrow(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE
+);
+INSERT INTO `ArrowImage`(`fileName`,`arrow`)
+    SELECT `image`, `_id`
+    FROM ARROW_OLD
+    WHERE `image` <> '';
 
 -- Bow migration
 CREATE TABLE IF NOT EXISTS `Bow`(
@@ -46,16 +58,39 @@ CREATE TABLE IF NOT EXISTS `Bow`(
     `drawWeight` TEXT,
     `stabilizer` TEXT,
     `clicker` TEXT,
+    `button` TEXT,
+    `string` TEXT,
+    `nockingPoint` TEXT,
+    `letoffWeight` TEXT,
+    `arrowRest` TEXT,
+    `restHorizontalPosition` TEXT,
+    `restVerticalPosition` TEXT,
+    `restStiffness` TEXT,
+    `camSetting` TEXT,
+    `scopeMagnification` TEXT,
     `description` TEXT,
-    `thumbnail` BLOB,
-    `imageFile` TEXT
+    `thumbnail` BLOB
 );
 INSERT INTO `Bow`
     SELECT `_id`,`name`,`type`,`brand`,`size`,
            `height`,`tiller`,`limbs`,`sight`,
            `draw_weight`,`stabilizer`,`clicker`,
-           `description`,`thumbnail`,`image`
+           '', '', '', '', '',
+           '', '', '', '', '',
+           `description`,`thumbnail`
     FROM BOW_OLD;
+
+-- Bow image migration
+CREATE TABLE IF NOT EXISTS `BowImage`(
+    `_id` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `fileName` TEXT,
+    `bow` INTEGER,
+    FOREIGN KEY(`bow`) REFERENCES Bow(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE
+);
+INSERT INTO `BowImage`(`fileName`,`bow`)
+    SELECT `image`, `_id`
+    FROM BOW_OLD
+    WHERE `image` <> '';
 
 -- StandardRound migration
 CREATE TABLE IF NOT EXISTS `StandardRound`(
@@ -144,7 +179,6 @@ INSERT INTO `Round`
 CREATE TABLE IF NOT EXISTS `End`(
     `_id` INTEGER PRIMARY KEY AUTOINCREMENT,
     `index` INTEGER,
-    `images` TEXT,
     `round` INTEGER,
     `exact` INTEGER,
     `saveTime` INTEGER,
@@ -155,8 +189,20 @@ SELECT `_id`, (SELECT COUNT(*)
                 FROM PASSE_OLD p
                 WHERE PASSE_OLD.round = p.round
                 AND PASSE_OLD._id > p._id),
-       `image`,`round`,`exact`,`save_time`
+                `round`,`exact`,`save_time`
 FROM PASSE_OLD;
+
+-- End image migration
+CREATE TABLE IF NOT EXISTS `EndImage`(
+    `_id` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `fileName` TEXT,
+    `end` INTEGER,
+    FOREIGN KEY(`end`) REFERENCES End(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE
+);
+INSERT INTO `EndImage`(`fileName`,`end`)
+    SELECT `image`, `_id`
+    FROM PASSE_OLD
+    WHERE `image` <> '';
 
 -- Shot migration
 CREATE TABLE IF NOT EXISTS `Shot`(

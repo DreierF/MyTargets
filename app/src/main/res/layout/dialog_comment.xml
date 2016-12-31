@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 Florian Dreier
   ~
   ~ This file is part of MyTargets.
@@ -15,7 +14,7 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -35,7 +34,7 @@
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/unit"
             android:layout_toStartOf="@+id/unit"
-            android:inputType="textMultiLine"/>
+            android:inputType="textMultiLine" />
 
         <TextView
             android:id="@+id/unit"
@@ -48,7 +47,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="0dp"
-            tools:text="yd"/>
+            tools:text="yd" />
 
     </RelativeLayout>
 

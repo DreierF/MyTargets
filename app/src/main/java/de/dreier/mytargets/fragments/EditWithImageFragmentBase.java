@@ -36,10 +36,13 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentEditImageBinding;
 import de.dreier.mytargets.shared.models.Thumbnail;
+import de.dreier.mytargets.shared.models.db.Image;
 import de.dreier.mytargets.shared.utils.FileUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
@@ -53,9 +56,10 @@ import static de.dreier.mytargets.fragments.EditWithImageFragmentBasePermissions
 import static de.dreier.mytargets.fragments.EditWithImageFragmentBasePermissionsDispatcher.onTakePictureWithCheck;
 
 @RuntimePermissions
-public abstract class EditWithImageFragmentBase extends EditFragmentBase implements View.OnFocusChangeListener {
+public abstract class EditWithImageFragmentBase<T extends Image> extends EditFragmentBase implements View.OnFocusChangeListener {
 
     private final int defaultDrawable;
+    private final Class<T> clazz;
 
     FragmentEditImageBinding binding;
 
@@ -64,8 +68,9 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
     @State
     File oldImageFile = null;
 
-    EditWithImageFragmentBase(int defaultDrawable) {
+    EditWithImageFragmentBase(int defaultDrawable, Class<T> clazz) {
         this.defaultDrawable = defaultDrawable;
+        this.clazz = clazz;
     }
 
     @Override
@@ -203,32 +208,42 @@ public abstract class EditWithImageFragmentBase extends EditFragmentBase impleme
         }
     }
 
-    @Nullable
-    String getImageFile() {
-        if (imageFile == null) {
-            return null;
-        } else {
-            if (imageFile.getParentFile().equals(getContext().getFilesDir())) {
-                return imageFile.getName();
-            } else {
-                return imageFile.getPath();
-            }
-        }
-    }
-
-    void setImageFile(String path) {
-        if (path == null) {
+    void setImageFiles(List<T> images) {
+        if (images.isEmpty()) {
             imageFile = null;
             binding.imageView.setImageResource(defaultDrawable);
         } else {
-            imageFile = new File(getContext().getFilesDir(), path);
+            imageFile = new File(getContext().getFilesDir(), images.get(0).getFileName());
             if (!imageFile.exists()) {
-                imageFile = new File(path);
+                imageFile = new File(images.get(0).getFileName());
                 if (!imageFile.exists()) {
                     imageFile = null;
                     binding.imageView.setImageResource(defaultDrawable);
                 }
             }
+        }
+    }
+
+    List<T> getImageFiles() {
+        if (imageFile == null) {
+            return Collections.emptyList();
+        } else {
+            T image;
+            try {
+                image = clazz.newInstance();
+            } catch (java.lang.InstantiationException e) {
+                e.printStackTrace();
+                return Collections.emptyList();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                return Collections.emptyList();
+            }
+            if (imageFile.getParentFile().equals(getContext().getFilesDir())) {
+                image.setFileName(imageFile.getName());
+            } else {
+                image.setFileName(imageFile.getPath());
+            }
+            return Collections.singletonList(image);
         }
     }
 

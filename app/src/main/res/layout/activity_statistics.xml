@@ -14,7 +14,7 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/filter_view"
@@ -54,19 +54,19 @@
                         android:id="@+id/distanceTags"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="4dp"/>
+                        android:padding="4dp" />
 
                     <de.dreier.mytargets.views.ChipGroup
                         android:id="@+id/bowTags"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="4dp"/>
+                        android:padding="4dp" />
 
                     <de.dreier.mytargets.views.ChipGroup
                         android:id="@+id/arrowTags"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="4dp"/>
+                        android:padding="4dp" />
 
                 </LinearLayout>
 
@@ -91,7 +91,7 @@
                     android:background="@color/colorAccent"
                     android:paddingBottom="4dp"
                     android:paddingTop="4dp"
-                    android:textColor="#fff"/>
+                    android:textColor="#fff" />
 
             </android.support.v4.view.ViewPager>
 
@@ -101,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:visibility="visible"/>
+                android:visibility="visible" />
 
         </FrameLayout>
 

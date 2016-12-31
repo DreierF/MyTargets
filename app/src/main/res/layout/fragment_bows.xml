@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2016 Florian Dreier
+  ~
+  ~ This file is part of MyTargets.
+  ~
+  ~ MyTargets is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License version 2
+  ~ as published by the Free Software Foundation.
+  ~
+  ~ MyTargets is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            style="@style/card_list"
+            app:layoutManager="LinearLayoutManager" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_drop_shadow_height"
+            android:background="@drawable/toolbar_drop_shadow" />
+
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/fab"
+            style="@style/fabMenu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|end"
+            android:padding="16dp"
+            app:layout_behavior="de.dreier.mytargets.utils.FloatingActionMenuBehavior"
+            app:menu_labels_style="@style/fabMenuLabelsStyle">
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabBowYumi"
+                style="@style/fabBow"
+                android:src="@drawable/ic_compat_bow_yumi_grey600_24dp"
+                app:fab_label="@string/yumi" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabBowHorse"
+                style="@style/fabBow"
+                android:src="@drawable/ic_compat_bow_horse_grey_600_24dp"
+                app:fab_label="@string/horse_bow" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabBowLong"
+                style="@style/fabBow"
+                android:src="@drawable/ic_compat_bow_long_grey600_24dp"
+                app:fab_label="@string/long_bow" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabBowBare"
+                style="@style/fabBow"
+                android:src="@drawable/ic_compat_bow_bare_grey600_24dp"
+                app:fab_label="@string/bare_bow" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabBowCompound"
+                style="@style/fabBow"
+                android:src="@drawable/ic_compat_bow_compound_grey600_24dp"
+                app:fab_label="@string/compound_bow" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabBowRecurve"
+                style="@style/fabBow"
+                android:src="@drawable/ic_compat_bow_recurve_grey600_24dp"
+                app:fab_label="@string/recurve_bow" />
+
+        </com.github.clans.fab.FloatingActionMenu>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</layout>

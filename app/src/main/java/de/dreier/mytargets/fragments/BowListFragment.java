@@ -24,12 +24,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.clans.fab.FloatingActionButton;
+
 import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.ListAdapterBase;
-import de.dreier.mytargets.databinding.FragmentListBinding;
+import de.dreier.mytargets.databinding.FragmentBowsBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
+import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.utils.DividerItemDecoration;
@@ -38,9 +41,16 @@ import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
+import static de.dreier.mytargets.shared.models.EBowType.BARE_BOW;
+import static de.dreier.mytargets.shared.models.EBowType.COMPOUND_BOW;
+import static de.dreier.mytargets.shared.models.EBowType.HORSE_BOW;
+import static de.dreier.mytargets.shared.models.EBowType.LONG_BOW;
+import static de.dreier.mytargets.shared.models.EBowType.RECURVE_BOW;
+import static de.dreier.mytargets.shared.models.EBowType.YUMI;
+
 public class BowListFragment extends EditableListFragment<Bow> {
 
-    protected FragmentListBinding binding;
+    protected FragmentBowsBinding binding;
 
     public BowListFragment() {
         itemTypeSelRes = R.plurals.bow_selected;
@@ -49,21 +59,38 @@ public class BowListFragment extends EditableListFragment<Bow> {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        binding.fab.close(false);
+    }
+
+    @Override
     @CallSuper
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bows, container, false);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.addItemDecoration(
                 new DividerItemDecoration(getContext(), R.drawable.inset_divider));
-        binding.fab.setOnClickListener(
-                view1 -> EditBowFragment.createIntent()
-                        .withContext(this)
-                        .fromFab(binding.fab)
-                        .start());
         mAdapter = new BowAdapter(getContext());
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
+
+        setFabClickListener(binding.fabBowRecurve, RECURVE_BOW);
+        setFabClickListener(binding.fabBowCompound, COMPOUND_BOW);
+        setFabClickListener(binding.fabBowBare, BARE_BOW);
+        setFabClickListener(binding.fabBowLong, LONG_BOW);
+        setFabClickListener(binding.fabBowHorse, HORSE_BOW);
+        setFabClickListener(binding.fabBowYumi, YUMI);
+
         return binding.getRoot();
+    }
+
+    public void setFabClickListener(FloatingActionButton fab, EBowType bowType) {
+        fab.setOnClickListener(view -> EditBowFragment
+                .createIntent(bowType)
+                .withContext(this)
+                .fromFab(fab, R.color.fabBow, bowType.getDrawable())
+                .start());
     }
 
     @NonNull

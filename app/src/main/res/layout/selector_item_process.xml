@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 Florian Dreier
   ~
   ~ This file is part of MyTargets.
@@ -25,7 +24,7 @@
         <ProgressBar
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:padding="5dp"/>
+            android:padding="5dp" />
 
     </LinearLayout>
 

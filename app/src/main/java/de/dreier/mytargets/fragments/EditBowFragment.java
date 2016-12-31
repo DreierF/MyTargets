@@ -36,10 +36,11 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
-import de.dreier.mytargets.databinding.EditBowFragmentBinding;
+import de.dreier.mytargets.databinding.FragmentEditBowBinding;
 import de.dreier.mytargets.databinding.ItemSightMarkBinding;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.db.Bow;
+import de.dreier.mytargets.shared.models.db.BowImage;
 import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.IntentWrapper;
@@ -48,28 +49,24 @@ import de.dreier.mytargets.views.selector.SelectorBase;
 import de.dreier.mytargets.views.selector.SimpleDistanceSelector;
 import icepick.State;
 
-import static de.dreier.mytargets.shared.models.EBowType.BARE_BOW;
-import static de.dreier.mytargets.shared.models.EBowType.COMPOUND_BOW;
-import static de.dreier.mytargets.shared.models.EBowType.HORSE_BOW;
-import static de.dreier.mytargets.shared.models.EBowType.LONG_BOW;
-import static de.dreier.mytargets.shared.models.EBowType.RECURVE_BOW;
-import static de.dreier.mytargets.shared.models.EBowType.YUMI;
+public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
 
-public class EditBowFragment extends EditWithImageFragmentBase {
-
+    public static final String BOW_TYPE = "bow_type";
     private static final String BOW_ID = "bow_id";
+
     @State(ParcelsBundler.class)
     Bow bow;
-    private EditBowFragmentBinding contentBinding;
-    private SightSettingsAdapter adapter;
+    private FragmentEditBowBinding contentBinding;
+    private SightMarksAdapter adapter;
 
     public EditBowFragment() {
-        super(R.drawable.recurve_bow);
+        super(R.drawable.recurve_bow, BowImage.class);
     }
 
     @NonNull
-    public static IntentWrapper createIntent() {
-        return new IntentWrapper(SimpleFragmentActivityBase.EditBowActivity.class);
+    public static IntentWrapper createIntent(EBowType bowType) {
+        return new IntentWrapper(SimpleFragmentActivityBase.EditBowActivity.class)
+                .with(EditBowFragment.BOW_TYPE, bowType.name());
     }
 
     @NonNull
@@ -82,43 +79,34 @@ public class EditBowFragment extends EditWithImageFragmentBase {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        contentBinding = EditBowFragmentBinding.inflate(inflater, binding.content, true);
-        contentBinding.addButton.setOnClickListener((view) -> onAddSightSetting());
+        contentBinding = FragmentEditBowBinding.inflate(inflater, binding.content, true);
+        contentBinding.addButton.setOnClickListener(v -> onAddSightSetting());
+        contentBinding.moreFields.setOnClickListener(v -> contentBinding.setShowAll(true));
 
-        // TODO make this a selector
-        contentBinding.recurveBow.setOnClickListener(v -> setBowType(RECURVE_BOW));
-        contentBinding.compoundBow.setOnClickListener(v -> setBowType(COMPOUND_BOW));
-        contentBinding.longBow.setOnClickListener(v -> setBowType(LONG_BOW));
-        contentBinding.blankBow.setOnClickListener(v -> setBowType(BARE_BOW));
-        contentBinding.horseBow.setOnClickListener(v -> setBowType(HORSE_BOW));
-        contentBinding.yumiBow.setOnClickListener(v -> setBowType(YUMI));
+        EBowType bowType = EBowType
+                .valueOf(getArguments().getString(BOW_TYPE, EBowType.RECURVE_BOW.name()));
 
         if (savedInstanceState == null) {
             Bundle bundle = getArguments();
             if (bundle != null && bundle.containsKey(BOW_ID)) {
                 // Load data from database
-                long bowId = bundle.getLong(BOW_ID);
-                bow = Bow.get(bowId);
-                setImageFile(bow.imageFile);
+                bow = Bow.get(bundle.getLong(BOW_ID));
             } else {
                 // Set to default values
                 bow = new Bow();
                 bow.name = getString(R.string.my_bow);
-                bow.type = RECURVE_BOW;
+                bow.type = bowType;
                 bow.getSightMarks().add(new SightMark());
-                setImageFile(null);
             }
-
+            setImageFiles(bow.getImages());
             ToolbarUtils.setTitle(this, bow.name);
-            contentBinding.setBow(bow);
-            setBowType(bow.type);
-        } else {
-            contentBinding.setBow(bow);
         }
+        contentBinding.setBow(bow);
 
         loadImage(imageFile);
-        adapter = new SightSettingsAdapter(this, bow.getSightMarks());
-        contentBinding.sightSettings.setAdapter(adapter);
+        adapter = new SightMarksAdapter(this, bow.getSightMarks());
+        contentBinding.sightMarks.setAdapter(adapter);
+        contentBinding.sightMarks.setNestedScrollingEnabled(false);
         return rootView;
     }
 
@@ -130,6 +118,7 @@ public class EditBowFragment extends EditWithImageFragmentBase {
 
     private void onAddSightSetting() {
         bow.getSightMarks().add(new SightMark());
+        adapter.setList(bow.getSightMarks());
         adapter.notifyItemInserted(bow.getSightMarks().size() - 1);
     }
 
@@ -165,37 +154,19 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         bow.stabilizer = contentBinding.stabilizer.getText().toString();
         bow.clicker = contentBinding.clicker.getText().toString();
         bow.description = contentBinding.description.getText().toString();
-        bow.type = getType();
-        bow.imageFile = getImageFile();
+        bow.button = contentBinding.button.getText().toString();
+        bow.string = contentBinding.string.getText().toString();
+        bow.nockingPoint = contentBinding.nockingPoint.getText().toString();
+        bow.letoffWeight = contentBinding.letoffWeight.getText().toString();
+        bow.arrowRest = contentBinding.rest.getText().toString();
+        bow.restHorizontalPosition = contentBinding.restHorizontalPosition.getText().toString();
+        bow.restVerticalPosition = contentBinding.restVerticalPosition.getText().toString();
+        bow.restStiffness = contentBinding.restStiffness.getText().toString();
+        bow.camSetting = contentBinding.cam.getText().toString();
+        bow.scopeMagnification = contentBinding.scopeMagnification.getText().toString();
+        bow.images = getImageFiles();
         bow.thumbnail = getThumbnail();
         return bow;
-    }
-
-    private void setBowType(EBowType type) {
-        contentBinding.recurveBow.setChecked(type == RECURVE_BOW);
-        contentBinding.compoundBow.setChecked(type == COMPOUND_BOW);
-        contentBinding.longBow.setChecked(type == LONG_BOW);
-        contentBinding.blankBow.setChecked(type == BARE_BOW);
-        contentBinding.horseBow.setChecked(type == HORSE_BOW);
-        contentBinding.yumiBow.setChecked(type == YUMI);
-    }
-
-    private EBowType getType() {
-        if (contentBinding.recurveBow.isChecked()) {
-            return RECURVE_BOW;
-        } else if (contentBinding.compoundBow.isChecked()) {
-            return COMPOUND_BOW;
-        } else if (contentBinding.longBow.isChecked()) {
-            return LONG_BOW;
-        } else if (contentBinding.blankBow.isChecked()) {
-            return BARE_BOW;
-        } else if (contentBinding.horseBow.isChecked()) {
-            return HORSE_BOW;
-        } else if (contentBinding.yumiBow.isChecked()) {
-            return YUMI;
-        } else {
-            return RECURVE_BOW;
-        }
     }
 
     private static class SightSettingHolder extends DynamicItemHolder<SightMark> {
@@ -234,8 +205,8 @@ public class EditBowFragment extends EditWithImageFragmentBase {
         }
     }
 
-    private class SightSettingsAdapter extends DynamicItemAdapter<SightMark> {
-        SightSettingsAdapter(Fragment fragment, List<SightMark> list) {
+    private class SightMarksAdapter extends DynamicItemAdapter<SightMark> {
+        SightMarksAdapter(Fragment fragment, List<SightMark> list) {
             super(fragment, list, R.string.sight_setting_removed);
         }
 

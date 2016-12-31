@@ -38,6 +38,8 @@
     <color name="primaryTextDefaultMaterialLight">#de000000</color>
     <color name="secondaryTextDefaultMaterialLight">#8a000000</color>
 
-    <color name="materialGrey600">#ff757575</color>
+    <color name="fabFreeTraining">#4CAF50</color>
+    <color name="fabTrainingWithStandardRound">#2196F3</color>
+    <color name="fabBow">#ffffff</color>
 
 </resources>

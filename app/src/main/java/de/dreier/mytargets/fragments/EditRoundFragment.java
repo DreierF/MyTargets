@@ -146,6 +146,8 @@ public class EditRoundFragment extends EditFragmentBase {
             round = new Round();
             round.trainingId = trainingId;
             round.setTarget(binding.target.getSelectedItem());
+            round.shotsPerEnd = binding.arrows.getProgress();
+            round.maxEndCount = null;
             round.comment = binding.comment.getText().toString();
             round.distance = binding.distance.getSelectedItem();
             round.index = training.getRounds().size();

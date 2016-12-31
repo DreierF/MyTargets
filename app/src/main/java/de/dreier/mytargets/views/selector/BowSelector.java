@@ -24,6 +24,7 @@ import java.util.List;
 
 import de.dreier.mytargets.activities.ItemSelectActivity;
 import de.dreier.mytargets.fragments.EditBowFragment;
+import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.utils.IntentWrapper;
 
@@ -44,7 +45,7 @@ public class BowSelector extends ImageSelectorBase<Bow> {
 
     @Override
     protected IntentWrapper getAddIntent() {
-        return EditBowFragment.createIntent()
+        return EditBowFragment.createIntent(EBowType.RECURVE_BOW)
                 .forResult(BOW_ADD_REQUEST_CODE);
     }
 

@@ -42,13 +42,10 @@ public class AppDatabase {
     }
 
     private static void fillStandardRound(DatabaseWrapper db) {
-        db.beginTransaction();
         List<StandardRound> rounds = StandardRoundFactory.initTable();
         for (StandardRound round : rounds) {
-            round.insert(db);
+            round.save(db);
         }
-        db.setTransactionSuccessful();
-        db.endTransaction();
     }
 
     @Migration(version = 3, database = AppDatabase.class)

@@ -1,0 +1,48 @@
+<!--
+  ~ Copyright (C) 2016 Florian Dreier
+  ~
+  ~ This file is part of MyTargets.
+  ~
+  ~ MyTargets is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License version 2
+  ~ as published by the Free Software Foundation.
+  ~
+  ~ MyTargets is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="24dp"
+        android:height="24dp"
+        android:viewportWidth="24.0"
+        android:viewportHeight="24.0">
+    <path
+        android:fillColor="@color/materialGrey600"
+        android:pathData="M2,5l0,14l2,0l0,-7l0,-7z"/>
+    <path
+        android:fillColor="@color/materialGrey600"
+        android:pathData="M4,12l4,3l0,-2l6.3,0l0,2l4,-3l-4,-3l0,2l-6.3,0l0,-2z"/>
+    <path
+        android:fillColor="@color/materialGrey600"
+        android:pathData="M6,6m-1,0a1,1 0,1 1,2 0a1,1 0,1 1,-2 0"/>
+    <path
+        android:fillColor="@color/materialGrey600"
+        android:pathData="M10,6m-1,0a1,1 0,1 1,2 0a1,1 0,1 1,-2 0"/>
+    <path
+        android:fillColor="@color/materialGrey600"
+        android:pathData="M14,6m-1,0a1,1 0,1 1,2 0a1,1 0,1 1,-2 0"/>
+    <path
+        android:fillColor="@color/materialGrey600"
+        android:pathData="M6,18m-1,0a1,1 0,1 1,2 0a1,1 0,1 1,-2 0"/>
+    <path
+        android:fillColor="@color/materialGrey600"
+        android:pathData="M10,18m-1,0a1,1 0,1 1,2 0a1,1 0,1 1,-2 0"/>
+    <path
+        android:fillColor="@color/materialGrey600"
+        android:pathData="M14,18m-1,0a1,1 0,1 1,2 0a1,1 0,1 1,-2 0"/>
+    <path
+        android:fillColor="@color/materialGrey600"
+        android:pathData="M18.3,12.3c-1.1,1.2 -0.7,2.5 -0.4,3.9c0.2,0.9 0.4,1.9 0.5,2.8h5.2c-1.8,-4.7 -3.8,-9.4 -5.9,-14h-2.1c0.8,2 1.7,4 2.5,6.1C18.3,11.5 18.7,11.9 18.3,12.3z"/>
+</vector>
