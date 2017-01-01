@@ -76,17 +76,15 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      * @param recyclerView RecyclerView instance
      * @param item         Currently selected item
      */
-    protected void selectItem(RecyclerView recyclerView, T item) { //TODO test if we need to wrap into
-        recyclerView.post(() -> {
-            int position = mAdapter.getItemPosition(item);
-            mSelector.setSelected(position, item.getId(), true);
-            LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
-            int first = manager.findFirstCompletelyVisibleItemPosition();
-            int last = manager.findLastCompletelyVisibleItemPosition();
-            if (first > position || last < position) {
-                recyclerView.scrollToPosition(position);
-            }
-        });
+    protected void selectItem(RecyclerView recyclerView, T item) {
+        int position = mAdapter.getItemPosition(item);
+        mSelector.setSelected(position, item.getId(), true);
+        LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        int first = manager.findFirstCompletelyVisibleItemPosition();
+        int last = manager.findLastCompletelyVisibleItemPosition();
+        if (first > position || last < position) {
+            recyclerView.scrollToPosition(position);
+        }
     }
 
     /**

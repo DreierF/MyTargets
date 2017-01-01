@@ -180,6 +180,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == NEW_STANDARD_ROUND) {
+            persistSelection(Parcels.unwrap(data.getParcelableExtra(ITEM)));
             getActivity().setResult(resultCode, data);
             finish();
         } else if (requestCode == EDIT_STANDARD_ROUND) {
@@ -195,7 +196,19 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
 
     @Override
     protected StandardRound onSave() {
+        persistSelection(currentSelection);
         return currentSelection;
+    }
+
+    private void persistSelection(StandardRound standardRound) {
+        Map<Long, Integer> map = SettingsManager.getStandardRoundsLastUsed();
+        Integer counter = map.get(standardRound.getId());
+        if (counter == null) {
+            map.put(standardRound.getId(), 1);
+        } else {
+            map.put(standardRound.getId(), counter + 1);
+        }
+        SettingsManager.setStandardRoundsLastUsed(map);
     }
 
     private class StandardRoundListAdapter extends HeaderListAdapter<StandardRound> {
@@ -215,7 +228,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
                 if (usagesR2 == null) {
                     usagesR2 = 0;
                 }
-                final int i = usagesR1.compareTo(usagesR2);
+                final int i = usagesR2.compareTo(usagesR1);
                 return i == 0 ? r1.getName().compareTo(r2.getName()) : i;
             });
         }
