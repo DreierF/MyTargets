@@ -25,6 +25,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import de.dreier.mytargets.ApplicationInstance;
@@ -463,7 +464,9 @@ public class SettingsManager {
     }
 
     public static Map<Long, Integer> getStandardRoundsLastUsed() {
-        return Stream.of(lastUsed.getString(KEY_STANDARD_ROUNDS_LAST_USED, "").split(","))
+        String[] split = lastUsed.getString(KEY_STANDARD_ROUNDS_LAST_USED, "").split(",");
+        return Stream.of(Arrays.asList(split))
+                .filterNot(String::isEmpty)
                 .map(entry -> entry.split(":"))
                 .collect(Collectors.toMap(a -> Long.valueOf(a[0]), a -> Integer.valueOf(a[1])));
     }
