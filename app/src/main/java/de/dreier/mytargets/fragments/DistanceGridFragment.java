@@ -31,7 +31,7 @@ import org.parceler.Parcels;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.ListAdapterBase;
+import de.dreier.mytargets.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemDistanceBinding;
 import de.dreier.mytargets.shared.models.Dimension;
@@ -119,7 +119,7 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> impl
         };
     }
 
-    private class DistanceAdapter extends ListAdapterBase<Dimension> {
+    private class DistanceAdapter extends SimpleListAdapterBase<Dimension> {
         DistanceAdapter(Context context) {
             super(context);
         }

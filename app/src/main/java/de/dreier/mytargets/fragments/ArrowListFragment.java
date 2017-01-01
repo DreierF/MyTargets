@@ -28,7 +28,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.ListAdapterBase;
+import de.dreier.mytargets.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
 import de.dreier.mytargets.shared.models.db.Arrow;
@@ -89,7 +89,7 @@ public class ArrowListFragment extends EditableListFragment<Arrow> {
                 .start();
     }
 
-    private class ArrowAdapter extends ListAdapterBase<Arrow> {
+    private class ArrowAdapter extends SimpleListAdapterBase<Arrow> {
         ArrowAdapter(Context context) {
             super(context);
         }

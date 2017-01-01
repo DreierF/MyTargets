@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.ListAdapterBase;
+import de.dreier.mytargets.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
 import de.dreier.mytargets.shared.models.IIdProvider;
@@ -42,7 +42,7 @@ public abstract class SelectPureListItemFragmentBase<T extends IIdProvider & IIm
         onClick(holder, holder.getItem());
     }
 
-    private class ListAdapter extends ListAdapterBase<T> {
+    private class ListAdapter extends SimpleListAdapterBase<T> {
         ListAdapter(Context context) {
             super(context);
         }

@@ -19,13 +19,13 @@ import com.raizlabs.android.dbflow.structure.Model;
 
 import org.parceler.Parcels;
 
-import de.dreier.mytargets.adapters.ListAdapterBase;
+import de.dreier.mytargets.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.interfaces.ItemAdapter;
 import de.dreier.mytargets.shared.models.IIdSettable;
 
 public abstract class EditableListFragment<T extends IIdSettable & Model & Comparable<T>> extends EditableListFragmentBase<T> {
 
-    protected ListAdapterBase<T> mAdapter;
+    protected SimpleListAdapterBase<T> mAdapter;
 
     protected final void onSelected(T item) {
         if (listener == null) {

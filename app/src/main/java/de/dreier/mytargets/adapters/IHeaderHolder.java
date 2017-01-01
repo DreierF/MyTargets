@@ -12,15 +12,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.activities;
 
-import android.support.v4.app.Fragment;
+package de.dreier.mytargets.adapters;
 
-import de.dreier.mytargets.fragments.StandardRoundListFragment;
+import de.dreier.mytargets.shared.models.IIdProvider;
 
-public class StandardRoundActivity extends ItemSelectActivity {
-    @Override
-    protected Fragment instantiateFragment() {
-        return new StandardRoundListFragment();
-    }
+public interface IHeaderHolder<CHILD extends IIdProvider> extends Comparable<IHeaderHolder> {
+    void add(CHILD item);
+    void remove(CHILD item);
+    int getTotalItemCount();
+    int getHeaderIndex();
 }

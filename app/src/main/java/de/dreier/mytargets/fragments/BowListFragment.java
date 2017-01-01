@@ -29,7 +29,7 @@ import com.github.clans.fab.FloatingActionButton;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.ListAdapterBase;
+import de.dreier.mytargets.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentBowsBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
 import de.dreier.mytargets.shared.models.EBowType;
@@ -110,7 +110,7 @@ public class BowListFragment extends EditableListFragment<Bow> {
         EditBowFragment.editIntent(item).withContext(this).start();
     }
 
-    private class BowAdapter extends ListAdapterBase<Bow> {
+    private class BowAdapter extends SimpleListAdapterBase<Bow> {
         public BowAdapter(Context context) {
             super(context);
         }

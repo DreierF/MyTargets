@@ -32,7 +32,6 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ExpandableListAdapter;
 import de.dreier.mytargets.databinding.FragmentTrainingsBinding;
-import de.dreier.mytargets.databinding.ItemHeaderMonthBinding;
 import de.dreier.mytargets.databinding.ItemTrainingBinding;
 import de.dreier.mytargets.models.Month;
 import de.dreier.mytargets.shared.models.db.Round;
@@ -40,7 +39,6 @@ import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.Utils;
-import de.dreier.mytargets.utils.multiselector.HeaderBindingHolder;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.fragments.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION;
@@ -128,13 +126,6 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         }
 
         @Override
-        protected HeaderViewHolder getTopLevelViewHolder(ViewGroup parent) {
-            View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_header_month, parent, false);
-            return new HeaderViewHolder(itemView);
-        }
-
-        @Override
         protected ViewHolder getSecondLevelViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_training, parent, false);
@@ -155,20 +146,6 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
             binding.training.setText(item.title);
             binding.trainingDate.setText(item.getFormattedDate());
             binding.gesTraining.setText(item.getReachedScore().format(false));
-        }
-    }
-
-    private class HeaderViewHolder extends HeaderBindingHolder<Month> {
-        private final ItemHeaderMonthBinding binding;
-
-        HeaderViewHolder(View itemView) {
-            super(itemView, R.id.expand_collapse);
-            binding = DataBindingUtil.bind(itemView);
-        }
-
-        @Override
-        public void bindItem() {
-            binding.month.setText(item.toString());
         }
     }
 }

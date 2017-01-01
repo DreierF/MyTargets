@@ -94,7 +94,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
 
     public String getDescription(Context context) {
         String desc = "";
-        for (RoundTemplate r : rounds) {
+        for (RoundTemplate r : getRounds()) {
             if (!desc.isEmpty()) {
                 desc += "\n";
             }
@@ -123,7 +123,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
 
     public Drawable getTargetDrawable() {
         List<TargetDrawable> targets = new ArrayList<>();
-        for (RoundTemplate r : rounds) {
+        for (RoundTemplate r : getRounds()) {
             targets.add(r.getTargetTemplate().getDrawable());
         }
         return new CombinedSpot(targets);

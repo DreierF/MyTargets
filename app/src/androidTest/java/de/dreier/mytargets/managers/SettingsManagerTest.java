@@ -24,6 +24,10 @@ import org.joda.time.format.DateTimeFormat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.InstrumentedTestBase;
 import de.dreier.mytargets.features.settings.backup.EBackupInterval;
@@ -241,5 +245,22 @@ public class SettingsManagerTest extends InstrumentedTestBase {
     public void setBackupAutomaticallyEnabled() {
         SettingsManager.setBackupAutomaticallyEnabled(true);
         assertThat(SettingsManager.isBackupAutomaticallyEnabled()).isEqualTo(true);
+    }
+
+    @Test
+    public void setStandardRoundsLastUsedEmpty() {
+        SettingsManager.setStandardRoundsLastUsed(Collections.emptyMap());
+        assertThat(SettingsManager.getStandardRoundsLastUsed()).isEqualTo(Collections.emptyMap());
+    }
+
+    @Test
+    public void setStandardRoundsLastUsed() {
+        Map<Long, Integer> map = new HashMap<>();
+        map.put(2L,3);
+        SettingsManager.setStandardRoundsLastUsed(map);
+        assertThat(SettingsManager.getStandardRoundsLastUsed()).isEqualTo(map);
+        map.put(4L, 5);
+        SettingsManager.setStandardRoundsLastUsed(map);
+        assertThat(SettingsManager.getStandardRoundsLastUsed()).isEqualTo(map);
     }
 }

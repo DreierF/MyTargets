@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -34,19 +35,26 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.parceler.Parcels;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.adapters.HeaderListAdapter;
+import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
+import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
+import de.dreier.mytargets.utils.SlideInItemAnimator;
+import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static android.app.Activity.RESULT_OK;
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
 
-public class StandardRoundListFragment extends SelectPureListItemFragmentBase<StandardRound>
-        implements View.OnClickListener, SearchView.OnQueryTextListener {
+public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRound>
+        implements SearchView.OnQueryTextListener {
 
     private static final int NEW_STANDARD_ROUND = 1;
     private static final int EDIT_STANDARD_ROUND = 2;
@@ -55,12 +63,24 @@ public class StandardRoundListFragment extends SelectPureListItemFragmentBase<St
     private StandardRound currentSelection;
     private SearchView searchView;
 
+    protected FragmentListBinding binding;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
+        binding.recyclerView.setHasFixedSize(true);
+        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
+        Map<Long, Integer> usedRounds = SettingsManager.getStandardRoundsLastUsed();
+        mAdapter = new StandardRoundListAdapter(getContext(), usedRounds);
+        binding.recyclerView.setAdapter(mAdapter);
+        binding.fab.setVisibility(View.GONE);
+        ToolbarUtils.showUpAsX(this);
         binding.recyclerView.setHasFixedSize(false);
         binding.fab.setVisibility(View.VISIBLE);
-        binding.fab.setOnClickListener(this);
+        binding.fab.setOnClickListener(view -> EditStandardRoundFragment.createIntent()
+                .withContext(StandardRoundListFragment.this)
+                .fromFab(binding.fab).forResult(NEW_STANDARD_ROUND)
+                .start());
         useDoubleClickSelection = true;
         setHasOptionsMenu(true);
         currentSelection = Parcels.unwrap(getArguments().getParcelable(ITEM));
@@ -145,11 +165,16 @@ public class StandardRoundListFragment extends SelectPureListItemFragmentBase<St
     }
 
     @Override
-    public void onClick(View v) {
-        EditStandardRoundFragment.createIntent()
-                .withContext(this)
-                .fromFab(binding.fab).forResult(NEW_STANDARD_ROUND)
-                .start();
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String query) {
+        Bundle args = new Bundle();
+        args.putString(KEY_QUERY, query);
+        reloadData(args);
+        return false;
     }
 
     @Override
@@ -174,24 +199,32 @@ public class StandardRoundListFragment extends SelectPureListItemFragmentBase<St
         return currentSelection;
     }
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
+    private class StandardRoundListAdapter extends HeaderListAdapter<StandardRound> {
+        StandardRoundListAdapter(Context context, Map<Long, Integer> usedIds) {
+            super(child -> {
+                if (usedIds.containsKey(child.getId())) {
+                    return new SimpleHeader(0L, context.getString(R.string.recently_used));
+                } else {
+                    return new SimpleHeader(1L, "");
+                }
+            }, (r1, r2) -> {
+                Integer usagesR1 = usedIds.get(r1.getId());
+                Integer usagesR2 = usedIds.get(r2.getId());
+                if (usagesR1 == null) {
+                    usagesR1 = 0;
+                }
+                if (usagesR2 == null) {
+                    usagesR2 = 0;
+                }
+                return usagesR1.compareTo(usagesR2);
+            });
+        }
 
-    @Override
-    public boolean onQueryTextChange(String query) {
-        Bundle args = new Bundle();
-        args.putString(KEY_QUERY, query);
-        getLoaderManager().restartLoader(0, args, this);
-        return false;
-    }
-
-    @NonNull
-    @Override
-    protected ViewHolder onCreateViewHolder(LayoutInflater inflater, ViewGroup parent) {
-        return new ViewHolder(
-                DataBindingUtil.inflate(inflater, R.layout.item_standard_round, parent, false));
+        @Override
+        protected ViewHolder getSecondLevelViewHolder(ViewGroup parent) {
+            return new ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
+                    R.layout.item_standard_round, parent, false));
+        }
     }
 
     public class ViewHolder extends SelectableViewHolder<StandardRound> {

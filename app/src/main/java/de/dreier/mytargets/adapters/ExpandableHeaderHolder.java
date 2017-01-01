@@ -12,15 +12,23 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.activities;
 
-import android.support.v4.app.Fragment;
+package de.dreier.mytargets.adapters;
 
-import de.dreier.mytargets.fragments.StandardRoundListFragment;
+import java.util.Comparator;
 
-public class StandardRoundActivity extends ItemSelectActivity {
+public class ExpandableHeaderHolder<HEADER, CHILD> extends HeaderListAdapterBase.HeaderHolder<HEADER, CHILD> {
+    boolean expanded = false;
+
+    ExpandableHeaderHolder(HEADER parent, Comparator<? super CHILD> childComparator) {
+        super(parent, childComparator);
+    }
+
     @Override
-    protected Fragment instantiateFragment() {
-        return new StandardRoundListFragment();
+    int getTotalItemCount() {
+        if (children.size() < 1) {
+            return 0;
+        }
+        return expanded ? 1 + children.size() : 1;
     }
 }

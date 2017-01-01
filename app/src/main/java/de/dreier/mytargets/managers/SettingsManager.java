@@ -18,9 +18,14 @@ package de.dreier.mytargets.managers;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
+
+import java.util.Map;
 
 import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.features.settings.backup.EBackupInterval;
@@ -73,6 +78,7 @@ public class SettingsManager {
     private static final String KEY_BACKUP_LOCATION = "backup_location";
     private static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
     private static final String KEY_BACKUP_AUTOMATICALLY = "backup_automatically";
+    private static final String KEY_STANDARD_ROUNDS_LAST_USED = "standard_round_last_used";
 
     public static int getStandardRound() {
         return lastUsed.getInt(KEY_STANDARD_ROUND, 32);
@@ -453,6 +459,20 @@ public class SettingsManager {
     public static void setBackupAutomaticallyEnabled(boolean enabled) {
         preferences.edit()
                 .putBoolean(KEY_BACKUP_AUTOMATICALLY, enabled)
+                .apply();
+    }
+
+    public static Map<Long, Integer> getStandardRoundsLastUsed() {
+        return Stream.of(lastUsed.getString(KEY_STANDARD_ROUNDS_LAST_USED, "").split(","))
+                .map(entry -> entry.split(":"))
+                .collect(Collectors.toMap(a -> Long.valueOf(a[0]), a -> Integer.valueOf(a[1])));
+    }
+
+    public static void setStandardRoundsLastUsed(Map<Long, Integer> ids) {
+        lastUsed.edit()
+                .putString(KEY_STANDARD_ROUNDS_LAST_USED, Stream.of(ids)
+                        .map(id -> id.getKey() + ":" + id.getValue())
+                        .collect(Collectors.joining(",")))
                 .apply();
     }
 }

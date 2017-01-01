@@ -32,7 +32,8 @@
             android:layout_alignParentTop="true"
             android:padding="1dp"
             android:scaleType="fitCenter"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/content"
@@ -57,7 +58,9 @@
                 style="@style/secondaryText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone" />
+                tools:text="Details"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
         </LinearLayout>
 
