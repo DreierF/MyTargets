@@ -35,7 +35,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.parceler.Parcels;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -216,7 +215,8 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
                 if (usagesR2 == null) {
                     usagesR2 = 0;
                 }
-                return usagesR1.compareTo(usagesR2);
+                final int i = usagesR1.compareTo(usagesR2);
+                return i == 0 ? r1.getName().compareTo(r2.getName()) : i;
             });
         }
 
