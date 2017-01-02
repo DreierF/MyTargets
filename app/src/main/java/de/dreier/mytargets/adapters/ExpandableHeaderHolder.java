@@ -17,10 +17,10 @@ package de.dreier.mytargets.adapters;
 
 import java.util.Comparator;
 
-public class ExpandableHeaderHolder<HEADER, CHILD> extends HeaderListAdapterBase.HeaderHolder<HEADER, CHILD> {
+public class ExpandableHeaderHolder<P, C> extends HeaderListAdapterBase.HeaderHolder<P, C> {
     boolean expanded = false;
 
-    ExpandableHeaderHolder(HEADER parent, Comparator<? super CHILD> childComparator) {
+    ExpandableHeaderHolder(P parent, Comparator<? super C> childComparator) {
         super(parent, childComparator);
     }
 
