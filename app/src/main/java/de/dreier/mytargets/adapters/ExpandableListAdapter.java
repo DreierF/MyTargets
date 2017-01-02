@@ -34,10 +34,10 @@ import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.utils.multiselector.ExpandableHeaderBindingHolder;
 import de.dreier.mytargets.utils.multiselector.ItemBindingHolder;
 
-public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD extends IIdProvider>
-        extends HeaderListAdapterBase<HEADER, CHILD, ExpandableHeaderHolder<HEADER, CHILD>> {
+public abstract class ExpandableListAdapter<P extends IIdProvider, C extends IIdProvider>
+        extends HeaderListAdapterBase<P, C, ExpandableHeaderHolder<P, C>> {
 
-    public ExpandableListAdapter(PartitionDelegate<HEADER, CHILD> partitionDelegate, Comparator<HEADER> headerComparator, Comparator<CHILD> childComparator) {
+    public ExpandableListAdapter(PartitionDelegate<P, C> partitionDelegate, Comparator<P> headerComparator, Comparator<C> childComparator) {
         super(partitionDelegate, headerComparator, childComparator);
     }
 
@@ -48,13 +48,34 @@ public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD ex
             return;
         }
         if (viewHolder instanceof ExpandableHeaderBindingHolder) {
-            ExpandableHeaderHolder<HEADER, CHILD> header = getHeaderForPosition(position);
+            ExpandableHeaderHolder<P, C> header = getHeaderForPosition(position);
             ((ExpandableHeaderBindingHolder) viewHolder)
                     .setExpandOnClickListener(v -> expandOrCollapse(header), header.expanded);
         }
     }
 
-    private void expandOrCollapse(ExpandableHeaderHolder<HEADER, CHILD> header) {
+    @Override
+    public int getItemPosition(C item) {
+        int pos = 0;
+        for (HeaderHolder<P, C> header : headersList) {
+            if (header.getTotalItemCount() < 1) {
+                continue;
+            }
+            pos++;
+            if (header.getTotalItemCount() == 1) {
+                continue;
+            }
+            for (C child : header.children) {
+                if (child.equals(item)) {
+                    return pos;
+                }
+                pos++;
+            }
+        }
+        return -1;
+    }
+
+    private void expandOrCollapse(ExpandableHeaderHolder<P, C> header) {
         int childLength = header.children.size();
         if (!header.expanded) {
             notifyItemRangeInserted(getAbsolutePosition(header) + 1, childLength);
@@ -65,14 +86,14 @@ public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD ex
     }
 
     @Override
-    public void setList(List<CHILD> children) {
+    public void setList(List<C> children) {
         List<Long> oldExpanded = getExpandedIds();
         fillChildMap(children);
         setExpandedIds(oldExpanded);
         notifyDataSetChanged();
     }
 
-    public void setList(List<CHILD> children, boolean opened) {
+    public void setList(List<C> children, boolean opened) {
         fillChildMap(children);
         expandAll(opened);
         notifyDataSetChanged();
@@ -87,7 +108,7 @@ public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD ex
 
     public void setExpandedIds(List<Long> expanded) {
         for (int i = 0; i < headersList.size(); i++) {
-            final ExpandableHeaderHolder<HEADER, CHILD> header = headersList.get(i);
+            final ExpandableHeaderHolder<P, C> header = headersList.get(i);
             header.expanded = expanded.contains(header.item.getId());
         }
     }
@@ -104,7 +125,7 @@ public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD ex
         }
     }
 
-    private int getAbsolutePosition(ExpandableHeaderHolder<HEADER, CHILD> h) {
+    private int getAbsolutePosition(ExpandableHeaderHolder<P, C> h) {
         int headerIndex = getHeaderIndex(h);
         int pos = 0;
         for (int i = 0; i < headerIndex; i++) {
@@ -115,12 +136,12 @@ public abstract class ExpandableListAdapter<HEADER extends IIdProvider, CHILD ex
 
     @NonNull
     @Override
-    protected ExpandableHeaderHolder<HEADER, CHILD> getHeaderHolder(HEADER parent, Comparator<CHILD> childComparator) {
+    protected ExpandableHeaderHolder<P, C> getHeaderHolder(P parent, Comparator<C> childComparator) {
         return new ExpandableHeaderHolder<>(parent, childComparator);
     }
 
     @Override
-    protected HeaderViewHolder<HEADER> getTopLevelViewHolder(ViewGroup parent) {
+    protected HeaderViewHolder<P> getTopLevelViewHolder(ViewGroup parent) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_header_expandable, parent, false);
         return new HeaderViewHolder<>(itemView);

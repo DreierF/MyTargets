@@ -29,18 +29,18 @@ import de.dreier.mytargets.utils.multiselector.HeaderBindingHolder;
 import de.dreier.mytargets.utils.multiselector.ItemBindingHolder;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
-public abstract class HeaderListAdapterBase<HEADER extends IIdProvider, CHILD extends IIdProvider,
-        HOLDER extends HeaderListAdapterBase.HeaderHolder<HEADER, CHILD>>
-        extends ListAdapterBase<ItemBindingHolder<IIdProvider>, CHILD> {
+public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IIdProvider,
+        H extends HeaderListAdapterBase.HeaderHolder<P, C>>
+        extends ListAdapterBase<ItemBindingHolder<IIdProvider>, C> {
 
     private static final int ITEM_TYPE = 2;
     private static final int HEADER_TYPE = 1;
-    protected List<HOLDER> headersList = new ArrayList<>();
-    private PartitionDelegate<HEADER, CHILD> partitionDelegate;
-    private Comparator<HEADER> headerComparator;
-    private Comparator<CHILD> childComparator;
+    protected List<H> headersList = new ArrayList<>();
+    private PartitionDelegate<P, C> partitionDelegate;
+    private Comparator<P> headerComparator;
+    private Comparator<C> childComparator;
 
-    public HeaderListAdapterBase(PartitionDelegate<HEADER, CHILD> partitionDelegate, Comparator<HEADER> headerComparator, Comparator<CHILD> childComparator) {
+    public HeaderListAdapterBase(PartitionDelegate<P, C> partitionDelegate, Comparator<P> headerComparator, Comparator<C> childComparator) {
         this.partitionDelegate = partitionDelegate;
         this.headerComparator = headerComparator;
         this.childComparator = childComparator;
@@ -48,8 +48,8 @@ public abstract class HeaderListAdapterBase<HEADER extends IIdProvider, CHILD ex
     }
 
     @Override
-    public CHILD getItem(int position) {
-        HOLDER header = getHeaderForPosition(position);
+    public C getItem(int position) {
+        H header = getHeaderForPosition(position);
         int pos = getHeaderRelativePosition(position);
         if (pos != 0) {
             return header.children.get(pos - 1);
@@ -59,7 +59,7 @@ public abstract class HeaderListAdapterBase<HEADER extends IIdProvider, CHILD ex
 
     @Override
     public long getItemId(int position) {
-        HOLDER header = getHeaderForPosition(position);
+        H header = getHeaderForPosition(position);
         int pos = getHeaderRelativePosition(position);
         if (pos == 0) {
             return header.item.getId();
@@ -92,16 +92,16 @@ public abstract class HeaderListAdapterBase<HEADER extends IIdProvider, CHILD ex
         }
     }
 
-    protected abstract HeaderBindingHolder<HEADER> getTopLevelViewHolder(ViewGroup parent);
+    protected abstract HeaderBindingHolder<P> getTopLevelViewHolder(ViewGroup parent);
 
-    protected abstract SelectableViewHolder<CHILD> getSecondLevelViewHolder(ViewGroup parent);
+    protected abstract SelectableViewHolder<C> getSecondLevelViewHolder(ViewGroup parent);
 
     @Override
     public void onBindViewHolder(ItemBindingHolder<IIdProvider> viewHolder, int position) {
         if (position == -1) {
             return;
         }
-        HOLDER header = getHeaderForPosition(position);
+        H header = getHeaderForPosition(position);
         int pos = getHeaderRelativePosition(position);
         if (pos == 0) {
             viewHolder.bindItem(header.item);
@@ -110,9 +110,9 @@ public abstract class HeaderListAdapterBase<HEADER extends IIdProvider, CHILD ex
         }
     }
 
-    protected HOLDER getHeaderForPosition(int position) {
+    protected H getHeaderForPosition(int position) {
         int items = 0;
-        for (HOLDER header : headersList) {
+        for (H header : headersList) {
             if (header.getTotalItemCount() > position - items) {
                 return header;
             }
@@ -134,37 +134,37 @@ public abstract class HeaderListAdapterBase<HEADER extends IIdProvider, CHILD ex
     }
 
     @Override
-    public void addItem(CHILD item) {
+    public void addItem(C item) {
         addChildToMap(item);
         notifyDataSetChanged();
     }
 
     @Override
-    public void removeItem(CHILD item) {
-        HEADER parent = partitionDelegate.getParent(item);
+    public void removeItem(C item) {
+        P parent = partitionDelegate.getParent(item);
         int headerIndex = getHeaderIndex(getHeaderHolder(parent, childComparator));
         if (headerIndex < 0) {
             return;
         }
-        HOLDER header = headersList.get(headerIndex);
+        H header = headersList.get(headerIndex);
         header.remove(item);
     }
 
-    public void setList(List<CHILD> children) {
+    public void setList(List<C> children) {
         fillChildMap(children);
         notifyDataSetChanged();
     }
 
-    protected void fillChildMap(List<CHILD> children) {
+    protected void fillChildMap(List<C> children) {
         headersList.clear();
-        for (CHILD child : children) {
+        for (C child : children) {
             addChildToMap(child);
         }
     }
 
-    private void addChildToMap(CHILD child) {
-        HEADER parent = partitionDelegate.getParent(child);
-        HOLDER parentHolder = getHeaderHolder(parent, childComparator);
+    private void addChildToMap(C child) {
+        P parent = partitionDelegate.getParent(child);
+        H parentHolder = getHeaderHolder(parent, childComparator);
         int pos = getHeaderIndex(parentHolder);
         if (pos < 0) {
             parentHolder.add(child);
@@ -175,12 +175,12 @@ public abstract class HeaderListAdapterBase<HEADER extends IIdProvider, CHILD ex
     }
 
     @NonNull
-    protected abstract HOLDER getHeaderHolder(HEADER parent, Comparator<CHILD> childComparator);
+    protected abstract H getHeaderHolder(P parent, Comparator<C> childComparator);
 
     @Override
-    public CHILD getItemById(long id) {
-        for (HOLDER header : headersList) {
-            for (CHILD child : header.children) {
+    public C getItemById(long id) {
+        for (H header : headersList) {
+            for (C child : header.children) {
                 if (child.getId() == id) {
                     return child;
                 }
@@ -189,19 +189,12 @@ public abstract class HeaderListAdapterBase<HEADER extends IIdProvider, CHILD ex
         return null;
     }
 
-
-    @Override
-    public int getItemPosition(CHILD item) {
-        //TODO
-        return 0;
-    }
-
-    int getHeaderIndex(HOLDER h) {
+    int getHeaderIndex(H h) {
         return Collections.binarySearch(headersList, h,
                 (holder1, holder2) -> headerComparator.compare(holder1.item, holder2.item));
     }
 
-    protected static class HeaderHolder<HEADER , CHILD> {
+    protected static class HeaderHolder<HEADER, CHILD> {
         HEADER item;
         List<CHILD> children;
         private Comparator<? super CHILD> childComparator;

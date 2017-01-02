@@ -20,6 +20,5 @@ import android.support.v7.widget.RecyclerView;
 import de.dreier.mytargets.interfaces.ItemAdapter;
 
 public abstract class ListAdapterBase<S extends RecyclerView.ViewHolder, T>
-        extends RecyclerView.Adapter<S>
-        implements ItemAdapter<T> {
+        extends RecyclerView.Adapter<S> implements ItemAdapter<T> {
 }

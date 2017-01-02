@@ -79,12 +79,14 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
     protected void selectItem(RecyclerView recyclerView, T item) {
         int position = mAdapter.getItemPosition(item);
         mSelector.setSelected(position, item.getId(), true);
-        LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        int first = manager.findFirstCompletelyVisibleItemPosition();
-        int last = manager.findLastCompletelyVisibleItemPosition();
-        if (first > position || last < position) {
-            recyclerView.scrollToPosition(position);
-        }
+        recyclerView.post(() -> {
+            LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            int first = manager.findFirstCompletelyVisibleItemPosition();
+            int last = manager.findLastCompletelyVisibleItemPosition();
+            if (first > position || last < position) {
+                recyclerView.scrollToPosition(position);
+            }
+        });
     }
 
     /**

@@ -29,17 +29,35 @@ import de.dreier.mytargets.interfaces.PartitionDelegate;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.utils.multiselector.HeaderBindingHolder;
 
-public abstract class HeaderListAdapter<CHILD extends IIdProvider>
-        extends HeaderListAdapterBase<HeaderListAdapter.SimpleHeader, CHILD, HeaderListAdapterBase.HeaderHolder<HeaderListAdapter.SimpleHeader, CHILD>> {
+public abstract class HeaderListAdapter<C extends IIdProvider>
+        extends HeaderListAdapterBase<HeaderListAdapter.SimpleHeader, C, HeaderListAdapterBase.HeaderHolder<HeaderListAdapter.SimpleHeader, C>> {
 
-    public HeaderListAdapter(PartitionDelegate<SimpleHeader, CHILD> parentPartition, Comparator<CHILD> childComparator) {
+    public HeaderListAdapter(PartitionDelegate<SimpleHeader, C> parentPartition, Comparator<C> childComparator) {
         super(parentPartition, (h1, h2) -> h1.index.compareTo(h2.index), childComparator);
     }
 
     @NonNull
     @Override
-    protected HeaderHolder<SimpleHeader, CHILD> getHeaderHolder(SimpleHeader parent, Comparator<CHILD> childComparator) {
+    protected HeaderHolder<SimpleHeader, C> getHeaderHolder(SimpleHeader parent, Comparator<C> childComparator) {
         return new HeaderHolder<>(parent, childComparator);
+    }
+
+    @Override
+    public int getItemPosition(C item) {
+        int pos = 0;
+        for (HeaderHolder<HeaderListAdapter.SimpleHeader, C> header : headersList) {
+            if (header.getTotalItemCount() < 1) {
+                continue;
+            }
+            pos++;
+            for (C child : header.children) {
+                if (child.equals(item)) {
+                    return pos;
+                }
+                pos++;
+            }
+        }
+        return -1;
     }
 
     @Override
