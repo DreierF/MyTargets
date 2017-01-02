@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Florian Dreier
+ * Copyright (C) 2017 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -15,18 +15,12 @@
 package de.dreier.mytargets.activities;
 
 import android.support.v4.app.Fragment;
-import android.view.View;
 
 import de.dreier.mytargets.fragments.StandardRoundListFragment;
 
-public class StandardRoundActivity extends ItemSelectActivity implements View.OnClickListener {
+public class StandardRoundActivity extends ItemSelectActivity {
     @Override
     protected Fragment instantiateFragment() {
         return new StandardRoundListFragment();
-    }
-
-    @Override
-    public void onClick(View v) {
-        ((StandardRoundListFragment) childFragment).onClick(v);
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2016 Florian Dreier
+  ~ Copyright (C) 2017 Florian Dreier
   ~
   ~ This file is part of MyTargets.
   ~
@@ -16,5 +16,5 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:color="#CCFFFFFF"/>
-    <item android:color="@color/white" android:state_selected="true"/>
+    <item android:color="@color/md_white_1000" android:state_selected="true"/>
 </selector>

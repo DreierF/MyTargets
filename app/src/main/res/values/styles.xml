@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2016 Florian Dreier
+  ~ Copyright (C) 2017 Florian Dreier
   ~
   ~ This file is part of MyTargets.
   ~
@@ -19,16 +19,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:scrollbars">none</item>
-    </style>
-
-    <style name="header_container">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:minHeight">48dp</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:background">@color/md_grey_200</item>
     </style>
 
     <style name="primaryText">
@@ -45,9 +36,21 @@
         <item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif-medium</item>
     </style>
 
+    <style name="header_container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:background">@color/md_grey_200</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+    </style>
+
     <style name="MaterialItem">
-        <item name="android:foreground">?selectableItemBackground</item>
-        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:background">@drawable/selector_item_light</item>
+        <item name="android:stateListAnimator" tools:targetApi="lollipop">@animator/raise</item>
     </style>
 
     <style name="fabMenu">
@@ -81,8 +84,8 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="fab_colorNormal">@color/fabBow</item>
-        <item name="fab_colorPressed">@color/materialGrey600</item>
-        <item name="fab_colorRipple">@color/materialGrey600</item>
+        <item name="fab_colorPressed">@color/md_grey_600</item>
+        <item name="fab_colorRipple">@color/md_grey_600</item>
         <item name="fab_size">mini</item>
     </style>
 

@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2016 Florian Dreier
+  ~ Copyright (C) 2017 Florian Dreier
   ~
   ~ This file is part of MyTargets.
   ~
@@ -151,10 +151,6 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_drop_shadow_height"
-                android:background="@drawable/toolbar_drop_shadow" />
         </FrameLayout>
 
     </LinearLayout>

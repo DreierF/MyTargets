@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Florian Dreier
+ * Copyright (C) 2017 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -15,9 +15,14 @@
 
 package de.dreier.mytargets.interfaces;
 
+import java.util.List;
+
 public interface ItemAdapter<T> {
     void notifyDataSetChanged();
     void removeItem(T item);
     void addItem(T item);
+    T getItem(int position);
     T getItemById(long id);
+    int getItemPosition(T item);
+    void setList(List<T> data);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Florian Dreier
+ * Copyright (C) 2017 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -38,7 +38,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
-import de.dreier.mytargets.adapters.ListAdapterBase;
+import de.dreier.mytargets.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentTargetSelectBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
 import de.dreier.mytargets.shared.models.Dimension;
@@ -162,8 +162,8 @@ public class TargetListFragment extends SelectItemFragmentBase<Target>
     }
 
     @Override
-    public void onLongClick(SelectableViewHolder holder) {
-        onClick(holder, (Target) holder.getItem());
+    public void onLongClick(SelectableViewHolder<Target> holder) {
+        onClick(holder, holder.getItem());
     }
 
     @Override
@@ -190,7 +190,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target>
 
     }
 
-    private class TargetAdapter extends ListAdapterBase<Target> {
+    private class TargetAdapter extends SimpleListAdapterBase<Target> {
         TargetAdapter(Context context) {
             super(context);
         }

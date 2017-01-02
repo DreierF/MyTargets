@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Florian Dreier
+ * Copyright (C) 2017 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -36,7 +36,7 @@ import de.dreier.mytargets.activities.InputActivity;
 import de.dreier.mytargets.activities.ScoreboardActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.activities.StatisticsActivity;
-import de.dreier.mytargets.adapters.ListAdapterBase;
+import de.dreier.mytargets.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemEndBinding;
 import de.dreier.mytargets.shared.models.db.End;
@@ -162,7 +162,7 @@ public class RoundFragment extends EditableListFragment<End> {
                 .start();
     }
 
-    private class EndAdapter extends ListAdapterBase<End> {
+    private class EndAdapter extends SimpleListAdapterBase<End> {
 
         EndAdapter(Context context) {
             super(context);

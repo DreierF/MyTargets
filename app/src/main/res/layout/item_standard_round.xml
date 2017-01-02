@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (C) 2016 Florian Dreier
+  ~ Copyright (C) 2017 Florian Dreier
   ~
   ~ This file is part of MyTargets.
   ~
@@ -17,9 +17,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
+        style="@style/MaterialItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
         android:minHeight="48dp"
         android:padding="8dp">
 
@@ -32,7 +32,8 @@
             android:layout_alignParentTop="true"
             android:padding="1dp"
             android:scaleType="fitCenter"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/content"
@@ -57,7 +58,9 @@
                 style="@style/secondaryText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone" />
+                tools:text="Details"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
         </LinearLayout>
 

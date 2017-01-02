@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (C) 2016 Florian Dreier
+  ~ Copyright (C) 2017 Florian Dreier
   ~
   ~ This file is part of MyTargets.
   ~
@@ -16,9 +16,9 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
+        style="@style/MaterialItem"
         android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:background="?attr/selectableItemBackground"
         android:orientation="horizontal"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">

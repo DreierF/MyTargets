@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2016 Florian Dreier
+  ~ Copyright (C) 2017 Florian Dreier
   ~
   ~ This file is part of MyTargets.
   ~
@@ -19,6 +19,6 @@
         android:viewportWidth="24.0"
         android:viewportHeight="24.0">
     <path
-        android:fillColor="@color/materialGrey600"
+        android:fillColor="@color/md_grey_600"
         android:pathData="M18.5,1.9L17,4.2c0.8,0.5 1.6,1.2 2.2,1.9l-3.6,2.1l0.2,0.4L13.3,10l1,0.6l2.1,-1.2l0.2,0.3L14.5,11l0,1.2l2.6,-1.5l0.2,0.4l3.5,-2c0.3,0.9 0.5,1.9 0.5,2.9c0,4.6 -3.3,8.4 -7.6,9.2v-3.6h-0.4v-3l-1.1,0.6v2.4h-0.4v-2.4l-1.1,-0.6v3h-0.4v3.6C6,20.4 2.7,16.6 2.7,12c0,-1 0.2,-2 0.5,-2.9l3.5,2l0.2,-0.4l2.6,1.5l0,-1.2L7.4,9.8l0.2,-0.3l2.1,1.2l1,-0.6L8.1,8.6l0.2,-0.4L4.8,6.1c0.6,-0.8 1.4,-1.4 2.2,-2L5.5,1.9C2.2,4 0,7.8 0,12c0,6.6 5.4,12 12,12s12,-5.4 12,-12C24,7.8 21.8,4 18.5,1.9z"/>
 </vector>

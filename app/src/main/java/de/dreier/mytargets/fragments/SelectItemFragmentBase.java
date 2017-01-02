@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Florian Dreier
+ * Copyright (C) 2017 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -31,6 +31,7 @@ import org.parceler.Parcels;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.ListAdapterBase;
 import de.dreier.mytargets.shared.models.IIdProvider;
+import de.dreier.mytargets.utils.multiselector.ItemBindingHolder;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import de.dreier.mytargets.utils.multiselector.SingleSelector;
 
@@ -51,7 +52,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
     /**
      * Adapter for the fragment's RecyclerView
      */
-    protected ListAdapterBase<T> mAdapter;
+    protected ListAdapterBase<? extends ItemBindingHolder<?>, T> mAdapter;
 
     /**
      * Set to true when items are expanded when they are clicked and
@@ -73,17 +74,19 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      * If the position is not visible on the screen it is scrolled into view.
      *
      * @param recyclerView RecyclerView instance
-     * @param item Currently selected item
+     * @param item         Currently selected item
      */
-    protected void selectItem(RecyclerView recyclerView, T item) { //TODO test if we need to wrap into recyclerView.post {...}
+    protected void selectItem(RecyclerView recyclerView, T item) {
         int position = mAdapter.getItemPosition(item);
         mSelector.setSelected(position, item.getId(), true);
-        LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        int first = manager.findFirstCompletelyVisibleItemPosition();
-        int last = manager.findLastCompletelyVisibleItemPosition();
-        if (first > position || last < position) {
-            recyclerView.scrollToPosition(position);
-        }
+        recyclerView.post(() -> {
+            LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            int first = manager.findFirstCompletelyVisibleItemPosition();
+            int last = manager.findLastCompletelyVisibleItemPosition();
+            if (first > position || last < position) {
+                recyclerView.scrollToPosition(position);
+            }
+        });
     }
 
     /**

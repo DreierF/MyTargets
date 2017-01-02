@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2016 Florian Dreier
+  ~ Copyright (C) 2017 Florian Dreier
   ~
   ~ This file is part of MyTargets.
   ~
@@ -341,4 +341,5 @@
     <string name="bow_rest_stiffness">Stiffness</string>
     <string name="bow_button">Button</string>
     <string name="more_fields">More fields</string>
+    <string name="recently_used">Recently used</string>
 </resources>

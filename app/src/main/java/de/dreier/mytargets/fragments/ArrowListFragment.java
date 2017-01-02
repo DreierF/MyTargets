@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Florian Dreier
+ * Copyright (C) 2017 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -28,7 +28,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.ListAdapterBase;
+import de.dreier.mytargets.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
 import de.dreier.mytargets.shared.models.db.Arrow;
@@ -61,7 +61,7 @@ public class ArrowListFragment extends EditableListFragment<Arrow> {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.addItemDecoration(
-                new DividerItemDecoration(getContext(), R.drawable.inset_divider));
+                new DividerItemDecoration(getContext(), R.drawable.full_divider));
         mAdapter = new ArrowAdapter(getContext());
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
@@ -89,7 +89,7 @@ public class ArrowListFragment extends EditableListFragment<Arrow> {
                 .start();
     }
 
-    private class ArrowAdapter extends ListAdapterBase<Arrow> {
+    private class ArrowAdapter extends SimpleListAdapterBase<Arrow> {
         ArrowAdapter(Context context) {
             super(context);
         }

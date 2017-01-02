@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Florian Dreier
+ * Copyright (C) 2017 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -16,7 +16,6 @@
 package de.dreier.mytargets.activities;
 
 
-import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -79,18 +78,13 @@ public class InputActivityTest extends UITestBase {
 
     @Test
     public void inputActivityTest() {
-        Intent i = new Intent();
-        i.putExtra(InputActivity.TRAINING_ID, round1.trainingId);
-        i.putExtra(InputActivity.ROUND_ID, round1.getId());
-        i.putExtra(InputActivity.END_INDEX, 0);
-        activityTestRule.launchActivity(i);
+        activityTestRule.launchActivity(InputActivity.getIntent(round1, 0).build());
 
         onView(allOf(withContentDescription("X"), withId(R.id.targetView)))
                 .check(doesNotExist());
 
         clickActionBarItem(R.id.action_show_sidebar, R.string.keyboard);
 
-        //onView(withContentDescription("X"))
-        //        .check(matches(isDisplayed()));
+        //onView(withContentDescription("X")).check(matches(isDisplayed()));
     }
 }

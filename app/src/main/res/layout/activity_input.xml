@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2016 Florian Dreier
+  ~ Copyright (C) 2017 Florian Dreier
   ~
   ~ This file is part of MyTargets.
   ~
@@ -64,7 +64,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/passe"
-                        android:textColor="@color/white"
+                        android:textColor="@color/md_white_1000"
                         android:textSize="16sp" />
 
                     <TextView
@@ -88,7 +88,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/round"
-                        android:textColor="@color/white"
+                        android:textColor="@color/md_white_1000"
                         android:textSize="16sp" />
 
                     <TextView

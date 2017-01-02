@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2016 Florian Dreier
+  ~ Copyright (C) 2017 Florian Dreier
   ~
   ~ This file is part of MyTargets.
   ~
@@ -83,174 +83,163 @@
 
         </android.support.v7.widget.Toolbar>
 
-        <FrameLayout
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ScrollView
-                android:id="@+id/scrollView"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/notEditable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/notEditable"
+                    <de.dreier.mytargets.views.selector.StandardRoundSelector
+                        android:id="@+id/standardRound"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <Button
+                        android:id="@+id/change_target_face"
+                        style="@style/primaryText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:animateLayoutChanges="true"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="start"
+                        android:padding="16dp"
+                        android:text="@string/change_target_face"
+                        android:textStyle="normal"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/practiceLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <de.dreier.mytargets.views.selector.StandardRoundSelector
-                            android:id="@+id/standardRound"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-
-                        <Button
-                            android:id="@+id/change_target_face"
-                            style="@style/primaryText"
+                        <de.dreier.mytargets.views.selector.DistanceSelector
+                            android:id="@+id/distance"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:gravity="start"
-                            android:padding="16dp"
-                            android:text="@string/change_target_face"
-                            android:textStyle="normal"
-                            android:visibility="gone" />
-
-                        <LinearLayout
-                            android:id="@+id/practiceLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <de.dreier.mytargets.views.selector.DistanceSelector
-                                android:id="@+id/distance"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical" />
-
-                            <include layout="@layout/partial_divider_full" />
-
-                            <de.dreier.mytargets.views.selector.TargetSelector
-                                android:id="@+id/target"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical" />
-
-                            <include layout="@layout/partial_divider_full" />
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:padding="16dp">
-
-                                <TextView
-                                    android:id="@+id/arrowsLabel"
-                                    style="@style/Label"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/arrows" />
-
-                                <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-                                    android:id="@+id/arrows"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    app:dsb_indicatorColor="@color/colorPrimary"
-                                    app:dsb_max="12"
-                                    app:dsb_min="1"
-                                    app:dsb_progressColor="@color/colorPrimary" />
-
-                            </LinearLayout>
-
-                        </LinearLayout>
+                            android:orientation="vertical" />
 
                         <include layout="@layout/partial_divider_full" />
 
+                        <de.dreier.mytargets.views.selector.TargetSelector
+                            android:id="@+id/target"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" />
+
+                        <include layout="@layout/partial_divider_full" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:id="@+id/arrowsLabel"
+                                style="@style/Label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/arrows" />
+
+                            <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                                android:id="@+id/arrows"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:dsb_indicatorColor="@color/colorPrimary"
+                                app:dsb_max="12"
+                                app:dsb_min="1"
+                                app:dsb_progressColor="@color/colorPrimary" />
+
+                        </LinearLayout>
+
                     </LinearLayout>
 
-                    <de.dreier.mytargets.views.selector.BowSelector
-                        android:id="@+id/bow"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <Button
-                            style="@style/primaryText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?android:attr/selectableItemBackground"
-                            android:gravity="start"
-                            android:padding="16dp"
-                            android:text="@string/add_bow"
-                            android:textStyle="normal" />
-
-                    </de.dreier.mytargets.views.selector.BowSelector>
-
                     <include layout="@layout/partial_divider_full" />
-
-                    <de.dreier.mytargets.views.selector.ArrowSelector
-                        android:id="@+id/arrow"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <Button
-                            style="@style/primaryText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?android:attr/selectableItemBackground"
-                            android:gravity="start"
-                            android:padding="16dp"
-                            android:text="@string/add_arrow"
-                            android:textStyle="normal" />
-
-                    </de.dreier.mytargets.views.selector.ArrowSelector>
-
-                    <CheckBox
-                        android:id="@+id/numberArrows"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginStart="16dp"
-                        android:button="@drawable/arrow_numbers"
-                        android:padding="16dp"
-                        android:text="@string/arrow_numbers" />
-
-                    <include layout="@layout/partial_divider_full" />
-
-                    <de.dreier.mytargets.views.selector.EnvironmentSelector
-                        android:id="@+id/environment"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" />
-
-                    <include layout="@layout/partial_divider_full" />
-
-                    <CheckBox
-                        android:id="@+id/timer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginStart="16dp"
-                        android:button="@drawable/timer"
-                        android:padding="16dp"
-                        android:paddingLeft="32dp"
-                        android:paddingStart="32dp"
-                        android:text="@string/timer" />
 
                 </LinearLayout>
 
-            </ScrollView>
+                <de.dreier.mytargets.views.selector.BowSelector
+                    android:id="@+id/bow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_drop_shadow_height"
-                android:background="@drawable/toolbar_drop_shadow" />
+                    <Button
+                        style="@style/primaryText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:gravity="start"
+                        android:padding="16dp"
+                        android:text="@string/add_bow"
+                        android:textStyle="normal" />
 
-        </FrameLayout>
+                </de.dreier.mytargets.views.selector.BowSelector>
+
+                <include layout="@layout/partial_divider_full" />
+
+                <de.dreier.mytargets.views.selector.ArrowSelector
+                    android:id="@+id/arrow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        style="@style/primaryText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:gravity="start"
+                        android:padding="16dp"
+                        android:text="@string/add_arrow"
+                        android:textStyle="normal" />
+
+                </de.dreier.mytargets.views.selector.ArrowSelector>
+
+                <CheckBox
+                    android:id="@+id/numberArrows"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:button="@drawable/arrow_numbers"
+                    android:padding="16dp"
+                    android:text="@string/arrow_numbers" />
+
+                <include layout="@layout/partial_divider_full" />
+
+                <de.dreier.mytargets.views.selector.EnvironmentSelector
+                    android:id="@+id/environment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <include layout="@layout/partial_divider_full" />
+
+                <CheckBox
+                    android:id="@+id/timer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:button="@drawable/timer"
+                    android:padding="16dp"
+                    android:paddingLeft="32dp"
+                    android:paddingStart="32dp"
+                    android:text="@string/timer" />
+
+            </LinearLayout>
+
+        </ScrollView>
 
     </LinearLayout>
 
