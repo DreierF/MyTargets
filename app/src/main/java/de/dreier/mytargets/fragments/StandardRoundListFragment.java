@@ -39,12 +39,14 @@ import java.util.List;
 import java.util.Map;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.activities.StandardRoundActivity;
 import de.dreier.mytargets.adapters.HeaderListAdapter;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
+import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
@@ -63,6 +65,11 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
     private SearchView searchView;
 
     protected FragmentListBinding binding;
+
+    public static IntentWrapper getIntent(StandardRound standardRound) {
+        return new IntentWrapper(StandardRoundActivity.class)
+                .with(ITEM, Parcels.wrap(standardRound));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
