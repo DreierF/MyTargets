@@ -33,7 +33,7 @@ before_install:
 install:
 - git fetch --unshallow --tags
 before_script:
-- echo no | android create avd -f -n test -t "Google Inc.:Google APIs:$EMULATOR_VERSION" -b armeabi-v7a -s WXGA800 -c 128M
+- echo no | android create avd -f -n test -t "Google Inc.:Google APIs:$EMULATOR_VERSION" -b google_apis/armeabi-v7a -s WXGA800 -c 128M
 - emulator -avd test -no-audio -no-window &
 - android-wait-for-emulator
 - adb shell settings put global window_animation_scale 0
