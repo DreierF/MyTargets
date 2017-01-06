@@ -15,32 +15,40 @@
 
 package de.dreier.mytargets.activities;
 
-import android.support.test.espresso.intent.rule.IntentsTestRule;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
 import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.utils.rules.EmptyDbTestRule;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static de.dreier.mytargets.PermissionGranter.allowPermissionsIfNeeded;
 import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
 public class IntroActivityTest extends UITestBase {
 
+    private ActivityTestRule activityTestRule = new ActivityTestRule<>(MainActivity.class);
+
     @Rule
-    public IntentsTestRule<MainActivity> activityTestRule = new IntentsTestRule<>(MainActivity.class);
+    public final RuleChain rule = RuleChain.outerRule(new EmptyDbTestRule())
+            .around(activityTestRule);
 
     @BeforeClass
     public static void setUp() {
@@ -58,5 +66,9 @@ public class IntroActivityTest extends UITestBase {
         onView(withId(R.id.button_next)).perform(click());
 
         onView(withId(R.id.toolbar)).check(matches(hasDescendant(withText(R.string.my_targets))));
+
+        onView(matchFab()).perform(click());
+        allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
+        pressBack();
     }
 }
