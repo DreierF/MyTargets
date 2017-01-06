@@ -31,7 +31,6 @@ import de.dreier.mytargets.utils.rules.EmptyDbTestRule;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
@@ -69,6 +68,5 @@ public class IntroActivityTest extends UITestBase {
 
         onView(matchFab()).perform(click());
         allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
-        pressBack();
     }
 }
