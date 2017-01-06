@@ -265,7 +265,7 @@ public class SettingsManagerTest extends InstrumentedTestBase {
     }
 
     @Test
-    public static void setShouldShowIntroActivity() {
+    public void setShouldShowIntroActivity() {
         SettingsManager.setShouldShowIntroActivity(false);
         assertThat(SettingsManager.shouldShowIntroActivity()).isEqualTo(false);
     }

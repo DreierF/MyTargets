@@ -18,7 +18,7 @@ package de.dreier.mytargets.activities;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,31 +42,19 @@ public class IntroActivityTest extends UITestBase {
     @Rule
     public IntentsTestRule<MainActivity> activityTestRule = new IntentsTestRule<>(MainActivity.class);
 
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public static void setUp() {
         SettingsManager.setShouldShowIntroActivity(true);
     }
 
     @Test
     public void introActivityTest() {
-        onView(allOf(withId(R.id.txt_title_slide),
-                childAtPosition(
-                        allOf(withId(R.id.slide_background),
-                                childAtPosition(
-                                        withId(R.id.swipeable_view_pager),
-                                        0)), 1), isDisplayed()))
+        onView(allOf(withId(R.id.txt_title_slide), isDisplayed()))
                 .check(matches(withText(R.string.intro_title_track_training_progress)));
-
         onView(withId(R.id.button_next)).perform(click());
 
-        onView(allOf(withId(R.id.txt_title_slide),
-                childAtPosition(
-                        allOf(withId(R.id.slide_background),
-                                childAtPosition(
-                                        withId(R.id.swipeable_view_pager),
-                                        1)), 1), isDisplayed()))
+        onView(allOf(withId(R.id.txt_title_slide), isDisplayed()))
                 .check(matches(withText(R.string.intro_title_everything_in_one_place)));
-
         onView(withId(R.id.button_next)).perform(click());
 
         onView(withId(R.id.toolbar)).check(matches(hasDescendant(withText(R.string.my_targets))));

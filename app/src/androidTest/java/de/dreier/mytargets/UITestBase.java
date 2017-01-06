@@ -36,7 +36,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.Before;
+import org.junit.BeforeClass;
 
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.utils.matchers.MatcherUtils;
@@ -60,8 +60,8 @@ import static org.junit.Assert.assertThat;
 
 public class UITestBase extends InstrumentedTestBase {
 
-    @Before
-    public void disableIntro() {
+    @BeforeClass
+    public static void disableIntro() {
         SettingsManager.setShouldShowIntroActivity(false);
     }
 
