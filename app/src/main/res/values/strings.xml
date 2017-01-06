@@ -344,4 +344,8 @@
     <string name="bow_button">Button</string>
     <string name="more_fields">More fields</string>
     <string name="recently_used">Recently used</string>
+    <string name="intro_title_track_training_progress">Track your training progress</string>
+    <string name="intro_description_track_training_progress">Exact arrow plotting, Scoresheet, …</string>
+    <string name="intro_title_everything_in_one_place">Everything you need\nin one place</string>
+    <string name="intro_description_everything_in_one_place">Including bow-, arrow-\nand sightmark-management,\narchery timer, statistics \nand much more…</string>
 </resources>

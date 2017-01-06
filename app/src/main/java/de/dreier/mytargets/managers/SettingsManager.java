@@ -81,6 +81,7 @@ public class SettingsManager {
     private static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
     private static final String KEY_BACKUP_AUTOMATICALLY = "backup_automatically";
     private static final String KEY_STANDARD_ROUNDS_LAST_USED = "standard_round_last_used";
+    private static final String KEY_INTRO_SHOWED = "intro_showed";
 
     public static int getStandardRound() {
         return lastUsed.getInt(KEY_STANDARD_ROUND, 32);
@@ -489,6 +490,17 @@ public class SettingsManager {
                 .putString(KEY_STANDARD_ROUNDS_LAST_USED, Stream.of(ids)
                         .map(id -> id.getKey() + ":" + id.getValue())
                         .collect(Collectors.joining(",")))
+                .apply();
+    }
+
+    public static boolean shouldShowIntroActivity() {
+        return preferences
+                .getBoolean(KEY_INTRO_SHOWED, true);
+    }
+
+    public static void setShouldShowIntroActivity(boolean shouldShow) {
+        preferences.edit()
+                .putBoolean(KEY_INTRO_SHOWED, shouldShow)
                 .apply();
     }
 }
