@@ -26,8 +26,6 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import junit.framework.Assert;
-
 import org.parceler.Parcels;
 
 import java.util.List;
@@ -92,16 +90,6 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> impl
         }
         listener.onItemSelected(Parcels.wrap(distance));
         finish();
-    }
-
-    @Override
-    public void onAttach(Context activity) {
-        super.onAttach(activity);
-        if (activity instanceof OnItemSelectedListener) {
-            this.listener = (OnItemSelectedListener) activity;
-        }
-        Assert.assertNotNull(listener);
-        // TODO check if this works or is necessary
     }
 
     @Override
