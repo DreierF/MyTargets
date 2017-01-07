@@ -209,6 +209,8 @@ dependencies {
 
     compile "com.makeramen:roundedimageview:$libraryVersion.roundedImageView"
 
+    compile "agency.tango.android:material-intro-screen:$libraryVersion.materialIntroScreen"
+
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
     compile "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"

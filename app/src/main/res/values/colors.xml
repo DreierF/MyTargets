@@ -40,5 +40,6 @@
     <color name="fabFreeTraining">@color/md_green_500</color>
     <color name="fabTrainingWithStandardRound">@color/md_blue_500</color>
     <color name="fabBow">@color/md_white_1000</color>
+    <color name="introBackground">#037205</color>
 
 </resources>

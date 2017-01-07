@@ -51,6 +51,7 @@ public class SettingsManager {
     public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
     public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
     public static final String KEY_INPUT_KEYBOARD_TYPE = "input_keyboard_type";
+    public static final String KEY_FIRST_TRAINING_SHOWN = "first_training_shown";
     private static final String KEY_BACKUP_INTERVAL = "backup_interval";
     private static final String KEY_DONATED = "donated";
     private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
@@ -80,6 +81,7 @@ public class SettingsManager {
     private static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
     private static final String KEY_BACKUP_AUTOMATICALLY = "backup_automatically";
     private static final String KEY_STANDARD_ROUNDS_LAST_USED = "standard_round_last_used";
+    private static final String KEY_INTRO_SHOWED = "intro_showed";
 
     public static int getStandardRound() {
         return lastUsed.getInt(KEY_STANDARD_ROUND, 32);
@@ -430,6 +432,18 @@ public class SettingsManager {
                 .apply();
     }
 
+    public static boolean isFirstTrainingShown() {
+        return ApplicationInstance.getSharedPreferences()
+                .getBoolean(KEY_FIRST_TRAINING_SHOWN, false);
+    }
+
+    public static void setFirstTrainingShown(boolean shown) {
+        ApplicationInstance.getSharedPreferences()
+                .edit()
+                .putBoolean(KEY_FIRST_TRAINING_SHOWN, shown)
+                .apply();
+    }
+
     public static EBackupLocation getBackupLocation() {
         final String defaultLocation = EBackupLocation.INTERNAL_STORAGE.name();
         String location = preferences.getString(KEY_BACKUP_LOCATION, defaultLocation);
@@ -476,6 +490,17 @@ public class SettingsManager {
                 .putString(KEY_STANDARD_ROUNDS_LAST_USED, Stream.of(ids)
                         .map(id -> id.getKey() + ":" + id.getValue())
                         .collect(Collectors.joining(",")))
+                .apply();
+    }
+
+    public static boolean shouldShowIntroActivity() {
+        return preferences
+                .getBoolean(KEY_INTRO_SHOWED, true);
+    }
+
+    public static void setShouldShowIntroActivity(boolean shouldShow) {
+        preferences.edit()
+                .putBoolean(KEY_INTRO_SHOWED, shouldShow)
                 .apply();
     }
 }

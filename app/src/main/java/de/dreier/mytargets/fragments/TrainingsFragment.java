@@ -18,7 +18,9 @@ package de.dreier.mytargets.fragments;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -33,6 +35,7 @@ import de.dreier.mytargets.activities.StatisticsActivity;
 import de.dreier.mytargets.adapters.ExpandableListAdapter;
 import de.dreier.mytargets.databinding.FragmentTrainingsBinding;
 import de.dreier.mytargets.databinding.ItemTrainingBinding;
+import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.models.Month;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
@@ -40,6 +43,7 @@ import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+import de.dreier.mytargets.views.MaterialTapTargetPrompt;
 
 import static de.dreier.mytargets.fragments.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION;
 import static de.dreier.mytargets.fragments.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION;
@@ -72,16 +76,19 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         mAdapter = new TrainingAdapter();
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(mAdapter);
-        binding.recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), R.drawable.full_divider));
+        binding.recyclerView.addItemDecoration(
+                new DividerItemDecoration(getContext(), R.drawable.full_divider));
         binding.fab1.setOnClickListener(view -> EditTrainingFragment
                 .createIntent(CREATE_FREE_TRAINING_ACTION)
                 .withContext(this)
-                .fromFab(binding.fab1, R.color.fabFreeTraining, R.drawable.fab_trending_up_white_24dp)
+                .fromFab(binding.fab1, R.color.fabFreeTraining,
+                        R.drawable.fab_trending_up_white_24dp)
                 .start());
         binding.fab2.setOnClickListener(view -> EditTrainingFragment
                 .createIntent(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
                 .withContext(this)
-                .fromFab(binding.fab2, R.color.fabTrainingWithStandardRound, R.drawable.fab_album_24dp)
+                .fromFab(binding.fab2, R.color.fabTrainingWithStandardRound,
+                        R.drawable.fab_album_24dp)
                 .start());
         return binding.getRoot();
     }
@@ -114,7 +121,35 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
         final List<Training> trainings = Training.getAll();
-        return () -> setList(trainings, false);
+        return new LoaderUICallback() {
+            @Override
+            public void applyData() {
+                TrainingsFragment.this.setList(trainings, false);
+                if (trainings.isEmpty() && !SettingsManager.isFirstTrainingShown()) {
+                    new MaterialTapTargetPrompt.Builder(TrainingsFragment.this.getActivity())
+                            .setDrawView(binding.fab)
+                            .setTarget(binding.fab.getChildAt(2))
+                            .setBackgroundColourFromRes(R.color.colorPrimary)
+                            .setPrimaryText(R.string.your_first_training)
+                            .setSecondaryText(R.string.first_training_description)
+                            .setAnimationInterpolator(new FastOutSlowInInterpolator())
+                            .setOnHidePromptListener(
+                                    new MaterialTapTargetPrompt.OnHidePromptListener() {
+                                        @Override
+                                        public void onHidePrompt(MotionEvent event, boolean tappedTarget) {
+                                            //Do something such as storing a value so that this prompt is never shown again
+                                            SettingsManager.setFirstTrainingShown(true);
+                                        }
+
+                                        @Override
+                                        public void onHidePromptComplete() {
+
+                                        }
+                                    })
+                            .show();
+                }
+            }
+        };
     }
 
     private class TrainingAdapter extends ExpandableListAdapter<Month, Training> {

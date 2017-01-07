@@ -125,6 +125,15 @@
       "description": "Homage is a simple library, designed to make it more enjoyable (or less obnoxious, depending on your viewpoint) to include open source licenses for all your used libraries.",
       "url": "https://github.com/oriley-me/homage",
       "license": "apache2"
+    },
+    {
+      "name": "Material Tap Target Prompt",
+      "version": "1.2.1",
+      "year": "2016",
+      "owner": "Samuel Wall",
+      "description": "A Tap Target implementation in Android based on Material Design Onboarding guidelines.",
+      "url": "https://github.com/sjwall/MaterialTapTargetPrompt",
+      "license": "apache2"
     }
   ]
 }

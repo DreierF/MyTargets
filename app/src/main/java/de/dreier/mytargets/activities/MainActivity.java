@@ -15,11 +15,13 @@
 
 package de.dreier.mytargets.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.fragments.MainFragment;
+import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.utils.TranslationUtils;
 
 /**
@@ -31,7 +33,13 @@ public class MainActivity extends SimpleFragmentActivityBase {
     public void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_CustomToolbar);
         super.onCreate(savedInstanceState);
-        TranslationUtils.askForHelpTranslating(this);
+        if (SettingsManager.shouldShowIntroActivity()) {
+            SettingsManager.setShouldShowIntroActivity(false);
+            Intent intent = new Intent(this, IntroActivity.class);
+            startActivity(intent);
+        } else {
+            TranslationUtils.askForHelpTranslating(this);
+        }
     }
 
     @Override

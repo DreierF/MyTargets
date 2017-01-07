@@ -263,4 +263,10 @@ public class SettingsManagerTest extends InstrumentedTestBase {
         SettingsManager.setStandardRoundsLastUsed(map);
         assertThat(SettingsManager.getStandardRoundsLastUsed()).isEqualTo(map);
     }
+
+    @Test
+    public void setShouldShowIntroActivity() {
+        SettingsManager.setShouldShowIntroActivity(false);
+        assertThat(SettingsManager.shouldShowIntroActivity()).isEqualTo(false);
+    }
 }
