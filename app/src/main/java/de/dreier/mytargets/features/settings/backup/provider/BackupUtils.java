@@ -90,13 +90,13 @@ public class BackupUtils {
     @NonNull
     private static String getExportFileName() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
-        return "exported_data_" + format.format(new Date()) + ".csv";
+        return "MyTargets_exported_data_" + format.format(new Date()) + ".csv";
     }
 
     @NonNull
     static String getBackupName() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
-        return "backup_" + format.format(new Date()) + ".zip";
+        return "MyTargets_backup_" + format.format(new Date()) + ".zip";
     }
 
     public static void importZip(Context context, InputStream in) throws IOException {
