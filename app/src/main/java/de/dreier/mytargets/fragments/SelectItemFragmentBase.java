@@ -20,8 +20,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import junit.framework.Assert;
@@ -102,17 +100,10 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      * {@inheritDoc}
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.save, menu);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
             onSaveItem();
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -131,13 +122,14 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
         mSelector.setSelected(holder, true);
         if (alreadySelected || !useDoubleClickSelection) {
             onSaveItem();
+            finish();
         }
     }
 
     /**
      * Returns the selected item to the calling activity
      */
-    private void onSaveItem() {
+    protected void onSaveItem() {
         listener.onItemSelected(Parcels.wrap(onSave()));
     }
 

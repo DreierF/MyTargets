@@ -44,7 +44,7 @@ public class TargetModelBaseTest {
 
     @Test
     public void waVertical3SpotRealSize() throws Exception {
-        TargetModelBase target = TargetFactory.getTarget(Vertical3Spot.ID);
+        TargetModelBase target = TargetFactory.getTarget(WAVertical3Spot.ID);
         final Dimension diameter = new Dimension(40, Dimension.Unit.CENTIMETER);
         Dimension realSize = target.getRealSize(diameter);
         Assert.assertEquals(realSize, new Dimension(20, Dimension.Unit.CENTIMETER));

@@ -15,24 +15,47 @@
 
 package de.dreier.mytargets.shared.targets.scoringstyle;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
+
 import com.annimon.stream.Stream;
 
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Shot;
 
+import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
+
 public class ScoringStyle {
 
     public static final String MISS_SYMBOL = "M";
     private static final String X_SYMBOL = "X";
+    private final String title;
     private final boolean showAsX;
     protected final int[][] points;
     private int maxScorePerShot;
 
     ScoringStyle(boolean showAsX, int[][] points) {
+        this(null, showAsX, points);
+    }
+
+    public ScoringStyle(@StringRes int title, boolean showAsX, int... points) {
+        this(get(title), showAsX, new int[][]{points});
+    }
+
+    private ScoringStyle(String title, boolean showAsX, int[][] points) {
         this.showAsX = showAsX;
         this.points = points;
         getMaxPoints();
+        if (title == null) {
+            this.title = getDescriptionString();
+        } else {
+            this.title = title;
+        }
+    }
+
+    public ScoringStyle(boolean showAsX, int... points) {
+        this(showAsX, new int[][]{points});
     }
 
     private int getMaxPoints() {
@@ -47,12 +70,8 @@ public class ScoringStyle {
         return maxScorePerShot;
     }
 
-    public ScoringStyle(boolean showAsX, int... points) {
-        this(showAsX, new int[][]{points});
-    }
-
-    @Override
-    public String toString() {
+    @NonNull
+    private String getDescriptionString() {
         String style = "";
         for (int i = 0; i < points[0].length; i++) {
             if (i + 1 < points[0].length && points[0][i] <= points[0][i + 1] && !(i == 0 && showAsX)) {
@@ -67,6 +86,11 @@ public class ScoringStyle {
             }
         }
         return style;
+    }
+
+    @Override
+    public String toString() {
+        return title;
     }
 
     public String zoneToString(int zone, int arrow) {

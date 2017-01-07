@@ -32,6 +32,7 @@ public abstract class EditableListFragment<T extends IIdSettable & Model & Compa
             onItemSelected(item);
         } else {
             listener.onItemSelected(Parcels.wrap(item));
+            finish();
         }
     }
 

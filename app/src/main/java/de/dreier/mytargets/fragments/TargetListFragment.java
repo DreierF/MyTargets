@@ -22,6 +22,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -77,7 +79,6 @@ public class TargetListFragment extends SelectItemFragmentBase<Target>
         useDoubleClickSelection = true;
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
         ToolbarUtils.showHomeAsUp(this);
-        ToolbarUtils.showUpAsX(this);
         setHasOptionsMenu(true);
         return binding.getRoot();
     }
@@ -139,6 +140,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target>
         } else {
             binding.targetSize.setVisibility(View.GONE);
         }
+        onSaveItem();
     }
 
     private void setThemedAdapter(Spinner spinner, List<String> strings) {

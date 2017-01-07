@@ -50,12 +50,12 @@ public class WAFull extends TargetModelBase {
                 new CircularZone(1.0f, WHITE, DARK_GRAY, 2)
         };
         scoringStyles = new ScoringStyle[]{
-                new ScoringStyle(true, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1),
-                new ScoringStyle(false, 10, 9, 9, 8, 7, 6, 5, 4, 3, 2, 1),
+                new ScoringStyle(R.string.recurve_style, true, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1),
+                new ScoringStyle(R.string.compound_style, false, 10, 9, 9, 8, 7, 6, 5, 4, 3, 2, 1),
                 new ScoringStyle(false, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1),
                 new ScoringStyle(true, 5, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1),
                 new ScoringStyle(false, 9, 9, 9, 7, 7, 5, 5, 3, 3, 1, 1),
-                new ColorScoringStyle("FCFS Color (Reversed 10-1)", 31, 1, 1, 2, 4, 4, 6, 6, 8, 8, 10, 10)
+                new ColorScoringStyle(R.string.fcfs_color_reversed, 31, 1, 1, 2, 4, 4, 6, 6, 8, 8, 10, 10)
         };
         diameters = new Dimension[]{
                 new Dimension(40, CENTIMETER),

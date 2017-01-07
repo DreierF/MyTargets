@@ -32,7 +32,7 @@ import de.dreier.mytargets.shared.targets.models.NFAAField;
 import de.dreier.mytargets.shared.targets.models.NFAAHunter;
 import de.dreier.mytargets.shared.targets.models.NFAAIndoor;
 import de.dreier.mytargets.shared.targets.models.NFASField;
-import de.dreier.mytargets.shared.targets.models.Vertical3Spot;
+import de.dreier.mytargets.shared.targets.models.WAVertical3Spot;
 import de.dreier.mytargets.shared.targets.models.WA5Ring;
 import de.dreier.mytargets.shared.targets.models.WA6Ring;
 import de.dreier.mytargets.shared.targets.models.WAField;
@@ -98,7 +98,7 @@ public class StandardRoundFactory {
                 WAFull.ID, 0, 3, 25, 60, 20, 18, 40, 20));
         rounds.add(build(WA, R.string.match_round,
                 METER, CENTIMETER,
-                Vertical3Spot.ID, 0, 3, 18, 40, 4));
+                WAVertical3Spot.ID, 0, 3, 18, 40, 4));
         rounds.add(build(ARCHERY_GB, R.string.stafford,
                 METER, CENTIMETER,
                 WAFull.ID, 0, 3, 30, 80, 24));

@@ -21,6 +21,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -89,6 +91,7 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> impl
             // leave distance as it is
         }
         listener.onItemSelected(Parcels.wrap(distance));
+        finish();
     }
 
     @Override
@@ -117,6 +120,14 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> impl
                 selectItem(binding.recyclerView, distance);
             }
         };
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.save, menu);
     }
 
     private class DistanceAdapter extends SimpleListAdapterBase<Dimension> {

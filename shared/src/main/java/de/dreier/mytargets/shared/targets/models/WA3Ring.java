@@ -44,8 +44,8 @@ public class WA3Ring extends TargetModelBase {
                 new CircularZone(1.0f, FLAMINGO_RED, DARK_GRAY, 4)
         };
         scoringStyles = new ScoringStyle[]{
-                new ScoringStyle(true, 10, 10, 9, 8),
-                new ScoringStyle(false, 10, 9, 9, 8),
+                new ScoringStyle(R.string.recurve_style, true, 10, 10, 9, 8),
+                new ScoringStyle(R.string.compound_style, false, 10, 9, 9, 8),
                 new ScoringStyle(false, 11, 10, 9, 8),
                 new ScoringStyle(true, 5, 5, 5, 4),
                 new ScoringStyle(false, 9, 9, 9, 7)

@@ -129,6 +129,7 @@ public class EnvironmentFragment extends FragmentBase {
         e.windDirection = (int) (long) binding.windDirection.getSelectedItem().getId();
         e.location = binding.location.getText().toString();
         listener.onItemSelected(Parcels.wrap(e));
+        finish();
     }
 
     @Override
