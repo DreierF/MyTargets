@@ -12,7 +12,7 @@ Android app, which helps archers keep track of their training progress.
 <img src="https://raw.githubusercontent.com/DreierF/MyTargets/develop/app/src/main/art/screenshot/plotting.png" alt="Plotting/Enter data" width="30%" >
 
 <a href="https://play.google.com/store/apps/details?id=de.dreier.mytargets">
-<img alt="Get it on Google Play" src="http://steverichey.github.io/google-play-badge-svg/img/en_get.svg" />
+<img alt="Get it on Google Play" src="http://steverichey.github.io/google-play-badge-svg/img/en_get.svg" width="30%" />
 </a>
 
 ## Build ##
