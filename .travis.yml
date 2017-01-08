@@ -10,7 +10,6 @@ env:
   - ANDROID_BUILD_TOOLS_VERSION=25.0.2
   - EMULATOR_API_LEVEL=19
   - ANDROID_ABI=armeabi-v7a
-  - ANDROID_TAG=google_apis
   - JAVA7_HOME=/usr/lib/jvm/java-7-oracle
   - JAVA8_HOME=/usr/lib/jvm/java-8-oracle
   - JAVA_HOME=$JAVA8_HOME
@@ -22,9 +21,6 @@ android:
   - build-tools-$ANDROID_BUILD_TOOLS_VERSION
   - android-$ANDROID_API_LEVEL
   - android-$EMULATOR_API_LEVEL
-  # For Google APIs
-  - addon-google_apis-google-$ANDROID_API_LEVEL
-  - addon-google_apis-google-$EMULATOR_API_LEVEL
   # Google Play Services
   - extra-google-google_play_services
   # Support library
@@ -33,8 +29,7 @@ android:
   - extra-google-m2repository
   - extra-android-m2repository
   # Specify at least one system image
-  - sys-img-armeabi-v7a-google_apis-$ANDROID_API_LEVEL
-  - sys-img-armeabi-v7a-google_apis-$EMULATOR_API_LEVEL
+  - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
 before_install:
 - openssl aes-256-cbc -K $encrypted_143bf53fc355_key -iv $encrypted_143bf53fc355_iv -in services.tar.enc -out services.tar -d
 - tar xvf services.tar
@@ -45,11 +40,10 @@ before_install:
 install:
 - git fetch --unshallow --tags
 before_script:
-- echo no | android create avd -f -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI --tag $ANDROID_TAG -s WXGA800 -c 128M
+- echo no | android create avd -f -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI -s WXGA800 -c 128M
 - emulator -avd test -no-audio -no-window &
 - ./gradlew clean
 script:
-- ./gradlew assembleRegularDebugAndroidTest -PdisablePreDex
 - ./gradlew assembleRegularRelease -PdisablePreDex
 - android-wait-for-emulator
 - adb shell settings put global window_animation_scale 0
@@ -69,10 +63,10 @@ after_success:
 - bash <(curl -s https://codecov.io/bash)
 - ~/jpm/bin/codacy-coverage-reporter -l Java -r app/build/reports/coverage/regular/debug/report.xml
 after_failure:
-- cd app/build/reports/androidTests/connected/flavors/REGULAR/
-- adb logcat -d 2>&1 | python ../../../../../../../pidcat.py de.dreier.mytargets.debug | tee logcat.log
-- zip -r reports.zip .
-- cd ../../../../../../..
+- cd app/build/reports/androidTests/connected/flavors/REGULAR/ &&
+- adb logcat -d 2>&1 | python ../../../../../../../pidcat.py de.dreier.mytargets.debug | tee logcat.log &&
+- zip -r reports.zip . &&
+- cd ../../../../../../.. &&
 - ./dropbox_uploader.sh upload app/build/reports/androidTests/connected/flavors/REGULAR/reports.zip /Reports/$TRAVIS_JOB_NUMBER.zip
 deploy:
   provider: releases

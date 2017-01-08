@@ -39,7 +39,6 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivityBase
         data.putExtra(ITEM, item);
         data.putExtra(INTENT, getIntent() != null ? getIntent().getExtras() : null);
         setResult(RESULT_OK, data);
-        super.onBackPressed();
     }
 
     public static class ArrowActivity extends ItemSelectActivity {

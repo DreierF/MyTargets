@@ -33,125 +33,86 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <FrameLayout
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <ScrollView
-                android:id="@+id/scrollView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/distanceLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <de.dreier.mytargets.views.selector.DistanceSelector
-                            android:id="@+id/distance"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical" />
-
-                        <include layout="@layout/partial_divider_full" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/notEditable"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:animateLayoutChanges="true"
-                        android:orientation="vertical">
-
-
-                        <de.dreier.mytargets.views.selector.TargetSelector
-                            android:id="@+id/target"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical" />
-
-                        <include layout="@layout/partial_divider_full" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-
-                            <TextView
-                                android:id="@+id/arrowsLabel"
-                                style="@style/Label"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/arrows" />
-
-                            <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-                                android:id="@+id/arrows"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                app:dsb_indicatorColor="@color/colorPrimary"
-                                app:dsb_max="12"
-                                app:dsb_min="1"
-                                app:dsb_progressColor="@color/colorPrimary" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/dividerColor" />
-                    </LinearLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="16dp">
-
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/comment"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@android:color/transparent"
-                            android:hint="@string/comment"
-                            android:inputType="textMultiLine" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                </LinearLayout>
-
-            </ScrollView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
                 android:orientation="vertical">
 
-                <View
+                <LinearLayout
+                    android:id="@+id/distanceLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_gravity="bottom"
-                    android:background="?android:attr/listDivider" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/remove_button"
+                    <de.dreier.mytargets.views.selector.DistanceSelector
+                        android:id="@+id/distance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+                    <include layout="@layout/partial_divider_full" />
+
+                </LinearLayout>
+
+                <de.dreier.mytargets.views.selector.TargetSelector
+                    android:id="@+id/target"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:minHeight="48dp"
-                    android:text="@string/delete" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <include layout="@layout/partial_divider_full" />
+
+                <LinearLayout
+                    android:id="@+id/notEditable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/arrowsLabel"
+                        style="@style/Label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/arrows" />
+
+                    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                        android:id="@+id/arrows"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:dsb_indicatorColor="@color/colorPrimary"
+                        app:dsb_max="12"
+                        app:dsb_min="1"
+                        app:dsb_progressColor="@color/colorPrimary" />
+
+                    <include layout="@layout/partial_divider_full" />
+
+                </LinearLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/comment"
+                        android:inputType="textMultiLine" />
+
+                </android.support.design.widget.TextInputLayout>
 
             </LinearLayout>
 
-        </FrameLayout>
+        </ScrollView>
 
     </LinearLayout>
 

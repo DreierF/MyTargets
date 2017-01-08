@@ -99,10 +99,10 @@ public class EditTrainingActivityTest extends UITestBase {
         onView(withId(R.id.target)).perform(nestedScrollTo(), click());
         onView(withId(R.id.recyclerView)).perform(actionOnItemAtPosition(5, click()));
         onView(withId(R.id.scoring_style)).perform(click());
-        onView(withText("10, 9, 8, 7, 6")).perform(click());
+        onView(withText(R.string.compound_style)).perform(click());
         onView(withId(R.id.target_size)).perform(click());
         onView(withText("40cm")).perform(click());
-        onView(withId(R.id.action_save)).perform(click());
+        pressBack();
         onView(allOf(withId(R.id.name),
                 withParent(withParent(withParent(withParent(withId(R.id.target)))))))
                 .check(matches(withText(containsString(
@@ -110,7 +110,7 @@ public class EditTrainingActivityTest extends UITestBase {
                 .check(matches(withText(containsString("40cm"))));
         onView(allOf(withId(R.id.details),
                 withParent(withParent(withParent(withParent(withId(R.id.target)))))))
-                .check(matches(withText("10, 9, 8, 7, 6")));
+                .check(matches(withText(R.string.compound_style)));
 
         // Change environment
         onView(withId(R.id.environment)).perform(nestedScrollTo(), click());

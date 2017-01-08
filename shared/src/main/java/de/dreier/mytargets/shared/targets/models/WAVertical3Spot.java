@@ -21,16 +21,16 @@ import de.dreier.mytargets.shared.models.Dimension;
 
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 
-public class Vegas3Spot extends WA5Ring {
-    private static final int ID = 4;
+public class WAVertical3Spot extends WA5Ring {
+    public static final int ID = 5;
 
-    public Vegas3Spot() {
-        super(ID, R.string.vegas_3_spot);
-        faceRadius = 0.48f;
+    public WAVertical3Spot() {
+        super(ID, R.string.vertical_3_spot);
+        faceRadius = 0.32f;
         facePositions = new PointF[]{
-                new PointF(-0.52f, 0.5f),
-                new PointF(0.0f, -0.5f),
-                new PointF(0.52f, 0.5f)
+                new PointF(0.0f, -0.68f),
+                new PointF(0.0f, 0.0f),
+                new PointF(0.0f, 0.68f)
         };
         diameters = new Dimension[]{new Dimension(40, CENTIMETER),
                 new Dimension(60, CENTIMETER)};

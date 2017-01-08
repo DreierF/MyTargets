@@ -62,6 +62,7 @@ import de.dreier.mytargets.databinding.FragmentStatisticsBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
 import de.dreier.mytargets.models.ArrowStatistic;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.End;
@@ -183,7 +184,12 @@ public class StatisticsFragment extends FragmentBase {
         binding.chartView.getAxisRight().setEnabled(false);
         binding.chartView.getLegend().setEnabled(false);
         binding.chartView.setData(data);
-        binding.chartView.setDescription(EMPTY_DESCRIPTION);
+        final Description desc = new Description();
+        desc.setText(getString(R.string.average_arrow_score_per_end));
+        binding.chartView.setDescription(desc);
+        final int maxCeil = (int) Math.ceil(data.getYMax());
+        binding.chartView.getAxisLeft().setAxisMaximum(maxCeil);
+        binding.chartView.getAxisLeft().setLabelCount(maxCeil);
         binding.chartView.getAxisLeft().setAxisMinimum(0);
         binding.chartView.getXAxis().setDrawGridLines(false);
         binding.chartView.setDoubleTapToZoomEnabled(false);
@@ -322,7 +328,7 @@ public class StatisticsFragment extends FragmentBase {
                 .map(Training::get)
                 .collect(Collectors.toMap(Training::getId));
 
-        List<Pair<Integer, DateTime>> values = Stream.of(rounds)
+        List<Pair<Float, DateTime>> values = Stream.of(rounds)
                 .map(r -> new Pair<>(trainingsMap.get(r.trainingId).date, r))
                 .flatMap(roundIdPair -> Stream.of(roundIdPair.second.getEnds())
                         .map(end -> new Pair<>(roundIdPair.first, end)))
@@ -350,7 +356,7 @@ public class StatisticsFragment extends FragmentBase {
     }
 
     @NonNull
-    private Evaluator getEntryEvaluator(final List<Pair<Integer, DateTime>> values) {
+    private Evaluator getEntryEvaluator(final List<Pair<Float, DateTime>> values) {
         boolean singleTraining = Stream.of(rounds)
                 .groupBy(r -> r.trainingId).count() == 1;
 
@@ -360,7 +366,7 @@ public class StatisticsFragment extends FragmentBase {
                 private DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
 
                 @Override
-                public long getXValue(List<Pair<Integer, DateTime>> values, int i) {
+                public long getXValue(List<Pair<Float, DateTime>> values, int i) {
                     return values.get(i).second.getMillis() - values.get(0).second.getMillis();
                 }
 
@@ -376,7 +382,7 @@ public class StatisticsFragment extends FragmentBase {
                 private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
 
                 @Override
-                public long getXValue(List<Pair<Integer, DateTime>> values, int i) {
+                public long getXValue(List<Pair<Float, DateTime>> values, int i) {
                     return i;
                 }
 
@@ -389,16 +395,13 @@ public class StatisticsFragment extends FragmentBase {
         return eval;
     }
 
-    private Pair<Integer, DateTime> getPairEndSummary(Target target, End end, LocalDate trainingDate) {
-        int actCounter = 0;
-        for (Shot s : end.getShots()) {
-            actCounter += target.getScoreByZone(s.scoringRing, s.index);
-        }
-        return new Pair<>(actCounter, new DateTime(end.saveTime).withDate(trainingDate));
+    private Pair<Float, DateTime> getPairEndSummary(Target target, End end, LocalDate trainingDate) {
+        Score reachedScore = target.getReachedScore(end);
+        return new Pair<>(reachedScore.getShotAverage(), new DateTime(end.saveTime).withDate(trainingDate));
     }
 
     @NonNull
-    private LineDataSet convertToLineData(List<Pair<Integer, DateTime>> values, Evaluator evaluator) {
+    private LineDataSet convertToLineData(List<Pair<Float, DateTime>> values, Evaluator evaluator) {
         List<Entry> seriesEntries = new ArrayList<>();
         for (int i = 0; i < values.size(); i++) {
             seriesEntries.add(new Entry(evaluator.getXValue(values, i), values.get(i).first));
@@ -421,7 +424,7 @@ public class StatisticsFragment extends FragmentBase {
         return series;
     }
 
-    private ILineDataSet generateLinearRegressionLine(List<Pair<Integer, DateTime>> values, Evaluator eval) {
+    private ILineDataSet generateLinearRegressionLine(List<Pair<Float, DateTime>> values, Evaluator eval) {
         int dataSetSize = values.size();
         double[] x = new double[dataSetSize];
         double[] y = new double[dataSetSize];
@@ -474,8 +477,7 @@ public class StatisticsFragment extends FragmentBase {
     }
 
     private interface Evaluator {
-        long getXValue(List<Pair<Integer, DateTime>> values, int i);
-
+        long getXValue(List<Pair<Float, DateTime>> values, int i);
         String getXValueFormatted(float value);
     }
 

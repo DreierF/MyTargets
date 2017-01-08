@@ -23,17 +23,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import de.dreier.mytargets.shared.targets.models.Vertical3Spot;
-
 @SmallTest
 @RunWith(AndroidJUnit4.class)
-public class Vertical3SpotTest {
+public class WAVertical3SpotTest {
 
-    private Vertical3Spot target;
+    private WAVertical3Spot target;
 
     @Before
     public void setUp() throws Exception {
-        target = new Vertical3Spot();
+        target = new WAVertical3Spot();
     }
 
     @Test

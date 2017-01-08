@@ -31,7 +31,7 @@ public class WindDirectionListFragment extends SelectPureListItemFragmentBase<Wi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        mAdapter.setList(WindDirection.getList(getContext()));
+        adapter.setList(WindDirection.getList(getContext()));
         WindDirection windDirection = Parcels.unwrap(getArguments().getParcelable(ITEM));
         selectItem(binding.recyclerView, windDirection);
         return binding.getRoot();

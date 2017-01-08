@@ -24,8 +24,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 
 import com.annimon.stream.Collectors;
@@ -34,6 +34,7 @@ import com.annimon.stream.Stream;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.R;
@@ -51,19 +52,22 @@ import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
+import static de.dreier.mytargets.fragments.TargetListFragment.EFixedType.GROUP;
+import static de.dreier.mytargets.fragments.TargetListFragment.EFixedType.NONE;
+import static de.dreier.mytargets.fragments.TargetListFragment.EFixedType.TARGET;
 
-public class TargetListFragment extends SelectItemFragmentBase<Target>
-        implements SeekBar.OnSeekBarChangeListener {
+public class TargetListFragment extends SelectItemFragmentBase<Target> implements AdapterView.OnItemSelectedListener {
 
-    private static final String TYPE_FIXED = "type_fixed";
+    public static final String FIXED_TYPE = "fixed_type";
     private FragmentTargetSelectBinding binding;
-    private boolean typeFixed = false;
+    private ArrayAdapter<String> scoringStyleAdapter;
+    private ArrayAdapter<String> targetSizeAdapter;
 
     @NonNull
     public static IntentWrapper getIntent(Target target) {
         return new IntentWrapper(ItemSelectActivity.TargetActivity.class)
                 .with(ITEM, Parcels.wrap(target))
-                .with(TYPE_FIXED, true);
+                .with(FIXED_TYPE, GROUP.name());
     }
 
     @Override
@@ -71,13 +75,13 @@ public class TargetListFragment extends SelectItemFragmentBase<Target>
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_target_select, container, false);
         binding.recyclerView.setHasFixedSize(true);
-        mAdapter = new TargetAdapter(getContext());
+        adapter = new TargetAdapter(getContext());
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
-        binding.recyclerView.setAdapter(mAdapter);
+        binding.recyclerView.setAdapter(adapter);
+
         useDoubleClickSelection = true;
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
         ToolbarUtils.showHomeAsUp(this);
-        ToolbarUtils.showUpAsX(this);
         setHasOptionsMenu(true);
         return binding.getRoot();
     }
@@ -86,11 +90,20 @@ public class TargetListFragment extends SelectItemFragmentBase<Target>
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // Needs activity context
+        scoringStyleAdapter = getThemedSpinnerAdapter();
+        binding.scoringStyle.setAdapter(scoringStyleAdapter);
+        targetSizeAdapter = getThemedSpinnerAdapter();
+        binding.targetSize.setAdapter(targetSizeAdapter);
+
         // Process passed arguments
         Target target = Parcels.unwrap(getArguments().getParcelable(ITEM));
-        typeFixed = getArguments().getBoolean(TYPE_FIXED);
+        EFixedType fixedType = EFixedType
+                .valueOf(getArguments().getString(FIXED_TYPE, NONE.name()));
         List<TargetModelBase> list;
-        if (typeFixed) {
+        if (fixedType == TARGET) {
+            list = Collections.singletonList(target.getModel());
+        } else if (fixedType == GROUP) {
             list = TargetFactory.getList(target);
         } else {
             list = TargetFactory.getList();
@@ -98,7 +111,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target>
         List<Target> targets = Stream.of(list)
                 .map(value -> new Target((int) (long) value.getId(), 0))
                 .collect(Collectors.toList());
-        mAdapter.setList(targets);
+        adapter.setList(targets);
         selectItem(binding.recyclerView, target);
 
         updateSettings();
@@ -112,8 +125,9 @@ public class TargetListFragment extends SelectItemFragmentBase<Target>
                 break;
             }
         }
-        binding.scoringStyle.setSelection(target.scoringStyle);
-        binding.targetSize.setSelection(diameterIndex);
+
+        setSelectionWithoutEvent(binding.scoringStyle, target.scoringStyle);
+        setSelectionWithoutEvent(binding.targetSize, diameterIndex);
     }
 
     @Override
@@ -123,34 +137,47 @@ public class TargetListFragment extends SelectItemFragmentBase<Target>
             return;
         }
         updateSettings();
+        saveItem();
     }
 
     private void updateSettings() {
         // Init scoring styles
-        Target target = mAdapter.getItem(mSelector.getSelectedPosition());
+        Target target = adapter.getItem(mSelector.getSelectedPosition());
         List<String> styles = target.getModel().getScoringStyles();
-        setThemedAdapter(binding.scoringStyle, styles);
+        updateAdapter(binding.scoringStyle, scoringStyleAdapter, styles);
 
         // Init target size spinner
         ArrayList<String> diameters = diameterToList(target.getModel().getDiameters());
-        setThemedAdapter(binding.targetSize, diameters);
-        if (!typeFixed && diameters.size() > 1) {
+        updateAdapter(binding.targetSize, targetSizeAdapter, diameters);
+        if (diameters.size() > 1) {
             binding.targetSize.setVisibility(View.VISIBLE);
         } else {
             binding.targetSize.setVisibility(View.GONE);
         }
     }
 
-    private void setThemedAdapter(Spinner spinner, List<String> strings) {
+    private void updateAdapter(Spinner spinner, ArrayAdapter<String> spinnerAdapter, List<String> strings) {
+        int lastSelection = spinner.getSelectedItemPosition();
+        spinnerAdapter.clear();
+        spinnerAdapter.addAll(strings);
+        final int position = lastSelection < strings.size() ? lastSelection : strings.size() - 1;
+        setSelectionWithoutEvent(spinner, position);
+    }
+
+    private void setSelectionWithoutEvent(Spinner spinner, int position) {
+        spinner.setOnItemSelectedListener(null);
+        spinner.setSelection(position, false);
+        spinner.setOnItemSelectedListener(this);
+    }
+
+    @NonNull
+    private ArrayAdapter<String> getThemedSpinnerAdapter() {
         final AppCompatActivity activity = (AppCompatActivity) getActivity();
         Context themedContext = activity.getSupportActionBar().getThemedContext();
-        int lastSelection = spinner.getSelectedItemPosition();
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(themedContext,
-                android.R.layout.simple_spinner_item, strings);
+                android.R.layout.simple_spinner_item, new ArrayList<>());
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(spinnerAdapter);
-        spinner.setSelection(lastSelection < strings.size() ? lastSelection : strings.size() - 1,
-                false);
+        return spinnerAdapter;
     }
 
     private ArrayList<String> diameterToList(Dimension[] diameters) {
@@ -176,18 +203,32 @@ public class TargetListFragment extends SelectItemFragmentBase<Target>
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+    public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
         updateSettings();
+        saveItem();
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
+    public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
 
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
+    public enum EFixedType {
+        /**
+         * The user has completely free choice from all target faces.
+         */
+        NONE,
 
+        /**
+         * The user can change the selection within a group of target faces
+         * like between the WA target faces.
+         */
+        GROUP,
+
+        /**
+         * The user cannot change the selected target face, but e.g. scoring style or diameter.
+         */
+        TARGET
     }
 
     private class TargetAdapter extends SimpleListAdapterBase<Target> {

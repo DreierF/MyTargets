@@ -20,8 +20,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import junit.framework.Assert;
@@ -52,7 +50,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
     /**
      * Adapter for the fragment's RecyclerView
      */
-    protected ListAdapterBase<? extends ItemBindingHolder<?>, T> mAdapter;
+    protected ListAdapterBase<? extends ItemBindingHolder<?>, T> adapter;
 
     /**
      * Set to true when items are expanded when they are clicked and
@@ -77,7 +75,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      * @param item         Currently selected item
      */
     protected void selectItem(RecyclerView recyclerView, T item) {
-        int position = mAdapter.getItemPosition(item);
+        int position = adapter.getItemPosition(item);
         mSelector.setSelected(position, item.getId(), true);
         recyclerView.post(() -> {
             LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
@@ -102,17 +100,10 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      * {@inheritDoc}
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.save, menu);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
-            onSaveItem();
+            saveItem();
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -130,14 +121,15 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
         boolean alreadySelected = oldSelectedPosition == holder.getAdapterPosition();
         mSelector.setSelected(holder, true);
         if (alreadySelected || !useDoubleClickSelection) {
-            onSaveItem();
+            saveItem();
+            finish();
         }
     }
 
     /**
-     * Returns the selected item to the calling activity
+     * Returns the selected item to the calling activity. The item is retrieved by calling onSave().
      */
-    private void onSaveItem() {
+    protected void saveItem() {
         listener.onItemSelected(Parcels.wrap(onSave()));
     }
 
@@ -147,6 +139,6 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      * @return The selected item
      */
     T onSave() {
-        return mAdapter.getItem(mSelector.getSelectedPosition());
+        return adapter.getItem(mSelector.getSelectedPosition());
     }
 }

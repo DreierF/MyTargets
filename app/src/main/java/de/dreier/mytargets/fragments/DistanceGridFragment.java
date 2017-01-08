@@ -21,10 +21,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import junit.framework.Assert;
 
 import org.parceler.Parcels;
 
@@ -68,9 +68,9 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> impl
         unit = Unit.from(bundle.getString(DISTANCE_UNIT));
         binding.recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         binding.recyclerView.addItemDecoration(new CardItemDecorator(getActivity(), 3));
-        mAdapter = new DistanceAdapter(getContext());
+        adapter = new DistanceAdapter(getContext());
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
-        binding.recyclerView.setAdapter(mAdapter);
+        binding.recyclerView.setAdapter(adapter);
 
         binding.fab.setOnClickListener(view -> new DistanceInputDialog.Builder(getContext())
                 .setUnit(unit.toString())
@@ -89,16 +89,7 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> impl
             // leave distance as it is
         }
         listener.onItemSelected(Parcels.wrap(distance));
-    }
-
-    @Override
-    public void onAttach(Context activity) {
-        super.onAttach(activity);
-        if (activity instanceof OnItemSelectedListener) {
-            this.listener = (OnItemSelectedListener) activity;
-        }
-        Assert.assertNotNull(listener);
-        // TODO check if this works or is necessary
+        finish();
     }
 
     @Override
@@ -113,10 +104,18 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> impl
         return new LoaderUICallback() {
             @Override
             public void applyData() {
-                mAdapter.setList(distances);
+                adapter.setList(distances);
                 selectItem(binding.recyclerView, distance);
             }
         };
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.save, menu);
     }
 
     private class DistanceAdapter extends SimpleListAdapterBase<Dimension> {

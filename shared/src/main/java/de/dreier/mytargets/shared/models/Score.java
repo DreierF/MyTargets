@@ -15,13 +15,32 @@
 
 package de.dreier.mytargets.shared.models;
 
+import com.annimon.stream.Collector;
+import com.annimon.stream.function.BiConsumer;
+import com.annimon.stream.function.Function;
+import com.annimon.stream.function.Supplier;
+
 public class Score {
     public int reachedScore;
     public int totalScore;
+    public int shotCount;
+
+    private Score() {
+        this.reachedScore = 0;
+        this.totalScore = 0;
+        this.shotCount = 0;
+    }
+
+    public Score(int reachedScore, int totalScore) {
+        this.reachedScore = reachedScore;
+        this.totalScore = totalScore;
+        this.shotCount = 1;
+    }
 
     public Score add(Score other) {
         reachedScore += other.reachedScore;
         totalScore += other.totalScore;
+        shotCount += other.shotCount + 1;
         return this;
     }
 
@@ -38,7 +57,30 @@ public class Score {
         }
     }
 
+    public float getShotAverage() {
+        return reachedScore / (float) shotCount;
+    }
+
     private int getPercent() {
         return reachedScore * 100 / totalScore;
+    }
+
+    public static Collector<Score, Score, Score> sum() {
+        return new Collector<Score, Score, Score>() {
+            @Override
+            public Supplier<Score> supplier() {
+                return Score::new;
+            }
+
+            @Override
+            public BiConsumer<Score, Score> accumulator() {
+                return Score::add;
+            }
+
+            @Override
+            public Function<Score, Score> finisher() {
+                return score -> score;
+            }
+        };
     }
 }

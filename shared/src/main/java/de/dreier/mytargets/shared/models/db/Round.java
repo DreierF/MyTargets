@@ -162,7 +162,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
         final Target target = getTarget();
         return Stream.of(getEnds())
                 .map(target::getReachedScore)
-                .reduce(new Score(), Score::add);
+                .collect(Score.sum());
     }
 
     @Override

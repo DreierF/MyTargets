@@ -20,11 +20,14 @@ import android.util.AttributeSet;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.fragments.TargetListFragment;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.utils.IntentWrapper;
 
 public class TargetSelector extends ImageSelectorBase<Target> {
 
     public static final int TARGET_REQUEST_CODE = 12;
+    private TargetListFragment.EFixedType fixedType = TargetListFragment.EFixedType.NONE;
 
     public TargetSelector(Context context) {
         this(context, null);
@@ -34,6 +37,17 @@ public class TargetSelector extends ImageSelectorBase<Target> {
         super(context, attrs);
         defaultActivity = ItemSelectActivity.TargetActivity.class;
         requestCode = TARGET_REQUEST_CODE;
+    }
+
+    public void setFixedType(TargetListFragment.EFixedType fixedType) {
+        this.fixedType = fixedType;
+    }
+
+    @Override
+    protected IntentWrapper getDefaultIntent() {
+        IntentWrapper i = super.getDefaultIntent();
+        i.with(TargetListFragment.FIXED_TYPE, fixedType.name());
+        return i;
     }
 
     @Override

@@ -367,7 +367,7 @@ public class InputActivity extends ChildActivityBase
         // Set current round score
         Score reachedRoundScore = Stream.of(getEnds())
                 .map(end -> getCurrentRound().getTarget().getReachedScore(end))
-                .reduce(new Score(), Score::add);
+                .collect(Score.sum());
         binding.scoreRound.setText(reachedRoundScore.toString());
     }
 

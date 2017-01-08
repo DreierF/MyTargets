@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.shared.targets.scoringstyle;
 
+import android.support.annotation.StringRes;
+
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
@@ -23,28 +25,19 @@ import de.dreier.mytargets.shared.models.db.End;
 
 public class ColorScoringStyle extends ScoringStyle {
 
-    private final String title;
     private final int maxEndPoints;
 
-    public ColorScoringStyle(String title, int maxEndPoints, int... points) {
-        super(false, points);
-        this.title = title;
+    public ColorScoringStyle(@StringRes int title, int maxEndPoints, int... points) {
+        super(title, false, points);
         this.maxEndPoints = maxEndPoints;
     }
 
     @Override
     public Score getReachedScore(End end) {
-        Score score = new Score();
-        score.reachedScore = Stream.of(end.getShots())
+        int reachedScore = Stream.of(end.getShots())
                 .map(s -> getScoreByScoringRing(s.scoringRing, s.index))
                 .distinct()
                 .collect(Collectors.reducing(0, (a, b) -> a + b));
-        score.totalScore = maxEndPoints;
-        return score;
-    }
-
-    @Override
-    public String toString() {
-        return title;
+        return new Score(reachedScore, maxEndPoints);
     }
 }

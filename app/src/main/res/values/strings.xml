@@ -348,4 +348,5 @@
     <string name="intro_description_track_training_progress">Exact arrow plotting, Scoresheet, …</string>
     <string name="intro_title_everything_in_one_place">Everything you need\nin one place</string>
     <string name="intro_description_everything_in_one_place">Including bow-, arrow-\nand sightmark-management,\narchery timer, statistics \nand much more…</string>
+    <string name="average_arrow_score_per_end">Average arrow score per end</string>
 </resources>
