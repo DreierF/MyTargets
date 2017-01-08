@@ -55,7 +55,7 @@
             android:value="@integer/google_play_services_version"/>
 
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".features.main.MainActivity"
             android:label="@string/my_targets"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.CustomToolbar.Launcher">
@@ -70,16 +70,16 @@
                 android:resource="@xml/shortcuts"/>
         </activity>
         <activity
-            android:name=".activities.IntroActivity"
+            android:name=".features.main.IntroActivity"
             android:theme="@style/Theme.Intro" />
         <activity
             android:name=".activities.SimpleFragmentActivityBase$TrainingActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.MainActivity"
+            android:parentActivityName=".features.main.MainActivity"
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity"/>
+                android:value=".features.main.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.SimpleFragmentActivityBase$RoundActivity"
@@ -90,18 +90,18 @@
                 android:value=".activities.SimpleFragmentActivityBase$TrainingActivity"/>
         </activity>
         <activity
-            android:name=".activities.SimpleFragmentActivityBase$TimerActivity"
+            android:name=".features.timer.TimerActivity"
             android:configChanges="orientation|screenSize"
             android:label=""
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.InputActivity"
+            android:parentActivityName=".features.training.input.InputActivity"
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.InputActivity"/>
+                android:value=".features.training.input.InputActivity"/>
         </activity>
         <activity
-            android:name=".activities.InputActivity"
+            android:name=".features.training.input.InputActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.SimpleFragmentActivityBase$RoundActivity"
             android:theme="@style/AppTheme.CustomToolbar">
@@ -132,33 +132,33 @@
         <activity
             android:name=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"
             android:label="@string/new_round_template"
-            android:parentActivityName=".activities.StandardRoundActivity"
+            android:parentActivityName=".features.training.standardround.StandardRoundActivity"
             android:theme="@style/AppTheme.CustomToolbar"
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.StandardRoundActivity"/>
+                android:value=".features.training.standardround.StandardRoundActivity"/>
         </activity>
         <activity
-            android:name=".activities.SimpleFragmentActivityBase$EditBowActivity"
-            android:parentActivityName=".activities.MainActivity"
+            android:name=".features.bows.EditBowActivity"
+            android:parentActivityName=".features.main.MainActivity"
             android:theme="@style/AppTheme.CustomToolbar"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity"/>
+                android:value=".features.main.MainActivity"/>
         </activity>
         <activity
-            android:name=".activities.SimpleFragmentActivityBase$EditArrowActivity"
-            android:parentActivityName=".activities.MainActivity"
+            android:name=".features.arrows.EditArrowActivity"
+            android:parentActivityName=".features.main.MainActivity"
             android:theme="@style/AppTheme.CustomToolbar"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity"/>
+                android:value=".features.main.MainActivity"/>
         </activity>
         <activity
-            android:name=".activities.ScoreboardActivity"
+            android:name=".features.scoreboard.ScoreboardActivity"
             android:label="@string/scoreboard"
             android:parentActivityName=".activities.SimpleFragmentActivityBase$TrainingActivity">
             <meta-data
@@ -170,7 +170,7 @@
             android:label="@string/statistic"
             android:theme="@style/AppTheme.CustomToolbar"/>
         <activity
-            android:name=".activities.ItemSelectActivity$ArrowActivity"
+            android:name=".features.arrows.ArrowActivity"
             android:label="@string/arrow"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity">
@@ -179,7 +179,7 @@
                 android:value=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"/>
         </activity>
         <activity
-            android:name=".activities.ItemSelectActivity$BowActivity"
+            android:name=".features.bows.BowActivity"
             android:label="@string/bow"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity">
@@ -188,7 +188,7 @@
                 android:value=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"/>
         </activity>
         <activity
-            android:name=".activities.ItemSelectActivity$EnvironmentActivity"
+            android:name=".features.training.environment.EnvironmentActivity"
             android:label="@string/environment"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"
@@ -198,7 +198,7 @@
                 android:value=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"/>
         </activity>
         <activity
-            android:name=".activities.ItemSelectActivity$TargetActivity"
+            android:name=".features.training.target.TargetActivity"
             android:label="@string/target_face"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"
@@ -208,7 +208,7 @@
                 android:value=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"/>
         </activity>
         <activity
-            android:name=".activities.ItemSelectActivity$DistanceActivity"
+            android:name=".features.distance.DistanceActivity"
             android:label="@string/distance"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"
@@ -218,25 +218,25 @@
                 android:value=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"/>
         </activity>
         <activity
-            android:name=".activities.ItemSelectActivity$WindSpeedActivity"
+            android:name=".features.training.environment.WindSpeedActivity"
             android:label="@string/wind_speed"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.ItemSelectActivity$EnvironmentActivity">
+            android:parentActivityName=".features.training.environment.EnvironmentActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ItemSelectActivity$EnvironmentActivity"/>
+                android:value=".features.training.environment.EnvironmentActivity"/>
         </activity>
         <activity
-            android:name=".activities.ItemSelectActivity$WindDirectionActivity"
+            android:name=".features.training.environment.WindDirectionActivity"
             android:label="@string/wind_direction"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.ItemSelectActivity$EnvironmentActivity">
+            android:parentActivityName=".features.training.environment.EnvironmentActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ItemSelectActivity$EnvironmentActivity"/>
+                android:value=".features.training.environment.EnvironmentActivity"/>
         </activity>
         <activity
-            android:name=".activities.StandardRoundActivity"
+            android:name=".features.training.standardround.StandardRoundActivity"
             android:label="@string/standard_rounds"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.SimpleFragmentActivityBase$EditTrainingActivity">
@@ -247,39 +247,39 @@
 
         <!-- Preferences activity -->
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name=".features.settings.SettingsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/preferences"
-            android:parentActivityName=".activities.MainActivity">
+            android:parentActivityName=".features.main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity"/>
+                android:value=".features.main.MainActivity"/>
         </activity>
         <activity
-            android:name=".activities.SimpleFragmentActivityBase$AboutActivity"
+            android:name=".features.settings.about.AboutActivity"
             android:label="@string/about"
-            android:parentActivityName=".activities.SettingsActivity">
+            android:parentActivityName=".features.settings.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SettingsActivity"/>
+                android:value=".features.settings.SettingsActivity"/>
         </activity>
         <activity
-            android:name=".activities.SimpleFragmentActivityBase$LicencesActivity"
+            android:name=".features.settings.licences.LicencesActivity"
             android:label="@string/licences"
-            android:parentActivityName=".activities.SettingsActivity">
+            android:parentActivityName=".features.settings.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SettingsActivity"/>
+                android:value=".features.settings.SettingsActivity"/>
         </activity>
         <activity
-            android:name=".activities.DonateActivity"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$AboutActivity"
+            android:name=".features.settings.DonateActivity"
+            android:parentActivityName=".features.settings.about.AboutActivity"
             android:theme="@style/AppTheme.CustomToolbar.Translucent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivityBase$AboutActivity"/>
+                android:value=".features.settings.about.AboutActivity"/>
         </activity>
-        <activity android:name=".activities.DispersionPatternActivity"/>
+        <activity android:name=".features.statistics.DispersionPatternActivity"/>
         
         <provider
             android:name="android.support.v4.content.FileProvider"

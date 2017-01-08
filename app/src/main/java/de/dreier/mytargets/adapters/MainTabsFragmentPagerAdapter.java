@@ -21,10 +21,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.fragments.ArrowListFragment;
-import de.dreier.mytargets.fragments.BowListFragment;
+import de.dreier.mytargets.features.arrows.ArrowListFragment;
+import de.dreier.mytargets.features.bows.BowListFragment;
 import de.dreier.mytargets.fragments.EditableListFragmentBase;
-import de.dreier.mytargets.fragments.TrainingsFragment;
+import de.dreier.mytargets.features.training.TrainingsFragment;
 
 public class MainTabsFragmentPagerAdapter extends FragmentPagerAdapter {
     private final Context context;

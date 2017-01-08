@@ -42,30 +42,30 @@ import icepick.State;
  */
 public abstract class EditableListFragmentBase<T extends IIdSettable & Model> extends ListFragmentBase<T> {
 
-    protected static final String ITEM_ID = "id";
+    public static final String ITEM_ID = "id";
 
     protected boolean supportsStatistics = false;
     protected boolean supportsDeletion = true;
     @State(SelectorBundler.class)
-    MultiSelector mSelector = new MultiSelector();
+    protected MultiSelector mSelector = new MultiSelector();
 
     /**
      * Resource describing FAB action
      */
     @StringRes
-    int newStringRes;
+    protected int newStringRes;
 
     /**
      * Resource used to set title when items are selected.
      */
     @PluralsRes
-    int itemTypeSelRes;
+    protected int itemTypeSelRes;
 
     /**
      * Resource used to set title when items are deleted.
      */
     @PluralsRes
-    int itemTypeDelRes;
+    protected int itemTypeDelRes;
 
     /**
      * Action mode manager

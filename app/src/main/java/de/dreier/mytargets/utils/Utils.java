@@ -24,7 +24,7 @@ import org.joda.time.LocalDate;
 
 import java.util.Locale;
 
-import de.dreier.mytargets.activities.MainActivity;
+import de.dreier.mytargets.features.main.MainActivity;
 
 public class Utils {
 

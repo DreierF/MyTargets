@@ -25,8 +25,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import de.dreier.mytargets.managers.SettingsManager;
-import de.dreier.mytargets.models.ArrowStatistic;
+import de.dreier.mytargets.features.settings.SettingsManager;
+import de.dreier.mytargets.features.statistics.ArrowStatistic;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactDrawable;
 

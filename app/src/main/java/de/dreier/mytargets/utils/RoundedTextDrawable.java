@@ -28,7 +28,7 @@ import android.text.TextPaint;
 
 import java.util.Locale;
 
-import de.dreier.mytargets.models.ArrowStatistic;
+import de.dreier.mytargets.features.statistics.ArrowStatistic;
 
 public class RoundedTextDrawable extends Drawable {
     private final Paint mPaint;

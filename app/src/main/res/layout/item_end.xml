@@ -32,7 +32,7 @@
             android:layout_margin="5dp"
             android:clickable="false" />
 
-        <de.dreier.mytargets.views.EndView
+        <de.dreier.mytargets.features.training.EndView
             android:id="@+id/shoots"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

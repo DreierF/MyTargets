@@ -45,7 +45,7 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityStatisticsBinding;
 import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
-import de.dreier.mytargets.fragments.StatisticsFragment;
+import de.dreier.mytargets.features.statistics.StatisticsFragment;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
@@ -56,7 +56,7 @@ import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
-import de.dreier.mytargets.views.ChipGroup;
+import de.dreier.mytargets.features.statistics.ChipGroup;
 import icepick.Icepick;
 import icepick.State;
 

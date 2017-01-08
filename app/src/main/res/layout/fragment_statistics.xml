@@ -70,7 +70,7 @@
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground">
 
-                        <de.dreier.mytargets.views.ArrowDispersionView
+                        <de.dreier.mytargets.features.statistics.ArrowDispersionView
                             android:id="@+id/dispersionView"
                             android:layout_width="200dp"
                             android:layout_height="200dp"

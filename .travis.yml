@@ -63,11 +63,12 @@ after_success:
 - bash <(curl -s https://codecov.io/bash)
 - ~/jpm/bin/codacy-coverage-reporter -l Java -r app/build/reports/coverage/regular/debug/report.xml
 after_failure:
-- cd app/build/reports/androidTests/connected/flavors/REGULAR/ &&
-- adb logcat -d 2>&1 | python ../../../../../../../pidcat.py de.dreier.mytargets.debug | tee logcat.log &&
-- zip -r reports.zip . &&
-- cd ../../../../../../.. &&
-- ./dropbox_uploader.sh upload app/build/reports/androidTests/connected/flavors/REGULAR/reports.zip /Reports/$TRAVIS_JOB_NUMBER.zip
+- >
+  cd app/build/reports/androidTests/connected/flavors/REGULAR/ &&
+  adb logcat -d 2>&1 | python ../../../../../../../pidcat.py de.dreier.mytargets.debug | tee logcat.log &&
+  zip -r reports.zip . &&
+  cd ../../../../../../.. &&
+  ./dropbox_uploader.sh upload app/build/reports/androidTests/connected/flavors/REGULAR/reports.zip /Reports/$TRAVIS_JOB_NUMBER.zip
 deploy:
   provider: releases
   skip_cleanup: true

@@ -17,7 +17,7 @@ package de.dreier.mytargets.utils.rules;
 
 import java.util.Random;
 
-import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Round;

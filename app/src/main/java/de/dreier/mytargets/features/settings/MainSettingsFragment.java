@@ -19,8 +19,8 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.Preference;
 
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
-import de.dreier.mytargets.fragments.AboutFragment;
+import de.dreier.mytargets.features.settings.licences.LicencesActivity;
+import de.dreier.mytargets.features.settings.about.AboutFragment;
 
 public class MainSettingsFragment extends SettingsFragmentBase {
 
@@ -32,7 +32,7 @@ public class MainSettingsFragment extends SettingsFragmentBase {
                 return true;
             case "pref_licence":
                 startActivity(new Intent(getContext(),
-                        SimpleFragmentActivityBase.LicencesActivity.class));
+                        LicencesActivity.class));
                 return true;
             default:
                 return super.onPreferenceTreeClick(preference);

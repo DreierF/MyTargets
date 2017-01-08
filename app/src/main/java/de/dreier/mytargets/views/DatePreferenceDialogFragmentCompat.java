@@ -27,6 +27,8 @@ import android.widget.DatePicker;
 
 import org.joda.time.LocalDate;
 
+import de.dreier.mytargets.features.settings.DatePreference;
+
 public class DatePreferenceDialogFragmentCompat extends PreferenceDialogFragmentCompat implements DialogPreference.TargetFragment, DatePickerDialog.OnDateSetListener {
 
     @NonNull

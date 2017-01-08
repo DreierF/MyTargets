@@ -19,16 +19,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
-import de.dreier.mytargets.fragments.AboutFragment;
-import de.dreier.mytargets.fragments.EditArrowFragment;
-import de.dreier.mytargets.fragments.EditBowFragment;
-import de.dreier.mytargets.fragments.EditRoundFragment;
+import de.dreier.mytargets.features.rounds.EditRoundFragment;
 import de.dreier.mytargets.fragments.EditStandardRoundFragment;
-import de.dreier.mytargets.fragments.EditTrainingFragment;
-import de.dreier.mytargets.fragments.LicencesFragment;
-import de.dreier.mytargets.fragments.RoundFragment;
-import de.dreier.mytargets.fragments.TimerFragment;
-import de.dreier.mytargets.fragments.TrainingFragment;
+import de.dreier.mytargets.features.training.EditTrainingFragment;
+import de.dreier.mytargets.features.training.RoundFragment;
+import de.dreier.mytargets.features.training.TrainingFragment;
 import de.dreier.mytargets.utils.Utils;
 
 public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
@@ -60,15 +55,6 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
 
     public Fragment getChildFragment() {
         return getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
-    }
-
-    public static class TimerActivity extends SimpleFragmentActivityBase {
-
-        @Override
-        public Fragment instantiateFragment() {
-            return new TimerFragment();
-        }
-
     }
 
     public static class TrainingActivity extends SimpleFragmentActivityBase {
@@ -126,59 +112,4 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
 
     }
 
-    public static class EditBowActivity extends SimpleFragmentActivityBase {
-
-        @Override
-        protected Fragment instantiateFragment() {
-            return new EditBowFragment();
-        }
-
-        @Override
-        public void onBackPressed() {
-            // Workaround: When cancelling a new training don't animate
-            // back to the fab, because clans FAB breaks the transition
-            if (Utils.isLollipop()) {
-                getWindow().setSharedElementReturnTransition(null);
-                getWindow().setSharedElementReenterTransition(null);
-            }
-            finish();
-        }
-    }
-
-    public static class EditArrowActivity extends SimpleFragmentActivityBase {
-
-        @Override
-        protected Fragment instantiateFragment() {
-            return new EditArrowFragment();
-        }
-
-    }
-
-    public static class LicencesActivity extends SimpleFragmentActivityBase {
-
-        @Override
-        protected Fragment instantiateFragment() {
-            return new LicencesFragment();
-        }
-
-        @Override
-        public void onBackPressed() {
-            super.onBackPressed();
-            overridePendingTransition(0, 0);
-        }
-    }
-
-    public static class AboutActivity extends SimpleFragmentActivityBase {
-
-        @Override
-        protected Fragment instantiateFragment() {
-            return new AboutFragment();
-        }
-
-        @Override
-        public void onBackPressed() {
-            super.onBackPressed();
-            overridePendingTransition(0, 0);
-        }
-    }
 }

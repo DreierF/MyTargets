@@ -29,9 +29,10 @@ import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
-import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.features.bows.BowActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
-import de.dreier.mytargets.fragments.EditTrainingFragment;
+import de.dreier.mytargets.features.bows.EditBowActivity;
+import de.dreier.mytargets.features.training.EditTrainingFragment;
 import de.dreier.mytargets.utils.rules.EmptyDbTestRule;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -74,7 +75,7 @@ public class BowSelectorTest extends UITestBase {
         allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
 
         onView(withText(R.string.add_bow)).perform(nestedScrollTo(), click());
-        intended(hasComponent(SimpleFragmentActivityBase.EditBowActivity.class.getName()));
+        intended(hasComponent(EditBowActivity.class.getName()));
         onView(allOf(withId(R.id.action_save), isDisplayed())).perform(click());
 
         onView(allOf(withId(R.id.name),
@@ -83,7 +84,7 @@ public class BowSelectorTest extends UITestBase {
 
         // Check if bow selection opens
         onView(withId(R.id.bow)).perform(nestedScrollTo(), click());
-        intended(hasComponent(ItemSelectActivity.BowActivity.class.getName()));
+        intended(hasComponent(BowActivity.class.getName()));
 
         onView(allOf(withId(R.id.name), childAtPosition(childAtPosition(
                 IsInstanceOf.instanceOf(RelativeLayout.class), 1), 0),

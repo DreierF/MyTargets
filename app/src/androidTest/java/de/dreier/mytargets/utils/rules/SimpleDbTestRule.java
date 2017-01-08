@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Random;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Target;

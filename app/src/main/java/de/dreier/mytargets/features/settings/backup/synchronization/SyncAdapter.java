@@ -25,7 +25,7 @@ import android.util.Log;
 
 import de.dreier.mytargets.features.settings.backup.BackupException;
 import de.dreier.mytargets.features.settings.backup.provider.IBlockingBackup;
-import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.features.settings.SettingsManager;
 
 /**
  * Define a sync adapter for the app.

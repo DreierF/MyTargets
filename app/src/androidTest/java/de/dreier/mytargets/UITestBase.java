@@ -38,7 +38,7 @@ import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.BeforeClass;
 
-import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.utils.matchers.MatcherUtils;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;

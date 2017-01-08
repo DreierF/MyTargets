@@ -26,10 +26,10 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
 
-abstract class DynamicItemAdapter<T> extends RecyclerView.Adapter<DynamicItemHolder<T>> {
+public abstract class DynamicItemAdapter<T> extends RecyclerView.Adapter<DynamicItemHolder<T>> {
     private final Fragment fragment;
     private List<T> list;
-    final LayoutInflater inflater;
+    protected final LayoutInflater inflater;
     private final int undoString;
 
     public DynamicItemAdapter(Fragment fragment, List<T> list, @StringRes int undoString) {

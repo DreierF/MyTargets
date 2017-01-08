@@ -55,7 +55,7 @@ import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.features.settings.backup.provider.IAsyncBackupRestore;
 import de.dreier.mytargets.features.settings.backup.synchronization.GenericAccountService;
 import de.dreier.mytargets.features.settings.backup.synchronization.SyncUtils;
-import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;

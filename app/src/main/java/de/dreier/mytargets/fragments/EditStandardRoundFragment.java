@@ -37,7 +37,7 @@ import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.adapters.DynamicItemHolder;
 import de.dreier.mytargets.databinding.FragmentEditStandardRoundBinding;
 import de.dreier.mytargets.databinding.ItemRoundTemplateBinding;
-import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;

@@ -19,7 +19,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.features.training.environment.WindDirectionActivity;
 import de.dreier.mytargets.shared.models.WindDirection;
 
 public class WindDirectionSelector extends ImageSelectorBase<WindDirection> {
@@ -32,7 +32,7 @@ public class WindDirectionSelector extends ImageSelectorBase<WindDirection> {
 
     public WindDirectionSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
-        defaultActivity = ItemSelectActivity.WindDirectionActivity.class;
+        defaultActivity = WindDirectionActivity.class;
         requestCode = WIND_DIRECTION_REQUEST_CODE;
     }
 

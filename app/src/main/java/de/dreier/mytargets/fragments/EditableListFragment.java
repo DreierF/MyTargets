@@ -25,7 +25,7 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 
 public abstract class EditableListFragment<T extends IIdSettable & Model & Comparable<T>> extends EditableListFragmentBase<T> {
 
-    protected SimpleListAdapterBase<T> mAdapter;
+    protected SimpleListAdapterBase<T> adapter;
 
     protected final void onSelected(T item) {
         if (listener == null) {
@@ -40,6 +40,6 @@ public abstract class EditableListFragment<T extends IIdSettable & Model & Compa
 
     @Override
     protected ItemAdapter<T> getAdapter() {
-        return mAdapter;
+        return adapter;
     }
 }

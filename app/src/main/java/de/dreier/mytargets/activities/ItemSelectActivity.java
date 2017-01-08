@@ -16,16 +16,8 @@ package de.dreier.mytargets.activities;
 
 import android.content.Intent;
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
 
-import de.dreier.mytargets.fragments.ArrowListFragment;
-import de.dreier.mytargets.fragments.BowListFragment;
-import de.dreier.mytargets.fragments.DistanceFragment;
-import de.dreier.mytargets.fragments.EnvironmentFragment;
 import de.dreier.mytargets.fragments.ListFragmentBase;
-import de.dreier.mytargets.fragments.TargetListFragment;
-import de.dreier.mytargets.fragments.WindDirectionListFragment;
-import de.dreier.mytargets.fragments.WindSpeedListFragment;
 
 public abstract class ItemSelectActivity extends SimpleFragmentActivityBase
         implements ListFragmentBase.OnItemSelectedListener {
@@ -41,59 +33,4 @@ public abstract class ItemSelectActivity extends SimpleFragmentActivityBase
         setResult(RESULT_OK, data);
     }
 
-    public static class ArrowActivity extends ItemSelectActivity {
-
-        @Override
-        public Fragment instantiateFragment() {
-            return new ArrowListFragment();
-        }
-    }
-
-    public static class BowActivity extends ItemSelectActivity {
-
-        @Override
-        public Fragment instantiateFragment() {
-            return new BowListFragment();
-        }
-    }
-
-    public static class DistanceActivity extends ItemSelectActivity {
-        @Override
-        protected Fragment instantiateFragment() {
-            return new DistanceFragment();
-        }
-    }
-
-    public static class EnvironmentActivity extends ItemSelectActivity {
-        @Override
-        protected Fragment instantiateFragment() {
-            return new EnvironmentFragment();
-        }
-
-        @Override
-        public void onBackPressed() {
-            ((EnvironmentFragment)getChildFragment()).onSave();
-        }
-    }
-
-    public static class TargetActivity extends ItemSelectActivity {
-        @Override
-        protected Fragment instantiateFragment() {
-            return new TargetListFragment();
-        }
-    }
-
-    public static class WindDirectionActivity extends ItemSelectActivity {
-        @Override
-        protected Fragment instantiateFragment() {
-            return new WindDirectionListFragment();
-        }
-    }
-
-    public static class WindSpeedActivity extends ItemSelectActivity {
-        @Override
-        protected Fragment instantiateFragment() {
-            return new WindSpeedListFragment();
-        }
-    }
 }

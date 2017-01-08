@@ -29,9 +29,10 @@ import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
-import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.features.arrows.ArrowActivity;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
-import de.dreier.mytargets.fragments.EditTrainingFragment;
+import de.dreier.mytargets.features.arrows.EditArrowActivity;
+import de.dreier.mytargets.features.training.EditTrainingFragment;
 import de.dreier.mytargets.utils.rules.EmptyDbTestRule;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -74,7 +75,7 @@ public class ArrowSelectorTest extends UITestBase {
         allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
 
         onView(withText(R.string.add_arrow)).perform(nestedScrollTo(), click());
-        intended(hasComponent(SimpleFragmentActivityBase.EditArrowActivity.class.getName()));
+        intended(hasComponent(EditArrowActivity.class.getName()));
         onView(allOf(withId(R.id.action_save), isDisplayed())).perform(click());
 
         onView(allOf(withId(R.id.name),
@@ -83,7 +84,7 @@ public class ArrowSelectorTest extends UITestBase {
 
         // Check if arrow selection opens
         onView(withId(R.id.arrow)).perform(nestedScrollTo(), click());
-        intended(hasComponent(ItemSelectActivity.ArrowActivity.class.getName()));
+        intended(hasComponent(ArrowActivity.class.getName()));
         onView(allOf(withId(R.id.name), childAtPosition(childAtPosition(
                 IsInstanceOf.instanceOf(RelativeLayout.class), 1), 0),
                 isDisplayed())).check(matches(withText(R.string.my_arrow)));

@@ -21,6 +21,7 @@ import android.support.test.runner.AndroidJUnit4;
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,15 +31,16 @@ import java.util.Map;
 
 import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.InstrumentedTestBase;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.settings.backup.EBackupInterval;
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
-import de.dreier.mytargets.models.EShowMode;
+import de.dreier.mytargets.features.training.input.EShowMode;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.models.NFAAAnimal;
 import de.dreier.mytargets.shared.targets.models.WAFull;
-import de.dreier.mytargets.views.TargetView;
+import de.dreier.mytargets.features.training.input.TargetView;
 
 import static com.google.common.truth.Truth.assertThat;
 import static de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.KEYBOARD;
@@ -46,6 +48,12 @@ import static de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.KEYBO
 @SmallTest
 @RunWith(AndroidJUnit4.class)
 public class SettingsManagerTest extends InstrumentedTestBase {
+
+    @Before
+    public void setUp() {
+        ApplicationInstance.getSharedPreferences().edit().clear().apply();
+        ApplicationInstance.getLastSharedPreferences().edit().clear().apply();
+    }
 
     @Test
     public void setStandardRound() {

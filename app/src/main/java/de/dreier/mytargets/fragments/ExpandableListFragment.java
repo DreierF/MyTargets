@@ -32,14 +32,14 @@ import de.dreier.mytargets.shared.utils.LongUtils;
 /**
  * Shows all rounds of one training day
  */
-abstract class ExpandableListFragment<H extends IIdProvider, C extends IIdSettable & Model> extends EditableListFragmentBase<C> {
+public abstract class ExpandableListFragment<H extends IIdProvider, C extends IIdSettable & Model> extends EditableListFragmentBase<C> {
 
     private static final String KEY_EXPANDED = "expanded";
-    ExpandableListAdapter<H, C> mAdapter;
+    protected ExpandableListAdapter<H, C> mAdapter;
     @Nullable
     private Bundle savedInstanceState;
 
-    void setList(List<C> children, boolean opened) {
+    protected void setList(List<C> children, boolean opened) {
         if (mAdapter.getItemCount() == 0) {
             mAdapter.setList(children, opened);
             if (savedInstanceState != null && savedInstanceState.containsKey(KEY_EXPANDED)) {

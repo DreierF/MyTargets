@@ -28,8 +28,9 @@ import java.util.Map;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
-import de.dreier.mytargets.fragments.StandardRoundListFragment;
-import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.features.training.standardround.StandardRoundActivity;
+import de.dreier.mytargets.features.training.standardround.StandardRoundListFragment;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 
 import static android.support.test.espresso.Espresso.onView;

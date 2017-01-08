@@ -61,14 +61,15 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
     private final int defaultDrawable;
     private final Class<T> clazz;
 
-    FragmentEditImageBinding binding;
+    protected FragmentEditImageBinding binding;
 
     @State
-    File imageFile = null;
+    protected File imageFile = null;
+
     @State
     File oldImageFile = null;
 
-    EditWithImageFragmentBase(int defaultDrawable, Class<T> clazz) {
+    protected EditWithImageFragmentBase(int defaultDrawable, Class<T> clazz) {
         this.defaultDrawable = defaultDrawable;
         this.clazz = clazz;
     }
@@ -174,7 +175,7 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
                 });
     }
 
-    void loadImage(final File imageFile) {
+    protected void loadImage(final File imageFile) {
         this.imageFile = imageFile;
         if (imageFile == null) {
             binding.imageView.setImageResource(defaultDrawable);
@@ -208,7 +209,7 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
         }
     }
 
-    void setImageFiles(List<T> images) {
+    protected void setImageFiles(List<T> images) {
         if (images.isEmpty()) {
             imageFile = null;
             binding.imageView.setImageResource(defaultDrawable);
@@ -224,7 +225,7 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
         }
     }
 
-    List<T> getImageFiles() {
+    protected List<T> getImageFiles() {
         if (imageFile == null) {
             return Collections.emptyList();
         } else {
@@ -247,7 +248,7 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
         }
     }
 
-    Thumbnail getThumbnail() {
+    protected Thumbnail getThumbnail() {
         if (imageFile == null) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), defaultDrawable);
             return new Thumbnail(bitmap);

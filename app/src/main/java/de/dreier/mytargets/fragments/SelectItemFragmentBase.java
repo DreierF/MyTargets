@@ -138,7 +138,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      *
      * @return The selected item
      */
-    T onSave() {
+    protected T onSave() {
         return adapter.getItem(mSelector.getSelectedPosition());
     }
 }

@@ -20,7 +20,7 @@ import android.databinding.DataBindingUtil;
 import android.util.AttributeSet;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.features.distance.DistanceActivity;
 import de.dreier.mytargets.databinding.SelectorItemDistanceBinding;
 import de.dreier.mytargets.shared.models.Dimension;
 
@@ -34,7 +34,7 @@ public class DistanceSelector extends SelectorBase<Dimension> {
 
     public DistanceSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.selector_item_distance);
-        defaultActivity = ItemSelectActivity.DistanceActivity.class;
+        defaultActivity = DistanceActivity.class;
         requestCode = DISTANCE_REQUEST_CODE;
     }
 

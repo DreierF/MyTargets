@@ -28,7 +28,8 @@ import java.util.Map;
 
 import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.features.scoreboard.HtmlInfoBuilder;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Arrow;

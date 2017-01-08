@@ -28,9 +28,13 @@ import org.junit.runner.RunWith;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
 import de.dreier.mytargets.activities.SimpleFragmentActivityBase.EditTrainingActivity;
-import de.dreier.mytargets.fragments.EditBowFragment;
-import de.dreier.mytargets.fragments.EditTrainingFragment;
-import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.features.arrows.EditArrowActivity;
+import de.dreier.mytargets.features.bows.EditBowActivity;
+import de.dreier.mytargets.features.bows.EditBowFragment;
+import de.dreier.mytargets.features.main.MainActivity;
+import de.dreier.mytargets.features.settings.SettingsActivity;
+import de.dreier.mytargets.features.training.EditTrainingFragment;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.Target;
@@ -111,14 +115,14 @@ public class MainActivityNavigationTest extends UITestBase {
         onView(allOf(withText(R.string.bow), isDisplayed())).perform(click());
         onView(matchFab()).perform(click());
         onView(withId(R.id.fabBowRecurve)).perform(click());
-        intended(allOf(hasComponent(SimpleFragmentActivityBase.EditBowActivity.class.getName()),
+        intended(allOf(hasComponent(EditBowActivity.class.getName()),
                 hasExtra(EditBowFragment.BOW_TYPE, EBowType.RECURVE_BOW.name())));
         pressBack();
 
         // Does new arrow work
         onView(allOf(withText(R.string.arrow), isDisplayed())).perform(click());
         onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
-        intended(hasComponent(SimpleFragmentActivityBase.EditArrowActivity.class.getName()));
+        intended(hasComponent(EditArrowActivity.class.getName()));
     }
 
     @Test
