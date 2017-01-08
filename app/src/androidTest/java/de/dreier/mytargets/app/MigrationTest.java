@@ -28,6 +28,7 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -67,6 +68,12 @@ public final class MigrationTest extends InstrumentedTestBase {
      * A sqlite open helper for the app's data layer.
      */
     private DatabaseHelperDelegate helper;
+
+    @BeforeClass
+    public static void prepare() {
+        FlowManager.reset();
+        FlowManager.destroy();
+    }
 
     @Before
     public void setUp() throws IOException {
