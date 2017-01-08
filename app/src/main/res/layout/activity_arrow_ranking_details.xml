@@ -15,9 +15,9 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="de.dreier.mytargets.activities.DispersionPatternActivity">
+    tools:context="de.dreier.mytargets.features.statistics.DispersionPatternActivity">
 
-    <de.dreier.mytargets.views.ArrowDispersionView
+    <de.dreier.mytargets.features.statistics.ArrowDispersionView
         android:id="@+id/dispersionView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -16,7 +16,6 @@
 package de.dreier.mytargets.features.settings.backup.provider;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -37,20 +36,16 @@ import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import de.dreier.mytargets.managers.CsvExporter;
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.db.ArrowImage;
 import de.dreier.mytargets.shared.models.db.BowImage;
 import de.dreier.mytargets.shared.models.db.EndImage;
 import de.dreier.mytargets.shared.utils.FileUtils;
-
-import static android.support.v4.content.FileProvider.getUriForFile;
 
 public class BackupUtils {
 
@@ -76,21 +71,6 @@ public class BackupUtils {
         out.flush();
         in.close();
         out.close();
-    }
-
-    public static Uri export(Context context, List<Long> roundIds) throws IOException {
-        String packageName = context.getPackageName();
-        String authority = packageName + ".easyphotopicker.fileprovider";
-
-        final File f = new File(context.getCacheDir(), getExportFileName());
-        CsvExporter.exportAll(f, roundIds);
-        return getUriForFile(context, authority, f);
-    }
-
-    @NonNull
-    private static String getExportFileName() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
-        return "MyTargets_exported_data_" + format.format(new Date()) + ".csv";
     }
 
     @NonNull

@@ -25,12 +25,12 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.ItemSelectActivity;
-import de.dreier.mytargets.models.CurrentWeather;
-import de.dreier.mytargets.network.weather.WeatherService;
+import de.dreier.mytargets.features.training.environment.EnvironmentActivity;
+import de.dreier.mytargets.features.training.environment.CurrentWeather;
+import de.dreier.mytargets.features.training.environment.WeatherService;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
-import de.dreier.mytargets.utils.Locator;
+import de.dreier.mytargets.features.training.environment.Locator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,7 +48,7 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
 
     public EnvironmentSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
-        defaultActivity = ItemSelectActivity.EnvironmentActivity.class;
+        defaultActivity = EnvironmentActivity.class;
         requestCode = ENVIRONMENT_REQUEST_CODE;
     }
 

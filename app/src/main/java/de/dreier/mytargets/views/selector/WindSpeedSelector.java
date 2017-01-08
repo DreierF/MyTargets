@@ -19,7 +19,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.features.training.environment.WindSpeedActivity;
 import de.dreier.mytargets.shared.models.WindSpeed;
 
 public class WindSpeedSelector extends ImageSelectorBase<WindSpeed> {
@@ -32,7 +32,7 @@ public class WindSpeedSelector extends ImageSelectorBase<WindSpeed> {
 
     public WindSpeedSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
-        defaultActivity = ItemSelectActivity.WindSpeedActivity.class;
+        defaultActivity = WindSpeedActivity.class;
         requestCode = WIND_SPEED_REQUEST_CODE;
     }
 

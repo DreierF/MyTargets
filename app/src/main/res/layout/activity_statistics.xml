@@ -50,19 +50,19 @@
                     android:background="?attr/colorPrimary"
                     android:orientation="vertical">
 
-                    <de.dreier.mytargets.views.ChipGroup
+                    <de.dreier.mytargets.features.statistics.ChipGroup
                         android:id="@+id/distanceTags"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="4dp" />
 
-                    <de.dreier.mytargets.views.ChipGroup
+                    <de.dreier.mytargets.features.statistics.ChipGroup
                         android:id="@+id/bowTags"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="4dp" />
 
-                    <de.dreier.mytargets.views.ChipGroup
+                    <de.dreier.mytargets.features.statistics.ChipGroup
                         android:id="@+id/arrowTags"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

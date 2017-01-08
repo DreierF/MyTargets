@@ -16,11 +16,10 @@
 package de.dreier.mytargets.features.settings;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.managers.SettingsManager;
 
-import static de.dreier.mytargets.managers.SettingsManager.KEY_TIMER_SHOOT_TIME;
-import static de.dreier.mytargets.managers.SettingsManager.KEY_TIMER_WAIT_TIME;
-import static de.dreier.mytargets.managers.SettingsManager.KEY_TIMER_WARN_TIME;
+import static de.dreier.mytargets.features.settings.SettingsManager.KEY_TIMER_SHOOT_TIME;
+import static de.dreier.mytargets.features.settings.SettingsManager.KEY_TIMER_WAIT_TIME;
+import static de.dreier.mytargets.features.settings.SettingsManager.KEY_TIMER_WARN_TIME;
 
 public class TimerSettingsFragment extends SettingsFragmentBase {
     @Override

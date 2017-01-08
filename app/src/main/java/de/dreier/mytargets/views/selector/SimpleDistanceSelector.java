@@ -20,7 +20,7 @@ import android.databinding.DataBindingUtil;
 import android.util.AttributeSet;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.features.distance.DistanceActivity;
 import de.dreier.mytargets.databinding.SelectorItemSimpleTextBinding;
 import de.dreier.mytargets.shared.models.Dimension;
 
@@ -34,7 +34,7 @@ public class SimpleDistanceSelector extends SelectorBase<Dimension> {
 
     public SimpleDistanceSelector(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.selector_item_simple_text);
-        defaultActivity = ItemSelectActivity.DistanceActivity.class;
+        defaultActivity = DistanceActivity.class;
         requestCode = SIMPLE_DISTANCE_REQUEST_CODE;
     }
 

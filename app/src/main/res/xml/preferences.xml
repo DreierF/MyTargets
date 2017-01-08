@@ -54,7 +54,7 @@
                     android:inputType="textAutoComplete"
                     android:key="profile_last_name"
                     android:title="@string/last_name"/>
-                <de.dreier.mytargets.views.DatePreference
+                <de.dreier.mytargets.features.settings.DatePreference
                     android:key="profile_birthday"
                     android:title="@string/birthday"/>
                 <EditTextPreference

@@ -18,7 +18,7 @@ package de.dreier.mytargets.views.selector;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import de.dreier.mytargets.activities.StandardRoundActivity;
+import de.dreier.mytargets.features.training.standardround.StandardRoundActivity;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 
 public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {

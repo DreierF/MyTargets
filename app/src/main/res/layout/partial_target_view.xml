@@ -16,7 +16,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <de.dreier.mytargets.views.TargetView
+    <de.dreier.mytargets.features.training.input.TargetView
         android:id="@+id/targetView"
         android:background="#FAFAFA"
         android:layout_width="match_parent"

@@ -19,8 +19,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.ItemSelectActivity;
-import de.dreier.mytargets.fragments.TargetListFragment;
+import de.dreier.mytargets.features.training.target.TargetActivity;
+import de.dreier.mytargets.features.training.target.TargetListFragment;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.utils.IntentWrapper;
 
@@ -35,7 +35,7 @@ public class TargetSelector extends ImageSelectorBase<Target> {
 
     public TargetSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
-        defaultActivity = ItemSelectActivity.TargetActivity.class;
+        defaultActivity = TargetActivity.class;
         requestCode = TARGET_REQUEST_CODE;
     }
 

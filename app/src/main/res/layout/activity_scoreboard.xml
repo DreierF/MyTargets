@@ -15,7 +15,7 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="de.dreier.mytargets.activities.ScoreboardActivity">
+    tools:context="de.dreier.mytargets.features.scoreboard.ScoreboardActivity">
 
     <WebView
         android:id="@+id/webView"

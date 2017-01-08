@@ -23,7 +23,7 @@
 
         <variable
             name="tag"
-            type="de.dreier.mytargets.views.ChipGroup.Tag" />
+            type="de.dreier.mytargets.features.statistics.ChipGroup.Tag" />
     </data>
 
     <RelativeLayout

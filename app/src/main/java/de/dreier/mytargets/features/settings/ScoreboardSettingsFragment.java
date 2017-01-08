@@ -18,14 +18,10 @@ package de.dreier.mytargets.features.settings;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.preference.Preference;
 
-import de.dreier.mytargets.managers.SettingsManager;
-import de.dreier.mytargets.views.DatePreference;
-import de.dreier.mytargets.views.DatePreferenceDialogFragmentCompat;
-
-import static de.dreier.mytargets.managers.SettingsManager.KEY_PROFILE_BIRTHDAY;
-import static de.dreier.mytargets.managers.SettingsManager.KEY_PROFILE_CLUB;
-import static de.dreier.mytargets.managers.SettingsManager.KEY_PROFILE_FIRST_NAME;
-import static de.dreier.mytargets.managers.SettingsManager.KEY_PROFILE_LAST_NAME;
+import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_BIRTHDAY;
+import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_CLUB;
+import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_FIRST_NAME;
+import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_LAST_NAME;
 
 public class ScoreboardSettingsFragment extends SettingsFragmentBase {
 

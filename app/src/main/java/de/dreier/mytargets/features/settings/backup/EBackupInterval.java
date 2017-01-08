@@ -17,7 +17,7 @@ package de.dreier.mytargets.features.settings.backup;
 
 import android.support.annotation.StringRes;
 
-import de.dreier.mytargets.ApplicationInstance;
+import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.R;
 
 public enum EBackupInterval {

@@ -16,7 +16,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context="de.dreier.mytargets.activities.ScoreboardActivity">
+      tools:context="de.dreier.mytargets.features.scoreboard.ScoreboardActivity">
     <item
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share_white_24dp"

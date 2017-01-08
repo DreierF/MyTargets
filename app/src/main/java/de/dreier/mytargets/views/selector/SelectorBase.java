@@ -31,13 +31,13 @@ import android.widget.LinearLayout;
 import org.parceler.Parcels;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.base.activities.ItemSelectActivity;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.IntentWrapper;
 import icepick.Icepick;
 import icepick.State;
 
-import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
+import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
 
 public abstract class SelectorBase<T> extends LinearLayout {
 

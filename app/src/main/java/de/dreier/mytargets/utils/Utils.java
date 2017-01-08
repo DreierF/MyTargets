@@ -19,12 +19,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Process;
+import android.text.Html;
+import android.text.Spanned;
 
 import org.joda.time.LocalDate;
 
 import java.util.Locale;
 
-import de.dreier.mytargets.activities.MainActivity;
+import de.dreier.mytargets.features.main.MainActivity;
 
 public class Utils {
 
@@ -65,5 +67,14 @@ public class Utils {
 
     public static boolean equals(Object a, Object b) {
         return (a == b) || (a != null && a.equals(b));
+    }
+
+    @SuppressWarnings("deprecation")
+    public static Spanned fromHtml(String html) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            return Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            return Html.fromHtml(html);
+        }
     }
 }
