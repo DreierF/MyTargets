@@ -172,7 +172,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     public Score getReachedScore() {
         return Stream.of(getRounds())
                 .map(Round::getReachedScore)
-                .reduce(new Score(), Score::add);
+                .collect(Score.sum());
     }
 
     @Override

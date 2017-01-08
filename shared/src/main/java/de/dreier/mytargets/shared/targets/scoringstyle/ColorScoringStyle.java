@@ -34,12 +34,10 @@ public class ColorScoringStyle extends ScoringStyle {
 
     @Override
     public Score getReachedScore(End end) {
-        Score score = new Score();
-        score.reachedScore = Stream.of(end.getShots())
+        int reachedScore = Stream.of(end.getShots())
                 .map(s -> getScoreByScoringRing(s.scoringRing, s.index))
                 .distinct()
                 .collect(Collectors.reducing(0, (a, b) -> a + b));
-        score.totalScore = maxEndPoints;
-        return score;
+        return new Score(reachedScore, maxEndPoints);
     }
 }

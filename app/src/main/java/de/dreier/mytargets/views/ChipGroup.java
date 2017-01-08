@@ -161,6 +161,7 @@ public class ChipGroup extends ViewGroup {
 
     /**
      * Set the tags. It will remove all previous tags first.
+     * If the list of tags contains less than 2 elements the view sets its visibility to gone.
      *
      * @param tags the tag list to set.
      */
@@ -171,6 +172,7 @@ public class ChipGroup extends ViewGroup {
         for (final Tag tag : tagList) {
             appendTag(tag);
         }
+        setVisibility(tags.size() < 2 ? GONE : VISIBLE);
     }
 
     /**

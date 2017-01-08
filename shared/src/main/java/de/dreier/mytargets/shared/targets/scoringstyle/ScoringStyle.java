@@ -123,15 +123,13 @@ public class ScoringStyle {
     }
 
     public Score getReachedScore(Shot shot) {
-        Score score = new Score();
-        score.reachedScore = getScoreByScoringRing(shot.scoringRing, shot.index);
-        score.totalScore = maxScorePerShot;
-        return score;
+        int reachedScore = getScoreByScoringRing(shot.scoringRing, shot.index);
+        return new Score(reachedScore, maxScorePerShot);
     }
 
     public Score getReachedScore(End end) {
         return Stream.of(end.getShots())
                 .map(this::getReachedScore)
-                .reduce(new Score(), Score::add);
+                .collect(Score.sum());
     }
 }
