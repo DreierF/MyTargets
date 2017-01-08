@@ -3,14 +3,19 @@
 
 -keepattributes InnerClasses
 -keepattributes EnclosingMethod
+-keepattributes *Annotation*
+-keepattributes Signature
+-keepattributes Exceptions
 
 -dontnote android.net.http.**
 -dontnote org.apache.commons.**
 -dontnote org.apache.http.**
+-dontwarn sun.misc.Unsafe
 
 # Google Play Services
 -keep public class com.google.android.gms.* { public *; }
 -dontwarn com.google.android.gms.**
+-dontnote com.google.android.gms.**
 
 # Ignore duplicate classes in legacy android's http stuff
 -dontnote org.apache.http.**
@@ -44,16 +49,15 @@
 #Retrofit
 -dontwarn retrofit2.**
 -keep class retrofit2.** { *; }
--keepattributes Signature
--keepattributes Exceptions
+-keepclasseswithmembers class * {
+    @retrofit2.http.* <methods>;
+}
 
 # MPCharts
 -keep class com.github.mikephil.charting.** { *; }
 -dontwarn io.realm.**
 
 # OkHttp
--keepattributes Signature
--keepattributes *Annotation*
 -keep class com.squareup.okhttp.** { *; }
 -keep interface com.squareup.okhttp.** { *; }
 -dontwarn com.squareup.okhttp.**
@@ -62,9 +66,12 @@
 -dontwarn okhttp3.**
 -dontwarn okio.**
 
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
+
 # Butterknife
 -dontwarn butterknife.internal.**
--keepattributes *Annotation*
 -keep class butterknife.** { *; }
 -keep class **$$ViewBinder { *; }
 
@@ -88,7 +95,6 @@
 -keepattributes Signature
 -keepattributes *Annotation*
 -keep class sun.misc.Unsafe { *; }
-#-keep class com.google.gson.stream.** { *; }
 -keep class com.google.gson.examples.android.model.** { *; }
 -keep class * implements com.google.gson.TypeAdapterFactory
 -keep class * implements com.google.gson.JsonSerializer
