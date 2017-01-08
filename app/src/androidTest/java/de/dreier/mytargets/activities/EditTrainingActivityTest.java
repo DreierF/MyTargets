@@ -102,7 +102,7 @@ public class EditTrainingActivityTest extends UITestBase {
         onView(withText(R.string.compound_style)).perform(click());
         onView(withId(R.id.target_size)).perform(click());
         onView(withText("40cm")).perform(click());
-        onView(withId(R.id.action_save)).perform(click());
+        pressBack();
         onView(allOf(withId(R.id.name),
                 withParent(withParent(withParent(withParent(withId(R.id.target)))))))
                 .check(matches(withText(containsString(
