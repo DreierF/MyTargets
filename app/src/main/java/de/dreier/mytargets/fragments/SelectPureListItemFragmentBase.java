@@ -47,8 +47,8 @@ public abstract class SelectPureListItemFragmentBase<T extends IIdProvider & IIm
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
-        mAdapter = new ListAdapter(getContext());
-        binding.recyclerView.setAdapter(mAdapter);
+        adapter = new ListAdapter(getContext());
+        binding.recyclerView.setAdapter(adapter);
         binding.fab.setVisibility(View.GONE);
         ToolbarUtils.showUpAsX(this);
         return binding.getRoot();

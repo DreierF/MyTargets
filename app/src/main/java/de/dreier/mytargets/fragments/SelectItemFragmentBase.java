@@ -50,7 +50,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
     /**
      * Adapter for the fragment's RecyclerView
      */
-    protected ListAdapterBase<? extends ItemBindingHolder<?>, T> mAdapter;
+    protected ListAdapterBase<? extends ItemBindingHolder<?>, T> adapter;
 
     /**
      * Set to true when items are expanded when they are clicked and
@@ -75,7 +75,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      * @param item         Currently selected item
      */
     protected void selectItem(RecyclerView recyclerView, T item) {
-        int position = mAdapter.getItemPosition(item);
+        int position = adapter.getItemPosition(item);
         mSelector.setSelected(position, item.getId(), true);
         recyclerView.post(() -> {
             LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
@@ -102,7 +102,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
-            onSaveItem();
+            saveItem();
             finish();
             return true;
         }
@@ -121,15 +121,15 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
         boolean alreadySelected = oldSelectedPosition == holder.getAdapterPosition();
         mSelector.setSelected(holder, true);
         if (alreadySelected || !useDoubleClickSelection) {
-            onSaveItem();
+            saveItem();
             finish();
         }
     }
 
     /**
-     * Returns the selected item to the calling activity
+     * Returns the selected item to the calling activity. The item is retrieved by calling onSave().
      */
-    protected void onSaveItem() {
+    protected void saveItem() {
         listener.onItemSelected(Parcels.wrap(onSave()));
     }
 
@@ -139,6 +139,6 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      * @return The selected item
      */
     T onSave() {
-        return mAdapter.getItem(mSelector.getSelectedPosition());
+        return adapter.getItem(mSelector.getSelectedPosition());
     }
 }

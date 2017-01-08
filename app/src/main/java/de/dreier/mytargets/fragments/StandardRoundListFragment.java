@@ -77,8 +77,8 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         Map<Long, Integer> usedRounds = SettingsManager.getStandardRoundsLastUsed();
-        mAdapter = new StandardRoundListAdapter(getContext(), usedRounds);
-        binding.recyclerView.setAdapter(mAdapter);
+        adapter = new StandardRoundListAdapter(getContext(), usedRounds);
+        binding.recyclerView.setAdapter(adapter);
         binding.fab.setVisibility(View.GONE);
         ToolbarUtils.showUpAsX(this);
         binding.recyclerView.setHasFixedSize(false);
@@ -104,7 +104,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
             data = StandardRound.getAll();
         }
         return () -> {
-            mAdapter.setList(data);
+            adapter.setList(data);
             selectItem(binding.recyclerView, currentSelection);
         };
     }
