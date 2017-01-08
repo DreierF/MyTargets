@@ -52,8 +52,10 @@ import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.LongUtils;
+import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.views.ChipGroup;
 import icepick.Icepick;
 import icepick.State;
@@ -67,6 +69,15 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     private ActivityStatisticsBinding binding;
     private List<Pair<Training, Round>> rounds;
     private List<Pair<Target, List<Round>>> filteredRounds;
+
+    @State(ParcelsBundler.class)
+    List<String> distanceTags;
+
+    @State(ParcelsBundler.class)
+    List<Long> arrowTags;
+
+    @State(ParcelsBundler.class)
+    List<Long> bowTags;
 
     @NonNull
     public static IntentWrapper getIntent(List<Long> roundIds) {
@@ -117,9 +128,27 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         binding.arrowTags.setOnTagClickListener(t -> applyFilter());
         binding.bowTags.setTags(getBowTags());
         binding.bowTags.setOnTagClickListener(t -> applyFilter());
-        //TODO save filter on rotation
+
+        if (distanceTags != null && arrowTags != null && bowTags != null) {
+            restoreCheckedStates();
+        }
 
         updateFilter();
+    }
+
+    private void restoreCheckedStates() {
+        Stream.of(binding.distanceTags.getTags())
+                .forEach(tag -> tag.isChecked = Stream.of(distanceTags)
+                        .anyMatch(d -> Utils.equals(d, tag.text)));
+        Stream.of(binding.arrowTags.getTags())
+                .forEach(tag -> tag.isChecked = Stream.of(arrowTags)
+                        .anyMatch(a -> Utils.equals(a, tag.id)));
+        Stream.of(binding.bowTags.getTags())
+                .forEach(tag -> tag.isChecked = Stream.of(bowTags)
+                        .anyMatch(b -> Utils.equals(b, tag.id)));
+        binding.distanceTags.setTags(binding.distanceTags.getTags());
+        binding.arrowTags.setTags(binding.arrowTags.getTags());
+        binding.bowTags.setTags(binding.bowTags.getTags());
     }
 
     @Override
@@ -178,11 +207,11 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     }
 
     private void applyFilter() {
-        List<String> distanceTags = Stream.of(binding.distanceTags.getCheckedTags())
+        distanceTags = Stream.of(binding.distanceTags.getCheckedTags())
                 .map(t -> t.text).collect(Collectors.toList());
-        List<Long> arrowTags = Stream.of(binding.arrowTags.getCheckedTags())
+        arrowTags = Stream.of(binding.arrowTags.getCheckedTags())
                 .map(t -> t.id).collect(Collectors.toList());
-        List<Long> bowTags = Stream.of(binding.bowTags.getCheckedTags())
+        bowTags = Stream.of(binding.bowTags.getCheckedTags())
                 .map(t -> t.id).collect(Collectors.toList());
         filteredRounds = Stream.of(rounds)
                 .filter(pair -> distanceTags.contains(pair.second.distance.toString())
