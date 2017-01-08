@@ -42,10 +42,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ActivityScoreboardBinding;
 import de.dreier.mytargets.features.settings.ESettingsScreens;
 import de.dreier.mytargets.features.settings.SettingsActivity;
-import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.IntentWrapper;
-import de.dreier.mytargets.utils.ScoreboardConfiguration;
-import de.dreier.mytargets.utils.ScoreboardImage;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
 import static android.support.v4.content.FileProvider.getUriForFile;

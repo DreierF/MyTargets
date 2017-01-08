@@ -55,11 +55,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import de.dreier.mytargets.ApplicationInstance;
+import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentStatisticsBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
-import de.dreier.mytargets.fragments.FragmentBase;
+import de.dreier.mytargets.base.fragments.FragmentBase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.SelectableZone;
@@ -70,9 +70,9 @@ import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.Color;
 import de.dreier.mytargets.shared.utils.LongUtils;
-import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.RoundedTextDrawable;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.Utils;
 
 public class StatisticsFragment extends FragmentBase {
 
@@ -280,7 +280,7 @@ public class StatisticsFragment extends FragmentBase {
 
         binding.distributionChart.setData(data);
         final String hitMissText = getHitMissText();
-        binding.distributionChart.setCenterText(HtmlUtils.fromHtml(hitMissText));
+        binding.distributionChart.setCenterText(Utils.fromHtml(hitMissText));
 
         binding.distributionChart
                 .setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
@@ -291,12 +291,12 @@ public class StatisticsFragment extends FragmentBase {
                                 PIE_CHART_CENTER_TEXT_FORMAT,
                                 getString(R.string.points), selectableZone.text,
                                 getString(R.string.count), (int) e.getY());
-                        binding.distributionChart.setCenterText(HtmlUtils.fromHtml(s));
+                        binding.distributionChart.setCenterText(Utils.fromHtml(s));
                     }
 
                     @Override
                     public void onNothingSelected() {
-                        binding.distributionChart.setCenterText(HtmlUtils.fromHtml(hitMissText));
+                        binding.distributionChart.setCenterText(Utils.fromHtml(hitMissText));
                     }
                 });
     }

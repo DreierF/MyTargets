@@ -32,14 +32,13 @@ import java.util.List;
 import java.util.Locale;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.scoreboard.ScoreboardActivity;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
-import de.dreier.mytargets.activities.StatisticsActivity;
-import de.dreier.mytargets.adapters.SimpleListAdapterBase;
+import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemEndBinding;
+import de.dreier.mytargets.features.scoreboard.ScoreboardActivity;
+import de.dreier.mytargets.features.statistics.StatisticsActivity;
 import de.dreier.mytargets.features.training.input.InputActivity;
-import de.dreier.mytargets.fragments.EditableListFragment;
+import de.dreier.mytargets.base.fragments.EditableListFragment;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.utils.DividerItemDecoration;
@@ -55,7 +54,7 @@ public class RoundFragment extends EditableListFragment<End> {
 
     private static final String ROUND_ID = "round_id";
 
-    private long mRound;
+    private long roundId;
     private FragmentListBinding binding;
     private Round round;
 
@@ -67,7 +66,7 @@ public class RoundFragment extends EditableListFragment<End> {
 
     @NonNull
     public static IntentWrapper getIntent(Round round) {
-        return new IntentWrapper(SimpleFragmentActivityBase.RoundActivity.class)
+        return new IntentWrapper(RoundActivity.class)
                 .with(ROUND_ID, round.getId());
     }
 
@@ -89,7 +88,7 @@ public class RoundFragment extends EditableListFragment<End> {
                         .start());
         // Get round
         if (getArguments() != null) {
-            mRound = getArguments().getLong(ROUND_ID, -1);
+            roundId = getArguments().getLong(ROUND_ID, -1);
         }
 
         setHasOptionsMenu(true);
@@ -105,7 +104,7 @@ public class RoundFragment extends EditableListFragment<End> {
     @NonNull
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
-        round = Round.get(mRound);
+        round = Round.get(roundId);
         final List<End> ends = round.getEnds();
         final boolean showFab = round.maxEndCount == null || ends.size() < round.maxEndCount;
 

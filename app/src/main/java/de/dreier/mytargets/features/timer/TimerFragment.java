@@ -34,7 +34,7 @@ import android.view.WindowManager;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentTimerBinding;
-import de.dreier.mytargets.fragments.FragmentBase;
+import de.dreier.mytargets.base.fragments.FragmentBase;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;

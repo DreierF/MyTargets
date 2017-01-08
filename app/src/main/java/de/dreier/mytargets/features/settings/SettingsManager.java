@@ -28,7 +28,7 @@ import org.joda.time.format.DateTimeFormat;
 import java.util.Arrays;
 import java.util.Map;
 
-import de.dreier.mytargets.ApplicationInstance;
+import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.features.settings.backup.EBackupInterval;
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.features.training.input.EShowMode;

@@ -16,7 +16,7 @@ package de.dreier.mytargets.features.training.standardround;
 
 import android.support.v4.app.Fragment;
 
-import de.dreier.mytargets.activities.ItemSelectActivity;
+import de.dreier.mytargets.base.activities.ItemSelectActivity;
 
 public class StandardRoundActivity extends ItemSelectActivity {
     @Override

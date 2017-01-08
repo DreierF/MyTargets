@@ -33,9 +33,8 @@ import java.io.File;
 import java.io.IOException;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.ChildActivityBase;
+import de.dreier.mytargets.base.activities.ChildActivityBase;
 import de.dreier.mytargets.databinding.ActivityArrowRankingDetailsBinding;
-import de.dreier.mytargets.utils.DistributionPatternUtils;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
@@ -99,7 +98,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
             try {
                 File dir = getCacheDir();
                 final File f = File.createTempFile("dispersion_pattern", ".png", dir);
-                DistributionPatternUtils.createDistributionPatternImageFile(800, f, statistic);
+                DispersionPatternUtils.createDispersionPatternImageFile(800, f, statistic);
 
                 // Build and fire intent to ask for share provider
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -122,7 +121,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
         printHelper.setScaleMode(PrintHelper.SCALE_MODE_FIT);
 
         // Get the image
-        Bitmap image = DistributionPatternUtils.getDistributionPatternBitmap(800, statistic);
+        Bitmap image = DispersionPatternUtils.getDispersionPatternBitmap(800, statistic);
         if (image != null) {
             // Send it to the print helper
             printHelper.printBitmap("MyTargets", image);

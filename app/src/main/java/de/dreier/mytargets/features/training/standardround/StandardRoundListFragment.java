@@ -39,11 +39,10 @@ import java.util.List;
 import java.util.Map;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.HeaderListAdapter;
+import de.dreier.mytargets.base.adapters.header.HeaderListAdapter;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
-import de.dreier.mytargets.fragments.EditStandardRoundFragment;
-import de.dreier.mytargets.fragments.SelectItemFragmentBase;
+import de.dreier.mytargets.base.fragments.SelectItemFragmentBase;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
@@ -53,7 +52,7 @@ import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static android.app.Activity.RESULT_OK;
-import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
+import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
 
 public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRound>
         implements SearchView.OnQueryTextListener {

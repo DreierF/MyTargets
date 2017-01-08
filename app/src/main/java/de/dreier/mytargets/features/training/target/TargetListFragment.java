@@ -38,10 +38,10 @@ import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.SimpleListAdapterBase;
+import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentTargetSelectBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
-import de.dreier.mytargets.fragments.SelectItemFragmentBase;
+import de.dreier.mytargets.base.fragments.SelectItemFragmentBase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.TargetFactory;
@@ -51,7 +51,7 @@ import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
-import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
+import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
 import static de.dreier.mytargets.features.training.target.TargetListFragment.EFixedType.GROUP;
 import static de.dreier.mytargets.features.training.target.TargetListFragment.EFixedType.NONE;
 import static de.dreier.mytargets.features.training.target.TargetListFragment.EFixedType.TARGET;

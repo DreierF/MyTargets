@@ -23,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.settings.DonateActivity;
 import de.dreier.mytargets.databinding.ItemDonationBinding;
 
 public class DonationAdapter extends RecyclerView.Adapter<DonationAdapter.DonationViewHolder> {

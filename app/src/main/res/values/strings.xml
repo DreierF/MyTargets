@@ -322,7 +322,6 @@
     <string name="creating_backup">Creating backup…</string>
     <string name="backup_restore_desc">Backup and restore app data</string>
     <string name="exporting">Exporting…</string>
-    <string name="dropbox" translatable="false">Dropbox</string>
     <string name="loading_backups_failed">Loading backups failed!</string>
     <string name="external_storage">External storage</string>
     <string name="backup_interval">Backup interval</string>
@@ -344,8 +343,8 @@
     <string name="bow_button">Button</string>
     <string name="more_fields">More fields</string>
     <string name="recently_used">Recently used</string>
-    <string name="intro_title_track_training_progress">Track your training progress</string>
-    <string name="intro_description_track_training_progress">Exact arrow plotting, Scoresheet, …</string>
+    <string name="intro_title_track_training_progress">Forget paper scoresheets!</string>
+    <string name="intro_description_track_training_progress">With exact arrow plotting,\nyou can get more useful insights\nout of your training data.</string>
     <string name="intro_title_everything_in_one_place">Everything you need\nin one place</string>
     <string name="intro_description_everything_in_one_place">Including bow-, arrow-\nand sightmark-management,\narchery timer, statistics \nand much more…</string>
     <string name="average_arrow_score_per_end">Average arrow score per end</string>

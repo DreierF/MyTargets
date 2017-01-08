@@ -28,7 +28,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentDistanceBinding;
 import de.dreier.mytargets.shared.models.Dimension;
 
-import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
+import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
 
 public class DistanceFragment extends Fragment {
 

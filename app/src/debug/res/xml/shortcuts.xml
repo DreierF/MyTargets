@@ -24,9 +24,9 @@
             android:targetPackage="de.dreier.mytargets.debug"
             android:targetClass="de.dreier.mytargets.features.main.MainActivity" />
         <intent
-            android:action="de.dreier.mytargets.features.training.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION"
+            android:action="de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION"
             android:targetPackage="de.dreier.mytargets.debug"
-            android:targetClass="de.dreier.mytargets.activities.SimpleFragmentActivityBase$EditTrainingActivity" />
+            android:targetClass="de.dreier.mytargets.features.training.edit.EditTrainingActivity" />
     </shortcut>
     <shortcut
         android:shortcutId="standard_round"
@@ -38,9 +38,9 @@
             android:targetPackage="de.dreier.mytargets.debug"
             android:targetClass="de.dreier.mytargets.features.main.MainActivity" />
         <intent
-            android:action="de.dreier.mytargets.features.training.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION"
+            android:action="de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION"
             android:targetPackage="de.dreier.mytargets.debug"
-            android:targetClass="de.dreier.mytargets.activities.SimpleFragmentActivityBase$EditTrainingActivity" />
+            android:targetClass="de.dreier.mytargets.features.training.edit.EditTrainingActivity" />
     </shortcut>
 </shortcuts>
 

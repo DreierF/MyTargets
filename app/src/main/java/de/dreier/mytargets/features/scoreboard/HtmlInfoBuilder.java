@@ -19,7 +19,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
-import de.dreier.mytargets.ApplicationInstance;
+import de.dreier.mytargets.app.ApplicationInstance;
 
 public class HtmlInfoBuilder {
     private final StringBuilder info = new StringBuilder();

@@ -17,7 +17,7 @@ package de.dreier.mytargets.features.timer;
 
 import android.support.v4.app.Fragment;
 
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
 
 public class TimerActivity extends SimpleFragmentActivityBase {
 

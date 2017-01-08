@@ -36,11 +36,11 @@ import org.parceler.Parcel;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.ChildActivityBase;
+import de.dreier.mytargets.base.activities.ChildActivityBase;
 import de.dreier.mytargets.databinding.ActivityInputBinding;
 import de.dreier.mytargets.features.timer.TimerFragment;
 import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.managers.WearMessageManager;
+import de.dreier.mytargets.utils.WearMessageManager;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.NotificationInfo;

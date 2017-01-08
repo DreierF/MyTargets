@@ -29,17 +29,17 @@ import com.github.clans.fab.FloatingActionButton;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.SimpleListAdapterBase;
+import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentBowsBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
-import de.dreier.mytargets.fragments.EditableListFragment;
+import de.dreier.mytargets.base.fragments.EditableListFragment;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.features.scoreboard.HtmlInfoBuilder;
-import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
+import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.shared.models.EBowType.BARE_BOW;
@@ -150,7 +150,7 @@ public class BowListFragment extends EditableListFragment<Bow> {
             for (SightMark s : item.getSightMarks()) {
                 info.addLine(s.distance.toString(), s.value);
             }
-            binding.details.setText(HtmlUtils.fromHtml(info.toString()));
+            binding.details.setText(Utils.fromHtml(info.toString()));
         }
     }
 }

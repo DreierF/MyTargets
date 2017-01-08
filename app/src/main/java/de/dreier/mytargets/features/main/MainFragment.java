@@ -31,8 +31,7 @@ import com.annimon.stream.Stream;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.settings.SettingsActivity;
-import de.dreier.mytargets.activities.StatisticsActivity;
-import de.dreier.mytargets.adapters.MainTabsFragmentPagerAdapter;
+import de.dreier.mytargets.features.statistics.StatisticsActivity;
 import de.dreier.mytargets.databinding.FragmentMainBinding;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;

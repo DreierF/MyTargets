@@ -23,7 +23,7 @@ import android.view.ViewGroup;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentEditArrowBinding;
-import de.dreier.mytargets.fragments.EditWithImageFragmentBase;
+import de.dreier.mytargets.base.fragments.EditWithImageFragmentBase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.ArrowImage;

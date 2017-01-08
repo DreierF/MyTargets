@@ -56,7 +56,6 @@ import de.dreier.mytargets.features.settings.backup.provider.IAsyncBackupRestore
 import de.dreier.mytargets.features.settings.backup.synchronization.GenericAccountService;
 import de.dreier.mytargets.features.settings.backup.synchronization.SyncUtils;
 import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.utils.HtmlUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
 import permissions.dispatcher.NeedsPermission;
@@ -328,7 +327,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         );
         new MaterialDialog.Builder(getContext())
                 .title(R.string.dialog_restore_title)
-                .content(HtmlUtils.fromHtml(html))
+                .content(Utils.fromHtml(html))
                 .positiveText(R.string.restore)
                 .negativeText(android.R.string.cancel)
                 .positiveColor(0xffe53935)

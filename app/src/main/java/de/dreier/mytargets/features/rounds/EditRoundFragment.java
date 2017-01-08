@@ -26,10 +26,10 @@ import android.view.ViewGroup;
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.features.training.EditRoundActivity;
 import de.dreier.mytargets.features.training.input.InputActivity;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.databinding.FragmentEditRoundBinding;
-import de.dreier.mytargets.fragments.EditFragmentBase;
+import de.dreier.mytargets.base.fragments.EditFragmentBase;
 import de.dreier.mytargets.features.training.RoundFragment;
 import de.dreier.mytargets.features.training.target.TargetListFragment;
 import de.dreier.mytargets.features.settings.SettingsManager;
@@ -39,7 +39,7 @@ import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 
-import static de.dreier.mytargets.fragments.EditableListFragmentBase.ITEM_ID;
+import static de.dreier.mytargets.base.fragments.EditableListFragmentBase.ITEM_ID;
 
 public class EditRoundFragment extends EditFragmentBase {
     private static final String ROUND_ID = "round_id";
@@ -49,13 +49,13 @@ public class EditRoundFragment extends EditFragmentBase {
 
     @NonNull
     public static IntentWrapper createIntent(Training training) {
-        return new IntentWrapper(SimpleFragmentActivityBase.EditRoundActivity.class)
+        return new IntentWrapper(EditRoundActivity.class)
                 .with(ITEM_ID, training.getId());
     }
 
     @NonNull
     public static IntentWrapper editIntent(Training training, Round round) {
-        return new IntentWrapper(SimpleFragmentActivityBase.EditRoundActivity.class)
+        return new IntentWrapper(EditRoundActivity.class)
                 .with(ITEM_ID, training.getId())
                 .with(ROUND_ID, round.getId());
     }

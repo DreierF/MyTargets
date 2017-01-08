@@ -36,20 +36,20 @@ import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.scoreboard.ScoreboardActivity;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
-import de.dreier.mytargets.activities.StatisticsActivity;
-import de.dreier.mytargets.adapters.SimpleListAdapterBase;
+import de.dreier.mytargets.features.statistics.StatisticsActivity;
+import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentTrainingBinding;
 import de.dreier.mytargets.databinding.ItemRoundBinding;
 import de.dreier.mytargets.features.rounds.EditRoundFragment;
-import de.dreier.mytargets.fragments.EditableListFragment;
+import de.dreier.mytargets.base.fragments.EditableListFragment;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.utils.DividerItemDecoration;
-import de.dreier.mytargets.utils.HtmlUtils;
+import de.dreier.mytargets.features.scoreboard.HtmlUtils;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 /**
@@ -71,7 +71,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
 
     @NonNull
     public static IntentWrapper getIntent(Training training) {
-        return new IntentWrapper(SimpleFragmentActivityBase.TrainingActivity.class)
+        return new IntentWrapper(TrainingActivity.class)
                 .with(ITEM_ID, training.getId());
     }
 
@@ -126,7 +126,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
 
                 // Set round info
                 binding.weatherIcon.setImageResource(training.getEnvironment().getColorDrawable());
-                binding.detailRoundInfo.setText(HtmlUtils
+                binding.detailRoundInfo.setText(Utils
                         .fromHtml(HtmlUtils.getTrainingInfoHTML(training, rounds, equals, false)));
                 adapter.setList(rounds);
 
@@ -213,7 +213,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
             binding.title.setText(String.format(Locale.ENGLISH, "%s %d",
                     getContext().getString(R.string.round),
                     item.index + 1));
-            binding.subtitle.setText(HtmlUtils.fromHtml(HtmlUtils.getRoundInfo(item, equals)));
+            binding.subtitle.setText(Utils.fromHtml(HtmlUtils.getRoundInfo(item, equals)));
             if (binding.subtitle.getText().toString().isEmpty()) {
                 binding.subtitle.setVisibility(View.GONE);
             } else {

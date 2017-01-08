@@ -37,9 +37,9 @@
     <uses-permission android:name="com.android.vending.BILLING"/>
 
     <application
-        android:name=".ApplicationInstance"
+        android:name=".app.ApplicationInstance"
         android:allowBackup="true"
-        android:backupAgent=".utils.MyBackupAgent"
+        android:backupAgent=".utils.backup.MyBackupAgent"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/my_targets"
@@ -73,7 +73,7 @@
             android:name=".features.main.IntroActivity"
             android:theme="@style/Theme.Intro" />
         <activity
-            android:name=".activities.SimpleFragmentActivityBase$TrainingActivity"
+            android:name=".features.training.TrainingActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".features.main.MainActivity"
             android:theme="@style/AppTheme.CustomToolbar">
@@ -82,12 +82,12 @@
                 android:value=".features.main.MainActivity"/>
         </activity>
         <activity
-            android:name=".activities.SimpleFragmentActivityBase$RoundActivity"
+            android:name=".features.training.RoundActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$TrainingActivity">
+            android:parentActivityName=".features.training.TrainingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivityBase$TrainingActivity"/>
+                android:value=".features.training.TrainingActivity"/>
         </activity>
         <activity
             android:name=".features.timer.TimerActivity"
@@ -103,34 +103,34 @@
         <activity
             android:name=".features.training.input.InputActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$RoundActivity"
+            android:parentActivityName=".features.training.RoundActivity"
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivityBase$RoundActivity"/>
+                android:value=".features.training.RoundActivity"/>
         </activity>
         <activity
-            android:name=".activities.SimpleFragmentActivityBase$EditTrainingActivity"
+            android:name=".features.training.edit.EditTrainingActivity"
             android:label="@string/new_round"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$TrainingActivity"
+            android:parentActivityName=".features.training.TrainingActivity"
             android:theme="@style/AppTheme.CustomToolbar"
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivityBase$TrainingActivity"/>
+                android:value=".features.training.TrainingActivity"/>
         </activity>
         <activity
-            android:name=".activities.SimpleFragmentActivityBase$EditRoundActivity"
+            android:name=".features.training.EditRoundActivity"
             android:label="@string/new_round"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$TrainingActivity"
+            android:parentActivityName=".features.training.TrainingActivity"
             android:theme="@style/AppTheme.CustomToolbar"
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivityBase$TrainingActivity"/>
+                android:value=".features.training.TrainingActivity"/>
         </activity>
         <activity
-            android:name=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"
+            android:name=".features.training.standardround.EditStandardRoundActivity"
             android:label="@string/new_round_template"
             android:parentActivityName=".features.training.standardround.StandardRoundActivity"
             android:theme="@style/AppTheme.CustomToolbar"
@@ -160,62 +160,62 @@
         <activity
             android:name=".features.scoreboard.ScoreboardActivity"
             android:label="@string/scoreboard"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$TrainingActivity">
+            android:parentActivityName=".features.training.TrainingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivityBase$TrainingActivity"/>
+                android:value=".features.training.TrainingActivity"/>
         </activity>
         <activity
-            android:name=".activities.StatisticsActivity"
+            android:name=".features.statistics.StatisticsActivity"
             android:label="@string/statistic"
             android:theme="@style/AppTheme.CustomToolbar"/>
         <activity
             android:name=".features.arrows.ArrowActivity"
             android:label="@string/arrow"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity">
+            android:parentActivityName=".features.training.standardround.EditStandardRoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"/>
+                android:value=".features.training.standardround.EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".features.bows.BowActivity"
             android:label="@string/bow"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity">
+            android:parentActivityName=".features.training.standardround.EditStandardRoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"/>
+                android:value=".features.training.standardround.EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".features.training.environment.EnvironmentActivity"
             android:label="@string/environment"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"
+            android:parentActivityName=".features.training.standardround.EditStandardRoundActivity"
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"/>
+                android:value=".features.training.standardround.EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".features.training.target.TargetActivity"
             android:label="@string/target_face"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"
+            android:parentActivityName=".features.training.standardround.EditStandardRoundActivity"
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"/>
+                android:value=".features.training.standardround.EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".features.distance.DistanceActivity"
             android:label="@string/distance"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"
+            android:parentActivityName=".features.training.standardround.EditStandardRoundActivity"
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivityBase$EditStandardRoundActivity"/>
+                android:value=".features.training.standardround.EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".features.training.environment.WindSpeedActivity"
@@ -239,10 +239,10 @@
             android:name=".features.training.standardround.StandardRoundActivity"
             android:label="@string/standard_rounds"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.SimpleFragmentActivityBase$EditTrainingActivity">
+            android:parentActivityName=".features.training.edit.EditTrainingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SimpleFragmentActivityBase$EditTrainingActivity"/>
+                android:value=".features.training.edit.EditTrainingActivity"/>
         </activity>
 
         <!-- Preferences activity -->
@@ -272,7 +272,7 @@
                 android:value=".features.settings.SettingsActivity"/>
         </activity>
         <activity
-            android:name=".features.settings.DonateActivity"
+            android:name=".features.settings.about.DonateActivity"
             android:parentActivityName=".features.settings.about.AboutActivity"
             android:theme="@style/AppTheme.CustomToolbar.Translucent">
             <meta-data

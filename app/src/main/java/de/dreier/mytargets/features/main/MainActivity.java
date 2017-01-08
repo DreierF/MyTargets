@@ -20,7 +20,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.utils.TranslationUtils;
 

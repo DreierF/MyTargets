@@ -31,17 +31,16 @@ import org.parceler.Parcels;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.adapters.SimpleListAdapterBase;
+import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemDistanceBinding;
-import de.dreier.mytargets.fragments.SelectItemFragmentBase;
+import de.dreier.mytargets.base.fragments.SelectItemFragmentBase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Dimension.Unit;
-import de.dreier.mytargets.utils.DistanceInputDialog;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
-import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
+import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
 
 public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> implements DistanceInputDialog.OnClickListener {
 

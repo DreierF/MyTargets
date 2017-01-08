@@ -17,7 +17,7 @@ package de.dreier.mytargets.features.bows;
 
 import android.support.v4.app.Fragment;
 
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.utils.Utils;
 
 public class EditBowActivity extends SimpleFragmentActivityBase {

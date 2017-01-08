@@ -22,10 +22,10 @@ import android.view.ViewGroup;
 
 import org.parceler.Parcels;
 
-import de.dreier.mytargets.fragments.SelectPureListItemFragmentBase;
+import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase;
 import de.dreier.mytargets.shared.models.WindDirection;
 
-import static de.dreier.mytargets.activities.ItemSelectActivity.ITEM;
+import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
 
 public class WindDirectionListFragment extends SelectPureListItemFragmentBase<WindDirection> {
 

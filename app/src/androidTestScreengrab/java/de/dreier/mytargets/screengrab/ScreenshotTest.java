@@ -19,7 +19,7 @@ import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.UITestBase;
-import de.dreier.mytargets.activities.MainActivity;
+import de.dreier.mytargets.base.activities.MainActivity;
 import de.dreier.mytargets.managers.SettingsManager;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;

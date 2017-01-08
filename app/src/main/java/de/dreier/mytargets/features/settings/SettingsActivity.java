@@ -22,7 +22,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 
-import de.dreier.mytargets.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.utils.IntentWrapper;
 
 public class SettingsActivity extends SimpleFragmentActivityBase implements

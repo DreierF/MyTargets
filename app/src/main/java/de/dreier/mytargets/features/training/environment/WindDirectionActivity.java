@@ -17,8 +17,7 @@ package de.dreier.mytargets.features.training.environment;
 
 import android.support.v4.app.Fragment;
 
-import de.dreier.mytargets.activities.ItemSelectActivity;
-import de.dreier.mytargets.features.training.environment.WindDirectionListFragment;
+import de.dreier.mytargets.base.activities.ItemSelectActivity;
 
 public class WindDirectionActivity extends ItemSelectActivity {
     @Override
