@@ -20,6 +20,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,8 @@ import android.widget.Spinner;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
+
+import junit.framework.Assert;
 
 import org.parceler.Parcels;
 
@@ -172,8 +175,9 @@ public class TargetListFragment extends SelectItemFragmentBase<Target> implement
 
     @NonNull
     private ArrayAdapter<String> getThemedSpinnerAdapter() {
-        final AppCompatActivity activity = (AppCompatActivity) getActivity();
-        Context themedContext = activity.getSupportActionBar().getThemedContext();
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        Assert.assertNotNull(actionBar);
+        Context themedContext = actionBar.getThemedContext();
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(themedContext,
                 android.R.layout.simple_spinner_item, new ArrayList<>());
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

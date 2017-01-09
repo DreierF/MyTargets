@@ -16,9 +16,6 @@
 
 <resources>
 
-    <!-- APP NAME - NOT TRANSLATABLE -->
-    <string name="my_targets" translatable="false">MyTargets</string>
-
     <!-- General -->
     <string name="preferences">Options</string>
     <string name="prev">Previous</string>

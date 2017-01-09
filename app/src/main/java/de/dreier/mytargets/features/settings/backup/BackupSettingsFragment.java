@@ -46,7 +46,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import de.dreier.mytargets.BuildConfig;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentBackupBinding;
 import de.dreier.mytargets.features.settings.SettingsFragmentBase;
@@ -95,8 +94,8 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     private SyncStatusObserver mSyncStatusObserver = which -> getActivity().runOnUiThread(() -> {
         Account account = GenericAccountService.getAccount();
 
-        boolean syncActive = ContentResolver.isSyncActive(account, BuildConfig.CONTENT_AUTHORITY);
-        boolean syncPending = ContentResolver.isSyncPending(account, BuildConfig.CONTENT_AUTHORITY);
+        boolean syncActive = ContentResolver.isSyncActive(account, SyncUtils.CONTENT_AUTHORITY);
+        boolean syncPending = ContentResolver.isSyncPending(account, SyncUtils.CONTENT_AUTHORITY);
         boolean wasRefreshing = isRefreshing;
         isRefreshing = syncActive || syncPending;
         binding.backupNowButton.setEnabled(!isRefreshing);

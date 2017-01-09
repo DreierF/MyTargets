@@ -216,14 +216,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     }
 
     private void onDateClick() {
-        // Package bundle with fragment arguments
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(DatePickerFragment.ARG_CURRENT_DATE, date);
-
-        // Create and show date picker
-        DatePickerFragment datePickerDialog = new DatePickerFragment();
-        datePickerDialog.setTargetFragment(EditTrainingFragment.this, REQ_SELECTED_DATE);
-        datePickerDialog.setArguments(bundle);
+        DatePickerFragment datePickerDialog = DatePickerFragment.newInstance(date);
+        datePickerDialog.setTargetFragment(this, REQ_SELECTED_DATE);
         datePickerDialog.show(getActivity().getSupportFragmentManager(), "date_picker");
     }
 

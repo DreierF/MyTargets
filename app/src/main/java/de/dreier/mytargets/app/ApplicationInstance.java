@@ -98,7 +98,6 @@ public class ApplicationInstance extends SharedApplicationInstance {
                     .detectLeakedSqlLiteObjects()
                     .detectLeakedClosableObjects()
                     .penaltyLog()
-//                    .penaltyDeath()
                     .build());
         }
         super.onCreate();

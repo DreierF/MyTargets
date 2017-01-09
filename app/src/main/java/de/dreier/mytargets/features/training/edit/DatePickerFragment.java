@@ -21,17 +21,28 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
+import junit.framework.Assert;
+
 import org.joda.time.LocalDate;
 
 public class DatePickerFragment extends DialogFragment {
 
-    static final String ARG_CURRENT_DATE = "current_date";
+    private static final String ARG_CURRENT_DATE = "current_date";
+
+    public static DatePickerFragment newInstance(LocalDate date) {
+        DatePickerFragment datePickerDialog = new DatePickerFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ARG_CURRENT_DATE, date);
+        datePickerDialog.setArguments(bundle);
+        return datePickerDialog;
+    }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current date as the default date in the picker
         LocalDate date = (LocalDate) getArguments().getSerializable(ARG_CURRENT_DATE);
+        Assert.assertNotNull(date);
 
         // Create a new instance of DatePickerDialog and return it
         DatePickerDialog.OnDateSetListener listener = (DatePickerDialog.OnDateSetListener) getTargetFragment();
