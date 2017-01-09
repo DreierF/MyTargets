@@ -115,8 +115,6 @@
   <!-- Import/Backup -->
   <string name="select_a_file">Seleccciona un archivo</string>
   <string name="dir_not_created">El directorio no puede ser creado!</string>
-  <string name="backup_failed">Backup Incorrecto!</string>
-  <string name="import_successful">Importación correcta!</string>
   <string name="import_failed">Fallo en la Importación!</string>
   <string name="file_not_found">Archivo no encontrado!</string>
   <string name="failed_reading_file">Fallo leyendo el archivo!</string>
@@ -142,7 +140,6 @@
   <!-- Settings -->
   <string name="backup_action">Hacer copia de seguridad</string>
   <string name="import_action">Importar</string>
-  <string name="export">Exportar</string>
   <string name="exports_as_csv">Exportar los datos salvados como *.csv</string>
   <string name="licences">Licencias Open Source</string>
   <string name="licences_summary">Notas legales de la licencia</string>
@@ -153,8 +150,6 @@
   </plurals>
   <string name="info">Información</string>
   <string name="data">Datos</string>
-  <string name="create_backup_on_sd">Crea una backup en la tarjeta sd</string>
-  <string name="restore_backup">Restaura una backup</string>
   <string name="weather">El Tiempo</string>
   <string name="environment">Entorno</string>
   <string name="wind_speed">Velocidad del viento</string>
@@ -172,8 +167,6 @@
   <string name="filter">Filtro</string>
   <string name="club">Club</string>
   <string name="target">Blanco</string>
-  <string name="field">Campo</string>
-  <string name="three_d">3D</string>
   <string name="standard_round">Serie Estandar</string>
   <string name="use_as_template">¿Utilizar como plantilla?</string>
   <string name="create_copy">Esto es una Serie estándar! \nDo ¿desea crear una copia para poder editarlo?</string>
@@ -229,7 +222,6 @@
   <string name="training_with_standard_round">Entrenamiento Serie Estándar</string>
   <string name="free_training">Free Training</string>
   <string name="competition">Competición</string>
-  <string name="unit_lbs">Libras</string>
   <string name="about">Acerca (Nº versión)</string>
   <string name="general">General</string>
   <string name="contribute">Contribute</string>
@@ -259,7 +251,6 @@
   <string name="archer">Arquero</string>
   <string name="hits">Hits</string>
   <string name="misses">Misses</string>
-  <string name="arrow_number_removed">Arrow number removed!</string>
   <string name="new_end">Nuevo final</string>
   <string name="distribution">Distribution</string>
   <string name="count">Count</string>
@@ -279,7 +270,6 @@
   <string name="backup_drive_desc">Backing up your data allows you to restore all your trainings in case you lost or change your phone.</string>
   <string name="backup_now">Backup now</string>
   <string name="last_backup">Last backup: %s</string>
-  <string name="backup_folder">Backup folder</string>
   <string name="recent_backups">Recent backups</string>
   <string name="dialog_restore_title">Revert to previous version</string>
   <string name="restore_desc">Restoring the data will overwrite all the existing data with the backup.</string>
@@ -288,11 +278,9 @@
   <string name="backup_location">Backup location</string>
   <string name="internal_storage">Internal storage</string>
   <string name="automatic_backup">Automatic backup</string>
-  <string name="restoring_backup_failed">Restoring backup failed!</string>
   <string name="restoring">Restoring backup&#8230;</string>
   <string name="restore_failed">Restore failed</string>
   <string name="delete_failed">Deletion failed</string>
-  <string name="creating_backup">Creating backup&#8230;</string>
   <string name="backup_restore_desc">Backup and restore app data</string>
   <string name="exporting">Exporting&#8230;</string>
   <string name="loading_backups_failed">Loading backups failed!</string>
@@ -302,5 +290,4 @@
   <string name="weekly">Weekly</string>
   <string name="monthly">Monthly</string>
   <string name="connection_failed">Connection failed!</string>
-  <string name="connecting">Connecting</string>
 </resources>

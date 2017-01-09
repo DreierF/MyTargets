@@ -115,8 +115,6 @@
   <!-- Import/Backup -->
   <string name="select_a_file">Kies een bestand</string>
   <string name="dir_not_created">Map kan niet worden aangemaakt!</string>
-  <string name="backup_failed">Backup mislukt!</string>
-  <string name="import_successful">Importeren gelukt!</string>
   <string name="import_failed">Importeren mislukt!</string>
   <string name="file_not_found">Bestand niet gevonden!</string>
   <string name="failed_reading_file">Lezen van bestand mislukt!</string>
@@ -142,7 +140,6 @@
   <!-- Settings -->
   <string name="backup_action">Back-up</string>
   <string name="import_action">Importeren</string>
-  <string name="export">Exporteren</string>
   <string name="exports_as_csv">Exporteert de opgeslagen gegevens als *.csv</string>
   <string name="licences">Open Source-Licentie</string>
   <string name="licences_summary">Licentievoorwaarden</string>
@@ -153,8 +150,6 @@
   </plurals>
   <string name="info">Info</string>
   <string name="data">Gegevens</string>
-  <string name="create_backup_on_sd">Back-up van de opgeslagen gegevens</string>
-  <string name="restore_backup">Gegevens importeren</string>
   <string name="weather">Weer</string>
   <string name="environment">Omgeving</string>
   <string name="wind_speed">Windsnelheid</string>
@@ -172,8 +167,6 @@
   <string name="filter">Filter</string>
   <string name="club">Vereniging</string>
   <string name="target">Blazoen</string>
-  <string name="field">Veld</string>
-  <string name="three_d">3D</string>
   <string name="standard_round">Standaard ronde</string>
   <string name="use_as_template">Template gebruiken?</string>
   <string name="create_copy">Dit is een standaard ronde! \nWilt u een kopie maken om te bewerken?</string>
@@ -229,7 +222,6 @@
   <string name="training_with_standard_round">Training met standaard ronde</string>
   <string name="free_training">Vrije training</string>
   <string name="competition">Competitie</string>
-  <string name="unit_lbs">lbs</string>
   <string name="about">Over</string>
   <string name="general">Algemeen</string>
   <string name="contribute">Bijdragen</string>
@@ -259,7 +251,6 @@
   <string name="archer">Schutter</string>
   <string name="hits">Hits</string>
   <string name="misses">Gemist</string>
-  <string name="arrow_number_removed">Arrow number removed!</string>
   <string name="new_end">New end</string>
   <string name="distribution">Distribution</string>
   <string name="count">Count</string>
@@ -279,7 +270,6 @@
   <string name="backup_drive_desc">Backing up your data allows you to restore all your trainings in case you lost or change your phone.</string>
   <string name="backup_now">Backup now</string>
   <string name="last_backup">Last backup: %s</string>
-  <string name="backup_folder">Backup folder</string>
   <string name="recent_backups">Recent backups</string>
   <string name="dialog_restore_title">Revert to previous version</string>
   <string name="restore_desc">Restoring the data will overwrite all the existing data with the backup.</string>
@@ -288,11 +278,9 @@
   <string name="backup_location">Backup location</string>
   <string name="internal_storage">Internal storage</string>
   <string name="automatic_backup">Automatic backup</string>
-  <string name="restoring_backup_failed">Restoring backup failed!</string>
   <string name="restoring">Restoring backup&#8230;</string>
   <string name="restore_failed">Restore failed</string>
   <string name="delete_failed">Deletion failed</string>
-  <string name="creating_backup">Creating backup&#8230;</string>
   <string name="backup_restore_desc">Backup and restore app data</string>
   <string name="exporting">Exporting&#8230;</string>
   <string name="loading_backups_failed">Loading backups failed!</string>
@@ -302,5 +290,4 @@
   <string name="weekly">Weekly</string>
   <string name="monthly">Monthly</string>
   <string name="connection_failed">Connection failed!</string>
-  <string name="connecting">Connecting</string>
 </resources>

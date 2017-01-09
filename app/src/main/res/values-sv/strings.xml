@@ -115,8 +115,6 @@
   <!-- Import/Backup -->
   <string name="select_a_file">Välj fil</string>
   <string name="dir_not_created">Det gick inte att skapa katalogen!</string>
-  <string name="backup_failed">Säkerhetskopieringen misslyckades!</string>
-  <string name="import_successful">Importering lyckades!</string>
   <string name="import_failed">Importering misslyckades!</string>
   <string name="file_not_found">Filen saknas!</string>
   <string name="failed_reading_file">Kunde inte öppna filen!</string>
@@ -142,7 +140,6 @@
   <!-- Settings -->
   <string name="backup_action">Säkerhetskopiera</string>
   <string name="import_action">Återskapa säkerhetskopia</string>
-  <string name="export">Exportera</string>
   <string name="exports_as_csv">Exportera sparad data som *.csv</string>
   <string name="licences">Öppen källkod-licenser</string>
   <string name="licences_summary">Rättsliga anmärkningar på licenser</string>
@@ -153,8 +150,6 @@
   </plurals>
   <string name="info">Information</string>
   <string name="data">Data</string>
-  <string name="create_backup_on_sd">Skapar en säkerhetskopia på sd-kort</string>
-  <string name="restore_backup">Återställer en säkerhetskopia</string>
   <string name="weather">Väder</string>
   <string name="environment">Miljö</string>
   <string name="wind_speed">Vindhastighet</string>
@@ -172,8 +167,6 @@
   <string name="filter">Filter</string>
   <string name="club">Klubb</string>
   <string name="target">Mål</string>
-  <string name="field">Fältet</string>
-  <string name="three_d">3D</string>
   <string name="standard_round">Standard runda</string>
   <string name="use_as_template">Använd en mall?</string>
   <string name="create_copy">Detta är en standard runda! \nVill du skapa en kopia för att redigera den?</string>
@@ -229,7 +222,6 @@
   <string name="training_with_standard_round">Träning med standard runda</string>
   <string name="free_training">Fri träning</string>
   <string name="competition">Tävlande</string>
-  <string name="unit_lbs">lbs</string>
   <string name="about">Om</string>
   <string name="general">Allnänt</string>
   <string name="contribute">Bidra</string>
@@ -259,7 +251,6 @@
   <string name="archer">Bågskytt</string>
   <string name="hits">Träffar</string>
   <string name="misses">Missar</string>
-  <string name="arrow_number_removed">Pilnummer bortagen!</string>
   <string name="new_end">New end</string>
   <string name="distribution">Distribution</string>
   <string name="count">Count</string>
@@ -279,7 +270,6 @@
   <string name="backup_drive_desc">Backing up your data allows you to restore all your trainings in case you lost or change your phone.</string>
   <string name="backup_now">Backup now</string>
   <string name="last_backup">Last backup: %s</string>
-  <string name="backup_folder">Backup folder</string>
   <string name="recent_backups">Recent backups</string>
   <string name="dialog_restore_title">Revert to previous version</string>
   <string name="restore_desc">Restoring the data will overwrite all the existing data with the backup.</string>
@@ -288,11 +278,9 @@
   <string name="backup_location">Backup location</string>
   <string name="internal_storage">Internal storage</string>
   <string name="automatic_backup">Automatic backup</string>
-  <string name="restoring_backup_failed">Restoring backup failed!</string>
   <string name="restoring">Restoring backup&#8230;</string>
   <string name="restore_failed">Restore failed</string>
   <string name="delete_failed">Deletion failed</string>
-  <string name="creating_backup">Creating backup&#8230;</string>
   <string name="backup_restore_desc">Backup and restore app data</string>
   <string name="exporting">Exporting&#8230;</string>
   <string name="loading_backups_failed">Loading backups failed!</string>
@@ -302,5 +290,4 @@
   <string name="weekly">Weekly</string>
   <string name="monthly">Monthly</string>
   <string name="connection_failed">Connection failed!</string>
-  <string name="connecting">Connecting</string>
 </resources>

@@ -115,8 +115,6 @@
   <!-- Import/Backup -->
   <string name="select_a_file">Selecione um arquivo</string>
   <string name="dir_not_created">Diretório não pôde ser criado!</string>
-  <string name="backup_failed">Backup falhou!</string>
-  <string name="import_successful">Importação bem sucedida!</string>
   <string name="import_failed">Importação falhou!</string>
   <string name="file_not_found">Arquivo não encontrado!</string>
   <string name="failed_reading_file">Falha na leitura do arquivo!</string>
@@ -142,7 +140,6 @@
   <!-- Settings -->
   <string name="backup_action">Backup</string>
   <string name="import_action">Importar</string>
-  <string name="export">Exportar</string>
   <string name="exports_as_csv">Exporta dados como *.csv</string>
   <string name="licences">Licenças de código aberto</string>
   <string name="licences_summary">Notas legais de Licenças</string>
@@ -153,8 +150,6 @@
   </plurals>
   <string name="info">Informação</string>
   <string name="data">Dados</string>
-  <string name="create_backup_on_sd">Criar backup no cartão SD</string>
-  <string name="restore_backup">Restaurar backup</string>
   <string name="weather">Clima</string>
   <string name="environment">Ambiente</string>
   <string name="wind_speed">Velocidade do vento</string>
@@ -172,8 +167,6 @@
   <string name="filter">Filtro</string>
   <string name="club">Infantil</string>
   <string name="target">Alvo</string>
-  <string name="field">Field</string>
-  <string name="three_d">3D</string>
   <string name="standard_round">Partida padrão</string>
   <string name="use_as_template">Usar como modelo?</string>
   <string name="create_copy">Esse é um round padrão!\n Deseja criar uma cópia para editar?</string>
@@ -229,7 +222,6 @@
   <string name="training_with_standard_round">Treinamento com Standard Round</string>
   <string name="free_training">Treino Livre</string>
   <string name="competition">Competição</string>
-  <string name="unit_lbs">lbs</string>
   <string name="about">Sobre</string>
   <string name="general">Geral</string>
   <string name="contribute">Contribua</string>
@@ -259,7 +251,6 @@
   <string name="archer">Arqueiro</string>
   <string name="hits">Acertos</string>
   <string name="misses">Erros</string>
-  <string name="arrow_number_removed">Flecha removida !</string>
   <string name="new_end">Nova entrada</string>
   <string name="distribution">Distribuição</string>
   <string name="count">Contagem</string>
@@ -279,7 +270,6 @@
   <string name="backup_drive_desc">Backing up your data allows you to restore all your trainings in case you lost or change your phone.</string>
   <string name="backup_now">Backup now</string>
   <string name="last_backup">Last backup: %s</string>
-  <string name="backup_folder">Backup folder</string>
   <string name="recent_backups">Recent backups</string>
   <string name="dialog_restore_title">Revert to previous version</string>
   <string name="restore_desc">Restoring the data will overwrite all the existing data with the backup.</string>
@@ -288,11 +278,9 @@
   <string name="backup_location">Backup location</string>
   <string name="internal_storage">Internal storage</string>
   <string name="automatic_backup">Automatic backup</string>
-  <string name="restoring_backup_failed">Restoring backup failed!</string>
   <string name="restoring">Restoring backup&#8230;</string>
   <string name="restore_failed">Restore failed</string>
   <string name="delete_failed">Deletion failed</string>
-  <string name="creating_backup">Creating backup&#8230;</string>
   <string name="backup_restore_desc">Backup and restore app data</string>
   <string name="exporting">Exporting&#8230;</string>
   <string name="loading_backups_failed">Loading backups failed!</string>
@@ -302,5 +290,4 @@
   <string name="weekly">Weekly</string>
   <string name="monthly">Monthly</string>
   <string name="connection_failed">Connection failed!</string>
-  <string name="connecting">Connecting</string>
 </resources>

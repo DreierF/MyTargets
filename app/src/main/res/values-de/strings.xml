@@ -115,8 +115,6 @@
   <!-- Import/Backup -->
   <string name="select_a_file">Wähle eine Datei</string>
   <string name="dir_not_created">Ordner konnte nicht erstellt werden!</string>
-  <string name="backup_failed">Backup gescheitert!</string>
-  <string name="import_successful">Import erfolgreich!</string>
   <string name="import_failed">Import gescheitert!</string>
   <string name="file_not_found">Datei nicht gefunden!</string>
   <string name="failed_reading_file">Fehler beim Einlesen der Datei!</string>
@@ -142,7 +140,6 @@
   <!-- Settings -->
   <string name="backup_action">Backup</string>
   <string name="import_action">Importieren</string>
-  <string name="export">Exportieren</string>
   <string name="exports_as_csv">Exportiert die gespeicherten Daten als *.csv</string>
   <string name="licences">Open Source-Lizenzen</string>
   <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
@@ -153,8 +150,6 @@
   </plurals>
   <string name="info">Information</string>
   <string name="data">Daten</string>
-  <string name="create_backup_on_sd">Erzeugt ein Backup auf der SD-Karte</string>
-  <string name="restore_backup">Importiert ein Backup</string>
   <string name="weather">Wetter</string>
   <string name="environment">Umgebung</string>
   <string name="wind_speed">Windgeschwindigkeit</string>
@@ -172,8 +167,6 @@
   <string name="filter">Filtern</string>
   <string name="club">Verein</string>
   <string name="target">Zielscheibe</string>
-  <string name="field">Feld</string>
-  <string name="three_d">3D</string>
   <string name="standard_round">Standardrunde</string>
   <string name="use_as_template">Als Vorlage verwenden?</string>
   <string name="create_copy">Das ist eine Standardrunde!\nWillst du eine Kopie erzeugen um sie bearbeiten zu können?</string>
@@ -229,7 +222,6 @@
   <string name="training_with_standard_round">Training mit Standard Runde</string>
   <string name="free_training">Freies Training</string>
   <string name="competition">Wettkampf</string>
-  <string name="unit_lbs">lbs</string>
   <string name="about">Über</string>
   <string name="general">Allgemein</string>
   <string name="contribute">Beitragen</string>
@@ -259,7 +251,6 @@
   <string name="archer">Bogenschütze</string>
   <string name="hits">Treffer</string>
   <string name="misses">Nicht-Treffer</string>
-  <string name="arrow_number_removed">Pfeilnummer gelöscht!</string>
   <string name="new_end">Neue Passe</string>
   <string name="distribution">Verteilung</string>
   <string name="count">Anzahl</string>
@@ -279,7 +270,6 @@
   <string name="backup_drive_desc">Das Sichern Ihrer Daten ermöglicht es Ihnen, Ihre Trainingsdaten wiederherzustellen, wenn Sie Ihr Gerät verlieren oder durch ein anderes ersetzen.</string>
   <string name="backup_now">Jetzt sichern</string>
   <string name="last_backup">Letztes Backup: %s</string>
-  <string name="backup_folder">Sicherungsordner</string>
   <string name="recent_backups">Letzte Sicherungen</string>
   <string name="dialog_restore_title">Diese Version wiederherstellen</string>
   <string name="restore_desc">Wiederherstellen der Sicherung überschreibt alle vorhandenen Daten.</string>
@@ -288,11 +278,9 @@
   <string name="backup_location">Speicherort für Sicherung</string>
   <string name="internal_storage">Interner Speicher</string>
   <string name="automatic_backup">Automatische Sicherung</string>
-  <string name="restoring_backup_failed">Fehler beim Wiederherstellen der Sicherung!</string>
   <string name="restoring">Sicherung wiederherstellen&#8230;</string>
   <string name="restore_failed">Wiederherstellen fehlgeschlagen</string>
   <string name="delete_failed">Löschen fehlgeschlagen</string>
-  <string name="creating_backup">Erstelle Sicherung&#8230;</string>
   <string name="backup_restore_desc">Sicherungen erstellen und wiederherstellen</string>
   <string name="exporting">Exportieren&#8230;</string>
   <string name="loading_backups_failed">Abrufen der Sicherungen fehlgeschlagen!</string>
@@ -302,5 +290,4 @@
   <string name="weekly">Wöchentlich</string>
   <string name="monthly">Monatlich</string>
   <string name="connection_failed">Verbindung fehlgeschlagen!</string>
-  <string name="connecting">Verbindung herstellen</string>
 </resources>

@@ -115,8 +115,6 @@
   <!-- Import/Backup -->
   <string name="select_a_file">Fájl kiválasztása</string>
   <string name="dir_not_created">Mappa nem hozható létre!</string>
-  <string name="backup_failed">Mentés sikertelen!</string>
-  <string name="import_successful">Importálás sikeres!</string>
   <string name="import_failed">Importálás sikertelen!</string>
   <string name="file_not_found">A fájl nem található!</string>
   <string name="failed_reading_file">A fájl olvasása sikertelen!</string>
@@ -142,7 +140,6 @@
   <!-- Settings -->
   <string name="backup_action">Mentés</string>
   <string name="import_action">Importálás</string>
-  <string name="export">Exportálás</string>
   <string name="exports_as_csv">Kimentett adatok *.csv formátumba</string>
   <string name="licences">Nyílt forráskódú licencek</string>
   <string name="licences_summary">Jogi engedélyek</string>
@@ -153,8 +150,6 @@
   </plurals>
   <string name="info">Információ</string>
   <string name="data">Adat</string>
-  <string name="create_backup_on_sd">Mentés SD kártyára</string>
-  <string name="restore_backup">Mentés visszaállítása</string>
   <string name="weather">Időjárás</string>
   <string name="environment">Környezet</string>
   <string name="wind_speed">Szélsebesség</string>
@@ -172,8 +167,6 @@
   <string name="filter">Szűrő</string>
   <string name="club">Egyesület</string>
   <string name="target">Pálya</string>
-  <string name="field">Terep</string>
-  <string name="three_d">3D</string>
   <string name="standard_round">Standard forduló</string>
   <string name="use_as_template">Használja sablonként?</string>
   <string name="create_copy">Ez a standard forduló! \nMásolat létrehozása és szerkeztése?</string>
@@ -229,7 +222,6 @@
   <string name="training_with_standard_round">A Standard fordulós gyakorlás</string>
   <string name="free_training">Szabad gyakorlás</string>
   <string name="competition">Verseny</string>
-  <string name="unit_lbs">font</string>
   <string name="about">Leírás</string>
   <string name="general">Általános </string>
   <string name="contribute">Közzététel</string>
@@ -259,7 +251,6 @@
   <string name="archer">Íjász</string>
   <string name="hits">Találatok száma</string>
   <string name="misses">Mellé</string>
-  <string name="arrow_number_removed">Vessző szám eltávolítva!</string>
   <string name="new_end">Új sorozat</string>
   <string name="distribution">Találatok eloszlása</string>
   <string name="count">Számláló</string>
@@ -279,7 +270,6 @@
   <string name="backup_drive_desc">Backing up your data allows you to restore all your trainings in case you lost or change your phone.</string>
   <string name="backup_now">Backup now</string>
   <string name="last_backup">Last backup: %s</string>
-  <string name="backup_folder">Backup folder</string>
   <string name="recent_backups">Recent backups</string>
   <string name="dialog_restore_title">Revert to previous version</string>
   <string name="restore_desc">Restoring the data will overwrite all the existing data with the backup.</string>
@@ -288,11 +278,9 @@
   <string name="backup_location">Backup location</string>
   <string name="internal_storage">Internal storage</string>
   <string name="automatic_backup">Automatic backup</string>
-  <string name="restoring_backup_failed">Restoring backup failed!</string>
   <string name="restoring">Restoring backup&#8230;</string>
   <string name="restore_failed">Restore failed</string>
   <string name="delete_failed">Deletion failed</string>
-  <string name="creating_backup">Creating backup&#8230;</string>
   <string name="backup_restore_desc">Backup and restore app data</string>
   <string name="exporting">Exporting&#8230;</string>
   <string name="loading_backups_failed">Loading backups failed!</string>
@@ -302,5 +290,4 @@
   <string name="weekly">Weekly</string>
   <string name="monthly">Monthly</string>
   <string name="connection_failed">Connection failed!</string>
-  <string name="connecting">Connecting</string>
 </resources>

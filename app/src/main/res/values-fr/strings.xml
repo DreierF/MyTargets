@@ -115,8 +115,6 @@
   <!-- Import/Backup -->
   <string name="select_a_file">Choisir un fichier</string>
   <string name="dir_not_created"> Le répertoire ne peut pas être créé!</string>
-  <string name="backup_failed">La sauvegarde a échouée!</string>
-  <string name="import_successful">L\'Import a réussi!</string>
   <string name="import_failed">L\'import a échoué!</string>
   <string name="file_not_found">Fichier non trouvé!</string>
   <string name="failed_reading_file">Echec de la lecture du fichier!</string>
@@ -142,7 +140,6 @@
   <!-- Settings -->
   <string name="backup_action">Sauvegarde</string>
   <string name="import_action">Importer</string>
-  <string name="export">Exporter</string>
   <string name="exports_as_csv">Exporter les données au format *.csv</string>
   <string name="licences">Licences - Open Source</string>
   <string name="licences_summary">Notes légales sur les licences</string>
@@ -153,8 +150,6 @@
   </plurals>
   <string name="info">Informations</string>
   <string name="data">Données</string>
-  <string name="create_backup_on_sd">Crée une sauvegarde sur la carte SD</string>
-  <string name="restore_backup">Importer une sauvegarde</string>
   <string name="weather">Météo</string>
   <string name="environment">Environnement</string>
   <string name="wind_speed">Vitesse du vent</string>
@@ -172,8 +167,6 @@
   <string name="filter">Filtre</string>
   <string name="club">Compagnie/Club</string>
   <string name="target">Cible</string>
-  <string name="field">Terrain</string>
-  <string name="three_d">3D</string>
   <string name="standard_round">Épreuve standard</string>
   <string name="use_as_template">Utiliser comme modèle?</string>
   <string name="create_copy">Ceci est une manche standard\nVoulez-vous en créer une copie afin de l\'éditée?</string>
@@ -229,7 +222,6 @@
   <string name="training_with_standard_round">Entraînement avec série standard</string>
   <string name="free_training">Entraînement libre</string>
   <string name="competition">Compétition</string>
-  <string name="unit_lbs">livres</string>
   <string name="about">A propos de</string>
   <string name="general">Générale</string>
   <string name="contribute">Contribuer</string>
@@ -259,7 +251,6 @@
   <string name="archer">Archer</string>
   <string name="hits">Marquées</string>
   <string name="misses">Manquées</string>
-  <string name="arrow_number_removed">Numéro de flèche effacé !</string>
   <string name="new_end">Nouvelle fin</string>
   <string name="distribution">Répartition</string>
   <string name="count">Décompte</string>
@@ -279,7 +270,6 @@
   <string name="backup_drive_desc">Backing up your data allows you to restore all your trainings in case you lost or change your phone.</string>
   <string name="backup_now">Backup now</string>
   <string name="last_backup">Last backup: %s</string>
-  <string name="backup_folder">Backup folder</string>
   <string name="recent_backups">Recent backups</string>
   <string name="dialog_restore_title">Revert to previous version</string>
   <string name="restore_desc">Restoring the data will overwrite all the existing data with the backup.</string>
@@ -288,11 +278,9 @@
   <string name="backup_location">Backup location</string>
   <string name="internal_storage">Internal storage</string>
   <string name="automatic_backup">Automatic backup</string>
-  <string name="restoring_backup_failed">Restoring backup failed!</string>
   <string name="restoring">Restoring backup&#8230;</string>
   <string name="restore_failed">Restore failed</string>
   <string name="delete_failed">Deletion failed</string>
-  <string name="creating_backup">Creating backup&#8230;</string>
   <string name="backup_restore_desc">Backup and restore app data</string>
   <string name="exporting">Exporting&#8230;</string>
   <string name="loading_backups_failed">Loading backups failed!</string>
@@ -302,5 +290,4 @@
   <string name="weekly">Weekly</string>
   <string name="monthly">Monthly</string>
   <string name="connection_failed">Connection failed!</string>
-  <string name="connecting">Connecting</string>
 </resources>

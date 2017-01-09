@@ -115,8 +115,6 @@
   <!-- Import/Backup -->
   <string name="select_a_file">Vælg en fil</string>
   <string name="dir_not_created">Mappen kunne ikke oprettes!</string>
-  <string name="backup_failed">Sikkerhedskopiering mislykkedes!</string>
-  <string name="import_successful">Import lykkedes!</string>
   <string name="import_failed">Import mislykkedes!</string>
   <string name="file_not_found">Filen findes ikke!</string>
   <string name="failed_reading_file">Fejl i læsning af fil!</string>
@@ -142,7 +140,6 @@
   <!-- Settings -->
   <string name="backup_action">Sikkerhedskopi</string>
   <string name="import_action">Import</string>
-  <string name="export">Eksporter</string>
   <string name="exports_as_csv">Eksport data gemt som *.csv</string>
   <string name="licences">Open Source Licenser</string>
   <string name="licences_summary">Juridiske bemærkninger til licenser</string>
@@ -153,8 +150,6 @@
   </plurals>
   <string name="info">Oplysninger</string>
   <string name="data">Data</string>
-  <string name="create_backup_on_sd">Opretter en sikkerhedskopi på sd-kort</string>
-  <string name="restore_backup">Gendanner en sikkerhedskopi</string>
   <string name="weather">Vejr</string>
   <string name="environment">Omgivelser</string>
   <string name="wind_speed">Vindhastighed</string>
@@ -172,8 +167,6 @@
   <string name="filter">Filter</string>
   <string name="club">Klub</string>
   <string name="target">Mål</string>
-  <string name="field">Felt</string>
-  <string name="three_d">3D</string>
   <string name="standard_round">Standard runde</string>
   <string name="use_as_template">Brug som skabelon?</string>
   <string name="create_copy">This is a standard round!\nDo you want to create a copy in order to edit it?</string>
@@ -229,7 +222,6 @@
   <string name="training_with_standard_round">Training with Standard Round</string>
   <string name="free_training">Free Training</string>
   <string name="competition">Competition</string>
-  <string name="unit_lbs">lbs</string>
   <string name="about">About</string>
   <string name="general">General</string>
   <string name="contribute">Contribute</string>
@@ -259,7 +251,6 @@
   <string name="archer">Skytte</string>
   <string name="hits">Hits</string>
   <string name="misses">Forbiere</string>
-  <string name="arrow_number_removed">Pil fjernet!</string>
   <string name="new_end">Nye runde</string>
   <string name="distribution">Deling</string>
   <string name="count">Antal</string>
@@ -279,7 +270,6 @@
   <string name="backup_drive_desc">Backing up your data allows you to restore all your trainings in case you lost or change your phone.</string>
   <string name="backup_now">Backup now</string>
   <string name="last_backup">Last backup: %s</string>
-  <string name="backup_folder">Backup folder</string>
   <string name="recent_backups">Recent backups</string>
   <string name="dialog_restore_title">Revert to previous version</string>
   <string name="restore_desc">Restoring the data will overwrite all the existing data with the backup.</string>
@@ -288,11 +278,9 @@
   <string name="backup_location">Backup location</string>
   <string name="internal_storage">Internal storage</string>
   <string name="automatic_backup">Automatic backup</string>
-  <string name="restoring_backup_failed">Restoring backup failed!</string>
   <string name="restoring">Restoring backup&#8230;</string>
   <string name="restore_failed">Restore failed</string>
   <string name="delete_failed">Deletion failed</string>
-  <string name="creating_backup">Creating backup&#8230;</string>
   <string name="backup_restore_desc">Backup and restore app data</string>
   <string name="exporting">Exporting&#8230;</string>
   <string name="loading_backups_failed">Loading backups failed!</string>
@@ -302,5 +290,4 @@
   <string name="weekly">Weekly</string>
   <string name="monthly">Monthly</string>
   <string name="connection_failed">Connection failed!</string>
-  <string name="connecting">Connecting</string>
 </resources>
