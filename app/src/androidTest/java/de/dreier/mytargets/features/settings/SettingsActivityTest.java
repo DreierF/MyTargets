@@ -77,16 +77,16 @@ public class SettingsActivityTest extends UITestBase {
 
         matchToolbarTitle(getActivity().getString(R.string.input));
 
-        matchPreferenceSummary(0, "3.0x");
-        clickOnPreference(0);
+        matchPreferenceSummary(7, "3.0x");
+        clickOnPreference(7);
         selectFromList("5.0x");
-        matchPreferenceSummary(0, "5.0x");
+        matchPreferenceSummary(7, "5.0x");
         assertEquals(SettingsManager.getInputTargetZoom(), 5.0f);
 
-        matchPreferenceSummary(1, "1.0x");
-        clickOnPreference(1);
+        matchPreferenceSummary(8, "1.0x");
+        clickOnPreference(8);
         selectFromList("3.5x");
-        matchPreferenceSummary(1, "3.5x");
+        matchPreferenceSummary(8, "3.5x");
         assertEquals(SettingsManager.getInputArrowDiameterScale(), 3.5f);
 
         pressBack();
@@ -178,7 +178,7 @@ public class SettingsActivityTest extends UITestBase {
 
     private void matchPreferenceSummary(int index, String expectedSummary) {
         onView(allOf(withRecyclerView(R.id.list).atPositionOnView(index, android.R.id.summary),
-                isDisplayed())).check(matches(withText(expectedSummary)));
+                isOnForegroundFragment(), isDisplayed())).check(matches(withText(expectedSummary)));
     }
 
     private void clickOnPreference(int position) {
