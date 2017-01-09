@@ -123,6 +123,9 @@ public class ScoringStyle {
     }
 
     public Score getReachedScore(Shot shot) {
+        if(shot.scoringRing == Shot.NOTHING_SELECTED) {
+            return new Score(maxScorePerShot);
+        }
         int reachedScore = getScoreByScoringRing(shot.scoringRing, shot.index);
         return new Score(reachedScore, maxScorePerShot);
     }

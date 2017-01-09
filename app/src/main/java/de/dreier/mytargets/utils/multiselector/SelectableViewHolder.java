@@ -17,8 +17,6 @@ package de.dreier.mytargets.utils.multiselector;
 
 import android.view.View;
 
-import de.dreier.mytargets.utils.OnItemClickListener;
-
 /**
  * A holder extended to support having a selectable mode with a different
  * background and state list animator.

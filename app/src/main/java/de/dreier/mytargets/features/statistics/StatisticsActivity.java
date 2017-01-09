@@ -163,7 +163,11 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         filter.setIcon(showFilter ?
                 R.drawable.ic_clear_filter_white_24dp :
                 R.drawable.ic_filter_white_24dp);
-        filter.setVisible(rounds != null);
+        // only show filter if we have at least one category to filter by
+        boolean filterAvailable = binding.distanceTags.getTags().size() > 1
+                || binding.bowTags.getTags().size() > 1
+                || binding.arrowTags.getTags().size() > 1;
+        filter.setVisible(rounds != null && filterAvailable);
         export.setVisible(rounds != null);
         return true;
     }

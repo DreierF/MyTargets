@@ -15,16 +15,6 @@
 
 package de.dreier.mytargets.features.training.input;
 
-import de.dreier.mytargets.R;
-
-public enum EShowMode {
-    END(R.id.action_show_end),
-    ROUND(R.id.action_show_round),
-    TRAINING(R.id.action_show_training);
-
-    public final int actionItemId;
-
-    EShowMode(int actionItemId) {
-        this.actionItemId = actionItemId;
-    }
+public enum ETrainingScope {
+    END, ROUND, TRAINING
 }

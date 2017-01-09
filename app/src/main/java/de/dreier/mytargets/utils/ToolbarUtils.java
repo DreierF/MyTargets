@@ -33,7 +33,7 @@ public class ToolbarUtils {
         showUpAsX((AppCompatActivity) fragment.getActivity());
     }
 
-    public static void showUpAsX(AppCompatActivity activity) {
+    private static void showUpAsX(AppCompatActivity activity) {
         ActionBar supportActionBar = activity.getSupportActionBar();
         assert supportActionBar != null;
         supportActionBar.setDisplayHomeAsUpEnabled(true);

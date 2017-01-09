@@ -13,9 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils;
-
-import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+package de.dreier.mytargets.utils.multiselector;
 
 public interface OnItemClickListener<T> {
     void onClick(SelectableViewHolder<T> holder, T item);

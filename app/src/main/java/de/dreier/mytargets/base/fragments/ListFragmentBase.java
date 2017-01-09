@@ -17,7 +17,7 @@ package de.dreier.mytargets.base.fragments;
 import android.content.Context;
 import android.os.Parcelable;
 
-import de.dreier.mytargets.utils.OnItemClickListener;
+import de.dreier.mytargets.utils.multiselector.OnItemClickListener;
 
 public abstract class ListFragmentBase<T> extends FragmentBase implements OnItemClickListener<T> {
 

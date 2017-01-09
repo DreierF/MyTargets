@@ -20,6 +20,8 @@ import com.annimon.stream.function.BiConsumer;
 import com.annimon.stream.function.Function;
 import com.annimon.stream.function.Supplier;
 
+import java.util.Locale;
+
 public class Score {
     public int reachedScore;
     public int totalScore;
@@ -37,32 +39,10 @@ public class Score {
         this.shotCount = 1;
     }
 
-    public Score add(Score other) {
-        reachedScore += other.reachedScore;
-        totalScore += other.totalScore;
-        shotCount += other.shotCount + 1;
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return reachedScore + "/" + totalScore;
-    }
-
-    public String format(boolean appendPercent) {
-        if (appendPercent && totalScore > 0) {
-            return reachedScore + "/" + totalScore + " (" + getPercent() + ")";
-        } else {
-            return toString();
-        }
-    }
-
-    public float getShotAverage() {
-        return reachedScore / (float) shotCount;
-    }
-
-    private int getPercent() {
-        return reachedScore * 100 / totalScore;
+    public Score(int totalScore) {
+        this.reachedScore = 0;
+        this.totalScore = totalScore;
+        this.shotCount = 0;
     }
 
     public static Collector<Score, Score, Score> sum() {
@@ -82,5 +62,43 @@ public class Score {
                 return score -> score;
             }
         };
+    }
+
+    public Score add(Score other) {
+        reachedScore += other.reachedScore;
+        totalScore += other.totalScore;
+        shotCount += other.shotCount;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return reachedScore + "/" + totalScore;
+    }
+
+    public String format(boolean appendPercent) {
+        if (appendPercent && totalScore > 0) {
+            return reachedScore + "/" + totalScore + " (" + getPercent() + ")";
+        } else {
+            return toString();
+        }
+    }
+
+    public float getShotAverage() {
+        if (shotCount == 0) {
+            return -1;
+        }
+        return reachedScore / (float) shotCount;
+    }
+
+    public String getShotAverageFormatted() {
+        if (shotCount == 0) {
+            return "-";
+        }
+        return String.format(Locale.getDefault(), "%.2f", getShotAverage());
+    }
+
+    private int getPercent() {
+        return reachedScore * 100 / totalScore;
     }
 }
