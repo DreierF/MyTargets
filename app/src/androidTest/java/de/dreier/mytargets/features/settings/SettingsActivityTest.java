@@ -178,11 +178,11 @@ public class SettingsActivityTest extends UITestBase {
 
     private void matchPreferenceSummary(int index, String expectedSummary) {
         onView(allOf(withRecyclerView(R.id.list).atPositionOnView(index, android.R.id.summary),
-                isOnForegroundFragment(), isDisplayed())).check(matches(withText(expectedSummary)));
+                isOnForegroundFragment())).check(matches(withText(expectedSummary)));
     }
 
     private void clickOnPreference(int position) {
-        onView(allOf(withId(R.id.list), isOnForegroundFragment(), isDisplayed()))
-                .perform(actionOnItemAtPosition(position, click()));
+        onView(allOf(withId(R.id.list), isOnForegroundFragment()))
+                .perform(nestedScrollTo(), actionOnItemAtPosition(position, click()));
     }
 }
