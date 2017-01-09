@@ -32,11 +32,11 @@ import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.features.settings.backup.EBackupInterval;
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.features.training.input.EShowMode;
+import de.dreier.mytargets.features.training.input.TargetView.EKeyboardType;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.views.TargetViewBase;
-import de.dreier.mytargets.features.training.input.TargetView.EKeyboardType;
 
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 

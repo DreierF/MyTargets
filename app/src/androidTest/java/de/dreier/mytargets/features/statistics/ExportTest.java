@@ -30,9 +30,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
 
-import de.dreier.mytargets.test.base.InstrumentedTestBase;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.test.base.InstrumentedTestBase;
 import de.dreier.mytargets.test.utils.rules.MiniDbTestRule;
 
 @SmallTest

@@ -50,12 +50,12 @@ import de.dreier.mytargets.BuildConfig;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentBackupBinding;
 import de.dreier.mytargets.features.settings.SettingsFragmentBase;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.features.settings.backup.provider.IAsyncBackupRestore;
 import de.dreier.mytargets.features.settings.backup.synchronization.GenericAccountService;
 import de.dreier.mytargets.features.settings.backup.synchronization.SyncUtils;
-import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
 import permissions.dispatcher.NeedsPermission;
@@ -137,8 +137,10 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         binding.automaticBackupSwitch.setOnClickListener(v -> onAutomaticBackupChanged());
         updateAutomaticBackupSwitch();
 
-        binding.backupIntervalPreference.getRoot().setOnClickListener(view -> onBackupIntervalClicked());
-        binding.backupIntervalPreference.image.setImageResource(R.drawable.ic_query_builder_grey600_24dp);
+        binding.backupIntervalPreference.getRoot()
+                .setOnClickListener(view -> onBackupIntervalClicked());
+        binding.backupIntervalPreference.image
+                .setImageResource(R.drawable.ic_query_builder_grey600_24dp);
         binding.backupIntervalPreference.name.setText(R.string.backup_interval);
         updateInterval();
 
@@ -146,7 +148,8 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         updateBackupLocation();
 
         binding.recentBackupsList.setNestedScrollingEnabled(false);
-        binding.recentBackupsList.addItemDecoration(new DividerItemDecoration(getContext(), VERTICAL));
+        binding.recentBackupsList
+                .addItemDecoration(new DividerItemDecoration(getContext(), VERTICAL));
 
         setHasOptionsMenu(true);
         return binding.getRoot();
@@ -183,7 +186,8 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     private void updateInterval() {
         boolean autoBackupEnabled = SettingsManager.isBackupAutomaticallyEnabled();
         binding.backupIntervalLayout.setVisibility(autoBackupEnabled ? VISIBLE : GONE);
-        binding.backupIntervalPreference.summary.setText(SettingsManager.getBackupInterval().toString());
+        binding.backupIntervalPreference.summary
+                .setText(SettingsManager.getBackupInterval().toString());
     }
 
     private void onBackupLocationClicked() {

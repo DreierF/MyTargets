@@ -33,15 +33,18 @@ public class ScoreboardConfiguration {
 
     //TODO Use default values from xml
     public static ScoreboardConfiguration fromDisplaySettings() {
-        return getFromSettingsForPrefix("scoreboard_display_", true, true, true, true, true, true, false);
+        return getFromSettingsForPrefix("scoreboard_display_", true, true, true, true, true, true,
+                false);
     }
 
     public static ScoreboardConfiguration fromPrintSettings() {
-        return getFromSettingsForPrefix("scoreboard_print_", true, true, true, true, true, false, true);
+        return getFromSettingsForPrefix("scoreboard_print_", true, true, true, true, true, false,
+                true);
     }
 
     static ScoreboardConfiguration fromShareSettings() {
-        return getFromSettingsForPrefix("scoreboard_share_", true, true, true, true, true, true, false);
+        return getFromSettingsForPrefix("scoreboard_share_", true, true, true, true, true, true,
+                false);
     }
 
     private static ScoreboardConfiguration getFromSettingsForPrefix(String prefix,

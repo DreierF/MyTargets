@@ -23,8 +23,8 @@ import org.parceler.ParcelConstructor;
 import java.util.Arrays;
 import java.util.List;
 
-import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.shared.models.IIdProvider;
 
 public enum EBackupLocation implements IIdProvider {

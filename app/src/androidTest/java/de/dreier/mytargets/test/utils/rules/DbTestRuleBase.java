@@ -32,8 +32,8 @@ import org.junit.runners.model.Statement;
 import java.util.Collections;
 import java.util.Random;
 
-import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Thumbnail;

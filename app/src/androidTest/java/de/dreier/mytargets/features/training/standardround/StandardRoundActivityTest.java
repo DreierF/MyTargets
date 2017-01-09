@@ -27,9 +27,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.test.base.UITestBase;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.db.StandardRound;
+import de.dreier.mytargets.test.base.UITestBase;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;

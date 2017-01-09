@@ -27,6 +27,6 @@ public class EnvironmentActivity extends ItemSelectActivity {
 
     @Override
     public void onBackPressed() {
-        ((EnvironmentFragment)getChildFragment()).onSave();
+        ((EnvironmentFragment) getChildFragment()).onSave();
     }
 }

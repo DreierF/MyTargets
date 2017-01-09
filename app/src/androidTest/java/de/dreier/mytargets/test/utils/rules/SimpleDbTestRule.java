@@ -97,7 +97,8 @@ public class SimpleDbTestRule extends DbTestRuleBase {
     private RoundTemplate getRoundTemplate(int index, int distance) {
         RoundTemplate roundTemplate = new RoundTemplate();
         roundTemplate.index = index;
-        roundTemplate.setTargetTemplate(new Target(WAFull.ID, 0, new Dimension(60, Dimension.Unit.CENTIMETER)));
+        roundTemplate.setTargetTemplate(
+                new Target(WAFull.ID, 0, new Dimension(60, Dimension.Unit.CENTIMETER)));
         roundTemplate.shotsPerEnd = 6;
         roundTemplate.endCount = 6;
         roundTemplate.distance = new Dimension(distance, Dimension.Unit.METER);

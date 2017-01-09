@@ -29,13 +29,13 @@ import org.junit.runner.RunWith;
 import java.text.SimpleDateFormat;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.test.base.UITestBase;
-import de.dreier.mytargets.features.training.edit.EditTrainingActivity;
 import de.dreier.mytargets.features.settings.SettingsManager;
+import de.dreier.mytargets.features.training.edit.EditTrainingActivity;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
+import de.dreier.mytargets.test.base.UITestBase;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;
@@ -48,10 +48,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static de.dreier.mytargets.test.utils.PermissionGranter.allowPermissionsIfNeeded;
 import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
+import static de.dreier.mytargets.test.utils.PermissionGranter.allowPermissionsIfNeeded;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 

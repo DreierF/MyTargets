@@ -25,7 +25,7 @@ public class BackupEntry {
     private Date modifiedDate;
     private long backupSize;
 
-    public BackupEntry(String fileId, Date modifiedDate, long backupSize){
+    public BackupEntry(String fileId, Date modifiedDate, long backupSize) {
         this.fileId = fileId;
         this.modifiedDate = modifiedDate;
         this.backupSize = backupSize;

@@ -62,9 +62,9 @@ import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.utils.MatrixEvaluator;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
+import static de.dreier.mytargets.features.training.input.TargetView.EKeyboardType.LEFT;
 import static de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.KEYBOARD;
 import static de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.PLOTTING;
-import static de.dreier.mytargets.features.training.input.TargetView.EKeyboardType.LEFT;
 
 public class TargetView extends TargetViewBase {
 

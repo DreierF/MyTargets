@@ -51,7 +51,8 @@ public class RoundedTextDrawable extends Drawable {
     }
 
     public RoundedTextDrawable(ArrowStatistic item) {
-        this(String.format(Locale.ENGLISH, "%.3f", item.average.getStdDev()), item.getAppropriateBgColor(),
+        this(String.format(Locale.ENGLISH, "%.3f", item.average.getStdDev()),
+                item.getAppropriateBgColor(),
                 item.getAppropriateTextColor());
     }
 

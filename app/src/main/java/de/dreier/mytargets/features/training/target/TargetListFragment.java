@@ -39,9 +39,9 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
+import de.dreier.mytargets.base.fragments.SelectItemFragmentBase;
 import de.dreier.mytargets.databinding.FragmentTargetSelectBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
-import de.dreier.mytargets.base.fragments.SelectItemFragmentBase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.TargetFactory;

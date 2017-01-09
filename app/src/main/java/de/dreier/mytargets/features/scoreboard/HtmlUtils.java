@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
@@ -239,7 +239,8 @@ public class HtmlUtils {
     @NonNull
     private static String getStatisticsForRound(List<Round> rounds) {
         String html = BR + "<table class=\"myTable\" style=\"margin-top:5px;\"><tr>";
-        List<Map.Entry<SelectableZone, Integer>> scoreDistribution = getSortedScoreDistribution(rounds);
+        List<Map.Entry<SelectableZone, Integer>> scoreDistribution = getSortedScoreDistribution(
+                rounds);
         int hits = 0;
         int total = 0;
         for (Map.Entry<SelectableZone, Integer> score : scoreDistribution) {

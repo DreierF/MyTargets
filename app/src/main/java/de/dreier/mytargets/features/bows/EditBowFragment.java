@@ -34,11 +34,11 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.activities.ItemSelectActivity;
+import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemAdapter;
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder;
+import de.dreier.mytargets.base.fragments.EditWithImageFragmentBase;
 import de.dreier.mytargets.databinding.FragmentEditBowBinding;
 import de.dreier.mytargets.databinding.ItemSightMarkBinding;
-import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemAdapter;
-import de.dreier.mytargets.base.fragments.EditWithImageFragmentBase;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.BowImage;

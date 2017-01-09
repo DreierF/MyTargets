@@ -27,11 +27,10 @@ import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 /**
- *
  * The list is automatically sorted in natural order.
- * */
+ */
 public abstract class SimpleListAdapterBase<T extends IIdProvider & Comparable<T>>
-        extends ListAdapterBase<SelectableViewHolder<T>,T> {
+        extends ListAdapterBase<SelectableViewHolder<T>, T> {
 
     protected final LayoutInflater inflater;
     private List<T> list = new ArrayList<>();

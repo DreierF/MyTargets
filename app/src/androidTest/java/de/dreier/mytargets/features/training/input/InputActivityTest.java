@@ -27,12 +27,12 @@ import org.junit.runner.RunWith;
 import java.util.Random;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.test.base.UITestBase;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.views.TargetViewBase;
+import de.dreier.mytargets.test.base.UITestBase;
 import de.dreier.mytargets.test.utils.rules.DbTestRuleBase;
 
 import static android.support.test.espresso.Espresso.onView;

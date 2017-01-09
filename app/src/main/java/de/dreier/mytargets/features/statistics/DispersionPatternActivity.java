@@ -105,7 +105,8 @@ public class DispersionPatternActivity extends ChildActivityBase {
                 shareIntent.setType("image/png");
                 String packageName = getApplicationContext().getPackageName();
                 String authority = packageName + ".easyphotopicker.fileprovider";
-                shareIntent.putExtra(Intent.EXTRA_STREAM, getUriForFile(DispersionPatternActivity.this, authority, f));
+                shareIntent.putExtra(Intent.EXTRA_STREAM,
+                        getUriForFile(DispersionPatternActivity.this, authority, f));
                 startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
             } catch (IOException e) {
                 e.printStackTrace();

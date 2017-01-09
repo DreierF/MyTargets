@@ -32,7 +32,7 @@ public class GravityArcMotion extends ArcMotion {
 
     private static final float DEFAULT_MAX_ANGLE_DEGREES = 70;
     private static final float DEFAULT_MAX_TANGENT = (float)
-            Math.tan(Math.toRadians(DEFAULT_MAX_ANGLE_DEGREES/2));
+            Math.tan(Math.toRadians(DEFAULT_MAX_ANGLE_DEGREES / 2));
 
     private float mMinimumHorizontalAngle = 0;
     private float mMinimumVerticalAngle = 0;

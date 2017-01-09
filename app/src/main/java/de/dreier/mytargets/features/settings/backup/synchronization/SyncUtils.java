@@ -54,7 +54,8 @@ public class SyncUtils {
     public static void setSyncAccountPeriodicSync(EBackupInterval interval) {
         Account account = GenericAccountService.getAccount();
         if (interval == null) {
-            ContentResolver.removePeriodicSync(account, BuildConfig.CONTENT_AUTHORITY, new Bundle());
+            ContentResolver
+                    .removePeriodicSync(account, BuildConfig.CONTENT_AUTHORITY, new Bundle());
         } else {
             ContentResolver.addPeriodicSync(account, BuildConfig.CONTENT_AUTHORITY,
                     new Bundle(), interval.getDays() * ONE_DAY);

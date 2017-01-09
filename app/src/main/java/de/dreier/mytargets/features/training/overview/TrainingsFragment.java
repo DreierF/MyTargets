@@ -31,13 +31,13 @@ import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.statistics.StatisticsActivity;
 import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter;
 import de.dreier.mytargets.databinding.FragmentTrainingsBinding;
 import de.dreier.mytargets.databinding.ItemTrainingBinding;
 import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.features.training.edit.EditTrainingFragment;
+import de.dreier.mytargets.features.statistics.StatisticsActivity;
 import de.dreier.mytargets.features.training.TrainingFragment;
+import de.dreier.mytargets.features.training.edit.EditTrainingFragment;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.utils.DividerItemDecoration;

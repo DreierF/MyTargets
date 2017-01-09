@@ -25,12 +25,12 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.training.environment.EnvironmentActivity;
 import de.dreier.mytargets.features.training.environment.CurrentWeather;
+import de.dreier.mytargets.features.training.environment.EnvironmentActivity;
+import de.dreier.mytargets.features.training.environment.Locator;
 import de.dreier.mytargets.features.training.environment.WeatherService;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
-import de.dreier.mytargets.features.training.environment.Locator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

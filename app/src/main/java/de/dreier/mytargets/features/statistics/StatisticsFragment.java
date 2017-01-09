@@ -55,11 +55,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.app.ApplicationInstance;
+import de.dreier.mytargets.base.fragments.FragmentBase;
 import de.dreier.mytargets.databinding.FragmentStatisticsBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
-import de.dreier.mytargets.base.fragments.FragmentBase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.SelectableZone;
@@ -396,7 +396,8 @@ public class StatisticsFragment extends FragmentBase {
 
     private Pair<Float, DateTime> getPairEndSummary(Target target, End end, LocalDate trainingDate) {
         Score reachedScore = target.getReachedScore(end);
-        return new Pair<>(reachedScore.getShotAverage(), new DateTime(end.saveTime).withDate(trainingDate));
+        return new Pair<>(reachedScore.getShotAverage(),
+                new DateTime(end.saveTime).withDate(trainingDate));
     }
 
     @NonNull
@@ -477,6 +478,7 @@ public class StatisticsFragment extends FragmentBase {
 
     private interface Evaluator {
         long getXValue(List<Pair<Float, DateTime>> values, int i);
+
         String getXValueFormatted(float value);
     }
 

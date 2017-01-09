@@ -42,7 +42,8 @@ public class DistanceInputDialog {
 
         public void show() {
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            DialogCommentBinding binding = DataBindingUtil.inflate(inflater, R.layout.dialog_comment, null, false);
+            DialogCommentBinding binding = DataBindingUtil
+                    .inflate(inflater, R.layout.dialog_comment, null, false);
             binding.shotComment.setInputType(InputType.TYPE_CLASS_NUMBER);
             binding.unit.setText(mUnit);
             final EditText shotComment = binding.shotComment;
@@ -55,7 +56,8 @@ public class DistanceInputDialog {
                         mClickListener.onOkClickListener(s);
                         dialog.dismiss();
                     })
-                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss()).show();
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
+                    .show();
         }
 
         public Builder setOnClickListener(OnClickListener listener) {

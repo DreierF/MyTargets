@@ -17,8 +17,8 @@ package de.dreier.mytargets.features.settings.backup;
 
 import android.support.annotation.StringRes;
 
-import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.app.ApplicationInstance;
 
 public enum EBackupInterval {
     DAILY(1, R.string.daily),
