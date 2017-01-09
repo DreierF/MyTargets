@@ -21,10 +21,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
@@ -40,7 +37,6 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.transition.Transition;
 import android.transition.TransitionValues;
-import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
@@ -80,26 +76,6 @@ public class FabTransform extends Transition {
         icon = fabIconResId;
         setPathMotion(new GravityArcMotion());
         setDuration(DEFAULT_DURATION);
-    }
-
-    public FabTransform(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        TypedArray a = null;
-        try {
-            a = context.obtainStyledAttributes(attrs, R.styleable.FabTransform);
-            if (!a.hasValue(R.styleable.FabTransform_fabColor)
-                    || !a.hasValue(R.styleable.FabTransform_fabIcon)) {
-                throw new IllegalArgumentException("Must provide both color & icon.");
-            }
-            color = a.getColor(R.styleable.FabTransform_fabColor, Color.TRANSPARENT);
-            icon = a.getResourceId(R.styleable.FabTransform_fabIcon, 0);
-            setPathMotion(new GravityArcMotion());
-            if (getDuration() < 0) {
-                setDuration(DEFAULT_DURATION);
-            }
-        } finally {
-            a.recycle();
-        }
     }
 
     /**

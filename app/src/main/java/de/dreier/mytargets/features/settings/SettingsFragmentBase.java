@@ -22,8 +22,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.View;
 
-import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
 public abstract class SettingsFragmentBase extends PreferenceFragmentCompat

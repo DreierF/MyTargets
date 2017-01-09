@@ -24,24 +24,32 @@ import de.dreier.mytargets.features.settings.backup.BackupEntry;
 
 public interface IAsyncBackupRestore {
     void connect(Activity activity, ConnectionListener listener);
+
     void onActivityResult(int requestCode, int resultCode, Intent data);
+
     void getBackups(OnLoadFinishedListener listener);
+
     void restoreBackup(BackupEntry backup, BackupStatusListener listener);
+
     void deleteBackup(BackupEntry backup, BackupStatusListener listener);
+
     void stop();
 
     interface ConnectionListener {
         void onConnected();
+
         void onConnectionSuspended();
     }
 
     interface OnLoadFinishedListener {
         void onLoadFinished(List<BackupEntry> backupEntries);
+
         void onError(String message);
     }
 
     interface BackupStatusListener {
         void onFinished();
+
         void onError(String message);
     }
 }

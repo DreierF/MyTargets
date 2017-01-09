@@ -98,14 +98,13 @@ public class ApplicationInstance extends SharedApplicationInstance {
                     .detectLeakedSqlLiteObjects()
                     .detectLeakedClosableObjects()
                     .penaltyLog()
-//                    .penaltyDeath()
                     .build());
         }
         super.onCreate();
         final File newDatabasePath = getDatabasePath(AppDatabase.DATABASE_FILE_NAME);
         final File oldDatabasePath = getDatabasePath(AppDatabase.DATABASE_IMPORT_FILE_NAME);
-        if(oldDatabasePath.exists()) {
-            if(newDatabasePath.exists()) {
+        if (oldDatabasePath.exists()) {
+            if (newDatabasePath.exists()) {
                 newDatabasePath.delete();
             }
             oldDatabasePath.renameTo(newDatabasePath);

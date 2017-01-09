@@ -135,7 +135,7 @@ public class Locator implements LocationListener {
         if (this.method == Locator.Method.NETWORK_THEN_GPS
                 && provider.contentEquals(LocationManager.NETWORK_PROVIDER)) {
             // Network provider disabled, try GPS
-            Log.d(LOG_TAG, "Requesst updates from GPS provider, network provider disabled.");
+            Log.d(LOG_TAG, "Request updates from GPS provider, network provider disabled.");
             this.requestUpdates(LocationManager.GPS_PROVIDER);
         } else {
             this.locationManager.removeUpdates(this);

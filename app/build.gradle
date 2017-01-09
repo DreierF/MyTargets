@@ -133,23 +133,6 @@ if (CROWDIN_API_KEY != null && !CROWDIN_API_KEY.isEmpty()) {
     }
 }
 
-/*
-* Workaround for https://code.google.com/p/android/issues/detail?id=71365
-* */
-def buildConfigAndResStringField(variant, name, value) {
-    variant.resValue 'string', name.toLowerCase(), value
-    variant.buildConfigField 'String', name, "\"$value\""
-}
-
-afterEvaluate {
-    android.applicationVariants.all { variant ->
-        variant.resValue 'string', 'application_id', variant.applicationId
-        variant.resValue 'string', 'content_authority', variant.applicationId + ".provider"
-        buildConfigAndResStringField variant, "ACCOUNT_TYPE", variant.applicationId
-        buildConfigAndResStringField variant, "CONTENT_AUTHORITY", variant.applicationId + ".provider"
-    }
-}
-
 dependencies {
     compile "com.android.support:support-compat:$libraryVersion.support"
     compile "com.android.support:support-core-utils:$libraryVersion.support"

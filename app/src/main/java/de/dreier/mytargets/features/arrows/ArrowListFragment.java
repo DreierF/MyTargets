@@ -29,9 +29,9 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
+import de.dreier.mytargets.base.fragments.EditableListFragment;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
-import de.dreier.mytargets.base.fragments.EditableListFragment;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
@@ -40,6 +40,7 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 public class ArrowListFragment extends EditableListFragment<Arrow> {
 
     protected FragmentListBinding binding;
+
     public ArrowListFragment() {
         itemTypeSelRes = R.plurals.arrow_selected;
         itemTypeDelRes = R.plurals.arrow_deleted;

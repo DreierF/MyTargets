@@ -19,8 +19,8 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.Preference;
 
-import de.dreier.mytargets.features.settings.licences.LicencesActivity;
 import de.dreier.mytargets.features.settings.about.AboutFragment;
+import de.dreier.mytargets.features.settings.licences.LicencesActivity;
 
 public class MainSettingsFragment extends SettingsFragmentBase {
 

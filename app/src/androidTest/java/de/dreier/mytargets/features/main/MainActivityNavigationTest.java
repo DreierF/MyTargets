@@ -26,20 +26,20 @@ import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.test.base.UITestBase;
-import de.dreier.mytargets.features.training.edit.EditTrainingActivity;
-import de.dreier.mytargets.features.statistics.StatisticsActivity;
 import de.dreier.mytargets.features.arrows.EditArrowActivity;
 import de.dreier.mytargets.features.bows.EditBowActivity;
 import de.dreier.mytargets.features.bows.EditBowFragment;
 import de.dreier.mytargets.features.settings.SettingsActivity;
-import de.dreier.mytargets.features.training.edit.EditTrainingFragment;
 import de.dreier.mytargets.features.settings.SettingsManager;
+import de.dreier.mytargets.features.statistics.StatisticsActivity;
+import de.dreier.mytargets.features.training.edit.EditTrainingActivity;
+import de.dreier.mytargets.features.training.edit.EditTrainingFragment;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
+import de.dreier.mytargets.test.base.UITestBase;
 import de.dreier.mytargets.test.utils.rules.SimpleDbTestRule;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -57,9 +57,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static de.dreier.mytargets.test.utils.PermissionGranter.allowPermissionsIfNeeded;
 import static de.dreier.mytargets.test.utils.actions.OrientationChangeAction.orientationLandscape;
 import static de.dreier.mytargets.test.utils.actions.OrientationChangeAction.orientationPortrait;
-import static de.dreier.mytargets.test.utils.PermissionGranter.allowPermissionsIfNeeded;
 import static org.hamcrest.CoreMatchers.allOf;
 
 @RunWith(AndroidJUnit4.class)

@@ -25,8 +25,8 @@ import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.test.base.UITestBase;
 import de.dreier.mytargets.features.settings.SettingsManager;
+import de.dreier.mytargets.test.base.UITestBase;
 import de.dreier.mytargets.test.utils.rules.EmptyDbTestRule;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;

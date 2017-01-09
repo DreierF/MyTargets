@@ -137,7 +137,6 @@ public class UITestBase extends InstrumentedTestBase {
     }
 
     protected static Matcher<View> isOnForegroundFragment() {
-
         return new TypeSafeMatcher<View>() {
             @Override
             public void describeTo(Description description) {

@@ -30,16 +30,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.dreier.mytargets.app.ApplicationInstance;
-import de.dreier.mytargets.test.base.InstrumentedTestBase;
 import de.dreier.mytargets.features.settings.backup.EBackupInterval;
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.features.training.input.EShowMode;
+import de.dreier.mytargets.features.training.input.TargetView;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.models.NFAAAnimal;
 import de.dreier.mytargets.shared.targets.models.WAFull;
-import de.dreier.mytargets.features.training.input.TargetView;
+import de.dreier.mytargets.test.base.InstrumentedTestBase;
 
 import static com.google.common.truth.Truth.assertThat;
 import static de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.KEYBOARD;
@@ -79,9 +79,11 @@ public class SettingsManagerTest extends InstrumentedTestBase {
     @Test
     public void setDistance() {
         SettingsManager.setDistance(new Dimension(30, Dimension.Unit.METER));
-        assertThat(SettingsManager.getDistance()).isEqualTo(new Dimension(30, Dimension.Unit.METER));
+        assertThat(SettingsManager.getDistance())
+                .isEqualTo(new Dimension(30, Dimension.Unit.METER));
         SettingsManager.setDistance(new Dimension(-1, Dimension.Unit.METER));
-        assertThat(SettingsManager.getDistance()).isEqualTo(new Dimension(-1, Dimension.Unit.METER));
+        assertThat(SettingsManager.getDistance())
+                .isEqualTo(new Dimension(-1, Dimension.Unit.METER));
     }
 
     @Test
@@ -92,7 +94,8 @@ public class SettingsManagerTest extends InstrumentedTestBase {
 
     @Test
     public void setTarget() {
-        final Target targetWA = new Target(WAFull.ID, 0, new Dimension(40, Dimension.Unit.CENTIMETER));
+        final Target targetWA = new Target(WAFull.ID, 0,
+                new Dimension(40, Dimension.Unit.CENTIMETER));
         SettingsManager.setTarget(targetWA);
         assertThat(SettingsManager.getTarget()).isEqualTo(targetWA);
         final Target target3d = new Target(NFAAAnimal.ID, 0, Dimension.LARGE);
@@ -151,7 +154,8 @@ public class SettingsManagerTest extends InstrumentedTestBase {
     @Test
     public void setAggregationStrategy() {
         SettingsManager.setAggregationStrategy(EAggregationStrategy.CLUSTER);
-        assertThat(SettingsManager.getAggregationStrategy()).isEqualTo(EAggregationStrategy.CLUSTER);
+        assertThat(SettingsManager.getAggregationStrategy())
+                .isEqualTo(EAggregationStrategy.CLUSTER);
     }
 
     @Test
@@ -215,7 +219,8 @@ public class SettingsManagerTest extends InstrumentedTestBase {
         assertThat(SettingsManager.getProfileBirthDay()).isEqualTo(birthDay);
         assertThat(SettingsManager.getProfileBirthDayFormatted()).isEqualTo(
                 DateTimeFormat.mediumDate().print(birthDay));
-        assertThat(SettingsManager.getProfileAge()).isEqualTo(Years.yearsBetween(birthDay, LocalDate.now()).getYears());
+        assertThat(SettingsManager.getProfileAge())
+                .isEqualTo(Years.yearsBetween(birthDay, LocalDate.now()).getYears());
     }
 
     @Test
@@ -263,7 +268,7 @@ public class SettingsManagerTest extends InstrumentedTestBase {
     @Test
     public void setStandardRoundsLastUsed() {
         Map<Long, Integer> map = new HashMap<>();
-        map.put(2L,3);
+        map.put(2L, 3);
         SettingsManager.setStandardRoundsLastUsed(map);
         assertThat(SettingsManager.getStandardRoundsLastUsed()).isEqualTo(map);
         map.put(4L, 5);

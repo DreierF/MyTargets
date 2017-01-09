@@ -23,16 +23,16 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.settings.backup.BackupException;
 import de.dreier.mytargets.features.settings.backup.provider.IBlockingBackup;
-import de.dreier.mytargets.features.settings.SettingsManager;
 
 /**
  * Define a sync adapter for the app.
- *
+ * <p>
  * <p>This class is instantiated in {@link SyncService}, which also binds SyncAdapter to the system.
  * SyncAdapter should only be initialized in SyncService, never anywhere else.
- *
+ * <p>
  * <p>The system calls onPerformSync() via an RPC call through the IBinder object supplied by
  * SyncService.
  */
@@ -51,12 +51,12 @@ class SyncAdapter extends AbstractThreadedSyncAdapter {
      * done here. Extending AbstractThreadedSyncAdapter ensures that all methods within SyncAdapter
      * run on a background thread. For this reason, blocking I/O and other long-running tasks can be
      * run <em>in situ</em>, and you don't have to set up a separate thread for them.
-     .
-     *
+     * .
+     * <p>
      * <p>This is where we actually perform any work required to perform a sync.
      * {@link AbstractThreadedSyncAdapter} guarantees that this will be called on a non-UI thread,
      * so it is safe to peform blocking I/O here.
-     *
+     * <p>
      * <p>The syncResult argument allows you to pass information back to the method that triggered
      * the sync.
      */

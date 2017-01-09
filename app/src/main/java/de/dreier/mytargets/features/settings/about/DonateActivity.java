@@ -89,7 +89,7 @@ public class DonateActivity extends AppCompatActivity implements BillingProcesso
             TransactionDetails details = bp.getPurchaseTransactionDetails(sku.productId);
 
             // If consumption failed last time try it again
-            if (details != null && details.orderId != null) {
+            if (details != null && details.purchaseInfo.purchaseData.orderId != null) {
                 bp.consumePurchase(sku.productId);
             }
         }

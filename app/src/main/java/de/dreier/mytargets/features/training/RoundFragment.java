@@ -33,12 +33,12 @@ import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
+import de.dreier.mytargets.base.fragments.EditableListFragment;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemEndBinding;
 import de.dreier.mytargets.features.scoreboard.ScoreboardActivity;
 import de.dreier.mytargets.features.statistics.StatisticsActivity;
 import de.dreier.mytargets.features.training.input.InputActivity;
-import de.dreier.mytargets.base.fragments.EditableListFragment;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.utils.DividerItemDecoration;

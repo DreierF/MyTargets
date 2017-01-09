@@ -30,14 +30,14 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
+import de.dreier.mytargets.base.fragments.EditableListFragment;
 import de.dreier.mytargets.databinding.FragmentBowsBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
-import de.dreier.mytargets.base.fragments.EditableListFragment;
+import de.dreier.mytargets.features.scoreboard.HtmlInfoBuilder;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.utils.DividerItemDecoration;
-import de.dreier.mytargets.features.scoreboard.HtmlInfoBuilder;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;

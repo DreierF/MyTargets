@@ -23,8 +23,8 @@ import org.parceler.ParcelConstructor;
 import java.util.Arrays;
 import java.util.List;
 
-import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.shared.models.IIdProvider;
 
 public enum EBackupLocation implements IIdProvider {
@@ -58,27 +58,25 @@ public enum EBackupLocation implements IIdProvider {
 
     public IAsyncBackupRestore createAsyncRestore() {
         switch (this) {
-            case INTERNAL_STORAGE:
-                return new InternalStorageBackup.AsyncRestore();
             case EXTERNAL_STORAGE:
                 return new ExternalStorageBackup.AsyncRestore();
             case GOOGLE_DRIVE:
                 return new GoogleDriveBackup.AsyncRestore();
+            case INTERNAL_STORAGE:
             default:
-                return null;
+                return new InternalStorageBackup.AsyncRestore();
         }
     }
 
     public IBlockingBackup createBackup() {
         switch (this) {
-            case INTERNAL_STORAGE:
-                return new InternalStorageBackup.Backup();
             case EXTERNAL_STORAGE:
                 return new ExternalStorageBackup.Backup();
             case GOOGLE_DRIVE:
                 return new GoogleDriveBackup.Backup();
+            case INTERNAL_STORAGE:
             default:
-                return null;
+                return new InternalStorageBackup.Backup();
         }
     }
 

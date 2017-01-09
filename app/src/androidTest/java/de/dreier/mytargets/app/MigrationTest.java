@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import de.dreier.mytargets.test.base.InstrumentedTestBase;
 import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.Dimension;
@@ -49,6 +48,7 @@ import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.test.base.InstrumentedTestBase;
 
 import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.InstrumentationRegistry.getTargetContext;

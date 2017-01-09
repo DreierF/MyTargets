@@ -26,10 +26,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.test.base.UITestBase;
+import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
+import de.dreier.mytargets.test.base.UITestBase;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.support.test.espresso.Espresso.onView;

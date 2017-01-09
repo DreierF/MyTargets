@@ -28,13 +28,13 @@ import java.util.List;
 
 /**
  * Created by Matteo on 08/08/2015.
- *
+ * <p>
  * Floating Action Menu Behavior for Clans.FloatingActionButton
  * https://github.com/Clans/FloatingActionButton/
- *
+ * <p>
  * Use this behavior as your app:layout_behavior attribute in your Floating Action Menu to use the
  * FabMenu in a Coordinator Layout.
- *
+ * <p>
  * Remember to use the correct namespace for the fab:
  * xmlns:fab="http://schemas.android.com/apk/res-auto"
  */
@@ -91,7 +91,8 @@ public class FloatingActionMenuBehavior extends CoordinatorLayout.Behavior<Float
         for (int z = dependencies.size(); i < z; ++i) {
             View view = (View) dependencies.get(i);
             if (view instanceof Snackbar.SnackbarLayout && parent.doViewsOverlap(child, view)) {
-                minOffset = Math.min(minOffset, ViewCompat.getTranslationY(view) - (float) view.getHeight());
+                minOffset = Math.min(minOffset,
+                        ViewCompat.getTranslationY(view) - (float) view.getHeight());
             }
         }
 

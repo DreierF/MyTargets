@@ -80,7 +80,8 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         // TODO merge all these setters into a single setArrowStatistic(stats)
         this.target.setAggregationStrategy(SettingsManager.getAggregationStrategy());
         this.target.setShots(statistic.shots);
-        this.target.setArrowDiameter(statistic.arrowDiameter, SettingsManager.getInputArrowDiameterScale());
+        this.target.setArrowDiameter(statistic.arrowDiameter,
+                SettingsManager.getInputArrowDiameterScale());
         this.target.setCallback(this);
         invalidate();
     }

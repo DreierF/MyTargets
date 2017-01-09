@@ -254,8 +254,8 @@ public class ChipGroup extends ViewGroup {
         public boolean isChecked = false;
         private transient Bitmap thumbnail;
 
-        public Tag(Long id, String text, boolean isChecked) {
-            this(id, text, null, isChecked);
+        public Tag(Long id, String text) {
+            this(id, text, null, true);
         }
 
         @ParcelConstructor

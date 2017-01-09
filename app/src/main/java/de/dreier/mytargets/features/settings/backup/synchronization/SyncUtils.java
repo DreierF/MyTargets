@@ -32,6 +32,7 @@ public class SyncUtils {
     private static final long ONE_DAY = 86400;  // 1 day (in seconds)
 
     private static final String TAG = "SyncUtils";
+    public static final String CONTENT_AUTHORITY = BuildConfig.APPLICATION_ID + ".provider";
 
     /**
      * Create an entry for this application in the system account list, if it isn't already there.
@@ -45,18 +46,19 @@ public class SyncUtils {
                 .getSystemService(Context.ACCOUNT_SERVICE);
         if (accountManager.addAccountExplicitly(account, null, null)) {
             // Inform the system that this account supports sync
-            ContentResolver.setIsSyncable(account, BuildConfig.CONTENT_AUTHORITY, 1);
+            ContentResolver.setIsSyncable(account, CONTENT_AUTHORITY, 1);
             // Inform the system that this account is eligible for auto sync when the network is up
-            ContentResolver.setSyncAutomatically(account, BuildConfig.CONTENT_AUTHORITY, false);
+            ContentResolver.setSyncAutomatically(account, CONTENT_AUTHORITY, false);
         }
     }
 
     public static void setSyncAccountPeriodicSync(EBackupInterval interval) {
         Account account = GenericAccountService.getAccount();
         if (interval == null) {
-            ContentResolver.removePeriodicSync(account, BuildConfig.CONTENT_AUTHORITY, new Bundle());
+            ContentResolver
+                    .removePeriodicSync(account, CONTENT_AUTHORITY, new Bundle());
         } else {
-            ContentResolver.addPeriodicSync(account, BuildConfig.CONTENT_AUTHORITY,
+            ContentResolver.addPeriodicSync(account, CONTENT_AUTHORITY,
                     new Bundle(), interval.getDays() * ONE_DAY);
         }
     }
@@ -80,7 +82,7 @@ public class SyncUtils {
         Log.d(TAG, "triggerBackup: ");
         ContentResolver.requestSync(
                 GenericAccountService.getAccount(),
-                BuildConfig.CONTENT_AUTHORITY,
+                CONTENT_AUTHORITY,
                 b);
     }
 }

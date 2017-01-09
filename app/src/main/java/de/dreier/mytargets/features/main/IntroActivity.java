@@ -32,12 +32,12 @@ public class IntroActivity extends MaterialIntroActivity {
         enableLastSlideAlphaExitTransition(true);
 
         addSlide(new SlideFragmentBuilder()
-                        .backgroundColor(R.color.introBackground)
-                        .buttonsColor(R.color.colorAccent)
-                        .image(R.drawable.ic_intro_screen_1)
-                        .title(getString(R.string.intro_title_track_training_progress))
-                        .description(getString(R.string.intro_description_track_training_progress))
-                        .build());
+                .backgroundColor(R.color.introBackground)
+                .buttonsColor(R.color.colorAccent)
+                .image(R.drawable.ic_intro_screen_1)
+                .title(getString(R.string.intro_title_track_training_progress))
+                .description(getString(R.string.intro_description_track_training_progress))
+                .build());
 
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.introBackground)

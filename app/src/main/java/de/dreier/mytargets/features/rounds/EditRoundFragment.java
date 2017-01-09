@@ -26,13 +26,13 @@ import android.view.ViewGroup;
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.training.EditRoundActivity;
-import de.dreier.mytargets.features.training.input.InputActivity;
-import de.dreier.mytargets.databinding.FragmentEditRoundBinding;
 import de.dreier.mytargets.base.fragments.EditFragmentBase;
-import de.dreier.mytargets.features.training.RoundFragment;
-import de.dreier.mytargets.features.training.target.TargetListFragment;
+import de.dreier.mytargets.databinding.FragmentEditRoundBinding;
 import de.dreier.mytargets.features.settings.SettingsManager;
+import de.dreier.mytargets.features.training.EditRoundActivity;
+import de.dreier.mytargets.features.training.RoundFragment;
+import de.dreier.mytargets.features.training.input.InputActivity;
+import de.dreier.mytargets.features.training.target.TargetListFragment;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.utils.IntentWrapper;

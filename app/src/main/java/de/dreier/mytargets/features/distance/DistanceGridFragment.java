@@ -32,9 +32,9 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
+import de.dreier.mytargets.base.fragments.SelectItemFragmentBase;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemDistanceBinding;
-import de.dreier.mytargets.base.fragments.SelectItemFragmentBase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Dimension.Unit;
 import de.dreier.mytargets.utils.SlideInItemAnimator;

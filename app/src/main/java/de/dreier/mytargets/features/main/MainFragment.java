@@ -30,9 +30,9 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.databinding.FragmentMainBinding;
 import de.dreier.mytargets.features.settings.SettingsActivity;
 import de.dreier.mytargets.features.statistics.StatisticsActivity;
-import de.dreier.mytargets.databinding.FragmentMainBinding;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 

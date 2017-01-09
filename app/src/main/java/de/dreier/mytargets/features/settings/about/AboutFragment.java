@@ -69,7 +69,8 @@ public class AboutFragment extends Fragment {
 
     @NonNull
     private String getVersion() {
-        return getString(R.string.version, BuildConfig.VERSION_NAME) + " (" + BuildConfig.VERSION_CODE + ")";
+        return getString(R.string.version,
+                BuildConfig.VERSION_NAME) + " (" + BuildConfig.VERSION_CODE + ")";
     }
 
     private Element getCrowdinElement() {
@@ -102,7 +103,8 @@ public class AboutFragment extends Fragment {
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, URL_PLAY_STORE);
         sendIntent.setType("text/plain");
-        shareElement.setIntent(Intent.createChooser(sendIntent, getString(R.string.share_with_friends)));
+        shareElement.setIntent(
+                Intent.createChooser(sendIntent, getString(R.string.share_with_friends)));
         return shareElement;
     }
 

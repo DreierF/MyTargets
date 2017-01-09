@@ -36,14 +36,14 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.activities.ItemSelectActivity;
+import de.dreier.mytargets.base.fragments.EditFragmentBase;
 import de.dreier.mytargets.databinding.FragmentEditTrainingBinding;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.training.ETrainingType;
 import de.dreier.mytargets.features.training.RoundFragment;
 import de.dreier.mytargets.features.training.TrainingFragment;
 import de.dreier.mytargets.features.training.input.InputActivity;
-import de.dreier.mytargets.base.fragments.EditFragmentBase;
 import de.dreier.mytargets.features.training.target.TargetListFragment;
-import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Bow;
@@ -216,14 +216,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     }
 
     private void onDateClick() {
-        // Package bundle with fragment arguments
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(DatePickerFragment.ARG_CURRENT_DATE, date);
-
-        // Create and show date picker
-        DatePickerFragment datePickerDialog = new DatePickerFragment();
-        datePickerDialog.setTargetFragment(EditTrainingFragment.this, REQ_SELECTED_DATE);
-        datePickerDialog.setArguments(bundle);
+        DatePickerFragment datePickerDialog = DatePickerFragment.newInstance(date);
+        datePickerDialog.setTargetFragment(this, REQ_SELECTED_DATE);
         datePickerDialog.show(getActivity().getSupportFragmentManager(), "date_picker");
     }
 

@@ -22,7 +22,7 @@ public abstract class HeaderBindingHolder<T> extends ItemBindingHolder<T> {
     /**
      * Constructor for header items
      *
-     * @param itemView        Header view
+     * @param itemView Header view
      */
     public HeaderBindingHolder(View itemView) {
         super(itemView);

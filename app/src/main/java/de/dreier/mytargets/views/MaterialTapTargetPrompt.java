@@ -570,7 +570,7 @@ public class MaterialTapTargetPrompt {
             int[] rootLocation = new int[2];
             mDrawView.getLocationInWindow(rootLocation);
             int relativeLeft = viewLocation[0] - rootLocation[0];
-            int relativeTop  = viewLocation[1] - rootLocation[1];
+            int relativeTop = viewLocation[1] - rootLocation[1];
             mView.mDrawView = mDrawView;
             mView.mIconDrawableLeft = mView.mCentreLeft - (mView.mTargetView
                     .getWidth() / 2) - relativeLeft;
@@ -1300,7 +1300,7 @@ public class MaterialTapTargetPrompt {
             if (mTargetView != null) {
                 mPrompt.mTargetView = mTargetView;
                 mPrompt.mView.mTargetView = mTargetView;
-                if(mDrawView==null) {
+                if (mDrawView == null) {
                     mDrawView = mTargetView;
                 }
                 mPrompt.mDrawView = mDrawView;

@@ -36,7 +36,7 @@ public class GenericAccountService extends Service {
      * Obtain a handle to the {@link Account} used for sync in this application.
      *
      * @return Handle to application's account (not guaranteed to resolve unless createSyncAccount()
-     *         has been called)
+     * has been called)
      */
     public static Account getAccount() {
         return new Account(ACCOUNT_NAME, ACCOUNT_TYPE);

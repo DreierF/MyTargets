@@ -234,12 +234,12 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                     if (bid != null) {
                         Bow bow = Bow.get(bid);
                         if (bow == null) {
-                            return new ChipGroup.Tag(bid, "Deleted " + bid, true);
+                            return new ChipGroup.Tag(bid, "Deleted " + bid);
                         }
                         return new ChipGroup.Tag(bow.getId(), bow.getName(),
                                 bow.thumbnail.getBlob().getBlob(), true);
                     } else {
-                        return new ChipGroup.Tag(null, getString(R.string.unknown), true);
+                        return new ChipGroup.Tag(null, getString(R.string.unknown));
                     }
                 })
                 .collect(Collectors.toList());
@@ -253,12 +253,12 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                     if (aid != null) {
                         Arrow arrow = Arrow.get(aid);
                         if (arrow == null) {
-                            return new ChipGroup.Tag(aid, "Deleted " + aid, true);
+                            return new ChipGroup.Tag(aid, "Deleted " + aid);
                         }
                         return new ChipGroup.Tag(arrow.getId(), arrow.getName(),
                                 arrow.thumbnail.getBlob().getBlob(), true);
                     } else {
-                        return new ChipGroup.Tag(null, getString(R.string.unknown), true);
+                        return new ChipGroup.Tag(null, getString(R.string.unknown));
                     }
                 })
                 .collect(Collectors.toList());
@@ -269,7 +269,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 .map(p -> p.second.distance)
                 .distinct()
                 .sorted()
-                .map(d -> new ChipGroup.Tag(d.getId(), d.toString(), true))
+                .map(d -> new ChipGroup.Tag(d.getId(), d.toString()))
                 .collect(Collectors.toList());
     }
 
