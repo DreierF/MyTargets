@@ -232,9 +232,10 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     android:button="@drawable/timer"
-                    android:padding="16dp"
+                    android:paddingBottom="16dp"
                     android:paddingLeft="32dp"
-                    android:paddingStart="32dp"
+                    android:paddingRight="32dp"
+                    android:paddingTop="16dp"
                     android:text="@string/timer" />
 
             </LinearLayout>

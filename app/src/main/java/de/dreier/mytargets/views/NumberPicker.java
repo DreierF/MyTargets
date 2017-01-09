@@ -172,7 +172,7 @@ public class NumberPicker extends LinearLayout {
         }
         value = val;
         if (textPattern == 0) {
-            binding.numberValue.setText(value.toString());
+            binding.numberValue.setText(String.valueOf(value));
         } else {
             binding.numberValue
                     .setText(getResources().getQuantityString(textPattern, value, value));

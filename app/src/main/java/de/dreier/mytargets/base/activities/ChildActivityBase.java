@@ -22,7 +22,7 @@ import android.view.MenuItem;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.utils.Utils;
 
-public class ChildActivityBase extends AppCompatActivity {
+public abstract class ChildActivityBase extends AppCompatActivity {
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
