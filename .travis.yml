@@ -40,7 +40,7 @@ before_install:
 install:
 - git fetch --unshallow --tags
 before_script:
-- echo no | android create avd -f -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI -s WXGA800 -c 128M
+- echo no | android create avd -f -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI -s WVGA800 -c 128M
 - emulator -avd test -no-audio -no-window &
 - ./gradlew clean
 script:
@@ -64,8 +64,9 @@ after_success:
 - ~/jpm/bin/codacy-coverage-reporter -l Java -r app/build/reports/coverage/regular/debug/report.xml
 after_failure:
 - >
+  adb logcat -d 2>&1 | python pidcat.py de.dreier.mytargets.debug | tee logcat.log &&
   cd app/build/reports/androidTests/connected/flavors/REGULAR/ &&
-  adb logcat -d 2>&1 | python ../../../../../../../pidcat.py de.dreier.mytargets.debug | tee logcat.log &&
+  mv ../../../../../../../logcat.log ogcat.log &&
   zip -r reports.zip . &&
   cd ../../../../../../.. &&
   ./dropbox_uploader.sh upload app/build/reports/androidTests/connected/flavors/REGULAR/reports.zip /Reports/$TRAVIS_JOB_NUMBER.zip
