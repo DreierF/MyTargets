@@ -312,9 +312,9 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
                 .show();
     }
 
-    private MaterialDialog showProgressDialog(@StringRes int title) {
+    private MaterialDialog showRestoreProgressDialog() {
         return new MaterialDialog.Builder(getContext())
-                .content(title)
+                .content(R.string.restoring)
                 .progress(true, 0)
                 .show();
     }
@@ -340,7 +340,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     }
 
     private void restoreBackup(BackupEntry item) {
-        MaterialDialog progress = showProgressDialog(R.string.restoring);
+        MaterialDialog progress = showRestoreProgressDialog();
         backup.restoreBackup(item,
                 new IAsyncBackupRestore.BackupStatusListener() {
                     @Override
@@ -389,7 +389,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     }
 
     private void importFromUri(final Uri uri) {
-        MaterialDialog progress = showProgressDialog(R.string.restoring);
+        MaterialDialog progress = showRestoreProgressDialog();
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
