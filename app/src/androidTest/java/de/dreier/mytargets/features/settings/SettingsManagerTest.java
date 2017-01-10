@@ -32,7 +32,8 @@ import java.util.Map;
 import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.features.settings.backup.EBackupInterval;
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
-import de.dreier.mytargets.features.training.input.EShowMode;
+import de.dreier.mytargets.features.training.input.ETrainingScope;
+import de.dreier.mytargets.features.training.input.SummaryConfiguration;
 import de.dreier.mytargets.features.training.input.TargetView;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
@@ -147,8 +148,8 @@ public class SettingsManagerTest extends InstrumentedTestBase {
 
     @Test
     public void setShowMode() {
-        SettingsManager.setShowMode(EShowMode.TRAINING);
-        assertThat(SettingsManager.getShowMode()).isEqualTo(EShowMode.TRAINING);
+        SettingsManager.setShowMode(ETrainingScope.TRAINING);
+        assertThat(SettingsManager.getShowMode()).isEqualTo(ETrainingScope.TRAINING);
     }
 
     @Test
@@ -280,5 +281,17 @@ public class SettingsManagerTest extends InstrumentedTestBase {
     public void setShouldShowIntroActivity() {
         SettingsManager.setShouldShowIntroActivity(false);
         assertThat(SettingsManager.shouldShowIntroActivity()).isEqualTo(false);
+    }
+
+    @Test
+    public void setInputSummaryConfiguration() {
+        SummaryConfiguration config = new SummaryConfiguration();
+        config.showEnd = false;
+        config.showRound = true;
+        config.showTraining = true;
+        config.showAverage = true;
+        config.averageScope = ETrainingScope.TRAINING;
+        SettingsManager.setInputSummaryConfiguration(config);
+        assertThat(SettingsManager.getInputSummaryConfiguration()).isEqualTo(config);
     }
 }

@@ -50,10 +50,10 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginStart="72dp"
                 android:baselineAligned="false"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/endSummary"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -68,7 +68,7 @@
                         android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/scoreEnd"
+                        android:id="@+id/endScore"
                         style="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -78,6 +78,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/roundSummary"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -92,12 +93,62 @@
                         android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/scoreRound"
+                        android:id="@+id/roundScore"
                         style="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         tools:text="270/300" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/trainingSummary"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/trainingTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/training"
+                        android:textColor="@color/md_white_1000"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/trainingScore"
+                        style="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        tools:text="560/600" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/averageSummary"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/averageTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/average"
+                        android:textColor="@color/md_white_1000"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/averageScore"
+                        style="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        tools:text="9.1" />
 
                 </LinearLayout>
 

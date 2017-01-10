@@ -64,6 +64,9 @@ import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import icepick.Icepick;
 import icepick.State;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 public class InputActivity extends ChildActivityBase
         implements TargetViewBase.OnEndFinishedListener, TargetView.OnEndUpdatedListener,
         LoaderManager.LoaderCallbacks<InputActivity.LoaderResult> {
@@ -78,7 +81,8 @@ public class InputActivity extends ChildActivityBase
     private WearMessageManager manager;
     private ActivityInputBinding binding;
     private boolean transitionFinished = true;
-    private EShowMode showMode = EShowMode.END;
+    private ETrainingScope shotShowScope = ETrainingScope.END;
+    private ETrainingScope summaryShowScope = null;
     private TargetView targetView;
 
     @NonNull
@@ -110,7 +114,9 @@ public class InputActivity extends ChildActivityBase
             setupTransitionListener();
         }
 
-        showMode = SettingsManager.getShowMode();
+        shotShowScope = SettingsManager.getShowMode();
+
+        updateSummaryVisibility();
 
         Icepick.restoreInstanceState(this, savedInstanceState);
         if (data != null) {
@@ -119,6 +125,15 @@ public class InputActivity extends ChildActivityBase
         } else {
             getSupportLoaderManager().initLoader(0, getIntent().getExtras(), this).forceLoad();
         }
+    }
+
+    private void updateSummaryVisibility() {
+        SummaryConfiguration config = SettingsManager.getInputSummaryConfiguration();
+        binding.endSummary.setVisibility(config.showEnd ? VISIBLE : GONE);
+        binding.roundSummary.setVisibility(config.showRound ? VISIBLE : GONE);
+        binding.trainingSummary.setVisibility(config.showTraining ? VISIBLE : GONE);
+        binding.averageSummary.setVisibility(config.showAverage ? VISIBLE : GONE);
+        summaryShowScope = config.showAverage ? config.averageScope : null;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -158,11 +173,23 @@ public class InputActivity extends ChildActivityBase
             grouping.setVisible(plotting);
             showSidebar.setIcon(
                     plotting ? R.drawable.ic_keyboard_white_24dp : R.drawable.ic_keyboard_white_off_24dp);
-            showSidebar
-                    .setVisible(getCurrentEnd().getId() == null);
+            showSidebar.setVisible(getCurrentEnd().getId() == null);
         }
 
-        menu.findItem(SettingsManager.getShowMode().actionItemId).setChecked(true);
+        switch (SettingsManager.getShowMode()) {
+            case END:
+                menu.findItem(R.id.action_show_end).setChecked(true);
+                break;
+            case ROUND:
+                menu.findItem(R.id.action_show_round).setChecked(true);
+                break;
+            case TRAINING:
+                menu.findItem(R.id.action_show_training).setChecked(true);
+                break;
+            default:
+                // Never called: All enum values are checked
+                break;
+        }
         switch (SettingsManager.getAggregationStrategy()) {
             case NONE:
                 menu.findItem(R.id.action_grouping_none).setChecked(true);
@@ -193,13 +220,13 @@ public class InputActivity extends ChildActivityBase
                 targetView.setAggregationStrategy(EAggregationStrategy.CLUSTER);
                 break;
             case R.id.action_show_end:
-                setShowMode(EShowMode.END);
+                setShotShowScope(ETrainingScope.END);
                 break;
             case R.id.action_show_round:
-                setShowMode(EShowMode.ROUND);
+                setShotShowScope(ETrainingScope.ROUND);
                 break;
             case R.id.action_show_training:
-                setShowMode(EShowMode.TRAINING);
+                setShotShowScope(ETrainingScope.TRAINING);
                 break;
             case R.id.action_show_sidebar:
                 final EInputMethod inputMethod = targetView.getInputMode() == EInputMethod.KEYBOARD
@@ -296,8 +323,9 @@ public class InputActivity extends ChildActivityBase
     }
 
     private boolean shouldShowRound(Round r) {
-        return showMode != EShowMode.END
-                && (showMode == EShowMode.TRAINING || r.getId().equals(getCurrentEnd().roundId));
+        return shotShowScope != ETrainingScope.END
+                && (shotShowScope == ETrainingScope.TRAINING || r.getId()
+                .equals(getCurrentEnd().roundId));
     }
 
     private boolean shouldShowEnd(End end) {
@@ -306,8 +334,11 @@ public class InputActivity extends ChildActivityBase
 
     private void updateEnd() {
         targetView.setEnd(getCurrentEnd());
-        binding.endTitle.setText(getString(R.string.passe) + " " + (data.endIndex + 1));
-        binding.roundTitle.setText(getString(R.string.round) + " " + (getCurrentRound().index + 1));
+        binding.endTitle.setText(
+                getString(R.string.passe) + " " + (data.endIndex + 1) + "/" + getEnds().size());
+        binding.roundTitle.setText(getString(
+                R.string.round) + " " + (getCurrentRound().index + 1) + "/" + data.training
+                .getRounds().size());
         updateNavigationButtons();
 
         // Send message to wearable app, that we are starting an end
@@ -320,9 +351,9 @@ public class InputActivity extends ChildActivityBase
                 (getCurrentRound().maxEndCount == null || data.endIndex + 1 < getCurrentRound().maxEndCount));
     }
 
-    public void setShowMode(EShowMode showMode) {
-        this.showMode = showMode;
-        SettingsManager.setShowMode(showMode);
+    public void setShotShowScope(ETrainingScope shotShowScope) {
+        this.shotShowScope = shotShowScope;
+        SettingsManager.setShowMode(shotShowScope);
         updateOldShoots();
     }
 
@@ -350,24 +381,39 @@ public class InputActivity extends ChildActivityBase
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
-    }
-
-    @Override
     public void onEndUpdated(List<Shot> changedEnd) {
         getCurrentEnd().setShots(changedEnd);
 
         // Set current end score
-        Score score = getCurrentRound().getTarget().getReachedScore(getCurrentEnd());
-        binding.scoreEnd.setText(score.toString());
+        Score reachedEndScore = getCurrentRound().getTarget().getReachedScore(getCurrentEnd());
+        binding.endScore.setText(reachedEndScore.toString());
 
         // Set current round score
         Score reachedRoundScore = Stream.of(getEnds())
                 .map(end -> getCurrentRound().getTarget().getReachedScore(end))
                 .collect(Score.sum());
-        binding.scoreRound.setText(reachedRoundScore.toString());
+        binding.roundScore.setText(reachedRoundScore.toString());
+
+        // Set current training score
+        Score reachedTrainingScore = Stream.of(data.training.getRounds())
+                .flatMap(r -> Stream.of(r.getEnds())
+                        .map(end -> r.getTarget().getReachedScore(end)))
+                .collect(Score.sum());
+        binding.trainingScore.setText(reachedTrainingScore.toString());
+
+        switch (summaryShowScope) {
+            case END:
+                binding.averageScore.setText(reachedEndScore.getShotAverageFormatted());
+                break;
+            case ROUND:
+                binding.averageScore.setText(reachedRoundScore.getShotAverageFormatted());
+                break;
+            case TRAINING:
+                binding.averageScore.setText(reachedTrainingScore.getShotAverageFormatted());
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -428,6 +474,12 @@ public class InputActivity extends ChildActivityBase
 
     private End getCurrentEnd() {
         return getEnds().get(data.endIndex);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

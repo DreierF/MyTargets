@@ -31,7 +31,8 @@ import java.util.Map;
 import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.features.settings.backup.EBackupInterval;
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
-import de.dreier.mytargets.features.training.input.EShowMode;
+import de.dreier.mytargets.features.training.input.ETrainingScope;
+import de.dreier.mytargets.features.training.input.SummaryConfiguration;
 import de.dreier.mytargets.features.training.input.TargetView.EKeyboardType;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
@@ -48,10 +49,15 @@ public class SettingsManager {
     public static final String KEY_PROFILE_LAST_NAME = "profile_last_name";
     public static final String KEY_PROFILE_BIRTHDAY = "profile_birthday";
     public static final String KEY_PROFILE_CLUB = "profile_club";
+    private static final String KEY_INPUT_SUMMARY_SHOW_END = "input_summary_show_end";
+    private static final String KEY_INPUT_SUMMARY_SHOW_ROUND = "input_summary_show_round";
+    private static final String KEY_INPUT_SUMMARY_SHOW_TRAINING = "input_summary_show_training";
+    private static final String KEY_INPUT_SUMMARY_SHOW_AVERAGE = "input_summary_show_average";
+    public static final String KEY_INPUT_SUMMARY_AVERAGE_OF = "input_summary_average_of";
     public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
     public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
     public static final String KEY_INPUT_KEYBOARD_TYPE = "input_keyboard_type";
-    public static final String KEY_FIRST_TRAINING_SHOWN = "first_training_shown";
+    private static final String KEY_FIRST_TRAINING_SHOWN = "first_training_shown";
     private static final String KEY_BACKUP_INTERVAL = "backup_interval";
     private static final String KEY_DONATED = "donated";
     private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
@@ -238,12 +244,12 @@ public class SettingsManager {
                 .apply();
     }
 
-    public static EShowMode getShowMode() {
-        return EShowMode.valueOf(preferences
-                .getString(KEY_SHOW_MODE, EShowMode.END.toString()));
+    public static ETrainingScope getShowMode() {
+        return ETrainingScope.valueOf(preferences
+                .getString(KEY_SHOW_MODE, ETrainingScope.END.toString()));
     }
 
-    public static void setShowMode(EShowMode showMode) {
+    public static void setShowMode(ETrainingScope showMode) {
         preferences
                 .edit()
                 .putString(KEY_SHOW_MODE, showMode.toString())
@@ -501,6 +507,27 @@ public class SettingsManager {
     public static void setShouldShowIntroActivity(boolean shouldShow) {
         preferences.edit()
                 .putBoolean(KEY_INTRO_SHOWED, shouldShow)
+                .apply();
+    }
+
+    public static SummaryConfiguration getInputSummaryConfiguration() {
+        SummaryConfiguration config = new SummaryConfiguration();
+        config.showEnd = preferences.getBoolean(KEY_INPUT_SUMMARY_SHOW_END, true);
+        config.showRound = preferences.getBoolean(KEY_INPUT_SUMMARY_SHOW_ROUND, true);
+        config.showTraining = preferences.getBoolean(KEY_INPUT_SUMMARY_SHOW_TRAINING, false);
+        config.showAverage = preferences.getBoolean(KEY_INPUT_SUMMARY_SHOW_AVERAGE, true);
+        config.averageScope = ETrainingScope
+                .valueOf(preferences.getString(KEY_INPUT_SUMMARY_AVERAGE_OF, "ROUND"));
+        return config;
+    }
+
+    public static void setInputSummaryConfiguration(SummaryConfiguration configuration) {
+        preferences.edit()
+                .putBoolean(KEY_INPUT_SUMMARY_SHOW_END, configuration.showEnd)
+                .putBoolean(KEY_INPUT_SUMMARY_SHOW_ROUND, configuration.showRound)
+                .putBoolean(KEY_INPUT_SUMMARY_SHOW_TRAINING, configuration.showTraining)
+                .putBoolean(KEY_INPUT_SUMMARY_SHOW_AVERAGE, configuration.showAverage)
+                .putString(KEY_INPUT_SUMMARY_AVERAGE_OF, configuration.averageScope.name())
                 .apply();
     }
 }
