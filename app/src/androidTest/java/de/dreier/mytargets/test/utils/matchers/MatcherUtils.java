@@ -27,6 +27,7 @@ import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.CoreMatchers.is;
 
 public class MatcherUtils {
@@ -69,7 +70,23 @@ public class MatcherUtils {
         };
     }
 
-    public static RecyclerViewMatcher withRecyclerView(final int recyclerViewId) {
-        return new RecyclerViewMatcher(recyclerViewId);
+    public static RecyclerViewMatcher withRecyclerView(Matcher<View> recyclerViewMatcher) {
+        return new RecyclerViewMatcher(recyclerViewMatcher);
+    }
+
+    public static RecyclerViewMatcher withRecyclerView(int recyclerViewId) {
+        return new RecyclerViewMatcher(withId(recyclerViewId));
+    }
+
+    public static View getMatchingParent(View view, Matcher<View> matcher) {
+        if (view == null) {
+            return null;
+        }
+        if (matcher.matches(view)) {
+            return view;
+        } else if (view.getParent() != null && view.getParent() instanceof ViewGroup) {
+            return getMatchingParent((View) view.getParent(), matcher);
+        }
+        return null;
     }
 }

@@ -24,10 +24,10 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
 public class RecyclerViewMatcher {
-    private final int recyclerViewId;
+    private final Matcher<View> recyclerViewMatcher;
 
-    public RecyclerViewMatcher(int recyclerViewId) {
-        this.recyclerViewId = recyclerViewId;
+    public RecyclerViewMatcher(Matcher<View> recyclerViewMatcher) {
+        this.recyclerViewMatcher = recyclerViewMatcher;
     }
 
     public Matcher<View> atPosition(final int position) {
@@ -35,33 +35,42 @@ public class RecyclerViewMatcher {
     }
 
     public Matcher<View> atPositionOnView(final int position, final int targetViewId) {
-
         return new TypeSafeMatcher<View>() {
             Resources resources = null;
+            View childView;
 
             public void describeTo(Description description) {
-                String idDescription = Integer.toString(recyclerViewId);
-                if (resources != null) {
-                    try {
-                        idDescription = resources.getResourceName(recyclerViewId);
-                    } catch (Resources.NotFoundException var4) {
-                        idDescription = recyclerViewId + " (resource name not found)";
+                recyclerViewMatcher.describeTo(description);
+                description.appendText(" at position " + position);
+                if (targetViewId != -1) {
+                    String idDescription = Integer.toString(targetViewId);
+                    if (resources != null) {
+                        try {
+                            idDescription = resources.getResourceName(targetViewId);
+                        } catch (Resources.NotFoundException var4) {
+                            idDescription = targetViewId + " (resource name not found)";
+                        }
                     }
+                    description.appendText(" on view with id " + idDescription);
                 }
-
-                description.appendText("with id: " + idDescription);
             }
 
             public boolean matchesSafely(View view) {
                 resources = view.getResources();
 
-                RecyclerView recyclerView = (RecyclerView) MatcherUtils
-                        .getParentViewById(view, recyclerViewId);
-                if (recyclerView == null || recyclerView.getId() != recyclerViewId) {
-                    return false;
+                if (childView == null) {
+                    View parent = MatcherUtils.getMatchingParent(view, recyclerViewMatcher);
+                    if (parent == null || !(parent instanceof RecyclerView)) {
+                        return false;
+                    }
+                    RecyclerView recyclerView = (RecyclerView) parent;
+                    RecyclerView.ViewHolder viewHolder = recyclerView
+                            .findViewHolderForAdapterPosition(position);
+                    if (viewHolder == null) {
+                        return false;
+                    }
+                    childView = viewHolder.itemView;
                 }
-                View childView = recyclerView
-                        .findViewHolderForAdapterPosition(position).itemView;
 
                 if (targetViewId == -1) {
                     return view == childView;
@@ -73,6 +82,4 @@ public class RecyclerViewMatcher {
             }
         };
     }
-
-
 }
