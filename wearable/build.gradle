@@ -27,7 +27,7 @@ android {
 
     defaultConfig {
         applicationId 'de.dreier.mytargets'
-        minSdkVersion 20
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode appVersionCode
         versionName appVersionName
@@ -65,6 +65,9 @@ android {
 }
 
 dependencies {
+    provided "com.google.android.wearable:wearable:1.0.0"
+
+    compile "com.android.support:support-v13:$libraryVersion.support"
     compile "com.google.android.support:wearable:$libraryVersion.supportWearable"
     provided "com.google.android.wearable:wearable:$libraryVersion.supportWearable"
 

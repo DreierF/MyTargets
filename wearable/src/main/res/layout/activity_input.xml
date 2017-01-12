@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 Florian Dreier
+  ~
+  ~ This file is part of MyTargets.
+  ~
+  ~ MyTargets is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License version 2
+  ~ as published by the Free Software Foundation.
+  ~
+  ~ MyTargets is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  -->
+
+<android.support.wearable.view.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                              xmlns:app="http://schemas.android.com/apk/res-auto"
+                                              xmlns:tools="http://schemas.android.com/tools"
+                                              android:layout_width="match_parent"
+                                              android:layout_height="match_parent">
+
+    <android.support.wearable.view.WatchViewStub
+        android:id="@+id/watch_view_stub"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:rectLayout="@layout/rect_activity_main"
+        app:roundLayout="@layout/round_activity_main"
+        tools:context=".InputActivity"
+        android:visibility="gone"
+        tools:deviceIds="wear"/>
+
+    <TextView
+        android:id="@+id/start_training_hint"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="@string/start_training_on_phone"/>
+
+</android.support.wearable.view.BoxInsetLayout>

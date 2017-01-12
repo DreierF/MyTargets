@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 Florian Dreier
+  ~
+  ~ This file is part of MyTargets.
+  ~
+  ~ MyTargets is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License version 2
+  ~ as published by the Free Software Foundation.
+  ~
+  ~ MyTargets is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_stop"
+        android:icon="@drawable/ic_stop_white_24dp"
+        android:title="@string/stop" />
+    <item
+        android:id="@+id/menu_vibrate"
+        android:icon="@drawable/ic_vibration_black_24dp"
+        android:title="@string/vibration" />
+    <item
+        android:id="@+id/menu_sound"
+        android:icon="@drawable/ic_volume_up_black_24dp"
+        android:title="@string/sound" />
+</menu>

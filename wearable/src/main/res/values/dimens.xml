@@ -18,4 +18,6 @@
     <dimen name="circle_padding">5dp</dimen>
     <dimen name="circle_radius">35dp</dimen>
     <dimen name="circle_radius_pressed">30dp</dimen>
+    <dimen name="peek_drawer_icon_size">20dp</dimen>
+    <dimen name="padding_list_horizontal">16dp</dimen>
 </resources>

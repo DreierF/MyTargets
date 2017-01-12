@@ -139,7 +139,6 @@
 
     <!-- Timer -->
     <string name="timer">Timer</string>
-    <string name="stop">STOP</string>
     <string name="touch_to_start">Touch to start</string>
     <string name="preparation">Get ready</string>
     <string name="shooting">Shooting</string>

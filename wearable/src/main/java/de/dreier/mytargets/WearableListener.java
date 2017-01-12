@@ -54,7 +54,7 @@ public class WearableListener extends WearableListenerService {
                 showNotification(info);
                 if (info != null) {
                     Intent intent = new Intent(TRAINING_STARTED);
-                    intent.putExtra(MainActivity.EXTRA_ROUND, Parcels.wrap(info.round));
+                    intent.putExtra(InputActivity.EXTRA_ROUND, Parcels.wrap(info.round));
                     LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
                 }
             }
@@ -75,8 +75,8 @@ public class WearableListener extends WearableListenerService {
     private void showNotification(NotificationInfo info) {
 
         // Build the intent to display our custom notification
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        notificationIntent.putExtra(MainActivity.EXTRA_ROUND, Parcels.wrap(info.round));
+        Intent notificationIntent = new Intent(this, InputActivity.class);
+        notificationIntent.putExtra(InputActivity.EXTRA_ROUND, Parcels.wrap(info.round));
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 

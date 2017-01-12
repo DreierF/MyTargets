@@ -20,17 +20,14 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_wear_green_dark_background"
-    tools:context=".MainActivity"
+    android:background="@color/black"
+    tools:context=".TimerActivity"
     tools:deviceIds="wear">
 
-    <android.support.wearable.view.WearableRecyclerView
-        android:id="@+id/recyclerViewEnds"
+    <FrameLayout
+        android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:paddingTop="48dp"
-        android:paddingBottom="48dp"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical" />
+        android:layout_height="match_parent" />
 
     <android.support.wearable.view.drawer.WearableDrawerView
         android:layout_width="match_parent"
@@ -50,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/md_wear_green_darker_ui_element"
-                app:action_menu="@menu/main_action_drawer_menu" />
+                app:action_menu="@menu/timer_action_drawer_menu" />
         </FrameLayout>
 
         <LinearLayout
@@ -63,19 +60,13 @@
             android:paddingTop="8dp">
 
             <ImageView
-                android:id="@+id/primaryActionAdd"
+                android:id="@+id/primaryActionPeek"
                 android:layout_width="@dimen/peek_drawer_icon_size"
                 android:layout_height="@dimen/peek_drawer_icon_size"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_add_white_24dp" />
-
-            <ImageView
-                android:id="@+id/wearable_support_drawer_view_peek_icon"
-                android:layout_width="@dimen/peek_drawer_icon_size"
-                android:layout_height="@dimen/peek_drawer_icon_size"
-                android:layout_marginStart="8dp"
                 android:src="@drawable/ic_more_vert_white_24dp" />
+
         </LinearLayout>
+
     </android.support.wearable.view.drawer.WearableDrawerView>
 
 </android.support.wearable.view.drawer.WearableDrawerLayout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="md_wear_green_accent">#80ff84</color>
+    <color name="md_wear_green_active_ui_element">#47a64a</color>
+    <color name="md_wear_green_lighter_ui_element">#3c8c3f</color>
+    <color name="md_wear_green_darker_ui_element">#2c662e</color>
+    <color name="md_wear_green_light_background">#214d22</color>
+    <color name="md_wear_green_dark_background">#102611</color>
+</resources>
