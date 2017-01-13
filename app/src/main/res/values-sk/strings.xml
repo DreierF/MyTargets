@@ -112,7 +112,6 @@
   <string name="action_print">Tlačiť</string>
   <string name="average">Priemer</string>
   <!-- Input mode -->
-  <string name="show_all">Zobraziť všetky zásahy</string>
   <string name="comment">Komentár</string>
   <!-- Statistics -->
   <!-- Import/Backup -->
@@ -143,7 +142,7 @@
   <!-- Settings -->
   <string name="backup_action">Záloha</string>
   <string name="import_action">Importovať</string>
-  <string name="exports_as_csv">Uloží exportované dáta do *.csv</string>
+  <string name="exports_as_csv">Exports as csv</string>
   <string name="licences">Open Source licencie</string>
   <string name="licences_summary">Právne poznámky na licenciu</string>
   <string name="version">Verzia %s</string>
@@ -321,4 +320,14 @@
   <string name="intro_title_everything_in_one_place">Everything you need\nin one place</string>
   <string name="intro_description_everything_in_one_place">Including bow-, arrow-\nand sightmark-management,\narchery timer, statistics \nand much more&#8230;</string>
   <string name="average_arrow_score_per_end">Average arrow score per end</string>
+  <string name="show_end">Show end</string>
+  <string name="show_round">Show round</string>
+  <string name="show_training">Show training</string>
+  <string name="summary">Summary</string>
+  <string name="end">End</string>
+  <string name="average_of">Average of</string>
+  <string name="displayed_shots">Displayed shots</string>
+  <string name="invalid_decimal_number">Invalid decimal number</string>
+  <string name="not_within_expected_range_mm">Not within the expected range of 1 to 20 mm</string>
+  <string name="not_within_expected_range_inch">Not within the expected range of 0 to 1 inch</string>
 </resources>
