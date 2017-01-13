@@ -101,6 +101,15 @@ public class InputActivity extends ChildActivityBase
         return list.isEmpty() ? null : list.get(list.size() - 1);
     }
 
+    private static boolean shouldShowRound(Round r, ETrainingScope shotShowScope, Long roundId) {
+        return shotShowScope != ETrainingScope.END
+                && (shotShowScope == ETrainingScope.TRAINING || r.getId().equals(roundId));
+    }
+
+    private static boolean shouldShowEnd(End end, Long currentEndId) {
+        return !Utils.equals(end.getId(), currentEndId) && end.exact;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -313,23 +322,17 @@ public class InputActivity extends ChildActivityBase
     }
 
     public void updateOldShoots() {
+        final End currentEnd = getCurrentEnd();
+        final Long currentRoundId = getCurrentRound().getId();
+        final Long currentEndId = currentEnd == null ? null : currentEnd.getId();
+        final ETrainingScope shotShowScope = this.shotShowScope;
         final LoaderResult data = this.data;
         final Stream<Shot> shotStream = Stream.of(data.training.getRounds())
-                .filter(this::shouldShowRound)
+                .filter((r) -> shouldShowRound(r, shotShowScope, currentRoundId))
                 .flatMap(r -> Stream.of(r.getEnds()))
-                .filter(this::shouldShowEnd)
+                .filter((end) -> shouldShowEnd(end, currentEndId))
                 .flatMap(p -> Stream.of(p.getShots()));
         targetView.setTransparentShots(shotStream);
-    }
-
-    private boolean shouldShowRound(Round r) {
-        return shotShowScope != ETrainingScope.END
-                && (shotShowScope == ETrainingScope.TRAINING || r.getId()
-                .equals(getCurrentEnd().roundId));
-    }
-
-    private boolean shouldShowEnd(End end) {
-        return !Utils.equals(end.getId(), getCurrentEnd().getId()) && end.exact;
     }
 
     private void updateEnd() {
@@ -473,7 +476,11 @@ public class InputActivity extends ChildActivityBase
     }
 
     private End getCurrentEnd() {
-        return getEnds().get(data.endIndex);
+        final List<End> ends = getEnds();
+        if (ends.size() <= data.endIndex) {
+            return null;
+        }
+        return ends.get(data.endIndex);
     }
 
     @Override
