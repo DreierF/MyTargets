@@ -140,7 +140,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                     item -> roundTarget = item.getRounds().get(0).getTargetTemplate());
             binding.numberArrows.setChecked(SettingsManager.getArrowNumbersEnabled());
             binding.environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
-
             final StandardRound item = binding.standardRound.getSelectedItem();
             roundTarget = item.getRounds().get(0).getTargetTemplate();
         } else {

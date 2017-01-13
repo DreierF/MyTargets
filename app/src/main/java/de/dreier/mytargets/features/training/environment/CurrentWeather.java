@@ -20,6 +20,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 
@@ -33,8 +34,6 @@ public class CurrentWeather {
     public List<Weather> weather = new ArrayList<>();
     @SerializedName("wind")
     public Wind wind;
-    @SerializedName("clouds")
-    public Clouds clouds;
 
     private static Double mpsToKmh(Double mps) {
         return mps / 0.277777778;
@@ -47,7 +46,7 @@ public class CurrentWeather {
     public Environment toEnvironment() {
         Environment e = new Environment();
         int code = Integer.parseInt(weather.get(0).icon.substring(0, 2));
-        e.indoor = false;
+        e.indoor = SettingsManager.getIndoor();
         e.weather = imageCodeToWeather(code);
         e.windDirection = 0;
         e.location = cityName;
@@ -72,11 +71,6 @@ public class CurrentWeather {
             default:
                 return EWeather.CLOUDY;
         }
-    }
-
-    public class Clouds {
-        @SerializedName("all")
-        public Integer all;
     }
 
     public class Wind {
