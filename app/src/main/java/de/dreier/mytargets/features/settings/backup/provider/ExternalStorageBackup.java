@@ -105,7 +105,7 @@ public class ExternalStorageBackup {
         }
 
         private boolean isBackup(File file) {
-            return file.isFile() && file.getName().startsWith("backup_") && file.getName()
+            return file.isFile() && file.getName().contains("backup_") && file.getName()
                     .endsWith(".zip");
         }
 
