@@ -84,8 +84,8 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="fab_colorNormal">@color/fabBow</item>
-        <item name="fab_colorPressed">@color/md_grey_600</item>
-        <item name="fab_colorRipple">@color/md_grey_600</item>
+        <item name="fab_colorPressed">@color/colorPrimaryDark</item>
+        <item name="fab_colorRipple">@color/colorPrimaryDark</item>
         <item name="fab_size">mini</item>
     </style>
 
