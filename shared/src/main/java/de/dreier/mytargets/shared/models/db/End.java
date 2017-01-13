@@ -201,6 +201,22 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     }
 
     @Override
+    public void delete() {
+        super.delete();
+        updateEndIndicesForRound();
+    }
+
+    private void updateEndIndicesForRound() {
+        // TODO very inefficient
+        int i = 0;
+        for (End end : Round.get(roundId).getEnds()) {
+            end.index = i;
+            end.save();
+            i++;
+        }
+    }
+
+    @Override
     public boolean equals(Object another) {
         return another instanceof End &&
                 getClass().equals(another.getClass()) &&
