@@ -428,7 +428,7 @@ public class InputActivity extends ChildActivityBase
         }
 
         // Change round template if end is out of range defined in template
-        if (getCurrentRound().getEnds().size() - 1 == data.endIndex) {
+        if (getCurrentRound().getEnds().size() == data.endIndex) {
             getCurrentRound().addEnd();
         }
 
