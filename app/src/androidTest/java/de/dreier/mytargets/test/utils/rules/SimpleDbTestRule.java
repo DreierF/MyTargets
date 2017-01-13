@@ -147,7 +147,6 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         training.bowId = bow.id;
         training.arrowId = null;
         training.arrowNumbering = false;
-        training.timePerEnd = 0;
         training.save();
 
         Round round1 = new Round(standardRound.getRounds().get(0));

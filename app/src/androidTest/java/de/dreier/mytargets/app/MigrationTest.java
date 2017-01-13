@@ -112,7 +112,6 @@ public final class MigrationTest extends InstrumentedTestBase {
         Truth.assertThat(training.bowId).isEqualTo(null);
         Truth.assertThat(training.arrowId).isEqualTo(null);
         Truth.assertThat(training.arrowNumbering).isEqualTo(false);
-        Truth.assertThat(training.timePerEnd).isEqualTo(-1);
         Truth.assertThat(training.indoor).isEqualTo(true);
         Truth.assertThat(training.weather).isEqualTo(EWeather.SUNNY);
         Truth.assertThat(training.windDirection).isEqualTo(0);
@@ -177,7 +176,6 @@ public final class MigrationTest extends InstrumentedTestBase {
         Truth.assertThat(training.bowId).isEqualTo(1);
         Truth.assertThat(training.arrowId).isEqualTo(1);
         Truth.assertThat(training.arrowNumbering).isEqualTo(false);
-        Truth.assertThat(training.timePerEnd).isEqualTo(-1);
         Truth.assertThat(training.indoor).isEqualTo(false);
         Truth.assertThat(training.weather).isEqualTo(EWeather.LIGHT_RAIN);
         Truth.assertThat(training.windDirection).isEqualTo(0);
