@@ -60,7 +60,8 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout"
+        <FrameLayout
+            style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
             app:propertyShowAll="@{showAll}"
             app:propertyValue="@{arrow.length}">
@@ -84,7 +85,8 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout"
+        <FrameLayout
+            style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
             app:propertyShowAll="@{showAll}"
             app:propertyValue="@{arrow.material}">
@@ -108,7 +110,8 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout"
+        <FrameLayout
+            style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
             app:propertyShowAll="@{showAll}"
             app:propertyValue="@{arrow.spine}">
@@ -132,7 +135,8 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout"
+        <FrameLayout
+            style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
             app:propertyShowAll="@{showAll}"
             app:propertyValue="@{arrow.diameter.toString()}">
@@ -148,6 +152,7 @@
                 android:orientation="horizontal">
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/diameterTextInputLayout"
                     style="@style/propertyTextInputLayout"
                     android:layout_toLeftOf="@+id/diameterUnit"
                     android:layout_toStartOf="@+id/diameterUnit">
@@ -176,7 +181,8 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout"
+        <FrameLayout
+            style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
             app:propertyShowAll="@{showAll}"
             app:propertyValue="@{arrow.weight}">
@@ -200,7 +206,8 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout"
+        <FrameLayout
+            style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
             app:propertyShowAll="@{showAll}"
             app:propertyValue="@{arrow.tipWeight}">
@@ -224,7 +231,8 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout"
+        <FrameLayout
+            style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
             app:propertyShowAll="@{showAll}"
             app:propertyValue="@{arrow.vanes}">
@@ -248,7 +256,8 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout"
+        <FrameLayout
+            style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
             app:propertyShowAll="@{showAll}"
             app:propertyValue="@{arrow.nock}">
@@ -272,7 +281,8 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout"
+        <FrameLayout
+            style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
             app:propertyShowAll="@{showAll}"
             app:propertyValue="@{arrow.comment}">

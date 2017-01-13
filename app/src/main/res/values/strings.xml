@@ -118,7 +118,6 @@
     <string name="average">Average</string>
 
     <!-- Input mode -->
-    <string name="show_all">Show all impacts</string>
     <string name="comment">Comment</string>
 
     <!-- Statistics -->
@@ -339,8 +338,7 @@
     <string name="end">End</string>
     <string name="average_of">Average of</string>
     <string name="displayed_shots">Displayed shots</string>
-    <string name="disable_timer">Disable Timer</string>
-    <string name="enable_timer">Enable Timer</string>
-    <string name="enable_keyboard">Enable Keyboard</string>
-    <string name="disable_keyboard">Disable Keyboard</string>
+    <string name="invalid_decimal_number">Invalid decimal number</string>
+    <string name="not_within_expected_range_mm">Not within the expected range of 1 to 20 mm</string>
+    <string name="not_within_expected_range_inch">Not within the expected range of 0 to 1 inch</string>
 </resources>
