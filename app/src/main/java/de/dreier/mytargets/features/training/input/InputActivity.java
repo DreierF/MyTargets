@@ -322,12 +322,11 @@ public class InputActivity extends ChildActivityBase
 
     private void showEnd(int endIndex) {
         // Create a new end
+        data.endIndex = endIndex;
         if (endIndex == getEnds().size()) {
             getCurrentRound().addEnd();
             updateOldShoots();
         }
-
-        data.endIndex = endIndex;
 
         // Open timer if end has not been saved yet
         openTimer();
