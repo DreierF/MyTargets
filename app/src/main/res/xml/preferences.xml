@@ -182,7 +182,7 @@
             </PreferenceCategory>
         </PreferenceScreen>
         <PreferenceScreen
-            android:icon="@drawable/ic_traffic_grey600_24dp"
+            android:icon="@drawable/ic_timer_grey600_24dp"
             android:key="timer"
             android:title="@string/timer">
             <EditTextPreference

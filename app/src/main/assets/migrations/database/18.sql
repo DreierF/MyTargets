@@ -131,7 +131,6 @@ CREATE TABLE IF NOT EXISTS `Training`(
     `bow` INTEGER,
     `arrow` INTEGER,
     `arrowNumbering` INTEGER,
-    `timePerEnd` INTEGER,
     `indoor` INTEGER,
     `weather` INTEGER,
     `windDirection` INTEGER,
@@ -147,7 +146,7 @@ UPDATE TRAINING_OLD SET arrow = null WHERE arrow < 1;
 INSERT INTO `Training`
     SELECT t.`_id`,t.`title`,t.`datum`,
     CASE WHEN s.club < 512 THEN t.`standard_round` ELSE NULL END,
-    t.`bow`,t.`arrow`, t.`arrow_numbering`,t.`time`,
+    t.`bow`,t.`arrow`, t.`arrow_numbering`,
     s.`indoor`,t.`weather`,t.`wind_direction`,t.`wind_speed`,t.`location`
     FROM TRAINING_OLD t, STANDARD_ROUND_TEMPLATE_OLD s
     WHERE t.standard_round=s._id;

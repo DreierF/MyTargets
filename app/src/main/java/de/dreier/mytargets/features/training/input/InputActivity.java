@@ -170,19 +170,28 @@ public class InputActivity extends ChildActivityBase
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         final MenuItem eye = menu.findItem(R.id.action_show);
-        final MenuItem showSidebar = menu.findItem(R.id.action_show_sidebar);
+        final MenuItem keyboard = menu.findItem(R.id.action_keyboard);
         final MenuItem grouping = menu.findItem(R.id.action_grouping);
+        final MenuItem timer = menu.findItem(R.id.action_timer);
         if (targetView == null || getEnds().size() == 0) {
             eye.setVisible(false);
-            showSidebar.setVisible(false);
+            keyboard.setVisible(false);
             grouping.setVisible(false);
+            timer.setVisible(false);
         } else {
             final boolean plotting = targetView.getInputMode() == EInputMethod.PLOTTING;
             eye.setVisible(plotting);
             grouping.setVisible(plotting);
-            showSidebar.setIcon(
-                    plotting ? R.drawable.ic_keyboard_white_24dp : R.drawable.ic_keyboard_white_off_24dp);
-            showSidebar.setVisible(getCurrentEnd().getId() == null);
+            keyboard.setIcon(plotting
+                    ? R.drawable.ic_keyboard_white_24dp
+                    : R.drawable.ic_keyboard_white_off_24dp);
+            keyboard.setChecked(!plotting);
+            keyboard.setVisible(getCurrentEnd().getId() == null);
+            timer.setIcon(SettingsManager.getTimerEnabled()
+                    ? R.drawable.ic_timer_off_white_24dp
+                    : R.drawable.ic_timer_white_24dp);
+            timer.setVisible(true);
+            timer.setChecked(SettingsManager.getTimerEnabled());
         }
 
         switch (SettingsManager.getShowMode()) {
@@ -237,12 +246,19 @@ public class InputActivity extends ChildActivityBase
             case R.id.action_show_training:
                 setShotShowScope(ETrainingScope.TRAINING);
                 break;
-            case R.id.action_show_sidebar:
+            case R.id.action_keyboard:
                 final EInputMethod inputMethod = targetView.getInputMode() == EInputMethod.KEYBOARD
                         ? EInputMethod.PLOTTING
                         : EInputMethod.KEYBOARD;
                 targetView.setInputMethod(inputMethod, true);
                 SettingsManager.setInputMethod(inputMethod);
+                item.setChecked(inputMethod == EInputMethod.KEYBOARD);
+                supportInvalidateOptionsMenu();
+                return true;
+            case R.id.action_timer:
+                SettingsManager.setTimerEnabled(!SettingsManager.getTimerEnabled());
+                openTimer();
+                item.setChecked(SettingsManager.getTimerEnabled());
                 supportInvalidateOptionsMenu();
                 return true;
             default:
@@ -314,9 +330,7 @@ public class InputActivity extends ChildActivityBase
         data.endIndex = endIndex;
 
         // Open timer if end has not been saved yet
-        if (getCurrentEnd().getId() == null && data.training.timePerEnd > 0) {
-            openTimer();
-        }
+        openTimer();
         updateEnd();
         supportInvalidateOptionsMenu();
     }
@@ -361,12 +375,16 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void openTimer() {
-        if (transitionFinished) {
-            TimerFragment.getIntent(data.training.timePerEnd)
-                    .withContext(this)
-                    .start();
-        } else if (Utils.isLollipop()) {
-            startTimerDelayed();
+        if (getCurrentEnd().getId() == null
+                && getCurrentEnd().getShots().get(0).scoringRing == Shot.NOTHING_SELECTED
+                && SettingsManager.getTimerEnabled()) {
+            if (transitionFinished) {
+                TimerFragment.getIntent()
+                        .withContext(this)
+                        .start();
+            } else if (Utils.isLollipop()) {
+                startTimerDelayed();
+            }
         }
     }
 
@@ -375,7 +393,7 @@ public class InputActivity extends ChildActivityBase
         getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
             @Override
             public void onTransitionEnd(Transition transition) {
-                TimerFragment.getIntent(data.training.timePerEnd)
+                TimerFragment.getIntent()
                         .withContext(InputActivity.this)
                         .start();
                 getWindow().getSharedElementEnterTransition().removeListener(this);

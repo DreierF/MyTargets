@@ -49,7 +49,6 @@ import static de.dreier.mytargets.features.timer.TimerFragment.TimerState.WAIT_F
  */
 public class TimerFragment extends FragmentBase implements View.OnClickListener {
 
-    private static final String SHOOTING_TIME = "shooting_time";
     private TimerState mCurStatus = WAIT_FOR_START;
     private CountDownTimer countdown;
     private MediaPlayer horn;
@@ -58,9 +57,8 @@ public class TimerFragment extends FragmentBase implements View.OnClickListener 
     private FragmentTimerBinding binding;
 
     @NonNull
-    public static IntentWrapper getIntent(int timePerEnd) {
-        return new IntentWrapper(TimerActivity.class)
-                .with(SHOOTING_TIME, timePerEnd);
+    public static IntentWrapper getIntent() {
+        return new IntentWrapper(TimerActivity.class);
     }
 
     @Override

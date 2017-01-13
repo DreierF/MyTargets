@@ -338,4 +338,9 @@
     <string name="summary">Summary</string>
     <string name="end">End</string>
     <string name="average_of">Average of</string>
+    <string name="displayed_shots">Displayed shots</string>
+    <string name="disable_timer">Disable Timer</string>
+    <string name="enable_timer">Enable Timer</string>
+    <string name="enable_keyboard">Enable Keyboard</string>
+    <string name="disable_keyboard">Disable Keyboard</string>
 </resources>

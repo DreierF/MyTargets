@@ -76,9 +76,6 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     public boolean arrowNumbering;
 
     @Column
-    public int timePerEnd;
-
-    @Column
     public boolean indoor;
 
     @Column(typeConverter = EWeatherConverter.class)
