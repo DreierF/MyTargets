@@ -394,7 +394,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void showFilePicker() {
         final Intent getContentIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getContentIntent.setType("*/zip");
+        getContentIntent.setType("application/zip");
         getContentIntent.addCategory(Intent.CATEGORY_OPENABLE);
         Intent intent = Intent.createChooser(getContentIntent, getString(R.string.select_a_file));
         startActivityForResult(intent, IMPORT_FROM_URI);
