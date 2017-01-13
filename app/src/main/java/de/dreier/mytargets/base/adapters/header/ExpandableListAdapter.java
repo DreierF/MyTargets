@@ -146,7 +146,7 @@ public abstract class ExpandableListAdapter<P extends IIdProvider, C extends IId
         return new HeaderViewHolder<>(itemView);
     }
 
-    private static class HeaderViewHolder<HEADER> extends ExpandableHeaderBindingHolder<HEADER> {
+    private static class HeaderViewHolder<P> extends ExpandableHeaderBindingHolder<P> {
         private final ItemHeaderExpandableBinding binding;
 
         HeaderViewHolder(View itemView) {

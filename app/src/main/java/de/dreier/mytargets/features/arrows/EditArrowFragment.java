@@ -61,6 +61,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         contentBinding = FragmentEditArrowBinding.inflate(inflater, binding.content, true);
+        contentBinding.moreFields.setOnClickListener(v -> contentBinding.setShowAll(true));
 
         if (savedInstanceState == null) {
             Bundle bundle = getArguments();
