@@ -312,8 +312,16 @@
   <string name="summary">Zusammenfassung</string>
   <string name="end">Passe</string>
   <string name="average_of">Durchschnitt von</string>
-  <string name="displayed_shots">Displayed shots</string>
-  <string name="invalid_decimal_number">Invalid decimal number</string>
-  <string name="not_within_expected_range_mm">Not within the expected range of 1 to 20 mm</string>
-  <string name="not_within_expected_range_inch">Not within the expected range of 0 to 1 inch</string>
+  <string name="displayed_shots">Sichtbare Schüsse</string>
+  <string name="invalid_decimal_number">Ungültige Dezimalzahl</string>
+  <string name="not_within_expected_range_mm">Nicht innerhalb des erwarteten Bereichs von 1 bis 20 mm</string>
+  <string name="not_within_expected_range_inch">Nicht innerhalb des erwarteten Bereichs von 0 bis 1 Zoll</string>
+  <string name="next_round">Nächste Runde</string>
+  <string name="previous_round">Vorherige Runde</string>
+  <string name="overview">Übersicht</string>
+  <string name="score">Punktzahl</string>
+  <string name="show_reached_score">Erreichte Ringzahl anzeigen</string>
+  <string name="show_total_score">Maximal erreichbare Ringzahl anzeigen</string>
+  <string name="show_percentage">Prozent anzeigen</string>
+  <string name="show_arrow_average">Pfeildurchschnitt anzeigen</string>
 </resources>
