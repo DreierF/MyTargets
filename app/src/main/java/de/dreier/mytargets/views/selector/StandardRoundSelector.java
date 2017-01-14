@@ -35,7 +35,7 @@ public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
         requestCode = STANDARD_ROUND_REQUEST_CODE;
     }
 
-    public void setItemId(long standardRoundId) {
+    public void setItemId(Long standardRoundId) {
         StandardRound standardRound = StandardRound.get(standardRoundId);
         // If the round has been removed, choose default one
         if (standardRound == null) {

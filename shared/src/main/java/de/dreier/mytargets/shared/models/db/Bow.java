@@ -18,6 +18,7 @@ package de.dreier.mytargets.shared.models.db;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.annimon.stream.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -209,5 +210,27 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
     public int compareTo(@NonNull Bow another) {
         final int result = getName().compareTo(another.getName());
         return result == 0 ? (int) (id - another.id) : result;
+    }
+
+    public boolean areAllPropertiesSet() {
+        return !TextUtils.isEmpty(size) &&
+                !TextUtils.isEmpty(drawWeight) &&
+                (!type.showLetoffWeight() || !TextUtils.isEmpty(letoffWeight)) &&
+                (!type.showArrowRest() || !TextUtils.isEmpty(arrowRest)) &&
+                (!type.showArrowRest() || !TextUtils.isEmpty(restVerticalPosition)) &&
+                (!type.showArrowRest() || !TextUtils.isEmpty(restHorizontalPosition)) &&
+                (!type.showArrowRest() || !TextUtils.isEmpty(restStiffness)) &&
+                (!type.showCamSetting() || !TextUtils.isEmpty(camSetting)) &&
+                (!type.showTiller() || !TextUtils.isEmpty(tiller)) &&
+                (!type.showBraceHeight() || !TextUtils.isEmpty(braceHeight)) &&
+                (!type.showLimbs() || !TextUtils.isEmpty(limbs)) &&
+                (!type.showSight() || !TextUtils.isEmpty(sight)) &&
+                (!type.showScopeMagnification() || !TextUtils.isEmpty(scopeMagnification)) &&
+                (!type.showStabilizer() || !TextUtils.isEmpty(stabilizer)) &&
+                (!type.showClicker() || !TextUtils.isEmpty(clicker)) &&
+                (!type.showNockingPoint() || !TextUtils.isEmpty(nockingPoint)) &&
+                !TextUtils.isEmpty(string) &&
+                (!type.showButton() || !TextUtils.isEmpty(button)) &&
+                !TextUtils.isEmpty(description);
     }
 }

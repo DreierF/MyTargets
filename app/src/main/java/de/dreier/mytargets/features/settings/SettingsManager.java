@@ -49,14 +49,14 @@ public class SettingsManager {
     public static final String KEY_PROFILE_LAST_NAME = "profile_last_name";
     public static final String KEY_PROFILE_BIRTHDAY = "profile_birthday";
     public static final String KEY_PROFILE_CLUB = "profile_club";
-    private static final String KEY_INPUT_SUMMARY_SHOW_END = "input_summary_show_end";
-    private static final String KEY_INPUT_SUMMARY_SHOW_ROUND = "input_summary_show_round";
-    private static final String KEY_INPUT_SUMMARY_SHOW_TRAINING = "input_summary_show_training";
-    private static final String KEY_INPUT_SUMMARY_SHOW_AVERAGE = "input_summary_show_average";
     public static final String KEY_INPUT_SUMMARY_AVERAGE_OF = "input_summary_average_of";
     public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
     public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
     public static final String KEY_INPUT_KEYBOARD_TYPE = "input_keyboard_type";
+    private static final String KEY_INPUT_SUMMARY_SHOW_END = "input_summary_show_end";
+    private static final String KEY_INPUT_SUMMARY_SHOW_ROUND = "input_summary_show_round";
+    private static final String KEY_INPUT_SUMMARY_SHOW_TRAINING = "input_summary_show_training";
+    private static final String KEY_INPUT_SUMMARY_SHOW_AVERAGE = "input_summary_show_average";
     private static final String KEY_FIRST_TRAINING_SHOWN = "first_training_shown";
     private static final String KEY_BACKUP_INTERVAL = "backup_interval";
     private static final String KEY_DONATED = "donated";
@@ -89,8 +89,8 @@ public class SettingsManager {
     private static final String KEY_STANDARD_ROUNDS_LAST_USED = "standard_round_last_used";
     private static final String KEY_INTRO_SHOWED = "intro_showed";
 
-    public static int getStandardRound() {
-        return lastUsed.getInt(KEY_STANDARD_ROUND, 32);
+    public static Long getStandardRound() {
+        return (long) lastUsed.getInt(KEY_STANDARD_ROUND, 32);
     }
 
     public static void setStandardRound(long id) {

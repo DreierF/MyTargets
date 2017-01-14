@@ -341,4 +341,6 @@
     <string name="invalid_decimal_number">Invalid decimal number</string>
     <string name="not_within_expected_range_mm">Not within the expected range of 1 to 20 mm</string>
     <string name="not_within_expected_range_inch">Not within the expected range of 0 to 1 inch</string>
+    <string name="next_round">Next round</string>
+    <string name="previous_round">Previous round</string>
 </resources>

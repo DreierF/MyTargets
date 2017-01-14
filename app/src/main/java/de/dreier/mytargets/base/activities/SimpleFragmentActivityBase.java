@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.base.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -48,5 +49,17 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
 
     public Fragment getChildFragment() {
         return getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        childFragment = instantiateFragment();
+        Bundle bundle = intent != null ? intent.getExtras() : null;
+        childFragment.setArguments(bundle);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(android.R.id.content, childFragment, FRAGMENT_TAG);
+        ft.commit();
     }
 }

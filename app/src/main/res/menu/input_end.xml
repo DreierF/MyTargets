@@ -69,11 +69,15 @@
         android:checkable="true"
         android:icon="@drawable/ic_timer_white_24dp"
         android:title="@string/timer"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
     <item
         android:id="@+id/action_keyboard"
         android:checkable="true"
         android:icon="@drawable/ic_keyboard_white_24dp"
         android:title="@string/keyboard"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_new_round"
+        android:title="@string/new_round"
+        app:showAsAction="never"/>
 </menu>

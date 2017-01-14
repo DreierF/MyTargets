@@ -124,8 +124,13 @@ public class IntentWrapper {
     }
 
     public IntentWrapper noAnimation() {
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_ANIMATION);
         animate = false;
+        return this;
+    }
+
+    public IntentWrapper clearTop() {
+        intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         return this;
     }
 

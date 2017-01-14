@@ -67,7 +67,8 @@ public class RoundFragment extends EditableListFragment<End> {
     @NonNull
     public static IntentWrapper getIntent(Round round) {
         return new IntentWrapper(RoundActivity.class)
-                .with(ROUND_ID, round.getId());
+                .with(ROUND_ID, round.getId())
+                .clearTop();
     }
 
     @Override

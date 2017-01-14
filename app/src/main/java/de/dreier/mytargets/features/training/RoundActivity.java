@@ -25,5 +25,4 @@ public class RoundActivity extends SimpleFragmentActivityBase {
     public Fragment instantiateFragment() {
         return new RoundFragment();
     }
-
 }

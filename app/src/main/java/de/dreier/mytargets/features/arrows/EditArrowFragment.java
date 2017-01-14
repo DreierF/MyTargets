@@ -74,9 +74,9 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
             }
 
             setImageFiles(arrow.getImages());
-            ToolbarUtils.setTitle(this, arrow.name);
             contentBinding.diameterUnit.setSelection(arrow.diameter.unit == MILLIMETER ? 0 : 1);
         }
+        ToolbarUtils.setTitle(this, arrow.name);
         contentBinding.setArrow(arrow);
         loadImage(imageFile);
         return rootView;

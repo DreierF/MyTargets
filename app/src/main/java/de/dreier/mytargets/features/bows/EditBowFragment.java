@@ -100,8 +100,8 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
                 bow.getSightMarks().add(new SightMark());
             }
             setImageFiles(bow.getImages());
-            ToolbarUtils.setTitle(this, bow.name);
         }
+        ToolbarUtils.setTitle(this, bow.name);
         contentBinding.setBow(bow);
 
         loadImage(imageFile);

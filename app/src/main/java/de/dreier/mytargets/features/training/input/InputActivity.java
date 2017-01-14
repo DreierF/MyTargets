@@ -38,8 +38,10 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.activities.ChildActivityBase;
 import de.dreier.mytargets.databinding.ActivityInputBinding;
+import de.dreier.mytargets.features.rounds.EditRoundFragment;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.timer.TimerFragment;
+import de.dreier.mytargets.features.training.RoundFragment;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.NotificationInfo;
@@ -52,6 +54,7 @@ import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.utils.Color;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
@@ -142,7 +145,7 @@ public class InputActivity extends ChildActivityBase
         binding.roundSummary.setVisibility(config.showRound ? VISIBLE : GONE);
         binding.trainingSummary.setVisibility(config.showTraining ? VISIBLE : GONE);
         binding.averageSummary.setVisibility(config.showAverage ? VISIBLE : GONE);
-        summaryShowScope = config.showAverage ? config.averageScope : null;
+        summaryShowScope = config.averageScope;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -261,6 +264,11 @@ public class InputActivity extends ChildActivityBase
                 item.setChecked(SettingsManager.getTimerEnabled());
                 supportInvalidateOptionsMenu();
                 return true;
+            case R.id.action_new_round:
+                EditRoundFragment.createIntent(data.training)
+                        .withContext(this)
+                        .start();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -297,9 +305,6 @@ public class InputActivity extends ChildActivityBase
         targetView.setAggregationStrategy(SettingsManager.getAggregationStrategy());
         targetView.setInputMethod(SettingsManager.getInputMethod(), false);
         updateOldShoots();
-
-        binding.next.setOnClickListener(view -> showEnd(data.endIndex + 1));
-        binding.prev.setOnClickListener(view -> showEnd(data.endIndex - 1));
     }
 
     @Override
@@ -350,8 +355,11 @@ public class InputActivity extends ChildActivityBase
 
     private void updateEnd() {
         targetView.setEnd(getCurrentEnd());
+        final int totalEnds = getCurrentRound().maxEndCount == null
+                ? getEnds().size()
+                : getCurrentRound().maxEndCount;
         binding.endTitle.setText(
-                getString(R.string.passe) + " " + (data.endIndex + 1) + "/" + getEnds().size());
+                getString(R.string.passe) + " " + (data.endIndex + 1) + "/" + totalEnds);
         binding.roundTitle.setText(getString(
                 R.string.round) + " " + (getCurrentRound().index + 1) + "/" + data.training
                 .getRounds().size());
@@ -362,9 +370,54 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void updateNavigationButtons() {
-        binding.prev.setEnabled(data.endIndex > 0);
-        binding.next.setEnabled(getCurrentEnd().getId() != null &&
-                (getCurrentRound().maxEndCount == null || data.endIndex + 1 < getCurrentRound().maxEndCount));
+        updatePreviousButton();
+        updateNextButton();
+    }
+
+    private void updatePreviousButton() {
+        final boolean isFirstEnd = data.endIndex == 0;
+        final boolean isFirstRound = data.roundIndex == 0;
+        boolean showPreviousRound = isFirstEnd && !isFirstRound;
+        binding.prev.setEnabled(!isFirstEnd || !isFirstRound);
+        if (showPreviousRound) {
+            final Round round = data.training.getRounds().get(data.roundIndex - 1);
+            binding.prev.setOnClickListener(view -> openRound(round, round.getEnds().size() - 1));
+            binding.prev.setText(R.string.previous_round);
+            binding.prev.setTextColor(getResources().getColor(R.color.colorPrimary));
+        } else {
+            binding.prev.setOnClickListener(view -> showEnd(data.endIndex - 1));
+            binding.prev.setText(R.string.prev);
+            binding.prev.setTextColor(Color.BLACK);
+        }
+    }
+
+    private void updateNextButton() {
+        final boolean endFinished = getCurrentEnd().getId() != null;
+        boolean isLastEnd = getCurrentRound().maxEndCount != null && data.endIndex + 1 == getCurrentRound().maxEndCount;
+        final boolean hasOneMoreRound = data.roundIndex + 1 < data.training.getRounds().size();
+        boolean showNextRound = isLastEnd && hasOneMoreRound;
+        binding.next.setEnabled(endFinished && (!isLastEnd || hasOneMoreRound));
+        if (showNextRound) {
+            final Round round = data.training.getRounds().get(data.roundIndex + 1);
+            binding.next.setOnClickListener(view -> openRound(round, 0));
+            binding.next.setText(R.string.next_round);
+            binding.next.setTextColor(getResources().getColor(R.color.colorPrimary));
+        } else {
+            binding.next.setOnClickListener(view -> showEnd(data.endIndex + 1));
+            binding.next.setText(R.string.next);
+            binding.next.setTextColor(Color.BLACK);
+        }
+    }
+
+    private void openRound(Round round, int endIndex) {
+        finish();
+        RoundFragment.getIntent(round)
+                .noAnimation()
+                .withContext(this)
+                .start();
+        InputActivity.getIntent(round, endIndex)
+                .withContext(this)
+                .start();
     }
 
     public void setShotShowScope(ETrainingScope shotShowScope) {

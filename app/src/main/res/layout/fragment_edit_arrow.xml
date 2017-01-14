@@ -136,10 +136,7 @@
         </FrameLayout>
 
         <FrameLayout
-            style="@style/propertyFrameLayout"
-            app:propertyShouldShow="@{true}"
-            app:propertyShowAll="@{showAll}"
-            app:propertyValue="@{arrow.diameter.toString()}">
+            style="@style/propertyFrameLayout">
 
             <ImageView
                 style="@style/propertyImageView"
@@ -310,7 +307,7 @@
             android:id="@+id/moreFields"
             style="@style/propertyAddButton"
             android:text="@string/more_fields"
-            android:visibility="@{showAll ? View.GONE : View.VISIBLE}" />
+            android:visibility="@{showAll || arrow.areAllPropertiesSet ? View.GONE : View.VISIBLE}" />
 
     </LinearLayout>
 
