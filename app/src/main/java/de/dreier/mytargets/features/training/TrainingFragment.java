@@ -42,6 +42,7 @@ import de.dreier.mytargets.databinding.ItemRoundBinding;
 import de.dreier.mytargets.features.rounds.EditRoundFragment;
 import de.dreier.mytargets.features.scoreboard.HtmlUtils;
 import de.dreier.mytargets.features.scoreboard.ScoreboardActivity;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.statistics.StatisticsActivity;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
@@ -219,7 +220,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
             } else {
                 binding.subtitle.setVisibility(View.VISIBLE);
             }
-            binding.points.setText(item.getReachedScore().toString());
+            binding.points.setText(item.getReachedScore().format(SettingsManager.getScoreConfiguration()));
         }
     }
 }

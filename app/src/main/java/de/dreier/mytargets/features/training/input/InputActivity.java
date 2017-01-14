@@ -176,11 +176,13 @@ public class InputActivity extends ChildActivityBase
         final MenuItem keyboard = menu.findItem(R.id.action_keyboard);
         final MenuItem grouping = menu.findItem(R.id.action_grouping);
         final MenuItem timer = menu.findItem(R.id.action_timer);
+        final MenuItem newRound = menu.findItem(R.id.action_new_round);
         if (targetView == null || getEnds().size() == 0) {
             eye.setVisible(false);
             keyboard.setVisible(false);
             grouping.setVisible(false);
             timer.setVisible(false);
+            newRound.setVisible(false);
         } else {
             final boolean plotting = targetView.getInputMode() == EInputMethod.PLOTTING;
             eye.setVisible(plotting);
@@ -195,6 +197,7 @@ public class InputActivity extends ChildActivityBase
                     : R.drawable.ic_timer_white_24dp);
             timer.setVisible(true);
             timer.setChecked(SettingsManager.getTimerEnabled());
+            newRound.setVisible(data.training.standardRoundId == null);
         }
 
         switch (SettingsManager.getShowMode()) {

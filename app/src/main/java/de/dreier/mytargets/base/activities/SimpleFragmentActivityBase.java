@@ -54,6 +54,7 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        setIntent(intent);
         childFragment = instantiateFragment();
         Bundle bundle = intent != null ? intent.getExtras() : null;
         childFragment.setArguments(bundle);
