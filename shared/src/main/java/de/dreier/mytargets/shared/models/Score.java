@@ -84,6 +84,30 @@ public class Score {
         }
     }
 
+    public String format(Configuration config) {
+        if (!config.showReachedScore) {
+            return "";
+        }
+        String score = String.valueOf(reachedScore);
+        if (config.showTotalScore) {
+            score += "/" + totalScore;
+        }
+        if ((config.showPercentage || config.showAverage) && totalScore > 0) {
+            score += " (";
+            if (config.showPercentage) {
+                score += getPercent();
+                if (config.showAverage) {
+                    score += ", ";
+                }
+            }
+            if (config.showAverage) {
+                score += getShotAverageFormatted() + "∅";
+            }
+            score += ")";
+        }
+        return score;
+    }
+
     public float getShotAverage() {
         if (shotCount == 0) {
             return -1;
@@ -98,7 +122,34 @@ public class Score {
         return String.format(Locale.getDefault(), "%.2f", getShotAverage());
     }
 
-    private int getPercent() {
-        return reachedScore * 100 / totalScore;
+    private String getPercent() {
+        if (totalScore > 0) {
+            return String.valueOf(reachedScore * 100 / totalScore) + "%";
+        }
+        return "";
+    }
+
+    public static class Configuration {
+        public boolean showReachedScore;
+        public boolean showTotalScore;
+        public boolean showPercentage;
+        public boolean showAverage;
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            Configuration that = (Configuration) o;
+
+            return showReachedScore == that.showReachedScore &&
+                    showTotalScore == that.showTotalScore &&
+                    showPercentage == that.showPercentage &&
+                    showAverage == that.showAverage;
+
+        }
     }
 }

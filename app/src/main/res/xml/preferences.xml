@@ -17,6 +17,32 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/general">
         <PreferenceScreen
+            android:icon="@drawable/ic_view_list_grey600_24dp"
+            android:key="overview"
+            android:title="@string/overview">
+            <PreferenceCategory android:title="@string/score">
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="overview_show_reached_score"
+                    android:title="@string/show_reached_score" />
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:dependency="overview_show_reached_score"
+                    android:key="overview_show_total_score"
+                    android:title="@string/show_total_score" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:dependency="overview_show_reached_score"
+                    android:key="overview_show_percentage"
+                    android:title="@string/show_percentage" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:dependency="overview_show_reached_score"
+                    android:key="overview_show_arrow_average"
+                    android:title="@string/show_arrow_average" />
+            </PreferenceCategory>
+        </PreferenceScreen>
+        <PreferenceScreen
             android:icon="@drawable/ic_input_grey600_24dp"
             android:key="input"
             android:title="@string/input">
@@ -38,8 +64,8 @@
                     android:key="input_summary_show_average"
                     android:title="@string/show_average" />
                 <ListPreference
-                    android:dependency="input_summary_show_average"
                     android:defaultValue="ROUND"
+                    android:dependency="input_summary_show_average"
                     android:entries="@array/summary_average_entries"
                     android:entryValues="@array/summary_average_values"
                     android:key="input_summary_average_of"

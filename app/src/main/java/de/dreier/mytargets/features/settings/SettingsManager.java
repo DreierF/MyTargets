@@ -36,6 +36,7 @@ import de.dreier.mytargets.features.training.input.SummaryConfiguration;
 import de.dreier.mytargets.features.training.input.TargetView.EKeyboardType;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
@@ -88,6 +89,10 @@ public class SettingsManager {
     private static final String KEY_BACKUP_AUTOMATICALLY = "backup_automatically";
     private static final String KEY_STANDARD_ROUNDS_LAST_USED = "standard_round_last_used";
     private static final String KEY_INTRO_SHOWED = "intro_showed";
+    private static final String KEY_OVERVIEW_SHOW_REACHED_SCORE = "overview_show_reached_score";
+    private static final String KEY_OVERVIEW_SHOW_TOTAL_SCORE = "overview_show_total_score";
+    private static final String KEY_OVERVIEW_SHOW_PERCENTAGE = "overview_show_percentage";
+    private static final String KEY_OVERVIEW_SHOW_ARROW_AVERAGE = "overview_show_arrow_average";
 
     public static Long getStandardRound() {
         return (long) lastUsed.getInt(KEY_STANDARD_ROUND, 32);
@@ -528,6 +533,24 @@ public class SettingsManager {
                 .putBoolean(KEY_INPUT_SUMMARY_SHOW_TRAINING, configuration.showTraining)
                 .putBoolean(KEY_INPUT_SUMMARY_SHOW_AVERAGE, configuration.showAverage)
                 .putString(KEY_INPUT_SUMMARY_AVERAGE_OF, configuration.averageScope.name())
+                .apply();
+    }
+
+    public static Score.Configuration getScoreConfiguration() {
+        Score.Configuration config = new Score.Configuration();
+        config.showReachedScore = preferences.getBoolean(KEY_OVERVIEW_SHOW_REACHED_SCORE, true);
+        config.showTotalScore = preferences.getBoolean(KEY_OVERVIEW_SHOW_TOTAL_SCORE, true);
+        config.showPercentage = preferences.getBoolean(KEY_OVERVIEW_SHOW_PERCENTAGE, false);
+        config.showAverage = preferences.getBoolean(KEY_OVERVIEW_SHOW_ARROW_AVERAGE, false);
+        return config;
+    }
+
+    public static void setScoreConfiguration(Score.Configuration configuration) {
+        preferences.edit()
+                .putBoolean(KEY_OVERVIEW_SHOW_REACHED_SCORE, configuration.showReachedScore)
+                .putBoolean(KEY_OVERVIEW_SHOW_TOTAL_SCORE, configuration.showTotalScore)
+                .putBoolean(KEY_OVERVIEW_SHOW_PERCENTAGE, configuration.showPercentage)
+                .putBoolean(KEY_OVERVIEW_SHOW_ARROW_AVERAGE, configuration.showAverage)
                 .apply();
     }
 }
