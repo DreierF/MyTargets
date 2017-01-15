@@ -136,7 +136,6 @@
   <!-- Settings -->
   <string name="backup_action">Mentés</string>
   <string name="import_action">Importálás</string>
-  <string name="exports_as_csv">Exports as csv</string>
   <string name="licences">Nyílt forráskódú licencek</string>
   <string name="licences_summary">Jogi engedélyek</string>
   <string name="version">%s Verzió</string>
@@ -206,7 +205,7 @@
   <string name="my_arrow">Vesszőim</string>
   <string name="tip_weight">a hegy súlya</string>
   <string name="arrow_ranking">Vessző rangsor</string>
-  <string name="arrow_x_of_set_of_arrows">%2$s nyíl a %1$d-ból</string>
+  <string name="arrow_x_of_set_of_arrows">%2$s nyíl a %1$s-ból</string>
   <string name="display">Megjelenítés</string>
   <string name="print">Nyomtatás</string>
   <string name="table">Táblázat</string>
@@ -256,10 +255,8 @@
   <string name="arrow_diameter_scale">Vessző átmérő skála</string>
   <string name="timestamp">Időbélyeg</string>
   <string name="change_target_face">Lőlap váltása</string>
-  <string name="your_first_training">Your first training</string>
   <string name="grouping">Csoportosítás</string>
   <string name="show_clusters">Klaszterek</string>
-  <string name="first_training_description">Tap the plus to start a new training.</string>
   <string name="show_average">Átlag</string>
   <string name="show_none">Semmi</string>
   <string name="left_handed">Balkezes</string>
@@ -300,28 +297,4 @@
   <string name="bow_rest_stiffness">Merevség</string>
   <string name="bow_button">Oldaltámaszték</string>
   <string name="more_fields">További mezők</string>
-  <string name="recently_used">Recently used</string>
-  <string name="intro_title_track_training_progress">Forget paper scoresheets!</string>
-  <string name="intro_description_track_training_progress">With exact arrow plotting,\nyou can get more useful insights\nout of your training data.</string>
-  <string name="intro_title_everything_in_one_place">Everything you need\nin one place</string>
-  <string name="intro_description_everything_in_one_place">Including bow-, arrow-\nand sightmark-management,\narchery timer, statistics \nand much more&#8230;</string>
-  <string name="average_arrow_score_per_end">Average arrow score per end</string>
-  <string name="show_end">Show end</string>
-  <string name="show_round">Show round</string>
-  <string name="show_training">Show training</string>
-  <string name="summary">Summary</string>
-  <string name="end">End</string>
-  <string name="average_of">Average of</string>
-  <string name="displayed_shots">Displayed shots</string>
-  <string name="invalid_decimal_number">Invalid decimal number</string>
-  <string name="not_within_expected_range_mm">Not within the expected range of 1 to 20 mm</string>
-  <string name="not_within_expected_range_inch">Not within the expected range of 0 to 1 inch</string>
-  <string name="next_round">Next round</string>
-  <string name="previous_round">Previous round</string>
-  <string name="overview">Overview</string>
-  <string name="score">Score</string>
-  <string name="show_reached_score">Show reached score</string>
-  <string name="show_total_score">Show total score</string>
-  <string name="show_percentage">Show percentage</string>
-  <string name="show_arrow_average">Show arrow average</string>
 </resources>
