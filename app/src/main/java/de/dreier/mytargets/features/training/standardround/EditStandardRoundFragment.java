@@ -28,7 +28,6 @@ import android.view.ViewGroup;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.R;
@@ -58,8 +57,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
     public static final int RESULT_STANDARD_ROUND_DELETED = Activity.RESULT_FIRST_USER;
 
     @State(ParcelsBundler.class)
-    List<RoundTemplate> roundTemplateList = new ArrayList<>();
-    private StandardRound standardRound;
+    StandardRound standardRound;
     private RoundTemplateAdapter adapter;
     private FragmentEditStandardRoundBinding binding;
 
@@ -76,7 +74,6 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_edit_standard_round, container, false);
 
@@ -84,11 +81,10 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         ToolbarUtils.showUpAsX(this);
         setHasOptionsMenu(true);
 
-        if (getArguments() != null) {
-            standardRound = Parcels.unwrap(getArguments().getParcelable(ITEM));
-        }
-
         if (savedInstanceState == null) {
+            if (getArguments() != null) {
+                standardRound = Parcels.unwrap(getArguments().getParcelable(ITEM));
+            }
             if (standardRound == null) {
                 standardRound = new StandardRound();
                 ToolbarUtils.setTitle(this, R.string.new_round_template);
@@ -99,24 +95,25 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                 round.endCount = SettingsManager.getEndCount();
                 round.setTargetTemplate(SettingsManager.getTarget());
                 round.distance = SettingsManager.getDistance();
-                roundTemplateList.add(round);
+                standardRound.getRounds().add(round);
             } else {
                 ToolbarUtils.setTitle(this, R.string.edit_standard_round);
                 // Load saved values
-                roundTemplateList = standardRound.getRounds();
                 if (standardRound.club == StandardRoundFactory.CUSTOM) {
                     binding.name.setText(standardRound.name);
                 } else {
                     binding.name.setText(
                             String.format("%s %s", getString(R.string.custom), standardRound.name));
-                    for (RoundTemplate round : roundTemplateList) {
-                        round.setId(-1L);
+                    // When copying an existing standard round make sure
+                    // we don't overwrite the other rounds templates
+                    for (RoundTemplate round : standardRound.getRounds()) {
+                        round.setId(null);
                     }
                 }
             }
         }
 
-        adapter = new RoundTemplateAdapter(this, roundTemplateList);
+        adapter = new RoundTemplateAdapter(this, standardRound.getRounds());
         binding.rounds.setAdapter(adapter);
         binding.addButton.setOnClickListener((view) -> onAddRound());
         binding.deleteStandardRound.setOnClickListener((view) -> onDeleteStandardRound());
@@ -131,14 +128,14 @@ public class EditStandardRoundFragment extends EditFragmentBase {
     }
 
     private void onAddRound() {
-        RoundTemplate r = roundTemplateList.get(roundTemplateList.size() - 1);
+        RoundTemplate r = standardRound.getRounds().get(standardRound.getRounds().size() - 1);
         RoundTemplate roundTemplate = new RoundTemplate();
         roundTemplate.endCount = r.endCount;
         roundTemplate.shotsPerEnd = r.shotsPerEnd;
         roundTemplate.distance = r.distance;
         roundTemplate.setTargetTemplate(r.getTargetTemplate());
-        roundTemplateList.add(roundTemplate);
-        adapter.notifyItemInserted(roundTemplateList.size() - 1);
+        standardRound.getRounds().add(roundTemplate);
+        adapter.notifyItemInserted(standardRound.getRounds().size() - 1);
     }
 
     private void onDeleteStandardRound() {
@@ -151,10 +148,9 @@ public class EditStandardRoundFragment extends EditFragmentBase {
     protected void onSave() {
         standardRound.club = StandardRoundFactory.CUSTOM;
         standardRound.name = binding.name.getText().toString();
-        standardRound.setRounds(roundTemplateList);
         standardRound.save();
 
-        RoundTemplate round = roundTemplateList.get(0);
+        RoundTemplate round = standardRound.getRounds().get(0);
         SettingsManager.setShotsPerEnd(round.shotsPerEnd);
         SettingsManager.setEndCount(round.endCount);
         SettingsManager.setTarget(round.getTargetTemplate());
@@ -176,11 +172,11 @@ public class EditStandardRoundFragment extends EditFragmentBase {
             final Parcelable parcelable = data.getParcelableExtra(ITEM);
             switch (requestCode) {
                 case DistanceSelector.DISTANCE_REQUEST_CODE:
-                    roundTemplateList.get(index).distance = Parcels.unwrap(parcelable);
+                    standardRound.getRounds().get(index).distance = Parcels.unwrap(parcelable);
                     adapter.notifyItemChanged(index);
                     break;
                 case TargetSelector.TARGET_REQUEST_CODE:
-                    roundTemplateList.get(index).setTargetTemplate(Parcels.unwrap(parcelable));
+                    standardRound.getRounds().get(index).setTargetTemplate(Parcels.unwrap(parcelable));
                     adapter.notifyItemChanged(index);
                     break;
             }
