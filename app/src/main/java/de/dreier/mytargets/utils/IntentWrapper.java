@@ -129,8 +129,8 @@ public class IntentWrapper {
         return this;
     }
 
-    public IntentWrapper clearTop() {
-        intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    public IntentWrapper clearTopSingleTop() {
+        intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return this;
     }
 
