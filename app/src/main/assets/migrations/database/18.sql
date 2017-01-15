@@ -166,8 +166,8 @@ CREATE TABLE IF NOT EXISTS `Round`(
     FOREIGN KEY(`training`) REFERENCES Training(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE
 );
 INSERT INTO `Round`
-    SELECT r.`_id`,r.`training`,t.`r_index`,t.`passes`,
-    CASE WHEN s.club = 512 THEN NULL ELSE t.`arrows` END,
+    SELECT r.`_id`,r.`training`,t.`r_index`,t.`arrows`,
+    CASE WHEN s.club = 512 THEN NULL ELSE t.`passes` END,
     t.`distance` || ' ' || t.`unit`, r.`comment`,r.`target`,r.`scoring_style`,
     t.`size` || ' ' || t.`target_unit`
     FROM ROUND_OLD r, ROUND_TEMPLATE_OLD t, STANDARD_ROUND_TEMPLATE_OLD s
