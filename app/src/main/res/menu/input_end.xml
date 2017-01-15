@@ -44,7 +44,7 @@
     <item
         android:id="@+id/action_show"
         android:icon="@drawable/ic_visibility_white_24dp"
-        android:title="@string/show_all"
+        android:title="@string/displayed_shots"
         app:showAsAction="ifRoom">
         <menu>
             <group android:checkableBehavior="single">
@@ -65,8 +65,19 @@
         </menu>
     </item>
     <item
-        android:id="@+id/action_show_sidebar"
+        android:id="@+id/action_timer"
+        android:checkable="true"
+        android:icon="@drawable/ic_timer_white_24dp"
+        android:title="@string/timer"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_keyboard"
+        android:checkable="true"
         android:icon="@drawable/ic_keyboard_white_24dp"
         android:title="@string/keyboard"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_new_round"
+        android:title="@string/new_round"
+        app:showAsAction="never"/>
 </menu>

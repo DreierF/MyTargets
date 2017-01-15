@@ -37,6 +37,7 @@ import de.dreier.mytargets.features.training.input.SummaryConfiguration;
 import de.dreier.mytargets.features.training.input.TargetView;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.models.NFAAAnimal;
 import de.dreier.mytargets.shared.targets.models.WAFull;
@@ -293,5 +294,16 @@ public class SettingsManagerTest extends InstrumentedTestBase {
         config.averageScope = ETrainingScope.TRAINING;
         SettingsManager.setInputSummaryConfiguration(config);
         assertThat(SettingsManager.getInputSummaryConfiguration()).isEqualTo(config);
+    }
+
+    @Test
+    public void setScoreConfiguration() {
+        Score.Configuration config = new Score.Configuration();
+        config.showReachedScore = true;
+        config.showTotalScore = true;
+        config.showPercentage = false;
+        config.showAverage = true;
+        SettingsManager.setScoreConfiguration(config);
+        assertThat(SettingsManager.getScoreConfiguration()).isEqualTo(config);
     }
 }

@@ -44,7 +44,7 @@
   <string name="wa_danage_3_spot">WA Danage 3 Spot</string>
   <string name="wa_danage_6_spot">WA Danage 6 Spot</string>
   <string name="dbsc_blowpipe">DBSC Blasrohr</string>
-  <string name="fcfs_color_reversed">FCFS Color (Reversed 10–1)</string>
-  <string name="recurve_style">Recurve style</string>
-  <string name="compound_style">Compound style</string>
+  <string name="fcfs_color_reversed">FCFS Farbe (10-1 umgekehrt)</string>
+  <string name="recurve_style">Recurve-Stil</string>
+  <string name="compound_style">Compound-Stil</string>
 </resources>

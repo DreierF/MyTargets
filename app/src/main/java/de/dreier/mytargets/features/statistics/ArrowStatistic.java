@@ -71,6 +71,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
                     return Stream.of(t.getValue())
                             .flatMap(r -> Stream.of(r.getEnds())
                                     .flatMap(e -> Stream.of(e.getShots())))
+                            .filter(s -> s.arrowNumber != null)
                             .groupBy(shot -> shot.arrowNumber)
                             .filter(entry -> entry.getValue().size() > 1)
                             .map(stringListEntry -> new ArrowStatistic(arrow.getName(),

@@ -13,16 +13,8 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training;
+package de.dreier.mytargets.features.settings;
 
-import android.support.v4.app.Fragment;
+public class OverviewSettingsFragment extends SettingsFragmentBase {
 
-import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
-
-public class RoundActivity extends SimpleFragmentActivityBase {
-
-    @Override
-    public Fragment instantiateFragment() {
-        return new RoundFragment();
-    }
 }

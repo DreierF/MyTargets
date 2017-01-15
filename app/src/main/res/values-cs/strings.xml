@@ -112,7 +112,6 @@
   <string name="action_print">Tisk</string>
   <string name="average">Průměr</string>
   <!-- Input mode -->
-  <string name="show_all">Zobrazit všechny zásahy</string>
   <string name="comment">Komentář</string>
   <!-- Statistics -->
   <!-- Import/Backup -->
@@ -143,7 +142,7 @@
   <!-- Settings -->
   <string name="backup_action">Zálohovat</string>
   <string name="import_action">Importovat</string>
-  <string name="exports_as_csv">Export uložených dat do *.csv</string>
+  <string name="exports_as_csv">Exportovat jako csv</string>
   <string name="licences">Licence Open-Source</string>
   <string name="licences_summary">Právní poznámky k licencím</string>
   <string name="version">Verze %s</string>
@@ -319,6 +318,24 @@
   <string name="intro_title_track_training_progress">Zapomeňte na papírovou výsledkovou listinu!</string>
   <string name="intro_description_track_training_progress">S přesným průměrem zásahů,\nzískáte více užitečných informací\nz vašeho tréninku.</string>
   <string name="intro_title_everything_in_one_place">Vše, co potřebujete\nna jednom místě</string>
-  <string name="intro_description_everything_in_one_place">Including bow-, arrow-\nand sightmark-management,\narchery timer, statistics \nand much more&#8230;</string>
+  <string name="intro_description_everything_in_one_place">Včetně luku-, šípu-\na cíle-nastavení,\nlukostřelecké časomíry, statistiky \na mnoho dalšího&#8230;</string>
   <string name="average_arrow_score_per_end">Průměr zásahů na sadu</string>
+  <string name="show_end">Zobrazit sadu</string>
+  <string name="show_round">Zobrazit kolo</string>
+  <string name="show_training">Zobrazit trénink</string>
+  <string name="summary">Celkem</string>
+  <string name="end">Sada</string>
+  <string name="average_of">Průměr</string>
+  <string name="displayed_shots">Displayed shots</string>
+  <string name="invalid_decimal_number">Invalid decimal number</string>
+  <string name="not_within_expected_range_mm">Not within the expected range of 1 to 20 mm</string>
+  <string name="not_within_expected_range_inch">Not within the expected range of 0 to 1 inch</string>
+  <string name="next_round">Next round</string>
+  <string name="previous_round">Previous round</string>
+  <string name="overview">Overview</string>
+  <string name="score">Score</string>
+  <string name="show_reached_score">Show reached score</string>
+  <string name="show_total_score">Show total score</string>
+  <string name="show_percentage">Show percentage</string>
+  <string name="show_arrow_average">Show arrow average</string>
 </resources>

@@ -486,13 +486,9 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void onArrowChanged() {
-        if (!arrowNumbering || getCurrentShotIndex() != EndRenderer.NO_SELECTION
-                && shots.get(getCurrentShotIndex()).arrowNumber != null) {
+        if (!arrowNumbering) {
             super.onArrowChanged();
         } else {
-            List<String> numbers = Stream.rangeClosed(1, 12)
-                    .map(String::valueOf)
-                    .collect(Collectors.toList());
 
             // Prepare grid view
             GridView gridView = new GridView(getContext());
@@ -503,17 +499,23 @@ public class TargetView extends TargetViewBase {
                     .setCancelable(false)
                     .setTitle(R.string.arrow_numbers)
                     .create();
+
+            List<String> numbers = Stream.rangeClosed(1, 12)
+                    .map(String::valueOf)
+                    .collect(Collectors.toList());
             gridView.setAdapter(
                     new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, numbers));
             gridView.setNumColumns(4);
-            gridView.setOnItemClickListener((parent, view, position, id) ->
-            {
+            gridView.setOnItemClickListener((parent, view, position, id) -> {
                 if (getCurrentShotIndex() < shots.size()) {
                     shots.get(getCurrentShotIndex()).arrowNumber = numbers.get(position);
                 }
                 dialog.dismiss();
+                setOnTouchListener(this);
                 super.onArrowChanged();
             });
+            // Disable touch input while dialog is visible
+            setOnTouchListener(null);
             dialog.show();
         }
     }

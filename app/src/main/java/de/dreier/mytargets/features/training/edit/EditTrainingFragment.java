@@ -139,9 +139,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.standardRound.setOnUpdateListener(
                     item -> roundTarget = item.getRounds().get(0).getTargetTemplate());
             binding.numberArrows.setChecked(SettingsManager.getArrowNumbersEnabled());
-            binding.timer.setChecked(SettingsManager.getTimerEnabled());
             binding.environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
-
             final StandardRound item = binding.standardRound.getSelectedItem();
             roundTarget = item.getRounds().get(0).getTargetTemplate();
         } else {
@@ -155,7 +153,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.environment.setItem(train.getEnvironment());
             setTrainingDate();
             binding.notEditable.setVisibility(View.GONE);
-            binding.timer.setChecked(train.timePerEnd != -1);
         }
         binding.standardRound.setOnActivityResultContext(this);
         binding.standardRound.setOnUpdateListener(this::updateChangeTargetFaceVisibility);
@@ -292,13 +289,10 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                 .getId();
         training.arrowId = binding.arrow.getSelectedItem() == null ? null : binding.arrow
                 .getSelectedItem().getId();
-        training.timePerEnd = binding.timer.isChecked() ? SettingsManager
-                .getTimerShootTime() : -1;
         training.arrowNumbering = binding.numberArrows.isChecked();
 
         SettingsManager.setBow(training.bowId);
         SettingsManager.setArrow(training.arrowId);
-        SettingsManager.setTimerEnabled(binding.timer.isChecked());
         SettingsManager.setArrowNumbersEnabled(training.arrowNumbering);
         SettingsManager.setIndoor(training.indoor);
         return training;

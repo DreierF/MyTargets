@@ -131,7 +131,6 @@ CREATE TABLE IF NOT EXISTS `Training`(
     `bow` INTEGER,
     `arrow` INTEGER,
     `arrowNumbering` INTEGER,
-    `timePerEnd` INTEGER,
     `indoor` INTEGER,
     `weather` INTEGER,
     `windDirection` INTEGER,
@@ -147,7 +146,7 @@ UPDATE TRAINING_OLD SET arrow = null WHERE arrow < 1;
 INSERT INTO `Training`
     SELECT t.`_id`,t.`title`,t.`datum`,
     CASE WHEN s.club < 512 THEN t.`standard_round` ELSE NULL END,
-    t.`bow`,t.`arrow`, t.`arrow_numbering`,t.`time`,
+    t.`bow`,t.`arrow`, t.`arrow_numbering`,
     s.`indoor`,t.`weather`,t.`wind_direction`,t.`wind_speed`,t.`location`
     FROM TRAINING_OLD t, STANDARD_ROUND_TEMPLATE_OLD s
     WHERE t.standard_round=s._id;
@@ -167,8 +166,8 @@ CREATE TABLE IF NOT EXISTS `Round`(
     FOREIGN KEY(`training`) REFERENCES Training(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE
 );
 INSERT INTO `Round`
-    SELECT r.`_id`,r.`training`,t.`r_index`,t.`passes`,
-    CASE WHEN s.club = 512 THEN NULL ELSE t.`arrows` END,
+    SELECT r.`_id`,r.`training`,t.`r_index`,t.`arrows`,
+    CASE WHEN s.club = 512 THEN NULL ELSE t.`passes` END,
     t.`distance` || ' ' || t.`unit`, r.`comment`,r.`target`,r.`scoring_style`,
     t.`size` || ' ' || t.`target_unit`
     FROM ROUND_OLD r, ROUND_TEMPLATE_OLD t, STANDARD_ROUND_TEMPLATE_OLD s

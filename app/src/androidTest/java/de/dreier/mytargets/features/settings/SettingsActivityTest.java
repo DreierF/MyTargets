@@ -77,6 +77,11 @@ public class SettingsActivityTest extends UITestBase {
 
         clickOnPreference(1);
 
+        matchToolbarTitle(getActivity().getString(R.string.overview));
+        pressBack();
+
+        clickOnPreference(2);
+
         matchToolbarTitle(getActivity().getString(R.string.input));
 
         matchPreferenceSummary(7, "3.0x");
@@ -94,7 +99,7 @@ public class SettingsActivityTest extends UITestBase {
         pressBack();
         matchToolbarTitle(getActivity().getString(R.string.preferences));
 
-        clickOnPreference(2);
+        clickOnPreference(3);
         matchToolbarTitle(getActivity().getString(R.string.scoreboard));
 
         clickOnPreference(1);
@@ -133,7 +138,7 @@ public class SettingsActivityTest extends UITestBase {
         pressBack();
         matchToolbarTitle(getActivity().getString(R.string.preferences));
 
-        clickOnPreference(3);
+        clickOnPreference(4);
         matchToolbarTitle(getActivity().getString(R.string.timer));
 
         matchPreferenceSummary(0, getActivity()
@@ -147,16 +152,16 @@ public class SettingsActivityTest extends UITestBase {
 
         pressBack();
 
-        clickOnPreference(5);
+        clickOnPreference(6);
         allowPermissionsIfNeeded(getActivity(), WRITE_EXTERNAL_STORAGE);
         matchToolbarTitle(getActivity().getString(R.string.backup_action));
         pressBack();
 
-        clickOnPreference(7);
+        clickOnPreference(8);
         matchToolbarTitle(getActivity().getString(R.string.about));
         pressBack();
 
-        clickOnPreference(8);
+        clickOnPreference(9);
         matchToolbarTitle(getActivity().getString(R.string.licences));
         pressBack();
     }

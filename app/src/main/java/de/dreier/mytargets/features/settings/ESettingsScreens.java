@@ -19,6 +19,7 @@ import de.dreier.mytargets.features.settings.backup.BackupSettingsFragment;
 
 public enum ESettingsScreens {
     MAIN(MainSettingsFragment.class),
+    OVERVIEW(OverviewSettingsFragment.class),
     INPUT(InputSettingsFragment.class),
     TIMER(TimerSettingsFragment.class),
     SCOREBOARD(ScoreboardSettingsFragment.class),
@@ -32,6 +33,8 @@ public enum ESettingsScreens {
 
     public static ESettingsScreens from(String key) {
         switch (key) {
+            case "overview":
+                return OVERVIEW;
             case "input":
                 return INPUT;
             case "timer":

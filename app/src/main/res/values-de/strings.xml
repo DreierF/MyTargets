@@ -83,8 +83,8 @@
   <string name="material">Material</string>
   <!-- New round -->
   <string name="title">Titel</string>
-  <string name="outdoor">Outdoor</string>
-  <string name="indoor">Indoor</string>
+  <string name="outdoor">Draußen</string>
+  <string name="indoor">Halle</string>
   <string name="distance">Entfernung</string>
   <string name="format">Format</string>
   <!-- x ends of y arrows -->
@@ -106,7 +106,6 @@
   <string name="action_print">Drucken</string>
   <string name="average">Schnitt</string>
   <!-- Input mode -->
-  <string name="show_all">Zeige alle Schüsse</string>
   <string name="comment">Kommentar</string>
   <!-- Statistics -->
   <!-- Import/Backup -->
@@ -137,7 +136,7 @@
   <!-- Settings -->
   <string name="backup_action">Backup</string>
   <string name="import_action">Importieren</string>
-  <string name="exports_as_csv">Exportiert die gespeicherten Daten als *.csv</string>
+  <string name="exports_as_csv">Export als csv</string>
   <string name="licences">Open Source-Lizenzen</string>
   <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
   <string name="version">Version %s</string>
@@ -257,10 +256,10 @@
   <string name="arrow_diameter_scale">Pfeildurchmesser Skalierung</string>
   <string name="timestamp">Uhrzeit</string>
   <string name="change_target_face">Auflage ändern</string>
-  <string name="your_first_training">Your first training</string>
+  <string name="your_first_training">Dein erstes Training</string>
   <string name="grouping">Gruppierung</string>
   <string name="show_clusters">Gruppen</string>
-  <string name="first_training_description">Tap the plus to start a new training.</string>
+  <string name="first_training_description">Tippe auf das Plus um ein neues Training zu starten.</string>
   <string name="show_average">Durchschnitt</string>
   <string name="show_none">Nichts</string>
   <string name="left_handed">Linkshänder</string>
@@ -291,20 +290,38 @@
   <string name="connection_failed">Verbindung fehlgeschlagen!</string>
   <string name="shooting_indoor">Schießen in der Halle</string>
   <string name="bow_rest_vertical_position">Vertikale Ausrichtung</string>
-  <string name="bow_rest">Rest</string>
+  <string name="bow_rest">Pfeilablage</string>
   <string name="bow_rest_horizontal_position">Horizontale Ausrichtung</string>
   <string name="bow_cam_settings">Cam Einstellungen</string>
-  <string name="bow_letoff_weight">Letoff weight</string>
+  <string name="bow_letoff_weight">Zugkraft beim Loslassen</string>
   <string name="bow_nocking_point">Nockpunkt</string>
   <string name="bow_string">Sehne</string>
   <string name="bow_scope_magnification">Scope Vergrößerung</string>
   <string name="bow_rest_stiffness">Stiffness</string>
   <string name="bow_button">Button</string>
   <string name="more_fields">Weitere Felder</string>
-  <string name="recently_used">Recently used</string>
-  <string name="intro_title_track_training_progress">Forget paper scoresheets!</string>
-  <string name="intro_description_track_training_progress">With exact arrow plotting,\nyou can get more useful insights\nout of your training data.</string>
-  <string name="intro_title_everything_in_one_place">Everything you need\nin one place</string>
-  <string name="intro_description_everything_in_one_place">Including bow-, arrow-\nand sightmark-management,\narchery timer, statistics \nand much more&#8230;</string>
-  <string name="average_arrow_score_per_end">Average arrow score per end</string>
+  <string name="recently_used">Zuletzt verwendet</string>
+  <string name="intro_title_track_training_progress">Vergiss Schießzettel aus Papier!</string>
+  <string name="intro_description_track_training_progress">Durch exakte Pfeilaufnahme\nkannst du nützlichere Erkenntnisse\naus deinen Trainingsdaten gewinnen.</string>
+  <string name="intro_title_everything_in_one_place">Alles was du brauchst\nan einem Ort</string>
+  <string name="intro_description_everything_in_one_place">Einschließlich Bogen-, Pfeil-\nund Visier-Verwaltung, \nSchießuhr, Statistiken \nund vieles mehr&#8230;</string>
+  <string name="average_arrow_score_per_end">Ringdurchschnitt pro Passe</string>
+  <string name="show_end">Passe anzeigen</string>
+  <string name="show_round">Runde anzeigen</string>
+  <string name="show_training">Training anzeigen</string>
+  <string name="summary">Zusammenfassung</string>
+  <string name="end">Passe</string>
+  <string name="average_of">Durchschnitt von</string>
+  <string name="displayed_shots">Sichtbare Schüsse</string>
+  <string name="invalid_decimal_number">Ungültige Dezimalzahl</string>
+  <string name="not_within_expected_range_mm">Nicht innerhalb des erwarteten Bereichs von 1 bis 20 mm</string>
+  <string name="not_within_expected_range_inch">Nicht innerhalb des erwarteten Bereichs von 0 bis 1 Zoll</string>
+  <string name="next_round">Nächste Runde</string>
+  <string name="previous_round">Vorherige Runde</string>
+  <string name="overview">Übersicht</string>
+  <string name="score">Punktzahl</string>
+  <string name="show_reached_score">Erreichte Ringzahl anzeigen</string>
+  <string name="show_total_score">Maximal erreichbare Ringzahl anzeigen</string>
+  <string name="show_percentage">Prozent anzeigen</string>
+  <string name="show_arrow_average">Pfeildurchschnitt anzeigen</string>
 </resources>

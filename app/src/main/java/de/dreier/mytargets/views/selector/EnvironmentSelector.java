@@ -19,12 +19,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresPermission;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.training.environment.CurrentWeather;
 import de.dreier.mytargets.features.training.environment.EnvironmentActivity;
 import de.dreier.mytargets.features.training.environment.Locator;
@@ -114,14 +116,19 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
     }
 
     private void setDefaultWeather() {
-        setItem(new Environment(false, EWeather.SUNNY, 0, 0, ""));
+        setItem(getDefaultEnvironment());
     }
 
     @Override
     public Environment getSelectedItem() {
         if (item == null) {
-            return new Environment(false, EWeather.SUNNY, 0, 0, "");
+            return getDefaultEnvironment();
         }
         return item;
+    }
+
+    @NonNull
+    private Environment getDefaultEnvironment() {
+        return new Environment(SettingsManager.getIndoor(), EWeather.SUNNY, 0, 0, "");
     }
 }

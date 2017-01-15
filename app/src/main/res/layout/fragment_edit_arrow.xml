@@ -18,9 +18,15 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="arrow"
             type="de.dreier.mytargets.shared.models.db.Arrow" />
+
+        <variable
+            name="showAll"
+            type="boolean" />
 
     </data>
 
@@ -54,7 +60,11 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout">
+        <FrameLayout
+            style="@style/propertyFrameLayout"
+            app:propertyShouldShow="@{true}"
+            app:propertyShowAll="@{showAll}"
+            app:propertyValue="@{arrow.length}">
 
             <ImageView
                 style="@style/propertyImageView"
@@ -75,7 +85,11 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout">
+        <FrameLayout
+            style="@style/propertyFrameLayout"
+            app:propertyShouldShow="@{true}"
+            app:propertyShowAll="@{showAll}"
+            app:propertyValue="@{arrow.material}">
 
             <ImageView
                 style="@style/propertyImageView"
@@ -96,7 +110,11 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout">
+        <FrameLayout
+            style="@style/propertyFrameLayout"
+            app:propertyShouldShow="@{true}"
+            app:propertyShowAll="@{showAll}"
+            app:propertyValue="@{arrow.spine}">
 
             <ImageView
                 style="@style/propertyImageView"
@@ -117,7 +135,8 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout">
+        <FrameLayout
+            style="@style/propertyFrameLayout">
 
             <ImageView
                 style="@style/propertyImageView"
@@ -130,6 +149,7 @@
                 android:orientation="horizontal">
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/diameterTextInputLayout"
                     style="@style/propertyTextInputLayout"
                     android:layout_toLeftOf="@+id/diameterUnit"
                     android:layout_toStartOf="@+id/diameterUnit">
@@ -158,7 +178,11 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout">
+        <FrameLayout
+            style="@style/propertyFrameLayout"
+            app:propertyShouldShow="@{true}"
+            app:propertyShowAll="@{showAll}"
+            app:propertyValue="@{arrow.weight}">
 
             <ImageView
                 style="@style/propertyImageView"
@@ -179,7 +203,11 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout">
+        <FrameLayout
+            style="@style/propertyFrameLayout"
+            app:propertyShouldShow="@{true}"
+            app:propertyShowAll="@{showAll}"
+            app:propertyValue="@{arrow.tipWeight}">
 
             <ImageView
                 style="@style/propertyImageView"
@@ -200,7 +228,11 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout">
+        <FrameLayout
+            style="@style/propertyFrameLayout"
+            app:propertyShouldShow="@{true}"
+            app:propertyShowAll="@{showAll}"
+            app:propertyValue="@{arrow.vanes}">
 
             <ImageView
                 style="@style/propertyImageView"
@@ -221,7 +253,11 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout">
+        <FrameLayout
+            style="@style/propertyFrameLayout"
+            app:propertyShouldShow="@{true}"
+            app:propertyShowAll="@{showAll}"
+            app:propertyValue="@{arrow.nock}">
 
             <ImageView
                 style="@style/propertyImageView"
@@ -242,7 +278,11 @@
 
         </FrameLayout>
 
-        <FrameLayout style="@style/propertyFrameLayout">
+        <FrameLayout
+            style="@style/propertyFrameLayout"
+            app:propertyShouldShow="@{true}"
+            app:propertyShowAll="@{showAll}"
+            app:propertyValue="@{arrow.comment}">
 
             <ImageView
                 style="@style/propertyImageView"
@@ -262,6 +302,12 @@
             </android.support.design.widget.TextInputLayout>
 
         </FrameLayout>
+
+        <Button
+            android:id="@+id/moreFields"
+            style="@style/propertyAddButton"
+            android:text="@string/more_fields"
+            android:visibility="@{showAll || arrow.areAllPropertiesSet ? View.GONE : View.VISIBLE}" />
 
     </LinearLayout>
 

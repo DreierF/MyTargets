@@ -130,7 +130,6 @@ public abstract class DbTestRuleBase implements TestRule {
         training.bowId = null;
         training.arrowId = null;
         training.arrowNumbering = false;
-        training.timePerEnd = 0;
         training.save();
         return training;
     }

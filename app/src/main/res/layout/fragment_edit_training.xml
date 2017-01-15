@@ -223,21 +223,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
 
-                <include layout="@layout/partial_divider_full" />
-
-                <CheckBox
-                    android:id="@+id/timer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
-                    android:button="@drawable/timer"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="32dp"
-                    android:paddingRight="32dp"
-                    android:paddingTop="16dp"
-                    android:text="@string/timer" />
-
             </LinearLayout>
 
         </ScrollView>

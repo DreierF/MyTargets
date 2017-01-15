@@ -45,6 +45,8 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentBackupBinding;
@@ -76,6 +78,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     private IAsyncBackupRestore backup;
     private BackupAdapter adapter;
     private FragmentBackupBinding binding;
+    private Timer updateLabelTimer;
     /**
      * Handle to a SyncObserver. The ProgressBar element is visible until the SyncObserver reports
      * that the sync is complete.
@@ -258,6 +261,9 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         if (backup != null) {
             backup.stop();
         }
+        if (updateLabelTimer != null) {
+            updateLabelTimer.cancel();
+        }
         if (mSyncObserverHandle != null) {
             ContentResolver.removeStatusChangeListener(mSyncObserverHandle);
             mSyncObserverHandle = null;
@@ -298,9 +304,22 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         binding.recentBackupsList.setVisibility(VISIBLE);
         adapter.setList(list);
         binding.lastBackupLabel.setVisibility(list.size() > 0 ? VISIBLE : GONE);
+        if (updateLabelTimer != null) {
+            updateLabelTimer.cancel();
+        }
         if (list.size() > 0) {
-            binding.lastBackupLabel.setText(getString(R.string.last_backup, DateUtils
-                    .getRelativeTimeSpanString(list.get(0).getModifiedDate().getTime())));
+            final long time = list.get(0).getModifiedDate().getTime();
+            updateLabelTimer = new Timer();
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    getActivity().runOnUiThread(() ->
+                            binding.lastBackupLabel
+                                    .setText(getString(R.string.last_backup, DateUtils
+                                            .getRelativeTimeSpanString(time))));
+                }
+            };
+            updateLabelTimer.schedule(timerTask, 0, 10000);
         }
     }
 
@@ -375,7 +394,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void showFilePicker() {
         final Intent getContentIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getContentIntent.setType("*/zip");
+        getContentIntent.setType("application/zip");
         getContentIntent.addCategory(Intent.CATEGORY_OPENABLE);
         Intent intent = Intent.createChooser(getContentIntent, getString(R.string.select_a_file));
         startActivityForResult(intent, IMPORT_FROM_URI);

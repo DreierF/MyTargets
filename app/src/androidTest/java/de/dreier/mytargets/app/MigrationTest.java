@@ -112,7 +112,6 @@ public final class MigrationTest extends InstrumentedTestBase {
         Truth.assertThat(training.bowId).isEqualTo(null);
         Truth.assertThat(training.arrowId).isEqualTo(null);
         Truth.assertThat(training.arrowNumbering).isEqualTo(false);
-        Truth.assertThat(training.timePerEnd).isEqualTo(-1);
         Truth.assertThat(training.indoor).isEqualTo(true);
         Truth.assertThat(training.weather).isEqualTo(EWeather.SUNNY);
         Truth.assertThat(training.windDirection).isEqualTo(0);
@@ -125,7 +124,7 @@ public final class MigrationTest extends InstrumentedTestBase {
         Truth.assertThat(rounds.get(1).getId()).isEqualTo(2L);
         Truth.assertThat(rounds.get(1).trainingId).isEqualTo(1L);
         Truth.assertThat(rounds.get(1).index).isEqualTo(1);
-        Truth.assertThat(rounds.get(1).shotsPerEnd).isEqualTo(2);
+        Truth.assertThat(rounds.get(1).shotsPerEnd).isEqualTo(3);
         Truth.assertThat(rounds.get(1).maxEndCount).isEqualTo(null);
         Truth.assertThat(rounds.get(1).distance).isEqualTo(new Dimension(20, METER));
         Truth.assertThat(rounds.get(1).comment).isEqualTo("Kommentar");
@@ -140,7 +139,7 @@ public final class MigrationTest extends InstrumentedTestBase {
         Truth.assertThat(round1.getId()).isEqualTo(1L);
         Truth.assertThat(round1.trainingId).isEqualTo(1L);
         Truth.assertThat(round1.index).isEqualTo(0);
-        Truth.assertThat(round1.shotsPerEnd).isEqualTo(3);
+        Truth.assertThat(round1.shotsPerEnd).isEqualTo(4);
         Truth.assertThat(round1.maxEndCount).isEqualTo(null);
         Truth.assertThat(round1.distance).isEqualTo(new Dimension(50, METER));
         Truth.assertThat(round1.comment).isEqualTo("");
@@ -177,7 +176,6 @@ public final class MigrationTest extends InstrumentedTestBase {
         Truth.assertThat(training.bowId).isEqualTo(1);
         Truth.assertThat(training.arrowId).isEqualTo(1);
         Truth.assertThat(training.arrowNumbering).isEqualTo(false);
-        Truth.assertThat(training.timePerEnd).isEqualTo(-1);
         Truth.assertThat(training.indoor).isEqualTo(false);
         Truth.assertThat(training.weather).isEqualTo(EWeather.LIGHT_RAIN);
         Truth.assertThat(training.windDirection).isEqualTo(0);

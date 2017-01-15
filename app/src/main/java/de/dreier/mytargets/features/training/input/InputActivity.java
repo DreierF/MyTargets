@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.training.input;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,8 +39,10 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.activities.ChildActivityBase;
 import de.dreier.mytargets.databinding.ActivityInputBinding;
+import de.dreier.mytargets.features.rounds.EditRoundFragment;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.timer.TimerFragment;
+import de.dreier.mytargets.features.training.RoundFragment;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.NotificationInfo;
@@ -101,6 +104,15 @@ public class InputActivity extends ChildActivityBase
         return list.isEmpty() ? null : list.get(list.size() - 1);
     }
 
+    private static boolean shouldShowRound(Round r, ETrainingScope shotShowScope, Long roundId) {
+        return shotShowScope != ETrainingScope.END
+                && (shotShowScope == ETrainingScope.TRAINING || r.getId().equals(roundId));
+    }
+
+    private static boolean shouldShowEnd(End end, Long currentEndId) {
+        return !Utils.equals(end.getId(), currentEndId) && end.exact;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,7 +145,7 @@ public class InputActivity extends ChildActivityBase
         binding.roundSummary.setVisibility(config.showRound ? VISIBLE : GONE);
         binding.trainingSummary.setVisibility(config.showTraining ? VISIBLE : GONE);
         binding.averageSummary.setVisibility(config.showAverage ? VISIBLE : GONE);
-        summaryShowScope = config.showAverage ? config.averageScope : null;
+        summaryShowScope = config.averageScope;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -161,19 +173,31 @@ public class InputActivity extends ChildActivityBase
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         final MenuItem eye = menu.findItem(R.id.action_show);
-        final MenuItem showSidebar = menu.findItem(R.id.action_show_sidebar);
+        final MenuItem keyboard = menu.findItem(R.id.action_keyboard);
         final MenuItem grouping = menu.findItem(R.id.action_grouping);
+        final MenuItem timer = menu.findItem(R.id.action_timer);
+        final MenuItem newRound = menu.findItem(R.id.action_new_round);
         if (targetView == null || getEnds().size() == 0) {
             eye.setVisible(false);
-            showSidebar.setVisible(false);
+            keyboard.setVisible(false);
             grouping.setVisible(false);
+            timer.setVisible(false);
+            newRound.setVisible(false);
         } else {
             final boolean plotting = targetView.getInputMode() == EInputMethod.PLOTTING;
             eye.setVisible(plotting);
             grouping.setVisible(plotting);
-            showSidebar.setIcon(
-                    plotting ? R.drawable.ic_keyboard_white_24dp : R.drawable.ic_keyboard_white_off_24dp);
-            showSidebar.setVisible(getCurrentEnd().getId() == null);
+            keyboard.setIcon(plotting
+                    ? R.drawable.ic_keyboard_white_24dp
+                    : R.drawable.ic_keyboard_white_off_24dp);
+            keyboard.setChecked(!plotting);
+            keyboard.setVisible(getCurrentEnd().getId() == null);
+            timer.setIcon(SettingsManager.getTimerEnabled()
+                    ? R.drawable.ic_timer_off_white_24dp
+                    : R.drawable.ic_timer_white_24dp);
+            timer.setVisible(true);
+            timer.setChecked(SettingsManager.getTimerEnabled());
+            newRound.setVisible(data.training.standardRoundId == null);
         }
 
         switch (SettingsManager.getShowMode()) {
@@ -228,13 +252,25 @@ public class InputActivity extends ChildActivityBase
             case R.id.action_show_training:
                 setShotShowScope(ETrainingScope.TRAINING);
                 break;
-            case R.id.action_show_sidebar:
+            case R.id.action_keyboard:
                 final EInputMethod inputMethod = targetView.getInputMode() == EInputMethod.KEYBOARD
                         ? EInputMethod.PLOTTING
                         : EInputMethod.KEYBOARD;
                 targetView.setInputMethod(inputMethod, true);
                 SettingsManager.setInputMethod(inputMethod);
+                item.setChecked(inputMethod == EInputMethod.KEYBOARD);
                 supportInvalidateOptionsMenu();
+                return true;
+            case R.id.action_timer:
+                SettingsManager.setTimerEnabled(!SettingsManager.getTimerEnabled());
+                openTimer();
+                item.setChecked(SettingsManager.getTimerEnabled());
+                supportInvalidateOptionsMenu();
+                return true;
+            case R.id.action_new_round:
+                EditRoundFragment.createIntent(data.training)
+                        .withContext(this)
+                        .start();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -272,9 +308,6 @@ public class InputActivity extends ChildActivityBase
         targetView.setAggregationStrategy(SettingsManager.getAggregationStrategy());
         targetView.setInputMethod(SettingsManager.getInputMethod(), false);
         updateOldShoots();
-
-        binding.next.setOnClickListener(view -> showEnd(data.endIndex + 1));
-        binding.prev.setOnClickListener(view -> showEnd(data.endIndex - 1));
     }
 
     @Override
@@ -297,45 +330,39 @@ public class InputActivity extends ChildActivityBase
 
     private void showEnd(int endIndex) {
         // Create a new end
+        data.endIndex = endIndex;
         if (endIndex == getEnds().size()) {
             getCurrentRound().addEnd();
             updateOldShoots();
         }
 
-        data.endIndex = endIndex;
-
         // Open timer if end has not been saved yet
-        if (getCurrentEnd().getId() == null && data.training.timePerEnd > 0) {
-            openTimer();
-        }
+        openTimer();
         updateEnd();
         supportInvalidateOptionsMenu();
     }
 
     public void updateOldShoots() {
+        final End currentEnd = getCurrentEnd();
+        final Long currentRoundId = getCurrentRound().getId();
+        final Long currentEndId = currentEnd == null ? null : currentEnd.getId();
+        final ETrainingScope shotShowScope = this.shotShowScope;
         final LoaderResult data = this.data;
         final Stream<Shot> shotStream = Stream.of(data.training.getRounds())
-                .filter(this::shouldShowRound)
+                .filter((r) -> shouldShowRound(r, shotShowScope, currentRoundId))
                 .flatMap(r -> Stream.of(r.getEnds()))
-                .filter(this::shouldShowEnd)
+                .filter((end) -> shouldShowEnd(end, currentEndId))
                 .flatMap(p -> Stream.of(p.getShots()));
         targetView.setTransparentShots(shotStream);
     }
 
-    private boolean shouldShowRound(Round r) {
-        return shotShowScope != ETrainingScope.END
-                && (shotShowScope == ETrainingScope.TRAINING || r.getId()
-                .equals(getCurrentEnd().roundId));
-    }
-
-    private boolean shouldShowEnd(End end) {
-        return !Utils.equals(end.getId(), getCurrentEnd().getId()) && end.exact;
-    }
-
     private void updateEnd() {
         targetView.setEnd(getCurrentEnd());
+        final int totalEnds = getCurrentRound().maxEndCount == null
+                ? getEnds().size()
+                : getCurrentRound().maxEndCount;
         binding.endTitle.setText(
-                getString(R.string.passe) + " " + (data.endIndex + 1) + "/" + getEnds().size());
+                getString(R.string.passe) + " " + (data.endIndex + 1) + "/" + totalEnds);
         binding.roundTitle.setText(getString(
                 R.string.round) + " " + (getCurrentRound().index + 1) + "/" + data.training
                 .getRounds().size());
@@ -346,9 +373,60 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void updateNavigationButtons() {
-        binding.prev.setEnabled(data.endIndex > 0);
-        binding.next.setEnabled(getCurrentEnd().getId() != null &&
-                (getCurrentRound().maxEndCount == null || data.endIndex + 1 < getCurrentRound().maxEndCount));
+        updatePreviousButton();
+        updateNextButton();
+    }
+
+    private void updatePreviousButton() {
+        final boolean isFirstEnd = data.endIndex == 0;
+        final boolean isFirstRound = data.roundIndex == 0;
+        boolean showPreviousRound = isFirstEnd && !isFirstRound;
+        final boolean isEnabled = !isFirstEnd || !isFirstRound;
+        final int color;
+        if (showPreviousRound) {
+            final Round round = data.training.getRounds().get(data.roundIndex - 1);
+            binding.prev.setOnClickListener(view -> openRound(round, round.getEnds().size() - 1));
+            binding.prev.setText(R.string.previous_round);
+            color = getResources().getColor(R.color.colorPrimary);
+        } else {
+            binding.prev.setOnClickListener(view -> showEnd(data.endIndex - 1));
+            binding.prev.setText(R.string.prev);
+            color = Color.BLACK;
+        }
+        binding.prev.setTextColor(Utils.argb(isEnabled ? 0xFF : 0x42, color));
+        binding.prev.setEnabled(isEnabled);
+    }
+
+    private void updateNextButton() {
+        final boolean endFinished = getCurrentEnd().getId() != null;
+        boolean isLastEnd = getCurrentRound().maxEndCount != null && data.endIndex + 1 == getCurrentRound().maxEndCount;
+        final boolean hasOneMoreRound = data.roundIndex + 1 < data.training.getRounds().size();
+        boolean showNextRound = isLastEnd && hasOneMoreRound;
+        final boolean isEnabled = endFinished && (!isLastEnd || hasOneMoreRound);
+        final int color;
+        if (showNextRound) {
+            final Round round = data.training.getRounds().get(data.roundIndex + 1);
+            binding.next.setOnClickListener(view -> openRound(round, 0));
+            binding.next.setText(R.string.next_round);
+            color = getResources().getColor(R.color.colorPrimary);
+        } else {
+            binding.next.setOnClickListener(view -> showEnd(data.endIndex + 1));
+            binding.next.setText(R.string.next);
+            color = Color.BLACK;
+        }
+        binding.next.setTextColor(Utils.argb(isEnabled ? 0xFF : 0x42, color));
+        binding.next.setEnabled(isEnabled);
+    }
+
+    private void openRound(Round round, int endIndex) {
+        finish();
+        RoundFragment.getIntent(round)
+                .noAnimation()
+                .withContext(this)
+                .start();
+        InputActivity.getIntent(round, endIndex)
+                .withContext(this)
+                .start();
     }
 
     public void setShotShowScope(ETrainingScope shotShowScope) {
@@ -358,12 +436,16 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void openTimer() {
-        if (transitionFinished) {
-            TimerFragment.getIntent(data.training.timePerEnd)
-                    .withContext(this)
-                    .start();
-        } else if (Utils.isLollipop()) {
-            startTimerDelayed();
+        if (getCurrentEnd().getId() == null
+                && getCurrentEnd().getShots().get(0).scoringRing == Shot.NOTHING_SELECTED
+                && SettingsManager.getTimerEnabled()) {
+            if (transitionFinished) {
+                TimerFragment.getIntent()
+                        .withContext(this)
+                        .start();
+            } else if (Utils.isLollipop()) {
+                startTimerDelayed();
+            }
         }
     }
 
@@ -372,7 +454,7 @@ public class InputActivity extends ChildActivityBase
         getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
             @Override
             public void onTransitionEnd(Transition transition) {
-                TimerFragment.getIntent(data.training.timePerEnd)
+                TimerFragment.getIntent()
                         .withContext(InputActivity.this)
                         .start();
                 getWindow().getSharedElementEnterTransition().removeListener(this);
@@ -425,7 +507,7 @@ public class InputActivity extends ChildActivityBase
         }
 
         // Change round template if end is out of range defined in template
-        if (getCurrentRound().getEnds().size() - 1 == data.endIndex) {
+        if (getCurrentRound().getEnds().size() == data.endIndex) {
             getCurrentRound().addEnd();
         }
 
@@ -473,7 +555,11 @@ public class InputActivity extends ChildActivityBase
     }
 
     private End getCurrentEnd() {
-        return getEnds().get(data.endIndex);
+        final List<End> ends = getEnds();
+        if (ends.size() <= data.endIndex) {
+            return null;
+        }
+        return ends.get(data.endIndex);
     }
 
     @Override

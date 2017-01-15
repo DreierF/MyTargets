@@ -31,6 +31,8 @@ import android.view.ViewGroup;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
+import junit.framework.Assert;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -42,6 +44,7 @@ import de.dreier.mytargets.databinding.ItemRoundBinding;
 import de.dreier.mytargets.features.rounds.EditRoundFragment;
 import de.dreier.mytargets.features.scoreboard.HtmlUtils;
 import de.dreier.mytargets.features.scoreboard.ScoreboardActivity;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.statistics.StatisticsActivity;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
@@ -88,9 +91,8 @@ public class TrainingFragment extends EditableListFragment<Round> {
         binding.recyclerView.setAdapter(adapter);
 
         // Get training
-        if (getArguments() != null) {
-            trainingId = getArguments().getLong(ITEM_ID);
-        }
+        Assert.assertNotNull(getArguments());
+        trainingId = getArguments().getLong(ITEM_ID);
 
         binding.fab.setVisibility(View.GONE);
         binding.fab.setOnClickListener(view -> {
@@ -219,7 +221,8 @@ public class TrainingFragment extends EditableListFragment<Round> {
             } else {
                 binding.subtitle.setVisibility(View.VISIBLE);
             }
-            binding.points.setText(item.getReachedScore().toString());
+            binding.points.setText(
+                    item.getReachedScore().format(SettingsManager.getScoreConfiguration()));
         }
     }
 }

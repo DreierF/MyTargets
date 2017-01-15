@@ -82,7 +82,7 @@ public class InputActivityTest extends UITestBase {
         onView(allOf(withContentDescription("X"), withId(R.id.targetView)))
                 .check(doesNotExist());
 
-        clickActionBarItem(R.id.action_show_sidebar, R.string.keyboard);
+        clickActionBarItem(R.id.action_keyboard, R.string.keyboard);
 
         //onView(withContentDescription("X")).check(matches(isDisplayed()));
     }

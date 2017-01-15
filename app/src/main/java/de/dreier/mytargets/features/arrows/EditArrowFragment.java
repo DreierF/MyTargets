@@ -61,6 +61,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         contentBinding = FragmentEditArrowBinding.inflate(inflater, binding.content, true);
+        contentBinding.moreFields.setOnClickListener(v -> contentBinding.setShowAll(true));
 
         if (savedInstanceState == null) {
             Bundle bundle = getArguments();
@@ -73,9 +74,9 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
             }
 
             setImageFiles(arrow.getImages());
-            ToolbarUtils.setTitle(this, arrow.name);
             contentBinding.diameterUnit.setSelection(arrow.diameter.unit == MILLIMETER ? 0 : 1);
         }
+        ToolbarUtils.setTitle(this, arrow.name);
         contentBinding.setArrow(arrow);
         loadImage(imageFile);
         return rootView;
@@ -90,8 +91,39 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
     @Override
     public void onSave() {
         super.onSave();
+        if (!validateInput()) {
+            return;
+        }
         buildArrow().save();
         finish();
+    }
+
+    private boolean validateInput() {
+        float diameterValue;
+        try {
+            diameterValue = Float.parseFloat(contentBinding.diameter.getText().toString());
+        } catch (NumberFormatException ignored) {
+            contentBinding.diameterTextInputLayout
+                    .setError(getString(R.string.invalid_decimal_number));
+            return false;
+        }
+        final int selectedUnit = contentBinding.diameterUnit.getSelectedItemPosition();
+        Dimension.Unit diameterUnit = selectedUnit == 0 ? MILLIMETER : INCH;
+        if (diameterUnit == MILLIMETER) {
+            if (diameterValue < 1 || diameterValue > 20) {
+                contentBinding.diameterTextInputLayout
+                        .setError(getString(R.string.not_within_expected_range_mm));
+                return false;
+            }
+        } else {
+            if (diameterValue < 0 || diameterValue > 1) {
+                contentBinding.diameterTextInputLayout
+                        .setError(getString(R.string.not_within_expected_range_inch));
+                return false;
+            }
+        }
+        contentBinding.diameterTextInputLayout.setError(null);
+        return true;
     }
 
     private Arrow buildArrow() {

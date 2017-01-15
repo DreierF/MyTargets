@@ -34,7 +34,7 @@ public class IntroActivity extends MaterialIntroActivity {
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.introBackground)
                 .buttonsColor(R.color.colorAccent)
-                .image(R.drawable.ic_intro_screen_1)
+                .image(R.drawable.intro_screen_1)
                 .title(getString(R.string.intro_title_track_training_progress))
                 .description(getString(R.string.intro_description_track_training_progress))
                 .build());
@@ -42,7 +42,7 @@ public class IntroActivity extends MaterialIntroActivity {
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.introBackground)
                 .buttonsColor(R.color.colorAccent)
-                .image(R.drawable.ic_intro_screen_2)
+                .image(R.drawable.intro_screen_2)
                 .title(getString(R.string.intro_title_everything_in_one_place))
                 .description(getString(R.string.intro_description_everything_in_one_place))
                 .build());

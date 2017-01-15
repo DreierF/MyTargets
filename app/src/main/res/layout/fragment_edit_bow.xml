@@ -52,7 +52,8 @@
                     style="@style/propertyImageView"
                     android:contentDescription="@string/bow_type"
                     android:src="@{bow.type.drawable}"
-                    tools:src="@drawable/ic_bow_recurve_grey600_24dp" />
+                    android:tint="@color/md_grey_600"
+                    tools:src="@drawable/ic_bow_recurve_white_24dp" />
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
@@ -579,7 +580,7 @@
                 android:id="@+id/moreFields"
                 style="@style/propertyAddButton"
                 android:text="@string/more_fields"
-                android:visibility="@{showAll ? View.GONE : View.VISIBLE}" />
+                android:visibility="@{showAll || bow.areAllPropertiesSet ? View.GONE : View.VISIBLE}" />
 
         </LinearLayout>
 

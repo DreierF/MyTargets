@@ -18,6 +18,7 @@ package de.dreier.mytargets.shared.models.db;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
@@ -149,4 +150,14 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
         return result == 0 ? (int) (id - another.id) : result;
     }
 
+    public boolean areAllPropertiesSet() {
+        return !TextUtils.isEmpty(length) &&
+                !TextUtils.isEmpty(material) &&
+                !TextUtils.isEmpty(spine) &&
+                !TextUtils.isEmpty(weight) &&
+                !TextUtils.isEmpty(tipWeight) &&
+                !TextUtils.isEmpty(vanes) &&
+                !TextUtils.isEmpty(nock) &&
+                !TextUtils.isEmpty(comment);
+    }
 }
