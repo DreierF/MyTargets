@@ -111,8 +111,10 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        targetDrawable.setCallback(null);
-        targetDrawable.cleanup();
+        if (targetDrawable != null) {
+            targetDrawable.setCallback(null);
+            targetDrawable.cleanup();
+        }
     }
 
     public void setTarget(Target t) {
