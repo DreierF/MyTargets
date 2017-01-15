@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.training.input;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -54,7 +55,6 @@ import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.utils.Color;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
@@ -381,17 +381,20 @@ public class InputActivity extends ChildActivityBase
         final boolean isFirstEnd = data.endIndex == 0;
         final boolean isFirstRound = data.roundIndex == 0;
         boolean showPreviousRound = isFirstEnd && !isFirstRound;
-        binding.prev.setEnabled(!isFirstEnd || !isFirstRound);
+        final boolean isEnabled = !isFirstEnd || !isFirstRound;
+        final int color;
         if (showPreviousRound) {
             final Round round = data.training.getRounds().get(data.roundIndex - 1);
             binding.prev.setOnClickListener(view -> openRound(round, round.getEnds().size() - 1));
             binding.prev.setText(R.string.previous_round);
-            binding.prev.setTextColor(getResources().getColor(R.color.colorPrimary));
+            color = getResources().getColor(R.color.colorPrimary);
         } else {
             binding.prev.setOnClickListener(view -> showEnd(data.endIndex - 1));
             binding.prev.setText(R.string.prev);
-            binding.prev.setTextColor(Color.BLACK);
+            color = Color.BLACK;
         }
+        binding.prev.setTextColor(Utils.argb(isEnabled ? 0xFF : 0x42, color));
+        binding.prev.setEnabled(isEnabled);
     }
 
     private void updateNextButton() {
@@ -399,17 +402,20 @@ public class InputActivity extends ChildActivityBase
         boolean isLastEnd = getCurrentRound().maxEndCount != null && data.endIndex + 1 == getCurrentRound().maxEndCount;
         final boolean hasOneMoreRound = data.roundIndex + 1 < data.training.getRounds().size();
         boolean showNextRound = isLastEnd && hasOneMoreRound;
-        binding.next.setEnabled(endFinished && (!isLastEnd || hasOneMoreRound));
+        final boolean isEnabled = endFinished && (!isLastEnd || hasOneMoreRound);
+        final int color;
         if (showNextRound) {
             final Round round = data.training.getRounds().get(data.roundIndex + 1);
             binding.next.setOnClickListener(view -> openRound(round, 0));
             binding.next.setText(R.string.next_round);
-            binding.next.setTextColor(getResources().getColor(R.color.colorPrimary));
+            color = getResources().getColor(R.color.colorPrimary);
         } else {
             binding.next.setOnClickListener(view -> showEnd(data.endIndex + 1));
             binding.next.setText(R.string.next);
-            binding.next.setTextColor(Color.BLACK);
+            color = Color.BLACK;
         }
+        binding.next.setTextColor(Utils.argb(isEnabled ? 0xFF : 0x42, color));
+        binding.next.setEnabled(isEnabled);
     }
 
     private void openRound(Round round, int endIndex) {

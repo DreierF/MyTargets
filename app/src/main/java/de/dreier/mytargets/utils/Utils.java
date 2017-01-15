@@ -18,6 +18,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Process;
 import android.text.Html;
 import android.text.Spanned;
@@ -76,5 +77,10 @@ public class Utils {
         } else {
             return Html.fromHtml(html);
         }
+    }
+
+    public static int argb(int alpha, int color) {
+        return Color.argb(alpha, Color.red(color), Color.green(color),
+                Color.blue(color));
     }
 }
