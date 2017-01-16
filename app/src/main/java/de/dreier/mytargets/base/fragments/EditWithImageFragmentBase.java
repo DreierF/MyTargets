@@ -157,7 +157,7 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
                 new DefaultCallback() {
 
                     @Override
-                    public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
+                    public void onImagesPicked(@NonNull List<File> imageFiles, EasyImage.ImageSource source, int type) {
                         EditWithImageFragmentBase.this.oldImageFile = EditWithImageFragmentBase.this.imageFile;
                         loadImage(imageFile);
                     }
