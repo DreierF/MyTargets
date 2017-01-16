@@ -102,6 +102,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                 if (standardRound.club == StandardRoundFactory.CUSTOM) {
                     binding.name.setText(standardRound.name);
                 } else {
+                    standardRound.setId(null);
                     binding.name.setText(
                             String.format("%s %s", getString(R.string.custom), standardRound.name));
                     // When copying an existing standard round make sure
