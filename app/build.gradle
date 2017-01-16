@@ -79,6 +79,10 @@ android {
         regular {}
         screengrab {}
     }
+    
+    lintOptions {
+        disable 'MissingTranslation'
+    }
 }
 
 /*
