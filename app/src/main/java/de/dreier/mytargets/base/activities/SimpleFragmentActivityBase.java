@@ -55,9 +55,11 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        childFragment = instantiateFragment();
-        Bundle bundle = intent != null ? intent.getExtras() : null;
-        childFragment.setArguments(bundle);
+        childFragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+        if (childFragment == null && intent!= null && intent.getExtras()!=null) {
+            childFragment = instantiateFragment();
+            childFragment.setArguments(intent.getExtras());
+        }
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(android.R.id.content, childFragment, FRAGMENT_TAG);
