@@ -25,7 +25,6 @@ import android.text.TextPaint;
 import de.dreier.mytargets.shared.targets.models.Beursault;
 import de.dreier.mytargets.shared.targets.zone.ZoneBase;
 import de.dreier.mytargets.shared.utils.Color;
-import de.dreier.mytargets.shared.utils.PathUtils;
 
 import static de.dreier.mytargets.shared.utils.Color.DARK_GRAY;
 
@@ -168,6 +167,6 @@ public class BeursaultDecorator extends CenterMarkDecorator {
         scaleMatrix.setRectToRect(bounds, numberRect, Matrix.ScaleToFit.CENTER);
         Path tmp = new Path(path);
         tmp.transform(scaleMatrix);
-        PathUtils.drawPath(canvas, tmp, paintText);
+        canvas.drawPath(tmp, paintText);
     }
 }

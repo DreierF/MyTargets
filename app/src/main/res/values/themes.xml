@@ -46,6 +46,12 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
+    <style name="ThemeOverlay.AppCompat.Dark.ActionBar.WhiteControls">
+        <item name="colorControlNormal">@color/md_white_1000</item>
+        <item name="colorControlActivated">@color/md_white_1000</item>
+        <item name="colorControlHighlight">@color/md_white_1000</item>
+    </style>
+
     <style name="AppTheme" parent="AppBaseTheme"/>
 
     <style name="AppTheme.Overlay" parent="AppBaseTheme.Overlay"/>

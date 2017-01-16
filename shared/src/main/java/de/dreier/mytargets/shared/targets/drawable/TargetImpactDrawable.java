@@ -144,8 +144,9 @@ public class TargetImpactDrawable extends TargetDrawable {
 
     public void drawFocusedArrow(Canvas canvas, Shot shot) {
         canvas.save();
-        Matrix targetMatrix = getTargetFaceMatrix(shot.index % model.getFaceCount());
-        canvas.setMatrix(targetMatrix);
+        final Matrix targetMatrix = getTargetFaceMatrix(shot.index % model.getFaceCount());
+        canvas.concat(targetMatrix);
+        //TODO remove text pre-render workaround setMatrixForTargetFace(canvas,shot.index % model.getFaceCount());
 
         paintFill.setColor(0xFF009900);
         canvas.drawCircle(shot.x, shot.y, arrowRadius, paintFill);
@@ -156,6 +157,8 @@ public class TargetImpactDrawable extends TargetDrawable {
         canvas.drawLine(shot.x - lineLen, shot.y, shot.x + lineLen, shot.y, paintFill);
         canvas.drawLine(shot.x, shot.y - lineLen, shot.x, shot.y + lineLen, paintFill);
 
+        canvas.restore();
+        canvas.save();
         // Draw zone points
         String zoneString = target.zoneToString(shot.scoringRing, shot.index);
         RectF srcRect = new RectF(shot.x - arrowRadius, shot.y - arrowRadius,
@@ -163,7 +166,7 @@ public class TargetImpactDrawable extends TargetDrawable {
         Matrix m = new Matrix();
         m.setRectToRect(textRect, srcRect, Matrix.ScaleToFit.CENTER);
         m.postConcat(targetMatrix);
-        canvas.setMatrix(m);
+        canvas.concat(m);
         canvas.drawBitmap(scoresTextCache.get(zoneString), 0, 0, null);
         canvas.restore();
     }

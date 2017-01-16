@@ -26,8 +26,6 @@ import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.base.activities.ChildActivityBase;
 import de.dreier.mytargets.databinding.ActivityScoreboardBinding;
 import de.dreier.mytargets.features.settings.ESettingsScreens;
 import de.dreier.mytargets.features.settings.SettingsActivity;
@@ -47,14 +46,10 @@ import de.dreier.mytargets.utils.ToolbarUtils;
 
 import static android.support.v4.content.FileProvider.getUriForFile;
 
-public class ScoreboardActivity extends AppCompatActivity {
+public class ScoreboardActivity extends ChildActivityBase {
 
     private static final String TRAINING_ID = "training_id";
     private static final String ROUND_ID = "round_id";
-
-    static {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-    }
 
     private long mTraining;
     private long mRound;

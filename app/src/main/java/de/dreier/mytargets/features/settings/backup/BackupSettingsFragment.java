@@ -60,6 +60,7 @@ import de.dreier.mytargets.features.settings.backup.synchronization.SyncUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
 import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.RuntimePermissions;
 
 import static android.content.ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE;
@@ -67,7 +68,6 @@ import static android.content.ContentResolver.SYNC_OBSERVER_TYPE_PENDING;
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static de.dreier.mytargets.features.settings.backup.BackupSettingsFragmentPermissionsDispatcher.applyBackupLocationWithCheck;
 import static de.dreier.mytargets.features.settings.backup.BackupSettingsFragmentPermissionsDispatcher.showFilePickerWithCheck;
 
 @RuntimePermissions
@@ -147,7 +147,6 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         updateInterval();
 
         binding.backupLocation.getRoot().setOnClickListener(v -> onBackupLocationClicked());
-        updateBackupLocation();
 
         binding.recentBackupsList.setNestedScrollingEnabled(false);
         binding.recentBackupsList
@@ -155,6 +154,54 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
 
         setHasOptionsMenu(true);
         return binding.getRoot();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.backup_import, menu);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_import) {
+            showFilePickerWithCheck(this);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        applyBackupLocationWithCheck(SettingsManager.getBackupLocation());
+
+        mSyncStatusObserver.onStatusChanged(0);
+        mSyncObserverHandle = ContentResolver.addStatusChangeListener(
+                SYNC_OBSERVER_TYPE_PENDING | SYNC_OBSERVER_TYPE_ACTIVE, mSyncStatusObserver);
+    }
+
+    @Override
+    public void onPause() {
+        if (backup != null) {
+            backup.stop();
+        }
+        if (updateLabelTimer != null) {
+            updateLabelTimer.cancel();
+        }
+        if (mSyncObserverHandle != null) {
+            ContentResolver.removeStatusChangeListener(mSyncObserverHandle);
+            mSyncObserverHandle = null;
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        backup.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == IMPORT_FROM_URI && resultCode == AppCompatActivity.RESULT_OK) {
+            importFromUri(data.getData());
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void onAutomaticBackupChanged() {
@@ -203,40 +250,10 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
                             if (backup != null) {
                                 backup.stop();
                             }
-                            updateBackupLocation(location);
+                            applyBackupLocationWithCheck(location);
                             return true;
                         })
                 .show();
-    }
-
-    private void updateBackupLocation(EBackupLocation item) {
-        if (item.needsStoragePermissions()) {
-            applyBackupLocationWithCheck(this, item);
-        } else {
-            applyBackupLocation(item);
-        }
-    }
-
-    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void applyBackupLocation(EBackupLocation item) {
-        backup = item.createAsyncRestore();
-        binding.recentBackupsProgress.setVisibility(VISIBLE);
-        binding.recentBackupsList.setVisibility(GONE);
-        adapter = new BackupAdapter(getContext(), this::showBackupDetails, this::deleteBackup);
-        binding.recentBackupsList.setAdapter(adapter);
-        backup.connect(getActivity(), new IAsyncBackupRestore.ConnectionListener() {
-            @Override
-            public void onConnected() {
-                SettingsManager.setBackupLocation(item);
-                updateBackupLocation();
-                backup.getBackups(BackupSettingsFragment.this);
-            }
-
-            @Override
-            public void onConnectionSuspended() {
-                showError(R.string.loading_backups_failed, getString(R.string.connection_failed));
-            }
-        });
     }
 
     private void updateBackupLocation() {
@@ -246,52 +263,34 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         binding.backupLocation.summary.setText(backupLocation.toString());
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateBackupLocation(SettingsManager.getBackupLocation());
-
-        mSyncStatusObserver.onStatusChanged(0);
-        mSyncObserverHandle = ContentResolver.addStatusChangeListener(
-                SYNC_OBSERVER_TYPE_PENDING | SYNC_OBSERVER_TYPE_ACTIVE, mSyncStatusObserver);
+    private void applyBackupLocationWithCheck(EBackupLocation item) {
+        if (item.needsStoragePermissions()) {
+            BackupSettingsFragmentPermissionsDispatcher.applyBackupLocationWithCheck(this, item);
+        } else {
+            applyBackupLocation(item);
+        }
     }
 
-    @Override
-    public void onPause() {
-        if (backup != null) {
-            backup.stop();
-        }
-        if (updateLabelTimer != null) {
-            updateLabelTimer.cancel();
-        }
-        if (mSyncObserverHandle != null) {
-            ContentResolver.removeStatusChangeListener(mSyncObserverHandle);
-            mSyncObserverHandle = null;
-        }
-        super.onPause();
-    }
+    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void applyBackupLocation(EBackupLocation item) {
+        SettingsManager.setBackupLocation(item);
+        backup = item.createAsyncRestore();
+        binding.recentBackupsProgress.setVisibility(VISIBLE);
+        binding.recentBackupsList.setVisibility(GONE);
+        adapter = new BackupAdapter(getContext(), this::showBackupDetails, this::deleteBackup);
+        binding.recentBackupsList.setAdapter(adapter);
+        backup.connect(getActivity(), new IAsyncBackupRestore.ConnectionListener() {
+            @Override
+            public void onConnected() {
+                updateBackupLocation();
+                backup.getBackups(BackupSettingsFragment.this);
+            }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.backup_import, menu);
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_import) {
-            showFilePickerWithCheck(this);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        backup.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == IMPORT_FROM_URI && resultCode == AppCompatActivity.RESULT_OK) {
-            importFromUri(data.getData());
-        }
-        super.onActivityResult(requestCode, resultCode, data);
+            @Override
+            public void onConnectionSuspended() {
+                showError(R.string.loading_backups_failed, getString(R.string.connection_failed));
+            }
+        });
     }
 
     @Override
@@ -391,13 +390,18 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         });
     }
 
-    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     void showFilePicker() {
         final Intent getContentIntent = new Intent(Intent.ACTION_GET_CONTENT);
         getContentIntent.setType("application/zip");
         getContentIntent.addCategory(Intent.CATEGORY_OPENABLE);
         Intent intent = Intent.createChooser(getContentIntent, getString(R.string.select_a_file));
         startActivityForResult(intent, IMPORT_FROM_URI);
+    }
+
+    @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void showDeniedForWrite() {
+        getActivity().onBackPressed();
     }
 
     @Override

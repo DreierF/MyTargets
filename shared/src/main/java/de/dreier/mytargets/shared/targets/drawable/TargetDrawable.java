@@ -102,25 +102,27 @@ public class TargetDrawable extends Drawable {
 
     @Override
     public void draw(@NonNull Canvas canvas) {
-        canvas.save();
         for (int faceIndex = 0; faceIndex < model.facePositions.length; faceIndex++) {
+            canvas.save();
             setMatrixForTargetFace(canvas, faceIndex);
             for (ZoneBase zone : zonesToDraw) {
                 zone.drawFill(canvas);
             }
+            canvas.restore();
         }
         for (int faceIndex = 0; faceIndex < model.facePositions.length; faceIndex++) {
+            canvas.save();
             setMatrixForTargetFace(canvas, faceIndex);
             for (ZoneBase zone : zonesToDraw) {
                 zone.drawStroke(canvas);
             }
             onPostDraw(canvas, faceIndex);
+            canvas.restore();
         }
-        canvas.restore();
     }
 
-    private void setMatrixForTargetFace(@NonNull Canvas canvas, int faceIndex) {
-        canvas.setMatrix(getTargetFaceMatrix(faceIndex));
+    protected void setMatrixForTargetFace(@NonNull Canvas canvas, int faceIndex) {
+        canvas.concat(getTargetFaceMatrix(faceIndex));
     }
 
     protected Matrix getTargetFaceMatrix(int faceIndex) {
@@ -143,7 +145,7 @@ public class TargetDrawable extends Drawable {
     private Matrix calculateTargetFaceMatrix(int index) {
         PointF pos = model.facePositions[index % model.facePositions.length];
         Matrix matrix = new Matrix();
-        matrix.setRectToRect(new RectF(-1f, -1f, 1f, 1f),
+        matrix.setRectToRect(SRC_RECT,
                 new RectF(pos.x - model.faceRadius, pos.y - model.faceRadius,
                         pos.x + model.faceRadius, pos.y + model.faceRadius),
                 Matrix.ScaleToFit.FILL);

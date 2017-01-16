@@ -33,7 +33,6 @@
   <string name="large">Stor</string>
   <string name="xlarge">Extra stor</string>
   <string name="unknown">Okänd</string>
-  <string name="indoor">Indoor</string>
   <string name="wind">Vind</string>
   <string name="location">Plats</string>
   <string name="bft_0">0 Bft: vindstilla</string>

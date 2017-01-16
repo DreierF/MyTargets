@@ -20,6 +20,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
@@ -137,10 +138,12 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
     @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "sightMarks")
     public List<SightMark> getSightMarks() {
         if (sightMarks == null || sightMarks.isEmpty()) {
-            sightMarks = SQLite.select()
+            sightMarks = Stream.of(SQLite.select()
                     .from(SightMark.class)
                     .where(SightMark_Table.bow.eq(id))
-                    .queryList();
+                    .queryList())
+                    .sortBy(sightMark -> sightMark.distance)
+                    .collect(Collectors.toList());
         }
         return sightMarks;
     }
