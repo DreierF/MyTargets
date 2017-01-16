@@ -331,7 +331,7 @@ public class InputActivity extends ChildActivityBase
     private void showEnd(int endIndex) {
         // Create a new end
         data.endIndex = endIndex;
-        if (endIndex == getEnds().size()) {
+        if (endIndex >= getEnds().size()) {
             getCurrentRound().addEnd();
             updateOldShoots();
         }
@@ -398,7 +398,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void updateNextButton() {
-        final boolean endFinished = getCurrentEnd().getId() != null;
+        final boolean endFinished = getCurrentEnd() != null && getCurrentEnd().getId() != null;
         boolean isLastEnd = getCurrentRound().maxEndCount != null && data.endIndex + 1 == getCurrentRound().maxEndCount;
         final boolean hasOneMoreRound = data.roundIndex + 1 < data.training.getRounds().size();
         boolean showNextRound = isLastEnd && hasOneMoreRound;

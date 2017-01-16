@@ -236,7 +236,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
                     usagesR2 = 0;
                 }
                 final int i = usagesR2.compareTo(usagesR1);
-                return i == 0 ? r1.getName().compareTo(r2.getName()) : i;
+                return i == 0 ? r1.compareTo(r2) : i;
             });
         }
 

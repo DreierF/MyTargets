@@ -41,6 +41,7 @@
         android:allowBackup="true"
         android:backupAgent=".utils.backup.MyBackupAgent"
         android:fullBackupContent="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/my_targets"
         android:restoreAnyVersion="false"

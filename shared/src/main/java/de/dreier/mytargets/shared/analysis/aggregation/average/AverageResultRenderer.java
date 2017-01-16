@@ -24,7 +24,6 @@ import android.graphics.RectF;
 import com.annimon.stream.Stream;
 
 import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer;
-import de.dreier.mytargets.shared.utils.PathUtils;
 
 public class AverageResultRenderer implements IAggregationResultRenderer {
 
@@ -97,8 +96,8 @@ public class AverageResultRenderer implements IAggregationResultRenderer {
     @Override
     public void onDraw(Canvas canvas) {
         if (average.getDataPointCount() >= 3) {
-            PathUtils.drawPath(canvas, stdDevPath, stdDevPaint);
-            PathUtils.drawPath(canvas, symbolPath, symbolPaint);
+            canvas.drawPath(stdDevPath, stdDevPaint);
+            canvas.drawPath(symbolPath, symbolPaint);
         }
     }
 }
