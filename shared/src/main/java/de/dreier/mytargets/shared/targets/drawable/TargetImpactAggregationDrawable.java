@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.shared.targets.drawable;
 
-import android.graphics.Canvas;
 import android.support.annotation.ColorInt;
 
 import java.util.ArrayList;
@@ -65,7 +64,7 @@ public class TargetImpactAggregationDrawable extends TargetImpactDrawable implem
     }
 
     @Override
-    protected void onPostDraw(Canvas canvas, int faceIndex) {
+    protected void onPostDraw(CanvasWrapper canvas, int faceIndex) {
         super.onPostDraw(canvas, faceIndex);
         final IAggregationResultRenderer result = faceAggregations.get(faceIndex).getResult();
         if (result != null) {

@@ -15,10 +15,10 @@
 
 package de.dreier.mytargets.shared.targets.zone;
 
-import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
 
+import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
 import de.dreier.mytargets.shared.utils.Color;
 
 public abstract class ZoneBase {
@@ -73,7 +73,7 @@ public abstract class ZoneBase {
         return Color.getContrast(fillColor);
     }
 
-    public abstract void drawFill(Canvas canvas);
+    public abstract void drawFill(CanvasWrapper canvas);
 
-    public abstract void drawStroke(Canvas canvas);
+    public abstract void drawStroke(CanvasWrapper canvas);
 }

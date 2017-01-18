@@ -253,20 +253,17 @@ public class TargetView extends TargetViewBase {
         targetDrawable.setSpotMatrix(
                 spotMatrices[getCurrentShotIndex() % target.getModel().getFaceCount()]);
         targetDrawable.setZoom(targetZoomFactor);
-        targetDrawable.setMid(shot.x, shot.y);
+        targetDrawable.setFocusedArrow(shot);
         targetDrawable.setOffset(0, POINTER_OFFSET_Y_DP * density);
 
         targetDrawable.draw(canvas);
-
-        // Draw exact arrow position
-        targetDrawable.drawFocusedArrow(canvas, shot);
     }
 
     // Draw actual target face
     private void drawTarget(Canvas canvas) {
         targetDrawable.setOffset(0, 0);
         targetDrawable.setZoom(1);
-        targetDrawable.setMid(0, 0);
+        targetDrawable.setFocusedArrow(null);
         if (animator == null) {
             targetDrawable.setMatrix(fullMatrix);
             if (getCurrentShotIndex() == EndRenderer.NO_SELECTION || inputMethod == KEYBOARD) {

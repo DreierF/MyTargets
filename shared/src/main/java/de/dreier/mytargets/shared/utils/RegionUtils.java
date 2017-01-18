@@ -21,7 +21,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
 
-public class PathUtils {
+public class RegionUtils {
 
     public static Region getScaledRegion(Path path, float scale) {
         // Scale the path
