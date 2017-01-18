@@ -606,7 +606,6 @@ public class InputActivity extends ChildActivityBase
         @Override
         public LoaderResult loadInBackground() {
             LoaderResult result = new LoaderResult();
-            result.endIndex = endIndex;
             result.training = Training.get(trainingId);
             List<Round> rounds = result.training.getRounds();
             result.roundIndex = 0;
@@ -616,6 +615,7 @@ public class InputActivity extends ChildActivityBase
                 }
                 rounds.get(i).getEnds();
             }
+            result.endIndex = Math.min(endIndex, rounds.get(result.roundIndex).getEnds().size());
 
             result.standardRound = result.training.getStandardRound();
             result.arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
