@@ -33,6 +33,7 @@
   <string name="large">Veľká</string>
   <string name="xlarge">Exra veľká</string>
   <string name="unknown">Neznáma</string>
+  <string name="indoor">Hala</string>
   <string name="wind">Vietor</string>
   <string name="location">Pozícia</string>
   <string name="bft_0">0 Bft: Bezvetrie</string>

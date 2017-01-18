@@ -33,6 +33,7 @@
   <string name="large">大</string>
   <string name="xlarge">极大</string>
   <string name="unknown">未知</string>
+  <string name="indoor">Indoor</string>
   <string name="wind">风</string>
   <string name="location">地点</string>
   <string name="bft_0">0 级: 无风</string>

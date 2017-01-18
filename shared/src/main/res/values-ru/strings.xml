@@ -33,6 +33,7 @@
   <string name="large">Большой</string>
   <string name="xlarge">Очень большой</string>
   <string name="unknown">Неизвестно</string>
+  <string name="indoor">В помещении</string>
   <string name="wind">Ветер</string>
   <string name="location">Расположение</string>
   <string name="bft_0">0 Bft: безветренно</string>

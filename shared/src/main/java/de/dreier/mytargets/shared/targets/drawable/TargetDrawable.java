@@ -47,6 +47,7 @@ public class TargetDrawable extends Drawable {
     private Matrix spotMatrix = new Matrix();
     private float xOffset;
     private float yOffset;
+    private CanvasWrapper canvasWrapper = new CanvasWrapper();
 
     public TargetDrawable(Target target) {
         this.model = target.getModel();
@@ -102,27 +103,25 @@ public class TargetDrawable extends Drawable {
 
     @Override
     public void draw(@NonNull Canvas canvas) {
+        canvasWrapper.setCanvas(canvas);
         for (int faceIndex = 0; faceIndex < model.facePositions.length; faceIndex++) {
-            canvas.save();
-            setMatrixForTargetFace(canvas, faceIndex);
+            setMatrixForTargetFace(canvasWrapper, faceIndex);
             for (ZoneBase zone : zonesToDraw) {
-                zone.drawFill(canvas);
+                zone.drawFill(canvasWrapper);
             }
-            canvas.restore();
         }
         for (int faceIndex = 0; faceIndex < model.facePositions.length; faceIndex++) {
-            canvas.save();
-            setMatrixForTargetFace(canvas, faceIndex);
+            setMatrixForTargetFace(canvasWrapper, faceIndex);
             for (ZoneBase zone : zonesToDraw) {
-                zone.drawStroke(canvas);
+                zone.drawStroke(canvasWrapper);
             }
-            onPostDraw(canvas, faceIndex);
-            canvas.restore();
+            onPostDraw(canvasWrapper, faceIndex);
         }
+        canvasWrapper.releaseCanvas();
     }
 
-    protected void setMatrixForTargetFace(@NonNull Canvas canvas, int faceIndex) {
-        canvas.concat(getTargetFaceMatrix(faceIndex));
+    protected void setMatrixForTargetFace(@NonNull CanvasWrapper canvas, int faceIndex) {
+        canvas.setMatrix(getTargetFaceMatrix(faceIndex));
     }
 
     protected Matrix getTargetFaceMatrix(int faceIndex) {
@@ -152,7 +151,7 @@ public class TargetDrawable extends Drawable {
         return matrix;
     }
 
-    protected void onPostDraw(Canvas canvas, int faceIndex) {
+    protected void onPostDraw(CanvasWrapper canvas, int faceIndex) {
         if (model.getDecorator() != null) {
             model.getDecorator().drawDecoration(canvas);
         }

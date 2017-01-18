@@ -16,16 +16,16 @@
   -->
 <resources>
   <string name="wa_full">WA teljes</string>
-  <string name="wa_6_ring">WA 6 gyűrű</string>
-  <string name="wa_5_ring">WA 5 gyűrű</string>
-  <string name="wa_3_ring">WA 3 gyűrű</string>
-  <string name="vegas_3_spot">Vegas 3</string>
-  <string name="vertical_3_spot">WA függőleges 3 pontos</string>
-  <string name="wa_3_ring_3_spot">WA 3 gyűrű 3 pontos</string>
+  <string name="wa_6_ring">WA 6 szűkétés</string>
+  <string name="wa_5_ring">WA 5 szűkítés</string>
+  <string name="wa_3_ring">WA 3 szűkítés</string>
+  <string name="vegas_3_spot">Vegas 3as lőlap</string>
+  <string name="vertical_3_spot">WA függőleges 3as lőlap</string>
+  <string name="wa_3_ring_3_spot">WA 3 szűkítés 3as lőlap</string>
   <string name="nfaa_field">NFAA terep</string>
   <string name="nfaa_expert_field">NFAA haladó terep</string>
   <string name="nfaa_hunter">NFAA vadász</string>
-  <string name="nfaa_indoor">NFAA fedett</string>
+  <string name="nfaa_indoor">NFAA terem</string>
   <string name="nfaa_indoor_5_spot">NFAA beltéri 5 pontos</string>
   <string name="worcester_face">Worcester</string>
   <string name="wa_field">WA terep</string>
@@ -44,4 +44,7 @@
   <string name="wa_danage_3_spot">WA Danage 3 pontos</string>
   <string name="wa_danage_6_spot">WA Danage 6 pontos</string>
   <string name="dbsc_blowpipe">DBSC fúvócső</string>
+  <string name="fcfs_color_reversed">Színes FCFS (fordított 10 – 1)</string>
+  <string name="recurve_style">Olimpiai tipusú</string>
+  <string name="compound_style">Csigás-íj tipusú</string>
 </resources>

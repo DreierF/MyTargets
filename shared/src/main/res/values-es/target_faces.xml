@@ -39,4 +39,12 @@
   <string name="nfaa_animal">NFAA Animal</string>
   <string name="nfas_field">NFAS campo</string>
   <string name="beursault">Beursault</string>
+  <string name="sca_period">SCA Period</string>
+  <string name="wa_field_3_spot">WA Campo 3 Anillos</string>
+  <string name="wa_danage_3_spot">WA Danage 3 Anillos</string>
+  <string name="wa_danage_6_spot">WA Danage 6 anillos</string>
+  <string name="dbsc_blowpipe">DBSC cerbatana</string>
+  <string name="fcfs_color_reversed">Color FCFS (invertido 10 – 1)</string>
+  <string name="recurve_style">Estilo recurvado</string>
+  <string name="compound_style">Estilo compuesto</string>
 </resources>

@@ -15,8 +15,8 @@
 
 package de.dreier.mytargets.shared.targets.decoration;
 
-import android.graphics.Canvas;
+import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
 
 public interface TargetDecorator {
-    void drawDecoration(Canvas canvas);
+    void drawDecoration(CanvasWrapper canvas);
 }

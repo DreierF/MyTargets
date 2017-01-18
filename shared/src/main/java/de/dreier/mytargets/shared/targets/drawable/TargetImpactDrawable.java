@@ -15,27 +15,19 @@
 
 package de.dreier.mytargets.shared.targets.drawable;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.AsyncTask;
-import android.support.v4.util.Pair;
 import android.text.TextPaint;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Shot;
 
@@ -45,15 +37,14 @@ public class TargetImpactDrawable extends TargetDrawable {
     protected List<List<Shot>> shots = new ArrayList<>();
     protected List<List<Shot>> transparentShots = new ArrayList<>();
     private Paint paintFill;
-    private Map<String, Bitmap> scoresTextCache = new HashMap<>();
-    private RectF textRect;
     private float arrowRadius;
     private boolean shouldDrawArrows = true;
+    private Shot focusedArrow;
+    private TextPaint paintText;
 
     public TargetImpactDrawable(Target target) {
         super(target);
         initPaint();
-        initScoresBitmapCache();
         setArrowDiameter(new Dimension(5, Dimension.Unit.MILLIMETER), 1);
         for (int i = 0; i < model.getFaceCount(); i++) {
             shots.add(new ArrayList<>());
@@ -64,42 +55,9 @@ public class TargetImpactDrawable extends TargetDrawable {
     private void initPaint() {
         paintFill = new Paint();
         paintFill.setAntiAlias(true);
-    }
-
-    private void initScoresBitmapCache() {
-        TextPaint paintText = new TextPaint();
+        paintText = new TextPaint();
         paintText.setAntiAlias(true);
         paintText.setColor(WHITE);
-        Rect tr = new Rect();
-        paintText.setTextSize(40);
-
-        final Set<SelectableZone> selectableZones = target.getAllPossibleSelectableZones();
-        List<Pair<SelectableZone, Rect>> rects = new ArrayList<>();
-        int maxWidth = 0;
-        int maxHeight = 0;
-        for (SelectableZone zone : selectableZones) {
-            paintText.getTextBounds(zone.text, 0, zone.text.length(), tr);
-            rects.add(new Pair<>(zone, new Rect(tr)));
-            if (tr.width() > maxWidth) {
-                maxWidth = tr.width();
-            }
-            if (tr.height() > maxHeight) {
-                maxHeight = tr.height();
-            }
-        }
-
-        // Leave some space around the text for antialiasing
-        maxWidth += 4;
-        maxHeight += 4;
-        textRect = new RectF(0, 0, maxWidth, maxHeight);
-        for (Pair<SelectableZone, Rect> rect : rects) {
-            Bitmap b = Bitmap.createBitmap(maxWidth, maxHeight, Bitmap.Config.ARGB_8888);
-            Canvas c = new Canvas(b);
-            final float x = (maxWidth - rect.second.width()) * 0.5f;
-            final float y = (maxHeight + rect.second.height()) * 0.5f;
-            c.drawText(rect.first.text, x, y, paintText);
-            scoresTextCache.put(rect.first.text, b);
-        }
     }
 
     public void setArrowDiameter(Dimension arrowDiameter, float scale) {
@@ -108,7 +66,7 @@ public class TargetImpactDrawable extends TargetDrawable {
     }
 
     @Override
-    protected void onPostDraw(Canvas canvas, int faceIndex) {
+    protected void onPostDraw(CanvasWrapper canvas, int faceIndex) {
         super.onPostDraw(canvas, faceIndex);
         if (!shouldDrawArrows) {
             return;
@@ -127,13 +85,16 @@ public class TargetImpactDrawable extends TargetDrawable {
                 drawArrow(canvas, s, false);
             }
         }
+        if(focusedArrow != null) {
+            drawFocusedArrow(canvas, focusedArrow);
+        }
     }
 
     public int getZoneFromPoint(float x, float y) {
         return model.getZoneFromPoint(x, y, arrowRadius);
     }
 
-    private void drawArrow(Canvas canvas, Shot shot, boolean transparent) {
+    private void drawArrow(CanvasWrapper canvas, Shot shot, boolean transparent) {
         int color = model.getContrastColor(shot.scoringRing);
         if (transparent) {
             color = 0x55000000 | color & 0xFFFFFF;
@@ -142,11 +103,18 @@ public class TargetImpactDrawable extends TargetDrawable {
         canvas.drawCircle(shot.x, shot.y, arrowRadius, paintFill);
     }
 
-    public void drawFocusedArrow(Canvas canvas, Shot shot) {
-        canvas.save();
-        final Matrix targetMatrix = getTargetFaceMatrix(shot.index % model.getFaceCount());
-        canvas.concat(targetMatrix);
-        //TODO remove text pre-render workaround setMatrixForTargetFace(canvas,shot.index % model.getFaceCount());
+    public void setFocusedArrow(Shot shot) {
+        focusedArrow = shot;
+        if (focusedArrow == null) {
+            setMid(0, 0);
+        } else {
+            setMid(shot.x, shot.y);
+        }
+    }
+
+    private void drawFocusedArrow(CanvasWrapper canvas, Shot shot) {
+        final int faceIndex = shot.index % model.getFaceCount();
+        setMatrixForTargetFace(canvas, faceIndex);
 
         paintFill.setColor(0xFF009900);
         canvas.drawCircle(shot.x, shot.y, arrowRadius, paintFill);
@@ -157,18 +125,11 @@ public class TargetImpactDrawable extends TargetDrawable {
         canvas.drawLine(shot.x - lineLen, shot.y, shot.x + lineLen, shot.y, paintFill);
         canvas.drawLine(shot.x, shot.y - lineLen, shot.x, shot.y + lineLen, paintFill);
 
-        canvas.restore();
-        canvas.save();
         // Draw zone points
         String zoneString = target.zoneToString(shot.scoringRing, shot.index);
         RectF srcRect = new RectF(shot.x - arrowRadius, shot.y - arrowRadius,
                 shot.x + arrowRadius, shot.y + arrowRadius);
-        Matrix m = new Matrix();
-        m.setRectToRect(textRect, srcRect, Matrix.ScaleToFit.CENTER);
-        m.postConcat(targetMatrix);
-        canvas.concat(m);
-        canvas.drawBitmap(scoresTextCache.get(zoneString), 0, 0, null);
-        canvas.restore();
+        canvas.drawText(zoneString, srcRect, paintText);
     }
 
     public void setShots(List<Shot> shots) {
@@ -187,7 +148,8 @@ public class TargetImpactDrawable extends TargetDrawable {
         new AsyncTask<Void, Void, Map<Integer, List<Shot>>>() {
             @Override
             protected Map<Integer, List<Shot>> doInBackground(Void... objects) {
-                return shots.collect(Collectors.groupingBy(shot -> shot.index % model.getFaceCount()));
+                return shots
+                        .collect(Collectors.groupingBy(shot -> shot.index % model.getFaceCount()));
             }
 
             @Override

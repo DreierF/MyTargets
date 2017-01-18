@@ -24,7 +24,7 @@
   <string name="wa_3_ring_3_spot">WA 3 kruh 3 terč</string>
   <string name="nfaa_field">NFAA terénny</string>
   <string name="nfaa_expert_field">NFAA terénny Expert</string>
-  <string name="nfaa_hunter">NFAA lovecký</string>
+  <string name="nfaa_hunter">NFAA lovec</string>
   <string name="nfaa_indoor">NFAA halový</string>
   <string name="nfaa_indoor_5_spot">NFAA halový 5 terč</string>
   <string name="worcester_face">Worcester</string>
@@ -41,4 +41,10 @@
   <string name="beursault">Beursault</string>
   <string name="sca_period">SCA bodka</string>
   <string name="wa_field_3_spot">WA terénny 3 terč</string>
+  <string name="wa_danage_3_spot">WA Danage 3 terč</string>
+  <string name="wa_danage_6_spot">WA Danage 6 terč</string>
+  <string name="dbsc_blowpipe">DBSC pre Fúkaciu tyč</string>
+  <string name="fcfs_color_reversed">FCFS farebný (opačný 10–1)</string>
+  <string name="recurve_style">Reflexný štýl</string>
+  <string name="compound_style">Kladkový štýl</string>
 </resources>

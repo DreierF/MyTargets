@@ -16,4 +16,5 @@
   -->
 <resources>
   <string name="saved">Guardado</string>
+  <string name="start_training_on_phone">Iniciar un entrenamiento en el teléfono para continuar&#8230;</string>
 </resources>

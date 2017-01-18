@@ -198,6 +198,12 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
     @Override
     public void save() {
         super.save();
+        SQLite.delete(BowImage.class)
+                .where(BowImage_Table.bow.eq(id))
+                .execute();
+        SQLite.delete(SightMark.class)
+                .where(SightMark_Table.bow.eq(id))
+                .execute();
         // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
         for (SightMark sightMark : getSightMarks()) {
             sightMark.bowId = id;

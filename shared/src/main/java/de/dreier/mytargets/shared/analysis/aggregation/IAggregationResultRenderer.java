@@ -15,11 +15,12 @@
 
 package de.dreier.mytargets.shared.analysis.aggregation;
 
-import android.graphics.Canvas;
 import android.support.annotation.ColorInt;
+
+import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
 
 public interface IAggregationResultRenderer {
     void onPrepareDraw();
-    void onDraw(Canvas canvas);
+    void onDraw(CanvasWrapper canvas);
     void setColor(@ColorInt int color);
 }

@@ -33,6 +33,7 @@
   <string name="large">Büyük</string>
   <string name="xlarge">XLarge</string>
   <string name="unknown">Belirsiz</string>
+  <string name="indoor">Indoor</string>
   <string name="wind">Rüzgar</string>
   <string name="location">Yer</string>
   <string name="bft_0">0 Bft: Rüzgarsız</string>

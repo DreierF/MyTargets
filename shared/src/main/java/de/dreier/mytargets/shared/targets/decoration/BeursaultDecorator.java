@@ -15,13 +15,13 @@
 
 package de.dreier.mytargets.shared.targets.decoration;
 
-import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.text.TextPaint;
 
+import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
 import de.dreier.mytargets.shared.targets.models.Beursault;
 import de.dreier.mytargets.shared.targets.zone.ZoneBase;
 import de.dreier.mytargets.shared.utils.Color;
@@ -135,7 +135,7 @@ public class BeursaultDecorator extends CenterMarkDecorator {
     }
 
     @Override
-    public void drawDecoration(Canvas canvas) {
+    public void drawDecoration(CanvasWrapper canvas) {
         super.drawDecoration(canvas);
         if (paintText == null) {
             initPaint();
@@ -145,7 +145,7 @@ public class BeursaultDecorator extends CenterMarkDecorator {
         drawPathsForZone(canvas, 2, 3, 1.05f, three, threeBounds);
     }
 
-    private void drawPathsForZone(Canvas canvas, int innerZoneIndex, int outerZoneIndex, float scale, Path path, RectF pathBounds) {
+    private void drawPathsForZone(CanvasWrapper canvas, int innerZoneIndex, int outerZoneIndex, float scale, Path path, RectF pathBounds) {
         final ZoneBase outerZone = model.getZone(outerZoneIndex);
         final ZoneBase innerZone = model.getZone(innerZoneIndex);
         final float outerRadius = outerZone.radius - outerZone.strokeWidth * 0.5f;
@@ -157,11 +157,11 @@ public class BeursaultDecorator extends CenterMarkDecorator {
         drawFilledPath(canvas, rel, 0f, scale, path, pathBounds); // right
     }
 
-    private void drawFilledPath(Canvas canvas, float x, float y, float scaleFactor, Path path, RectF bounds) {
-        float rectSize = 0.012f*2 * scaleFactor;
+    private void drawFilledPath(CanvasWrapper canvas, float x, float y, float scaleFactor, Path path, RectF bounds) {
+        float rectSize = 0.012f * 2 * scaleFactor;
         final RectF bgRect = new RectF(x - rectSize, y - rectSize, x + rectSize, y + rectSize);
         canvas.drawRect(bgRect, paintFill);
-        rectSize = 0.007f*2 * scaleFactor;
+        rectSize = 0.007f * 2 * scaleFactor;
         final RectF numberRect = new RectF(x - rectSize, y - rectSize, x + rectSize, y + rectSize);
         Matrix scaleMatrix = new Matrix();
         scaleMatrix.setRectToRect(bounds, numberRect, Matrix.ScaleToFit.CENTER);

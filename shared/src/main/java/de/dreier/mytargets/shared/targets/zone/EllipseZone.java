@@ -15,13 +15,13 @@
 
 package de.dreier.mytargets.shared.targets.zone;
 
-import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.Region;
 
-import de.dreier.mytargets.shared.utils.PathUtils;
+import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
+import de.dreier.mytargets.shared.utils.RegionUtils;
 
 public class EllipseZone extends ZoneBase {
 
@@ -37,7 +37,7 @@ public class EllipseZone extends ZoneBase {
 
         /** The region needs to be bigger, because the Region#contains(x,y) only allows to test for
          * integers, which is obviously to inaccurate for a -1..1 coordinate system. */
-        ELLIPSE_REGION = PathUtils.getScaledRegion(ellipse, REGION_SCALE_FACTOR);
+        ELLIPSE_REGION = RegionUtils.getScaledRegion(ellipse, REGION_SCALE_FACTOR);
     }
 
     public EllipseZone(float radius, float midpointX, float midpointY, int fillColor, int strokeColor, int strokeWidth) {
@@ -50,13 +50,13 @@ public class EllipseZone extends ZoneBase {
     }
 
     @Override
-    public void drawFill(Canvas canvas) {
+    public void drawFill(CanvasWrapper canvas) {
         initPaint();
         canvas.drawPath(ellipse, paintFill);
     }
 
     @Override
-    public void drawStroke(Canvas canvas) {
+    public void drawStroke(CanvasWrapper canvas) {
         initPaint();
         canvas.drawPath(ellipse, paintStroke);
     }
