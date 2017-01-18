@@ -326,4 +326,16 @@
   <string name="summary">Celkem</string>
   <string name="end">Sada</string>
   <string name="average_of">Průměr</string>
+  <string name="displayed_shots">Zobrazené výstřely</string>
+  <string name="invalid_decimal_number">Neplatné desetinné číslo</string>
+  <string name="not_within_expected_range_mm">Není v předpokládaném rozmezí 1 až 20 mm</string>
+  <string name="not_within_expected_range_inch">Není v předpokládaném rozmezí 0 až 1 palce</string>
+  <string name="next_round">Další kolo</string>
+  <string name="previous_round">Předchozí kolo</string>
+  <string name="overview">Přehled</string>
+  <string name="score">Body</string>
+  <string name="show_reached_score">Zobrazit dosažené skóre</string>
+  <string name="show_total_score">Zobrazit celkové skóre</string>
+  <string name="show_percentage">Zobrazit procenta</string>
+  <string name="show_arrow_average">Zobrazit průměr na šíp</string>
 </resources>

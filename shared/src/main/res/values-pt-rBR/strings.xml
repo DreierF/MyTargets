@@ -33,6 +33,7 @@
   <string name="large">Grande</string>
   <string name="xlarge">Extra Grande</string>
   <string name="unknown">Desconhecido</string>
+  <string name="indoor">Indoor</string>
   <string name="wind">Vento</string>
   <string name="location">Local</string>
   <string name="bft_0">0 Bft: Sem vento</string>

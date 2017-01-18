@@ -33,6 +33,7 @@
   <string name="large">Groot</string>
   <string name="xlarge">Extra groot</string>
   <string name="unknown">Onbekend</string>
+  <string name="indoor">Indoor</string>
   <string name="wind">Wind</string>
   <string name="location">Locatie</string>
   <string name="bft_0">0 Bft: windstil</string>

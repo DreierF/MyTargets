@@ -15,7 +15,7 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="recurve_bow">Reflex íj</string>
+  <string name="recurve_bow">Olimpiai/Reflex íj</string>
   <string name="compound_bow">Csigás íj</string>
   <string name="bare_bow">Csupasz íj  - BB</string>
   <string name="long_bow">Hosszúíj - Longbow</string>
