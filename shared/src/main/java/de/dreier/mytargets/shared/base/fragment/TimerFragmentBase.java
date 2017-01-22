@@ -29,8 +29,8 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
     private ETimerState currentStatus = ETimerState.WAIT_FOR_START;
     private CountDownTimer countdown;
     private MediaPlayer horn;
-    protected boolean soundEnabled;
-    protected boolean vibrate;
+    public boolean soundEnabled;
+    public boolean vibrate;
     private PowerManager.WakeLock wakeLock;
     protected int timerWaitTime;
     protected int timerShootTime;

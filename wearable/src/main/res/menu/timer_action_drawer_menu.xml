@@ -17,7 +17,8 @@
     <item
         android:id="@+id/menu_stop"
         android:icon="@drawable/ic_stop_white_24dp"
-        android:title="@string/stop" />
+        android:title="@string/stop"
+        android:visible="false" />
     <item
         android:id="@+id/menu_vibrate"
         android:icon="@drawable/ic_vibration_black_24dp"

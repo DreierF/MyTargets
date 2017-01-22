@@ -46,7 +46,6 @@ import de.dreier.mytargets.features.timer.TimerFragment;
 import de.dreier.mytargets.features.training.RoundFragment;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
@@ -63,7 +62,6 @@ import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
-import de.dreier.mytargets.utils.WearMessageManager;
 import de.dreier.mytargets.utils.transitions.FabTransform;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import de.dreier.mytargets.utils.transitions.TransitionAdapter;
@@ -84,7 +82,6 @@ public class InputActivity extends ChildActivityBase
     @State(ParcelsBundler.class)
     LoaderResult data;
 
-    private WearMessageManager manager;
     private ActivityInputBinding binding;
     private boolean transitionFinished = true;
     private ETrainingScope shotShowScope = ETrainingScope.END;
@@ -101,10 +98,6 @@ public class InputActivity extends ChildActivityBase
                 .with(TRAINING_ID, round.trainingId)
                 .with(ROUND_ID, round.getId())
                 .with(END_INDEX, endIndex);
-    }
-
-    private static <T> T lastItem(List<T> list) {
-        return list.isEmpty() ? null : list.get(list.size() - 1);
     }
 
     private static boolean shouldShowRound(Round r, ETrainingScope shotShowScope, Long roundId) {
@@ -324,14 +317,6 @@ public class InputActivity extends ChildActivityBase
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (manager != null) {
-            manager.close();
-        }
-    }
-
     private void showEnd(int endIndex) {
         // Create a new end
         data.endIndex = endIndex;
@@ -398,14 +383,6 @@ public class InputActivity extends ChildActivityBase
                 R.string.round) + " " + (data.getCurrentRound().index + 1) + "/" + data.training
                 .getRounds().size());
         updateNavigationButtons();
-
-        // Send message to wearable app, that we are starting an end
-        new Thread(InputActivity.this::startWearNotification).start();
-    }
-
-    private void startWearNotification() {
-        NotificationInfo info = buildInfo();
-        manager = new WearMessageManager(this, info);
     }
 
     private NotificationInfo buildInfo() {
@@ -543,12 +520,7 @@ public class InputActivity extends ChildActivityBase
 
         data.getCurrentEnd().save();
 
-        if (manager != null) {
-            manager.sendMessageUpdate(buildInfo());
-        }
-        if (remote) {
-            showEnd(data.getEnds().size());
-        }
+        //TODO send broadcast update training
         updateNavigationButtons();
         supportInvalidateOptionsMenu();
     }

@@ -23,14 +23,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 
 import org.parceler.Parcels;
 
-import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.NotificationInfo$$Parcelable;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.WearableUtils;
@@ -46,23 +44,12 @@ public class WearableListener extends WearableListenerService {
 
         // Transform byte[] to Bundle
         byte[] data = messageEvent.getData();
-
-        Log.d("listener", messageEvent.getPath());
-        if (messageEvent.getPath().equals(WearableUtils.STARTED_ROUND)) {
-            if (data.length != 0) {
-                NotificationInfo info = getNotificationInfo(data);
-                showNotification(info);
-                if (info != null) {
-                    Intent intent = new Intent(TRAINING_STARTED);
-                    intent.putExtra(InputActivity.EXTRA_ROUND, Parcels.wrap(info.round));
-                    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-                }
-            }
-        } else if (messageEvent.getPath().equals(WearableUtils.UPDATE_ROUND)) {
+        if (messageEvent.getPath().equals(WearableUtils.TRAINING_UPDATE)) {
             NotificationInfo info = getNotificationInfo(data);
             showNotification(info);
-        } else if (messageEvent.getPath().equals(WearableUtils.STOPPED_ROUND)) {
-            cancelNotification();
+            Intent intent = new Intent(TRAINING_STARTED);
+            intent.putExtra(InputActivity.EXTRA_ROUND, Parcels.wrap(info.round));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
     }
 
@@ -75,7 +62,7 @@ public class WearableListener extends WearableListenerService {
     private void showNotification(NotificationInfo info) {
 
         // Build the intent to display our custom notification
-        Intent notificationIntent = new Intent(this, InputActivity.class);
+        Intent notificationIntent = new Intent(this, RoundActivity.class);
         notificationIntent.putExtra(InputActivity.EXTRA_ROUND, Parcels.wrap(info.round));
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -95,7 +82,6 @@ public class WearableListener extends WearableListenerService {
                         .setContentTitle(info.title)
                         .setContentText(info.text)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setOngoing(true)
                         .extend(new Notification.WearableExtender()
                                 .addPage(page).setBackground(image));
 

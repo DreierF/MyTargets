@@ -24,51 +24,12 @@
     tools:context=".RoundActivity"
     tools:deviceIds="wear">
 
-    <LinearLayout
+    <android.support.wearable.view.WearableRecyclerView
+        android:id="@+id/recyclerViewEnds"
         android:layout_width="match_parent"
+        android:paddingTop="48dp"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:textColor="@color/md_wear_green_lighter_ui_element"
-            android:textSize="14sp"
-            tools:text="today" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:textColor="@color/md_white_1000"
-            android:textSize="18sp"
-            tools:text="Training" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:textColor="@color/md_white_1000"
-            android:textSize="12sp"
-            tools:text="5 rounds" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:textColor="@color/md_white_1000"
-            android:textSize="12sp"
-            tools:text="10 \u00D7 3 arrows" />
-
-    </LinearLayout>
+        android:scrollbars="vertical" />
 
     <android.support.wearable.view.drawer.WearableDrawerView
         android:layout_width="match_parent"
@@ -87,10 +48,10 @@
             android:paddingTop="8dp">
 
             <ImageView
-                android:id="@+id/primaryActionAdd"
+                android:id="@+id/primaryActionTimer"
                 android:layout_width="@dimen/peek_drawer_icon_size"
                 android:layout_height="@dimen/peek_drawer_icon_size"
-                android:src="@drawable/ic_add_white_24dp" />
+                android:src="@drawable/ic_traffic_white_24dp" />
 
         </LinearLayout>
 

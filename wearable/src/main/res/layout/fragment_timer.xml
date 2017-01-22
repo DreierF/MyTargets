@@ -24,7 +24,7 @@
         android:id="@+id/start_timer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/md_wear_green_light_background"
+        android:background="@color/md_wear_green_lighter_background"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:gravity="center"

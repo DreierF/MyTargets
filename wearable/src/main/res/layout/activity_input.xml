@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (C) 2017 Florian Dreier
   ~
@@ -14,28 +13,30 @@
   ~ GNU General Public License for more details.
   -->
 
-<android.support.wearable.view.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                              xmlns:app="http://schemas.android.com/apk/res-auto"
-                                              xmlns:tools="http://schemas.android.com/tools"
-                                              android:layout_width="match_parent"
-                                              android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootFrameLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <android.support.wearable.view.WatchViewStub
-        android:id="@+id/watch_view_stub"
+    <de.dreier.mytargets.TargetSelectView
+        android:id="@+id/target"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:rectLayout="@layout/rect_activity_main"
-        app:roundLayout="@layout/round_activity_main"
-        tools:context=".InputActivity"
-        android:visibility="gone"
-        tools:deviceIds="wear"/>
+        android:background="@color/md_wear_green_lighter_background" />
 
-    <TextView
-        android:id="@+id/start_training_hint"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:padding="16dp"
-        android:text="@string/start_training_on_phone"/>
+    <android.support.wearable.view.DelayedConfirmationView
+        android:id="@+id/delayedConfirm"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/ic_close_white_18dp"
+        app:circle_border_color="@color/md_wear_green_accent"
+        app:circle_border_width="@dimen/circle_border_normal_width"
+        app:circle_color="@color/md_wear_green_active_ui_element"
+        app:circle_padding="@dimen/circle_padding"
+        app:circle_radius="@dimen/circle_radius"
+        app:circle_radius_pressed="@dimen/circle_radius_pressed" />
 
-</android.support.wearable.view.BoxInsetLayout>
+</FrameLayout>

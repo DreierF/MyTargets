@@ -42,6 +42,7 @@ public class TimerActivity extends WearableActivity implements
     private WearableDrawerLayout wearableDrawerLayout;
     private WearableActionDrawer wearableActionDrawer;
     private ImageView primaryActionPeek;
+    private TimerFragment timerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,7 @@ public class TimerActivity extends WearableActivity implements
         setAmbientEnabled();
 
         // Initialize content to first planet.
-        TimerFragment timerFragment = new TimerFragment();
+        timerFragment = new TimerFragment();
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, timerFragment).commit();
 
@@ -61,6 +62,7 @@ public class TimerActivity extends WearableActivity implements
         // Bottom Action Drawer
         wearableActionDrawer = (WearableActionDrawer) findViewById(R.id.bottom_action_drawer);
         primaryActionPeek = (ImageView) findViewById(R.id.primaryActionPeek);
+        primaryActionPeek.setOnClickListener(v -> wearableDrawerLayout.openDrawer(Gravity.BOTTOM));
 
         wearableActionDrawer.setOnMenuItemClickListener(this);
 
@@ -74,13 +76,13 @@ public class TimerActivity extends WearableActivity implements
 
         switch (itemId) {
             case R.id.menu_stop:
-                //TODO
+                finish();
                 break;
             case R.id.menu_vibrate:
-                //TODO
+                timerFragment.vibrate = !timerFragment.vibrate;
                 return true;
             case R.id.menu_sound:
-                //TODO
+                timerFragment.soundEnabled = !timerFragment.soundEnabled;
                 return true;
             default:
                 return false;
@@ -132,7 +134,9 @@ public class TimerActivity extends WearableActivity implements
 
         @Override
         protected void applyStatus(ETimerState status) {
-            ((TimerActivity) getActivity()).applyStatus(status);
+            if (getActivity() != null) {
+                ((TimerActivity) getActivity()).applyStatus(status);
+            }
             startTimer.setVisibility(status == ETimerState.WAIT_FOR_START ? VISIBLE : GONE);
             time.setVisibility(status != ETimerState.WAIT_FOR_START ? VISIBLE : GONE);
             getView().setBackgroundResource(status.color);

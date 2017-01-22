@@ -16,8 +16,9 @@
 package de.dreier.mytargets.shared.utils;
 
 public class WearableUtils {
-    public static final String STARTED_ROUND = "de/dreier/mytargets/round/started";
-    public static final String UPDATE_ROUND = "de/dreier/mytargets/round/update/started";
-    public static final String FINISHED_INPUT = "de/dreier/mytargets/passe/finished";
-    public static final String STOPPED_ROUND = "de/dreier/mytargets/round/stopped";
+    public static final String TRAINING_CREATE = "/de/dreier/mytargets/training/create";
+    public static final String TRAINING_CREATE_ON_PHONE = "/de/dreier/mytargets/training/create/phone";
+    public static final String TRAINING_START = "/de/dreier/mytargets/training/start";
+    public static final String TRAINING_UPDATE = "/de/dreier/mytargets/training/update";
+    public static final String END_UPDATE = "/de/dreier/mytargets/end/update";
 }

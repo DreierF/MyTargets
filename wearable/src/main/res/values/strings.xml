@@ -22,4 +22,5 @@
     <string name="start_timer">Start timer</string>
     <string name="vibration">Vibration</string>
     <string name="sound">Sound</string>
+    <string name="new_end">New End</string>
 </resources>
