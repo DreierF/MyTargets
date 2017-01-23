@@ -108,7 +108,7 @@ public class ArrowListFragment extends EditableListFragment<Arrow> {
         private final ItemImageDetailsBinding binding;
 
         public ViewHolder(View itemView) {
-            super(itemView, mSelector, ArrowListFragment.this);
+            super(itemView, selector, ArrowListFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }
 

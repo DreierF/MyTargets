@@ -33,6 +33,7 @@ import com.annimon.stream.Stream;
 
 import org.joda.time.DateTime;
 import org.parceler.Parcel;
+import org.parceler.ParcelConstructor;
 
 import java.util.List;
 
@@ -601,6 +602,7 @@ public class InputActivity extends ChildActivityBase
         int roundIndex = 0;
         int endIndex = 0;
 
+        @ParcelConstructor
         public LoaderResult(Training training) {
             this.training = training;
             this.standardRound = training.getStandardRound();

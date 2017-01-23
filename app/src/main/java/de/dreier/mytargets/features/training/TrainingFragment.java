@@ -206,7 +206,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
         private final ItemRoundBinding binding;
 
         ViewHolder(View itemView) {
-            super(itemView, mSelector, TrainingFragment.this);
+            super(itemView, selector, TrainingFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }
 

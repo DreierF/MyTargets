@@ -32,7 +32,7 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.ListAdapterBase;
 import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.utils.SelectorBundler;
+import de.dreier.mytargets.utils.MultiSelectorBundler;
 import de.dreier.mytargets.utils.multiselector.MultiSelector;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import icepick.State;
@@ -46,8 +46,8 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model> ex
 
     protected boolean supportsStatistics = false;
     protected boolean supportsDeletion = true;
-    @State(SelectorBundler.class)
-    protected MultiSelector mSelector = new MultiSelector();
+    @State(MultiSelectorBundler.class)
+    protected MultiSelector selector = new MultiSelector();
 
     /**
      * Resource describing FAB action
@@ -72,12 +72,12 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model> ex
      */
     ActionMode actionMode = null;
 
-    private final ActionMode.Callback mDeleteMode = new ActionMode.Callback() {
+    private final ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             MenuItem edit = menu.findItem(R.id.action_edit);
-            edit.setVisible(mSelector.getSelectedIds().size() == 1);
+            edit.setVisible(selector.getSelectedIds().size() == 1);
             menu.findItem(R.id.action_statistics).setVisible(supportsStatistics);
             menu.findItem(R.id.action_delete).setVisible(supportsDeletion);
             return false;
@@ -85,7 +85,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model> ex
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mSelector.setSelectable(true);
+            selector.setSelectable(true);
             actionMode = mode;
             MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.context_menu_edit_delete, menu);
@@ -113,7 +113,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model> ex
         }
 
         private List<T> getSelectedItems() {
-            List<Long> ids = mSelector.getSelectedIds();
+            List<Long> ids = selector.getSelectedIds();
             return Stream.of(ids)
                     .map(id -> getAdapter().getItemById(id))
                     .filter(item -> item != null)
@@ -122,8 +122,8 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model> ex
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            mSelector.setSelectable(false);
-            mSelector.clearSelections();
+            selector.setSelectable(false);
+            selector.clearSelections();
             actionMode = null;
         }
     };
@@ -172,7 +172,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model> ex
         if (actionMode == null) {
             return;
         }
-        int count = mSelector.getSelectedIds().size();
+        int count = selector.getSelectedIds().size();
         if (count == 0) {
             actionMode.finish();
         } else {
@@ -186,7 +186,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model> ex
         if (mItem == null) {
             return;
         }
-        if (!mSelector.tapSelection(holder)) {
+        if (!selector.tapSelection(holder)) {
             onSelected(mItem);
         } else {
             updateTitle();
@@ -197,10 +197,10 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model> ex
     public void onLongClick(SelectableViewHolder holder) {
         if (actionMode == null) {
             AppCompatActivity activity = (AppCompatActivity) getActivity();
-            activity.startSupportActionMode(mDeleteMode);
-            mSelector.setSelectable(true);
+            activity.startSupportActionMode(actionModeCallback);
+            selector.setSelectable(true);
         }
-        mSelector.setSelected(holder, true);
+        selector.setSelected(holder, true);
         updateTitle();
     }
 

@@ -135,7 +135,7 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> impl
         private final ItemDistanceBinding binding;
 
         public ViewHolder(View itemView) {
-            super(itemView, mSelector, DistanceGridFragment.this);
+            super(itemView, selector, DistanceGridFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }
 

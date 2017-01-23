@@ -145,7 +145,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target> implement
 
     private void updateSettings() {
         // Init scoring styles
-        Target target = adapter.getItem(mSelector.getSelectedPosition());
+        Target target = adapter.getItem(selector.getSelectedPosition());
         List<String> styles = target.getModel().getScoringStyles();
         updateAdapter(binding.scoringStyle, scoringStyleAdapter, styles);
 
@@ -203,6 +203,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target> implement
         target.scoringStyle = binding.scoringStyle.getSelectedItemPosition();
         Dimension[] diameters = target.getModel().getDiameters();
         target.size = diameters[binding.targetSize.getSelectedItemPosition()];
+        getArguments().putParcelable(ITEM, Parcels.wrap(target));
         return target;
     }
 
@@ -252,7 +253,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target> implement
         private ItemImageSimpleBinding binding;
 
         public ViewHolder(View itemView) {
-            super(itemView, mSelector, TargetListFragment.this);
+            super(itemView, selector, TargetListFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }
 

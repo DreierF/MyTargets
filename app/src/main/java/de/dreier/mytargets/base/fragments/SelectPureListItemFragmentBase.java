@@ -87,7 +87,7 @@ public abstract class SelectPureListItemFragmentBase<T extends IIdProvider & IIm
         ItemImageSimpleBinding binding;
 
         public ViewHolder(View itemView) {
-            super(itemView, mSelector, SelectPureListItemFragmentBase.this);
+            super(itemView, selector, SelectPureListItemFragmentBase.this);
             binding = DataBindingUtil.bind(itemView);
         }
 

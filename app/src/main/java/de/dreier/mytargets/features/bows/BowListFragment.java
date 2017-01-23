@@ -129,7 +129,7 @@ public class BowListFragment extends EditableListFragment<Bow> {
         final ItemImageDetailsBinding binding;
 
         public ViewHolder(View itemView) {
-            super(itemView, mSelector, BowListFragment.this);
+            super(itemView, selector, BowListFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }
 

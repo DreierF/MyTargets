@@ -29,9 +29,11 @@ import org.parceler.Parcels;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.ListAdapterBase;
 import de.dreier.mytargets.shared.models.IIdProvider;
+import de.dreier.mytargets.utils.SingleSelectorBundler;
 import de.dreier.mytargets.utils.multiselector.ItemBindingHolder;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import de.dreier.mytargets.utils.multiselector.SingleSelector;
+import icepick.State;
 
 /**
  * Base class for handling single item selection
@@ -45,7 +47,8 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
     /**
      * Selector which manages the item selection
      */
-    protected final SingleSelector mSelector = new SingleSelector();
+    @State(SingleSelectorBundler.class)
+    protected SingleSelector selector = new SingleSelector();
 
     /**
      * Adapter for the fragment's RecyclerView
@@ -64,7 +67,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mSelector.setSelectable(true);
+        selector.setSelectable(true);
     }
 
     /**
@@ -76,7 +79,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      */
     protected void selectItem(RecyclerView recyclerView, T item) {
         int position = adapter.getItemPosition(item);
-        mSelector.setSelected(position, item.getId(), true);
+        selector.setSelected(position, item.getId(), true);
         recyclerView.post(() -> {
             LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
             int first = manager.findFirstCompletelyVisibleItemPosition();
@@ -117,9 +120,9 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
         if (mItem == null) {
             return;
         }
-        int oldSelectedPosition = mSelector.getSelectedPosition();
+        int oldSelectedPosition = selector.getSelectedPosition();
         boolean alreadySelected = oldSelectedPosition == holder.getAdapterPosition();
-        mSelector.setSelected(holder, true);
+        selector.setSelected(holder, true);
         if (alreadySelected || !useDoubleClickSelection) {
             saveItem();
             finish();
@@ -139,6 +142,6 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      * @return The selected item
      */
     protected T onSave() {
-        return adapter.getItem(mSelector.getSelectedPosition());
+        return adapter.getItem(selector.getSelectedPosition());
     }
 }

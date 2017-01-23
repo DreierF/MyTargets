@@ -35,34 +35,34 @@ import de.dreier.mytargets.shared.utils.LongUtils;
 public abstract class ExpandableListFragment<H extends IIdProvider, C extends IIdSettable & Model> extends EditableListFragmentBase<C> {
 
     private static final String KEY_EXPANDED = "expanded";
-    protected ExpandableListAdapter<H, C> mAdapter;
+    protected ExpandableListAdapter<H, C> adapter;
     @Nullable
     private Bundle savedInstanceState;
 
     protected void setList(List<C> children, boolean opened) {
-        if (mAdapter.getItemCount() == 0) {
-            mAdapter.setList(children, opened);
+        if (adapter.getItemCount() == 0) {
+            adapter.setList(children, opened);
             if (savedInstanceState != null && savedInstanceState.containsKey(KEY_EXPANDED)) {
-                mAdapter.setExpandedIds(
+                adapter.setExpandedIds(
                         LongUtils.toList(savedInstanceState.getLongArray(KEY_EXPANDED)));
-            } else if (!opened && mAdapter.getItemCount() > 0) {
-                mAdapter.expandFirst();
+            } else if (!opened && adapter.getItemCount() > 0) {
+                adapter.expandFirst();
             }
             return;
         }
-        mAdapter.setList(children);
+        adapter.setList(children);
     }
 
     @Override
     protected ListAdapterBase<?, C> getAdapter() {
-        return mAdapter;
+        return adapter;
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mAdapter != null) {
-            outState.putLongArray(KEY_EXPANDED, LongUtils.toArray(mAdapter.getExpandedIds()));
+        if (adapter != null) {
+            outState.putLongArray(KEY_EXPANDED, LongUtils.toArray(adapter.getExpandedIds()));
         }
     }
 

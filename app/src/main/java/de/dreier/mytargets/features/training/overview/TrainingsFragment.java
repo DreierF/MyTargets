@@ -74,9 +74,9 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_trainings, container, false);
         binding.recyclerView.setHasFixedSize(true);
-        mAdapter = new TrainingAdapter();
+        adapter = new TrainingAdapter();
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
-        binding.recyclerView.setAdapter(mAdapter);
+        binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.addItemDecoration(
                 new DividerItemDecoration(getContext(), R.drawable.full_divider));
         binding.fab1.setOnClickListener(view -> EditTrainingFragment
@@ -173,7 +173,7 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         ItemTrainingBinding binding;
 
         public ViewHolder(View itemView) {
-            super(itemView, mSelector, TrainingsFragment.this);
+            super(itemView, selector, TrainingsFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }
 

@@ -182,7 +182,7 @@ public class RoundFragment extends EditableListFragment<End> {
         private final ItemEndBinding binding;
 
         EndViewHolder(View itemView) {
-            super(itemView, mSelector, RoundFragment.this);
+            super(itemView, selector, RoundFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }
 
