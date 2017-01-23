@@ -42,18 +42,14 @@ import icepick.State;
  *
  * @param <T> Model of the item which is managed within the fragment.
  */
-public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<T>> extends ListFragmentBase<T> {
+public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<T>,
+        U extends ListAdapterBase<? extends ItemBindingHolder<?>, T>> extends ListFragmentBase<T, U> {
 
     /**
      * Selector which manages the item selection
      */
     @State(SingleSelectorBundler.class)
     protected SingleSelector selector = new SingleSelector();
-
-    /**
-     * Adapter for the fragment's RecyclerView
-     */
-    protected ListAdapterBase<? extends ItemBindingHolder<?>, T> adapter;
 
     /**
      * Set to true when items are expanded when they are clicked and

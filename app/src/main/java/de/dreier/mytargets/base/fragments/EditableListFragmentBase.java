@@ -40,7 +40,8 @@ import icepick.State;
 /**
  * @param <T> Model of the item which is managed within the fragment.
  */
-public abstract class EditableListFragmentBase<T extends IIdSettable & Model> extends ListFragmentBase<T> {
+public abstract class EditableListFragmentBase<T extends IIdSettable & Model,
+        U extends ListAdapterBase<?, T>> extends ListFragmentBase<T, U> {
 
     public static final String ITEM_ID = "id";
 
@@ -115,7 +116,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model> ex
         private List<T> getSelectedItems() {
             List<Long> ids = selector.getSelectedIds();
             return Stream.of(ids)
-                    .map(id -> getAdapter().getItemById(id))
+                    .map(id -> adapter.getItemById(id))
                     .filter(item -> item != null)
                     .collect(Collectors.toList());
         }
@@ -136,15 +137,15 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model> ex
 
     private void remove(List<T> deleted) {
         for (T item : deleted) {
-            getAdapter().removeItem(item);
+            adapter.removeItem(item);
         }
-        getAdapter().notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
         String message = getResources()
                 .getQuantityString(itemTypeDelRes, deleted.size(), deleted.size());
         Snackbar.make(getView().findViewById(R.id.coordinatorLayout), message, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, v -> {
                     for (T item : deleted) {
-                        getAdapter().addItem(item);
+                        adapter.addItem(item);
                     }
                     deleted.clear();
                 })
@@ -165,8 +166,6 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model> ex
                             }
                         }).show();
     }
-
-    protected abstract ListAdapterBase<?, T> getAdapter();
 
     private void updateTitle() {
         if (actionMode == null) {

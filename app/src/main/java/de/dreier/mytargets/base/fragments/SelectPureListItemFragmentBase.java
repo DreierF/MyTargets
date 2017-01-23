@@ -38,7 +38,8 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 /**
  *
  * */
-public abstract class SelectPureListItemFragmentBase<T extends IIdProvider & IImageProvider & Comparable<T>> extends SelectItemFragmentBase<T> {
+public abstract class SelectPureListItemFragmentBase<T extends IIdProvider & IImageProvider & Comparable<T>>
+        extends SelectItemFragmentBase<T, SimpleListAdapterBase<T>> {
 
     protected FragmentListBinding binding;
 

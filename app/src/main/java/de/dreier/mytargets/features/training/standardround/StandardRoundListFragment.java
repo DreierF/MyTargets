@@ -56,7 +56,7 @@ import icepick.State;
 import static android.app.Activity.RESULT_OK;
 import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
 
-public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRound>
+public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRound, HeaderListAdapter<StandardRound>>
         implements SearchView.OnQueryTextListener {
 
     private static final int NEW_STANDARD_ROUND = 1;

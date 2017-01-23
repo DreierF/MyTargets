@@ -22,7 +22,6 @@ import com.raizlabs.android.dbflow.structure.Model;
 
 import java.util.List;
 
-import de.dreier.mytargets.base.adapters.ListAdapterBase;
 import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter;
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase;
 import de.dreier.mytargets.shared.models.IIdProvider;
@@ -32,10 +31,11 @@ import de.dreier.mytargets.shared.utils.LongUtils;
 /**
  * Shows all rounds of one training day
  */
-public abstract class ExpandableListFragment<H extends IIdProvider, C extends IIdSettable & Model> extends EditableListFragmentBase<C> {
+public abstract class ExpandableListFragment<H extends IIdProvider, C extends IIdSettable & Model>
+        extends EditableListFragmentBase<C, ExpandableListAdapter<H, C>> {
 
     private static final String KEY_EXPANDED = "expanded";
-    protected ExpandableListAdapter<H, C> adapter;
+
     @Nullable
     private Bundle savedInstanceState;
 
@@ -51,11 +51,6 @@ public abstract class ExpandableListFragment<H extends IIdProvider, C extends II
             return;
         }
         adapter.setList(children);
-    }
-
-    @Override
-    protected ListAdapterBase<?, C> getAdapter() {
-        return adapter;
     }
 
     @Override

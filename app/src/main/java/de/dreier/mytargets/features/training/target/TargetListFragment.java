@@ -59,7 +59,7 @@ import static de.dreier.mytargets.features.training.target.TargetListFragment.EF
 import static de.dreier.mytargets.features.training.target.TargetListFragment.EFixedType.NONE;
 import static de.dreier.mytargets.features.training.target.TargetListFragment.EFixedType.TARGET;
 
-public class TargetListFragment extends SelectItemFragmentBase<Target> implements AdapterView.OnItemSelectedListener {
+public class TargetListFragment extends SelectItemFragmentBase<Target, SimpleListAdapterBase<Target>> implements AdapterView.OnItemSelectedListener {
 
     public static final String FIXED_TYPE = "fixed_type";
     private FragmentTargetSelectBinding binding;
