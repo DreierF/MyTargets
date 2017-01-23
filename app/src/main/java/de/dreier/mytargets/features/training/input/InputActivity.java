@@ -64,6 +64,7 @@ import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.WearMessageManager;
 import de.dreier.mytargets.utils.transitions.FabTransform;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
+import de.dreier.mytargets.utils.transitions.TransitionAdapter;
 import icepick.Icepick;
 import icepick.State;
 
@@ -177,7 +178,7 @@ public class InputActivity extends ChildActivityBase
         final MenuItem grouping = menu.findItem(R.id.action_grouping);
         final MenuItem timer = menu.findItem(R.id.action_timer);
         final MenuItem newRound = menu.findItem(R.id.action_new_round);
-        if (targetView == null || getEnds().size() == 0) {
+        if (targetView == null || data.getEnds().size() == 0) {
             eye.setVisible(false);
             keyboard.setVisible(false);
             grouping.setVisible(false);
@@ -191,7 +192,7 @@ public class InputActivity extends ChildActivityBase
                     ? R.drawable.ic_keyboard_white_24dp
                     : R.drawable.ic_keyboard_white_off_24dp);
             keyboard.setChecked(!plotting);
-            keyboard.setVisible(getCurrentEnd().getId() == null);
+            keyboard.setVisible(data.getCurrentEnd().getId() == null);
             timer.setIcon(SettingsManager.getTimerEnabled()
                     ? R.drawable.ic_timer_off_white_24dp
                     : R.drawable.ic_timer_white_24dp);
@@ -279,6 +280,12 @@ public class InputActivity extends ChildActivityBase
         return true;
     }
 
+    private void setShotShowScope(ETrainingScope shotShowScope) {
+        this.shotShowScope = shotShowScope;
+        SettingsManager.setShowMode(shotShowScope);
+        updateOldShoots();
+    }
+
     @Override
     public Loader<LoaderResult> onCreateLoader(int id, Bundle args) {
         long trainingId = args.getLong(TRAINING_ID);
@@ -300,7 +307,7 @@ public class InputActivity extends ChildActivityBase
             binding.targetViewStub.getViewStub().inflate();
         }
         targetView = (TargetView) binding.targetViewStub.getBinding().getRoot();
-        targetView.setTarget(getCurrentRound().getTarget());
+        targetView.setTarget(data.getCurrentRound().getTarget());
         targetView.setArrow(data.arrowDiameter, data.training.arrowNumbering);
         targetView.setOnTargetSetListener(InputActivity.this);
         targetView.setUpdateListener(InputActivity.this);
@@ -315,11 +322,6 @@ public class InputActivity extends ChildActivityBase
 
     }
 
-    private void startWearNotification() {
-        NotificationInfo info = buildInfo();
-        manager = new WearMessageManager(this, info);
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -331,8 +333,8 @@ public class InputActivity extends ChildActivityBase
     private void showEnd(int endIndex) {
         // Create a new end
         data.endIndex = endIndex;
-        if (endIndex >= getEnds().size()) {
-            getCurrentRound().addEnd();
+        if (endIndex >= data.getEnds().size()) {
+            data.getCurrentRound().addEnd();
             updateOldShoots();
         }
 
@@ -343,9 +345,9 @@ public class InputActivity extends ChildActivityBase
     }
 
     public void updateOldShoots() {
-        final End currentEnd = getCurrentEnd();
-        final Long currentRoundId = getCurrentRound().getId();
-        final Long currentEndId = currentEnd == null ? null : currentEnd.getId();
+        final End currentEnd = data.getCurrentEnd();
+        final Long currentRoundId = data.getCurrentRound().getId();
+        final Long currentEndId = currentEnd.getId();
         final ETrainingScope shotShowScope = this.shotShowScope;
         final LoaderResult data = this.data;
         final Stream<Shot> shotStream = Stream.of(data.training.getRounds())
@@ -356,20 +358,77 @@ public class InputActivity extends ChildActivityBase
         targetView.setTransparentShots(shotStream);
     }
 
+    private void openTimer() {
+        if (data.getCurrentEnd().getId() == null
+                && data.getCurrentEnd().getShots().get(0).scoringRing == Shot.NOTHING_SELECTED
+                && SettingsManager.getTimerEnabled()) {
+            if (transitionFinished) {
+                TimerFragment.getIntent()
+                        .withContext(this)
+                        .start();
+            } else if (Utils.isLollipop()) {
+                startTimerDelayed();
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void startTimerDelayed() {
+        getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                TimerFragment.getIntent()
+                        .withContext(InputActivity.this)
+                        .start();
+                getWindow().getSharedElementEnterTransition().removeListener(this);
+            }
+        });
+    }
+
     private void updateEnd() {
-        targetView.setEnd(getCurrentEnd());
-        final int totalEnds = getCurrentRound().maxEndCount == null
-                ? getEnds().size()
-                : getCurrentRound().maxEndCount;
+        targetView.setEnd(data.getCurrentEnd());
+        final int totalEnds = data.getCurrentRound().maxEndCount == null
+                ? data.getEnds().size()
+                : data.getCurrentRound().maxEndCount;
         binding.endTitle.setText(
                 getString(R.string.passe) + " " + (data.endIndex + 1) + "/" + totalEnds);
         binding.roundTitle.setText(getString(
-                R.string.round) + " " + (getCurrentRound().index + 1) + "/" + data.training
+                R.string.round) + " " + (data.getCurrentRound().index + 1) + "/" + data.training
                 .getRounds().size());
         updateNavigationButtons();
 
         // Send message to wearable app, that we are starting an end
         new Thread(InputActivity.this::startWearNotification).start();
+    }
+
+    private void startWearNotification() {
+        NotificationInfo info = buildInfo();
+        manager = new WearMessageManager(this, info);
+    }
+
+    private NotificationInfo buildInfo() {
+        String title = getString(R.string.passe) + " " + (data.getEnds().size());
+        String text = "";
+
+        // Initialize message text
+        if (data.getEnds().size() > 0) {
+            End lastEnd = lastItem(data.getEnds());
+            if(lastEnd != null) {
+                for (Shot shot : lastEnd.getShots()) {
+                    text += data.getCurrentRound().getTarget()
+                            .zoneToString(shot.scoringRing, shot.index) + " ";
+                }
+                text += "\n";
+            }
+        } else {
+            title = getString(R.string.my_targets);
+        }
+
+        // Load bow settings
+        if (data.sightMark != null) {
+            text += String.format("%s: %s", data.getCurrentRound().distance, data.sightMark.value);
+        }
+        return new NotificationInfo(data.getCurrentRound(), title, text);
     }
 
     private void updateNavigationButtons() {
@@ -398,9 +457,12 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void updateNextButton() {
-        final boolean endFinished = getCurrentEnd() != null && getCurrentEnd().getId() != null;
-        boolean isLastEnd = getCurrentRound().maxEndCount != null && data.endIndex + 1 == getCurrentRound().maxEndCount;
-        final boolean hasOneMoreRound = data.roundIndex + 1 < data.training.getRounds().size();
+        final boolean endFinished = data != null && data.getCurrentEnd().getId() != null;
+        boolean isLastEnd = data != null &&
+                data.getCurrentRound().maxEndCount != null &&
+                data.endIndex + 1 == data.getCurrentRound().maxEndCount;
+        final boolean hasOneMoreRound = data != null &&
+                data.roundIndex + 1 < data.training.getRounds().size();
         boolean showNextRound = isLastEnd && hasOneMoreRound;
         final boolean isEnabled = endFinished && (!isLastEnd || hasOneMoreRound);
         final int color;
@@ -429,50 +491,18 @@ public class InputActivity extends ChildActivityBase
                 .start();
     }
 
-    public void setShotShowScope(ETrainingScope shotShowScope) {
-        this.shotShowScope = shotShowScope;
-        SettingsManager.setShowMode(shotShowScope);
-        updateOldShoots();
-    }
-
-    private void openTimer() {
-        if (getCurrentEnd().getId() == null
-                && getCurrentEnd().getShots().get(0).scoringRing == Shot.NOTHING_SELECTED
-                && SettingsManager.getTimerEnabled()) {
-            if (transitionFinished) {
-                TimerFragment.getIntent()
-                        .withContext(this)
-                        .start();
-            } else if (Utils.isLollipop()) {
-                startTimerDelayed();
-            }
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void startTimerDelayed() {
-        getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
-            @Override
-            public void onTransitionEnd(Transition transition) {
-                TimerFragment.getIntent()
-                        .withContext(InputActivity.this)
-                        .start();
-                getWindow().getSharedElementEnterTransition().removeListener(this);
-            }
-        });
-    }
-
     @Override
     public void onEndUpdated(List<Shot> changedEnd) {
-        getCurrentEnd().setShots(changedEnd);
+        data.getCurrentEnd().setShots(changedEnd);
 
         // Set current end score
-        Score reachedEndScore = getCurrentRound().getTarget().getReachedScore(getCurrentEnd());
+        Score reachedEndScore = data.getCurrentRound().getTarget()
+                .getReachedScore(data.getCurrentEnd());
         binding.endScore.setText(reachedEndScore.toString());
 
         // Set current round score
-        Score reachedRoundScore = Stream.of(getEnds())
-                .map(end -> getCurrentRound().getTarget().getReachedScore(end))
+        Score reachedRoundScore = Stream.of(data.getEnds())
+                .map(end -> data.getCurrentRound().getTarget().getReachedScore(end))
                 .collect(Score.sum());
         binding.roundScore.setText(reachedRoundScore.toString());
 
@@ -500,95 +530,33 @@ public class InputActivity extends ChildActivityBase
 
     @Override
     public void onEndFinished(List<Shot> shots, boolean remote) {
-        getCurrentEnd().setShots(shots);
-        getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING;
-        if (getCurrentEnd().getId() == null) {
-            getCurrentEnd().saveTime = new DateTime();
+        data.getCurrentEnd().setShots(shots);
+        data.getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING;
+        if (data.getCurrentEnd().getId() == null) {
+            data.getCurrentEnd().saveTime = new DateTime();
         }
 
         // Change round template if end is out of range defined in template
-        if (getCurrentRound().getEnds().size() == data.endIndex) {
-            getCurrentRound().addEnd();
+        if (data.getCurrentRound().getEnds().size() == data.endIndex) {
+            data.getCurrentRound().addEnd();
         }
 
-        getCurrentEnd().save();
+        data.getCurrentEnd().save();
 
         if (manager != null) {
             manager.sendMessageUpdate(buildInfo());
         }
         if (remote) {
-            showEnd(getEnds().size());
+            showEnd(data.getEnds().size());
         }
         updateNavigationButtons();
         supportInvalidateOptionsMenu();
-    }
-
-    private NotificationInfo buildInfo() {
-        String title = getString(R.string.passe) + " " + (getEnds().size());
-        String text = "";
-
-        // Initialize message text
-        if (getEnds().size() > 0) {
-            End lastEnd = lastItem(getEnds());
-            for (Shot shot : lastEnd.getShots()) {
-                text += getCurrentRound().getTarget()
-                        .zoneToString(shot.scoringRing, shot.index) + " ";
-            }
-            text += "\n";
-        } else {
-            title = getString(R.string.my_targets);
-        }
-
-        // Load bow settings
-        if (data.sightMark != null) {
-            text += String.format("%s: %s", getCurrentRound().distance, data.sightMark.value);
-        }
-        return new NotificationInfo(getCurrentRound(), title, text);
-    }
-
-    private List<End> getEnds() {
-        return getCurrentRound().getEnds();
-    }
-
-    private Round getCurrentRound() {
-        return data.training.getRounds().get(data.roundIndex);
-    }
-
-    private End getCurrentEnd() {
-        final List<End> ends = getEnds();
-        if (ends.size() <= data.endIndex) {
-            return null;
-        }
-        return ends.get(data.endIndex);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Icepick.saveInstanceState(this, outState);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private static abstract class TransitionAdapter implements Transition.TransitionListener {
-        @Override
-        public void onTransitionStart(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
-
-        }
     }
 
     private static class UITaskAsyncTaskLoader extends AsyncTaskLoader<LoaderResult> {
@@ -605,43 +573,81 @@ public class InputActivity extends ChildActivityBase
 
         @Override
         public LoaderResult loadInBackground() {
-            LoaderResult result = new LoaderResult();
-            result.training = Training.get(trainingId);
-            List<Round> rounds = result.training.getRounds();
-            result.roundIndex = 0;
-            for (int i = 0; i < rounds.size(); i++) {
-                if (rounds.get(i).getId() == roundId) {
-                    result.roundIndex = i;
-                }
-                rounds.get(i).getEnds();
-            }
-            result.endIndex = Math.min(endIndex, rounds.get(result.roundIndex).getEnds().size());
+            Training training = Training.get(trainingId);
+            final LoaderResult result = new LoaderResult(training);
+            result.setRoundId(roundId);
+            result.setEndIndex(endIndex);
 
-            result.standardRound = result.training.getStandardRound();
-            result.arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
-            if (result.training.arrowId != null) {
-                Arrow arrow = result.training.getArrow();
+            if (training.arrowId != null) {
+                Arrow arrow = training.getArrow();
                 if (arrow != null) {
-                    result.arrowDiameter = arrow.diameter;
+                    result.setArrowDiameter(arrow.diameter);
                 }
             }
-
-            final Bow bow = result.training.getBow();
+            final Bow bow = training.getBow();
             if (bow != null) {
-                result.sightMark = bow.getSightSetting(rounds.get(result.roundIndex).distance);
+                result.sightMark = bow.getSightSetting(result.getDistance());
             }
-
             return result;
         }
     }
 
     @Parcel
     static class LoaderResult {
-        Training training;
-        StandardRound standardRound;
-        int roundIndex;
-        Dimension arrowDiameter;
-        int endIndex;
-        SightMark sightMark;
+        final Training training;
+        final StandardRound standardRound;
+        Dimension arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
+        SightMark sightMark = null;
+        int roundIndex = 0;
+        int endIndex = 0;
+
+        public LoaderResult(Training training) {
+            this.training = training;
+            this.standardRound = training.getStandardRound();
+        }
+
+        public void setRoundId(long roundId) {
+            List<Round> rounds = training.getRounds();
+            roundIndex = 0;
+            for (int i = 0; i < rounds.size(); i++) {
+                if (rounds.get(i).getId() == roundId) {
+                    roundIndex = i;
+                }
+                rounds.get(i).getEnds();
+            }
+        }
+
+        public void setEndIndex(int endIndex) {
+            this.endIndex = Math.min(endIndex, getCurrentRound().getEnds().size());
+        }
+
+        public Dimension getDistance() {
+            return getCurrentRound().distance;
+        }
+
+        @NonNull
+        private List<End> getEnds() {
+            return getCurrentRound().getEnds();
+        }
+
+        @NonNull
+        private Round getCurrentRound() {
+            return training.getRounds().get(roundIndex);
+        }
+
+        @NonNull
+        private End getCurrentEnd() {
+            List<End> ends = getEnds();
+            if (ends.size() <= endIndex) {
+                endIndex = ends.size();
+                getCurrentRound().addEnd();
+                ends = getEnds();
+            }
+            return ends.get(endIndex);
+        }
+
+        public void setArrowDiameter(Dimension arrowDiameter) {
+            this.arrowDiameter = arrowDiameter;
+        }
     }
 }

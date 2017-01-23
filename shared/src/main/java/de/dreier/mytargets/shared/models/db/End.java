@@ -81,6 +81,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
         }
     }
 
+    @NonNull
     @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "shots")
     public List<Shot> getShots() {
         if (shots == null || shots.isEmpty()) {
