@@ -72,6 +72,9 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     List<String> distanceTags;
 
     @State(ParcelsBundler.class)
+    List<String> diameterTags;
+
+    @State(ParcelsBundler.class)
     List<Long> arrowTags;
 
     @State(ParcelsBundler.class)
@@ -122,12 +125,14 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         binding.progressBar.hide();
         binding.distanceTags.setTags(getDistanceTags());
         binding.distanceTags.setOnTagClickListener(t -> applyFilter());
+        binding.diameterTags.setTags(getDiameterTags());
+        binding.diameterTags.setOnTagClickListener(t -> applyFilter());
         binding.arrowTags.setTags(getArrowTags());
         binding.arrowTags.setOnTagClickListener(t -> applyFilter());
         binding.bowTags.setTags(getBowTags());
         binding.bowTags.setOnTagClickListener(t -> applyFilter());
 
-        if (distanceTags != null && arrowTags != null && bowTags != null) {
+        if (distanceTags != null && diameterTags != null && arrowTags != null && bowTags != null) {
             restoreCheckedStates();
         }
 
@@ -138,6 +143,9 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         Stream.of(binding.distanceTags.getTags())
                 .forEach(tag -> tag.isChecked = Stream.of(distanceTags)
                         .anyMatch(d -> Utils.equals(d, tag.text)));
+        Stream.of(binding.diameterTags.getTags())
+                .forEach(tag -> tag.isChecked = Stream.of(diameterTags)
+                        .anyMatch(d -> Utils.equals(d, tag.text)));
         Stream.of(binding.arrowTags.getTags())
                 .forEach(tag -> tag.isChecked = Stream.of(arrowTags)
                         .anyMatch(a -> Utils.equals(a, tag.id)));
@@ -145,6 +153,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 .forEach(tag -> tag.isChecked = Stream.of(bowTags)
                         .anyMatch(b -> Utils.equals(b, tag.id)));
         binding.distanceTags.setTags(binding.distanceTags.getTags());
+        binding.diameterTags.setTags(binding.diameterTags.getTags());
         binding.arrowTags.setTags(binding.arrowTags.getTags());
         binding.bowTags.setTags(binding.bowTags.getTags());
     }
@@ -165,6 +174,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 R.drawable.ic_filter_white_24dp);
         // only show filter if we have at least one category to filter by
         boolean filterAvailable = binding.distanceTags.getTags().size() > 1
+                || binding.diameterTags.getTags().size() > 1
                 || binding.bowTags.getTags().size() > 1
                 || binding.arrowTags.getTags().size() > 1;
         filter.setVisible(rounds != null && filterAvailable);
@@ -199,11 +209,14 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     private void resetFilter() {
         Stream.of(binding.distanceTags.getTags())
                 .forEach(tag -> tag.isChecked = true);
+        Stream.of(binding.diameterTags.getTags())
+                .forEach(tag -> tag.isChecked = true);
         Stream.of(binding.arrowTags.getTags())
                 .forEach(tag -> tag.isChecked = true);
         Stream.of(binding.bowTags.getTags())
                 .forEach(tag -> tag.isChecked = true);
         binding.distanceTags.setTags(binding.distanceTags.getTags());
+        binding.diameterTags.setTags(binding.diameterTags.getTags());
         binding.arrowTags.setTags(binding.arrowTags.getTags());
         binding.bowTags.setTags(binding.bowTags.getTags());
     }
@@ -211,12 +224,15 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     private void applyFilter() {
         distanceTags = Stream.of(binding.distanceTags.getCheckedTags())
                 .map(t -> t.text).collect(Collectors.toList());
+        diameterTags = Stream.of(binding.diameterTags.getCheckedTags())
+                .map(t -> t.text).collect(Collectors.toList());
         arrowTags = Stream.of(binding.arrowTags.getCheckedTags())
                 .map(t -> t.id).collect(Collectors.toList());
         bowTags = Stream.of(binding.bowTags.getCheckedTags())
                 .map(t -> t.id).collect(Collectors.toList());
         filteredRounds = Stream.of(rounds)
                 .filter(pair -> distanceTags.contains(pair.second.distance.toString())
+                        && diameterTags.contains(pair.second.getTarget().size.toString())
                         && arrowTags.contains(pair.first.arrowId)
                         && bowTags.contains(pair.first.bowId))
                 .map(p -> p.second)
@@ -271,6 +287,15 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     private List<ChipGroup.Tag> getDistanceTags() {
         return Stream.of(rounds)
                 .map(p -> p.second.distance)
+                .distinct()
+                .sorted()
+                .map(d -> new ChipGroup.Tag(d.getId(), d.toString()))
+                .collect(Collectors.toList());
+    }
+
+    private List<ChipGroup.Tag> getDiameterTags() {
+        return Stream.of(rounds)
+                .map(p -> p.second.getTarget().size)
                 .distinct()
                 .sorted()
                 .map(d -> new ChipGroup.Tag(d.getId(), d.toString()))
