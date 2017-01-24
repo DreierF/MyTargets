@@ -37,6 +37,7 @@ import de.dreier.mytargets.shared.models.db.SightMark_Table;
 
 @Parcel
 public class Dimension implements IIdProvider, Comparable<Dimension> {
+    public static final Dimension UNKNOWN = new Dimension(-1, (Unit) null);
     private static final int MINI_VALUE = -6;
     public static final Dimension MINI = new Dimension(MINI_VALUE, (Unit) null);
     private static final int SMALL_VALUE = -5;
@@ -47,7 +48,6 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
     public static final Dimension LARGE = new Dimension(LARGE_VALUE, (Unit) null);
     private static final int XLARGE_VALUE = -2;
     public static final Dimension XLARGE = new Dimension(XLARGE_VALUE, (Unit) null);
-
     public final float value;
     public final Unit unit;
 
@@ -80,7 +80,7 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
     public static List<Dimension> getAll(Dimension distance, Unit unit) {
         HashSet<Dimension> distances = new HashSet<>();
 
-        distances.add(new Dimension(-1, (Unit) null));
+        distances.add(Dimension.UNKNOWN);
 
         // Add currently selected distance to list
         if (distance.unit == unit) {

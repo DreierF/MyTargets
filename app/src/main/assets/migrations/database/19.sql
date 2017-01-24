@@ -1,0 +1,1 @@
+UPDATE Round SET distance="-1 null" WHERE distance IS NULL

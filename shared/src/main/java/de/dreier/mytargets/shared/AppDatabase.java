@@ -45,7 +45,7 @@ public class AppDatabase {
     public static final String DATABASE_FILE_NAME = "database.db";
     public static final String DATABASE_IMPORT_FILE_NAME = "database";
 
-    public static final int VERSION = 18;
+    public static final int VERSION = 19;
 
     @Migration(version = 0, database = AppDatabase.class)
     public static class Migration0 extends BaseMigration {
