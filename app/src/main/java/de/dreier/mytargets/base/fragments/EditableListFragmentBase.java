@@ -181,7 +181,8 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model,
         }
     }
 
-    public void onClick(SelectableViewHolder holder, T mItem) {
+    @Override
+    public void onClick(SelectableViewHolder<T> holder, T mItem) {
         if (mItem == null) {
             return;
         }
@@ -193,7 +194,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model,
     }
 
     @Override
-    public void onLongClick(SelectableViewHolder holder) {
+    public void onLongClick(SelectableViewHolder<T> holder) {
         if (actionMode == null) {
             AppCompatActivity activity = (AppCompatActivity) getActivity();
             activity.startSupportActionMode(actionModeCallback);
