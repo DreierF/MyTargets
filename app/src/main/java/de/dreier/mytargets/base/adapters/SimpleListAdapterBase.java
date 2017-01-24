@@ -15,8 +15,6 @@
 
 package de.dreier.mytargets.base.adapters;
 
-import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -32,11 +30,9 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 public abstract class SimpleListAdapterBase<T extends IIdProvider & Comparable<T>>
         extends ListAdapterBase<SelectableViewHolder<T>, T> {
 
-    protected final LayoutInflater inflater;
     private List<T> list = new ArrayList<>();
 
-    public SimpleListAdapterBase(Context context) {
-        inflater = LayoutInflater.from(context);
+    public SimpleListAdapterBase() {
         setHasStableIds(true);
     }
 

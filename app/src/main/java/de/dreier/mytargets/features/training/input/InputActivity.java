@@ -596,7 +596,7 @@ public class InputActivity extends ChildActivityBase
     @Parcel
     static class LoaderResult {
         final Training training;
-        final StandardRound standardRound;
+        StandardRound standardRound;
         Dimension arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
         SightMark sightMark = null;
         int roundIndex = 0;

@@ -16,6 +16,7 @@ package de.dreier.mytargets.shared.targets.models;
 
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.ETargetType;
 import de.dreier.mytargets.shared.targets.decoration.CenterMarkDecorator;
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
 import de.dreier.mytargets.shared.targets.zone.CircularZone;
@@ -54,6 +55,6 @@ public class WAField extends TargetModelBase {
                 new Dimension(80, CENTIMETER)
         };
         decorator = new CenterMarkDecorator(DARK_GRAY, 10.5f, 4, false);
-        isFieldTarget = true;
+        type = ETargetType.FIELD;
     }
 }

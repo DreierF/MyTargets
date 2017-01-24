@@ -29,6 +29,7 @@ import java.util.Set;
 
 import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.ETargetType;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.db.Shot;
@@ -48,9 +49,8 @@ public class TargetModelBase implements IIdProvider {
     protected ZoneBase[] zones;
     protected Dimension[] diameters;
     protected ScoringStyle[] scoringStyles;
-    protected boolean is3DTarget;
-    protected boolean isFieldTarget;
     protected TargetDecorator decorator;
+    protected ETargetType type = ETargetType.TARGET;
 
     /**
      * Factor that needs to be applied to the target's diameter to get the real target size.
@@ -69,6 +69,10 @@ public class TargetModelBase implements IIdProvider {
     @Override
     public Long getId() {
         return id;
+    }
+
+    public ETargetType getType() {
+        return type;
     }
 
     @Override

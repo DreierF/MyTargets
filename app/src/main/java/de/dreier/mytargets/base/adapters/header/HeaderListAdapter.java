@@ -32,7 +32,7 @@ public abstract class HeaderListAdapter<C extends IIdProvider>
         extends HeaderListAdapterBase<HeaderListAdapter.SimpleHeader, C, HeaderListAdapterBase.HeaderHolder<HeaderListAdapter.SimpleHeader, C>> {
 
     public HeaderListAdapter(PartitionDelegate<SimpleHeader, C> parentPartition, Comparator<C> childComparator) {
-        super(parentPartition, (h1, h2) -> h1.index.compareTo(h2.index), childComparator);
+        super(parentPartition, SimpleHeader::compareTo, childComparator);
     }
 
     @NonNull
@@ -80,7 +80,7 @@ public abstract class HeaderListAdapter<C extends IIdProvider>
         }
     }
 
-    public static class SimpleHeader implements IIdProvider {
+    public static class SimpleHeader implements IIdProvider, Comparable<SimpleHeader> {
         Long index;
         String title;
 
@@ -92,6 +92,16 @@ public abstract class HeaderListAdapter<C extends IIdProvider>
         @Override
         public Long getId() {
             return index;
+        }
+
+        @Override
+        public int compareTo(@NonNull SimpleHeader other) {
+            return index.compareTo(other.index);
+        }
+
+        @Override
+        public String toString() {
+            return title;
         }
     }
 }

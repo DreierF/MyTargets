@@ -15,6 +15,7 @@
 package de.dreier.mytargets.shared.targets.models;
 
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.models.ETargetType;
 import de.dreier.mytargets.shared.targets.TargetOvalBase;
 import de.dreier.mytargets.shared.targets.scoringstyle.ArrowAwareScoringStyle;
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
@@ -43,5 +44,6 @@ public class IFAAAnimal extends TargetOvalBase {
                         {12, 10}
                 })
         };
+        type = ETargetType.THREE_D;
     }
 }

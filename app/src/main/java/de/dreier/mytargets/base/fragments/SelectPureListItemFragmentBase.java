@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.base.fragments;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -48,7 +47,7 @@ public abstract class SelectPureListItemFragmentBase<T extends IIdProvider & IIm
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
-        adapter = new ListAdapter(getContext());
+        adapter = new ListAdapter();
         binding.recyclerView.setAdapter(adapter);
         binding.fab.setVisibility(View.GONE);
         ToolbarUtils.showUpAsX(this);
@@ -69,12 +68,10 @@ public abstract class SelectPureListItemFragmentBase<T extends IIdProvider & IIm
     }
 
     private class ListAdapter extends SimpleListAdapterBase<T> {
-        ListAdapter(Context context) {
-            super(context);
-        }
 
         @Override
         public SelectableViewHolder<T> onCreateViewHolder(ViewGroup parent) {
+            final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             return SelectPureListItemFragmentBase.this.onCreateViewHolder(inflater, parent);
         }
     }

@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,11 +42,13 @@ import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
+import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter;
+import de.dreier.mytargets.base.adapters.header.HeaderListAdapter;
 import de.dreier.mytargets.base.fragments.SelectItemFragmentBase;
 import de.dreier.mytargets.databinding.FragmentTargetSelectBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.ETargetType;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.shared.targets.models.TargetModelBase;
@@ -59,7 +62,9 @@ import static de.dreier.mytargets.features.training.target.TargetListFragment.EF
 import static de.dreier.mytargets.features.training.target.TargetListFragment.EFixedType.NONE;
 import static de.dreier.mytargets.features.training.target.TargetListFragment.EFixedType.TARGET;
 
-public class TargetListFragment extends SelectItemFragmentBase<Target, SimpleListAdapterBase<Target>> implements AdapterView.OnItemSelectedListener {
+public class TargetListFragment extends SelectItemFragmentBase<Target,
+        ExpandableListAdapter<HeaderListAdapter.SimpleHeader, Target>>
+        implements AdapterView.OnItemSelectedListener {
 
     public static final String FIXED_TYPE = "fixed_type";
     private FragmentTargetSelectBinding binding;
@@ -77,8 +82,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target, SimpleLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_target_select, container, false);
-        binding.recyclerView.setHasFixedSize(true);
-        adapter = new TargetAdapter(getContext());
+        adapter = new TargetAdapter();
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(adapter);
 
@@ -131,6 +135,12 @@ public class TargetListFragment extends SelectItemFragmentBase<Target, SimpleLis
 
         setSelectionWithoutEvent(binding.scoringStyle, target.scoringStyle);
         setSelectionWithoutEvent(binding.targetSize, diameterIndex);
+    }
+
+    @Override
+    protected void selectItem(RecyclerView recyclerView, Target item) {
+        adapter.ensureItemIsExpanded(item);
+        super.selectItem(recyclerView, item);
     }
 
     @Override
@@ -236,13 +246,16 @@ public class TargetListFragment extends SelectItemFragmentBase<Target, SimpleLis
         TARGET
     }
 
-    private class TargetAdapter extends SimpleListAdapterBase<Target> {
-        TargetAdapter(Context context) {
-            super(context);
+    private class TargetAdapter extends ExpandableListAdapter<HeaderListAdapter.SimpleHeader, Target> {
+        TargetAdapter() {
+            super(child -> {
+                final ETargetType type = child.getModel().getType();
+                return new HeaderListAdapter.SimpleHeader((long) type.ordinal(), type.toString());
+            }, HeaderListAdapter.SimpleHeader::compareTo, TargetFactory.getComparator());
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent) {
+        protected ViewHolder getSecondLevelViewHolder(ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_image_simple, parent, false);
             return new ViewHolder(itemView);

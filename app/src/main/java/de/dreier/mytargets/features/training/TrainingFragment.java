@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.features.training;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -86,7 +85,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.addItemDecoration(
                 new DividerItemDecoration(getContext(), R.drawable.full_divider));
-        adapter = new RoundAdapter(getContext());
+        adapter = new RoundAdapter();
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(adapter);
 
@@ -189,10 +188,6 @@ public class TrainingFragment extends EditableListFragment<Round> {
     }
 
     private class RoundAdapter extends SimpleListAdapterBase<Round> {
-
-        RoundAdapter(Context context) {
-            super(context);
-        }
 
         @Override
         protected SelectableViewHolder<Round> onCreateViewHolder(ViewGroup parent) {

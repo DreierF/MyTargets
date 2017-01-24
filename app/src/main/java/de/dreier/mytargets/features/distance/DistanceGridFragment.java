@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.features.distance;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -42,7 +41,8 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
 
-public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> implements DistanceInputDialog.OnClickListener {
+public class DistanceGridFragment extends SelectItemFragmentBase<Dimension, SimpleListAdapterBase<Dimension>>
+        implements DistanceInputDialog.OnClickListener {
 
     private static final String DISTANCE_UNIT = "distance_unit";
     protected FragmentListBinding binding;
@@ -67,7 +67,7 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> impl
         unit = Unit.from(bundle.getString(DISTANCE_UNIT));
         binding.recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         binding.recyclerView.addItemDecoration(new CardItemDecorator(getActivity(), 3));
-        adapter = new DistanceAdapter(getContext());
+        adapter = new DistanceAdapter();
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(adapter);
 
@@ -118,9 +118,6 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension> impl
     }
 
     private class DistanceAdapter extends SimpleListAdapterBase<Dimension> {
-        DistanceAdapter(Context context) {
-            super(context);
-        }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {

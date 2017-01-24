@@ -16,6 +16,7 @@ package de.dreier.mytargets.shared.targets.models;
 
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.ETargetType;
 import de.dreier.mytargets.shared.targets.decoration.CenterMarkDecorator;
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
 import de.dreier.mytargets.shared.targets.zone.CircularZone;
@@ -49,6 +50,6 @@ public class NFAAExpertField extends TargetModelBase {
                 new Dimension(65, CENTIMETER)
         };
         decorator = new CenterMarkDecorator(WHITE, 7.307f, 4, true);
-        isFieldTarget = true;
+        type = ETargetType.FIELD;
     }
 }
