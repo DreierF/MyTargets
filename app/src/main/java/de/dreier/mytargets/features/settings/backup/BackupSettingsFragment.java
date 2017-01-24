@@ -401,7 +401,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
 
     @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void showDeniedForWrite() {
-        getActivity().onBackPressed();
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     @Override

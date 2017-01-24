@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.features.bows;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -72,7 +71,7 @@ public class BowListFragment extends EditableListFragment<Bow> {
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.addItemDecoration(
                 new DividerItemDecoration(getContext(), R.drawable.full_divider));
-        adapter = new BowAdapter(getContext());
+        adapter = new BowAdapter();
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(adapter);
 
@@ -112,9 +111,6 @@ public class BowListFragment extends EditableListFragment<Bow> {
     }
 
     private class BowAdapter extends SimpleListAdapterBase<Bow> {
-        public BowAdapter(Context context) {
-            super(context);
-        }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
@@ -129,7 +125,7 @@ public class BowListFragment extends EditableListFragment<Bow> {
         final ItemImageDetailsBinding binding;
 
         public ViewHolder(View itemView) {
-            super(itemView, mSelector, BowListFragment.this);
+            super(itemView, selector, BowListFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }
 

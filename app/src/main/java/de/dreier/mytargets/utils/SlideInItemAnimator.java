@@ -74,11 +74,8 @@ public class SlideInItemAnimator extends DefaultItemAnimator {
 
     @Override
     public void runPendingAnimations() {
-        if (useDefaultAnimator) {
-            super.runPendingAnimations();
-            return;
-        }
-        if (!pendingAdds.isEmpty() && !useDefaultAnimator) {
+        super.runPendingAnimations();
+        if (!pendingAdds.isEmpty()) {
             for (int i = pendingAdds.size() - 1; i >= 0; i--) {
                 final RecyclerView.ViewHolder holder = pendingAdds.get(i);
                 new Handler().postDelayed(() -> holder.itemView.animate()

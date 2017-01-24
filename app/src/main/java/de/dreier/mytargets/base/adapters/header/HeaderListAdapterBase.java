@@ -150,6 +150,7 @@ public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IId
         header.remove(item);
     }
 
+    @Override
     public void setList(List<C> children) {
         fillChildMap(children);
         notifyDataSetChanged();
@@ -163,8 +164,7 @@ public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IId
     }
 
     private void addChildToMap(C child) {
-        P parent = partitionDelegate.getParent(child);
-        H parentHolder = getHeaderHolder(parent, childComparator);
+        H parentHolder = getHeaderHolderForChild(child);
         int pos = getHeaderIndex(parentHolder);
         if (pos < 0) {
             parentHolder.add(child);
@@ -172,6 +172,11 @@ public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IId
         } else {
             headersList.get(pos).add(child);
         }
+    }
+
+    protected H getHeaderHolderForChild(C child) {
+        P parent = partitionDelegate.getParent(child);
+        return getHeaderHolder(parent, childComparator);
     }
 
     @NonNull

@@ -45,23 +45,26 @@ import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.db.StandardRound;
+import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+import icepick.State;
 
 import static android.app.Activity.RESULT_OK;
 import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
 
-public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRound>
+public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRound, HeaderListAdapter<StandardRound>>
         implements SearchView.OnQueryTextListener {
 
     private static final int NEW_STANDARD_ROUND = 1;
     private static final int EDIT_STANDARD_ROUND = 2;
     private static final String KEY_QUERY = "query";
 
-    private StandardRound currentSelection;
+    @State(ParcelsBundler.class)
+    StandardRound currentSelection;
     private SearchView searchView;
 
     protected FragmentListBinding binding;
@@ -69,6 +72,14 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
     public static IntentWrapper getIntent(StandardRound standardRound) {
         return new IntentWrapper(StandardRoundActivity.class)
                 .with(ITEM, Parcels.wrap(standardRound));
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState == null) {
+            currentSelection = Parcels.unwrap(getArguments().getParcelable(ITEM));
+        }
     }
 
     @Override
@@ -89,7 +100,6 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
                 .start());
         useDoubleClickSelection = true;
         setHasOptionsMenu(true);
-        currentSelection = Parcels.unwrap(getArguments().getParcelable(ITEM));
         return binding.getRoot();
     }
 
@@ -251,7 +261,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
         private final ItemStandardRoundBinding binding;
 
         public ViewHolder(ItemStandardRoundBinding binding) {
-            super(binding.getRoot(), mSelector, StandardRoundListFragment.this);
+            super(binding.getRoot(), selector, StandardRoundListFragment.this);
             this.binding = binding;
         }
 

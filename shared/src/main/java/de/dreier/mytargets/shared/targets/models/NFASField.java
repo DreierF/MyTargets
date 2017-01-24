@@ -15,6 +15,7 @@
 package de.dreier.mytargets.shared.targets.models;
 
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.models.ETargetType;
 import de.dreier.mytargets.shared.targets.TargetOvalBase;
 import de.dreier.mytargets.shared.targets.scoringstyle.ArrowAwareScoringStyle;
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
@@ -45,6 +46,6 @@ public class NFASField extends TargetOvalBase {
                         {8, 8, 4}
                 })
         };
-        isFieldTarget = true;
+        type = ETargetType.FIELD;
     }
 }

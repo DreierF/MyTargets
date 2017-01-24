@@ -74,6 +74,14 @@ public abstract class ExpandableListAdapter<P extends IIdProvider, C extends IId
         return -1;
     }
 
+    public void ensureItemIsExpanded(C item) {
+        ExpandableHeaderHolder<P, C> parentHolder = getHeaderHolderForChild(item);
+        int pos = getHeaderIndex(parentHolder);
+        if (pos >= 0 && !headersList.get(pos).expanded) {
+            expandOrCollapse(headersList.get(pos));
+        }
+    }
+
     private void expandOrCollapse(ExpandableHeaderHolder<P, C> header) {
         int childLength = header.children.size();
         if (!header.expanded) {

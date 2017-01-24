@@ -165,8 +165,10 @@ public class MainActivity extends Activity implements TargetViewBase.OnEndFinish
         return results;
     }
 
-    private void sendMessage(List<Shot> p) {
-        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(p));
+    private void sendMessage(List<Shot> shots) {
+        End e = new End();
+        e.setShots(shots);
+        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(e));
         new Thread(() -> {
             sendMessage(WearableUtils.FINISHED_INPUT, data);
         }).start();

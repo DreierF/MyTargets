@@ -26,20 +26,14 @@ public final class DimensionConverter extends TypeConverter<String, Dimension> {
         if (model != null) {
             return model.value + " " + model.unit;
         }
-
         return null;
     }
 
     @Override
     public Dimension getModelValue(String data) {
-        if (data != null) {
-            int index = data.indexOf(' ');
-            final String value = data.substring(0, index);
-            final String unit = data.substring(index + 1);
-            return new Dimension(Float.parseFloat(value), Dimension.Unit.from(unit));
-        }
-
-        return null;
+        int index = data.indexOf(' ');
+        final String value = data.substring(0, index);
+        final String unit = data.substring(index + 1);
+        return new Dimension(Float.parseFloat(value), Dimension.Unit.from(unit));
     }
-
 }

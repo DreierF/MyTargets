@@ -26,8 +26,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.utils.Utils;
 import icepick.Icepick;
@@ -41,15 +39,10 @@ public abstract class FragmentBase extends Fragment implements LoaderManager.Loa
 
     private static final int LOADER_ID = 0;
 
-    public void logEvent(String event) {
-        FirebaseAnalytics.getInstance(getContext()).logEvent(event, null);
-    }
-
     @CallSuper
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        logEvent(getClass().getSimpleName());
         Icepick.restoreInstanceState(this, savedInstanceState);
     }
 
