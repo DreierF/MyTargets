@@ -98,7 +98,9 @@ public abstract class SettingsFragmentBase extends PreferenceFragmentCompat
             super.onDisplayPreferenceDialog(preference);
         } catch (IllegalArgumentException e) {
             FirebaseAnalytics.getInstance(getContext())
-                    .logEvent("key=" + preference.getKey() + " toStr" + preference.toString(),
+                    .logEvent("key=" + preference.getKey() + " " +
+                                    preference.getClass().getCanonicalName() + " toStr" + preference
+                                    .toString(),
                             null);
             // TODO remove this when crashes have been fixed
             throw e;
