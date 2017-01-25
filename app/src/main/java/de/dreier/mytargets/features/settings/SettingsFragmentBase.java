@@ -19,8 +19,11 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.View;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.app.ApplicationInstance;
@@ -87,6 +90,19 @@ public abstract class SettingsFragmentBase extends PreferenceFragmentCompat
         super.onPause();
         ApplicationInstance.getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onDisplayPreferenceDialog(Preference preference) {
+        try {
+            super.onDisplayPreferenceDialog(preference);
+        } catch (IllegalArgumentException e) {
+            FirebaseAnalytics.getInstance(getContext())
+                    .logEvent("key=" + preference.getKey() + " toStr" + preference.toString(),
+                            null);
+            // TODO remove this when crashes have been fixed
+            throw e;
+        }
     }
 
     protected void setSummary(String key, String value) {
