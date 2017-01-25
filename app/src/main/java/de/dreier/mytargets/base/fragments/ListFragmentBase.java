@@ -38,9 +38,6 @@ public abstract class ListFragmentBase<T, U extends ListAdapterBase<?, T>> exten
         if (activity instanceof OnItemSelectedListener) {
             listener = (OnItemSelectedListener) activity;
         }
-        if (getParentFragment() instanceof OnItemSelectedListener) {
-            listener = (OnItemSelectedListener) getParentFragment();
-        }
     }
 
     /**

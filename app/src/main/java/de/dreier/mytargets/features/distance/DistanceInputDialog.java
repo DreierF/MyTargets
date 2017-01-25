@@ -32,28 +32,28 @@ public class DistanceInputDialog {
     }
 
     public static class Builder {
-        private final Context mContext;
-        private OnClickListener mClickListener;
-        private String mUnit;
+        private final Context context;
+        private OnClickListener clickListener;
+        private String unit;
 
         public Builder(Context context) {
-            mContext = context;
+            this.context = context;
         }
 
         public void show() {
-            LayoutInflater inflater = LayoutInflater.from(mContext);
+            LayoutInflater inflater = LayoutInflater.from(context);
             DialogCommentBinding binding = DataBindingUtil
                     .inflate(inflater, R.layout.dialog_comment, null, false);
             binding.shotComment.setInputType(InputType.TYPE_CLASS_NUMBER);
-            binding.unit.setText(mUnit);
+            binding.unit.setText(unit);
             final EditText shotComment = binding.shotComment;
 
-            new AlertDialog.Builder(mContext)
+            new AlertDialog.Builder(context)
                     .setTitle(R.string.distance)
                     .setView(binding.getRoot())
                     .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                         String s = shotComment.getText().toString();
-                        mClickListener.onOkClickListener(s);
+                        clickListener.onOkClickListener(s);
                         dialog.dismiss();
                     })
                     .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
@@ -61,12 +61,12 @@ public class DistanceInputDialog {
         }
 
         public Builder setOnClickListener(OnClickListener listener) {
-            mClickListener = listener;
+            clickListener = listener;
             return this;
         }
 
         public Builder setUnit(String unit) {
-            mUnit = unit;
+            this.unit = unit;
             return this;
         }
     }

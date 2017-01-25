@@ -69,6 +69,7 @@ public abstract class SimpleListAdapterBase<T extends IIdProvider & Comparable<T
         notifyDataSetChanged();
     }
 
+    @Override
     public T getItem(int pos) {
         return list.get(pos);
     }
