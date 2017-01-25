@@ -36,10 +36,9 @@ public abstract class SelectorBase {
 
     protected void refreshHolder(SelectableHolder holder) {
         if (holder != null) {
-            if (holder instanceof ItemBindingHolder) {
-                if (((ItemBindingHolder) holder).getItem() != null) {
-                    ((ItemBindingHolder) holder).bindItem();
-                }
+            if (holder instanceof ItemBindingHolder &&
+                    ((ItemBindingHolder) holder).getItem() != null) {
+                ((ItemBindingHolder) holder).bindItem();
             }
             holder.setSelectable(isSelectable);
             boolean isActivated = isSelected(holder.getItemId());

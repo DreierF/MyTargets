@@ -94,7 +94,7 @@ public class EditStandardRoundActivityTest extends UITestBase {
         onView(withId(R.id.addButton)).perform(nestedScrollTo(), click());
 
         onView(withRecyclerView(R.id.rounds).atPositionOnView(1, R.id.distance))
-                .perform(click());
+                .perform(nestedScrollTo(), click());
         onView(allOf(withId(R.id.recyclerView), isDisplayed()))
                 .perform(actionOnItem(hasDescendant(withText("15m")), click()));
 
