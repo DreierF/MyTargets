@@ -190,6 +190,12 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     @Override
     public void save() {
         super.save();
+        SQLite.delete(Shot.class)
+                .where(Shot_Table.end.eq(id))
+                .execute();
+        SQLite.delete(EndImage.class)
+                .where(EndImage_Table.end.eq(id))
+                .execute();
         // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
         for (Shot s : getShots()) {
             s.endId = id;

@@ -96,6 +96,8 @@
                 <Button
                     android:id="@+id/addButton"
                     style="@style/propertyAddButton"
+                    android:paddingLeft="16dp"
+                    android:paddingStart="16dp"
                     android:text="@string/add" />
 
             </LinearLayout>
