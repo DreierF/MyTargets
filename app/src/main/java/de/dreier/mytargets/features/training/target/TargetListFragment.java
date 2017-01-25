@@ -144,9 +144,9 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
     }
 
     @Override
-    public void onClick(SelectableViewHolder<Target> holder, Target mItem) {
-        super.onClick(holder, mItem);
-        if (mItem == null) {
+    public void onClick(SelectableViewHolder<Target> holder, Target item) {
+        super.onClick(holder, item);
+        if (item == null) {
             return;
         }
         updateSettings();
@@ -155,7 +155,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
 
     private void updateSettings() {
         // Init scoring styles
-        Target target = adapter.getItem(selector.getSelectedPosition());
+        Target target = adapter.getItemById(selector.getSelectedId());
         List<String> styles = target.getModel().getScoringStyles();
         updateAdapter(binding.scoringStyle, scoringStyleAdapter, styles);
 

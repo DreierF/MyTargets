@@ -15,30 +15,46 @@
 
 package de.dreier.mytargets.utils.multiselector;
 
-/**
- * <p>A MultiSelector that only allows for one position at a time to be selected. </p>
- * <p>Any time {@link #setSelected(int, long, boolean)} is called, all other selected positions are set to false.</p>
- */
-public class SingleSelector extends MultiSelector {
+import android.os.Bundle;
 
-    private int selectedPosition = -1;
+/**
+ * <p>A Selector that only allows for one position at a time to be selected. </p>
+ * <p>Any time {@link SelectorBase#setSelected(long, boolean)} is called, all other selected positions are set to false.</p>
+ */
+public class SingleSelector extends SelectorBase {
+
+    private static final String SELECTION_ID = "selection_id";
+    private long selectedId = -1L;
 
     @Override
-    public void setSelected(int position, long id, boolean isSelected) {
+    public void setSelected(long id, boolean isSelected) {
+        long oldId = selectedId;
         if (isSelected) {
-            for (Long selectedId : getSelectedIds()) {
-                if (selectedId != position) {
-                    super.setSelected(selectedPosition, selectedId, false);
-                }
-            }
-            selectedPosition = position;
+            selectedId = id;
         } else {
-            selectedPosition = -1;
+            selectedId = -1;
         }
-        super.setSelected(position, id, isSelected);
+        refreshHolder(tracker.getHolder(oldId));
+        refreshHolder(tracker.getHolder(selectedId));
     }
 
-    public int getSelectedPosition() {
-        return selectedPosition;
+    @Override
+    public boolean isSelected(long id) {
+        return id == selectedId && selectedId != -1;
+    }
+
+    @Override
+    protected void saveSelectionStates(Bundle bundle) {
+        bundle.putLong(SELECTION_ID, selectedId);
+    }
+
+    @Override
+    public void restoreSelectionStates(Bundle savedStates) {
+        super.restoreSelectionStates(savedStates);
+        selectedId = savedStates.getLong(SELECTION_ID);
+    }
+
+    public Long getSelectedId() {
+        return selectedId == -1 ? null : selectedId;
     }
 }

@@ -41,37 +41,37 @@ import android.view.View;
  */
 public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
         implements View.OnClickListener, View.OnLongClickListener {
-    private final MultiSelector mMultiSelector;
-    private OnItemClickListener<T> mListener;
-    private boolean mIsSelectable = false;
+    private final SelectorBase multiSelector;
+    private OnItemClickListener<T> listener;
+    private boolean isSelectable = false;
 
     /**
      * Construct a new SelectableHolder hooked up to be controlled by a MultiSelector.
      * <p/>
-     * If the MultiSelector is not null, the SelectableHolder can be selected by
-     * calling {@link MultiSelector#setSelected(SelectableHolder, boolean)}.
+     * If the Selector is not null, the SelectableHolder can be selected by
+     * calling {@link SelectorBase#setSelected(SelectableHolder, boolean)}.
      * <p/>
      * If the MultiSelector is null, the SelectableHolder acts as a standalone
      * ViewHolder that you can control manually by setting {@link #setSelectable(boolean)}
      * and {@link #setActivated(boolean)}
      *
      * @param itemView      Item view for this ViewHolder
-     * @param multiSelector A selector set to bind this holder to
+     * @param selector A selector set to bind this holder to
      */
-    public SelectableViewHolder(View itemView, MultiSelector multiSelector, OnItemClickListener<T> listener) {
+    public SelectableViewHolder(View itemView, SelectorBase selector, OnItemClickListener<T> listener) {
         super(itemView);
-        this.mMultiSelector = multiSelector;
+        this.multiSelector = selector;
         itemView.setOnClickListener(this);
-        if (multiSelector != null) {
+        if (selector != null) {
             itemView.setLongClickable(true);
             itemView.setOnLongClickListener(this);
-            mListener = listener;
+            this.listener = listener;
         }
     }
 
     @Override
     protected void onRebind() {
-        this.mMultiSelector.bindHolder(this, this.getAdapterPosition(), this.getItemId());
+        multiSelector.bindHolder(this, getItemId());
     }
 
     /**
@@ -81,7 +81,7 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
      * @return True if selectable.
      */
     public boolean isSelectable() {
-        return mIsSelectable;
+        return isSelectable;
     }
 
     /**
@@ -90,7 +90,7 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
      * @param isSelectable True if selectable.
      */
     public void setSelectable(boolean isSelectable) {
-        mIsSelectable = isSelectable;
+        this.isSelectable = isSelectable;
     }
 
     public T getItem() {
@@ -103,14 +103,14 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
 
     @Override
     public void onClick(View v) {
-        if (mListener != null) {
-            mListener.onClick(this, item);
+        if (listener != null) {
+            listener.onClick(this, item);
         }
     }
 
     @Override
     public boolean onLongClick(View v) {
-        mListener.onLongClick(this);
+        listener.onLongClick(this);
         return true;
     }
 

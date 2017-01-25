@@ -27,6 +27,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 
+import com.annimon.stream.Stream;
+
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import org.joda.time.LocalDate;
 import org.parceler.Parcels;
@@ -136,12 +138,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.bow.setItemId(SettingsManager.getBow());
             binding.arrow.setItemId(SettingsManager.getArrow());
             binding.standardRound.setItemId(SettingsManager.getStandardRound());
-            binding.standardRound.setOnUpdateListener(
-                    item -> roundTarget = item.getRounds().get(0).getTargetTemplate());
             binding.numberArrows.setChecked(SettingsManager.getArrowNumbersEnabled());
             binding.environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
-            final StandardRound item = binding.standardRound.getSelectedItem();
-            roundTarget = item.getRounds().get(0).getTargetTemplate();
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_training);
             Training train = Training.get(trainingId);
@@ -173,8 +171,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     }
 
     private void updateChangeTargetFaceVisibility(StandardRound item) {
-        Target target = item.getRounds().get(0).getTargetTemplate();
-        final boolean canBeChanged = (target.id < 7 || target.id == 10 || target.id == 11)
+        roundTarget = item.getRounds().get(0).getTargetTemplate();
+        final boolean canBeChanged = (roundTarget.id < 7 || roundTarget.id == 10 || roundTarget.id == 11)
                 && trainingType == TRAINING_WITH_STANDARD_ROUND;
         binding.changeTargetFace.setVisibility(canBeChanged ? View.VISIBLE : View.GONE);
     }
@@ -247,7 +245,9 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             } else {
                 StandardRound standardRound = binding.standardRound.getSelectedItem();
                 SettingsManager.setStandardRound(standardRound.getId());
-                standardRound.save();
+                if (standardRound.getId() == null) {
+                    standardRound.save();
+                }
                 training.standardRoundId = standardRound.getId();
                 training.rounds.addAll(createRoundsFromTemplate(standardRound, training));
             }
@@ -327,7 +327,11 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         binding.environment.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == SR_TARGET_REQUEST_CODE) {
             final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
-            roundTarget = Parcels.unwrap(parcelable);
+            Target target = Parcels.unwrap(parcelable);
+            final StandardRound item = binding.standardRound.getSelectedItem();
+            Stream.of(item.getRounds())
+                    .forEach(r -> r.setTargetTemplate(target));
+            binding.standardRound.setItem(item);
         }
     }
 

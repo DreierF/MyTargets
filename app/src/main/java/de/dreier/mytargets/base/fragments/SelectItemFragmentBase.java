@@ -74,12 +74,12 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      * @param item         Currently selected item
      */
     protected void selectItem(RecyclerView recyclerView, T item) {
-        int position = adapter.getItemPosition(item);
-        selector.setSelected(position, item.getId(), true);
+        selector.setSelected(item.getId(), true);
         recyclerView.post(() -> {
             LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
             int first = manager.findFirstCompletelyVisibleItemPosition();
             int last = manager.findLastCompletelyVisibleItemPosition();
+            int position = adapter.getItemPosition(item);
             if (first > position || last < position) {
                 recyclerView.scrollToPosition(position);
             }
@@ -112,12 +112,11 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      * {@inheritDoc}
      */
     @Override
-    public void onClick(SelectableViewHolder<T> holder, T mItem) {
-        if (mItem == null) {
+    public void onClick(SelectableViewHolder<T> holder, T item) {
+        if (item == null) {
             return;
         }
-        int oldSelectedPosition = selector.getSelectedPosition();
-        boolean alreadySelected = oldSelectedPosition == holder.getAdapterPosition();
+        boolean alreadySelected = selector.isSelected(holder.getItemId());
         selector.setSelected(holder, true);
         if (alreadySelected || !useDoubleClickSelection) {
             saveItem();
@@ -138,6 +137,6 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      * @return The selected item
      */
     protected T onSave() {
-        return adapter.getItem(selector.getSelectedPosition());
+        return adapter.getItemById(selector.getSelectedId());
     }
 }

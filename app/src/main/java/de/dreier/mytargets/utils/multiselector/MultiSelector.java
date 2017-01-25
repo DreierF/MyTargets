@@ -29,100 +29,51 @@ import java.util.Set;
 
 import de.dreier.mytargets.shared.utils.LongUtils;
 
-public class MultiSelector {
+public class MultiSelector extends SelectorBase {
     private static final String SELECTION_IDS = "ids";
-    private static final String SELECTIONS_STATE = "state";
-    private Set<Long> mSelections = new HashSet<>();
-    private WeakHolderTracker mTracker = new WeakHolderTracker();
-    private boolean mIsSelectable;
+    private Set<Long> selections = new HashSet<>();
 
-    public void setSelectable(boolean isSelectable) {
-        this.mIsSelectable = isSelectable;
-        refreshAllHolders();
-    }
-
-    public void setSelected(SelectableHolder holder, boolean isSelected) {
-        this.setSelected(holder.getAdapterPosition(), holder.getItemId(), isSelected);
-    }
-
-    public void setSelected(int position, long id, boolean isSelected) {
+    @Override
+    public void setSelected(long id, boolean isSelected) {
         if (isSelected) {
-            mSelections.add(id);
+            selections.add(id);
         } else {
-            mSelections.remove(id);
+            selections.remove(id);
         }
-        this.refreshHolder(mTracker.getHolder(position));
+        refreshHolder(tracker.getHolder(id));
     }
 
-    private boolean isSelected(long id) {
-        return mSelections.contains(id);
+    @Override
+    protected boolean isSelected(long id) {
+        return selections.contains(id);
     }
 
     public void clearSelections() {
-        this.mSelections.clear();
-        this.refreshAllHolders();
+        selections.clear();
+        refreshAllHolders();
     }
 
     public ArrayList<Long> getSelectedIds() {
-        return new ArrayList<>(mSelections);
+        return new ArrayList<>(selections);
     }
 
-    public void bindHolder(SelectableHolder holder, int position, long id) {
-        this.mTracker.bindHolder(holder, position);
-        this.refreshHolder(holder);
+    @Override
+    protected void saveSelectionStates(Bundle bundle) {
+        bundle.putLongArray(SELECTION_IDS, LongUtils.toArray(getSelectedIds()));
     }
 
-    public boolean tapSelection(SelectableHolder holder) {
-        return tapSelection(holder.getAdapterPosition(), holder.getItemId());
-    }
-
-    private boolean tapSelection(int position, long itemId) {
-        if (mIsSelectable) {
-            boolean isSelected = isSelected(itemId);
-            this.setSelected(position, itemId, !isSelected);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private void refreshAllHolders() {
-        for (SelectableHolder holder : mTracker.getTrackedHolders()) {
-            this.refreshHolder(holder);
-        }
-    }
-
-    private void refreshHolder(SelectableHolder holder) {
-        if (holder != null) {
-            if (holder instanceof ItemBindingHolder) {
-                if (((ItemBindingHolder) holder).getItem() != null) {
-                    ((ItemBindingHolder) holder).bindItem();
-                }
-            }
-            holder.setSelectable(mIsSelectable);
-            boolean isActivated = mSelections.contains(holder.getItemId());
-            holder.setActivated(isActivated);
-        }
-    }
-
-    public Bundle saveSelectionStates() {
-        Bundle information = new Bundle();
-        information.putLongArray(SELECTION_IDS, LongUtils.toArray(getSelectedIds()));
-        information.putBoolean(SELECTIONS_STATE, this.mIsSelectable);
-        return information;
-    }
-
+    @Override
     public void restoreSelectionStates(Bundle savedStates) {
-        long[] selectedPositions = savedStates.getLongArray(SELECTION_IDS);
-        restoreSelections(LongUtils.toList(selectedPositions));
-        this.mIsSelectable = savedStates.getBoolean(SELECTIONS_STATE);
+        super.restoreSelectionStates(savedStates);
+        long[] selectedIds = savedStates.getLongArray(SELECTION_IDS);
+        restoreSelections(LongUtils.toList(selectedIds));
     }
 
     private void restoreSelections(List<Long> selected) {
         if (selected != null) {
-            mSelections.clear();
-            mSelections.addAll(selected);
-            this.refreshAllHolders();
+            selections.clear();
+            selections.addAll(selected);
+            refreshAllHolders();
         }
     }
 }

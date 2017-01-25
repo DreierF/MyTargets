@@ -132,12 +132,12 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
     }
 
     @Override
-    public void onClick(SelectableViewHolder<StandardRound> holder, StandardRound mItem) {
-        if (mItem == null) {
+    public void onClick(SelectableViewHolder<StandardRound> holder, StandardRound item) {
+        if (item == null) {
             return;
         }
-        currentSelection = mItem;
-        super.onClick(holder, mItem);
+        currentSelection = item;
+        super.onClick(holder, item);
     }
 
     @Override
