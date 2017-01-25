@@ -112,6 +112,12 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        contentBinding.rootView.requestFocus();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         bow = buildBow();
         super.onSaveInstanceState(outState);
