@@ -60,7 +60,6 @@ public class RoundFragment extends EditableListFragment<End> {
     public RoundFragment() {
         itemTypeSelRes = R.plurals.passe_selected;
         itemTypeDelRes = R.plurals.passe_deleted;
-        newStringRes = R.string.new_end;
     }
 
     @NonNull

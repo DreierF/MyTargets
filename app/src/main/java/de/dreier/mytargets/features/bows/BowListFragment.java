@@ -55,7 +55,6 @@ public class BowListFragment extends EditableListFragment<Bow> {
     public BowListFragment() {
         itemTypeSelRes = R.plurals.bow_selected;
         itemTypeDelRes = R.plurals.bow_deleted;
-        newStringRes = R.string.new_bow;
     }
 
     @Override

@@ -60,7 +60,6 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
     public TrainingsFragment() {
         itemTypeSelRes = R.plurals.training_selected;
         itemTypeDelRes = R.plurals.training_deleted;
-        newStringRes = R.string.new_training;
         supportsStatistics = true;
     }
 

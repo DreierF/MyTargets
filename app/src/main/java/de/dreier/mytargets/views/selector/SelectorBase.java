@@ -113,10 +113,10 @@ public abstract class SelectorBase<T> extends LinearLayout {
 
     public void setItem(T item) {
         this.item = item;
-        updateView();
         if (updateListener != null) {
             updateListener.onUpdate(item);
         }
+        updateView();
     }
 
     public void setOnUpdateListener(OnUpdateListener<T> updateListener) {

@@ -67,7 +67,6 @@ public class TrainingFragment extends EditableListFragment<Round> {
     public TrainingFragment() {
         itemTypeSelRes = R.plurals.round_selected;
         itemTypeDelRes = R.plurals.round_deleted;
-        newStringRes = R.string.new_round;
         supportsStatistics = true;
     }
 

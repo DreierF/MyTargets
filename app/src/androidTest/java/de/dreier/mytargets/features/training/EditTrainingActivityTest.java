@@ -43,15 +43,21 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItem;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION;
+import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
 import static de.dreier.mytargets.test.utils.PermissionGranter.allowPermissionsIfNeeded;
+import static de.dreier.mytargets.test.utils.assertions.RecyclerViewAssertions.itemCount;
+import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.containsStringRes;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 
@@ -64,6 +70,7 @@ public class EditTrainingActivityTest extends UITestBase {
 
     @Before
     public void setUp() {
+        SettingsManager.setStandardRound(93L);
         SettingsManager.setTarget(new Target(WAFull.ID, 0, new Dimension(122, CENTIMETER)));
         SettingsManager.setDistance(new Dimension(50, METER));
         SettingsManager.setIndoor(false);
@@ -74,7 +81,7 @@ public class EditTrainingActivityTest extends UITestBase {
     }
 
     @Test
-    public void editTrainingActivityTest() {
+    public void createFreeTraining() {
         Intent intent = new Intent();
         intent.setAction(CREATE_FREE_TRAINING_ACTION);
         activityTestRule.launchActivity(intent);
@@ -135,8 +142,49 @@ public class EditTrainingActivityTest extends UITestBase {
                 .format(new LocalDate(2016, 8, 10).toDate());
         onView(withId(R.id.trainingDate)).check(matches(withText(formattedDate)));
 
-        onView(withId(R.id.action_save)).perform(click());
+        clickActionBarItem(R.id.action_save, R.string.save);
         pressBack();
         pressBack();
+    }
+
+    @Test
+    public void createTrainingWithStandardRound() {
+        Intent intent = new Intent();
+        intent.setAction(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION);
+        activityTestRule.launchActivity(intent);
+
+        allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
+
+        // Has last used standard round been restored
+        onView(withId(R.id.standardRound))
+                .check(matches(hasDescendant(withText(R.string.warwick))));
+
+        // Change standard round
+        onView(withId(R.id.standardRound)).perform(nestedScrollTo(), click());
+        onView(withId(R.id.recyclerView))
+                .perform(actionOnItem(hasDescendant(withText(R.string.wa_standard)), click()),
+                        actionOnItem(hasDescendant(withText(R.string.wa_standard)), click()));
+        onView(withId(R.id.standardRound))
+                .check(matches(hasDescendant(withText(R.string.wa_standard))));
+
+        onView(withText(R.string.change_target_face)).perform(nestedScrollTo(), click());
+
+        onView(withId(R.id.recyclerView))
+                .check(matches(hasDescendant(withText(R.string.wa_full))))
+                .check(matches(hasDescendant(withText(R.string.wa_3_ring))))
+                .check(itemCount(is(5)));
+
+        onView(allOf(withId(R.id.recyclerView), isDisplayed()))
+                .perform(actionOnItemAtPosition(4, click()));
+        navigateUp();
+
+        clickActionBarItem(R.id.action_save, R.string.save);
+
+        navigateUp();
+        navigateUp();
+
+        onView(withId(R.id.detail_round_info))
+                .check(matches(allOf(containsStringRes(R.string.wa_standard),
+                        containsStringRes(R.string.wa_3_ring))));
     }
 }

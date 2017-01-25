@@ -15,47 +15,39 @@
 
 package de.dreier.mytargets.utils.multiselector;
 
-import android.util.SparseArray;
+import android.util.LongSparseArray;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 class WeakHolderTracker {
-    private SparseArray<WeakReference<SelectableHolder>> mHoldersByPosition =
-            new SparseArray<>();
+    private LongSparseArray<WeakReference<SelectableHolder>> holdersById =
+            new LongSparseArray<>();
 
     /**
-     * Returns the holder with a given position. If non-null, the returned
-     * holder is guaranteed to have getPosition() == position.
+     * Returns the holder with a given id.
      *
-     * @param position
+     * @param id
      * @return
      */
-    public SelectableHolder getHolder(int position) {
-        WeakReference<SelectableHolder> holderRef = mHoldersByPosition.get(position);
+    public SelectableHolder getHolder(long id) {
+        WeakReference<SelectableHolder> holderRef = holdersById.get(id);
         if (holderRef == null) {
             return null;
         }
-
-        SelectableHolder holder = holderRef.get();
-        if (holder == null || holder.getAdapterPosition() != position) {
-            mHoldersByPosition.remove(position);
-            return null;
-        }
-
-        return holder;
+        return holderRef.get();
     }
 
-    public void bindHolder(SelectableHolder holder, int position) {
-        mHoldersByPosition.put(position, new WeakReference<>(holder));
+    public void bindHolder(SelectableHolder holder, long id) {
+        holdersById.put(id, new WeakReference<>(holder));
     }
 
     public List<SelectableHolder> getTrackedHolders() {
         List<SelectableHolder> holders = new ArrayList<>();
 
-        for (int i = 0; i < mHoldersByPosition.size(); i++) {
-            int key = mHoldersByPosition.keyAt(i);
+        for (int i = 0; i < holdersById.size(); i++) {
+            long key = holdersById.keyAt(i);
             SelectableHolder holder = getHolder(key);
 
             if (holder != null) {

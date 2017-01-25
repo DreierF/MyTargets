@@ -62,7 +62,7 @@ public abstract class RebindReportingHolder extends RecyclerView.ViewHolder {
     }
 
     /**
-     * check if the view is due for rebiding
+     * Check if the view is due for rebinding
      *
      * @param flag
      * @return

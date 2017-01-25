@@ -51,7 +51,6 @@ public abstract class ImageSelectorBase<T extends IImageProvider> extends Select
             binding.details.setText(((IDetailProvider) item).getDetails(getContext()));
         }
         binding.image.setImageDrawable(item.getDrawable(getContext()));
-        invalidate();
     }
 
     protected void setTitle(@StringRes int title) {

@@ -15,7 +15,6 @@
 package de.dreier.mytargets.base.fragments;
 
 import android.support.annotation.PluralsRes;
-import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -49,12 +48,6 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model,
     protected boolean supportsDeletion = true;
     @State(MultiSelectorBundler.class)
     protected MultiSelector selector = new MultiSelector();
-
-    /**
-     * Resource describing FAB action
-     */
-    @StringRes
-    protected int newStringRes;
 
     /**
      * Resource used to set title when items are selected.
@@ -182,12 +175,12 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model,
     }
 
     @Override
-    public void onClick(SelectableViewHolder<T> holder, T mItem) {
-        if (mItem == null) {
+    public void onClick(SelectableViewHolder<T> holder, T item) {
+        if (item == null) {
             return;
         }
         if (!selector.tapSelection(holder)) {
-            onSelected(mItem);
+            onSelected(item);
         } else {
             updateTitle();
         }

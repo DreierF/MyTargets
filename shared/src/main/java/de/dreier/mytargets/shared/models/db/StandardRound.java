@@ -162,6 +162,9 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
     @Override
     public void save() {
         super.save();
+        SQLite.delete(RoundTemplate.class)
+                .where(RoundTemplate_Table.standardRound.eq(id))
+                .execute();
         // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
         for (RoundTemplate s : getRounds()) {
             s.standardRound = id;
@@ -172,6 +175,9 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
     @Override
     public void save(DatabaseWrapper databaseWrapper) {
         super.save(databaseWrapper);
+        SQLite.delete(RoundTemplate.class)
+                .where(RoundTemplate_Table.standardRound.eq(id))
+                .execute(databaseWrapper);
         // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
         for (RoundTemplate s : getRounds()) {
             s.standardRound = id;

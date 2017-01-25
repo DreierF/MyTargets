@@ -109,7 +109,7 @@ public class TargetFactory {
             out.add(new NFAAIndoor());
             out.add(new NFAAIndoor5Spot());
         } else {
-            out.add(list.get(target.id));
+            out.add(list.get(idIndexLookup[target.id]));
         }
         return out;
     }

@@ -43,7 +43,6 @@ public class ArrowListFragment extends EditableListFragment<Arrow> {
     public ArrowListFragment() {
         itemTypeSelRes = R.plurals.arrow_selected;
         itemTypeDelRes = R.plurals.arrow_deleted;
-        newStringRes = R.string.new_arrow;
     }
 
     @Override

@@ -35,6 +35,6 @@ public abstract class MultiSelectorBindingHolder extends RebindReportingHolder i
 
     @Override
     protected void onRebind() {
-        mMultiSelector.bindHolder(this, getAdapterPosition(), getItemId());
+        mMultiSelector.bindHolder(this, getItemId());
     }
 }
