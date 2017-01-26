@@ -66,15 +66,15 @@ public class EditSightMarksTest extends UITestBase {
 
         // Set initial sight mark to 18m: 1
         onView(withRecyclerView(R.id.sightMarks).atPositionOnView(0, R.id.sightSetting))
-                .perform(replaceText("1"));
+                .perform(nestedScrollTo(), replaceText("1"));
 
         // Add sight mark 10m: 2
         onView(withId(R.id.addButton))
                 .perform(nestedScrollTo(), click());
         onView(withRecyclerView(R.id.sightMarks).atPositionOnView(1, R.id.sightSetting))
-                .perform(replaceText("2"));
+                .perform(nestedScrollTo(), replaceText("2"));
         onView(withRecyclerView(R.id.sightMarks).atPositionOnView(1, R.id.distance))
-                .perform(click());
+                .perform(nestedScrollTo(), click());
         onView(allOf(withId(R.id.recyclerView), isDisplayed()))
                 .perform(actionOnItem(hasDescendant(withText("10m")), click()));
 
@@ -93,15 +93,15 @@ public class EditSightMarksTest extends UITestBase {
         onView(withId(R.id.addButton))
                 .perform(nestedScrollTo(), click());
         onView(withRecyclerView(R.id.sightMarks).atPositionOnView(2, R.id.sightSetting))
-                .perform(replaceText("3"), closeSoftKeyboard());
+                .perform(nestedScrollTo(), replaceText("3"), closeSoftKeyboard());
         onView(withRecyclerView(R.id.sightMarks).atPositionOnView(2, R.id.distance))
-                .perform(click());
+                .perform(nestedScrollTo(), click());
         onView(allOf(withId(R.id.recyclerView), isDisplayed()))
                 .perform(actionOnItem(hasDescendant(withText("15m")), click()));
 
         // "Accidentally delete" a sight mark and undo it
         onView(withRecyclerView(R.id.sightMarks).atPositionOnView(0, R.id.removeSightSetting))
-                .perform(click());
+                .perform(nestedScrollTo(), click());
         onView(withId(R.id.snackbar_text))
                 .check(matches(withText(R.string.sight_setting_removed)));
         onView(withId(R.id.snackbar_action)).perform(click());
@@ -119,7 +119,7 @@ public class EditSightMarksTest extends UITestBase {
         clickContextualActionBarItem(R.id.action_edit, R.string.edit);
 
         onView(withRecyclerView(R.id.sightMarks).atPositionOnView(0, R.id.removeSightSetting))
-                .perform(click());
+                .perform(nestedScrollTo(), click());
 
         onView(withId(R.id.snackbar_text))
                 .check(matches(withText(R.string.sight_setting_removed)));
