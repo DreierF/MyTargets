@@ -60,7 +60,7 @@ public class EditSightMarksTest extends UITestBase {
     public void editSightMarksTest() {
         onView(allOf(withText(R.string.bow), isDisplayed())).perform(click());
 
-        onView(matchFab()).perform(click());
+        onView(matchFabMenu()).perform(click());
 
         onView(withId(R.id.fabBowRecurve)).perform(click());
 

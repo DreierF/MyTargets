@@ -95,7 +95,7 @@ public class MainActivityNavigationTest extends UITestBase {
         pressBack();
 
         // Does new free training work
-        onView(matchFab()).perform(click());
+        onView(matchFabMenu()).perform(click());
         onView(withId(R.id.fab1)).perform(click());
         intended(allOf(hasComponent(EditTrainingActivity.class.getName()),
                 hasAction(EditTrainingFragment.CREATE_FREE_TRAINING_ACTION)));
@@ -103,7 +103,7 @@ public class MainActivityNavigationTest extends UITestBase {
         pressBack();
 
         // Does new training with standard round work
-        onView(matchFab()).perform(click());
+        onView(matchFabMenu()).perform(click());
         onView(withId(R.id.fab2)).perform(click());
         intended(allOf(hasComponent(EditTrainingActivity.class.getName()),
                 hasAction(EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)));
@@ -113,7 +113,7 @@ public class MainActivityNavigationTest extends UITestBase {
 
         // Does new bow work
         onView(allOf(withText(R.string.bow), isDisplayed())).perform(click());
-        onView(matchFab()).perform(click());
+        onView(matchFabMenu()).perform(click());
         onView(withId(R.id.fabBowRecurve)).perform(click());
         intended(allOf(hasComponent(EditBowActivity.class.getName()),
                 hasExtra(EditBowFragment.BOW_TYPE, EBowType.RECURVE_BOW.name())));
@@ -128,7 +128,7 @@ public class MainActivityNavigationTest extends UITestBase {
     @Test
     public void addTraining() throws InterruptedException {
         onView(withId(R.id.fab1)).check(matches(withEffectiveVisibility(INVISIBLE)));
-        onView(matchFab()).perform(click());
+        onView(matchFabMenu()).perform(click());
         onView(withId(R.id.fab1)).perform(click());
         allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
         save();

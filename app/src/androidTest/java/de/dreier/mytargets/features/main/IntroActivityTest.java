@@ -66,7 +66,7 @@ public class IntroActivityTest extends UITestBase {
 
         onView(withId(R.id.toolbar)).check(matches(hasDescendant(withText(R.string.my_targets))));
 
-        onView(matchFab()).perform(click());
+        onView(matchFabMenu()).perform(click());
         allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
     }
 }

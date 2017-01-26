@@ -31,6 +31,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.is;
 
@@ -79,7 +80,7 @@ public class MatcherUtils {
     }
 
     public static RecyclerViewMatcher withRecyclerView(int recyclerViewId) {
-        return new RecyclerViewMatcher(allOf(withId(recyclerViewId), isDisplayed()));
+        return new RecyclerViewMatcher(allOf(withId(recyclerViewId), withParent(withParent(isDisplayed()))));
     }
 
     public static View getMatchingParent(View view, Matcher<View> matcher) {

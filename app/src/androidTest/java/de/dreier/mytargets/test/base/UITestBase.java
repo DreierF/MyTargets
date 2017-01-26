@@ -19,6 +19,7 @@ import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewAssertion;
@@ -55,6 +56,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
@@ -78,7 +80,7 @@ public abstract class UITestBase extends InstrumentedTestBase {
     }
 
     @NonNull
-    protected static Matcher<View> matchFab() {
+    protected static Matcher<View> matchFabMenu() {
         return Matchers.allOf(withParent(ViewMatchers.withId(R.id.fab)),
                 withClassName(endsWith("ImageView")),
                 isDisplayed());
@@ -169,5 +171,10 @@ public abstract class UITestBase extends InstrumentedTestBase {
     protected Matcher<String> isRes(@StringRes int textRes) {
         final Context context = getInstrumentation().getTargetContext();
         return is(context.getString(textRes));
+    }
+
+    @NonNull
+    public Matcher<View> supportFab() {
+        return Matchers.allOf(withId(R.id.fab), isDisplayed(), instanceOf(FloatingActionButton.class));
     }
 }

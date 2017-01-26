@@ -35,7 +35,10 @@ public class FileUtils {
     }
 
     public static void copy(InputStream in, File dst) throws IOException {
-        OutputStream out = new FileOutputStream(dst);
+        copy(in, new FileOutputStream(dst));
+    }
+
+    public static void copy(InputStream in, OutputStream out) throws IOException {
         byte[] buf = new byte[1024];
         int len;
         while ((len = in.read(buf)) > 0) {

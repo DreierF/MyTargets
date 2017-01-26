@@ -138,7 +138,7 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
         EasyImage.openCamera(this, 0);
     }
 
-    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     void onSelectImage() {
         EasyImage.openGallery(this, 0);
     }
@@ -159,7 +159,7 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
                     @Override
                     public void onImagesPicked(@NonNull List<File> imageFiles, EasyImage.ImageSource source, int type) {
                         EditWithImageFragmentBase.this.oldImageFile = EditWithImageFragmentBase.this.imageFile;
-                        loadImage(imageFile);
+                        loadImage(imageFiles.get(0));
                     }
 
                     @Override
