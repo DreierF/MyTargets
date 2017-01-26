@@ -16,10 +16,8 @@
 
 package android.support.test.espresso.intent;
 
-import android.support.test.runner.intent.IntentStubber;
-
-import android.app.Instrumentation.ActivityResult;
 import android.content.Intent;
+import android.support.test.runner.intent.IntentStubber;
 
 import org.hamcrest.Matcher;
 
@@ -34,7 +32,7 @@ public interface ResettingStubber extends IntentStubber {
      * Sets the result that will be returned to the intent sender (if the sender expects the
      * result), next time an intent matched by the given matcher is launched.
      */
-    public void setActivityResultForIntent(Matcher<Intent> matcher, ActivityResult result);
+    public void setActivityResultForIntent(Matcher<Intent> matcher, IntentHandler result);
 
     /**
      * Marks this spy as initialized. Once initialized, ResettingStubber begins recording intents

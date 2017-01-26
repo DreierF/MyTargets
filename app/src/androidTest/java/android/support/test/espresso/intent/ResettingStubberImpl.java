@@ -16,16 +16,12 @@
 
 package android.support.test.espresso.intent;
 
-import static android.support.test.espresso.intent.Checks.checkNotNull;
-import static android.support.test.espresso.intent.Checks.checkState;
-
-import android.support.test.InstrumentationRegistry;
-
 import android.app.Instrumentation.ActivityResult;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Looper;
+import android.support.test.InstrumentationRegistry;
 import android.util.Pair;
 
 import org.hamcrest.Matcher;
@@ -34,14 +30,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import static android.support.test.espresso.intent.Checks.checkNotNull;
+import static android.support.test.espresso.intent.Checks.checkState;
+
 /**
  * Implementation of {@link ResettingStubber}
  */
 public final class ResettingStubberImpl implements ResettingStubber {
 
   // Should be accessed only from main thread
-  private List<Pair<Matcher<Intent>, ActivityResult>> intentResponsePairs =
-      new ArrayList<Pair<Matcher<Intent>, ActivityResult>>();
+  private List<Pair<Matcher<Intent>, IntentHandler>> intentResponsePairs =
+      new ArrayList<Pair<Matcher<Intent>, IntentHandler>>();
 
   private PackageManager packageManager;
   private boolean isInitialized;
@@ -65,11 +64,11 @@ public final class ResettingStubberImpl implements ResettingStubber {
   }
 
   @Override
-  public void setActivityResultForIntent(Matcher<Intent> matcher, ActivityResult result) {
+  public void setActivityResultForIntent(Matcher<Intent> matcher, IntentHandler result) {
     checkState(isInitialized, "ResettingStubber must be initialized before calling this method");
     checkNotNull(matcher);
     checkMain();
-    intentResponsePairs.add(new Pair<Matcher<Intent>, ActivityResult>(matcher, result));
+    intentResponsePairs.add(new Pair<Matcher<Intent>, IntentHandler>(matcher, result));
   }
 
   @Override
@@ -77,14 +76,14 @@ public final class ResettingStubberImpl implements ResettingStubber {
     checkState(isInitialized, "ResettingStubber must be initialized before calling this method");
     checkNotNull(intent);
     checkMain();
-    ListIterator<Pair<Matcher<Intent>, ActivityResult>> reverseIterator =
+    ListIterator<Pair<Matcher<Intent>, IntentHandler>> reverseIterator =
         intentResponsePairs.listIterator(intentResponsePairs.size());
     while (reverseIterator.hasPrevious()) {
-      Pair<Matcher<Intent>, ActivityResult> pair = reverseIterator.previous();
+      Pair<Matcher<Intent>, IntentHandler> pair = reverseIterator.previous();
       // We resolve the intent so that the toPackage matcher has the necessary information to match
       // the intent.
       if (pair.first.matches(resolveIntent(intent))) {
-        return pair.second;
+        return pair.second.handle(intent);
       }
     }
     return null;

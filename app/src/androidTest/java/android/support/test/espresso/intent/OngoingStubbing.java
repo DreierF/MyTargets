@@ -16,42 +16,90 @@
 
 package android.support.test.espresso.intent;
 
-import static android.support.test.espresso.intent.Checks.checkNotNull;
-
+import android.app.Activity;
 import android.app.Instrumentation;
 import android.app.Instrumentation.ActivityResult;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.annotation.RawRes;
 
 import org.hamcrest.Matcher;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import de.dreier.mytargets.shared.utils.FileUtils;
+
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.intent.Checks.checkNotNull;
 
 /**
  * Supports method chaining after @Intents#intending method call.
  */
 public final class OngoingStubbing {
 
-  private final Matcher<Intent> matcher;
-  private final ResettingStubber resettingStubber;
-  private final Instrumentation instrumentation;
+    private final Matcher<Intent> matcher;
+    private final ResettingStubber resettingStubber;
+    private final Instrumentation instrumentation;
 
-  OngoingStubbing(Matcher<Intent> matcher, ResettingStubber resettingStubber,
-        Instrumentation instrumentation) {
-    this.matcher = checkNotNull(matcher);
-    this.resettingStubber = checkNotNull(resettingStubber);
-    this.instrumentation = checkNotNull(instrumentation);
-  }
+    OngoingStubbing(Matcher<Intent> matcher, ResettingStubber resettingStubber,
+                    Instrumentation instrumentation) {
+        this.matcher = checkNotNull(matcher);
+        this.resettingStubber = checkNotNull(resettingStubber);
+        this.instrumentation = checkNotNull(instrumentation);
+    }
 
-  /**
-   * Sets a response for the intent being stubbed.
-   */
-  public void respondWith(final ActivityResult result) {
-    checkNotNull(result);
-    instrumentation.waitForIdleSync();
-    instrumentation.runOnMainSync(new Runnable() {
-        @Override
-        public void run() {
-          resettingStubber.setActivityResultForIntent(matcher, result);
-        }
-    });
-    instrumentation.waitForIdleSync();
-  }
+    /**
+     * Sets a response for the intent being stubbed.
+     */
+    public void respondWith(final ActivityResult result) {
+        checkNotNull(result);
+        instrumentation.waitForIdleSync();
+        instrumentation.runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                resettingStubber.setActivityResultForIntent(matcher, intent -> result);
+            }
+        });
+        instrumentation.waitForIdleSync();
+    }
+
+    /**
+     * Sets a response for the intent being stubbed.
+     */
+    public void respondWith(final IntentHandler intentHandler) {
+        checkNotNull(intentHandler);
+        instrumentation.waitForIdleSync();
+        instrumentation.runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                resettingStubber.setActivityResultForIntent(matcher, intentHandler);
+            }
+        });
+        instrumentation.waitForIdleSync();
+    }
+
+    public void respondWithRawImage(@RawRes final int rawResId) {
+        checkNotNull(rawResId);
+        respondWith(intent -> {
+            Intent resultIntent = new Intent();
+            Uri uriToSaveImage = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
+            //save ready-made mock image to the provided Uri
+            try {
+                Context testContext = getInstrumentation().getContext();
+                Resources testRes = testContext.getResources();
+                InputStream ts = testRes.openRawResource(rawResId);
+                OutputStream stream = testContext.getContentResolver()
+                        .openOutputStream(uriToSaveImage);
+                FileUtils.copy(ts, stream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return new Instrumentation.ActivityResult(Activity.RESULT_OK, resultIntent);
+        });
+    }
 }
