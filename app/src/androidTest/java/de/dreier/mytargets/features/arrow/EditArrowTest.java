@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.main;
+package de.dreier.mytargets.features.arrow;
 
 
 import android.support.test.espresso.intent.rule.IntentsTestRule;
@@ -25,6 +25,7 @@ import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.features.main.MainActivity;
 import de.dreier.mytargets.test.base.UITestBase;
 import de.dreier.mytargets.test.utils.rules.EmptyDbTestRule;
 
@@ -36,6 +37,7 @@ import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
@@ -60,7 +62,7 @@ public class EditArrowTest extends UITestBase {
         onView(allOf(withText(R.string.arrow), isDisplayed())).perform(click());
 
         // Add new arrow and change some properties
-        onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
+        onView(allOf(withId(R.id.fab), isCompletelyDisplayed())).perform(click());
         onView(withId(R.id.name))
                 .perform(nestedScrollTo(), replaceText("Arrow"), closeSoftKeyboard());
         onView(withText(R.string.more_fields))

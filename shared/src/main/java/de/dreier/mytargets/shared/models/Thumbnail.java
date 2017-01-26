@@ -15,10 +15,12 @@
 
 package de.dreier.mytargets.shared.models;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
+import android.support.annotation.DrawableRes;
 
 import com.raizlabs.android.dbflow.data.Blob;
 
@@ -61,6 +63,10 @@ public class Thumbnail {
                         TARGET_SIZE_MICRO_THUMBNAIL, TARGET_SIZE_MICRO_THUMBNAIL);
         data = BitmapUtils.getBitmapAsByteArray(thumbnail);
         image = new RoundedAvatarDrawable(thumbnail);
+    }
+
+    public Thumbnail(Context context, @DrawableRes int resId) {
+        this(BitmapFactory.decodeResource(context.getResources(), resId));
     }
 
     public Drawable getRoundDrawable() {

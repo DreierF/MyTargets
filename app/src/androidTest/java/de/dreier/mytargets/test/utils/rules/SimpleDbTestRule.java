@@ -48,7 +48,10 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         SettingsManager.setInputMethod(TargetViewBase.EInputMethod.PLOTTING);
         SettingsManager.setTimerEnabled(true);
         SettingsManager.setShotsPerEnd(6);
-        Bow bow = addBow();
+        Bow bow = addBow("PSE Fever");
+        addBow("PSE Something");
+        addArrow("Arrow 1");
+        addArrow("Arrow 2");
         addRandomTraining(578459341);
         addRandomTraining(454459456);
         addRandomTraining(763478984);

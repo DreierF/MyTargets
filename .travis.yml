@@ -13,6 +13,7 @@ env:
   - JAVA7_HOME=/usr/lib/jvm/java-7-oracle
   - JAVA8_HOME=/usr/lib/jvm/java-8-oracle
   - JAVA_HOME=$JAVA8_HOME
+  - PWD=`pwd`
 android:
   components:
   - tools
@@ -56,7 +57,7 @@ after_success:
 - |
   if [[ "$TRAVIS_TAG" ]]; then
     ./gradlew publishRegularRelease
-    ./gradlew -PFirebaseServiceAccountFilePath=app/src/main/google-services.json :app:firebaseUploadRegularReleaseProguardMapping
+    ./gradlew -PFirebaseServiceAccountFilePath=$PWD/app/src/main/google-services.json :app:firebaseUploadRegularReleaseProguardMapping
     ./dropbox_uploader.sh upload app/build/outputs/apk/app-regular-release.apk /Release/$TRAVIS_TAG/MyTargets.apk
     ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /Release/$TRAVIS_TAG/mapping.txt
   fi

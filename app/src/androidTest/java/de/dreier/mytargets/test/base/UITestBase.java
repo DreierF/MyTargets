@@ -15,14 +15,13 @@
 
 package de.dreier.mytargets.test.base;
 
+import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewAssertion;
-import android.support.test.espresso.action.GeneralClickAction;
-import android.support.test.espresso.action.Press;
-import android.support.test.espresso.action.Tap;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -41,7 +40,6 @@ import org.junit.BeforeClass;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.test.utils.actions.LowLevelActions;
 import de.dreier.mytargets.test.utils.actions.NestedScrollToAction;
 import de.dreier.mytargets.test.utils.matchers.MatcherUtils;
 
@@ -51,7 +49,6 @@ import static android.support.test.espresso.Espresso.openActionBarOverflowOrOpti
 import static android.support.test.espresso.Espresso.openContextualActionModeOverflowMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
@@ -63,7 +60,7 @@ import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-public class UITestBase extends InstrumentedTestBase {
+public abstract class UITestBase extends InstrumentedTestBase {
 
     @BeforeClass
     public static void disableIntro() {
@@ -78,21 +75,6 @@ public class UITestBase extends InstrumentedTestBase {
 
     protected static void navigateUp() {
         onView(androidHomeMatcher()).perform(click());
-    }
-
-    protected static ViewAction clickTarget(final float x, final float y) {
-        return new GeneralClickAction(
-                Tap.SINGLE,
-                view -> LowLevelActions.getTargetCoordinates(view, new float[]{x, y}),
-                Press.FINGER);
-    }
-
-    protected static ViewAction holdTapTarget(final float x, final float y) {
-        return LowLevelActions.pressAndHold(new float[]{x, y});
-    }
-
-    protected static ViewAction releaseTapTarget(final float x, final float y) {
-        return LowLevelActions.release(new float[]{x, y});
     }
 
     @NonNull
@@ -184,4 +166,8 @@ public class UITestBase extends InstrumentedTestBase {
         clickActionBarItem(R.id.action_save, R.string.save);
     }
 
+    protected Matcher<String> isRes(@StringRes int textRes) {
+        final Context context = getInstrumentation().getTargetContext();
+        return is(context.getString(textRes));
+    }
 }

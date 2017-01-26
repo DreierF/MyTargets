@@ -28,7 +28,7 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
 public class PermissionGranter {
 
-    private static final int PERMISSIONS_DIALOG_DELAY = 1000;
+    private static final int PERMISSIONS_DIALOG_DELAY = 500;
     private static final int GRANT_BUTTON_INDEX = 1;
 
     public static void allowPermissionsIfNeeded(Activity activity, String permissionNeeded) {
