@@ -142,7 +142,7 @@ public class EditTrainingActivityTest extends UITestBase {
                 .format(new LocalDate(2016, 8, 10).toDate());
         onView(withId(R.id.trainingDate)).check(matches(withText(formattedDate)));
 
-        clickActionBarItem(R.id.action_save, R.string.save);
+        save();
         pressBack();
         pressBack();
     }
@@ -178,7 +178,7 @@ public class EditTrainingActivityTest extends UITestBase {
                 .perform(actionOnItemAtPosition(4, click()));
         navigateUp();
 
-        clickActionBarItem(R.id.action_save, R.string.save);
+        save();
 
         navigateUp();
         navigateUp();

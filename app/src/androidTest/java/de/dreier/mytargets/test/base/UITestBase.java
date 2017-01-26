@@ -51,6 +51,7 @@ import static android.support.test.espresso.Espresso.openActionBarOverflowOrOpti
 import static android.support.test.espresso.Espresso.openContextualActionModeOverflowMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
@@ -178,4 +179,9 @@ public class UITestBase extends InstrumentedTestBase {
                 .perform(PickerActions.setDate(year, monthOfYear, dayOfMonth));
         onView(withId(android.R.id.button1)).perform(click());
     }
+
+    public void save() {
+        clickActionBarItem(R.id.action_save, R.string.save);
+    }
+
 }

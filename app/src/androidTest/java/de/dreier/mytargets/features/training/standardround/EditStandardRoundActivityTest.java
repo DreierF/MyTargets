@@ -106,7 +106,7 @@ public class EditStandardRoundActivityTest extends UITestBase {
                 isNestedChildOfView(withRecyclerView(R.id.rounds).atPosition(1))))
                 .perform(nestedScrollTo(), click(), click(), click(), click(), click());
 
-        clickActionBarItem(R.id.action_save, R.string.save);
+        save();
 
         onView(withId(R.id.standardRound))
                 .check(matches(hasDescendant(withText(R.string.custom_round))));

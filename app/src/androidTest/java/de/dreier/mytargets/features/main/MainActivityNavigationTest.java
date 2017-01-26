@@ -131,7 +131,7 @@ public class MainActivityNavigationTest extends UITestBase {
         onView(matchFab()).perform(click());
         onView(withId(R.id.fab1)).perform(click());
         allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
-        clickActionBarItem(R.id.action_save, R.string.save);
+        save();
         onView(isRoot()).perform(orientationLandscape(activityTestRule));
         navigateUp();
         onView(isRoot()).perform(orientationPortrait(activityTestRule));

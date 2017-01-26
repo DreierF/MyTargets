@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.views.selector;
+package de.dreier.mytargets.features.bow;
 
 
 import android.content.Intent;
@@ -76,7 +76,7 @@ public class BowSelectorTest extends UITestBase {
 
         onView(withText(R.string.add_bow)).perform(nestedScrollTo(), click());
         intended(hasComponent(EditBowActivity.class.getName()));
-        onView(allOf(withId(R.id.action_save), isDisplayed())).perform(click());
+        save();
 
         onView(allOf(withId(R.id.name),
                 withParent(withParent(withParent(withParent(withId(R.id.bow))))), isDisplayed()))

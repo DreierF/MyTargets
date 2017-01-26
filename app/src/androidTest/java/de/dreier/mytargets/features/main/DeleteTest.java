@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.features.main;
 
-import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
@@ -35,6 +34,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -75,12 +75,12 @@ public class DeleteTest extends UITestBase {
         clickContextualActionBarItem(R.id.action_delete, R.string.delete);
         final String trainingText = activityTestRule
                 .getActivity().getResources().getQuantityString(R.plurals.training_deleted, 1, 1);
-        onView(withId(R.id.snackbar_text)).check(ViewAssertions.matches(withText(trainingText)));
+        onView(withId(R.id.snackbar_text)).check(matches(withText(trainingText)));
 
         // Open training
         onView(allOf(withId(R.id.recyclerView), isDisplayed())).perform(
                 RecyclerViewActions.actionOnItemAtPosition(1, click()));
-        onView(withText("Aug 22, 2016")).check(ViewAssertions.matches(isDisplayed()));
+        onView(withText("Aug 22, 2016")).check(matches(isDisplayed()));
 
         onView(withId(R.id.recyclerView)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
@@ -98,7 +98,7 @@ public class DeleteTest extends UITestBase {
         clickContextualActionBarItem(R.id.action_delete, R.string.delete);
         final String endsText = activityTestRule
                 .getActivity().getResources().getQuantityString(R.plurals.passe_deleted, 2, 2);
-        onView(withId(R.id.snackbar_text)).check(ViewAssertions.matches(withText(endsText)));
+        onView(withId(R.id.snackbar_text)).check(matches(withText(endsText)));
         onView(withId(R.id.snackbar_action)).perform(click());
 
         // Delete ends
@@ -108,7 +108,7 @@ public class DeleteTest extends UITestBase {
                 RecyclerViewActions.actionOnItemAtPosition(3, click()));
         clickContextualActionBarItem(R.id.action_delete, R.string.delete);
 
-        onView(withId(R.id.snackbar_text)).check(ViewAssertions.matches(withText(endsText)));
+        onView(withId(R.id.snackbar_text)).check(matches(withText(endsText)));
 
         pressBack();
 
