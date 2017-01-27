@@ -41,6 +41,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.containsStringRes;
+import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.withNestedRecyclerView;
 import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.withRecyclerView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
@@ -65,15 +66,15 @@ public class EditSightMarksTest extends UITestBase {
         onView(withId(R.id.fabBowRecurve)).perform(click());
 
         // Set initial sight mark to 18m: 1
-        onView(withRecyclerView(R.id.sightMarks).atPositionOnView(0, R.id.sightSetting))
+        onView(withNestedRecyclerView(R.id.sightMarks).atPositionOnView(0, R.id.sightSetting))
                 .perform(nestedScrollTo(), replaceText("1"));
 
         // Add sight mark 10m: 2
         onView(withId(R.id.addButton))
                 .perform(nestedScrollTo(), click());
-        onView(withRecyclerView(R.id.sightMarks).atPositionOnView(1, R.id.sightSetting))
+        onView(withNestedRecyclerView(R.id.sightMarks).atPositionOnView(1, R.id.sightSetting))
                 .perform(nestedScrollTo(), replaceText("2"));
-        onView(withRecyclerView(R.id.sightMarks).atPositionOnView(1, R.id.distance))
+        onView(withNestedRecyclerView(R.id.sightMarks).atPositionOnView(1, R.id.distance))
                 .perform(nestedScrollTo(), click());
         onView(allOf(withId(R.id.recyclerView), isDisplayed()))
                 .perform(actionOnItem(hasDescendant(withText("10m")), click()));
@@ -92,15 +93,15 @@ public class EditSightMarksTest extends UITestBase {
         // Add sight mark 15m: 3
         onView(withId(R.id.addButton))
                 .perform(nestedScrollTo(), click());
-        onView(withRecyclerView(R.id.sightMarks).atPositionOnView(2, R.id.sightSetting))
+        onView(withNestedRecyclerView(R.id.sightMarks).atPositionOnView(2, R.id.sightSetting))
                 .perform(nestedScrollTo(), replaceText("3"), closeSoftKeyboard());
-        onView(withRecyclerView(R.id.sightMarks).atPositionOnView(2, R.id.distance))
+        onView(withNestedRecyclerView(R.id.sightMarks).atPositionOnView(2, R.id.distance))
                 .perform(nestedScrollTo(), click());
         onView(allOf(withId(R.id.recyclerView), isDisplayed()))
                 .perform(actionOnItem(hasDescendant(withText("15m")), click()));
 
         // "Accidentally delete" a sight mark and undo it
-        onView(withRecyclerView(R.id.sightMarks).atPositionOnView(0, R.id.removeSightSetting))
+        onView(withNestedRecyclerView(R.id.sightMarks).atPositionOnView(0, R.id.removeSightSetting))
                 .perform(nestedScrollTo(), click());
         onView(withId(R.id.snackbar_text))
                 .check(matches(withText(R.string.sight_setting_removed)));
@@ -118,7 +119,7 @@ public class EditSightMarksTest extends UITestBase {
                 .perform(longClick());
         clickContextualActionBarItem(R.id.action_edit, R.string.edit);
 
-        onView(withRecyclerView(R.id.sightMarks).atPositionOnView(0, R.id.removeSightSetting))
+        onView(withNestedRecyclerView(R.id.sightMarks).atPositionOnView(0, R.id.removeSightSetting))
                 .perform(nestedScrollTo(), click());
 
         onView(withId(R.id.snackbar_text))

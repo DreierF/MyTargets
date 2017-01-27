@@ -21,6 +21,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -53,7 +54,8 @@ import icepick.State;
 public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
 
     public static final String BOW_TYPE = "bow_type";
-    private static final String BOW_ID = "bow_id";
+    @VisibleForTesting
+    public static final String BOW_ID = "bow_id";
 
     @State(ParcelsBundler.class)
     Bow bow;

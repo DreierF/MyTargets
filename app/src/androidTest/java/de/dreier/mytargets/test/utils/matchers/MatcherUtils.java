@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.test.utils.matchers;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.assertion.ViewAssertions;
@@ -26,6 +27,12 @@ import android.widget.TextView;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
+
+import java.util.Set;
+import java.util.TreeSet;
+
+import de.dreier.mytargets.shared.utils.LongUtils;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
@@ -80,7 +87,12 @@ public class MatcherUtils {
     }
 
     public static RecyclerViewMatcher withRecyclerView(int recyclerViewId) {
-        return new RecyclerViewMatcher(allOf(withId(recyclerViewId), withParent(withParent(isDisplayed()))));
+        return new RecyclerViewMatcher(allOf(withId(recyclerViewId), isDisplayed()));
+    }
+
+    public static RecyclerViewMatcher withNestedRecyclerView(int recyclerViewId) {
+        return new RecyclerViewMatcher(allOf(withId(recyclerViewId),
+                withParent(withParent(isDisplayed()))));
     }
 
     public static View getMatchingParent(View view, Matcher<View> matcher) {
@@ -139,4 +151,18 @@ public class MatcherUtils {
         };
     }
 
+    public static Matcher<? super Intent> hasLongArrayExtra(String key, Set<Long> values) {
+        return new TypeSafeMatcher<Intent>() {
+            @Override
+            public void describeTo(Description description) {
+
+            }
+
+            @Override
+            protected boolean matchesSafely(Intent intent) {
+                long[] items = intent.getLongArrayExtra(key);
+                return items != null && new TreeSet(LongUtils.toList(items)).equals(values);
+            }
+        };
+    }
 }

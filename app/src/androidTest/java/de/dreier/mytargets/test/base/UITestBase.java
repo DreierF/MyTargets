@@ -16,11 +16,11 @@
 package de.dreier.mytargets.test.base;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.action.ViewActions;
@@ -49,11 +49,15 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.Espresso.openContextualActionModeOverflowMenu;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.intent.matcher.ComponentNameMatchers.hasClassName;
+import static android.support.test.espresso.intent.matcher.ComponentNameMatchers.hasMyPackageName;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isNestedChildOfView;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -151,7 +155,7 @@ public abstract class UITestBase extends InstrumentedTestBase {
     }
 
     protected void clickContextualActionBarItem(@IdRes int menuItem, @StringRes int title) {
-        onView(withId(menuItem)).withFailureHandler((error, viewMatcher) -> {
+        onView(allOf(withId(menuItem), isNestedChildOfView(withId(R.id.action_mode_bar)), isDisplayed())).withFailureHandler((error, viewMatcher) -> {
             error.printStackTrace();
             openContextualActionModeOverflowMenu();
             onView(withText(title)).perform(click());
@@ -174,7 +178,11 @@ public abstract class UITestBase extends InstrumentedTestBase {
     }
 
     @NonNull
-    public Matcher<View> supportFab() {
+    protected Matcher<View> supportFab() {
         return Matchers.allOf(withId(R.id.fab), isDisplayed(), instanceOf(FloatingActionButton.class));
+    }
+
+    protected Matcher<Intent> hasClass(Class<?> clazz) {
+        return hasComponent(allOf(hasClassName(clazz.getName()), hasMyPackageName()));
     }
 }
