@@ -1,6 +1,6 @@
 ![GitHub version](https://img.shields.io/github/release/dreierf/mytargets.svg)
 ![Licence](https://img.shields.io/badge/licence-GNU%20GPLv2-blue.svg)
-![API](https://img.shields.io/badge/API-14+-green.svg)
+![API](https://img.shields.io/badge/API-16+-green.svg)
 [![Build Status](https://travis-ci.org/DreierF/MyTargets.svg?branch=develop)](https://travis-ci.org/DreierF/MyTargets)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7dbed6d9a63d4874b10adfd24a58ef9d)](https://www.codacy.com/app/dreier-florian/MyTargets?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=DreierF/MyTargets&amp;utm_campaign=Badge_Grade)
 
