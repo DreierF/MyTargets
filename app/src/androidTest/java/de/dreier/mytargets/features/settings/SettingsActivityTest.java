@@ -56,7 +56,7 @@ import static org.hamcrest.Matchers.startsWith;
 public class SettingsActivityTest extends UITestBase {
 
     @Rule
-    public ActivityTestRule<SettingsActivity> mActivityTestRule = new ActivityTestRule<>(
+    public ActivityTestRule<SettingsActivity> activityTestRule = new ActivityTestRule<>(
             SettingsActivity.class);
 
     @Before
@@ -167,7 +167,7 @@ public class SettingsActivityTest extends UITestBase {
     }
 
     private SettingsActivity getActivity() {
-        return mActivityTestRule.getActivity();
+        return activityTestRule.getActivity();
     }
 
     private void enterText(String text) {

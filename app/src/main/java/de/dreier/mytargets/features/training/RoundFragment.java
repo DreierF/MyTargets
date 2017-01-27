@@ -19,6 +19,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,7 +52,8 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
  */
 public class RoundFragment extends EditableListFragment<End> {
 
-    private static final String ROUND_ID = "round_id";
+    @VisibleForTesting
+    public static final String ROUND_ID = "round_id";
 
     private long roundId;
     private FragmentListBinding binding;

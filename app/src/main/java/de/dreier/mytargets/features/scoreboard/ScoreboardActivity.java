@@ -25,6 +25,7 @@ import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.Snackbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,8 +49,10 @@ import static android.support.v4.content.FileProvider.getUriForFile;
 
 public class ScoreboardActivity extends ChildActivityBase {
 
-    private static final String TRAINING_ID = "training_id";
-    private static final String ROUND_ID = "round_id";
+    @VisibleForTesting
+    public static final String TRAINING_ID = "training_id";
+    @VisibleForTesting
+    public static final String ROUND_ID = "round_id";
 
     private long mTraining;
     private long mRound;

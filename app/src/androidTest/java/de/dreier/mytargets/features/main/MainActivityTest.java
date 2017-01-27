@@ -78,7 +78,7 @@ import static org.hamcrest.CoreMatchers.allOf;
 public class MainActivityTest extends UITestBase {
 
     private IntentsTestRule<MainActivity> activityTestRule = new IntentsTestRule<>(
-            MainActivity.class, true, true);
+            MainActivity.class);
     @Rule
     public final RuleChain rule = RuleChain.outerRule(new SimpleDbTestRule())
             .around(activityTestRule);

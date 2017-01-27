@@ -34,7 +34,6 @@ import java.io.OutputStream;
 
 import de.dreier.mytargets.shared.utils.FileUtils;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.intent.Checks.checkNotNull;
 
 /**
@@ -90,7 +89,7 @@ public final class OngoingStubbing {
             Uri uriToSaveImage = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
             //save ready-made mock image to the provided Uri
             try {
-                Context testContext = getInstrumentation().getContext();
+                Context testContext = instrumentation.getContext();
                 Resources testRes = testContext.getResources();
                 InputStream ts = testRes.openRawResource(rawResId);
                 OutputStream stream = testContext.getContentResolver()
