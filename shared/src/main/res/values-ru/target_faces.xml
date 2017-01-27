@@ -15,12 +15,17 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
+  <!-- Target groups -->
+  <string name="target_type_target_archery">Стандартный</string>
+  <string name="target_type_field_archery">Область</string>
+  <string name="target_type_3d_archery">ЗD мишень</string>
+  <!-- Target names -->
   <string name="wa_full">WA полный</string>
   <string name="wa_6_ring">WA 6 колец</string>
   <string name="wa_5_ring">WA 5 колец</string>
   <string name="wa_3_ring">WA 3 кольца</string>
   <string name="vegas_3_spot">Vegas 3-х</string>
-  <string name="vertical_3_spot">WA Vertical 3 Spot</string>
+  <string name="vertical_3_spot">WA вертикальный 3-х</string>
   <string name="wa_3_ring_3_spot">WA 3 кольца 3-х</string>
   <string name="nfaa_field">NFAA Field</string>
   <string name="nfaa_expert_field">NFAA Expert Field</string>
@@ -40,11 +45,12 @@
   <string name="nfas_field">NFAA Field</string>
   <string name="beursault">Beursault</string>
   <string name="sca_period">SCA период</string>
-  <string name="wa_field_3_spot">WA Field 3 Spot</string>
-  <string name="wa_danage_3_spot">WA Danage 3 Spot</string>
-  <string name="wa_danage_6_spot">WA Danage 6 Spot</string>
-  <string name="dbsc_blowpipe">DBSC Blowpipe</string>
-  <string name="fcfs_color_reversed">FCFS Color (Reversed 10–1)</string>
-  <string name="recurve_style">Recurve style</string>
-  <string name="compound_style">Compound style</string>
+  <string name="wa_field_3_spot">WA двухцветный 3-х</string>
+  <string name="wa_danage_3_spot">WA учет попаданий 3-х</string>
+  <string name="wa_danage_6_spot">WA учет попаданий 6-х</string>
+  <string name="dbsc_blowpipe">DBSC (3 кольца, значения 3,5,7)</string>
+  <!-- Scoring styles -->
+  <string name="fcfs_color_reversed">FCFS цветной (обратные значения 10-1)</string>
+  <string name="recurve_style">Стиль классического лука</string>
+  <string name="compound_style">Стиль блочного лука</string>
 </resources>

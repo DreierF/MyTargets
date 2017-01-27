@@ -304,13 +304,13 @@
   <string name="connection_failed">Соединение потеряно!</string>
   <string name="shooting_indoor">Стрельба в помещении</string>
   <string name="bow_rest_vertical_position">Положение по вертикали</string>
-  <string name="bow_rest">Отдых</string>
+  <string name="bow_rest">Полочка</string>
   <string name="bow_rest_horizontal_position">Положение по горизонтали</string>
-  <string name="bow_cam_settings">Cam settings</string>
+  <string name="bow_cam_settings">Настройки блоков</string>
   <string name="bow_letoff_weight">Letoff weight</string>
-  <string name="bow_nocking_point">Nocking point</string>
+  <string name="bow_nocking_point">Седло</string>
   <string name="bow_string">Тетива</string>
-  <string name="bow_scope_magnification">Scope magnification</string>
+  <string name="bow_scope_magnification">Увеличение прицела</string>
   <string name="bow_rest_stiffness">Жесткость</string>
   <string name="bow_button">Плунжер</string>
   <string name="more_fields">Дополнительные поля</string>

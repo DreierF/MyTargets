@@ -162,7 +162,7 @@
   <string name="custom_round">Egyéni forduló</string>
   <string name="filter">Szűrő</string>
   <string name="club">Egyesület</string>
-  <string name="target">Pálya</string>
+  <string name="target">Lőlap</string>
   <string name="standard_round">Szabványos forduló</string>
   <string name="use_as_template">Használja sablonként?</string>
   <string name="create_copy">Ez a szabványos forduló! \nMásolat létrehozása és szerkeztése?</string>
