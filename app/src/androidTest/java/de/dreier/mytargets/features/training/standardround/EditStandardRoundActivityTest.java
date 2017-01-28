@@ -19,7 +19,6 @@ package de.dreier.mytargets.features.training.standardround;
 import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -40,6 +39,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItem;
+import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -56,8 +56,7 @@ import static org.hamcrest.Matchers.startsWith;
 
 @RunWith(AndroidJUnit4.class)
 public class EditStandardRoundActivityTest extends UITestBase {
-
-    private static final String TAG = "EditStandardRoundActivi";
+    
     @Rule
     public IntentsTestRule<EditTrainingActivity> activityTestRule = new IntentsTestRule<>(
             EditTrainingActivity.class, true, false);
@@ -77,60 +76,48 @@ public class EditStandardRoundActivityTest extends UITestBase {
         Intent intent = new Intent();
         intent.setAction(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION);
         activityTestRule.launchActivity(intent);
-        int i = 0;
+
         allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
-        Log.d(TAG, "editStandardRoundActivity: " + (i++));
 
         onView(withId(R.id.standardRound)).perform(scrollTo(), click());
-        Log.d(TAG, "editStandardRoundActivity: " + (i++));
 
         onView(withId(R.id.fab)).perform(click());
-        Log.d(TAG, "editStandardRoundActivity: " + (i++));
 
         onView(withId(R.id.distance)).perform(nestedScrollTo(), click());
-        Log.d(TAG, "editStandardRoundActivity: " + (i++));
+
         onView(allOf(withId(R.id.recyclerView), isDisplayed()))
                 .perform(actionOnItem(hasDescendant(withText("20m")), click()));
-        Log.d(TAG, "editStandardRoundActivity: " + (i++));
 
         onView(withId(R.id.target)).perform(nestedScrollTo(), click());
-        Log.d(TAG, "editStandardRoundActivity: " + (i++));
+
         onView(withId(R.id.recyclerView))
-                .perform(actionOnItem(hasDescendant(withText(R.string.wa_danage_6_spot)), click()));
-        Log.d(TAG, "editStandardRoundActivity: " + (i++));
+                .perform(actionOnItemAtPosition(9, click()));
+
         navigateUp();
 
-        Log.d(TAG, "editStandardRoundActivity: " + (i++));
         onView(withId(R.id.addButton)).perform(nestedScrollTo(), click());
-        Log.d(TAG, "editStandardRoundActivity: " + (i++));
 
         onView(withRecyclerView(R.id.rounds).atPositionOnView(1, R.id.distance))
                 .perform(nestedScrollTo(), click());
-        Log.d(TAG, "editStandardRoundActivity: " + (i++));
+
         onView(allOf(withId(R.id.recyclerView), isDisplayed()))
                 .perform(actionOnItem(hasDescendant(withText("15m")), click()));
-        Log.d(TAG, "editStandardRoundActivity: " + (i++));
 
         onView(allOf(withId(R.id.number_increment), isNestedChildOfView(withId(R.id.shotCount)),
                 isNestedChildOfView(withRecyclerView(R.id.rounds).atPosition(1))))
                 .perform(nestedScrollTo(), click(), click(), click());
-        Log.d(TAG, "editStandardRoundActivity: " + (i++));
 
         onView(allOf(withId(R.id.number_decrement), isNestedChildOfView(withId(R.id.endCount)),
                 isNestedChildOfView(withRecyclerView(R.id.rounds).atPosition(1))))
                 .perform(nestedScrollTo(), click(), click(), click(), click(), click());
-        Log.d(TAG, "editStandardRoundActivity: " + (i++));
 
         save();
-        Log.d(TAG, "editStandardRoundActivity: " + (i++));
 
         onView(withId(R.id.standardRound))
                 .check(matches(hasDescendant(withText(R.string.custom_round))));
-        Log.d(TAG, "editStandardRoundActivity: " + (i++));
 
         onView(withId(R.id.standardRound))
                 .check(matches(hasDescendant(withText(
                         allOf(startsWith("20m: 10 × 3"), containsString("15m: 5 × 6"))))));
-        Log.d(TAG, "editStandardRoundActivity: " + (i++));
     }
 }
