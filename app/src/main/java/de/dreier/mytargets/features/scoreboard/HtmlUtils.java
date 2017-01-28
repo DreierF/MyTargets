@@ -36,7 +36,7 @@ import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.utils.Utils;
+import de.dreier.mytargets.shared.utils.SharedUtils;
 
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 import static de.dreier.mytargets.shared.models.db.End.getSortedScoreDistribution;
@@ -342,7 +342,7 @@ public class HtmlUtils {
         equals[1] = true;
         Round round = rounds.get(0);
         for (Round r : rounds) {
-            equals[0] = Utils.equals(r.distance, round.distance) && equals[0];
+            equals[0] = SharedUtils.equals(r.distance, round.distance) && equals[0];
             equals[1] = r.getTarget().equals(round.getTarget()) && equals[1];
         }
     }

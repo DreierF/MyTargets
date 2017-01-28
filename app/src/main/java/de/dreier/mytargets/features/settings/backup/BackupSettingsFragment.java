@@ -197,7 +197,10 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        backup.onActivityResult(requestCode, resultCode, data);
+        if (backup != null) {
+            // TODO Rethink!!
+            backup.onActivityResult(requestCode, resultCode, data);
+        }
         if (requestCode == IMPORT_FROM_URI && resultCode == AppCompatActivity.RESULT_OK) {
             importFromUri(data.getData());
         }

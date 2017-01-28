@@ -57,6 +57,7 @@ import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
+import de.dreier.mytargets.shared.utils.SharedUtils;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
 import de.dreier.mytargets.utils.IntentWrapper;
@@ -112,7 +113,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     private static boolean shouldShowEnd(End end, Long currentEndId) {
-        return !Utils.equals(end.getId(), currentEndId) && end.exact;
+        return !SharedUtils.equals(end.getId(), currentEndId) && end.exact;
     }
 
     @Override

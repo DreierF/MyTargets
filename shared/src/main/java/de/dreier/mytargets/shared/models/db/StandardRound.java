@@ -38,6 +38,7 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
 import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
 import de.dreier.mytargets.shared.targets.models.CombinedSpot;
+import de.dreier.mytargets.shared.utils.SharedUtils;
 
 @Parcel
 @Table(database = AppDatabase.class)
@@ -86,10 +87,12 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
     }
 
     public void setId(Long id) {
-        this.id = id;
-        for (RoundTemplate r : rounds) {
-            r.standardRound = id;
+        if (SharedUtils.equals(this.id, id)) {
+            for (RoundTemplate r : getRounds()) {
+                r.standardRound = id;
+            }
         }
+        this.id = id;
     }
 
     @Override
