@@ -56,7 +56,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     @Column
     public int index;
 
-    public List<EndImage> images = new ArrayList<>();
+    public List<EndImage> images;
 
     @ForeignKey(tableClass = Round.class, references = {
             @ForeignKeyReference(columnName = "round", columnType = Long.class, foreignKeyColumnName = "_id")},
@@ -76,6 +76,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
 
     public End(int shotCount, int index) {
         this.index = index;
+        shots = new ArrayList<>();
         for (int i = 0; i < shotCount; i++) {
             shots.add(new Shot(i));
         }
