@@ -137,9 +137,11 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
     @Override
     public void save() {
         super.save();
-        SQLite.delete(ArrowImage.class)
-                .where(ArrowImage_Table.arrow.eq(id))
-                .execute();
+        if(images != null) {
+            SQLite.delete(ArrowImage.class)
+                    .where(ArrowImage_Table.arrow.eq(id))
+                    .execute();
+        }
         // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
         for (ArrowImage image : getImages()) {
             image.arrowId = id;

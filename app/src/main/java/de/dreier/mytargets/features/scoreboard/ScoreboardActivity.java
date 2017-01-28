@@ -18,6 +18,7 @@ package de.dreier.mytargets.features.scoreboard;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -146,26 +147,39 @@ public class ScoreboardActivity extends ChildActivityBase {
     /* Called after the user selected with items he wants to share */
     private void shareImage() {
         // Construct share intent
-        new Thread(() -> {
-            try {
-                File dir = getCacheDir();
-                final File f = File.createTempFile("scoreboard", ".png", dir);
-                new ScoreboardImage().generateBitmap(this, mTraining, mRound, f);
+        new AsyncTask<Void, Void, Uri>() {
 
-                // Build and fire intent to ask for share provider
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("*/*");
-                String packageName = getApplicationContext().getPackageName();
-                String authority = packageName + ".easyphotopicker.fileprovider";
-                shareIntent.putExtra(Intent.EXTRA_STREAM,
-                        getUriForFile(ScoreboardActivity.this, authority, f));
-                startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
-            } catch (IOException e) {
-                e.printStackTrace();
-                Snackbar.make(binding.getRoot(), R.string.sharing_failed, Snackbar.LENGTH_SHORT)
-                        .show();
+            @Override
+            protected Uri doInBackground(Void... objects) {
+                try {
+                    File dir = getCacheDir();
+                    final File f = File.createTempFile("scoreboard", ".png", dir);
+                    new ScoreboardImage()
+                            .generateBitmap(ScoreboardActivity.this, mTraining, mRound, f);
+                    String packageName = getApplicationContext().getPackageName();
+                    String authority = packageName + ".easyphotopicker.fileprovider";
+                    return getUriForFile(ScoreboardActivity.this, authority, f);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
             }
-        }).start();
+
+            @Override
+            protected void onPostExecute(Uri uri) {
+                super.onPostExecute(uri);
+                if (uri == null) {
+                    Snackbar.make(binding.getRoot(), R.string.sharing_failed, Snackbar.LENGTH_SHORT)
+                            .show();
+                } else {
+                    // Build and fire intent to ask for share provider
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("*/*");
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                    startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
+                }
+            }
+        }.execute();
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)

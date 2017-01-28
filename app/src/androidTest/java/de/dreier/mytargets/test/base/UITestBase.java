@@ -155,7 +155,8 @@ public abstract class UITestBase extends InstrumentedTestBase {
     }
 
     protected void clickContextualActionBarItem(@IdRes int menuItem, @StringRes int title) {
-        onView(allOf(withId(menuItem), isNestedChildOfView(withId(R.id.action_mode_bar)), isDisplayed())).withFailureHandler((error, viewMatcher) -> {
+        onView(allOf(withId(menuItem), isNestedChildOfView(withId(R.id.action_context_bar)), isDisplayed()))
+                .withFailureHandler((error, viewMatcher) -> {
             error.printStackTrace();
             openContextualActionModeOverflowMenu();
             onView(withText(title)).perform(click());

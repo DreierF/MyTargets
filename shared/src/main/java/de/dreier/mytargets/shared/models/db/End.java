@@ -190,6 +190,8 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     @Override
     public void save() {
         super.save();
+        getShots();
+        getImages();
         SQLite.delete(Shot.class)
                 .where(Shot_Table.end.eq(id))
                 .execute();
