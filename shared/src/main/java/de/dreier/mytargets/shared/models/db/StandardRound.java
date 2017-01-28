@@ -53,7 +53,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
     @Column
     public String name;
 
-    List<RoundTemplate> rounds = new ArrayList<>();
+    List<RoundTemplate> rounds;
 
     public static StandardRound get(Long id) {
         return SQLite.select()
@@ -115,13 +115,17 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
 
     @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "rounds")
     public List<RoundTemplate> getRounds() {
-        if (rounds == null || rounds.isEmpty()) {
+        if (rounds == null) {
             rounds = SQLite.select()
                     .from(RoundTemplate.class)
-                     .where(RoundTemplate_Table.standardRound.eq(id))
+                    .where(RoundTemplate_Table.standardRound.eq(id))
                     .queryList();
         }
         return rounds;
+    }
+
+    public void setRounds(List<RoundTemplate> rounds) {
+        this.rounds = rounds;
     }
 
     @Override
@@ -155,37 +159,33 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
         return result == 0 ? (int) (id - another.id) : result;
     }
 
-    public void setRounds(List<RoundTemplate> rounds) {
-        this.rounds = rounds;
-    }
-
     @Override
     public void save() {
         super.save();
-        if(rounds != null) {
+        if (rounds != null) {
             SQLite.delete(RoundTemplate.class)
                     .where(RoundTemplate_Table.standardRound.eq(id))
                     .execute();
-        }
-        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-        for (RoundTemplate s : getRounds()) {
-            s.standardRound = id;
-            s.save();
+            // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
+            for (RoundTemplate s : rounds) {
+                s.standardRound = id;
+                s.save();
+            }
         }
     }
 
     @Override
     public void save(DatabaseWrapper databaseWrapper) {
         super.save(databaseWrapper);
-        if(rounds != null) {
+        if (rounds != null) {
             SQLite.delete(RoundTemplate.class)
                     .where(RoundTemplate_Table.standardRound.eq(id))
                     .execute(databaseWrapper);
-        }
-        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-        for (RoundTemplate s : getRounds()) {
-            s.standardRound = id;
-            s.save(databaseWrapper);
+            // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
+            for (RoundTemplate s : getRounds()) {
+                s.standardRound = id;
+                s.save(databaseWrapper);
+            }
         }
     }
 }

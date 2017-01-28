@@ -69,7 +69,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     @Column(typeConverter = DateTimeConverter.class)
     public DateTime saveTime = new DateTime();
 
-    List<Shot> shots = new ArrayList<>();
+    List<Shot> shots;
 
     public End() {
     }
@@ -84,7 +84,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     @NonNull
     @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "shots")
     public List<Shot> getShots() {
-        if (shots == null || shots.isEmpty()) {
+        if (shots == null) {
             shots = SQLite.select()
                     .from(Shot.class)
                     .where(Shot_Table.end.eq(id))
@@ -95,7 +95,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
 
     @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "images")
     public List<EndImage> getImages() {
-        if (images == null || images.isEmpty()) {
+        if (images == null) {
             images = SQLite.select()
                     .from(EndImage.class)
                     .where(EndImage_Table.end.eq(id))
@@ -190,22 +190,25 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     @Override
     public void save() {
         super.save();
-        getShots();
-        getImages();
-        SQLite.delete(Shot.class)
-                .where(Shot_Table.end.eq(id))
-                .execute();
-        SQLite.delete(EndImage.class)
-                .where(EndImage_Table.end.eq(id))
-                .execute();
-        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-        for (Shot s : getShots()) {
-            s.endId = id;
-            s.save();
+        if (shots != null) {
+            SQLite.delete(Shot.class)
+                    .where(Shot_Table.end.eq(id))
+                    .execute();
+            // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
+            for (Shot s : shots) {
+                s.endId = id;
+                s.save();
+            }
         }
-        for (EndImage image : getImages()) {
-            image.endId = id;
-            image.save();
+        if(images != null) {
+            SQLite.delete(EndImage.class)
+                    .where(EndImage_Table.end.eq(id))
+                    .execute();
+            // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
+            for (EndImage image : getImages()) {
+                image.endId = id;
+                image.save();
+            }
         }
     }
 
