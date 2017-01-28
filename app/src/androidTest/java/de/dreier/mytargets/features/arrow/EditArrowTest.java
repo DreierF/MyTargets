@@ -30,6 +30,7 @@ import de.dreier.mytargets.features.main.MainActivity;
 import de.dreier.mytargets.test.base.UITestBase;
 import de.dreier.mytargets.test.utils.rules.EmptyDbTestRule;
 
+import static android.Manifest.permission.CAMERA;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -46,6 +47,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static de.dreier.mytargets.test.utils.PermissionGranter.allowPermissionsIfNeeded;
 import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.withRecyclerView;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -122,6 +124,8 @@ public class EditArrowTest extends UITestBase {
         onView(supportFab()).perform(click());
         onView(withText(R.string.take_picture))
                 .perform(click());
+
+        allowPermissionsIfNeeded(activityTestRule.getActivity(), CAMERA);
 
         intended(hasAction(MediaStore.ACTION_IMAGE_CAPTURE));
 

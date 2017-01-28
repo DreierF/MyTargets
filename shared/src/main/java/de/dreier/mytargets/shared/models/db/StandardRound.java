@@ -77,9 +77,9 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
     }
 
     public void insert(RoundTemplate template) {
-        template.index = rounds.size();
+        template.index = getRounds().size();
         template.standardRound = id;
-        rounds.add(template);
+        getRounds().add(template);
     }
 
     public Long getId() {

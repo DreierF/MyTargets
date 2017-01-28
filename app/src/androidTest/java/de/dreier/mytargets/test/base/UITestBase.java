@@ -59,6 +59,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isNestedChildOfView;
 import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -155,12 +156,13 @@ public abstract class UITestBase extends InstrumentedTestBase {
     }
 
     protected void clickContextualActionBarItem(@IdRes int menuItem, @StringRes int title) {
-        onView(allOf(withId(menuItem), isNestedChildOfView(withId(R.id.action_context_bar)), isDisplayed()))
+        onView(allOf(withId(menuItem), isDisplayed(), isNestedChildOfView(
+                anyOf(withId(R.id.action_context_bar), withId(R.id.action_mode_bar)))))
                 .withFailureHandler((error, viewMatcher) -> {
-            error.printStackTrace();
-            openContextualActionModeOverflowMenu();
-            onView(withText(title)).perform(click());
-        }).perform(click());
+                    error.printStackTrace();
+                    openContextualActionModeOverflowMenu();
+                    onView(withText(title)).perform(click());
+                }).perform(click());
     }
 
     protected void enterDate(int year, int monthOfYear, int dayOfMonth) {
@@ -180,7 +182,8 @@ public abstract class UITestBase extends InstrumentedTestBase {
 
     @NonNull
     protected Matcher<View> supportFab() {
-        return Matchers.allOf(withId(R.id.fab), isDisplayed(), instanceOf(FloatingActionButton.class));
+        return Matchers
+                .allOf(withId(R.id.fab), isDisplayed(), instanceOf(FloatingActionButton.class));
     }
 
     protected Matcher<Intent> hasClass(Class<?> clazz) {
