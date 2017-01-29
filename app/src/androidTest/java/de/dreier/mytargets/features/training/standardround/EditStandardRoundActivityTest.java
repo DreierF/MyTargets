@@ -56,7 +56,7 @@ import static org.hamcrest.Matchers.startsWith;
 
 @RunWith(AndroidJUnit4.class)
 public class EditStandardRoundActivityTest extends UITestBase {
-    
+
     @Rule
     public IntentsTestRule<EditTrainingActivity> activityTestRule = new IntentsTestRule<>(
             EditTrainingActivity.class, true, false);

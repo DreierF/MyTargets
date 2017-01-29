@@ -42,14 +42,18 @@ import de.dreier.mytargets.test.utils.rules.SimpleDbTestRule;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.isInternal;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.base.fragments.EditableListFragmentBase.ITEM_ID;
 import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.hasLongArrayExtra;
 import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.withRecyclerView;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
 
 @RunWith(AndroidJUnit4.class)
 public class TrainingActivityTest extends UITestBase {
@@ -70,6 +74,14 @@ public class TrainingActivityTest extends UITestBase {
         intending(isInternal())
                 .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
 
+        onView(withRecyclerView(R.id.recyclerView).atPosition(0))
+                .check(matches(hasDescendant(withText(containsString("50m")))))
+                .check(matches(hasDescendant(withText("212/360"))));
+
+        onView(withRecyclerView(R.id.recyclerView).atPosition(1))
+                .check(matches(hasDescendant(withText(containsString("30m")))))
+                .check(matches(hasDescendant(withText("203/360"))));
+
         onView(withRecyclerView(R.id.recyclerView).atPosition(1))
                 .perform(click());
         intended(allOf(hasClass(RoundActivity.class),
@@ -86,18 +98,8 @@ public class TrainingActivityTest extends UITestBase {
                 hasExtra(ScoreboardActivity.TRAINING_ID, training.getId()),
                 hasExtra(ScoreboardActivity.ROUND_ID, -1L)));
 
-        onView(supportFab())
-                .perform(click());
+        onView(supportFab()).perform(click());
         intended(allOf(hasClass(EditRoundActivity.class),
                 hasExtra(ITEM_ID, training.getId())));
-//
-//        onView(withContentDescription("0/0"))
-//                .check(matches(isDisplayed()));
-//
-//        clickActionBarItem(R.id.action_share, R.string.share);
-//
-//        clickActionBarItem(R.id.action_print, R.string.print);
-//
-//        clickActionBarItem(R.id.action_settings, R.string.preferences);
     }
 }
