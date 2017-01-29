@@ -199,7 +199,6 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        Log.d(TAG, "onActivityResult: ");
         if (requestCode == REQUEST_CODE_RESOLUTION && resultCode != RESULT_OK) {
             leaveBackupSettings();
         }
