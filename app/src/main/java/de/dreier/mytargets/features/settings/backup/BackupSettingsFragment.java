@@ -63,12 +63,14 @@ import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.RuntimePermissions;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE;
 import static android.content.ContentResolver.SYNC_OBSERVER_TYPE_PENDING;
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static de.dreier.mytargets.features.settings.backup.BackupSettingsFragmentPermissionsDispatcher.showFilePickerWithCheck;
+import static de.dreier.mytargets.features.settings.backup.provider.GoogleDriveBackup.AsyncRestore.REQUEST_CODE_RESOLUTION;
 
 @RuntimePermissions
 public class BackupSettingsFragment extends SettingsFragmentBase implements IAsyncBackupRestore.OnLoadFinishedListener {
@@ -86,7 +88,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
      * <p>This allows us to delete our SyncObserver once the application is no longer in the
      * foreground.
      */
-    private Object mSyncObserverHandle;
+    private Object syncObserverHandle;
     private boolean isRefreshing = false;
 
     /**
@@ -94,7 +96,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
      * onResume(), and removed in onPause(). If status changes, it sets the state of the Progress
      * bar. If a sync is active or pending, the progress is shown.
      */
-    private SyncStatusObserver mSyncStatusObserver = which -> getActivity().runOnUiThread(() -> {
+    private SyncStatusObserver syncStatusObserver = which -> getActivity().runOnUiThread(() -> {
         Account account = GenericAccountService.getAccount();
 
         boolean syncActive = ContentResolver.isSyncActive(account, SyncUtils.CONTENT_AUTHORITY);
@@ -175,9 +177,9 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         super.onResume();
         applyBackupLocationWithCheck(SettingsManager.getBackupLocation());
 
-        mSyncStatusObserver.onStatusChanged(0);
-        mSyncObserverHandle = ContentResolver.addStatusChangeListener(
-                SYNC_OBSERVER_TYPE_PENDING | SYNC_OBSERVER_TYPE_ACTIVE, mSyncStatusObserver);
+        syncStatusObserver.onStatusChanged(0);
+        syncObserverHandle = ContentResolver.addStatusChangeListener(
+                SYNC_OBSERVER_TYPE_PENDING | SYNC_OBSERVER_TYPE_ACTIVE, syncStatusObserver);
     }
 
     @Override
@@ -188,18 +190,18 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         if (updateLabelTimer != null) {
             updateLabelTimer.cancel();
         }
-        if (mSyncObserverHandle != null) {
-            ContentResolver.removeStatusChangeListener(mSyncObserverHandle);
-            mSyncObserverHandle = null;
+        if (syncObserverHandle != null) {
+            ContentResolver.removeStatusChangeListener(syncObserverHandle);
+            syncObserverHandle = null;
         }
         super.onPause();
     }
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (backup != null) {
-            // TODO Rethink!!
-            backup.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: ");
+        if (requestCode == REQUEST_CODE_RESOLUTION && resultCode != RESULT_OK) {
+            leaveBackupSettings();
         }
         if (requestCode == IMPORT_FROM_URI && resultCode == AppCompatActivity.RESULT_OK) {
             importFromUri(data.getData());
@@ -404,6 +406,10 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
 
     @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void showDeniedForWrite() {
+        leaveBackupSettings();
+    }
+
+    private void leaveBackupSettings() {
         getActivity().getSupportFragmentManager().popBackStack();
     }
 
