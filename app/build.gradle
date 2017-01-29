@@ -101,23 +101,11 @@ tasks.withType(DataBindingExportBuildInfoTask) { task ->
     }
 }
 
-task renameFolders {
-    file('app/src/main/play/ca-ES').renameTo(file('app/src/main/play/ca'))
-    file('app/src/main/play/sk-SK').renameTo(file('app/src/main/play/sk'))
-    file('app/src/main/play/sl-SI').renameTo(file('app/src/main/play/sl'))
-}
-
 def CROWDIN_API_KEY = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
 if (CROWDIN_API_KEY != null && !CROWDIN_API_KEY.isEmpty()) {
     tasks.whenTaskAdded { task ->
         if (task.name.equals("generateRegularReleasePlayResources")) {
-            task.dependsOn(':crowdinDownload')
-            task.dependsOn renameFolders
-            task.doLast {
-                file('app/src/main/play/ca').renameTo(file('app/src/main/play/ca-ES'))
-                file('app/src/main/play/sk').renameTo(file('app/src/main/play/sk-SK'))
-                file('app/src/main/play/sl').renameTo(file('app/src/main/play/sl-SI'))
-            }
+            task.dependsOn ':crowdinDownload'
         }
     }
 
