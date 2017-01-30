@@ -38,13 +38,11 @@ import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.BeforeClass;
-import org.junit.ClassRule;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.test.utils.actions.NestedScrollToAction;
 import de.dreier.mytargets.test.utils.matchers.MatcherUtils;
-import de.dreier.mytargets.test.utils.rules.DisableAnimationsRule;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
@@ -70,9 +68,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 public abstract class UITestBase extends InstrumentedTestBase {
-
-    @ClassRule
-    public static DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
 
     @BeforeClass
     public static void disableIntro() {
