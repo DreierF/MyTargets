@@ -113,8 +113,7 @@
                         android:gravity="start"
                         android:padding="16dp"
                         android:text="@string/change_target_face"
-                        android:textStyle="normal"
-                        android:visibility="gone" />
+                        android:textStyle="normal" />
 
                     <LinearLayout
                         android:id="@+id/practiceLayout"
