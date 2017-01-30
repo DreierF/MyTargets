@@ -532,15 +532,13 @@ public class InputActivity extends ChildActivityBase
 
     @Override
     public void onEndFinished(List<Shot> shots, boolean remote) {
+        if(remote && data.getCurrentRound().getEnds().size() > data.endIndex) {
+            data.endIndex = data.getCurrentRound().getEnds().size();
+        }
         data.getCurrentEnd().setShots(shots);
-        data.getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING;
+        data.getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING && !remote;
         if (data.getCurrentEnd().getId() == null) {
             data.getCurrentEnd().saveTime = new DateTime();
-        }
-
-        // Change round template if end is out of range defined in template
-        if (data.getCurrentRound().getEnds().size() == data.endIndex) {
-            data.getCurrentRound().addEnd();
         }
 
         data.getCurrentEnd().save();
