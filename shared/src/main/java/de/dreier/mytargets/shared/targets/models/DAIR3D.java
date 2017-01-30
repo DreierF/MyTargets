@@ -52,7 +52,8 @@ public class DAIR3D extends Target3DBase {
                 new ScoringStyle(false, 8, 8, 12, 12, 12, 12, 11, 11, 10, 8, 0),
                 new ScoringStyle(false, 14, 14, 12, 12, 12, 12, 11, 11, 10, 8, 0),
                 new ScoringStyle(false, 8, 8, 12, 12, 12, 12, 10, 10, 10, 8, 0),
-                new ScoringStyle(false, 14, 14, 12, 12, 12, 12, 10, 10, 10, 8, 0)
+                new ScoringStyle(false, 14, 14, 12, 12, 12, 12, 10, 10, 10, 8, 0),
+                new ScoringStyle(false, 14, 14, 11, 11, 10, 10, 10, 10, 10, 8, 5)
         };
     }
 }

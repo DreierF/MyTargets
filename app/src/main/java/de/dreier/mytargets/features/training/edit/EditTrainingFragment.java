@@ -153,13 +153,13 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.notEditable.setVisibility(View.GONE);
         }
         binding.standardRound.setOnActivityResultContext(this);
-        binding.standardRound.setOnUpdateListener(this::updateChangeTargetFaceVisibility);
+        binding.standardRound.setOnUpdateListener(
+                item -> roundTarget = item.getRounds().get(0).getTargetTemplate());
         binding.changeTargetFace.setOnClickListener(v ->
                 TargetListFragment.getIntent(roundTarget)
                         .withContext(this)
                         .forResult(SR_TARGET_REQUEST_CODE)
                         .start());
-        updateChangeTargetFaceVisibility(binding.standardRound.getSelectedItem());
         binding.arrow.setOnActivityResultContext(this);
         binding.bow.setOnActivityResultContext(this);
         binding.environment.setOnActivityResultContext(this);
@@ -168,13 +168,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         updateArrowsLabel();
 
         return binding.getRoot();
-    }
-
-    private void updateChangeTargetFaceVisibility(StandardRound item) {
-        roundTarget = item.getRounds().get(0).getTargetTemplate();
-        final boolean canBeChanged = (roundTarget.id < 7 || roundTarget.id == 10 || roundTarget.id == 11)
-                && trainingType == TRAINING_WITH_STANDARD_ROUND;
-        binding.changeTargetFace.setVisibility(canBeChanged ? View.VISIBLE : View.GONE);
     }
 
     protected void setScoringStyleForCompoundBow(Bow bow) {
