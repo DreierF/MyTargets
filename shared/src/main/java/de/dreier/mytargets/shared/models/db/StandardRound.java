@@ -87,7 +87,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
     }
 
     public void setId(Long id) {
-        if (SharedUtils.equals(this.id, id)) {
+        if (!SharedUtils.equals(this.id, id)) {
             for (RoundTemplate r : getRounds()) {
                 r.standardRound = id;
             }
@@ -114,7 +114,6 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
         }
         return desc;
     }
-
 
     @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "rounds")
     public List<RoundTemplate> getRounds() {
@@ -185,7 +184,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
                     .where(RoundTemplate_Table.standardRound.eq(id))
                     .execute(databaseWrapper);
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-            for (RoundTemplate s : getRounds()) {
+            for (RoundTemplate s : rounds) {
                 s.standardRound = id;
                 s.save(databaseWrapper);
             }
