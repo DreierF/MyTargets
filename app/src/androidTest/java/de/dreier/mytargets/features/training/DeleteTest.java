@@ -26,6 +26,8 @@ import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 
+import java.util.Locale;
+
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.main.MainActivity;
 import de.dreier.mytargets.test.base.UITestBase;
@@ -53,7 +55,7 @@ public class DeleteTest extends UITestBase {
 
     @Before
     public void setUp() {
-        setLocale("en", "EN");
+        setLocale(Locale.ENGLISH);
     }
 
     @Test

@@ -22,8 +22,7 @@ import android.support.test.InstrumentationRegistry;
 import java.util.Locale;
 
 public class InstrumentedTestBase {
-    protected void setLocale(String language, String country) {
-        Locale locale = new Locale(language, country);
+    protected void setLocale(Locale locale) {
         // here we update locale for date formatter
         Locale.setDefault(locale);
         // here we update locale for app resources
