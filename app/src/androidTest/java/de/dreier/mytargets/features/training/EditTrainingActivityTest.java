@@ -38,7 +38,6 @@ import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
 import de.dreier.mytargets.test.base.UITestBase;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -58,7 +57,6 @@ import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
 import static de.dreier.mytargets.test.utils.PermissionGranter.allowPermissionsIfNeeded;
 import static de.dreier.mytargets.test.utils.assertions.RecyclerViewAssertions.itemCount;
 import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.containsStringRes;
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
@@ -108,18 +106,14 @@ public class EditTrainingActivityTest extends UITestBase {
         onView(withId(R.id.target)).perform(nestedScrollTo(), click());
         onView(withId(R.id.recyclerView)).perform(actionOnItemAtPosition(5, click()));
         onView(withId(R.id.scoring_style)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), containsString("Compound"))).perform(click());
+        onView(withText(R.string.compound_style)).perform(click());
         onView(withId(R.id.target_size)).perform(click());
         onView(withText("40cm")).perform(click());
         pressBack();
-        onView(allOf(withId(R.id.name),
-                withParent(withParent(withParent(withParent(withId(R.id.target)))))))
-                .check(matches(withText(containsString(
-                        activityTestRule.getActivity().getString(R.string.vertical_3_spot)))))
-                .check(matches(withText(containsString("40cm"))));
-        onView(allOf(withId(R.id.details),
-                withParent(withParent(withParent(withParent(withId(R.id.target)))))))
-                .check(matches(withText(R.string.compound_style)));
+        onView(withId(R.id.target))
+                .check(matches(hasDescendant(withText(containsString(activityTestRule.getActivity().getString(R.string.vertical_3_spot))))))
+                .check(matches(hasDescendant(withText(containsString("40cm")))))
+                .check(matches(hasDescendant(withText(R.string.compound_style))));
 
         // Change environment
         onView(withId(R.id.environment)).perform(nestedScrollTo(), click());
@@ -130,9 +124,8 @@ public class EditTrainingActivityTest extends UITestBase {
         onView(withId(R.id.recyclerView)).perform(actionOnItemAtPosition(7, click()));
         onView(withId(R.id.location)).perform(replaceText("My location"));
         navigateUp();
-        onView(allOf(withId(R.id.name),
-                withParent(withParent(withParent(withParent(withId(R.id.environment)))))))
-                .check(matches(withText(R.string.rain)));
+        onView(withId(R.id.environment))
+                .check(matches(hasDescendant(withText(R.string.rain))));
         onView(allOf(withId(R.id.details),
                 withParent(withParent(withParent(withParent(withId(R.id.environment)))))))
                 .check(matches(withText(containsString("9 Bft"))))

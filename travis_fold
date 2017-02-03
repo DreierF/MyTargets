@@ -2,5 +2,6 @@
 # Usage: travis_fold assembleRelease ./mycommand
 
 echo -e "travis_fold:start:$1"
+echo "\033[0K\033[33;1m${@:2}\033[0m"
 "${@:2}"
 echo -e "travis_fold:end:$1"

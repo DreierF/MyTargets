@@ -146,5 +146,4 @@ public class EditArrowTest extends UITestBase {
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .check(matches(hasDescendant(withText("Arrow"))));
     }
-
 }
