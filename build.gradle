@@ -59,7 +59,7 @@ ext {
         supportWearable : '1.4.0',
         playService : '10.0.1',
         firebase: '10.0.1',
-        espresso : '2.2.2', // On update also pull the latest changes for our intents copy
+        espresso : '2.2.2',
         parceler : '1.1.6',
         jodaTime : '2.9.7',
         dbFlow : '3.1.1',
