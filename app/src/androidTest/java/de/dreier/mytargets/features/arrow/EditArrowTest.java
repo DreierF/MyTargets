@@ -29,24 +29,18 @@ import de.dreier.mytargets.features.main.MainActivity;
 import de.dreier.mytargets.test.base.UITestBase;
 import de.dreier.mytargets.test.utils.rules.EmptyDbTestRule;
 
-import static android.Manifest.permission.CAMERA;
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.swipeDown;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static de.dreier.mytargets.test.utils.ImageCaptureUtils.intendedImageCapture;
-import static de.dreier.mytargets.test.utils.ImageCaptureUtils.intendingImageCapture;
-import static de.dreier.mytargets.test.utils.PermissionGranter.allowPermissionsIfNeeded;
 import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.withRecyclerView;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -116,17 +110,17 @@ public class EditArrowTest extends UITestBase {
         onView(withId(R.id.diameter))
                 .perform(nestedScrollTo(), replaceText("0.5"), closeSoftKeyboard());
 
-        intendingImageCapture(getInstrumentation().getContext(),
-                de.dreier.mytargets.debug.test.R.raw.mocked_image_capture);
-
-        onView(withId(R.id.coordinatorLayout)).perform(swipeDown());
-        onView(supportFab()).perform(click());
-        onView(withText(R.string.take_picture))
-                .perform(click());
-
-        allowPermissionsIfNeeded(activityTestRule.getActivity(), CAMERA);
-
-        intendedImageCapture();
+//        intendingImageCapture(getInstrumentation().getContext(),
+//                de.dreier.mytargets.debug.test.R.raw.mocked_image_capture);
+//
+//        onView(withId(R.id.coordinatorLayout)).perform(swipeDown());
+//        onView(supportFab()).perform(click());
+//        onView(withText(R.string.take_picture))
+//                .perform(click());
+//
+//        allowPermissionsIfNeeded(activityTestRule.getActivity(), CAMERA);
+//
+//        intendedImageCapture();
 
         save();
 
