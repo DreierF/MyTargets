@@ -16,40 +16,21 @@
 package de.dreier.mytargets.features.arrow;
 
 
-import android.app.Activity;
-import android.app.Instrumentation;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.test.runner.intent.IntentCallback;
-import android.support.test.runner.intent.IntentMonitorRegistry;
-import android.support.test.runner.intent.IntentStubber;
-import android.support.test.runner.intent.IntentStubberRegistry;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.main.MainActivity;
-import de.dreier.mytargets.shared.utils.FileUtils;
 import de.dreier.mytargets.test.base.UITestBase;
 import de.dreier.mytargets.test.utils.rules.EmptyDbTestRule;
 
-<<<<<<< HEAD
 import static android.Manifest.permission.CAMERA;
-=======
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
->>>>>>> parent of 3dfcf43... Included my changes
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -58,13 +39,13 @@ import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.swipeDown;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intending;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static de.dreier.mytargets.test.utils.ImageCaptureUtils.intendedImageCapture;
+import static de.dreier.mytargets.test.utils.ImageCaptureUtils.intendingImageCapture;
 import static de.dreier.mytargets.test.utils.PermissionGranter.allowPermissionsIfNeeded;
 import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.withRecyclerView;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -74,7 +55,7 @@ import static org.hamcrest.Matchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class EditArrowTest extends UITestBase {
 
-    private IntentsTestRule<MainActivity> activityTestRule = new IntentsTestRule<>(
+    private ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(
             MainActivity.class);
 
     @Rule
@@ -135,52 +116,17 @@ public class EditArrowTest extends UITestBase {
         onView(withId(R.id.diameter))
                 .perform(nestedScrollTo(), replaceText("0.5"), closeSoftKeyboard());
 
+        intendingImageCapture(getInstrumentation().getContext(),
+                de.dreier.mytargets.debug.test.R.raw.mocked_image_capture);
 
-        intending(hasAction(MediaStore.ACTION_IMAGE_CAPTURE))
-                .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
-
-        // stub intent handling for retrieving RESULT_OK status back
-        IntentStubberRegistry.load(new IntentStubber() {
-            @Override
-            public Instrumentation.ActivityResult getActivityResultForIntent(Intent intent) {
-                Intent resultIntent = new Intent();
-                return new Instrumentation.ActivityResult(Activity.RESULT_OK, resultIntent);
-            }
-        });
-        IntentCallback intentCallback = new IntentCallback() {
-            @Override
-            public void onIntentSent(Intent intent) {
-                //extract output path for captured image from intent
-                Uri uriToSaveImage = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
-                //save ready-made mock image to the provided Uri
-                try {
-                    Context testContext = getInstrumentation().getContext();
-                    Resources testRes = testContext.getResources();
-                    InputStream ts = testRes.openRawResource(de.dreier.mytargets.debug.test.R.raw.mocked_image_capture);
-                    OutputStream stream = testContext.getContentResolver()
-                            .openOutputStream(uriToSaveImage);
-                    FileUtils.copy(ts, stream);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        IntentMonitorRegistry.getInstance().addIntentCallback(intentCallback);
-
-        //TODO Take a picture
         onView(withId(R.id.coordinatorLayout)).perform(swipeDown());
         onView(supportFab()).perform(click());
         onView(withText(R.string.take_picture))
                 .perform(click());
 
-<<<<<<< HEAD
         allowPermissionsIfNeeded(activityTestRule.getActivity(), CAMERA);
 
-        intended(hasAction(MediaStore.ACTION_IMAGE_CAPTURE));
-=======
-       // intended(hasAction(MediaStore.ACTION_IMAGE_CAPTURE));
-        IntentMonitorRegistry.getInstance().removeIntentCallback(intentCallback);
->>>>>>> parent of 3dfcf43... Included my changes
+        intendedImageCapture();
 
         save();
 
@@ -200,4 +146,5 @@ public class EditArrowTest extends UITestBase {
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .check(matches(hasDescendant(withText("Arrow"))));
     }
+
 }
