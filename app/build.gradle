@@ -121,6 +121,25 @@ if (CROWDIN_API_KEY != null && !CROWDIN_API_KEY.isEmpty()) {
     }
 }
 
+// Get the path to ADB.  Required when running tests directly from Android Studio.
+// Source: http://stackoverflow.com/a/26771087/112705
+def adb = android.getAdbExe().toString()
+
+// Source: http://stackoverflow.com/q/29908110/112705
+afterEvaluate {
+    task grantAnimationPermission(type: Exec, dependsOn: 'installRegularDebug') {
+        commandLine "$adb shell pm grant de.dreier.mytargets.debug android.permission.SET_ANIMATION_SCALE".split(' ')
+    }
+
+    // When launching individual tests from Android Studio, it seems that only the assemble tasks
+    // get called directly, not the install* versions
+    tasks.each { task ->
+        if (task.name.startsWith('assembleRegularDebugAndroidTest')) {
+            task.dependsOn grantAnimationPermission
+        }
+    }
+}
+
 dependencies {
     compile "com.android.support:support-compat:$libraryVersion.support"
     compile "com.android.support:support-core-utils:$libraryVersion.support"
