@@ -24,27 +24,22 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.test.runner.intent.IntentStubberRegistry;
 
-import org.hamcrest.Matcher;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import de.dreier.mytargets.shared.utils.FileUtils;
 
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
-
-public class ImageCaptureUtils {
+public class ImageCaptureStubbingUtils {
 
     private static boolean matched = false;
 
-    public static void intendingImageCapture(final Context context, final int mocked_image) {
+    public static void intendingImageCapture(final Context context, final int mockedImage) {
         matched = false;
-        final Matcher<Intent> intentMatcher = hasAction(MediaStore.ACTION_IMAGE_CAPTURE);
         IntentStubberRegistry.load(intent -> {
-            if (intentMatcher.matches(intent)) {
+            if (MediaStore.ACTION_IMAGE_CAPTURE.equals(intent.getAction())) {
                 Uri uriToSaveImage = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
-                saveMockToUri(context, mocked_image, uriToSaveImage);
+                saveMockToUri(context, mockedImage, uriToSaveImage);
                 matched = true;
 
                 Intent resultIntent = new Intent();
@@ -54,10 +49,10 @@ public class ImageCaptureUtils {
         });
     }
 
-    private static void saveMockToUri(Context context, int mocked_image, Uri uriToSaveImage) {
+    private static void saveMockToUri(Context context, int mockedImage, Uri uriToSaveImage) {
         try {
             Resources testRes = context.getResources();
-            InputStream ts = testRes.openRawResource(mocked_image);
+            InputStream ts = testRes.openRawResource(mockedImage);
             OutputStream stream = context.getContentResolver()
                     .openOutputStream(uriToSaveImage);
             FileUtils.copy(ts, stream);
