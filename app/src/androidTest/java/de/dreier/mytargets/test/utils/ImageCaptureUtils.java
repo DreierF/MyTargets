@@ -22,10 +22,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.test.runner.intent.IntentCallback;
-import android.support.test.runner.intent.IntentMonitorRegistry;
-import android.support.test.runner.intent.IntentStubber;
 import android.support.test.runner.intent.IntentStubberRegistry;
 
 import org.hamcrest.Matcher;
@@ -40,50 +36,40 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAct
 
 public class ImageCaptureUtils {
 
-    private static IntentCallback intentCallback;
     private static boolean matched = false;
 
-    @NonNull
     public static void intendingImageCapture(final Context context, final int mocked_image) {
         matched = false;
         final Matcher<Intent> intentMatcher = hasAction(MediaStore.ACTION_IMAGE_CAPTURE);
-        // stub intent handling for retrieving RESULT_OK status back
-        IntentStubberRegistry.load(new IntentStubber() {
-            @Override
-            public Instrumentation.ActivityResult getActivityResultForIntent(Intent intent) {
-                if (intentMatcher.matches(intent)) {
-                    Intent resultIntent = new Intent();
-                    return new Instrumentation.ActivityResult(Activity.RESULT_OK, resultIntent);
-                }
-                return null;
-            }
-        });
-        intentCallback = intent -> {
-            if (!intentMatcher.matches(intent)) {
-                return;
-            }
-            //extract output path for captured image from intent
-            Uri uriToSaveImage = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
-            try {
-                Resources testRes = context.getResources();
-                InputStream ts = testRes.openRawResource(
-                        mocked_image);
-                OutputStream stream = context.getContentResolver()
-                        .openOutputStream(uriToSaveImage);
-                //save ready-made mock image to the provided Uri
-                FileUtils.copy(ts, stream);
+        IntentStubberRegistry.load(intent -> {
+            if (intentMatcher.matches(intent)) {
+                Uri uriToSaveImage = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
+                saveMockToUri(context, mocked_image, uriToSaveImage);
                 matched = true;
-            } catch (IOException e) {
-                e.printStackTrace();
+
+                Intent resultIntent = new Intent();
+                return new Instrumentation.ActivityResult(Activity.RESULT_OK, resultIntent);
             }
-        };
-        IntentMonitorRegistry.getInstance().addIntentCallback(intentCallback);
+            return null;
+        });
+    }
+
+    private static void saveMockToUri(Context context, int mocked_image, Uri uriToSaveImage) {
+        try {
+            Resources testRes = context.getResources();
+            InputStream ts = testRes.openRawResource(mocked_image);
+            OutputStream stream = context.getContentResolver()
+                    .openOutputStream(uriToSaveImage);
+            FileUtils.copy(ts, stream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void intendedImageCapture() {
         if(!matched) {
             throw new RuntimeException("No intent captured with action ACTION_IMAGE_CAPTURE.");
         }
-        IntentMonitorRegistry.getInstance().removeIntentCallback(intentCallback);
+        IntentStubberRegistry.reset();
     }
 }
