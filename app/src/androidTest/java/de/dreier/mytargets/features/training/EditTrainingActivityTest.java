@@ -115,7 +115,7 @@ public class EditTrainingActivityTest extends UITestBase {
         onView(withId(R.id.target))
                 .check(matches(hasDescendant(withText(containsString(activityTestRule.getActivity().getString(R.string.vertical_3_spot))))))
                 .check(matches(hasDescendant(withText(containsString("40cm")))))
-                .check(matches(hasDescendant(withText(R.string.compound_style))));
+                .check(matches(hasDescendant(withText(containsString("Compound")))));
 
         // Change environment
         onView(withId(R.id.environment)).perform(nestedScrollTo(), click());
