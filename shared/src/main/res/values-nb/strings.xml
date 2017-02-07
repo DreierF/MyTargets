@@ -38,14 +38,14 @@
   <string name="location">Sted</string>
   <string name="bft_0">0 Bft: vindstille</string>
   <string name="bft_1">1 Bft: bladene beveger seg ikke</string>
-  <string name="bft_2">1 Bft: Bladene beveger seg ikke</string>
+  <string name="bft_2">2 Bft: Bladene begynner å bevege seg</string>
   <string name="bft_3">3 Bft: Lette flagg begynner å bevege seg</string>
   <string name="bft_4">4 Bft: Små greiner begynner å bevege seg</string>
   <string name="bft_5">5 Bft: Små trær beveger seg</string>
   <string name="bft_6">6 Bft: Store grener beveger seg</string>
   <string name="bft_7">5 Bft: Trær beveger seg</string>
   <string name="bft_8">8 Bft: Små greiner Knekker</string>
-  <string name="bft_9">9 Bft: Storm skade</string>
+  <string name="bft_9">9 Bft: Storm styrke</string>
   <string name="front">forfra</string>
   <string name="back">bakfra</string>
   <string name="left">fra venstre</string>

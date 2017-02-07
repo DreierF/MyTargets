@@ -228,7 +228,7 @@
   <string name="show_points_colored">Показать окрашенные точки</string>
   <string name="stabilizer">Стабилизатор</string>
   <string name="clicker">Кликер</string>
-  <string name="arrow_number_x">Стрела номер %d</string>
+  <string name="arrow_number_x">Стрела номер %s</string>
   <string name="training_with_standard_round">Тренировка со стандартным раундом</string>
   <string name="free_training">Свободная тренировка</string>
   <string name="competition">Соревнование</string>

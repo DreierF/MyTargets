@@ -23,7 +23,7 @@
   <string name="custom">Spesial</string>
   <string name="training">Trening</string>
   <string name="bow">Bue</string>
-  <string name="arrow">Pil</string>
+  <string name="arrow">Piler</string>
   <string name="round">Runde</string>
   <string name="points">Poeng</string>
   <string name="passe">Runde</string>
@@ -279,7 +279,7 @@
   <string name="restoring">Gjenoppretter sikkerhetskopi&#8230;</string>
   <string name="restore_failed">Gjenoppretting mislyktes</string>
   <string name="delete_failed">Sletting mislyktes</string>
-  <string name="backup_restore_desc">Sikkerhetskopier og gjenoppretting app data</string>
+  <string name="backup_restore_desc">Sikkerhetskopier og gjenopprett app data</string>
   <string name="exporting">Eksporterer&#8230;</string>
   <string name="loading_backups_failed">Gjenoppretting av sikkerhetskopiering mislyktes!</string>
   <string name="external_storage">Ekstern lagring</string>

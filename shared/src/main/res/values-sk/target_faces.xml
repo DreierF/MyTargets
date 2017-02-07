@@ -16,8 +16,8 @@
   -->
 <resources>
   <!-- Target groups -->
-  <string name="target_type_target_archery">Regular</string>
-  <string name="target_type_field_archery">Field</string>
+  <string name="target_type_target_archery">Štandardné</string>
+  <string name="target_type_field_archery">Terénne</string>
   <string name="target_type_3d_archery">3D</string>
   <!-- Target names -->
   <string name="wa_full">WA úplný</string>
