@@ -40,7 +40,7 @@ import static android.support.test.espresso.contrib.RecyclerViewActions.actionOn
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.withRecyclerView;
+import static de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 
 @RunWith(AndroidJUnit4.class)
 public class StandardRoundActivityTest extends UITestBase {

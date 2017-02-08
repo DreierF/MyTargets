@@ -48,8 +48,8 @@ import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CR
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
 import static de.dreier.mytargets.test.utils.PermissionGranter.allowPermissionsIfNeeded;
-import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.withRecyclerView;
 import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isNestedChildOfView;
+import static de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;

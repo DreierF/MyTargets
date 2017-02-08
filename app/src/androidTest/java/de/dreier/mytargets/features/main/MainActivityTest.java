@@ -54,7 +54,6 @@ import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
 import de.dreier.mytargets.test.base.UITestBase;
-import de.dreier.mytargets.test.utils.matchers.MatcherUtils;
 import de.dreier.mytargets.test.utils.rules.SimpleDbTestRule;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -70,8 +69,11 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.base.fragments.EditableListFragmentBase.ITEM_ID;
 import static de.dreier.mytargets.features.statistics.StatisticsActivity.ROUND_IDS;
-import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.withRecyclerView;
+import static de.dreier.mytargets.test.utils.matchers.IntentMatcher.hasClass;
+import static de.dreier.mytargets.test.utils.matchers.IntentMatcher.hasLongArrayExtra;
 import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isNestedChildOfView;
+import static de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.withRecyclerView;
+import static de.dreier.mytargets.test.utils.matchers.ViewMatcher.matchFabMenu;
 import static org.hamcrest.CoreMatchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
@@ -134,7 +136,7 @@ public class MainActivityTest extends UITestBase {
                 .map(Round::getId)
                 .collect(Collectors.toSet());
         intended(allOf(hasClass(StatisticsActivity.class),
-                MatcherUtils.hasLongArrayExtra(ROUND_IDS, expectedRoundIds)));
+                hasLongArrayExtra(ROUND_IDS, expectedRoundIds)));
 
         // openStatistics_selectedTrainings
         // Start Action mode with training 0
@@ -166,7 +168,7 @@ public class MainActivityTest extends UITestBase {
                 .collect(Collectors.toSet());
 
         intended(allOf(hasClass(StatisticsActivity.class),
-                MatcherUtils.hasLongArrayExtra(ROUND_IDS, expectedRoundIds)));
+                hasLongArrayExtra(ROUND_IDS, expectedRoundIds)));
 
         // newBow_recurve
         switchToTab(R.string.bow);
@@ -191,8 +193,8 @@ public class MainActivityTest extends UITestBase {
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .perform(click());
         final Arrow firstArrow = Stream.of(Arrow.getAll()).sorted().findFirst().get();
-        final Class<?> clazz = EditArrowActivity.class;
-        intended(allOf(hasClass(clazz), hasExtra(EditArrowFragment.ARROW_ID, firstArrow.getId())));
+        intended(allOf(hasClass(EditArrowActivity.class),
+                hasExtra(EditArrowFragment.ARROW_ID, firstArrow.getId())));
 
         // openSettings
         clickActionBarItem(R.id.action_preferences, R.string.preferences);

@@ -117,7 +117,7 @@ public class RoundFragment extends EditableListFragment<End> {
                 binding.fab.setVisibility(showFab ? View.VISIBLE : View.GONE);
 
                 ToolbarUtils.setTitle(RoundFragment.this,
-                        String.format(Locale.ENGLISH, "%s %d", getString(R.string.round),
+                        String.format(Locale.US, "%s %d", getString(R.string.round),
                                 round.index + 1));
                 ToolbarUtils.setSubtitle(RoundFragment.this, round.getReachedScore().toString());
             }

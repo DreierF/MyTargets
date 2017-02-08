@@ -287,7 +287,7 @@ public class StatisticsFragment extends FragmentBase {
                     @Override
                     public void onValueSelected(Entry e, Highlight h) {
                         final SelectableZone selectableZone = (SelectableZone) e.getData();
-                        final String s = String.format(Locale.ENGLISH,
+                        final String s = String.format(Locale.US,
                                 PIE_CHART_CENTER_TEXT_FORMAT,
                                 getString(R.string.points), selectableZone.text,
                                 getString(R.string.count), (int) e.getY());
@@ -309,7 +309,7 @@ public class StatisticsFragment extends FragmentBase {
         long missCount = Stream.of(shots).filter(s -> s.scoringRing == Shot.MISS).count();
         long hitCount = shots.size() - missCount;
 
-        return String.format(Locale.ENGLISH, PIE_CHART_CENTER_TEXT_FORMAT,
+        return String.format(Locale.US, PIE_CHART_CENTER_TEXT_FORMAT,
                 getString(R.string.hits), String.valueOf(hitCount),
                 getString(R.string.misses), missCount);
     }

@@ -16,6 +16,7 @@
 package de.dreier.mytargets.test.utils.matchers;
 
 import android.view.View;
+import android.view.ViewGroup;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -32,6 +33,27 @@ public class ParentViewMatcher {
             public boolean matchesSafely(View view) {
                 return MatcherUtils.getMatchingParent(view, parentViewMatcher) != null;
             }
+        };
+    }
+
+    public static Matcher<View> isOnForegroundFragment() {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("is on foreground fragment");
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                View content = MatcherUtils.getParentViewById(view, android.R.id.content);
+                if (content != null && content instanceof ViewGroup) {
+                    final View currentFragment = ((ViewGroup) content)
+                            .getChildAt(((ViewGroup) content).getChildCount() - 1);
+                    return MatcherUtils.isInViewHierarchy(view, currentFragment);
+                }
+                return false;
+            }
+
         };
     }
 }

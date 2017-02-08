@@ -56,8 +56,7 @@ public class ScoreboardImage {
             container.addView(webView);
 
             // Render html to bitmap
-            webView.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8",
-                    "");
+            webView.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8", "");
             webView.setPictureListener((view, picture) -> {
                 picture = webView.capturePicture();
 

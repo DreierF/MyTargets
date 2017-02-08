@@ -201,7 +201,11 @@ dependencies {
     androidTestCompile("com.android.support.test.espresso:espresso-contrib:$libraryVersion.espresso", {
         exclude group: 'com.android.support'
     })
-    androidTestCompile "com.android.support.test.espresso:espresso-intents:$libraryVersion.espresso"
+    androidTestCompile("com.android.support.test.espresso:espresso-intents:$libraryVersion.espresso", {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+    })
     androidTestScreengrabCompile "tools.fastlane:screengrab:$libraryVersion.screengrab"
 }
 

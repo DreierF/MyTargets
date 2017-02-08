@@ -16,10 +16,12 @@
 package de.dreier.mytargets.features.scoreboard;
 
 import android.annotation.TargetApi;
+import android.app.LoaderManager;
+import android.content.AsyncTaskLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.print.PrintAttributes;
@@ -54,6 +56,9 @@ public class ScoreboardActivity extends ChildActivityBase {
     public static final String TRAINING_ID = "training_id";
     @VisibleForTesting
     public static final String ROUND_ID = "round_id";
+    private static final int SCOREBOARD_LOADER_ID = 1;
+    private static final int SCOREBOARD_IMAGE_LOADER_ID = 2;
+    private static final int SCOREBOARD_PRINT_LOADER_ID = 3;
 
     private long mTraining;
     private long mRound;
@@ -94,25 +99,32 @@ public class ScoreboardActivity extends ChildActivityBase {
         });
 
         ToolbarUtils.showHomeAsUp(this);
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        new AsyncTask<Void, Void, String>() {
+        getLoaderManager().initLoader(SCOREBOARD_LOADER_ID, null,
+                new LoaderManager.LoaderCallbacks<String>() {
+                    @Override
+                    public Loader<String> onCreateLoader(int id, Bundle args) {
+                        return new AsyncTaskLoader<String>(ScoreboardActivity.this) {
+                            @Override
+                            public String loadInBackground() {
+                                return HtmlUtils.getScoreboard(mTraining, mRound,
+                                        ScoreboardConfiguration.fromDisplaySettings());
+                            }
+                        };
+                    }
 
-            @Override
-            protected String doInBackground(Void... params) {
-                return HtmlUtils.getScoreboard(mTraining, mRound,
-                        ScoreboardConfiguration.fromDisplaySettings());
-            }
+                    @Override
+                    public void onLoadFinished(Loader<String> loader, String data) {
+                        binding.webView
+                                .loadDataWithBaseURL("file:///android_asset/", data, "text/html",
+                                        "UTF-8", "");
+                    }
 
-            @Override
-            protected void onPostExecute(String s) {
-                binding.webView
-                        .loadDataWithBaseURL("file:///android_asset/", s, "text/html", "UTF-8", "");
-            }
-        }.execute();
+                    @Override
+                    public void onLoaderReset(Loader<String> loader) {
+
+                    }
+                });
     }
 
     @Override
@@ -120,8 +132,7 @@ public class ScoreboardActivity extends ChildActivityBase {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_scoreboard, menu);
         menu.findItem(R.id.action_print).setVisible(pageLoaded &&
-                Build.VERSION.SDK_INT >=
-                        Build.VERSION_CODES.KITKAT);
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT);
         return true;
     }
 
@@ -147,39 +158,53 @@ public class ScoreboardActivity extends ChildActivityBase {
     /* Called after the user selected with items he wants to share */
     private void shareImage() {
         // Construct share intent
-        new AsyncTask<Void, Void, Uri>() {
 
-            @Override
-            protected Uri doInBackground(Void... objects) {
-                try {
-                    File dir = getCacheDir();
-                    final File f = File.createTempFile("scoreboard", ".png", dir);
-                    new ScoreboardImage()
-                            .generateBitmap(ScoreboardActivity.this, mTraining, mRound, f);
-                    String packageName = getApplicationContext().getPackageName();
-                    String authority = packageName + ".easyphotopicker.fileprovider";
-                    return getUriForFile(ScoreboardActivity.this, authority, f);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
+        getLoaderManager().initLoader(SCOREBOARD_IMAGE_LOADER_ID, null,
+                new LoaderManager.LoaderCallbacks<Uri>() {
 
-            @Override
-            protected void onPostExecute(Uri uri) {
-                super.onPostExecute(uri);
-                if (uri == null) {
-                    Snackbar.make(binding.getRoot(), R.string.sharing_failed, Snackbar.LENGTH_SHORT)
-                            .show();
-                } else {
-                    // Build and fire intent to ask for share provider
-                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                    shareIntent.setType("*/*");
-                    shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                    startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
-                }
-            }
-        }.execute();
+                    @Override
+                    public Loader<Uri> onCreateLoader(int id, Bundle args) {
+                        return new AsyncTaskLoader<Uri>(ScoreboardActivity.this) {
+                            @Override
+                            public Uri loadInBackground() {
+                                try {
+                                    File dir = getCacheDir();
+                                    final File f = File.createTempFile("scoreboard", ".png", dir);
+                                    new ScoreboardImage()
+                                            .generateBitmap(ScoreboardActivity.this, mTraining,
+                                                    mRound, f);
+                                    String packageName = getApplicationContext().getPackageName();
+                                    String authority = packageName + ".easyphotopicker.fileprovider";
+                                    return getUriForFile(ScoreboardActivity.this, authority, f);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    return null;
+                                }
+                            }
+                        };
+                    }
+
+                    @Override
+                    public void onLoadFinished(Loader<Uri> loader, Uri data) {
+                        if (data == null) {
+                            Snackbar.make(binding.getRoot(), R.string.sharing_failed,
+                                    Snackbar.LENGTH_SHORT)
+                                    .show();
+                        } else {
+                            // Build and fire intent to ask for share provider
+                            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                            shareIntent.setType("*/*");
+                            shareIntent.putExtra(Intent.EXTRA_STREAM, data);
+                            startActivity(
+                                    Intent.createChooser(shareIntent, getString(R.string.share)));
+                        }
+                    }
+
+                    @Override
+                    public void onLoaderReset(Loader<Uri> loader) {
+
+                    }
+                });
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -193,26 +218,38 @@ public class ScoreboardActivity extends ChildActivityBase {
         webViewPrint.setLayoutParams(p);
         ((ViewGroup) binding.getRoot()).addView(webViewPrint);
 
-        new AsyncTask<Void, Void, String>() {
+        getLoaderManager().initLoader(SCOREBOARD_PRINT_LOADER_ID, null,
+                new LoaderManager.LoaderCallbacks<String>() {
+                    @Override
+                    public Loader<String> onCreateLoader(int id, Bundle args) {
+                        return new AsyncTaskLoader<String>(ScoreboardActivity.this) {
+                            @Override
+                            public String loadInBackground() {
+                                return HtmlUtils.getScoreboard(mTraining, mRound,
+                                        ScoreboardConfiguration.fromPrintSettings());
+                            }
+                        };
+                    }
 
-            @Override
-            protected String doInBackground(Void... params) {
-                return HtmlUtils.getScoreboard(mTraining, mRound,
-                        ScoreboardConfiguration.fromPrintSettings());
-            }
+                    @Override
+                    public void onLoadFinished(Loader<String> loader, String data) {
+                        webViewPrint
+                                .loadDataWithBaseURL("file:///android_asset/", data, "text/html",
+                                        "UTF-8", "");
+                        PrintDocumentAdapter printAdapter = webViewPrint
+                                .createPrintDocumentAdapter();
 
-            @SuppressWarnings("deprecation")
-            @Override
-            protected void onPostExecute(String s) {
-                webViewPrint
-                        .loadDataWithBaseURL("file:///android_asset/", s, "text/html", "UTF-8", "");
-                PrintDocumentAdapter printAdapter = webViewPrint.createPrintDocumentAdapter();
+                        // Create a print job with name and adapter instance
+                        PrintManager printManager = (PrintManager) getSystemService(PRINT_SERVICE);
+                        String jobName = getString(R.string.scoreboard) + " Document";
+                        printManager.print(jobName, printAdapter,
+                                new PrintAttributes.Builder().build());
+                    }
 
-                // Create a print job with name and adapter instance
-                PrintManager printManager = (PrintManager) getSystemService(PRINT_SERVICE);
-                String jobName = getString(R.string.scoreboard) + " Document";
-                printManager.print(jobName, printAdapter, new PrintAttributes.Builder().build());
-            }
-        }.execute();
+                    @Override
+                    public void onLoaderReset(Loader<String> loader) {
+
+                    }
+                });
     }
 }

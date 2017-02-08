@@ -36,7 +36,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.withRecyclerView;
+import static de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static org.hamcrest.Matchers.containsString;
 
 @RunWith(AndroidJUnit4.class)

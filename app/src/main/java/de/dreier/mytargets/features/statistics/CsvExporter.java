@@ -42,6 +42,7 @@ import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 
 public class CsvExporter {
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    private static DateFormat timeInstance = new SimpleDateFormat("HH:mm:ss", Locale.US);
 
     public static Uri export(Context context, List<Long> roundIds) throws IOException {
         String packageName = context.getPackageName();
@@ -132,8 +133,7 @@ public class CsvExporter {
             // End
             csv.add(String.valueOf(e.index + 1));
             // Timestamp
-            csv.add(SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN)
-                    .format(e.saveTime.toDate()));
+            csv.add(timeInstance.format(e.saveTime.toDate()));
             for (Shot s : e.getShots()) {
                 csv.enterScope();
                 // Score

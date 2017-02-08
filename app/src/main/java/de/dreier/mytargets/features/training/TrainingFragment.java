@@ -206,7 +206,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
 
         @Override
         public void bindItem() {
-            binding.title.setText(String.format(Locale.ENGLISH, "%s %d",
+            binding.title.setText(String.format(Locale.US, "%s %d",
                     getContext().getString(R.string.round),
                     item.index + 1));
             binding.subtitle.setText(Utils.fromHtml(HtmlUtils.getRoundInfo(item, equals)));
