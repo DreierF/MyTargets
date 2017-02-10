@@ -46,7 +46,8 @@ public class WA5Ring extends TargetModelBase {
                 new CircularZone(1.0f, CERULEAN_BLUE, DARK_GRAY, 4)
         };
         scoringStyles = new ScoringStyle[]{
-                new ScoringStyle(R.string.recurve_style, true, 10, 10, 9, 8, 7, 6),
+                new ScoringStyle(R.string.recurve_style_x_6, true, 10, 10, 9, 8, 7, 6),
+                new ScoringStyle(R.string.recurve_style_10_6, false, 10, 10, 9, 8, 7, 6),
                 new ScoringStyle(R.string.compound_style, false, 10, 9, 9, 8, 7, 6),
                 new ScoringStyle(false, 11, 10, 9, 8, 7, 6),
                 new ScoringStyle(true, 5, 5, 5, 4, 4, 3),
@@ -65,7 +66,7 @@ public class WA5Ring extends TargetModelBase {
     @Override
     public boolean shouldDrawZone(int zone, int scoringStyle) {
         // Do not draw second ring if we have a compound face
-        return !(scoringStyle == 1 && zone == 1);
+        return !(scoringStyle == 1 && zone == 0) &&
+                !(scoringStyle == 2 && zone == 1);
     }
-
 }

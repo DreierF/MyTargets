@@ -51,6 +51,6 @@
   <string name="dbsc_blowpipe">DBSC pre Fúkaciu tyč</string>
   <!-- Scoring styles -->
   <string name="fcfs_color_reversed">FCFS farebný (opačný 10–1)</string>
-  <string name="recurve_style">Reflexný štýl</string>
+  <string name="recurve_style_x">Reflexný štýl</string>
   <string name="compound_style">Kladkový štýl</string>
 </resources>

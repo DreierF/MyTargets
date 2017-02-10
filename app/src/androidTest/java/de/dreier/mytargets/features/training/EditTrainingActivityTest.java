@@ -108,7 +108,7 @@ public class EditTrainingActivityTest extends UITestBase {
         onView(withId(R.id.target)).perform(nestedScrollTo(), click());
         onView(withId(R.id.recyclerView)).perform(actionOnItemAtPosition(5, click()));
         onView(withId(R.id.scoring_style)).perform(click());
-        onData(instanceOf(String.class)).atPosition(1).perform(click());
+        onData(instanceOf(String.class)).atPosition(2).perform(click());
         onView(withId(R.id.target_size)).perform(click());
         onView(withText("40cm")).perform(click());
         pressBack();

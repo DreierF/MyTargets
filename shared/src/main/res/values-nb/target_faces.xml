@@ -51,6 +51,6 @@
   <string name="dbsc_blowpipe">DBSC Blowpipe</string>
   <!-- Scoring styles -->
   <string name="fcfs_color_reversed">FCFS farge (reversert 10-1)</string>
-  <string name="recurve_style">Recurve stil</string>
+  <string name="recurve_style_x">Recurve stil</string>
   <string name="compound_style">Compound stil</string>
 </resources>

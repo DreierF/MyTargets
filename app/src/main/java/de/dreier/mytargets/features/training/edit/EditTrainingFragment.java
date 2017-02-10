@@ -181,9 +181,9 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         final Target target = binding.target.getSelectedItem();
         if (bow != null && target != null && target.id <= WA3Ring3Spot.ID) {
             if (bow.type == EBowType.COMPOUND_BOW && target.scoringStyle == 0) {
-                target.scoringStyle = 1;
+                target.scoringStyle = 2;
                 binding.target.setItem(target);
-            } else if (bow.type != EBowType.COMPOUND_BOW && target.scoringStyle == 1) {
+            } else if (bow.type != EBowType.COMPOUND_BOW && target.scoringStyle == 2) {
                 target.scoringStyle = 0;
                 binding.target.setItem(target);
             }

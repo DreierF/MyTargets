@@ -51,6 +51,6 @@
   <string name="dbsc_blowpipe">DBSC (3 кольца, значения 3,5,7)</string>
   <!-- Scoring styles -->
   <string name="fcfs_color_reversed">FCFS цветной (обратные значения 10-1)</string>
-  <string name="recurve_style">Стиль классического лука</string>
+  <string name="recurve_style_x">Стиль классического лука</string>
   <string name="compound_style">Стиль блочного лука</string>
 </resources>

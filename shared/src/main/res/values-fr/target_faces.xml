@@ -51,6 +51,6 @@
   <string name="dbsc_blowpipe">DBSC sarbacane</string>
   <!-- Scoring styles -->
   <string name="fcfs_color_reversed">FCFS Color (Reversed 10–1)</string>
-  <string name="recurve_style">Recurve style</string>
+  <string name="recurve_style_x">Recurve style</string>
   <string name="compound_style">Compound style</string>
 </resources>

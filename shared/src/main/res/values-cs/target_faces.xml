@@ -51,6 +51,6 @@
   <string name="dbsc_blowpipe">DBSC Foukačky</string>
   <!-- Scoring styles -->
   <string name="fcfs_color_reversed">FCFS barvy (obrácené 10 – 1)</string>
-  <string name="recurve_style">Reflexní styl</string>
+  <string name="recurve_style_x">Reflexní styl</string>
   <string name="compound_style">Kladkový styl</string>
 </resources>

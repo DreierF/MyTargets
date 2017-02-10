@@ -51,6 +51,6 @@
   <string name="dbsc_blowpipe">DBSC fúvócső</string>
   <!-- Scoring styles -->
   <string name="fcfs_color_reversed">Színes FCFS (fordított 10 – 1)</string>
-  <string name="recurve_style">Olimpiai tipusú</string>
+  <string name="recurve_style_x">Olimpiai tipusú</string>
   <string name="compound_style">Csigás-íj tipusú</string>
 </resources>

@@ -51,6 +51,6 @@
   <string name="dbsc_blowpipe">DBSC cerbatana</string>
   <!-- Scoring styles -->
   <string name="fcfs_color_reversed">Color FCFS (invertido 10 – 1)</string>
-  <string name="recurve_style">Estilo recurvado</string>
+  <string name="recurve_style_x">Estilo recurvado</string>
   <string name="compound_style">Estilo compuesto</string>
 </resources>

@@ -51,6 +51,6 @@
   <string name="dbsc_blowpipe">DBSC Blowpipe</string>
   <!-- Scoring styles -->
   <string name="fcfs_color_reversed">FCFS Kolorowa (Odwrócona 10-1)</string>
-  <string name="recurve_style">Styl klasyczny</string>
+  <string name="recurve_style_x">Styl klasyczny</string>
   <string name="compound_style">Styl bloczkowy</string>
 </resources>
