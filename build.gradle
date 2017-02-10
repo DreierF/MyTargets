@@ -22,7 +22,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.0-beta3'
         classpath 'me.tatarka:gradle-retrolambda:3.5.0'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
         //classpath 'com.github.triplet.gradle:play-publisher:1.1.5' //for now until triplet gets the mapping upload
@@ -31,7 +31,7 @@ buildscript {
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.2'
         classpath 'com.google.gms:google-services:3.0.0'
-        classpath 'com.google.firebase:firebase-plugins:1.0.4'
+        classpath 'com.google.firebase:firebase-plugins:1.0.5'
     }
 
     configurations.classpath.exclude group: 'com.android.tools.external.lombok'
@@ -39,7 +39,7 @@ buildscript {
 
 plugins {
     id 'com.mendhak.gradlecrowdin' version '0.0.9'
-    id 'com.github.ben-manes.versions' version '0.13.0'
+    id 'com.github.ben-manes.versions' version '0.14.0'
 }
 
 ext {
@@ -55,7 +55,7 @@ ext {
 
     libraryVersion = [
             aboutPage            : '1.1.1',
-            annimonStream        : '1.1.4',
+            annimonStream        : '1.1.5',
             clansFab             : '1.6.4',
             dbFlow               : '3.1.1',
             dexmaker             : '2.2.0',
@@ -70,11 +70,11 @@ ext {
             icepick              : '3.2.0',
             jodaTime             : '2.9.7',
             jUnit                : '4.12',
-            materialDialogs      : '0.9.2.3',
+            materialDialogs      : '0.9.3.0',
             materialIntroScreen  : '0.0.5',
             mpAndroidChart       : 'v3.0.1',
-            mockito              : '2.7.0',
-            okhttp               : '3.5.0',
+            mockito              : '2.7.5',
+            okhttp               : '3.6.0',
             parceler             : '1.1.6',
             permissionsdispatcher: '2.3.1',
             picasso              : '2.5.2',
@@ -83,9 +83,9 @@ ext {
             retrofit             : '2.1.0',
             roundedImageView     : '2.2.1',
             support              : '25.1.1',
-            supportWearable      : '1.4.0',
+            supportWearable      : '2.0.0',
             testSupport          : '0.5',
-            truth                : '0.30',
+            truth                : '0.31',
             uiAutomator          : '2.1.2'
     ]
 }
@@ -102,7 +102,7 @@ apply from: "crowdin.gradle"
 
 dependencyUpdates.resolutionStrategy = {
     componentSelection { rules ->
-        rules.all { ComponentSelection selection ->
+        rules.all { selection ->
             boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
                 selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
             }
