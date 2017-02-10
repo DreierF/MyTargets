@@ -57,6 +57,7 @@ import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
+import de.dreier.mytargets.shared.utils.SharedUtils;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
 import de.dreier.mytargets.utils.IntentWrapper;
@@ -112,7 +113,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     private static boolean shouldShowEnd(End end, Long currentEndId) {
-        return !Utils.equals(end.getId(), currentEndId) && end.exact;
+        return !SharedUtils.equals(end.getId(), currentEndId) && end.exact;
     }
 
     @Override
@@ -531,15 +532,13 @@ public class InputActivity extends ChildActivityBase
 
     @Override
     public void onEndFinished(List<Shot> shots, boolean remote) {
+        if(remote && data.getCurrentRound().getEnds().size() > data.endIndex) {
+            data.endIndex = data.getCurrentRound().getEnds().size();
+        }
         data.getCurrentEnd().setShots(shots);
-        data.getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING;
+        data.getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING && !remote;
         if (data.getCurrentEnd().getId() == null) {
             data.getCurrentEnd().saveTime = new DateTime();
-        }
-
-        // Change round template if end is out of range defined in template
-        if (data.getCurrentRound().getEnds().size() == data.endIndex) {
-            data.getCurrentRound().addEnd();
         }
 
         data.getCurrentEnd().save();

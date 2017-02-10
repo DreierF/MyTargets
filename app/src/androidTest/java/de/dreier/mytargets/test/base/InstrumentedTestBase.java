@@ -18,12 +18,26 @@ package de.dreier.mytargets.test.base;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.support.test.InstrumentationRegistry;
+import android.util.Log;
+
+import org.junit.Rule;
+import org.junit.rules.TestName;
+import org.junit.runner.Description;
 
 import java.util.Locale;
 
 public class InstrumentedTestBase {
-    protected void setLocale(String language, String country) {
-        Locale locale = new Locale(language, country);
+
+    @Rule
+    public TestName testName = new TestName() {
+        @Override
+        protected void starting(Description d) {
+            super.starting(d);
+            Log.d("TestName", d.getDisplayName());
+        }
+    };
+
+    protected void setLocale(Locale locale) {
         // here we update locale for date formatter
         Locale.setDefault(locale);
         // here we update locale for app resources

@@ -29,7 +29,6 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.parceler.Parcel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.AppDatabase;
@@ -81,7 +80,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
     @Column(typeConverter = ThumbnailConverter.class)
     public Thumbnail thumbnail;
 
-    public List<ArrowImage> images = new ArrayList<>();
+    public List<ArrowImage> images = null;
 
     public static List<Arrow> getAll() {
         return SQLite.select().from(Arrow.class).queryList();
@@ -96,7 +95,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
 
     @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "images")
     public List<ArrowImage> getImages() {
-        if (images == null || images.isEmpty()) {
+        if (images == null) {
             images = SQLite.select()
                     .from(ArrowImage.class)
                     .where(ArrowImage_Table.arrow.eq(id))
@@ -137,13 +136,15 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
     @Override
     public void save() {
         super.save();
-        SQLite.delete(ArrowImage.class)
-                .where(ArrowImage_Table.arrow.eq(id))
-                .execute();
-        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-        for (ArrowImage image : getImages()) {
-            image.arrowId = id;
-            image.save();
+        if(images != null) {
+            SQLite.delete(ArrowImage.class)
+                    .where(ArrowImage_Table.arrow.eq(id))
+                    .execute();
+            // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
+            for (ArrowImage image : images) {
+                image.arrowId = id;
+                image.save();
+            }
         }
     }
 

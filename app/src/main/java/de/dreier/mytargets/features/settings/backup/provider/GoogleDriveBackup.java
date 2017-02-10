@@ -17,7 +17,6 @@ package de.dreier.mytargets.features.settings.backup.provider;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -52,8 +51,6 @@ import java.util.ArrayList;
 import de.dreier.mytargets.features.settings.backup.BackupEntry;
 import de.dreier.mytargets.features.settings.backup.BackupException;
 
-import static android.app.Activity.RESULT_OK;
-
 public class GoogleDriveBackup {
     public static class AsyncRestore implements IAsyncBackupRestore {
 
@@ -62,7 +59,7 @@ public class GoogleDriveBackup {
         /**
          * Request code for auto Google Play Services error resolution.
          */
-        private static final int REQUEST_CODE_RESOLUTION = 1;
+        public static final int REQUEST_CODE_RESOLUTION = 1;
 
         private GoogleApiClient googleApiClient;
         private Activity activity;
@@ -103,13 +100,6 @@ public class GoogleDriveBackup {
                         .build();
             }
             googleApiClient.connect();
-        }
-
-        @Override
-        public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            if (requestCode == REQUEST_CODE_RESOLUTION && resultCode == RESULT_OK) {
-                googleApiClient.connect();
-            }
         }
 
         @Override

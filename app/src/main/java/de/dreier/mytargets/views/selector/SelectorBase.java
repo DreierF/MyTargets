@@ -47,8 +47,7 @@ public abstract class SelectorBase<T> extends LinearLayout {
     protected int requestCode;
     protected Class<?> defaultActivity;
     @State(ParcelsBundler.class)
-    protected
-    T item = null;
+    protected T item = null;
     private Button addButton;
     private View progress;
     private OnUpdateListener<T> updateListener;

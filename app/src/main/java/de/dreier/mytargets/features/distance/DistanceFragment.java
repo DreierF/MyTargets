@@ -44,5 +44,4 @@ public class DistanceFragment extends Fragment {
         binding.viewPager.setCurrentItem(item, false);
         return binding.getRoot();
     }
-
 }

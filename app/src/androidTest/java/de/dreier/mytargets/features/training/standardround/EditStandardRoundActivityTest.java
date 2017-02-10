@@ -39,6 +39,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItem;
+import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -47,8 +48,8 @@ import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CR
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
 import static de.dreier.mytargets.test.utils.PermissionGranter.allowPermissionsIfNeeded;
-import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.withRecyclerView;
 import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isNestedChildOfView;
+import static de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
@@ -83,18 +84,22 @@ public class EditStandardRoundActivityTest extends UITestBase {
         onView(withId(R.id.fab)).perform(click());
 
         onView(withId(R.id.distance)).perform(nestedScrollTo(), click());
+
         onView(allOf(withId(R.id.recyclerView), isDisplayed()))
                 .perform(actionOnItem(hasDescendant(withText("20m")), click()));
 
         onView(withId(R.id.target)).perform(nestedScrollTo(), click());
+
         onView(withId(R.id.recyclerView))
-                .perform(actionOnItem(hasDescendant(withText(R.string.wa_danage_6_spot)), click()));
+                .perform(actionOnItemAtPosition(9, click()));
+
         navigateUp();
 
         onView(withId(R.id.addButton)).perform(nestedScrollTo(), click());
 
         onView(withRecyclerView(R.id.rounds).atPositionOnView(1, R.id.distance))
                 .perform(nestedScrollTo(), click());
+
         onView(allOf(withId(R.id.recyclerView), isDisplayed()))
                 .perform(actionOnItem(hasDescendant(withText("15m")), click()));
 
@@ -106,7 +111,7 @@ public class EditStandardRoundActivityTest extends UITestBase {
                 isNestedChildOfView(withRecyclerView(R.id.rounds).atPosition(1))))
                 .perform(nestedScrollTo(), click(), click(), click(), click(), click());
 
-        clickActionBarItem(R.id.action_save, R.string.save);
+        save();
 
         onView(withId(R.id.standardRound))
                 .check(matches(hasDescendant(withText(R.string.custom_round))));

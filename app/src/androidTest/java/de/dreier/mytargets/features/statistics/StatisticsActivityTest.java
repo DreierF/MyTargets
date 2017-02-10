@@ -68,6 +68,9 @@ public class StatisticsActivityTest extends UITestBase {
 
         onView(withId(R.id.action_filter)).perform(click());
         onView(withId(R.id.action_filter)).perform(click());
+
+        //TODO
+        //clickActionBarItem(R.id.action_export, R.string.exports_as_csv);
     }
 
 }

@@ -31,7 +31,6 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.parceler.Parcel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.AppDatabase;
@@ -120,9 +119,9 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
     @Column(typeConverter = ThumbnailConverter.class)
     public Thumbnail thumbnail;
 
-    public List<BowImage> images = new ArrayList<>();
+    public List<BowImage> images;
 
-    public List<SightMark> sightMarks = new ArrayList<>();
+    public List<SightMark> sightMarks;
 
     public static List<Bow> getAll() {
         return SQLite.select().from(Bow.class).queryList();
@@ -137,7 +136,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
 
     @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "sightMarks")
     public List<SightMark> getSightMarks() {
-        if (sightMarks == null || sightMarks.isEmpty()) {
+        if (sightMarks == null) {
             sightMarks = Stream.of(SQLite.select()
                     .from(SightMark.class)
                     .where(SightMark_Table.bow.eq(id))
@@ -150,7 +149,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
 
     @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "images")
     public List<BowImage> getImages() {
-        if (images == null || images.isEmpty()) {
+        if (images == null) {
             images = SQLite.select()
                     .from(BowImage.class)
                     .where(BowImage_Table.bow.eq(id))
@@ -198,20 +197,25 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
     @Override
     public void save() {
         super.save();
-        SQLite.delete(BowImage.class)
-                .where(BowImage_Table.bow.eq(id))
-                .execute();
-        SQLite.delete(SightMark.class)
-                .where(SightMark_Table.bow.eq(id))
-                .execute();
-        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-        for (SightMark sightMark : getSightMarks()) {
-            sightMark.bowId = id;
-            sightMark.save();
+        if (images != null) {
+            SQLite.delete(BowImage.class)
+                    .where(BowImage_Table.bow.eq(id))
+                    .execute();
+            // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
+            for (BowImage image : images) {
+                image.bowId = id;
+                image.save();
+            }
         }
-        for (BowImage image : getImages()) {
-            image.bowId = id;
-            image.save();
+        if (sightMarks != null) {
+            SQLite.delete(SightMark.class)
+                    .where(SightMark_Table.bow.eq(id))
+                    .execute();
+            // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
+            for (SightMark sightMark : sightMarks) {
+                sightMark.bowId = id;
+                sightMark.save();
+            }
         }
     }
 

@@ -23,16 +23,12 @@ import android.view.View;
 import de.dreier.mytargets.R;
 
 
-public class CardItemDecorator extends RecyclerView.ItemDecoration {
+public class DistanceItemDecorator extends RecyclerView.ItemDecoration {
     private final int spaceHorizontal;
     private final int spaceVertical;
     private final int gridSize;
 
-    public CardItemDecorator(Context context) {
-        this(context, 1);
-    }
-
-    public CardItemDecorator(Context context, int gridSize) {
+    public DistanceItemDecorator(Context context, int gridSize) {
         this.spaceHorizontal = (int) context.getResources()
                 .getDimension(R.dimen.card_padding_horizontal);
         this.spaceVertical = (int) context.getResources()

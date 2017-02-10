@@ -176,9 +176,6 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model,
 
     @Override
     public void onClick(SelectableViewHolder<T> holder, T item) {
-        if (item == null) {
-            return;
-        }
         if (!selector.tapSelection(holder)) {
             onSelected(item);
         } else {

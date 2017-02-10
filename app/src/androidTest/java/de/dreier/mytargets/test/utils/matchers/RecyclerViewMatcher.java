@@ -23,11 +23,29 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
+import static org.hamcrest.CoreMatchers.allOf;
+
 public class RecyclerViewMatcher {
     private final Matcher<View> recyclerViewMatcher;
 
     public RecyclerViewMatcher(Matcher<View> recyclerViewMatcher) {
         this.recyclerViewMatcher = recyclerViewMatcher;
+    }
+
+    public static RecyclerViewMatcher withRecyclerView(Matcher<View> recyclerViewMatcher) {
+        return new RecyclerViewMatcher(recyclerViewMatcher);
+    }
+
+    public static RecyclerViewMatcher withRecyclerView(int recyclerViewId) {
+        return new RecyclerViewMatcher(allOf(withId(recyclerViewId), isDisplayed()));
+    }
+
+    public static RecyclerViewMatcher withNestedRecyclerView(int recyclerViewId) {
+        return new RecyclerViewMatcher(allOf(withId(recyclerViewId),
+                withParent(withParent(isDisplayed()))));
     }
 
     public Matcher<View> atPosition(final int position) {

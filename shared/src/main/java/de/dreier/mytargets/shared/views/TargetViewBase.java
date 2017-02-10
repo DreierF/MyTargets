@@ -29,6 +29,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.support.v4.widget.ExploreByTouchHelper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
@@ -47,10 +48,10 @@ import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 
 public abstract class TargetViewBase extends View implements View.OnTouchListener {
+    private static final String TAG = "TargetViewBase";
     private final TargetAccessibilityTouchHelper touchHelper = new TargetAccessibilityTouchHelper(
             this);
     private final List<VirtualView> virtualViews = new ArrayList<>();
-
     /**
      * Zero-based index of the shot that is currently being changed.
      * If no shot is selected it is set to EndRenderer#NO_SELECTION.
@@ -146,6 +147,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        Log.d(TAG, "onLayout: ");
         updateLayout();
         animateToNewState();
         updateVirtualViews();

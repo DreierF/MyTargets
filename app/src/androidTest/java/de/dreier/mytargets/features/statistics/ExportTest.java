@@ -29,6 +29,7 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
+import java.util.Locale;
 
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
@@ -81,7 +82,7 @@ public class ExportTest extends InstrumentedTestBase {
 
     @Test
     public void testDataExport() throws IOException {
-        setLocale("en", "EN");
+        setLocale(Locale.US);
         final StringWriter writer = new StringWriter();
         List<Long> roundIds = Stream.of(Training.getAll())
                 .flatMap(t -> Stream.of(t.getRounds()))

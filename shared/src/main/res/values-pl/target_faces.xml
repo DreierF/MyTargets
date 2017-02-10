@@ -15,6 +15,11 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
+  <!-- Target groups -->
+  <string name="target_type_target_archery">Standardowe</string>
+  <string name="target_type_field_archery">Field</string>
+  <string name="target_type_3d_archery">3D</string>
+  <!-- Target names -->
   <string name="wa_full">WA Pełna</string>
   <string name="wa_6_ring">WA 6 Pierścieni</string>
   <string name="wa_5_ring">WA 5 Pierścieni</string>
@@ -44,7 +49,8 @@
   <string name="wa_danage_3_spot">WA Danage 3 Strefy</string>
   <string name="wa_danage_6_spot">WA Danage 6 Stref</string>
   <string name="dbsc_blowpipe">DBSC Blowpipe</string>
-  <string name="fcfs_color_reversed">FCFS Color (Reversed 10–1)</string>
-  <string name="recurve_style">Recurve style</string>
-  <string name="compound_style">Compound style</string>
+  <!-- Scoring styles -->
+  <string name="fcfs_color_reversed">FCFS Kolorowa (Odwrócona 10-1)</string>
+  <string name="recurve_style">Styl klasyczny</string>
+  <string name="compound_style">Styl bloczkowy</string>
 </resources>

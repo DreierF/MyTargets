@@ -24,6 +24,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -52,15 +53,16 @@ import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.LongUtils;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
+import de.dreier.mytargets.shared.utils.SharedUtils;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.Utils;
 import icepick.Icepick;
 import icepick.State;
 
 public class StatisticsActivity extends ChildActivityBase implements LoaderManager.LoaderCallbacks<List<Pair<Training, Round>>> {
 
-    private static final String ROUND_IDS = "round_ids";
+    @VisibleForTesting
+    public static final String ROUND_IDS = "round_ids";
 
     @State
     boolean showFilter = false;
@@ -142,16 +144,16 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     private void restoreCheckedStates() {
         Stream.of(binding.distanceTags.getTags())
                 .forEach(tag -> tag.isChecked = Stream.of(distanceTags)
-                        .anyMatch(d -> Utils.equals(d, tag.text)));
+                        .anyMatch(d -> SharedUtils.equals(d, tag.text)));
         Stream.of(binding.diameterTags.getTags())
                 .forEach(tag -> tag.isChecked = Stream.of(diameterTags)
-                        .anyMatch(d -> Utils.equals(d, tag.text)));
+                        .anyMatch(d -> SharedUtils.equals(d, tag.text)));
         Stream.of(binding.arrowTags.getTags())
                 .forEach(tag -> tag.isChecked = Stream.of(arrowTags)
-                        .anyMatch(a -> Utils.equals(a, tag.id)));
+                        .anyMatch(a -> SharedUtils.equals(a, tag.id)));
         Stream.of(binding.bowTags.getTags())
                 .forEach(tag -> tag.isChecked = Stream.of(bowTags)
-                        .anyMatch(b -> Utils.equals(b, tag.id)));
+                        .anyMatch(b -> SharedUtils.equals(b, tag.id)));
         binding.distanceTags.setTags(binding.distanceTags.getTags());
         binding.diameterTags.setTags(binding.diameterTags.getTags());
         binding.arrowTags.setTags(binding.arrowTags.getTags());

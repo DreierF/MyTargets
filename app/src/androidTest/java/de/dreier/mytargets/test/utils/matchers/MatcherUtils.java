@@ -29,7 +29,6 @@ import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.CoreMatchers.is;
 
 public class MatcherUtils {
@@ -70,14 +69,6 @@ public class MatcherUtils {
                 textMatcher.describeTo(description);
             }
         };
-    }
-
-    public static RecyclerViewMatcher withRecyclerView(Matcher<View> recyclerViewMatcher) {
-        return new RecyclerViewMatcher(recyclerViewMatcher);
-    }
-
-    public static RecyclerViewMatcher withRecyclerView(int recyclerViewId) {
-        return new RecyclerViewMatcher(withId(recyclerViewId));
     }
 
     public static View getMatchingParent(View view, Matcher<View> matcher) {

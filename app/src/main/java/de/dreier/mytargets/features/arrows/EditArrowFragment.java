@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.arrows;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,8 @@ import static de.dreier.mytargets.shared.models.Dimension.Unit.MILLIMETER;
 
 public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
 
-    private static final String ARROW_ID = "arrow_id";
+    @VisibleForTesting
+    public static final String ARROW_ID = "arrow_id";
     @State(ParcelsBundler.class)
     Arrow arrow;
     private FragmentEditArrowBinding contentBinding;

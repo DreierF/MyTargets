@@ -33,6 +33,7 @@ import android.support.annotation.NonNull;
 import android.text.InputType;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.Property;
 import android.view.MotionEvent;
 import android.view.View;
@@ -111,7 +112,7 @@ public class TargetView extends TargetViewBase {
     private static final int POINTER_OFFSET_Y_DP = -60;
     private static final int MIN_END_RECT_HEIGHT_DP = 80;
     private static final int KEYBOARD_INNER_PADDING_DP = 40;
-
+    private static final String TAG = "TargetView";
     private Matrix[] spotMatrices;
     private boolean arrowNumbering;
     private Dimension arrowDiameter;
@@ -197,6 +198,7 @@ public class TargetView extends TargetViewBase {
 
     @Override
     public void setEnd(End end) {
+        Log.d(TAG, "setEnd: " + end.getShots());
         shots = end.getShots();
         setCurrentShotIndex(getNextShotIndex(-1));
         endRenderer.setShots(shots);

@@ -23,7 +23,7 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
-        classpath 'me.tatarka:gradle-retrolambda:3.4.0'
+        classpath 'me.tatarka:gradle-retrolambda:3.5.0'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
         //classpath 'com.github.triplet.gradle:play-publisher:1.1.5' //for now until triplet gets the mapping upload
         classpath 'com.github.bobvanderlinden:gradle-play-publisher:1.2.0-beta2'
@@ -54,39 +54,39 @@ ext {
             .replace("_rc", "-RC")
 
     libraryVersion = [
-        support : '25.1.0',
-        testSupport : '0.5',
-        supportWearable : '1.4.0',
-        playService : '10.0.1',
-        firebase: '10.0.1',
-        espresso : '2.2.2',
-        parceler : '1.1.6',
-        jodaTime : '2.9.7',
-        dbFlow : '3.1.1',
-        gson : '2.8.0',
-        okhttp : '3.5.0',
-        retrofit : '2.1.0',
-        picasso : '2.5.2',
-        icepick : '3.2.0',
-        permissionsdispatcher : '2.3.1',
-        iab : '1.0.38',
-        mpAndroidChart : 'v3.0.1',
-        clansFab : '1.6.4',
-        discreteSeekbar : '1.0.1',
-        easyImage : '1.4.2',
-        materialDialogs : '0.9.2.2',
-        aboutPage : '1.1.1',
-        homage : '0.2.0',
-        roundedImageView : '2.2.1',
-        truth : '0.30',
-        robolectric : '3.1.4',
-        findbugs : '3.0.1',
-        uiAutomator : '2.1.2',
-        screengrab : '0.5.6',
-        annimonStream : '1.1.4',
-        jUnit : '4.12',
-        mockito : '2.5.5',
-        materialIntroScreen: '0.0.5'
+            aboutPage            : '1.1.1',
+            annimonStream        : '1.1.4',
+            clansFab             : '1.6.4',
+            dbFlow               : '3.1.1',
+            dexmaker             : '2.2.0',
+            discreteSeekbar      : '1.0.1',
+            easyImage            : '1.4.2',
+            espresso             : '2.2.2',
+            findbugs             : '3.0.1',
+            firebase             : '10.0.1',
+            gson                 : '2.8.0',
+            homage               : '0.2.0',
+            iab                  : '1.0.38',
+            icepick              : '3.2.0',
+            jodaTime             : '2.9.7',
+            jUnit                : '4.12',
+            materialDialogs      : '0.9.2.3',
+            materialIntroScreen  : '0.0.5',
+            mpAndroidChart       : 'v3.0.1',
+            mockito              : '2.7.0',
+            okhttp               : '3.5.0',
+            parceler             : '1.1.6',
+            permissionsdispatcher: '2.3.1',
+            picasso              : '2.5.2',
+            playService          : '10.0.1',
+            screengrab           : '1.0.1',
+            retrofit             : '2.1.0',
+            roundedImageView     : '2.2.1',
+            support              : '25.1.1',
+            supportWearable      : '1.4.0',
+            testSupport          : '0.5',
+            truth                : '0.30',
+            uiAutomator          : '2.1.2'
     ]
 }
 

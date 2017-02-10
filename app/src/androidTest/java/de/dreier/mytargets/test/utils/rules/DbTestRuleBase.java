@@ -16,8 +16,6 @@
 package de.dreier.mytargets.test.utils.rules;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 
@@ -34,6 +32,7 @@ import java.util.Random;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.app.ApplicationInstance;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Thumbnail;
@@ -102,19 +101,31 @@ public abstract class DbTestRuleBase implements TestRule {
     protected abstract void addDatabaseContent();
 
     @NonNull
-    protected Bow addBow() {
+    protected Bow addBow(String name) {
         Bow bow = new Bow();
-        bow.name = "PSE Fever";
+        bow.name = name;
         bow.brand = "PSE";
         bow.size = "64\"";
         bow.braceHeight = "6 3/8\"";
         bow.type = EBowType.COMPOUND_BOW;
         bow.images = Collections.emptyList();
-        Bitmap bitmap = BitmapFactory
-                .decodeResource(context.getResources(), R.drawable.recurve_bow);
-        bow.thumbnail = new Thumbnail(bitmap);
+        bow.thumbnail = new Thumbnail(context, R.drawable.recurve_bow);
         bow.save();
         return bow;
+    }
+
+    @NonNull
+    protected Arrow addArrow(String name) {
+        Arrow arrow = new Arrow();
+        arrow.name = name;
+        arrow.length = "30inch";
+        arrow.comment = "some comment";
+        arrow.diameter = new Dimension(4, Dimension.Unit.MILLIMETER);
+        arrow.nock = "Awesome nock";
+        arrow.images = Collections.emptyList();
+        arrow.thumbnail = new Thumbnail(context, R.drawable.arrows);
+        arrow.save();
+        return arrow;
     }
 
     @NonNull

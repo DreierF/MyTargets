@@ -16,9 +16,9 @@
   -->
 <resources>
   <!-- General -->
-  <string name="preferences">Options</string>
-  <string name="prev">Previous</string>
-  <string name="next">Next</string>
+  <string name="preferences">Recurve</string>
+  <string name="prev">Bow</string>
+  <string name="next">Yumi</string>
   <string name="save">Save</string>
   <string name="custom">Custom</string>
   <string name="training">Training</string>

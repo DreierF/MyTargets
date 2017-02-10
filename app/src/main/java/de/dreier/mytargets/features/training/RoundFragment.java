@@ -19,6 +19,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,7 +52,8 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
  */
 public class RoundFragment extends EditableListFragment<End> {
 
-    private static final String ROUND_ID = "round_id";
+    @VisibleForTesting
+    public static final String ROUND_ID = "round_id";
 
     private long roundId;
     private FragmentListBinding binding;
@@ -115,7 +117,7 @@ public class RoundFragment extends EditableListFragment<End> {
                 binding.fab.setVisibility(showFab ? View.VISIBLE : View.GONE);
 
                 ToolbarUtils.setTitle(RoundFragment.this,
-                        String.format(Locale.ENGLISH, "%s %d", getString(R.string.round),
+                        String.format(Locale.US, "%s %d", getString(R.string.round),
                                 round.index + 1));
                 ToolbarUtils.setSubtitle(RoundFragment.this, round.getReachedScore().toString());
             }

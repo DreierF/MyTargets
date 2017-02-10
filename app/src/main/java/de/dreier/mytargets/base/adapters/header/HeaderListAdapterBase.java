@@ -98,9 +98,6 @@ public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IId
 
     @Override
     public void onBindViewHolder(ItemBindingHolder<IIdProvider> viewHolder, int position) {
-        if (position == -1) {
-            return;
-        }
         H header = getHeaderForPosition(position);
         int pos = getHeaderRelativePosition(position);
         if (pos == 0) {
@@ -223,6 +220,12 @@ public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IId
             children.remove(item);
         }
 
+        /**
+         * Returns the number of items contained in this header including the header itself.
+         * This number is most of the time greater or equal 1.
+         * BUT CAUTION: during the deletion of an item (while the Snackbar is shown) it will get 0.
+         * @return
+         */
         int getTotalItemCount() {
             if (children.size() < 1) {
                 return 0;

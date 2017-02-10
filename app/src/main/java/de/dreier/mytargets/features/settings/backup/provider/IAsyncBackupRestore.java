@@ -16,7 +16,6 @@
 package de.dreier.mytargets.features.settings.backup.provider;
 
 import android.app.Activity;
-import android.content.Intent;
 
 import java.util.List;
 
@@ -24,8 +23,6 @@ import de.dreier.mytargets.features.settings.backup.BackupEntry;
 
 public interface IAsyncBackupRestore {
     void connect(Activity activity, ConnectionListener listener);
-
-    void onActivityResult(int requestCode, int resultCode, Intent data);
 
     void getBackups(OnLoadFinishedListener listener);
 

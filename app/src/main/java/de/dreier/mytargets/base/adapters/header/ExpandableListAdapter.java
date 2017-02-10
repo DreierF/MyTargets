@@ -43,9 +43,6 @@ public abstract class ExpandableListAdapter<P extends IIdProvider, C extends IId
     @Override
     public final void onBindViewHolder(ItemBindingHolder<IIdProvider> viewHolder, int position) {
         super.onBindViewHolder(viewHolder, position);
-        if (position == -1) {
-            return;
-        }
         if (viewHolder instanceof ExpandableHeaderBindingHolder) {
             ExpandableHeaderHolder<P, C> header = getHeaderForPosition(position);
             ((ExpandableHeaderBindingHolder) viewHolder)

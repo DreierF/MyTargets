@@ -20,13 +20,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.MenuItem;
 
 import junit.framework.Assert;
 
 import org.parceler.Parcels;
 
-import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.ListAdapterBase;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.utils.SingleSelectorBundler;
@@ -99,23 +97,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      * {@inheritDoc}
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            saveItem();
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void onClick(SelectableViewHolder<T> holder, T item) {
-        if (item == null) {
-            return;
-        }
         boolean alreadySelected = selector.isSelected(holder.getItemId());
         selector.setSelected(holder, true);
         if (alreadySelected || !useDoubleClickSelection) {

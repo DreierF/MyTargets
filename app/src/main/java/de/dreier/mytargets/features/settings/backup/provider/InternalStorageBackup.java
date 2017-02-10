@@ -17,7 +17,6 @@ package de.dreier.mytargets.features.settings.backup.provider;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Environment;
 
 import java.io.File;
@@ -55,11 +54,6 @@ public class InternalStorageBackup {
         public void connect(Activity activity, ConnectionListener listener) {
             this.activity = activity;
             listener.onConnected();
-        }
-
-        @Override
-        public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         }
 
         @Override

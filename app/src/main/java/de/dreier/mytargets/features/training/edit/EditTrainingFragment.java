@@ -58,6 +58,8 @@ import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static de.dreier.mytargets.base.fragments.EditableListFragmentBase.ITEM_ID;
 import static de.dreier.mytargets.features.training.ETrainingType.FREE_TRAINING;
 import static de.dreier.mytargets.features.training.ETrainingType.TRAINING_WITH_STANDARD_ROUND;
@@ -139,7 +141,11 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.arrow.setItemId(SettingsManager.getArrow());
             binding.standardRound.setItemId(SettingsManager.getStandardRound());
             binding.numberArrows.setChecked(SettingsManager.getArrowNumbersEnabled());
-            binding.environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
+            if(savedInstanceState == null) {
+                binding.environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
+            }
+            binding.changeTargetFace.setVisibility(trainingType == TRAINING_WITH_STANDARD_ROUND
+                    ? VISIBLE : GONE);
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_training);
             Training train = Training.get(trainingId);
@@ -150,16 +156,17 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             binding.standardRound.setItemId(train.standardRoundId);
             binding.environment.setItem(train.getEnvironment());
             setTrainingDate();
-            binding.notEditable.setVisibility(View.GONE);
+            binding.notEditable.setVisibility(GONE);
+            binding.changeTargetFace.setVisibility(train.standardRoundId != null ? VISIBLE : GONE);
         }
         binding.standardRound.setOnActivityResultContext(this);
-        binding.standardRound.setOnUpdateListener(this::updateChangeTargetFaceVisibility);
+        binding.standardRound.setOnUpdateListener(
+                item -> roundTarget = item.getRounds().get(0).getTargetTemplate());
         binding.changeTargetFace.setOnClickListener(v ->
                 TargetListFragment.getIntent(roundTarget)
                         .withContext(this)
                         .forResult(SR_TARGET_REQUEST_CODE)
                         .start());
-        updateChangeTargetFaceVisibility(binding.standardRound.getSelectedItem());
         binding.arrow.setOnActivityResultContext(this);
         binding.bow.setOnActivityResultContext(this);
         binding.environment.setOnActivityResultContext(this);
@@ -168,13 +175,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         updateArrowsLabel();
 
         return binding.getRoot();
-    }
-
-    private void updateChangeTargetFaceVisibility(StandardRound item) {
-        roundTarget = item.getRounds().get(0).getTargetTemplate();
-        final boolean canBeChanged = (roundTarget.id < 7 || roundTarget.id == 10 || roundTarget.id == 11)
-                && trainingType == TRAINING_WITH_STANDARD_ROUND;
-        binding.changeTargetFace.setVisibility(canBeChanged ? View.VISIBLE : View.GONE);
     }
 
     protected void setScoringStyleForCompoundBow(Bow bow) {
@@ -206,8 +206,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             out = binding.practiceLayout;
             in = binding.standardRound;
         }
-        in.setVisibility(View.VISIBLE);
-        out.setVisibility(View.GONE);
+        in.setVisibility(VISIBLE);
+        out.setVisibility(GONE);
     }
 
     private void onDateClick() {

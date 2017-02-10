@@ -13,15 +13,13 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.views.selector;
+package de.dreier.mytargets.features.arrow;
 
 
 import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.widget.RelativeLayout;
 
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -41,11 +39,13 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.test.utils.PermissionGranter.allowPermissionsIfNeeded;
+import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isNestedChildOfView;
+import static de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
@@ -76,18 +76,16 @@ public class ArrowSelectorTest extends UITestBase {
 
         onView(withText(R.string.add_arrow)).perform(nestedScrollTo(), click());
         intended(hasComponent(EditArrowActivity.class.getName()));
-        onView(allOf(withId(R.id.action_save), isDisplayed())).perform(click());
+        save();
 
-        onView(allOf(withId(R.id.name),
-                withParent(withParent(withParent(withParent(withId(R.id.arrow))))), isDisplayed()))
+        onView(allOf(withId(R.id.name), isNestedChildOfView(withId(R.id.arrow)), isDisplayed()))
                 .check(matches(withText(R.string.my_arrow)));
 
         // Check if arrow selection opens
         onView(withId(R.id.arrow)).perform(nestedScrollTo(), click());
         intended(hasComponent(ArrowActivity.class.getName()));
-        onView(allOf(withId(R.id.name), childAtPosition(childAtPosition(
-                IsInstanceOf.instanceOf(RelativeLayout.class), 1), 0),
-                isDisplayed())).check(matches(withText(R.string.my_arrow)));
+        onView(withRecyclerView(R.id.recyclerView).atPosition(0))
+                .check(matches(hasDescendant(withText(R.string.my_arrow))));
         navigateUp();
     }
 }

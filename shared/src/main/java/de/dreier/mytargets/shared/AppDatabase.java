@@ -26,6 +26,7 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -259,8 +260,8 @@ public class AppDatabase {
             StandardRound sr = new StandardRound();
             sr.name = "Practice";
             sr.club = 512;
+            sr.setRounds(new ArrayList<>());
             if (res.moveToFirst()) {
-                //FIXME sr.indoor = res.getInt(5) == 1;
                 do {
                     RoundTemplate template = new RoundTemplate();
                     template.shotsPerEnd = res.getInt(0);
@@ -306,7 +307,7 @@ public class AppDatabase {
             if (sr.getRounds().isEmpty()) {
                 return 0L;
             }
-            sr.save();
+            sr.save(db);
             return sr.getId();
         }
     }

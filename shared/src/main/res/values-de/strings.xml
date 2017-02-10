@@ -33,7 +33,7 @@
   <string name="large">Groß</string>
   <string name="xlarge">XL</string>
   <string name="unknown">Unbekannt</string>
-  <string name="indoor">Indoor</string>
+  <string name="indoor">Halle</string>
   <string name="wind">Wind</string>
   <string name="location">Standort</string>
   <string name="bft_0">0 Bft: Windstill</string>

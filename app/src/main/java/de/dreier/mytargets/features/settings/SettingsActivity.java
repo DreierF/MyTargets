@@ -25,17 +25,23 @@ import android.support.v7.preference.PreferenceScreen;
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.utils.IntentWrapper;
 
+import static android.support.v7.preference.PreferenceFragmentCompat.ARG_PREFERENCE_ROOT;
+
 public class SettingsActivity extends SimpleFragmentActivityBase implements
         PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
     public static IntentWrapper getIntent(ESettingsScreens subScreen) {
         return new IntentWrapper(SettingsActivity.class)
-                .with(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, subScreen.getKey());
+                .with(ARG_PREFERENCE_ROOT, subScreen.getKey());
     }
 
     @Override
     public Fragment instantiateFragment() {
-        return new MainSettingsFragment();
+        String key = getIntent().getStringExtra(ARG_PREFERENCE_ROOT);
+        if (key != null) {
+            return ESettingsScreens.from(key).create();
+        }
+        return ESettingsScreens.MAIN.create();
     }
 
     @Override
@@ -60,7 +66,7 @@ public class SettingsActivity extends SimpleFragmentActivityBase implements
         ESettingsScreens screen = ESettingsScreens.from(preferenceScreen.getKey());
         SettingsFragmentBase fragment = screen.create();
         Bundle args = new Bundle();
-        args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, preferenceScreen.getKey());
+        args.putString(ARG_PREFERENCE_ROOT, preferenceScreen.getKey());
         fragment.setArguments(args);
         ft.add(android.R.id.content, fragment, preferenceScreen.getKey());
         ft.addToBackStack(preferenceScreen.getKey());

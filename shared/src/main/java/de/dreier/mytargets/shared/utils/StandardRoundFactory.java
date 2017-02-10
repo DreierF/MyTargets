@@ -730,6 +730,7 @@ public class StandardRoundFactory {
         standardRound.setId(idCounter);
         standardRound.name = SharedApplicationInstance.getContext().getString(name);
         standardRound.club = institution;
+        standardRound.setRounds(new ArrayList<>());
         for (int i = 0; i < roundDetails.length; i += 3) {
             roundCounter++;
             RoundTemplate roundTemplate = new RoundTemplate();
