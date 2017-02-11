@@ -45,6 +45,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="UnusedAttribute"
         tools:replace="android:name">
+
         <meta-data
             android:name="com.google.android.backup.api_key"
             android:value="AEdPqrEAAAAIy_jZMyyGuh5M-ICvUll4H1WyF1R9M8cUcN5wVw" />

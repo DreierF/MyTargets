@@ -121,6 +121,12 @@
                     android:id="@+id/backupLocation"
                     layout="@layout/preference_image_details" />
 
+                <include layout="@layout/partial_divider_full" />
+
+                <include
+                    android:id="@+id/backupFolder"
+                    layout="@layout/preference_image_details" />
+
                 <TextView
                     style="@style/Label"
                     android:layout_width="wrap_content"

@@ -27,7 +27,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -76,6 +75,7 @@ import static de.dreier.mytargets.features.settings.backup.provider.GoogleDriveB
 public class BackupSettingsFragment extends SettingsFragmentBase implements IAsyncBackupRestore.OnLoadFinishedListener {
 
     private static final int IMPORT_FROM_URI = 1234;
+    private static final int REQUEST_CODE_OPENER = 2345;
 
     private IAsyncBackupRestore backup;
     private BackupAdapter adapter;
@@ -129,6 +129,11 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     public void onCreatePreferences() {
         /* Overridden to no do anything. Normally this would try to inflate the preferences,
         * but in this case we want to show our own UI. */
+    }
+
+    @Override
+    protected void setActivityTitle() {
+        getActivity().setTitle(R.string.backup_action);
     }
 
     @Override
@@ -202,8 +207,12 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         if (requestCode == REQUEST_CODE_RESOLUTION && resultCode != RESULT_OK) {
             leaveBackupSettings();
         }
-        if (requestCode == IMPORT_FROM_URI && resultCode == AppCompatActivity.RESULT_OK) {
+        if (requestCode == IMPORT_FROM_URI && resultCode == RESULT_OK) {
             importFromUri(data.getData());
+        }
+        if (requestCode == REQUEST_CODE_OPENER && resultCode == RESULT_OK &&
+                backup instanceof IAsyncBackupRestore.IFolderSelectable) {
+            ((IAsyncBackupRestore.IFolderSelectable) backup).setSelectFolderResult(data, this::updateFolder);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -287,6 +296,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
             @Override
             public void onConnected() {
                 updateBackupLocation();
+                updateFolder();
                 backup.getBackups(BackupSettingsFragment.this);
             }
 
@@ -297,9 +307,18 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         });
     }
 
-    @Override
-    protected void setActivityTitle() {
-        getActivity().setTitle(R.string.backup_action);
+    private void onBackupFolderClicked() {
+        if (backup != null && backup instanceof IAsyncBackupRestore.IFolderSelectable) {
+            ((IAsyncBackupRestore.IFolderSelectable) backup).selectFolder(REQUEST_CODE_OPENER);
+        }
+    }
+
+    private void updateFolder() {
+        binding.backupFolder.getRoot().setOnClickListener(v -> onBackupFolderClicked());
+        binding.backupFolder.getRoot().setEnabled(backup instanceof IAsyncBackupRestore.IFolderSelectable);
+        binding.backupFolder.image.setImageResource(R.drawable.ic_folder_grey600_24dp);
+        binding.backupFolder.name.setText(R.string.backup_folder);
+        binding.backupFolder.summary.setText(backup.getBackupFolderString());
     }
 
     private void onBackupsLoaded(List<BackupEntry> list) {

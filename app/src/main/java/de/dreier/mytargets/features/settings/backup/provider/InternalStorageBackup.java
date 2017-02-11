@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.settings.backup.provider;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Environment;
 
 import java.io.File;
@@ -44,6 +45,10 @@ public class InternalStorageBackup {
         if (!directory.exists() || !directory.isDirectory()) {
             throw new IOException(get(R.string.dir_not_created));
         }
+    }
+
+    private static File getBackupFolder() {
+        return new File(Environment.getExternalStorageDirectory(), FOLDER_NAME);
     }
 
     public static class AsyncRestore implements IAsyncBackupRestore {
@@ -105,6 +110,11 @@ public class InternalStorageBackup {
         public void stop() {
             activity = null;
         }
+
+        @Override
+        public String getBackupFolderString() {
+            return getBackupFolder().getPath();
+        }
     }
 
     public static class Backup implements IBlockingBackup {
@@ -112,8 +122,7 @@ public class InternalStorageBackup {
         @Override
         public void performBackup(Context context) throws BackupException {
             try {
-                File backupDir = new File(Environment.getExternalStorageDirectory(),
-                        FOLDER_NAME);
+                File backupDir = getBackupFolder();
                 createDirectory(backupDir);
                 final File zipFile = new File(backupDir, getBackupName());
                 BackupUtils.zip(context, new FileOutputStream(zipFile));
