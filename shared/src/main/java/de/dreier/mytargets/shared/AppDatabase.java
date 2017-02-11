@@ -57,6 +57,15 @@ public class AppDatabase {
         }
     }
 
+    @Migration(version = 20, database = AppDatabase.class)
+    public static class Migration20 extends BaseMigration {
+
+        @Override
+        public void migrate(DatabaseWrapper database) {
+            fillStandardRound(database);
+        }
+    }
+
     private static void fillStandardRound(DatabaseWrapper db) {
         List<StandardRound> rounds = StandardRoundFactory.initTable();
         for (StandardRound round : rounds) {
