@@ -43,7 +43,6 @@
         android:restoreAnyVersion="false"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="UnusedAttribute"
         tools:replace="android:name">
 
         <meta-data

@@ -213,8 +213,7 @@ public class SettingsManager {
     }
 
     public static boolean isTranslationDialogShown() {
-        SharedPreferences prefs = preferences;
-        return prefs.getBoolean(KEY_TRANSLATION_DIALOG_SHOWN, false);
+        return preferences.getBoolean(KEY_TRANSLATION_DIALOG_SHOWN, false);
     }
 
     public static void setTranslationDialogShown(boolean shown) {

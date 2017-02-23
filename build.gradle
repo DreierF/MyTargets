@@ -22,7 +22,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0-beta3'
+        classpath 'com.android.tools.build:gradle:2.3.0-rc1'
         classpath 'me.tatarka:gradle-retrolambda:3.5.0'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
         //classpath 'com.github.triplet.gradle:play-publisher:1.1.5' //for now until triplet gets the mapping upload
@@ -78,11 +78,11 @@ ext {
             parceler             : '1.1.6',
             permissionsdispatcher: '2.3.1',
             picasso              : '2.5.2',
-            playService          : '10.0.1',
+            playService          : '10.2.0',
             screengrab           : '1.0.1',
             retrofit             : '2.1.0',
             roundedImageView     : '2.2.1',
-            support              : '25.1.1',
+            support              : '25.2.0',
             supportWearable      : '2.0.0',
             testSupport          : '0.5',
             truth                : '0.31',
