@@ -144,7 +144,7 @@ public final class MigrationTest extends InstrumentedTestBase {
         Truth.assertThat(round1.distance).isEqualTo(new Dimension(50, METER));
         Truth.assertThat(round1.comment).isEqualTo("");
         Truth.assertThat(round1.getTarget().getId()).isEqualTo(1);
-        Truth.assertThat(round1.getTarget().scoringStyle).isEqualTo(1);
+        Truth.assertThat(round1.getTarget().scoringStyle).isEqualTo(2);
         Truth.assertThat(round1.getTarget().size).isEqualTo(new Dimension(40, CENTIMETER));
         final List<End> ends = round1.getEnds();
         Truth.assertThat(ends).hasSize(3);

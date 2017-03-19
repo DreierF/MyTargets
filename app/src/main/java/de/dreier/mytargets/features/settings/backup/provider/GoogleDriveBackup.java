@@ -221,14 +221,13 @@ public class GoogleDriveBackup {
             Query.Builder builder = new Query.Builder()
                     .addFilter(Filters.eq(SearchableField.MIME_TYPE, "mytargets/zip"))
                     .addFilter(Filters.eq(SearchableField.TRASHED, false))
-                    .addFilter(Filters.in(SearchableField.PARENTS, parentFolder))
                     .setSortOrder(new SortOrder.Builder()
                             .addSortDescending(SortableField.MODIFIED_DATE).build());
             queryFiles(listener, builder.build());
         }
 
         private void queryFiles(final OnLoadFinishedListener listener, Query query) {
-            Drive.DriveApi.getRootFolder(googleApiClient).queryChildren(googleApiClient, query)
+            parentFolder.asDriveFolder().queryChildren(googleApiClient, query)
                     .setResultCallback(new ResultCallback<DriveApi.MetadataBufferResult>() {
 
                         private ArrayList<BackupEntry> backupsArray = new ArrayList<>();
