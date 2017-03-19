@@ -61,8 +61,8 @@ public class AboutFragment extends Fragment {
                 .addGitHub("DreierF")
                 .addItem(getLinkedInItem())
                 .addGroup(getString(R.string.special_thanks_to))
-                .addItem(new Element("testers", getString(R.string.all_beta_testers), null))
-                .addItem(new Element("translators", getString(R.string.all_translators)
+                .addItem(new Element(getString(R.string.all_beta_testers), null))
+                .addItem(new Element(getString(R.string.all_translators)
                         + "\n" + getString(R.string.translators), null))
                 .create();
     }
@@ -97,8 +97,7 @@ public class AboutFragment extends Fragment {
     }
 
     private Element getShareElement() {
-        Element shareElement = new Element(null, getString(R.string.share_with_friends),
-                R.drawable.about_icon_share);
+        Element shareElement = new Element(getString(R.string.share_with_friends), R.drawable.about_icon_share);
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, URL_PLAY_STORE);
@@ -109,15 +108,14 @@ public class AboutFragment extends Fragment {
     }
 
     private Element getDonateElement() {
-        Element donateElement = new Element(null, getString(R.string.donate),
-                R.drawable.about_icon_donate);
+        Element donateElement = new Element(getString(R.string.donate), R.drawable.about_icon_donate);
         donateElement.setIntent(new Intent(getContext(), DonateActivity.class));
         return donateElement;
     }
 
     private class WebElement extends Element {
         WebElement(@StringRes int title, Integer icon, String url) {
-            super(null, getString(title), icon);
+            super(getString(title), icon);
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_VIEW);
             intent.addCategory(Intent.CATEGORY_BROWSABLE);
