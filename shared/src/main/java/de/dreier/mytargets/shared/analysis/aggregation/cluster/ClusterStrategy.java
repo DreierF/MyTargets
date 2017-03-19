@@ -25,7 +25,7 @@ import java.util.Set;
 
 import de.dreier.mytargets.shared.models.db.Shot;
 
-public class ClusterStrategy extends AggregationStrategyBase<ClusterResultRenderer> {
+public class ClusterStrategy extends AggregationStrategyBase {
 
     private static final double EPS = 0.4;
     private static final int MINIMUM_POINTS_FOR_CLUSTER = 2;

@@ -15,17 +15,24 @@
 
 package de.dreier.mytargets.shared.analysis.aggregation;
 
+import android.support.annotation.NonNull;
+
 import java.util.List;
 
 public class NoneStrategy implements IAggregationStrategy {
-    @Override
-    public void setOnAggregationResultListener(OnAggregationResult onAggregationResult) {
 
+    private NOPResultRenderer resultRenderer = new NOPResultRenderer();
+    private OnAggregationResult resultListener;
+
+    @Override
+    public void setOnAggregationResultListener(OnAggregationResult resultListener) {
+        this.resultListener = resultListener;
     }
 
+    @NonNull
     @Override
     public IAggregationResultRenderer getResult() {
-        return null;
+        return resultRenderer;
     }
 
     @Override
@@ -40,6 +47,8 @@ public class NoneStrategy implements IAggregationStrategy {
 
     @Override
     public void calculate(List list) {
-
+        if (resultListener != null) {
+            resultListener.onResult();
+        }
     }
 }

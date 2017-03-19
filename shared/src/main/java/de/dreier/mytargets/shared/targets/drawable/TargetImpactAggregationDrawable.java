@@ -67,9 +67,7 @@ public class TargetImpactAggregationDrawable extends TargetImpactDrawable implem
     protected void onPostDraw(CanvasWrapper canvas, int faceIndex) {
         super.onPostDraw(canvas, faceIndex);
         final IAggregationResultRenderer result = faceAggregations.get(faceIndex).getResult();
-        if (result != null) {
-            result.onDraw(canvas);
-        }
+        result.onDraw(canvas);
     }
 
     @Override
