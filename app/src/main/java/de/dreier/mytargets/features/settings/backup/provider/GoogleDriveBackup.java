@@ -59,6 +59,7 @@ import de.dreier.mytargets.features.settings.backup.BackupException;
 public class GoogleDriveBackup {
 
     private static final String FOLDER_NAME = "MyTargets";
+    public static final String MYTARGETS_MIME_TYPE = "application/zip";
 
     public static class AsyncRestore implements IAsyncBackupRestore, IAsyncBackupRestore.IFolderSelectable {
 
@@ -121,10 +122,6 @@ public class GoogleDriveBackup {
         }
 
         private void findOrCreateDefaultFolder(ConnectionListener listener) {
-            MetadataChangeSet metadata = new MetadataChangeSet.Builder()
-                    .setTitle(FOLDER_NAME)
-                    .setMimeType(DriveFolder.MIME_TYPE)
-                    .build();
             Drive.DriveApi.getRootFolder(googleApiClient)
                     .listChildren(googleApiClient)
                     .setResultCallback(metadataBufferResult -> {
@@ -135,6 +132,9 @@ public class GoogleDriveBackup {
                             SettingsManager.setBackupGoogleDriveFolderId(parentFolder.encodeToString());
                             ensureParentFolderStringIsLoaded(listener);
                         } else {
+                            MetadataChangeSet metadata = new MetadataChangeSet.Builder()
+                                    .setTitle(FOLDER_NAME)
+                                    .build();
                             Drive.DriveApi.getRootFolder(googleApiClient)
                                     .createFolder(googleApiClient, metadata)
                                     .setResultCallback(driveFolderResult -> {
@@ -160,7 +160,11 @@ public class GoogleDriveBackup {
                     .getMetadata(googleApiClient)
                     .setResultCallback(metadataResult -> {
                         final Metadata metadata = metadataResult.getMetadata();
-                        getPath(listener, parentFolder, "/" + metadata.getTitle());
+                        if(metadata!=null) {
+                            getPath(listener, parentFolder, "/" + metadata.getTitle());
+                        } else {
+                            parentFolderString = "/";
+                        }
                     });
         }
 
@@ -219,7 +223,7 @@ public class GoogleDriveBackup {
         @Override
         public void getBackups(OnLoadFinishedListener listener) {
             Query.Builder builder = new Query.Builder()
-                    .addFilter(Filters.eq(SearchableField.MIME_TYPE, "mytargets/zip"))
+                    .addFilter(Filters.eq(SearchableField.MIME_TYPE, MYTARGETS_MIME_TYPE))
                     .addFilter(Filters.eq(SearchableField.TRASHED, false))
                     .setSortOrder(new SortOrder.Builder()
                             .addSortDescending(SortableField.MODIFIED_DATE).build());
@@ -324,17 +328,18 @@ public class GoogleDriveBackup {
             }
 
             final DriveContents driveContents = result.getDriveContents();
-            OutputStream outputStream = driveContents.getOutputStream();
-
-            try {
-                BackupUtils.zip(context, outputStream);
-            } catch (IOException e) {
-                throw new BackupException(e.getLocalizedMessage(), e);
-            }
+//            OutputStream outputStream = driveContents.getOutputStream();
+//
+//            try {
+//                BackupUtils.zip(context, outputStream);
+//            } catch (IOException e) {
+//                throw new BackupException(e.getLocalizedMessage(), e);
+//            }
 
             MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
                     .setTitle(BackupUtils.getBackupName())
-                    .setMimeType("mytargets/zip")
+                    .setMimeType(MYTARGETS_MIME_TYPE)
+                    .setStarred(true)
                     .build();
 
             // create a file in selected folder

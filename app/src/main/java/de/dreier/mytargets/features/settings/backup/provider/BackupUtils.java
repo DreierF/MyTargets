@@ -28,6 +28,7 @@ import java.io.BufferedOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -129,16 +130,20 @@ public class BackupUtils {
 
             String[] files = getImages();
             for (String file : files) {
-                fi = new FileInputStream(new File(context.getFilesDir(), file));
-                origin = new BufferedInputStream(fi, BUFFER);
+                try {
+                    fi = new FileInputStream(new File(context.getFilesDir(), file));
+                    origin = new BufferedInputStream(fi, BUFFER);
 
-                entry = new ZipEntry("/" + file);
-                out.putNextEntry(entry);
+                    entry = new ZipEntry("/" + file);
+                    out.putNextEntry(entry);
 
-                while ((count = origin.read(data, 0, BUFFER)) != -1) {
-                    out.write(data, 0, count);
+                    while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                        out.write(data, 0, count);
+                    }
+                    origin.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
-                origin.close();
             }
 
             out.close();
