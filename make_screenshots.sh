@@ -24,7 +24,7 @@ do
   echo Emulator started, waiting for boot
   # wait until adb is connected to device, so that we can issue adb shell commands
   adb wait-for-device
-  
+
   # wait until boot is completed (see http://ncona.com/2014/01/detect-when-android-emulator-is-ready/ )
   output=''
   while [[ ${output:0:7} != 'stopped' ]]; do
@@ -32,8 +32,8 @@ do
     sleep 1
     echo ...waiting
   done
-  
-  sleep 1 
+
+  sleep 1
   # unlock lockscreen
   adb shell input keyevent 82
 
@@ -47,12 +47,12 @@ do
 
   # Display battery as fully charged
   { echo "power capacity 100"; echo "power ac off"; echo "exit"; sleep 1; } | telnet localhost 5554
-  
+
   echo Device online, initiating screengrabs
 
   # now let the screengrab script run
-  screengrab --device_type ${device_types[$i]}
-  
+  fastlane screengrab --device_type ${device_types[$i]}
+
   echo Done, killing this emulator now!
   { echo "kill"; echo "exit"; sleep 1; } | telnet localhost 5554
 done

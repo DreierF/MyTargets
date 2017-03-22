@@ -129,7 +129,7 @@
   <string name="donate_text">Suma je vrátane DPH a 30% poplatkov pre Google. Prípadne ma môžete obdarovať cez PayPal účet dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Časovač</string>
-  <string name="stop">Zastaviť</string>
+  <string name="stop">STOP</string>
   <string name="touch_to_start">Stlačiť pre štart</string>
   <string name="preparation">Pripravte sa</string>
   <string name="shooting">Streľba</string>
@@ -338,4 +338,5 @@
   <string name="show_total_score">Zobraziť celkové skóre</string>
   <string name="show_percentage">Zobraziť percento</string>
   <string name="show_arrow_average">Zobraziť priemer na šíp</string>
+  <string name="backup_folder">Folder</string>
 </resources>

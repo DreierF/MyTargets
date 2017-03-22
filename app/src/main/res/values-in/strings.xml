@@ -22,17 +22,17 @@
   <string name="save">Simpan</string>
   <string name="custom">Custom</string>
   <string name="training">Training</string>
-  <string name="bow">Bow</string>
-  <string name="arrow">Arrow</string>
-  <string name="round">Round</string>
+  <string name="bow">Busur</string>
+  <string name="arrow">Anak panah</string>
+  <string name="round">Seri</string>
   <string name="points">Points</string>
   <string name="passe">End</string>
   <string name="passe_n">End %d</string>
   <!-- Overview -->
   <string name="new_training">New training</string>
-  <string name="new_bow">New bow</string>
-  <string name="new_arrow">New arrow</string>
-  <string name="new_round">New round</string>
+  <string name="new_bow">Busur baru</string>
+  <string name="new_arrow">Anak panah baru</string>
+  <string name="new_round">Seri baru</string>
   <plurals name="training_selected">
     <item quantity="other">%d trainings selected</item>
   </plurals>
@@ -46,42 +46,42 @@
     <item quantity="other">%d ends selected</item>
   </plurals>
   <string name="edit">Edit</string>
-  <string name="delete">Delete</string>
-  <string name="statistic">Statistic</string>
+  <string name="delete">Hapus</string>
+  <string name="statistic">Statistik</string>
   <!-- Share -->
-  <string name="share">Share</string>
+  <string name="share">Bagikan</string>
   <string name="dispersion_pattern">Dispersion pattern</string>
   <string name="sharing_failed">Sharing failed!</string>
   <!-- Export -->
   <string name="send_exported">Send exported data</string>
   <string name="exporting_failed">Exporting failed!</string>
   <!-- New bow -->
-  <string name="add_bow">Add bow</string>
-  <string name="name">Name</string>
-  <string name="bow_type">Bow type</string>
+  <string name="add_bow">Tambahkan busur</string>
+  <string name="name">Nama</string>
+  <string name="bow_type">Tipe busur</string>
   <string name="properties">Properties</string>
-  <string name="brand">Brand</string>
-  <string name="size">Size</string>
-  <string name="description">Description</string>
+  <string name="brand">Merek</string>
+  <string name="size">Ukuran</string>
+  <string name="description">Deskripsi</string>
   <string name="height">Brace height</string>
   <string name="tiller">Tiller</string>
   <string name="sight_settings">Sight settings</string>
   <string name="add">Add</string>
-  <string name="take_picture">Take a picture</string>
-  <string name="pick_from_gallery">Select a picture from gallery</string>
+  <string name="take_picture">Ambil gambar</string>
+  <string name="pick_from_gallery">Pilih gambar dari galeri</string>
   <!-- New arrow -->
-  <string name="add_arrow">Add arrow</string>
-  <string name="length">Length</string>
+  <string name="add_arrow">Tambahkan anak panah</string>
+  <string name="length">Panjang</string>
   <string name="spine">Spine</string>
-  <string name="weight">Weight</string>
+  <string name="weight">Berat</string>
   <string name="vanes">Vanes</string>
   <string name="nock">Nock</string>
   <string name="material">Material</string>
   <!-- New round -->
-  <string name="title">Title</string>
+  <string name="title">Judul</string>
   <string name="outdoor">Outdoor</string>
   <string name="indoor">Indoor</string>
-  <string name="distance">Distance</string>
+  <string name="distance">Jarak</string>
   <string name="format">Format</string>
   <!-- x ends of y arrows -->
   <plurals name="passe">
@@ -93,68 +93,68 @@
   </plurals>
   <string name="target_face">Target face</string>
   <!-- Scoreboard -->
-  <string name="scoreboard">Scoreboard</string>
+  <string name="scoreboard">Papan nilai</string>
   <string name="arrows">Arrows</string>
-  <string name="sum">Score</string>
+  <string name="sum">Nilai</string>
   <string name="carry">R.Total</string>
   <string name="action_print">Print</string>
   <string name="average">Average</string>
   <!-- Input mode -->
-  <string name="comment">Comment</string>
+  <string name="comment">Komentar</string>
   <!-- Statistics -->
   <!-- Import/Backup -->
-  <string name="select_a_file">Select a file</string>
-  <string name="dir_not_created">Directory could not be created!</string>
+  <string name="select_a_file">Pilih berkas</string>
+  <string name="dir_not_created">Tidak dapat membuat direktori!</string>
   <string name="import_failed">Import failed!</string>
-  <string name="file_not_found">File not found!</string>
-  <string name="failed_reading_file">Failed reading file!</string>
+  <string name="file_not_found">Berkas tidak ditemukan!</string>
+  <string name="failed_reading_file">Gagal membaca berkas!</string>
   <!-- Donate -->
   <string name="donate_2">Donate me a burger</string>
   <string name="donate_5">Donate me a kebab</string>
   <string name="donate_10">Donate me a large pizza</string>
   <string name="donate_20">Donate me some fuel</string>
-  <string name="donation_thank">Thank you for your support!</string>
+  <string name="donation_thank">Terima kasih atas dukungan anda!</string>
   <string name="donate_text">The amounts are incl. VAT and 30% fees for Google. Alternatively you may gladly donate on the PayPal account dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Timer</string>
   <string name="stop">STOP</string>
-  <string name="touch_to_start">Touch to start</string>
+  <string name="touch_to_start">Sentuh untuk memulai</string>
   <string name="preparation">Get ready</string>
   <string name="shooting">Shooting</string>
   <!-- Timer settings -->
   <string name="timer_shooting_time">Shooting Time</string>
   <string name="timer_waiting_time">Prepare Time</string>
   <string name="timer_warning_time">Warning Time</string>
-  <string name="timer_sound">Sound</string>
-  <string name="timer_vibrate">Vibrate</string>
+  <string name="timer_sound">Suara</string>
+  <string name="timer_vibrate">Getar</string>
   <!-- Settings -->
   <string name="backup_action">Backup</string>
   <string name="import_action">Import</string>
   <string name="exports_as_csv">Exports as csv</string>
   <string name="licences">Open Source-Licences</string>
   <string name="licences_summary">Legal notes to licences</string>
-  <string name="version">Version %s</string>
+  <string name="version">Versi %s</string>
   <plurals name="second">
-    <item quantity="other">%d seconds</item>
+    <item quantity="other">%d detik</item>
   </plurals>
-  <string name="info">Information</string>
+  <string name="info">Informasi</string>
   <string name="data">Data</string>
-  <string name="weather">Weather</string>
-  <string name="environment">Environment</string>
-  <string name="wind_speed">Wind speed</string>
-  <string name="wind_direction">Wind direction</string>
-  <string name="sight_setting_removed">Sight setting deleted!</string>
-  <string name="metric">Metric</string>
+  <string name="weather">Cuaca</string>
+  <string name="environment">Lingkungan</string>
+  <string name="wind_speed">Kecepatan angin</string>
+  <string name="wind_direction">Arah angin</string>
+  <string name="sight_setting_removed">Pengaturan sight dihapus!</string>
+  <string name="metric">Metrik</string>
   <string name="imperial">Imperial</string>
   <string name="undo">Undo</string>
   <string name="standard_rounds">Standard rounds</string>
   <string name="expand_collapse">Expand/Collapse</string>
   <string name="new_round_template">New template</string>
-  <string name="arrow_numbers">Arrow numbers</string>
+  <string name="arrow_numbers">Nomor anak panah</string>
   <string name="round_removed">Round deleted!</string>
   <string name="custom_round">Custom round</string>
   <string name="filter">Filter</string>
-  <string name="club">Club</string>
+  <string name="club">Klub</string>
   <string name="target">Target</string>
   <string name="standard_round">Standard round</string>
   <string name="use_as_template">Use as template?</string>
@@ -183,28 +183,28 @@
   <plurals name="round_deleted">
     <item quantity="other">%d rounds deleted</item>
   </plurals>
-  <string name="date">Date</string>
+  <string name="date">Tanggal</string>
   <string name="edit_round">Edit round</string>
   <string name="draw_weight">Draw weight</string>
   <string name="sight">Sight</string>
   <string name="limbs">Limbs</string>
-  <string name="my_bow">My bow</string>
-  <string name="my_arrow">My arrow</string>
+  <string name="my_bow">Busur saya</string>
+  <string name="my_arrow">Anak panah saya</string>
   <string name="tip_weight">Tip weight</string>
   <string name="arrow_ranking">Arrow ranking</string>
   <string name="arrow_x_of_set_of_arrows">Arrow %1$s of %2$s</string>
-  <string name="display">Display</string>
-  <string name="print">Print</string>
-  <string name="table">Table</string>
-  <string name="comments">Comments</string>
+  <string name="display">Tampilan</string>
+  <string name="print">Cetak</string>
+  <string name="table">Tabel</string>
+  <string name="comments">Komentar</string>
   <string name="show_points_colored">Show points colored</string>
   <string name="stabilizer">Stabilizer</string>
   <string name="clicker">Clicker</string>
   <string name="arrow_number_x">Arrow number %s</string>
   <string name="training_with_standard_round">Training with Standard Round</string>
   <string name="free_training">Free Training</string>
-  <string name="competition">Competition</string>
-  <string name="about">About</string>
+  <string name="competition">Kompetisi</string>
+  <string name="about">Tentang</string>
   <string name="general">General</string>
   <string name="contribute">Contribute</string>
   <string name="connect">Connect</string>
@@ -214,8 +214,8 @@
   <string name="test_beta">Test the latest beta version</string>
   <string name="join_on_google_plus">Join us on Google+</string>
   <string name="share_with_friends">Share with your friends</string>
-  <string name="donate">Donate</string>
-  <string name="donate_via_paypal">Donate via PayPal</string>
+  <string name="donate">Donasi</string>
+  <string name="donate_via_paypal">Donasi melalui PayPal</string>
   <string name="translate_crowdin">Translate on Crowdin</string>
   <string name="network_linkedin">Network on LinkedIn</string>
   <string name="search">Search</string>
@@ -223,13 +223,13 @@
   <string name="show_shots_training">Whole training</string>
   <string name="show_shots_round">Current round</string>
   <string name="show_shots_end">Current end</string>
-  <string name="profile">Profile</string>
-  <string name="birthday">Birthday</string>
-  <string name="first_name">First name</string>
-  <string name="last_name">Last name</string>
-  <string name="age">Age</string>
-  <string name="show_signature">Signature</string>
-  <string name="witness">Witness</string>
+  <string name="profile">Profil</string>
+  <string name="birthday">Tanggal lahir</string>
+  <string name="first_name">Nama depan</string>
+  <string name="last_name">Nama belakang</string>
+  <string name="age">Usia</string>
+  <string name="show_signature">Tanda tangan</string>
+  <string name="witness">Saksi</string>
   <string name="archer">Archer</string>
   <string name="hits">Hits</string>
   <string name="misses">Misses</string>
@@ -268,17 +268,17 @@
   <string name="backup_restore_desc">Backup and restore app data</string>
   <string name="exporting">Exporting&#8230;</string>
   <string name="loading_backups_failed">Loading backups failed!</string>
-  <string name="external_storage">External storage</string>
+  <string name="external_storage">Penyimpanan eksternal</string>
   <string name="backup_interval">Backup interval</string>
-  <string name="daily">Daily</string>
-  <string name="weekly">Weekly</string>
-  <string name="monthly">Monthly</string>
+  <string name="daily">Harian</string>
+  <string name="weekly">Mingguan</string>
+  <string name="monthly">Bulanan</string>
   <string name="connection_failed">Connection failed!</string>
   <string name="shooting_indoor">Shooting indoor</string>
-  <string name="bow_rest_vertical_position">Vertical position</string>
+  <string name="bow_rest_vertical_position">Posisi vertikal</string>
   <string name="bow_rest">Rest</string>
-  <string name="bow_rest_horizontal_position">Horizontal position</string>
-  <string name="bow_cam_settings">Cam settings</string>
+  <string name="bow_rest_horizontal_position">Posisi horizontal</string>
+  <string name="bow_cam_settings">Pengaturan cam</string>
   <string name="bow_letoff_weight">Letoff weight</string>
   <string name="bow_nocking_point">Nocking point</string>
   <string name="bow_string">String</string>
@@ -302,12 +302,13 @@
   <string name="invalid_decimal_number">Invalid decimal number</string>
   <string name="not_within_expected_range_mm">Not within the expected range of 1 to 20 mm</string>
   <string name="not_within_expected_range_inch">Not within the expected range of 0 to 1 inch</string>
-  <string name="next_round">Next round</string>
-  <string name="previous_round">Previous round</string>
+  <string name="next_round">Seri berikutnya</string>
+  <string name="previous_round">Seri sebelumnya</string>
   <string name="overview">Overview</string>
-  <string name="score">Score</string>
+  <string name="score">Nilai</string>
   <string name="show_reached_score">Show reached score</string>
-  <string name="show_total_score">Show total score</string>
-  <string name="show_percentage">Show percentage</string>
+  <string name="show_total_score">Tunjukkan nilai keseluruhan</string>
+  <string name="show_percentage">Tunjukkan persentase</string>
   <string name="show_arrow_average">Show arrow average</string>
+  <string name="backup_folder">Folder</string>
 </resources>

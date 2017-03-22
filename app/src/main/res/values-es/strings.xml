@@ -123,7 +123,7 @@
   <string name="donate_text">Los impuestos están incluidos. IVA y el 30% de tasas para Google. Como alternativa, puedes gustosamente, donar en mi cuenta de PayPal (dreier.florian@gmail.com.)</string>
   <!-- Timer -->
   <string name="timer">Cronómetro</string>
-  <string name="stop">Stop</string>
+  <string name="stop">STOP</string>
   <string name="touch_to_start">Pulsa para empezar</string>
   <string name="preparation">Preparación..</string>
   <string name="shooting">Disparando..</string>
@@ -324,4 +324,5 @@
   <string name="show_total_score">Mostrar puntuación total</string>
   <string name="show_percentage">Mostrar porcentajes</string>
   <string name="show_arrow_average">Mostrar media de flechas</string>
+  <string name="backup_folder">Folder</string>
 </resources>
