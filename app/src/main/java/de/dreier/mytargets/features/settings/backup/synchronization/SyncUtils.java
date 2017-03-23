@@ -32,7 +32,6 @@ import de.dreier.mytargets.features.settings.backup.EBackupInterval;
 public class SyncUtils {
     private static final long ONE_DAY = 86400;  // 1 day (in seconds)
 
-    private static final String TAG = "SyncUtils";
     public static final String CONTENT_AUTHORITY = BuildConfig.APPLICATION_ID + ".provider";
 
     /**
@@ -85,7 +84,6 @@ public class SyncUtils {
         // Disable sync backoff and ignore sync preferences. In other words...perform sync NOW!
         b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-        Log.d(TAG, "triggerBackup: ");
         ContentResolver.requestSync(
                 GenericAccountService.getAccount(),
                 CONTENT_AUTHORITY,
