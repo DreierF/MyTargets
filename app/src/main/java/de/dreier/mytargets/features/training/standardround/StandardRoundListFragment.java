@@ -203,6 +203,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
                 reloadData();
             } else if (resultCode == EditStandardRoundFragment.RESULT_STANDARD_ROUND_DELETED) {
                 currentSelection = StandardRound.get(32L);
+                saveItem();
                 reloadData();
             }
         }
