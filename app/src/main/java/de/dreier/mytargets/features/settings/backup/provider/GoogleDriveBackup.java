@@ -75,7 +75,8 @@ public class GoogleDriveBackup {
                         .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                             @Override
                             public void onConnected(@Nullable Bundle bundle) {
-                                listener.onConnected();
+                                Drive.DriveApi.requestSync(googleApiClient)
+                                        .setResultCallback(result -> listener.onConnected());
                             }
 
                             @Override
