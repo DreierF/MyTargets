@@ -139,7 +139,6 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         binding.backupNowButton.setOnClickListener(v -> SyncUtils.triggerBackup());
 
         binding.automaticBackupSwitch.setOnClickListener(v -> onAutomaticBackupChanged());
-        updateAutomaticBackupSwitch();
 
         binding.backupIntervalPreference.getRoot()
                 .setOnClickListener(view -> onBackupIntervalClicked());
@@ -176,6 +175,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     public void onResume() {
         super.onResume();
         applyBackupLocationWithCheck(SettingsManager.getBackupLocation());
+        updateAutomaticBackupSwitch();
 
         syncStatusObserver.onStatusChanged(0);
         syncObserverHandle = ContentResolver.addStatusChangeListener(
@@ -210,14 +210,12 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
 
     private void onAutomaticBackupChanged() {
         boolean autoBackupEnabled = binding.automaticBackupSwitch.isChecked();
-        SettingsManager.setBackupAutomaticallyEnabled(autoBackupEnabled);
         binding.backupIntervalLayout.setVisibility(autoBackupEnabled ? VISIBLE : GONE);
-        SyncUtils.setSyncAccountPeriodicSync(
-                autoBackupEnabled ? SettingsManager.getBackupInterval() : null);
+        SyncUtils.setSyncAutomaticallyEnabled(autoBackupEnabled);
     }
 
     private void updateAutomaticBackupSwitch() {
-        boolean autoBackupEnabled = SettingsManager.isBackupAutomaticallyEnabled();
+        boolean autoBackupEnabled = SyncUtils.isSyncAutomaticallyEnabled();
         binding.automaticBackupSwitch.setChecked(autoBackupEnabled);
     }
 
@@ -237,7 +235,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     }
 
     private void updateInterval() {
-        boolean autoBackupEnabled = SettingsManager.isBackupAutomaticallyEnabled();
+        boolean autoBackupEnabled = SyncUtils.isSyncAutomaticallyEnabled();
         binding.backupIntervalLayout.setVisibility(autoBackupEnabled ? VISIBLE : GONE);
         binding.backupIntervalPreference.summary
                 .setText(SettingsManager.getBackupInterval().toString());

@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import de.dreier.mytargets.BuildConfig;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.settings.backup.EBackupInterval;
 
 /**
@@ -52,16 +53,19 @@ public class SyncUtils {
         }
     }
 
-    public static void setSyncAccountPeriodicSync(EBackupInterval interval) {
+    public static boolean isSyncAutomaticallyEnabled() {
         Account account = GenericAccountService.getAccount();
-        boolean autoSyncEnabled = interval != null;
-        ContentResolver.setSyncAutomatically(account, CONTENT_AUTHORITY, autoSyncEnabled);
-        if (autoSyncEnabled) {
+        return ContentResolver.getSyncAutomatically(account, CONTENT_AUTHORITY);
+    }
+
+    public static void setSyncAutomaticallyEnabled(boolean enabled) {
+        Account account = GenericAccountService.getAccount();
+        ContentResolver.setSyncAutomatically(account, CONTENT_AUTHORITY, enabled);
+        if (enabled) {
             ContentResolver.addPeriodicSync(account, CONTENT_AUTHORITY,
-                    new Bundle(), interval.getDays() * ONE_DAY);
+                    new Bundle(), SettingsManager.getBackupInterval().getDays() * ONE_DAY);
         } else {
-            ContentResolver
-                    .removePeriodicSync(account, CONTENT_AUTHORITY, new Bundle());
+            ContentResolver.removePeriodicSync(account, CONTENT_AUTHORITY, new Bundle());
         }
     }
 
