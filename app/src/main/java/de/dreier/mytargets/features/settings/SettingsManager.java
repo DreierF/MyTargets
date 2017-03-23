@@ -93,7 +93,6 @@ public class SettingsManager {
     private static final String KEY_OVERVIEW_SHOW_TOTAL_SCORE = "overview_show_total_score";
     private static final String KEY_OVERVIEW_SHOW_PERCENTAGE = "overview_show_percentage";
     private static final String KEY_OVERVIEW_SHOW_ARROW_AVERAGE = "overview_show_arrow_average";
-    private static final String KEY_BACKUP_GOOGLE_DRIVE_FOLDER_ID = "backup_google_drive_folder_id";
 
     public static Long getStandardRound() {
         return (long) lastUsed.getInt(KEY_STANDARD_ROUND, 32);
@@ -551,17 +550,6 @@ public class SettingsManager {
                 .putBoolean(KEY_OVERVIEW_SHOW_TOTAL_SCORE, configuration.showTotalScore)
                 .putBoolean(KEY_OVERVIEW_SHOW_PERCENTAGE, configuration.showPercentage)
                 .putBoolean(KEY_OVERVIEW_SHOW_ARROW_AVERAGE, configuration.showAverage)
-                .apply();
-    }
-
-    public static String getBackupGoogleDriveFolderId() {
-        return preferences.getString(KEY_BACKUP_GOOGLE_DRIVE_FOLDER_ID, null);
-    }
-
-    public static void setBackupGoogleDriveFolderId(String driveId) {
-        preferences
-                .edit()
-                .putString(KEY_BACKUP_GOOGLE_DRIVE_FOLDER_ID, driveId)
                 .apply();
     }
 }

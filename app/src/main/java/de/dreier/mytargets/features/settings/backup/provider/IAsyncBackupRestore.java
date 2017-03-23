@@ -16,11 +16,9 @@
 package de.dreier.mytargets.features.settings.backup.provider;
 
 import android.app.Activity;
-import android.content.Intent;
 
 import java.util.List;
 
-import de.dreier.mytargets.base.fragments.FragmentBase;
 import de.dreier.mytargets.features.settings.backup.BackupEntry;
 
 public interface IAsyncBackupRestore {
@@ -33,8 +31,6 @@ public interface IAsyncBackupRestore {
     void deleteBackup(BackupEntry backup, BackupStatusListener listener);
 
     void stop();
-
-    String getBackupFolderString();
 
     interface ConnectionListener {
         void onConnected();
@@ -52,10 +48,5 @@ public interface IAsyncBackupRestore {
         void onFinished();
 
         void onError(String message);
-    }
-
-    interface IFolderSelectable {
-        void selectFolder(int requestCode);
-        void setSelectFolderResult(Intent result, FragmentBase.LoaderUICallback callback);
     }
 }

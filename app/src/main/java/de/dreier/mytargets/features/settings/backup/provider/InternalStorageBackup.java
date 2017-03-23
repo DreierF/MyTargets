@@ -46,10 +46,6 @@ public class InternalStorageBackup {
         }
     }
 
-    private static File getBackupFolder() {
-        return new File(Environment.getExternalStorageDirectory(), FOLDER_NAME);
-    }
-
     public static class AsyncRestore implements IAsyncBackupRestore {
 
         private Activity activity;
@@ -109,11 +105,6 @@ public class InternalStorageBackup {
         public void stop() {
             activity = null;
         }
-
-        @Override
-        public String getBackupFolderString() {
-            return getBackupFolder().getPath();
-        }
     }
 
     public static class Backup implements IBlockingBackup {
@@ -121,7 +112,8 @@ public class InternalStorageBackup {
         @Override
         public void performBackup(Context context) throws BackupException {
             try {
-                File backupDir = getBackupFolder();
+                File backupDir = new File(Environment.getExternalStorageDirectory(),
+                        FOLDER_NAME);
                 createDirectory(backupDir);
                 final File zipFile = new File(backupDir, getBackupName());
                 BackupUtils.zip(context, new FileOutputStream(zipFile));

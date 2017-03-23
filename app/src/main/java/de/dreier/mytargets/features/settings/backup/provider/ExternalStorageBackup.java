@@ -17,7 +17,6 @@ package de.dreier.mytargets.features.settings.backup.provider;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.io.File;
@@ -72,11 +71,6 @@ public class ExternalStorageBackup {
         return null;
     }
 
-    @NonNull
-    private static File getBackupFolder() {
-        return new File(getMicroSdCardPath(), FOLDER_NAME);
-    }
-
     public static class AsyncRestore implements IAsyncBackupRestore {
         private Activity activity;
 
@@ -88,7 +82,7 @@ public class ExternalStorageBackup {
 
         @Override
         public void getBackups(OnLoadFinishedListener listener) {
-            File backupDir = getBackupFolder();
+            File backupDir = new File(getMicroSdCardPath(), FOLDER_NAME);
             if (backupDir.isDirectory()) {
                 List<BackupEntry> backups = new ArrayList<>();
                 for (File file : backupDir.listFiles()) {
@@ -135,18 +129,13 @@ public class ExternalStorageBackup {
         public void stop() {
             activity = null;
         }
-
-        @Override
-        public String getBackupFolderString() {
-            return getBackupFolder().getPath();
-        }
     }
 
     public static class Backup implements IBlockingBackup {
         @Override
         public void performBackup(Context context) throws BackupException {
             try {
-                File backupDir = getBackupFolder();
+                File backupDir = new File(getMicroSdCardPath(), FOLDER_NAME);
                 createDirectory(backupDir);
                 final File zipFile = new File(backupDir, getBackupName());
                 BackupUtils.zip(context, new FileOutputStream(zipFile));

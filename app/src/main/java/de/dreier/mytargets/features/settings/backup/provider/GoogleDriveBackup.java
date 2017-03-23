@@ -17,7 +17,6 @@ package de.dreier.mytargets.features.settings.backup.provider;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,13 +32,11 @@ import com.google.android.gms.drive.DriveApi;
 import com.google.android.gms.drive.DriveApi.DriveContentsResult;
 import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
-import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveFolder.DriveFileResult;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataBuffer;
 import com.google.android.gms.drive.MetadataChangeSet;
-import com.google.android.gms.drive.OpenFileActivityBuilder;
 import com.google.android.gms.drive.query.Filters;
 import com.google.android.gms.drive.query.Query;
 import com.google.android.gms.drive.query.SearchableField;
@@ -51,27 +48,22 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-import de.dreier.mytargets.base.fragments.FragmentBase;
-import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.settings.backup.BackupEntry;
 import de.dreier.mytargets.features.settings.backup.BackupException;
 
 public class GoogleDriveBackup {
+    private static final String TAG = "GoogleDriveBackup";
+    private static final String MYTARGETS_MIME_TYPE = "application/zip";
 
-    private static final String FOLDER_NAME = "MyTargets";
-    public static final String MYTARGETS_MIME_TYPE = "application/zip";
-
-    public static class AsyncRestore implements IAsyncBackupRestore, IAsyncBackupRestore.IFolderSelectable {
+    public static class AsyncRestore implements IAsyncBackupRestore {
 
         /**
          * Request code for auto Google Play Services error resolution.
          */
         public static final int REQUEST_CODE_RESOLUTION = 1;
-        private static final String TAG = "GoogleDriveBackup";
+
         private GoogleApiClient googleApiClient;
         private Activity activity;
-        private DriveId parentFolder;
-        private String parentFolderString;
 
         @Override
         public void connect(Activity activity, ConnectionListener listener) {
@@ -79,11 +71,11 @@ public class GoogleDriveBackup {
             if (googleApiClient == null) {
                 googleApiClient = new GoogleApiClient.Builder(activity)
                         .addApi(Drive.API)
-                        .addScope(Drive.SCOPE_FILE)
+                        .addScope(Drive.SCOPE_APPFOLDER)
                         .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                             @Override
                             public void onConnected(@Nullable Bundle bundle) {
-                                ensureParentFolderExists(listener);
+                                listener.onConnected();
                             }
 
                             @Override
@@ -111,127 +103,15 @@ public class GoogleDriveBackup {
             googleApiClient.connect();
         }
 
-        private void ensureParentFolderExists(ConnectionListener listener) {
-            String encodedDriveId = SettingsManager.getBackupGoogleDriveFolderId();
-            if (encodedDriveId != null) {
-                parentFolder = DriveId.decodeFromString(encodedDriveId);
-                ensureParentFolderStringIsLoaded(listener);
-                return;
-            }
-            findOrCreateDefaultFolder(listener);
-        }
-
-        private void findOrCreateDefaultFolder(ConnectionListener listener) {
-            Drive.DriveApi.getRootFolder(googleApiClient)
-                    .listChildren(googleApiClient)
-                    .setResultCallback(metadataBufferResult -> {
-                        final DriveId folder = getMyTargetsFolder(
-                                metadataBufferResult.getMetadataBuffer());
-                        if (folder != null) {
-                            parentFolder = folder;
-                            SettingsManager.setBackupGoogleDriveFolderId(parentFolder.encodeToString());
-                            ensureParentFolderStringIsLoaded(listener);
-                        } else {
-                            MetadataChangeSet metadata = new MetadataChangeSet.Builder()
-                                    .setTitle(FOLDER_NAME)
-                                    .build();
-                            Drive.DriveApi.getRootFolder(googleApiClient)
-                                    .createFolder(googleApiClient, metadata)
-                                    .setResultCallback(driveFolderResult -> {
-                                        parentFolder = driveFolderResult.getDriveFolder().getDriveId();
-                                        SettingsManager.setBackupGoogleDriveFolderId(parentFolder.encodeToString());
-                                        ensureParentFolderStringIsLoaded(listener);
-                                    });
-                        }
-                    });
-        }
-
-        private DriveId getMyTargetsFolder(MetadataBuffer metadataBuffer) {
-            for (int i = 0; i < metadataBuffer.getCount(); i++) {
-                if (metadataBuffer.get(i).getTitle().equals(FOLDER_NAME)) {
-                    return metadataBuffer.get(i).getDriveId();
-                }
-            }
-            return null;
-        }
-
-        private void ensureParentFolderStringIsLoaded(ConnectionListener listener) {
-            parentFolder.asDriveFolder()
-                    .getMetadata(googleApiClient)
-                    .setResultCallback(metadataResult -> {
-                        final Metadata metadata = metadataResult.getMetadata();
-                        if(metadata!=null) {
-                            getPath(listener, parentFolder, "/" + metadata.getTitle());
-                        } else {
-                            parentFolderString = "/";
-                        }
-                    });
-        }
-
-        private void getPath(ConnectionListener listener, DriveId parentFolder, String path) {
-            parentFolder.asDriveResource().listParents(googleApiClient)
-                    .setResultCallback(
-                            metadataBufferResult -> {
-                                final MetadataBuffer metadataBuffer = metadataBufferResult
-                                        .getMetadataBuffer();
-                                if (metadataBuffer.getCount() < 1) {
-                                    parentFolderString = path;
-                                    listener.onConnected();
-                                } else {
-                                    final Metadata firstParent = metadataBuffer.get(0);
-                                    getPath(listener, firstParent.getDriveId(),
-                                            firstParent.getTitle() + "/" + path);
-                                }
-                            });
-        }
-
-        @Override
-        public void selectFolder(int requestCode) {
-            IntentSender intentSender = Drive.DriveApi
-                    .newOpenFileActivityBuilder()
-                    .setMimeType(new String[]{DriveFolder.MIME_TYPE})
-                    .build(googleApiClient);
-            try {
-                activity.startIntentSenderForResult(intentSender, requestCode, null, 0, 0, 0);
-            } catch (IntentSender.SendIntentException e) {
-                Log.w(TAG, "Unable to send intent", e);
-            }
-        }
-
-        @Override
-        public void setSelectFolderResult(Intent result, FragmentBase.LoaderUICallback callback) {
-            parentFolder = result.getParcelableExtra(OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
-            SettingsManager.setBackupGoogleDriveFolderId(parentFolder.encodeToString());
-            ensureParentFolderStringIsLoaded(new ConnectionListener() {
-                @Override
-                public void onConnected() {
-                    callback.applyData();
-                }
-
-                @Override
-                public void onConnectionSuspended() {
-
-                }
-            });
-        }
-
-        @Override
-        public String getBackupFolderString() {
-            return parentFolderString;
-        }
-
         @Override
         public void getBackups(OnLoadFinishedListener listener) {
-            Query.Builder builder = new Query.Builder()
+            Query query = new Query.Builder()
                     .addFilter(Filters.eq(SearchableField.MIME_TYPE, MYTARGETS_MIME_TYPE))
                     .addFilter(Filters.eq(SearchableField.TRASHED, false))
                     .setSortOrder(new SortOrder.Builder()
-                            .addSortDescending(SortableField.MODIFIED_DATE).build());
-            queryFiles(listener, builder.build());
-        }
-
-        private void queryFiles(final OnLoadFinishedListener listener, Query query) {
-            parentFolder.asDriveFolder().queryChildren(googleApiClient, query)
+                            .addSortDescending(SortableField.MODIFIED_DATE).build())
+                    .build();
+            Drive.DriveApi.getAppFolder(googleApiClient).queryChildren(googleApiClient, query)
                     .setResultCallback(new ResultCallback<DriveApi.MetadataBufferResult>() {
 
                         private ArrayList<BackupEntry> backupsArray = new ArrayList<>();
@@ -309,18 +189,12 @@ public class GoogleDriveBackup {
         public void performBackup(Context context) throws BackupException {
             GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
                     .addApi(Drive.API)
-                    .addScope(Drive.SCOPE_FILE)
+                    .addScope(Drive.SCOPE_APPFOLDER)
                     .build();
             ConnectionResult connectionResult = googleApiClient.blockingConnect();
             if (!connectionResult.isSuccess()) {
                 throw new BackupException(connectionResult.getErrorMessage());
             }
-
-            String encodedDriveId = SettingsManager.getBackupGoogleDriveFolderId();
-            if (encodedDriveId == null) {
-                return;
-            }
-            DriveId folder = DriveId.decodeFromString(encodedDriveId);
 
             DriveContentsResult result = Drive.DriveApi.newDriveContents(googleApiClient).await();
             if (!result.getStatus().isSuccess()) {
@@ -328,13 +202,13 @@ public class GoogleDriveBackup {
             }
 
             final DriveContents driveContents = result.getDriveContents();
-//            OutputStream outputStream = driveContents.getOutputStream();
-//
-//            try {
-//                BackupUtils.zip(context, outputStream);
-//            } catch (IOException e) {
-//                throw new BackupException(e.getLocalizedMessage(), e);
-//            }
+            OutputStream outputStream = driveContents.getOutputStream();
+
+            try {
+                BackupUtils.zip(context, outputStream);
+            } catch (IOException e) {
+                throw new BackupException(e.getLocalizedMessage(), e);
+            }
 
             MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
                     .setTitle(BackupUtils.getBackupName())
@@ -343,7 +217,7 @@ public class GoogleDriveBackup {
                     .build();
 
             // create a file in selected folder
-            DriveFileResult result1 = folder.asDriveFolder()
+            DriveFileResult result1 = Drive.DriveApi.getAppFolder(googleApiClient)
                     .createFile(googleApiClient, changeSet, driveContents).await();
             if (!result1.getStatus().isSuccess()) {
                 throw new BackupException(result1.getStatus().getStatusMessage());
