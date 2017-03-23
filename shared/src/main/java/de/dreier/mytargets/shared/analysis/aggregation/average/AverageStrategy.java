@@ -19,6 +19,8 @@ import android.support.annotation.Nullable;
 
 import java.util.List;
 
+import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer;
+import de.dreier.mytargets.shared.analysis.aggregation.NOPResultRenderer;
 import de.dreier.mytargets.shared.analysis.aggregation.cluster.AggregationStrategyBase;
 import de.dreier.mytargets.shared.models.db.Shot;
 
@@ -26,9 +28,9 @@ public class AverageStrategy extends AggregationStrategyBase {
 
     @Nullable
     @Override
-    protected AverageResultRenderer compute(List<Shot> shots) {
+    protected IAggregationResultRenderer compute(List<Shot> shots) {
         if (shots.size() == 0) {
-            return null;
+            return new NOPResultRenderer();
         }
         Average average = new Average();
         average.computeAll(shots);

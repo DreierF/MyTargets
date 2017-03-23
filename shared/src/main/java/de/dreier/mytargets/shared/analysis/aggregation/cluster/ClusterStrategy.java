@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer;
 import de.dreier.mytargets.shared.models.db.Shot;
 
 public class ClusterStrategy extends AggregationStrategyBase {
@@ -44,7 +45,7 @@ public class ClusterStrategy extends AggregationStrategyBase {
     }
 
     @Override
-    protected ClusterResultRenderer compute(List<Shot> shots) {
+    protected IAggregationResultRenderer compute(List<Shot> shots) {
         // DBSCAN
         clusters.clear();
         final Map<Shot, PointStatus> visited = new HashMap<>();

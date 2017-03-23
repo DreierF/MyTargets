@@ -31,6 +31,7 @@ import de.dreier.mytargets.shared.models.db.Shot;
 
 public abstract class AggregationStrategyBase implements IAggregationStrategy {
     protected final ArrayList<Shot> data;
+    @NonNull
     protected IAggregationResultRenderer result = new NOPResultRenderer();
     protected boolean isDirty;
     private OnAggregationResult resultListener;
