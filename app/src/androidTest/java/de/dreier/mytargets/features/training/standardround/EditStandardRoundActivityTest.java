@@ -55,6 +55,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
 
+@Ignore
 @RunWith(AndroidJUnit4.class)
 public class EditStandardRoundActivityTest extends UITestBase {
 
