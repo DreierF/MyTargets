@@ -49,8 +49,9 @@ public class WAFull extends TargetModelBase {
                 new CircularZone(0.9f, WHITE, DARK_GRAY, 2),
                 new CircularZone(1.0f, WHITE, DARK_GRAY, 2)
         };
-        scoringStyles = new ScoringStyle[]{
-                new ScoringStyle(R.string.recurve_style, true, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1),
+        scoringStyles = new ScoringStyle[] {
+                new ScoringStyle(R.string.recurve_style_x_1, true, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1),
+                new ScoringStyle(R.string.recurve_style_10_1, false, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1),
                 new ScoringStyle(R.string.compound_style, false, 10, 9, 9, 8, 7, 6, 5, 4, 3, 2, 1),
                 new ScoringStyle(false, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1),
                 new ScoringStyle(true, 5, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1),
@@ -65,5 +66,12 @@ public class WAFull extends TargetModelBase {
                 new Dimension(122, CENTIMETER)
         };
         decorator = new CenterMarkDecorator(DARK_GRAY, 5f, 4, false);
+    }
+
+    @Override
+    public boolean shouldDrawZone(int zone, int scoringStyle) {
+        // Do not draw second ring if we have a compound face
+        return !(scoringStyle == 1 && zone == 0) &&
+                !(scoringStyle == 2 && zone == 1);
     }
 }

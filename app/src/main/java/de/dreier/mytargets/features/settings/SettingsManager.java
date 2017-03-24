@@ -86,7 +86,6 @@ public class SettingsManager {
             .getSharedPreferences();
     private static final String KEY_BACKUP_LOCATION = "backup_location";
     private static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
-    private static final String KEY_BACKUP_AUTOMATICALLY = "backup_automatically";
     private static final String KEY_STANDARD_ROUNDS_LAST_USED = "standard_round_last_used";
     private static final String KEY_INTRO_SHOWED = "intro_showed";
     private static final String KEY_OVERVIEW_SHOW_REACHED_SCORE = "overview_show_reached_score";
@@ -212,8 +211,7 @@ public class SettingsManager {
     }
 
     public static boolean isTranslationDialogShown() {
-        SharedPreferences prefs = preferences;
-        return prefs.getBoolean(KEY_TRANSLATION_DIALOG_SHOWN, false);
+        return preferences.getBoolean(KEY_TRANSLATION_DIALOG_SHOWN, false);
     }
 
     public static void setTranslationDialogShown(boolean shown) {
@@ -469,22 +467,13 @@ public class SettingsManager {
     }
 
     public static EBackupInterval getBackupInterval() {
-        return EBackupInterval.valueOf(preferences.getString(KEY_BACKUP_INTERVAL, "WEEKLY"));
+        return EBackupInterval.valueOf(preferences.getString(KEY_BACKUP_INTERVAL,
+                EBackupInterval.WEEKLY.name()));
     }
 
     public static void setBackupInterval(EBackupInterval interval) {
         preferences.edit()
                 .putString(KEY_BACKUP_INTERVAL, interval.name())
-                .apply();
-    }
-
-    public static boolean isBackupAutomaticallyEnabled() {
-        return preferences.getBoolean(KEY_BACKUP_AUTOMATICALLY, false);
-    }
-
-    public static void setBackupAutomaticallyEnabled(boolean enabled) {
-        preferences.edit()
-                .putBoolean(KEY_BACKUP_AUTOMATICALLY, enabled)
                 .apply();
     }
 

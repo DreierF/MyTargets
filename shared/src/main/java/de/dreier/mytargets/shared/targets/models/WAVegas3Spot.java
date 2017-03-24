@@ -35,10 +35,4 @@ public class WAVegas3Spot extends WA5Ring {
         diameters = new Dimension[]{new Dimension(40, CENTIMETER),
                 new Dimension(60, CENTIMETER)};
     }
-
-    @Override
-    public boolean shouldDrawZone(int zone, int scoringStyle) {
-        // Do not draw second ring if we have a 3 Spot for compound
-        return !(scoringStyle == 1 && zone == 1);
-    }
 }

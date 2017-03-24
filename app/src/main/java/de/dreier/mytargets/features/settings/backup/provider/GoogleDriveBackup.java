@@ -52,9 +52,10 @@ import de.dreier.mytargets.features.settings.backup.BackupEntry;
 import de.dreier.mytargets.features.settings.backup.BackupException;
 
 public class GoogleDriveBackup {
-    public static class AsyncRestore implements IAsyncBackupRestore {
+    private static final String TAG = "GoogleDriveBackup";
+    private static final String MYTARGETS_MIME_TYPE = "application/zip";
 
-        private static final String TAG = "GoogleDriveBackup";
+    public static class AsyncRestore implements IAsyncBackupRestore {
 
         /**
          * Request code for auto Google Play Services error resolution.
@@ -74,7 +75,8 @@ public class GoogleDriveBackup {
                         .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                             @Override
                             public void onConnected(@Nullable Bundle bundle) {
-                                listener.onConnected();
+                                Drive.DriveApi.requestSync(googleApiClient)
+                                        .setResultCallback(result -> listener.onConnected());
                             }
 
                             @Override
@@ -105,7 +107,7 @@ public class GoogleDriveBackup {
         @Override
         public void getBackups(OnLoadFinishedListener listener) {
             Query query = new Query.Builder()
-                    .addFilter(Filters.eq(SearchableField.MIME_TYPE, "mytargets/zip"))
+                    .addFilter(Filters.eq(SearchableField.MIME_TYPE, MYTARGETS_MIME_TYPE))
                     .addFilter(Filters.eq(SearchableField.TRASHED, false))
                     .setSortOrder(new SortOrder.Builder()
                             .addSortDescending(SortableField.MODIFIED_DATE).build())
@@ -211,7 +213,8 @@ public class GoogleDriveBackup {
 
             MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
                     .setTitle(BackupUtils.getBackupName())
-                    .setMimeType("mytargets/zip")
+                    .setMimeType(MYTARGETS_MIME_TYPE)
+                    .setStarred(true)
                     .build();
 
             // create a file in selected folder

@@ -67,7 +67,6 @@ public class SettingsActivityTest extends UITestBase {
         SettingsManager.setInputTargetZoom(3.0f);
         SettingsManager.setInputArrowDiameterScale(1.0f);
         SettingsManager.setBackupLocation(EBackupLocation.INTERNAL_STORAGE);
-        SettingsManager.setBackupAutomaticallyEnabled(false);
     }
 
     @Test

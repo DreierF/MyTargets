@@ -31,6 +31,7 @@ android {
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
 }
+
 dependencies {
     compile "com.android.support:support-v4:$libraryVersion.support"
     compile "com.android.support:support-core-ui:$libraryVersion.support"

@@ -17,6 +17,7 @@ package de.dreier.mytargets.shared.analysis.aggregation.cluster;
 
 import android.os.AsyncTask;
 import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
@@ -25,14 +26,16 @@ import java.util.List;
 
 import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer;
 import de.dreier.mytargets.shared.analysis.aggregation.IAggregationStrategy;
+import de.dreier.mytargets.shared.analysis.aggregation.NOPResultRenderer;
 import de.dreier.mytargets.shared.models.db.Shot;
 
-public abstract class AggregationStrategyBase<R extends IAggregationResultRenderer> implements IAggregationStrategy<R> {
+public abstract class AggregationStrategyBase implements IAggregationStrategy {
     protected final ArrayList<Shot> data;
-    protected R result;
+    @NonNull
+    protected IAggregationResultRenderer result = new NOPResultRenderer();
     protected boolean isDirty;
     private OnAggregationResult resultListener;
-    private AsyncTask<List<Shot>, Integer, R> computeTask;
+    private AsyncTask<List<Shot>, Integer, IAggregationResultRenderer> computeTask;
     private int color;
 
     public AggregationStrategyBase() {
@@ -42,15 +45,16 @@ public abstract class AggregationStrategyBase<R extends IAggregationResultRender
     @CallSuper
     protected void reset() {
         data.clear();
-        result = null;
+        result = new NOPResultRenderer();
         if (computeTask != null) {
             computeTask.cancel(true);
         }
         isDirty = true;
     }
 
+    @NonNull
     @Override
-    public R getResult() {
+    public IAggregationResultRenderer getResult() {
         return result;
     }
 
@@ -67,7 +71,7 @@ public abstract class AggregationStrategyBase<R extends IAggregationResultRender
 
     @WorkerThread
     @Nullable
-    protected abstract R compute(List<Shot> shots);
+    protected abstract IAggregationResultRenderer compute(List<Shot> shots);
 
     @Override
     public void cleanup() {
@@ -86,13 +90,13 @@ public abstract class AggregationStrategyBase<R extends IAggregationResultRender
         return computeTask.isCancelled();
     }
 
-    private class ComputeTask extends AsyncTask<List<Shot>, Integer, R> {
+    private class ComputeTask extends AsyncTask<List<Shot>, Integer, IAggregationResultRenderer> {
 
-        protected R doInBackground(final List<Shot>... array) {
+        protected IAggregationResultRenderer doInBackground(final List<Shot>... array) {
             return compute(array[0]);
         }
 
-        protected void onPostExecute(final R clusterResultRenderer) {
+        protected void onPostExecute(final IAggregationResultRenderer clusterResultRenderer) {
             super.onPostExecute(clusterResultRenderer);
             if (clusterResultRenderer != null) {
                 clusterResultRenderer.setColor(color);

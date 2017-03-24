@@ -338,4 +338,5 @@
   <string name="show_total_score">Show total score</string>
   <string name="show_percentage">Show percentage</string>
   <string name="show_arrow_average">Show arrow average</string>
+  <string name="backup_folder">Folder</string>
 </resources>

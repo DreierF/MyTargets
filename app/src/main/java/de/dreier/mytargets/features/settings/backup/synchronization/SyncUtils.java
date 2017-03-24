@@ -20,10 +20,9 @@ import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
 import de.dreier.mytargets.BuildConfig;
-import de.dreier.mytargets.features.settings.backup.EBackupInterval;
+import de.dreier.mytargets.features.settings.SettingsManager;
 
 /**
  * Static helper methods for working with the sync framework.
@@ -31,7 +30,6 @@ import de.dreier.mytargets.features.settings.backup.EBackupInterval;
 public class SyncUtils {
     private static final long ONE_DAY = 86400;  // 1 day (in seconds)
 
-    private static final String TAG = "SyncUtils";
     public static final String CONTENT_AUTHORITY = BuildConfig.APPLICATION_ID + ".provider";
 
     /**
@@ -52,14 +50,19 @@ public class SyncUtils {
         }
     }
 
-    public static void setSyncAccountPeriodicSync(EBackupInterval interval) {
+    public static boolean isSyncAutomaticallyEnabled() {
         Account account = GenericAccountService.getAccount();
-        if (interval == null) {
-            ContentResolver
-                    .removePeriodicSync(account, CONTENT_AUTHORITY, new Bundle());
-        } else {
+        return ContentResolver.getSyncAutomatically(account, CONTENT_AUTHORITY);
+    }
+
+    public static void setSyncAutomaticallyEnabled(boolean enabled) {
+        Account account = GenericAccountService.getAccount();
+        ContentResolver.setSyncAutomatically(account, CONTENT_AUTHORITY, enabled);
+        if (enabled) {
             ContentResolver.addPeriodicSync(account, CONTENT_AUTHORITY,
-                    new Bundle(), interval.getDays() * ONE_DAY);
+                    new Bundle(), SettingsManager.getBackupInterval().getDays() * ONE_DAY);
+        } else {
+            ContentResolver.removePeriodicSync(account, CONTENT_AUTHORITY, new Bundle());
         }
     }
 
@@ -79,7 +82,6 @@ public class SyncUtils {
         // Disable sync backoff and ignore sync preferences. In other words...perform sync NOW!
         b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-        Log.d(TAG, "triggerBackup: ");
         ContentResolver.requestSync(
                 GenericAccountService.getAccount(),
                 CONTENT_AUTHORITY,

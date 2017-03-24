@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 Florian Dreier
   ~
   ~ This file is part of MyTargets.
@@ -27,6 +26,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -44,7 +44,7 @@
         android:restoreAnyVersion="false"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="UnusedAttribute">
+        tools:replace="android:name">
         <meta-data
             android:name="com.google.android.backup.api_key"
             android:value="AEdPqrEAAAAIy_jZMyyGuh5M-ICvUll4H1WyF1R9M8cUcN5wVw" />

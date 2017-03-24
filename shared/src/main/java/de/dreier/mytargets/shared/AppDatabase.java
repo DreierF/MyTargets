@@ -46,10 +46,19 @@ public class AppDatabase {
     public static final String DATABASE_FILE_NAME = "database.db";
     public static final String DATABASE_IMPORT_FILE_NAME = "database";
 
-    public static final int VERSION = 19;
+    public static final int VERSION = 20;
 
     @Migration(version = 0, database = AppDatabase.class)
     public static class Migration0 extends BaseMigration {
+
+        @Override
+        public void migrate(DatabaseWrapper database) {
+            fillStandardRound(database);
+        }
+    }
+
+    @Migration(version = 20, database = AppDatabase.class)
+    public static class Migration20 extends BaseMigration {
 
         @Override
         public void migrate(DatabaseWrapper database) {

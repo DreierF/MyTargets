@@ -15,27 +15,23 @@
 
 package de.dreier.mytargets.shared.analysis.aggregation;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.UiThread;
+import android.support.annotation.ColorInt;
 
-import java.util.List;
+import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
 
-import de.dreier.mytargets.shared.models.db.Shot;
+public class NOPResultRenderer implements IAggregationResultRenderer {
+    @Override
+    public void onPrepareDraw() {
 
-public interface IAggregationStrategy {
-    void setOnAggregationResultListener(final OnAggregationResult onAggregationResult);
+    }
 
-    void calculate(List<Shot> shots);
+    @Override
+    public void onDraw(CanvasWrapper canvas) {
 
-    @NonNull
-    IAggregationResultRenderer getResult();
+    }
 
-    void cleanup();
+    @Override
+    public void setColor(@ColorInt int color) {
 
-    void setColor(int color);
-
-    interface OnAggregationResult {
-        @UiThread
-        void onResult();
     }
 }

@@ -129,7 +129,7 @@
   <string name="donate_text">The amounts are incl. VAT and 30% fees for Google. Alternatively you may gladly donate on the PayPal account dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Таймер</string>
-  <string name="stop">Зупинити</string>
+  <string name="stop">STOP</string>
   <string name="touch_to_start">Touch to start</string>
   <string name="preparation">Приготуйся</string>
   <string name="shooting">Стрільба</string>
@@ -338,4 +338,5 @@
   <string name="show_total_score">Show total score</string>
   <string name="show_percentage">Show percentage</string>
   <string name="show_arrow_average">Show arrow average</string>
+  <string name="backup_folder">Folder</string>
 </resources>

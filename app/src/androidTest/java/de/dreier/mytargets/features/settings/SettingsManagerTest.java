@@ -256,12 +256,6 @@ public class SettingsManagerTest extends InstrumentedTestBase {
     }
 
     @Test
-    public void setBackupAutomaticallyEnabled() {
-        SettingsManager.setBackupAutomaticallyEnabled(true);
-        assertThat(SettingsManager.isBackupAutomaticallyEnabled()).isEqualTo(true);
-    }
-
-    @Test
     public void setStandardRoundsLastUsedEmpty() {
         SettingsManager.setStandardRoundsLastUsed(Collections.emptyMap());
         assertThat(SettingsManager.getStandardRoundsLastUsed()).isEqualTo(Collections.emptyMap());

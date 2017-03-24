@@ -13,8 +13,6 @@
  * GNU General Public License for more details.
  */
 
-import com.android.build.gradle.internal.tasks.databinding.DataBindingExportBuildInfoTask
-
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.triplet.play'
@@ -55,7 +53,7 @@ android {
                 keyAlias 'mytargets'
                 keyPassword project.hasProperty('KEY_PASSWORD') ? KEY_PASSWORD : System.getenv('KEY_PASSWORD')
             } catch (ignored) {
-                throw new InvalidUserDataException('You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.')
+                throw new Exception('You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.')
             }
         }
     }
@@ -81,30 +79,10 @@ android {
     }
 }
 
-/*
- * Workaround for https://code.google.com/p/android/issues/detail?id=182715
- *
- * The Android Gradle plugin is creating DataBindingExportBuildInfoTasks for the instrumentation
- * APK that generates from the app APKs layouts. This creates duplicate classes in the app and
- * instrumentation APK which leads to
- *      java.lang.IllegalAccessError: Class ref in pre-verified class resolved to unexpected implementation
- * on older devices.
- *
- * The workaround is to get the DataBindingExportBuildInfoTasks tasks for the instrumentation APK
- * and delete the files right after it creates them.
- */
-tasks.withType(DataBindingExportBuildInfoTask) { task ->
-    if (task.name.endsWith('AndroidTest')) {
-        task.finalizedBy(tasks.create("${task.name}Workaround") << {
-            task.output.deleteDir()
-        })
-    }
-}
-
 def CROWDIN_API_KEY = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
 if (CROWDIN_API_KEY != null && !CROWDIN_API_KEY.isEmpty()) {
     tasks.whenTaskAdded { task ->
-        if (task.name.equals("generateRegularReleasePlayResources")) {
+        if (task.name == "generateRegularReleasePlayResources") {
             task.dependsOn ':crowdinDownload'
         }
     }
@@ -116,6 +94,7 @@ if (CROWDIN_API_KEY != null && !CROWDIN_API_KEY.isEmpty()) {
 
     if (new File('googlePlayAndroidDeveloper.json').exists()) {
         play {
+            track = 'beta'
             jsonFile = file('../googlePlayAndroidDeveloper.json')
         }
     }
@@ -126,12 +105,14 @@ dependencies {
     compile "com.android.support:support-core-utils:$libraryVersion.support"
     compile "com.android.support:support-core-ui:$libraryVersion.support"
     compile "com.android.support:support-fragment:$libraryVersion.support"
+    compile "com.android.support:support-v13:$libraryVersion.support"
     compile "com.android.support:appcompat-v7:$libraryVersion.support"
     compile "com.android.support:design:$libraryVersion.support"
     compile "com.android.support:support-annotations:$libraryVersion.support"
     compile "com.android.support:preference-v7:$libraryVersion.support"
     compile "com.android.support:preference-v14:$libraryVersion.support"
     compile "com.android.support:recyclerview-v7:$libraryVersion.support"
+    compile "com.android.support:cardview-v7:$libraryVersion.support"
     compile "com.android.support:preference-v14:$libraryVersion.support"
 
     compile "com.google.android.gms:play-services-wearable:$libraryVersion.playService"

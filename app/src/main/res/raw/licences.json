@@ -2,7 +2,7 @@
   "licenses": [
     {
       "name": "Google Gson",
-      "version": "2.6.2",
+      "version": "2.8.0",
       "year": "2008",
       "owner": "Google Inc.",
       "description": "A Java serialization/deserialization library that can convert Java Objects into JSON and back.",
@@ -11,7 +11,7 @@
     },
     {
       "name": "Joda-Time",
-      "version": "2.9.4",
+      "version": "2.9.9",
       "year": "2016",
       "owner": "Stephen Colebourne",
       "description": "Joda-Time is the widely used replacement for the Java date and time classes prior to Java SE 8.",
@@ -20,7 +20,7 @@
     },
     {
       "name": "OkHttp",
-      "version": "3.2.0",
+      "version": "3.6.0",
       "year": "2016",
       "owner": "Square, Inc.",
       "description": "An HTTP & HTTP/2 client for Android and Java applications.",
@@ -29,7 +29,7 @@
     },
     {
       "name": "Retrofit",
-      "version": "2.0.2",
+      "version": "2.2.0",
       "year": "2013",
       "owner": "Square, Inc.",
       "description": "Type-safe HTTP client for Android and Java by Square, Inc.",
@@ -65,7 +65,7 @@
     },
     {
       "name": "PermissionsDispatcher",
-      "version": "2.1.2",
+      "version": "2.3.2",
       "year": "2016",
       "owner": "Shintaro Katafuchi, Marcel Schnelle, Yoshinori Isogai",
       "description": "Provides simple annotation-based API to handle runtime permissions.",
@@ -74,7 +74,7 @@
     },
     {
       "name": "MPAndroidChart",
-      "version": "3.0.0 beta1",
+      "version": "3.0.2",
       "year": "2016",
       "owner": "Philipp Jahoda",
       "description": "A powerful Android chart view / graph view library, supporting line- bar- pie- radar- bubble- and candlestick charts as well as scaling, dragging and animations.",
@@ -92,7 +92,7 @@
     },
     {
       "name": "EasyImage",
-      "version": "1.3.0",
+      "version": "1.4.2",
       "year": "2015",
       "owner": "Jacek Kwiecień",
       "description": "Library for picking pictures from gallery or camera.",
@@ -101,7 +101,7 @@
     },
     {
       "name": "Material Dialogs",
-      "version": "0.9.0.2",
+      "version": "0.9.4.2",
       "year": "2014-2016",
       "owner": "Aidan Michael Follestad",
       "description": "A beautiful, easy-to-use, and customizable dialogs API, enabling you to use Material designed dialogs down to API 8.",
@@ -110,7 +110,7 @@
     },
     {
       "name": "Android About Page",
-      "version": "1.1.1",
+      "version": "1.2",
       "year": "2016",
       "owner": "Mehdi Sakout",
       "description": "Create an awesome About Page for your Android App in 2 minutes.",
@@ -134,6 +134,33 @@
       "description": "A Tap Target implementation in Android based on Material Design Onboarding guidelines.",
       "url": "https://github.com/sjwall/MaterialTapTargetPrompt",
       "license": "apache2"
+    },
+    {
+      "name": "DBFlow",
+      "version": "3.1.1",
+      "year": "2014",
+      "owner": "Andrew Grosner",
+      "description": "A blazing fast, powerful, and very simple ORM android database library that writes database code for you.",
+      "url": "https://github.com/Raizlabs/DBFlow",
+      "license": "mit"
+    },
+    {
+      "name": "Lightweight-Stream-API",
+      "version": "1.1.6",
+      "year": "2017",
+      "owner": "Victor Melnik",
+      "description": "Stream API from Java 8 rewritten on iterators for Java 7 and below.",
+      "url": "https://github.com/aNNiMON/Lightweight-Stream-API",
+      "license": "apache2"
+    },
+    {
+      "name": "Lightweight-Stream-API",
+      "version": "0.0.5",
+      "year": "2016",
+      "owner": "Tango Agency",
+      "description": "Inspired by Heinrich Reimer Material Intro and developed with love from scratch.",
+      "url": "https://github.com/TangoAgency/material-intro-screen",
+      "license": "mit"
     }
   ]
 }

@@ -124,7 +124,7 @@ public class TargetDrawable extends Drawable {
         canvas.setMatrix(getTargetFaceMatrix(faceIndex));
     }
 
-    protected Matrix getTargetFaceMatrix(int faceIndex) {
+    private Matrix getTargetFaceMatrix(int faceIndex) {
         Matrix m = drawMatrices.get(faceIndex);
         m.set(getPreCalculatedFaceMatrix(faceIndex));
         m.postConcat(spotMatrix);

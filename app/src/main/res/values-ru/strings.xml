@@ -129,7 +129,7 @@
   <string name="donate_text">Сумма включает НДС и 30% платежи для Google. Вместо этого можете воспользоваться PayPal. Мой аккаунт dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Таймер</string>
-  <string name="stop">СТОП</string>
+  <string name="stop">STOP</string>
   <string name="touch_to_start">Коснитесь экрана для старта</string>
   <string name="preparation">Приготовились</string>
   <string name="shooting">Стрельба</string>
@@ -338,4 +338,5 @@
   <string name="show_total_score">Показать общий результат</string>
   <string name="show_percentage">Показать в процентах</string>
   <string name="show_arrow_average">Показать среднее значение за выстрел</string>
+  <string name="backup_folder">Folder</string>
 </resources>

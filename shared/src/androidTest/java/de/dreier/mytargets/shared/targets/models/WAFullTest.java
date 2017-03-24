@@ -40,6 +40,7 @@ public class WAFullTest {
     public void testScoringStyle() {
         Assert.assertEquals(10, target.getScoringStyle(0).getScoreByScoringRing(0, 0));
         Assert.assertEquals(10, target.getScoringStyle(0).getScoreByScoringRing(1, 0));
-        Assert.assertEquals(9, target.getScoringStyle(1).getScoreByScoringRing(1, 0));
+        Assert.assertEquals(10, target.getScoringStyle(1).getScoreByScoringRing(1, 0));
+        Assert.assertEquals(9, target.getScoringStyle(2).getScoreByScoringRing(1, 0));
     }
 }

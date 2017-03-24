@@ -27,16 +27,6 @@ import org.junit.runner.Description;
 import java.util.Locale;
 
 public class InstrumentedTestBase {
-
-    @Rule
-    public TestName testName = new TestName() {
-        @Override
-        protected void starting(Description d) {
-            super.starting(d);
-            Log.d("TestName", d.getDisplayName());
-        }
-    };
-
     protected void setLocale(Locale locale) {
         // here we update locale for date formatter
         Locale.setDefault(locale);

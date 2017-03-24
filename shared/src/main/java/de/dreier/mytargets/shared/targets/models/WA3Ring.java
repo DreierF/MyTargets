@@ -44,7 +44,8 @@ public class WA3Ring extends TargetModelBase {
                 new CircularZone(1.0f, FLAMINGO_RED, DARK_GRAY, 4)
         };
         scoringStyles = new ScoringStyle[]{
-                new ScoringStyle(R.string.recurve_style, true, 10, 10, 9, 8),
+                new ScoringStyle(R.string.recurve_style_x_8, true, 10, 10, 9, 8),
+                new ScoringStyle(R.string.recurve_style_10_8, false, 10, 10, 9, 8),
                 new ScoringStyle(R.string.compound_style, false, 10, 9, 9, 8),
                 new ScoringStyle(false, 11, 10, 9, 8),
                 new ScoringStyle(true, 5, 5, 5, 4),
@@ -60,4 +61,10 @@ public class WA3Ring extends TargetModelBase {
         decorator = new CenterMarkDecorator(DARK_GRAY, 16.667f, 4, false);
     }
 
+    @Override
+    public boolean shouldDrawZone(int zone, int scoringStyle) {
+        // Do not draw second ring if we have a compound face
+        return !(scoringStyle == 1 && zone == 0) &&
+                !(scoringStyle == 2 && zone == 1);
+    }
 }

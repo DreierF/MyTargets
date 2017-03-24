@@ -36,9 +36,14 @@ public class WAVertical3SpotTest {
 
     @Test
     public void testShouldDrawZone() throws Exception {
+        Assert.assertEquals(true, target.shouldDrawZone(0, 0));
         Assert.assertEquals(true, target.shouldDrawZone(1, 0));
-        Assert.assertEquals(true, target.shouldDrawZone(0, 1));
-        Assert.assertEquals(false, target.shouldDrawZone(1, 1));
+        Assert.assertEquals(true, target.shouldDrawZone(2, 0));
+        Assert.assertEquals(false, target.shouldDrawZone(0, 1));
+        Assert.assertEquals(true, target.shouldDrawZone(1, 1));
         Assert.assertEquals(true, target.shouldDrawZone(2, 1));
+        Assert.assertEquals(true, target.shouldDrawZone(0, 2));
+        Assert.assertEquals(false, target.shouldDrawZone(1, 2));
+        Assert.assertEquals(true, target.shouldDrawZone(2, 2));
     }
 }
