@@ -20,11 +20,9 @@ import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
 import de.dreier.mytargets.BuildConfig;
 import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.features.settings.backup.EBackupInterval;
 
 /**
  * Static helper methods for working with the sync framework.
