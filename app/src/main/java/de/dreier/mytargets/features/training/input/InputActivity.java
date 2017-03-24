@@ -35,10 +35,12 @@ import org.joda.time.DateTime;
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.activities.ChildActivityBase;
+import de.dreier.mytargets.base.gallery.GalleryActivity;
 import de.dreier.mytargets.databinding.ActivityInputBinding;
 import de.dreier.mytargets.features.rounds.EditRoundFragment;
 import de.dreier.mytargets.features.settings.SettingsManager;
@@ -272,6 +274,11 @@ public class InputActivity extends ChildActivityBase
                 return true;
             case R.id.action_new_round:
                 EditRoundFragment.createIntent(data.training)
+                        .withContext(this)
+                        .start();
+                return true;
+            case R.id.action_photo:
+                GalleryActivity.getIntent(data.getCurrentEnd())
                         .withContext(this)
                         .start();
                 return true;

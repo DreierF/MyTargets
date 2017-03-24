@@ -181,6 +181,9 @@
                 android:value=".features.main.MainActivity" />
         </activity>
         <activity
+            android:name=".base.gallery.GalleryActivity"
+            android:theme="@style/AppTheme.CustomToolbar" />
+        <activity
             android:name=".features.scoreboard.ScoreboardActivity"
             android:label="@string/scoreboard" />
         <activity
