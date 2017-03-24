@@ -55,7 +55,6 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
 
-@Ignore
 @RunWith(AndroidJUnit4.class)
 public class EditStandardRoundActivityTest extends UITestBase {
 
@@ -121,5 +120,7 @@ public class EditStandardRoundActivityTest extends UITestBase {
         onView(withId(R.id.standardRound))
                 .check(matches(hasDescendant(withText(
                         allOf(startsWith("20m: 10 × 3"), containsString("15m: 5 × 6"))))));
+
+        activityTestRule.getActivity().finish();
     }
 }
