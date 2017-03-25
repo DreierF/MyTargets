@@ -182,12 +182,14 @@ public class InputActivity extends ChildActivityBase
         final MenuItem grouping = menu.findItem(R.id.action_grouping);
         final MenuItem timer = menu.findItem(R.id.action_timer);
         final MenuItem newRound = menu.findItem(R.id.action_new_round);
+        final MenuItem takePicture = menu.findItem(R.id.action_take_picture);
         if (targetView == null || data.getEnds().size() == 0) {
             eye.setVisible(false);
             keyboard.setVisible(false);
             grouping.setVisible(false);
             timer.setVisible(false);
             newRound.setVisible(false);
+            takePicture.setVisible(false);
         } else {
             final boolean plotting = targetView.getInputMode() == EInputMethod.PLOTTING;
             eye.setVisible(plotting);
@@ -203,6 +205,7 @@ public class InputActivity extends ChildActivityBase
             timer.setVisible(true);
             timer.setChecked(SettingsManager.getTimerEnabled());
             newRound.setVisible(data.training.standardRoundId == null);
+            takePicture.setVisible(true);
         }
 
         switch (SettingsManager.getShowMode()) {
