@@ -19,6 +19,8 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,8 +59,9 @@ public class TimerFragment extends TimerFragmentBase {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ToolbarUtils.setSupportActionBar(this, binding.toolbar);
-        ToolbarUtils.showHomeAsUp(this);
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(binding.toolbar);
+        ToolbarUtils.showHomeAsUp(activity);
     }
 
     @Override
@@ -73,7 +76,7 @@ public class TimerFragment extends TimerFragmentBase {
         if (Utils.isLollipop()) {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getContext().getResources().getColor(status.color));
+            window.setStatusBarColor(getActivity().getResources().getColor(status.color));
         }
         binding.timerStatus.setText(getStatusText(status));
 

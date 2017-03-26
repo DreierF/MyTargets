@@ -73,7 +73,6 @@ import de.dreier.mytargets.utils.backup.MyBackupAgent;
         @ParcelClass(Shot.class),
         @ParcelClass(SightMark.class),
         @ParcelClass(StandardRound.class),
-        @ParcelClass(NotificationInfo.class),
         @ParcelClass(Target.class),
         @ParcelClass(Training.class),
         @ParcelClass(Thumbnail.class),

@@ -385,31 +385,6 @@ public class InputActivity extends ChildActivityBase
         updateNavigationButtons();
     }
 
-    private NotificationInfo buildInfo() {
-        String title = getString(R.string.passe) + " " + (data.getEnds().size());
-        String text = "";
-
-        // Initialize message text
-        if (data.getEnds().size() > 0) {
-            End lastEnd = lastItem(data.getEnds());
-            if(lastEnd != null) {
-                for (Shot shot : lastEnd.getShots()) {
-                    text += data.getCurrentRound().getTarget()
-                            .zoneToString(shot.scoringRing, shot.index) + " ";
-                }
-                text += "\n";
-            }
-        } else {
-            title = getString(R.string.my_targets);
-        }
-
-        // Load bow settings
-        if (data.sightMark != null) {
-            text += String.format("%s: %s", data.getCurrentRound().distance, data.sightMark.value);
-        }
-        return new NotificationInfo(data.getCurrentRound(), title, text);
-    }
-
     private void updateNavigationButtons() {
         updatePreviousButton();
         updateNextButton();

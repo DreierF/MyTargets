@@ -40,7 +40,7 @@ import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.WearableUtils;
 
 /**
- * Listens for incomming connections of wearable devices.
+ * Listens for incoming connections of wearable devices.
  * On request the class takes care of creating a new training or
  * adding an end to an existing training.
  */
