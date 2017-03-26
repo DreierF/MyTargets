@@ -15,8 +15,12 @@
 
 package de.dreier.mytargets.base.gallery;
 
+import android.Manifest;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,7 +28,10 @@ import android.view.MenuItem;
 
 import org.parceler.Parcels;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.activities.ChildActivityBase;
@@ -32,9 +39,22 @@ import de.dreier.mytargets.base.gallery.adapters.HorizontalListAdapters;
 import de.dreier.mytargets.base.gallery.adapters.ViewPagerAdapter;
 import de.dreier.mytargets.databinding.ActivityGalleryBinding;
 import de.dreier.mytargets.shared.models.db.End;
+import de.dreier.mytargets.shared.models.db.EndImage;
+import de.dreier.mytargets.shared.utils.FileUtils;
+import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.Utils;
+import icepick.Icepick;
+import icepick.State;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
+import pl.aprilapps.easyphotopicker.DefaultCallback;
+import pl.aprilapps.easyphotopicker.EasyImage;
 
+import static de.dreier.mytargets.base.gallery.GalleryActivityPermissionsDispatcher.onTakePictureWithCheck;
+
+@RuntimePermissions
 public class GalleryActivity extends ChildActivityBase {
     public static final String EXTRA_END = "end";
 
@@ -42,7 +62,10 @@ public class GalleryActivity extends ChildActivityBase {
     LinearLayoutManager mLayoutManager;
     HorizontalListAdapters hAdapter;
 
-    private End end;
+    @State(ParcelsBundler.class)
+    End end;
+
+    private ActivityGalleryBinding binding;
 
     public static IntentWrapper getIntent(End end) {
         return new IntentWrapper(GalleryActivity.class)
@@ -52,23 +75,27 @@ public class GalleryActivity extends ChildActivityBase {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityGalleryBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_gallery);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_gallery);
 
-        end = Parcels.unwrap(getIntent().getParcelableExtra(EXTRA_END));
+        if (savedInstanceState == null) {
+            end = Parcels.unwrap(getIntent().getParcelableExtra(EXTRA_END));
+        } else {
+            Icepick.restoreInstanceState(this, savedInstanceState);
+        }
 
         setSupportActionBar(binding.toolbar);
 
         ToolbarUtils.showHomeAsUp(this);
         ToolbarUtils.setTitle(this, getString(R.string.passe) + " " + (end.index + 1));
+        Utils.showSystemUI(this);
 
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        binding.imagesHorizontalList.setLayoutManager(mLayoutManager);
 
-        ArrayList<String> imageList = getDummyImageList();
-        adapter = new ViewPagerAdapter(this, imageList, binding.toolbar, binding.imagesHorizontalList);
+        adapter = new ViewPagerAdapter(this, end.getImages(), binding.toolbar, binding.imagesHorizontalList);
         binding.pager.setAdapter(adapter);
 
-        hAdapter = new HorizontalListAdapters(this, imageList, pos -> binding.pager.setCurrentItem(pos, true));
-        binding.imagesHorizontalList.setLayoutManager(mLayoutManager);
+        hAdapter = new HorizontalListAdapters(this, end.getImages(), this::goToImage);
         binding.imagesHorizontalList.setAdapter(hAdapter);
         hAdapter.notifyDataSetChanged();
 
@@ -92,39 +119,99 @@ public class GalleryActivity extends ChildActivityBase {
         int currentPos = 0;
         hAdapter.setSelectedItem(currentPos);
         binding.pager.setCurrentItem(currentPos);
+
+        if (end.getImages().size() == 0 && savedInstanceState == null) {
+            onTakePictureWithCheck(this);
+        }
     }
 
-    private ArrayList<String> getDummyImageList() {
-        ArrayList<String> imagesList = new ArrayList<>();
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/05110349/20160731-igor-trepeshchenok-barnimages-08-768x509.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/05095154/tumblr_oawfisUmZo1u7ns0go1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/05095153/tumblr_obbkeo3lZW1ted1sho1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/05095153/tumblr_obaxpnJbKg1sfie3io1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/05095153/tumblr_obdehwWneK1slhhf0o1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/05095152/2016-08-01-roman-drits-barnimages-005-768x512.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/05095151/2016-08-01-roman-drits-barnimages-003-768x512.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/05095149/tumblr_obbjwp1bDz1ted1sho1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/05095151/tumblr_oawfhnxNjL1u7ns0go1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/05095150/tumblr_ob6xvqXLoB1tlwzgvo1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/05095148/20160731-igor-trepeshchenok-barnimages-10-768x512.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/03092421/tumblr_oawfgd2G941u7ns0go1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/03092423/tumblr_ob6xutS8N21tlwzgvo1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/03092421/tumblr_o86sgm6F7a1ted1sho1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/03092420/tumblr_ob6xudqW4U1tlwzgvo1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/03092420/2016-08-01-roman-drits-barnimages-002-768x512.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/03092418/tumblr_o97fatuGnd1ted1sho1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/03092420/tumblr_oawff12j9L1u7ns0go1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/03092420/2016-08-01-roman-drits-barnimages-001-768x512.jpg");
-        imagesList.add("http://1x402i15i5vh15yage3fafmg.wpengine.netdna-cdn.com/wp-content/uploads/2016/08/tumblr_oawfdsEx2w1u7ns0go1_500-1.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/08/03092417/tumblr_o97gyqSK3k1ted1sho1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/07/03092417/20160731-igor-trepeshchenok-barnimages-07-768x512.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/07/03092605/tumblr_ob6wjiCBUh1tlwzgvo1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/07/03092604/tumblr_ob6wkn58cJ1tlwzgvo1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/07/03092416/tumblr_ob6wk7mns81tlwzgvo1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/07/03092413/tumblr_ob6vv04yIP1tlwzgvo1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/07/03092414/tumblr_ob6vk1bBPa1tlwzgvo1_500.jpg");
-        imagesList.add("http://static0.passel.co/wp-content/uploads/2016/07/03092404/tumblr_o97ipvkger1ted1sho1_500.jpg");
-        return imagesList;
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
+    }
+
+
+    @NeedsPermission(Manifest.permission.CAMERA)
+    void onTakePicture() {
+        EasyImage.openCamera(this, 0);
+    }
+
+    @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+    void onSelectImage() {
+        EasyImage.openGallery(this, 0);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        GalleryActivityPermissionsDispatcher
+                .onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        EasyImage.handleActivityResult(requestCode, resultCode, data, this,
+                new DefaultCallback() {
+
+                    @Override
+                    public void onImagesPicked(@NonNull List<File> imageFiles, EasyImage.ImageSource source, int type) {
+                        loadImages(imageFiles);
+                    }
+
+                    @Override
+                    public void onCanceled(EasyImage.ImageSource source, int type) {
+                        //Cancel handling, you might wanna remove taken photo if it was canceled
+                        if (source == EasyImage.ImageSource.CAMERA) {
+                            File photoFile = EasyImage.lastlyTakenButCanceledPhoto(getApplicationContext());
+                            if (photoFile != null) {
+                                photoFile.delete();
+                            }
+                        }
+                    }
+                });
+    }
+
+    protected void loadImages(final List<File> imageFile) {
+        new AsyncTask<Void, Void, List<EndImage>>() {
+
+            @Override
+            protected List<EndImage> doInBackground(Void... params) {
+                List<EndImage> internalFiles = new ArrayList<>();
+                for (File file : imageFile) {
+                    try {
+                        File internal = File
+                                .createTempFile("img", file.getName(), getFilesDir());
+                        internalFiles.add(new EndImage(file.getPath()));
+                        FileUtils.copy(file, internal);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return internalFiles;
+            }
+
+            @Override
+            protected void onPostExecute(List<EndImage> files) {
+                super.onPostExecute(files);
+                end.getImages().addAll(files);
+                end.save();
+                hAdapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
+                int currentPos = end.getImages().size() - 1;
+                hAdapter.setSelectedItem(currentPos);
+                binding.pager.setCurrentItem(currentPos);
+            }
+        }.execute();
+    }
+
+    private void goToImage(int pos) {
+        if (end.images.size() == pos) {
+            onTakePictureWithCheck(this);
+        } else {
+            binding.pager.setCurrentItem(pos, true);
+        }
     }
 
     @Override

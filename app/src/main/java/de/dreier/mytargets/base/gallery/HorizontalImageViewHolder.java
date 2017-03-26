@@ -22,10 +22,12 @@ import android.widget.ImageView;
 import de.dreier.mytargets.R;
 
 public class HorizontalImageViewHolder extends RecyclerView.ViewHolder {
+    public ImageView camera;
     public ImageView image;
 
     public HorizontalImageViewHolder(View itemView) {
         super(itemView);
         image = (ImageView) itemView.findViewById(R.id.iv);
+        camera = (ImageView) itemView.findViewById(R.id.camera);
     }
 }

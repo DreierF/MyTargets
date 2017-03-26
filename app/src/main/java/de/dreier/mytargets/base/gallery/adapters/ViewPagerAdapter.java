@@ -31,24 +31,27 @@ import android.widget.RelativeLayout;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.util.List;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.shared.models.db.Image;
+import de.dreier.mytargets.utils.Utils;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ViewPagerAdapter extends PagerAdapter {
 
-    Activity activity;
-    LayoutInflater mLayoutInflater;
-    ArrayList<String> images;
-    PhotoViewAttacher mPhotoViewAttacher;
+    private Activity activity;
+    private LayoutInflater layoutInflater;
+    private List<? extends Image> images;
+    private PhotoViewAttacher photoViewAttacher;
     private boolean isShowing = true;
     private Toolbar toolbar;
     private RecyclerView imagesHorizontalList;
 
-    public ViewPagerAdapter(Activity activity, ArrayList<String> images, Toolbar toolbar, RecyclerView imagesHorizontalList) {
+    public ViewPagerAdapter(Activity activity, List<? extends Image> images, Toolbar toolbar, RecyclerView imagesHorizontalList) {
         this.activity = activity;
-        mLayoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.images = images;
         this.toolbar = toolbar;
         this.imagesHorizontalList = imagesHorizontalList;
@@ -66,46 +69,65 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
+        View itemView = layoutInflater.inflate(R.layout.pager_item, container, false);
 
         final ImageView imageView = (ImageView) itemView.findViewById(R.id.iv);
-        Picasso.with(activity).load(images.get(position)).into(imageView, new Callback() {
-            @Override
-            public void onSuccess() {
-                mPhotoViewAttacher = new PhotoViewAttacher(imageView);
-
-                mPhotoViewAttacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+        Image image = images.get(position);
+        Picasso.with(activity)
+                .load(new File(image.getFileName()))
+                .fit()
+                .centerInside()
+                .into(imageView, new Callback() {
                     @Override
-                    public void onPhotoTap(View view, float x, float y) {
-                        if (isShowing) {
-                            isShowing = false;
-                            toolbar.animate().translationY(-toolbar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
-                            imagesHorizontalList.animate().translationY(imagesHorizontalList.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
-                            hideSystemUI();
-                        } else {
-                            isShowing = true;
-                            toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
-                            imagesHorizontalList.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
-                            showSystemUI();
-                        }
+                    public void onSuccess() {
+                        photoViewAttacher = new PhotoViewAttacher(imageView);
+                        photoViewAttacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+                            @Override
+                            public void onPhotoTap(View view, float x, float y) {
+                                toggleToolbar();
+                            }
+
+                            @Override
+                            public void onOutsidePhotoTap() {
+
+                            }
+                        });
                     }
 
                     @Override
-                    public void onOutsidePhotoTap() {
+                    public void onError() {
 
                     }
                 });
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
 
         container.addView(itemView);
-
         return itemView;
+    }
+
+    private void toggleToolbar() {
+        if (isShowing) {
+            isShowing = false;
+            toolbar.animate()
+                    .translationY(-toolbar.getBottom())
+                    .setInterpolator(new AccelerateInterpolator())
+                    .start();
+            imagesHorizontalList.animate()
+                    .translationY(imagesHorizontalList.getBottom())
+                    .setInterpolator(new AccelerateInterpolator())
+                    .start();
+            Utils.hideSystemUI(activity);
+        } else {
+            isShowing = true;
+            toolbar.animate()
+                    .translationY(0)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+            imagesHorizontalList.animate()
+                    .translationY(0)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+            Utils.showSystemUI(activity);
+        }
     }
 
     @Override
@@ -113,27 +135,4 @@ public class ViewPagerAdapter extends PagerAdapter {
         container.removeView((RelativeLayout) object);
     }
 
-    private void hideSystemUI() {
-        View decorView = activity.getWindow().getDecorView();
-        // Set the IMMERSIVE flag.
-        // Set the content to appear under the system bars so that the content
-        // doesn't resize when the system bars hide and show.
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
-    }
-
-    // This snippet shows the system bars. It does this by removing all the flags
-// except for the ones that make the content appear under the system bars.
-    private void showSystemUI() {
-        View decorView = activity.getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-    }
 }

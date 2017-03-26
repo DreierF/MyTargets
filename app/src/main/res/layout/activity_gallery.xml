@@ -6,7 +6,7 @@
         android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000"
+        android:background="@color/md_black_1000"
         android:orientation="vertical">
 
         <de.dreier.mytargets.base.gallery.CustomViewPager
@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="60dp"
             android:clipToPadding="false"
             android:paddingLeft="40dp"
             android:paddingRight="40dp" />

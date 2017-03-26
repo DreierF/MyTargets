@@ -178,6 +178,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
     public End addEnd() {
         End end = new End(shotsPerEnd, getEnds().size());
         end.roundId = id;
+        end.save();
         getEnds().add(end);
         return end;
     }
