@@ -297,7 +297,7 @@
   <string name="bow_nocking_point">Nockpunkt</string>
   <string name="bow_string">Sehne</string>
   <string name="bow_scope_magnification">Scope Vergrößerung</string>
-  <string name="bow_rest_stiffness">Stiffness</string>
+  <string name="bow_rest_stiffness">Steifigkeit</string>
   <string name="bow_button">Button</string>
   <string name="more_fields">Weitere Felder</string>
   <string name="recently_used">Zuletzt verwendet</string>
@@ -324,5 +324,4 @@
   <string name="show_total_score">Maximal erreichbare Ringzahl anzeigen</string>
   <string name="show_percentage">Prozent anzeigen</string>
   <string name="show_arrow_average">Pfeildurchschnitt anzeigen</string>
-  <string name="backup_folder">Folder</string>
 </resources>
