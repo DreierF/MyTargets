@@ -51,13 +51,13 @@
   <string name="dbsc_blowpipe">DBSC Blasrohr</string>
   <!-- Scoring styles -->
   <string name="fcfs_color_reversed">FCFS Farbe (10-1 umgekehrt)</string>
-  <string name="recurve_style_x_1">Recurve style (X–1)</string>
-  <string name="recurve_style_10_1">Recurve style (10–1)</string>
-  <string name="recurve_style_x_5">Recurve style (X–5)</string>
-  <string name="recurve_style_10_5">Recurve style (10–5)</string>
-  <string name="recurve_style_x_6">Recurve style (X–6)</string>
-  <string name="recurve_style_10_6">Recurve style (10–6)</string>
-  <string name="recurve_style_x_8">Recurve style (X–8)</string>
-  <string name="recurve_style_10_8">Recurve style (10–8)</string>
+  <string name="recurve_style_x_1">Recurve-Stil (X-1)</string>
+  <string name="recurve_style_10_1">Recurve-Stil (10-1)</string>
+  <string name="recurve_style_x_5">Recurve-Stil (X-5)</string>
+  <string name="recurve_style_10_5">Recurve-Stil (10-5)</string>
+  <string name="recurve_style_x_6">Recurve-Stil (X-6)</string>
+  <string name="recurve_style_10_6">Recurve-Stil (10-6)</string>
+  <string name="recurve_style_x_8">Recurve-Stil (X-8)</string>
+  <string name="recurve_style_10_8">Recurve-Stil (10-8)</string>
   <string name="compound_style">Compound-Stil</string>
 </resources>

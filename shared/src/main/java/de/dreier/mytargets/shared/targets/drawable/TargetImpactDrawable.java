@@ -85,8 +85,8 @@ public class TargetImpactDrawable extends TargetDrawable {
                 drawArrow(canvas, s, false);
             }
         }
-        if(focusedArrow != null) {
-            drawFocusedArrow(canvas, focusedArrow);
+        if (focusedArrow != null) {
+            drawFocusedArrow(canvas, focusedArrow, faceIndex);
         }
     }
 
@@ -112,9 +112,10 @@ public class TargetImpactDrawable extends TargetDrawable {
         }
     }
 
-    private void drawFocusedArrow(CanvasWrapper canvas, Shot shot) {
-        final int faceIndex = shot.index % model.getFaceCount();
-        setMatrixForTargetFace(canvas, faceIndex);
+    private void drawFocusedArrow(CanvasWrapper canvas, Shot shot, int drawFaceIndex) {
+        if (shot.index % model.getFaceCount() != drawFaceIndex) {
+            return;
+        }
 
         paintFill.setColor(0xFF009900);
         canvas.drawCircle(shot.x, shot.y, arrowRadius, paintFill);

@@ -87,7 +87,7 @@ public abstract class AggregationStrategyBase implements IAggregationStrategy {
     }
 
     protected boolean isCancelled() {
-        return computeTask.isCancelled();
+        return computeTask == null || computeTask.isCancelled();
     }
 
     private class ComputeTask extends AsyncTask<List<Shot>, Integer, IAggregationResultRenderer> {

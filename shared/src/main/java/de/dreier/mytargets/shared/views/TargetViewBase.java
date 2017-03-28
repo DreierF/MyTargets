@@ -29,7 +29,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.support.v4.widget.ExploreByTouchHelper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
@@ -48,7 +47,6 @@ import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 
 public abstract class TargetViewBase extends View implements View.OnTouchListener {
-    private static final String TAG = "TargetViewBase";
     private final TargetAccessibilityTouchHelper touchHelper = new TargetAccessibilityTouchHelper(
             this);
     private final List<VirtualView> virtualViews = new ArrayList<>();
@@ -147,7 +145,6 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        Log.d(TAG, "onLayout: ");
         updateLayout();
         animateToNewState();
         updateVirtualViews();
@@ -224,6 +221,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         // If finger is released go to next shoot
         if (motionEvent.getAction() == MotionEvent.ACTION_UP && isCurrentlySelecting()) {
             onArrowChanged();
+            notifyEndFinished();
             return true;
         }
         return true;
@@ -260,10 +258,13 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     protected void notifyTargetShotsChanged() {
+        invalidate();
+    }
+
+    protected void notifyEndFinished() {
         if (currentShotIndex == EndRenderer.NO_SELECTION && setListener != null) {
             setListener.onEndFinished(shots, false);
         }
-        invalidate();
     }
 
     protected Animator getCircleAnimation() {
