@@ -398,32 +398,36 @@ public class InputActivity extends ChildActivityBase
                 R.string.round) + " " + (data.getCurrentRound().index + 1) + "/" + data.training
                 .getRounds().size());
         updateNavigationButtons();
-
-        // Send message to wearable app, that we are starting an end
-        new Thread(InputActivity.this::startWearNotification).start();
+        updateWearNotification();
     }
 
     private void startWearNotification() {
         NotificationInfo info = buildInfo();
-        manager = new WearMessageManager(this, info);
+        if (manager == null) {
+            manager = new WearMessageManager(this, info);
+        } else {
+            manager.sendMessageUpdate(info);
+        }
     }
 
     private NotificationInfo buildInfo() {
-        String title = getString(R.string.passe) + " " + (data.getEnds().size());
+        String title = getString(R.string.my_targets);
         String text = "";
 
         // Initialize message text
         if (data.getEnds().size() > 0) {
             End lastEnd = lastItem(data.getEnds());
-            if(lastEnd != null) {
+            if (lastEnd != null && lastEnd.getId() == null && data.getEnds().size() > 1) {
+                lastEnd = data.getEnds().get(data.getEnds().size() - 2);
+            }
+            if (lastEnd != null && lastEnd.getId() != null) { //TODO change when merging with #4
+                title = getString(R.string.passe) + " " + (lastEnd.index + 1);
                 for (Shot shot : lastEnd.getShots()) {
                     text += data.getCurrentRound().getTarget()
                             .zoneToString(shot.scoringRing, shot.index) + " ";
                 }
                 text += "\n";
             }
-        } else {
-            title = getString(R.string.my_targets);
         }
 
         // Load bow settings
@@ -436,6 +440,11 @@ public class InputActivity extends ChildActivityBase
     private void updateNavigationButtons() {
         updatePreviousButton();
         updateNextButton();
+    }
+
+    private void updateWearNotification() {
+        // Send message to wearable app, that we are starting an end
+        new Thread(InputActivity.this::startWearNotification).start();
     }
 
     private void updatePreviousButton() {
@@ -532,8 +541,11 @@ public class InputActivity extends ChildActivityBase
 
     @Override
     public void onEndFinished(List<Shot> shots, boolean remote) {
-        if(remote && data.getCurrentRound().getEnds().size() > data.endIndex) {
-            data.endIndex = data.getCurrentRound().getEnds().size();
+        if (remote) {
+            data.endIndex = data.getCurrentRound().getEnds().size() - 1;
+            if (data.getCurrentEnd().getId() != null) {
+                data.endIndex = data.getCurrentRound().getEnds().size();
+            }
         }
         data.getCurrentEnd().setShots(shots);
         data.getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING && !remote;
@@ -543,11 +555,10 @@ public class InputActivity extends ChildActivityBase
 
         data.getCurrentEnd().save();
 
-        if (manager != null) {
-            manager.sendMessageUpdate(buildInfo());
-        }
         if (remote) {
-            showEnd(data.getEnds().size());
+            showEnd(data.getEnds().size() - 1);
+        } else {
+            updateWearNotification();
         }
         updateNavigationButtons();
         supportInvalidateOptionsMenu();
