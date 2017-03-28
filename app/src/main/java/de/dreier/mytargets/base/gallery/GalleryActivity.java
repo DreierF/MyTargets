@@ -18,12 +18,15 @@ package de.dreier.mytargets.base.gallery;
 import android.Manifest;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import org.parceler.Parcels;
@@ -52,6 +55,7 @@ import permissions.dispatcher.RuntimePermissions;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
+import static android.support.v4.content.FileProvider.getUriForFile;
 import static de.dreier.mytargets.base.gallery.GalleryActivityPermissionsDispatcher.onTakePictureWithCheck;
 
 @RuntimePermissions
@@ -126,11 +130,73 @@ public class GalleryActivity extends ChildActivityBase {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.gallery, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_share:
+                String packageName = getApplicationContext().getPackageName();
+                String authority = packageName + ".easyphotopicker.fileprovider";
+                int currentItem = binding.pager.getCurrentItem();
+                EndImage currentEndImage = end.getImages().get(currentItem);
+                File file = new File(currentEndImage.getFileName());
+                Uri uri = getUriForFile(this, authority, file);
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("*/*");
+                shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
+                return true;
+            case R.id.action_delete:
+                currentItem = binding.pager.getCurrentItem();
+                deleteImage(currentItem);
+                return true;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void deleteImage(int currentItem) {
+        EndImage image = end.getImages().get(currentItem);
+        end.getImages().remove(currentItem);
+        end.save();
+        hAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
+        hAdapter.setSelectedItem(currentItem);
+        binding.pager.setCurrentItem(currentItem);
+        String message = getString(R.string.image_deleted);
+        Snackbar.make(binding.mainLayout, message, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, v -> {
+                    end.getImages().add(currentItem, image);
+                    hAdapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
+                    hAdapter.setSelectedItem(currentItem);
+                    binding.pager.setCurrentItem(currentItem);
+                })
+                .addCallback(
+                        new Snackbar.Callback() {
+                            @Override
+                            public void onDismissed(Snackbar snackbar, int event) {
+                                new File(image.getFileName()).delete();
+                            }
+
+                            @Override
+                            public void onShown(Snackbar snackbar) {
+                            }
+                        }).show();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Icepick.saveInstanceState(this, outState);
     }
-
 
     @NeedsPermission(Manifest.permission.CAMERA)
     void onTakePicture() {
@@ -212,13 +278,5 @@ public class GalleryActivity extends ChildActivityBase {
         } else {
             binding.pager.setCurrentItem(pos, true);
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
