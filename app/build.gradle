@@ -88,8 +88,7 @@ if (CROWDIN_API_KEY != null && !CROWDIN_API_KEY.isEmpty()) {
     }
 
     task generateLocalizedScreenshots(type: Exec, group: 'play store', dependsOn: [':crowdinDownload', 'assembleScreengrabDebugAndroidTest', 'assembleScreengrabDebug']) {
-        workingDir '..'
-        commandLine './make_screenshots.sh'
+        commandLine '../make_screenshots.sh'
     }
 
     if (new File('googlePlayAndroidDeveloper.json').exists()) {

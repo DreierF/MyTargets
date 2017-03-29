@@ -60,7 +60,22 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
         setTitle(R.string.environment);
     }
 
+    private static boolean isTestMode() {
+        boolean result;
+        try {
+            Class.forName("de.dreier.mytargets.test.base.InstrumentedTestBase");
+            result = true;
+        } catch (final Exception e) {
+            result = false;
+        }
+        return result;
+    }
+
     public void queryWeather(Fragment fragment, int request_code) {
+        if (isTestMode()) {
+            setDefaultWeather();
+            return;
+        }
         if (ContextCompat.checkSelfPermission(fragment.getContext(), ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             setDefaultWeather();
