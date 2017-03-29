@@ -92,7 +92,7 @@ public class ScreenshotTest extends UITestBase {
         navigateUp();
         onView(matchFabMenu()).perform(click());
         onView(withId(R.id.fab1)).perform(click());
-        allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
+        //allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
         Screengrab.screenshot("2_enter_training");
         save();
         onView(isRoot()).perform(click());
