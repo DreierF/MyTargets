@@ -22,7 +22,6 @@ import android.support.v4.app.Fragment;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.utils.TranslationUtils;
 
 /**
  * Shows an overview over all training days
@@ -37,8 +36,6 @@ public class MainActivity extends SimpleFragmentActivityBase {
             SettingsManager.setShouldShowIntroActivity(false);
             Intent intent = new Intent(this, IntroActivity.class);
             startActivity(intent);
-        } else {
-            TranslationUtils.askForHelpTranslating(this);
         }
     }
 
