@@ -401,7 +401,7 @@ public class InputActivity extends ChildActivityBase
         updateWearNotification();
     }
 
-    private void startWearNotification() {
+    private void updateWearNotification() {
         NotificationInfo info = buildInfo();
         if (manager == null) {
             manager = new WearMessageManager(this, info);
@@ -440,11 +440,6 @@ public class InputActivity extends ChildActivityBase
     private void updateNavigationButtons() {
         updatePreviousButton();
         updateNextButton();
-    }
-
-    private void updateWearNotification() {
-        // Send message to wearable app, that we are starting an end
-        new Thread(InputActivity.this::startWearNotification).start();
     }
 
     private void updatePreviousButton() {

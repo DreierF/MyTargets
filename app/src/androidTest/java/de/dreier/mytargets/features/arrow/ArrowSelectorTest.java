@@ -72,7 +72,7 @@ public class ArrowSelectorTest extends UITestBase {
         Intent intent = new Intent();
         intent.setAction(type);
         activityTestRule.launchActivity(intent);
-        allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
+        //allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
 
         onView(withText(R.string.add_arrow)).perform(nestedScrollTo(), click());
         intended(hasComponent(EditArrowActivity.class.getName()));

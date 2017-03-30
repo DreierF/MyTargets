@@ -21,18 +21,18 @@ import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Tap;
 
 public class TargetViewActions {
-    protected static ViewAction clickTarget(final float x, final float y) {
+    public static ViewAction clickTarget(final float x, final float y) {
         return new GeneralClickAction(
                 Tap.SINGLE,
                 view -> LowLevelActions.getTargetCoordinates(view, new float[]{x, y}),
                 Press.FINGER);
     }
 
-    protected static ViewAction holdTapTarget(final float x, final float y) {
+    public static ViewAction holdTapTarget(final float x, final float y) {
         return LowLevelActions.pressAndHold(new float[]{x, y});
     }
 
-    protected static ViewAction releaseTapTarget(final float x, final float y) {
+    public static ViewAction releaseTapTarget(final float x, final float y) {
         return LowLevelActions.release(new float[]{x, y});
     }
 }
