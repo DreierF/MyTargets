@@ -59,6 +59,9 @@
         android:theme="@style/AppTheme"
         tools:replace="android:name">
         <meta-data
+            android:name="android.max_aspect"
+            android:value="2.1" />
+        <meta-data
             android:name="com.google.android.backup.api_key"
             android:value="AEdPqrEAAAAIy_jZMyyGuh5M-ICvUll4H1WyF1R9M8cUcN5wVw" />
         <meta-data
