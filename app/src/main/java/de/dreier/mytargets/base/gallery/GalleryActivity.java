@@ -172,13 +172,16 @@ public class GalleryActivity extends ChildActivityBase {
         new MaterialDialog.Builder(this)
                 .content(R.string.delete_image)
                 .negativeText(android.R.string.cancel)
+                .negativeColorRes(R.color.md_grey_500)
                 .positiveText(R.string.delete)
+                .positiveColorRes(R.color.md_red_500)
                 .onPositive((dialog, which) -> {
                     end.getImages().remove(currentItem);
                     end.save();
                     adapter.notifyDataSetChanged();
-                    hAdapter.setSelectedItem(currentItem);
-                    binding.pager.setCurrentItem(currentItem);
+                    int nextItem = Math.min(end.getImages().size() - 1, currentItem);
+                    hAdapter.setSelectedItem(nextItem);
+                    binding.pager.setCurrentItem(nextItem);
                 })
                 .show();
     }
