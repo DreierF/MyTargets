@@ -18,6 +18,7 @@ package de.dreier.mytargets.utils;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -41,39 +42,39 @@ import de.dreier.mytargets.shared.utils.WearableUtils;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
 public class WearMessageManager
-        implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        MessageApi.MessageListener {
+        implements GoogleApiClient.OnConnectionFailedListener,MessageApi.MessageListener {
 
     private static final String TAG = "wearMessageManager";
     private final TargetViewBase.OnEndFinishedListener mListener;
-    private final NotificationInfo info;
 
     private final GoogleApiClient mGoogleApiClient;
 
     public WearMessageManager(Context context, NotificationInfo info) {
-        this.info = info;
-        mGoogleApiClient = new GoogleApiClient.Builder(context)
-                .addApi(Wearable.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        mGoogleApiClient.connect();
-
         if (!(context instanceof TargetViewBase.OnEndFinishedListener)) {
             throw new ClassCastException();
         }
-
         mListener = (TargetViewBase.OnEndFinishedListener) context;
-    }
 
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        if (Log.isLoggable(TAG, Log.DEBUG)) {
-            Log.d(TAG, "Connected to Google Api Service");
-        }
-        Wearable.MessageApi.addListener(mGoogleApiClient, this);
-        sendMessage(info, WearableUtils.STARTED_ROUND);
+        mGoogleApiClient = new GoogleApiClient.Builder(context)
+                .addApi(Wearable.API)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(@Nullable Bundle bundle) {
+                        if (Log.isLoggable(TAG, Log.DEBUG)) {
+                            Log.d(TAG, "Connected to Google Api Service");
+                        }
+                        Wearable.MessageApi.addListener(mGoogleApiClient, WearMessageManager.this);
+                        sendMessage(info, WearableUtils.STARTED_ROUND);
+                    }
 
+                    @Override
+                    public void onConnectionSuspended(int i) {
+
+                    }
+                })
+                .addOnConnectionFailedListener(this)
+                .build();
+        mGoogleApiClient.connect();
     }
 
     private Collection<String> getNodes() {
@@ -127,11 +128,6 @@ public class WearMessageManager
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
 
     }
 
