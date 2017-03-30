@@ -350,4 +350,5 @@
     <string name="show_percentage">Show percentage</string>
     <string name="show_arrow_average">Show arrow average</string>
     <string name="image_deleted">Image deleted</string>
+    <string name="delete_image">Delete image?</string>
 </resources>

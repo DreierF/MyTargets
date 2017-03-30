@@ -29,6 +29,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import org.parceler.Parcels;
 
 import java.io.File;
@@ -139,16 +141,8 @@ public class GalleryActivity extends ChildActivityBase {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                String packageName = getApplicationContext().getPackageName();
-                String authority = packageName + ".easyphotopicker.fileprovider";
                 int currentItem = binding.pager.getCurrentItem();
-                EndImage currentEndImage = end.getImages().get(currentItem);
-                File file = new File(currentEndImage.getFileName());
-                Uri uri = getUriForFile(this, authority, file);
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("*/*");
-                shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
+                shareImage(currentItem);
                 return true;
             case R.id.action_delete:
                 currentItem = binding.pager.getCurrentItem();
@@ -162,34 +156,31 @@ public class GalleryActivity extends ChildActivityBase {
         }
     }
 
+    private void shareImage(int currentItem) {
+        String packageName = getApplicationContext().getPackageName();
+        String authority = packageName + ".easyphotopicker.fileprovider";
+        EndImage currentEndImage = end.getImages().get(currentItem);
+        File file = new File(currentEndImage.getFileName());
+        Uri uri = getUriForFile(this, authority, file);
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("*/*");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
+    }
+
     private void deleteImage(int currentItem) {
-        EndImage image = end.getImages().get(currentItem);
-        end.getImages().remove(currentItem);
-        end.save();
-        hAdapter.notifyDataSetChanged();
-        adapter.notifyDataSetChanged();
-        hAdapter.setSelectedItem(currentItem);
-        binding.pager.setCurrentItem(currentItem);
-        String message = getString(R.string.image_deleted);
-        Snackbar.make(binding.mainLayout, message, Snackbar.LENGTH_LONG)
-                .setAction(R.string.undo, v -> {
-                    end.getImages().add(currentItem, image);
-                    hAdapter.notifyDataSetChanged();
+        new MaterialDialog.Builder(this)
+                .content(R.string.delete_image)
+                .negativeText(android.R.string.cancel)
+                .positiveText(R.string.delete)
+                .onPositive((dialog, which) -> {
+                    end.getImages().remove(currentItem);
+                    end.save();
                     adapter.notifyDataSetChanged();
                     hAdapter.setSelectedItem(currentItem);
                     binding.pager.setCurrentItem(currentItem);
                 })
-                .addCallback(
-                        new Snackbar.Callback() {
-                            @Override
-                            public void onDismissed(Snackbar snackbar, int event) {
-                                new File(image.getFileName()).delete();
-                            }
-
-                            @Override
-                            public void onShown(Snackbar snackbar) {
-                            }
-                        }).show();
+                .show();
     }
 
     @Override

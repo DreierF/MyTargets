@@ -508,6 +508,7 @@ public class InputActivity extends ChildActivityBase
     @Override
     public void onEndUpdated(List<Shot> changedEnd) {
         data.getCurrentEnd().setShots(changedEnd);
+        data.getCurrentEnd().save();
 
         // Set current end score
         Score reachedEndScore = data.getCurrentRound().getTarget()
