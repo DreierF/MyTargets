@@ -36,6 +36,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.db.Image;
+import de.dreier.mytargets.shared.utils.SharedUtils;
 import de.dreier.mytargets.utils.Utils;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -44,7 +45,6 @@ public class ViewPagerAdapter extends PagerAdapter {
     private Activity activity;
     private LayoutInflater layoutInflater;
     private List<? extends Image> images;
-    private PhotoViewAttacher photoViewAttacher;
     private boolean isShowing = true;
     private Toolbar toolbar;
     private RecyclerView imagesHorizontalList;
@@ -64,7 +64,7 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return view == object;
+        return SharedUtils.equals(view, object);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                 .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
-                        photoViewAttacher = new PhotoViewAttacher(imageView);
+                        private PhotoViewAttacher photoViewAttacher = new PhotoViewAttacher(imageView);
                         photoViewAttacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
                             @Override
                             public void onPhotoTap(View view, float x, float y) {
