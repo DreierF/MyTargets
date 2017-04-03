@@ -49,6 +49,8 @@ dependencies {
     compile "frankiesardo:icepick:$libraryVersion.icepick"
     provided "frankiesardo:icepick-processor:$libraryVersion.icepick"
 
+    compile "com.jakewharton.timber:timber:$libraryVersion.timber"
+
     testCompile "junit:junit:$libraryVersion.jUnit"
     testCompile "org.mockito:mockito-core:$libraryVersion.mockito"
     androidTestCompile "com.android.support.test:runner:$libraryVersion.testSupport"
