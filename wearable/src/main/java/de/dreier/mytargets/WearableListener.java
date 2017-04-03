@@ -29,6 +29,7 @@ import com.google.android.gms.wearable.WearableListenerService;
 
 import org.parceler.Parcels;
 
+import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.NotificationInfo$$Parcelable;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.WearableUtils;
