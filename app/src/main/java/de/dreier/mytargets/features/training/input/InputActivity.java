@@ -645,7 +645,7 @@ public class InputActivity extends ChildActivityBase
         @NonNull
         private End getCurrentEnd() {
             List<End> ends = getEnds();
-            if (ends.size() <= endIndex) {
+            if (ends.size() <= endIndex || endIndex < 0 || ends.size() == 0) {
                 endIndex = ends.size();
                 getCurrentRound().addEnd();
                 ends = getEnds();
