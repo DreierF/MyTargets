@@ -33,8 +33,8 @@ android {
         applicationId 'de.dreier.mytargets'
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode appVersionCode
-        versionName appVersionName
+        versionCode gitVersionCode
+        versionName gitVersionName
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary = true
     }
@@ -69,7 +69,7 @@ android {
             signingConfig signingConfigs.release
             shrinkResources true
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../tools/rules-proguard.pro'
         }
     }
 
@@ -78,6 +78,8 @@ android {
         screengrab {}
     }
 }
+
+apply from: "../tools/script-codacy.gradle"
 
 def CROWDIN_API_KEY = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
 if (CROWDIN_API_KEY != null && !CROWDIN_API_KEY.isEmpty()) {

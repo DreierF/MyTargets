@@ -221,7 +221,6 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         // If finger is released go to next shoot
         if (motionEvent.getAction() == MotionEvent.ACTION_UP && isCurrentlySelecting()) {
             onArrowChanged();
-            notifyEndFinished();
             return true;
         }
         return true;
@@ -236,6 +235,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         setCurrentShotIndex(getNextShotIndex(currentShotIndex));
         animateToNewState();
         notifyTargetShotsChanged();
+        notifyEndFinished();
     }
 
     /**

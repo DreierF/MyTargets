@@ -78,7 +78,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
     @Column(typeConverter = DimensionConverter.class)
     Dimension targetDiameter;
 
-    public List<End> ends = new ArrayList<>();
+    public List<End> ends;
 
     public Round() {
 
@@ -149,7 +149,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
 
     @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "ends")
     public List<End> getEnds() {
-        if (ends == null || ends.isEmpty()) {
+        if (ends == null) {
             ends = SQLite.select()
                     .from(End.class)
                     .where(End_Table.round.eq(id))
