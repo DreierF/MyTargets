@@ -92,10 +92,4 @@ public class WearableListener extends WearableListenerService {
         notificationManager.cancel(NOTIFICATION_ID);
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
-
-    private void cancelNotification() {
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancel(NOTIFICATION_ID);
-    }
 }
