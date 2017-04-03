@@ -122,7 +122,7 @@ public class InputActivity extends Activity implements TargetViewBase.OnEndFinis
     }
 
     @Override
-    public void onEndFinished(final List<Shot> shotList, boolean remote) {
+    public void onEndFinished(final List<Shot> shotList) {
         confirm.setVisibility(View.VISIBLE);
         confirm.setTotalTimeMs(2500);
         confirm.start();

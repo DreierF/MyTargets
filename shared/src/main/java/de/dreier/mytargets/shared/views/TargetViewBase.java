@@ -263,7 +263,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     protected void notifyEndFinished() {
         if (currentShotIndex == EndRenderer.NO_SELECTION && setListener != null) {
-            setListener.onEndFinished(shots, false);
+            setListener.onEndFinished(shots);
         }
     }
 
@@ -360,7 +360,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     public interface OnEndFinishedListener {
-        void onEndFinished(List<Shot> shotList, boolean remote);
+        void onEndFinished(List<Shot> shotList);
     }
 
     private static class TargetAccessibilityTouchHelper extends ExploreByTouchHelper {
