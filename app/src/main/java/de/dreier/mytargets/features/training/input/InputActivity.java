@@ -403,6 +403,43 @@ public class InputActivity extends ChildActivityBase
                 R.string.round) + " " + (data.getCurrentRound().index + 1) + "/" + data.training
                 .getRounds().size());
         updateNavigationButtons();
+        updateWearNotification();
+    }
+
+    private void updateWearNotification() {
+        NotificationInfo info = buildInfo();
+        if (manager == null) {
+            manager = new WearMessageManager(this, info);
+        } else {
+            manager.sendMessageUpdate(info);
+        }
+    }
+
+    private NotificationInfo buildInfo() {
+        String title = getString(R.string.my_targets);
+        String text = "";
+
+        // Initialize message text
+        if (data.getEnds().size() > 0) {
+            End lastEnd = lastItem(data.getEnds());
+            if (lastEnd != null && lastEnd.getId() == null && data.getEnds().size() > 1) {
+                lastEnd = data.getEnds().get(data.getEnds().size() - 2);
+            }
+            if (lastEnd != null && lastEnd.getId() != null) { //TODO change when merging with #4
+                title = getString(R.string.passe) + " " + (lastEnd.index + 1);
+                for (Shot shot : lastEnd.getShots()) {
+                    text += data.getCurrentRound().getTarget()
+                            .zoneToString(shot.scoringRing, shot.index) + " ";
+                }
+                text += "\n";
+            }
+        }
+
+        // Load bow settings
+        if (data.sightMark != null) {
+            text += String.format("%s: %s", data.getCurrentRound().distance, data.sightMark.value);
+        }
+        return new NotificationInfo(data.getCurrentRound(), title, text);
     }
 
     private void updateNavigationButtons() {
@@ -504,8 +541,11 @@ public class InputActivity extends ChildActivityBase
 
     @Override
     public void onEndFinished(List<Shot> shots, boolean remote) {
-        if(remote && data.getCurrentRound().getEnds().size() > data.endIndex) {
+        if (remote) {
+            data.endIndex = data.getCurrentRound().getEnds().size() - 1;
+            if (data.getCurrentEnd().getId() != null) {
             data.endIndex = data.getCurrentRound().getEnds().size();
+            }
         }
         data.getCurrentEnd().setShots(shots);
         data.getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING && !remote;
@@ -515,7 +555,12 @@ public class InputActivity extends ChildActivityBase
 
         data.getCurrentEnd().save();
 
+        if (remote) {
         WearableListener.sendUpdateTrainingFromLocalBroadcast(this, data.training);
+            showEnd(data.getEnds().size() - 1);
+        } else {
+            updateWearNotification();
+        }
         updateNavigationButtons();
         supportInvalidateOptionsMenu();
     }
@@ -606,7 +651,7 @@ public class InputActivity extends ChildActivityBase
         @NonNull
         private End getCurrentEnd() {
             List<End> ends = getEnds();
-            if (ends.size() <= endIndex) {
+            if (ends.size() <= endIndex || endIndex < 0 || ends.size() == 0) {
                 endIndex = ends.size();
                 getCurrentRound().addEnd();
                 ends = getEnds();

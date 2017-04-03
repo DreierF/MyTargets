@@ -7,7 +7,6 @@ import android.support.test.filters.SdkSuppress;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -18,28 +17,29 @@ import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.UITestBase;
-import de.dreier.mytargets.base.activities.MainActivity;
-import de.dreier.mytargets.managers.SettingsManager;
+import de.dreier.mytargets.features.main.MainActivity;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.targets.models.WAField;
-import de.dreier.mytargets.utils.rules.SimpleDbTestRule;
+import de.dreier.mytargets.shared.targets.models.WAFull;
+import de.dreier.mytargets.test.base.UITestBase;
+import de.dreier.mytargets.test.utils.rules.SimpleDbTestRule;
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 import tools.fastlane.screengrab.locale.LocaleTestRule;
 
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static de.dreier.mytargets.PermissionGranter.allowPermissionsIfNeeded;
+import static de.dreier.mytargets.test.utils.actions.TargetViewActions.clickTarget;
+import static de.dreier.mytargets.test.utils.actions.TargetViewActions.holdTapTarget;
+import static de.dreier.mytargets.test.utils.actions.TargetViewActions.releaseTapTarget;
+import static de.dreier.mytargets.test.utils.matchers.ViewMatcher.matchFabMenu;
 import static org.hamcrest.core.AllOf.allOf;
 
 @SdkSuppress(minSdkVersion = 18)
@@ -60,7 +60,7 @@ public class ScreenshotTest extends UITestBase {
         Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
         SettingsManager.setArrowNumbersEnabled(false);
         SettingsManager.setShotsPerEnd(6);
-        SettingsManager.setTarget(new Target(WAField.ID, 1,
+        SettingsManager.setTarget(new Target(WAFull.ID, 2,
                 new Dimension(60, Dimension.Unit.CENTIMETER)));
         SettingsManager.setTimerEnabled(true);
     }
@@ -86,22 +86,20 @@ public class ScreenshotTest extends UITestBase {
         Screengrab.screenshot("6_statistics");
         navigateUp();
         navigateUp();
-        onView(matchFab()).perform(click());
-        onView(CoreMatchers.allOf(withId(R.id.fab1), withParent(withId(R.id.fab))))
-                .perform(click());
-        allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
+        onView(matchFabMenu()).perform(click());
+        onView(withId(R.id.fab1)).perform(click());
         Screengrab.screenshot("2_enter_training");
-        onView(withContentDescription(R.string.save)).perform(click());
+        save();
         onView(isRoot()).perform(click());
         onView(isRoot()).perform(click());
         Screengrab.screenshot("8_timer");
         pressBack();
         onView(withId(R.id.targetViewContainer)).perform(
                 clickTarget(0.1f, 0.05f),
-                clickTarget(-0.45f, 0.5f),
-                clickTarget(-0.5f, -0.6f),
-                holdTapTarget(0.5f, 0.4f));
+                clickTarget(-0.15f, 0.3f),
+                clickTarget(-0.24f, -0.06f),
+                holdTapTarget(0.0f, 0.0f));
         Screengrab.screenshot("1_enter_end");
-        onView(withId(R.id.targetViewContainer)).perform(releaseTapTarget(0.5f, 0.4f));
+        onView(withId(R.id.targetViewContainer)).perform(releaseTapTarget(0.0f, 0.0f));
     }
 }

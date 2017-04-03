@@ -79,7 +79,7 @@ public class EditStandardRoundActivityTest extends UITestBase {
         intent.setAction(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION);
         activityTestRule.launchActivity(intent);
 
-        allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
+        //allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
 
         onView(withId(R.id.standardRound)).perform(scrollTo(), click());
 

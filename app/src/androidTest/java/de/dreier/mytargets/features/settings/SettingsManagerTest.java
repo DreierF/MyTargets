@@ -130,12 +130,6 @@ public class SettingsManagerTest extends InstrumentedTestBase {
     }
 
     @Test
-    public void setTranslationDialogWasShown() {
-        SettingsManager.setTranslationDialogShown(true);
-        assertThat(SettingsManager.isTranslationDialogShown()).isEqualTo(true);
-    }
-
-    @Test
     public void setInputMethod() {
         SettingsManager.setInputMethod(KEYBOARD);
         assertThat(SettingsManager.getInputMethod()).isEqualTo(KEYBOARD);

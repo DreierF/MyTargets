@@ -88,7 +88,7 @@ public class EditTrainingActivityTest extends UITestBase {
         intent.setAction(CREATE_FREE_TRAINING_ACTION);
         activityTestRule.launchActivity(intent);
 
-        allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
+        //allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
 
         // Select distance 20m
         onView(withId(R.id.distance)).perform(nestedScrollTo(), click());
@@ -150,7 +150,7 @@ public class EditTrainingActivityTest extends UITestBase {
         intent.setAction(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION);
         activityTestRule.launchActivity(intent);
 
-        allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
+        //allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
 
         // Has last used standard round been restored
         onView(withId(R.id.standardRound))

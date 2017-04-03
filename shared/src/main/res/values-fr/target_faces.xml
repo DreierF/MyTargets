@@ -16,8 +16,8 @@
   -->
 <resources>
   <!-- Target groups -->
-  <string name="target_type_target_archery">Regular</string>
-  <string name="target_type_field_archery">Field</string>
+  <string name="target_type_target_archery">Normal</string>
+  <string name="target_type_field_archery">Campagne</string>
   <string name="target_type_3d_archery">3D</string>
   <!-- Target names -->
   <string name="wa_full">WA complet</string>
@@ -51,13 +51,13 @@
   <string name="dbsc_blowpipe">DBSC sarbacane</string>
   <!-- Scoring styles -->
   <string name="fcfs_color_reversed">FCFS Color (Reversed 10–1)</string>
-  <string name="recurve_style_x_1">Recurve style (X–1)</string>
-  <string name="recurve_style_10_1">Recurve style (10–1)</string>
-  <string name="recurve_style_x_5">Recurve style (X–5)</string>
-  <string name="recurve_style_10_5">Recurve style (10–5)</string>
-  <string name="recurve_style_x_6">Recurve style (X–6)</string>
-  <string name="recurve_style_10_6">Recurve style (10–6)</string>
-  <string name="recurve_style_x_8">Recurve style (X–8)</string>
-  <string name="recurve_style_10_8">Recurve style (10–8)</string>
-  <string name="compound_style">Compound style</string>
+  <string name="recurve_style_x_1">Style classique (X-1)</string>
+  <string name="recurve_style_10_1">Style classique (10-1)</string>
+  <string name="recurve_style_x_5">Style classique (X-5)</string>
+  <string name="recurve_style_10_5">Style classique (10-5)</string>
+  <string name="recurve_style_x_6">Style classique (X-6)</string>
+  <string name="recurve_style_10_6">Style classique (10-6)</string>
+  <string name="recurve_style_x_8">Style classique (X-8)</string>
+  <string name="recurve_style_10_8">Style classique (10-8)</string>
+  <string name="compound_style">Style poulies</string>
 </resources>

@@ -16,3 +16,4 @@
 include ':app'
 include ':wearable'
 include ':shared'
+include ':tools'

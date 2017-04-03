@@ -324,5 +324,4 @@
   <string name="show_total_score">A teljes pontszám</string>
   <string name="show_percentage">Százalékos megjelenítés</string>
   <string name="show_arrow_average">Mutasd a vesszők pontátlagát</string>
-  <string name="backup_folder">Folder</string>
 </resources>

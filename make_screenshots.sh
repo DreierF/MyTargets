@@ -6,6 +6,9 @@
 #echo no | android create avd -f -n "Nexus_7_API_23" -t android-23 --abi armeabi-v7a -s 1200x1920
 #echo no | android create avd -f -n "Nexus_10_API_23" -t android-23 --abi armeabi-v7a -s 2560x1600
 
+# Workaround for https://code.google.com/p/android/issues/detail?id=235461
+function emulator { cd "$(dirname "$(which emulator)")" && ./emulator "$@"; }
+
 # Disable emulator authentication
 touch '~/.emulator_console_auth_token'
 echo '' > '~/.emulator_console_auth_token'

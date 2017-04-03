@@ -90,12 +90,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                 ToolbarUtils.setTitle(this, R.string.new_round_template);
                 binding.name.setText(R.string.custom_round);
                 // Initialize with default values
-                RoundTemplate round = new RoundTemplate();
-                round.shotsPerEnd = SettingsManager.getShotsPerEnd();
-                round.endCount = SettingsManager.getEndCount();
-                round.setTargetTemplate(SettingsManager.getTarget());
-                round.distance = SettingsManager.getDistance();
-                standardRound.getRounds().add(round);
+                addDefaultRound();
             } else {
                 ToolbarUtils.setTitle(this, R.string.edit_standard_round);
                 // Load saved values
@@ -122,6 +117,15 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         return binding.getRoot();
     }
 
+    private void addDefaultRound() {
+        RoundTemplate round = new RoundTemplate();
+        round.shotsPerEnd = SettingsManager.getShotsPerEnd();
+        round.endCount = SettingsManager.getEndCount();
+        round.setTargetTemplate(SettingsManager.getTarget());
+        round.distance = SettingsManager.getDistance();
+        standardRound.getRounds().add(round);
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -129,14 +133,19 @@ public class EditStandardRoundFragment extends EditFragmentBase {
     }
 
     private void onAddRound() {
-        RoundTemplate r = standardRound.getRounds().get(standardRound.getRounds().size() - 1);
-        RoundTemplate roundTemplate = new RoundTemplate();
-        roundTemplate.endCount = r.endCount;
-        roundTemplate.shotsPerEnd = r.shotsPerEnd;
-        roundTemplate.distance = r.distance;
-        roundTemplate.setTargetTemplate(r.getTargetTemplate());
-        standardRound.getRounds().add(roundTemplate);
-        adapter.notifyItemInserted(standardRound.getRounds().size() - 1);
+        int newItemIndex = standardRound.getRounds().size();
+        if (newItemIndex > 0) {
+            RoundTemplate r = standardRound.getRounds().get(newItemIndex - 1);
+            RoundTemplate roundTemplate = new RoundTemplate();
+            roundTemplate.endCount = r.endCount;
+            roundTemplate.shotsPerEnd = r.shotsPerEnd;
+            roundTemplate.distance = r.distance;
+            roundTemplate.setTargetTemplate(r.getTargetTemplate());
+            standardRound.getRounds().add(roundTemplate);
+        } else {
+            addDefaultRound();
+        }
+        adapter.notifyItemInserted(newItemIndex);
     }
 
     private void onDeleteStandardRound() {

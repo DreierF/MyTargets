@@ -77,7 +77,6 @@ public class SettingsManager {
     private static final String KEY_NUMBERING_ENABLED = "numbering";
     private static final String KEY_INDOOR = "indoor";
     private static final String KEY_END_COUNT = "rounds";
-    private static final String KEY_TRANSLATION_DIALOG_SHOWN = "translation_dialog_shown";
     private static final String KEY_INPUT_MODE = "target_mode";
     private static final String KEY_SHOW_MODE = "show_mode";
     private static final SharedPreferences lastUsed = ApplicationInstance
@@ -207,17 +206,6 @@ public class SettingsManager {
     public static void setEndCount(int endCount) {
         lastUsed.edit()
                 .putInt(KEY_END_COUNT, endCount)
-                .apply();
-    }
-
-    public static boolean isTranslationDialogShown() {
-        return preferences.getBoolean(KEY_TRANSLATION_DIALOG_SHOWN, false);
-    }
-
-    public static void setTranslationDialogShown(boolean shown) {
-        preferences
-                .edit()
-                .putBoolean(KEY_TRANSLATION_DIALOG_SHOWN, shown)
                 .apply();
     }
 
