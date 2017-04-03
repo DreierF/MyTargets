@@ -13,8 +13,6 @@
  * GNU General Public License for more details.
  */
 
-import org.ajoberstar.grgit.Grgit
-
 buildscript {
     repositories {
         jcenter()
@@ -26,7 +24,6 @@ buildscript {
         classpath 'me.tatarka:gradle-retrolambda:3.6.0'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
         classpath 'com.github.triplet.gradle:play-publisher:1.2.0-beta2'
-        classpath 'org.ajoberstar:grgit:1.9.0'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.3'
         classpath 'com.google.gms:google-services:3.0.0'
@@ -44,13 +41,6 @@ plugins {
 ext {
     compileSdkVersionCode = 25
     buildToolsVersionCode = '25.0.2'
-
-    git = Grgit.open()
-    appVersionCode = Integer.parseInt("${git.tag.list().size()}")
-    appVersionName = "${git.describe()}"
-            .replace("v", "")
-            .replace("_b", "-Beta")
-            .replace("_rc", "-RC")
 
     libraryVersion = [
             aboutPage            : '1.2',
@@ -82,7 +72,7 @@ ext {
             retrofit             : '2.2.0',
             roundedImageView     : '2.2.1',
             support              : '25.3.1',
-            supportWearable      : '2.0.0',
+            supportWearable      : '2.0.1',
             testSupport          : '0.5',
             truth                : '0.32',
             uiAutomator          : '2.1.2'
@@ -97,7 +87,8 @@ allprojects {
     }
 }
 
-apply from: "crowdin.gradle"
+apply from: "tools/script-crowdin.gradle"
+apply from: "tools/script-git-version.gradle"
 
 dependencyUpdates.resolutionStrategy = {
     componentSelection { rules ->
