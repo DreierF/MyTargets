@@ -15,6 +15,11 @@
 
 package de.dreier.mytargets.utils;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.annimon.stream.Optional;
@@ -39,6 +44,8 @@ import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.utils.WearableUtils;
 
+import static org.parceler.Parcels.unwrap;
+
 /**
  * Listens for incoming connections of wearable devices.
  * On request the class takes care of creating a new training or
@@ -47,7 +54,36 @@ import de.dreier.mytargets.shared.utils.WearableUtils;
 public class WearableListener extends WearableListenerService {
 
     private static final String TAG = "WearableListener";
+    private static final String BROADCAST_UPDATE_TRAINING_FROM_LOCAL = "update_from_local";
+    public static final String BROADCAST_UPDATE_TRAINING_FROM_REMOTE = "update_from_remote";
+    static final String EXTRA_TRAINING = "training";
+    private static final String EXTRA_TRAINING_ID = "training_id";
+    private static final String EXTRA_ROUND_ID = "round_id";
+    private static final String EXTRA_END = "end_index";
     protected GoogleApiClient googleApiClient;
+
+    private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Training training = unwrap(intent.getParcelableExtra(EXTRA_TRAINING));
+            updateTraining(training);
+        }
+    };
+
+    //TODO send local broadcast to InputActivity, RoundActivity, TrainingActivity, ScoreboardActivity and StatisticsActivity
+    public static void sendUpdateTrainingFromLocalBroadcast(Context context, Training training) {
+        Intent intent = new Intent(BROADCAST_UPDATE_TRAINING_FROM_LOCAL);
+        intent.putExtra(EXTRA_TRAINING, Parcels.wrap(training));
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
+    private static void sendUpdateTrainingFromRemoteBroadcast(Context context, Round round, End end) {
+        Intent intent = new Intent(BROADCAST_UPDATE_TRAINING_FROM_REMOTE);
+        intent.putExtra(EXTRA_TRAINING_ID, round.trainingId);
+        intent.putExtra(EXTRA_ROUND_ID, round.getId());
+        intent.putExtra(EXTRA_END, Parcels.wrap(end));
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
 
     @Override
     public void onCreate() {
@@ -57,6 +93,9 @@ public class WearableListener extends WearableListenerService {
                 .build();
 
         googleApiClient.connect();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver,
+                new IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_LOCAL));
     }
 
     @Override
@@ -72,6 +111,12 @@ public class WearableListener extends WearableListenerService {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(updateReceiver);
+        super.onDestroy();
+    }
+
     public void createTraining() {
         Optional<Training> training = Stream.of(Training.getAll()).sorted().findFirst();
         if (training.isPresent()) {
@@ -83,7 +128,7 @@ public class WearableListener extends WearableListenerService {
             }
             t.setId(null);
             t.save();
-            startTraining(t);
+            updateTraining(t);
         } else {
             //show opened on phone animation
             sendMessage(WearableUtils.TRAINING_CREATE_ON_PHONE, null);
@@ -92,16 +137,19 @@ public class WearableListener extends WearableListenerService {
 
     private void endUpdated(MessageEvent messageEvent) {
         byte[] data = messageEvent.getData();
-        End end = Parcels.unwrap(ParcelableUtil.unmarshall(data, End$$Parcelable.CREATOR));
-        End newEnd = Round.get(end.roundId).addEnd();
+        End end = unwrap(ParcelableUtil.unmarshall(data, End$$Parcelable.CREATOR));
+        Round round = Round.get(end.roundId);
+        End newEnd = round.addEnd();  //TODO change to take last empty end when merging with #4
         newEnd.exact = false;
         newEnd.setShots(end.getShots());
-        //TODO send local broadcast to InputActivity, RoundActivity, TrainingActivity, ScoreboardActivity and StatisticsActivity
+        newEnd.save();
+
+        sendUpdateTrainingFromRemoteBroadcast(this, round, newEnd);
     }
 
-    private void startTraining(Training training) {
+    private void updateTraining(Training training) {
         final byte[] data = ParcelableUtil.marshall(Parcels.wrap(training));
-        sendMessage(WearableUtils.TRAINING_START, data);
+        sendMessage(WearableUtils.TRAINING_UPDATE, data);
     }
 
     @Override
@@ -135,5 +183,21 @@ public class WearableListener extends WearableListenerService {
             results.add(node.getId());
         }
         return results;
+    }
+
+    public abstract static class EndUpdateReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Long trainingId = intent.getLongExtra(EXTRA_TRAINING_ID, -1);
+            Long roundId = intent.getLongExtra(EXTRA_ROUND_ID, -1);
+            End end = intent.getParcelableExtra(EXTRA_END);
+            if (trainingId == -1 || roundId == -1) {
+                Log.w(TAG, "Incomplete request!");
+            }
+            onUpdate(trainingId, roundId, end);
+        }
+
+        protected abstract void onUpdate(Long trainingId, Long roundId, End end);
     }
 }

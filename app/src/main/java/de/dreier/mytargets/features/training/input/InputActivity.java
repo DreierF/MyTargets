@@ -15,7 +15,9 @@
 
 package de.dreier.mytargets.features.training.input;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Build;
@@ -25,6 +27,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -65,6 +68,7 @@ import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.transitions.FabTransform;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import de.dreier.mytargets.utils.transitions.TransitionAdapter;
+import de.dreier.mytargets.utils.WearableListener;
 import icepick.Icepick;
 import icepick.State;
 
@@ -87,6 +91,14 @@ public class InputActivity extends ChildActivityBase
     private ETrainingScope shotShowScope = ETrainingScope.END;
     private ETrainingScope summaryShowScope = null;
     private TargetView targetView;
+
+    private BroadcastReceiver updateReceiver = new WearableListener.EndUpdateReceiver() {
+
+        @Override
+        protected void onUpdate(Long trainingId, Long roundId, End end) {
+            getSupportLoaderManager().initLoader(0, getIntent().getExtras(), InputActivity.this).forceLoad();
+        }
+    };
 
     @NonNull
     public static IntentWrapper createIntent(Round round) {
@@ -133,6 +145,14 @@ public class InputActivity extends ChildActivityBase
         } else {
             getSupportLoaderManager().initLoader(0, getIntent().getExtras(), this).forceLoad();
         }
+        LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver,
+                new IntentFilter(WearableListener.BROADCAST_UPDATE_TRAINING_FROM_REMOTE));
+    }
+
+    @Override
+    protected void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(updateReceiver);
+        super.onDestroy();
     }
 
     private void updateSummaryVisibility() {
@@ -495,7 +515,7 @@ public class InputActivity extends ChildActivityBase
 
         data.getCurrentEnd().save();
 
-        //TODO send broadcast update training
+        WearableListener.sendUpdateTrainingFromLocalBroadcast(this, data.training);
         updateNavigationButtons();
         supportInvalidateOptionsMenu();
     }
