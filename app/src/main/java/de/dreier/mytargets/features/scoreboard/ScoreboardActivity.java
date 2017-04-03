@@ -46,7 +46,7 @@ import de.dreier.mytargets.features.settings.SettingsActivity;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
-import static android.support.v4.content.FileProvider.getUriForFile;
+import static de.dreier.mytargets.shared.utils.FileUtils.getUriForFile;
 
 public class ScoreboardActivity extends ChildActivityBase {
 
@@ -156,9 +156,7 @@ public class ScoreboardActivity extends ChildActivityBase {
                     final File f = File.createTempFile("scoreboard", ".png", dir);
                     new ScoreboardImage()
                             .generateBitmap(ScoreboardActivity.this, mTraining, mRound, f);
-                    String packageName = getApplicationContext().getPackageName();
-                    String authority = packageName + ".easyphotopicker.fileprovider";
-                    return getUriForFile(ScoreboardActivity.this, authority, f);
+                    return getUriForFile(ScoreboardActivity.this, f);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;
