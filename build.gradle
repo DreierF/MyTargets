@@ -89,16 +89,4 @@ allprojects {
 
 apply from: "tools/script-crowdin.gradle"
 apply from: "tools/script-git-version.gradle"
-
-dependencyUpdates.resolutionStrategy = {
-    componentSelection { rules ->
-        rules.all { selection ->
-            boolean rejected = ['alpha', 'preview', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
-                selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
-            }
-            if (rejected) {
-                selection.reject('Release candidate')
-            }
-        }
-    }
-}
+apply from: "tools/script-dependency-updates.gradle"

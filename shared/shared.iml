@@ -136,8 +136,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="icepick-3.2.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="byte-buddy-agent-1.6.11" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="byte-buddy-1.6.11" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="runner-0.5" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="byte-buddy-1.6.11" level="project" />
     <orderEntry type="library" exported="" name="data.priority-map-0.0.2" level="project" />
     <orderEntry type="library" exported="" name="slingshot-0.10.3" level="project" />
     <orderEntry type="library" exported="" name="support-core-ui-25.3.1" level="project" />

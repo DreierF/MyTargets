@@ -12,23 +12,25 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
- 
- buildscript {
-     repositories {
-         jcenter()
-     }
-     dependencies {
-         classpath 'org.ajoberstar:grgit:1.9.0'
-     }
- }
 
- import org.ajoberstar.grgit.Grgit
+import org.ajoberstar.grgit.Grgit
 
- ext {
-     git = Grgit.open()
-     gitVersionCode = git.tag.list().size()
-     gitVersionName = git.describe()
-             .replace("v", "")
-             .replace("_b", "-Beta")
-             .replace("_rc", "-RC")
- }
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.ajoberstar:grgit:1.9.0'
+    }
+}
+
+ext {
+    git = Grgit.open()
+    gitVersionCode = git.tag.list().size()
+    gitVersionName = git.describe()
+            .replace("v", "")
+            .replace("_b", "-Beta")
+            .replace("_rc", "-RC")
+
+    print("Code $gitVersionCode")
+}

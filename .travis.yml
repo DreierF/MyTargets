@@ -37,13 +37,12 @@ before_install:
 - wget https://raw.githubusercontent.com/JakeWharton/pidcat/master/pidcat.py
 install:
 - git fetch --unshallow --tags
-- chmod +x travis_fold
 before_script:
 - echo no | android create avd -f -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI -s WVGA800 -c 128M
 - emulator -avd test -no-audio -no-window &
 - ./gradlew clean
 script:
-- ./travis_fold assembleRelease ./gradlew assembleRegularRelease -PdisablePreDex
+- ./gradlew assembleRegularRelease -PdisablePreDex
 - android-wait-for-emulator
 - adb shell settings put global window_animation_scale 0
 - adb shell settings put global transition_animation_scale 0
@@ -55,7 +54,7 @@ after_success:
 - |
   if [[ "$TRAVIS_TAG" ]]; then
     ./gradlew publishRegularRelease
-    ./gradlew -PFirebaseServiceAccountFilePath=$PWD/app/src/release/google-services.json :app:firebaseUploadRegularReleaseProguardMapping
+    ./gradlew -PFirebaseServiceAccountFilePath=$PWD/app/src/release/google-services.json :app:firebaseUploadRegularReleaseProguardMapping --debug
     ./dropbox_uploader.sh upload app/build/outputs/apk/app-regular-release.apk /Release/$TRAVIS_TAG/MyTargets.apk
     ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /Release/$TRAVIS_TAG/mapping.txt
   fi
