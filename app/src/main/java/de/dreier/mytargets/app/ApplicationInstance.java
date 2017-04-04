@@ -18,7 +18,9 @@ package de.dreier.mytargets.app;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.StrictMode;
+import android.util.Log;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -52,6 +54,7 @@ import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.utils.backup.MyBackupAgent;
+import timber.log.Timber;
 
 /**
  * Application singleton. Gets instantiated exactly once and is used
@@ -99,8 +102,16 @@ public class ApplicationInstance extends SharedApplicationInstance {
                     .detectLeakedClosableObjects()
                     .penaltyLog()
                     .build());
+            Timber.plant(new Timber.DebugTree());
+        } else {
+            Timber.plant(new CrashReportingTree());
         }
         super.onCreate();
+        handleDatabaseImport();
+        initFlowManager(this);
+    }
+
+    private void handleDatabaseImport() {
         final File newDatabasePath = getDatabasePath(AppDatabase.DATABASE_FILE_NAME);
         final File oldDatabasePath = getDatabasePath(AppDatabase.DATABASE_IMPORT_FILE_NAME);
         if (oldDatabasePath.exists()) {
@@ -109,8 +120,6 @@ public class ApplicationInstance extends SharedApplicationInstance {
             }
             oldDatabasePath.renameTo(newDatabasePath);
         }
-        final ApplicationInstance context = this;
-        initFlowManager(context);
     }
 
     public static void initFlowManager(Context context) {
@@ -122,4 +131,24 @@ public class ApplicationInstance extends SharedApplicationInstance {
         super.onTerminate();
         FlowManager.destroy();
     }
+
+    private static class CrashReportingTree extends Timber.Tree {
+        @Override
+        protected void log(int priority, String tag, String message, Throwable t) {
+            if (priority == Log.VERBOSE || priority == Log.DEBUG) {
+                return;
+            }
+
+            FirebaseCrash.log(message);
+
+            if (t != null) {
+                if (priority == Log.ERROR) {
+                    FirebaseCrash.report(t);
+                } else if (priority == Log.WARN) {
+                    FirebaseCrash.report(t);
+                }
+            }
+        }
+    }
+
 }
