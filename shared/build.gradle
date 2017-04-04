@@ -49,6 +49,8 @@ dependencies {
     compile "frankiesardo:icepick:$libraryVersion.icepick"
     provided "frankiesardo:icepick-processor:$libraryVersion.icepick"
 
+    compile "com.google.android.gms:play-services-wearable:$libraryVersion.playService"
+
     testCompile "junit:junit:$libraryVersion.jUnit"
     testCompile "org.mockito:mockito-core:$libraryVersion.mockito"
     androidTestCompile "com.android.support.test:runner:$libraryVersion.testSupport"

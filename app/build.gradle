@@ -116,7 +116,6 @@ dependencies {
     compile "com.android.support:cardview-v7:$libraryVersion.support"
     compile "com.android.support:preference-v14:$libraryVersion.support"
 
-    compile "com.google.android.gms:play-services-wearable:$libraryVersion.playService"
     compile "com.google.android.gms:play-services-drive:$libraryVersion.playService"
 
     compile "com.google.firebase:firebase-core:$libraryVersion.firebase"

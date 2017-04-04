@@ -22,13 +22,15 @@ import de.dreier.mytargets.shared.models.db.Round;
 
 public class NotificationInfo implements Serializable {
     public final String title;
-    public final String text;
+    public final int roundCount;
     public final Round round;
+    public final boolean timerEnabled;
 
     @ParcelConstructor
-    public NotificationInfo(Round round, String title, String text) {
+    public NotificationInfo(Round round, String title, int roundCount, boolean timerEnabled) {
         this.round = round;
         this.title = title;
-        this.text = text;
+        this.roundCount = roundCount;
+        this.timerEnabled = timerEnabled;
     }
 }

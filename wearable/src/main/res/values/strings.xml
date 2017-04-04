@@ -23,4 +23,12 @@
     <string name="vibration">Vibration</string>
     <string name="sound">Sound</string>
     <string name="new_end">New End</string>
+    <plurals name="rounds">
+        <item quantity="one">%d round</item>
+        <item quantity="many">%d rounds</item>
+    </plurals>
+    <plurals name="ends_arrow">
+        <item quantity="one">%1$d \u00D7 %2$d arrow</item>
+        <item quantity="many">%1$d \u00D7 %2$d arrows</item>
+    </plurals>
 </resources>

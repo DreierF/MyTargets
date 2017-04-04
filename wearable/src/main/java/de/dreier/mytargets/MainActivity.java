@@ -20,62 +20,45 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.Wearable;
-
 import org.parceler.Parcels;
 
-import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.databinding.ActivityMainBinding;
+import de.dreier.mytargets.shared.models.NotificationInfo;
 
-public class MainActivity extends Activity implements
-        GoogleApiClient.ConnectionCallbacks {
+import static android.provider.DocumentsContract.EXTRA_INFO;
 
-    public static final String EXTRA_ROUND = "round";
-    private GoogleApiClient mGoogleApiClient;
+public class MainActivity extends Activity {
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Round round = Parcels.unwrap(intent.getExtras().getParcelable(EXTRA_ROUND));
+            NotificationInfo info = Parcels.unwrap(intent.getExtras().getParcelable(EXTRA_INFO));
+            setNotificationInfo(info);
         }
     };
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        Intent intent = getIntent();
-        if (intent != null && intent.getExtras() != null) {
-            //round = Parcels.unwrap(intent.getExtras().getParcelable(EXTRA_ROUND));
-        }
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Wearable.API)
-                .addConnectionCallbacks(this)
-                .build();
-        mGoogleApiClient.connect();
-
-        final IntentFilter intentFilter = new IntentFilter(WearableListener.TRAINING_STARTED);
+        final IntentFilter intentFilter = new IntentFilter(WearableListener.BROADCAST_TRAINING_UPDATED);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
+        WearableListener.sendRequestInfo(this);
+    }
+
+    public void setNotificationInfo(NotificationInfo info) {
+        binding.title.setText(info.title);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
     }
 }

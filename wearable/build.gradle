@@ -33,6 +33,10 @@ android {
         versionName gitVersionName
     }
 
+    dataBinding {
+        enabled = true
+    }
+
     signingConfigs {
         debug {
         }
@@ -65,13 +69,10 @@ android {
 }
 
 dependencies {
-    provided "com.google.android.wearable:wearable:1.0.0"
-
-    compile "com.android.support:support-v13:$libraryVersion.support"
-    compile "com.google.android.support:wearable:$libraryVersion.supportWearable"
     provided "com.google.android.wearable:wearable:$libraryVersion.supportWearable"
 
-    compile "com.google.android.gms:play-services-wearable:$libraryVersion.playService"
+    compile "com.google.android.support:wearable:$libraryVersion.supportWearable"
+    provided "com.google.android.wearable:wearable:$libraryVersion.supportWearable"
 
     compile "org.parceler:parceler-api:$libraryVersion.parceler"
     annotationProcessor "org.parceler:parceler:$libraryVersion.parceler"

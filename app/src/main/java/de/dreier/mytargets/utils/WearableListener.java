@@ -24,19 +24,16 @@ import android.util.Log;
 
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageEvent;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.NodeApi;
-import com.google.android.gms.wearable.Wearable;
-import com.google.android.gms.wearable.WearableListenerService;
 
 import org.joda.time.LocalDate;
 import org.parceler.Parcels;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
 
+import de.dreier.mytargets.features.settings.SettingsManager;
+import de.dreier.mytargets.shared.base.WearableListenerServiceBase;
+import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.End$$Parcelable;
 import de.dreier.mytargets.shared.models.db.Round;
@@ -51,7 +48,7 @@ import static org.parceler.Parcels.unwrap;
  * On request the class takes care of creating a new training or
  * adding an end to an existing training.
  */
-public class WearableListener extends WearableListenerService {
+public class WearableListener extends WearableListenerServiceBase {
 
     private static final String TAG = "WearableListener";
     private static final String BROADCAST_UPDATE_TRAINING_FROM_LOCAL = "update_from_local";
@@ -60,7 +57,6 @@ public class WearableListener extends WearableListenerService {
     private static final String EXTRA_TRAINING_ID = "training_id";
     private static final String EXTRA_ROUND_ID = "round_id";
     private static final String EXTRA_END = "end_index";
-    protected GoogleApiClient googleApiClient;
 
     private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
         @Override
@@ -88,12 +84,6 @@ public class WearableListener extends WearableListenerService {
     @Override
     public void onCreate() {
         super.onCreate();
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Wearable.API)
-                .build();
-
-        googleApiClient.connect();
-
         LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver,
                 new IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_LOCAL));
     }
@@ -148,41 +138,16 @@ public class WearableListener extends WearableListenerService {
     }
 
     private void updateTraining(Training training) {
-        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(training));
+        List<Round> rounds = training.getRounds();
+        int roundCount = rounds.size();
+        if (roundCount < 1) {
+            return;
+        }
+        Round round = rounds.get(roundCount - 1);
+        NotificationInfo notificationInfo = new NotificationInfo(round, training.title, roundCount,
+                SettingsManager.getTimerEnabled());
+        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(notificationInfo));
         sendMessage(WearableUtils.TRAINING_UPDATE, data);
-    }
-
-    @Override
-    public void onPeerConnected(Node peer) {
-        super.onPeerConnected(peer);
-
-    }
-
-    private void sendMessage(String path, byte[] data) {
-        // Send message to all available nodes
-        final Collection<String> nodes = getNodes();
-        for (String nodeId : nodes) {
-            Wearable.MessageApi.sendMessage(
-                    googleApiClient, nodeId, path, data)
-                    .setResultCallback(
-                            sendMessageResult -> {
-                                if (!sendMessageResult.getStatus().isSuccess()) {
-                                    Log.e(TAG, "Failed to send message with status code: "
-                                            + sendMessageResult.getStatus().getStatusCode());
-                                }
-                            }
-                    );
-        }
-    }
-
-    private Collection<String> getNodes() {
-        HashSet<String> results = new HashSet<>();
-        NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(googleApiClient)
-                .await();
-        for (Node node : nodes.getNodes()) {
-            results.add(node.getId());
-        }
-        return results;
     }
 
     public abstract static class EndUpdateReceiver extends BroadcastReceiver {
