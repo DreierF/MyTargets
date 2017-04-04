@@ -53,6 +53,7 @@ import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.EndRenderer;
+import de.dreier.mytargets.utils.MobileWearableClient;
 import de.dreier.mytargets.utils.backup.MyBackupAgent;
 import timber.log.Timber;
 
@@ -86,8 +87,10 @@ import timber.log.Timber;
 })
 public class ApplicationInstance extends SharedApplicationInstance {
 
+    public static MobileWearableClient wearableClient;
+
     public static SharedPreferences getLastSharedPreferences() {
-        return mContext.getSharedPreferences(MyBackupAgent.PREFS, 0);
+        return context.getSharedPreferences(MyBackupAgent.PREFS, 0);
     }
 
     @Override
@@ -109,6 +112,7 @@ public class ApplicationInstance extends SharedApplicationInstance {
         super.onCreate();
         handleDatabaseImport();
         initFlowManager(this);
+        wearableClient = new MobileWearableClient(this);
     }
 
     private void handleDatabaseImport() {
@@ -128,8 +132,9 @@ public class ApplicationInstance extends SharedApplicationInstance {
 
     @Override
     public void onTerminate() {
-        super.onTerminate();
         FlowManager.destroy();
+        wearableClient.disconnect();
+        super.onTerminate();
     }
 
     private static class CrashReportingTree extends Timber.Tree {

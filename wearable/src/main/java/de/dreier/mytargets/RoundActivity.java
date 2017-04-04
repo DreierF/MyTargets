@@ -38,9 +38,8 @@ import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.views.EndView;
+import de.dreier.mytargets.utils.WearWearableClient;
 import icepick.State;
-
-import static de.dreier.mytargets.WearableListener.EXTRA_INFO;
 
 /**
  * Demonstrates use of Navigation and Action Drawers on Android Wear.
@@ -59,7 +58,7 @@ public class RoundActivity extends WearableActivity {
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            NotificationInfo info = Parcels.unwrap(intent.getExtras().getParcelable(EXTRA_INFO));
+            NotificationInfo info = Parcels.unwrap(intent.getExtras().getParcelable(WearWearableClient.EXTRA_INFO));
             round = info.round;
             loadData();
         }
@@ -90,7 +89,7 @@ public class RoundActivity extends WearableActivity {
                 timerEnabled ? R.drawable.ic_traffic_white_24dp
                         : R.drawable.ic_timer_off_white_24dp);
 
-        final IntentFilter intentFilter = new IntentFilter(WearableListener.BROADCAST_TRAINING_UPDATED);
+        final IntentFilter intentFilter = new IntentFilter(WearWearableClient.BROADCAST_TRAINING_UPDATED);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
     }
 

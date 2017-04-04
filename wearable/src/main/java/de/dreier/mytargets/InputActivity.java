@@ -97,7 +97,7 @@ public class InputActivity extends Activity implements TargetViewBase.OnEndFinis
                 End end = new End(round.shotsPerEnd, 0);
                 end.setShots(shotList);
                 end.roundId = round.getId();
-                WearableListener.sendEndUpdate(InputActivity.this, end);
+                ApplicationInstance.wearableClient.sendEndUpdate(end);
             }
         });
     }

@@ -40,6 +40,7 @@ import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.EndRenderer;
+import de.dreier.mytargets.utils.WearWearableClient;
 
 /**
  * Application singleton. Gets instantiated exactly once and is used
@@ -71,4 +72,16 @@ import de.dreier.mytargets.shared.utils.EndRenderer;
 })
 public class ApplicationInstance extends SharedApplicationInstance {
 
+    public static WearWearableClient wearableClient;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        wearableClient = new WearWearableClient(this);
+    }
+    @Override
+    public void onTerminate() {
+        wearableClient.disconnect();
+        super.onTerminate();
+    }
 }

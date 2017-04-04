@@ -41,6 +41,7 @@ import org.parceler.ParcelConstructor;
 import java.util.List;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.base.activities.ChildActivityBase;
 import de.dreier.mytargets.databinding.ActivityInputBinding;
 import de.dreier.mytargets.features.rounds.EditRoundFragment;
@@ -63,14 +64,15 @@ import de.dreier.mytargets.shared.utils.SharedUtils;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
 import de.dreier.mytargets.utils.IntentWrapper;
+import de.dreier.mytargets.utils.MobileWearableClient;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
-import de.dreier.mytargets.utils.WearableListener;
 import de.dreier.mytargets.utils.transitions.FabTransform;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import de.dreier.mytargets.utils.transitions.TransitionAdapter;
 import icepick.Icepick;
 import icepick.State;
+import timber.log.Timber;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -92,7 +94,7 @@ public class InputActivity extends ChildActivityBase
     private ETrainingScope summaryShowScope = null;
     private TargetView targetView;
 
-    private BroadcastReceiver updateReceiver = new WearableListener.EndUpdateReceiver() {
+    private BroadcastReceiver updateReceiver = new MobileWearableClient.EndUpdateReceiver() {
 
         @Override
         protected void onUpdate(Long trainingId, Long roundId, End end) {
@@ -146,7 +148,7 @@ public class InputActivity extends ChildActivityBase
             getSupportLoaderManager().initLoader(0, getIntent().getExtras(), this).forceLoad();
         }
         LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver,
-                new IntentFilter(WearableListener.BROADCAST_UPDATE_TRAINING_FROM_REMOTE));
+                new IntentFilter(MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE));
     }
 
     @Override
@@ -407,7 +409,8 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void updateWearNotification() {
-        WearableListener.sendUpdateTrainingFromLocalBroadcast(this, data.training);
+        Timber.d("updateWearNotification()");
+        ApplicationInstance.wearableClient.sendUpdateTrainingFromLocalBroadcast(data.training);
     }
 
     private void updateNavigationButtons() {
