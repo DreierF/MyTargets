@@ -61,7 +61,6 @@ public class WearableClientBase {
                 .build();
 
         googleApiClient.connect();
-        Timber.d("WearableClientBase() called with: context = [" + context + "]");
         IntentFilter filter = new IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_LOCAL);
         LocalBroadcastManager.getInstance(context).registerReceiver(timerReceiver, filter);
     }
@@ -72,10 +71,8 @@ public class WearableClientBase {
     }
 
     protected void sendMessage(String path, byte[] data) {
-        Timber.d("sendMessage() called with: path = [" + path + "]");
         Wearable.NodeApi.getConnectedNodes(googleApiClient)
                 .setResultCallback(nodes -> {
-                    Timber.d("sendMessage: " + nodes);
                     for (Node node : nodes.getNodes()) {
                         sendToNode(node, path, data);
                     }

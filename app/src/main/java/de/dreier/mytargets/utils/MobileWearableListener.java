@@ -37,7 +37,6 @@ import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.models.db.Training$$Parcelable;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.wearable.WearableClientBase;
-import timber.log.Timber;
 
 import static org.parceler.Parcels.unwrap;
 
@@ -51,7 +50,6 @@ public class MobileWearableListener extends WearableListenerService {
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         super.onMessageReceived(messageEvent);
-        Timber.d("onMessageReceived() called with: messageEvent = [" + messageEvent.getPath() + "]");
         switch (messageEvent.getPath()) {
             case WearableClientBase.TRAINING_CREATE:
                 createTraining(messageEvent);
@@ -110,7 +108,6 @@ public class MobileWearableListener extends WearableListenerService {
     }
 
     public void createTraining(MessageEvent messageEvent) {
-        Timber.d("createTraining() called with: messageEvent = [" + messageEvent + "]");
         byte[] data = messageEvent.getData();
         Training training = unwrap(ParcelableUtil.unmarshall(data, Training$$Parcelable.CREATOR));
         training.save();
@@ -119,7 +116,6 @@ public class MobileWearableListener extends WearableListenerService {
     }
 
     private void endUpdated(MessageEvent messageEvent) {
-        Timber.d("endUpdated() called with: messageEvent = [" + messageEvent + "]");
         byte[] data = messageEvent.getData();
         End end = unwrap(ParcelableUtil.unmarshall(data, End$$Parcelable.CREATOR));
         Round round = Round.get(end.roundId);

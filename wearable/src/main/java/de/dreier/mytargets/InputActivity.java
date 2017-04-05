@@ -45,7 +45,6 @@ public class InputActivity extends Activity implements TargetViewBase.OnEndFinis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Timber.d("onCreate() called with: savedInstanceState = [" + savedInstanceState + "]");
         binding = DataBindingUtil.setContentView(this, R.layout.activity_input);
 
         Intent intent = getIntent();
@@ -71,7 +70,6 @@ public class InputActivity extends Activity implements TargetViewBase.OnEndFinis
 
     @Override
     public void onEndFinished(final List<Shot> shotList) {
-        Timber.d("onEndFinished() called with: shotList = [" + shotList + "]");
         binding.delayedConfirm.setVisibility(View.VISIBLE);
         binding.delayedConfirm.setTotalTimeMs(2500);
         binding.delayedConfirm.start();
@@ -85,7 +83,6 @@ public class InputActivity extends Activity implements TargetViewBase.OnEndFinis
 
             @Override
             public void onTimerFinished(View view) {
-                Timber.d("onTimerFinished() called with: view = [" + view + "]");
                 Intent intent = new Intent(InputActivity.this, ConfirmationActivity.class);
                 intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
                         ConfirmationActivity.SUCCESS_ANIMATION);
@@ -94,9 +91,6 @@ public class InputActivity extends Activity implements TargetViewBase.OnEndFinis
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 v.vibrate(200);
                 finish();
-//                Intent i = new Intent();
-//                i.putExtra(EXTRA_SHOTS, Parcels.wrap(shotList));
-//                setResult(RESULT_OK, i);
                 End end = new End(round.shotsPerEnd, 0);
                 end.setShots(shotList);
                 end.roundId = round.getId();

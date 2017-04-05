@@ -428,7 +428,6 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void updateWearNotification() {
-        Timber.d("updateWearNotification()");
         ApplicationInstance.wearableClient.sendUpdateTrainingFromLocalBroadcast(data.training);
     }
 

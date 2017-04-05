@@ -62,21 +62,18 @@ public class MobileWearableClient extends WearableClientBase {
     private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Timber.d("updateReceiver received %s", intent.getAction());
             Training training = Parcels.unwrap(intent.getParcelableExtra(EXTRA_TRAINING));
             updateTraining(training);
         }
     };
 
     public void sendUpdateTrainingFromLocalBroadcast(Training training) {
-        Timber.d("sendUpdateTrainingFromLocalBroadcast() called with: training = [" + training + "]");
         Intent intent = new Intent(BROADCAST_UPDATE_TRAINING_FROM_LOCAL);
         intent.putExtra(EXTRA_TRAINING, Parcels.wrap(training));
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     public void sendUpdateTrainingFromRemoteBroadcast(Round round, End end) {
-        Timber.d("sendUpdateTrainingFromRemoteBroadcast() called with: round = [" + round + "], end = [" + end + "]");
         Intent intent = new Intent(BROADCAST_UPDATE_TRAINING_FROM_REMOTE);
         intent.putExtra(EXTRA_TRAINING_ID, round.trainingId);
         intent.putExtra(EXTRA_ROUND_ID, round.getId());
@@ -90,7 +87,6 @@ public class MobileWearableClient extends WearableClientBase {
     }
 
     public void updateTraining(Training training) {
-        Timber.d("updateTraining() called with: training = [" + training + "]");
         List<Round> rounds = training.getRounds();
         int roundCount = rounds.size();
         if (roundCount < 1) {

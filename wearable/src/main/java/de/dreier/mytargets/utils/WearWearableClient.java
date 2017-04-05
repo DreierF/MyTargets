@@ -65,7 +65,6 @@ public class WearWearableClient extends WearableClientBase {
 
     public WearWearableClient(Context context) {
         super(context);
-        Timber.d("WearWearableClient() called with: context = [" + context + "]");
         IntentFilter filter = new IntentFilter();
         filter.addAction(BROADCAST_UPDATE_END_FROM_LOCAL);
         filter.addAction(BROADCAST_REQUEST_TRAINING_TEMPLATE);
@@ -75,7 +74,6 @@ public class WearWearableClient extends WearableClientBase {
 
     @Override
     public void disconnect() {
-        Timber.d("disconnect() called");
         LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcastReceiver);
         super.disconnect();
     }
@@ -91,34 +89,29 @@ public class WearWearableClient extends WearableClientBase {
     }
 
     public void sendTrainingUpdate(TrainingInfo info) {
-        Timber.d("sendTrainingUpdate: send broadcast");
         Intent intent = new Intent(BROADCAST_TRAINING_UPDATED);
         intent.putExtra(EXTRA_INFO, Parcels.wrap(info));
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     public void sendEndUpdate(End end) {
-        Timber.d("sendEndUpdate() called with: end = [" + end + "]");
         Intent intent = new Intent(BROADCAST_UPDATE_END_FROM_LOCAL);
         intent.putExtra(EXTRA_END, Parcels.wrap(end));
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     public void requestNewTrainingTemplate() {
-        Timber.d("requestNewTrainingTemplate() called");
         Intent intent = new Intent(BROADCAST_REQUEST_TRAINING_TEMPLATE);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     public void sendCreateTraining(Training training) {
-        Timber.d("createTraining: send broadcast");
         Intent intent = new Intent(BROADCAST_TRAINING_CREATE);
         intent.putExtra(EXTRA_TRAINING, Parcels.wrap(training));
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     public void sendTrainingTemplate(Training training) {
-        Timber.d("sendTrainingTemplate() called with: training = [" + training + "]");
         Intent intent = new Intent(BROADCAST_TRAINING_TEMPLATE);
         intent.putExtra(EXTRA_TRAINING, Parcels.wrap(training));
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
