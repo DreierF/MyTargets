@@ -34,7 +34,7 @@ import org.parceler.Parcels;
 import java.util.List;
 
 import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.shared.models.NotificationInfo;
+import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
@@ -43,9 +43,15 @@ import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.wearable.WearableClientBase;
 import timber.log.Timber;
 
-import static org.parceler.Parcels.unwrap;
-
 public class MobileWearableClient extends WearableClientBase implements NodeApi.NodeListener {
+
+    private static final String BROADCAST_UPDATE_TRAINING_FROM_LOCAL = "update_from_local";
+    public static final String BROADCAST_UPDATE_TRAINING_FROM_REMOTE = "update_from_remote";
+    private static final String EXTRA_TRAINING = "training";
+    private static final String EXTRA_TRAINING_ID = "training_id";
+    private static final String EXTRA_ROUND_ID = "round_id";
+    private static final String EXTRA_END = "end_index";
+
     public MobileWearableClient(Context context) {
         super(context);
         LocalBroadcastManager.getInstance(context).registerReceiver(updateReceiver,
@@ -58,18 +64,11 @@ public class MobileWearableClient extends WearableClientBase implements NodeApi.
         super.disconnect();
     }
 
-    private static final String BROADCAST_UPDATE_TRAINING_FROM_LOCAL = "update_from_local";
-    public static final String BROADCAST_UPDATE_TRAINING_FROM_REMOTE = "update_from_remote";
-    private static final String EXTRA_TRAINING = "training";
-    private static final String EXTRA_TRAINING_ID = "training_id";
-    private static final String EXTRA_ROUND_ID = "round_id";
-    private static final String EXTRA_END = "end_index";
-
     private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Timber.d("updateReceiver received %s", intent.getAction());
-            Training training = unwrap(intent.getParcelableExtra(EXTRA_TRAINING));
+            Training training = Parcels.unwrap(intent.getParcelableExtra(EXTRA_TRAINING));
             updateTraining(training);
         }
     };
@@ -91,7 +90,7 @@ public class MobileWearableClient extends WearableClientBase implements NodeApi.
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
-    private void updateTraining(Training training) {
+    public void updateTraining(Training training) {
         Timber.d("updateTraining() called with: training = [" + training + "]");
         List<Round> rounds = training.getRounds();
         int roundCount = rounds.size();
@@ -103,7 +102,7 @@ public class MobileWearableClient extends WearableClientBase implements NodeApi.
                 .filter(end -> Stream.of(end.getShots())
                         .allMatch(s -> s.scoringRing != Shot.NOTHING_SELECTED))
                 .toList();
-        NotificationInfo notificationInfo = new NotificationInfo(round, training.title, roundCount,
+        TrainingInfo notificationInfo = new TrainingInfo(round, training.title, roundCount,
                 SettingsManager.getTimerEnabled());
         final byte[] data = ParcelableUtil.marshall(Parcels.wrap(notificationInfo));
 

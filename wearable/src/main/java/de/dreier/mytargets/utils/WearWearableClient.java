@@ -23,7 +23,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import org.parceler.Parcels;
 
-import de.dreier.mytargets.shared.models.NotificationInfo;
+import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.wearable.WearableClientBase;
 import timber.log.Timber;
@@ -39,7 +39,7 @@ public class WearWearableClient extends WearableClientBase {
     private static final String EXTRA_END = "end";
     public static final String EXTRA_INFO = "info";
 
-    private NotificationInfo info;
+    private TrainingInfo info;
     private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -76,7 +76,7 @@ public class WearWearableClient extends WearableClientBase {
         super.disconnect();
     }
 
-    public void sendTrainingUpdate(NotificationInfo info) {
+    public void sendTrainingUpdate(TrainingInfo info) {
         this.info = info;
         Timber.d("sendTrainingUpdate: send broadcast");
         Intent intent = new Intent(BROADCAST_TRAINING_UPDATED);

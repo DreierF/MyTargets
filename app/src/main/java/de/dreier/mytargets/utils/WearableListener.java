@@ -17,7 +17,12 @@ package de.dreier.mytargets.utils;
 
 import com.google.android.gms.wearable.MessageEvent;
 
+import org.joda.time.LocalDate;
+
+import de.dreier.mytargets.R;
 import de.dreier.mytargets.app.ApplicationInstance;
+import de.dreier.mytargets.features.settings.SettingsManager;
+import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.End$$Parcelable;
 import de.dreier.mytargets.shared.models.db.Round;
@@ -42,30 +47,27 @@ public class WearableListener extends WearableListenerServiceBase {
         Timber.d("onMessageReceived() called with: messageEvent = [" + messageEvent.getPath() + "]");
         switch (messageEvent.getPath()) {
             case WearableClientBase.TRAINING_CREATE:
-//                createTraining();
+                createTraining();
                 break;
             case WearableClientBase.END_UPDATE:
                 endUpdated(messageEvent);
+                break;
+            default:
                 break;
         }
     }
 
     public void createTraining() {
-//        Optional<Training> training = Stream.of(Training.getAll()).sorted().findFirst();
-//        if (training.isPresent()) {
-//            Training t = training.get();
-//            t.date = LocalDate.now();
-//            t.arrowNumbering = false;
-//            for (Round round : t.getRounds()) {
-//                round.setId(null);
-//            }
-//            t.setId(null);
-//            t.save();
-//            ApplicationInstance.wearableClient.updateTraining(t);
-//        } else {
-            //show opened on phone animation
+        Training training = new Training();
+        training.title = getString(R.string.training);
+        training.date = LocalDate.now();
+        training.setEnvironment(Environment.getDefault(SettingsManager.getIndoor()));
+        training.bowId = SettingsManager.getBow();
+        training.arrowId = SettingsManager.getArrow();
+        training.arrowNumbering = false;
 
-//        }
+        training.save();
+        ApplicationInstance.wearableClient.updateTraining(t);
     }
 
     private void endUpdated(MessageEvent messageEvent) {

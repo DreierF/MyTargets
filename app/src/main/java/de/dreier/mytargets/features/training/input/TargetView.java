@@ -612,7 +612,7 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected int getSelectedShotCircleRadius() {
-        return inputMethod == EInputMethod.KEYBOARD ? EndRenderer.MAX_CIRCLE_SIZE : 0;
+        return inputMethod == KEYBOARD ? EndRenderer.MAX_CIRCLE_SIZE : 0;
     }
 
     public enum EKeyboardType {

@@ -28,7 +28,7 @@ import android.view.Gravity;
 import org.parceler.Parcels;
 
 import de.dreier.mytargets.databinding.ActivityMainBinding;
-import de.dreier.mytargets.shared.models.NotificationInfo;
+import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.utils.WearWearableClient;
 import timber.log.Timber;
 
@@ -38,12 +38,12 @@ public class MainActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             Timber.d("onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
-            NotificationInfo info = Parcels.unwrap(intent.getExtras().getParcelable(WearWearableClient.EXTRA_INFO));
+            TrainingInfo info = Parcels.unwrap(intent.getExtras().getParcelable(WearWearableClient.EXTRA_INFO));
             setNotificationInfo(info);
         }
     };
     private ActivityMainBinding binding;
-    private NotificationInfo info;
+    private TrainingInfo info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public class MainActivity extends Activity {
         ApplicationInstance.wearableClient.sendRequestInfo();
     }
 
-    public void setNotificationInfo(NotificationInfo info) {
+    public void setNotificationInfo(TrainingInfo info) {
         this.info = info;
         binding.title.setText(info.title);
         String rounds = getResources().getQuantityString(R.plurals.rounds, info.roundCount, info.roundCount);

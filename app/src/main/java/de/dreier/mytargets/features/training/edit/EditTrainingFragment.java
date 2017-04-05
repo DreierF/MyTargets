@@ -298,24 +298,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         return training;
     }
 
-    @NonNull
-    private ArrayList<Round> createRoundsFromTemplate(StandardRound standardRound, Training training) {
-        ArrayList<Round> rounds = new ArrayList<>();
-        for (RoundTemplate template : standardRound.getRounds()) {
-            Round round = new Round(template);
-            round.trainingId = training.getId();
-            if (trainingType == FREE_TRAINING) {
-                round.setTarget(binding.target.getSelectedItem());
-            } else {
-                round.setTarget(roundTarget);
-            }
-            round.comment = "";
-            round.save();
-            rounds.add(round);
-        }
-        return rounds;
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

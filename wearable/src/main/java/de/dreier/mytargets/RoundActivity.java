@@ -34,7 +34,7 @@ import org.parceler.Parcels;
 import java.util.List;
 
 import de.dreier.mytargets.databinding.ActivityRoundBinding;
-import de.dreier.mytargets.shared.models.NotificationInfo;
+import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.views.EndView;
@@ -58,7 +58,7 @@ public class RoundActivity extends WearableActivity {
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            NotificationInfo info = Parcels.unwrap(intent.getExtras().getParcelable(WearWearableClient.EXTRA_INFO));
+            TrainingInfo info = Parcels.unwrap(intent.getExtras().getParcelable(WearWearableClient.EXTRA_INFO));
             round = info.round;
             loadData();
         }

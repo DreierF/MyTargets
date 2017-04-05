@@ -92,7 +92,7 @@ public class TimerActivity extends WearableActivity implements
         return true;
     }
 
-    private void applyStatus(ETimerState status) {
+    public void applyStatus(ETimerState status) {
         primaryActionPeek.setImageResource(status == ETimerState.WAIT_FOR_START
                 ? R.drawable.ic_more_vert_white_24dp
                 : R.drawable.ic_stop_white_24dp);

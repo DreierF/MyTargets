@@ -27,8 +27,8 @@ import com.google.android.gms.wearable.MessageEvent;
 
 import org.parceler.Parcels;
 
-import de.dreier.mytargets.shared.models.NotificationInfo;
-import de.dreier.mytargets.shared.models.NotificationInfo$$Parcelable;
+import de.dreier.mytargets.shared.models.TrainingInfo;
+import de.dreier.mytargets.shared.models.TrainingInfo$$Parcelable;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.wearable.WearableListenerServiceBase;
 import timber.log.Timber;
@@ -50,18 +50,18 @@ public class WearableListener extends WearableListenerServiceBase {
         // Transform byte[] to Bundle
         byte[] data = messageEvent.getData();
         if (messageEvent.getPath().equals(TRAINING_UPDATE)) {
-            NotificationInfo info = getNotificationInfo(data);
+            TrainingInfo info = getNotificationInfo(data);
             showNotification(info);
             ApplicationInstance.wearableClient.sendTrainingUpdate(info);
         }
     }
 
     @Nullable
-    private NotificationInfo getNotificationInfo(byte[] data) {
-        return unwrap(ParcelableUtil.unmarshall(data, NotificationInfo$$Parcelable.CREATOR));
+    private TrainingInfo getNotificationInfo(byte[] data) {
+        return unwrap(ParcelableUtil.unmarshall(data, TrainingInfo$$Parcelable.CREATOR));
     }
 
-    private void showNotification(NotificationInfo info) {
+    private void showNotification(TrainingInfo info) {
         // Build the intent to display our custom notification
         Intent notificationIntent = new Intent(this, RoundActivity.class);
         notificationIntent.putExtra(RoundActivity.EXTRA_ROUND, Parcels.wrap(info.round));
@@ -87,7 +87,7 @@ public class WearableListener extends WearableListenerServiceBase {
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
 
-    private String describe(NotificationInfo info) {
+    private String describe(TrainingInfo info) {
         String rounds = getResources().getQuantityString(R.plurals.rounds, info.roundCount, info.roundCount);
         Integer endCount = info.round.maxEndCount == null ? info.round.getEnds().size() : info.round.maxEndCount;
         String ends = getResources().getQuantityString(R.plurals.ends_arrow, info.round.shotsPerEnd, endCount, info.round.shotsPerEnd);

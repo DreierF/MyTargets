@@ -19,7 +19,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresPermission;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -31,7 +30,6 @@ import de.dreier.mytargets.features.training.environment.CurrentWeather;
 import de.dreier.mytargets.features.training.environment.EnvironmentActivity;
 import de.dreier.mytargets.features.training.environment.Locator;
 import de.dreier.mytargets.features.training.environment.WeatherService;
-import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -131,19 +129,15 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
     }
 
     private void setDefaultWeather() {
-        setItem(getDefaultEnvironment());
+        setItem(Environment.getDefault(SettingsManager.getIndoor()));
     }
 
     @Override
     public Environment getSelectedItem() {
         if (item == null) {
-            return getDefaultEnvironment();
+            return Environment.getDefault(SettingsManager.getIndoor());
         }
         return item;
     }
 
-    @NonNull
-    private Environment getDefaultEnvironment() {
-        return new Environment(SettingsManager.getIndoor(), EWeather.SUNNY, 0, 0, "");
-    }
 }
