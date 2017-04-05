@@ -85,18 +85,18 @@ public class ViewPagerAdapter extends PagerAdapter {
                 .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
-                        private PhotoViewAttacher photoViewAttacher = new PhotoViewAttacher(imageView);
-                        photoViewAttacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-                            @Override
-                            public void onPhotoTap(View view, float x, float y) {
-                                toggleToolbar();
-                            }
+                        new PhotoViewAttacher(imageView)
+                                .setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+                                    @Override
+                                    public void onPhotoTap(View view, float x, float y) {
+                                        toggleToolbar();
+                                    }
 
-                            @Override
-                            public void onOutsidePhotoTap() {
+                                    @Override
+                                    public void onOutsidePhotoTap() {
 
-                            }
-                        });
+                                    }
+                                });
                     }
 
                     @Override
