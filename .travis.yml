@@ -36,7 +36,8 @@ before_install:
 - tar xvf services.tar
 - wget https://raw.githubusercontent.com/JakeWharton/pidcat/master/pidcat.py
 install:
-- git fetch --unshallow --tags
+- git fetch --unshallow --tags -f
+- git tags
 before_script:
 - echo no | android create avd -f -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI -s WVGA800 -c 128M
 - emulator -avd test -no-audio -no-window &
@@ -54,7 +55,8 @@ after_success:
 - |
   if [[ "$TRAVIS_TAG" ]]; then
     ./gradlew publishRegularRelease
-    ./gradlew -PFirebaseServiceAccountFilePath=$PWD/app/src/release/google-services.json :app:firebaseUploadRegularReleaseProguardMapping --debug
+    ./gradlew -PFirebaseServiceAccountFilePath=$PWD/app/src/release/google-services.json :app:firebaseUploadRegularReleaseProguardMapping --debug >>firebaseUploadRegularReleaseProguardMapping.txt 2>&1
+    ./dropbox_uploader.sh upload firebaseUploadRegularReleaseProguardMapping.txt /Release/$TRAVIS_TAG/firebaseUploadRegularReleaseProguardMapping.txt
     ./dropbox_uploader.sh upload app/build/outputs/apk/app-regular-release.apk /Release/$TRAVIS_TAG/MyTargets.apk
     ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /Release/$TRAVIS_TAG/mapping.txt
   fi
