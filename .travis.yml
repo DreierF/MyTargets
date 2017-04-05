@@ -37,7 +37,7 @@ before_install:
 - wget https://raw.githubusercontent.com/JakeWharton/pidcat/master/pidcat.py
 install:
 - git fetch --unshallow --tags -f
-- git tags
+- git tag
 before_script:
 - echo no | android create avd -f -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI -s WVGA800 -c 128M
 - emulator -avd test -no-audio -no-window &
