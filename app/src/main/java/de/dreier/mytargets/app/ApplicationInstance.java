@@ -17,7 +17,6 @@ package de.dreier.mytargets.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.StrictMode;
 import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
@@ -95,18 +94,7 @@ public class ApplicationInstance extends SharedApplicationInstance {
 
     @Override
     public void onCreate() {
-        if (BuildConfig.DEBUG) {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                    .detectAll()
-                    .penaltyLog()
-                    .build());
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                    .detectLeakedSqlLiteObjects()
-                    .detectLeakedClosableObjects()
-                    .penaltyLog()
-                    .build());
-            Timber.plant(new Timber.DebugTree());
-        } else {
+        if (!BuildConfig.DEBUG) {
             Timber.plant(new CrashReportingTree());
         }
         super.onCreate();

@@ -15,11 +15,7 @@
 
 package de.dreier.mytargets.utils;
 
-import com.annimon.stream.Optional;
-import com.annimon.stream.Stream;
 import com.google.android.gms.wearable.MessageEvent;
-
-import org.joda.time.LocalDate;
 
 import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.shared.models.db.End;
@@ -46,7 +42,7 @@ public class WearableListener extends WearableListenerServiceBase {
         Timber.d("onMessageReceived() called with: messageEvent = [" + messageEvent.getPath() + "]");
         switch (messageEvent.getPath()) {
             case WearableClientBase.TRAINING_CREATE:
-                createTraining();
+//                createTraining();
                 break;
             case WearableClientBase.END_UPDATE:
                 endUpdated(messageEvent);
@@ -55,24 +51,25 @@ public class WearableListener extends WearableListenerServiceBase {
     }
 
     public void createTraining() {
-        Optional<Training> training = Stream.of(Training.getAll()).sorted().findFirst();
-        if (training.isPresent()) {
-            Training t = training.get();
-            t.date = LocalDate.now();
-            t.arrowNumbering = false;
-            for (Round round : t.getRounds()) {
-                round.setId(null);
-            }
-            t.setId(null);
-            t.save();
-            ApplicationInstance.wearableClient.updateTraining(t);
-        } else {
+//        Optional<Training> training = Stream.of(Training.getAll()).sorted().findFirst();
+//        if (training.isPresent()) {
+//            Training t = training.get();
+//            t.date = LocalDate.now();
+//            t.arrowNumbering = false;
+//            for (Round round : t.getRounds()) {
+//                round.setId(null);
+//            }
+//            t.setId(null);
+//            t.save();
+//            ApplicationInstance.wearableClient.updateTraining(t);
+//        } else {
             //show opened on phone animation
-            ApplicationInstance.wearableClient.createOnPhone();
-        }
+
+//        }
     }
 
     private void endUpdated(MessageEvent messageEvent) {
+        Timber.d("endUpdated() called with: messageEvent = [" + messageEvent + "]");
         byte[] data = messageEvent.getData();
         End end = unwrap(ParcelableUtil.unmarshall(data, End$$Parcelable.CREATOR));
         Round round = Round.get(end.roundId);
@@ -82,6 +79,6 @@ public class WearableListener extends WearableListenerServiceBase {
         newEnd.save();
 
         ApplicationInstance.wearableClient.sendUpdateTrainingFromRemoteBroadcast(round, newEnd);
+        ApplicationInstance.wearableClient.sendUpdateTrainingFromLocalBroadcast(Training.get(round.trainingId).ensureLoaded());
     }
-
 }

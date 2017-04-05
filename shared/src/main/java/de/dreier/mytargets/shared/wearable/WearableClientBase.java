@@ -39,8 +39,7 @@ public class WearableClientBase implements GoogleApiClient.ConnectionCallbacks {
     public static final String TIMER_ENABLE = "/de/dreier/mytargets/timer/enable";
     public static final String TIMER_DISABLE = "/de/dreier/mytargets/timer/disable";
 
-
-    private GoogleApiClient googleApiClient;
+    protected GoogleApiClient googleApiClient;
     protected final Context context;
 
     public WearableClientBase(Context context) {
@@ -61,6 +60,7 @@ public class WearableClientBase implements GoogleApiClient.ConnectionCallbacks {
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Timber.d("onConnected() called with: bundle = [" + bundle + "]");
+
     }
 
     @Override
@@ -72,6 +72,7 @@ public class WearableClientBase implements GoogleApiClient.ConnectionCallbacks {
         Timber.d("sendMessage() called with: path = [" + path + "]");
         Wearable.NodeApi.getConnectedNodes(googleApiClient)
                 .setResultCallback(nodes -> {
+                    Timber.d("sendMessage: "+nodes);
                     for (Node node : nodes.getNodes()) {
                         sendToNode(node, path, data);
                     }
@@ -79,6 +80,7 @@ public class WearableClientBase implements GoogleApiClient.ConnectionCallbacks {
     }
 
     private void sendToNode(Node node, String path, byte[] data) {
+        Timber.d("sendToNode() called with: node = [" + node + "], path = [" + path + "], data = [" + data + "]");
         Wearable.MessageApi.sendMessage(
                 googleApiClient, node.getId(), path, data)
                 .setResultCallback(

@@ -43,6 +43,7 @@ public class WearWearableClient extends WearableClientBase {
     private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Timber.d("BROADCAST_UPDATE_END_FROM_LOCAL onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
             End end = unwrap(intent.getParcelableExtra(EXTRA_END));
             updateEnd(end);
         }
@@ -53,13 +54,14 @@ public class WearWearableClient extends WearableClientBase {
             if (info == null) {
                 return;
             }
+            Timber.d("BROADCAST_REQUEST_INFO onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
             sendTrainingUpdate(info);
         }
     };
 
     public WearWearableClient(Context context) {
         super(context);
-
+        Timber.d("WearWearableClient() called with: context = [" + context + "]");
         LocalBroadcastManager.getInstance(context).registerReceiver(updateReceiver,
                 new IntentFilter(BROADCAST_UPDATE_END_FROM_LOCAL));
         LocalBroadcastManager.getInstance(context).registerReceiver(requestReceiver,
@@ -68,6 +70,7 @@ public class WearWearableClient extends WearableClientBase {
 
     @Override
     public void disconnect() {
+        Timber.d("disconnect() called");
         LocalBroadcastManager.getInstance(context).unregisterReceiver(updateReceiver);
         LocalBroadcastManager.getInstance(context).unregisterReceiver(requestReceiver);
         super.disconnect();
@@ -82,12 +85,14 @@ public class WearWearableClient extends WearableClientBase {
     }
 
     public void sendEndUpdate(End end) {
+        Timber.d("sendEndUpdate() called with: end = [" + end + "]");
         Intent intent = new Intent(BROADCAST_UPDATE_END_FROM_LOCAL);
         intent.putExtra(EXTRA_END, Parcels.wrap(end));
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     public void sendRequestInfo() {
+        Timber.d("sendRequestInfo() called");
         Intent intent = new Intent(BROADCAST_REQUEST_INFO);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }

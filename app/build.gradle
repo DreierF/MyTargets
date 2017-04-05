@@ -61,7 +61,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled false
             testCoverageEnabled true
         }

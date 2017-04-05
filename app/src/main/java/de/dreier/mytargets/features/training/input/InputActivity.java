@@ -98,7 +98,11 @@ public class InputActivity extends ChildActivityBase
 
         @Override
         protected void onUpdate(Long trainingId, Long roundId, End end) {
-            getSupportLoaderManager().restartLoader(0, getIntent().getExtras(), InputActivity.this).forceLoad();
+            Bundle extras = getIntent().getExtras();
+            extras.putLong(TRAINING_ID, trainingId);
+            extras.putLong(ROUND_ID, roundId);
+            extras.putInt(END_INDEX, end.index);
+            getSupportLoaderManager().restartLoader(0, extras, InputActivity.this).forceLoad();
         }
     };
 
@@ -574,7 +578,7 @@ public class InputActivity extends ChildActivityBase
 
         @ParcelConstructor
         public LoaderResult(Training training) {
-            this.training = training;
+            this.training = training.ensureLoaded();
             this.standardRound = training.getStandardRound();
         }
 
@@ -585,7 +589,6 @@ public class InputActivity extends ChildActivityBase
                 if (rounds.get(i).getId() == roundId) {
                     roundIndex = i;
                 }
-                rounds.get(i).getEnds();
             }
         }
 

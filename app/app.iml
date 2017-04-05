@@ -80,13 +80,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/regularDebug/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/regularDebug/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/regularDebug/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/regular/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/regular/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/regular/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/regular/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/androidTest/regular/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/regular/debug" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/regular/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testRegularDebug/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testRegularDebug/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testRegularDebug/assets" type="java-test-resource" />
@@ -94,6 +87,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/testRegularDebug/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testRegularDebug/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testRegularDebug/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/regular/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/regular/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/regular/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/regular/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/androidTest/regular/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/regular/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/regular/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/regular/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/regular/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/regular/assets" type="java-resource" />
@@ -165,7 +165,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-verifier" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant-run-resources" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant-run-support" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jacoco" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/reload-dex" />
@@ -184,19 +183,19 @@
     <orderEntry type="library" exported="" name="icepick-3.2.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="runner-0.5" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="espresso-idling-resource-2.2.2" level="project" />
-    <orderEntry type="library" exported="" name="firebase-core-10.2.1" level="project" />
+    <orderEntry type="library" exported="" name="firebase-core-10.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="accessibility-test-framework-2.0" level="project" />
     <orderEntry type="library" exported="" name="permissionsdispatcher-2.3.2" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-library-1.3" level="project" />
     <orderEntry type="library" exported="" name="transition-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="data.priority-map-0.0.2" level="project" />
     <orderEntry type="library" exported="" name="baseLibrary-2.3.0" level="project" />
+    <orderEntry type="library" exported="" name="play-services-wearable-10.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="guava-20.0" level="project" />
-    <orderEntry type="library" exported="" name="play-services-wearable-10.2.1" level="project" />
     <orderEntry type="library" exported="" name="library-1.3.0" level="project" />
     <orderEntry type="library" exported="" name="library-1.3.1" level="project" />
+    <orderEntry type="library" exported="" name="firebase-crash-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="discrete-seekbar-1.0.1" level="project" />
-    <orderEntry type="library" exported="" name="firebase-crash-10.2.1" level="project" />
     <orderEntry type="library" exported="" name="core.cache-0.6.3" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="espresso-intents-2.2.2" level="project" />
     <orderEntry type="library" exported="" name="guava-18.0" level="project" />
@@ -208,11 +207,11 @@
     <orderEntry type="library" exported="" name="MPAndroidChart-v3.0.2" level="project" />
     <orderEntry type="library" exported="" name="EasyImage-1.4.2" level="project" />
     <orderEntry type="library" exported="" name="converter-gson-2.2.0" level="project" />
+    <orderEntry type="library" exported="" name="firebase-common-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="homage-recyclerview-0.2.0" level="project" />
     <orderEntry type="library" exported="" name="dbflow-core-3.1.1" level="project" />
-    <orderEntry type="library" exported="" name="firebase-common-10.2.1" level="project" />
     <orderEntry type="library" exported="" name="stencil-0.3.5" level="project" />
-    <orderEntry type="library" exported="" name="play-services-basement-10.2.1" level="project" />
+    <orderEntry type="library" exported="" name="play-services-basement-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="fab-1.6.4" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="javawriter-2.1.1" level="project" />
     <orderEntry type="library" exported="" name="support-media-compat-25.3.1" level="project" />
@@ -222,16 +221,16 @@
     <orderEntry type="library" exported="" name="support-annotations-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="support-vector-drawable-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="support-compat-25.3.1" level="project" />
-    <orderEntry type="library" exported="" name="firebase-analytics-10.2.1" level="project" />
+    <orderEntry type="library" exported="" name="firebase-analytics-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="picasso-2.5.2" level="project" />
     <orderEntry type="library" exported="" name="library-1.0.38" level="project" />
     <orderEntry type="library" exported="" name="gson-2.8.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="jsr305-3.0.1" level="project" />
-    <orderEntry type="library" exported="" name="play-services-base-10.2.1" level="project" />
-    <orderEntry type="library" exported="" name="play-services-tasks-10.2.1" level="project" />
+    <orderEntry type="library" exported="" name="play-services-tasks-10.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="espresso-contrib-2.2.2" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-integration-1.3" level="project" />
     <orderEntry type="library" exported="" name="design-25.3.1" level="project" />
+    <orderEntry type="library" exported="" name="play-services-base-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="slingshot-0.10.3" level="project" />
     <orderEntry type="library" exported="" name="support-core-ui-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="cardview-v7-25.3.1" level="project" />
@@ -240,27 +239,27 @@
     <orderEntry type="library" exported="" name="okhttp-urlconnection-3.6.0" level="project" />
     <orderEntry type="library" exported="" name="support-v13-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="joda-time-2.9.9" level="project" />
-    <orderEntry type="library" exported="" name="firebase-iid-10.2.1" level="project" />
     <orderEntry type="library" exported="" name="support-core-utils-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="support-fragment-25.3.1" level="project" />
+    <orderEntry type="library" exported="" name="firebase-iid-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="core-0.9.4.2" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="espresso-core-2.2.2" level="project" />
     <orderEntry type="library" exported="" name="preference-v7-25.3.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="rules-0.5" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="uiautomator-v18-2.1.2" level="project" />
     <orderEntry type="library" exported="" name="quoin-0.1.2" level="project" />
-    <orderEntry type="library" exported="" name="firebase-analytics-impl-10.2.1" level="project" />
     <orderEntry type="library" exported="" name="roundedimageview-2.2.1" level="project" />
     <orderEntry type="library" exported="" name="scout-0.1.0" level="project" />
+    <orderEntry type="library" exported="" name="firebase-analytics-impl-10.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="javax.inject-1" level="project" />
     <orderEntry type="library" exported="" name="preference-v14-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="okio-1.11.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="error_prone_annotations-2.0.12" level="project" />
     <orderEntry type="library" exported="" name="dbflow-3.1.1" level="project" />
     <orderEntry type="library" exported="" name="okhttp-3.6.0" level="project" />
+    <orderEntry type="library" exported="" name="play-services-drive-10.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.3" level="project" />
     <orderEntry type="library" exported="" name="timber-4.5.1" level="project" />
-    <orderEntry type="library" exported="" name="play-services-drive-10.2.1" level="project" />
     <orderEntry type="library" exported="" name="clojure-1.7.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-25.3.1" level="project" />

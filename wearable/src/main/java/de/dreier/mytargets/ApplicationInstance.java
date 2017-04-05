@@ -41,6 +41,7 @@ import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.utils.WearWearableClient;
+import timber.log.Timber;
 
 /**
  * Application singleton. Gets instantiated exactly once and is used
@@ -77,6 +78,7 @@ public class ApplicationInstance extends SharedApplicationInstance {
     @Override
     public void onCreate() {
         super.onCreate();
+        Timber.plant(new Timber.DebugTree());
         wearableClient = new WearWearableClient(this);
     }
     @Override

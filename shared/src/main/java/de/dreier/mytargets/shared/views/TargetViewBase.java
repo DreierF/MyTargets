@@ -214,7 +214,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             shots.get(getCurrentShotIndex()).y = shot.y;
             endRenderer.setSelection(
                     getCurrentShotIndex(), initAnimationPositions(getCurrentShotIndex()),
-                    inputMethod == EInputMethod.KEYBOARD ? EndRenderer.MAX_CIRCLE_SIZE : 0);
+                    getSelectedShotCircleRadius());
             invalidate();
         }
 
@@ -225,6 +225,8 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
         return true;
     }
+
+    protected abstract int getSelectedShotCircleRadius();
 
     protected boolean isCurrentlySelecting() {
         return getCurrentShotIndex() != EndRenderer.NO_SELECTION
@@ -272,7 +274,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         if (isCurrentlySelecting()) {
             pos = initAnimationPositions(getCurrentShotIndex());
         }
-        int initialSize = inputMethod == EInputMethod.KEYBOARD ? EndRenderer.MAX_CIRCLE_SIZE : 0;
+        int initialSize = getSelectedShotCircleRadius();
         return endRenderer
                 .getAnimationToSelection(getCurrentShotIndex(), pos, initialSize, endRect);
     }

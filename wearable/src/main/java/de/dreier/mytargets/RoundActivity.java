@@ -101,6 +101,7 @@ public class RoundActivity extends WearableActivity {
 
     private void loadData() {
         binding.recyclerViewEnds.setAdapter(new EndAdapter(round.getEnds()));
+        binding.recyclerViewEnds.scrollToPosition(round.getEnds().size());
     }
 
     private void addEnd() {
@@ -108,7 +109,7 @@ public class RoundActivity extends WearableActivity {
         intent.putExtra(InputActivity.EXTRA_ROUND, Parcels.wrap(round));
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
-        if(timerEnabled) {
+        if (timerEnabled) {
             startActivity(new Intent(this, TimerActivity.class));
         }
     }

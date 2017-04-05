@@ -57,7 +57,7 @@ android {
             applicationIdSuffix '.debug'
             signingConfig signingConfigs.release
             minifyEnabled false
-            testCoverageEnabled = true
+            testCoverageEnabled true
         }
         release {
             signingConfig signingConfigs.release

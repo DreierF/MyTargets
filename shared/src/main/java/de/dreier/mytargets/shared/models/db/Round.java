@@ -30,7 +30,6 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.parceler.Parcel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.AppDatabase;
@@ -90,6 +89,20 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
         maxEndCount = info.endCount;
         index = info.index;
         setTarget(info.getTargetTemplate());
+    }
+
+    public Round(Round round) {
+        this.id = round.id;
+        this.trainingId = round.trainingId;
+        this.index = round.index;
+        this.shotsPerEnd = round.shotsPerEnd;
+        this.maxEndCount = round.maxEndCount;
+        this.distance = round.distance;
+        this.comment = round.comment;
+        this.targetId = round.targetId;
+        this.targetScoringStyle = round.targetScoringStyle;
+        this.targetDiameter = round.targetDiameter;
+        this.ends = round.ends;
     }
 
     public static Round get(Long id) {
