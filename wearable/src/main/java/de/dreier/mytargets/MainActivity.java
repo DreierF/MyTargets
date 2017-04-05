@@ -24,61 +24,95 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Gravity;
+import android.view.View;
 
 import org.parceler.Parcels;
 
 import de.dreier.mytargets.databinding.ActivityMainBinding;
 import de.dreier.mytargets.shared.models.TrainingInfo;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.utils.WearWearableClient;
-import timber.log.Timber;
+
+import static de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_TEMPLATE;
+import static de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_UPDATED;
 
 public class MainActivity extends Activity {
 
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Timber.d("onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
-            TrainingInfo info = Parcels.unwrap(intent.getExtras().getParcelable(WearWearableClient.EXTRA_INFO));
-            setNotificationInfo(info);
+            switch (intent.getAction()) {
+                case BROADCAST_TRAINING_TEMPLATE:
+                    Training training = Parcels.unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_TRAINING));
+                    setTraining(training);
+                    binding.root.setClickable(false);
+                    binding.wearableDrawerView.setVisibility(View.VISIBLE);
+                    binding.primaryActionAdd.setOnClickListener(view -> ApplicationInstance.wearableClient.sendCreateTraining(training));
+                    binding.drawerLayout.peekDrawer(Gravity.BOTTOM);
+                    break;
+                case BROADCAST_TRAINING_UPDATED:
+                    TrainingInfo info = Parcels.unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_INFO));
+                    setTrainingInfo(info);
+                    binding.root.setClickable(true);
+                    binding.root.setOnClickListener(v -> {
+                        Intent i = new Intent(MainActivity.this, RoundActivity.class);
+                        i.putExtra(RoundActivity.EXTRA_ROUND, Parcels.wrap(info.round));
+                        i.putExtra(RoundActivity.EXTRA_TIMER, Parcels.wrap(info.timerSettings));
+                        startActivity(i);
+                    });
+                    binding.wearableDrawerView.setVisibility(View.GONE);
+                    break;
+            }
         }
     };
+
     private ActivityMainBinding binding;
-    private TrainingInfo info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        binding.drawerLayout.peekDrawer(Gravity.BOTTOM);
-
-        binding.root.setOnClickListener(v -> {
-            Intent i = new Intent(this, RoundActivity.class);
-            i.putExtra(RoundActivity.EXTRA_ROUND, Parcels.wrap(info.round));
-            i.putExtra(RoundActivity.EXTRA_TIMER, info.timerEnabled);
-            startActivity(i);
-        });
-
-        binding.primaryActionAdd.setOnClickListener(view -> ApplicationInstance.wearableClient.createOnPhone());
-
-        final IntentFilter intentFilter = new IntentFilter(WearWearableClient.BROADCAST_TRAINING_UPDATED);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
-        ApplicationInstance.wearableClient.sendRequestInfo();
+        final IntentFilter filter = new IntentFilter();
+        filter.addAction(BROADCAST_TRAINING_TEMPLATE);
+        filter.addAction(BROADCAST_TRAINING_UPDATED);
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, filter);
+        ApplicationInstance.wearableClient.requestNewTrainingTemplate();
     }
 
-    public void setNotificationInfo(TrainingInfo info) {
-        this.info = info;
+    public void setTrainingInfo(TrainingInfo info) {
         binding.title.setText(info.title);
         String rounds = getResources().getQuantityString(R.plurals.rounds, info.roundCount, info.roundCount);
-        Integer endCount = info.round.maxEndCount == null ? info.round.getEnds().size() : info.round.maxEndCount;
-        String ends = getResources().getQuantityString(R.plurals.ends_arrow, info.round.shotsPerEnd, endCount, info.round.shotsPerEnd);
         binding.rounds.setText(rounds);
+        setRoundInfo(info.round);
+        binding.date.setText(R.string.today);
+    }
+
+    private void setTraining(Training training) {
+        binding.title.setText(training.title);
+        int roundCount = training.getRounds().size();
+        String rounds = getResources().getQuantityString(R.plurals.rounds, roundCount, roundCount);
+        binding.rounds.setText(rounds);
+        Round round = training.getRounds().get(0);
+        setRoundInfo(round);
+        binding.date.setText("");
+    }
+
+    private void setRoundInfo(Round round) {
+        String ends;
+        if(round.maxEndCount == null) {
+            ends = getResources().getQuantityString(R.plurals.arrows_per_end, round.shotsPerEnd, round.shotsPerEnd);
+        } else {
+            ends = getResources().getQuantityString(R.plurals.ends_arrow, round.shotsPerEnd, round.maxEndCount, round.shotsPerEnd);
+        }
         binding.ends.setText(ends);
+        binding.distance.setText(round.distance.toString());
     }
 
     @Override
     protected void onDestroy() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         super.onDestroy();
     }
 }

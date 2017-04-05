@@ -13,22 +13,13 @@
  * GNU General Public License for more details.
  */
 
-import org.ajoberstar.grgit.Grgit
+package de.dreier.mytargets.shared.models;
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'org.ajoberstar:grgit:1.9.0'
-    }
-}
-
-ext {
-    git = Grgit.open()
-    gitVersionCode = git.tag.list().size()
-    gitVersionName = git.describe()
-            .replace("v", "")
-            .replace("_b", "-Beta")
-            .replace("_rc", "-RC")
+public class TimerSettings {
+    public boolean enabled;
+    public boolean soundEnabled;
+    public boolean vibrate;
+    public int timerWaitTime;
+    public int timerShootTime;
+    public int timerWarnTime;
 }

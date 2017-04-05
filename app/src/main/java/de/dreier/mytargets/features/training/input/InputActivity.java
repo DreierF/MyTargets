@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.training.input;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
@@ -76,6 +77,8 @@ import timber.log.Timber;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static de.dreier.mytargets.shared.wearable.WearableClientBase.BROADCAST_TIMER_SETTINGS_FROM_REMOTE;
+import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
 
 public class InputActivity extends ChildActivityBase
         implements TargetViewBase.OnEndFinishedListener, TargetView.OnEndUpdatedListener,
@@ -103,6 +106,13 @@ public class InputActivity extends ChildActivityBase
             extras.putLong(ROUND_ID, roundId);
             extras.putInt(END_INDEX, end.index);
             getSupportLoaderManager().restartLoader(0, extras, InputActivity.this).forceLoad();
+        }
+    };
+
+    private final BroadcastReceiver timerReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            supportInvalidateOptionsMenu();
         }
     };
 
@@ -152,12 +162,15 @@ public class InputActivity extends ChildActivityBase
             getSupportLoaderManager().initLoader(0, getIntent().getExtras(), this).forceLoad();
         }
         LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver,
-                new IntentFilter(MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE));
+                new IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE));
+        LocalBroadcastManager.getInstance(this).registerReceiver(timerReceiver,
+                new IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_REMOTE));
     }
 
     @Override
     protected void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(updateReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(timerReceiver);
         super.onDestroy();
     }
 
@@ -284,9 +297,11 @@ public class InputActivity extends ChildActivityBase
                 supportInvalidateOptionsMenu();
                 return true;
             case R.id.action_timer:
-                SettingsManager.setTimerEnabled(!SettingsManager.getTimerEnabled());
+                boolean timerEnabled = !SettingsManager.getTimerEnabled();
+                SettingsManager.setTimerEnabled(timerEnabled);
+                ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(SettingsManager.getTimerSettings());
                 openTimer();
-                item.setChecked(SettingsManager.getTimerEnabled());
+                item.setChecked(timerEnabled);
                 supportInvalidateOptionsMenu();
                 return true;
             case R.id.action_new_round:

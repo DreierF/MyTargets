@@ -15,20 +15,23 @@
 package de.dreier.mytargets;
 
 import android.app.FragmentManager;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.drawer.WearableActionDrawer;
-import android.support.wearable.view.drawer.WearableDrawerLayout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+import org.parceler.Parcels;
+
+import de.dreier.mytargets.databinding.ActivityTimerBinding;
+import de.dreier.mytargets.databinding.FragmentTimerBinding;
 import de.dreier.mytargets.shared.base.fragment.ETimerState;
 import de.dreier.mytargets.shared.base.fragment.TimerFragmentBase;
+import de.dreier.mytargets.shared.models.TimerSettings;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -39,35 +42,25 @@ import static android.view.View.VISIBLE;
 public class TimerActivity extends WearableActivity implements
         WearableActionDrawer.OnMenuItemClickListener {
 
-    private WearableDrawerLayout wearableDrawerLayout;
-    private WearableActionDrawer wearableActionDrawer;
-    private ImageView primaryActionPeek;
+    public static final String EXTRA_TIMER_SETTINGS = "timer_settings";
+
     private TimerFragment timerFragment;
+    private ActivityTimerBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_timer);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_timer);
         setAmbientEnabled();
 
-        // Initialize content to first planet.
-        timerFragment = new TimerFragment();
+        TimerSettings settings = Parcels.unwrap(getIntent().getParcelableExtra(EXTRA_TIMER_SETTINGS));
+        timerFragment = TimerFragment.getInstance(settings);
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, timerFragment).commit();
 
-        // Main Wearable Drawer Layout that wraps all content
-        wearableDrawerLayout = (WearableDrawerLayout) findViewById(R.id.drawer_layout);
-
-        // Bottom Action Drawer
-        wearableActionDrawer = (WearableActionDrawer) findViewById(R.id.bottom_action_drawer);
-        primaryActionPeek = (ImageView) findViewById(R.id.primaryActionPeek);
-        primaryActionPeek.setOnClickListener(v -> wearableDrawerLayout.openDrawer(Gravity.BOTTOM));
-
-        wearableActionDrawer.setOnMenuItemClickListener(this);
-
-        // Peeks action drawer on the bottom.
-        wearableDrawerLayout.peekDrawer(Gravity.BOTTOM);
+        binding.primaryActionPeek.setOnClickListener(v -> binding.drawerLayout.openDrawer(Gravity.BOTTOM));
+        binding.bottomActionDrawer.setOnMenuItemClickListener(this);
+        binding.drawerLayout.peekDrawer(Gravity.BOTTOM);
     }
 
     @Override
@@ -79,24 +72,26 @@ public class TimerActivity extends WearableActivity implements
                 finish();
                 break;
             case R.id.menu_vibrate:
-                timerFragment.vibrate = !timerFragment.vibrate;
+                timerFragment.settings.vibrate = !timerFragment.settings.vibrate;
+                ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(timerFragment.settings);
                 return true;
             case R.id.menu_sound:
-                timerFragment.soundEnabled = !timerFragment.soundEnabled;
+                timerFragment.settings.soundEnabled = !timerFragment.settings.soundEnabled;
+                ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(timerFragment.settings);
                 return true;
             default:
                 return false;
         }
 
-        wearableDrawerLayout.closeDrawer(wearableActionDrawer);
+        binding.drawerLayout.closeDrawer(binding.bottomActionDrawer);
         return true;
     }
 
     public void applyStatus(ETimerState status) {
-        primaryActionPeek.setImageResource(status == ETimerState.WAIT_FOR_START
+        binding.primaryActionPeek.setImageResource(status == ETimerState.WAIT_FOR_START
                 ? R.drawable.ic_more_vert_white_24dp
                 : R.drawable.ic_stop_white_24dp);
-        primaryActionPeek.setOnClickListener(status == ETimerState.WAIT_FOR_START
+        binding.primaryActionPeek.setOnClickListener(status == ETimerState.WAIT_FOR_START
                 ? null : view -> finish());
     }
 
@@ -105,31 +100,26 @@ public class TimerActivity extends WearableActivity implements
      */
     public static class TimerFragment extends TimerFragmentBase {
 
-        private TextView time;
-        private View startTimer;
+        private FragmentTimerBinding binding;
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_timer, container, false);
-            startTimer = rootView.findViewById(R.id.start_timer);
-            startTimer.setOnClickListener(this);
-            time = (TextView) rootView.findViewById(R.id.timer_time);
-            return rootView;
+        public static TimerFragment getInstance(TimerSettings settings) {
+            TimerFragment timer = new TimerFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(ARG_TIMER_SETTINGS, Parcels.wrap(settings));
+            timer.setArguments(bundle);
+            return timer;
         }
 
         @Override
-        public void getSettings() {
-            soundEnabled = true;
-            vibrate = true;
-            timerWaitTime = 10;
-            timerShootTime = 30;
-            timerWarnTime = 15;
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_timer, container, false);
+            binding.startTimer.setOnClickListener(this);
+            return binding.getRoot();
         }
 
         @Override
         public void applyTime(String text) {
-            time.setText(text);
+            binding.timerTime.setText(text);
         }
 
         @Override
@@ -137,9 +127,9 @@ public class TimerActivity extends WearableActivity implements
             if (getActivity() != null) {
                 ((TimerActivity) getActivity()).applyStatus(status);
             }
-            startTimer.setVisibility(status == ETimerState.WAIT_FOR_START ? VISIBLE : GONE);
-            time.setVisibility(status != ETimerState.WAIT_FOR_START ? VISIBLE : GONE);
-            getView().setBackgroundResource(status.color);
+            binding.startTimer.setVisibility(status == ETimerState.WAIT_FOR_START ? VISIBLE : GONE);
+            binding.timerTime.setVisibility(status != ETimerState.WAIT_FOR_START ? VISIBLE : GONE);
+            binding.getRoot().setBackgroundResource(status.color);
         }
     }
 }

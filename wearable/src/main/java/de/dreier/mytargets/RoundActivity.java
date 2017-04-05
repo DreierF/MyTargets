@@ -34,12 +34,19 @@ import org.parceler.Parcels;
 import java.util.List;
 
 import de.dreier.mytargets.databinding.ActivityRoundBinding;
+import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.views.EndView;
 import de.dreier.mytargets.utils.WearWearableClient;
+import icepick.Icepick;
 import icepick.State;
+
+import static de.dreier.mytargets.shared.wearable.WearableClientBase.BROADCAST_TIMER_SETTINGS_FROM_REMOTE;
+import static de.dreier.mytargets.shared.wearable.WearableClientBase.EXTRA_TIMER_SETTINGS;
+import static de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_UPDATED;
 
 /**
  * Demonstrates use of Navigation and Action Drawers on Android Wear.
@@ -49,48 +56,64 @@ public class RoundActivity extends WearableActivity {
     public static final String EXTRA_ROUND = "round";
     public static final String EXTRA_TIMER = "timer";
 
-    @State
-    private Round round;
+    private ActivityRoundBinding binding;
 
-    @State
-    boolean timerEnabled = false;
+    @State(ParcelsBundler.class)
+    Round round;
+
+    @State(ParcelsBundler.class)
+    TimerSettings timerSettings;
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            TrainingInfo info = Parcels.unwrap(intent.getExtras().getParcelable(WearWearableClient.EXTRA_INFO));
-            round = info.round;
-            loadData();
+            switch (intent.getAction()) {
+                case BROADCAST_TRAINING_UPDATED:
+                    TrainingInfo info = Parcels.unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_INFO));
+                    round = info.round;
+                    showRoundData();
+                    break;
+                case BROADCAST_TIMER_SETTINGS_FROM_REMOTE:
+                    timerSettings = Parcels.unwrap(intent.getParcelableExtra(EXTRA_TIMER_SETTINGS));
+                    applyTimerState();
+                    break;
+            }
         }
     };
-    private ActivityRoundBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_round);
 
         setAmbientEnabled();
 
-        Intent intent = getIntent();
-        if (intent != null && intent.getExtras() != null) {
-            round = Parcels.unwrap(intent.getExtras().getParcelable(EXTRA_ROUND));
-            timerEnabled = intent.getExtras().getBoolean(EXTRA_TIMER);
+        Icepick.restoreInstanceState(this, savedInstanceState);
+        if (savedInstanceState == null) {
+            Intent intent = getIntent();
+            if (intent != null && intent.getExtras() != null) {
+                round = Parcels.unwrap(intent.getParcelableExtra(EXTRA_ROUND));
+                timerSettings = Parcels.unwrap(intent.getParcelableExtra(EXTRA_TIMER));
+            }
         }
 
-        loadData();
+        showRoundData();
 
         // Peeks action drawer on the bottom.
         binding.drawerLayout.peekDrawer(Gravity.BOTTOM);
-
         binding.primaryActionTimer.setOnClickListener(view -> toggleTimer());
-        binding.primaryActionTimer.setImageResource(
-                timerEnabled ? R.drawable.ic_traffic_white_24dp
-                        : R.drawable.ic_timer_off_white_24dp);
+        applyTimerState();
 
-        final IntentFilter intentFilter = new IntentFilter(WearWearableClient.BROADCAST_TRAINING_UPDATED);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
+        final IntentFilter filter = new IntentFilter();
+        filter.addAction(BROADCAST_TRAINING_UPDATED);
+        filter.addAction(BROADCAST_TIMER_SETTINGS_FROM_REMOTE);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
     }
 
     @Override
@@ -99,8 +122,9 @@ public class RoundActivity extends WearableActivity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
-    private void loadData() {
-        binding.recyclerViewEnds.setAdapter(new EndAdapter(round.getEnds()));
+    private void showRoundData() {
+        boolean showAddEnd = round.maxEndCount == null || round.maxEndCount > round.getEnds().size();
+        binding.recyclerViewEnds.setAdapter(new EndAdapter(round.getEnds(), showAddEnd));
         binding.recyclerViewEnds.scrollToPosition(round.getEnds().size());
     }
 
@@ -109,24 +133,33 @@ public class RoundActivity extends WearableActivity {
         intent.putExtra(InputActivity.EXTRA_ROUND, Parcels.wrap(round));
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
-        if (timerEnabled) {
-            startActivity(new Intent(this, TimerActivity.class));
+        if (timerSettings.enabled) {
+            Intent intentTimer = new Intent(this, TimerActivity.class);
+            intentTimer.putExtra(TimerActivity.EXTRA_TIMER_SETTINGS, Parcels.wrap(timerSettings));
+            startActivity(intentTimer);
         }
     }
 
     public void toggleTimer() {
-        timerEnabled = !timerEnabled;
+        timerSettings.enabled = !timerSettings.enabled;
+        ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(timerSettings);
+        applyTimerState();
+    }
+
+    private void applyTimerState() {
         binding.primaryActionTimer.setImageResource(
-                timerEnabled ? R.drawable.ic_traffic_white_24dp
+                timerSettings.enabled ? R.drawable.ic_traffic_white_24dp
                         : R.drawable.ic_timer_off_white_24dp);
     }
 
     private class EndAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private final List<End> ends;
+        private final boolean showAddEnd;
 
-        public EndAdapter(List<End> ends) {
+        public EndAdapter(List<End> ends, boolean showAddEnd) {
             this.ends = ends;
+            this.showAddEnd = showAddEnd;
         }
 
         @Override
@@ -157,7 +190,7 @@ public class RoundActivity extends WearableActivity {
 
         @Override
         public int getItemCount() {
-            return ends.size() + 1;
+            return ends.size() + (showAddEnd ? 1 : 0);
         }
     }
 

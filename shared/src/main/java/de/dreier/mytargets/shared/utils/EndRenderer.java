@@ -35,7 +35,6 @@ import java.util.List;
 
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Shot;
-import timber.log.Timber;
 
 @Parcel
 public class EndRenderer {
@@ -128,7 +127,6 @@ public class EndRenderer {
                 circle.draw(canvas, coordinate.x, coordinate.y, shot.scoringRing, radius,
                         !TextUtils.isEmpty(shot.comment) && i != selected, shot.index,
                         shot.arrowNumber);
-                Timber.d("draw: selected "+radius+" "+i);
             }
         }
     }

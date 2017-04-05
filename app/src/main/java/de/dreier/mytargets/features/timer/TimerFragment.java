@@ -26,6 +26,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import org.parceler.Parcels;
+
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentTimerBinding;
 import de.dreier.mytargets.features.settings.SettingsManager;
@@ -46,7 +48,9 @@ public class TimerFragment extends TimerFragmentBase {
 
     @NonNull
     public static IntentWrapper getIntent() {
-        return new IntentWrapper(TimerActivity.class);
+        return new IntentWrapper(TimerActivity.class)
+                .with(TimerFragmentBase.ARG_TIMER_SETTINGS,
+                        Parcels.wrap(SettingsManager.getTimerSettings()));
     }
 
     @Override
@@ -101,14 +105,5 @@ public class TimerFragment extends TimerFragmentBase {
             default:
                 return R.string.stop;
         }
-    }
-
-    @Override
-    public void getSettings() {
-        soundEnabled = SettingsManager.getTimerSoundEnabled();
-        vibrate = SettingsManager.getTimerVibrate();
-        timerWaitTime = SettingsManager.getTimerWaitTime();
-        timerShootTime = SettingsManager.getTimerShootTime();
-        timerWarnTime = SettingsManager.getTimerWarnTime();
     }
 }

@@ -34,9 +34,10 @@ import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.analysis.aggregation.average.Average;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Environment;
-import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Thumbnail;
+import de.dreier.mytargets.shared.models.TimerSettings;
+import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.WindDirection;
 import de.dreier.mytargets.shared.models.WindSpeed;
 import de.dreier.mytargets.shared.models.db.Arrow;
@@ -79,6 +80,7 @@ import timber.log.Timber;
         @ParcelClass(StandardRound.class),
         @ParcelClass(TrainingInfo.class),
         @ParcelClass(Target.class),
+        @ParcelClass(TimerSettings.class),
         @ParcelClass(Training.class),
         @ParcelClass(Thumbnail.class),
         @ParcelClass(WindDirection.class),

@@ -21,51 +21,57 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.Nullable;
 
 import com.google.android.gms.wearable.MessageEvent;
+import com.google.android.gms.wearable.WearableListenerService;
 
 import org.parceler.Parcels;
 
+import de.dreier.mytargets.shared.models.TimerSettings;
+import de.dreier.mytargets.shared.models.TimerSettings$$Parcelable;
 import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.TrainingInfo$$Parcelable;
+import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.models.db.Training$$Parcelable;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
-import de.dreier.mytargets.shared.wearable.WearableListenerServiceBase;
-import timber.log.Timber;
 
-import static de.dreier.mytargets.RoundActivity.EXTRA_TIMER;
+import static de.dreier.mytargets.shared.wearable.WearableClientBase.TIMER_SETTINGS;
+import static de.dreier.mytargets.shared.wearable.WearableClientBase.TRAINING_TEMPLATE;
 import static de.dreier.mytargets.shared.wearable.WearableClientBase.TRAINING_UPDATE;
-import static org.parceler.Parcels.unwrap;
 
-public class WearableListener extends WearableListenerServiceBase {
+public class WearWearableListener extends WearableListenerService {
 
     private static final int NOTIFICATION_ID = 1;
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         super.onMessageReceived(messageEvent);
-
-        Timber.d("onMessageReceived: ");
-
-        // Transform byte[] to Bundle
         byte[] data = messageEvent.getData();
-        if (messageEvent.getPath().equals(TRAINING_UPDATE)) {
-            TrainingInfo info = getNotificationInfo(data);
-            showNotification(info);
-            ApplicationInstance.wearableClient.sendTrainingUpdate(info);
+        switch (messageEvent.getPath()) {
+            case TRAINING_UPDATE:
+                TrainingInfo info = Parcels.unwrap(ParcelableUtil.unmarshall(data, TrainingInfo$$Parcelable.CREATOR));
+                showNotification(info);
+                ApplicationInstance.wearableClient.sendTrainingUpdate(info);
+                break;
+            case TRAINING_TEMPLATE:
+                Training training = Parcels.unwrap(ParcelableUtil.unmarshall(data, Training$$Parcelable.CREATOR));
+                ApplicationInstance.wearableClient.sendTrainingTemplate(training);
+                break;
+            case TIMER_SETTINGS:
+                TimerSettings settings = Parcels.unwrap(ParcelableUtil.unmarshall(data, TimerSettings$$Parcelable.CREATOR));
+                ApplicationInstance.wearableClient.sendTimerSettingsFromRemote(settings);
+                break;
+            default:
+                break;
         }
-    }
-
-    @Nullable
-    private TrainingInfo getNotificationInfo(byte[] data) {
-        return unwrap(ParcelableUtil.unmarshall(data, TrainingInfo$$Parcelable.CREATOR));
     }
 
     private void showNotification(TrainingInfo info) {
         // Build the intent to display our custom notification
         Intent notificationIntent = new Intent(this, RoundActivity.class);
         notificationIntent.putExtra(RoundActivity.EXTRA_ROUND, Parcels.wrap(info.round));
-        notificationIntent.putExtra(EXTRA_TIMER, info.timerEnabled);
+        notificationIntent.putExtra(RoundActivity.EXTRA_TIMER, Parcels.wrap(info.timerSettings));
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
@@ -89,8 +95,13 @@ public class WearableListener extends WearableListenerServiceBase {
 
     private String describe(TrainingInfo info) {
         String rounds = getResources().getQuantityString(R.plurals.rounds, info.roundCount, info.roundCount);
-        Integer endCount = info.round.maxEndCount == null ? info.round.getEnds().size() : info.round.maxEndCount;
-        String ends = getResources().getQuantityString(R.plurals.ends_arrow, info.round.shotsPerEnd, endCount, info.round.shotsPerEnd);
-        return rounds + "\n" + ends;
+        Round round = info.round;
+        String ends;
+        if(round.maxEndCount == null) {
+            ends = getResources().getQuantityString(R.plurals.arrows_per_end, round.shotsPerEnd, round.shotsPerEnd);
+        } else {
+            ends = getResources().getQuantityString(R.plurals.ends_arrow, round.shotsPerEnd, round.maxEndCount, round.shotsPerEnd);
+        }
+        return rounds + "\n" + ends + "\n" + round.distance.toString();
     }
 }

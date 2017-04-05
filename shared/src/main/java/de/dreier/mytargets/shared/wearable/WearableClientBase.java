@@ -15,9 +15,11 @@
 
 package de.dreier.mytargets.shared.wearable;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Node;
@@ -25,54 +27,55 @@ import com.google.android.gms.wearable.Wearable;
 
 import org.parceler.Parcels;
 
-import de.dreier.mytargets.shared.models.db.End;
+import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import timber.log.Timber;
 
-public class WearableClientBase implements GoogleApiClient.ConnectionCallbacks {
+public class WearableClientBase {
 
-    public static final String TRAINING_INFO = "/de/dreier/mytargets/training/info";
+    public static final String TRAINING_TEMPLATE = "/de/dreier/mytargets/training/last";
     public static final String TRAINING_CREATE = "/de/dreier/mytargets/training/create";
-    public static final String TRAINING_CREATE_ON_PHONE = "/de/dreier/mytargets/training/create/phone";
     public static final String TRAINING_UPDATE = "/de/dreier/mytargets/training/update";
     public static final String END_UPDATE = "/de/dreier/mytargets/end/update";
-    public static final String TIMER_ENABLE = "/de/dreier/mytargets/timer/enable";
-    public static final String TIMER_DISABLE = "/de/dreier/mytargets/timer/disable";
+    public static final String TIMER_SETTINGS = "/de/dreier/mytargets/timer/settings";
 
-    protected GoogleApiClient googleApiClient;
+    private static final String BROADCAST_TIMER_SETTINGS_FROM_LOCAL = "timer_settings_local";
+    public static final String BROADCAST_TIMER_SETTINGS_FROM_REMOTE = "timer_settings_remote";
+    public static final String EXTRA_TIMER_SETTINGS = "timer_enabled";
+
+    private GoogleApiClient googleApiClient;
     protected final Context context;
+
+    private BroadcastReceiver timerReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            TimerSettings settings = Parcels.unwrap(intent.getParcelableExtra(EXTRA_TIMER_SETTINGS));
+            updateTimer(settings);
+        }
+    };
 
     public WearableClientBase(Context context) {
         this.context = context;
         googleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(Wearable.API)
-                .addConnectionCallbacks(this)
                 .build();
 
         googleApiClient.connect();
         Timber.d("WearableClientBase() called with: context = [" + context + "]");
+        IntentFilter filter = new IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_LOCAL);
+        LocalBroadcastManager.getInstance(context).registerReceiver(timerReceiver, filter);
     }
 
     public void disconnect() {
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(timerReceiver);
         googleApiClient.disconnect();
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Timber.d("onConnected() called with: bundle = [" + bundle + "]");
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Timber.d("onConnectionSuspended() called with: i = [" + i + "]");
     }
 
     protected void sendMessage(String path, byte[] data) {
         Timber.d("sendMessage() called with: path = [" + path + "]");
         Wearable.NodeApi.getConnectedNodes(googleApiClient)
                 .setResultCallback(nodes -> {
-                    Timber.d("sendMessage: "+nodes);
+                    Timber.d("sendMessage: " + nodes);
                     for (Node node : nodes.getNodes()) {
                         sendToNode(node, path, data);
                     }
@@ -80,7 +83,6 @@ public class WearableClientBase implements GoogleApiClient.ConnectionCallbacks {
     }
 
     private void sendToNode(Node node, String path, byte[] data) {
-        Timber.d("sendToNode() called with: node = [" + node + "], path = [" + path + "], data = [" + data + "]");
         Wearable.MessageApi.sendMessage(
                 googleApiClient, node.getId(), path, data)
                 .setResultCallback(
@@ -93,12 +95,20 @@ public class WearableClientBase implements GoogleApiClient.ConnectionCallbacks {
                 );
     }
 
-    public void updateEnd(End end) {
-        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(end));
-        sendMessage(WearableClientBase.END_UPDATE, data);
+    private void updateTimer(TimerSettings settings) {
+        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(settings));
+        sendMessage(TIMER_SETTINGS, data);
     }
 
-    public void createOnPhone() {
-        sendMessage(WearableClientBase.TRAINING_CREATE_ON_PHONE, null);
+    public void sendTimerSettingsFromLocal(TimerSettings settings) {
+        Intent intent = new Intent(BROADCAST_TIMER_SETTINGS_FROM_LOCAL);
+        intent.putExtra(EXTRA_TIMER_SETTINGS, Parcels.wrap(settings));
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
+    public void sendTimerSettingsFromRemote(TimerSettings settings) {
+        Intent intent = new Intent(BROADCAST_TIMER_SETTINGS_FROM_REMOTE);
+        intent.putExtra(EXTRA_TIMER_SETTINGS, Parcels.wrap(settings));
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 }

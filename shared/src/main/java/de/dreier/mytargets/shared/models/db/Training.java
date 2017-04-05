@@ -92,7 +92,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     @Column
     public String location = "";
 
-    public List<Round> rounds = new ArrayList<>();
+    public List<Round> rounds;
 
     public static Training get(Long id) {
         return SQLite.select()
@@ -134,7 +134,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
 
     @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "rounds")
     public List<Round> getRounds() {
-        if (rounds == null || rounds.isEmpty()) {
+        if (rounds == null) {
             rounds = SQLite.select()
                     .from(Round.class)
                     .where(training.eq(id))
@@ -203,20 +203,15 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         return this;
     }
 
-    private void initRoundsFromTemplate(StandardRound standardRound) {
+    public void initRoundsFromTemplate(StandardRound standardRound) {
         rounds = new ArrayList<>();
         for (RoundTemplate template : standardRound.getRounds()) {
             Round round = new Round(template);
-            round.trainingId = training.getId();
-            if (trainingType == FREE_TRAINING) {
-                round.setTarget(binding.target.getSelectedItem());
-            } else {
-                round.setTarget(roundTarget);
-            }
+            round.trainingId = id;
+            round.setTarget(template.getTargetTemplate());
             round.comment = "";
             round.save();
             rounds.add(round);
         }
-        return rounds;
     }
 }

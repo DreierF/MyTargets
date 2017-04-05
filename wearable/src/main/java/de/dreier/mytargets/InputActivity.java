@@ -50,7 +50,7 @@ public class InputActivity extends Activity implements TargetViewBase.OnEndFinis
 
         Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null) {
-            round = Parcels.unwrap(intent.getExtras().getParcelable(EXTRA_ROUND));
+            round = Parcels.unwrap(intent.getParcelableExtra(EXTRA_ROUND));
         }
 
         // Workaround to avoid crash happening when setting invisible via xml layout

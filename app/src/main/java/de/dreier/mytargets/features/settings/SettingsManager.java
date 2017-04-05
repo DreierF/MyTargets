@@ -38,6 +38,7 @@ import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
@@ -313,6 +314,31 @@ public class SettingsManager {
         preferences
                 .edit()
                 .putString(KEY_TIMER_WARN_TIME, String.valueOf(warnTime))
+                .apply();
+    }
+
+    public static TimerSettings getTimerSettings() {
+        TimerSettings settings = new TimerSettings();
+        settings.enabled = lastUsed.getBoolean(KEY_TIMER, false);
+        settings.vibrate = preferences.getBoolean(KEY_TIMER_VIBRATE, false);
+        settings.soundEnabled = preferences.getBoolean(KEY_TIMER_SOUND, true);
+        settings.timerWaitTime = getPrefTime(KEY_TIMER_WAIT_TIME, 10);
+        settings.timerShootTime = getPrefTime(KEY_TIMER_SHOOT_TIME, 120);
+        settings.timerWarnTime = getPrefTime(KEY_TIMER_WARN_TIME, 30);
+        return settings;
+    }
+
+    public static void setTimerSettings(TimerSettings settings) {
+        lastUsed.edit()
+                .putBoolean(KEY_TIMER, settings.enabled)
+                .apply();
+        preferences
+                .edit()
+                .putBoolean(KEY_TIMER_VIBRATE, settings.vibrate)
+                .putBoolean(KEY_TIMER_SOUND, settings.soundEnabled)
+                .putString(KEY_TIMER_WAIT_TIME, String.valueOf(settings.timerWaitTime))
+                .putString(KEY_TIMER_SHOOT_TIME, String.valueOf(settings.timerShootTime))
+                .putString(KEY_TIMER_WARN_TIME, String.valueOf(settings.timerWarnTime))
                 .apply();
     }
 

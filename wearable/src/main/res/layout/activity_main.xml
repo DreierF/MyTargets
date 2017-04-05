@@ -74,9 +74,19 @@
                 android:textSize="12sp"
                 tools:text="10 \u00D7 3 arrows" />
 
+            <TextView
+                android:id="@+id/distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:textColor="@color/md_white_1000"
+                android:textSize="12sp"
+                tools:text="10m" />
+
         </LinearLayout>
 
         <android.support.wearable.view.drawer.WearableDrawerView
+            android:id="@+id/wearableDrawerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="bottom"

@@ -14,23 +14,22 @@
  */
 package de.dreier.mytargets.shared.models;
 
-import org.parceler.ParcelConstructor;
-
-import java.io.Serializable;
-
 import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Training;
 
-public class TrainingInfo implements Serializable {
-    public final String title;
-    public final int roundCount;
-    public final Round round;
-    public final boolean timerEnabled;
+public class TrainingInfo {
+    public String title;
+    public int roundCount;
+    public Round round;
+    public TimerSettings timerSettings;
 
-    @ParcelConstructor
-    public TrainingInfo(Round round, String title, int roundCount, boolean timerEnabled) {
+    public TrainingInfo() {
+    }
+
+    public TrainingInfo(Training training, Round round, TimerSettings timerSettings) {
         this.round = round;
-        this.title = title;
-        this.roundCount = roundCount;
-        this.timerEnabled = timerEnabled;
+        this.title = training.title;
+        this.roundCount = training.getRounds().size();
+        this.timerSettings = timerSettings;
     }
 }

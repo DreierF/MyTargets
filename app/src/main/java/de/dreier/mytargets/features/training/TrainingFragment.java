@@ -15,11 +15,14 @@
 
 package de.dreier.mytargets.features.training;
 
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,14 +48,18 @@ import de.dreier.mytargets.features.scoreboard.HtmlUtils;
 import de.dreier.mytargets.features.scoreboard.ScoreboardActivity;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.statistics.StatisticsActivity;
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.IntentWrapper;
+import de.dreier.mytargets.utils.MobileWearableClient;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+
+import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
 
 /**
  * Shows all rounds of one training.
@@ -74,6 +81,29 @@ public class TrainingFragment extends EditableListFragment<Round> {
     public static IntentWrapper getIntent(Training training) {
         return new IntentWrapper(TrainingActivity.class)
                 .with(ITEM_ID, training.getId());
+    }
+
+    private BroadcastReceiver updateReceiver = new MobileWearableClient.EndUpdateReceiver() {
+
+        @Override
+        protected void onUpdate(Long training, Long roundId, End end) {
+            if(trainingId == training) {
+                reloadData();
+            }
+        }
+    };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(updateReceiver,
+                new IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(updateReceiver);
     }
 
     @Override

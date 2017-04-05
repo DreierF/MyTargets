@@ -19,15 +19,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.NodeApi;
-import com.google.android.gms.wearable.Wearable;
 
 import org.parceler.Parcels;
 
@@ -43,10 +37,11 @@ import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.wearable.WearableClientBase;
 import timber.log.Timber;
 
-public class MobileWearableClient extends WearableClientBase implements NodeApi.NodeListener {
+public class MobileWearableClient extends WearableClientBase {
 
     private static final String BROADCAST_UPDATE_TRAINING_FROM_LOCAL = "update_from_local";
     public static final String BROADCAST_UPDATE_TRAINING_FROM_REMOTE = "update_from_remote";
+    public static final String BROADCAST_CREATE_TRAINING_FROM_REMOTE = "create_from_remote";
     private static final String EXTRA_TRAINING = "training";
     private static final String EXTRA_TRAINING_ID = "training_id";
     private static final String EXTRA_ROUND_ID = "round_id";
@@ -73,7 +68,6 @@ public class MobileWearableClient extends WearableClientBase implements NodeApi.
         }
     };
 
-    //TODO send local broadcast to InputActivity, RoundActivity, TrainingActivity, ScoreboardActivity and StatisticsActivity
     public void sendUpdateTrainingFromLocalBroadcast(Training training) {
         Timber.d("sendUpdateTrainingFromLocalBroadcast() called with: training = [" + training + "]");
         Intent intent = new Intent(BROADCAST_UPDATE_TRAINING_FROM_LOCAL);
@@ -90,6 +84,11 @@ public class MobileWearableClient extends WearableClientBase implements NodeApi.
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
+    public void sendCreateTrainingFromRemoteBroadcast() {
+        Intent intent = new Intent(BROADCAST_CREATE_TRAINING_FROM_REMOTE);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
     public void updateTraining(Training training) {
         Timber.d("updateTraining() called with: training = [" + training + "]");
         List<Round> rounds = training.getRounds();
@@ -102,29 +101,16 @@ public class MobileWearableClient extends WearableClientBase implements NodeApi.
                 .filter(end -> Stream.of(end.getShots())
                         .allMatch(s -> s.scoringRing != Shot.NOTHING_SELECTED))
                 .toList();
-        TrainingInfo notificationInfo = new TrainingInfo(round, training.title, roundCount,
-                SettingsManager.getTimerEnabled());
+        TrainingInfo notificationInfo = new TrainingInfo(training, round,
+                SettingsManager.getTimerSettings());
         final byte[] data = ParcelableUtil.marshall(Parcels.wrap(notificationInfo));
 
         sendMessage(WearableClientBase.TRAINING_UPDATE, data);
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        super.onConnected(bundle);
-        Wearable.NodeApi.addListener(googleApiClient, this);
-    }
-    @Override
-    public void onPeerConnected(Node node) {
-        Optional<Training> training = Stream.of(Training.getAll()).sorted().findFirst();
-        if (training.isPresent()) {
-            Timber.d("onPeerConnected() called with: node = [" + node + "]");
-            updateTraining(training.get().ensureLoaded());
-        }
-    }
-
-    @Override
-    public void onPeerDisconnected(Node node) {
+    public void sendTrainingTemplate(Training training) {
+        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(training));
+        sendMessage(WearableClientBase.TRAINING_TEMPLATE, data);
     }
 
     public abstract static class EndUpdateReceiver extends BroadcastReceiver {

@@ -25,6 +25,8 @@ import org.parceler.Parcels;
 
 import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.db.End;
+import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.wearable.WearableClientBase;
 import timber.log.Timber;
 
@@ -32,52 +34,63 @@ import static org.parceler.Parcels.unwrap;
 
 public class WearWearableClient extends WearableClientBase {
 
+    public static final String BROADCAST_TRAINING_TEMPLATE = "training_template";
+    private static final String BROADCAST_TRAINING_CREATE = "training_create";
     public static final String BROADCAST_TRAINING_UPDATED = "training_updated";
     private static final String BROADCAST_UPDATE_END_FROM_LOCAL = "end_from_local";
-    private static final String BROADCAST_REQUEST_INFO = "request_info";
+    private static final String BROADCAST_REQUEST_TRAINING_TEMPLATE = "request_info";
 
+    public static final String EXTRA_TRAINING = "training";
     private static final String EXTRA_END = "end";
     public static final String EXTRA_INFO = "info";
 
-    private TrainingInfo info;
-    private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Timber.d("BROADCAST_UPDATE_END_FROM_LOCAL onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
-            End end = unwrap(intent.getParcelableExtra(EXTRA_END));
-            updateEnd(end);
-        }
-    };
-    private BroadcastReceiver requestReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (info == null) {
-                return;
+            switch (intent.getAction()) {
+                case BROADCAST_REQUEST_TRAINING_TEMPLATE:
+                    sendMessage(TRAINING_TEMPLATE, null);
+                    break;
+                case BROADCAST_TRAINING_CREATE:
+                    Training training = unwrap(intent.getParcelableExtra(EXTRA_TRAINING));
+                    createTraining(training);
+                    break;
+                case BROADCAST_UPDATE_END_FROM_LOCAL:
+                    End end = unwrap(intent.getParcelableExtra(EXTRA_END));
+                    updateEnd(end);
+                    break;
             }
-            Timber.d("BROADCAST_REQUEST_INFO onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
-            sendTrainingUpdate(info);
         }
     };
 
     public WearWearableClient(Context context) {
         super(context);
         Timber.d("WearWearableClient() called with: context = [" + context + "]");
-        LocalBroadcastManager.getInstance(context).registerReceiver(updateReceiver,
-                new IntentFilter(BROADCAST_UPDATE_END_FROM_LOCAL));
-        LocalBroadcastManager.getInstance(context).registerReceiver(requestReceiver,
-                new IntentFilter(BROADCAST_REQUEST_INFO));
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BROADCAST_UPDATE_END_FROM_LOCAL);
+        filter.addAction(BROADCAST_REQUEST_TRAINING_TEMPLATE);
+        filter.addAction(BROADCAST_TRAINING_CREATE);
+        LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver, filter);
     }
 
     @Override
     public void disconnect() {
         Timber.d("disconnect() called");
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(updateReceiver);
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(requestReceiver);
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcastReceiver);
         super.disconnect();
     }
 
+    private void updateEnd(End end) {
+        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(end));
+        sendMessage(WearableClientBase.END_UPDATE, data);
+    }
+
+    private void createTraining(Training training) {
+        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(training));
+        sendMessage(WearableClientBase.TRAINING_CREATE, data);
+    }
+
     public void sendTrainingUpdate(TrainingInfo info) {
-        this.info = info;
         Timber.d("sendTrainingUpdate: send broadcast");
         Intent intent = new Intent(BROADCAST_TRAINING_UPDATED);
         intent.putExtra(EXTRA_INFO, Parcels.wrap(info));
@@ -91,9 +104,23 @@ public class WearWearableClient extends WearableClientBase {
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
-    public void sendRequestInfo() {
-        Timber.d("sendRequestInfo() called");
-        Intent intent = new Intent(BROADCAST_REQUEST_INFO);
+    public void requestNewTrainingTemplate() {
+        Timber.d("requestNewTrainingTemplate() called");
+        Intent intent = new Intent(BROADCAST_REQUEST_TRAINING_TEMPLATE);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
+    public void sendCreateTraining(Training training) {
+        Timber.d("createTraining: send broadcast");
+        Intent intent = new Intent(BROADCAST_TRAINING_CREATE);
+        intent.putExtra(EXTRA_TRAINING, Parcels.wrap(training));
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
+    public void sendTrainingTemplate(Training training) {
+        Timber.d("sendTrainingTemplate() called with: training = [" + training + "]");
+        Intent intent = new Intent(BROADCAST_TRAINING_TEMPLATE);
+        intent.putExtra(EXTRA_TRAINING, Parcels.wrap(training));
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 }

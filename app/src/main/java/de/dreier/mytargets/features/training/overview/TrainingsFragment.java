@@ -15,9 +15,14 @@
 
 package de.dreier.mytargets.features.training.overview;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -48,6 +53,8 @@ import de.dreier.mytargets.views.MaterialTapTargetPrompt;
 
 import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION;
 import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION;
+import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_CREATE_TRAINING_FROM_REMOTE;
+import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
 
 
 /**
@@ -67,6 +74,29 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
     public void onResume() {
         super.onResume();
         binding.fab.close(false);
+    }
+
+    private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            reloadData();
+        }
+    };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BROADCAST_UPDATE_TRAINING_FROM_REMOTE);
+        filter.addAction(BROADCAST_CREATE_TRAINING_FROM_REMOTE);
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(updateReceiver, filter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(updateReceiver);
     }
 
     @Override
