@@ -351,9 +351,11 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     protected void updateSelectableZones() {
-        selectableZones = target.getSelectableZoneList(getCurrentShotIndex());
-        if (virtualViews.size() > 0) {
-            updateVirtualViews();
+        if(getCurrentShotIndex() != EndRenderer.NO_SELECTION) {
+            selectableZones = target.getSelectableZoneList(getCurrentShotIndex());
+            if (virtualViews.size() > 0) {
+                updateVirtualViews();
+            }
         }
     }
 
