@@ -15,13 +15,37 @@
 
 package de.dreier.mytargets.features.timer;
 
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.os.Bundle;
 
-import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.base.activities.ChildActivityBase;
 
-public class TimerActivity extends SimpleFragmentActivityBase {
+public class TimerActivity extends ChildActivityBase {
+
+    private static final String FRAGMENT_TAG = "fragment";
+    Fragment childFragment;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            // Create the fragment only when the activity is created for the first time.
+            // ie. not after orientation changes
+            childFragment = getFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+            if (childFragment == null) {
+                childFragment = instantiateFragment();
+                Bundle bundle = getIntent() != null ? getIntent().getExtras() : null;
+                childFragment.setArguments(bundle);
+            }
+
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(android.R.id.content, childFragment, FRAGMENT_TAG);
+            ft.commit();
+        }
+    }
+
     public Fragment instantiateFragment() {
         return new TimerFragment();
     }

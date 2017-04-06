@@ -26,7 +26,7 @@ public class Circle {
     private final float density;
     private final Target target;
     private final Paint circleColorP;
-    private final Paint mTextPaint;
+    private final Paint textPaint;
 
     public Circle(float density, Target target) {
         this.density = density;
@@ -37,9 +37,9 @@ public class Circle {
         circleColorP.setAntiAlias(true);
 
         // Set up a default TextPaint object
-        mTextPaint = new TextPaint();
-        mTextPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setTextAlign(Paint.Align.CENTER);
+        textPaint = new TextPaint();
+        textPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
+        textPaint.setTextAlign(Paint.Align.CENTER);
     }
 
     public void draw(Canvas can, float x, float y, int zone, int rad, boolean comment, int arrow, String number) {
@@ -59,11 +59,11 @@ public class Circle {
         can.drawCircle(x, y, rad * density, circleColorP);
 
         // Draw the text inside the circle
-        mTextPaint.setTextSize(22 * density);
-        mTextPaint.setColor(target.getModel().getZone(zone).getTextColor());
-        mTextPaint.setTextSize(font_size * density);
+        textPaint.setTextSize(22 * density);
+        textPaint.setColor(target.getModel().getZone(zone).getTextColor());
+        textPaint.setTextSize(font_size * density);
         can.drawText(target.zoneToString(zone, arrow), x, y + font_size * 7 * density / 22.0f,
-                mTextPaint);
+                textPaint);
 
         // Draw red circled + as indicator that this impact is commented
         if (comment) {
@@ -71,19 +71,18 @@ public class Circle {
             circleColorP.setColor(0xFFFF0000);
             can.drawCircle(x + rad * 0.8f * density, y - rad * 0.8f * density, 8 * density,
                     circleColorP);
-            mTextPaint.setColor(0xFFFFFFFF);
-            can.drawText("+", x + rad * 0.8f * density, y - rad * 0.4f * density, mTextPaint);
+            textPaint.setColor(0xFFFFFFFF);
+            can.drawText("+", x + rad * 0.8f * density, y - rad * 0.4f * density, textPaint);
         }
         if (number != null) {
             circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
             circleColorP.setColor(0xFF333333);
             can.drawCircle(x + rad * 0.8f * density, y + rad * 0.8f * density, 8 * density,
                     circleColorP);
-            mTextPaint.setTextSize(font_size * density * 0.5f);
-            mTextPaint.setColor(0xFFFFFFFF);
-            can.drawText(number, x + rad * 0.8f * density,
-                    y + rad * 1.05f * density,
-                    mTextPaint);
+            textPaint.setTextSize(font_size * density * 0.5f);
+            textPaint.setColor(0xFFFFFFFF);
+            can.drawText(number, x + rad * 0.8f * density, y + rad * 1.05f * density,
+                    textPaint);
         }
     }
 }

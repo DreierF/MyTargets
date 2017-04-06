@@ -38,7 +38,7 @@ import de.dreier.mytargets.databinding.ActivityArrowRankingDetailsBinding;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
-import static android.support.v4.content.FileProvider.getUriForFile;
+import static de.dreier.mytargets.shared.utils.FileUtils.getUriForFile;
 
 public class DispersionPatternActivity extends ChildActivityBase {
 
@@ -103,10 +103,8 @@ public class DispersionPatternActivity extends ChildActivityBase {
                 // Build and fire intent to ask for share provider
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("image/png");
-                String packageName = getApplicationContext().getPackageName();
-                String authority = packageName + ".easyphotopicker.fileprovider";
                 shareIntent.putExtra(Intent.EXTRA_STREAM,
-                        getUriForFile(DispersionPatternActivity.this, authority, f));
+                        getUriForFile(DispersionPatternActivity.this, f));
                 startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
             } catch (IOException e) {
                 e.printStackTrace();

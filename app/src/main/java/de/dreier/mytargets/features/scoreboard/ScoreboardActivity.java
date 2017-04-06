@@ -16,7 +16,9 @@
 package de.dreier.mytargets.features.scoreboard;
 
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -28,6 +30,7 @@ import android.print.PrintManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,10 +46,13 @@ import de.dreier.mytargets.base.activities.ChildActivityBase;
 import de.dreier.mytargets.databinding.ActivityScoreboardBinding;
 import de.dreier.mytargets.features.settings.ESettingsScreens;
 import de.dreier.mytargets.features.settings.SettingsActivity;
+import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.utils.IntentWrapper;
+import de.dreier.mytargets.utils.MobileWearableClient;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
-import static android.support.v4.content.FileProvider.getUriForFile;
+import static de.dreier.mytargets.shared.utils.FileUtils.getUriForFile;
+import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
 
 public class ScoreboardActivity extends ChildActivityBase {
 
@@ -55,8 +61,8 @@ public class ScoreboardActivity extends ChildActivityBase {
     @VisibleForTesting
     public static final String ROUND_ID = "round_id";
 
-    private long mTraining;
-    private long mRound;
+    private long trainingId;
+    private long roundId;
     private boolean pageLoaded = true;
     private ActivityScoreboardBinding binding;
 
@@ -72,14 +78,24 @@ public class ScoreboardActivity extends ChildActivityBase {
                 .with(ROUND_ID, roundId);
     }
 
+    private BroadcastReceiver updateReceiver = new MobileWearableClient.EndUpdateReceiver() {
+
+        @Override
+        protected void onUpdate(Long training, Long round, End end) {
+            if (roundId == round || (training == trainingId && roundId == -1)) {
+                reloadData();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_scoreboard);
 
         Intent intent = getIntent();
-        mTraining = intent.getLongExtra(TRAINING_ID, -1);
-        mRound = intent.getLongExtra(ROUND_ID, -1);
+        trainingId = intent.getLongExtra(TRAINING_ID, -1);
+        roundId = intent.getLongExtra(ROUND_ID, -1);
 
         binding.webView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -94,16 +110,29 @@ public class ScoreboardActivity extends ChildActivityBase {
         });
 
         ToolbarUtils.showHomeAsUp(this);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver,
+                new IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(updateReceiver);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        reloadData();
+    }
+
+    private void reloadData() {
         new AsyncTask<Void, Void, String>() {
 
             @Override
             protected String doInBackground(Void... params) {
-                return HtmlUtils.getScoreboard(mTraining, mRound,
+                return HtmlUtils.getScoreboard(trainingId, roundId,
                         ScoreboardConfiguration.fromDisplaySettings());
             }
 
@@ -155,10 +184,8 @@ public class ScoreboardActivity extends ChildActivityBase {
                     File dir = getCacheDir();
                     final File f = File.createTempFile("scoreboard", ".png", dir);
                     new ScoreboardImage()
-                            .generateBitmap(ScoreboardActivity.this, mTraining, mRound, f);
-                    String packageName = getApplicationContext().getPackageName();
-                    String authority = packageName + ".easyphotopicker.fileprovider";
-                    return getUriForFile(ScoreboardActivity.this, authority, f);
+                            .generateBitmap(ScoreboardActivity.this, trainingId, roundId, f);
+                    return getUriForFile(ScoreboardActivity.this, f);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;
@@ -197,7 +224,7 @@ public class ScoreboardActivity extends ChildActivityBase {
 
             @Override
             protected String doInBackground(Void... params) {
-                return HtmlUtils.getScoreboard(mTraining, mRound,
+                return HtmlUtils.getScoreboard(trainingId, roundId,
                         ScoreboardConfiguration.fromPrintSettings());
             }
 

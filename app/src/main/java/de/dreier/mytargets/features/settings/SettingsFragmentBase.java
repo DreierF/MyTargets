@@ -70,6 +70,7 @@ public abstract class SettingsFragmentBase extends PreferenceFragmentCompat
     @Override
     public void onResume() {
         super.onResume();
+        onFragmentResume();
         ApplicationInstance.getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
     }

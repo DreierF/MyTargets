@@ -41,6 +41,11 @@ public class Environment implements IImageProvider, IDetailProvider {
         this.location = location;
     }
 
+    @NonNull
+    public static Environment getDefault(boolean indoor) {
+        return new Environment(indoor, EWeather.SUNNY, 0, 0, "");
+    }
+
     @Override
     public String getName() {
         return indoor ? SharedApplicationInstance.get(R.string.indoor) : weather.getName();

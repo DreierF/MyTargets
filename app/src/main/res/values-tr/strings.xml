@@ -123,7 +123,6 @@
   <string name="donate_text">Ücretler vergi ve %30 Google giderleridir. Alternatif olarak PayPal üzerinden  dreier.florian@gmail.com hesabına bağışta bulunabilirsiniz.</string>
   <!-- Timer -->
   <string name="timer">kronometre</string>
-  <string name="stop">STOP</string>
   <string name="touch_to_start">Başlat</string>
   <string name="preparation">Hazırlan</string>
   <string name="shooting">Atış</string>

@@ -15,7 +15,10 @@
 
 package de.dreier.mytargets.features.training.input;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Build;
@@ -25,6 +28,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +42,7 @@ import org.parceler.ParcelConstructor;
 import java.util.List;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.base.activities.ChildActivityBase;
 import de.dreier.mytargets.base.gallery.GalleryActivity;
 import de.dreier.mytargets.databinding.ActivityInputBinding;
@@ -47,7 +52,6 @@ import de.dreier.mytargets.features.timer.TimerFragment;
 import de.dreier.mytargets.features.training.RoundFragment;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
@@ -62,17 +66,20 @@ import de.dreier.mytargets.shared.utils.SharedUtils;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
 import de.dreier.mytargets.utils.IntentWrapper;
+import de.dreier.mytargets.utils.MobileWearableClient;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
-import de.dreier.mytargets.utils.WearMessageManager;
 import de.dreier.mytargets.utils.transitions.FabTransform;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import de.dreier.mytargets.utils.transitions.TransitionAdapter;
 import icepick.Icepick;
 import icepick.State;
+import timber.log.Timber;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static de.dreier.mytargets.shared.wearable.WearableClientBase.BROADCAST_TIMER_SETTINGS_FROM_REMOTE;
+import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
 
 public class InputActivity extends ChildActivityBase
         implements TargetViewBase.OnEndFinishedListener, TargetView.OnEndUpdatedListener,
@@ -85,12 +92,30 @@ public class InputActivity extends ChildActivityBase
     @State(ParcelsBundler.class)
     LoaderResult data;
 
-    private WearMessageManager manager;
     private ActivityInputBinding binding;
     private boolean transitionFinished = true;
     private ETrainingScope shotShowScope = ETrainingScope.END;
     private ETrainingScope summaryShowScope = null;
     private TargetView targetView;
+
+    private BroadcastReceiver updateReceiver = new MobileWearableClient.EndUpdateReceiver() {
+
+        @Override
+        protected void onUpdate(Long trainingId, Long roundId, End end) {
+            Bundle extras = getIntent().getExtras();
+            extras.putLong(TRAINING_ID, trainingId);
+            extras.putLong(ROUND_ID, roundId);
+            extras.putInt(END_INDEX, end.index);
+            getSupportLoaderManager().restartLoader(0, extras, InputActivity.this).forceLoad();
+        }
+    };
+
+    private final BroadcastReceiver timerReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            supportInvalidateOptionsMenu();
+        }
+    };
 
     @NonNull
     public static IntentWrapper createIntent(Round round) {
@@ -102,10 +127,6 @@ public class InputActivity extends ChildActivityBase
                 .with(TRAINING_ID, round.trainingId)
                 .with(ROUND_ID, round.getId())
                 .with(END_INDEX, endIndex);
-    }
-
-    private static <T> T lastItem(List<T> list) {
-        return list.isEmpty() ? null : list.get(list.size() - 1);
     }
 
     private static boolean shouldShowRound(Round r, ETrainingScope shotShowScope, Long roundId) {
@@ -141,6 +162,17 @@ public class InputActivity extends ChildActivityBase
         } else {
             getSupportLoaderManager().initLoader(0, getIntent().getExtras(), this).forceLoad();
         }
+        LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver,
+                new IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE));
+        LocalBroadcastManager.getInstance(this).registerReceiver(timerReceiver,
+                new IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_REMOTE));
+    }
+
+    @Override
+    protected void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(updateReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(timerReceiver);
+        super.onDestroy();
     }
 
     private void updateSummaryVisibility() {
@@ -269,9 +301,11 @@ public class InputActivity extends ChildActivityBase
                 supportInvalidateOptionsMenu();
                 return true;
             case R.id.action_timer:
-                SettingsManager.setTimerEnabled(!SettingsManager.getTimerEnabled());
+                boolean timerEnabled = !SettingsManager.getTimerEnabled();
+                SettingsManager.setTimerEnabled(timerEnabled);
+                ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(SettingsManager.getTimerSettings());
                 openTimer();
-                item.setChecked(SettingsManager.getTimerEnabled());
+                item.setChecked(timerEnabled);
                 supportInvalidateOptionsMenu();
                 return true;
             case R.id.action_new_round:
@@ -331,14 +365,6 @@ public class InputActivity extends ChildActivityBase
     @Override
     public void onLoaderReset(Loader<LoaderResult> loader) {
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (manager != null) {
-            manager.close();
-        }
     }
 
     private void showEnd(int endIndex) {
@@ -410,39 +436,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void updateWearNotification() {
-        NotificationInfo info = buildInfo();
-        if (manager == null) {
-            manager = new WearMessageManager(this, info);
-        } else {
-            manager.sendMessageUpdate(info);
-        }
-    }
-
-    private NotificationInfo buildInfo() {
-        String title = getString(R.string.my_targets);
-        String text = "";
-
-        // Initialize message text
-        if (data.getEnds().size() > 0) {
-            End lastEnd = lastItem(data.getEnds());
-            if (lastEnd != null && lastEnd.isEmpty() && data.getEnds().size() > 1) {
-                lastEnd = data.getEnds().get(data.getEnds().size() - 2);
-            }
-            if (lastEnd != null && !lastEnd.isEmpty()) {
-                title = getString(R.string.passe) + " " + (lastEnd.index + 1);
-                for (Shot shot : lastEnd.getShots()) {
-                    text += data.getCurrentRound().getTarget()
-                            .zoneToString(shot.scoringRing, shot.index) + " ";
-                }
-                text += "\n";
-            }
-        }
-
-        // Load bow settings
-        if (data.sightMark != null) {
-            text += String.format("%s: %s", data.getCurrentRound().distance, data.sightMark.value);
-        }
-        return new NotificationInfo(data.getCurrentRound(), title, text);
+        ApplicationInstance.wearableClient.sendUpdateTrainingFromLocalBroadcast(data.training);
     }
 
     private void updateNavigationButtons() {
@@ -544,26 +538,15 @@ public class InputActivity extends ChildActivityBase
     }
 
     @Override
-    public void onEndFinished(List<Shot> shots, boolean remote) {
-        if (remote) {
-            data.endIndex = data.getCurrentRound().getEnds().size() - 1;
-            if (!data.getCurrentEnd().isEmpty()) {
-                data.endIndex = data.getCurrentRound().getEnds().size();
-            }
-        }
+    public void onEndFinished(List<Shot> shots) {
         data.getCurrentEnd().setShots(shots);
-        data.getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING && !remote;
+        data.getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING;
         if (data.getCurrentEnd().isEmpty()) {
             data.getCurrentEnd().saveTime = new DateTime();
         }
-
         data.getCurrentEnd().save();
 
-        if (remote) {
-            showEnd(data.getEnds().size() - 1);
-        } else {
-            updateWearNotification();
-        }
+        updateWearNotification();
         updateNavigationButtons();
         supportInvalidateOptionsMenu();
     }
@@ -618,7 +601,7 @@ public class InputActivity extends ChildActivityBase
 
         @ParcelConstructor
         public LoaderResult(Training training) {
-            this.training = training;
+            this.training = training.ensureLoaded();
             this.standardRound = training.getStandardRound();
         }
 
@@ -628,8 +611,8 @@ public class InputActivity extends ChildActivityBase
             for (int i = 0; i < rounds.size(); i++) {
                 if (rounds.get(i).getId() == roundId) {
                     roundIndex = i;
+                    break;
                 }
-                rounds.get(i).getEnds();
             }
         }
 

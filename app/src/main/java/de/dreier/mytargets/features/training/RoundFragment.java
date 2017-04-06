@@ -15,11 +15,14 @@
 
 package de.dreier.mytargets.features.training;
 
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,9 +46,12 @@ import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.IntentWrapper;
+import de.dreier.mytargets.utils.MobileWearableClient;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+
+import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
 
 /**
  * Shows all ends of one round
@@ -71,6 +77,29 @@ public class RoundFragment extends EditableListFragment<End> {
                 .clearTopSingleTop();
     }
 
+    private BroadcastReceiver updateReceiver = new MobileWearableClient.EndUpdateReceiver() {
+
+        @Override
+        protected void onUpdate(Long trainingId, Long round, End end) {
+            if(roundId == round) {
+                reloadData();
+            }
+        }
+    };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(updateReceiver,
+                new IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(updateReceiver);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
@@ -87,7 +116,7 @@ public class RoundFragment extends EditableListFragment<End> {
                         .withContext(this)
                         .fromFab(binding.fab)
                         .start());
-        // Get round
+
         if (getArguments() != null) {
             roundId = getArguments().getLong(ROUND_ID, -1);
         }
@@ -109,18 +138,14 @@ public class RoundFragment extends EditableListFragment<End> {
         final List<End> ends = round.getEnds();
         final boolean showFab = round.maxEndCount == null || ends.size() < round.maxEndCount;
 
-        return new LoaderUICallback() {
-            @Override
-            public void applyData() {
-                // Set round info
-                adapter.setList(ends);
-                binding.fab.setVisibility(showFab ? View.VISIBLE : View.GONE);
+        return () -> {
+            adapter.setList(ends);
+            binding.fab.setVisibility(showFab ? View.VISIBLE : View.GONE);
 
-                ToolbarUtils.setTitle(RoundFragment.this,
-                        String.format(Locale.US, "%s %d", getString(R.string.round),
-                                round.index + 1));
-                ToolbarUtils.setSubtitle(RoundFragment.this, round.getReachedScore().toString());
-            }
+            ToolbarUtils.setTitle(RoundFragment.this,
+                    String.format(Locale.US, "%s %d", getString(R.string.round),
+                            round.index + 1));
+            ToolbarUtils.setSubtitle(RoundFragment.this, round.getReachedScore().toString());
         };
     }
 

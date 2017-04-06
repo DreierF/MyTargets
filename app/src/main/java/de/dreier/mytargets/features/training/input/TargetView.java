@@ -610,6 +610,11 @@ public class TargetView extends TargetViewBase {
         targetDrawable.setTransparentShots(shotStream);
     }
 
+    @Override
+    protected int getSelectedShotCircleRadius() {
+        return inputMethod == KEYBOARD ? EndRenderer.MAX_CIRCLE_SIZE : 0;
+    }
+
     public enum EKeyboardType {
         LEFT, RIGHT
     }

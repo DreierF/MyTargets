@@ -27,10 +27,14 @@ android {
 
     defaultConfig {
         applicationId 'de.dreier.mytargets'
-        minSdkVersion 20
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode gitVersionCode
         versionName gitVersionName
+    }
+
+    dataBinding {
+        enabled = true
     }
 
     signingConfigs {
@@ -51,9 +55,9 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
             minifyEnabled false
-            testCoverageEnabled = true
+            testCoverageEnabled true
         }
         release {
             signingConfig signingConfigs.release
@@ -65,10 +69,10 @@ android {
 }
 
 dependencies {
-    compile "com.google.android.support:wearable:$libraryVersion.supportWearable"
     provided "com.google.android.wearable:wearable:$libraryVersion.supportWearable"
 
-    compile "com.google.android.gms:play-services-wearable:$libraryVersion.playService"
+    compile "com.google.android.support:wearable:$libraryVersion.supportWearable"
+    provided "com.google.android.wearable:wearable:$libraryVersion.supportWearable"
 
     compile "org.parceler:parceler-api:$libraryVersion.parceler"
     annotationProcessor "org.parceler:parceler:$libraryVersion.parceler"

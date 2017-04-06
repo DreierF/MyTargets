@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training;
+package de.dreier.mytargets.shared.views;
 
 import android.content.Context;
 import android.graphics.Canvas;

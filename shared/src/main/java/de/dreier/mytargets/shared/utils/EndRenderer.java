@@ -87,7 +87,7 @@ public class EndRenderer {
         } while (neededRows > maxRows);
         radius -= MIN_PADDING;
         int numRows = Math.max(neededRows, 1);
-        shotsPerRow = (int) Math.ceil(shotList.size() / numRows);
+        shotsPerRow = (int) Math.ceil(shotList.size() / (float)numRows);
         rowHeight = rect.height() / numRows;
         columnWidth = rect.width() / shotsPerRow;
     }

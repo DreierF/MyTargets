@@ -39,6 +39,7 @@ import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.targets.models.NFAAAnimal;
 import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.test.base.InstrumentedTestBase;
@@ -155,38 +156,21 @@ public class SettingsManagerTest extends InstrumentedTestBase {
     }
 
     @Test
-    public void getTimerVibrate() {
-        SettingsManager.setTimerVibrate(true);
-        assertThat(SettingsManager.getTimerVibrate()).isEqualTo(true);
-    }
-
-    @Test
-    public void getTimerSoundEnabled() {
-        SettingsManager.setTimerSoundEnabled(false);
-        assertThat(SettingsManager.getTimerSoundEnabled()).isEqualTo(false);
-    }
-
-    @Test
-    public void getTimerWaitTime() {
-        SettingsManager.setTimerWaitTime(5);
-        assertThat(SettingsManager.getTimerWaitTime()).isEqualTo(5);
+    public void getTimerSettings() {
+        TimerSettings settings = new TimerSettings();
+        settings.enabled = false;
+        settings.sound = true;
+        settings.vibrate = true;
+        settings.waitTime = 5;
+        settings.shootTime = 90;
+        settings.warnTime = 30;
+        SettingsManager.setTimerSettings(settings);
+        assertThat(SettingsManager.getTimerSettings()).isEqualTo(settings);
         ApplicationInstance.getSharedPreferences()
                 .edit()
                 .putString(SettingsManager.KEY_TIMER_WAIT_TIME, "")
                 .apply();
-        assertThat(SettingsManager.getTimerWaitTime()).isEqualTo(10);
-    }
-
-    @Test
-    public void getTimerShootTime() {
-        SettingsManager.setTimerShootTime(90);
-        assertThat(SettingsManager.getTimerShootTime()).isEqualTo(90);
-    }
-
-    @Test
-    public void getTimerWarnTime() {
-        SettingsManager.setTimerWarnTime(30);
-        assertThat(SettingsManager.getTimerWarnTime()).isEqualTo(30);
+        assertThat(SettingsManager.getTimerSettings().waitTime).isEqualTo(10);
     }
 
     @Test

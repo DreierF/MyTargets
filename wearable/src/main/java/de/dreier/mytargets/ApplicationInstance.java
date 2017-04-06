@@ -22,9 +22,10 @@ import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.analysis.aggregation.average.Average;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Environment;
-import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Thumbnail;
+import de.dreier.mytargets.shared.models.TimerSettings;
+import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.WindDirection;
 import de.dreier.mytargets.shared.models.WindSpeed;
 import de.dreier.mytargets.shared.models.db.Arrow;
@@ -40,6 +41,7 @@ import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.EndRenderer;
+import de.dreier.mytargets.utils.WearWearableClient;
 
 /**
  * Application singleton. Gets instantiated exactly once and is used
@@ -62,8 +64,9 @@ import de.dreier.mytargets.shared.utils.EndRenderer;
         @ParcelClass(Shot.class),
         @ParcelClass(SightMark.class),
         @ParcelClass(StandardRound.class),
-        @ParcelClass(NotificationInfo.class),
+        @ParcelClass(TrainingInfo.class),
         @ParcelClass(Target.class),
+        @ParcelClass(TimerSettings.class),
         @ParcelClass(Training.class),
         @ParcelClass(Thumbnail.class),
         @ParcelClass(WindDirection.class),
@@ -71,4 +74,16 @@ import de.dreier.mytargets.shared.utils.EndRenderer;
 })
 public class ApplicationInstance extends SharedApplicationInstance {
 
+    public static WearWearableClient wearableClient;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        wearableClient = new WearWearableClient(this);
+    }
+    @Override
+    public void onTerminate() {
+        wearableClient.disconnect();
+        super.onTerminate();
+    }
 }

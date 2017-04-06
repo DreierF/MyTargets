@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 Florian Dreier
   ~
   ~ This file is part of MyTargets.
@@ -13,29 +12,106 @@
   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   ~ GNU General Public License for more details.
   -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-<android.support.wearable.view.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                              xmlns:app="http://schemas.android.com/apk/res-auto"
-                                              xmlns:tools="http://schemas.android.com/tools"
-                                              android:layout_width="match_parent"
-                                              android:layout_height="match_parent">
-
-    <android.support.wearable.view.WatchViewStub
-        android:id="@+id/watch_view_stub"
+    <android.support.wearable.view.drawer.WearableDrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:rectLayout="@layout/rect_activity_main"
-        app:roundLayout="@layout/round_activity_main"
-        tools:context=".MainActivity"
-        android:visibility="gone"
-        tools:deviceIds="wear"/>
+        android:background="@color/md_wear_green_dark_background"
+        tools:context=".RoundActivity"
+        tools:deviceIds="wear">
 
-    <TextView
-        android:id="@+id/start_training_hint"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:padding="16dp"
-        android:text="@string/start_training_on_phone"/>
+        <LinearLayout
+            android:id="@+id/root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-</android.support.wearable.view.BoxInsetLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:textColor="@color/md_wear_green_lighter_ui_element"
+                android:textSize="14sp"
+                tools:text="today" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:textColor="@color/md_white_1000"
+                android:textSize="18sp"
+                tools:text="Training" />
+
+            <TextView
+                android:id="@+id/rounds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:textColor="@color/md_white_1000"
+                android:textSize="12sp"
+                tools:text="5 rounds" />
+
+            <TextView
+                android:id="@+id/ends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:textColor="@color/md_white_1000"
+                android:textSize="12sp"
+                tools:text="10 \u00D7 3 arrows" />
+
+            <TextView
+                android:id="@+id/distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:textColor="@color/md_white_1000"
+                android:textSize="12sp"
+                tools:text="10m" />
+
+        </LinearLayout>
+
+        <android.support.wearable.view.drawer.WearableDrawerView
+            android:id="@+id/wearableDrawerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:background="@color/md_wear_green_lighter_ui_element"
+            app:peek_view="@+id/peek_view">
+
+            <LinearLayout
+                android:id="@id/peek_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp">
+
+                <ImageView
+                    android:id="@+id/primaryActionAdd"
+                    android:layout_width="@dimen/peek_drawer_icon_size"
+                    android:layout_height="@dimen/peek_drawer_icon_size"
+                    android:src="@drawable/ic_add_white_24dp" />
+
+            </LinearLayout>
+
+        </android.support.wearable.view.drawer.WearableDrawerView>
+
+    </android.support.wearable.view.drawer.WearableDrawerLayout>
+
+</layout>
